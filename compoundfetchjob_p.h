@@ -73,7 +73,7 @@ class CompoundFetchJob : public KJob
       ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
       if ( fetchJob->items().isEmpty() ) {
         setError( UserDefinedError );
-        setErrorText( QLatin1String( "Item not found" ) );
+        setErrorText( i18n( "Item not found" ) );
         emitResult();
         return;
       }
@@ -82,7 +82,7 @@ class CompoundFetchJob : public KJob
       mItemFetched = true;
 
       if ( mItemFetched && mCollectionFetched )
-        
+
         emitResult();
     }
 
@@ -98,7 +98,7 @@ class CompoundFetchJob : public KJob
       CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
       if ( fetchJob->collections().isEmpty() ) {
         setError( UserDefinedError );
-        setErrorText( QLatin1String( "Collection not found" ) );
+        setErrorText( i18n( "Collection not found" ) );
         emitResult();
         return;
       }

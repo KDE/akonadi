@@ -24,7 +24,7 @@
 #include "job_p.h"
 
 #include <kdebug.h>
-
+#include <KLocale>
 using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate : public JobPrivate
@@ -55,7 +55,7 @@ void CollectionCreateJob::doStart( )
   Q_D( CollectionCreateJob );
   if ( d->mCollection.parentCollection().id() < 0 && d->mCollection.parentCollection().remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( QLatin1String("Invalid parent") );
+    setErrorText( i18n("Invalid parent") );
     emitResult();
     return;
   }

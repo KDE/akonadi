@@ -27,6 +27,7 @@
 #include "protocolhelper_p.h"
 
 #include <kdebug.h>
+#include <KLocale>
 
 namespace Akonadi {
 
@@ -45,7 +46,7 @@ template <typename LinkJob> class LinkJobImpl : public JobPrivate
       }
       if ( !destination.isValid() && destination.remoteId().isEmpty() ) {
         q->setError( Job::Unknown );
-        q->setErrorText( QLatin1String( "No valid destination specified" ) );
+        q->setErrorText( i18n( "No valid destination specified" ) );
         q->emitResult();
         return;
       }

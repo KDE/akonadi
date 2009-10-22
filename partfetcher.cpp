@@ -23,6 +23,7 @@
 #include "session.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include <KLocale>
 
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
@@ -57,7 +58,7 @@ void PartFetcherPrivate::fetchJobDone( KJob *job )
   Q_Q( PartFetcher );
   if ( job->error() ) {
     q->setError( KJob::UserDefinedError );
-    q->setErrorText( QLatin1String( "Unable to fetch item for index" ) );
+    q->setErrorText( i18n( "Unable to fetch item for index" ) );
     q->emitResult();
     return;
   }
@@ -72,7 +73,7 @@ void PartFetcherPrivate::fetchJobDone( KJob *job )
   // invalid if the user clicks around a lot.
   if ( !m_persistentIndex.isValid() ) {
     q->setError( KJob::UserDefinedError );
-    q->setErrorText( QLatin1String( "Index is no longer available" ) );
+    q->setErrorText( i18n( "Index is no longer available" ) );
     q->emitResult();
     return;
   }
@@ -119,8 +120,7 @@ void PartFetcher::start()
   const QSet<QByteArray> availableParts = index.data( EntityTreeModel::AvailablePartsRole ).value<QSet<QByteArray> >();
   if ( !availableParts.contains( d->m_partName ) ) {
     setError( UserDefinedError );
-    setErrorText( QString::fromLatin1( "Payload part '%1' is not available for this index" )
-                                     .arg( QString::fromLatin1( d->m_partName ) ) );
+    setErrorText( i18n( "Payload part '%1' is not available for this index" , QString::fromLatin1( d->m_partName ) ) );
     emitResult();
     return;
   }
@@ -129,7 +129,7 @@ void PartFetcher::start()
 
   if ( !session ) {
     setError( UserDefinedError );
-    setErrorText( QLatin1String( "No session available for this index" ) );
+    setErrorText( i18n( "No session available for this index" ) );
     emitResult();
     return;
   }
@@ -138,7 +138,7 @@ void PartFetcher::start()
 
   if ( !item.isValid() ) {
     setError( UserDefinedError );
-    setErrorText( QLatin1String( "No item available for this index" ) );
+    setErrorText( i18n( "No item available for this index" ) );
     emitResult();
     return;
   }

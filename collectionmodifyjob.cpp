@@ -23,6 +23,7 @@
 #include "protocolhelper_p.h"
 #include "collectionstatistics.h"
 #include "collection_p.h"
+#include <KLocale>
 
 using namespace Akonadi;
 
@@ -53,7 +54,7 @@ void CollectionModifyJob::doStart()
   Q_D( CollectionModifyJob );
   if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( QLatin1String( "Invalid collection" ) );
+    setErrorText( i18n( "Invalid collection" ) );
     emitResult();
     return;
   }

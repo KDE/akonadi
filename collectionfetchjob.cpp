@@ -28,6 +28,7 @@
 #include "collectionutils_p.h"
 
 #include <kdebug.h>
+#include <KLocale>
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
@@ -125,7 +126,7 @@ void CollectionFetchJob::doStart()
 
   if ( !d->mBase.isValid() && d->mBase.remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( QLatin1String( "Invalid collection given." ) );
+    setErrorText( i18n( "Invalid collection given." ) );
     emitResult();
     return;
   }

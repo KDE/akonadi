@@ -23,6 +23,7 @@
 #include "job_p.h"
 
 #include <akonadi/private/imapparser_p.h>
+#include <KLocale>
 
 using namespace Akonadi;
 
@@ -55,7 +56,7 @@ void CollectionDeleteJob::doStart()
 
   if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( QLatin1String("Invalid collection") );
+    setErrorText( i18n("Invalid collection") );
     emitResult();
     return;
   }

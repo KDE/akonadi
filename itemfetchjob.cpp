@@ -29,6 +29,7 @@
 #include "protocolhelper_p.h"
 
 #include <kdebug.h>
+#include <KLocale>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>
@@ -145,7 +146,7 @@ void ItemFetchJob::doStart()
 
   if ( d->mRequestedItems.isEmpty() ) { // collection content listing
     if ( d->mCollection == Collection::root() ) {
-      setErrorText( QLatin1String("Cannot list root collection.") );
+      setErrorText( i18n("Cannot list root collection.") );
       setError( Unknown );
       emitResult();
     }
