@@ -32,8 +32,6 @@
 
 using namespace Akonadi;
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
-
 /**
  * @internal
  */
@@ -73,9 +71,11 @@ typedef QList<CollectionPropertiesPageFactory*> CollectionPropertiesPageFactoryL
 
 K_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
 
+K_GLOBAL_STATIC_WITH_ARGS( bool, s_defaultPage,( "true" ) )
+
 CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *parent ) : q( parent )
 {
-  if ( s_pages->isEmpty() )
+  if ( s_pages->isEmpty() && *s_defaultPage)
     registerBuiltinPages();
 }
 
@@ -118,9 +118,14 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 
 void CollectionPropertiesDialog::registerPage(CollectionPropertiesPageFactory * factory)
 {
-  if ( s_pages->isEmpty() )
+  if ( s_pages->isEmpty() && *s_defaultPage)
     Private::registerBuiltinPages();
   s_pages->append( factory );
+}
+
+void CollectionPropertiesDialog::useDefaultPage( bool defaultPage )
+{
+  *s_defaultPage = defaultPage;
 }
 
 #include "collectionpropertiesdialog.moc"

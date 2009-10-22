@@ -43,6 +43,7 @@ class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
     Ui::CollectionGeneralPropertiesPage ui;
 };
 
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CollectionGeneralPropertiesPageFactory, CollectionGeneralPropertiesPage)
 //@endcond
 
 }
