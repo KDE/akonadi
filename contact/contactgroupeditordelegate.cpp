@@ -25,20 +25,19 @@
 #include "contactgroupmodel_p.h"
 
 #include <akonadi/entitytreemodel.h>
+#include <kcombobox.h>
 #include <kicon.h>
 #include <klocale.h>
 
 #include <QtGui/QAbstractItemView>
-#include <QtGui/QComboBox>
 #include <QtGui/QCompleter>
-#include <QtGui/QLineEdit>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QToolButton>
 
 using namespace Akonadi;
 
 ContactLineEdit::ContactLineEdit( QWidget *parent )
-  : QLineEdit( parent )
+  : KLineEdit( parent )
 {
   setFrame( false );
 
@@ -93,11 +92,11 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
     return new ContactLineEdit( parent );
   } else {
     if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
-      QComboBox *comboBox = new QComboBox( parent );
+      KComboBox *comboBox = new KComboBox( parent );
       comboBox->setFrame( false );
       return comboBox;
     } else {
-      QLineEdit *lineEdit = new QLineEdit( parent );
+      KLineEdit *lineEdit = new KLineEdit( parent );
       lineEdit->setFrame( false );
       return lineEdit;
     }
@@ -108,13 +107,13 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
 {
   if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
     if ( index.column() == 0 ) {
-      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
+      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
       if ( !lineEdit )
         return;
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
     } else {
-      QComboBox *comboBox = qobject_cast<QComboBox*>( editor );
+      KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
       if ( !comboBox )
         return;
 
@@ -126,14 +125,14 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
   } else {
     if ( index.column() == 0 ) {
 
-      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
+      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
       if ( !lineEdit )
         return;
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
 
     } else {
-      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
+      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
       if ( !lineEdit )
         return;
 
@@ -157,7 +156,7 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
     }
 
     if ( index.column() == 1 ) {
-      QComboBox *comboBox = qobject_cast<QComboBox*>( editor );
+      KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
       if ( !comboBox )
         return;
 
@@ -176,7 +175,7 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
     }
 
     if ( index.column() == 1 ) {
-      QLineEdit *lineEdit = qobject_cast<QLineEdit*>( editor );
+      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
       if ( !lineEdit )
         return;
 
@@ -207,7 +206,7 @@ QSize ContactGroupEditorDelegate::sizeHint( const QStyleOptionViewItem& option, 
 
   if ( index.column() == 1 )
     hint.setWidth( hint.width() + d->mButtonSize.width() );
-  
+
   return hint;
 }
 

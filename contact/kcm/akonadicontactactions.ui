@@ -21,7 +21,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QComboBox" name="kcfg_ShowAddressAction">
+       <widget class="KComboBox" name="kcfg_ShowAddressAction">
         <item>
          <property name="text">
           <string>Web Browser</string>
@@ -49,7 +49,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="kcfg_AddressUrl"/>
+           <widget class="KLineEdit" name="kcfg_AddressUrl"/>
           </item>
          </layout>
         </widget>
@@ -63,7 +63,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="kcfg_AddressCommand"/>
+           <widget class="KLineEdit" name="kcfg_AddressCommand"/>
           </item>
          </layout>
         </widget>
@@ -92,7 +92,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QComboBox" name="kcfg_DialPhoneNumberAction">
+       <widget class="KComboBox" name="kcfg_DialPhoneNumberAction">
         <item>
          <property name="text">
           <string>Skype</string>
@@ -121,7 +121,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="kcfg_PhoneCommand"/>
+           <widget class="KLineEdit" name="kcfg_PhoneCommand"/>
           </item>
          </layout>
         </widget>
