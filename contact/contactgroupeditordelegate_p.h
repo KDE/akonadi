@@ -51,7 +51,7 @@ class ContactGroupEditorDelegate : public QStyledItemDelegate
   Q_OBJECT
 
   public:
-    ContactGroupEditorDelegate( QAbstractItemView *view, QObject *parent = 0 );
+    explicit ContactGroupEditorDelegate( QAbstractItemView *view, QObject *parent = 0 );
     ~ContactGroupEditorDelegate();
 
     virtual QWidget* createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;

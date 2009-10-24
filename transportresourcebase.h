@@ -70,7 +70,7 @@ class AKONADI_EXPORT TransportResourceBase
 
     /**
      * This method is called when the given @p item shall be send.
-     * When the sending is done or an error occured during
+     * When the sending is done or an error occurred during
      * sending, call itemSent() with the according result flag.
      *
      * @param item The message item to be send.
