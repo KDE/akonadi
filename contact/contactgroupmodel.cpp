@@ -178,10 +178,14 @@ bool ContactGroupModel::storeContactGroup( KABC::ContactGroup &group ) const
     else {
       if ( i != (d->mMembers.count() - 1) ) {
         if ( member.data.name().isEmpty() ) {
-          d->mLastErrorMessage = i18n( "The member with email address <b>%1</b> is missing a name" ).arg( member.data.email() );
+          d->mLastErrorMessage =
+            i18n( "The member with email address <b>%1</b> is missing a name",
+                  member.data.email() );
           return false;
         } else if ( member.data.email().isEmpty() ) {
-          d->mLastErrorMessage = i18n( "The member with name <b>%1</b> is missing an email address" ).arg( member.data.name() );
+          d->mLastErrorMessage =
+            i18n( "The member with name <b>%1</b> is missing an email address",
+                  member.data.name() );
           return false;
         }
         group.append( member.data );
@@ -361,9 +365,9 @@ QVariant ContactGroupModel::headerData( int section, Qt::Orientation orientation
     return QVariant();
 
   if ( section == 0 )
-    return i18n( "Name" );
+    return i18nc( "contact's name", "Name" );
   else
-    return i18n( "EMail" );
+    return i18nc( "contact's email address", "EMail" );
 }
 
 Qt::ItemFlags ContactGroupModel::flags( const QModelIndex &index ) const
