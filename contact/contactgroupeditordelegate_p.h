@@ -36,14 +36,20 @@ class ContactLineEdit : public KLineEdit
   Q_OBJECT
 
   public:
-    ContactLineEdit( QWidget *parent = 0 );
+    explicit ContactLineEdit( bool isReference, QWidget *parent = 0 );
 
+    bool isReference() const;
     Akonadi::Item completedItem() const;
+
+  Q_SIGNALS:
+    void completed( QWidget* );
 
   private Q_SLOTS:
     void completed( const QModelIndex& );
+    void slotTextEdited();
 
   private:
+    bool mIsReference;
     Item mItem;
 };
 
@@ -65,6 +71,9 @@ class ContactGroupEditorDelegate : public QStyledItemDelegate
     QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
     virtual bool editorEvent( QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index );
+
+  private Q_SLOTS:
+    void completed( QWidget* );
 
   private:
     class Private;

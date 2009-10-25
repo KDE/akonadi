@@ -36,8 +36,8 @@
 
 using namespace Akonadi;
 
-ContactLineEdit::ContactLineEdit( QWidget *parent )
-  : KLineEdit( parent )
+ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
+  : KLineEdit( parent ), mIsReference( isReference )
 {
   setFrame( false );
 
@@ -46,6 +46,13 @@ ContactLineEdit::ContactLineEdit( QWidget *parent )
   connect( completer, SIGNAL( activated( const QModelIndex& ) ), SLOT( completed( const QModelIndex& ) ) );
 
   setCompleter( completer );
+
+  connect( this, SIGNAL( textEdited( const QString& ) ), SLOT( slotTextEdited() ) );
+}
+
+bool ContactLineEdit::isReference() const
+{
+  return mIsReference;
 }
 
 Akonadi::Item ContactLineEdit::completedItem() const
@@ -55,10 +62,21 @@ Akonadi::Item ContactLineEdit::completedItem() const
 
 void ContactLineEdit::completed( const QModelIndex &index )
 {
-  if ( index.isValid() )
+  if ( index.isValid() ) {
     mItem = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  else
+    mIsReference = true;
+  } else {
     mItem = Item();
+    mIsReference = false;
+  }
+
+  emit completed( this );
+}
+
+void ContactLineEdit::slotTextEdited()
+{
+  // if the user has edited the text, we break up the reference
+  mIsReference = false;
 }
 
 class ContactGroupEditorDelegate::Private
@@ -89,7 +107,16 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
                                                    const QModelIndex &index ) const
 {
   if ( index.column() == 0 ) {
-    return new ContactLineEdit( parent );
+    ContactLineEdit *edit = 0;
+    if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
+      edit = new ContactLineEdit( true, parent );
+    } else {
+      edit = new ContactLineEdit( false, parent );
+    }
+
+    connect( edit, SIGNAL( completed( QWidget* ) ), SLOT( completed( QWidget* ) ) );
+
+    return edit;
   } else {
     if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
       KComboBox *comboBox = new KComboBox( parent );
@@ -147,11 +174,13 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
     if ( index.column() == 0 ) {
       ContactLineEdit *lineEdit = static_cast<ContactLineEdit*>( editor );
 
+      const bool isReference = lineEdit->isReference();
       const Item item = lineEdit->completedItem();
-      model->setData( index, item.isValid(), ContactGroupModel::IsReferenceRole );
-      if ( item.isValid() )
-        model->setData( index, item.id(), Qt::EditRole );
-      else
+      model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
+      if ( isReference ) {
+        if ( item.isValid() )
+          model->setData( index, item.id(), Qt::EditRole );
+      } else
         model->setData( index, lineEdit->text(), Qt::EditRole );
     }
 
@@ -166,11 +195,13 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
     if ( index.column() == 0 ) {
       ContactLineEdit *lineEdit = static_cast<ContactLineEdit*>( editor );
 
+      const bool isReference = lineEdit->isReference();
       const Item item = lineEdit->completedItem();
-      model->setData( index, item.isValid(), ContactGroupModel::IsReferenceRole );
-      if ( item.isValid() )
-        model->setData( index, item.id(), Qt::EditRole );
-      else
+      model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
+      if ( isReference ) {
+        if ( item.isValid() )
+          model->setData( index, item.id(), Qt::EditRole );
+      } else
         model->setData( index, lineEdit->text(), Qt::EditRole );
     }
 
@@ -225,6 +256,12 @@ bool ContactGroupEditorDelegate::editorEvent( QEvent *event, QAbstractItemModel 
     }
   }
   return QStyledItemDelegate::editorEvent( event, model, option, index );
+}
+
+void ContactGroupEditorDelegate::completed( QWidget *widget )
+{
+  emit commitData( widget );
+  emit closeEditor( widget );
 }
 
 #include "contactgroupeditordelegate_p.moc"
