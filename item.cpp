@@ -230,6 +230,8 @@ void Item::apply( const Item &other )
   setFlags( other.flags() );
   setModificationTime( other.modificationTime() );
   setSize( other.size() );
+  setParentCollection( other.parentCollection() );
+  setRemoteId( other.remoteId() );
 
   foreach( Attribute *attribute, other.attributes() )
     addAttribute( attribute->clone() );
