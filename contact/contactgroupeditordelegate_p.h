@@ -22,7 +22,8 @@
 #ifndef AKONADI_CONTACTGROUPEDITORDELEGATE_P_H
 #define AKONADI_CONTACTGROUPEDITORDELEGATE_P_H
 
-#include <QtGui/QLineEdit>
+#include <KLineEdit>
+
 #include <QtGui/QStyledItemDelegate>
 
 #include <akonadi/item.h>
@@ -30,19 +31,25 @@
 namespace Akonadi
 {
 
-class ContactLineEdit : public QLineEdit
+class ContactLineEdit : public KLineEdit
 {
   Q_OBJECT
 
   public:
-    ContactLineEdit( QWidget *parent = 0 );
+    explicit ContactLineEdit( bool isReference, QWidget *parent = 0 );
 
+    bool isReference() const;
     Akonadi::Item completedItem() const;
+
+  Q_SIGNALS:
+    void completed( QWidget* );
 
   private Q_SLOTS:
     void completed( const QModelIndex& );
+    void slotTextEdited();
 
   private:
+    bool mIsReference;
     Item mItem;
 };
 
@@ -51,7 +58,7 @@ class ContactGroupEditorDelegate : public QStyledItemDelegate
   Q_OBJECT
 
   public:
-    ContactGroupEditorDelegate( QAbstractItemView *view, QObject *parent = 0 );
+    explicit ContactGroupEditorDelegate( QAbstractItemView *view, QObject *parent = 0 );
     ~ContactGroupEditorDelegate();
 
     virtual QWidget* createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
@@ -64,6 +71,9 @@ class ContactGroupEditorDelegate : public QStyledItemDelegate
     QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
 
     virtual bool editorEvent( QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index );
+
+  private Q_SLOTS:
+    void completed( QWidget* );
 
   private:
     class Private;

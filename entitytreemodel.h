@@ -254,12 +254,12 @@ class EntityTreeModelPrivate;
  * titles for each column depending on the contents of the view.
  *
  * The way this is accomplished is by using the MimeTypeFilterProxyModel for splitting the model into a "CollectionTree" and an "Item List"
- * as in the above example, and using a type-specifc EntityTreeModel subclass to return the type-specific data, typically for only one type (for example, contacts or emails).
+ * as in the above example, and using a type-specific EntityTreeModel subclass to return the type-specific data, typically for only one type (for example, contacts or emails).
  *
  * The following protected virtual methods should be implemented in the subclass:
  * - int entityColumnCount( HeaderGroup headerGroup ) const;
  * -- Implement to return the number of columns for a HeaderGroup. If the HeaderGroup is CollectionTreeHeaders, return the number of columns to display for the
- *    Collection tree, and if it is ItemListHeaders, return the number of colums to display for the item. In the case of addressee, this could be for example,
+ *    Collection tree, and if it is ItemListHeaders, return the number of columns to display for the item. In the case of addressee, this could be for example,
  *    two (for given name and family name) or for emails it could be three (for subject, sender, date). This is a decision of the subclass implementor.
  * - QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
  * -- Implement to return the data for each section for a HeaderGroup. For example, if the header group is CollectionTreeHeaders in a contacts model,

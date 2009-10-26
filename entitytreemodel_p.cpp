@@ -38,7 +38,6 @@
 #include <akonadi/session.h>
 
 #include <kdebug.h>
-#include "monitor_p.h"
 
 using namespace Akonadi;
 
@@ -132,7 +131,7 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
   const Collection parent = entity.parentCollection();
   if ( parent.isValid() )
     return isHidden( parent );
- 
+
   return false;
 }
 

@@ -106,7 +106,7 @@ class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
   private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( SelectionProxyModel )
-    SelectionProxyModelPrivate *d_ptr;
+    SelectionProxyModelPrivate *const d_ptr;
 
     Q_PRIVATE_SLOT( d_func(), void rootIndexAdded( const QModelIndex & ) )
     Q_PRIVATE_SLOT( d_func(), void rootIndexAboutToBeRemoved( const QModelIndex & ) )

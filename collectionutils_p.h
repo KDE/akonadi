@@ -72,7 +72,7 @@ namespace CollectionUtils
       return QLatin1String( "network-server" );
     if ( CollectionUtils::isStructural( col ) )
       return QLatin1String( "folder-grey" );
-    if ( col.rights() & Collection::CanCreateItem )
+    if ( CollectionUtils::isReadOnly( col ) )
       return QLatin1String( "folder-grey" );
 
     const QStringList content = col.contentMimeTypes();

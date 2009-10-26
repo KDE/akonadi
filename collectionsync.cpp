@@ -169,7 +169,7 @@ class CollectionSync::Private
       // safety check: the local tree has to be connected
       if ( !localPendingCollections.isEmpty() ) {
         q->setError( Unknown );
-        q->setErrorText( i18n( "Inconsistent local collection tree detected! OMG, what have you done to my database?!?!" ) );
+        q->setErrorText( i18n( "Inconsistent local collection tree detected." ) );
         q->emitResult();
         return;
       }
@@ -266,7 +266,7 @@ class CollectionSync::Private
         localNode = findBestLocalAncestor( remoteNode->collection );
         if ( !localNode ) {
           q->setError( Unknown );
-          q->setErrorText( i18n( "Remote collection without root-terminated ancestor chain provided, fix your resource dude!" ) );
+          q->setErrorText( i18n( "Remote collection without root-terminated ancestor chain provided, resource is broken." ) );
           q->emitResult();
           return;
         }
