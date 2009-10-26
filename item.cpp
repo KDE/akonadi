@@ -231,6 +231,7 @@ void Item::apply( const Item &other )
   setModificationTime( other.modificationTime() );
   setSize( other.size() );
   setParentCollection( other.parentCollection() );
+  setStorageCollectionId( other.storageCollectionId() );
   setRemoteId( other.remoteId() );
 
   foreach( Attribute *attribute, other.attributes() )
