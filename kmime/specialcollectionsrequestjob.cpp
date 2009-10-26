@@ -240,7 +240,7 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult( KJob *job )
   Q_ASSERT( dynamic_cast<CollectionCreateJob*>( job ) );
   CollectionCreateJob *cjob = static_cast<CollectionCreateJob*>( job );
   const Collection col = cjob->collection();
-  toRegister.append( qMakePair( col, (SpecialCollections::Type)cjob->property( "id" ).toInt() ) );
+  toRegister.append( qMakePair( col, (SpecialCollections::Type)cjob->property( "type" ).toInt() ) );
 
   Q_ASSERT( pendingCreateJobs > 0 );
   pendingCreateJobs--;
