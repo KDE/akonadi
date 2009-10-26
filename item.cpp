@@ -224,7 +224,13 @@ QSet<QByteArray> Item::availablePayloadParts() const
 
 void Item::apply( const Item &other )
 {
+  Q_ASSERT( mimeType() == other.mimeType() && id() == other.id() );
   setRemoteId( other.remoteId() );
+  setRevision( other.revision() );
+  setFlags( other.flags() );
+  setModificationTime( other.modificationTime() );
+  setSize( other.size() );
+
   foreach( Attribute *attribute, other.attributes() )
     addAttribute( attribute->clone() );
 
