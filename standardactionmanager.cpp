@@ -76,8 +76,8 @@ static const struct {
   { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
   { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
   { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
+  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
   { "akonadi_item_cut", I18N_NOOP("&Cut Item"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
   { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
 };
