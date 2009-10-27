@@ -23,7 +23,9 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QVariant>
 
+class QByteArray;
 class QTreeView;
 class KConfigGroup;
 
@@ -116,6 +118,17 @@ class AKONADI_EXPORT EntityTreeViewStateSaver : public QObject
      * @param configGroup Config file group containing a previously stored EntityTreeView state.
      */
     void restoreState( const KConfigGroup &configGroup ) const;
+
+
+    /**
+     * adds an additional role to be saved and restored.
+     *
+     * @param role the role to save/restore
+     * @param identifier Identifier used internally to write/read the additional role. Must only contain letters (a-z) or digits (0-9)!
+     * @param defaultValue The value that should be set if nothing is stored in the settings. When saving,
+     *        values equal to the default value are not explicitely stored
+     */
+    void addAdditionalRole( int role, const QByteArray &identifier, const QVariant &defaultValue=QVariant() );
 
   private:
     //@cond PRIVATE
