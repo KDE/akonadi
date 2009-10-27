@@ -65,7 +65,7 @@ void LocalFoldersTest::initTestCase()
 
 void LocalFoldersTest::testLock()
 {
-  const QString dbusName = QString::fromLatin1( "org.kde.pim.LocalFolders" );
+  const QString dbusName = QString::fromLatin1( "org.kde.pim.SpecialCollections" );
 
   // Initially not locked.
   QVERIFY( !QDBusConnection::sessionBus().interface()->isServiceRegistered( dbusName ) );
