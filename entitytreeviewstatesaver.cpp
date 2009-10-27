@@ -26,20 +26,10 @@
 #include <KConfigGroup>
 #include <KDebug>
 
-#include <QHash>
-#include <QPair>
 #include <QScrollBar>
 #include <QTimer>
 #include <QTreeView>
-#include <QVector>
 
-namespace {
-  struct AdditionalRole {
-    QByteArray identifier;
-    int role;
-    QVariant defaultValue;
-  };
-}
 namespace Akonadi {
 
 struct State
@@ -48,7 +38,6 @@ struct State
   bool selected;
   bool expanded;
   bool currentIndex;
-  QHash<int, QVariant> additionalRoles;
 };
 
 class EntityTreeViewStateSaverPrivate
@@ -77,23 +66,16 @@ class EntityTreeViewStateSaverPrivate
       return QString::fromLatin1( "i%1" ).arg( index.data( EntityTreeModel::ItemIdRole ).value<Entity::Id>() );
     }
 
-    void saveState( const QModelIndex &index, QStringList &selection, QStringList &expansion, QHash<QByteArray,QVector<QPair<QString, QVariant> > > &additionalValues )
+    void saveState( const QModelIndex &index, QStringList &selection, QStringList &expansion )
     {
       const QString cfgKey = key( index );
       if ( view->selectionModel()->isSelected( index ) )
         selection.append( cfgKey );
       if ( view->isExpanded( index ) )
         expansion.append( cfgKey );
-      Q_FOREACH( const AdditionalRole &ar, additionalRoles )
-      {
-        const QVariant v = index.data( ar.role );
-        if ( v != ar.defaultValue )
-          additionalValues[ar.identifier].push_back( qMakePair( cfgKey, v ) );
-      }
-
       for ( int i = 0; i < view->model()->rowCount( index ); ++i ) {
         const QModelIndex child = view->model()->index( i, 0, index );
-        saveState( child, selection, expansion, additionalValues );
+        saveState( child, selection, expansion );
       }
     }
 
@@ -105,12 +87,6 @@ class EntityTreeViewStateSaverPrivate
         view->setExpanded( index, true );
       if ( state.currentIndex )
         view->setCurrentIndex( index );
-      QHash<int,QVariant>::ConstIterator it = state.additionalRoles.constBegin();
-      while ( it != state.additionalRoles.constEnd() ) {
-        if ( index.data( it.key() ) != it.value() )
-          view->model()->setData( index, it.value(), it.key() );
-        ++it;
-      }
       QTimer::singleShot( 0, q, SLOT(restoreScrollBarState()) );
     }
 
@@ -164,7 +140,6 @@ class EntityTreeViewStateSaverPrivate
     QTreeView *view;
     QHash<Entity::Id, State> pendingCollectionChanges, pendingItemChanges;
     int horizontalScrollBarValue, verticalScrollBarValue;
-    QHash<QByteArray,AdditionalRole> additionalRoles;
 };
 
 EntityTreeViewStateSaver::EntityTreeViewStateSaver( QTreeView * view ) :
@@ -179,26 +154,13 @@ EntityTreeViewStateSaver::~EntityTreeViewStateSaver()
   delete d;
 }
 
-void EntityTreeViewStateSaver::addAdditionalRole( int role, const QByteArray &identifier, const QVariant &defaultValue )
-{
-  AdditionalRole ar;
-  ar.role = role;
-  ar.identifier = identifier;
-  ar.defaultValue = defaultValue;
-  d->additionalRoles.insert( identifier, ar );
-}
-
 void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
 {
   configGroup.deleteGroup();
   QStringList selection, expansion;
-  typedef QPair<QString, QVariant> StringVariantPair;
-  typedef QHash<QByteArray, QVector<StringVariantPair> > ValueHash;
-  ValueHash additionalValues;
-
   for ( int i = 0; i < d->view->model()->rowCount(); ++i ) {
     const QModelIndex index = d->view->model()->index( i, 0 );
-    d->saveState( index, selection, expansion, additionalValues );
+    d->saveState( index, selection, expansion );
   }
 
   const QString currentIndex = d->key( d->view->selectionModel()->currentIndex() );
@@ -208,16 +170,6 @@ void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
   configGroup.writeEntry( "CurrentIndex", currentIndex );
   configGroup.writeEntry( "ScrollBarHorizontal", d->view->horizontalScrollBar()->value() );
   configGroup.writeEntry( "ScrollBarVertical", d->view->verticalScrollBar()->value() );
-  ValueHash::ConstIterator it = additionalValues.constBegin();
-  while ( it != additionalValues.constEnd() ) {
-    QStringList l;
-    Q_FOREACH( const StringVariantPair &pair, it.value() ) {
-      l.push_back( pair.first );
-      l.push_back( pair.second.toString() );
-    }
-    configGroup.writeEntry( ( QByteArray("AdditionalRole_") + it.key() ).constData(), l );
-    ++it;
-  }
 }
 
 void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) const
@@ -255,28 +207,6 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
 
   d->horizontalScrollBarValue = configGroup.readEntry( "ScrollBarHorizontal", -1 );
   d->verticalScrollBarValue = configGroup.readEntry( "ScrollBarVertical", -1 );
-
-  Q_FOREACH ( const AdditionalRole &ar, d->additionalRoles ) {
-    const QStringList l = configGroup.readEntry( ( QByteArray("AdditionalRole_") + ar.identifier ).constData(), QStringList() );
-    if ( l.isEmpty() || l.size() % 2 != 0 ) //lists with an odd number of entries are invalid and ignored
-      continue;
-    QStringList::ConstIterator it = l.constBegin();
-    while ( it != l.constEnd() ) {
-      const QString key = *it;
-      ++it;
-      const QVariant value = *it;
-      ++it;
-      if ( value == ar.defaultValue )
-        continue;
-      const Entity::Id id = key.mid( 1 ).toLongLong();
-      if ( id >= 0 ) {
-        if ( key.startsWith( QLatin1Char( 'c' ) ) )
-          d->pendingCollectionChanges[id].additionalRoles.insert( ar.role, value );
-        else if ( key.startsWith( QLatin1Char( 'i' ) ) )
-          d->pendingItemChanges[id].additionalRoles.insert( ar.role, value );
-      }
-    }
-  }
 
   // initial restore run, for everything already loaded
   for ( int i = 0; i < d->view->model()->rowCount() && d->hasChanges(); ++i ) {
