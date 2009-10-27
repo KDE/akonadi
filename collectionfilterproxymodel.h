@@ -101,8 +101,6 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     //@cond PRIVATE
     class Private;
     Private* const d;
-
-    Q_PRIVATE_SLOT( d, void slotReset() )
     //@endcond
 };
 

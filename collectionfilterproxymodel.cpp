@@ -44,11 +44,6 @@ class CollectionFilterProxyModel::Private
 
     bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true );
 
-    void slotReset()
-    {
-      mParent->reset();
-    }
-
     QList< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
     MimeTypeChecker mimeChecker;
@@ -69,13 +64,13 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
       while ( resource.parent().isValid() )
         resource = resource.parent();
 
-      // See if that resource is visible, if not, reset the model.
+      // See if that resource is visible, if not, invalidate the filter.
       if ( resource != index && !acceptedResources.contains( resource ) ) {
         kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString()
                  << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
         acceptedResources.clear();
         // defer reset, the model might still be supplying new items at this point which crashs
-        QTimer::singleShot( 0, mParent, SLOT(slotReset()) );
+        mParent->invalidateFilter();
         return true;
       }
     }
