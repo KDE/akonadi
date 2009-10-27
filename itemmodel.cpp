@@ -137,6 +137,10 @@ void ItemModel::Private::listingDone( KJob * job )
 void ItemModel::Private::collectionFetchResult( KJob * job )
 {
   CollectionFetchJob *fetch = static_cast<CollectionFetchJob*>( job );
+
+  if ( fetch->collections().isEmpty() )
+    return;
+
   Q_ASSERT( fetch->collections().count() == 1 ); // we only listed base
   Collection c = fetch->collections().first();
    // avoid recursion, if this fails for some reason
