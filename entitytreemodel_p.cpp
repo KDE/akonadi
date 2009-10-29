@@ -428,7 +428,11 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if ( isHidden( collection ) )
     return;
 
-  if ( !m_collections.contains( collection.parentCollection().id() ) )
+  Collection::Id parentId = collection.parentCollection().id();
+
+  if ( parentId < 0 ) parentId = -1;
+
+  if ( !m_collections.contains( parentId ) )
     return;
 
   Q_Q( EntityTreeModel );
@@ -439,11 +443,16 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
     return;
   }
 
-  const int row = indexOf( m_childEntities.value( collection.parentCollection().id() ), collection.id() );
+
+  Q_ASSERT( m_childEntities.contains( parentId ) );
+
+  const int row = indexOf( m_childEntities.value( parentId ), collection.id() );
 
   Q_ASSERT( row >= 0 );
 
-  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.parentCollection().id() ) );
+  Q_ASSERT( m_collections.contains( parentId ) );
+
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( parentId ) );
 
   q->beginRemoveRows( parentIndex, row, row );
 
@@ -451,7 +460,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   removeChildEntities( collection.id() );
 
   // Remove deleted collection from its parent.
-  m_childEntities[ collection.parentCollection().id() ].removeAt( row );
+  m_childEntities[ parentId ].removeAt( row );
 
   q->endRemoveRows();
 }
