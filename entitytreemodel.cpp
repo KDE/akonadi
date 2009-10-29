@@ -57,7 +57,7 @@ EntityTreeModel::EntityTreeModel( Session *session,
                                   ChangeRecorder *monitor,
                                   QObject *parent
                                 )
-    : QAbstractItemModel( parent ),
+  : QAbstractItemModel( parent ),
     d_ptr( new EntityTreeModelPrivate( this ) )
 {
   Q_D( EntityTreeModel );
@@ -65,7 +65,7 @@ EntityTreeModel::EntityTreeModel( Session *session,
   d->m_monitor = monitor;
   d->m_session = session;
 
-  d->m_monitor->setChangeRecordingEnabled(false);
+  d->m_monitor->setChangeRecordingEnabled( false );
 
   d->m_includeStatistics = true;
   d->m_monitor->fetchCollectionStatistics( true );
@@ -82,13 +82,12 @@ EntityTreeModel::EntityTreeModel( Session *session,
   connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-           SLOT( monitoredCollectionRemoved( const Akonadi::Collection&) ) );
+           SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
   connect( monitor,
-           SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
-           SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+           SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 
-  if ( !monitor->itemFetchScope().isEmpty() )
-  {
+  if ( !monitor->itemFetchScope().isEmpty() ) {
     // Monitor item changes.
     connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
             SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
@@ -96,16 +95,16 @@ EntityTreeModel::EntityTreeModel( Session *session,
             SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
     connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
             SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-    connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
-            SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
+    connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 
-    connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& )),
-            SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& )));
-    connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
-            SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
+    connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   }
   connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
-           SLOT(monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
+           SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
 //   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
 
@@ -120,9 +119,8 @@ EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
 
-  foreach( QList<Node*> list, d->m_childEntities ) {
-    qDeleteAll(list);
-    list.clear();
+  foreach( const QList<Node*> &list, d->m_childEntities ) {
+    qDeleteAll( list );
   }
 
   delete d_ptr;
@@ -188,7 +186,7 @@ QVariant EntityTreeModel::entityData( const Item &item, int column, int role ) c
 
 QVariant EntityTreeModel::entityData( const Collection &collection, int column, int role ) const
 {
-  Q_D(const EntityTreeModel);
+  Q_D( const EntityTreeModel );
 
   if ( column > 0 )
     return QString();
@@ -236,10 +234,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   const HeaderGroup headerGroup = static_cast<HeaderGroup>( ( role / static_cast<int>( TerminalUserRole ) ) );
 
   role %= TerminalUserRole;
-  if ( !index.isValid() )
-  {
+  if ( !index.isValid() ) {
     if ( ColumnCountRole != role )
       return QVariant();
+
     return entityColumnCount( headerGroup );
   }
 
@@ -248,78 +246,88 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if ( ParentCollectionRole == role )
-  {
+  if ( ParentCollectionRole == role ) {
     const Collection parentCollection = d->m_collections.value( node->parent );
-    Q_ASSERT(parentCollection.isValid());
+    Q_ASSERT( parentCollection.isValid() );
 
-    return QVariant::fromValue(parentCollection);
+    return QVariant::fromValue( parentCollection );
   }
 
   if ( Node::Collection == node->type ) {
 
     if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
-    {
-       return QApplication::palette().color( QPalette::Disabled, QPalette::Text);
-    }
+      return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
 
     const Collection collection = d->m_collections.value( node->id );
 
     if ( !collection.isValid() )
       return QVariant();
 
-    switch ( role )
-    {
-    case MimeTypeRole:
-      return collection.mimeType();
-    case RemoteIdRole:
-      return collection.remoteId();
-    case CollectionIdRole:
-      return collection.id();
-    case ItemIdRole:
-      // QVariant().toInt() is 0, not -1, so we have to handle the ItemIdRole
-      // and CollectionIdRole (below) specially
-      return -1;
-    case CollectionRole:
-      return QVariant::fromValue( collection );
-    case EntityUrlRole:
-      return collection.url().url();
-    default:
-      return entityData( collection, index.column(), role );
+    switch ( role ) {
+      case MimeTypeRole:
+        return collection.mimeType();
+        break;
+      case RemoteIdRole:
+        return collection.remoteId();
+        break;
+      case CollectionIdRole:
+        return collection.id();
+        break;
+      case ItemIdRole:
+        // QVariant().toInt() is 0, not -1, so we have to handle the ItemIdRole
+        // and CollectionIdRole (below) specially
+        return -1;
+        break;
+      case CollectionRole:
+        return QVariant::fromValue( collection );
+        break;
+      case EntityUrlRole:
+        return collection.url().url();
+        break;
+      default:
+        return entityData( collection, index.column(), role );
+        break;
     }
 
   } else if ( Node::Item == node->type ) {
     if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
-    {
-       return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
-    }
+      return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
 
     const Item item = d->m_items.value( node->id );
     if ( !item.isValid() )
       return QVariant();
 
-    switch ( role )
-    {
-    case MimeTypeRole:
-      return item.mimeType();
-    case RemoteIdRole:
-      return item.remoteId();
-    case ItemRole:
-      return QVariant::fromValue( item );
-    case ItemIdRole:
-      return item.id();
-    case CollectionIdRole:
-      return -1;
-    case LoadedPartsRole:
-      return QVariant::fromValue( item.loadedPayloadParts() );
-    case AvailablePartsRole:
-      return QVariant::fromValue( item.availablePayloadParts() );
-    case EntityUrlRole:
-      return item.url( Akonadi::Item::UrlWithMimeType ).url();
-    default:
-      return entityData( item, index.column(), role );
+    switch ( role ) {
+      case MimeTypeRole:
+        return item.mimeType();
+        break;
+      case RemoteIdRole:
+        return item.remoteId();
+        break;
+      case ItemRole:
+        return QVariant::fromValue( item );
+        break;
+      case ItemIdRole:
+        return item.id();
+        break;
+      case CollectionIdRole:
+        return -1;
+        break;
+      case LoadedPartsRole:
+        return QVariant::fromValue( item.loadedPayloadParts() );
+        break;
+      case AvailablePartsRole:
+        return QVariant::fromValue( item.availablePayloadParts() );
+        break;
+      case EntityUrlRole:
+        return item.url( Akonadi::Item::UrlWithMimeType ).url();
+        break;
+      default:
+        return entityData( item, index.column(), role );
+        break;
     }
   }
+
   return QVariant();
 }
 
@@ -334,7 +342,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
-  const Node *node = reinterpret_cast<Node *>(index.internalPointer());
+  const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
   if ( Node::Collection == node->type ) {
     const Collection collection = d->m_collections.value( node->id );
@@ -389,7 +397,7 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
 Qt::DropActions EntityTreeModel::supportedDropActions() const
 {
-  return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
+  return (Qt::CopyAction | Qt::MoveAction | Qt::LinkAction);
 }
 
 QStringList EntityTreeModel::mimeTypes() const
@@ -417,7 +425,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
   // Needs to be handled when ordering is accounted for.
 
   // Handle dropping between items as well as on items.
-//   if (row != -1 && column != -1)
+//   if ( row != -1 && column != -1 )
 //   {
 //   }
 
@@ -426,7 +434,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
     return true;
 
 // Shouldn't do this. Need to be able to drop vcards for example.
-//   if (!data->hasFormat("text/uri-list"))
+//   if ( !data->hasFormat( "text/uri-list" ) )
 //       return false;
 
   Node *node = reinterpret_cast<Node *>( parent.internalId() );
@@ -434,8 +442,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
   Q_ASSERT( node );
 
   if ( Node::Item == node->type ) {
-    if ( !parent.parent().isValid() )
-    {
+    if ( !parent.parent().isValid() ) {
       // The drop is somehow on an item with no parent (shouldn't happen)
       // The drop should be considered handled anyway.
       kWarning() << "Dropped onto item with no parent collection";
@@ -462,31 +469,25 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       const KUrl::List urls = KUrl::List::fromMimeData( data );
       foreach ( const KUrl &url, urls ) {
         const Collection collection = d->m_collections.value( Collection::fromUrl( url ).id() );
-        if ( collection.isValid() )
-        {
-          if ( collection.parentCollection().id() == destCollection.id() )
-          {
+        if ( collection.isValid() ) {
+          if ( collection.parentCollection().id() == destCollection.id() ) {
             kDebug() << "Error: source and destination of move are the same.";
             return false;
           }
 
-          if ( !mimeChecker.isWantedCollection( collection ) )
-          {
+          if ( !mimeChecker.isWantedCollection( collection ) ) {
             kDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
             return false;
           }
         } else {
           const Item item = d->m_items.value( Item::fromUrl( url ).id() );
-          if ( item.isValid() )
-          {
-            if ( item.parentCollection().id() == destCollection.id() )
-            {
+          if ( item.isValid() ) {
+            if ( item.parentCollection().id() == destCollection.id() ) {
               kDebug() << "Error: source and destination of move are the same.";
               return false;
             }
 
-            if ( !mimeChecker.isWantedItem( item ) )
-            {
+            if ( !mimeChecker.isWantedItem( item ) ) {
               kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
               return false;
             }
@@ -495,10 +496,10 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       }
 
       KJob *job = PasteHelper::pasteUriList( data, destCollection, action, d->m_session );
-      if (!job)
+      if ( !job )
         return false;
 
-      connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( pasteJobDone( KJob* ) ) );
 
       // Accpet the event so that it doesn't propagate.
       return true;
@@ -518,9 +519,7 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   Q_D( const EntityTreeModel );
 
   if ( parent.column() > 0 )
-  {
     return QModelIndex();
-  }
 
   //TODO: don't use column count here? Use some d-> func.
   if ( column >= columnCount() || column < 0 )
@@ -614,7 +613,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 {
   // Not needed in this model.
-  Q_UNUSED(headerGroup);
+  Q_UNUSED( headerGroup );
 
   return 1;
 }
@@ -648,17 +647,17 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
     if ( index.column() != 0 )
       continue;
 
-    if (!index.isValid())
+    if ( !index.isValid() )
       continue;
 
     const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
     if ( Node::Collection == node->type )
-      urls << d->m_collections.value(node->id).url();
+      urls << d->m_collections.value( node->id ).url();
     else if ( Node::Item == node->type )
       urls << d->m_items.value( node->id ).url( Item::UrlWithMimeType );
     else // if that happens something went horrible wrong
-      Q_ASSERT(false);
+      Q_ASSERT( false );
   }
 
   urls.populateMimeData( data );
@@ -673,36 +672,31 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
-  if ( role == PendingCutRole )
-  {
-    if ( index.isValid() && value.toBool() )
-    {
+  if ( role == PendingCutRole ) {
+    if ( index.isValid() && value.toBool() ) {
       if ( Node::Collection == node->type )
         d->m_pendingCutCollections.append( node->id );
 
       if ( Node::Item == node->type )
         d->m_pendingCutItems.append( node->id );
-    }
-    else
-    {
+    } else {
       d->m_pendingCutCollections.clear();
       d->m_pendingCutItems.clear();
     }
     return true;
   }
 
-  if ( index.isValid() && node->type == Node::Collection && ( role == CollectionRefRole || role == CollectionDerefRole ) )
-  {
-    Collection col = index.data( CollectionRole ).value<Collection>();
-    Q_ASSERT( col.isValid() );
+  if ( index.isValid() && node->type == Node::Collection && (role == CollectionRefRole || role == CollectionDerefRole) ) {
+    const Collection collection = index.data( CollectionRole ).value<Collection>();
+    Q_ASSERT( collection.isValid() );
 
     if ( role == CollectionDerefRole )
-      d->deref( col.id() );
+      d->deref( collection.id() );
     else if ( role == CollectionRefRole )
-      d->ref( col.id() );
+      d->ref( collection.id() );
   }
 
-  if ( index.column() == 0 && (role & ( Qt::EditRole | ItemRole | CollectionRole ) ) ) {
+  if ( index.column() == 0 && (role & (Qt::EditRole | ItemRole | CollectionRole)) ) {
     if ( Node::Collection == node->type ) {
 
       Collection collection = d->m_collections.value( node->id );
@@ -728,7 +722,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
                SLOT( updateJobDone( KJob* ) ) );
 
       return false;
-    } else if (Node::Item == node->type) {
+    } else if ( Node::Item == node->type ) {
 
       Item item = d->m_items.value( node->id );
 
@@ -759,7 +753,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 {
-  Q_D(const EntityTreeModel);
+  Q_D( const EntityTreeModel );
   const Item item = parent.data( ItemRole ).value<Item>();
 
   if ( item.isValid() ) {
@@ -772,14 +766,10 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 
     // But the root collection can't...
     if ( Collection::root().id() == colId )
-    {
       return false;
-    }
 
-    foreach (Node *node, d->m_childEntities.value( colId ) )
-    {
-      if ( Node::Item == node->type )
-      {
+    foreach ( Node *node, d->m_childEntities.value( colId ) ) {
+      if ( Node::Item == node->type ) {
         // Only try to fetch more from a collection if we don't already have items in it.
         // Otherwise we'd spend all the time listing items in collections.
         // This means that collections which don't contain items get a lot of item fetch jobs started on them.
@@ -787,6 +777,7 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
         return false;
       }
     }
+
     return true;
   }
 
@@ -799,7 +790,7 @@ void EntityTreeModel::fetchMore( const QModelIndex & parent )
 {
   Q_D( EntityTreeModel );
 
-  if (!canFetchMore(parent))
+  if ( !canFetchMore( parent ) )
     return;
 
   if ( d->m_itemPopulation == ImmediatePopulation )
@@ -822,122 +813,118 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
   // There is probably no way to tell if a collection
   // has child items in akonadi without first attempting an itemFetchJob...
   // Figure out a way to fix this. (Statistics)
-  return ((rowCount(parent) > 0) || (canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation));
+  return ((rowCount( parent ) > 0) || (canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation));
 }
 
-bool EntityTreeModel::entityMatch(const Item &item, const QVariant &value, Qt::MatchFlags flags) const
+bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const
 {
-  Q_UNUSED(item);
-  Q_UNUSED(value);
-  Q_UNUSED(flags);
+  Q_UNUSED( item );
+  Q_UNUSED( value );
+  Q_UNUSED( flags );
   return false;
 }
 
-bool EntityTreeModel::entityMatch(const Collection &collection, const QVariant &value, Qt::MatchFlags flags) const
+bool EntityTreeModel::entityMatch( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const
 {
-  Q_UNUSED(collection);
-  Q_UNUSED(value);
-  Q_UNUSED(flags);
+  Q_UNUSED( collection );
+  Q_UNUSED( value );
+  Q_UNUSED( flags );
   return false;
 }
 
-QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
+QModelIndexList EntityTreeModel::match( const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( role == CollectionIdRole || role == CollectionRole )
-  {
+  if ( role == CollectionIdRole || role == CollectionRole ) {
     Collection::Id id;
-    if ( role == CollectionRole )
-    {
-      Collection col = value.value<Collection>();
-      id = col.id();
+    if ( role == CollectionRole ) {
+      const Collection collection = value.value<Collection>();
+      id = collection.id();
     }
+
     id = value.toLongLong();
     QModelIndexList list;
 
-    Collection col = d->m_collections.value( id );
+    const Collection collection = d->m_collections.value( id );
 
-    if ( !col.isValid() )
+    if ( !collection.isValid() )
       return list;
 
-    QModelIndex collectionIndex = d->indexForCollection(col);
+    const QModelIndex collectionIndex = d->indexForCollection( collection );
     Q_ASSERT( collectionIndex.isValid() );
     list << collectionIndex;
+
     return list;
   }
 
-  if ( role == ItemIdRole)
-  {
+  if ( role == ItemIdRole ) {
     Item::Id id;
-    if ( role == CollectionRole )
-    {
-      Item item = value.value<Item>();
+    if ( role == CollectionRole ) {
+      const Item item = value.value<Item>();
       id = item.id();
     }
+
     id = value.toLongLong();
     QModelIndexList list;
 
-    Item item = d->m_items.value( id );
+    const Item item = d->m_items.value( id );
     if ( !item.isValid() )
       return list;
+
     return d->indexesForItem( item );
   }
 
-  if ( role == EntityUrlRole )
-  {
-    KUrl url(value.toString());
-    Item item = Item::fromUrl( url );
+  if ( role == EntityUrlRole ) {
+    const KUrl url( value.toString() );
+    const Item item = Item::fromUrl( url );
+
     if ( item.isValid() )
-    {
       return d->indexesForItem( d->m_items.value( item.id() ) );
-    }
-    Collection col = Collection::fromUrl( url );
+
+    const Collection collection = Collection::fromUrl( url );
     QModelIndexList list;
-    if ( col.isValid() )
-    {
-      list << d->indexForCollection(col);
-    }
+    if ( collection.isValid() )
+      list << d->indexForCollection( collection );
+
     return list;
   }
 
-  if (role != AmazingCompletionRole)
-    return QAbstractItemModel::match(start, role, value, hits, flags);
+  if ( role != AmazingCompletionRole )
+    return QAbstractItemModel::match( start, role, value, hits, flags );
 
   // Try to match names, and email addresses.
   QModelIndexList list;
 
-  if (role < 0 || !start.isValid() || !value.isValid())
+  if ( role < 0 || !start.isValid() || !value.isValid() )
     return list;
 
   const int column = 0;
   int row = start.row();
-  QModelIndex parentIdx = start.parent();
-  int parentRowCount = rowCount(parentIdx);
+  const QModelIndex parentIndex = start.parent();
+  const int parentRowCount = rowCount( parentIndex );
 
-  while (row < parentRowCount && (hits == -1 || list.size() < hits))
-  {
-    QModelIndex idx = index(row, column, parentIdx);
-    Item item = idx.data(ItemRole).value<Item>();
-    if (!item.isValid())
-    {
-      Collection col = idx.data(CollectionRole).value<Collection>();
-      if (!col.isValid())
-      {
+  while ( row < parentRowCount && (hits == -1 || list.size() < hits) ) {
+    const QModelIndex idx = index( row, column, parentIndex );
+    const Item item = idx.data( ItemRole ).value<Item>();
+
+    if ( !item.isValid() ) {
+      const Collection collection = idx.data( CollectionRole ).value<Collection>();
+      if ( !collection.isValid() )
         continue;
-      }
-      if (entityMatch(col, value, flags))
+
+      if ( entityMatch( collection, value, flags ) )
         list << idx;
+
     } else {
-      if (entityMatch(item, value, flags))
-      {
+      if ( entityMatch( item, value, flags ) )
         list << idx;
-      }
     }
+
     ++row;
   }
-  return list;
 
+  return list;
 }
 
 bool EntityTreeModel::insertRows( int, int, const QModelIndex& )
@@ -965,50 +952,49 @@ void EntityTreeModel::setItemPopulationStrategy( ItemPopulationStrategy strategy
   Q_D( EntityTreeModel );
   d->m_itemPopulation = strategy;
 
-  if ( strategy == NoItemPopulation )
-  {
+  if ( strategy == NoItemPopulation ) {
     disconnect( d->m_monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
             this, SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
     disconnect( d->m_monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
             this, SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
     disconnect( d->m_monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
             this, SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-    disconnect( d->m_monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
-            this, SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
+    disconnect( d->m_monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 
-    disconnect( d->m_monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& )),
-            this, SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& )));
-    disconnect( d->m_monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )),
-            this, SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& )));
+    disconnect( d->m_monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    disconnect( d->m_monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   }
 
-  d->m_monitor->d_ptr->useRefCounting = ( strategy == LazyPopulation );
+  d->m_monitor->d_ptr->useRefCounting = (strategy == LazyPopulation);
 
   clearAndReset();
 }
 
 EntityTreeModel::ItemPopulationStrategy EntityTreeModel::itemPopulationStrategy() const
 {
-  Q_D(const EntityTreeModel);
+  Q_D( const EntityTreeModel );
   return d->m_itemPopulation;
 }
 
 void EntityTreeModel::setIncludeRootCollection( bool include )
 {
-  Q_D(EntityTreeModel);
+  Q_D( EntityTreeModel );
   d->m_showRootCollection = include;
   clearAndReset();
 }
 
 bool EntityTreeModel::includeRootCollection() const
 {
-  Q_D(const EntityTreeModel);
+  Q_D( const EntityTreeModel );
   return d->m_showRootCollection;
 }
 
 void EntityTreeModel::setRootCollectionDisplayName( const QString &displayName )
 {
-  Q_D(EntityTreeModel);
+  Q_D( EntityTreeModel );
   d->m_rootCollectionDisplayName = displayName;
 
   // TODO: Emit datachanged if it is being shown.
@@ -1016,20 +1002,20 @@ void EntityTreeModel::setRootCollectionDisplayName( const QString &displayName )
 
 QString EntityTreeModel::rootCollectionDisplayName() const
 {
-  Q_D( const EntityTreeModel);
+  Q_D( const EntityTreeModel );
   return d->m_rootCollectionDisplayName;
 }
 
 void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strategy )
 {
-  Q_D( EntityTreeModel);
+  Q_D( EntityTreeModel );
   d->m_collectionFetchStrategy = strategy;
   clearAndReset();
 }
 
 EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrategy() const
 {
-  Q_D( const EntityTreeModel);
+  Q_D( const EntityTreeModel );
   return d->m_collectionFetchStrategy;
 }
 

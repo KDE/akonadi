@@ -95,15 +95,15 @@ public:
   Entity::Id childAt( Collection::Id, int position, bool *ok ) const;
   int indexOf( Collection::Id parent, Collection::Id id ) const;
   Item getItem( Item::Id id ) const;
-  void removeChildEntities(Collection::Id colId);
-  void retrieveAncestors(const Akonadi::Collection& collection);
-  void ancestorsFetched(const Akonadi::Collection::List& collectionList);
-  void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent );
-  void insertPendingCollection(const Akonadi::Collection &collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &it );
+  void removeChildEntities( Collection::Id collectionId );
+  void retrieveAncestors( const Akonadi::Collection& collection );
+  void ancestorsFetched( const Akonadi::Collection::List& collectionList );
+  void insertCollection( const Akonadi::Collection &collection, const Akonadi::Collection& parent );
+  void insertPendingCollection( const Akonadi::Collection &collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &it );
 
-  ItemFetchJob* getItemFetchJob(const Collection &parent, ItemFetchScope scope) const;
-  ItemFetchJob* getItemFetchJob(const Item &item, ItemFetchScope scope) const;
-  void runItemFetchJob(ItemFetchJob* itemFetchJob, const Collection &parent) const;
+  ItemFetchJob* getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const;
+  ItemFetchJob* getItemFetchJob( const Item &item, const ItemFetchScope &scope ) const;
+  void runItemFetchJob( ItemFetchJob* itemFetchJob, const Collection &parent ) const;
 
   QHash<Collection::Id, Collection> m_collections;
   QHash<Entity::Id, Item> m_items;
@@ -149,12 +149,12 @@ public:
   Q_DECLARE_PUBLIC( EntityTreeModel )
 
   void fetchTopLevelCollections() const;
-  void topLevelCollectionsFetched(const Akonadi::Collection::List& collectionList);
+  void topLevelCollectionsFetched( const Akonadi::Collection::List& collectionList );
 
   /**
     @returns True if @p entity or one of its descemdants is hidden.
   */
-  bool isHidden(const Entity &entity) const;
+  bool isHidden( const Entity &entity ) const;
 
   bool m_showSystemEntities;
 
@@ -214,7 +214,6 @@ public:
   * Returns the item for the given item @p id.
   */
   Item itemForId( Item::Id id ) const;
-
 };
 
 }
