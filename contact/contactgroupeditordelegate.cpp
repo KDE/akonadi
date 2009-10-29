@@ -43,6 +43,7 @@ ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
 
   QCompleter *completer = new QCompleter( Akonadi::ContactCompletionModel::self(), this );
   completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameColumn );
+  completer->setCaseSensitivity( Qt::CaseInsensitive );
   connect( completer, SIGNAL( activated( const QModelIndex& ) ), SLOT( completed( const QModelIndex& ) ) );
 
   setCompleter( completer );
