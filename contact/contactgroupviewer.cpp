@@ -158,12 +158,18 @@ static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::
 
 
   foreach ( const KABC::Addressee &contact, contacts ) {
-    const QString fullEmail = QLatin1String( "<a href=\"mailto:" ) + QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) + QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
+    if ( contact.preferredEmail().isEmpty() ) {
+      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
+                                            "<td width=\"50%\"></td></tr>" )
+                     .arg( contact.realName() ) );
+    } else {
+      const QString fullEmail = QLatin1String( "<a href=\"mailto:" ) + QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) + QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
 
-    strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></td></tr>" )
-                   .arg( contact.realName() )
-                   .arg( fullEmail ) );
+      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
+                                            "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></tr>" )
+                     .arg( contact.realName() )
+                     .arg( fullEmail ) );
+    }
   }
 
   strGroup.append( QString::fromLatin1( "</table>\n" ) );
