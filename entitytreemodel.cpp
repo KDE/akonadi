@@ -282,6 +282,8 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return -1;
     case CollectionRole:
       return QVariant::fromValue( collection );
+    case EntityUrlRole:
+      return collection.url().url();
     default:
       return entityData( collection, index.column(), role );
     }
@@ -312,6 +314,8 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return QVariant::fromValue( item.loadedPayloadParts() );
     case AvailablePartsRole:
       return QVariant::fromValue( item.availablePayloadParts() );
+    case EntityUrlRole:
+      return item.url( Akonadi::Item::UrlWithMimeType ).url();
     default:
       return entityData( item, index.column(), role );
     }
@@ -878,6 +882,23 @@ QModelIndexList EntityTreeModel::match(const QModelIndex& start, int role, const
     if ( !item.isValid() )
       return list;
     return d->indexesForItem( item );
+  }
+
+  if ( role == EntityUrlRole )
+  {
+    KUrl url(value.toString());
+    Item item = Item::fromUrl( url );
+    if ( item.isValid() )
+    {
+      return d->indexesForItem( d->m_items.value( item.id() ) );
+    }
+    Collection col = Collection::fromUrl( url );
+    QModelIndexList list;
+    if ( col.isValid() )
+    {
+      list << d->indexForCollection(col);
+    }
+    return list;
   }
 
   if (role != AmazingCompletionRole)

@@ -312,6 +312,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
       CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
+      EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
     };
