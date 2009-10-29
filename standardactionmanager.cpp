@@ -484,6 +484,8 @@ class StandardActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       favoritesModel->removeCollection( collection );
+      if ( favoritesModel->collections().count() <= 1 )
+        enableAction( AddToFavoriteCollections, true );
     }
 
     void slotRenameFavorite()
