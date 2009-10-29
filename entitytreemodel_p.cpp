@@ -69,6 +69,7 @@ ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent,
 {
   ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_session );
   itemJob->setFetchScope( scope );
+  itemJob->fetchScope().setAncestorRetrieval( ItemFetchScope::All );
   return itemJob;
 }
 

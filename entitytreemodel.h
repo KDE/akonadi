@@ -118,6 +118,10 @@ class EntityTreeModelPrivate;
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *
+ * @note The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
+ * to retrieve all ancestors. This is necessary for proper function of the model.
+ * @see Akonadi::ItemFetchScope::AncestorRetrieval.
+ *
  * @see akonadi-mimetypes.
  *
  * The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
