@@ -246,6 +246,8 @@ class StandardActionManager::Private
       updatePluralLabel( CopyCollections, colCount );
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
+      updatePluralLabel( CutItems, itemCount );
+      updatePluralLabel( CutCollections, itemCount );
 
       emit q->actionStateUpdated();
     }
