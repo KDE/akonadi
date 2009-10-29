@@ -96,6 +96,11 @@ static bool canCreateCollection( const Collection &collection )
   return true;
 }
 
+static inline bool isRootCollection( const Collection &collection )
+{
+  return (collection == Collection::root());
+}
+
 /**
  * @internal
  */
@@ -197,22 +202,23 @@ class StandardActionManager::Private
         }
       }
 
-      enableAction( CopyCollections, singleColSelected || multiColSelected );
-      enableAction( CollectionProperties, singleColSelected );
-
       Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
+
+      enableAction( CopyCollections, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
+      enableAction( CollectionProperties, singleColSelected && !isRootCollection( col ) );
+
       enableAction( CreateCollection, singleColSelected && canCreateCollection( col ) );
-      enableAction( DeleteCollections, singleColSelected && col.rights() & Collection::CanDeleteCollection );
-      enableAction( CopyCollections, singleColSelected || multiColSelected );
-      enableAction( CutCollections, canDeleteCollections );
-      enableAction( CollectionProperties, singleColSelected );
+      enableAction( DeleteCollections, singleColSelected && (col.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( col ) );
+      enableAction( CopyCollections, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
+      enableAction( CutCollections, canDeleteCollections && !isRootCollection( col ) && !CollectionUtils::isResource( col ) );
+      enableAction( CollectionProperties, singleColSelected && !isRootCollection( col ) );
       enableAction( SynchronizeCollections, singleColSelected && (CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) ) );
       enableAction( Paste, singleColSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       enableAction( AddToFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( col ) ) );
       enableAction( RemoveFromFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
       enableAction( RenameFavoriteCollection, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
-      enableAction( CopyCollectionToMenu, singleColSelected || multiColSelected );
-      enableAction( MoveCollectionToMenu, canDeleteCollections );
+      enableAction( CopyCollectionToMenu, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
+      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( col ) && !CollectionUtils::isResource( col ) );
 
       bool multiItemSelected = false;
       bool canDeleteItems = true;
