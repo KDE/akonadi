@@ -118,6 +118,10 @@ class EntityTreeModelPrivate;
  * (an alias for "message/rfc822") the model would instead contain emails. The model can be configured to contain items of any mimetype
  * known to %Akonadi.
  *
+ * @note The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
+ * to retrieve all ancestors. This is necessary for proper function of the model.
+ * @see Akonadi::ItemFetchScope::AncestorRetrieval.
+ *
  * @see akonadi-mimetypes.
  *
  * The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
@@ -312,6 +316,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
       CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
+      EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
       UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
       TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
     };

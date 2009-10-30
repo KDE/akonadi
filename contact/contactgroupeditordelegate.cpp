@@ -29,6 +29,7 @@
 #include <kicon.h>
 #include <klocale.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QCompleter>
 #include <QtGui/QMouseEvent>
@@ -43,6 +44,7 @@ ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
 
   QCompleter *completer = new QCompleter( Akonadi::ContactCompletionModel::self(), this );
   completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameColumn );
+  completer->setCaseSensitivity( Qt::CaseInsensitive );
   connect( completer, SIGNAL( activated( const QModelIndex& ) ), SLOT( completed( const QModelIndex& ) ) );
 
   setCompleter( completer );
@@ -251,6 +253,7 @@ bool ContactGroupEditorDelegate::editorEvent( QEvent *event, QAbstractItemModel 
 
       if ( buttonRect.contains( mouseEvent->pos() ) ) {
         model->removeRows( index.row(), 1 );
+        QTimer::singleShot( 0, this, SLOT( setLastRowAsCurrent() ) );
         return true;
       }
     }
@@ -262,6 +265,11 @@ void ContactGroupEditorDelegate::completed( QWidget *widget )
 {
   emit commitData( widget );
   emit closeEditor( widget );
+}
+
+void ContactGroupEditorDelegate::setLastRowAsCurrent()
+{
+  d->mItemView->setCurrentIndex( d->mItemView->model()->index( d->mItemView->model()->rowCount() - 1, 0 ) );
 }
 
 #include "contactgroupeditordelegate_p.moc"

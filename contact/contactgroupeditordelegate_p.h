@@ -74,6 +74,7 @@ class ContactGroupEditorDelegate : public QStyledItemDelegate
 
   private Q_SLOTS:
     void completed( QWidget* );
+    void setLastRowAsCurrent();
 
   private:
     class Private;

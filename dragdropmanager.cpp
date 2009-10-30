@@ -104,24 +104,31 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   int actionCount = 0;
   Qt::DropAction defaultAction;
   QAction* moveDropAction = 0;
+  QString sequence;
   // TODO check if the source supports moving
 
   if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::MoveAction) ) {
-    moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-rename" ) ), i18n( "&Move here" ) );
+    sequence = QKeySequence( Qt::ShiftModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "go-jump" ) ), i18n( "&Move Here" ) + QLatin1Char( '\t' ) + sequence );
     ++actionCount;
     defaultAction = Qt::MoveAction;
   }
   QAction* copyDropAction = 0;
   if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::CopyAction) ) {
-    copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy here" ) );
+    sequence = QKeySequence( Qt::ControlModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy Here" ) + QLatin1Char( '\t' ) + sequence );
     ++actionCount;
     defaultAction = Qt::CopyAction;
   }
   QAction* linkAction = 0;
   if ( (targetCollection.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
-    linkAction = popup.addAction( KIcon( QLatin1String( "edit-link" ) ), i18n( "&Link here" ) );
+    sequence = QKeySequence( Qt::ControlModifier + Qt::ShiftModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    linkAction = popup.addAction( KIcon( QLatin1String( "edit-link" ) ), i18n( "&Link Here" ) + QLatin1Char( '\t' ) + sequence );
     ++actionCount;
     defaultAction = Qt::LinkAction;
   }
@@ -138,7 +145,7 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   }
 
   popup.addSeparator();
-  popup.addAction( KIcon( QString::fromLatin1( "process-stop" ) ), i18n( "Cancel" ) );
+  popup.addAction( KIcon( QString::fromLatin1( "process-stop" ) ), i18n( "C&ancel" ) + QLatin1Char( '\t' ) + QKeySequence( Qt::Key_Escape ).toString() );
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
 
