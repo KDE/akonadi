@@ -21,7 +21,11 @@
 #include "entity_p.h"
 #include "collection.h"
 
+#include <kglobal.h>
+
 using namespace Akonadi;
+
+K_GLOBAL_STATIC( Akonadi::Collection, s_defaultParentCollection )
 
 Entity::Entity( const Entity &other )
   : d_ptr( other.d_ptr )
@@ -137,8 +141,9 @@ Collection& Entity::parentCollection()
 Collection Entity::parentCollection() const
 {
   if ( !d_ptr->mParent )
-    d_ptr->mParent = new Collection();
-  return *(d_ptr->mParent);
+    return *(s_defaultParentCollection);
+  else
+    return *(d_ptr->mParent);
 }
 
 void Entity::setParentCollection( const Collection &parent )
