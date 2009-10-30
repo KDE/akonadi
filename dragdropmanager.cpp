@@ -19,6 +19,7 @@
 
 #include "dragdropmanager_p.h"
 
+#include <QtGui/QApplication>
 #include <QtGui/QDropEvent>
 #include <QtGui/QMenu>
 
@@ -100,48 +101,83 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   if ( !targetCollection.isValid() )
     return false;
 
-  QMenu popup( m_view );
   int actionCount = 0;
   Qt::DropAction defaultAction;
-  QAction* moveDropAction = 0;
-  QString sequence;
   // TODO check if the source supports moving
+
+  bool moveAllowed, copyAllowed, linkAllowed;
+  moveAllowed = copyAllowed = linkAllowed = false;
 
   if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::MoveAction) ) {
-    sequence = QKeySequence( Qt::ShiftModifier ).toString();
-    sequence.chop( 1 ); // chop superfluous '+'
-    moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "go-jump" ) ), i18n( "&Move Here" ) + QLatin1Char( '\t' ) + sequence );
-    ++actionCount;
-    defaultAction = Qt::MoveAction;
-  }
-  QAction* copyDropAction = 0;
-  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
-        && (event->possibleActions() & Qt::CopyAction) ) {
-    sequence = QKeySequence( Qt::ControlModifier ).toString();
-    sequence.chop( 1 ); // chop superfluous '+'
-    copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy Here" ) + QLatin1Char( '\t' ) + sequence );
-    ++actionCount;
-    defaultAction = Qt::CopyAction;
-  }
-  QAction* linkAction = 0;
-  if ( (targetCollection.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
-    sequence = QKeySequence( Qt::ControlModifier + Qt::ShiftModifier ).toString();
-    sequence.chop( 1 ); // chop superfluous '+'
-    linkAction = popup.addAction( KIcon( QLatin1String( "edit-link" ) ), i18n( "&Link Here" ) + QLatin1Char( '\t' ) + sequence );
-    ++actionCount;
-    defaultAction = Qt::LinkAction;
+    moveAllowed = true;
   }
 
-  if ( actionCount == 0 ) {
+  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
+        && (event->possibleActions() & Qt::CopyAction) ) {
+    copyAllowed = true;
+  }
+
+  if ( (targetCollection.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
+    linkAllowed = true;
+  }
+
+  if ( !moveAllowed && !copyAllowed && !linkAllowed ) {
     kDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
     return false;
+  }
+
+  // first check whether the user pressed a modifier key to select a specific action
+  if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) &&
+       (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+    if ( linkAllowed ) {
+      defaultAction = Qt::LinkAction;
+      actionCount = 1;
+    } else
+      return false;
+  } else if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) ) {
+    if ( copyAllowed ) {
+      defaultAction = Qt::CopyAction;
+      actionCount = 1;
+    } else
+      return false;
+  } else if ( (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+    if ( moveAllowed ) {
+      defaultAction = Qt::MoveAction;
+      actionCount = 1;
+    } else
+      return false;
   }
 
   if ( actionCount == 1 ) {
     kDebug() << "Selecting drop action" << defaultAction << ", there are no other possibilities";
     event->setDropAction( defaultAction );
     return true;
+  }
+
+  // otherwise show up a menu to allow the user to select an action
+  QMenu popup( m_view );
+  QAction* moveDropAction = 0;
+  QAction* copyDropAction = 0;
+  QAction* linkAction = 0;
+  QString sequence;
+
+  if ( moveAllowed ) {
+    sequence = QKeySequence( Qt::ShiftModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    moveDropAction = popup.addAction( KIcon( QString::fromLatin1( "go-jump" ) ), i18n( "&Move Here" ) + QLatin1Char( '\t' ) + sequence );
+  }
+
+  if ( copyAllowed ) {
+    sequence = QKeySequence( Qt::ControlModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    copyDropAction = popup.addAction( KIcon( QString::fromLatin1( "edit-copy" ) ), i18n( "&Copy Here" ) + QLatin1Char( '\t' ) + sequence );
+  }
+
+  if ( linkAllowed ) {
+    sequence = QKeySequence( Qt::ControlModifier + Qt::ShiftModifier ).toString();
+    sequence.chop( 1 ); // chop superfluous '+'
+    linkAction = popup.addAction( KIcon( QLatin1String( "edit-link" ) ), i18n( "&Link Here" ) + QLatin1Char( '\t' ) + sequence );
   }
 
   popup.addSeparator();
@@ -160,6 +196,7 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   } else {
     return false;
   }
+
   return true;
 }
 
