@@ -100,7 +100,8 @@ class Control::Private
     void createErrorOverlays()
     {
       foreach ( QWidget* widget, mPendingOverlays )
-        new ErrorOverlay( widget );
+        if ( widget )
+          new ErrorOverlay( widget );
       mPendingOverlays.clear();
     }
 
@@ -116,7 +117,7 @@ class Control::Private
     QPointer<Control> mParent;
     QEventLoop *mEventLoop;
     QPointer<ControlProgressIndicator> mProgressIndicator;
-    QList<QWidget*> mPendingOverlays;
+    QList<QPointer<QWidget> > mPendingOverlays;
     Firstrun *mFirstRunner;
     bool mSuccess;
 
