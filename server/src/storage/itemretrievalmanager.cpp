@@ -145,6 +145,8 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
 // called within the retrieval thread
 void ItemRetrievalManager::processRequest()
 {
+  QList<QPair<ItemRetrievalJob*, QString> > newJobs;
+
   mLock->lockForWrite();
   // look for idle resources
   for ( QHash< QString, QList< ItemRetrievalRequest* > >::iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
@@ -159,18 +161,22 @@ void ItemRetrievalManager::processRequest()
       ItemRetrievalJob *job = new ItemRetrievalJob( req, this );
       connect( job, SIGNAL(requestCompleted(ItemRetrievalRequest*,QString)), SLOT(retrievalJobFinished(ItemRetrievalRequest*,QString)) );
       mCurrentJobs.insert( req->resourceId, job );
-      job->start( resourceInterface( req->resourceId ) );
+      // delay job execution until after we unlocked the mutex, since the job can emit the finished signal immediately in some cases
+      newJobs.append( qMakePair( job, req->resourceId ) );
     }
     ++it;
   }
 
-  bool nothingGoingOn = mPendingRequests.isEmpty() || mCurrentJobs.isEmpty();
+  bool nothingGoingOn = mPendingRequests.isEmpty() && mCurrentJobs.isEmpty() && newJobs.isEmpty();
   mLock->unlock();
 
-  if ( !nothingGoingOn ) { // someone asked as to process requests although everything is done already, he might still be waiting
+  if ( nothingGoingOn ) { // someone asked as to process requests although everything is done already, he might still be waiting
     mWaitCondition->wakeAll();
     return;
   }
+
+  for ( QList< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it )
+    (*it).first->start( resourceInterface( (*it).second ) );
 }
 
 void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, const QString& errorMsg)
