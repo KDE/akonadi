@@ -43,7 +43,7 @@ struct State
 class EntityTreeViewStateSaverPrivate
 {
   public:
-    EntityTreeViewStateSaverPrivate( EntityTreeViewStateSaver *parent ) :
+    explicit EntityTreeViewStateSaverPrivate( EntityTreeViewStateSaver *parent ) :
       q( parent ),
       view( 0 ),
       horizontalScrollBarValue( -1 ),
