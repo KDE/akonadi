@@ -24,9 +24,7 @@
 
 #include <kdeversion.h>
 
-#if KDE_IS_VERSION(4,1,85)
 #include <kfilterproxysearchline.h>
-#endif
 
 using namespace Akonadi;
 
@@ -48,11 +46,9 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
   d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( d->Widget, SIGNAL( activated() ), this, SLOT( accept() ) );
 
-#if KDE_IS_VERSION(4,1,85)
   KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
   layout->addWidget( searchLine );
   searchLine->setProxy( d->Widget->agentFilterProxyModel() );
-#endif
 
   layout->addWidget( d->Widget );
 
