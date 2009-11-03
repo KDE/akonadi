@@ -469,6 +469,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval( const Akonadi::Item &item )
   Q_Q( ResourceBase );
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
   fetch->fetchScope().setAncestorRetrieval( q->changeRecorder()->itemFetchScope().ancestorRetrieval() );
+  fetch->fetchScope().setCacheOnly( true );
   q->connect( fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemRetrievalResult(KJob*)) );
 }
 
