@@ -90,6 +90,7 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
       Trash,           ///< The trash collection.
       Drafts,          ///< The drafts collection.
       Templates,       ///< The templates collection.
+      Invitations,     ///< The invitations collection.
       LastType         ///< @internal marker
     };
 
