@@ -173,7 +173,7 @@ endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 # all the following variables are put into AkonadiConfig.cmake, so
 # they are usable by projects using Akonadi.
 make_install_path_absolute(AKONADI_BIN_DIR             ${BIN_INSTALL_DIR})
-make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR})
+make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR}/akonadi)
 make_install_path_absolute(AKONADI_LIB_DIR             ${LIB_INSTALL_DIR})
 make_install_path_absolute(AKONADI_CONFIG_DIR          ${CONFIG_INSTALL_DIR})
 make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
