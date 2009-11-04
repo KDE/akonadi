@@ -120,6 +120,7 @@ class EntityTreeModelPrivate;
  *
  * @note The EntityTreeModel does some extra configuration on the Monitor, such as setting itemFetchScope() and collectionFetchScope()
  * to retrieve all ancestors. This is necessary for proper function of the model.
+ *
  * @see Akonadi::ItemFetchScope::AncestorRetrieval.
  *
  * @see akonadi-mimetypes.
@@ -134,13 +135,30 @@ class EntityTreeModelPrivate;
  *
  * The items may be fetched lazily, i.e. not inserted into the model until request by the user for performance reasons.
  *
- * The Collection tree is always built immediately.
+ * The Collection tree is always built immediately if Collections are to be fetched.
  *
  * @code
  * entityTreeModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
  * @endcode
  *
  * This will typically be used with a MimeTypeFilterProxyModel in a configuration such as KMail4.5 or AkonadiConsole.
+ *
+ * The CollectionFetchStrategy determines how the model will be populated with Collections. That is, if FetchNoCollections is set, 
+ * no collections beyond the root of the model will be fetched. This can be used in combination with setting a particular Collection to monitor.
+ *
+ * @code
+ * // Get an collection id from a config file.
+ * Collection::Id id;
+ * monitor->setCollectionMonitored( Collection( id ) );
+ * // ... Other initialization code.
+ * entityTree->setCollectionFetchStrategy( FetchNoCollections );
+ * @endcode
+ *
+ * This has the effect of creating a model of only a list of Items, and not collections. This is similar in behaviour and aims to the ItemModel.
+ * By using FetchFirstLevelCollections instead, a mixed list of entities can be created.
+ * 
+ * @note It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
+ * If you need a model with a more complex structure, consider monitoring a common ancestor and using a SelectionProxyModel.
  *
  * @see lazy-model-population
  *

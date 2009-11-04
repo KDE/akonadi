@@ -825,7 +825,7 @@ void EntityTreeModelPrivate::startFirstListJob()
   // necessary.
   // HACK: fix this for recursive listing if we filter on mimetypes that only exit deeper
   // in the hierarchy
-  if ( (m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections)
+  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections )
     /*|| ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )*/ ) {
     fetchCollections( rootCollection, CollectionFetchJob::FirstLevel );
   }
