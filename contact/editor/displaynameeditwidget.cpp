@@ -21,35 +21,69 @@
 
 #include "displaynameeditwidget.h"
 
+#include <QtCore/QEvent>
 #include <QtCore/QString>
-#include <QtGui/QActionGroup>
-#include <QtGui/QContextMenuEvent>
+#include <QtGui/QAbstractItemView>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QMenu>
+#include <QtGui/QPainter>
+#include <QtGui/QStyledItemDelegate>
 
 #include <kabc/addressee.h>
+#include <kcombobox.h>
 #include <kdialog.h>
-#include <klineedit.h>
 #include <klocale.h>
-#include <ktoggleaction.h>
 
-class DisplayNameEditWidget::LineEdit : public KLineEdit
+class DisplayNameDelegate : public QStyledItemDelegate
 {
   public:
-    LineEdit( DisplayNameEditWidget *parent )
-      : KLineEdit( parent ), mParent( parent )
+    DisplayNameDelegate( QAbstractItemView *view, QObject *parent = 0 )
+      : QStyledItemDelegate( parent ), mMaxDescriptionWidth( 0 )
     {
+      mDescriptions.append( i18n( "Short Name" ) );
+      mDescriptions.append( i18n( "Full Name" ) );
+      mDescriptions.append( i18n( "Reverse Name with Comma" ) );
+      mDescriptions.append( i18n( "Reverse Name" ) );
+      mDescriptions.append( i18n( "Organization" ) );
+      mDescriptions.append( i18n( "Custom" ) );
+
+      QFont font = view->font();
+      font.setStyle( QFont::StyleItalic );
+      QFontMetrics metrics( font );
+      foreach ( const QString &description, mDescriptions )
+        mMaxDescriptionWidth = qMax( mMaxDescriptionWidth, metrics.width( description ) );
+
+      mMaxDescriptionWidth += 3;
     }
 
-  protected:
-    // context menu handling
-    virtual void contextMenuEvent( QContextMenuEvent *event )
+    int maximumDescriptionWidth() const
     {
-      mParent->contextMenuEvent( event );
+      return mMaxDescriptionWidth;
+    }
+
+    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
+    {
+      QStyledItemDelegate::paint( painter, option, index );
+      const QRect rect( option.rect.width() - mMaxDescriptionWidth, option.rect.y(), mMaxDescriptionWidth, option.rect.height() );
+      painter->save();
+      QFont font( painter->font() );
+      font.setStyle( QFont::StyleItalic );
+      painter->setFont( font );
+      painter->setPen( Qt::gray );
+      painter->drawText( rect, Qt::AlignLeft, mDescriptions.at( index.row() ) );
+      painter->restore();
+    }
+
+    QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
+    {
+      QSize size = QStyledItemDelegate::sizeHint( option, index );
+      size.setWidth( size.width() + mMaxDescriptionWidth );
+
+      return size;
     }
 
   private:
-    DisplayNameEditWidget *mParent;
+    QStringList mDescriptions;
+    int mMaxDescriptionWidth;
 };
 
 DisplayNameEditWidget::DisplayNameEditWidget( QWidget *parent )
@@ -60,8 +94,18 @@ DisplayNameEditWidget::DisplayNameEditWidget( QWidget *parent )
   layout->setMargin( 0 );
   layout->setSpacing( KDialog::spacingHint() );
 
-  mView = new LineEdit( this );
+  mView = new KComboBox( this );
   layout->addWidget( mView );
+
+  connect( mView, SIGNAL( activated( int ) ), SLOT( displayTypeChanged( int ) ) );
+
+  DisplayNameDelegate *delegate = new DisplayNameDelegate( mView->view() );
+  mView->view()->setItemDelegate( delegate );
+
+  mAdditionalPopupWidth = delegate->maximumDescriptionWidth();
+
+  mViewport = mView->view()->viewport();
+  mViewport->installEventFilter( this );
 }
 
 DisplayNameEditWidget::~DisplayNameEditWidget()
@@ -70,7 +114,7 @@ DisplayNameEditWidget::~DisplayNameEditWidget()
 
 void DisplayNameEditWidget::setReadOnly( bool readOnly )
 {
-  mView->setReadOnly( readOnly && (mDisplayType != CustomName) );
+  mView->setEnabled( !readOnly );
 }
 
 void DisplayNameEditWidget::setDisplayType( DisplayType type )
@@ -86,7 +130,6 @@ DisplayNameEditWidget::DisplayType DisplayNameEditWidget::displayType() const
 
 void DisplayNameEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  mView->setText( contact.formattedName() );
   mContact = contact;
 
   updateView();
@@ -94,7 +137,7 @@ void DisplayNameEditWidget::loadContact( const KABC::Addressee &contact )
 
 void DisplayNameEditWidget::storeContact( KABC::Addressee &contact ) const
 {
-  contact.setFormattedName( mView->text() );
+  contact.setFormattedName( mView->currentText() );
 }
 
 void DisplayNameEditWidget::changeName( const KABC::Addressee &contact )
@@ -103,7 +146,7 @@ void DisplayNameEditWidget::changeName( const KABC::Addressee &contact )
   mContact = contact;
   mContact.setOrganization( organization );
   if ( mDisplayType == CustomName )
-    mContact.setFormattedName( mView->text() );
+    mContact.setFormattedName( mView->currentText() );
 
   updateView();
 }
@@ -115,88 +158,62 @@ void DisplayNameEditWidget::changeOrganization( const QString &organization )
   updateView();
 }
 
-void DisplayNameEditWidget::contextMenuEvent( QContextMenuEvent *event )
+void DisplayNameEditWidget::displayTypeChanged( int type )
 {
-  QMenu menu;
-
-  QActionGroup *group = new QActionGroup( this );
-
-  KToggleAction *simpleNameAction = new KToggleAction( i18n( "Simple Name" ), group );
-  KToggleAction *fullNameAction = new KToggleAction( i18n( "Full Name" ), group );
-  KToggleAction *reverseNameWithCommaAction = new KToggleAction( i18n( "Reverse Name with Comma" ), group );
-  KToggleAction *reverseNameAction = new KToggleAction( i18n( "Reverse Name" ), group );
-  KToggleAction *organizationNameAction = new KToggleAction( i18n( "Organization Name" ), group );
-  KToggleAction *customNameAction = new KToggleAction( i18n( "Custom" ), group );
-
-  group->setExclusive( true );
-
-  menu.addAction( simpleNameAction );
-  menu.addAction( fullNameAction );
-  menu.addAction( reverseNameWithCommaAction );
-  menu.addAction( reverseNameAction );
-  menu.addAction( organizationNameAction );
-  menu.addAction( customNameAction );
-
-  if ( mDisplayType == SimpleName )
-    simpleNameAction->setChecked( true );
-  if ( mDisplayType == FullName )
-    fullNameAction->setChecked( true );
-  if ( mDisplayType == ReverseNameWithComma )
-    reverseNameWithCommaAction->setChecked( true );
-  if ( mDisplayType == ReverseName )
-    reverseNameAction->setChecked( true );
-  if ( mDisplayType == Organization )
-    organizationNameAction->setChecked( true );
-  if ( mDisplayType == CustomName )
-    customNameAction->setChecked( true );
-
-  QAction *result = menu.exec( event->globalPos() );
-  if ( result == simpleNameAction )
-    mDisplayType = SimpleName;
-  else if ( result == fullNameAction )
-    mDisplayType = FullName;
-  else if ( result == reverseNameWithCommaAction )
-    mDisplayType = ReverseNameWithComma;
-  else if ( result == reverseNameAction )
-    mDisplayType = ReverseName;
-  else if ( result == organizationNameAction )
-    mDisplayType = Organization;
-  else if ( result == customNameAction )
-    mDisplayType = CustomName;
-
-  delete group;
+  mDisplayType = (DisplayType)type;
 
   updateView();
 }
 
-void DisplayNameEditWidget::updateView()
+bool DisplayNameEditWidget::eventFilter( QObject *object, QEvent *event )
 {
-  QString text;
+  if ( object == mViewport ) {
+    if ( event->type() == QEvent::Show ) {
+      // retrieve the widget that contains the popup view
+      QWidget *parentWidget = mViewport->parentWidget()->parentWidget();
 
-  switch ( mDisplayType ) {
-    case SimpleName:
-      text = mContact.givenName() + QLatin1Char( ' ' ) + mContact.familyName();
-      break;
-    case FullName:
-      text = mContact.assembledName();
-      break;
-    case ReverseNameWithComma:
-      text = mContact.familyName() + QLatin1String( ", " ) + mContact.givenName();
-      break;
-    case ReverseName:
-      text = mContact.familyName() + QLatin1Char( ' ' ) + mContact.givenName();
-      break;
-    case Organization:
-      text = mContact.organization();
-      break;
-    case CustomName:
-      text = mContact.formattedName();
-    default:
-      break;
+      int maxWidth = 0;
+      QFontMetrics metrics( mView->font() );
+      for ( int i = 0; i < mView->count(); ++i )
+        maxWidth = qMax( maxWidth, metrics.width( mView->itemText( i ) ) );
+
+      // resize it to show the complete content
+      parentWidget->resize( maxWidth + mAdditionalPopupWidth + 20, parentWidget->height() );
+    }
+    return false;
   }
 
-  mView->setText( text );
-  mView->setReadOnly( mDisplayType != CustomName );
+  return eventFilter( object, event );
+}
+
+void DisplayNameEditWidget::updateView()
+{
+  mView->clear();
+
+  QStringList items;
+
+  // SimpleName:
+  items.append( mContact.givenName() + QLatin1Char( ' ' ) + mContact.familyName() );
+
+  // FullName:
+  items.append( mContact.assembledName() );
+
+  // ReverseNameWithComma:
+  items.append( mContact.familyName() + QLatin1String( ", " ) + mContact.givenName() );
+
+  // ReverseName:
+  items.append( mContact.familyName() + QLatin1Char( ' ' ) + mContact.givenName() );
+
+  // Organization:
+  items.append( mContact.organization() );
+
+  // CustomName:
+  items.append( mContact.formattedName() );
+
+  mView->addItems( items );
+  mView->setEditable( mDisplayType == CustomName );
+
+  mView->setCurrentIndex( (int)mDisplayType );
 }
 
 #include "displaynameeditwidget.moc"
