@@ -21,6 +21,8 @@
 
 #include "contactviewer.h"
 
+#include "textbrowser_p.h"
+
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
@@ -29,7 +31,6 @@
 #include <kicon.h>
 #include <klocale.h>
 #include <kstringhandler.h>
-#include <ktextbrowser.h>
 
 #include <QtGui/QVBoxLayout>
 
@@ -80,7 +81,7 @@ class ContactViewer::Private
     }
 
     ContactViewer *mParent;
-    KTextBrowser *mBrowser;
+    TextBrowser *mBrowser;
     KABC::Addressee mCurrentContact;
 };
 
@@ -89,7 +90,7 @@ ContactViewer::ContactViewer( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  d->mBrowser = new KTextBrowser;
+  d->mBrowser = new TextBrowser;
   d->mBrowser->setNotifyClick( true );
 
   connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),

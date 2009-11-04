@@ -22,6 +22,7 @@
 #include "contactgroupviewer.h"
 
 #include "contactgroupexpandjob.h"
+#include "textbrowser_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
@@ -33,7 +34,6 @@
 #include <kicon.h>
 #include <klocale.h>
 #include <kstringhandler.h>
-#include <ktextbrowser.h>
 
 #include <QtGui/QVBoxLayout>
 
@@ -71,7 +71,7 @@ class ContactGroupViewer::Private
     }
 
     ContactGroupViewer *mParent;
-    KTextBrowser *mBrowser;
+    TextBrowser *mBrowser;
     QString mGroupName;
     ContactGroupExpandJob *mExpandJob;
 };
@@ -81,7 +81,7 @@ ContactGroupViewer::ContactGroupViewer( QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  d->mBrowser = new KTextBrowser;
+  d->mBrowser = new TextBrowser;
   d->mBrowser->setNotifyClick( true );
 
   connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),
