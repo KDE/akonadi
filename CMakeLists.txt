@@ -27,7 +27,7 @@ include_directories(
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
-  ${AKONADI_INCLUDE_DIR}/private
+  ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
 
 # libakonadi-kde
@@ -267,12 +267,12 @@ install( FILES
   transactionsequence.h
   transportresourcebase.h
   unlinkjob.h
-  DESTINATION ${AKONADI_INCLUDE_DIR} COMPONENT Devel
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )
 
 install( FILES
    collectionpathresolver_p.h
-   DESTINATION ${AKONADI_INCLUDE_DIR}/private COMPONENT Devel
+   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private COMPONENT Devel
    )
 
 install( FILES
