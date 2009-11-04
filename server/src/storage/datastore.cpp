@@ -543,6 +543,10 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
 
 void DataStore::debugLastDbError( const char* actionDescription ) const
 {
+  akError() << "Database error:" << actionDescription;
+  akError() << "  Last driver error:" << m_database.lastError().driverText();
+  akError() << "  Last database error:" << m_database.lastError().databaseText();
+
   Tracer::self()->error( "DataStore (Database Error)",
                          QString::fromLatin1( "%1\nDriver said: %2\nDatabase said:%3" )
                             .arg( QString::fromLatin1( actionDescription ) )
@@ -553,6 +557,11 @@ void DataStore::debugLastDbError( const char* actionDescription ) const
 
 void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const
 {
+  akError() << "Query error:" << actionDescription;
+  akError() << "  Last error message:" << query.lastError().text();
+  akError() << "  Last driver error:" << m_database.lastError().driverText();
+  akError() << "  Last database error:" << m_database.lastError().databaseText();
+
   Tracer::self()->error( "DataStore (Database Query Error)",
                          QString::fromLatin1( "%1: %2" )
                             .arg( QString::fromLatin1( actionDescription ) )
