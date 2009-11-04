@@ -117,11 +117,6 @@ if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
 
-#### Sqlite ####
-set(SQLITE_MIN_VERSION 3.6.16)
-find_package(Sqlite)
-macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" TRUE "" "")
-
 ############### Compilers flags ###############
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
@@ -178,7 +173,7 @@ endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 # all the following variables are put into AkonadiConfig.cmake, so
 # they are usable by projects using Akonadi.
 make_install_path_absolute(AKONADI_BIN_DIR             ${BIN_INSTALL_DIR})
-make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR})
+make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR}/akonadi)
 make_install_path_absolute(AKONADI_LIB_DIR             ${LIB_INSTALL_DIR})
 make_install_path_absolute(AKONADI_CONFIG_DIR          ${CONFIG_INSTALL_DIR})
 make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
@@ -213,10 +208,6 @@ add_subdirectory(libs)
 if (XSLTPROC_EXECUTABLE)
    add_subdirectory(server)
 endif (XSLTPROC_EXECUTABLE)
-
-if (SQLITE_FOUND)
-   add_subdirectory(qsqlite)
-endif (SQLITE_FOUND)
 
 
 ############### install stuff ###############
