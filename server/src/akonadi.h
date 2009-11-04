@@ -63,6 +63,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
 
   private:
     void startDatabaseProcess();
+    void createDatabase();
     void stopDatabaseProcess();
 
     CacheCleaner *mCacheCleaner;
