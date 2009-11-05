@@ -519,6 +519,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionStatisticsChanged( Akonadi::Collection::Id,
                                                                          const Akonadi::CollectionStatistics& ) )
 
+    Q_PRIVATE_SLOT( d_func(), void rootCollectionFetched(Akonadi::Collection::List) )
     Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
     // Q_PRIVATE_SLOT( d_func(), void slotModelReset() )
 

@@ -514,7 +514,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   Q_ASSERT( collection.parentCollection() == destCollection );
 
-#if QT_VERSION >= 0x040600
   const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
   const int destRow = 0; // Prepend collections
 
@@ -530,7 +529,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   node->parent = destCollection.id();
   m_childEntities[ destCollection.id() ].prepend( node );
   q->endMoveRows();
-#endif
 }
 
 void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collection &collection )
@@ -790,6 +788,13 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
   }
 }
 
+void EntityTreeModelPrivate::rootCollectionFetched( const Collection::List &list )
+{
+  Q_ASSERT( list.size() == 1 );
+  m_rootCollection = list.first();
+  startFirstListJob();
+}
+
 void EntityTreeModelPrivate::startFirstListJob()
 {
   Q_Q( EntityTreeModel );
@@ -797,28 +802,25 @@ void EntityTreeModelPrivate::startFirstListJob()
   if ( m_collections.size() > 0 )
     return;
 
-  Collection rootCollection;
   // Even if the root collection is the invalid collection, we still need to start
   // the first list job with Collection::root.
   if ( m_showRootCollection ) {
-    rootCollection = Collection::root();
     // Notify the outside that we're putting collection::root into the model.
     q->beginInsertRows( QModelIndex(), 0, 0 );
-    m_collections.insert( rootCollection.id(), rootCollection );
+    m_collections.insert( m_rootCollection.id(), m_rootCollection );
     m_rootNode = new Node;
-    m_rootNode->id = rootCollection.id();
+    m_rootNode->id = m_rootCollection.id();
     m_rootNode->parent = -1;
     m_rootNode->type = Node::Collection;
     m_childEntities[ -1 ].append( m_rootNode );
     q->endInsertRows();
   } else {
     // Otherwise store it silently because it's not part of the usable model.
-    rootCollection = m_rootCollection;
     m_rootNode = new Node;
-    m_rootNode->id = rootCollection.id();
+    m_rootNode->id = m_rootCollection.id();
     m_rootNode->parent = -1;
     m_rootNode->type = Node::Collection;
-    m_collections.insert( rootCollection.id(), rootCollection );
+    m_collections.insert( m_rootCollection.id(), m_rootCollection );
   }
 
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
@@ -827,17 +829,17 @@ void EntityTreeModelPrivate::startFirstListJob()
   // in the hierarchy
   if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections )
     /*|| ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )*/ ) {
-    fetchCollections( rootCollection, CollectionFetchJob::FirstLevel );
+    fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
 
   if ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
-    fetchCollections( rootCollection, CollectionFetchJob::Recursive );
+    fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
 
   if ( m_itemPopulation != EntityTreeModel::NoItemPopulation ) {
-    if ( rootCollection != Collection::root() )
-      fetchItems( rootCollection );
+    if ( m_rootCollection != Collection::root() )
+      fetchItems( m_rootCollection );
   }
 
   // Resources which are explicitly monitored won't have appeared yet if their mimetype didn't match.

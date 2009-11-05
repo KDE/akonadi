@@ -109,23 +109,13 @@ EntityTreeModel::EntityTreeModel( Session *session,
 //   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
 
   QList<Collection> list = monitor->collectionsMonitored();
-  if ( list.size() == 1 && list.first() != Collection::root() )
-  {
-    CollectionFetchJob *rootFetchJob = new CollectionFetchJob( list.first(), CollectionFetchJob::Base, session );
-
-    if ( !rootFetchJob->exec() )
-    {
-      kDebug() << "Error fetching collection" << list.first().id();
-      d->m_rootCollection = Collection::root();
-      d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
-    }
-    d->m_rootCollection = rootFetchJob->collections().first();
-  }
+  if ( list.size() == 1 )
+    d->m_rootCollection = list.first();
   else
-  {
     d->m_rootCollection = Collection::root();
-    d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
-  }
+
+  d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
+
   // Initializes the model cleanly.
   clearAndReset();
 }
@@ -160,7 +150,15 @@ void EntityTreeModel::clearAndReset()
   d->m_items.clear();
   d->m_childEntities.clear();
   reset();
-  QTimer::singleShot( 0, this, SLOT( startFirstListJob() ) );
+
+  if ( d->m_rootCollection == Collection::root() )
+  {
+    QTimer::singleShot( 0, this, SLOT( startFirstListJob() ) );
+  } else {
+    CollectionFetchJob *rootFetchJob = new CollectionFetchJob( d->m_rootCollection, CollectionFetchJob::Base, d->m_session );
+    connect( rootFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(rootCollectionFetched(Akonadi::Collection::List)) );
+    connect( rootFetchJob, SIGNAL(result(KJob *)), SLOT(fetchJobDone(KJob *)) );
+  }
 }
 
 int EntityTreeModel::columnCount( const QModelIndex & parent ) const
