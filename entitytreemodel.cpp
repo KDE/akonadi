@@ -639,11 +639,16 @@ int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 
 QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
 {
+  Q_D( const EntityTreeModel );
   // Not needed in this model.
   Q_UNUSED( headerGroup );
 
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
-    return i18nc( "@title:column, name of a thing", "Name" );
+  {
+    if ( d->m_rootCollection == Collection::root() )
+      return i18nc( "@title:column, name of a thing", "Name" );
+    return d->m_rootCollection.name();
+  }
 
   return QAbstractItemModel::headerData( section, orientation, role );
 }
