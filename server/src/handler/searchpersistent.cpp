@@ -78,6 +78,13 @@ bool SearchPersistent::parseStream()
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction" );
 
+  const QByteArray b = HandlerHelper::collectionToByteArray( col );
+
+  Response colResponse;
+  colResponse.setUntagged();
+  colResponse.setString( b );
+  emit responseAvailable( colResponse );
+
   Response response;
   response.setTag( tag() );
   response.setSuccess();
