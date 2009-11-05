@@ -108,9 +108,24 @@ EntityTreeModel::EntityTreeModel( Session *session,
 
 //   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
 
-  d->m_rootCollection = Collection::root();
-  d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
+  QList<Collection> list = monitor->collectionsMonitored();
+  if ( list.size() == 1 && list.first() != Collection::root() )
+  {
+    CollectionFetchJob *rootFetchJob = new CollectionFetchJob( list.first(), CollectionFetchJob::Base, session );
 
+    if ( !rootFetchJob->exec() )
+    {
+      kDebug() << "Error fetching collection" << list.first().id();
+      d->m_rootCollection = Collection::root();
+      d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
+    }
+    d->m_rootCollection = rootFetchJob->collections().first();
+  }
+  else
+  {
+    d->m_rootCollection = Collection::root();
+    d->m_rootCollectionDisplayName = QLatin1String( "[*]" );
+  }
   // Initializes the model cleanly.
   clearAndReset();
 }
@@ -374,12 +389,18 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   } else if ( Node::Item == node->type ) {
 
     // Rights come from the parent collection.
-    const Node *parentNode = reinterpret_cast<Node *>( index.parent().internalPointer() );
 
-    // TODO: Is this right for the root collection? I think so, but only by chance.
-    // But will it work if m_rootCollection is different from Collection::root?
-    // Should probably rely on index.parent().isValid() for that.
-    const Collection parentCollection = d->m_collections.value( parentNode->id );
+    Collection parentCollection;
+    if ( !index.parent().isValid() )
+    {
+      parentCollection = d->m_rootCollection;
+    }
+    else
+    {
+      const Node *parentNode = reinterpret_cast<Node *>( index.parent().internalPointer() );
+
+      parentCollection = d->m_collections.value( parentNode->id );
+    }
     if ( parentCollection.isValid() ) {
       const int rights = parentCollection.rights();
 
@@ -1010,6 +1031,20 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
 {
   Q_D( EntityTreeModel );
   d->m_collectionFetchStrategy = strategy;
+
+
+  if ( strategy == FetchNoCollections ) {
+    disconnect( d->m_monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+            this, SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
+    disconnect( d->m_monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+    disconnect( d->m_monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+            this, SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
+    disconnect( d->m_monitor,
+            SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+            this, SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  }
+
   clearAndReset();
 }
 

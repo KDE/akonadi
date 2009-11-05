@@ -42,7 +42,7 @@ class EmailValidator : public QRegExpValidator
     EmailValidator() : QRegExpValidator( 0 )
     {
       setObjectName( QLatin1String( "EmailValidator" ) );
-      QRegExp rx( QLatin1String( ".*@.*\\.[A-Za-z]+" ) );
+      QRegExp rx( QLatin1String( "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+" ) );
       setRegExp( rx );
     }
 };

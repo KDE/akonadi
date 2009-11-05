@@ -26,6 +26,8 @@
 
 #include <kabc/addressee.h>
 
+class KComboBox;
+
 /**
  * @short A widget for editing the display name of a contact.
  *
@@ -42,12 +44,12 @@ class DisplayNameEditWidget : public QWidget
      */
     enum DisplayType
     {
-      CustomName,           ///< Let the user input a display name
       SimpleName,           ///< A name of the form: givenName familyName
       FullName,             ///< A name of the form: prefix givenName additionalName familyName suffix
       ReverseNameWithComma, ///< A name of the form: familyName, givenName
       ReverseName,          ///< A name of the form: familyName givenName
-      Organization          ///< The organization name
+      Organization,         ///< The organization name
+      CustomName            ///< Let the user input a display name
     };
 
     explicit DisplayNameEditWidget( QWidget *parent = 0 );
@@ -66,17 +68,19 @@ class DisplayNameEditWidget : public QWidget
     void changeOrganization( const QString &organization );
 
   protected:
-    // context menu handling
-    virtual void contextMenuEvent( QContextMenuEvent* );
+    virtual bool eventFilter( QObject *object, QEvent *event );
+
+  private Q_SLOTS:
+    void displayTypeChanged( int );
 
   private:
     void updateView();
 
-    class LineEdit;
-    LineEdit *mView;
-
+    KComboBox *mView;
     DisplayType mDisplayType;
     KABC::Addressee mContact;
+    QWidget *mViewport;
+    int mAdditionalPopupWidth;
 };
 
 #endif

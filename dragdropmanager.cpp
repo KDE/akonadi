@@ -244,5 +244,15 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
   if ( !sourceDeletable )
     supportedActions &= ~Qt::MoveAction;
 
-  drag->exec( supportedActions, Qt::CopyAction );
+  Qt::DropAction defaultAction = Qt::IgnoreAction;
+  if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) &&
+       (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+    defaultAction = Qt::LinkAction;
+  } else if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) ) {
+    defaultAction = Qt::CopyAction;
+  } else if ( (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+    defaultAction = Qt::MoveAction;
+  }
+
+  drag->exec( supportedActions, defaultAction );
 }

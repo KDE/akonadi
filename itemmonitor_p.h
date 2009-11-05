@@ -57,11 +57,13 @@ class ItemMonitor::Private : public QObject
   private Q_SLOTS:
     void slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
     {
+      mItem.apply( item );
       mParent->itemChanged( item );
     }
 
     void slotItemRemoved( const Akonadi::Item& )
     {
+      mItem = Item();
       mParent->itemRemoved();
     }
 
