@@ -37,7 +37,8 @@ void SearchJobTest::testCreateDeleteSearch()
 {
   SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
   QVERIFY( create->exec() );
-
+  Collection created = create->createdCollection();
+  QVERIFY( created.isValid() );
   CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
   QVERIFY( list->exec() );
   Collection::List cols = list->collections();
@@ -46,7 +47,7 @@ void SearchJobTest::testCreateDeleteSearch()
     if ( c.name() == "search123456" )
       col = c;
   }
-  QVERIFY( col.isValid() );
+  QVERIFY( col == created );
   QCOMPARE( col.parentCollection().id(), 1LL );
   QVERIFY( CollectionUtils::isVirtual( col ) );
 

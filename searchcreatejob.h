@@ -24,6 +24,7 @@
 
 namespace Akonadi {
 
+class Collection;
 class SearchCreateJobPrivate;
 
 /**
@@ -44,8 +45,6 @@ class SearchCreateJobPrivate;
  *   qDebug() << "Error occurred";
  *
  * @endcode
- *
- * @todo Add method that returns the new search collection.
  *
  * @author Volker Krause <vkrause@kde.org>
  */
@@ -68,8 +67,22 @@ class AKONADI_EXPORT SearchCreateJob : public Job
      */
     ~SearchCreateJob();
 
+    /**
+     * Returns the newly created search collection once the job finished successfully. Returns an invalid
+     * collection if the job has not yet finished or failed.
+     */
+    Collection createdCollection() const;
+
   protected:
+    /**
+     * Reimplemented from Akonadi::Job
+     */
     void doStart();
+
+    /**
+     * Reimplemented from Akonadi::Job
+     */
+    void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
     Q_DECLARE_PRIVATE( SearchCreateJob )
