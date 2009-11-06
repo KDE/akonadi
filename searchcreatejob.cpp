@@ -1,3 +1,4 @@
+
 /*
     Copyright (c) 2007 Volker Krause <vkrause@kde.org>
 
@@ -19,7 +20,9 @@
 
 #include "searchcreatejob.h"
 
+#include "collection.h"
 #include "imapparser_p.h"
+#include "protocolhelper_p.h"
 #include "job_p.h"
 
 using namespace Akonadi;
@@ -34,6 +37,7 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
 
     QString mName;
     QString mQuery;
+    Collection createdCollection;
 };
 
 SearchCreateJob::SearchCreateJob(const QString & name, const QString & query, QObject * parent)
@@ -59,6 +63,22 @@ void SearchCreateJob::doStart()
   command += ImapParser::quote( d->mQuery.toUtf8() );
   command += '\n';
   d->writeData( command );
+}
+
+Collection SearchCreateJob::createdCollection() const
+{
+  Q_D( const SearchCreateJob );
+  return d->createdCollection;
+}
+
+void SearchCreateJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
+{
+  Q_D( SearchCreateJob );
+  if ( tag == "*" ) {
+   ProtocolHelper::parseCollection( data, d->createdCollection );
+   return;
+  }
+  kDebug() << "Unhandled response: " << tag << data;
 }
 
 #include "searchcreatejob.moc"
