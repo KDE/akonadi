@@ -125,6 +125,7 @@ public:
   bool m_includeStatistics;
   bool m_showRootCollection;
 
+  void rootCollectionFetched( const Collection::List &list );
   void startFirstListJob();
 
   void fetchJobDone( KJob *job );
