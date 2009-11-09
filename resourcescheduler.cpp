@@ -240,7 +240,10 @@ void ResourceScheduler::executeNext()
       break;
     case Custom:
     {
-      const bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
+      bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );;
+      if ( !success )
+        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName );
+
       if ( !success )
         kError() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
       break;
