@@ -54,11 +54,14 @@ class DragDropManager
      */
     void startDrag( Qt::DropActions supportedActions );
 
+    bool isAskDndActionMenu() const;
+    void askDndActionMenu( bool );
+
   private:
     Collection currentDropTarget( QDropEvent* event ) const;
 
     bool hasAncestor( const QModelIndex& index, Collection::Id parentId ) const;
-
+    bool mAskAction;
     QAbstractItemView *m_view;
 };
 

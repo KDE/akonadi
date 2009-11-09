@@ -264,4 +264,15 @@ void EntityTreeView::startDrag( Qt::DropActions supportedActions )
   d->mDragDropManager->startDrag( supportedActions );
 }
 
+
+void EntityTreeView::askDndActionMenu(bool askAction)
+{
+  d->mDragDropManager->askDndActionMenu( askAction );
+}
+
+bool EntityTreeView::isAskDndActionMenu() const
+{
+  return d->mDragDropManager->isAskDndActionMenu();
+}
+
 #include "entitytreeview.moc"

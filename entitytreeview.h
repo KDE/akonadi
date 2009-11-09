@@ -108,6 +108,15 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      */
     virtual void setModel( QAbstractItemModel * model );
 
+    /**
+     * Show or not dnd menu action during dnd
+     */
+    void askDndActionMenu(bool askAction);
+
+    /**
+     * Get info about show or not menu during dnd
+     */
+    bool isAskDndActionMenu() const;
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
