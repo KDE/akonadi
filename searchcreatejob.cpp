@@ -37,10 +37,10 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
 
     QString mName;
     QString mQuery;
-    Collection createdCollection;
+    Collection mCreatedCollection;
 };
 
-SearchCreateJob::SearchCreateJob(const QString & name, const QString & query, QObject * parent)
+SearchCreateJob::SearchCreateJob( const QString & name, const QString & query, QObject * parent )
   : Job( new SearchCreateJobPrivate( this ), parent )
 {
   Q_D( SearchCreateJob );
@@ -68,14 +68,14 @@ void SearchCreateJob::doStart()
 Collection SearchCreateJob::createdCollection() const
 {
   Q_D( const SearchCreateJob );
-  return d->createdCollection;
+  return d->mCreatedCollection;
 }
 
 void SearchCreateJob::doHandleResponse( const QByteArray &tag, const QByteArray &data )
 {
   Q_D( SearchCreateJob );
   if ( tag == "*" ) {
-   ProtocolHelper::parseCollection( data, d->createdCollection );
+   ProtocolHelper::parseCollection( data, d->mCreatedCollection );
    return;
   }
   kDebug() << "Unhandled response: " << tag << data;

@@ -68,7 +68,10 @@ class DisplayNameDelegate : public QStyledItemDelegate
       QFont font( painter->font() );
       font.setStyle( QFont::StyleItalic );
       painter->setFont( font );
-      painter->setPen( Qt::gray );
+      if ( option.state & QStyle::State_Selected )
+        painter->setPen( option.palette.color( QPalette::Normal, QPalette::BrightText ) );
+      else
+        painter->setPen( option.palette.color( QPalette::Disabled, QPalette::Text ) );
       painter->drawText( rect, Qt::AlignLeft, mDescriptions.at( index.row() ) );
       painter->restore();
     }
