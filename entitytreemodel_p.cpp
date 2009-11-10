@@ -1043,6 +1043,9 @@ void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIn
 
   Node* node = reinterpret_cast<Node*>( bottom.internalPointer() );
 
+  if ( !node )
+    return;
+
   if ( node->type == Node::Collection )
     rightIndex = bottom.sibling( bottom.row(), q->entityColumnCount( EntityTreeModel::CollectionTreeHeaders ) - 1 );
   if ( node->type == Node::Item )
