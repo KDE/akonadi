@@ -507,7 +507,6 @@ QString Akonadi::nameForType( SpecialCollections::Type type )
     case SpecialCollections::SentMail: return QLatin1String( "sent-mail" );
     case SpecialCollections::Trash: return QLatin1String( "trash" );
     case SpecialCollections::Drafts: return QLatin1String( "drafts" );
-    case SpecialCollections::Invitations: return QLatin1String( "invitations" );
     case SpecialCollections::Templates: return QLatin1String( "templates" );
     default: Q_ASSERT( false ); return QString();
   }
@@ -522,7 +521,6 @@ QString Akonadi::displayNameForType( SpecialCollections::Type type )
     case SpecialCollections::SentMail: return i18nc( "local mail folder", "sent-mail" );
     case SpecialCollections::Trash: return i18nc( "local mail folder", "trash" );
     case SpecialCollections::Drafts: return i18nc( "local mail folder", "drafts" );
-    case SpecialCollections::Invitations: return i18nc( "local mail folder", "invitations" );
     case SpecialCollections::Templates: return i18nc( "local mail folder", "templates" );
     default: Q_ASSERT( false ); return QString();
   }
@@ -538,7 +536,6 @@ QString Akonadi::iconNameForType( SpecialCollections::Type type )
     case SpecialCollections::SentMail: return QLatin1String( "mail-folder-sent" );
     case SpecialCollections::Trash: return QLatin1String( "user-trash" );
     case SpecialCollections::Drafts: return QLatin1String( "document-properties" );
-    case SpecialCollections::Invitations: return QLatin1String( "document-properties" );
     case SpecialCollections::Templates: return QLatin1String( "document-new" );
     default: Q_ASSERT( false ); return QString();
   }
