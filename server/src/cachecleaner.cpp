@@ -70,8 +70,15 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
     qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
+    QStringList localParts;
+    foreach ( const QString &partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
+      if ( partName.startsWith( QLatin1String( "PLD:" ) ) )
+        localParts.append( partName );
+      else
+        localParts.append( QLatin1String( "PLD:" ) + partName );
+    }
     if ( !collection.cachePolicyLocalParts().isEmpty() )
-      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, collection.cachePolicyLocalParts().split( QLatin1String(" ") ) );
+      qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, localParts );
     if ( !qb.exec() )
       continue;
     Part::List parts = qb.result();
