@@ -136,13 +136,21 @@ void AkonadiConnection::slotNewData()
       m_currentHandler->failureResponse( e.what() );
       m_streamParser->readUntilCommandEnd(); //just eat the ending newline
     } catch ( const Akonadi::Exception &e ) {
-      m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
+      if ( m_currentHandler ) {
+        m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
           + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
-      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      }
+      try {
+        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      } catch ( ... ) {}
     } catch ( ... ) {
       akError() << "Unknown exception caught: " << akBacktrace();
-      m_currentHandler->failureResponse( "Unknown exception caught" );
-      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      if ( m_currentHandler ) {
+        m_currentHandler->failureResponse( "Unknown exception caught" );
+      }
+      try {
+        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      } catch ( ... ) {}
     }
     delete m_currentHandler;
     m_currentHandler = 0;
