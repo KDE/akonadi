@@ -351,12 +351,11 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  // cut out entities will be shown as inactive
-  if ( d->m_pendingCutEntities.contains( node->id ) )
-    return Qt::ItemIsSelectable;
-
-
   if ( Node::Collection == node->type ) {
+    // cut out entities will be shown as inactive
+    if ( d->m_pendingCutCollections.contains( node->id ) )
+      return Qt::ItemIsSelectable;
+
     const Collection collection = d->m_collections.value( node->id );
     if ( collection.isValid() ) {
 
@@ -384,6 +383,8 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 
     }
   } else if ( Node::Item == node->type ) {
+    if ( d->m_pendingCutItems.contains( node->id ) )
+      return Qt::ItemIsSelectable;
 
     // Rights come from the parent collection.
 
@@ -697,9 +698,14 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   if ( role == PendingCutRole ) {
     if ( index.isValid() && value.toBool() ) {
-      d->m_pendingCutEntities.append( node->id );
+      if ( Node::Collection == node->type )
+        d->m_pendingCutCollections.append( node->id );
+
+      if ( Node::Item == node->type )
+        d->m_pendingCutItems.append( node->id );
     } else {
-      d->m_pendingCutEntities.clear();
+      d->m_pendingCutCollections.clear();
+      d->m_pendingCutItems.clear();
     }
     return true;
   }
