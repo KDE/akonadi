@@ -93,7 +93,6 @@ set( akonadikde_LIB_SRC
   erroroverlay.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
-  favoritecollectionsview.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
   item.cpp
@@ -234,7 +233,6 @@ install( FILES
   entitytreeviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
-  favoritecollectionsview.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
