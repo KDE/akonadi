@@ -390,9 +390,14 @@ void AgentManager::readPluginInfos( const QDir& directory )
         agentInfo.capabilities.removeOne( AgentType::CapabilityAutostart );
       }
 
+      const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
+      if ( executable.isEmpty() ) {
+        akError() << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
+        continue;
+      }
+
       qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
-      const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
       if ( !mAgentWatcher->files().contains( executable) )
 	mAgentWatcher->addPath( executable );
     }
