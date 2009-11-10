@@ -110,8 +110,7 @@ public:
   QHash<Collection::Id, QList<Node*> > m_childEntities;
   QSet<Collection::Id> m_populatedCols;
 
-  QList<Entity::Id> m_pendingCutItems;
-  QList<Entity::Id> m_pendingCutCollections;
+  QList<Entity::Id> m_pendingCutEntities;
 
   ChangeRecorder *m_monitor;
   Collection m_rootCollection;

@@ -268,9 +268,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
   if ( Node::Collection == node->type ) {
 
-    if ( role == Qt::ForegroundRole && d->m_pendingCutCollections.contains( node->id ) )
-      return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
-
     const Collection collection = d->m_collections.value( node->id );
 
     if ( !collection.isValid() )
@@ -303,9 +300,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     }
 
   } else if ( Node::Item == node->type ) {
-    if ( role == Qt::ForegroundRole && d->m_pendingCutItems.contains( node->id ) )
-      return QApplication::palette().color( QPalette::Disabled, QPalette::Text );
-
     const Item item = d->m_items.value( node->id );
     if ( !item.isValid() )
       return QVariant();
@@ -356,6 +350,11 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
+
+  // cut out entities will be shown as inactive
+  if ( d->m_pendingCutEntities.contains( node->id ) )
+    return Qt::ItemIsSelectable;
+
 
   if ( Node::Collection == node->type ) {
     const Collection collection = d->m_collections.value( node->id );
@@ -698,14 +697,9 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   if ( role == PendingCutRole ) {
     if ( index.isValid() && value.toBool() ) {
-      if ( Node::Collection == node->type )
-        d->m_pendingCutCollections.append( node->id );
-
-      if ( Node::Item == node->type )
-        d->m_pendingCutItems.append( node->id );
+      d->m_pendingCutEntities.append( node->id );
     } else {
-      d->m_pendingCutCollections.clear();
-      d->m_pendingCutItems.clear();
+      d->m_pendingCutEntities.clear();
     }
     return true;
   }
