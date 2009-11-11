@@ -192,11 +192,12 @@ void EntityListView::contextMenuEvent( QContextMenuEvent * event )
 
   // check if the index under the cursor is a collection or item
   const Collection collection = model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-  if ( collection.isValid() )
+  if ( collection.isValid() ) {
     popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
                                  QLatin1String( "akonadi_favoriteview_contextmenu" ), d->mXmlGuiClient ) );
-  if ( popup )
-    popup->exec( event->globalPos() );
+    if ( popup )
+      popup->exec( event->globalPos() );
+  }
 }
 
 void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
