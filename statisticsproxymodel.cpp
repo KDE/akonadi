@@ -227,7 +227,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
     if ( collection.isValid() && collection.statistics().count()>0 ) {
       return d->toolTipForCollection( index, collection );
     }
-  
+
   } else if ( role == Qt::DecorationRole && index.column() == 0 ) {
     const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
     Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
@@ -244,12 +244,12 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientation, int role) const
 {
   if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
-    if ( section == d->sourceColumnCount( QModelIndex() )+2 ) {
-      return i18n( "Size" );
-    } else if ( section == d->sourceColumnCount( QModelIndex() )+1 ) {
-      return i18n( "Total" );
+    if ( section == d->sourceColumnCount( QModelIndex() ) + 2 ) {
+      return i18nc( "collection size", "Size" );
+    } else if ( section == d->sourceColumnCount( QModelIndex() ) + 1 ) {
+      return i18nc( "number of entities in the collection", "Total" );
     } else if ( section == d->sourceColumnCount( QModelIndex() ) ) {
-      return i18n( "Unread" );
+      return i18nc( "number of unread entities in the collection", "Unread" );
     }
   }
 

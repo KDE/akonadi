@@ -690,7 +690,7 @@ class StandardActionManager::Private
       if ( !cut )
         return;
 
-      const QByteArray cutSelectionData = "1";
+      const QByteArray cutSelectionData = "1"; //krazy:exclude=doublequote_chars
       mimeData->setData( QLatin1String( "application/x-kde.akonadi-cutselection" ), cutSelectionData);
     }
 
