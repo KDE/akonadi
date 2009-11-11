@@ -73,6 +73,7 @@ class Akonadi::SpecialCollectionsRequestJobPrivate
 SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate( SpecialCollectionsRequestJob *qq )
   : q( qq )
   , pendingCreateJobs( 0 )
+  , mRequestedType( SpecialCollections::Root )
   , requestingDefaultFolders( false )
 {
   for( int type = SpecialCollections::Root; type < SpecialCollections::LastType; type++ ) {
