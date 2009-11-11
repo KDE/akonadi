@@ -217,7 +217,7 @@ QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 
   } else if ( role == Qt::TextAlignmentRole && index.column()>=d->sourceColumnCount( index.parent() ) ) {
     return Qt::AlignRight;
-  
+
   } else if ( role == Qt::ToolTipRole && d->mToolTipEnabled ) {
     const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
     Collection collection
@@ -275,28 +275,6 @@ int StatisticsProxyModel::columnCount( const QModelIndex & parent ) const
     return d->sourceColumnCount( parent )
          + ( d->mExtraColumnsEnabled ? 3 : 0 );
   }
-}
-
-bool StatisticsProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
-{
-  Q_ASSERT(sourceModel());
-  const QModelIndex sourceParent = mapToSource(parent);
-  return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
-}
-
-QMimeData* StatisticsProxyModel::mimeData( const QModelIndexList & indexes ) const
-{
-  Q_ASSERT(sourceModel());
-  QModelIndexList sourceIndexes;
-  foreach(const QModelIndex& index, indexes)
-    sourceIndexes << mapToSource(index);
-  return sourceModel()->mimeData(sourceIndexes);
-}
-
-QStringList StatisticsProxyModel::mimeTypes() const
-{
-  Q_ASSERT(sourceModel());
-  return sourceModel()->mimeTypes();
 }
 
 #include "statisticsproxymodel.moc"

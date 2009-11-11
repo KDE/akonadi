@@ -91,11 +91,6 @@ class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
     virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
-    // QAbstractProxyModel does not proxy all methods...
-    virtual bool dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent );
-    virtual QMimeData* mimeData( const QModelIndexList & indexes ) const;
-    virtual QStringList mimeTypes() const;
-
   private:
     //@cond PRIVATE
     class Private;
