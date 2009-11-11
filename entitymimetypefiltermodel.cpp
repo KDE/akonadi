@@ -146,28 +146,6 @@ QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orie
   return sourceModel()->headerData(section, orientation, role);
 }
 
-bool EntityMimeTypeFilterModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
-{
-  Q_ASSERT(sourceModel());
-  const QModelIndex sourceParent = mapToSource(parent);
-  return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
-}
-
-QMimeData* EntityMimeTypeFilterModel::mimeData( const QModelIndexList & indexes ) const
-{
-  Q_ASSERT(sourceModel());
-  QModelIndexList sourceIndexes;
-  foreach(const QModelIndex& index, indexes)
-    sourceIndexes << mapToSource(index);
-  return sourceModel()->mimeData(sourceIndexes);
-}
-
-QStringList EntityMimeTypeFilterModel::mimeTypes() const
-{
-  Q_ASSERT(sourceModel());
-  return sourceModel()->mimeTypes();
-}
-
 QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
 {
   if (EntityTreeModel::AmazingCompletionRole != role)
