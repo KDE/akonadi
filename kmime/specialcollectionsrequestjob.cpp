@@ -204,9 +204,12 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders( ResourceScanJo
   foreach( const Collection &col, resjob->localFolders() ) {
     Q_ASSERT( col.hasAttribute<SpecialCollectionAttribute>() );
     const SpecialCollectionAttribute *attr = col.attribute<SpecialCollectionAttribute>();
-    const int type = (int)attr->collectionType();
-    toRegister.append( qMakePair( col, (SpecialCollections::Type)type ) );
-    requestedFolders[ type ] = false;
+    const SpecialCollections::Type type = attr->collectionType();
+    Q_ASSERT( type != SpecialCollections::LastType );
+    if ( type != SpecialCollections::Invalid ) {
+      toRegister.append( qMakePair( col, type ) );
+      requestedFolders[ static_cast<int>( type ) ] = false;
+    }
   }
   toForget.append( resjob->resourceId() );
 
