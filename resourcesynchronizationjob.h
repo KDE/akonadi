@@ -72,6 +72,8 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
      */
     ~ResourceSynchronizationJob();
 
+    AgentInstance resource() const;
+
     /* reimpl */
     void start();
 
