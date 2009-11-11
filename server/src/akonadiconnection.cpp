@@ -134,7 +134,9 @@ void AkonadiConnection::slotNewData()
       }
     } catch ( const Akonadi::HandlerException &e ) {
       m_currentHandler->failureResponse( e.what() );
-      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      try {
+        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      } catch ( ... ) {}
     } catch ( const Akonadi::Exception &e ) {
       if ( m_currentHandler ) {
         m_currentHandler->failureResponse( QString::fromLatin1( e.type() )
@@ -156,7 +158,9 @@ void AkonadiConnection::slotNewData()
     m_currentHandler = 0;
 
     if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n"))
-      m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      try {
+        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+      } catch ( ... ) {}
   }
 }
 
