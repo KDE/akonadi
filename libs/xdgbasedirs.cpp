@@ -190,6 +190,11 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
 
     executableDirs += searchPath;
 
+#if defined(Q_OS_MAC) //krazy:exclude=cpp
+    executableDirs += QLatin1String(AKONADIBUNDLEPATH);
+#endif
+    qWarning( ) << "search paths: " << executableDirs;
+
     instance()->mExecutableDirs = executableDirs;
   }
 
