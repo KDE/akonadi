@@ -30,7 +30,7 @@ class QString;
 namespace Akonadi {
 
 /**
-  Base class for execpetion used by the Akonadi library.
+  Base class for exceptions used by the Akonadi library.
 */
 class AKONADI_EXPORT Exception : public std::exception
 {
