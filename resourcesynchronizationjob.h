@@ -72,6 +72,9 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
      */
     ~ResourceSynchronizationJob();
 
+    /**
+     * Returns the resource that has been synchronized.
+     */
     AgentInstance resource() const;
 
     /* reimpl */
