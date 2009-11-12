@@ -121,6 +121,11 @@ void ResourceSynchronizationJobPrivate::slotTimeout()
   }
 }
 
+AgentInstance ResourceSynchronizationJob::resource() const
+{
+  return d->instance;
+}
+
 }
 
 #include "resourcesynchronizationjob.moc"
