@@ -59,12 +59,17 @@ QByteArray SpecialCollectionAttribute::type() const
 
 QByteArray SpecialCollectionAttribute::serialized() const
 {
-  return QByteArray::number( (int)d->mType );
+  return QByteArray::number( static_cast<int>( d->mType ) );
 }
 
 void SpecialCollectionAttribute::deserialize( const QByteArray &data )
 {
-  d->mType = (SpecialCollections::Type)data.toInt();
+  bool ok;
+  const int parsed = data.toInt( &ok );
+  if ( !ok || parsed < SpecialCollections::Invalid || parsed >= SpecialCollections::LastType )
+    d->mType = SpecialCollections::Invalid;
+  else
+    d->mType = static_cast<SpecialCollections::Type>( parsed );
 }
 
 void SpecialCollectionAttribute::setCollectionType( SpecialCollections::Type type )
