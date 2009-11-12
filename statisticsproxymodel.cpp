@@ -277,27 +277,5 @@ int StatisticsProxyModel::columnCount( const QModelIndex & parent ) const
   }
 }
 
-bool StatisticsProxyModel::dropMimeData( const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent )
-{
-  Q_ASSERT(sourceModel());
-  const QModelIndex sourceParent = mapToSource(parent);
-  return sourceModel()->dropMimeData(data, action, row, column, sourceParent);
-}
-
-QMimeData* StatisticsProxyModel::mimeData( const QModelIndexList & indexes ) const
-{
-  Q_ASSERT(sourceModel());
-  QModelIndexList sourceIndexes;
-  foreach(const QModelIndex& index, indexes)
-    sourceIndexes << mapToSource(index);
-  return sourceModel()->mimeData(sourceIndexes);
-}
-
-QStringList StatisticsProxyModel::mimeTypes() const
-{
-  Q_ASSERT(sourceModel());
-  return sourceModel()->mimeTypes();
-}
-
 #include "statisticsproxymodel.moc"
 
