@@ -91,6 +91,30 @@ class ContactGroupModel::Private
 
     void normalizeMemberList()
     {
+      // check whether a normalization is needed or not
+      bool needsNormalization = false;
+      if ( mMembers.isEmpty() ) {
+        needsNormalization = true;
+      } else {
+        for ( int i = 0; i < mMembers.count(); ++i ) {
+          const GroupMember &member = mMembers[ i ];
+          if ( !member.isReference && !(i == mMembers.count() - 1) ) {
+            if ( member.data.name().isEmpty() && member.data.email().isEmpty() ) {
+              needsNormalization = true;
+              break;
+            }
+          }
+        }
+
+        const GroupMember &member = mMembers.last();
+        if ( member.isReference || !(member.data.name().isEmpty() && member.data.email().isEmpty()) )
+          needsNormalization = true;
+      }
+
+      // if not, avoid to update the model and view
+      if ( !needsNormalization )
+        return;
+
       bool foundEmpty = false;
 
       // add an empty line at the end
@@ -378,7 +402,8 @@ Qt::ItemFlags ContactGroupModel::flags( const QModelIndex &index ) const
   if ( d->mMembers[ index.row() ].loadingError )
     return Qt::ItemFlags( Qt::ItemIsEnabled );
 
-  return Qt::ItemFlags( Qt::ItemIsEnabled | Qt::ItemIsEditable );
+  Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
+  return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 }
 
 int ContactGroupModel::columnCount( const QModelIndex &parent ) const

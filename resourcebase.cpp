@@ -320,7 +320,7 @@ void ResourceBasePrivate::changeCommittedResult( KJob *job )
 {
   Q_Q( ResourceBase );
   if ( job->error() )
-    emit q->error( i18n( "Updating local collection failed: %1.", job->errorText() ) );
+    emit q->error( i18nc( "@info", "Updating local collection failed: %1.", job->errorText() ) );
   mMonitor->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
   changeProcessed();
 }

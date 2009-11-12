@@ -232,7 +232,7 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   d->mMode = mode;
   d->mGui.setupUi( this );
 
-  d->mGui.membersView->setEditTriggers( QAbstractItemView::CurrentChanged );
+  d->mGui.membersView->setEditTriggers( QAbstractItemView::AllEditTriggers );
 
   d->mGroupModel = new ContactGroupModel( this );
   d->mGui.membersView->setModel( d->mGroupModel );
