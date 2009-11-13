@@ -21,6 +21,8 @@
 
 #include "contactsearchjob.h"
 
+#include <akonadi/itemfetchscope.h>
+
 using namespace Akonadi;
 
 ContactSearchJob::ContactSearchJob( QObject * parent )
