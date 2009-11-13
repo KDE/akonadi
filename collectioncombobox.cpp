@@ -78,7 +78,6 @@ class CollectionComboBox::Private
 
     ~Private()
     {
-      mParent->setModel( 0 );
     }
 
     void activated( int index );
