@@ -19,7 +19,6 @@
 #include "queryserviceclient.h"
 #include "dbusoperators.h"
 #include "result.h"
-#include "query.h"
 #include "queryserviceinterface.h"
 #include "queryinterface.h"
 
@@ -154,21 +153,7 @@ bool Nepomuk::Search::QueryServiceClient::query( const QString& query )
     close();
 
     if ( d->queryServiceInterface->isValid() ) {
-        return d->handleQueryReply( d->queryServiceInterface->query( query, QStringList() ) );
-    }
-    else {
-        qDebug() << "Could not contact query service.";
-        return false;
-    }
-}
-
-
-bool Nepomuk::Search::QueryServiceClient::query( const Query& query )
-{
-    close();
-
-    if ( d->queryServiceInterface->isValid() ) {
-        return d->handleQueryReply( d->queryServiceInterface->query( query ) );
+        return d->handleQueryReply( d->queryServiceInterface->sparqlQuery( query, QHash<QString, QString>() ) );
     }
     else {
         qDebug() << "Could not contact query service.";
@@ -178,21 +163,6 @@ bool Nepomuk::Search::QueryServiceClient::query( const Query& query )
 
 
 bool Nepomuk::Search::QueryServiceClient::blockingQuery( const QString& q )
-{
-    if( query( q ) ) {
-        QEventLoop loop;
-        d->loop = &loop;
-        loop.exec();
-        d->loop = 0;
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-
-bool Nepomuk::Search::QueryServiceClient::blockingQuery( const Query& q )
 {
     if( query( q ) ) {
         QEventLoop loop;

@@ -17,6 +17,7 @@
 */
 
 #include "dbusoperators.h"
+#include "querymetatype.h"
 
 #include <soprano/version.h>
 
@@ -25,7 +26,6 @@
 
 Q_DECLARE_METATYPE(Nepomuk::Search::Result)
 Q_DECLARE_METATYPE(Nepomuk::Search::Term)
-Q_DECLARE_METATYPE(Nepomuk::Search::Query)
 Q_DECLARE_METATYPE(Soprano::Node)
 Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QList<Nepomuk::Search::Result>)
@@ -38,6 +38,7 @@ void Nepomuk::Search::registerDBusTypes()
     qDBusRegisterMetaType<Nepomuk::Search::Term>();
     qDBusRegisterMetaType<Nepomuk::Search::Query>();
     qDBusRegisterMetaType<Soprano::Node>();
+    qDBusRegisterMetaType<RequestPropertyMapDBus>();
 }
 
 

@@ -4,13 +4,13 @@
   <interface name="org.kde.nepomuk.QueryService">
     <method name="query">
       <arg name="query" type="s" direction="in" />
-      <arg name="requestProperties" type="as" direction="in" />
       <arg name="queryobject" type="o" direction="out" />
     </method>
-    <method name="query">
-      <arg name="query" type="(isa(ii(isss)sss)a{iai}ia{sb})" direction="in" />
+    <method name="sparqlQuery">
+      <arg name="query" type="s" direction="in" />
+      <arg name="requestProps" type="a{ss}" direction="in" />
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QHash&lt;QString, QString&gt;"/>
       <arg name="queryobject" type="o" direction="out" />
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In0" value="Nepomuk::Search::Query" />
     </method>
   </interface>
 </node>

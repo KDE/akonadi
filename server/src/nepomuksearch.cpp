@@ -67,7 +67,7 @@ QStringList NepomukSearch::search( const QString &query )
     return QStringList();
   }
 
-  mSearchService->blockingQuery( Nepomuk::Search::Query( query ) );
+  mSearchService->blockingQuery( query );
 
   return mMatchingUIDs.toList();
 }

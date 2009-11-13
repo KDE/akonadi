@@ -27,5 +27,7 @@
 #include "query.h"
 
 Q_DECLARE_METATYPE(Nepomuk::Search::Query)
+typedef QHash<QString, QString> RequestPropertyMapDBus;
+Q_DECLARE_METATYPE( RequestPropertyMapDBus )
 
 #endif

@@ -93,7 +93,7 @@ void NepomukManager::addSearchInternal( qint64 id, const QString &searchStatemen
   mMutex.unlock();
 
   // query with SPARQL statement
-  query->query( Nepomuk::Search::Query( searchStatement ) );
+  query->query( searchStatement );
 }
 
 bool NepomukManager::removeSearch( qint64 collectionId )

@@ -27,7 +27,6 @@ namespace Nepomuk {
     namespace Search {
 
         class Result;
-        class Query;
 
         /**
          * \class QueryServiceClient queryserviceclient.h Nepomuk/Search/QueryServiceClient
@@ -81,17 +80,6 @@ namespace Nepomuk {
             bool query( const QString& query );
 
             /**
-             * Start a query.
-             *
-             * Results will be reported via newEntries. All results
-             * have been reported once finishedListing has been emitted.
-             *
-             * \return \p true if the query service was found and the query
-             * was started. \p false otherwise.
-             */
-            bool query( const Query& query );
-
-            /**
              * Start a query using the Nepomuk user query language.
              *
              * Results will be reported as with query(const QString&)
@@ -108,13 +96,6 @@ namespace Nepomuk {
              * \sa query(const QString&), close()
              */
             bool blockingQuery( const QString& query );
-
-            /**
-             * \overload
-             *
-             * \sa query(const Query&)
-             */
-            bool blockingQuery( const Query& query );
 
             /**
              * Close the client, thus stop to monitor the query
