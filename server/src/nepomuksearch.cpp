@@ -24,7 +24,6 @@
 #include "nepomuksearch.h"
 
 #include "search/result.h"
-#include "search/query.h"
 
 using namespace Akonadi;
 

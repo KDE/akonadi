@@ -24,7 +24,6 @@
 #include "nepomukmanager.h"
 
 #include "search/result.h"
-#include "search/query.h"
 
 #include "entities.h"
 
