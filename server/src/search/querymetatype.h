@@ -24,9 +24,6 @@
 #ifndef _NEPOMUK_QUERY_META_TYPE_H_
 #define _NEPOMUK_QUERY_META_TYPE_H_
 
-#include "query.h"
-
-Q_DECLARE_METATYPE(Nepomuk::Search::Query)
 typedef QHash<QString, QString> RequestPropertyMapDBus;
 Q_DECLARE_METATYPE( RequestPropertyMapDBus )
 

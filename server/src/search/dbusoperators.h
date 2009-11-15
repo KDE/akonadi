@@ -22,8 +22,6 @@
 #include <QtDBus/QDBusArgument>
 
 #include "result.h"
-#include "query.h"
-#include "term.h"
 
 namespace Nepomuk {
     namespace Search {
@@ -33,12 +31,6 @@ namespace Nepomuk {
 
 QDBusArgument& operator<<( QDBusArgument& arg, const Soprano::Node& );
 const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& );
-
-QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Term& term );
-const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Term& );
-
-QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Query& query );
-const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Query& );
 
 QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Result& );
 const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Result& );

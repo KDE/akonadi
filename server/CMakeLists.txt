@@ -93,10 +93,8 @@ set(libakonadiprivate_SRCS
   src/handler/transaction.cpp
 
   src/search/dbusoperators.cpp
-  src/search/query.cpp
   src/search/queryserviceclient.cpp
   src/search/result.cpp
-  src/search/term.cpp
 
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
