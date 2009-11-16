@@ -294,6 +294,17 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       case EntityUrlRole:
         return collection.url().url();
         break;
+      case Qt::BackgroundRole:
+      {
+        if ( collection.hasAttribute<EntityDisplayAttribute>() )
+        {
+          EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
+          QColor color = eda->backgroundColor();
+          if ( color.isValid() )
+            return color;
+        }
+        // fall through.
+      }
       default:
         return entityData( collection, index.column(), role );
         break;
@@ -329,6 +340,17 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       case EntityUrlRole:
         return item.url( Akonadi::Item::UrlWithMimeType ).url();
         break;
+      case Qt::BackgroundRole:
+      {
+        if ( item.hasAttribute<EntityDisplayAttribute>() )
+        {
+          EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
+          QColor color = eda->backgroundColor();
+          if ( color.isValid() )
+            return color;
+        }
+        // fall through.
+      }
       default:
         return entityData( item, index.column(), role );
         break;
@@ -720,7 +742,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       d->ref( collection.id() );
   }
 
-  if ( index.column() == 0 && (role & (Qt::EditRole | ItemRole | CollectionRole)) ) {
+  if ( index.column() == 0 && ( role & ( Qt::EditRole | ItemRole | CollectionRole ) ) ) {
     if ( Node::Collection == node->type ) {
 
       Collection collection = d->m_collections.value( node->id );
@@ -736,6 +758,18 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
           displayAttribute->setDisplayName( value.toString() );
           collection.addAttribute( displayAttribute );
         }
+      }
+
+      if ( Qt::BackgroundRole == role )
+      {
+        QColor color = value.value<QColor>();
+
+        if ( color.isValid() )
+          return false;
+
+        EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
+        eda->setBackgroundColor( color );
+        collection.addAttribute( eda );
       }
 
       if ( CollectionRole == role )
@@ -761,8 +795,22 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
         }
       }
 
+      if ( Qt::BackgroundRole == role )
+      {
+        QColor color = value.value<QColor>();
+
+        if ( !color.isValid() )
+          return false;
+
+        EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
+        eda->setBackgroundColor( color );
+      }
+
       if ( ItemRole == role )
+      {
         item = value.value<Item>();
+        Q_ASSERT( item.id() == node->id );
+      }
 
       ItemModifyJob *itemModifyJob = new ItemModifyJob( item, d->m_session );
       connect( itemModifyJob, SIGNAL( result( KJob* ) ),
