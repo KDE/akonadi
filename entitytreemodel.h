@@ -143,7 +143,7 @@ class EntityTreeModelPrivate;
  *
  * This will typically be used with a MimeTypeFilterProxyModel in a configuration such as KMail4.5 or AkonadiConsole.
  *
- * The CollectionFetchStrategy determines how the model will be populated with Collections. That is, if FetchNoCollections is set, 
+ * The CollectionFetchStrategy determines how the model will be populated with Collections. That is, if FetchNoCollections is set,
  * no collections beyond the root of the model will be fetched. This can be used in combination with setting a particular Collection to monitor.
  *
  * @code
@@ -156,7 +156,7 @@ class EntityTreeModelPrivate;
  *
  * This has the effect of creating a model of only a list of Items, and not collections. This is similar in behaviour and aims to the ItemModel.
  * By using FetchFirstLevelCollections instead, a mixed list of entities can be created.
- * 
+ *
  * @note It is important that you set only one Collection to be monitored in the monitor object. This one collection will be the root of the tree.
  * If you need a model with a more complex structure, consider monitoring a common ancestor and using a SelectionProxyModel.
  *
@@ -335,9 +335,11 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
       EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
-      UserRole = Qt::UserRole + 1000,         ///< Role for user extensions.
-      TerminalUserRole = 10000                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
+      UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
+      TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
+      EndRole = 65535
     };
+
 
     /**
      * Describes what header information the model shall return.
@@ -346,7 +348,9 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       EntityTreeHeaders,      ///< Header information for a tree with collections and items
       CollectionTreeHeaders,  ///< Header information for a collection-only tree
       ItemListHeaders,        ///< Header information for a list of items
-      UserHeaders = 1000      ///< Last header information for submodel extensions
+      UserHeaders = 10,       ///< Last header information for submodel extensions
+      EndHeaderGroup = 32     ///< Last headergroup role. Don't use a role beyond this or headerData will break.
+      // Note that we're splitting up available roles for the header data hack and int(EndRole / TerminalUserRole) == 32
     };
 
     /**
