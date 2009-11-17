@@ -70,8 +70,7 @@ class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsPrivate
     AgentInstance defaultResource() const;
 
     SpecialCollections *instance;
-    Collection::List emptyFolderList;
-    QHash<QString,Collection::List> foldersForResource;
+    QHash<QString, QHash<SpecialCollections::Type, Collection> > foldersForResource;
     bool batchMode;
     QSet<QString> toEmitChangedFor;
     Monitor *monitor;

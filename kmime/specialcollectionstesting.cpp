@@ -65,8 +65,9 @@ int SpecialCollectionsTesting::_t_knownFolderCount() const
 {
   const SpecialCollectionsPrivate *d = SpecialCollections::self()->d;
   int ret = 0;
-  foreach( const Collection::List &list, d->foldersForResource ) {
-    foreach( const Collection &col, list ) {
+  typedef QHash<SpecialCollections::Type, Collection> CollectionHash;
+  foreach( const  CollectionHash &hash, d->foldersForResource ) {
+    foreach( const Collection &col, hash.values() ) {
       if( col.isValid() ) {
         ret++;
       }
