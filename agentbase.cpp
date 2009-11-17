@@ -23,15 +23,14 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
+#include "changerecorder.h"
 #include "controladaptor.h"
-#include "statusadaptor.h"
+#include "itemfetchjob.h"
 #include "monitor_p.h"
-#include "xdgbasedirs_p.h"
-
 #include "session.h"
 #include "session_p.h"
-#include "changerecorder.h"
-#include "itemfetchjob.h"
+#include "statusadaptor.h"
+#include "xdgbasedirs_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -42,8 +41,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
 #include <QtDBus/QtDBus>
+#include <QtGui/QApplication>
 
 #include <signal.h>
 #include <stdlib.h>
@@ -121,7 +120,7 @@ void AgentBase::ObserverV2::itemMoved( const Akonadi::Item &item, const Akonadi:
     sAgentBase->d_ptr->changeProcessed();
 }
 
-void AgentBase::ObserverV2::itemLinked(const Akonadi::Item& item, const Akonadi::Collection& collection)
+void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
@@ -130,7 +129,7 @@ void AgentBase::ObserverV2::itemLinked(const Akonadi::Item& item, const Akonadi:
     sAgentBase->d_ptr->changeProcessed();
 }
 
-void AgentBase::ObserverV2::itemUnlinked(const Akonadi::Item& item, const Akonadi::Collection& collection)
+void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
   kDebug() << "sAgentBase=" << (void*) sAgentBase << "this=" << (void*) this;
   Q_UNUSED( item );
@@ -220,16 +219,16 @@ void AgentBasePrivate::init()
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
   connect( mMonitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
-  connect( mMonitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+  connect( mMonitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  connect( mMonitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
            SLOT( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
-  connect( mMonitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
-           SLOT(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
+  connect( mMonitor, SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
@@ -241,7 +240,7 @@ void AgentBasePrivate::init()
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.
   KGlobal::ref();
-  KGlobal::setAllowQuit(true);
+  KGlobal::setAllowQuit( true );
 
   QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
@@ -495,11 +494,11 @@ QString AgentBase::parseArguments( int argc, char **argv )
   else
     catalog = QByteArray( argv[0] );
 
-  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog, ki18n("Akonadi Agent"),"0.1" ,
-                      ki18n("Akonadi Agent") );
+  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog, ki18n( "Akonadi Agent" ), "0.1",
+                      ki18n( "Akonadi Agent" ) );
 
   KCmdLineOptions options;
-  options.add("identifier <argument>", ki18n("Agent identifier"));
+  options.add( "identifier <argument>", ki18n( "Agent identifier" ) );
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;
@@ -510,7 +509,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
 int AgentBase::init( AgentBase *r )
 {
   QApplication::setQuitOnLastWindowClosed( false );
-  KGlobal::locale()->insertCatalog( QLatin1String("libakonadi") );
+  KGlobal::locale()->insertCatalog( QLatin1String( "libakonadi" ) );
   int rv = kapp->exec();
   delete r;
   return rv;
@@ -595,18 +594,19 @@ void AgentBase::configure( qlonglong windowId )
 
 WId AgentBase::winIdForDialogs() const
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.freedesktop.akonaditray") );
+  const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( "org.freedesktop.akonaditray" ) );
   if ( !registered )
     return 0;
 
-  QDBusInterface dbus( QLatin1String("org.freedesktop.akonaditray"), QLatin1String("/Actions"),
-                       QLatin1String("org.freedesktop.Akonadi.Tray") );
-  QDBusMessage reply = dbus.call( QLatin1String("getWinId") );
+  QDBusInterface dbus( QLatin1String( "org.freedesktop.akonaditray" ), QLatin1String( "/Actions" ),
+                       QLatin1String( "org.freedesktop.Akonadi.Tray" ) );
+  const QDBusMessage reply = dbus.call( QLatin1String( "getWinId" ) );
 
   if ( reply.type() == QDBusMessage::ErrorMessage )
     return 0;
 
-  WId winid = (WId)reply.arguments().at( 0 ).toLongLong();
+  const WId winid = (WId)reply.arguments().at( 0 ).toLongLong();
+
   return winid;
 }
 
