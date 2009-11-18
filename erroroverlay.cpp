@@ -56,7 +56,6 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     mBaseWidget( baseWidget )
 {
   Q_ASSERT( baseWidget );
-  Q_ASSERT( parentWidget() != baseWidget );
 
   // check existing overlays to detect cascading
   for ( QList<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
