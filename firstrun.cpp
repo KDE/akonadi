@@ -19,10 +19,10 @@
 
 #include "firstrun_p.h"
 
-#include <akonadi/agenttype.h>
-#include <akonadi/agentmanager.h>
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/agenttype.h>
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -31,20 +31,20 @@
 #include <KProcess>
 #include <KStandardDirs>
 
-#include <QDBusConnection>
-#include <QDBusInterface>
-#include <QDBusReply>
-#include <QDir>
-#include <QMetaMethod>
-#include <QMetaObject>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
+#include <QtCore/QDir>
+#include <QtCore/QMetaMethod>
+#include <QtCore/QMetaObject>
 
 using namespace Akonadi;
 
-Firstrun::Firstrun( QObject *parent ) :
-  QObject( parent ),
-  mConfig( new KConfig( QLatin1String("akonadi-firstrunrc") ) ),
-  mCurrentDefault( 0 ),
-  mProcess( 0 )
+Firstrun::Firstrun( QObject *parent )
+  : QObject( parent ),
+    mConfig( new KConfig( QLatin1String( "akonadi-firstrunrc" ) ) ),
+    mCurrentDefault( 0 ),
+    mProcess( 0 )
 {
   findPendingDefaults();
   kDebug() << mPendingDefaults;
@@ -60,7 +60,7 @@ Firstrun::~Firstrun()
 void Firstrun::findPendingDefaults()
 {
   const KConfigGroup cfg( mConfig, "ProcessedDefaults" );
-  foreach ( const QString &dirName, KGlobal::dirs()->findDirs( "data", QLatin1String("akonadi/firstrun") ) ) {
+  foreach ( const QString &dirName, KGlobal::dirs()->findDirs( "data", QLatin1String( "akonadi/firstrun" ) ) ) {
     const QStringList files = QDir( dirName ).entryList( QDir::Files | QDir::Readable );
     foreach ( const QString &fileName, files ) {
       const QString fullName = dirName + fileName;
@@ -79,9 +79,9 @@ void Firstrun::findPendingDefaults()
 
 static QString resourceTypeForMimetype( const QStringList &mimeTypes )
 {
-  if ( mimeTypes.contains( QLatin1String("text/directory") ) )
+  if ( mimeTypes.contains( QLatin1String( "text/directory" ) ) )
     return QString::fromLatin1( "contact" );
-  if ( mimeTypes.contains( QLatin1String("text/calendar") ) )
+  if ( mimeTypes.contains( QLatin1String( "text/calendar" ) ) )
     return QString::fromLatin1( "calendar" );
   // TODO notes
   return QString();
@@ -90,21 +90,21 @@ static QString resourceTypeForMimetype( const QStringList &mimeTypes )
 void Firstrun::migrateKresType( const QString& resourceFamily )
 {
   mResourceFamily = resourceFamily;
-  KConfig config( QLatin1String("kres-migratorrc") );
+  KConfig config( QLatin1String( "kres-migratorrc" ) );
   KConfigGroup migrationCfg( &config, "Migration" );
   const bool enabled = migrationCfg.readEntry( "Enabled", false );
   const bool setupClientBridge = migrationCfg.readEntry( "SetupClientBridge", true );
-  const int currentVersion = migrationCfg.readEntry( QString::fromLatin1("Version-%1").arg( resourceFamily ), 0 );
+  const int currentVersion = migrationCfg.readEntry( QString::fromLatin1( "Version-%1" ).arg( resourceFamily ), 0 );
   const int targetVersion = migrationCfg.readEntry( "TargetVersion", 0 );
   if ( enabled && currentVersion < targetVersion ) {
     kDebug() << "Performing migration of legacy KResource settings. Good luck!";
     mProcess = new KProcess( this );
-    connect( mProcess, SIGNAL(finished(int)), SLOT(migrationFinished(int)) );
-    QStringList args = QStringList() << QLatin1String("--interactive-on-change")
-                                     << QLatin1String("--type") << resourceFamily;
+    connect( mProcess, SIGNAL( finished( int ) ), SLOT( migrationFinished( int ) ) );
+    QStringList args = QStringList() << QLatin1String( "--interactive-on-change" )
+                                     << QLatin1String( "--type" ) << resourceFamily;
     if ( !setupClientBridge )
       args << QLatin1String( "--omit-client-bridge" );
-    mProcess->setProgram( QLatin1String("kres-migrator"), args );
+    mProcess->setProgram( QLatin1String( "kres-migrator" ), args );
     mProcess->start();
     if ( !mProcess->waitForStarted() )
       migrationFinished( -1 );
@@ -114,15 +114,15 @@ void Firstrun::migrateKresType( const QString& resourceFamily )
   }
 }
 
-void Firstrun::migrationFinished(int exitCode)
+void Firstrun::migrationFinished( int exitCode )
 {
   Q_ASSERT( mProcess );
   if ( exitCode == 0 ) {
     kDebug() << "KResource -> Akonadi migration has been successful";
-    KConfig config( QLatin1String("kres-migratorrc") );
+    KConfig config( QLatin1String( "kres-migratorrc" ) );
     KConfigGroup migrationCfg( &config, "Migration" );
     const int targetVersion = migrationCfg.readEntry( "TargetVersion", 0 );
-    migrationCfg.writeEntry( QString::fromLatin1("Version-%1").arg( mResourceFamily ), targetVersion );
+    migrationCfg.writeEntry( QString::fromLatin1( "Version-%1" ).arg( mResourceFamily ), targetVersion );
     migrationCfg.sync();
   } else if ( exitCode != 1 ) {
     // exit code 1 means it is already running, so we are probably called by a migrator instance
@@ -168,7 +168,7 @@ void Firstrun::setupNext()
     const QStringList kresResources = resGroup.readEntry( "ResourceKeys", QStringList() )
       + resGroup.readEntry( "PassiveResourceKeys", QStringList() );
     foreach ( const QString &kresResource, kresResources ) {
-      const KConfigGroup cfg( &resCfg, QString::fromLatin1("Resource_%1").arg( kresResource ) );
+      const KConfigGroup cfg( &resCfg, QString::fromLatin1( "Resource_%1" ).arg( kresResource ) );
       if ( cfg.readEntry( "ResourceType", QString() ) != QLatin1String( "akonadi" ) ) { // not a bridge
         legacyResourceFound = true;
         break;
@@ -184,9 +184,9 @@ void Firstrun::setupNext()
     }
   }
 
-   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-   connect( job, SIGNAL(result(KJob*)), SLOT(instanceCreated(KJob*)) );
-   job->start();
+  AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( instanceCreated( KJob* ) ) );
+  job->start();
 }
 
 void Firstrun::instanceCreated( KJob *job )
@@ -208,8 +208,8 @@ void Firstrun::instanceCreated( KJob *job )
   // agent specific settings, using the D-Bus <-> KConfigXT bridge
   const KConfigGroup settings = KConfigGroup( mCurrentDefault, "Settings" );
 
-  QDBusInterface *iface = new QDBusInterface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( instance.identifier() ),
-                                              QLatin1String("/Settings"), QString(), QDBusConnection::sessionBus(), this );
+  QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( instance.identifier() ),
+                                              QLatin1String( "/Settings" ), QString(), QDBusConnection::sessionBus(), this );
   if ( !iface->isValid() ) {
     kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
     setupNext();
@@ -219,7 +219,7 @@ void Firstrun::instanceCreated( KJob *job )
 
   foreach ( const QString &setting, settings.keyList() ) {
     kDebug() << "Setting up " << setting << " for agent " << instance.identifier();
-    const QString methodName = QString::fromLatin1("set%1").arg( setting );
+    const QString methodName = QString::fromLatin1( "set%1" ).arg( setting );
     const QVariant::Type argType = argumentType( iface->metaObject(), methodName );
     if ( argType == QVariant::Invalid ) {
       kError() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
@@ -255,7 +255,7 @@ QVariant::Type Firstrun::argumentType( const QMetaObject *mo, const QString &met
 {
   QMetaMethod m;
   for ( int i = 0; i < mo->methodCount(); ++i ) {
-    const QString signature = QString::fromLatin1( mo->method(i).signature() );
+    const QString signature = QString::fromLatin1( mo->method( i ).signature() );
     if ( signature.startsWith( method ) )
       m = mo->method( i );
   }

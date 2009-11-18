@@ -21,11 +21,19 @@
 
 #include "contactsearchjob.h"
 
+#include <akonadi/itemfetchscope.h>
+
 using namespace Akonadi;
 
 ContactSearchJob::ContactSearchJob( QObject * parent )
   : ItemSearchJob( QString(), parent ), d( 0 )
 {
+  fetchScope().fetchFullPayload();
+
+  // by default search for all contacts
+  ItemSearchJob::setQuery( QLatin1String( ""
+                                          "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
+                                          "SELECT ?r WHERE { ?r a nco:PersonContact }" ) );
 }
 
 ContactSearchJob::~ContactSearchJob()

@@ -45,10 +45,6 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate()
   : instance( new SpecialCollections( this ) )
   , batchMode( false )
 {
-  for( int type = SpecialCollections::Root; type < SpecialCollections::LastType; type++ ) {
-    emptyFolderList.append( Collection( -1 ) );
-  }
-
   monitor = new Monitor( instance );
   QObject::connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
       instance, SLOT(collectionRemoved(Akonadi::Collection)) );
@@ -74,23 +70,26 @@ void SpecialCollectionsPrivate::emitChanged( const QString &resourceId )
   }
 }
 
-void SpecialCollectionsPrivate::collectionRemoved( const Collection &col )
+void SpecialCollectionsPrivate::collectionRemoved( const Collection &collection )
 {
-  kDebug() << "Collection" << col.id() << "resource" << col.resource();
-  if( foldersForResource.contains( col.resource() ) ) {
-    Collection::List &list = foldersForResource[ col.resource() ];
-    int others = 0;
-    for( int i = SpecialCollections::Root; i < SpecialCollections::LastType; i++ ) {
-      if( list[i] == col ) {
-        list[i] = Collection( -1 );
-        emitChanged( col.resource() );
-      } else if( list[i].isValid() ) {
-        others++;
+  kDebug() << "Collection" << collection.id() << "resource" << collection.resource();
+  if ( foldersForResource.contains( collection.resource() ) ) {
+
+    // Retrieve the list of special folders for the resource the collection belongs to
+    QHash<SpecialCollections::Type, Collection> &folders = foldersForResource[ collection.resource() ];
+    QMutableHashIterator<SpecialCollections::Type, Collection> it( folders );
+    while ( it.hasNext() ) {
+      it.next();
+      if ( it.value() == collection ) {
+        // The collection to be removed is a special folder
+        it.remove();
+        emitChanged( collection.resource() );
       }
     }
-    if( others == 0 ) {
+
+    if ( folders.isEmpty() ) {
       // This resource has no more folders, so remove it completely.
-      foldersForResource.remove( col.resource() );
+      foldersForResource.remove( collection.resource() );
     }
   }
 }
@@ -106,19 +105,23 @@ void SpecialCollectionsPrivate::endBatchRegister()
 {
   Q_ASSERT( batchMode );
   batchMode = false;
-  
+
   foreach( const QString &resourceId, toEmitChangedFor ) {
     emitChanged( resourceId );
   }
+
   toEmitChangedFor.clear();
 }
 
 void SpecialCollectionsPrivate::forgetFoldersForResource( const QString &resourceId )
 {
-  if( foldersForResource.contains( resourceId ) ) {
-    foreach( const Collection &col, foldersForResource[ resourceId ] ) {
-      monitor->setCollectionMonitored( col, false );
+  if ( foldersForResource.contains( resourceId ) ) {
+    const Collection::List folders = foldersForResource[ resourceId ].values();
+
+    foreach ( const Collection &collection, folders ) {
+      monitor->setCollectionMonitored( collection, false );
     }
+
     foldersForResource.remove( resourceId );
     emitChanged( resourceId );
   }
@@ -146,12 +149,12 @@ bool SpecialCollections::hasCollection( Type type, const AgentInstance &instance
 {
   kDebug() << "Type" << type << "resourceId" << instance.identifier();
 
-  Q_ASSERT( type > Invalid && type < LastType );
   if( !d->foldersForResource.contains( instance.identifier() ) ) {
     // We do not know any folders in this resource.
     return false;
   }
-  return d->foldersForResource[ instance.identifier() ][ type ].isValid();
+
+  return d->foldersForResource[ instance.identifier() ].contains( type );
 }
 
 Collection SpecialCollections::collection( Type type, const AgentInstance &instance ) const
@@ -190,15 +193,16 @@ bool SpecialCollections::registerCollection( Type type, const Collection &collec
 
   if( !d->foldersForResource.contains( resourceId ) ) {
     // We do not know any folders in this resource yet.
-    Q_ASSERT( d->emptyFolderList.count() == LastType );
-    d->foldersForResource[ resourceId ] = d->emptyFolderList;
+    d->foldersForResource.insert( resourceId, QHash<Type, Collection>() );
   }
 
-  if( d->foldersForResource[ resourceId ][ type ] != collection ) {
-    d->monitor->setCollectionMonitored( d->foldersForResource[ resourceId ][ type ], false );
-    d->monitor->setCollectionMonitored( collection, true );
-    d->foldersForResource[ resourceId ][ type ] = collection;
-    d->emitChanged( resourceId );
+  if ( d->foldersForResource[ resourceId ].contains( type ) ) {
+    if ( d->foldersForResource[ resourceId ][ type ] != collection ) {
+      d->monitor->setCollectionMonitored( d->foldersForResource[ resourceId ][ type ], false );
+      d->monitor->setCollectionMonitored( collection, true );
+      d->foldersForResource[ resourceId ].insert( type, collection );
+      d->emitChanged( resourceId );
+    }
   }
   kDebug() << "Registered collection" << collection.id() << "as folder of type" << type
     << "in resource" << resourceId;

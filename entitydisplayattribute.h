@@ -20,6 +20,8 @@
 #ifndef AKONADI_ENTITYDISPLAYATTRIBUTE_H
 #define AKONADI_ENTITYDISPLAYATTRIBUTE_H
 
+#include <QtGui/QColor>
+
 #include <akonadi/attribute.h>
 
 class KIcon;
@@ -90,6 +92,18 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
      * @since 4.4
      */
     QString activeIconName() const;
+
+    /**
+     * Returns the backgroundColor or an invalid color if none is set.
+     * @since 4.4
+     */
+    QColor backgroundColor() const;
+
+    /**
+     * Sets the backgroundColor to @p color.
+     * @since 4.4
+     */
+    void setBackgroundColor( const QColor &color );
 
     /* reimpl */
     QByteArray type() const;

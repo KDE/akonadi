@@ -90,7 +90,6 @@ class CollectionDialog::Private
 
     ~Private()
     {
-      mView->setModel( 0 );
     }
 
     void slotCollectionAvailable( const QModelIndex &index )

@@ -36,10 +36,30 @@ namespace Akonadi {
  * This job searches for contacts that match given search criteria and returns
  * the list of contacts.
  *
+ * Examples:
+ *
  * @code
  *
+ * // Search all contacts with email address tokoe@kde.org
  * Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
  * job->setQuery( Akonadi::ContactSearchJob::Email, "tokoe@kde.org" );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
+ *
+ * ...
+ *
+ * MyClass::searchResult( KJob *job )
+ * {
+ *   Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+ *   const KABC::Addressee::List contacts = searchJob->contacts();
+ *   // do something with the contacts
+ * }
+ *
+ * @endcode
+ *
+ * @code
+ *
+ * // Search for all existing contacts
+ * Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
  * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
  *
  * ...

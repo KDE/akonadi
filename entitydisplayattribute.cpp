@@ -32,6 +32,7 @@ class EntityDisplayAttribute::Private
     QString name;
     QString icon;
     QString activeIcon;
+    QColor backgroundColor;
     bool hidden;
 };
 
@@ -81,6 +82,7 @@ EntityDisplayAttribute * EntityDisplayAttribute::clone() const
   attr->d->name = d->name;
   attr->d->icon = d->icon;
   attr->d->activeIcon = d->activeIcon;
+  attr->d->backgroundColor = d->backgroundColor;
   return attr;
 }
 
@@ -90,6 +92,16 @@ QByteArray EntityDisplayAttribute::serialized() const
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
   l << ImapParser::quote( d->activeIcon.toUtf8() );
+
+  QList<QByteArray> components;
+  if ( d->backgroundColor.isValid() )
+  {
+    components = QList<QByteArray>() << QByteArray::number( d->backgroundColor.red() )
+                                     << QByteArray::number( d->backgroundColor.green() )
+                                     << QByteArray::number( d->backgroundColor.blue() )
+                                     << QByteArray::number( d->backgroundColor.alpha() );
+  }
+  l << '(' + ImapParser::join( components, " " ) + ')';
   return '(' + ImapParser::join( l, " " ) + ')';
 }
 
@@ -97,11 +109,32 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
 {
   QList<QByteArray> l;
   ImapParser::parseParenthesizedList( data, l );
-  Q_ASSERT( l.count() >= 2 );
+  int size = l.size();
+  Q_ASSERT( size >= 2 );
   d->name = QString::fromUtf8( l[0] );
   d->icon = QString::fromUtf8( l[1] );
-  if ( l.size() >= 3 )
-     d->activeIcon = QString::fromUtf8( l[2] );
+  if ( size == 3 )
+    d->activeIcon = QString::fromUtf8( l[2] );
+  if ( size == 4 )
+  {
+    if ( !l[3].isEmpty() )
+    {
+      QList<QByteArray> componentData;
+      ImapParser::parseParenthesizedList( l[3], componentData );
+      if ( componentData.size() != 4 )
+        return;
+      QList<int> components;
+
+      bool ok;
+      for ( int i = 0; i <= 3; ++i )
+      {
+        components << componentData.at( i ).toInt( &ok );
+        if ( !ok )
+          return;
+      }
+      d->backgroundColor = QColor( components.at( 0 ), components.at( 1 ), components.at( 2 ), components.at( 3 ) );
+    }
+  }
 }
 
 void EntityDisplayAttribute::setActiveIconName( const QString &name )
@@ -118,3 +151,14 @@ QString EntityDisplayAttribute::activeIconName() const
 {
   return d->activeIcon;
 }
+
+QColor EntityDisplayAttribute::backgroundColor() const
+{
+  return d->backgroundColor;
+}
+
+void EntityDisplayAttribute::setBackgroundColor( const QColor &color )
+{
+  d->backgroundColor = color;
+}
+
