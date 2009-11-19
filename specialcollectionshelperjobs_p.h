@@ -20,11 +20,13 @@
 #ifndef AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 #define AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadiprivate_export.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/specialcollections.h>
 #include <akonadi/transactionsequence.h>
+
+#include <QtCore/QVariant>
 
 namespace Akonadi {
 
@@ -40,7 +42,7 @@ namespace Akonadi {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
+class AKONADI_TESTS_EXPORT ResourceScanJob : public TransactionSequence
 {
   Q_OBJECT
 
@@ -48,7 +50,7 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
     /**
       Creates a new ResourceScanJob.
     */
-    explicit ResourceScanJob( const QString &resourceId, QObject *parent = 0 );
+    explicit ResourceScanJob( const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent = 0 );
 
     /**
       Destroys this ResourceScanJob.
@@ -76,7 +78,7 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
       Returns all the collections of this resource which have a
       SpecialCollectionAttribute. These might include the root resource collection.
     */
-    Akonadi::Collection::List localFolders() const;
+    Akonadi::Collection::List specialCollections() const;
 
   protected:
     /* reimpl */
@@ -92,6 +94,8 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
 
 
 // ===================== DefaultResourceJob ============================
+
+class DefaultResourceJobPrivate;
 
 /**
   @internal
@@ -110,20 +114,47 @@ class AKONADI_KMIME_TEST_EXPORT ResourceScanJob : public TransactionSequence
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_KMIME_TEST_EXPORT DefaultResourceJob : public ResourceScanJob
+class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
 {
   Q_OBJECT
 
   public:
     /**
-      Creates a new DefaultResourceJob.
-    */
-    explicit DefaultResourceJob( QObject *parent = 0 );
+     * Creates a new DefaultResourceJob.
+     */
+    explicit DefaultResourceJob( KCoreConfigSkeleton *settings, QObject *parent = 0 );
 
     /**
-      Destroys the DefaultResourceJob.
-    */
+     * Destroys the DefaultResourceJob.
+     */
     ~DefaultResourceJob();
+
+    /**
+     * Sets the @p type of the resource that shall be created if the requested
+     * special collection does not exist yet.
+     */
+    void setDefaultResourceType( const QString &type );
+
+    /**
+     * Sets the configuration @p options that shall be applied to the new resource
+     * that is created if the requested special collection does not exist yet.
+     */
+    void setDefaultResourceOptions( const QVariantMap &options );
+
+    /**
+     * Sets the list of well known special collection @p types.
+     */
+    void setTypes( const QList<QByteArray> &types );
+
+    /**
+     * Sets the @p map of special collection types to display names.
+     */
+    void setNameForTypeMap( const QMap<QByteArray, QString> &map );
+
+    /**
+     * Sets the @p map of special collection types to icon names.
+     */
+    void setIconForTypeMap( const QMap<QByteArray, QString> &map );
 
   protected:
     /* reimpl */
@@ -132,9 +163,8 @@ class AKONADI_KMIME_TEST_EXPORT DefaultResourceJob : public ResourceScanJob
     virtual void slotResult( KJob *job );
 
   private:
-    class Private;
-    friend class Private;
-    Private *const d;
+    friend class DefaultResourceJobPrivate;
+    DefaultResourceJobPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void resourceCreateResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void resourceSyncResult( KJob* ) )
@@ -163,7 +193,7 @@ class AKONADI_KMIME_TEST_EXPORT DefaultResourceJob : public ResourceScanJob
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_KMIME_TEST_EXPORT GetLockJob : public KJob
+class AKONADI_TESTS_EXPORT GetLockJob : public KJob
 {
   Q_OBJECT
 
@@ -195,34 +225,19 @@ class AKONADI_KMIME_TEST_EXPORT GetLockJob : public KJob
 // ===================== helper functions ============================
 
 /**
-  Returns the short English name associated with a SpecialCollection type (for
-  instance 'outbox' for Outbox). These names are used as collection names.
-*/
-QString AKONADI_KMIME_TEST_EXPORT nameForType( SpecialCollections::Type type );
-
-/**
-  Returns the pretty i18n'ed name of a SpecialCollection type. These names are used
-  in the EntityDisplayAttribute of SpecialCollections collections.
-*/
-QString AKONADI_KMIME_TEST_EXPORT displayNameForType( SpecialCollections::Type type );
-
-/**
-  Returns the icon name for a given SpecialCollection type.
-*/
-QString iconNameForType( SpecialCollections::Type type );
-
-/**
   Sets on @p col the required attributes of SpecialCollection type @p type.
   These are a SpecialCollectionAttribute and an EntityDisplayAttribute.
 */
-void setCollectionAttributes( Akonadi::Collection &col, SpecialCollections::Type type );
+void setCollectionAttributes( Akonadi::Collection &col, const QByteArray &type,
+                              const QMap<QByteArray, QString> &nameForType,
+                              const QMap<QByteArray, QString> &iconForType );
 
 /**
   Releases the SpecialCollectionsRequestJob lock that was obtained through
   GetLockJob.
   @return Whether the lock was released successfully.
 */
-bool AKONADI_KMIME_TEST_EXPORT releaseLock();
+bool AKONADI_TESTS_EXPORT releaseLock();
 
 } // namespace Akonadi
 

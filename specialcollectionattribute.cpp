@@ -18,7 +18,6 @@
 */
 
 #include "specialcollectionattribute_p.h"
-#include "specialcollections.h"
 
 #include <KDebug>
 
@@ -32,10 +31,10 @@ using namespace Akonadi;
 class SpecialCollectionAttribute::Private
 {
   public:
-    SpecialCollections::Type mType;
+    QByteArray mType;
 };
 
-SpecialCollectionAttribute::SpecialCollectionAttribute( SpecialCollections::Type type )
+SpecialCollectionAttribute::SpecialCollectionAttribute( const QByteArray &type )
   : d( new Private )
 {
   d->mType = type;
@@ -59,26 +58,20 @@ QByteArray SpecialCollectionAttribute::type() const
 
 QByteArray SpecialCollectionAttribute::serialized() const
 {
-  return QByteArray::number( static_cast<int>( d->mType ) );
+  return d->mType;
 }
 
 void SpecialCollectionAttribute::deserialize( const QByteArray &data )
 {
-  bool ok;
-  const int parsed = data.toInt( &ok );
-  if ( !ok || parsed < SpecialCollections::Invalid || parsed >= SpecialCollections::LastType )
-    d->mType = SpecialCollections::Invalid;
-  else
-    d->mType = static_cast<SpecialCollections::Type>( parsed );
+  d->mType = data;
 }
 
-void SpecialCollectionAttribute::setCollectionType( SpecialCollections::Type type )
+void SpecialCollectionAttribute::setCollectionType( const QByteArray &type )
 {
-    Q_ASSERT( type > SpecialCollections::Invalid && type < SpecialCollections::LastType );
-    d->mType = type;
-  }
+  d->mType = type;
+}
 
-SpecialCollections::Type SpecialCollectionAttribute::collectionType() const
+QByteArray SpecialCollectionAttribute::collectionType() const
 {
   return d->mType;
 }

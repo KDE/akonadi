@@ -20,12 +20,13 @@
 #ifndef AKONADI_SPECIALCOLLECTIONS_H
 #define AKONADI_SPECIALCOLLECTIONS_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi_export.h"
 
 #include <QtCore/QObject>
 
 #include "akonadi/collection.h"
 
+class KCoreConfigSkeleton;
 class KJob;
 
 namespace Akonadi {
@@ -69,46 +70,27 @@ class SpecialCollectionsPrivate;
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
+class AKONADI_EXPORT SpecialCollections : public QObject
 {
   Q_OBJECT
 
   public:
     /**
-     * Describes the possible types of special collections.
-     *
-     * Generally, there may not be two special collections of
-     * the same type in the same resource.
+     * Destroys the special collections object.
      */
-    enum Type
-    {
-      Invalid = -1,    ///< An invalid special collection.
-      Root = 0,        ///< The root collection containing the local folders.
-      Inbox,           ///< The inbox collection.
-      Outbox,          ///< The outbox collection.
-      SentMail,        ///< The sent-mail collection.
-      Trash,           ///< The trash collection.
-      Drafts,          ///< The drafts collection.
-      Templates,       ///< The templates collection.
-      LastType         ///< @internal marker
-    };
-
-    /**
-     * Returns the global SpecialCollections instance.
-     */
-    static SpecialCollections *self();
+    ~SpecialCollections();
 
     /**
      * Returns whether the given agent @p instance has a special collection of
      * the given @p type.
      */
-    bool hasCollection( Type type, const AgentInstance &instance ) const;
+    bool hasCollection( const QByteArray &type, const AgentInstance &instance ) const;
 
     /**
      * Returns the special collection of the given @p type in the given agent
      * @p instance, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection collection( Type type, const AgentInstance &instance ) const;
+    Akonadi::Collection collection( const QByteArray &type, const AgentInstance &instance ) const;
 
     /**
      * Registers the given @p collection as a special collection
@@ -118,19 +100,19 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
-    bool registerCollection( Type type, const Akonadi::Collection &collection );
+    bool registerCollection( const QByteArray &type, const Akonadi::Collection &collection );
 
     /**
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */
-    bool hasDefaultCollection( Type type ) const;
+    bool hasDefaultCollection( const QByteArray &type ) const;
 
     /**
      * Returns the special collection of given @p type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection defaultCollection( Type type ) const;
+    Akonadi::Collection defaultCollection( const QByteArray &type ) const;
 
   Q_SIGNALS:
     /**
@@ -147,6 +129,15 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
      */
     void defaultCollectionsChanged();
 
+  protected:
+    /**
+     * Creates a new special collections object.
+     *
+     * @param config The configuration skeleton that provides the default resource id.
+     * @param parent The parent object.
+     */
+    SpecialCollections( KCoreConfigSkeleton *config, QObject *parent = 0 );
+
   private:
     //@cond PRIVATE
     friend class SpecialCollectionsRequestJob;
@@ -154,12 +145,9 @@ class AKONADI_KMIME_EXPORT SpecialCollections : public QObject
     friend class SpecialCollectionsPrivate;
 
 #if 1 // TODO do this only if building tests:
-    friend class SpecialCollectionsTesting;
+    friend class SpecialMailCollectionsTesting;
     friend class LocalFoldersTest;
 #endif
-
-    // singleton class; the only instance resides in sInstance->instance
-    SpecialCollections( SpecialCollectionsPrivate *dd );
 
     SpecialCollectionsPrivate *const d;
 
