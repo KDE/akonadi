@@ -57,12 +57,15 @@ set(akonadicontact_LIB_SRC
   contactsearchjob.cpp
   contactviewer.cpp
   contactviewerdialog.cpp
+  recentcontactscollections.cpp
+  recentcontactscollectionrequestjob.cpp
   waitingoverlay.cpp
   ${akonadicontact_actions_SRCS}
   ${akonadicontact_editor_SRCS}
 )
 
 qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
+kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
 kde4_add_library(akonadi-contact SHARED ${akonadicontact_LIB_SRC})
 
@@ -85,6 +88,7 @@ set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
 install(TARGETS akonadi-contact EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES editor/pics/world.jpg DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/pics)
 install(FILES editor/data/zone.tab DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/data)
+install(FILES recentcontactscollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
 install( FILES
   akonadi-contact_export.h
@@ -101,5 +105,6 @@ install( FILES
   contactsearchjob.h
   contactviewer.h
   contactviewerdialog.h
+  recentcontactscollectionrequestjob.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
 )
