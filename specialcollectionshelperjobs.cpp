@@ -266,6 +266,9 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 {
   if ( job->error() ) {
     //fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
+    q->setError( job->error() );
+    q->setErrorText( job->errorText() );
+    q->emitResult();
     return;
   }
 
@@ -402,7 +405,6 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
       kDebug() << "Unknown collection name" << collection.name() << "-- not recovering.";
     }
   }
-  Q_ASSERT( mPendingModifyJobs > 0 ); // At least Root.
 }
 
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
