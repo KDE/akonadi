@@ -196,14 +196,16 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     d->mFoldersForResource.insert( resourceId, QHash<QByteArray, Collection>() );
   }
 
-  if ( d->mFoldersForResource[ resourceId ].contains( type ) ) {
-    if ( d->mFoldersForResource[ resourceId ][ type ] != collection ) {
-      d->mMonitor->setCollectionMonitored( d->mFoldersForResource[ resourceId ][ type ], false );
-      d->mMonitor->setCollectionMonitored( collection, true );
-      d->mFoldersForResource[ resourceId ].insert( type, collection );
-      d->emitChanged( resourceId );
-    }
+  if ( !d->mFoldersForResource[ resourceId ].contains( type ) )
+    d->mFoldersForResource[ resourceId ].insert( type, Collection() );
+
+  if ( d->mFoldersForResource[ resourceId ][ type ] != collection ) {
+    d->mMonitor->setCollectionMonitored( d->mFoldersForResource[ resourceId ][ type ], false );
+    d->mMonitor->setCollectionMonitored( collection, true );
+    d->mFoldersForResource[ resourceId ].insert( type, collection );
+    d->emitChanged( resourceId );
   }
+
   kDebug() << "Registered collection" << collection.id() << "as folder of type" << type
     << "in resource" << resourceId;
   return true;
