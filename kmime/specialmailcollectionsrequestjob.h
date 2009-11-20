@@ -75,22 +75,22 @@ class AKONADI_KMIME_EXPORT SpecialMailCollectionsRequestJob : public SpecialColl
 
   public:
     /**
-     * Creates a new special collections request job.
+     * Creates a new special mail collections request job.
      */
     explicit SpecialMailCollectionsRequestJob( QObject *parent = 0 );
 
     /**
-     * Destroys the special collections request job.
+     * Destroys the special mail collections request job.
      */
     ~SpecialMailCollectionsRequestJob();
 
     /**
-     * Requests a special collection of the given @p type in the default resource.
+     * Requests a special mail collection of the given @p type in the default resource.
      */
     void requestDefaultCollection( SpecialMailCollections::Type type );
 
     /**
-     * Requests a special collection of the given @p type in the given resource @p instance.
+     * Requests a special mail collection of the given @p type in the given resource @p instance.
      */
     void requestCollection( SpecialMailCollections::Type type, const AgentInstance &instance );
 

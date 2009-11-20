@@ -45,29 +45,8 @@ class SpecialCollectionsRequestJobPrivate;
  * Otherwise, it creates the required collections and registers them with
  * SpecialCollections.
  *
- * Example:
- *
- * @code
- *
- * SpecialCollectionsRequestJob *job = new SpecialCollectionsRequestJob( this );
- * job->requestDefaultCollection( "outbox" );
- * connect( job, SIGNAL( result( KJob* ) ),
- *          this, SLOT( requestDone( KJob* ) ) );
- *
- * ...
- *
- * MyClass::requestDone( KJob *job )
- * {
- *   if ( job->error() )
- *     return;
- *
- *   SpecialCollectionsRequestJob *requestJob = qobject_cast<SpecialCollectionsRequestJob*>( job );
- *
- *   const Collection collection = requestJob->collection();
- *   ...
- * }
- *
- * @endcode
+ * This class is not meant to be used directly but as a base class for type
+ * specific special collection request jobs.
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4

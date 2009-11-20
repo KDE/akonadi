@@ -35,12 +35,12 @@ class AgentInstance;
 class SpecialCollectionsPrivate;
 
 /**
-  @short Interface to special collections such as inbox, outbox etc.
+  @short An interface to special collections.
 
-  This class is the central interface to the local mail folders. These folders
-  can either be in the default resource (stored in ~/.local/share/local-mail)
-  or in any number of custom resources. Special collections of the following types
-  are supported: inbox, outbox, sent-mail, trash, drafts, templates and spam.
+  This class is the central interface to special collections like inbox or
+  outbox in a mail resource or recent contacts in a contacts resource.
+  The class is not meant to be used directly, but to inherit the a type
+  specific special collections class from it (e.g. SpecialMailCollections).
 
   To check whether a special collection is available, simply use the hasCollection() and
   hasDefaultCollection() methods. Available special collections are accessible through
@@ -57,15 +57,6 @@ class SpecialCollectionsPrivate;
   The defaultCollectionsChanged() and collectionsChanged() signals are emitted when
   the special collections for a resource change (i.e. some became available or some
   become unavailable).
-
-  @code
-  if( SpecialCollections::self()->hasDefaultCollection( SpecialCollections::Outbox ) ) {
-    const Collection col = SpecialCollections::self()->defaultCollection( SpecialCollections::Outbox );
-    // ...
-  } else {
-    // ... use SpecialCollectionsRequestJob to request the collection...
-  }
-  @endcode
 
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
