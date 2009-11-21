@@ -20,7 +20,7 @@
 #ifndef ITEMRETRIEVER_H
 #define ITEMRETRIEVER_H
 
-#include "exception.h"
+#include "../exception.h"
 #include "entities.h"
 #include "handler/scope.h"
 
