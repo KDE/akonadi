@@ -48,10 +48,10 @@ void ModelSpy::startSpying()
           this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
   disconnect(m_model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
           this, SLOT(rowsRemoved(const QModelIndex &, int, int)));
-//  disconnect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
-//          this, SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-//  disconnect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-//          this, SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  disconnect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
+          this, SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  disconnect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
+          this, SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
 
   disconnect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
           this, SLOT(dataChanged(const QModelIndex &, const QModelIndex &)));
@@ -65,11 +65,10 @@ void ModelSpy::startSpying()
           SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
   connect(m_model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
           SLOT(rowsRemoved(const QModelIndex &, int, int)));
-// TODO: ncomment for Qt4.6
-//  connect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
-//          SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-//  connect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-//          SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  connect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
+          SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  connect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
+          SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
 
   connect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
           SLOT(dataChanged(const QModelIndex &, const QModelIndex &)));
@@ -88,10 +87,10 @@ void ModelSpy::stopSpying()
           this, SLOT(rowsAboutToBeRemoved(const QModelIndex &, int, int)));
   disconnect(m_model, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
           this, SLOT(rowsRemoved(const QModelIndex &, int, int)));
-//  disconnect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
-//          this, SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-//  disconnect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-//          this, SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  disconnect(m_model, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int,const QModelIndex &, int)),
+          this, SLOT(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
+  disconnect(m_model, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
+          this, SLOT(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
 
   disconnect(m_model, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
           this, SLOT(dataChanged(const QModelIndex &, const QModelIndex &)));
