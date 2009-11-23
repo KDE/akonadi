@@ -56,6 +56,24 @@ class CollectionUtilsTest : public QObject
       QFETCH( bool, isHRID );
       QCOMPARE( CollectionUtils::hasValidHierarchicalRID( collection ), isHRID );
     }
+
+    void testPersistentParentCollection()
+    {
+      Collection col1(1);
+      Collection col2(2);
+      Collection col3(3);
+
+      col2.setParentCollection(col3);
+      col1.setParentCollection(col2);
+
+      Collection assigned = col1;
+      QCOMPARE(assigned.parentCollection(), col2);
+      QCOMPARE(assigned.parentCollection().parentCollection(), col3);
+
+      Collection copied(col1);
+      QCOMPARE(copied.parentCollection(), col2);
+      QCOMPARE(copied.parentCollection().parentCollection(), col3);
+    }
 };
 
 QTEST_AKONADIMAIN( CollectionUtilsTest, NoGUI )
