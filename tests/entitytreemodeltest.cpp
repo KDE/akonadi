@@ -34,8 +34,37 @@
 #include "entitytreemodel.h"
 #include <entitydisplayattribute.h>
 #include <KStandardDirs>
+#include <entitytreemodel_p.h>
 
+class PublicETMPrivate;
 
+class PublicETM : public EntityTreeModel
+{
+  Q_OBJECT
+  Q_DECLARE_PRIVATE(PublicETM);
+  public:
+    PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent );
+
+    EntityTreeModelPrivate *privateClass() const { return d_ptr; }
+};
+
+class PublicETMPrivate : public EntityTreeModelPrivate
+{
+  Q_DECLARE_PUBLIC(PublicETM);
+
+  public:
+    PublicETMPrivate( PublicETM *p );
+};
+
+PublicETM::PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent )
+    : EntityTreeModel( session, monitor, new PublicETMPrivate( this ), parent )
+{
+}
+
+PublicETMPrivate::PublicETMPrivate(PublicETM *p)
+    : EntityTreeModelPrivate( p )
+{
+}
 
 class EntityTreeModelTest : public QObject
 {
@@ -97,7 +126,7 @@ private slots:
   void testCollectionFetch();
 
 private:
-  EntityTreeModel *m_model;
+  PublicETM *m_model;
   QEventLoop *m_eventLoop;
   EventQueue *m_eventQueue;
 
@@ -127,7 +156,9 @@ void EntityTreeModelTest::initTestCase()
 void EntityTreeModelTest::init()
 {
   FakeMonitor *fakeMonitor = new FakeMonitor( m_eventQueue, m_fakeServer, this);
-  m_model = new EntityTreeModel( m_fakeSession, fakeMonitor );
+
+  fakeMonitor->setCollectionMonitored(Collection::root());
+  m_model = new PublicETM( m_fakeSession, fakeMonitor, this );
   m_model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
   m_modelSpy = new ModelSpy(this);
