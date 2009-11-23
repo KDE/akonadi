@@ -29,7 +29,7 @@ class FakeMonitor : public Akonadi::ChangeRecorder
 {
   Q_OBJECT
 public:
-  FakeMonitor(EventQueue *eventQueue, FakeAkonadiServer *fakeServer, QObject* parent = 0);
+  FakeMonitor(QObject* parent = 0);
 
 public slots:
   void processNextEvent();
