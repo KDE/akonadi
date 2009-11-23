@@ -24,6 +24,7 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 
 include(MacroLogFeature)
 include(InstallSettings)
+include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(MacroWriteBasicCMakeVersionFile)
 
@@ -132,7 +133,19 @@ endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
 
 ############### Configure checks ###############
 
+set (AKONADI_SYSTEM_LIBS)
+
 check_include_files(execinfo.h HAVE_EXECINFO_H)
+if (HAVE_EXECINFO_H)
+  check_function_exists(backtrace BACKTRACE_IN_LIBC)
+  if (NOT BACKTRACE_IN_LIBC)
+    find_library (EXECINFO_LIBRARY NAMES execinfo)
+    if (EXECINFO_LIBRARY)
+      set (AKONADI_SYSTEM_LIBS ${AKONADI_SYSTEM_LIBS} ${EXECINFO_LIBRARY})
+    endif (EXECINFO_LIBRARY)
+  endif (NOT BACKTRACE_IN_LIBC)
+endif (HAVE_EXECINFO_H)
+
 check_include_files(unistd.h HAVE_UNISTD_H)
 
 # set the output paths
