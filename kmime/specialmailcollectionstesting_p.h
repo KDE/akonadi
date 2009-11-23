@@ -17,23 +17,23 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_SPECIALCOLLECTIONSTESTING_H
-#define AKONADI_SPECIALCOLLECTIONSTESTING_H
+#ifndef AKONADI_SPECIALMAILCOLLECTIONSTESTING_H
+#define AKONADI_SPECIALMAILCOLLECTIONSTESTING_H
 
 #include "akonadi-kmime_export.h"
-#include "specialcollections.h"
+#include "specialmailcollections.h"
 
 namespace Akonadi {
 
 /**
   @internal
-  Class that exposes SpecialCollections' private methods for use in unit tests.
+  Class that exposes SpecialMailCollections' private methods for use in unit tests.
   HACK Is there a better way to do this?
 */
-class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsTesting
+class AKONADI_KMIME_TEST_EXPORT SpecialMailCollectionsTesting
 {
   public:
-    static SpecialCollectionsTesting *_t_self();
+    static SpecialMailCollectionsTesting *_t_self();
     void _t_setDefaultResourceId( const QString &resourceId );
     void _t_forgetFoldersForResource( const QString &resourceId );
     void _t_beginBatchRegister();
@@ -44,4 +44,4 @@ class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsTesting
 
 } // namespace Akonadi
 
-#endif // AKONADI_SPECIALCOLLECTIONSTESTING_H
+#endif // AKONADI_SPECIALMAILCOLLECTIONSTESTING_H

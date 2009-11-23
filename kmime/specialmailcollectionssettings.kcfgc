@@ -1,5 +1,5 @@
-File=specialcollections.kcfg
-ClassName=SpecialCollectionsSettings
+File=specialmailcollections.kcfg
+ClassName=SpecialMailCollectionsSettings
 NameSpace=Akonadi
 Singleton=true
 ItemAccessors=true

@@ -37,11 +37,11 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/control.h>
 #include <akonadi/qtest_akonadi.h>
-#include "../specialcollectionattribute_p.h"
-#include "../specialcollections_p.h"
-#include <akonadi/kmime/specialcollections.h>
-#include "../specialcollectionstesting.h"
-#include "../specialcollectionshelperjobs_p.h"
+#include "../../specialcollectionattribute_p.h"
+#include "../../specialcollections_p.h"
+#include <akonadi/kmime/specialmailcollections.h>
+#include "../specialmailcollectionstesting.h"
+#include "../../specialcollectionshelperjobs_p.h"
 
 using namespace Akonadi;
 
@@ -467,7 +467,7 @@ void LocalFoldersTest::testResourceScan()
 void LocalFoldersTest::testDefaultResourceJob()
 {
   // Initially the defaut maildir does not exist.
-  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
+  QVERIFY( !QFile::exists( KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) ) );
 
   // Run the job.
   Collection maildirRoot;
@@ -484,7 +484,7 @@ void LocalFoldersTest::testDefaultResourceJob()
   }
 
   // The maildir should exist now.
-  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + nameForType( SpecialCollections::Root ) ) );
+  QVERIFY( QFile::exists( KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) ) );
 
   // Create a LocalFolder in the default resource.
   Collection outbox;
@@ -517,10 +517,10 @@ void LocalFoldersTest::testRecoverDefaultResource()
 {
   // The maildirs should exist (created in testDefaultResourceJob).
   const QString xdgPath = KGlobal::dirs()->localxdgdatadir();
-  const QString rootPath = xdgPath + nameForType( SpecialCollections::Root );
+  const QString rootPath = xdgPath + QLatin1String( "local-mail" );
   const QString outboxPath = xdgPath + QString::fromLatin1( ".%1.directory/%2" ) \
-                                       .arg( nameForType( SpecialCollections::Root ) )
-                                       .arg( nameForType( SpecialCollections::Outbox ) );
+                                       .arg( QLatin1String( "local-mail" ) )
+                                       .arg( QLatin1String( "outbox" ) );
   QVERIFY( QFile::exists( rootPath ) );
   QVERIFY( QFile::exists( outboxPath ) );
 

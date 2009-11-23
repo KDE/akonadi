@@ -20,11 +20,13 @@
 #ifndef AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
 #define AKONADI_SPECIALCOLLECTIONSREQUESTJOB_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi_export.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/kmime/specialcollections.h>
+#include <akonadi/specialcollections.h>
 #include <akonadi/transactionsequence.h>
+
+#include <QtCore/QVariant>
 
 namespace Akonadi {
 
@@ -43,42 +45,17 @@ class SpecialCollectionsRequestJobPrivate;
  * Otherwise, it creates the required collections and registers them with
  * SpecialCollections.
  *
- * Example:
- *
- * @code
- *
- * SpecialCollectionsRequestJob *job = new SpecialCollectionsRequestJob( this );
- * job->requestDefaultCollection( SpecialCollections::Outbox );
- * connect( job, SIGNAL( result( KJob* ) ),
- *          this, SLOT( requestDone( KJob* ) ) );
- *
- * ...
- *
- * MyClass::requestDone( KJob *job )
- * {
- *   if ( job->error() )
- *     return;
- *
- *   SpecialCollectionsRequestJob *requestJob = qobject_cast<SpecialCollectionsRequestJob*>( job );
- *
- *   const Collection collection = requestJob->collection();
- *   ...
- * }
- *
- * @endcode
+ * This class is not meant to be used directly but as a base class for type
+ * specific special collection request jobs.
  *
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
 */
-class AKONADI_KMIME_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
+class AKONADI_EXPORT SpecialCollectionsRequestJob : public TransactionSequence
 {
   Q_OBJECT
 
   public:
-    /**
-     * Creates a new special collections request job.
-     */
-    explicit SpecialCollectionsRequestJob( QObject *parent = 0 );
 
     /**
      * Destroys the special collections request job.
@@ -88,12 +65,12 @@ class AKONADI_KMIME_EXPORT SpecialCollectionsRequestJob : public TransactionSequ
     /**
      * Requests a special collection of the given @p type in the default resource.
      */
-    void requestDefaultCollection( SpecialCollections::Type type );
+    void requestDefaultCollection( const QByteArray &type );
 
     /**
      * Requests a special collection of the given @p type in the given resource @p instance.
      */
-    void requestCollection( SpecialCollections::Type type, const AgentInstance &instance );
+    void requestCollection( const QByteArray &type, const AgentInstance &instance );
 
     /**
      * Returns the requested collection.
@@ -101,6 +78,41 @@ class AKONADI_KMIME_EXPORT SpecialCollectionsRequestJob : public TransactionSequ
     Collection collection() const;
 
   protected:
+    /**
+     * Creates a new special collections request job.
+     *
+     * @param collections The SpecialCollections object that shall be used.
+     * @param parent The parent object.
+     */
+    explicit SpecialCollectionsRequestJob( SpecialCollections *collections, QObject *parent = 0 );
+
+    /**
+     * Sets the @p type of the resource that shall be created if the requested
+     * special collection does not exist yet.
+     */
+    void setDefaultResourceType( const QString &type );
+
+    /**
+     * Sets the configuration @p options that shall be applied to the new resource
+     * that is created if the requested special collection does not exist yet.
+     */
+    void setDefaultResourceOptions( const QVariantMap &options );
+
+    /**
+     * Sets the list of well known special collection @p types.
+     */
+    void setTypes( const QList<QByteArray> &types );
+
+    /**
+     * Sets the @p map of special collection types to display names.
+     */
+    void setNameForTypeMap( const QMap<QByteArray, QString> &map );
+
+    /**
+     * Sets the @p map of special collection types to icon names.
+     */
+    void setIconForTypeMap( const QMap<QByteArray, QString> &map );
+
     /* reimpl */
     virtual void doStart();
     /* reimpl */
@@ -109,6 +121,7 @@ class AKONADI_KMIME_EXPORT SpecialCollectionsRequestJob : public TransactionSequ
   private:
     //@cond PRIVATE
     friend class SpecialCollectionsRequestJobPrivate;
+    friend class DefaultResourceJobPrivate;
 
     SpecialCollectionsRequestJobPrivate *const d;
 

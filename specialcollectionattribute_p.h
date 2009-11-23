@@ -20,10 +20,11 @@
 #ifndef AKONADI_SPECIALCOLLECTIONATTRIBUTE_P_H
 #define AKONADI_SPECIALCOLLECTIONATTRIBUTE_P_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi_export.h"
 
 #include <akonadi/attribute.h>
-#include <akonadi/kmime/specialcollections.h>
+
+#include <QtCore/QByteArray>
 
 namespace Akonadi {
 
@@ -35,13 +36,13 @@ namespace Akonadi {
  * @author Constantin Berzan <exit3219@gmail.com>
  * @since 4.4
  */
-class AKONADI_KMIME_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
+class AKONADI_EXPORT SpecialCollectionAttribute : public Akonadi::Attribute
 {
   public:
     /**
      * Creates a new special collection attribute.
      */
-    explicit SpecialCollectionAttribute( SpecialCollections::Type type = SpecialCollections::Invalid );
+    explicit SpecialCollectionAttribute( const QByteArray &type = QByteArray() );
 
     /**
      * Destroys the special collection attribute.
@@ -51,12 +52,12 @@ class AKONADI_KMIME_EXPORT SpecialCollectionAttribute : public Akonadi::Attribut
     /**
      * Sets the special collections @p type of the collection.
      */
-    void setCollectionType( SpecialCollections::Type type );
+    void setCollectionType( const QByteArray &type );
 
     /**
      * Returns the special collections type of the collection.
      */
-    SpecialCollections::Type collectionType() const;
+    QByteArray collectionType() const;
 
     /* reimpl */
     virtual SpecialCollectionAttribute* clone() const;

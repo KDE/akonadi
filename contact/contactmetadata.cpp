@@ -30,6 +30,11 @@ using namespace Akonadi;
 class ContactMetaData::Private
 {
   public:
+    Private()
+      : mDisplayNameMode( -1 )
+    {
+    }
+
     int mDisplayNameMode;
 };
 
@@ -51,7 +56,10 @@ void ContactMetaData::load( const Akonadi::Item &contact )
   ContactMetaDataAttribute *attribute = contact.attribute<ContactMetaDataAttribute>();
   const QVariantMap metaData = attribute->metaData();
 
-  d->mDisplayNameMode = metaData.value( QLatin1String( "DisplayNameMode" ) ).toInt();
+  if ( metaData.contains( QLatin1String( "DisplayNameMode" ) ) )
+    d->mDisplayNameMode = metaData.value( QLatin1String( "DisplayNameMode" ) ).toInt();
+  else
+    d->mDisplayNameMode = -1;
 }
 
 void ContactMetaData::store( Akonadi::Item &contact )
@@ -59,7 +67,8 @@ void ContactMetaData::store( Akonadi::Item &contact )
   ContactMetaDataAttribute *attribute = contact.attribute<ContactMetaDataAttribute>( Item::AddIfMissing );
 
   QVariantMap metaData;
-  metaData.insert( QLatin1String( "DisplayNameMode" ), QVariant( d->mDisplayNameMode ) );
+  if ( d->mDisplayNameMode != -1 )
+    metaData.insert( QLatin1String( "DisplayNameMode" ), QVariant( d->mDisplayNameMode ) );
 
   attribute->setMetaData( metaData );
 }

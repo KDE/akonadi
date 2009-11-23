@@ -33,6 +33,23 @@
 #include <kdialog.h>
 #include <klocale.h>
 
+// Tries to guess the display type that is used for the passed contact
+static DisplayNameEditWidget::DisplayType guessedDisplayType( const KABC::Addressee &contact )
+{
+  if ( contact.formattedName() == (contact.givenName() + QLatin1Char( ' ' ) + contact.familyName()) )
+    return DisplayNameEditWidget::SimpleName;
+  else if ( contact.formattedName() == contact.assembledName() )
+    return DisplayNameEditWidget::FullName;
+  else if ( contact.formattedName() == (contact.familyName() + QLatin1String( ", " ) + contact.givenName()) )
+    return DisplayNameEditWidget::ReverseNameWithComma;
+  else if ( contact.formattedName() == (contact.familyName() + QLatin1Char( ' ' ) + contact.givenName()) )
+    return DisplayNameEditWidget::ReverseName;
+  else if ( contact.formattedName() == contact.organization() )
+    return DisplayNameEditWidget::Organization;
+  else
+    return DisplayNameEditWidget::CustomName;
+}
+
 class DisplayNameDelegate : public QStyledItemDelegate
 {
   public:
@@ -122,7 +139,12 @@ void DisplayNameEditWidget::setReadOnly( bool readOnly )
 
 void DisplayNameEditWidget::setDisplayType( DisplayType type )
 {
-  mDisplayType = type;
+  if ( type == -1 ) {
+    // guess the used display type
+    mDisplayType = guessedDisplayType( mContact );
+  } else
+    mDisplayType = type;
+
   updateView();
 }
 
@@ -134,6 +156,8 @@ DisplayNameEditWidget::DisplayType DisplayNameEditWidget::displayType() const
 void DisplayNameEditWidget::loadContact( const KABC::Addressee &contact )
 {
   mContact = contact;
+
+  mDisplayType = guessedDisplayType( mContact );
 
   updateView();
 }

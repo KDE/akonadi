@@ -129,6 +129,10 @@ set( akonadikde_LIB_SRC
   selftestdialog.cpp
   session.cpp
   servermanager.cpp
+  specialcollectionattribute.cpp
+  specialcollections.cpp
+  specialcollectionshelperjobs.cpp
+  specialcollectionsrequestjob.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
   subscriptionjob.cpp
@@ -261,6 +265,8 @@ install( FILES
   selectionproxymodel.h
   session.h
   servermanager.h
+  specialcollections.h
+  specialcollectionsrequestjob.h
   standardactionmanager.h
   statisticsproxymodel.h
   transactionjobs.h

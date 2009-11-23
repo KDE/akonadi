@@ -20,13 +20,14 @@
 #ifndef AKONADI_SPECIALCOLLECTIONS_P_H
 #define AKONADI_SPECIALCOLLECTIONS_P_H
 
-#include <QHash>
-#include <QString>
+#include <QtCore/QHash>
+#include <QtCore/QString>
 
-#include "akonadi-kmime_export.h"
+#include "akonadiprivate_export.h"
 
 #include "akonadi/collection.h"
 
+class KCoreConfigSkeleton;
 class KJob;
 
 namespace Akonadi {
@@ -38,12 +39,13 @@ class Monitor;
 /**
   @internal
 */
-class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsPrivate
+class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
 {
   public:
-    SpecialCollectionsPrivate();
+    SpecialCollectionsPrivate( KCoreConfigSkeleton *settings, SpecialCollections *qq );
     ~SpecialCollectionsPrivate();
 
+    QString defaultResourceId() const;
     void emitChanged( const QString &resourceId );
     void collectionRemoved( const Collection &col ); // slot
 
@@ -69,11 +71,12 @@ class AKONADI_KMIME_TEST_EXPORT SpecialCollectionsPrivate
 
     AgentInstance defaultResource() const;
 
-    SpecialCollections *instance;
-    QHash<QString, QHash<SpecialCollections::Type, Collection> > foldersForResource;
-    bool batchMode;
-    QSet<QString> toEmitChangedFor;
-    Monitor *monitor;
+    SpecialCollections *q;
+    KCoreConfigSkeleton *mSettings;
+    QHash<QString, QHash<QByteArray, Collection> > mFoldersForResource;
+    bool mBatchMode;
+    QSet<QString> mToEmitChangedFor;
+    Monitor *mMonitor;
 };
 
 } // namespace Akonadi
