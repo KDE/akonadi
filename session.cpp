@@ -171,6 +171,11 @@ void SessionPrivate::startJob( Job *job )
   }
 }
 
+void SessionPrivate::endJob( Job *job )
+{
+  job->emitResult();
+}
+
 void SessionPrivate::jobDone(KJob * job)
 {
   if( job == currentJob ) {
@@ -229,21 +234,25 @@ void SessionPrivate::writeData(const QByteArray & data)
 //@endcond
 
 
-Session::Session(const QByteArray & sessionId, QObject * parent) :
-    QObject( parent ),
-    d( new SessionPrivate( this ) )
+SessionPrivate::SessionPrivate( Session *parent )
+    : mParent( parent ), mConnectionSettings( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
 {
+}
+
+void SessionPrivate::init()
+{
+  parser = new ImapParser();
+
   if ( !sessionId.isEmpty() ) {
-    d->sessionId = sessionId;
+    sessionId = sessionId;
   } else {
-    d->sessionId = QCoreApplication::instance()->applicationName().toUtf8()
+    sessionId = QCoreApplication::instance()->applicationName().toUtf8()
         + '-' + QByteArray::number( qrand() );
   }
 
-  d->connected = false;
-  d->theNextTag = 1;
-  d->currentJob = 0;
-  d->jobRunning = false;
+  connected = false;
+  theNextTag = 1;
+  jobRunning = false;
 
   const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
 
@@ -255,15 +264,29 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
                << XdgBaseDirs::systemPathList( "config" );
   }
 
-  d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
+  mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
 
   // should check connection method
-  d->socket = new QLocalSocket( this );
+  socket = new QLocalSocket( mParent );
 
-  connect( d->socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
-  connect( d->socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
-  connect( d->socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
-  d->reconnect();
+  mParent->connect( socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
+  mParent->connect( socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
+  mParent->connect( socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
+  reconnect();
+}
+
+Session::Session(const QByteArray & sessionId, QObject * parent) :
+    QObject( parent ),
+    d( new SessionPrivate( this ) )
+{
+  d->init();
+}
+
+Session::Session( SessionPrivate *dd, const QByteArray & sessionId, QObject * parent)
+    : QObject( parent ),
+    d( dd )
+{
+  d->init();
 }
 
 Session::~Session()
