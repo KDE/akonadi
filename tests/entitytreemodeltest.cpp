@@ -109,6 +109,8 @@ private slots:
   void init();
 
   void testCollectionFetch();
+  void testCollectionAdded();
+  void testCollectionMoved();
 
 private:
   PublicETM *m_model;
@@ -255,6 +257,138 @@ void EntityTreeModelTest::testCollectionFetch()
 
 }
 
+
+void EntityTreeModelTest::testCollectionAdded()
+{
+  Collection::List collectionList;
+
+  collectionList << getCollection(Collection::root(), "Col0");
+  collectionList << getCollection(Collection::root(), "Col1");
+  collectionList << getCollection(Collection::root(), "Col2");
+  collectionList << getCollection(Collection::root(), "Col3");
+
+  // Give the collection 'col0' four child collections.
+  Collection col0 = collectionList.at( 0 );
+
+  collectionList << getCollection(col0, "Col4");
+  collectionList << getCollection(col0, "Col5");
+  collectionList << getCollection(col0, "Col6");
+  collectionList << getCollection(col0, "Col7");
+
+  Collection col5 = collectionList.at( 5 );
+
+  collectionList << getCollection(col5, "Col8");
+  collectionList << getCollection(col5, "Col9");
+  collectionList << getCollection(col5, "Col10");
+  collectionList << getCollection(col5, "Col11");
+
+  Collection col6 = collectionList.at( 6 );
+
+  collectionList << getCollection(col6, "Col12");
+  collectionList << getCollection(col6, "Col13");
+  collectionList << getCollection(col6, "Col14");
+  collectionList << getCollection(col6, "Col15");
+
+  Collection::List collectionListReversed;
+
+  foreach(const Collection &c, collectionList)
+    collectionListReversed.prepend(c);
+
+  // The first list job is started with a single shot.
+  // Give it time to set the root collection.
+  QTest::qWait(1);
+
+  m_modelSpy->stopSpying();
+  m_model->privateClass()->collectionsFetched(collectionListReversed);
+  m_modelSpy->startSpying();
+
+  Collection newCol1 = getCollection(Collection::root(), "NewCollection");
+
+  m_model->privateClass()->monitoredCollectionAdded(newCol1, Collection::root());
+
+  QVERIFY(m_modelSpy->size() == 2);
+  for (int i = 0; i < m_modelSpy->size(); ++i)
+  {
+    QVERIFY( m_modelSpy->at( i ).at( 0 ) == ( i % 2 == 0 ? RowsAboutToBeInserted : RowsInserted ) );
+  }
+  int start = m_modelSpy->at( 1 ).at( 2 ).toInt();
+  int end = m_modelSpy->at( 1 ).at( 3 ).toInt();
+
+  QCOMPARE(m_model->rowCount(), 5);
+  QCOMPARE(start, end);
+  QCOMPARE(m_model->index(start, 0).data().toString(), QLatin1String("NewCollection"));
+
+}
+
+void EntityTreeModelTest::testCollectionMoved()
+{
+  Collection::List collectionList;
+
+  collectionList << getCollection(Collection::root(), "Col0");
+  collectionList << getCollection(Collection::root(), "Col1");
+  collectionList << getCollection(Collection::root(), "Col2");
+  collectionList << getCollection(Collection::root(), "Col3");
+
+  // Give the collection 'col0' four child collections.
+  Collection col0 = collectionList.at( 0 );
+
+  collectionList << getCollection(col0, "Col4");
+  collectionList << getCollection(col0, "Col5");
+  collectionList << getCollection(col0, "Col6");
+  collectionList << getCollection(col0, "Col7");
+
+  Collection col5 = collectionList.at( 5 );
+
+  collectionList << getCollection(col5, "Col8");
+  collectionList << getCollection(col5, "Col9");
+  collectionList << getCollection(col5, "Col10");
+  collectionList << getCollection(col5, "Col11");
+
+  Collection col6 = collectionList.at( 6 );
+
+  collectionList << getCollection(col6, "Col12");
+  Collection col13 = getCollection(col6, "Col13");
+  collectionList << col13;
+  collectionList << getCollection(col6, "Col14");
+  collectionList << getCollection(col6, "Col15");
+
+  Collection::List collectionListReversed;
+
+  foreach(const Collection &c, collectionList)
+    collectionListReversed.prepend(c);
+
+  // The first list job is started with a single shot.
+  // Give it time to set the root collection.
+  QTest::qWait(1);
+
+  m_modelSpy->stopSpying();
+  m_model->privateClass()->collectionsFetched(collectionListReversed);
+  m_modelSpy->startSpying();
+
+  // Move col13 to col5
+
+  col13.setParentCollection( col5 );
+  m_model->privateClass()->monitoredCollectionMoved(col13, col6, col5);
+
+  QVERIFY(m_modelSpy->size() == 2);
+  for (int i = 0; i < m_modelSpy->size(); ++i)
+  {
+    QVERIFY( m_modelSpy->at( i ).at( 0 ) == ( i % 2 == 0 ? RowsAboutToBeMoved : RowsMoved ) );
+  }
+
+  int start = m_modelSpy->at( 1 ).at( 2 ).toInt();
+  int end = m_modelSpy->at( 1 ).at( 3 ).toInt();
+  int dest = m_modelSpy->at( 1 ).at( 5 ).toInt();
+
+  QModelIndex src = qvariant_cast<QModelIndex>( m_modelSpy->at( 1 ).at( 1 ) );
+  QModelIndex destIdx = qvariant_cast<QModelIndex>( m_modelSpy->at( 1 ).at( 4 ) );
+
+  QCOMPARE(start, end);
+  QCOMPARE(src.data().toString(), QLatin1String("Col6"));
+  QCOMPARE(destIdx.data().toString(), QLatin1String("Col5"));
+  QCOMPARE(m_model->index(dest, 0, destIdx).data().toString(), QLatin1String("Col13"));
+
+}
 
 #include "entitytreemodeltest.moc"
 
