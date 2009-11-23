@@ -508,12 +508,15 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     virtual bool entityMatch( const Collection &collection, const QVariant &value, Qt::MatchFlags flags ) const;
 
-
-  private:
+protected:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityTreeModel )
-    EntityTreeModelPrivate * const d_ptr;
+    EntityTreeModelPrivate * d_ptr;
+    EntityTreeModel( Session *session, ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject* parent = 0 );
+    //@endcond
 
+private:
+  //@cond PRIVATE
     // Make these private, they shouldn't be called by applications
     virtual bool insertRows( int , int, const QModelIndex& = QModelIndex() );
     virtual bool insertColumns( int, int, const QModelIndex& = QModelIndex() );

@@ -52,6 +52,67 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
 {
 }
 
+void EntityTreeModelPrivate::init( ChangeRecorder *monitor, Session *session )
+{
+  Q_Q( EntityTreeModel );
+  m_monitor = monitor;
+  m_session = session;
+
+  m_monitor->setChangeRecordingEnabled( false );
+
+  m_includeStatistics = true;
+  m_monitor->fetchCollectionStatistics( true );
+  m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+
+  m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
+
+  q->connect( monitor, SIGNAL( mimeTypeMonitored( const QString&, bool ) ),
+              SLOT( monitoredMimeTypeChanged( const QString&, bool ) ) );
+
+  // monitor collection changes
+  q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
+  q->connect( monitor,
+           SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+
+  if ( !monitor->itemFetchScope().isEmpty() ) {
+    // Monitor item changes.
+    q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+            SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+    q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+            SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
+    q->connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+
+    q->connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    q->connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+            SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  }
+  q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
+           SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
+
+//   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
+
+  QList<Collection> list = monitor->collectionsMonitored();
+  if ( list.size() == 1 )
+    m_rootCollection = list.first();
+  else
+    m_rootCollection = Collection::root();
+
+  m_rootCollectionDisplayName = QLatin1String( "[*]" );
+
+  // Initializes the model cleanly.
+  q->clearAndReset();
+}
+
 
 int EntityTreeModelPrivate::indexOf( const QList<Node*> &nodes, Entity::Id id ) const
 {

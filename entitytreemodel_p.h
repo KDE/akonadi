@@ -29,6 +29,8 @@
 
 #include "entitytreemodel.h"
 
+#include "akonadiprivate_export.h"
+
 namespace Akonadi
 {
 class ItemFetchJob;
@@ -54,7 +56,7 @@ namespace Akonadi
 /**
  * @internal
  */
-class EntityTreeModelPrivate
+class AKONADI_TESTS_EXPORT EntityTreeModelPrivate
 {
 public:
 
@@ -67,6 +69,8 @@ public:
     Base,
     Recursive
   };
+
+  void init( ChangeRecorder *monitor, Session *session );
 
   void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
   void fetchItems( const Collection &collection );
