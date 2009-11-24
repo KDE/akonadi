@@ -41,7 +41,7 @@ class PublicETMPrivate;
 class PublicETM : public EntityTreeModel
 {
   Q_OBJECT
-  Q_DECLARE_PRIVATE(PublicETM);
+  Q_DECLARE_PRIVATE(PublicETM)
   public:
     PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent );
 
@@ -50,7 +50,7 @@ class PublicETM : public EntityTreeModel
 
 class PublicETMPrivate : public EntityTreeModelPrivate
 {
-  Q_DECLARE_PUBLIC(PublicETM);
+  Q_DECLARE_PUBLIC(PublicETM)
 
   public:
     PublicETMPrivate( PublicETM *p );
