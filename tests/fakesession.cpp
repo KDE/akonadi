@@ -21,11 +21,32 @@
 
 #include "fakesession.h"
 #include "session_p.h"
+#include "job.h"
 
 #include <KDebug>
 
+class FakeSessionPrivate : public SessionPrivate
+{
+  public:
+    FakeSessionPrivate(Session* parent)
+      : SessionPrivate( parent )
+    {
+
+    }
+
+    /* reimp */ void init() {}
+
+    /* reimp */ void addJob( Job *job )
+    {
+      // Return immediately so that no actual communication happens with the server and
+      // the started jobs are completed.
+      endJob( job );
+    }
+
+};
+
 FakeSession::FakeSession(const QByteArray& sessionId, QObject* parent)
-    : Session(sessionId, parent)
+    : Session(new FakeSessionPrivate(this), sessionId, parent)
 {
 
 }

@@ -22,6 +22,7 @@
 
 #include "session.h"
 #include "imapparser_p.h"
+#include "akonadiprivate_export.h"
 
 #include <QtNetwork/QLocalSocket>
 
@@ -36,20 +37,18 @@ namespace Akonadi {
 /**
  * @internal
  */
-class SessionPrivate
+class AKONADI_TESTS_EXPORT SessionPrivate
 {
   public:
-    SessionPrivate( Session *parent )
-      : mParent( parent ), mConnectionSettings( 0 ), protocolVersion( 0 )
-    {
-      parser = new ImapParser();
-    }
+    SessionPrivate( Session *parent );
 
-    ~SessionPrivate()
+    virtual ~SessionPrivate()
     {
       delete parser;
       delete mConnectionSettings;
     }
+
+    virtual void init();
 
     void startNext();
     void reconnect();
@@ -58,6 +57,12 @@ class SessionPrivate
     void dataReceived();
     void doStartNext();
     void startJob( Job* job );
+
+    /**
+      @internal For testing purposes only. See FakeSesson.
+    */
+    void endJob( Job* job );
+
     void jobDone( KJob* job );
     void jobWriteFinished( Akonadi::Job* job );
     void jobDestroyed( QObject *job );
@@ -78,7 +83,7 @@ class SessionPrivate
     /**
       Associates the given Job object with this session.
     */
-    void addJob( Job* job );
+    virtual void addJob( Job* job );
 
     /**
       Returns the next IMAP tag.

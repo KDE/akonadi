@@ -25,42 +25,14 @@
 
 using namespace Akonadi;
 
-FakeMonitor::FakeMonitor(EventQueue *eventQueue, FakeAkonadiServer *fakeServer, QObject* parent)
-  : ChangeRecorder(parent), m_eventQueue(eventQueue), m_fakeServer(fakeServer)
+FakeMonitor::FakeMonitor(QObject* parent)
+  : ChangeRecorder(parent)
 {
-  connect(eventQueue, SIGNAL(dequeued()), SLOT(processNextEvent()));
 }
 
 
 void FakeMonitor::processNextEvent()
 {
-  if (!m_eventQueue->head()->isMonitorEvent())
-    return;
-
-  AkonadiEvent *event = m_eventQueue->dequeue();
-  MonitorEvent *monitorEvent = dynamic_cast<MonitorEvent *>(event);
-  Q_ASSERT(monitorEvent);
-
-  QList<Entity::Id> ids = monitorEvent->affectedCollections();
-
-
-
-  // Process it.
-  switch (monitorEvent->eventType())
-  {
-    case MonitorEvent::CollectionsAdded:
-    {
-      Collection::List list;
-      foreach (Entity::Id id, ids)
-      {
-        Collection col = m_fakeServer->getCollection(id);
-        Q_ASSERT(col.isValid());
-        Collection parent = m_fakeServer->getCollection(col.parentCollection().id());
-        Q_ASSERT(parent.isValid());
-        emit collectionAdded(col, parent);
-      }
-    }
-  }
 }
 
 

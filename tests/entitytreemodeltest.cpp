@@ -34,8 +34,37 @@
 #include "entitytreemodel.h"
 #include <entitydisplayattribute.h>
 #include <KStandardDirs>
+#include <entitytreemodel_p.h>
 
+class PublicETMPrivate;
 
+class PublicETM : public EntityTreeModel
+{
+  Q_OBJECT
+  Q_DECLARE_PRIVATE(PublicETM)
+  public:
+    PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent );
+
+    EntityTreeModelPrivate *privateClass() const { return d_ptr; }
+};
+
+class PublicETMPrivate : public EntityTreeModelPrivate
+{
+  Q_DECLARE_PUBLIC(PublicETM)
+
+  public:
+    PublicETMPrivate( PublicETM *p );
+};
+
+PublicETM::PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent )
+    : EntityTreeModel( session, monitor, new PublicETMPrivate( this ), parent )
+{
+}
+
+PublicETMPrivate::PublicETMPrivate(PublicETM *p)
+    : EntityTreeModelPrivate( p )
+{
+}
 
 class EntityTreeModelTest : public QObject
 {
@@ -63,7 +92,7 @@ protected:
     else
       eda->setDisplayName( name );
 
-    if (!displayDecoration.isEmpty())
+    if ( !displayDecoration.isEmpty() )
       eda->setIconName( displayDecoration );
     else
       eda->setIconName( "x-akonadi-test-icon" );
@@ -74,35 +103,19 @@ protected:
 
   Entity::Id getCollectionId() { return m_collectionId++; }
 
-protected slots:
-  void eventProcessed()
-  {
-    // This is called after the last real event has been
-    // started, but it might not be finihsed yet, so we give it a second.
-    if ( !m_eventQueue->head()->isTerminalEvent() )
-      QTimer::singleShot(1000, this, SLOT(delayedExit()) );
-  }
-
-  void delayedExit()
-  {
-    m_eventLoop->exit();
-  }
-
-
 private slots:
   void initTestCase();
 
   void init();
 
   void testCollectionFetch();
+  void testCollectionAdded();
+  void testCollectionMoved();
 
 private:
-  EntityTreeModel *m_model;
-  QEventLoop *m_eventLoop;
-  EventQueue *m_eventQueue;
+  PublicETM *m_model;
 
   ModelSpy *m_modelSpy;
-  FakeAkonadiServer *m_fakeServer;
   FakeSession *m_fakeSession;
   FakeMonitor *m_fakeMonitor;
   QByteArray m_sessionName;
@@ -114,20 +127,19 @@ private:
 
 void EntityTreeModelTest::initTestCase()
 {
-
   m_collectionId = 1;
-  m_eventQueue = new EventQueue();
   m_sessionName = "EntityTreeModelTest fake session";
   m_fakeSession = new FakeSession( m_sessionName, this);
-  connect( m_eventQueue, SIGNAL( dequeued() ), SLOT( eventProcessed() ) );
-  m_fakeServer = new FakeAkonadiServer(m_eventQueue, m_fakeSession);
-  m_fakeServer->start();
+
+  qRegisterMetaType<QModelIndex>("QModelIndex");
 }
 
 void EntityTreeModelTest::init()
 {
-  FakeMonitor *fakeMonitor = new FakeMonitor( m_eventQueue, m_fakeServer, this);
-  m_model = new EntityTreeModel( m_fakeSession, fakeMonitor );
+  FakeMonitor *fakeMonitor = new FakeMonitor(this);
+
+  fakeMonitor->setCollectionMonitored(Collection::root());
+  m_model = new PublicETM( m_fakeSession, fakeMonitor, this );
   m_model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
   m_modelSpy = new ModelSpy(this);
@@ -137,16 +149,6 @@ void EntityTreeModelTest::init()
 
 void EntityTreeModelTest::testCollectionFetch()
 {
-  SessionEvent *sessionEvent = new SessionEvent(this);
-  sessionEvent->setTrigger( "0 LOGIN " + ImapParser::quote( m_sessionName ) + '\n'  );
-  sessionEvent->setResponse( "0 OK User logged in\r\n" );
-
-  m_eventQueue->enqueue( sessionEvent );
-
-  sessionEvent = new SessionEvent(this);
-  sessionEvent->setTrigger( "1 LIST 0 INF () (STATISTICS true)\n"  );
-
-  Collection::List allCollections;
   Collection::List collectionList;
 
   collectionList << getCollection(Collection::root(), "Col0");
@@ -154,121 +156,240 @@ void EntityTreeModelTest::testCollectionFetch()
   collectionList << getCollection(Collection::root(), "Col2");
   collectionList << getCollection(Collection::root(), "Col3");
 
-  QList<Entity::Id> ids;
-  foreach (const Collection & c, collectionList)
-  {
-    ids << c.id();
-  }
-
-  sessionEvent->setAffectedCollections( ids );
-
-  sessionEvent->setHasFollowUpResponse( true );
-  m_eventQueue->enqueue( sessionEvent );
-  allCollections << collectionList;
-  collectionList.clear();
-  ids.clear();
-
-//   // Give the collection 'col2' four child collections.
-//   Collection col2 = allCollections.at( 2 );
-//
-//   collectionList << getCollection(col2, "Col4");
-//   collectionList << getCollection(col2, "Col5");
-//   collectionList << getCollection(col2, "Col6");
-//   collectionList << getCollection(col2, "Col7");
-//
-//   foreach (const Collection & c, collectionList)
-//   {
-//     ids << c.id();
-//   }
-//
-//   MonitorEvent *monitorEvent = new MonitorEvent( this );
-//   monitorEvent->setEventType( MonitorEvent::CollectionsAdded );
-//   monitorEvent->setAffectedCollections(ids);
-//
-//   m_eventQueue->enqueue( monitorEvent );
-//   allCollections << collectionList;
-//   collectionList.clear();
-//   ids.clear();
-
-
   // Give the collection 'col0' four child collections.
-  Collection col0 = allCollections.at( 0 );
+  Collection col0 = collectionList.at( 0 );
 
   collectionList << getCollection(col0, "Col4");
   collectionList << getCollection(col0, "Col5");
   collectionList << getCollection(col0, "Col6");
   collectionList << getCollection(col0, "Col7");
 
-  foreach (const Collection & c, collectionList)
-  {
-    ids << c.id();
-  }
+  Collection col5 = collectionList.at( 5 );
 
-  sessionEvent = new SessionEvent(this);
-  sessionEvent->setAffectedCollections( ids );
-  sessionEvent->setHasFollowUpResponse( true );
+  collectionList << getCollection(col5, "Col8");
+  collectionList << getCollection(col5, "Col9");
+  collectionList << getCollection(col5, "Col10");
+  collectionList << getCollection(col5, "Col11");
 
-  m_eventQueue->enqueue( sessionEvent );
-  allCollections << collectionList;
-  collectionList.clear();
+  Collection col6 = collectionList.at( 6 );
 
+  collectionList << getCollection(col6, "Col12");
+  collectionList << getCollection(col6, "Col13");
+  collectionList << getCollection(col6, "Col14");
+  collectionList << getCollection(col6, "Col15");
 
-  sessionEvent = new SessionEvent(this);
-  sessionEvent->setResponse( "1 OK List completed\r\n" );
-  sessionEvent->setHasTrigger( false );
-  m_eventQueue->enqueue( sessionEvent );
+  Collection::List collectionListReversed;
 
-  m_fakeServer->setCollectionStore( allCollections );
+  foreach(const Collection &c, collectionList)
+    collectionListReversed.prepend(c);
 
-  m_eventQueue->moveToThread( m_fakeServer );
+  // The first list job is started with a single shot.
+  // Give it time to set the root collection.
+  QTest::qWait(1);
+  m_model->privateClass()->collectionsFetched(collectionListReversed);
 
-  m_eventLoop = new QEventLoop(this);
-  m_eventLoop->exec();
-
-  // From the job event, We got 8 rows about to be inserted signals and 8 rows inserted signals.
-  // From the monitor we get an additional pair of signals.
-  // We should not be getting collections 1 at a time from the job, but I haven't figured out why
-  // that's happening yet.
-  QVERIFY( m_modelSpy->size() == 16 );
+  QVERIFY( m_modelSpy->size() == 8 );
 
   for (int i = 0; i < m_modelSpy->size(); ++i)
   {
-      kDebug() << i;
     QVERIFY( m_modelSpy->at( i ).at( 0 ) == ( i % 2 == 0 ? RowsAboutToBeInserted : RowsInserted ) );
   }
 
-  kDebug() << m_model->rowCount();
-  for (int i = 0; i < m_model->rowCount(); ++i )
-    kDebug() << m_model->index(i, 0).data();
-
   QVERIFY( m_model->rowCount() == 4 );
-  QVERIFY( m_model->index(0, 0).data() == "Col3" );
-  QVERIFY( m_model->index(1, 0).data() == "Col2" );
-  QVERIFY( m_model->index(2, 0).data() == "Col1" );
-  QVERIFY( m_model->index(3, 0).data() == "Col0" );
+
+  QSet<QString> expectedRowData;
+  QSet<QString> rowData;
+  expectedRowData << "Col0" << "Col1" << "Col2" << "Col3";
+  for ( int row = 0; row < m_model->rowCount(); ++row )
+  {
+    rowData.insert(m_model->index(row, 0).data().toString());
+  }
+
+  QCOMPARE(rowData, expectedRowData);
+  rowData.clear();
+  expectedRowData.clear();
 
   // Col0 is at row index 3 by the end
-  QModelIndex col0Index = m_model->index(3, 0);
+  QModelIndex col0Index = m_model->match(m_model->index(0, 0), Qt::DisplayRole, "Col0", 1).first();
 
-  QVERIFY( col0Index.data() == "Col0" );
+  expectedRowData << "Col4" << "Col5" << "Col6" << "Col7";
 
   QVERIFY( m_model->rowCount( col0Index ) == 4 );
-  kDebug() << m_model->index(0, 0, col0Index).data();
-  QVERIFY( m_model->index(0, 0, col0Index).data() == "Col7" );
-  QVERIFY( m_model->index(1, 0, col0Index).data() == "Col6" );
-  QVERIFY( m_model->index(2, 0, col0Index).data() == "Col5" );
-  QVERIFY( m_model->index(3, 0, col0Index).data() == "Col4" );
 
+  for ( int row = 0; row < m_model->rowCount(col0Index); ++row )
+  {
+    rowData.insert(m_model->index(row, 0, col0Index).data().toString());
+  }
 
+  QCOMPARE(rowData, expectedRowData);
+  rowData.clear();
+  expectedRowData.clear();
 
+  QModelIndex col5Index = m_model->match(m_model->index(0, 0, col0Index), Qt::DisplayRole, "Col5", 1).first();
 
-//   sleep(10);
-//   QList<Collection::List> collectionChunks;
-//   m_fakeSession->firstListJobResult(collectionChunks);
+  expectedRowData << "Col8" << "Col9" << "Col10" << "Col11";
+
+  QVERIFY( m_model->rowCount( col5Index ) == 4 );
+
+  for ( int row = 0; row < m_model->rowCount(col5Index); ++row )
+  {
+    rowData.insert(m_model->index(row, 0, col5Index).data().toString());
+  }
+
+  QCOMPARE(rowData, expectedRowData);
+  rowData.clear();
+  expectedRowData.clear();
+
+  QModelIndex col6Index = m_model->match(m_model->index(0, 0, col0Index), Qt::DisplayRole, "Col6", 1).first();
+
+  expectedRowData << "Col12" << "Col13" << "Col14" << "Col15";
+
+  QVERIFY( m_model->rowCount( col6Index ) == 4 );
+
+  for ( int row = 0; row < m_model->rowCount(col6Index); ++row )
+  {
+    rowData.insert(m_model->index(row, 0, col6Index).data().toString());
+  }
+
+  QCOMPARE(rowData, expectedRowData);
+  rowData.clear();
+  expectedRowData.clear();
+
 }
 
 
-// #endif
+void EntityTreeModelTest::testCollectionAdded()
+{
+  Collection::List collectionList;
+
+  collectionList << getCollection(Collection::root(), "Col0");
+  collectionList << getCollection(Collection::root(), "Col1");
+  collectionList << getCollection(Collection::root(), "Col2");
+  collectionList << getCollection(Collection::root(), "Col3");
+
+  // Give the collection 'col0' four child collections.
+  Collection col0 = collectionList.at( 0 );
+
+  collectionList << getCollection(col0, "Col4");
+  collectionList << getCollection(col0, "Col5");
+  collectionList << getCollection(col0, "Col6");
+  collectionList << getCollection(col0, "Col7");
+
+  Collection col5 = collectionList.at( 5 );
+
+  collectionList << getCollection(col5, "Col8");
+  collectionList << getCollection(col5, "Col9");
+  collectionList << getCollection(col5, "Col10");
+  collectionList << getCollection(col5, "Col11");
+
+  Collection col6 = collectionList.at( 6 );
+
+  collectionList << getCollection(col6, "Col12");
+  collectionList << getCollection(col6, "Col13");
+  collectionList << getCollection(col6, "Col14");
+  collectionList << getCollection(col6, "Col15");
+
+  Collection::List collectionListReversed;
+
+  foreach(const Collection &c, collectionList)
+    collectionListReversed.prepend(c);
+
+  // The first list job is started with a single shot.
+  // Give it time to set the root collection.
+  QTest::qWait(1);
+
+  m_modelSpy->stopSpying();
+  m_model->privateClass()->collectionsFetched(collectionListReversed);
+  m_modelSpy->startSpying();
+
+  Collection newCol1 = getCollection(Collection::root(), "NewCollection");
+
+  m_model->privateClass()->monitoredCollectionAdded(newCol1, Collection::root());
+
+  QVERIFY(m_modelSpy->size() == 2);
+  for (int i = 0; i < m_modelSpy->size(); ++i)
+  {
+    QVERIFY( m_modelSpy->at( i ).at( 0 ) == ( i % 2 == 0 ? RowsAboutToBeInserted : RowsInserted ) );
+  }
+  int start = m_modelSpy->at( 1 ).at( 2 ).toInt();
+  int end = m_modelSpy->at( 1 ).at( 3 ).toInt();
+
+  QCOMPARE(m_model->rowCount(), 5);
+  QCOMPARE(start, end);
+  QCOMPARE(m_model->index(start, 0).data().toString(), QLatin1String("NewCollection"));
+
+}
+
+void EntityTreeModelTest::testCollectionMoved()
+{
+  Collection::List collectionList;
+
+  collectionList << getCollection(Collection::root(), "Col0");
+  collectionList << getCollection(Collection::root(), "Col1");
+  collectionList << getCollection(Collection::root(), "Col2");
+  collectionList << getCollection(Collection::root(), "Col3");
+
+  // Give the collection 'col0' four child collections.
+  Collection col0 = collectionList.at( 0 );
+
+  collectionList << getCollection(col0, "Col4");
+  collectionList << getCollection(col0, "Col5");
+  collectionList << getCollection(col0, "Col6");
+  collectionList << getCollection(col0, "Col7");
+
+  Collection col5 = collectionList.at( 5 );
+
+  collectionList << getCollection(col5, "Col8");
+  collectionList << getCollection(col5, "Col9");
+  collectionList << getCollection(col5, "Col10");
+  collectionList << getCollection(col5, "Col11");
+
+  Collection col6 = collectionList.at( 6 );
+
+  collectionList << getCollection(col6, "Col12");
+  Collection col13 = getCollection(col6, "Col13");
+  collectionList << col13;
+  collectionList << getCollection(col6, "Col14");
+  collectionList << getCollection(col6, "Col15");
+
+  Collection::List collectionListReversed;
+
+  foreach(const Collection &c, collectionList)
+    collectionListReversed.prepend(c);
+
+  // The first list job is started with a single shot.
+  // Give it time to set the root collection.
+  QTest::qWait(1);
+
+  m_modelSpy->stopSpying();
+  m_model->privateClass()->collectionsFetched(collectionListReversed);
+  m_modelSpy->startSpying();
+
+  // Move col13 to col5
+
+  col13.setParentCollection( col5 );
+  m_model->privateClass()->monitoredCollectionMoved(col13, col6, col5);
+
+  QVERIFY(m_modelSpy->size() == 2);
+  for (int i = 0; i < m_modelSpy->size(); ++i)
+  {
+    QVERIFY( m_modelSpy->at( i ).at( 0 ) == ( i % 2 == 0 ? RowsAboutToBeMoved : RowsMoved ) );
+  }
+
+  int start = m_modelSpy->at( 1 ).at( 2 ).toInt();
+  int end = m_modelSpy->at( 1 ).at( 3 ).toInt();
+  int dest = m_modelSpy->at( 1 ).at( 5 ).toInt();
+
+  QModelIndex src = qvariant_cast<QModelIndex>( m_modelSpy->at( 1 ).at( 1 ) );
+  QModelIndex destIdx = qvariant_cast<QModelIndex>( m_modelSpy->at( 1 ).at( 4 ) );
+
+  QCOMPARE(start, end);
+  QCOMPARE(src.data().toString(), QLatin1String("Col6"));
+  QCOMPARE(destIdx.data().toString(), QLatin1String("Col5"));
+  QCOMPARE(m_model->index(dest, 0, destIdx).data().toString(), QLatin1String("Col13"));
+
+}
+
 #include "entitytreemodeltest.moc"
 
 QTEST_KDEMAIN(EntityTreeModelTest, NoGUI)

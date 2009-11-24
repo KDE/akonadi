@@ -95,6 +95,9 @@ class AKONADI_EXPORT Session : public QObject
      */
     void clear();
 
+  protected:
+    explicit Session( SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
+
   private:
     //@cond PRIVATE
     SessionPrivate* const d;
