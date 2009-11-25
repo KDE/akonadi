@@ -34,7 +34,7 @@ class FakeSessionPrivate : public SessionPrivate
 
     }
 
-    /* reimp */ void init() {}
+    /* reimp */ void init( const QByteArray &sessionId ) { Q_UNUSED( sessionId ); }
 
     /* reimp */ void addJob( Job *job )
     {
