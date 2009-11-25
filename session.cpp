@@ -239,12 +239,12 @@ SessionPrivate::SessionPrivate( Session *parent )
 {
 }
 
-void SessionPrivate::init()
+void SessionPrivate::init( const QByteArray &id )
 {
   parser = new ImapParser();
 
-  if ( !sessionId.isEmpty() ) {
-    sessionId = sessionId;
+  if ( !id.isEmpty() ) {
+    sessionId = id;
   } else {
     sessionId = QCoreApplication::instance()->applicationName().toUtf8()
         + '-' + QByteArray::number( qrand() );
@@ -279,14 +279,14 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),
     d( new SessionPrivate( this ) )
 {
-  d->init();
+  d->init( sessionId );
 }
 
 Session::Session( SessionPrivate *dd, const QByteArray & sessionId, QObject * parent)
     : QObject( parent ),
     d( dd )
 {
-  d->init();
+  d->init( sessionId );
 }
 
 Session::~Session()

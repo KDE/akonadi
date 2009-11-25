@@ -48,7 +48,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
       delete mConnectionSettings;
     }
 
-    virtual void init();
+    virtual void init( const QByteArray &sessionId );
 
     void startNext();
     void reconnect();
