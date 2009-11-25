@@ -21,7 +21,7 @@
 
 #include "contactcompletionmodel_p.h"
 
-#include <kdescendantsproxymodel.h>
+#include "../kdescendantsproxymodel_p.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>

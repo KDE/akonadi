@@ -111,6 +111,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   itemview.cpp
   job.cpp
+  kdescendantsproxymodel.cpp
   linkjob.cpp
   mimetypechecker.cpp
   monitor.cpp
