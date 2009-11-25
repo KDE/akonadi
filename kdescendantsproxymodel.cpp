@@ -18,7 +18,7 @@
 */
 
 
-#include "kdescendantsproxymodel.h"
+#include "kdescendantsproxymodel_p.h"
 
 #include "kdebug.h"
 
@@ -906,4 +906,4 @@ Qt::DropActions KDescendantsProxyModel::supportedDropActions() const
   return sourceModel()->supportedDropActions();
 }
 
-#include "moc_kdescendantsproxymodel.cpp"
+#include "moc_kdescendantsproxymodel_p.cpp"
