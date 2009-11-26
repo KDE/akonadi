@@ -141,6 +141,9 @@ void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup head
 
 QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orientation, int role ) const
 {
+  if (!sourceModel())
+    return QVariant();
+
   Q_D(const EntityMimeTypeFilterModel);
   role += (EntityTreeModel::TerminalUserRole * d->m_headerGroup);
   return sourceModel()->headerData(section, orientation, role);
@@ -148,6 +151,9 @@ QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orie
 
 QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
 {
+  if (!sourceModel())
+    return QModelIndexList();
+
   if (EntityTreeModel::AmazingCompletionRole != role)
     return QSortFilterProxyModel::match(start, role, value, hits, flags);
 
@@ -183,6 +189,9 @@ int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
 {
   Q_D(const EntityMimeTypeFilterModel);
 
+  if (!sourceModel())
+    return 0;
+
   QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
   if( !var.isValid() )
     return 0;
@@ -191,6 +200,9 @@ int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
 
 bool EntityMimeTypeFilterModel::hasChildren(const QModelIndex &parent) const
 {
+  if (!sourceModel())
+    return false;
+
   if ( !parent.isValid() )
     return sourceModel()->hasChildren(parent);
 
