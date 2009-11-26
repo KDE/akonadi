@@ -113,7 +113,7 @@ void JobPrivate::signalCreationToJobTracker()
                    << QString::number(reinterpret_cast<unsigned long>( q ), 16)
                    << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QString() )
                    << QString::fromLatin1( q->metaObject()->className() );
-      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobCreated"), argumentList);
   }
 }
 
@@ -130,7 +130,7 @@ void JobPrivate::startQueued()
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
-      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobStarted"), argumentList);
   }
 }
 
@@ -208,7 +208,7 @@ Job::~Job()
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
                    << errorString();
-      s_jobtracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobEnded"), argumentList);
   }
 }
 
