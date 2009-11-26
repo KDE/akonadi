@@ -4,8 +4,7 @@ include_directories(
         ${Boost_INCLUDE_DIR}
 )
 
-#tokoe: disabled tests, they are way too coupled with the interna, need fixing!
-#add_subdirectory( tests )
+add_subdirectory( tests )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -21,6 +20,13 @@ set( kmimeakonadi_LIB_SRC
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
 )
+
+if (KDE4_BUILD_TESTS)
+set( kmimeakonadi_LIB_SRC
+  ${kmimeakonadi_LIB_SRC}
+  specialmailcollectionstesting.cpp
+)
+endif (KDE4_BUILD_TESTS)
 
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC specialmailcollectionssettings.kcfgc )
 install( FILES specialmailcollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )

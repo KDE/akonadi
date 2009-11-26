@@ -20,6 +20,7 @@ add_definitions( -DREQUESTER_EXE='${requester_exe}' )
 macro(add_akonadi_isolated_test _source)
   get_filename_component(_targetName ${_source} NAME_WE)
   set(_srcList ${_source} )
+  kde4_add_kcfg_files( _srcList ../specialmailcollectionssettings.kcfgc )
 
   kde4_add_executable(${_targetName} TEST ${_srcList})
   target_link_libraries(${_targetName}
@@ -28,6 +29,7 @@ macro(add_akonadi_isolated_test _source)
     ${QT_QTDBUS_LIBRARY}
     ${KDE4_AKONADI_LIBS}
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
     ${KDE4_MAILTRANSPORT_LIBS}
     ${KDE4_KMIME_LIBS}
     akonadi-kde

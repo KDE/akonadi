@@ -25,8 +25,8 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
-#include <akonadi/kmime/specialcollections.h>
-#include <akonadi/kmime/specialcollectionsrequestjob.h>
+#include <akonadi/kmime/specialmailcollections.h>
+#include <akonadi/kmime/specialmailcollectionsrequestjob.h>
 
 using namespace Akonadi;
 
@@ -35,8 +35,8 @@ Requester::Requester()
 {
   Control::start();
 
-  SpecialCollectionsRequestJob *rjob = new SpecialCollectionsRequestJob( this );
-  rjob->requestDefaultCollection( SpecialCollections::Outbox );
+  SpecialMailCollectionsRequestJob *rjob = new SpecialMailCollectionsRequestJob( this );
+  rjob->requestDefaultCollection( SpecialMailCollections::Outbox );
   connect( rjob, SIGNAL(result(KJob*)), this, SLOT(requestResult(KJob*)) );
   rjob->start();
 }

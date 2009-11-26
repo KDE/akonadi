@@ -131,6 +131,11 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
     //@cond PRIVATE
     friend class SpecialMailCollectionsPrivate;
 
+#if 1 // TODO do this only if building tests:
+    friend class SpecialMailCollectionsTesting;
+    friend class LocalFoldersTest;
+#endif
+
     SpecialMailCollections( SpecialMailCollectionsPrivate *dd );
 
     SpecialMailCollectionsPrivate *const d;
