@@ -235,7 +235,7 @@ void EntityTreeView::dropEvent( QDropEvent * event )
 
 void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->mXmlGuiClient )
+  if ( !d->mXmlGuiClient || !model())
     return;
 
   const QModelIndex index = indexAt( event->pos() );
