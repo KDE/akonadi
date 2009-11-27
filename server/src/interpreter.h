@@ -20,6 +20,8 @@
 #ifndef AKONADI_INTERPRETER_H
 #define AKONADI_INTERPRETER_H
 
+#include "akonadiprivate_export.h"
+
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
@@ -28,7 +30,7 @@ namespace Akonadi {
 /**
  * This class encapsulates solving nexted boolean constructs
  */
-class SearchInterpreterItem
+class AKONADIPRIVATE_EXPORT SearchInterpreterItem
 {
   public:
     enum Relation
