@@ -259,7 +259,7 @@ AKONADIPRIVATE_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonad
   <xsl:value-of select="comment"/>
 */
 </xsl:if>
-class <xsl:value-of select="$className"/>
+class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/>
 {
   public:
     // SQL table information

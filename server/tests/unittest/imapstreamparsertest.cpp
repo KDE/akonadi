@@ -24,10 +24,7 @@
 #include <QtCore/QVariant>
 #include <QBuffer>
 
-#define private public
 #include "imapstreamparser.h"
-#undef private
-#define private private
 
 Q_DECLARE_METATYPE( QList<QByteArray> )
 Q_DECLARE_METATYPE( QList<int> )

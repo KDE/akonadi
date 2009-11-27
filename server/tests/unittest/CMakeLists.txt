@@ -11,9 +11,6 @@ macro(add_server_test _source)
   target_link_libraries(${_name} akonadiprivate ${QT_QTTEST_LIBRARY})
 endmacro(add_server_test)
 
-if(NOT WIN32)
-  add_server_test(imapstreamparsertest.cpp)
+add_server_test(imapstreamparsertest.cpp)
 add_server_test(scopetest.cpp)
-### FIXME : BROKEN EXPORTS FROM AKONADIPRIVATE ON WINDOWS, REVIEW & FIX !!! 
 add_server_test(handlerhelpertest.cpp)
-endif(NOT WIN32)

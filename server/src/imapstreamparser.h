@@ -37,6 +37,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE( ImapParserException );
 
 class QIODevice;
 
+class ImapStreamParserTest;
+
 namespace Akonadi {
 
 /**
@@ -44,6 +46,8 @@ namespace Akonadi {
 */
 class AKONADIPRIVATE_EXPORT ImapStreamParser
 {
+  friend class ::ImapStreamParserTest;
+
   public:
     /**
      * Construct the parser.

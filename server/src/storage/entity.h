@@ -21,6 +21,7 @@
 #define ENTITY_H
 
 #include "countquerybuilder.h"
+#include "../akonadiprivate_export.h"
 
 #include <QtCore/Qt>
 #include <QtCore/QDateTime>
@@ -38,7 +39,7 @@ namespace Akonadi {
   Base class for classes representing database records. It also contains
   low-level data access and manipulation template methods.
 */
-class Entity
+class AKONADIPRIVATE_EXPORT Entity
 {
   public:
     typedef qint64 Id;
