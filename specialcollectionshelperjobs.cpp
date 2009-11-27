@@ -283,13 +283,22 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
     kDebug() << "Created maildir resource with id" << defaultResourceId( mSettings );
   }
 
+  const QString defaultId = defaultResourceId( mSettings );
+
   // Configure the resource.
   {
     agent.setName( mDefaultResourceOptions.value( QLatin1String( "Name" ) ).toString() );
 
-    QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + defaultResourceId( mSettings ),
+    QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + defaultId,
                          QString::fromLatin1( "/Settings" ), QString() );
 
+    if( ! conf.isValid() ) {
+      q->setError( -1 );
+      q->setErrorText( i18n("Invalid resource identifier '%1'", defaultId) );
+      q->emitResult();
+      return;
+    }
+                         
     QMapIterator<QString, QVariant> it( mDefaultResourceOptions );
     while ( it.hasNext() ) {
       it.next();
