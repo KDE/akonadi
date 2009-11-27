@@ -37,9 +37,9 @@ class EntityDisplayAttributeTest : public QObject
       QTest::addColumn<QString>( "activeIcon");
       QTest::addColumn<QByteArray>( "output" );
 
-      QTest::newRow( "empty" ) << QByteArray("(\"\" \"\")") << QString() << QString() << QString() << QByteArray("(\"\" \"\" \"\")");
-      QTest::newRow( "name+icon" ) << QByteArray( "(\"name\" \"icon\")") << QString( "name" ) << QString( "icon" ) << QString()<<QByteArray( "(\"name\" \"icon\" \"\")" );
-      QTest::newRow("name+icon+activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\")") << QString( "name" ) << QString( "icon" ) << QString("activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\")" );
+      QTest::newRow( "empty" ) << QByteArray("(\"\" \"\")") << QString() << QString() << QString() << QByteArray("(\"\" \"\" \"\" ())");
+      QTest::newRow( "name+icon" ) << QByteArray( "(\"name\" \"icon\")") << QString( "name" ) << QString( "icon" ) << QString()<<QByteArray( "(\"name\" \"icon\" \"\" ())" );
+      QTest::newRow("name+icon+activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\")") << QString( "name" ) << QString( "icon" ) << QString("activeIcon") << QByteArray( "(\"name\" \"icon\" \"activeIcon\" ())" );
     }
 
     void testDeserialize()
