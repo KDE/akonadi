@@ -112,7 +112,11 @@ void AkonadiConnection::slotDisconnected()
 
 void AkonadiConnection::slotNewData()
 {
-  while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty()) {
+  // On Windows, calling readLiteralPart() triggers the readyRead() signal recursively and leads to parse errors
+  if ( m_currentHandler )
+    return;
+    
+  while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty() ) {
     try {
       const QByteArray tag = m_streamParser->readString();
       // deal with stray newlines
