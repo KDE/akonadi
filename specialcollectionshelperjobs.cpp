@@ -112,6 +112,7 @@ ResourceScanJob::Private::Private( KCoreConfigSkeleton *settings, ResourceScanJo
 void ResourceScanJob::Private::fetchResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     return;
   }
 
@@ -265,6 +266,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
 void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
     q->setError( job->error() );
     q->setErrorText( job->errorText() );
@@ -338,6 +340,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 void DefaultResourceJobPrivate::resourceSyncResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "ResourceSynchronizationJob failed (%1).", job->errorString() ) );
     return;
   }
@@ -352,6 +355,7 @@ void DefaultResourceJobPrivate::resourceSyncResult( KJob *job )
 void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to fetch the root maildir collection (%1).", job->errorString() ) );
     return;
   }
@@ -419,6 +423,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to modify the root maildir collection (%1).", job->errorString() ) );
     return;
   }
@@ -483,6 +488,7 @@ void DefaultResourceJob::doStart()
 void DefaultResourceJob::slotResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     // Do some cleanup.
     if ( !d->mResourceWasPreexisting ) {
       // We only removed the resource instance if we have created it.
