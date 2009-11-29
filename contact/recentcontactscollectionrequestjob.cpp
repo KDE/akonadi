@@ -59,12 +59,12 @@ RecentContactsCollectionRequestJob::~RecentContactsCollectionRequestJob()
 
 void RecentContactsCollectionRequestJob::requestDefaultCollection()
 {
-  return SpecialCollectionsRequestJob::requestDefaultCollection( sRecentContactsType );
+  SpecialCollectionsRequestJob::requestDefaultCollection( sRecentContactsType );
 }
 
 void RecentContactsCollectionRequestJob::requestCollection( const AgentInstance &instance )
 {
-  return SpecialCollectionsRequestJob::requestCollection( sRecentContactsType, instance );
+  SpecialCollectionsRequestJob::requestCollection( sRecentContactsType, instance );
 }
 
 #include "recentcontactscollectionrequestjob.moc"
