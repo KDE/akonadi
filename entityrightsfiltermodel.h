@@ -91,7 +91,7 @@ class EntityRightsFilterModel : public KRecursiveFilterProxyModel
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
   protected:
-    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
   private:
     //@cond PRIVATE
