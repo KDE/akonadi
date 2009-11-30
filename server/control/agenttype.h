@@ -51,6 +51,7 @@ class AgentType
     static QLatin1String CapabilityResource;
     static QLatin1String CapabilityAutostart;
     static QLatin1String CapabilityPreprocessor;
+    static QLatin1String CapabilitySearch;
 };
 
 #endif

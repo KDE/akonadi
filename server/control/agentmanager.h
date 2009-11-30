@@ -213,6 +213,16 @@ class AgentManager : public QObject
     */
     void restartAgentInstance( const QString &identifier );
 
+    /**
+     * Add a persistent search to remote search agents.
+     */
+    void addSearch( const QString &query, const QString &queryLanguage, qint64 resultCollectionId );
+
+    /**
+     * Removes a persistent search for the given result collection.
+     */
+    void removeSearch( quint64 resultCollectionId );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.

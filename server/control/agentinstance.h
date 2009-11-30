@@ -25,6 +25,7 @@
 #include "resourceinterface.h"
 #include "tracerinterface.h"
 #include "preprocessorinterface.h"
+#include "searchinterface.h"
 
 #include <QDBusError>
 #include <QString>
@@ -76,6 +77,7 @@ class AgentInstance : public QObject
 
     org::freedesktop::Akonadi::Agent::Control* controlInterface() const { return mAgentControlInterface; }
     org::freedesktop::Akonadi::Agent::Status* statusInterface() const { return mAgentStatusInterface; }
+    org::freedesktop::Akonadi::Agent::Search* searchInterface() const { return mSearchInterface; }
     org::freedesktop::Akonadi::Resource* resourceInterface() const { return mResourceInterface; }
     org::freedesktop::Akonadi::Preprocessor * preProcessorInterface() const { return mPreprocessorInterface; }
 
@@ -105,6 +107,7 @@ class AgentInstance : public QObject
     Akonadi::ProcessControl *mController;
     org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface;
     org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface;
+    org::freedesktop::Akonadi::Agent::Search* mSearchInterface;
     org::freedesktop::Akonadi::Resource *mResourceInterface;
     org::freedesktop::Akonadi::Preprocessor * mPreprocessorInterface;
 

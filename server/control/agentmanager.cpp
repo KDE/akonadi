@@ -21,6 +21,7 @@
 #include "agentmanager.h"
 
 #include "agentmanageradaptor.h"
+#include "agentmanagerinternaladaptor.h"
 #include "processcontrol.h"
 #include "serverinterface.h"
 #include "libs/xdgbasedirs_p.h"
@@ -45,6 +46,7 @@ AgentManager::AgentManager( QObject *parent )
   mAgentWatcher( new QFileSystemWatcher( this ) )
 {
   new AgentManagerAdaptor( this );
+  new AgentManagerInternalAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
 
   mTracer = new org::freedesktop::Akonadi::Tracer( "org.freedesktop.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
@@ -675,6 +677,27 @@ void AgentManager::registerAgentAtServer( const AgentInstance::Ptr &instance, co
                                                       QLatin1String("/ResourceManager"),
                                                       QDBusConnection::sessionBus(), this ) );
     resmanager->addResourceInstance( instance->identifier(), type.capabilities );
+  }
+}
+
+
+void AgentManager::addSearch(const QString& query, const QString& queryLanguage, qint64 resultCollectionId)
+{
+  qDebug() << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
+  foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+    const AgentType type = mAgents.value( instance->agentType() );
+    if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
+      instance->searchInterface()->addSearch( query, queryLanguage, resultCollectionId );
+  }
+}
+
+void AgentManager::removeSearch(quint64 resultCollectionId)
+{
+  qDebug() << "AgentManager::removeSearch" << resultCollectionId;
+  foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+    const AgentType type = mAgents.value( instance->agentType() );
+    if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
+      instance->searchInterface()->removeSearch( resultCollectionId );
   }
 }
 

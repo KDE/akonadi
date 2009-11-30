@@ -30,6 +30,7 @@ AgentInstance::AgentInstance(AgentManager * manager) :
     mController( 0 ),
     mAgentControlInterface( 0 ),
     mAgentStatusInterface( 0 ),
+    mSearchInterface( 0 ),
     mResourceInterface( 0 ),
     mPreprocessorInterface( 0 ),
     mStatus( 0 ),
@@ -107,6 +108,14 @@ bool AgentInstance::obtainAgentInterface()
     return false;
   }
   mAgentStatusInterface = agentStatusIface;
+
+
+  mSearchInterface = new org::freedesktop::Akonadi::Agent::Search( "org.freedesktop.Akonadi.Agent." + mIdentifier,
+                                                                   "/", QDBusConnection::sessionBus(), this );
+  if ( !mSearchInterface || !mSearchInterface->isValid() ) {
+    delete mSearchInterface;
+    mSearchInterface = 0;
+  }
 
   connect( agentStatusIface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)) );
   connect( agentStatusIface, SIGNAL(percent(int)), SLOT(percentChanged(int)) );

@@ -29,6 +29,10 @@
 #include "imapstreamparser.h"
 #include <storage/selectquerybuilder.h>
 #include <storage/collectionqueryhelper.h>
+#include "libs/protocol_p.h"
+#include <akdebug.h>
+
+#include <QDBusInterface>
 
 using namespace Akonadi;
 
@@ -78,6 +82,18 @@ bool Delete::parseStream()
       return failureResponse( "Cannot delete virtual root collection" );
 
     AbstractSearchManager::instance()->removeSearch( collection.id() );
+
+    // disable remote searches
+    QDBusInterface agentMgr( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                             QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
+                             QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
+    if ( agentMgr.isValid() ) {
+      QList<QVariant> args;
+      args << collection.id();
+      agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "removeSearch" ), args );
+    } else {
+      akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
+    }
   }
 
   if ( !deleteRecursive( collection ) )

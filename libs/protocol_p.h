@@ -32,6 +32,8 @@
 #define AKONADI_DBUS_SERVER_SERVICE "org.freedesktop.Akonadi"
 #define AKONADI_DBUS_CONTROL_SERVICE "org.freedesktop.Akonadi.Control"
 
+#define AKONADI_DBUS_AGENTMANAGER_PATH "/AgentManager"
+
 // Commands
 #define AKONADI_CMD_COLLECTIONCOPY "COLCOPY"
 #define AKONADI_CMD_COLLECTIONCREATE "CREATE"
