@@ -91,7 +91,7 @@ Collection::Rights EntityRightsFilterModel::accessRights() const
   return d->mAccessRights;
 }
 
-bool EntityRightsFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
+bool EntityRightsFilterModel::acceptRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   Q_D(const EntityRightsFilterModel);
 
