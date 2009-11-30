@@ -41,6 +41,7 @@ set( akonadikde_LIB_SRC
   agentinstancemodel.cpp
   agentinstancewidget.cpp
   agentmanager.cpp
+  agentsearchinterface.cpp
   agenttype.cpp
   agenttypemodel.cpp
   agenttypewidget.cpp
@@ -160,6 +161,7 @@ qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.free
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Status.xml agentbase.h Akonadi::AgentBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresourcebase_p.h Akonadi::TransportResourceBasePrivate )
+qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate )
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
@@ -197,6 +199,7 @@ install( FILES
   agentinstancemodel.h
   agentinstancewidget.h
   agentmanager.h
+  agentsearchinterface.h
   agenttype.h
   agenttypemodel.h
   agenttypewidget.h
