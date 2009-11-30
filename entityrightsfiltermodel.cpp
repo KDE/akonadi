@@ -68,7 +68,7 @@ class EntityRightsFilterModelPrivate
 }
 
 EntityRightsFilterModel::EntityRightsFilterModel( QObject *parent )
-  : QSortFilterProxyModel( parent ),
+  : KRecursiveFilterProxyModel( parent ),
     d_ptr( new EntityRightsFilterModelPrivate( this ) )
 {
 }
@@ -97,12 +97,6 @@ bool EntityRightsFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex
 
   const QModelIndex modelIndex = sourceModel()->index( sourceRow, 0, sourceParent );
 
-  // one of our children might be accepted, so accept this row if one of our children are accepted.
-  for ( int row = 0 ; row < sourceModel()->rowCount( modelIndex ); row++ ) {
-    if ( filterAcceptsRow( row, modelIndex ) )
-      return true;
-  }
-
   return d->rightsMatches( modelIndex );
 }
 
@@ -111,9 +105,9 @@ Qt::ItemFlags EntityRightsFilterModel::flags( const QModelIndex &index ) const
   Q_D(const EntityRightsFilterModel);
 
   if ( d->rightsMatches( index ) )
-    return QSortFilterProxyModel::flags( index );
+    return KRecursiveFilterProxyModel::flags( index );
   else
-    return QSortFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    return KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 #include "entityrightsfiltermodel.moc"

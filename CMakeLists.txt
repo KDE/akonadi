@@ -113,6 +113,7 @@ set( akonadikde_LIB_SRC
   itemview.cpp
   job.cpp
   kdescendantsproxymodel.cpp
+  krecursivefilterproxymodel.cpp
   linkjob.cpp
   mimetypechecker.cpp
   monitor.cpp
@@ -235,7 +236,8 @@ install( FILES
   entityhiddenattribute.h
   entitylistview.h
   entitymimetypefiltermodel.h
-  entityrightsfiltermodel.h
+# Made private in 4.4 -- Stephen Kelly.
+#  entityrightsfiltermodel.h
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h
