@@ -190,6 +190,13 @@ QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int 
   }
 }
 
+QString Akonadi::FavoriteCollectionsModel::favoriteLabel( const Akonadi::Collection & collection )
+{
+  if ( !collection.isValid() )
+    return QString();
+  return d->labelForCollection( collection );
+}
+
 QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
   if ( section == 0
