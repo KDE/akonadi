@@ -81,10 +81,8 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
   Q_FOREACH( const Nepomuk::Search::Result &result, entries ) {
     const qint64 itemId = uriToItemId( result.resourceUri() );
 
-    if ( itemId == -1 ) {
-      qWarning() << "Nepomuk QueryServer: Retrieved invalid item id from server!";
+    if ( itemId == -1 )
       continue;
-    }
 
     mMatchingUIDs.insert( QString::number( itemId ) );
   }
