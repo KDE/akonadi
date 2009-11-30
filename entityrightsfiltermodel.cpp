@@ -42,7 +42,7 @@ class EntityRightsFilterModelPrivate
 
     bool rightsMatches( const QModelIndex &index ) const
     {
-      if ( mAccessRights == Collection::ReadOnly )
+      if ( mAccessRights == Collection::AllRights )
         return true;
 
       const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
