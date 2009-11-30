@@ -112,6 +112,7 @@ ResourceScanJob::Private::Private( KCoreConfigSkeleton *settings, ResourceScanJo
 void ResourceScanJob::Private::fetchResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     return;
   }
 
@@ -265,6 +266,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
 void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
     q->setError( job->error() );
     q->setErrorText( job->errorText() );
@@ -283,13 +285,22 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
     kDebug() << "Created maildir resource with id" << defaultResourceId( mSettings );
   }
 
+  const QString defaultId = defaultResourceId( mSettings );
+
   // Configure the resource.
   {
     agent.setName( mDefaultResourceOptions.value( QLatin1String( "Name" ) ).toString() );
 
-    QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + defaultResourceId( mSettings ),
+    QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + defaultId,
                          QString::fromLatin1( "/Settings" ), QString() );
 
+    if( ! conf.isValid() ) {
+      q->setError( -1 );
+      q->setErrorText( i18n("Invalid resource identifier '%1'", defaultId) );
+      q->emitResult();
+      return;
+    }
+                         
     QMapIterator<QString, QVariant> it( mDefaultResourceOptions );
     while ( it.hasNext() ) {
       it.next();
@@ -329,6 +340,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 void DefaultResourceJobPrivate::resourceSyncResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "ResourceSynchronizationJob failed (%1).", job->errorString() ) );
     return;
   }
@@ -343,6 +355,7 @@ void DefaultResourceJobPrivate::resourceSyncResult( KJob *job )
 void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to fetch the root maildir collection (%1).", job->errorString() ) );
     return;
   }
@@ -410,6 +423,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     //fail( i18n( "Failed to modify the root maildir collection (%1).", job->errorString() ) );
     return;
   }
@@ -474,6 +488,7 @@ void DefaultResourceJob::doStart()
 void DefaultResourceJob::slotResult( KJob *job )
 {
   if ( job->error() ) {
+    kWarning() << job->errorText();
     // Do some cleanup.
     if ( !d->mResourceWasPreexisting ) {
       // We only removed the resource instance if we have created it.

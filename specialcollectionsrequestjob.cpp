@@ -113,6 +113,9 @@ void SpecialCollectionsRequestJobPrivate::lockResult( KJob *job )
 {
   if ( job->error() ) {
     kWarning() << "Failed to get lock:" << job->errorString();
+    q->setError( job->error() );
+    q->setErrorText( job->errorString() );
+    q->emitResult();
     return;
   }
 
