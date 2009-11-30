@@ -109,9 +109,8 @@ bool AgentInstance::obtainAgentInterface()
   }
   mAgentStatusInterface = agentStatusIface;
 
-
   mSearchInterface = new org::freedesktop::Akonadi::Agent::Search( "org.freedesktop.Akonadi.Agent." + mIdentifier,
-                                                                   "/", QDBusConnection::sessionBus(), this );
+                                                                   "/Search", QDBusConnection::sessionBus(), this );
   if ( !mSearchInterface || !mSearchInterface->isValid() ) {
     delete mSearchInterface;
     mSearchInterface = 0;
