@@ -55,6 +55,7 @@ class CollectionComboBox::Private
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
         KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
+        proxyModel->setDisplayAncestorData( true );
         proxyModel->setSourceModel( mModel );
 
         baseModel = proxyModel;
