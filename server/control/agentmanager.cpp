@@ -382,7 +382,7 @@ void AgentManager::readPluginInfos( const QDir& directory )
       if ( mAgents.contains( agentInfo.identifier ) ) {
         mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
                         QString( "Duplicated agent identifier '%1' from file '%2'" )
-                            .arg( fileName, agentInfo.identifier ) );
+                            .arg( agentInfo.identifier, fileName ) );
         continue;
       }
 
