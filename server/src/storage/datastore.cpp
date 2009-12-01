@@ -26,6 +26,7 @@
 #include "notificationmanager.h"
 #include "tracer.h"
 #include "selectquerybuilder.h"
+#include "transaction.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
 #include "xdgbasedirs_p.h"
@@ -51,6 +52,8 @@
 #include "collectionqueryhelper.h"
 
 using namespace Akonadi;
+
+static QMutex sTransactionMutex;
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -245,8 +248,12 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   qb.addTable( Collection::tableName() );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
+  Transaction transaction( DataStore::self() );
   if ( !qb.exec() )
     return false;
+
+  transaction.commit();
+
   foreach ( const Collection &col, collection.children() ) {
     if ( !recursiveSetResourceId( col, resourceId ) )
       return false;
@@ -601,8 +608,10 @@ bool Akonadi::DataStore::beginTransaction()
 
   if ( m_transactionLevel == 0 ) {
     QSqlDriver *driver = m_database.driver();
+    sTransactionMutex.lock();
     if ( !driver->beginTransaction() ) {
       debugLastDbError( "DataStore::beginTransaction" );
+      sTransactionMutex.unlock();
       return false;
     }
   }
@@ -628,9 +637,11 @@ bool Akonadi::DataStore::rollbackTransaction()
     QSqlDriver *driver = m_database.driver();
     emit transactionRolledBack();
     if ( !driver->rollbackTransaction() ) {
+      sTransactionMutex.unlock();
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
     }
+    sTransactionMutex.unlock();
   }
 
   return true;
@@ -653,6 +664,7 @@ bool Akonadi::DataStore::commitTransaction()
       rollbackTransaction();
       return false;
     } else {
+      sTransactionMutex.unlock();
       emit transactionCommitted();
     }
   }

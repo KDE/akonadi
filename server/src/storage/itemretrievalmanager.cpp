@@ -112,6 +112,9 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
   req->resourceId = resource;
   req->parts = parts;
 
+  qDebug() << "requestItemDelivery() - current thread:" << QThread::currentThread()
+           << " retrieval thread:" << thread();
+
   mLock->lockForWrite();
   qDebug() << "posting retrieval request for item" << uid << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ resource ].size() << " items in mine";
   mPendingRequests[ resource ].append( req );
