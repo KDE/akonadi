@@ -87,6 +87,11 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
      */
     Collection::List collections() const;
 
+    /**
+     * Return associate label for collection
+     */
+    QString favoriteLabel( const Akonadi::Collection & col );
+
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 

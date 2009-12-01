@@ -511,7 +511,7 @@ class StandardActionManager::Private
       bool ok;
       QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
                                              i18nc( "@label:textbox New name of the folder.", "Name:" ),
-                                             index.data().toString(), &ok, parentWidget );
+                                             favoritesModel->favoriteLabel( collection ), &ok, parentWidget );
       if ( !ok )
         return;
 
