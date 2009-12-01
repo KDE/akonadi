@@ -622,7 +622,7 @@ QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orienta
   if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
   {
     if ( d->m_rootCollection == Collection::root() )
-      return i18nc( "@title:column, name of a thing", "Name" );
+      return i18nc( "@title:column Name of a thing", "Name" );
     return d->m_rootCollection.name();
   }
 
