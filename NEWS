@@ -1,3 +1,36 @@
+1.2.80                       01-December-2009
+---------------------------------------------
+- Support for collection content type filtering as part of LIST.
+- Adapt to Nepomuk query service changes.
+- Experimental support for PostgreSQL.
+- Support for preprocessor agents.
+- Support for distributed searching.
+- Support for agents creating virtual collections.
+- Protocol parser fixes for non-Linux/non-KDE clients.
+- Support for single-shot searches using the Nepomuk query service.
+- Support HRID-based LIST operations.
+- Support RID-based MOVE, COLMOVE, LINK and UNLINK opertions.
+- Respect cache-only retrieval also regarding on-demand syncing.
+- Add configuration accepted/rejected signals to the agent interface.
+- Fix change notification compression when using modified parts sets.
+- Use one retrieval pipeline per resource.
+- Reduce unecessary change notification on flag changes.
+- Fix RID quoting.
+- Fix resource creating race for autostarted agents.
+- Create new database also when using external db servers.
+- Return the created result collection when creating a persistent search.
+
+1.2.1                          28-August-2009
+---------------------------------------------
+- Fix item creation with RID's containing a ']'.
+- Fix ASAP parser not reading the entire command.
+
+1.2.0                            28-June-2009
+---------------------------------------------
+- Fix attribute joining in collection list results.
+- Buildsystem fixes for Mac OS.
+- Do not show a console window for akonadi_control on Windows.
+
 1.1.95                           23-June-2009
 ---------------------------------------------
 - Fix item size handling.
