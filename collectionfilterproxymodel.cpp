@@ -149,7 +149,7 @@ Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) cons
   if ( d->mimeChecker.isWantedCollection( collection ) )
     return QSortFilterProxyModel::flags( index );
   else
-    return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+    return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable );
 }
 
 #include "collectionfilterproxymodel.moc"
