@@ -23,7 +23,7 @@
 
 #include <QtGui/QAbstractProxyModel>
 
-#include <kdeui_export.h>
+#include "akonadi_export.h"
 
 class KDescendantsProxyModelPrivate;
 
