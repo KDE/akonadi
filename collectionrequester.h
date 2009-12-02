@@ -97,6 +97,18 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
     */
     QStringList mimeTypeFilter() const;
 
+    /**
+     * @since 4.4
+     * Sets the access @p rights that the listed collections shall match with.
+     */
+    void setAccessRightsFilter( Collection::Rights rights );
+
+    /**
+     * @since 4.4
+     * Sets the access @p rights that the listed collections shall match with.
+     */
+    Collection::Rights accessRightsFilter() const;
+
   public Q_SLOTS:
     /**
      * Sets the @p collection of the requester.
