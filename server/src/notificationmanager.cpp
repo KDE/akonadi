@@ -62,9 +62,9 @@ NotificationManager* NotificationManager::self()
   return mSelf;
 }
 
-void NotificationManager::connectDatastore( DataStore * store )
+void NotificationManager::connectNotificationCollector(NotificationCollector* collector)
 {
-  connect( store->notificationCollector(), SIGNAL(notify(Akonadi::NotificationMessage::List)),
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessage::List)),
            SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
 }
 

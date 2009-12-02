@@ -30,6 +30,8 @@
 
 namespace Akonadi {
 
+class NotificationCollector;
+
 class NepomukManager : public QObject, public AbstractSearchManager
 {
   Q_OBJECT
@@ -53,6 +55,7 @@ class NepomukManager : public QObject, public AbstractSearchManager
   private:
     bool mValid;
     QMutex mMutex;
+    NotificationCollector* mCollector;
 
     QHash<Nepomuk::Search::QueryServiceClient*, qint64> mQueryMap;
     QHash<qint64, Nepomuk::Search::QueryServiceClient*> mQueryInvMap;

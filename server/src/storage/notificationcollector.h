@@ -44,6 +44,12 @@ class NotificationCollector : public QObject
 
   public:
     /**
+      Create a new notification collector that is not attached to
+      a DataStore and just collects notifications until you emit them manually.
+    */
+    NotificationCollector( QObject *parent = 0 );
+
+    /**
       Create a new notification collector for the given DataStore @p db.
       @param db The datastore using this notification collector.
     */
@@ -141,6 +147,12 @@ class NotificationCollector : public QObject
      */
     void collectionRemoved( const Collection &collection,
                             const QByteArray &resource = QByteArray() );
+
+
+    /**
+      Trigger sending of collected notifications.
+    */
+    void dispatchNotifications();
 
   Q_SIGNALS:
     void notify( const Akonadi::NotificationMessage::List &msgs );

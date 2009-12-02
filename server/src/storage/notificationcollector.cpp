@@ -26,6 +26,13 @@
 
 using namespace Akonadi;
 
+
+NotificationCollector::NotificationCollector(QObject* parent) :
+  QObject( parent ),
+  mDb( 0 )
+{
+}
+
 Akonadi::NotificationCollector::NotificationCollector(DataStore * db) :
   QObject( db ),
   mDb( db )
@@ -111,8 +118,7 @@ void Akonadi::NotificationCollector::collectionRemoved( const Collection &collec
 
 void Akonadi::NotificationCollector::transactionCommitted()
 {
-  emit notify( mNotifications );
-  clear();
+  dispatchNotifications();
 }
 
 void Akonadi::NotificationCollector::transactionRolledBack()
@@ -189,13 +195,19 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
 
 void NotificationCollector::dispatchNotification(const NotificationMessage & msg)
 {
-  if ( mDb->inTransaction() ) {
+  if ( !mDb || mDb->inTransaction() ) {
     NotificationMessage::appendAndCompress( mNotifications, msg );
   } else {
     NotificationMessage::List l;
     l << msg;
     emit notify( l );
   }
+}
+
+void NotificationCollector::dispatchNotifications()
+{
+  emit notify( mNotifications );
+  clear();
 }
 
 #include "notificationcollector.moc"

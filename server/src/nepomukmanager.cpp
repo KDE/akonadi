@@ -26,6 +26,8 @@
 #include "search/result.h"
 
 #include "entities.h"
+#include "storage/notificationcollector.h"
+#include "notificationmanager.h"
 
 using namespace Akonadi;
 
@@ -43,10 +45,12 @@ static qint64 uriToItemId( const QUrl &url )
 
 NepomukManager::NepomukManager( QObject* parent )
   : QObject( parent ),
-    mValid( true )
+    mValid( true ),
+    mCollector( new NotificationCollector( this ) )
 {
   Q_ASSERT( mInstance == 0 );
   mInstance = this;
+  NotificationManager::self()->connectNotificationCollector( mCollector );
 
   if ( !Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
     qWarning() << "Nepomuk QueryServer interface not available!";
@@ -155,17 +159,19 @@ void NepomukManager::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
   mMutex.lock();
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
+  const Collection collection = Collection::retrieveById( collectionId );
 
   Q_FOREACH( const Nepomuk::Search::Result &result, entries ) {
     const qint64 itemId = uriToItemId( result.resourceUri() );
 
-    if ( itemId == -1 ) {
-      qWarning() << "Nepomuk QueryServer: Retrieved invalid item id from server!";
+    if ( itemId == -1 )
       continue;
-    }
 
     Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
+    mCollector->itemLinked( PimItem::retrieveById( itemId ), collection );
   }
+
+  mCollector->dispatchNotifications();
 }
 
 void NepomukManager::hitsRemoved( const QList<QUrl> &entries )
@@ -179,17 +185,19 @@ void NepomukManager::hitsRemoved( const QList<QUrl> &entries )
   mMutex.lock();
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
+  const Collection collection = Collection::retrieveById( collectionId );
 
   Q_FOREACH( const QUrl &uri, entries ) {
     const qint64 itemId = uriToItemId( uri );
 
-    if ( itemId == -1 ) {
-      qWarning() << "Nepomuk QueryServer: Retrieved invalid item id from server!";
+    if ( itemId == -1 )
       continue;
-    }
 
     Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
+    mCollector->itemUnlinked( PimItem::retrieveById( itemId ), collection );
   }
+
+  mCollector->dispatchNotifications();
 }
 
 #include "nepomukmanager.moc"
