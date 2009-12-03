@@ -148,4 +148,18 @@ QStringList CollectionRequester::mimeTypeFilter() const
     return QStringList();
 }
 
+void CollectionRequester::setAccessRightsFilter( Collection::Rights rights )
+{
+  if ( d->collectionDialog )
+    d->collectionDialog->setAccessRightsFilter( rights );
+}
+
+Collection::Rights CollectionRequester::accessRightsFilter() const
+{
+  if ( d->collectionDialog )
+    return d->collectionDialog->accessRightsFilter();
+  else
+    return Akonadi::Collection::ReadOnly;
+}
+
 #include "collectionrequester.moc"
