@@ -127,7 +127,7 @@ class AKONADI_EXPORT SpecialCollections : public QObject
      * @param config The configuration skeleton that provides the default resource id.
      * @param parent The parent object.
      */
-    SpecialCollections( KCoreConfigSkeleton *config, QObject *parent = 0 );
+    explicit SpecialCollections( KCoreConfigSkeleton *config, QObject *parent = 0 );
 
   private:
     //@cond PRIVATE
