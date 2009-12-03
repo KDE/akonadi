@@ -804,9 +804,9 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
-  q->beginInsertRows( parentIndex, row, row );
+  q->beginRemoveRows( parentIndex, row, row );
   m_childEntities[ collection.id() ].removeAt( row );
-  q->endInsertRows();
+  q->endRemoveRows();
 }
 
 void EntityTreeModelPrivate::fetchJobDone( KJob *job )
