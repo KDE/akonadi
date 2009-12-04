@@ -106,7 +106,12 @@ AttributeFactory::~ AttributeFactory()
 
 void AttributeFactory::registerAttribute(Attribute *attr)
 {
-  Q_ASSERT( !d->attributes.contains( attr->type() ) );
+  Q_ASSERT( attr );
+  QHash<QByteArray, Attribute*>::Iterator it = d->attributes.find( attr->type() );
+  if ( it != d->attributes.constEnd() ) {
+    delete *it;
+    d->attributes.erase( it );
+  }
   d->attributes.insert( attr->type(), attr );
 }
 
