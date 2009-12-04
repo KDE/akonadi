@@ -66,8 +66,9 @@ int SpecialMailCollectionsTesting::_t_knownFolderCount() const
   const SpecialCollectionsPrivate *d = static_cast<SpecialCollections*>(SpecialMailCollections::self())->d;
   int ret = 0;
   typedef QHash<QByteArray, Collection> CollectionHash;
-  foreach( const  CollectionHash &hash, d->mFoldersForResource ) {
-    foreach( const Collection &col, hash.values() ) {
+  foreach( const CollectionHash &hash, d->mFoldersForResource ) {
+    const Collection::List collections = hash.values();
+    foreach( const Collection &col, collections ) {
       if( col.isValid() ) {
         ret++;
       }
