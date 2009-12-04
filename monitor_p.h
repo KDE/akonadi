@@ -156,7 +156,7 @@ class MonitorPrivate
       */
       void purge( Collection::Id id );
 
-      bool isBuffered( Collection::Id id )
+      bool isBuffered( Collection::Id id ) const
       {
         return m_buffer.contains( id );
       }

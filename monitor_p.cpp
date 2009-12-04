@@ -106,15 +106,15 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
     || ( op == NotificationMessage::Link )
     || ( op == NotificationMessage::Unlink ) )
   {
-    if ( refCountMap.contains( parentCollectionId ) )
+    if ( refCountMap.contains( parentCollectionId ) || m_buffer.isBuffered( parentCollectionId ) )
       return false;
   }
 
 
   if ( op == NotificationMessage::Move )
   {
-    if ( refCountMap.contains( parentCollectionId ) )
-      if ( refCountMap.contains( msg.parentDestCollection() ) )
+    if ( !refCountMap.contains( parentCollectionId ) && !m_buffer.isBuffered( parentCollectionId ) )
+      if ( !refCountMap.contains( msg.parentDestCollection() ) && !m_buffer.isBuffered( msg.parentDestCollection() ) )
         return true;
     // We can't ignore the move. It must be transformed later into a removal or insertion.
     return false;
