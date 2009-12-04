@@ -104,20 +104,6 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
     void addMimeTypeExclusionFilter( const QString &mimeType );
 
     /**
-     * Add content mime type to be shown by the filter.
-     *
-     * @param mimeType A mime type to be shown.
-     */
-    void addContentMimeTypeInclusionFilter( const QString &mimeType );
-
-    /**
-     * Add content mime types to be shown by the filter.
-     *
-     * @param mimeTypes A list of content mime types to be included.
-     */
-    void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
-
-    /**
      * Returns the list of mime type inclusion filters.
      */
     QStringList mimeTypeInclusionFilters() const;
@@ -126,11 +112,6 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
      * Returns the list of mime type exclusion filters.
      */
     QStringList mimeTypeExclusionFilters() const;
-
-    /**
-     * Returns the list of content mime type inclusion filters.
-     */
-    QStringList contentMimeTypeInclusionFilters() const;
 
     /**
      * Clear all mime type filters.
