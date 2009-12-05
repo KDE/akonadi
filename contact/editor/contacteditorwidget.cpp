@@ -564,7 +564,7 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   contact.setNote( d->mNotesWidget->toPlainText() );
 
   // dates group
-  contact.setBirthday( QDateTime( d->mBirthdateWidget->date(), QTime() ) );
+  contact.setBirthday( QDateTime( d->mBirthdateWidget->date(), QTime(), contact.birthday().timeSpec() ) );
   d->storeCustom( contact, QLatin1String( "X-Anniversary" ), d->mAnniversaryWidget->date().toString( Qt::ISODate ) );
 
   // family group
