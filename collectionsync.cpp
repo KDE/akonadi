@@ -539,6 +539,7 @@ void CollectionSync::doStart()
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
   job->fetchScope().setResource( d->resourceId );
+  job->fetchScope().setAncestorRetrieval( CollectionFetchScope::Parent );
   connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(localCollectionsReceived(Akonadi::Collection::List)) );
   connect( job, SIGNAL(result(KJob*)), SLOT(localCollectionFetchResult(KJob*)) );
 }
