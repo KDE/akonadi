@@ -156,6 +156,9 @@ EntityTreeViewStateSaver::~EntityTreeViewStateSaver()
 
 void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
 {
+  if ( !d->view->model() )
+    return;
+
   configGroup.deleteGroup();
   QStringList selection, expansion;
   for ( int i = 0; i < d->view->model()->rowCount(); ++i ) {
@@ -174,6 +177,9 @@ void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
 
 void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) const
 {
+  if ( !d->view->model() )
+    return;
+
   const QStringList selection = configGroup.readEntry( "Selection", QStringList() );
   foreach( const QString &key, selection ) {
     Entity::Id id = key.mid( 1 ).toLongLong();
