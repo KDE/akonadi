@@ -100,19 +100,8 @@ void EntityTreeModel::setShowSystemEntities( bool show )
 void EntityTreeModel::clearAndReset()
 {
   Q_D( EntityTreeModel );
-  d->m_collections.clear();
-  d->m_items.clear();
-  d->m_childEntities.clear();
-  reset();
-
-  if ( d->m_rootCollection == Collection::root() )
-  {
-    QTimer::singleShot( 0, this, SLOT( startFirstListJob() ) );
-  } else {
-    CollectionFetchJob *rootFetchJob = new CollectionFetchJob( d->m_rootCollection, CollectionFetchJob::Base, d->m_session );
-    connect( rootFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(rootCollectionFetched(Akonadi::Collection::List)) );
-    connect( rootFetchJob, SIGNAL(result(KJob *)), SLOT(fetchJobDone(KJob *)) );
-  }
+  d->beginResetModel();
+  d->endResetModel();
 }
 
 int EntityTreeModel::columnCount( const QModelIndex & parent ) const
@@ -976,6 +965,7 @@ bool EntityTreeModel::removeColumns( int, int, const QModelIndex& )
 void EntityTreeModel::setItemPopulationStrategy( ItemPopulationStrategy strategy )
 {
   Q_D( EntityTreeModel );
+  d->beginResetModel();
   d->m_itemPopulation = strategy;
 
   if ( strategy == NoItemPopulation ) {
@@ -996,7 +986,7 @@ void EntityTreeModel::setItemPopulationStrategy( ItemPopulationStrategy strategy
 
   d->m_monitor->d_ptr->useRefCounting = (strategy == LazyPopulation);
 
-  clearAndReset();
+  d->endResetModel();
 }
 
 EntityTreeModel::ItemPopulationStrategy EntityTreeModel::itemPopulationStrategy() const
@@ -1008,8 +998,9 @@ EntityTreeModel::ItemPopulationStrategy EntityTreeModel::itemPopulationStrategy(
 void EntityTreeModel::setIncludeRootCollection( bool include )
 {
   Q_D( EntityTreeModel );
+  d->beginResetModel();
   d->m_showRootCollection = include;
-  clearAndReset();
+  d->endResetModel();
 }
 
 bool EntityTreeModel::includeRootCollection() const
@@ -1035,6 +1026,7 @@ QString EntityTreeModel::rootCollectionDisplayName() const
 void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strategy )
 {
   Q_D( EntityTreeModel );
+  d->beginResetModel();
   d->m_collectionFetchStrategy = strategy;
 
 
@@ -1049,8 +1041,7 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
             SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
             this, SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   }
-
-  clearAndReset();
+  d->endResetModel();
 }
 
 EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrategy() const

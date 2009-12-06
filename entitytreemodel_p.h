@@ -105,6 +105,10 @@ public:
   void insertCollection( const Akonadi::Collection &collection, const Akonadi::Collection& parent );
   void insertPendingCollection( const Akonadi::Collection &collection, const Akonadi::Collection& parent, QMutableListIterator<Collection> &it );
 
+  void beginResetModel();
+  void endResetModel();
+  void fillModel();
+
   ItemFetchJob* getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const;
   ItemFetchJob* getItemFetchJob( const Item &item, const ItemFetchScope &scope ) const;
   void runItemFetchJob( ItemFetchJob* itemFetchJob, const Collection &parent ) const;
