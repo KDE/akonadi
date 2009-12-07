@@ -108,7 +108,7 @@ void AttributeFactory::registerAttribute(Attribute *attr)
 {
   Q_ASSERT( attr );
   QHash<QByteArray, Attribute*>::Iterator it = d->attributes.find( attr->type() );
-  if ( it != d->attributes.constEnd() ) {
+  if ( it != d->attributes.end() ) {
     delete *it;
     d->attributes.erase( it );
   }
