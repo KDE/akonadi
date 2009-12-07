@@ -23,8 +23,6 @@
 
 #include <QtGui/QAbstractProxyModel>
 
-#include "akonadi_export.h"
-
 class KDescendantsProxyModelPrivate;
 
 /**
@@ -66,7 +64,7 @@ view->setModel(descProxy);
 @since 4.4
 @author Stephen Kelly <steveire@gmail.com>
 */
-class AKONADI_EXPORT KDescendantsProxyModel : public QAbstractProxyModel
+class KDescendantsProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT
 
