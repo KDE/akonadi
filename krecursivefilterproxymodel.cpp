@@ -48,7 +48,7 @@ public:
 void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
 {
   Q_Q(KRecursiveFilterProxyModel);
-  q->invalidate();
+//   q->invalidate(); // Temporarily disabled.
   return;
 
   QModelIndex parent = source_top_left.parent();
@@ -81,13 +81,15 @@ void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sour
 
 void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
 {
+  Q_Q(KRecursiveFilterProxyModel);
+  q->layoutAboutToBeChanged();
   return;
 }
 
 void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
-  q->invalidate();
+  q->layoutChanged();
   return;
 
   if (!source_parent.isValid() || q->acceptRow(source_parent.row(), source_parent.parent()))
@@ -130,7 +132,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &sou
 void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
-
+  q->layoutAboutToBeChanged();
   return;
 
   bool accepted = false;
@@ -164,7 +166,8 @@ void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIn
 void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
-  q->invalidate();
+  q->layoutChanged();
+//   q->invalidate();
   return;
 
   if (!ignoreRemove)
