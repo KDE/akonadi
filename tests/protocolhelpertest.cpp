@@ -114,6 +114,26 @@ class ProtocolHelperTest : public QObject
       }
     }
 
+    void testParentCollectionAfterCollectionParsing()
+    {
+      Collection parsedCollection;
+      const QByteArray b = "111 222 (REMOTEID \"A\" ANCESTORS ((222 \"B\") (333 \"C\") (0 \"\"))";
+      ProtocolHelper::parseCollection( b, parsedCollection );
+
+      QList<qint64> ids;
+      ids << 111;
+      ids << 222;
+      ids << 333;
+      int i = 0;
+
+      Collection col = parsedCollection;
+      while ( col.isValid() ) {
+        QCOMPARE( col.id(), ids[i++] );
+        col = col.parentCollection();
+      }
+      QCOMPARE( i, 2 );
+    }
+
     void testHRidToByteArray_data()
     {
       QTest::addColumn<Collection>( "collection" );
