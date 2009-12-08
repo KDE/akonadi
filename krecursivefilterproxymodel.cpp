@@ -184,7 +184,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &sour
 KRecursiveFilterProxyModel::KRecursiveFilterProxyModel(QObject* parent)
     : QSortFilterProxyModel(parent), d_ptr(new RecursiveFilterProxyModelPrivate(this))
 {
-
+  setDynamicSortFilter(true);
 }
 
 KRecursiveFilterProxyModel::~KRecursiveFilterProxyModel()
@@ -194,11 +194,11 @@ KRecursiveFilterProxyModel::~KRecursiveFilterProxyModel()
 
 bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
+  Q_ASSERT(sourceModel()->index(sourceRow, 0, sourceParent).isValid());
   QVariant da = sourceModel()->index(sourceRow, 0, sourceParent).data();
 
   if (acceptRow(sourceRow, sourceParent))
   {
-//     kDebug() << "Direct accepted" << da;
     return true;
   }
 
