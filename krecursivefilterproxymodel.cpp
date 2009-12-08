@@ -221,22 +221,6 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 {
   Q_D(RecursiveFilterProxyModel);
 
-  // Disconnect in the QSortFilterProxyModel. These methods will be invoked manually
-  disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-      this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex)));
-
-  disconnect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsAboutToBeInserted(QModelIndex,int,int)));
-
-  disconnect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsInserted(QModelIndex,int,int)));
-
-  disconnect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
-
-  disconnect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-      this, SLOT(_q_sourceRowsRemoved(QModelIndex,int,int)));
-
   // Standard disconnect.
   disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
       this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));
@@ -254,6 +238,22 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
       this, SLOT(sourceRowsRemoved(QModelIndex,int,int)));
 
   QSortFilterProxyModel::setSourceModel(model);
+
+  // Disconnect in the QSortFilterProxyModel. These methods will be invoked manually
+  disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+      this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex)));
+
+  disconnect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+      this, SLOT(_q_sourceRowsAboutToBeInserted(QModelIndex,int,int)));
+
+  disconnect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+      this, SLOT(_q_sourceRowsInserted(QModelIndex,int,int)));
+
+  disconnect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+      this, SLOT(_q_sourceRowsAboutToBeRemoved(QModelIndex,int,int)));
+
+  disconnect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+      this, SLOT(_q_sourceRowsRemoved(QModelIndex,int,int)));
 
   // Slots for manual invoking of QSortFilterProxyModel methods.
   connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
