@@ -244,6 +244,12 @@ class AKONADI_EXPORT Entity
     }
 
   protected:
+
+    /**
+     * Helper method for assignment operator and copy constructor.
+     */
+    void assign( const Entity &other );
+
     /**
      * Creates an entity from an @p other entity.
      */
