@@ -429,13 +429,14 @@ void SelfTestDialog::testSearchStatus()
     if ( reply.isValid() ) {
       const QString name = reply.value();
 
-      if ( name == QLatin1String( "sesame2" ) ) {
-        report( Success, ki18n( "Nepomuk search service uses Sesame2 backend. " ),
-                         ki18n( "The Nepomuk search service uses the recommended Sesame2 backend." ) );
-      } else {
+      // put blacklisted backends here
+      if ( name.contains( QLatin1String( "redland" ) ) ) {
         report( Error, ki18n( "Nepomuk search service uses inappropriate backend." ),
                        ki18n( "The Nepomuk search service uses the '%1' backend, which is not "
                               "recommended for use with Akonadi." ).subs( name ) );
+      } else {
+        report( Success, ki18n( "Nepomuk search service uses an appropriate backend. " ),
+                         ki18n( "The Nepomuk search service uses one of the recommended backends." ) );
       }
     }
   }
