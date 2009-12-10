@@ -404,20 +404,27 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
 
     // Find the type for the collection.
     QByteArray type;
-    if ( typeForName.contains( collection.name() ) )
-      type = typeForName[ collection.name() ];
+    QString name = collection.name();
+    if ( collection.hasAttribute<EntityDisplayAttribute>() )
+      name = collection.attribute<EntityDisplayAttribute>()->displayName();
+    if ( typeForName.contains( name ) )
+      type = typeForName[ name ];
 
     if ( !type.isEmpty() ) {
-      kDebug() << "Recovering collection" << collection.name();
+      kDebug() << "Recovering collection" << name;
       setCollectionAttributes( collection, type, mNameForTypeMap, mIconForTypeMap );
 
       CollectionModifyJob *modifyJob = new CollectionModifyJob( collection, q );
       QObject::connect( modifyJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionModifyResult( KJob* ) ) );
       mPendingModifyJobs++;
     } else {
-      kDebug() << "Unknown collection name" << collection.name() << "-- not recovering.";
+      kDebug() << "Searching for names: " << typeForName.keys();
+      kDebug() << "Unknown collection name" << name << "-- not recovering.";
     }
   }
+
+  if ( mPendingModifyJobs == 0 )
+    q->commit();
 }
 
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
