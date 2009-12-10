@@ -376,6 +376,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
      * This method is called when the agent is removed from
      * the system, so it can do some cleanup stuff.
+     *
+     * @note If you reimplement this in a subclass make sure
+     *       to call this base implementation at the end.
      */
     virtual void cleanup();
 

@@ -95,12 +95,16 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
     }
   }
 
-  foreach ( const QString &resourceId, mFoldersForResource.keys() ) {
-    const QHash<QByteArray, bool> &requested = mFoldersForResource[ resourceId ];
+  const QStringList resourceIds = mFoldersForResource.keys();
+  QHashIterator< QString, QHash<QByteArray, bool> > resourceIt( mFoldersForResource );
+  while ( resourceIt.hasNext() ) {
+    resourceIt.next();
+
+    const QHash<QByteArray, bool> &requested = resourceIt.value();
     QHashIterator<QByteArray, bool> it( requested );
     while ( it.hasNext() ) {
       it.next();
-      if ( it.value() && !mSpecialCollections->hasCollection( it.key(), AgentManager::self()->instance( resourceId ) ) )
+      if ( it.value() && !mSpecialCollections->hasCollection( it.key(), AgentManager::self()->instance( resourceIt.key() ) ) )
         return false;
     }
   }
