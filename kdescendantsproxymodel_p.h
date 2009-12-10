@@ -23,8 +23,6 @@
 
 #include <QtGui/QAbstractProxyModel>
 
-#include <kdeui_export.h>
-
 class KDescendantsProxyModelPrivate;
 
 /**
