@@ -99,8 +99,6 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor, Session *session )
   q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
            SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
-//   connect( q, SIGNAL( modelReset() ), q, SLOT( slotModelReset() ) );
-
   QList<Collection> list = monitor->collectionsMonitored();
   if ( list.size() == 1 )
     m_rootCollection = list.first();
@@ -109,10 +107,8 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor, Session *session )
 
   m_rootCollectionDisplayName = QLatin1String( "[*]" );
 
-  // Initializes the model cleanly.
-  q->clearAndReset();
+  fillModel();
 }
-
 
 int EntityTreeModelPrivate::indexOf( const QList<Node*> &nodes, Entity::Id id ) const
 {
@@ -612,6 +608,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
+  return; // Temporarily disabled
   if ( !m_collections.contains( id ) ) {
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
@@ -738,7 +735,6 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
 
   // Where should it go? Always append items and prepend collections and reorganize them with separate reactions to Attributes?
 
-#if QT_VERSION >= 0x040600
   const Item::Id itemId = item.id();
 
   const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
@@ -754,7 +750,6 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   node->parent = destCollection.id();
   m_childEntities[ destCollection.id() ].append( node );
   q->endMoveRows();
-#endif
 }
 
 void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
@@ -1150,5 +1145,34 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
   }
 
   return indexes;
+}
+
+void EntityTreeModelPrivate::beginResetModel()
+{
+  Q_Q( EntityTreeModel );
+  q->beginResetModel();
+}
+
+void EntityTreeModelPrivate::endResetModel()
+{
+  Q_Q( EntityTreeModel );
+  m_collections.clear();
+  m_items.clear();
+  m_childEntities.clear();
+  q->endResetModel();
+  fillModel();
+}
+
+void EntityTreeModelPrivate::fillModel()
+{
+  Q_Q( EntityTreeModel );
+  if ( m_rootCollection == Collection::root() )
+  {
+    QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
+  } else {
+    CollectionFetchJob *rootFetchJob = new CollectionFetchJob( m_rootCollection, CollectionFetchJob::Base, m_session );
+    q->connect( rootFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(rootCollectionFetched(Akonadi::Collection::List)) );
+    q->connect( rootFetchJob, SIGNAL(result(KJob *)), SLOT(fetchJobDone(KJob *)) );
+  }
 }
 
