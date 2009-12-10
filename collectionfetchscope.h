@@ -159,6 +159,10 @@ class AKONADI_EXPORT CollectionFetchScope
     /**
      * Sets how many levels of ancestor collections should be included in the retrieval.
      *
+     * Only the ID and the remote ID of the ancestor collections are fetched. If
+     * you want more information about the ancestor collections, like their name,
+     * you will need to do an additional CollectionFetchJob for them.
+     *
      * @param ancestorDepth The desired ancestor retrieval depth.
      */
     void setAncestorRetrieval( AncestorRetrieval ancestorDepth );
