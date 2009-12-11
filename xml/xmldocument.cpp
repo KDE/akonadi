@@ -55,7 +55,7 @@ template <typename T, void FreeFunc(T)> class XmlPtr
 
     operator bool() const
     {
-      return p != NULL;
+      return p != 0;
     }
 
   private:
@@ -153,7 +153,7 @@ bool Akonadi::XmlDocument::loadFile(const QString& fileName)
   }
 
   const QString &schemaFileName = KGlobal::dirs()->findResource( "data", QLatin1String("akonadi/akonadi-xml.xsd") );
-  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), NULL, XML_PARSE_NONET ) );
+  XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc( xmlReadFile( schemaFileName.toLocal8Bit(), 0, XML_PARSE_NONET ) );
   if ( !schemaDoc ) {
     d->lastError = i18n( "Schema definition could not be loaded and parsed." );
     return false;
