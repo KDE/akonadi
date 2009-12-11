@@ -160,7 +160,7 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
 {
   QDomElement parentElem = mDocument.collectionElementByRemoteId( parent.remoteId() );
   if ( parentElem.isNull() ) {
-    emit error( "Parent collection not found in DOM tree." );
+    emit error( i18n("Parent collection not found in DOM tree.") );
     changeProcessed();
     return;
   }
@@ -168,7 +168,7 @@ void KnutResource::collectionAdded( const Akonadi::Collection &collection, const
   Collection c( collection );
   c.setRemoteId( QUuid::createUuid().toString() );
   if ( XmlWriter::writeCollection( c, parentElem ).isNull() ) {
-    emit error( "Unable to write collection." );
+    emit error( i18n("Unable to write collection.") );
     changeProcessed();
   } else {
     save();
@@ -180,7 +180,7 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
 {
   QDomElement oldElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( oldElem.isNull() ) {
-    emit error( "Modified collection not found in DOM tree." );
+    emit error( i18n("Modified collection not found in DOM tree.") );
     changeProcessed();
     return;
   }
@@ -209,7 +209,7 @@ void KnutResource::collectionRemoved( const Akonadi::Collection &collection )
 {
   const QDomElement colElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( colElem.isNull() ) {
-    emit error( "Deleted collection not found in DOM tree." );
+    emit error( i18n("Deleted collection not found in DOM tree." ));
     changeProcessed();
     return;
   }
@@ -224,7 +224,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
 {
   QDomElement parentElem = mDocument.collectionElementByRemoteId( collection.remoteId() );
   if ( parentElem.isNull() ) {
-    emit error( QString::fromLatin1( "Parent collection '%1' not found in DOM tree." ).arg( collection.remoteId() ) );
+    emit error( i18n( "Parent collection '%1' not found in DOM tree." , collection.remoteId() ) );
     changeProcessed();
     return;
   }
@@ -232,7 +232,7 @@ void KnutResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   Item i( item );
   i.setRemoteId( QUuid::createUuid().toString() );
   if ( XmlWriter::writeItem( i, parentElem ).isNull() ) {
-    emit error( "Unable to write item." );
+    emit error( i18n("Unable to write item.") );
     changeProcessed();
   } else {
     save();
@@ -244,7 +244,7 @@ void KnutResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
 {
   const QDomElement oldElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( oldElem.isNull() ) {
-    emit error( "Modified item not found in DOM tree." );
+    emit error( i18n("Modified item not found in DOM tree.") );
     changeProcessed();
     return;
   }
@@ -260,7 +260,7 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
 {
   const QDomElement itemElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( itemElem.isNull() ) {
-    emit error( "Deleted item not found in DOM tree." );
+    emit error( i18n("Deleted item not found in DOM tree.") );
     changeProcessed();
     return;
   }
