@@ -121,7 +121,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     void setDefaultCollection( const Collection &collection );
 
     /**
-     * Sets the selection mode.
+     * Sets the selection mode. The initial default mode is
+     * QAbstractItemView::SingleSelection.
      * @see QAbstractItemView::setSelectionMode()
      */
     void setSelectionMode( QAbstractItemView::SelectionMode mode );
@@ -134,9 +135,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Returns the selected collection if the selection mode is
-     * QAbstractItemView::SingleSelection what is the default. If
-     * another selection mode was set then an invalid collection
-     * is returned.
+     * QAbstractItemView::SingleSelection. If another selection mode was set,
+     * or nothing is selected, an invalid collection is returned.
      */
     Akonadi::Collection selectedCollection() const;
 
