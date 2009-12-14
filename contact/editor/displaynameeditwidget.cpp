@@ -115,6 +115,9 @@ DisplayNameEditWidget::DisplayNameEditWidget( QWidget *parent )
   layout->setSpacing( KDialog::spacingHint() );
 
   mView = new KComboBox( this );
+  mView->addItems( QStringList() << QString() << QString() << QString()
+                                 << QString() << QString() << QString() );
+
   layout->addWidget( mView );
 
   connect( mView, SIGNAL( activated( int ) ), SLOT( displayTypeChanged( int ) ) );
@@ -215,29 +218,24 @@ bool DisplayNameEditWidget::eventFilter( QObject *object, QEvent *event )
 
 void DisplayNameEditWidget::updateView()
 {
-  mView->clear();
-
-  QStringList items;
-
   // SimpleName:
-  items.append( mContact.givenName() + QLatin1Char( ' ' ) + mContact.familyName() );
+  mView->setItemText( 0, mContact.givenName() + QLatin1Char( ' ' ) + mContact.familyName() );
 
   // FullName:
-  items.append( mContact.assembledName() );
+  mView->setItemText( 1, mContact.assembledName() );
 
   // ReverseNameWithComma:
-  items.append( mContact.familyName() + QLatin1String( ", " ) + mContact.givenName() );
+  mView->setItemText( 2, mContact.familyName() + QLatin1String( ", " ) + mContact.givenName() );
 
   // ReverseName:
-  items.append( mContact.familyName() + QLatin1Char( ' ' ) + mContact.givenName() );
+  mView->setItemText( 3, mContact.familyName() + QLatin1Char( ' ' ) + mContact.givenName() );
 
   // Organization:
-  items.append( mContact.organization() );
+  mView->setItemText( 4, mContact.organization() );
 
   // CustomName:
-  items.append( mContact.formattedName() );
+  mView->setItemText( 5, mContact.formattedName() );
 
-  mView->addItems( items );
   mView->setEditable( mDisplayType == CustomName );
 
   mView->setCurrentIndex( (int)mDisplayType );
