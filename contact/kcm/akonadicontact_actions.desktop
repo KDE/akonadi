@@ -10,6 +10,7 @@ X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=Contact Actions
+Name[ca]=Accions del contacte
 Name[cs]=Činnosti kontaktů
 Name[da]=Kontakthandlinger
 Name[de]=Kontakt-Aktionen
@@ -28,6 +29,7 @@ Name[uk]=Дії контакту
 Name[x-test]=xxContact Actionsxx
 Name[zh_TW]=聯絡人動作
 Comment=Configure the Contact Actions
+Comment[ca]=Configura les accions del contacte
 Comment[cs]=Nastavit činnosti kontaktů
 Comment[da]=Indstil kontakthandlinger
 Comment[de]=Kontakt-Aktionen einrichten
