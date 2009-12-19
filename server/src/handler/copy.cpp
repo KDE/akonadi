@@ -52,7 +52,13 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
     newPart.setPimItemId( -1 );
     parts << newPart;
   }
-  return store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), newItem );
+  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), newItem ) )
+    return false;
+  foreach ( const Flag &flag, item.flags() ) {
+    if ( !newItem.addFlag( flag ) )
+      return false;
+  }
+  return true;
 }
 
 bool Copy::parseStream()
