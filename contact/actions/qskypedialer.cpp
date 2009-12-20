@@ -27,6 +27,8 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 
+#include <klocale.h>
+
 #include <unistd.h>
 
 static bool isSkypeServiceRegistered()
