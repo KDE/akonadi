@@ -90,7 +90,8 @@ class EntityTreeModelPrivate;
  * <h3>Creating and configuring the EntityTreeModel</h3>
  *
  * This class is a wrapper around a Akonadi::ChangeRecorder object. The model represents a
- * part of the collection and item tree configured in the ChangeRecorder.
+ * part of the collection and item tree configured in the ChangeRecorder. The structure of the
+ * model mirrors the structure of Collections and Items on the %Akonadi server.
  *
  * The following code creates a model which fetches items and collections relevant to
  * addressees (contacts), and automatically manages keeping the items up to date.
@@ -288,9 +289,11 @@ class EntityTreeModelPrivate;
  *    the string "Address books" might be returned for column 0, whereas if the headerGroup is ItemListHeaders, the strings "Given Name", "Family Name",
  *    "Email Address" might be returned for the columns 0, 1, and 2.
  * - QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
- * -- Implement to return data for a particular Collection. Typically this will be the name of the collection or the EntityDisplayAttribute
+ * -- Implement to return data for a particular Collection. Typically this will be the name of the collection or the EntityDisplayAttribute.
  * - QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
  * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the email.
+ *
+ * @note The entityData methods are just for convenience. the QAbstractItemMOdel::data method can be overridden if required.
  *
  * The application writer must then properly configure proxy models for the views, so that the correct data is shown in the correct view.
  * That is the purpose of these lines in the above example
