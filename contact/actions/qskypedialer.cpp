@@ -70,7 +70,7 @@ bool QSkypeDialer::dialNumber( const QString &number )
 
     // it could be skype is not running yet, so start it now
     if ( !QProcess::startDetached( QLatin1String( "skype" ), QStringList() ) ) {
-      mErrorMessage = QLatin1String( "Unable to start skype process, check that skype executable is in your PATH variable." );
+      mErrorMessage = i18n( "Unable to start skype process, check that skype executable is in your PATH variable." );
       return false;
     }
 
@@ -89,7 +89,7 @@ bool QSkypeDialer::dialNumber( const QString &number )
   if ( !interface->isValid() ) {
     delete interface;
 
-    mErrorMessage = QLatin1String( "Skype Public API (DBus) seems to be disabled." );
+    mErrorMessage = i18n( "Skype Public API (DBus) seems to be disabled." );
     return false;
   }
 
@@ -97,7 +97,7 @@ bool QSkypeDialer::dialNumber( const QString &number )
   if ( reply.value() != QLatin1String( "OK" ) ) {
     delete interface;
 
-    mErrorMessage = QLatin1String( "Skype registration failed." );
+    mErrorMessage = i18n( "Skype registration failed." );
     return false;
   }
 
@@ -105,7 +105,7 @@ bool QSkypeDialer::dialNumber( const QString &number )
   if ( reply.value() != QLatin1String( "PROTOCOL 1" ) ) {
     delete interface;
 
-    mErrorMessage = QLatin1String( "Protocol mismatch." );
+    mErrorMessage = i18n( "Protocol mismatch." );
     return false;
   }
 
