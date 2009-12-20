@@ -23,7 +23,7 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
-class RecursiveFilterProxyModelPrivate;
+class KRecursiveFilterProxyModelPrivate;
 
 class KRecursiveFilterProxyModel : public QSortFilterProxyModel
 {
@@ -42,9 +42,9 @@ private:
   /* reimp */ bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 protected:
-  RecursiveFilterProxyModelPrivate * const d_ptr;
+  KRecursiveFilterProxyModelPrivate * const d_ptr;
 
-  Q_DECLARE_PRIVATE(RecursiveFilterProxyModel)
+  Q_DECLARE_PRIVATE(KRecursiveFilterProxyModel)
 
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right))
   Q_PRIVATE_SLOT(d_func(), void sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end))

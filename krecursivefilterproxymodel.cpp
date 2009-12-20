@@ -21,12 +21,12 @@
 
 #include <kdebug.h>
 
-class RecursiveFilterProxyModelPrivate
+class KRecursiveFilterProxyModelPrivate
 {
   Q_DECLARE_PUBLIC(KRecursiveFilterProxyModel)
   KRecursiveFilterProxyModel *q_ptr;
 public:
-  RecursiveFilterProxyModelPrivate(KRecursiveFilterProxyModel *model)
+  KRecursiveFilterProxyModelPrivate(KRecursiveFilterProxyModel *model)
     : q_ptr(model),
       ignoreRemove(false),
       completeInsert(false),
@@ -103,7 +103,7 @@ public:
   bool completeRemove;
 };
 
-void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
+void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -131,7 +131,7 @@ void RecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sour
   refreshAscendantMapping(source_parent);
 }
 
-void RecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex &index, bool refreshAll)
+void KRecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex &index, bool refreshAll)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -155,7 +155,7 @@ void RecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelIndex
   invokeDataChanged(lastAscendant, lastAscendant);
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -166,15 +166,15 @@ void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelI
   }
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
   if (completeInsert)
   {
     completeInsert = false;
-    // If the parent is already in the model, we can just pass on the signal.
     invokeRowsInserted(source_parent, start, end);
+    // If the parent is already in the model, we can just pass on the signal.
     return;
   }
 
@@ -187,6 +187,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &sou
       break;
     }
   }
+
   if (!requireRow)
   {
     // The row doesn't have descendants that match the filter. Filter it out.
@@ -196,7 +197,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsInserted(const QModelIndex &sou
   refreshAscendantMapping(source_parent);
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -223,7 +224,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIn
   }
 }
 
-void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
+void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
 {
   Q_Q(KRecursiveFilterProxyModel);
 
@@ -248,7 +249,7 @@ void RecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &sour
 }
 
 KRecursiveFilterProxyModel::KRecursiveFilterProxyModel(QObject* parent)
-    : QSortFilterProxyModel(parent), d_ptr(new RecursiveFilterProxyModelPrivate(this))
+    : QSortFilterProxyModel(parent), d_ptr(new KRecursiveFilterProxyModelPrivate(this))
 {
   setDynamicSortFilter(true);
 }
@@ -269,6 +270,7 @@ bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelInd
   QModelIndex source_index = sourceModel()->index(sourceRow, 0, sourceParent);
   Q_ASSERT(source_index.isValid());
   bool accepted = false;
+
   for (int row = 0 ; row < sourceModel()->rowCount(source_index); ++row)
     if (filterAcceptsRow(row, source_index))
       accepted = true; // Need to do this in a loop so that all siblings in a parent get processed, not just the first.
@@ -283,7 +285,7 @@ bool KRecursiveFilterProxyModel::acceptRow(int sourceRow, const QModelIndex& sou
 
 void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 {
-  Q_D(RecursiveFilterProxyModel);
+  Q_D(KRecursiveFilterProxyModel);
 
   // Standard disconnect.
   disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
