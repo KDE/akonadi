@@ -152,7 +152,7 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
 {
   QMessageBox dlg( mParent );
 
-  dlg.setInformativeText( i18n( "The contact has been changed by anyone else\nWhat shall be done?" ) );
+  dlg.setInformativeText( i18n( "The contact has been changed by someone else.\nWhat should be done?" ) );
   dlg.addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
   dlg.addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
 
