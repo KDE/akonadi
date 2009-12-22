@@ -699,7 +699,6 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
         if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
           EntityDisplayAttribute *displayAttribute = collection.attribute<EntityDisplayAttribute>();
           displayAttribute->setDisplayName( value.toString() );
-          collection.addAttribute( displayAttribute );
         }
       }
 
@@ -712,7 +711,6 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
         EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
         eda->setBackgroundColor( color );
-        collection.addAttribute( eda );
       }
 
       if ( CollectionRole == role )
@@ -734,7 +732,6 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
         if ( item.hasAttribute<EntityDisplayAttribute>() ) {
           EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
           displayAttribute->setDisplayName( value.toString() );
-          item.addAttribute( displayAttribute );
         }
       }
 
