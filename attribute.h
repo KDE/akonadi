@@ -33,6 +33,9 @@ namespace Akonadi {
  * in an entity. Attributes should be meta data, e.g. ACLs, quotas etc.
  * that are not part of the entities' data itself.
  *
+ * Note that attributes are per user, i.e. when an attribute is added to
+ * an entity, it only applies to the current user.
+ *
  * To provide custom attributes, you have to subclass from this interface
  * and reimplement the pure virtual methods.
  *
