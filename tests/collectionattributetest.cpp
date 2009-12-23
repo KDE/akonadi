@@ -111,6 +111,20 @@ void CollectionAttributeTest::testAttributes()
   QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
 
+  TestAttribute *attrB = new TestAttribute();
+  attrB->deserialize( attr2 );
+  col.addAttribute(attrB);
+  attrB = col.attribute<TestAttribute>();
+  QVERIFY( attrB != 0 );
+  QCOMPARE( attrB->serialized(), QByteArray( attr2 ) );
+
+  attrB->deserialize( attr1 );
+  col.addAttribute(attrB);
+  attrB = col.attribute<TestAttribute>();
+  QVERIFY( attrB != 0 );
+  QCOMPARE( attrB->serialized(), QByteArray( attr1 ) );
+
+
   // modify a custom attribute
   col.attribute<TestAttribute>( Collection::AddIfMissing )->deserialize( attr2 );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );

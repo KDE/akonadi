@@ -86,8 +86,14 @@ Entity& Entity ::operator=( const Entity &other )
 
 void Entity::addAttribute(Attribute * attr)
 {
-  if ( d_ptr->mAttributes.contains( attr->type() ) )
-    delete d_ptr->mAttributes.take( attr->type() );
+  if ( d_ptr->mAttributes.contains( attr->type() ) ) {
+    Attribute *existing = d_ptr->mAttributes.value( attr->type() );
+    if ( attr == existing ) {
+      return;
+    }
+    d_ptr->mAttributes.remove( attr->type() );
+    delete existing;
+  }
   d_ptr->mAttributes.insert( attr->type(), attr );
   d_ptr->mDeletedAttributes.remove( attr->type() );
 }
