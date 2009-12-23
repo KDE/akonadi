@@ -27,6 +27,7 @@
 
 using namespace Akonadi;
 
+#ifndef KDE_USE_FINAL
 static inline QByteArray enumToType( SpecialMailCollections::Type type )
 {
   switch ( type ) {
@@ -41,6 +42,7 @@ static inline QByteArray enumToType( SpecialMailCollections::Type type )
     default: return QByteArray(); break;
   }
 }
+#endif
 
 SpecialMailCollectionsRequestJob::SpecialMailCollectionsRequestJob( QObject *parent )
   : SpecialCollectionsRequestJob( SpecialMailCollections::self(), parent ),

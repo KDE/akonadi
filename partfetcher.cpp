@@ -25,7 +25,9 @@
 #include "itemfetchscope.h"
 #include <KLocale>
 
+#ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE( QSet<QByteArray> )
+#endif
 
 using namespace Akonadi;
 
