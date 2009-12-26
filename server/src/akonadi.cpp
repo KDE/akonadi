@@ -301,6 +301,10 @@ void AkonadiServer::startDatabaseProcess()
   if ( miscDir.isEmpty() )
     akFatal() << "Akonadi server was not able not create database misc directory";
 
+  // the socket path must not exceed 103 characters, so check for max dir length right away
+  if ( miscDir.length() >= 90 )
+      akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << miscDir;
+
   // move mysql error log file out of the way
   const QFileInfo errorLog( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err" ) );
   if ( errorLog.exists() ) {
