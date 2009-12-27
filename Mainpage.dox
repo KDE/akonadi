@@ -34,7 +34,7 @@ or a contact. The actual object it represents is its so-called payload. All
 available ways to work with items are listed in the \ref libakonadi_pimitems "Items"
 section.
 
-Both, items and collections, are identified by a persistent unique identifier.
+Both items and collections are identified by a persistent unique identifier.
 Also, they can contain arbitrary attributes (derived from Akonadi::Attribute) to
 attach general or application specific meta data to them. Functionality common
 to both is provided by their base class Akonadi::Entity.
@@ -42,8 +42,7 @@ to both is provided by their base class Akonadi::Entity.
 
 \section libakonadi_collections Collection retrieval and manipulation
 
-See \ref akonadi_concepts_collections "Collection Concept" for more information
-about the concept of collections. A collection is represented by the Akonadi::Collection class.
+A collection is represented by the Akonadi::Collection class.
 
 Classes to retrieve information about collections:
 
@@ -79,13 +78,13 @@ The following classes are provided to manipulate PIM items:
 - Akonadi::ItemDeleteJob
 
 Akonadi::ItemModel provides a self-updating model class which can be used to display the content
-of a collection. Akonadi::ItemView is the base-class for a corresponding view. Often needed KAction
+of a collection. Akonadi::ItemView is the base class for a corresponding view. Often needed KAction
 for item operations are provided by Akonadi::StandardActionManager.
 
 
 \section libakonadi_jobs Low-level access to the Akonadi server
 
-Accessing the Akonadi server is done using job-classes derived from Akonadi::Job. The
+Accessing the Akonadi server is done using job classes derived from Akonadi::Job. The
 communication channel with the server is provided by Akonadi::Session.
 
 To use server-side transactions, the following jobs are provided:
@@ -95,7 +94,7 @@ To use server-side transactions, the following jobs are provided:
 - Akonadi::TransactionRollbackJob
 
 There also is Akonadi::TransactionSequence which can be used to automatically group
-a set of jobs to a single transaction.
+a set of jobs into a single transaction.
 
 
 \section libakonadi_monitor Change notifications
@@ -121,7 +120,9 @@ functionality such as change monitoring and recording.
 
 Resources are a special kind of agents. Akonadi::ResourceBase is the base class for them. It provides the
 necessary interfaces to the server as well as many convenience functions to make implementing
-a new resource as easy as possible.
+a new resource as easy as possible. Note that a collection contains items belonging to a single 
+resource, although there are plans in the future for 'virtual' collections which will contain 
+the results of a search query spanning multiple resources.
 
 
 \page libakonadi_integration Integration in your application
@@ -130,15 +131,15 @@ Akonadi::Control provides ways to ensure that the Akonadi server is running, to 
 and provide help on server-side errors. A more low-level interface to the Akonadi server is provided
 by Akonadi::ServerManager.
 
-A set of standard actions is provided by Akonadi::StandardActionManager. These provided consistent
+A set of standard actions is provided by Akonadi::StandardActionManager. These provide consistent
 look and feel across applications.
 
 
-This library provides classes for KDE applications to communicate with the akonadi server. The most high-level interface to Akonadi is the Models and Views provided in this library. Ready to use models are provided for use with views to interact with a tree of collections, a list of items in a collection, or a combined tree of Collections and items.
+This library provides classes for KDE applications to communicate with the Akonadi server. The most high-level interface to Akonadi is the Models and Views provided in this library. Ready to use models are provided for use with views to interact with a tree of collections, a list of items in a collection, or a combined tree of Collections and items.
 
 \subsection collections_and_items Collections and Items
 
-In the Akonadi concept, Items are individual objects of PIM data, eg emails, contacts, events, notes etc. The data in an item is stored in it a typed payload. For example, if an Akonadi Item holds a contact, the contact is available as a KABC::Addressee:
+In the Akonadi concept, Items are individual objects of PIM data, e.g. emails, contacts, events, notes etc. The data in an item is stored in a typed payload. For example, if an Akonadi Item holds a contact, the contact is available as a KABC::Addressee:
 
 @code
   if (item.hasPayload<KABC::Addressee>())
@@ -150,7 +151,7 @@ In the Akonadi concept, Items are individual objects of PIM data, eg emails, con
 
 Additionally, an Item must have a mimetype which corresponds to the type of payload it holds.
 
-Collections are simply containers of Items. A Collection has a name and a list of mimetypes that it may contain. If a collection may contain events if it can contain the mimetype 'text/calendar'. All Collections have the same mimetype. A Collection which can itself contain Collections must be able to contain the Collection mimetype.
+Collections are simply containers of Items. A Collection has a name and a list of mimetypes that it may contain. A collection may for example contain events if it can contain the mimetype 'text/calendar'. A Collection itself (as opposed to its contents) has a mimetype, which is the same for all Collections. A Collection which can itself contain Collections must be able to contain the Collection mimetype.
 
 @code
   Collection col;
@@ -158,7 +159,7 @@ Collections are simply containers of Items. A Collection has a name and a list o
   col.setContentMimetypes( QStringList() << Collection::mimeType() << "text/calendar" );
 @endcode
 
-This systems makes it simple to create PIM applications. For example, to create an application for viewing and editing events, you simply need to tell akonadi to retrieve all items matching the mimetype 'text/calendar'.
+This system makes it simple to create PIM applications. For example, to create an application for viewing and editing events, you simply need to tell %Akonadi to retrieve all items matching the mimetype 'text/calendar'.
 
 \subsection convenience_mimetype_accessors Convenience Mimetype Accessors
 
@@ -172,9 +173,9 @@ In order to avoid typos, improve readability, and to encapsulate the correct mim
 <h2> Models and Views</h2>
 %Akonadi models and views are a high level way to interact with the %Akonadi server. Most applications will use these classes. See the EntityTreeModel documentation for more information.
 
-Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts of deletes items etc.
+Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts or deletes items etc.
 
-%Akonadi provides several models for particular uses, eg the MailModel is used for emails and the ContactsModel is used for showing contacts. Additional specific models can be implemented using EntityTreeModel as a base class.
+%Akonadi provides several models for particular uses, e.g. the MailModel is used for emails and the ContactsModel is used for showing contacts. Additional specific models can be implemented using EntityTreeModel as a base class.
 
 A typical use of these would be to create a model and use proxy models to make the view show different parts of the model. For example, show a collection tree in on one side and show items in a selected collection in another view.
 
@@ -401,7 +402,7 @@ The SelectionProxyModel orders its items in the same top-to-bottom order as they
 
 <h2>Jobs and Monitors</h2>
 
-The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (eg, a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (eg, creating, updating, deleting or moving an item or collection ) via signals.
+The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (e.g., a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (e.g., creating, updating, deleting or moving an item or collection ) via signals.
 
 Typically, an application will configure a monitor to report changes to a particular Collection, mimetype or resource, and then connect to the signals it emits.
 

@@ -59,8 +59,6 @@ class CollectionStatistics;
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>
- *
- * @see \ref akonadi_concepts_collections "Akonadi Collection Concept"
  */
 class AKONADI_EXPORT Collection : public Entity
 {
