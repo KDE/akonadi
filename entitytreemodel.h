@@ -290,7 +290,7 @@ class EntityTreeModelPrivate;
  *    "Email Address" might be returned for the columns 0, 1, and 2.
  * - QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
  * -- Implement to return data for a particular Collection. Typically this will be the name of the collection or the EntityDisplayAttribute.
- * - QVariant entityData( const QModelIndex & index, const Item &item, int column, int role = Qt::DisplayRole ) const;
+ * - QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
  * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the email.
  *
  * @note The entityData methods are just for convenience. the QAbstractItemMOdel::data method can be overridden if required.
@@ -486,7 +486,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Provided for convenience of subclasses.
      */
-    virtual QVariant entityData( const QModelIndex &index, const Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
 
     /**
      * Provided for convenience of subclasses.
