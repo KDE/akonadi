@@ -124,6 +124,15 @@ a new resource as easy as possible. Note that a collection contains items belong
 resource, although there are plans in the future for 'virtual' collections which will contain 
 the results of a search query spanning multiple resources.
 
+A resource can support multiple mimetypes. There are two places where a resource can specify 
+mimetypes: in its desktop files, and in the content mimetypes field of 
+collections created by it. The ones in the desktop file are used for 
+filtering agent types, e.g. in the resource creation dialogs. The collection 
+content mimetypes specify what you can actually put into a collection, which 
+is not necessarily the same (e.g. the Kolab resource supports contacts and events, but not 
+in the same folder).
+
+
 
 \page libakonadi_integration Integration in your application
 
