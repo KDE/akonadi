@@ -71,6 +71,11 @@ namespace DbConfig {
    */
   bool useExternalPayloadFile();
 
+  /**
+   * Returns a command that will shut down the server cleanly, if possible. Empty if no such command
+   * exists.
+   */
+  QString cleanServerShutdownCommand();
 }
 
 #endif

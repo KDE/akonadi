@@ -424,6 +424,14 @@ void AkonadiServer::stopDatabaseProcess()
 {
   if ( !mDatabaseProcess )
     return;
+
+  // first, try the nicest approach
+  const QString shutdownCmd = DbConfig::cleanServerShutdownCommand();
+  if ( !shutdownCmd.isEmpty() ) {
+      QProcess::execute( shutdownCmd );
+      if ( mDatabaseProcess->waitForFinished(3000) )
+          return;
+  }
   mDatabaseProcess->terminate();
   const bool result = mDatabaseProcess->waitForFinished(3000);
   // We've waited nicely for 3 seconds, to no avail, let's be rude.

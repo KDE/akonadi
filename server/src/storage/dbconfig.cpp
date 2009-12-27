@@ -70,6 +70,7 @@ class DbConfigStatic
       QString defaultDbName;
       QString defaultOptions;
       QString defaultServerPath;
+      QString defaultCleanShutdownCommand;
 
       if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
         defaultDbName = QLatin1String( "akonadi" );
@@ -81,14 +82,21 @@ class DbConfigStatic
 #ifdef MYSQLD_EXECUTABLE
         defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
+        const QStringList mysqldSearchPath = QStringList()
+            << QLatin1String("/usr/sbin")
+            << QLatin1String("/usr/local/sbin")
+            << QLatin1String("/usr/local/libexec")
+            << QLatin1String("/usr/libexec")
+            << QLatin1String("/opt/mysql/libexec")
+            << QLatin1String("/opt/local/lib/mysql5/bin");
         if ( defaultServerPath.isEmpty() ) {
-          const QStringList mysqldSearchPath = QStringList()
-              << QLatin1String("/usr/sbin")
-              << QLatin1String("/usr/local/sbin")
-              << QLatin1String("/usr/local/libexec")
-              << QLatin1String("/usr/libexec")
-              << QLatin1String("/opt/mysql/libexec");
           defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqld"), mysqldSearchPath );
+        }
+        const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqladmin"), mysqldSearchPath );
+        if ( !mysqladminPath.isEmpty() ) {
+          defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --socket=%2/mysql.socket")
+                                            .arg(mysqladminPath)
+                                            .arg(XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
         }
         mInternalServer = settings.value( QLatin1String("QMYSQL/StartServer"), defaultInternalServer ).toBool();
         if ( mInternalServer ) {
@@ -98,7 +106,7 @@ class DbConfigStatic
       } else if ( mDriverName == QLatin1String("QMYSQL_EMBEDDED") ) {
         defaultDbName = QLatin1String( "akonadi" );
         defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( mysqlEmbeddedDataDir() );
-      } else if ( mDriverName == QLatin1String( "QSQLITE" ) || mDriverName == QLatin1String( "QSQLITE3" ) ) {
+      } else if ( mDriverName == QLatin1String( "QSQLITE" ) ) {
         defaultDbName = sqliteDataFile();
       }
 
@@ -110,6 +118,7 @@ class DbConfigStatic
       mPassword = settings.value( QLatin1String( "Password" ) ).toString();
       mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
       mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
+      mCleanServerShutdownCommand = settings.value( QLatin1String("CleanServerShutdownCommand"), defaultCleanShutdownCommand ).toString();
       settings.endGroup();
 
       // verify settings and apply permanent changes (written out below)
@@ -168,7 +177,7 @@ class DbConfigStatic
 
     QString sqliteDataFile() const
     {
-      Q_ASSERT( mDriverName == QLatin1String( "QSQLITE" ) || mDriverName == QLatin1String( "QSQLITE3" ) );
+      Q_ASSERT( mDriverName == QLatin1String( "QSQLITE" ) );
       const QString akonadiPath = dataDir() + QLatin1String("akonadi.db");
       if ( !QFile::exists( akonadiPath ) ) {
         QFile file( akonadiPath );
@@ -208,6 +217,7 @@ class DbConfigStatic
     bool mInternalServer;
     bool mUseExternalPayloadFile;
     qint64 mSizeThreshold;
+    QString mCleanServerShutdownCommand;
 };
 
 Q_GLOBAL_STATIC( DbConfigStatic, sInstance )
@@ -262,5 +272,10 @@ qint64 DbConfig::sizeThreshold()
 bool DbConfig::useExternalPayloadFile()
 {
   return sInstance()->mUseExternalPayloadFile;
+}
+
+QString DbConfig::cleanServerShutdownCommand()
+{
+    return sInstance()->mCleanServerShutdownCommand;
 }
 
