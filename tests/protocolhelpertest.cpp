@@ -114,6 +114,24 @@ class ProtocolHelperTest : public QObject
       }
     }
 
+    void testParentCollectionAfterCollectionParsing()
+    {
+      Collection parsedCollection;
+      const QByteArray b = "111 222 (REMOTEID \"A\" ANCESTORS ((222 \"B\") (333 \"C\") (0 \"\"))";
+      ProtocolHelper::parseCollection( b, parsedCollection );
+
+      QList<qint64> ids;
+      ids << 111 << 222 << 333 << 0;
+      int i = 0;
+
+      Collection col = parsedCollection;
+      while ( col.isValid() ) {
+        QCOMPARE( col.id(), ids[i++] );
+        col = col.parentCollection();
+      }
+      QCOMPARE( i, 4 );
+    }
+
     void testHRidToByteArray_data()
     {
       QTest::addColumn<Collection>( "collection" );
@@ -124,11 +142,11 @@ class ProtocolHelperTest : public QObject
       Collection c;
       c.setParentCollection( Collection::root() );
       c.setRemoteId( "r1" );
-      QTest::newRow( "one level" ) << c << QByteArray( "(-14 \"r1\") (0 \"\")" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(-17 \"r1\") (0 \"\")" );
       Collection c2;
       c2.setParentCollection( c );
       c2.setRemoteId( "r2" );
-      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-15 \"r2\") (-14 \"r1\") (0 \"\")" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-18 \"r2\") (-17 \"r1\") (0 \"\")" );
     }
 
     void testHRidToByteArray()

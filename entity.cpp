@@ -28,8 +28,8 @@ using namespace Akonadi;
 K_GLOBAL_STATIC( Akonadi::Collection, s_defaultParentCollection )
 
 Entity::Entity( const Entity &other )
-  : d_ptr( other.d_ptr )
 {
+  assign( other );
 }
 
 Entity::Entity( EntityPrivate *dd )
@@ -78,8 +78,9 @@ bool Akonadi::Entity::operator!=(const Entity & other) const
 
 Entity& Entity ::operator=( const Entity &other )
 {
-  if ( this != &other )
-    d_ptr = other.d_ptr;
+  if ( this != &other ) {
+    assign( other );
+  }
 
   return *this;
 }
@@ -157,5 +158,26 @@ void Entity::setParentCollection( const Collection &parent )
   delete d_ptr->mParent;
   d_ptr->mParent = new Collection( parent );
 }
+
+void Entity::assign( const Entity &other )
+{
+  // We can't simply do d_ptr = other.d_ptr here, we have to use a temp.
+  // Otherwise ProtocolHelperTest::testParentCollectionAfterCollectionParsing()
+  // will break.
+  //
+  // The reason are assignments like
+  //   col = col.parentCollection()
+  //
+  // Here, parentCollection() actually returns a reference to a pointer owned
+  // by col. So when col (or rather, it's private class) is deleted, the pointer
+  // to the parent collection and therefore the reference becomes invalid.
+  //
+  // With a single-line assignment here, the parent collection would be deleted
+  // before it is assigned, and therefore the resulting object would point to
+  // uninitalized memory.
+  QSharedDataPointer<EntityPrivate> temp = other.d_ptr;
+  d_ptr = temp;
+}
+
 
 AKONADI_DEFINE_PRIVATE( Entity )
