@@ -425,7 +425,10 @@ void AkonadiServer::stopDatabaseProcess()
   if ( !mDatabaseProcess )
     return;
   mDatabaseProcess->terminate();
-  mDatabaseProcess->waitForFinished();
+  const bool result = mDatabaseProcess->waitForFinished(3000);
+  // We've waited nicely for 3 seconds, to no avail, let's be rude.
+  if ( !result )
+    mDatabaseProcess->kill();
 }
 
 void AkonadiServer::serviceOwnerChanged(const QString & name, const QString & oldOwner, const QString & newOwner)
