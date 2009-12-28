@@ -84,19 +84,13 @@ class EntityPrivate : public QSharedData
  * @internal
  *
  * This template specialization is used to change the detach
- * behaviour of QSharedDataPointer to match our needs.
+ * behaviour of QSharedDataPointer to allow 'virtual copy constructors',
+ * so Akonadi::ItemPrivate and Akonadi::CollectionPrivate are copied correctly.
  */
 template <>
-Q_INLINE_TEMPLATE void QSharedDataPointer<Akonadi::EntityPrivate>::detach()
+Q_INLINE_TEMPLATE Akonadi::EntityPrivate* QSharedDataPointer<Akonadi::EntityPrivate>::clone()
 {
-    if (d && d->ref != 1)
-    {
-        Akonadi::EntityPrivate *x = d->clone();
-        x->ref.ref();
-        if (!d->ref.deref())
-            delete d;
-        d = x;
-    }
+  return d->clone();
 }
 
 #endif
