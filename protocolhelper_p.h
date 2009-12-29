@@ -22,6 +22,7 @@
 
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collection.h>
+#include <akonadi/collectionutils_p.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 
@@ -121,25 +122,57 @@ class ProtocolHelper
         ImapSet set;
         set.add( uids );
         rv += set.toImapSequenceSet();
-      } else {
-        // check if all items have a remote id
-        QList<QByteArray> rids;
-        foreach ( const T &object, objects ) {
-          if ( object.remoteId().isEmpty() )
-            throw Exception( "No remote identifier specified" );
-          rids << ImapParser::quote( object.remoteId().toUtf8() );
-        }
+        return rv;
+      }
 
-        rv += " " AKONADI_CMD_RID " ";
+      // check if all items have a remote id
+      if ( std::find_if( objects.constBegin(), objects.constEnd(),
+            boost::bind( &QString::isEmpty, boost::bind( &T::remoteId, _1 ) ) )
+            != objects.constEnd() )
+      {
+        throw Exception( "No remote identifier specified" );
+      }
+
+      // check if we have RIDs or HRIDs
+      if ( std::find_if( objects.constBegin(), objects.constEnd(),
+            !boost::bind( static_cast<bool (*)(const T&)>( &CollectionUtils::hasValidHierarchicalRID ), _1 ) )
+          == objects.constEnd() && objects.size() == 1 ) // ### HRID sets are not yet specified
+      {
+        // HRIDs
+        rv += " " AKONADI_CMD_HRID " ";
         if ( !command.isEmpty() ) {
           rv += command;
           rv += ' ';
         }
-        rv += '(';
-        rv += ImapParser::join( rids, " " );
-        rv += ')';
+        rv += '(' + hierarchicalRidToByteArray( objects.first() ) + ')';
+        return rv;
       }
+
+      // RIDs
+      QList<QByteArray> rids;
+      foreach ( const T &object, objects ) {
+        rids << ImapParser::quote( object.remoteId().toUtf8() );
+      }
+
+      rv += " " AKONADI_CMD_RID " ";
+      if ( !command.isEmpty() ) {
+        rv += command;
+        rv += ' ';
+      }
+      rv += '(';
+      rv += ImapParser::join( rids, " " );
+      rv += ')';
       return rv;
+    }
+
+    /**
+      Converts the given object identifier into a protocol representation.
+      @throws A Akonadi::Exception if the item set contains items with missing/invalid identifiers.
+    */
+    template <typename T>
+    static QByteArray entityIdToByteArray( const T &object, const QByteArray &command )
+    {
+      return entitySetToByteArray( typename T::List() << object, command );
     }
 
     /**
@@ -147,6 +180,12 @@ class ProtocolHelper
       Assumes @p col has a valid hierarchical RID, so check that before!
     */
     static QByteArray hierarchicalRidToByteArray( const Collection &col );
+
+    /**
+      Converts the HRID of the given item into an ASAP protocol representation.
+      Assumes @p item has a valid HRID.
+    */
+    static QByteArray hierarchicalRidToByteArray( const Item &item );
 
     /**
       Converts a given ItemFetchScope object into a protocol representation.

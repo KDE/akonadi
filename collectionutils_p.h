@@ -23,6 +23,8 @@
 #include <QtCore/QStringList>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/collectionstatistics.h>
+#include <akonadi/item.h>
+
 namespace Akonadi {
 
 /**
@@ -111,6 +113,10 @@ namespace CollectionUtils
     if ( col.remoteId().isEmpty() )
       return false;
     return hasValidHierarchicalRID( col.parentCollection() );
+  }
+  inline bool hasValidHierarchicalRID( const Item &item )
+  {
+    return !item.remoteId().isEmpty() && hasValidHierarchicalRID( item.parentCollection() );
   }
 }
 

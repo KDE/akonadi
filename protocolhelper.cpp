@@ -226,6 +226,12 @@ QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Collection &col )
   return '(' + QByteArray::number( col.id() ) + ' ' + ImapParser::quote( col.remoteId().toUtf8() ) + ") " + parentHrid;
 }
 
+QByteArray ProtocolHelper::hierarchicalRidToByteArray( const Item &item )
+{
+  const QByteArray parentHrid = hierarchicalRidToByteArray( item.parentCollection() );
+  return '(' + QByteArray::number( item.id() ) + ' ' + ImapParser::quote( item.remoteId().toUtf8() ) + ") " + parentHrid;
+}  
+
 QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetchScope )
 {
   QByteArray command;

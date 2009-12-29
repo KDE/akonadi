@@ -296,7 +296,9 @@ class CollectionSync::Private
       if ( !hierarchicalRIDs ) {
         LocalNode *oldParent = localUidMap.value( localNode->collection.parentCollection().id() );
         LocalNode *newParent = findMatchingLocalNode( remoteNode->collection.parentCollection() );
-        if ( oldParent != newParent ) {
+        // TODO: handle the newParent == 0 case correctly, ie. defer the move until the new
+        // local parent has been created
+        if ( newParent && oldParent != newParent ) {
           ++pendingJobs;
           CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, q );
           connect( move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
@@ -358,11 +360,31 @@ class CollectionSync::Private
     }
 
     /**
-      Find all local nodes that are not marked as processed.
+      Checks if the given local node has processed child nodes.
     */
-    Collection::List findUnprocessedLocalCollections( LocalNode *localNode )
+    bool hasProcessedChildren( LocalNode *localNode ) const
+    {
+      if ( localNode->processed )
+        return true;
+      foreach ( LocalNode *child, localNode->childNodes ) {
+        if ( hasProcessedChildren( child ) )
+          return true;
+      }
+      return false;
+    }
+
+    /**
+      Find all local nodes that are not marked as processed and have no children that
+      are marked as processed.
+    */
+    Collection::List findUnprocessedLocalCollections( LocalNode *localNode ) const
     {
       Collection::List rv;
+      if ( !localNode->processed && hasProcessedChildren( localNode ) ) {
+        kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
+        kWarning() << localNode->collection;
+        return rv;
+      }
       if ( !localNode->processed ) {
         rv.append( localNode->collection );
         return rv;
@@ -379,7 +401,7 @@ class CollectionSync::Private
     {
       if ( incremental )
         return;
-      Collection::List cols = findUnprocessedLocalCollections( localRoot );
+      const Collection::List cols = findUnprocessedLocalCollections( localRoot );
       deleteLocalCollections( cols );
     }
 

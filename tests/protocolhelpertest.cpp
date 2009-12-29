@@ -38,6 +38,9 @@ class ProtocolHelperTest : public QObject
       Item u3; u3.setId( 3 );
       Item r1; r1.setRemoteId( "A" );
       Item r2; r2.setRemoteId( "B" );
+      Item h1; h1.setRemoteId( "H1" ); h1.setParentCollection( Collection::root() );
+      Item h2; h2.setRemoteId( "H2a" ); h2.parentCollection().setRemoteId( "H2b" ); h2.parentCollection().setParentCollection( Collection::root() );
+      Item h3; h3.setRemoteId( "H3a" ); h3.parentCollection().setRemoteId( "H3b" );
 
       QTest::newRow( "empty" ) << Item::List() << QByteArray( "CMD" ) << QByteArray() << true;
       QTest::newRow( "single uid" ) << (Item::List() << u1) << QByteArray( "CMD" ) << QByteArray( " UID CMD 1" ) << false;
@@ -49,6 +52,10 @@ class ProtocolHelperTest : public QObject
       QTest::newRow( "mixed" ) << (Item::List() << u1 << r1) << QByteArray( "CMD" ) << QByteArray() << true;
       QTest::newRow( "empty command, uid" ) << (Item::List() << u1) << QByteArray() << QByteArray( " UID 1" ) << false;
       QTest::newRow( "empty command, single rid" ) << (Item::List() << r1) << QByteArray() << QByteArray( " RID (\"A\")" ) << false;
+      QTest::newRow( "single hrid" ) << (Item::List() << h1) << QByteArray( "CMD" ) << QByteArray( " HRID CMD ((-1 \"H1\") (0 \"\"))" ) << false;
+      QTest::newRow( "single hrid 2" ) << (Item::List() << h2) << QByteArray( "CMD" ) << QByteArray( " HRID CMD ((-1 \"H2a\") (-1 \"H2b\") (0 \"\"))" ) << false;
+      QTest::newRow( "mixed hrid/rid" ) << (Item::List() << h1 << r1) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"H1\" \"A\")" ) << false;
+      QTest::newRow( "unterminated hrid" ) << (Item::List() << h3) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"H3a\")" ) << false;
     }
 
     void testItemSetToByteArray()
@@ -61,6 +68,7 @@ class ProtocolHelperTest : public QObject
       bool didThrow = false;
       try {
         const QByteArray r = ProtocolHelper::entitySetToByteArray( items, command );
+        qDebug() << r << result;
         QCOMPARE( r, result );
       } catch ( const std::exception &e ) {
         qDebug() << e.what();
@@ -142,11 +150,11 @@ class ProtocolHelperTest : public QObject
       Collection c;
       c.setParentCollection( Collection::root() );
       c.setRemoteId( "r1" );
-      QTest::newRow( "one level" ) << c << QByteArray( "(-17 \"r1\") (0 \"\")" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(-20 \"r1\") (0 \"\")" );
       Collection c2;
       c2.setParentCollection( c );
       c2.setRemoteId( "r2" );
-      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-18 \"r2\") (-17 \"r1\") (0 \"\")" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-21 \"r2\") (-20 \"r1\") (0 \"\")" );
     }
 
     void testHRidToByteArray()

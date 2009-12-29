@@ -23,6 +23,9 @@
 #include "protocolhelper_p.h"
 #include "collectionstatistics.h"
 #include "collection_p.h"
+
+#include <akonadi/private/protocol_p.h>
+
 #include <KLocale>
 
 using namespace Akonadi;
@@ -52,18 +55,16 @@ CollectionModifyJob::~CollectionModifyJob()
 void CollectionModifyJob::doStart()
 {
   Q_D( CollectionModifyJob );
-  if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
-    setError( Unknown );
-    setErrorText( i18n( "Invalid collection" ) );
+  QByteArray command = d->newTag();
+  try {
+    command += ProtocolHelper::entityIdToByteArray( d->mCollection, AKONADI_CMD_COLLECTIONMODIFY );
+  } catch ( const std::exception &e ) {
+    setError( Job::Unknown );
+    setErrorText( QString::fromUtf8( e.what() ) );
     emitResult();
     return;
   }
 
-  QByteArray command = d->newTag();
-  if ( d->mCollection.isValid() )
-    command += " MODIFY " + QByteArray::number( d->mCollection.id() );
-  else
-    command += " RID MODIFY " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
