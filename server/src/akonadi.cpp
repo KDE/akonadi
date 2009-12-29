@@ -292,6 +292,10 @@ void AkonadiServer::startPostgresqlDatabaseProcess()
     content.replace( QLatin1String( "#unix_socket_directory = ''" ),
                      QString::fromLatin1( "unix_socket_directory = '%1'" ).arg( socketDir ) );
 
+    // treat backslashes in strings literally as defined in the SQL standard
+    content.replace( QLatin1String( "#standard_conforming_strings = off" ),
+                     QLatin1String( "standard_conforming_strings = on" ) );
+
     configFile.open( QIODevice::WriteOnly );
     configFile.write( content.toUtf8() );
     configFile.close();
