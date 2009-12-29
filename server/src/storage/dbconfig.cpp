@@ -68,6 +68,7 @@ class DbConfigStatic
 
       // determine default settings depending on the driver
       QString defaultDbName;
+      QString defaultHostName;
       QString defaultOptions;
       QString defaultServerPath;
       QString defaultCleanShutdownCommand;
@@ -108,12 +109,30 @@ class DbConfigStatic
         defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( mysqlEmbeddedDataDir() );
       } else if ( mDriverName == QLatin1String( "QSQLITE" ) ) {
         defaultDbName = sqliteDataFile();
+      } else if ( mDriverName == QLatin1String( "QPSQL" ) ) {
+#ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
+        const bool defaultInternalServer = true;
+#else
+        const bool defaultInternalServer = false;
+#endif
+        defaultDbName = QLatin1String( "akonadi" );
+
+        mInternalServer = settings.value( QLatin1String( "QPSQL/StartServer" ), defaultInternalServer ).toBool();
+        if ( mInternalServer ) {
+          const QStringList postgresSearchPath = QStringList()
+            << QLatin1String( "/usr/sbin" )
+            << QLatin1String( "/usr/local/sbin" )
+            << QLatin1String( "/usr/lib/postgresql/8.4/bin" );
+
+          defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "postgres" ), postgresSearchPath );
+          defaultHostName = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+        }
       }
 
       // read settings for current driver
       settings.beginGroup( mDriverName );
       mName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
-      mHostName = settings.value( QLatin1String( "Host" ) ).toString();
+      mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
       mUserName = settings.value( QLatin1String( "User" ) ).toString();
       mPassword = settings.value( QLatin1String( "Password" ) ).toString();
       mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
@@ -135,6 +154,7 @@ class DbConfigStatic
       settings.setValue( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile );
       settings.beginGroup( mDriverName );
       settings.setValue( QLatin1String( "Name" ), mName );
+      settings.setValue( QLatin1String( "Host" ), mHostName );
       settings.setValue( QLatin1String( "User" ), mUserName );
       settings.setValue( QLatin1String( "Password" ), mPassword );
       settings.setValue( QLatin1String( "Options" ), mConnectionOptions );

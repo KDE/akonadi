@@ -242,11 +242,129 @@ void AkonadiServer::startDatabaseProcess()
   if ( !DbConfig::useInternalServer() )
     return;
 
-  const QString mysqldPath = DbConfig::serverPath();
-  if ( mysqldPath.isEmpty() )
-    akFatal() << "No path to mysqld set in server configuration!";
+  const QString serverPath = DbConfig::serverPath();
+  if ( serverPath.isEmpty() )
+    akFatal() << "No path to external sql server set in server configuration!";
 
   // create the database directories if they don't exists
+  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
+  const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
+  const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+  const QString fileDataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
+
+  if ( DbConfig::driverName() == QLatin1String( "QMYSQL" ) )
+    startMysqlDatabaseProcess();
+  else if ( DbConfig::driverName() == QLatin1String( "QPSQL" ) )
+    startPostgresqlDatabaseProcess();
+}
+
+void AkonadiServer::startPostgresqlDatabaseProcess()
+{
+  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
+  const QString socketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+
+  if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( dataDir ) ) ) {
+    // postgre data directory not initialized yet, so call initdb on it
+
+    const QStringList postgresSearchPath = QStringList()
+        << QLatin1String("/usr/sbin")
+        << QLatin1String("/usr/local/sbin")
+        << QLatin1String("/usr/lib/postgresql/8.4/bin");
+
+    const QString initDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
+
+    // call 'initdb -D/home/user/.local/share/akonadi/data_db'
+    const QString command = QString::fromLatin1( "%1 -D%2" ).arg( initDbPath ).arg( dataDir );
+    QProcess::execute( command );
+
+    const QString configFileName = dataDir + QDir::separator() + QLatin1String( "postgresql.conf" );
+    QFile configFile( configFileName );
+    configFile.open( QIODevice::ReadOnly );
+
+    QString content = QString::fromUtf8( configFile.readAll() );
+    configFile.close();
+
+    // avoid binding to tcp port
+    content.replace( QLatin1String( "#listen_addresses = 'localhost'" ),
+                     QLatin1String( "listen_addresses = ''" ) );
+
+    // set the directory for unix domain socket communication
+    content.replace( QLatin1String( "#unix_socket_directory = ''" ),
+                     QString::fromLatin1( "unix_socket_directory = '%1'" ).arg( socketDir ) );
+
+    configFile.open( QIODevice::WriteOnly );
+    configFile.write( content.toUtf8() );
+    configFile.close();
+  }
+
+  // synthesize the postgres command
+  QStringList arguments;
+  arguments << QString::fromLatin1( "-D%1" ).arg( dataDir );
+
+  mDatabaseProcess = new QProcess( this );
+  mDatabaseProcess->start( DbConfig::serverPath(), arguments );
+  if ( !mDatabaseProcess->waitForStarted() ) {
+    akError() << "Could not start database server!";
+    akError() << "executable:" << DbConfig::serverPath();
+    akError() << "arguments:" << arguments;
+    akFatal() << "process error:" << mDatabaseProcess->errorString();
+  }
+
+  const QLatin1String initCon( "initConnection" );
+  {
+    QSqlDatabase db = QSqlDatabase::addDatabase( DbConfig::driverName(), initCon );
+    DbConfig::configure( db );
+
+    // use the dummy database that is always available
+    db.setDatabaseName( QLatin1String( "template1" ) );
+
+    if ( !db.isValid() )
+      akFatal() << "Invalid database object during database server startup";
+
+    bool opened = false;
+    for ( int i = 0; i < 120; ++i ) {
+      opened = db.open();
+      if ( opened )
+        break;
+
+      if ( mDatabaseProcess->waitForFinished( 500 ) ) {
+        akError() << "Database process exited unexpectedly during initial connection!";
+        akError() << "executable:" << DbConfig::serverPath();
+        akError() << "arguments:" << arguments;
+        akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
+        akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
+        akError() << "exit code:" << mDatabaseProcess->exitCode();
+        akFatal() << "process error:" << mDatabaseProcess->errorString();
+      }
+    }
+
+    if ( opened ) {
+      {
+        QSqlQuery query( db );
+
+        // check if the 'akonadi' database already exists
+        query.exec( QString::fromLatin1( "SELECT * FROM pg_catalog.pg_database WHERE datname = '%1'" ).arg( DbConfig::databaseName() ) );
+
+        // if not, create it
+        if ( !query.first() ) {
+          if ( !query.exec( QString::fromLatin1( "CREATE DATABASE %1" ).arg( DbConfig::databaseName() ) ) ) {
+            akError() << "Failed to create database";
+            akError() << "Query error:" << query.lastError().text();
+            akFatal() << "Database error:" << db.lastError().text();
+          }
+        }
+      } // make sure query is destroyed before we close the db
+      db.close();
+    }
+  }
+
+  QSqlDatabase::removeDatabase( initCon );
+}
+
+void AkonadiServer::startMysqlDatabaseProcess()
+{
+  const QString mysqldPath = DbConfig::serverPath();
+
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
   const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
@@ -258,6 +376,7 @@ void AkonadiServer::startDatabaseProcess()
   const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String("/mysql.conf");
   if ( globalConfig.isEmpty() )
     akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
+
   bool confUpdate = false;
   QFile actualFile ( actualConfig );
   // update conf only if either global (or local) is newer than actual
