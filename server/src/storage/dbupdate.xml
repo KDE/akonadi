@@ -52,10 +52,10 @@
   </update>
 
   <update version="8" abortOnFailure="false">
-    UPDATE parttable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';
-    UPDATE parttable SET name = 'PLD:RFC822' WHERE name = 'RFC822';
-    UPDATE parttable SET name = 'PLD:HEAD' WHERE name = 'HEAD';
-    UPDATE parttable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';
+    UPDATE PartTable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';
+    UPDATE PartTable SET name = 'PLD:RFC822' WHERE name = 'RFC822';
+    UPDATE PartTable SET name = 'PLD:HEAD' WHERE name = 'HEAD';
+    UPDATE PartTable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';
   </update>
 
   <!-- the initializer runs first, so we will have all the new tables and columns already
@@ -81,13 +81,13 @@
   </update>
 
   <update version="13" abortOnFailure="true">
-    UPDATE collectiontable SET parentId = NULL WHERE parentId = 0;
+    UPDATE CollectionTable SET parentId = NULL WHERE parentId = 0;
     ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;
   </update>
 
   <update version="14" abortOnFailure="false">
-    UPDATE resourcetable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';
-    UPDATE resourcetable SET isVirtual = true WHERE name = 'akonadi_search_resource';
+    UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';
+    UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';
   </update>
 
 </updates>
