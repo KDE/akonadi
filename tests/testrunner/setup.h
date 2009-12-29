@@ -49,11 +49,13 @@ class SetupTest : public QObject
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void resourceSynchronized( const QString &agentId );
+    void slotAkonadiDaemonProcessFinished();
 
   private:
     bool clearEnvironment();
     QMap<QString, QString> environment() const;
     int addDBusToEnvironment( QIODevice &device );
+    void generateDBusConfigFile( const QString& path );
     int startDBusDaemon();
     void stopDBusDaemon( int dbusPid );
     void registerWithInternalDBus( const QString &address );

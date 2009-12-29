@@ -37,7 +37,9 @@ class TestEnvironmentTest : public QObject
   private slots:
     void testEnvironment()
     {
-      QVERIFY( qgetenv( "KDEHOME" ).startsWith( QDir::tempPath().toLocal8Bit() ) );
+      const QString kdehome = qgetenv( "KDEHOME" );
+      QVERIFY( kdehome.startsWith( QDir::tempPath().toLocal8Bit() ) 
+              || kdehome.startsWith( QLatin1String("/tmp") ) );
     }
 
     void testDBus()

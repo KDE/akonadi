@@ -110,17 +110,48 @@ int SetupTest::addDBusToEnvironment( QIODevice& io )
   return pid;
 }
 
+void SetupTest::generateDBusConfigFile( const QString& path )
+{
+    static const char* configFileContents =
+        "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\"\n"
+        "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
+        "<busconfig>\n"
+        "<type>session</type>"
+        "<keep_umask/>\n"
+        "<listen>unix:path=%1</listen>\n"
+        "<standard_session_servicedirs />\n"
+        "<policy context=\"default\">\n"
+        "<allow send_destination=\"*\" eavesdrop=\"true\"/>\n"
+        "<allow eavesdrop=\"true\"/>\n"
+        "<allow own=\"*\"/>\n"
+        "</policy>\n"
+        "</busconfig>\n";
+
+    QFile confFile(path);
+    if ( confFile.open( QIODevice::WriteOnly ) ) {
+        const QString socketPath = basePath() + QDir::separator() + QLatin1String("dbus.socket");
+        const QString data = QString::fromLatin1( configFileContents ).arg( socketPath );
+        const qint64 bytes = confFile.write( data.toUtf8() );
+        Q_ASSERT( bytes > 0 );
+    }
+}
+
 int SetupTest::startDBusDaemon()
 {
-  QProcess dbusprocess;
-  QStringList dbusargs;
+  const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
+  generateDBusConfigFile( dbusConfigFilePath );
+  Q_ASSERT( QFile::exists( dbusConfigFilePath ) );
 
-  dbusprocess.start( "/usr/bin/dbus-launch", dbusargs );
+  QStringList dbusargs;
+  dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
+
+  QProcess dbusprocess;
+  dbusprocess.start( QLatin1String("dbus-launch"), dbusargs );
   bool ok = dbusprocess.waitForStarted() && dbusprocess.waitForFinished();
   if ( !ok ) {
-    kDebug() << "error starting dbus-launch";
+    kWarning() << "error starting dbus-launch";
     dbusprocess.kill();
-    return -1;
+    exit(1); // failure to start an internal dbus must be considered a fatal unit test error
   }
 
   int dbuspid = addDBusToEnvironment( dbusprocess );
@@ -149,8 +180,7 @@ void SetupTest::registerWithInternalDBus( const QString &address )
                                 QDBusConnection::ExportAdaptors );
   mInternalBus->registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 
-  QDBusConnectionInterface *busInterface = mInternalBus->interface();
-  connect( busInterface, SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
+  connect( mInternalBus->interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
            this, SLOT( dbusNameOwnerChanged( QString, QString, QString ) ) );
 }
 
@@ -159,12 +189,13 @@ bool SetupTest::startAkonadiDaemon()
   mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
-  kDebug() << mAkonadiDaemonProcess->pid();
+  kDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
   return started;
 }
 
 bool SetupTest::stopAkonadiDaemon()
 {
+  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
   if ( !finished ) {
@@ -306,7 +337,7 @@ void SetupTest::createTempEnvironment()
 
 void SetupTest::deleteDirectory( const QString &dirName )
 {
-  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) ); // just to be sure we don't run amok anywhere
+  Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QLatin1String("/tmp") ) ); // just to be sure we don't run amok anywhere
   QDir dir( dirName );
   dir.setFilter( QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden );
 
@@ -363,6 +394,8 @@ SetupTest::SetupTest() :
 #endif
 
   mAkonadiDaemonProcess = new KProcess( this );
+  connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
+           this, SLOT(slotAkonadiDaemonProcessFinished()));
 
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }
@@ -400,6 +433,13 @@ void SetupTest::shutdown()
       if ( !reply.isValid() )
         kDebug() << reply.error();
     }
+    if ( mInternalBus->interface()->isServiceRegistered( "org.kde.kded" ) ) {
+      QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
+                                   QLatin1String( "org.kde.kded" ), *mInternalBus );
+      QDBusReply<void> reply = klauncherIface.call( "quit" );
+      if ( !reply.isValid() )
+        kDebug() << reply.error();
+    }
   } else {
     shutdownHarder();
   }
@@ -416,9 +456,25 @@ void SetupTest::shutdownHarder()
 
 QString SetupTest::basePath() const
 {
+  QString sysTempDirPath = QDir::tempPath();
+#ifdef Q_OS_UNIX
+  // QDir::tempPath() makes sure to use the fully sym-link exploded
+  // absolute path to the temp dir. That is nice, but on OSX it makes
+  // that path really long. MySQL chokes on this, for it's socket path,
+  // so work around that
+  sysTempDirPath = QLatin1String("/tmp");
+#endif
+
+  const QDir sysTempDir(sysTempDirPath);
   const QString tempDir = QString::fromLatin1( "akonadi_testrunner-%1" )
     .arg( QCoreApplication::instance()->applicationPid() );
-  if ( !QDir::temp().exists( tempDir ) )
-    QDir::temp().mkdir( tempDir );
-  return QDir::tempPath() + QDir::separator() + tempDir + QDir::separator();
+  if ( !sysTempDir.exists( tempDir ) )
+    sysTempDir.mkdir( tempDir );
+  return sysTempDirPath + QDir::separator() + tempDir + QDir::separator();
+}
+
+void SetupTest::slotAkonadiDaemonProcessFinished()
+{
+  // any outside termination of the akonadi process is considered a failure, in this context
+  exit( 1 );
 }
