@@ -38,7 +38,7 @@ class ContactCompletionModel : public EntityTreeModel
       EmailColumn         ///< The preferred email of the contact.
     };
 
-    ContactCompletionModel( ChangeRecorder *monitor, QObject *parent = 0 );
+    explicit ContactCompletionModel( ChangeRecorder *monitor, QObject *parent = 0 );
     virtual ~ContactCompletionModel();
 
     virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
