@@ -61,6 +61,7 @@ class MonitorPrivate
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
+    Session *session;
     CollectionCache collectionCache;
     ItemCache itemCache;
     QQueue<NotificationMessage> pendingNotifications;
@@ -210,7 +211,7 @@ class MonitorPrivate
 
     void fetchStatistics( Collection::Id colId )
     {
-      CollectionStatisticsJob *job = new CollectionStatisticsJob( Collection( colId ), q_ptr );
+      CollectionStatisticsJob *job = new CollectionStatisticsJob( Collection( colId ), session );
       QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)) );
     }
 

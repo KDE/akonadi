@@ -43,7 +43,7 @@ class PublicETM : public EntityTreeModel
   Q_OBJECT
   Q_DECLARE_PRIVATE(PublicETM)
   public:
-    PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent );
+    PublicETM( ChangeRecorder *monitor, QObject *parent );
 
     EntityTreeModelPrivate *privateClass() const { return d_ptr; }
 };
@@ -56,12 +56,12 @@ class PublicETMPrivate : public EntityTreeModelPrivate
     PublicETMPrivate( PublicETM *p );
 };
 
-PublicETM::PublicETM( Session *session, ChangeRecorder *monitor, QObject *parent )
-    : EntityTreeModel( session, monitor, new PublicETMPrivate( this ), parent )
+PublicETM::PublicETM( ChangeRecorder *monitor, QObject *parent )
+    : EntityTreeModel( monitor, new PublicETMPrivate( this ), parent )
 {
 }
 
-PublicETMPrivate::PublicETMPrivate(PublicETM *p)
+PublicETMPrivate::PublicETMPrivate( PublicETM *p )
     : EntityTreeModelPrivate( p )
 {
 }
@@ -138,8 +138,9 @@ void EntityTreeModelTest::init()
 {
   FakeMonitor *fakeMonitor = new FakeMonitor(this);
 
+  fakeMonitor->setSession( m_fakeSession );
   fakeMonitor->setCollectionMonitored(Collection::root());
-  m_model = new PublicETM( m_fakeSession, fakeMonitor, this );
+  m_model = new PublicETM( fakeMonitor, this );
   m_model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
   m_modelSpy = new ModelSpy(this);

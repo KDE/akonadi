@@ -52,11 +52,11 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
 {
 }
 
-void EntityTreeModelPrivate::init( ChangeRecorder *monitor, Session *session )
+void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 {
   Q_Q( EntityTreeModel );
   m_monitor = monitor;
-  m_session = session;
+  m_session = m_monitor->session();
 
   m_monitor->setChangeRecordingEnabled( false );
 

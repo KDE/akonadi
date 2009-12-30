@@ -363,7 +363,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    EntityTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent = 0 );
+    explicit EntityTreeModel( ChangeRecorder *monitor, QObject *parent = 0 );
 
     /**
      * Destroys the entity tree model.
@@ -515,7 +515,7 @@ protected:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE( EntityTreeModel )
     EntityTreeModelPrivate * d_ptr;
-    EntityTreeModel( Session *session, ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject* parent = 0 );
+    EntityTreeModel( ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject* parent = 0 );
     //@endcond
 
 private:

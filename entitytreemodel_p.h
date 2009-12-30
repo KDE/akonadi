@@ -70,7 +70,7 @@ public:
     Recursive
   };
 
-  void init( ChangeRecorder *monitor, Session *session );
+  void init( ChangeRecorder *monitor );
 
   void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
   void fetchItems( const Collection &collection );

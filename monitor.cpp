@@ -166,6 +166,25 @@ bool Monitor::isAllMonitored() const
   return d->monitorAll;
 }
 
+void Monitor::setSession( Akonadi::Session *session )
+{
+  if (session == d->session)
+    return;
+
+  if (!session)
+    d->session = Session::defaultSession();
+  else
+    d->session = session;
+
+  d->itemCache.setSession(d->session);
+  d->collectionCache.setSession(d->session);
+}
+
+Session* Monitor::session() const
+{
+  return d->session;
+}
+
 #undef d
 
 #include "monitor.moc"

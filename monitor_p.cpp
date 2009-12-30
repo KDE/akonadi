@@ -37,8 +37,9 @@ MonitorPrivate::MonitorPrivate(Monitor * parent) :
   q_ptr( parent ),
   nm( 0 ),
   monitorAll( false ),
-  collectionCache( 3*PipelineSize ), // needs to be at least 3x pipeline size for the collection move case
-  itemCache( PipelineSize ), // needs to be at least 1x pipeline size
+  session( Session::defaultSession() ),
+  collectionCache( 3*PipelineSize, session ), // needs to be at least 3x pipeline size for the collection move case
+  itemCache( PipelineSize, session ), // needs to be at least 1x pipeline size
   fetchCollection( false ),
   fetchCollectionStatistics( false ),
   useRefCounting( false )

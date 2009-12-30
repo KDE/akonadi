@@ -45,7 +45,7 @@ QAbstractItemModel* ContactCompletionModel::self()
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->setMimeTypeMonitored( KABC::Addressee::mimeType() );
 
-  ContactCompletionModel *model = new ContactCompletionModel( Session::defaultSession(), monitor );
+  ContactCompletionModel *model = new ContactCompletionModel( monitor );
 
   KDescendantsProxyModel *descModel = new KDescendantsProxyModel( model );
   descModel->setSourceModel( model );
@@ -60,8 +60,8 @@ QAbstractItemModel* ContactCompletionModel::self()
   return mSelf;
 }
 
-ContactCompletionModel::ContactCompletionModel( Session *session, ChangeRecorder *monitor, QObject *parent )
-  : EntityTreeModel( session, monitor, parent )
+ContactCompletionModel::ContactCompletionModel( ChangeRecorder *monitor, QObject *parent )
+  : EntityTreeModel( monitor, parent )
 {
 }
 

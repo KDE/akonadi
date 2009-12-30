@@ -68,7 +68,7 @@ class CollectionDialog::Private
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor, mParent );
+        mModel = new EntityTreeModel( mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
         baseModel = mModel;
       }

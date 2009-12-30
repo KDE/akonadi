@@ -242,6 +242,17 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     bool isAllMonitored() const;
 
+    /**
+     * Sets the session used by the Monitor to communicate with the %Akonadi server.
+     * If not set, the Akonadi::Session::defaultSession is used.
+     */
+    void setSession(Akonadi::Session *session);
+
+    /**
+     * Returns the Session used by the monitor to communicate with Akonadi.
+     */
+    Session* session() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted if a monitored item has changed, e.g. item parts have been modified.

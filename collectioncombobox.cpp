@@ -51,7 +51,7 @@ class CollectionComboBox::Private
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( Session::defaultSession(), mMonitor, mParent );
+        mModel = new EntityTreeModel( mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
         KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );

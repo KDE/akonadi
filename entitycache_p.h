@@ -26,6 +26,7 @@
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/session.h>
 
 #include <qobject.h>
 #include <QQueue>
@@ -44,7 +45,12 @@ class EntityCacheBase : public QObject
 {
   Q_OBJECT
   public:
-    explicit EntityCacheBase (QObject * parent = 0);
+    explicit EntityCacheBase ( Session * parent = 0 );
+
+    void setSession(Session *session);
+
+  protected:
+    Session *session;
 
   signals:
     void dataAvailable();
@@ -71,8 +77,8 @@ template<typename T, typename FetchJob, typename FetchScope>
 class EntityCache : public EntityCacheBase
 {
   public:
-    explicit EntityCache( int maxCapacity, QObject *parent = 0 ) :
-      EntityCacheBase( parent ),
+    explicit EntityCache( int maxCapacity, Session *session = 0 ) :
+      EntityCacheBase( session ),
       mCapacity( maxCapacity )
     {}
 
@@ -189,7 +195,7 @@ class EntityCache : public EntityCacheBase
 
     inline FetchJob* createFetchJob( typename T::Id id )
     {
-      return new FetchJob( T( id ), this );
+      return new FetchJob( T( id ), session );
     }
 
     /** Tries to reduce the cache size until at least one more object fits in. */
@@ -226,7 +232,7 @@ template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractR
 
 template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( Collection::Id id )
 {
-  return new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, this );
+  return new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base, session );
 }
 
 typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;

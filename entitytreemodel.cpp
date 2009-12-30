@@ -53,25 +53,23 @@ Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 using namespace Akonadi;
 
-EntityTreeModel::EntityTreeModel( Session *session,
-                                  ChangeRecorder *monitor,
+EntityTreeModel::EntityTreeModel( ChangeRecorder *monitor,
                                   QObject *parent
                                 )
   : QAbstractItemModel( parent ),
     d_ptr( new EntityTreeModelPrivate( this ) )
 {
   Q_D( EntityTreeModel );
-  d->init( monitor, session );
+  d->init( monitor );
 }
 
-EntityTreeModel::EntityTreeModel( Session *session,
-                                  ChangeRecorder *monitor,
+EntityTreeModel::EntityTreeModel( ChangeRecorder *monitor,
                                   EntityTreeModelPrivate *d,
                                   QObject *parent )
   : QAbstractItemModel( parent ),
     d_ptr( d )
 {
-  d->init(monitor, session);
+  d->init(monitor );
 }
 
 EntityTreeModel::~EntityTreeModel()
