@@ -96,6 +96,16 @@ class AKONADI_EXPORT Session : public QObject
     void clear();
 
   protected:
+    /**
+     * Creates a new session with shared private object.
+     *
+     * @param d The private object.
+     * @param sessionId The identifier for this session, will be a
+     *                  random value if empty.
+     * @param parent The parent object.
+     *
+     * @note This constructor is needed for unit testing only.
+     */
     explicit Session( SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = 0 );
 
   private:
