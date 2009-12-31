@@ -125,7 +125,7 @@ class AKONADI_EXPORT ItemFetchScope
 
     /**
      * Sets whether the full payload shall be fetched.
-     * The default is false.
+     * The default is @c false.
      *
      * @param fetch @c true if the full payload should be fetched, @c false otherwise.
      */
@@ -168,7 +168,7 @@ class AKONADI_EXPORT ItemFetchScope
 
     /**
      * Sets whether all available attributes should be fetched.
-     * The default is false.
+     * The default is @c false.
      *
      * @param fetch @c true if all available attributes should be fetched, @c false otherwise.
      */

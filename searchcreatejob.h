@@ -73,6 +73,8 @@ class AKONADI_EXPORT SearchCreateJob : public Job
     /**
      * Returns the newly created search collection once the job finished successfully. Returns an invalid
      * collection if the job has not yet finished or failed.
+     *
+     * @since 4.4
      */
     Collection createdCollection() const;
 

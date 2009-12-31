@@ -81,19 +81,19 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
     static void registerPage( CollectionPropertiesPageFactory *factory );
 
     /**
-     * Define if we want to use default page.
-     *
-     * @param defaultPage Use or not default page.
+     * Sets whether to @p use default page or not.
      *
      * @since 4.4
      */
-    static void useDefaultPage ( bool defaultPage );
+    static void useDefaultPage( bool use );
+
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
+
     Q_PRIVATE_SLOT( d, void save() )
-    Q_PRIVATE_SLOT( d, void saveResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void saveResult( KJob* ) )
     //@endcond
 };
 

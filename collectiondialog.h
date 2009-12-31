@@ -82,6 +82,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      *
      * @param model The custom model to use.
      * @param parent The parent widget.
+     *
+     * @since 4.4
      */
     explicit CollectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
 
@@ -102,21 +104,29 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
+     *
+     * @since 4.4
      */
     void setAccessRightsFilter( Collection::Rights rights );
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
+     *
+     * @since 4.4
      */
     Collection::Rights accessRightsFilter() const;
 
     /**
      * Sets the @p text that will be shown in the dialog.
+     *
+     * @since 4.4
      */
     void setDescription( const QString &text );
 
     /**
      * Sets the @p collection that shall be selected by default.
+     *
+     * @since 4.4
      */
     void setDefaultCollection( const Collection &collection );
 

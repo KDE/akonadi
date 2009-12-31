@@ -105,15 +105,15 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       Paste,                     ///< Paste collections or items
       DeleteItems,               ///< Deletes the selected items
       ManageLocalSubscriptions,  ///< Manages local subscriptions
-      AddToFavoriteCollections,  ///< Add the collection to the favorite collections model
-      RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model
-      RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model
-      CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection
-      CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection
-      MoveItemToMenu,            ///< Menu allowing to move item into a collection
-      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection
-      CutItems,                  ///< Cuts the selected items
-      CutCollections,            ///< Cuts the selected collections
+      AddToFavoriteCollections,  ///< Add the collection to the favorite collections model @since 4.4
+      RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model @since 4.4
+      RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model @since 4.4
+      CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection @since 4.4
+      CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection @since 4.4
+      MoveItemToMenu,            ///< Menu allowing to move item into a collection @since 4.4
+      MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection @since 4.4
+      CutItems,                  ///< Cuts the selected items @since 4.4
+      CutCollections,            ///< Cuts the selected collections @since 4.4
       LastType                   ///< Marks last action
     };
 

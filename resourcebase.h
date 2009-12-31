@@ -447,6 +447,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * for execution.
      *
      * @see scheduleCustomTask
+     * @since 4.4
      */
     enum SchedulePriority {
       Prepend,            ///> The task will be executed as soon as the current task has finished.
