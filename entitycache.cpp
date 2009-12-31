@@ -21,7 +21,7 @@
 
 using namespace Akonadi;
 
-EntityCacheBase::EntityCacheBase( Session *_session ) : QObject( _session ), session(_session)
+EntityCacheBase::EntityCacheBase( Session *_session, QObject *parent ) : QObject( parent ), session(_session)
 {
 }
 

@@ -45,7 +45,7 @@ class EntityCacheBase : public QObject
 {
   Q_OBJECT
   public:
-    explicit EntityCacheBase ( Session * parent = 0 );
+    explicit EntityCacheBase ( Session *session, QObject * parent = 0 );
 
     void setSession(Session *session);
 
@@ -77,8 +77,8 @@ template<typename T, typename FetchJob, typename FetchScope>
 class EntityCache : public EntityCacheBase
 {
   public:
-    explicit EntityCache( int maxCapacity, Session *session = 0 ) :
-      EntityCacheBase( session ),
+    explicit EntityCache( int maxCapacity, Session *session = 0, QObject *parent = 0 ) :
+      EntityCacheBase( session, parent ),
       mCapacity( maxCapacity )
     {}
 
