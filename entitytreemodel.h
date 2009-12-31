@@ -69,11 +69,11 @@ class EntityTreeModelPrivate;
  * have a valid QModelIndex, use match:
  *
  * @code
- * QModelIndexList list = model->match(QModelIndex(), CollectionIdRole, id);
- * if (list.isEmpty())
+ * QModelIndexList list = model->match( QModelIndex(), CollectionIdRole, id );
+ * if ( list.isEmpty() )
  *   return; // A Collection with that Id is not in the model.
  * Q_ASSERT( list.size() == 1 ); // Otherwise there must be only one instance of it.
- * Collection col = list.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+ * Collection collection = list.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
  * @endcode
  *
  * Not that a single Item may appear multiple times in a model, so the list size may not be 1
@@ -101,8 +101,9 @@ class EntityTreeModelPrivate;
  *   ChangeRecorder *changeRecorder = new ChangeRecorder( this );
  *   changeRecorder->setCollectionMonitored( Collection::root() );
  *   changeRecorder->setMimeTypeMonitored( KABC::addresseeMimeType() );
+ *   changeRecorder->setSession( session );
  *
- *   EntityTreeModel *model = new EntityTreeModel( session, changeRecorder, this );
+ *   EntityTreeModel *model = new EntityTreeModel( changeRecorder, this );
  *
  *   EntityTreeView *view = new EntityTreeView( this );
  *   view->setModel( model );
@@ -166,15 +167,15 @@ class EntityTreeModelPrivate;
  * It is also possible to show the root Collection as part of the selectable model:
  *
  * @code
- * entityTree->setIncludeRootCollection(true);
+ * entityTree->setIncludeRootCollection( true );
  * @endcode
  *
  *
  * By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
  *
  * @code
- * entityTree->setIncludeRootCollection(true);
- * entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all addressbooks in the application", "[All AddressBooks]"))
+ * entityTree->setIncludeRootCollection( true );
+ * entityTree->setRootCollectionDisplayName( i18nc( "Name of top level for all addressbooks in the application", "[All AddressBooks]" ) )
  * @endcode
  *
  * This feature is used in KAddressBook.
@@ -187,8 +188,8 @@ class EntityTreeModelPrivate;
  * @code
  * // ... create an EntityTreeModel
  *
- * collectionTree = new EntityMimeTypeFilterModel(this);
- * collectionTree->setSourceModel(entityTreeModel);
+ * collectionTree = new EntityMimeTypeFilterModel( this );
+ * collectionTree->setSourceModel( entityTreeModel );
  *
  * // Include only collections in this proxy model.
  * collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
@@ -359,7 +360,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Creates a new entity tree model.
      *
-     * @param session The Session to use to communicate with Akonadi.
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
@@ -380,18 +380,18 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     };
 
     /**
-      Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
-      directories in groupware resources.
-
-      They are hidden by default, but can be shown by setting @p show to true.
-
-      Most applications will not need to use this feature.
-    */
+     * Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
+     * directories in groupware resources.
+     *
+     * They are hidden by default, but can be shown by setting @p show to true.
+     *
+     * Most applications will not need to use this feature.
+     */
     void setShowSystemEntities( bool show );
 
     /**
-      @returns True if internal system entities are shown, and false otherwise.
-    */
+     * Returns @c true if internal system entities are shown, and @c false otherwise.
+     */
     bool systemEntitiesShown() const;
 
     /**
