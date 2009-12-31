@@ -206,7 +206,6 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     CollectionFetchScope &collectionFetchScope();
 
-
     /**
      * Returns the list of collections being monitored.
      *
@@ -245,11 +244,15 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
      * Sets the session used by the Monitor to communicate with the %Akonadi server.
      * If not set, the Akonadi::Session::defaultSession is used.
+     *
+     * @since 4.4
      */
-    void setSession(Akonadi::Session *session);
+    void setSession( Akonadi::Session *session );
 
     /**
      * Returns the Session used by the monitor to communicate with Akonadi.
+     *
+     * @since 4.4
      */
     Session* session() const;
 
