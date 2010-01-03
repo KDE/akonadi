@@ -138,12 +138,14 @@ void SetupTest::generateDBusConfigFile( const QString& path )
 
 int SetupTest::startDBusDaemon()
 {
+  QStringList dbusargs;
+#ifdef Q_OS_MAC
   const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
   generateDBusConfigFile( dbusConfigFilePath );
   Q_ASSERT( QFile::exists( dbusConfigFilePath ) );
 
-  QStringList dbusargs;
   dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
+#endif
 
   QProcess dbusprocess;
   dbusprocess.start( QLatin1String("dbus-launch"), dbusargs );

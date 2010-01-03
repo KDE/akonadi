@@ -28,15 +28,9 @@ kde4_add_executable(akonaditest NOGUI ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
   akonadi-kde
-  kabc
-  kcal
-  syndication
   ${KDE4_KDEUI_LIBS}
   ${Boost_LIBRARIES}
   ${KDE4_AKONADI_LIBS}
-  ${KDE4_KABC_LIBS}
-  ${KDE4_KCAL_LIBS}
-  ${KDE4_SYNDICATION_LIBS}
   ${QT_QTXML_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
