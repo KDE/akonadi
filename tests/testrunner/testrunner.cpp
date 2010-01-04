@@ -52,6 +52,11 @@ void TestRunner::run()
   }
 }
 
+void TestRunner::triggerTermination( int exitCode )
+{
+  processFinished( exitCode );
+}
+
 void TestRunner::processFinished( int exitCode )
 {
   kDebug() << exitCode;

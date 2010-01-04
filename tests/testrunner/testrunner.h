@@ -35,6 +35,7 @@ class TestRunner : public QObject
 
   public Q_SLOTS:
     void run();
+    void triggerTermination(int);
 
   Q_SIGNALS:
     void finished();

@@ -98,6 +98,7 @@ int main( int argc, char **argv )
       testArgs << args->arg( i );
     runner = new TestRunner( testArgs );
     QObject::connect( setup, SIGNAL( setupDone() ), runner, SLOT( run() ) );
+    QObject::connect( setup, SIGNAL( serverExited(int) ), runner, SLOT( triggerTermination(int) ) );
     QObject::connect( runner, SIGNAL( finished() ), setup, SLOT( shutdown() ) );
   }
 

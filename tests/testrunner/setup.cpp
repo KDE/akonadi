@@ -477,6 +477,5 @@ QString SetupTest::basePath() const
 
 void SetupTest::slotAkonadiDaemonProcessFinished()
 {
-  // any outside termination of the akonadi process is considered a failure, in this context
-  exit( 1 );
+  emit serverExited();
 }
