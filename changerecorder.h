@@ -31,9 +31,9 @@ class ChangeRecorderPrivate;
 /**
  * @short Records and replays change notification.
  *
- * This class is responsible for recording change notification during
- * an agent is not online and replay the notifications when the agent
- * is online again. Therefor the agent doesn't have to care about
+ * This class is responsible for recording change notification while
+ * an agent is not online and replaying the notifications when the agent
+ * is online again. Therefore the agent doesn't have to care about
  * online/offline mode in its synchronization algorithm.
  *
  * @author Volker Krause <vkrause@kde.org>
@@ -54,7 +54,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     ~ChangeRecorder();
 
     /**
-     * Sets the QSettings object used for persisting recorded changes.
+     * Sets the QSettings object used for persistent recorded changes.
      */
     void setConfig( QSettings *settings );
 
@@ -89,7 +89,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
 
     /**
      * Emitted when replayNext() was called, but there was no valid change to replay.
-     * This can happen when all pending changes have been filtered out for example.
+     * This can happen when all pending changes have been filtered out, for example.
      * You only need to connect to this signal if you rely on one signal being emitted
      * as a result of calling replayNext().
      */
