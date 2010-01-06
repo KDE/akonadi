@@ -1,3 +1,12 @@
+1.2.90                        06-January-2010
+---------------------------------------------
+- Fix change notifications for search results.
+- Fix database creation with PostgreSQL.
+- Fix copying of item flags.
+- Fix internal MySQL shutdown.
+- Support PostgreSQL in internal mode.
+- Fix table name case mismatch.
+
 1.2.80                       01-December-2009
 ---------------------------------------------
 - Support for collection content type filtering as part of LIST.
