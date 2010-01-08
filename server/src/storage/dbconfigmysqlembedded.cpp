@@ -23,6 +23,7 @@
 #include "akdebug.h"
 
 #include <QtCore/QDir>
+#include <QtSql/QSqlDriver>
 
 using namespace Akonadi;
 

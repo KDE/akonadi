@@ -24,6 +24,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
+#include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
