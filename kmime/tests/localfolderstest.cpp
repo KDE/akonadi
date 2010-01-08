@@ -52,6 +52,24 @@ static Collection res1;
 
 void LocalFoldersTest::initTestCase()
 {
+  qRegisterMetaType<Akonadi::AgentInstance>( "Akonadi::AgentInstance" );
+
+  mDisplayNameMap.insert( "local-mail", i18nc( "local mail folder", "Local Folders" ) );
+  mDisplayNameMap.insert( "inbox", i18nc( "local mail folder", "inbox" ) );
+  mDisplayNameMap.insert( "outbox", i18nc( "local mail folder", "outbox" ) );
+  mDisplayNameMap.insert( "sent-mail", i18nc( "local mail folder", "sent-mail" ) );
+  mDisplayNameMap.insert( "trash", i18nc( "local mail folder", "trash" ) );
+  mDisplayNameMap.insert( "drafts", i18nc( "local mail folder", "drafts" ) );
+  mDisplayNameMap.insert( "templates", i18nc( "local mail folder", "templates" ) );
+
+  mIconNameMap.insert( "local-mail", QLatin1String( "folder" ) );
+  mIconNameMap.insert( "inbox", QLatin1String( "mail-folder-inbox" ) );
+  mIconNameMap.insert( "outbox", QLatin1String( "mail-folder-outbox" ) );
+  mIconNameMap.insert( "sent-mail", QLatin1String( "mail-folder-sent" ) );
+  mIconNameMap.insert( "trash", QLatin1String( "user-trash" ) );
+  mIconNameMap.insert( "drafts", QLatin1String( "document-properties" ) );
+  mIconNameMap.insert( "templates", QLatin1String( "document-new" ) );
+
   QVERIFY( Control::start() );
   QTest::qWait( 1000 );
 
@@ -99,6 +117,7 @@ void LocalFoldersTest::testInitialState()
   SpecialMailCollectionsTesting *smct = SpecialMailCollectionsTesting::_t_self();
   Q_ASSERT( smc );
   Q_ASSERT( smct );
+  Q_UNUSED( smct );
 
   // No one has created the default resource.
   QVERIFY( sc->d->defaultResource().identifier().isEmpty() );
@@ -481,6 +500,16 @@ void LocalFoldersTest::testDefaultResourceJob()
   QString resourceId;
   {
     DefaultResourceJob *resjob = new DefaultResourceJob( Settings::self(), this );
+    resjob->setDefaultResourceType( QLatin1String( "akonadi_maildir_resource" ) );
+
+    QVariantMap options;
+    options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
+    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    resjob->setDefaultResourceOptions( options );
+    resjob->setTypes( mDisplayNameMap.keys() );
+    resjob->setNameForTypeMap( mDisplayNameMap );
+    resjob->setIconForTypeMap( mIconNameMap );
+
     AKVERIFYEXEC( resjob );
     resourceId = resjob->resourceId();
     const Collection::List folders = resjob->specialCollections();
@@ -511,6 +540,16 @@ void LocalFoldersTest::testDefaultResourceJob()
   // Run the job again.
   {
     DefaultResourceJob *resjob = new DefaultResourceJob( Settings::self(), this );
+    resjob->setDefaultResourceType( QLatin1String( "akonadi_maildir_resource" ) );
+
+    QVariantMap options;
+    options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
+    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    resjob->setDefaultResourceOptions( options );
+    resjob->setTypes( mDisplayNameMap.keys() );
+    resjob->setNameForTypeMap( mDisplayNameMap );
+    resjob->setIconForTypeMap( mIconNameMap );
+
     AKVERIFYEXEC( resjob );
     QCOMPARE( resourceId, resjob->resourceId() ); // Did not mistakenly create another resource.
     const Collection::List folders = resjob->specialCollections();
@@ -542,6 +581,16 @@ void LocalFoldersTest::testRecoverDefaultResource()
   // created in testDefaultResourceJob.
   {
     DefaultResourceJob *resjob = new DefaultResourceJob( Settings::self(), this );
+    resjob->setDefaultResourceType( QLatin1String( "akonadi_maildir_resource" ) );
+
+    QVariantMap options;
+    options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
+    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    resjob->setDefaultResourceOptions( options );
+    resjob->setTypes( mDisplayNameMap.keys() );
+    resjob->setNameForTypeMap( mDisplayNameMap );
+    resjob->setIconForTypeMap( mIconNameMap );
+
     AKVERIFYEXEC( resjob );
     QVERIFY( resjob->resourceId() != oldResourceId ); // Created another resource.
     Collection::List folders = resjob->specialCollections();
@@ -563,7 +612,7 @@ void LocalFoldersTest::testRecoverDefaultResource()
     // The second folder should be the Outbox.
     {
       Collection col = folders[1];
-      QCOMPARE( col.name(), QLatin1String( "Outbox" ) );
+      QCOMPARE( col.name(), QLatin1String( "outbox" ) );
       QVERIFY( col.hasAttribute<SpecialCollectionAttribute>() );
       QCOMPARE( col.attribute<SpecialCollectionAttribute>()->collectionType(), QByteArray( "outbox" ) );
     }

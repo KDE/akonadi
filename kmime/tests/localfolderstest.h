@@ -20,6 +20,7 @@
 #ifndef LOCALFOLDERSTEST_H
 #define LOCALFOLDERSTEST_H
 
+#include <QtCore/QMap>
 #include <QtCore/QObject>
 
 /**
@@ -52,6 +53,10 @@ class LocalFoldersTest : public QObject
     // Tests for DefaultResourceJob:
     void testDefaultResourceJob();
     void testRecoverDefaultResource();
+
+  private:
+    QMap<QByteArray, QString> mDisplayNameMap;
+    QMap<QByteArray, QString> mIconNameMap;
 };
 
 }
