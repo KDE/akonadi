@@ -704,7 +704,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       {
         QColor color = value.value<QColor>();
 
-        if ( color.isValid() )
+        if ( !color.isValid() )
           return false;
 
         EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
