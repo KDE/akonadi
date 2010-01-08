@@ -302,7 +302,7 @@ static QString contactAsHtml( const KABC::Addressee &contact )
     "<table cellpadding=\"3\" cellspacing=\"0\">"
     "<tr>"
     "<td align=\"right\" valign=\"top\" width=\"30%\" rowspan=\"3\">"
-    "<img src=\"%1\" vspace=\"1\">" // image
+    "<img src=\"%1\" width=\"100\" vspace=\"1\">" // image
     "</td>"
     "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
     "</tr>"
