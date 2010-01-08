@@ -134,7 +134,7 @@ in the same folder).
 
 
 
-\page libakonadi_integration Integration in your application
+\page libakonadi_integration Integration in your Application
 
 Akonadi::Control provides ways to ensure that the Akonadi server is running, to monitor its availability
 and provide help on server-side errors. A more low-level interface to the Akonadi server is provided
