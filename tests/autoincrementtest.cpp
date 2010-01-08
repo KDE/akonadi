@@ -89,9 +89,7 @@ void AutoIncrementTest::testItemAutoIncrement()
 
   // Restart the server, then test item creation again. The new id of the item
   // should be higher than all ids before.
-  QVERIFY( Control::stop() );
-  QVERIFY( Control::start() );
-
+  restartAkonadiServer();
   ItemCreateJob *job = createItemCreateJob();
   AKVERIFYEXEC( job );
   Item newItem = job->item();
@@ -124,8 +122,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
 
   // Restart the server, then test collection creation again. The new id of the collection
   // should be higher than all ids before.
-  QVERIFY( Control::stop() );
-  QVERIFY( Control::start() );
+  restartAkonadiServer();
 
   CollectionCreateJob *job = createCollectionCreateJob( 0 );
   AKVERIFYEXEC( job );

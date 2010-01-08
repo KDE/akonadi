@@ -23,6 +23,9 @@
 #include "collectionpathresolver_p.h"
 #include "qtest_akonadi.h"
 
+#include <QDBusInterface>
+#include <QDBusReply>
+
 qint64 collectionIdFromPath( const QString &path )
 {
   Akonadi::CollectionPathResolver *resolver = new Akonadi::CollectionPathResolver( path );
@@ -33,6 +36,24 @@ qint64 collectionIdFromPath( const QString &path )
   }
   qint64 id = resolver->collection();
   return id;
+}
+
+bool restartAkonadiServer()
+{
+    QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
+                                    QLatin1String( "/" ),
+                                    QLatin1String( "org.kde.Akonadi.Testrunner" ),
+                                    QDBusConnection::sessionBus() );
+    if ( !testrunnerIface.isValid() )
+        kWarning() << "Unable to get a dbus interface to the testrunner!";
+
+    QDBusReply<void> reply = testrunnerIface.call( "restartAkonadiServer" );
+    if ( !reply.isValid() ) {
+        kWarning() << reply.error();
+        return false;
+    } else {
+        return true;
+    }
 }
 
 #endif

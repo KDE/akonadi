@@ -456,6 +456,25 @@ void SetupTest::shutdownHarder()
   QCoreApplication::instance()->quit();
 }
 
+void SetupTest::restartAkonadiServer()
+{
+  kDebug();
+  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
+  QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
+                              QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), *mInternalBus );
+  QDBusReply<void> reply = controlIface.call( "shutdown" );
+  if ( !reply.isValid() )
+    kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
+  Q_ASSERT( mAkonadiDaemonProcess->waitForFinished() );
+  // we don't use Control::start() since we want to be able to kill
+  // it forcefully, if necessary, and know the pid
+  startAkonadiDaemon();
+  // from here on, the server exiting is an error again
+  connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
+           this, SLOT(slotAkonadiDaemonProcessFinished()));
+}
+
+
 QString SetupTest::basePath() const
 {
   QString sysTempDirPath = QDir::tempPath();
@@ -477,5 +496,6 @@ QString SetupTest::basePath() const
 
 void SetupTest::slotAkonadiDaemonProcessFinished()
 {
+  kWarning() << "Akonadi server process was terminated externally!";
   emit serverExited();
 }

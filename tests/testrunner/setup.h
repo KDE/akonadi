@@ -42,6 +42,8 @@ class SetupTest : public QObject
   public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
     Q_SCRIPTABLE void shutdownHarder();
+    /** Synchronously restarts the server. */
+    Q_SCRIPTABLE void restartAkonadiServer();
 
   Q_SIGNALS:
     void setupDone();
