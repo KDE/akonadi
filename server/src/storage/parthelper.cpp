@@ -43,7 +43,7 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
   if (!part)
     return false;
 
-  if (DbConfig::useExternalPayloadFile() && part->external())
+  if (DbConfig::configuredDatabase()->useExternalPayloadFile() && part->external())
   {
     QString origFileName = QString::fromUtf8( part->data() );
     QString fileName = origFileName;
@@ -97,7 +97,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 //   qDebug() << "Insert original data " << part->data();
   QByteArray fileNameData("");
   QByteArray data;
-  bool storeInFile = DbConfig::useExternalPayloadFile()  && ( part->datasize() > DbConfig::sizeThreshold() || part->external() );
+  bool storeInFile = DbConfig::configuredDatabase()->useExternalPayloadFile()  && ( part->datasize() > DbConfig::configuredDatabase()->sizeThreshold() || part->external() );
 
   //it is needed to insert first the metadata so a new id is generated for the part,
   //and we need this id for the payload file name
@@ -146,7 +146,7 @@ bool PartHelper::remove( Akonadi::Part *part )
   if (!part)
     return false;
 
-  if (DbConfig::useExternalPayloadFile()  && part->external())
+  if (DbConfig::configuredDatabase()->useExternalPayloadFile()  && part->external())
   {
     qDebug() << "remove part file " << part->data();
     QString fileName = QString::fromUtf8( part->data() );
@@ -157,7 +157,7 @@ bool PartHelper::remove( Akonadi::Part *part )
 
 bool PartHelper::remove( const QString &column, const QVariant &value )
 {
-  if ( DbConfig::useExternalPayloadFile() )
+  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() )
   {
     SelectQueryBuilder<Part> builder;
     builder.addValueCondition( column, Query::Equals, value );
@@ -199,7 +199,7 @@ bool PartHelper::loadData( Part::List &parts )
 
 bool PartHelper::loadData( Part &part )
 {
-  if ( DbConfig::useExternalPayloadFile() && part.external() )
+  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() && part.external() )
   {
     QString fileName = QString::fromUtf8( part.data() );
     QFile file( fileName );
@@ -229,7 +229,7 @@ QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool is
 {
   Q_UNUSED(id);
 
-  if ( DbConfig::useExternalPayloadFile() && isExternal )
+  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() && isExternal )
   {
     //qDebug() << "translateData " << id;
     QString fileName = QString::fromUtf8( data );

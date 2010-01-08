@@ -77,8 +77,8 @@ void DataStore::open()
   m_connectionName = QUuid::createUuid().toString() + QString::number( reinterpret_cast<qulonglong>( QThread::currentThread() ) );
   Q_ASSERT( !QSqlDatabase::contains( m_connectionName ) );
 
-  m_database = QSqlDatabase::addDatabase( DbConfig::driverName(), m_connectionName );
-  DbConfig::configure( m_database );
+  m_database = QSqlDatabase::addDatabase( DbConfig::configuredDatabase()->driverName(), m_connectionName );
+  DbConfig::configuredDatabase()->apply( m_database );
 
   if ( !m_database.isValid() ) {
     m_dbOpened = false;

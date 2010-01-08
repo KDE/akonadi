@@ -17,37 +17,27 @@
     02110-1301, USA.
 */
 
-#ifndef DBCONFIG_H
-#define DBCONFIG_H
+#ifndef DBCONFIGPOSTGRESQL_H
+#define DBCONFIGPOSTGRESQL_H
 
-#include <QtCore/QSettings>
-#include <QtSql/QSqlDatabase>
+#include "dbconfig.h"
 
-/**
- * A base class that provides an unique access layer to configuration
- * and initialization of different database backends.
- */
-class DbConfig
+class QProcess;
+
+class DbConfigPostgresql : public DbConfig
 {
   public:
-
-    virtual ~DbConfig();
-
-    /**
-     * Returns the DbConfig instance for the database the user has
-     * configured.
-     */
-    static DbConfig* configuredDatabase();
+    DbConfigPostgresql();
 
     /**
      * Returns the name of the used driver.
      */
-    virtual QString driverName() const = 0;
+    virtual QString driverName() const;
 
     /**
      * Returns the database name.
      */
-    virtual QString databaseName() const = 0;
+    virtual QString databaseName() const;
 
     /**
      * This method is called whenever the Akonadi server is started
@@ -56,18 +46,18 @@ class DbConfig
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back.
      */
-    virtual bool init( QSettings &settings ) = 0;
+    virtual bool init( QSettings &settings );
 
     /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */
-    virtual void apply( QSqlDatabase &database ) = 0;
+    virtual void apply( QSqlDatabase &database );
 
     /**
      * Returns whether an internal server needs to be used.
      */
-    virtual bool useInternalServer() const = 0;
+    virtual bool useInternalServer() const;
 
     /**
      * This method is called to start an external server.
@@ -79,25 +69,17 @@ class DbConfig
      */
     virtual void stopInternalServer();
 
-    /**
-     * Payload data bigger than this value will be stored in separate files, instead of the database. Valid
-     * only if @ref useExternalPayloadFile returns true, otherwise it is ignored.
-     * @return the size threshold in bytes, defaults to 4096.
-     */
-    virtual qint64 sizeThreshold() const;
-
-    /**
-     * Check if big payload data (@ref sizeThreshold) is stored in external files instead of the database.
-     * @return true, if the big data is stored in external files. Default is @c false.
-     */
-    virtual bool useExternalPayloadFile() const;
-
-  protected:
-    DbConfig();
-
   private:
-    qint64 mSizeThreshold;
-    bool mUseExternalPayloadFile;
+    QString mDatabaseName;
+    QString mHostName;
+    QString mUserName;
+    QString mPassword;
+    QString mConnectionOptions;
+    QString mServerPath;
+    QString mInitDbPath;
+    QString mCleanServerShutdownCommand;
+    bool mInternalServer;
+    QProcess *mDatabaseProcess;
 };
 
 #endif

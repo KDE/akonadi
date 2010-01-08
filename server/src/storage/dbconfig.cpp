@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,284 +18,85 @@
 */
 
 #include "dbconfig.h"
-#include "akdebug.h"
-#include "../../libs/xdgbasedirs_p.h"
 
-#include <QDir>
-#include <QFile>
-#include <QSettings>
-#include <QStringList>
-#include <QSqlDriver>
+#include "dbconfigmysql.h"
+#include "dbconfigmysqlembedded.h"
+#include "dbconfigpostgresql.h"
+#include "dbconfigsqlite.h"
+
+#include "../../libs/xdgbasedirs_p.h"
 
 using namespace Akonadi;
 
-class DbConfigStatic
+//TODO: make me Q_GLOBAL_STATIC
+static DbConfig *s_DbConfigInstance = 0;
+
+DbConfig::DbConfig()
 {
-  public:
-    DbConfigStatic() : mInternalServer( false )
-    {
-      const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
-      QSettings settings( serverConfigFile, QSettings::IniFormat );
+  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+  QSettings settings( serverConfigFile, QSettings::IniFormat );
 
-      // determine driver to use
-      const QString defaultDriver = QLatin1String("QMYSQL");
-      mDriverName = settings.value( QLatin1String("General/Driver"), defaultDriver ).toString();
-      if ( mDriverName.isEmpty() )
-        mDriverName = defaultDriver;
+  mSizeThreshold = 4096;
+  const QVariant value = settings.value( QLatin1String( "General/SizeThreshold" ), mSizeThreshold );
+  if ( value.canConvert<qint64>() )
+    mSizeThreshold = value.value<qint64>();
+  else
+    mSizeThreshold = 0;
 
-      if ( !checkDriver( mDriverName ) ) {
-        akError() << "Falling back to database driver" << defaultDriver;
-        mDriverName = defaultDriver;
-        if ( !checkDriver( mDriverName ) )
-          akFatal() << "No usable database driver found.";
-      }
+  if ( mSizeThreshold < 0 )
+    mSizeThreshold = 0;
 
-      mSizeThreshold = 4096;
-      QVariant v = settings.value( QLatin1String("General/SizeThreshold"), mSizeThreshold );
-      if ( v.canConvert<qint64>() )
-      {
-        mSizeThreshold = v.value<qint64>();
-      } else
-      {
-        mSizeThreshold = 0;
-      }
-
-      if ( mSizeThreshold < 0 )
-        mSizeThreshold = 0;
-
-      mUseExternalPayloadFile = false;
-      mUseExternalPayloadFile = settings.value( QLatin1String("General/ExternalPayload"), mUseExternalPayloadFile ).toBool();
-
-      // determine default settings depending on the driver
-      QString defaultDbName;
-      QString defaultHostName;
-      QString defaultOptions;
-      QString defaultServerPath;
-      QString defaultCleanShutdownCommand;
-
-      if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
-        defaultDbName = QLatin1String( "akonadi" );
-#ifndef Q_WS_WIN // We assume that MySQL is running as service on Windows
-        const bool defaultInternalServer = true;
-#else
-        const bool defaultInternalServer = false;
-#endif
-#ifdef MYSQLD_EXECUTABLE
-        defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
-#endif
-        const QStringList mysqldSearchPath = QStringList()
-            << QLatin1String("/usr/sbin")
-            << QLatin1String("/usr/local/sbin")
-            << QLatin1String("/usr/local/libexec")
-            << QLatin1String("/usr/libexec")
-            << QLatin1String("/opt/mysql/libexec")
-            << QLatin1String("/opt/local/lib/mysql5/bin");
-        if ( defaultServerPath.isEmpty() ) {
-          defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqld"), mysqldSearchPath );
-        }
-        const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String("mysqladmin"), mysqldSearchPath );
-        if ( !mysqladminPath.isEmpty() ) {
-          defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --socket=%2/mysql.socket")
-                                            .arg(mysqladminPath)
-                                            .arg(XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
-        }
-        mInternalServer = settings.value( QLatin1String("QMYSQL/StartServer"), defaultInternalServer ).toBool();
-        if ( mInternalServer ) {
-          const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
-          defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
-        }
-      } else if ( mDriverName == QLatin1String("QMYSQL_EMBEDDED") ) {
-        defaultDbName = QLatin1String( "akonadi" );
-        defaultOptions = QString::fromLatin1( "SERVER_DATADIR=%1" ).arg( mysqlEmbeddedDataDir() );
-      } else if ( mDriverName == QLatin1String( "QSQLITE" ) ) {
-        defaultDbName = sqliteDataFile();
-      } else if ( mDriverName == QLatin1String( "QPSQL" ) ) {
-#ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
-        const bool defaultInternalServer = true;
-#else
-        const bool defaultInternalServer = false;
-#endif
-        defaultDbName = QLatin1String( "akonadi" );
-
-        mInternalServer = settings.value( QLatin1String( "QPSQL/StartServer" ), defaultInternalServer ).toBool();
-        if ( mInternalServer ) {
-          const QStringList postgresSearchPath = QStringList()
-            << QLatin1String( "/usr/sbin" )
-            << QLatin1String( "/usr/local/sbin" )
-            << QLatin1String( "/usr/lib/postgresql/8.4/bin" );
-
-          defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "postgres" ), postgresSearchPath );
-          defaultHostName = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
-        }
-      }
-
-      // read settings for current driver
-      settings.beginGroup( mDriverName );
-      mName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
-      mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
-      mUserName = settings.value( QLatin1String( "User" ) ).toString();
-      mPassword = settings.value( QLatin1String( "Password" ) ).toString();
-      mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-      mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
-      mCleanServerShutdownCommand = settings.value( QLatin1String("CleanServerShutdownCommand"), defaultCleanShutdownCommand ).toString();
-      settings.endGroup();
-
-      // verify settings and apply permanent changes (written out below)
-      if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
-        if ( mInternalServer && mConnectionOptions.isEmpty() )
-          mConnectionOptions = defaultOptions;
-        if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists(mServerPath) ) )
-          mServerPath = defaultServerPath;
-      }
-
-      // store back the default values
-      settings.setValue( QLatin1String( "General/Driver" ), mDriverName );
-      settings.setValue( QLatin1String( "General/SizeThreshold" ), mSizeThreshold );
-      settings.setValue( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile );
-      settings.beginGroup( mDriverName );
-      settings.setValue( QLatin1String( "Name" ), mName );
-      settings.setValue( QLatin1String( "Host" ), mHostName );
-      settings.setValue( QLatin1String( "User" ), mUserName );
-      settings.setValue( QLatin1String( "Password" ), mPassword );
-      settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-      if ( !mServerPath.isEmpty() )
-        settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
-      settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
-      settings.endGroup();
-      settings.sync();
-
-      // apply temporary changes to the settings
-      if ( mDriverName == QLatin1String( "QMYSQL" ) ) {
-        if ( mInternalServer ) {
-          mHostName.clear();
-          mUserName.clear();
-          mPassword.clear();
-        }
-      }
-
-    }
-
-    bool checkDriver( const QString &driver ) const
-    {
-      if ( QSqlDatabase::isDriverAvailable( driver ) )
-        return true;
-      akError() << "Database driver" << driver << "was not found.";
-      akError() << "Available drivers are:" << QSqlDatabase::drivers();
-      return false;
-    }
-
-    QString dataDir() const
-    {
-      QString akonadiHomeDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-      if ( akonadiHomeDir.isEmpty() ) {
-        akFatal() << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath( "data" )
-            << "during database initialization";
-      }
-      akonadiHomeDir += QDir::separator();
-      return akonadiHomeDir;
-    }
-
-    QString sqliteDataFile() const
-    {
-      Q_ASSERT( mDriverName == QLatin1String( "QSQLITE" ) );
-      const QString akonadiPath = dataDir() + QLatin1String("akonadi.db");
-      if ( !QFile::exists( akonadiPath ) ) {
-        QFile file( akonadiPath );
-        if ( !file.open( QIODevice::WriteOnly ) )
-          akFatal() << "Unable to create file" << akonadiPath << "during database initialization.";
-        file.close();
-      }
-      return akonadiPath;
-    }
-
-    QString mysqlEmbeddedDataDir() const
-    {
-      Q_ASSERT( mDriverName == QLatin1String( "QMYSQL_EMBEDDED" ) );
-      const QString dbDataDir = dataDir() + QLatin1String( "db" ) + QDir::separator();
-      if ( !QDir( dbDataDir ).exists() ) {
-        QDir dir;
-        if ( !dir.mkdir( dbDataDir ) )
-          akFatal() << "Unable to create directory" << dbDataDir << "during database initialization.";
-      }
-
-      const QString dbDir = dbDataDir + QLatin1String("akonadi");
-      if ( !QDir( dbDir ).exists() ) {
-        QDir dir;
-        if ( !dir.mkdir( dbDir ) )
-          akFatal() << "Unable to create directory" << dbDir << "during database initialization.";
-      }
-      return dbDataDir;
-    }
-
-    QString mDriverName;
-    QString mName;
-    QString mHostName;
-    QString mUserName;
-    QString mPassword;
-    QString mConnectionOptions;
-    QString mServerPath;
-    bool mInternalServer;
-    bool mUseExternalPayloadFile;
-    qint64 mSizeThreshold;
-    QString mCleanServerShutdownCommand;
-};
-
-Q_GLOBAL_STATIC( DbConfigStatic, sInstance )
-
-void DbConfig::init()
-{
-  sInstance();
+  mUseExternalPayloadFile = false;
+  mUseExternalPayloadFile = settings.value( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile ).toBool();
 }
 
-void DbConfig::configure(QSqlDatabase & db)
+DbConfig::~DbConfig()
 {
-  if ( !sInstance()->mName.isEmpty() )
-    db.setDatabaseName( sInstance()->mName );
-  if ( !sInstance()->mHostName.isEmpty() )
-    db.setHostName( sInstance()->mHostName );
-  if ( !sInstance()->mUserName.isEmpty() )
-    db.setUserName( sInstance()->mUserName );
-  if ( !sInstance()->mPassword.isEmpty() )
-    db.setPassword( sInstance()->mPassword );
-  db.setConnectOptions( sInstance()->mConnectionOptions );
-
-  // can we check that during init() already?
-  Q_ASSERT( db.driver()->hasFeature( QSqlDriver::LastInsertId ) );
-//   Q_ASSERT( db.driver()->hasFeature( QSqlDriver::Transactions ) );
 }
 
-QString DbConfig::driverName()
+DbConfig* DbConfig::configuredDatabase()
 {
-  return sInstance()->mDriverName;
+  if ( !s_DbConfigInstance ) {
+    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+    QSettings settings( serverConfigFile, QSettings::IniFormat );
+
+    // determine driver to use
+    const QString defaultDriver = QLatin1String( "QMYSQL" );
+    QString driverName = settings.value( QLatin1String( "General/Driver" ), defaultDriver ).toString();
+    if ( driverName.isEmpty() )
+      driverName = defaultDriver;
+
+    if ( driverName == QLatin1String( "QMYSQL" ) )
+      s_DbConfigInstance = new DbConfigMysql;
+    else if ( driverName == QLatin1String( "QMYSQL_EMBEDDED" ) )
+      s_DbConfigInstance = new DbConfigMysqlEmbedded;
+    else if ( driverName == QLatin1String( "QSQLITE" ) )
+      s_DbConfigInstance = new DbConfigSqlite;
+    else if ( driverName == QLatin1String( "QPSQL" ) )
+      s_DbConfigInstance = new DbConfigPostgresql;
+    else
+      qDebug( "No sql driver defined!" );
+  }
+
+  return s_DbConfigInstance;
 }
 
-bool DbConfig::useInternalServer()
+void DbConfig::startInternalServer()
 {
-  return sInstance()->mInternalServer;
+  // do nothing
 }
 
-QString DbConfig::serverPath()
+void DbConfig::stopInternalServer()
 {
-  return sInstance()->mServerPath;
+  // do nothing
 }
 
-QString DbConfig::databaseName()
+qint64 DbConfig::sizeThreshold() const
 {
-  return sInstance()->mName;
+  return mSizeThreshold;
 }
 
-qint64 DbConfig::sizeThreshold()
+bool DbConfig::useExternalPayloadFile() const
 {
-  return sInstance()->mSizeThreshold;
+  return mUseExternalPayloadFile;
 }
-
-bool DbConfig::useExternalPayloadFile()
-{
-  return sInstance()->mUseExternalPayloadFile;
-}
-
-QString DbConfig::cleanServerShutdownCommand()
-{
-    return sInstance()->mCleanServerShutdownCommand;
-}
-

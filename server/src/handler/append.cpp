@@ -61,7 +61,7 @@ bool Append::commit()
     if ( m_streamParser->hasLiteral() ) {
       dataSize = m_streamParser->remainingLiteralSize();
       m_size = qMax( m_size, dataSize );
-      storeInFile = DbConfig::useExternalPayloadFile() && dataSize > DbConfig::sizeThreshold();
+      storeInFile = DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold();
       if ( storeInFile ) {
         if ( !tmpFile.open() ) {
           storeInFile =  false;

@@ -101,6 +101,10 @@ set(libakonadiprivate_SRCS
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   src/storage/datastore.cpp
   src/storage/dbconfig.cpp
+  src/storage/dbconfigmysql.cpp
+  src/storage/dbconfigmysqlembedded.cpp
+  src/storage/dbconfigpostgresql.cpp
+  src/storage/dbconfigsqlite.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbupdater.cpp
   src/storage/itemqueryhelper.cpp

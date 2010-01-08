@@ -244,7 +244,7 @@ bool Store::parseStream()
       if ( m_streamParser->hasLiteral() ) {
         const qint64 dataSize = m_streamParser->remainingLiteralSize();
         partSizes += dataSize;
-        const bool storeInFile = ( DbConfig::useExternalPayloadFile() && dataSize > DbConfig::sizeThreshold() );
+        const bool storeInFile = ( DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold() );
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
           part.setExternal( true ); //the part WILL be external
