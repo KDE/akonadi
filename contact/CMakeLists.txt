@@ -1,3 +1,7 @@
+
+find_package(Nepomuk)
+macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -21,6 +25,7 @@ kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.k
 
 set(akonadicontact_editor_SRCS
   editor/addresseditwidget.cpp
+  editor/categorieseditwidget.cpp
   editor/contacteditorwidget.cpp
   editor/dateeditwidget.cpp
   editor/displaynameeditwidget.cpp
@@ -30,10 +35,12 @@ set(akonadicontact_editor_SRCS
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp
+  editor/kedittagsdialog.cpp
   editor/nameeditwidget.cpp
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
   editor/soundeditwidget.cpp
+  editor/tagwidget.cpp
 )
 
 set(akonadicontact_LIB_SRC
@@ -75,14 +82,16 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kcal
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS})
+                                      ${KDE4_PHONON_LIBS}
+                                      ${NEPOMUK_LIBRARIES})
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc
                                       kcal
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS})
+                                      ${KDE4_PHONON_LIBS}
+                                      ${NEPOMUK_LIBRARIES})
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

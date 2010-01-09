@@ -22,6 +22,7 @@
 #include "contacteditorwidget.h"
 
 #include "addresseditwidget.h"
+#include "categorieseditwidget.h"
 #include "contacteditorpageplugin.h"
 #include "contactmetadata_p.h"
 #include "dateeditwidget.h"
@@ -87,6 +88,8 @@ class ContactEditorWidget::Private
 
     // widgets from phones group
     PhoneEditWidget *mPhonesWidget;
+
+    CategoriesEditWidget *mCategoriesWidget;
 
     // widgets from addresses group
     AddressEditWidget *mAddressesWidget;
@@ -237,6 +240,19 @@ void ContactEditorWidget::Private::initGuiContactTab()
   phonesLayout->addWidget( mPhonesWidget, 0, 0 );
 
   phonesLayout->setRowStretch( 1, 1 );
+
+  // setup categories section
+  QHBoxLayout *categoriesLayout = new QHBoxLayout;
+  label = new QLabel( i18n( "Categories:" ) );
+  label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
+
+  mCategoriesWidget = new CategoriesEditWidget;
+  label->setBuddy( mCategoriesWidget );
+
+  categoriesLayout->addWidget( label );
+  categoriesLayout->addWidget( mCategoriesWidget );
+
+  layout->addLayout( categoriesLayout );
 }
 
 void ContactEditorWidget::Private::initGuiLocationTab()
@@ -486,6 +502,9 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   // phones group
   d->mPhonesWidget->loadContact( contact );
 
+  // categories section
+  d->mCategoriesWidget->loadContact( contact );
+
   // address group
   d->mAddressesWidget->loadContact( contact );
 
@@ -541,6 +560,9 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   // phones group
   d->mPhonesWidget->storeContact( contact );
 
+  // categories section
+  d->mCategoriesWidget->storeContact( contact );
+
   // address group
   d->mAddressesWidget->storeContact( contact );
 
@@ -594,6 +616,9 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
 
   // widgets from phones group
   d->mPhonesWidget->setReadOnly( readOnly );
+
+  // widgets from categories section
+  d->mCategoriesWidget->setReadOnly( readOnly );
 
   // widgets from addresses group
   d->mAddressesWidget->setReadOnly( readOnly );
