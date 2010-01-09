@@ -224,8 +224,9 @@ monitor->setCollectionMonitored( Collection::root() );
 monitor->setMimeTypeMonitored( MyEntity::mimeType() );
 
 Session *session = new Session( QByteArray( "MyEmailApp-" ) + QByteArray::number( qrand() ), this );
+monitor->setSession(session);
 
-EntityTreeModel *entityTree = new Akonadi::EntityTreeModel(session, monitor, this);
+EntityTreeModel *entityTree = new Akonadi::EntityTreeModel(monitor, this);
 @endcode
 
 \image html entitytreemodel.png "A plain EntityTreeModel in a view"
@@ -344,6 +345,7 @@ listView->setModel(itemList);
 Or to also show items of child collections in the list:
 
 @code
+  // ... Create an entityTreeModel
   collectionTree = new EntityMimeTypeFilterModel(this);
   collectionTree->setSourceModel(entityTree);
 
@@ -372,6 +374,7 @@ Note that it is important in this case to use the DescendantEntitesProxyModel be
 A SelectionProxyModel can be used to simplify managing selection in one view through multiple proxy models to a representation in another view. The selectionModel of the initial view is used to create a proxied model which includes only the selected indexes and their children.
 
 @code
+  // ... Create an entityTreeModel
   collectionTree = new EntityMimeTypeFilterModel(this);
   collectionTree->setSourceModel(entityTree);
 
@@ -384,7 +387,7 @@ A SelectionProxyModel can be used to simplify managing selection in one view thr
   treeview->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
   SelectionProxyModel *selProxy = new SelectionProxyModel(treeview->selectionModel(), this);
-  selProxy->setSourceModel(etm);
+  selProxy->setSourceModel(entityTree);
 
   EntityTreeView *selView = new EntityTreeView(splitter);
   selView->setModel(selProxy);
