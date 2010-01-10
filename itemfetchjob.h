@@ -42,15 +42,24 @@ class ItemFetchScope;
  *
  * // Fetch all items with full payload from the root collection
  * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Collection::root() );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
  * job->fetchScope().fetchFullPayload();
  *
- * if ( job->exec() ) {
- *   Akonadi::Item::List items = job->items();
+ * ...
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << "Error occurred";
+ *     return;
+ *   }
+ *
+ *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+ *
+ *   const Akonadi::Item::List items = fetchJob->items();
  *   foreach( const Akonadi::Item &item, items ) {
  *     qDebug() << "Item ID:" << item.id();
  *   }
- * } else {
- *   qDebug() << "Error occurred";
  * }
  *
  * @endcode

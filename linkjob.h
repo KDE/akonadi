@@ -43,11 +43,16 @@ class LinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::LinkJob *job = new Akonadi::LinkJob( virtualCollection, items );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
  *
- * if ( job->exec() ) {
- *   qDebug() << "Linked items successfully";
- * } else {
- *   qDebug() << "Error occurred";
+ * ...
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Linked items successfully";
  * }
  *
  * @endcode

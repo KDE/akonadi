@@ -50,11 +50,17 @@ class ItemCreateJobPrivate;
  * Akonadi::Collection collection = Akonadi::Collection::root();
  *
  * Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
  *
- * if ( job->exec() )
- *   qDebug() << "Contact item created successfully";
- * else
- *   qDebug() << "Error occurred";
+ * ...
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Contact item created successfully";
+ * }
  *
  * @endcode
  *

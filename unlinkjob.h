@@ -43,11 +43,16 @@ class UnlinkJobPrivate;
  * const Akonadi::Item::List items = ...
  *
  * Akonadi::UnlinkJob *job = new Akonadi::UnlinkJob( virtualCollection, items );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
  *
- * if ( job->exec() ) {
- *   qDebug() << "Unlinked items successfully";
- * } else {
- *   qDebug() << "Error occurred";
+ * ...
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Unlinked items successfully";
  * }
  *
  * @endcode

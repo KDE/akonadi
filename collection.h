@@ -49,8 +49,20 @@ class CollectionStatistics;
  *
  * // fetching all collections recursive, starting at the root collection
  * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
- * if ( job->exec() ) {
- *   Collection::List collections = job->collections();
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchFinished( KJob* ) ) );
+ *
+ * ...
+ *
+ * MyClass::fetchFinished( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << "Error occurred";
+ *     return;
+ *   }
+ *
+ *   CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
+ *
+ *   const Collection::List collections = fetchJob->collections();
  *   foreach( const Collection &collection, collections ) {
  *     qDebug() << "Name:" << collection.name();
  *   }

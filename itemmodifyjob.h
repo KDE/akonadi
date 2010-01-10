@@ -44,7 +44,17 @@ class ItemModifyJobPrivate;
  *
  * // Fetch item with unique id 125
  * Akonadi::ItemFetchJob *fetchJob = new Akonadi::ItemFetchJob( Akonadi::Item( 125 ) );
- * if ( fetchJob->exec() ) {
+ * connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( fetchFinished( KJob* ) ) );
+ *
+ * ...
+ *
+ * MyClass::fetchFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     return;
+ *
+ *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
+ *
  *   Akonadi::Item item = fetchJob->items().first();
  *
  *   // Set a custom flag
@@ -52,12 +62,15 @@ class ItemModifyJobPrivate;
  *
  *   // Store back modified item
  *   Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item );
- *   if ( modifyJob->exec() )
- *     qDebug() << "Item modified successfully";
- *   else
+ *   connect( modifyJob, SIGNAL( result( KJob* ) ), SLOT( modifyFinished( KJob* ) ) );
+ * }
+ *
+ * MyClass::modifyFinished( KJob *job )
+ * {
+ *   if ( job->error() )
  *     qDebug() << "Error occurred";
- * } else {
- *   qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Item modified successfully";
  * }
  *
  * @endcode

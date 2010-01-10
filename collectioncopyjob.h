@@ -38,11 +38,17 @@ class CollectionCopyJobPrivate;
  * Akonadi::Collection target = ...
  *
  * Akonadi::CollectionCopyJob *job = new Akonadi::CollectionCopyJob( source, target );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( copyFinished( KJob* ) ) );
  *
- * if ( job->exec() )
- *   qDebug() << "Copied successfully";
- * else
- *   qDebug() << "Error occurred";
+ * ...
+ *
+ * MyClass::copyFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Copied successfully";
+ * }
  *
  * @endcode
  *

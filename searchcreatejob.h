@@ -39,13 +39,19 @@ class SearchCreateJobPrivate;
  * const QString query = "...";
  *
  * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
- * if ( !job->exec() ) {
- *   qDebug() << "Error occurred";
- *   return;
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << "Error occurred";
+ *     return;
+ *   }
+ *
+ *   qDebug() << "Created search folder successfully";
+ *   const Collection searchCollection = job->createdCollection();
+ *   ...
  * }
- * qDebug() << "Created search folder successfully";
- * const Collection searchCollection = job->createdCollection();
- * ...
  *
  * @endcode
  *

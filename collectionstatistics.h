@@ -43,8 +43,20 @@ namespace Akonadi {
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
- * if ( job->exec() ) {
- *   Akonadi::CollectionStatistics statistics = job->statistics();
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ *
+ * ...
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << "Error occurred";
+ *     return;
+ *   }
+ *
+ *   CollectionStatisticsJob *statisticsJob = qobject_cast<CollectionStatisticsJob*>( job );
+ *
+ *   const Akonadi::CollectionStatistics statistics = statisticsJob->statistics();
  *   qDebug() << "Unread items:" << statistics.unreadCount();
  * }
  *

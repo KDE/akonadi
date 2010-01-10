@@ -44,6 +44,7 @@ class TransactionSequencePrivate;
  *
  * // Delete a couple of items inside a transaction
  * Akonadi::TransactionSequence *transaction = new TransactionSequence;
+ * connect( transaction, SIGNAL( result( KJob* ) ), SLOT( transactionFinished( KJob* ) ) );
  *
  * const Akonadi::Item::List items = ...
  *
@@ -51,7 +52,15 @@ class TransactionSequencePrivate;
  *   new Akonadi::ItemDeleteJob( item, transaction );
  * }
  *
- * transaction->exec();
+ * ...
+ *
+ * MyClass::transactionFinished( KJob *job )
+ * {
+ *   if ( job->error() )
+ *     qDebug() << "Error occurred";
+ *   else
+ *     qDebug() << "Items deleted successfully";
+ * }
  *
  * @endcode
  *
