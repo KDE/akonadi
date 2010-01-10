@@ -136,8 +136,6 @@ void ItemAppendTest::testContent()
   QCOMPARE( fjob->items().count(), 1 );
   Item item2 = fjob->items().first();
   QCOMPARE( item2.payload<QByteArray>(), data );
-  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
-  QCOMPARE( item2.payload<QByteArray>().isNull(), data.isNull() );
 
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
   AKVERIFYEXEC( djob );

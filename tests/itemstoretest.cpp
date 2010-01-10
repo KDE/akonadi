@@ -158,8 +158,6 @@ void ItemStoreTest::testDataChange()
   QEXPECT_FAIL( "null", "STORE will not update item size on 0 sizes", Continue );
   QEXPECT_FAIL( "empty", "STORE will not update item size on 0 sizes", Continue );
   QCOMPARE( item.size(), static_cast<qint64>( data.size() ) );
-  QEXPECT_FAIL( "null", "Serializer cannot distinguish null vs. empty", Continue );
-  QCOMPARE( item.payload<QByteArray>().isNull(), data.isNull() );
 }
 
 void ItemStoreTest::testRemoteId_data()
