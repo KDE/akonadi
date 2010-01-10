@@ -7,11 +7,4 @@ ExternalPayload=true
 Manager=Dummy
 
 [QPSQL]
-Name=post_table
-User=user
-Password=pass
-Options=
-StartServer=false
-Host=
-Port=5432
-
+StartServer=true
