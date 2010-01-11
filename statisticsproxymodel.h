@@ -91,8 +91,8 @@ class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
     virtual Qt::ItemFlags flags ( const QModelIndex & index ) const;
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
+                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
   private:
     //@cond PRIVATE

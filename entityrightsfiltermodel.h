@@ -90,8 +90,11 @@ class EntityRightsFilterModel : public KRecursiveFilterProxyModel
      */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+    /**
+     * @reimplemented
+     */
+    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
+                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
   protected:
     virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
