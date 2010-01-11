@@ -98,8 +98,9 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
      */
     enum Criterion
     {
-      Name, ///< The name of the contact.
-      Email ///< The email address of the contact.
+      Name,    ///< The name of the contact.
+      Email,   ///< The email address of the contact.
+      NickName ///< The nickname of the contact
     };
 
     /**
