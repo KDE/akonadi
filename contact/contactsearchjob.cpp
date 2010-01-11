@@ -55,9 +55,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
                                   "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
                                   " }" );
   } else if ( criterion == NickName ) {
+    //select ?r { ?r nco:fullname ?v . ?v bif:contains "'hugo maier'" .
     query += QString::fromLatin1( "SELECT ?r WHERE {"
                                   "  ?r a nco:PersonContact ."
-                                  "  ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
+                                  "  ?r nco:nickname ?v . ?v bif:contains \"'%1'\" ."
                                   " }" );
   }
 
