@@ -23,18 +23,25 @@
 #include "monitor_p.h" // For friend ref/deref
 
 #include <KDE/KIconLoader>
+#include <KDE/KLocale>
+#include <KDE/KMessageBox>
 #include <KDE/KUrl>
 
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttype.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/collectioncopyjob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
+#include <akonadi/collectionmovejob.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/entityhiddenattribute.h>
+#include <akonadi/itemcopyjob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemmovejob.h>
+#include <akonadi/linkjob.h>
 #include <akonadi/session.h>
 
 #include <kdebug.h>
@@ -812,8 +819,24 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
 void EntityTreeModelPrivate::pasteJobDone( KJob *job )
 {
-  if ( job->error() )
-    kWarning() << "Job error: " << job->errorString() << endl;
+  if ( job->error() ) {
+    QString errorMsg;
+    if ( qobject_cast<ItemCopyJob*>( job ) ) {
+      errorMsg = i18n( "Could not copy item:" );
+    } else if ( qobject_cast<CollectionCopyJob*>( job ) ) {
+      errorMsg = i18n( "Could not copy collection:" );
+    } else if ( qobject_cast<ItemMoveJob*>( job ) ) {
+      errorMsg = i18n( "Could not move item:" );
+    } else if ( qobject_cast<CollectionMoveJob*>( job ) ) {
+      errorMsg = i18n( "Could not move collection:" );
+    } else if ( qobject_cast<LinkJob*>( job ) ) {
+      errorMsg = i18n( "Could not link entity:" );
+    }
+
+    errorMsg += QLatin1Char( ' ' ) + job->errorString();
+
+    KMessageBox::error( 0, errorMsg );
+  }
 }
 
 void EntityTreeModelPrivate::updateJobDone( KJob *job )
