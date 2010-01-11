@@ -277,5 +277,22 @@ int StatisticsProxyModel::columnCount( const QModelIndex & parent ) const
   }
 }
 
+QModelIndexList StatisticsProxyModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
+{
+  if (role < Qt::UserRole)
+    return QSortFilterProxyModel::match(start, role, value, hits, flags);
+
+  QModelIndexList list;
+  QModelIndex proxyIndex;
+  foreach(const QModelIndex idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
+  {
+    proxyIndex = mapFromSource(idx);
+    if (proxyIndex.isValid())
+      list << proxyIndex;
+  }
+  return list;
+}
+
+
 #include "statisticsproxymodel.moc"
 

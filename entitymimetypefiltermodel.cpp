@@ -155,8 +155,20 @@ QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int r
     return QModelIndexList();
 
   if (EntityTreeModel::AmazingCompletionRole != role)
-    return QSortFilterProxyModel::match(start, role, value, hits, flags);
+  {
+    if (role < Qt::UserRole)
+      return QSortFilterProxyModel::match(start, role, value, hits, flags);
 
+    QModelIndexList list;
+    QModelIndex proxyIndex;
+    foreach(const QModelIndex idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
+    {
+      proxyIndex = mapFromSource(idx);
+      if (proxyIndex.isValid())
+        list << proxyIndex;
+    }
+    return list;
+  }
   // We match everything in the source model because sorting will change what we should show.
   const int allHits = -1;
 

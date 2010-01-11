@@ -32,7 +32,7 @@ class EntityRightsFilterModelPrivate;
 /**
  * @short A proxy model that filters entities by access rights.
  *
- * This class can be used on top of an EntityTreeModel to exclude entities by access type 
+ * This class can be used on top of an EntityTreeModel to exclude entities by access type
  * or to include only certain entities with special access rights.
  *
  * @code
@@ -89,6 +89,9 @@ class EntityRightsFilterModel : public KRecursiveFilterProxyModel
      * @reimplemented
      */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+
+    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1,
+                                  Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
   protected:
     virtual bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
