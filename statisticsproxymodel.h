@@ -99,6 +99,9 @@ class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
     class Private;
     Private* const d;
     //@endcond
+
+    Q_PRIVATE_SLOT( d, void proxyDataChanged(QModelIndex,QModelIndex))
+
 };
 
 }
