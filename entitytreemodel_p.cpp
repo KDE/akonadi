@@ -617,7 +617,6 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Collection::Id id,
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
-  return; // Temporarily disabled
   if ( !m_collections.contains( id ) ) {
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
