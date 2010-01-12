@@ -56,7 +56,7 @@ class EntityRightsFilterModelPrivate;
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class EntityRightsFilterModel : public KRecursiveFilterProxyModel
+class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
 {
   Q_OBJECT
 
