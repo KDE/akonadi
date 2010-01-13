@@ -40,17 +40,18 @@ class AKONADI_EXPORT AgentSearchInterface
 {
   public:
     /**
-     * Constructor.
+     * Creates a new agent search interface.
      */
     AgentSearchInterface();
 
     /**
-     * Destructor.
+     * Destroys the agent search interface.
      */
     virtual ~AgentSearchInterface();
 
     /**
      * Adds a new search.
+     *
      * @param query The query string, using the language specified in @p queryLanguage
      * @param queryLanguage The query language used for @p query
      * @param resultCollection The destination collection for the search results. It's a virtual
