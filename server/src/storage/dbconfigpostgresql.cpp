@@ -69,9 +69,12 @@ bool DbConfigPostgresql::init( QSettings &settings )
       << QLatin1String( "/usr/local/sbin" )
       << QLatin1String( "/usr/lib/postgresql/8.4/bin" );
 
-    defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "postgres" ), postgresSearchPath );
+    defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
     defaultHostName = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+    defaultCleanShutdownCommand = QString::fromLatin1( "%1 stop -D%2" )
+                                      .arg( defaultServerPath )
+                                      .arg( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) ) );
   }
 
   // read settings for current driver
@@ -83,6 +86,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
   mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
   mInitDbPath = settings.value( QLatin1String("InitDbPath"), defaultInitDbPath ).toString();
+  mCleanServerShutdownCommand = settings.value( QLatin1String( "CleanServerShutdownCommand" ), defaultCleanShutdownCommand ).toString();
   settings.endGroup();
 
   // store back the default values
@@ -129,7 +133,7 @@ void DbConfigPostgresql::startInternalServer()
   const QString socketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
 
   if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( dataDir ) ) ) {
-    // postgre data directory not initialized yet, so call initdb on it
+    // postgres data directory not initialized yet, so call initdb on it
 
     // call 'initdb -D/home/user/.local/share/akonadi/data_db'
     const QString command = QString::fromLatin1( "%1 -D%2" ).arg( mInitDbPath ).arg( dataDir );
@@ -161,7 +165,10 @@ void DbConfigPostgresql::startInternalServer()
 
   // synthesize the postgres command
   QStringList arguments;
-  arguments << QString::fromLatin1( "-D%1" ).arg( dataDir );
+  arguments << QString::fromLatin1( "-w" )
+            << QString::fromLatin1( "-t10" ) // default is 60 seconds.
+            << QString::fromLatin1( "start" )
+            << QString::fromLatin1( "-D%1" ).arg( dataDir );
 
   mDatabaseProcess = new QProcess;
   mDatabaseProcess->start( mServerPath, arguments );
@@ -227,6 +234,13 @@ void DbConfigPostgresql::stopInternalServer()
 {
   if ( !mDatabaseProcess )
     return;
+
+  // first, try the nicest approach
+  if ( !mCleanServerShutdownCommand.isEmpty() ) {
+    QProcess::execute( mCleanServerShutdownCommand );
+    if ( mDatabaseProcess->waitForFinished( 3000 ) )
+      return;
+  }
 
   mDatabaseProcess->terminate();
   const bool result = mDatabaseProcess->waitForFinished( 3000 );
