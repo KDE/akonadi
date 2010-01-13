@@ -21,6 +21,8 @@
 
 #include "phoneeditwidget.h"
 
+#include "autoqpointer_p.h"
+
 #include <QtCore/QSignalMapper>
 #include <QtCore/QString>
 #include <QtGui/QButtonGroup>
@@ -99,9 +101,9 @@ void PhoneTypeCombo::selected( int pos )
 
 void PhoneTypeCombo::otherSelected()
 {
-  PhoneTypeDialog dlg( mType, this );
-  if ( dlg.exec() ) {
-    mType = dlg.type();
+  AutoQPointer<PhoneTypeDialog> dlg = new PhoneTypeDialog( mType, this );
+  if ( dlg->exec() ) {
+    mType = dlg->type();
     if ( !mTypeList.contains( mType ) )
       mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), mType );
   } else {

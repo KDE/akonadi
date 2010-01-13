@@ -21,6 +21,8 @@
 
 #include "emaileditwidget.h"
 
+#include "autoqpointer_p.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -127,11 +129,11 @@ void EmailEditWidget::storeContact( KABC::Addressee &contact ) const
 
 void EmailEditWidget::edit()
 {
-  EmailEditDialog dlg( mEmailList, this );
+  AutoQPointer<EmailEditDialog> dlg = new EmailEditDialog( mEmailList, this );
 
-  if ( dlg.exec() ) {
-    if ( dlg.changed() ) {
-      mEmailList = dlg.emails();
+  if ( dlg->exec() ) {
+    if ( dlg->changed() ) {
+      mEmailList = dlg->emails();
       if ( !mEmailList.isEmpty() )
         mEmailEdit->setText( mEmailList.first() );
       else

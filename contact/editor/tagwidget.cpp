@@ -21,6 +21,7 @@
 
 #include "tagwidget.h"
 
+#include "autoqpointer_p.h"
 #include "kedittagsdialog_p.h"
 
 #include <kicon.h>
@@ -64,9 +65,9 @@ QList<Nepomuk::Tag> TagWidget::tags() const
 
 void TagWidget::editTags()
 {
-  KEditTagsDialog dlg( mTags, this );
-  if ( dlg.exec() ) {
-    mTags = dlg.tags();
+  AutoQPointer<KEditTagsDialog> dlg = new KEditTagsDialog( mTags, this );
+  if ( dlg->exec() ) {
+    mTags = dlg->tags();
     updateView();
   }
 }

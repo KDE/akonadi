@@ -21,6 +21,8 @@
 
 #include "addresseditwidget.h"
 
+#include "autoqpointer_p.h"
+
 #include <QtCore/QEvent>
 #include <QtCore/QList>
 #include <QtGui/QApplication>
@@ -201,9 +203,9 @@ void AddressTypeCombo::selected( int pos )
 
 void AddressTypeCombo::otherSelected()
 {
-  AddressTypeDialog dlg( mType, this );
-  if ( dlg.exec() ) {
-    mType = dlg.type();
+  AutoQPointer<AddressTypeDialog> dlg = new AddressTypeDialog( mType, this );
+  if ( dlg->exec() ) {
+    mType = dlg->type();
     if ( !mTypeList.contains( mType ) )
       mTypeList.insert( mTypeList.at( mTypeList.count() - 1 ), mType );
   } else {
@@ -267,9 +269,9 @@ void AddressEditWidget::updateName( const QString &name )
 
 void AddressEditWidget::createAddress()
 {
-  AddressEditDialog dialog( this );
-  if ( dialog.exec() ) {
-    const KABC::Address address = dialog.address();
+  AutoQPointer<AddressEditDialog> dialog = new AddressEditDialog( this );
+  if ( dialog->exec() ) {
+    const KABC::Address address = dialog->address();
     fixPreferredAddress( address );
     mAddressList.append( address );
     mAddressSelectionWidget->setAddresses( mAddressList );
@@ -282,10 +284,10 @@ void AddressEditWidget::createAddress()
 
 void AddressEditWidget::editAddress()
 {
-  AddressEditDialog dialog( this );
-  dialog.setAddress( mAddressSelectionWidget->currentAddress() );
-  if ( dialog.exec() ) {
-    const KABC::Address address = dialog.address();
+  AutoQPointer<AddressEditDialog> dialog = new AddressEditDialog( this );
+  dialog->setAddress( mAddressSelectionWidget->currentAddress() );
+  if ( dialog->exec() ) {
+    const KABC::Address address = dialog->address();
     fixPreferredAddress( address );
     mAddressList[ mAddressSelectionWidget->currentIndex() ] = address;
     mAddressSelectionWidget->setAddresses( mAddressList );

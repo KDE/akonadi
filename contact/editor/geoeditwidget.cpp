@@ -21,6 +21,8 @@
 
 #include "geoeditwidget.h"
 
+#include "autoqpointer_p.h"
+
 #include <kabc/addressee.h>
 #include <kabc/geo.h>
 #include <kcombobox.h>
@@ -155,9 +157,9 @@ void GeoEditWidget::updateView()
 
 void GeoEditWidget::changeClicked()
 {
-  GeoDialog dlg( mCoordinates, this );
-  if ( dlg.exec() ) {
-    mCoordinates = dlg.coordinates();
+  AutoQPointer<GeoDialog> dlg = new GeoDialog( mCoordinates, this );
+  if ( dlg->exec() ) {
+    mCoordinates = dlg->coordinates();
     updateView();
   }
 }
