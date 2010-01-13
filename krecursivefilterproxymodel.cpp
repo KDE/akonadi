@@ -115,8 +115,6 @@ void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &sou
     return;
   }
 
-  int start = -1;
-  int end = -1;
   bool requireRow = false;
   for (int row = source_top_left.row(); row <= source_bottom_right.row(); ++row)
     if (q->filterAcceptsRow(row, source_parent))
@@ -138,7 +136,6 @@ void KRecursiveFilterProxyModelPrivate::refreshAscendantMapping(const QModelInde
   Q_ASSERT(index.isValid());
   QModelIndex lastAscendant = index;
   QModelIndex sourceAscendant = index.parent();
-  int lastRow;
   // We got a matching descendant, so find the right place to insert the row.
   // We need to tell the QSortFilterProxyModel that the first child between an existing row in the model
   // has changed data so that it will get a mapping.
@@ -226,8 +223,6 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelI
 
 void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
 {
-  Q_Q(KRecursiveFilterProxyModel);
-
   if (completeRemove)
   {
     completeRemove = false;
@@ -285,8 +280,6 @@ bool KRecursiveFilterProxyModel::acceptRow(int sourceRow, const QModelIndex& sou
 
 void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 {
-  Q_D(KRecursiveFilterProxyModel);
-
   // Standard disconnect.
   disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
       this, SLOT(sourceDataChanged(QModelIndex,QModelIndex)));

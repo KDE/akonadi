@@ -742,6 +742,8 @@ QModelIndex KDescendantsProxyModel::parent(const QModelIndex& proxyIndex) const
 
 int KDescendantsProxyModel::columnCount(const QModelIndex &index) const
 {
+  Q_UNUSED( index );
+
   if (!sourceModel())
     return 0;
 
