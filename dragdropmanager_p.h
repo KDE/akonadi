@@ -54,8 +54,15 @@ class DragDropManager
      */
     void startDrag( Qt::DropActions supportedActions );
 
+    /**
+     * Sets whether to @p show the drop action menu on drop operation.
+     */
+    void setShowDropActionMenu( bool show );
+
+    /**
+     * Returns whether the drop action menu is shown on drop operation.
+     */
     bool showDropActionMenu() const;
-    void setShowDropActionMenu( bool );
 
   private:
     Collection currentDropTarget( QDropEvent* event ) const;

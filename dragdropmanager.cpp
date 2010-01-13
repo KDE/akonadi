@@ -275,8 +275,7 @@ bool DragDropManager::showDropActionMenu() const
   return mShowDropActionMenu;
 }
 
-void DragDropManager::setShowDropActionMenu( bool _b)
+void DragDropManager::setShowDropActionMenu( bool show )
 {
-  mShowDropActionMenu = _b;
+  mShowDropActionMenu = show;
 }
-
