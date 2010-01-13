@@ -341,7 +341,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @param collection The moved collection.
      * @param source The previous parent collection.
-     * @param distination The new parent collection.
+     * @param destination The new parent collection.
      *
      * @since 4.4
      */

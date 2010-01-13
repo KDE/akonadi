@@ -256,8 +256,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * is called instead.
          *
          * @param collection The moved collection.
-         * @param source The previous parent collection.
-         * @param destination The new parent collection.
+         * @param collectionSource The previous parent collection.
+         * @param collectionDestination The new parent collection.
          */
         virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &collectionSource,
                                       const Akonadi::Collection &collectionDestination );
@@ -265,7 +265,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
         /**
          * Reimplement to handle changes to existing collections.
          * @param collection The changed collection.
-         * @param partIdentifiers The identifiers of the collection parts that has been changed.
+         * @param changedAttributes The identifiers of the collection parts/attributes that has been changed.
          */
         virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );
     };
@@ -465,10 +465,10 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
 
     /**
      * Emitted when the online state changed.
-     * @param state The online state.
+     * @param online The online state.
      * @since 4.2
      */
-    void onlineChanged( bool b );
+    void onlineChanged( bool online );
 
     /**
      * This signal is emitted whenever the user has accepted the configuration dialog.

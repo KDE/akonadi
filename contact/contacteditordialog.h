@@ -100,8 +100,6 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * Creates a new contact editor dialog with a custom editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param collectionModel The collection model that is used to allow the user
-     *                        to select a target collection for new contacts.
      * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the dialog.
      */

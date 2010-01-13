@@ -85,7 +85,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
     /**
      * Creates a new collection view.
      *
-     * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
+     * @param xmlGuiClient The KXmlGuiClient the view is used in.
      *                     This is needed for the XMLGUI based context menu.
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.

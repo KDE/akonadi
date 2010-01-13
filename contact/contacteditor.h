@@ -98,7 +98,6 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      * Creates a new contact editor with the standard editor widget.
      *
      * @param mode The mode of the editor.
-     * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the editor.
      */
     explicit ContactEditor( Mode mode, QWidget *parent = 0 );

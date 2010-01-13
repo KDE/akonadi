@@ -461,7 +461,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * executed by calling the specified method. With the priority parameter the
      * time of execution of the Task can be influenced. @see SchedulePriority
      * @param receiver The object the slot should be called on.
-     * @param methodName The name of the method (and only the name, not signature, not SLOT(...) macro),
+     * @param method The name of the method (and only the name, not signature, not SLOT(...) macro),
      * that should be called to execute this task. The method has to be a slot and take a QVariant as
      * argument.
      * @param argument A QVariant argument passed to the method specified above. Use this to pass task
