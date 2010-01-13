@@ -304,7 +304,7 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
 
   QModelIndexList list;
   QModelIndex proxyIndex;
-  foreach ( const QModelIndex idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
+  foreach ( const QModelIndex &idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
     proxyIndex = mapFromSource( idx );
     if ( proxyIndex.isValid() )
       list << proxyIndex;

@@ -161,7 +161,7 @@ QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int r
 
     QModelIndexList list;
     QModelIndex proxyIndex;
-    foreach(const QModelIndex idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
+    foreach(const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
     {
       proxyIndex = mapFromSource(idx);
       if (proxyIndex.isValid())
