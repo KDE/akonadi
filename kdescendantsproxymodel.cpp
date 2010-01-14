@@ -488,6 +488,7 @@ void KDescendantsProxyModelPrivate::sourceRowsAboutToBeMoved(const QModelIndex &
   int d = descendedRow(destParent);
 
   bool allowMove = q->beginMoveRows(QModelIndex(), c+1+start, c+1+end, QModelIndex(), d+1+destRow);
+  Q_UNUSED(allowMove);
   Q_ASSERT(allowMove);
 }
 

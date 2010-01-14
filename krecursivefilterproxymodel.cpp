@@ -41,6 +41,7 @@ public:
     bool success = QMetaObject::invokeMethod(q, "_q_sourceDataChanged", Qt::DirectConnection,
         Q_ARG(QModelIndex, topLeft),
         Q_ARG(QModelIndex, bottomRight));
+    Q_UNUSED(success);
     Q_ASSERT(success);
   }
 
@@ -51,7 +52,8 @@ public:
         Q_ARG(QModelIndex, source_parent),
         Q_ARG(int, start),
         Q_ARG(int, end));
-   Q_ASSERT(success);
+    Q_UNUSED(success);
+    Q_ASSERT(success);
   }
 
   inline void invokeRowsAboutToBeInserted(const QModelIndex &source_parent, int start, int end)
@@ -61,6 +63,7 @@ public:
         Q_ARG(QModelIndex, source_parent),
         Q_ARG(int, start),
         Q_ARG(int, end));
+    Q_UNUSED(success);
     Q_ASSERT(success);
   }
 
@@ -71,6 +74,7 @@ public:
         Q_ARG(QModelIndex, source_parent),
         Q_ARG(int, start),
         Q_ARG(int, end));
+    Q_UNUSED(success);
     Q_ASSERT(success);
   }
 
@@ -81,6 +85,7 @@ public:
         Q_ARG(QModelIndex, source_parent),
         Q_ARG(int, start),
         Q_ARG(int, end));
+    Q_UNUSED(success);
     Q_ASSERT(success);
   }
 

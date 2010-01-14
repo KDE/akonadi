@@ -53,6 +53,7 @@ FakeSession::FakeSession(const QByteArray& sessionId, QObject* parent)
 
 void FakeSession::firstListJobResult(QList<Collection::List> collectionChunks)
 {
+  Q_UNUSED( collectionChunks );
   // write the collection chunks to the socket.
 }
 
