@@ -47,12 +47,12 @@ class SetupTest : public QObject
 
   Q_SIGNALS:
     void setupDone();
-    void serverExited();
+    void serverExited(int exitCode);
 
   private Q_SLOTS:
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void resourceSynchronized( const QString &agentId );
-    void slotAkonadiDaemonProcessFinished();
+    void slotAkonadiDaemonProcessFinished( int exitCode );
 
   private:
     bool clearEnvironment();

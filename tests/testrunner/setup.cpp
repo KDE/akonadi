@@ -471,7 +471,7 @@ void SetupTest::restartAkonadiServer()
   startAkonadiDaemon();
   // from here on, the server exiting is an error again
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
-           this, SLOT(slotAkonadiDaemonProcessFinished()));
+           this, SLOT(slotAkonadiDaemonProcessFinished(int)));
 }
 
 
@@ -494,8 +494,8 @@ QString SetupTest::basePath() const
   return sysTempDirPath + QDir::separator() + tempDir + QDir::separator();
 }
 
-void SetupTest::slotAkonadiDaemonProcessFinished()
+void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
 {
   kWarning() << "Akonadi server process was terminated externally!";
-  emit serverExited();
+  emit serverExited( exitCode );
 }
