@@ -397,7 +397,7 @@ SetupTest::SetupTest() :
 
   mAkonadiDaemonProcess = new KProcess( this );
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
-           this, SLOT(slotAkonadiDaemonProcessFinished()));
+           this, SLOT(slotAkonadiDaemonProcessFinished(int)));
 
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }
