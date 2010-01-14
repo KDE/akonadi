@@ -56,11 +56,7 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultCleanShutdownCommand;
 
   defaultDbName = QLatin1String( "akonadi" );
-#ifndef Q_WS_WIN // We assume that MySQL is running as service on Windows
   const bool defaultInternalServer = true;
-#else
-  const bool defaultInternalServer = false;
-#endif
 #ifdef MYSQLD_EXECUTABLE
   defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
@@ -76,9 +72,13 @@ bool DbConfigMysql::init( QSettings &settings )
 
   const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqladmin" ), mysqldSearchPath );
   if ( !mysqladminPath.isEmpty() ) {
+#ifndef Q_OS_WIN
     defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --socket=%2/mysql.socket" )
                                       .arg( mysqladminPath )
                                       .arg( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+#else
+    defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --shared-memory" ).arg( mysqladminPath );
+#endif
   }
 
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
@@ -238,6 +238,8 @@ void DbConfigMysql::startInternalServer()
   arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
 #ifndef Q_WS_WIN
   arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+#else
+  arguments << QString::fromLatin1( "--shared-memory" );
 #endif
 
   mDatabaseProcess = new QProcess;
