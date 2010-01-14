@@ -43,8 +43,9 @@ DateView::DateView( QWidget *parent )
 
 void DateView::contextMenuEvent( QContextMenuEvent *event )
 {
-  if(text().isEmpty())
+  if ( text().isEmpty() )
     return;
+
   QMenu menu;
   menu.addAction( i18n( "Remove" ), this, SLOT( emitSignal() ) );
 
