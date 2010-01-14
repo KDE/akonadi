@@ -116,7 +116,11 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
     if ( instance()->mDataDirs.isEmpty() ) {
       QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
 
+#ifdef Q_OS_WIN
+      const QString prefixDataDir = QLatin1String( AKONADIPREFIX "/" AKONADIDATA );
+#else
       const QString prefixDataDir = QLatin1String( AKONADIDATA );
+#endif
       if ( !dataDirs.contains( prefixDataDir ) ) {
         dataDirs << prefixDataDir;
       }
@@ -142,7 +146,11 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
     if ( instance()->mConfigDirs.isEmpty() ) {
       QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
 
+#ifdef Q_OS_WIN
+      const QString prefixConfigDir = QLatin1String( AKONADIPREFIX "/" AKONADICONFIG );
+#else
       const QString prefixConfigDir = QLatin1String( AKONADICONFIG );
+#endif
       if ( !configDirs.contains( prefixConfigDir ) ) {
         configDirs << prefixConfigDir;
       }

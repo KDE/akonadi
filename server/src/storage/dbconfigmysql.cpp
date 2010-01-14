@@ -84,7 +84,9 @@ bool DbConfigMysql::init( QSettings &settings )
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
   if ( mInternalServer ) {
     const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+#if !(defined Q_WS_WIN)
     defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
+#endif
   }
 
   // read settings for current driver
@@ -234,7 +236,9 @@ void DbConfigMysql::startInternalServer()
   QStringList arguments;
   arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
   arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
+#ifndef Q_WS_WIN
   arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+#endif
 
   mDatabaseProcess = new QProcess;
   mDatabaseProcess->start( mysqldPath, arguments );
