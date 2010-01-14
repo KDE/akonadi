@@ -34,6 +34,11 @@ using namespace Akonadi;
 
 QTEST_AKONADIMAIN( AutoIncrementTest, NoGUI )
 
+static bool isMySQLEnvironment()
+{
+  return (qgetenv( "TESTRUNNER_DB_ENVIRONMENT" ) == "mysql");
+}
+
 void AutoIncrementTest::initTestCase()
 {
   QVERIFY( Control::start() );
@@ -94,7 +99,9 @@ void AutoIncrementTest::testItemAutoIncrement()
   AKVERIFYEXEC( job );
   Item newItem = job->item();
 
-  QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
+  if ( isMySQLEnvironment() )
+    QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
+
   QVERIFY( newItem.id() > lastId );
   lastId = newItem.id();
 }
@@ -128,7 +135,9 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   AKVERIFYEXEC( job );
   Collection newCollection = job->collection();
 
-  QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
+  if ( isMySQLEnvironment() )
+    QEXPECT_FAIL( "", "Server bug: http://bugs.mysql.com/bug.php?id=199", Continue );
+
   QVERIFY( newCollection.id() > lastId );
   lastId = newCollection.id();
 }
