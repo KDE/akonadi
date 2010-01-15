@@ -130,8 +130,10 @@ bool DbInitializer::checkTable( const QDomElement &element )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
         if ( entry.second.contains( QLatin1String( "BINARY" ) ) )
           entry.second.remove( QLatin1String( "BINARY" ) );
-        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) )
+        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
           entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
+          entry.second.replace(QLatin1String("VARCHAR(255)"), QLatin1String("BYTEA"));
+        }
       }
       // special cases for MySQL
       else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
@@ -370,7 +372,7 @@ bool DbInitializer::hasIndex(const QString & tableName, const QString & indexNam
     statement  = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
     statement += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
     statement += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
-  } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") || mDatabase.driverName() == QLatin1String("QSQLITE3") ) {
+  } else if ( mDatabase.driverName() == QLatin1String("QSQLITE") ) {
     statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
   } else {
     qFatal( "Implement index support for your database!" );
