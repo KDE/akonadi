@@ -355,9 +355,9 @@ KABC::Geo GeoDialog::coordinates() const
 void GeoDialog::cityInputChanged()
 {
   if ( mCityCombo->currentIndex() != 0 ) {
-    GeoData data = mGeoDataMap[ mCityCombo->currentText() ];
-    mCoordinates.setLatitude( data.latitude );
-    mCoordinates.setLongitude( data.longitude );
+    GeoData geoData = mGeoDataMap[ mCityCombo->currentText() ];
+    mCoordinates.setLatitude( geoData.latitude );
+    mCoordinates.setLongitude( geoData.longitude );
   } else {
     mCoordinates.setLatitude( 0 );
     mCoordinates.setLongitude( 0 );
@@ -492,12 +492,12 @@ void GeoDialog::loadCityList()
         if ( pos < 0 )
           pos = c.indexOf( QLatin1Char( '-' ), 1 );
         if ( pos > 0 ) {
-          GeoData data;
-          data.latitude = calculateCoordinate( c.left( pos ) );
-          data.longitude = calculateCoordinate( c.mid( pos ) );
-          data.country = country;
+          GeoData geoData;
+          geoData.latitude = calculateCoordinate( c.left( pos ) );
+          geoData.longitude = calculateCoordinate( c.mid( pos ) );
+          geoData.country = country;
 
-          mGeoDataMap.insert( n, data );
+          mGeoDataMap.insert( n, geoData );
         }
       }
     }

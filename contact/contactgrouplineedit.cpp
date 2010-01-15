@@ -56,12 +56,12 @@ bool ContactGroupLineEdit::containsReference() const
   return mContainsReference;
 }
 
-void ContactGroupLineEdit::setContactData( const KABC::ContactGroup::Data &data )
+void ContactGroupLineEdit::setContactData( const KABC::ContactGroup::Data &groupData )
 {
-  mContactData = data;
+  mContactData = groupData;
   mContainsReference = false;
 
-  setText( QString::fromLatin1( "%1 <%2>" ).arg( data.name() ).arg( data.email() ) );
+  setText( QString::fromLatin1( "%1 <%2>" ).arg( groupData.name() ).arg( groupData.email() ) );
 }
 
 KABC::ContactGroup::Data ContactGroupLineEdit::contactData() const
@@ -72,11 +72,11 @@ KABC::ContactGroup::Data ContactGroupLineEdit::contactData() const
   if ( fullName.isEmpty() || email.isEmpty() )
     return KABC::ContactGroup::Data();
 
-  KABC::ContactGroup::Data data( mContactData );
-  data.setName( fullName );
-  data.setEmail( email );
+  KABC::ContactGroup::Data groupData( mContactData );
+  groupData.setName( fullName );
+  groupData.setEmail( email );
 
-  return data;
+  return groupData;
 }
 
 void ContactGroupLineEdit::setContactReference( const KABC::ContactGroup::ContactReference &reference )
