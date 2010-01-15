@@ -223,9 +223,9 @@ void MonitorPrivate::updatePendingStatistics( const NotificationMessage &msg )
 
 void MonitorPrivate::slotSessionDestroyed( QObject * object )
 {
-  Session* session = qobject_cast<Session*>( object );
-  if ( session )
-    sessions.removeAll( session->sessionId() );
+  Session* objectSession = qobject_cast<Session*>( object );
+  if ( objectSession )
+    sessions.removeAll( objectSession->sessionId() );
 }
 
 void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )

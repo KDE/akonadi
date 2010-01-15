@@ -179,8 +179,8 @@ void CollectionView::dragMoveEvent( QDragMoveEvent * event )
 
   // Check if the collection under the cursor accepts this data type
   const QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
-  const QMimeData *data = event->mimeData();
-  const KUrl::List urls = KUrl::List::fromMimeData( data );
+  const QMimeData *mimeData = event->mimeData();
+  const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
   foreach( const KUrl &url, urls ) {
 
     const Collection collection = Collection::fromUrl( url );

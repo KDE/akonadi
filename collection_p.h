@@ -71,11 +71,11 @@ class Akonadi::CollectionPrivate : public EntityPrivate
 
     static Collection newRoot()
     {
-      Collection root( 0 );
+      Collection rootCollection( 0 );
       QStringList types;
       types << Collection::mimeType();
-      root.setContentMimeTypes( types );
-      return root;
+      rootCollection.setContentMimeTypes( types );
+      return rootCollection;
     }
 
     QString name;

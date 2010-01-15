@@ -243,10 +243,10 @@ class CollectionSync::Private
       to see if any of them can be processed by now. If not, they are moved to
       the closest ancestor available.
     */
-    void processPendingRemoteNodes( LocalNode *localRoot )
+    void processPendingRemoteNodes( LocalNode *_localRoot )
     {
-      QList<RemoteNode*> pendingRemoteNodes( localRoot->pendingRemoteNodes );
-      localRoot->pendingRemoteNodes.clear();
+      QList<RemoteNode*> pendingRemoteNodes( _localRoot->pendingRemoteNodes );
+      _localRoot->pendingRemoteNodes.clear();
       QHash<LocalNode*, QList<RemoteNode*> > pendingCreations;
       foreach ( RemoteNode *remoteNode, pendingRemoteNodes ) {
         // step 1: see if we have a matching local node already
