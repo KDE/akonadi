@@ -255,3 +255,4 @@ void ItemFetchTest::testAncestorRetrieval()
   QCOMPARE( c3, Collection::root() );
 
 }
+
