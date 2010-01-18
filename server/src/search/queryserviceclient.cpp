@@ -180,7 +180,7 @@ bool Nepomuk::Search::QueryServiceClient::blockingQuery( const QString& q )
 void Nepomuk::Search::QueryServiceClient::close()
 {
     if ( d->queryInterface ) {
-        qDebug();
+        qDebug() << Q_FUNC_INFO;
         d->queryInterface->close();
         delete d->queryInterface;
         d->queryInterface = 0;
