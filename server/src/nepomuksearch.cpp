@@ -42,13 +42,9 @@ static qint64 uriToItemId( const QUrl &url )
 NepomukSearch::NepomukSearch( QObject* parent )
   : QObject( parent ), mSearchService( 0 )
 {
-  if ( !Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
-    qWarning() << "Nepomuk QueryServer interface not available!";
-  } else {
-    mSearchService = new Nepomuk::Search::QueryServiceClient( this );
-    connect( mSearchService, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
-             this, SLOT( hitsAdded( const QList<Nepomuk::Search::Result>& ) ) );
-  }
+  mSearchService = new Nepomuk::Search::QueryServiceClient( this );
+  connect( mSearchService, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
+           this, SLOT( hitsAdded( const QList<Nepomuk::Search::Result>& ) ) );
 }
 
 NepomukSearch::~NepomukSearch()
@@ -66,7 +62,10 @@ QStringList NepomukSearch::search( const QString &query )
     return QStringList();
   }
 
-  mSearchService->blockingQuery( query );
+  if ( !mSearchService->blockingQuery( query ) ) {
+    qWarning() << Q_FUNC_INFO << "Calling blockingQuery() failed!";
+    return QStringList();
+  }
 
   return mMatchingUIDs.toList();
 }
