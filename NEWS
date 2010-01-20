@@ -1,3 +1,7 @@
+1.3.0                         20-January-2010
+---------------------------------------------
+- Work around D-Bus bug that could cause SEARCH to hang.
+
 1.2.90                        06-January-2010
 ---------------------------------------------
 - Fix change notifications for search results.
