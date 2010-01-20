@@ -43,11 +43,15 @@ class ContactGroupExpandJob::Private
       if ( !items.isEmpty() ) {
         const QString email = fetchJob->property( "preferredEmail" ).toString();
 
-        KABC::Addressee contact = items.first().payload<KABC::Addressee>();
-        if ( !email.isEmpty() )
-          contact.insertEmail( email, true );
+        const Item item = items.first();
+        if ( item.hasPayload<KABC::Addressee>() ) {
+          KABC::Addressee contact = item.payload<KABC::Addressee>();
+          if ( !email.isEmpty() )
+            contact.insertEmail( email, true );
 
-        mContacts.append( contact );
+          mContacts.append( contact );
+        } else
+          kWarning() << "Contact for Akonadi item" << item.id() << "does not exist anymore!";
       }
 
       mFetchCount--;
