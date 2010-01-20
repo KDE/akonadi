@@ -89,6 +89,7 @@ ContactViewer::ContactViewer( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setMargin( 0 );
 
   d->mBrowser = new TextBrowser;
   d->mBrowser->setNotifyClick( true );
