@@ -21,8 +21,8 @@
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QStringList>
+#include <QDBusConnection>
 
-class QDBusConnection;
 class QIODevice;
 class KProcess;
 class QSignalMapper;
@@ -74,7 +74,7 @@ class SetupTest : public QObject
   private:
     KProcess *mAkonadiDaemonProcess;
     int mDBusDaemonPid;
-    QDBusConnection *mInternalBus;
+    QDBusConnection mInternalBus;
     QStringList mPendingAgents;
     QStringList mPendingResources;
     QStringList mPendingSyncs;

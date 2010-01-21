@@ -30,7 +30,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
 #include <QSignalMapper>
-#include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
@@ -173,16 +172,19 @@ void SetupTest::stopDBusDaemon( int dbuspid )
 
 void SetupTest::registerWithInternalDBus( const QString &address )
 {
-  mInternalBus = new QDBusConnection( QDBusConnection::connectToBus( address, QLatin1String( "InternalBus" ) ) );
-  mInternalBus->registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
-  mInternalBus->registerObject( QLatin1String( "/MainApplication" ),
+  // FIXME: make this work on Windows, address is always empty there as dbus-launch does not return any environment variables like on Unix there
+#ifndef Q_OS_WIN
+  mInternalBus = QDBusConnection::connectToBus( address, QLatin1String( "InternalBus" ) );
+#endif
+  mInternalBus.registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
+  mInternalBus.registerObject( QLatin1String( "/MainApplication" ),
                                 KApplication::kApplication(),
                                 QDBusConnection::ExportScriptableSlots |
                                 QDBusConnection::ExportScriptableProperties |
                                 QDBusConnection::ExportAdaptors );
-  mInternalBus->registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
+  mInternalBus.registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 
-  connect( mInternalBus->interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
+  connect( mInternalBus.interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
            this, SLOT( dbusNameOwnerChanged( QString, QString, QString ) ) );
 }
 
@@ -214,7 +216,7 @@ void SetupTest::setupAgents()
   mAgentsCreated = true;
   Config *config = Config::instance();
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
-                            QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), *mInternalBus );
+                            QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), mInternalBus );
 
   const QList<QPair<QString,bool> > agents = config->agents();
   typedef QPair<QString,bool> StringBoolPair;
@@ -275,7 +277,7 @@ void SetupTest::synchronizeResources()
 {
   foreach ( const QString id, mPendingSyncs ) {
     QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1").arg( id ),
-      "/", "org.freedesktop.Akonadi.Resource", *mInternalBus, this );
+      "/", "org.freedesktop.Akonadi.Resource", mInternalBus, this );
     mSyncMapper->setMapping( iface, id );
     connect( iface, SIGNAL(synchronized()), mSyncMapper, SLOT(map()) );
     if ( mPendingSyncs.contains( id ) ) {
@@ -363,6 +365,7 @@ void SetupTest::cleanTempEnvironment()
 }
 
 SetupTest::SetupTest() :
+  mInternalBus( QDBusConnection::sessionBus() ),
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false )
@@ -414,10 +417,10 @@ void SetupTest::shutdown()
     return;
   mShuttingDown = true;
   // check first if the Akonadi server is still running, otherwise D-Bus auto-launch will actually start it here
-  if ( mInternalBus->interface()->isServiceRegistered( "org.freedesktop.Akonadi.Control" ) ) {
+  if ( mInternalBus.interface()->isServiceRegistered( "org.freedesktop.Akonadi.Control" ) ) {
     kDebug() << "Shutting down Akonadi control...";
     QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                                QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), *mInternalBus );
+                                QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
     QDBusReply<void> reply = controlIface.call( "shutdown" );
     if ( !reply.isValid() ) {
       kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
@@ -428,16 +431,16 @@ void SetupTest::shutdown()
     }
 
     // in case we indirectly started KDE processes, stop those before we kill their D-Bus
-    if ( mInternalBus->interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
+    if ( mInternalBus.interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
       QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
-                                   QLatin1String( "org.kde.KLauncher" ), *mInternalBus );
+                                   QLatin1String( "org.kde.KLauncher" ), mInternalBus );
       QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
       if ( !reply.isValid() )
         kDebug() << reply.error();
     }
-    if ( mInternalBus->interface()->isServiceRegistered( "org.kde.kded" ) ) {
+    if ( mInternalBus.interface()->isServiceRegistered( "org.kde.kded" ) ) {
       QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
-                                   QLatin1String( "org.kde.kded" ), *mInternalBus );
+                                   QLatin1String( "org.kde.kded" ), mInternalBus );
       QDBusReply<void> reply = klauncherIface.call( "quit" );
       if ( !reply.isValid() )
         kDebug() << reply.error();
@@ -461,7 +464,7 @@ void SetupTest::restartAkonadiServer()
   kDebug();
   disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
   QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                              QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), *mInternalBus );
+                              QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
   QDBusReply<void> reply = controlIface.call( "shutdown" );
   if ( !reply.isValid() )
     kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
