@@ -97,7 +97,7 @@ void CollectionRequester::Private::_k_slotOpenDialog()
     return;
 
   q->setCollection( dlg->selectedCollection() );
-  emit q->collectionChanged();
+  emit q->collectionChanged( dlg->selectedCollection() );
 }
 
 CollectionRequester::CollectionRequester( QWidget *parent )
@@ -133,7 +133,7 @@ void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
   d->edit->setText( collection.isValid() ? collection.name() : i18n( "no collection" ) );
-  emit collectionChanged();
+  emit collectionChanged( collection );
 }
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )

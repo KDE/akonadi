@@ -120,7 +120,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      * @since 4.5
      * Emitted when the selected collection has changed.
      */
-   void collectionChanged();
+   void collectionChanged( const Akonadi::Collection& collection );
     
   private:
     class Private;
