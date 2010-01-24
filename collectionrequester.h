@@ -115,6 +115,13 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      */
     void setCollection( const Akonadi::Collection& collection );
 
+  Q_SIGNALS:
+    /**
+     * @since 4.5
+     * Emitted when the selected collection has changed.
+     */
+   void collectionChanged();
+    
   private:
     class Private;
     Private * const d;

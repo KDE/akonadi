@@ -97,6 +97,7 @@ void CollectionRequester::Private::_k_slotOpenDialog()
     return;
 
   q->setCollection( dlg->selectedCollection() );
+  emit q->collectionChanged();
 }
 
 CollectionRequester::CollectionRequester( QWidget *parent )
