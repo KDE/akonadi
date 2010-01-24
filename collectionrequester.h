@@ -117,11 +117,14 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
 
   Q_SIGNALS:
     /**
+     * This signal is emitted when the selected collection has changed.
+     *
+     * @param collection The selected collection.
+     *
      * @since 4.5
-     * Emitted when the selected collection has changed.
      */
    void collectionChanged( const Akonadi::Collection& collection );
-    
+
   private:
     class Private;
     Private * const d;
