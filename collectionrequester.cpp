@@ -133,6 +133,7 @@ void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
   d->edit->setText( collection.isValid() ? collection.name() : i18n( "no collection" ) );
+  emit collectionChanged();
 }
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
