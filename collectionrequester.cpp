@@ -132,7 +132,7 @@ Collection CollectionRequester::collection() const
 void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
-  d->edit->setText( collection.isValid() ? collection.name() : i18n( "no collection" ) );
+  d->edit->setText( collection.isValid() ? collection.name() : i18n( "No Folder" ) );
   emit collectionChanged( collection );
 }
 
