@@ -73,16 +73,8 @@ class SessionPrivate;
  * @endcode
  *
  * @warning Using the synchronous method is error prone, use this only
- *          if the asynchronous access is not possible and none of the following
- *          known issues apply:
- *
- *          - exec() must not be called directly from a result slot of another
- *            job in the same Session. This will trigger a dead-lock since the
- *            program won't return from the result slot and thus will never complete
- *            the finishing of the current job, keeping it in the internal queue
- *            and blocking the execution of any following job.
- *          - exec() must not be called from within another event-loop that might
- *            finish before the newly started inner sub-eventloop. This will crash!
+ *          if the asynchronous access is not possible. So the documentation of
+ *          KJob::exec() for more details.
  *
  * Subclasses must reimplement doStart().
  *
@@ -226,6 +218,7 @@ class AKONADI_EXPORT Job : public KCompositeJob
     Q_PRIVATE_SLOT( d_func(), void slotSubJobAboutToStart( Akonadi::Job* ) )
     Q_PRIVATE_SLOT( d_func(), void startNext() )
     Q_PRIVATE_SLOT( d_func(), void signalCreationToJobTracker() )
+    Q_PRIVATE_SLOT( d_func(), void delayedEmitResult() )
     //@endcond
 };
 

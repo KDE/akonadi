@@ -64,7 +64,9 @@ void JobPrivate::handleResponse( const QByteArray & tag, const QByteArray & data
       q->emitResult();
       return;
     } else if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
-      q->emitResult();
+
+      // We can't
+      QTimer::singleShot( 0, q, SLOT( delayedEmitResult() ) );
       return;
     }
   }
@@ -115,6 +117,12 @@ void JobPrivate::signalCreationToJobTracker()
                    << QString::fromLatin1( q->metaObject()->className() );
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobCreated"), argumentList);
   }
+}
+
+void JobPrivate::delayedEmitResult()
+{
+  Q_Q( Job );
+  q->emitResult();
 }
 
 void JobPrivate::startQueued()

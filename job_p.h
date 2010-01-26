@@ -50,6 +50,7 @@ class JobPrivate
     void slotSubJobAboutToStart( Akonadi::Job* );
     void startNext();
     void signalCreationToJobTracker();
+    void delayedEmitResult();
     /**
       Returns a new unique command tag for communication with the backend.
     */
