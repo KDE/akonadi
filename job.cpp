@@ -65,7 +65,11 @@ void JobPrivate::handleResponse( const QByteArray & tag, const QByteArray & data
       return;
     } else if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
 
-      // We can't
+      // We can't use emitResult() here: The slot connected to the result signal might exec()
+      // another job, and therefore this method would never return. That causes the session
+      // to deadlock, since it calls this method and does not continue starting new jobs until
+      // this method finishes. Which would also mean the exec()'d job is never started,, and there-
+      // fore everything deadlocks.
       QTimer::singleShot( 0, q, SLOT( delayedEmitResult() ) );
       return;
     }
