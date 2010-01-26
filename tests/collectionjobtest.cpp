@@ -521,7 +521,7 @@ void CollectionJobTest::testUtf8CollectionName()
   col.parentCollection().setId( res3ColId );
   col.setName( folderName );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
-  QVERIFY( create->exec() );
+  AKVERIFYEXEC( create );
   col = create->collection();
   QVERIFY( col.isValid() );
 
@@ -535,7 +535,7 @@ void CollectionJobTest::testUtf8CollectionName()
   // modify collection
   col.setContentMimeTypes( QStringList( "message/rfc822'" ) );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
-  QVERIFY( modify->exec() );
+  AKVERIFYEXEC( modify );
 
   // collection statistics
   CollectionStatisticsJob *statistics = new CollectionStatisticsJob( col, this );
@@ -546,7 +546,7 @@ void CollectionJobTest::testUtf8CollectionName()
 
   // delete collection
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );
-  QVERIFY( del->exec() );
+  AKVERIFYEXEC( del );
 }
 
 void CollectionJobTest::testMultiList()
