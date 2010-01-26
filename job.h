@@ -73,7 +73,7 @@ class SessionPrivate;
  * @endcode
  *
  * @warning Using the synchronous method is error prone, use this only
- *          if the asynchronous access is not possible. So the documentation of
+ *          if the asynchronous access is not possible. See the documentation of
  *          KJob::exec() for more details.
  *
  * Subclasses must reimplement doStart().
