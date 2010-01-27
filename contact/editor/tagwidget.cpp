@@ -76,7 +76,7 @@ void TagWidget::updateView()
 {
   QString text;
   foreach ( const Nepomuk::Tag &tag, mTags ) {
-    const QString separator = (tag != mTags.last() ? QLatin1String( ", " ) : QString());
+    const QString separator = (tag == mTags.last() ? QString() : QLatin1String( ", " ));
     text += tag.genericLabel() + separator;
   }
 
