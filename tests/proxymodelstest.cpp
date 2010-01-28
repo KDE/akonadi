@@ -66,12 +66,12 @@ void ProxyModelsTest::init()
   m_model.setRowCount( 5 );
   m_model.setColumnCount( 1  );
   m_model.setData( m_model.index( 0, 0, QModelIndex() ), "one" );
-  m_model.setData( m_model.index( 1, 0, QModelIndex() ), "two" );
-  QModelIndex idx = m_model.index( 2, 0, QModelIndex() );
-  m_model.setData( idx, "three" );
+  QModelIndex idx = m_model.index( 1, 0, QModelIndex() );
+  m_model.setData( idx, "two" );
   m_model.insertRows( 0, 1, idx );
   m_model.insertColumns( 0, 1, idx );
   m_model.setData( m_model.index( 0, 0, idx ), "three" );
+  m_model.setData( m_model.index( 2, 0, QModelIndex() ), "three" );
   m_model.setData( m_model.index( 3, 0, QModelIndex() ), "four" );
   m_model.setData( m_model.index( 4, 0, QModelIndex() ), "five" );
 
@@ -90,6 +90,8 @@ void ProxyModelsTest::init()
   QVERIFY( m_krfptest->rowCount( QModelIndex() ) == 4 );
   QCOMPARE( m_krfptest->data( m_krfptest->index( 0, 0 ) ).toString(), QLatin1String("one") );
 
+  QCOMPARE( m_krfp->rowCount( m_krfp->index( 1, 0 ) ), 1 );
+  QCOMPARE( m_krfptest->rowCount( m_krfptest->index( 1, 0 ) ), 0 );
 }
 
 void ProxyModelsTest::testMatch()
@@ -111,6 +113,12 @@ void ProxyModelsTest::testMatch()
     results = m_krfptest->match( m_krfptest->index( 0,0 ), Qt::UserRole+42, "mystuff" );
     QCOMPARE( results.size(), 1 );
 
+    results = m_model.match( QModelIndex(), Qt::DisplayRole, "three" );
+    QCOMPARE( results.size(), 0 );
+    results = m_krfp->match( QModelIndex(), Qt::DisplayRole, "three" );
+    QCOMPARE( results.size(), 0 );
+    results = m_krfptest->match( QModelIndex(), Qt::DisplayRole, "three" );
+    QCOMPARE( results.size(), 0 );
 }
 
 #include "proxymodelstest.moc"
