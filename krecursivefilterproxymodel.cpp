@@ -261,9 +261,6 @@ KRecursiveFilterProxyModel::~KRecursiveFilterProxyModel()
 
 bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
-  Q_ASSERT(sourceModel()->index(sourceRow, 0, sourceParent).isValid());
-  QVariant da = sourceModel()->index(sourceRow, 0, sourceParent).data();
-
   if (acceptRow(sourceRow, sourceParent))
     return true;
 
