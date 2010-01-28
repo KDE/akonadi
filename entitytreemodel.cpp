@@ -851,9 +851,10 @@ QModelIndexList EntityTreeModel::match( const QModelIndex& start, int role, cons
     if ( role == CollectionRole ) {
       const Collection collection = value.value<Collection>();
       id = collection.id();
+    } else {
+      id = value.toLongLong();
     }
 
-    id = value.toLongLong();
     QModelIndexList list;
 
     const Collection collection = d->m_collections.value( id );
