@@ -497,7 +497,7 @@ void GeoDialog::loadCityList()
           geoData.longitude = calculateCoordinate( c.mid( pos ) );
           geoData.country = country;
 
-          mGeoDataMap.insert( i18n( qPrintable ( n ) ).replace( QLatin1Char( '_' ),  QLatin1Char( ' ' ) ), data );
+          mGeoDataMap.insert( i18n( qPrintable ( n ) ).replace( QLatin1Char( '_' ),  QLatin1Char( ' ' ) ), geoData );
         }
       }
     }
