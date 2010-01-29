@@ -78,6 +78,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
   ItemSearchJob::setQuery( query );
 }
 
+void ContactSearchJob::setLimit( int limit )
+{
+  d->mLimit = limit;
+}
+
 KABC::Addressee::List ContactSearchJob::contacts() const
 {
   KABC::Addressee::List contacts;
