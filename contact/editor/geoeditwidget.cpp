@@ -206,6 +206,7 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
   : KDialog( parent ),
     mCoordinates( coordinates )
 {
+  KGlobal::locale()->insertCatalog( QLatin1String( "timezones4" ) );
   setCaption( i18nc( "@title:window", "Coordinate Selection" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
@@ -484,7 +485,6 @@ void GeoDialog::loadCityList()
       pos = name.indexIn(line, pos);
       if ( pos > 0 ) {
         n = line.mid( pos, name.matchedLength() ).trimmed();
-        n.replace( QLatin1Char( '_' ), QLatin1Char( ' ' ) );
       }
 
       if ( !c.isEmpty() && !n.isEmpty() ) {
@@ -497,7 +497,7 @@ void GeoDialog::loadCityList()
           geoData.longitude = calculateCoordinate( c.mid( pos ) );
           geoData.country = country;
 
-          mGeoDataMap.insert( n, geoData );
+          mGeoDataMap.insert( i18n( qPrintable ( n ) ).replace( QLatin1Char( '_' ),  QLatin1Char( ' ' ) ), data );
         }
       }
     }
