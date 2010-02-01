@@ -203,7 +203,7 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelI
 {
   Q_Q(KRecursiveFilterProxyModel);
 
-  if (q->filterAcceptsRow(source_parent.row(), source_parent.parent()))
+  if (source_parent.isValid() && q->filterAcceptsRow(source_parent.row(), source_parent.parent()))
   {
     invokeRowsAboutToBeRemoved(source_parent, start, end);
     completeRemove = true;
@@ -211,7 +211,7 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelI
   }
 
   bool accepted = false;
-  for (int row = start; row < end; ++row)
+  for (int row = start; row <= end; ++row)
   {
     if (q->filterAcceptsRow(row, source_parent))
     {
@@ -223,7 +223,10 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelI
   {
     // All removed rows are already filtered out. We don't care about the signal.
     ignoreRemove = true;
+    return;
   }
+  completeRemove = true;
+  invokeRowsAboutToBeRemoved(source_parent, start, end);
 }
 
 void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &source_parent, int start, int end)
@@ -245,7 +248,8 @@ void KRecursiveFilterProxyModelPrivate::sourceRowsRemoved(const QModelIndex &sou
   // Refresh intermediate rows too.
   // This is needed because QSFPM only invalidates the mapping for the
   // index range given to dataChanged, not its children.
-  refreshAscendantMapping(source_parent, true);
+  if (source_parent.isValid())
+    refreshAscendantMapping(source_parent, true);
 }
 
 KRecursiveFilterProxyModel::KRecursiveFilterProxyModel(QObject* parent)
