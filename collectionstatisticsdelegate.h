@@ -54,7 +54,7 @@ class CollectionStatisticsDelegatePrivate;
  *
  * @endcode
  *
- * @author Thomas McGuire <thomas.mcguire@gmx.net>
+ * @author Thomas McGuire <mcguire@kde.org>
  */
 class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
