@@ -31,6 +31,7 @@
 
 #include "entitytreemodel.h"
 #include "collectionstatistics.h"
+#include "collection.h"
 
 using namespace Akonadi;
 
