@@ -158,6 +158,16 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
     QModelIndex extraBottomRight = mParent->index( bottomRight.row(), mParent->columnCount( parent ) -1, parent );
     mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
     emit mParent->dataChanged( extraTopLeft, extraBottomRight );
+
+    // We get this signal when the statistics of a row changes.
+    // However, we need to emit data changed for the statistics of all ancestor rows too
+    // so that recursive totals can be updated.
+    while ( parent.isValid() )
+    {
+      emit mParent->dataChanged( parent.sibling( parent.row(), mParent->columnCount( parent ) - 1 - 3 ),
+                                 parent.sibling( parent.row(), mParent->columnCount( parent ) - 1 ) );
+      parent = parent.parent();
+    }
     mParent->connect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
   }
 }
