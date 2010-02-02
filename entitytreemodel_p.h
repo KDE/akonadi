@@ -63,8 +63,6 @@ public:
   EntityTreeModelPrivate( EntityTreeModel *parent );
   EntityTreeModel *q_ptr;
 
-//   void collectionStatisticsChanged( Collection::Id, const Akonadi::CollectionStatistics& );
-
   enum RetrieveDepth {
     Base,
     Recursive
@@ -75,7 +73,6 @@ public:
   void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
   void fetchItems( const Collection &collection );
   void collectionsFetched( const Akonadi::Collection::List& );
-//   void resourceTopCollectionsFetched( const Akonadi::Collection::List& );
   void itemsFetched( const Akonadi::Item::List& );
 
   void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& );
