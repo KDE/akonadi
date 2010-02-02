@@ -29,9 +29,18 @@
 #include <QtGui/QStyleOptionViewItemV4>
 #include <QtGui/QTreeView>
 
+#include "entitytreemodel.h"
+#include "collectionstatistics.h"
+
 using namespace Akonadi;
 
 namespace Akonadi {
+
+enum CountType
+{
+  UnreadCount,
+  TotalCount
+};
 
 class CollectionStatisticsDelegatePrivate
 {
@@ -40,8 +49,28 @@ class CollectionStatisticsDelegatePrivate
     bool drawUnreadAfterFolder;
 
     CollectionStatisticsDelegatePrivate( QTreeView *treeView )
-        : parent( treeView ), drawUnreadAfterFolder( false )
+        : parent( treeView ),
+          drawUnreadAfterFolder( false )
     {
+    }
+
+    template<CountType countType>
+    qint64 getCountRecursive( const QModelIndex &index ) const
+    {
+      Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+      CollectionStatistics statistics = collection.statistics();
+      qint64 count = countType == UnreadCount ? statistics.unreadCount() : statistics.count();
+
+      if ( index.model()->hasChildren( index ) )
+      {
+        for ( int row = 0; row < index.model()->rowCount( index ); row++ )
+        {
+          static const int column = 0;
+          count += getCountRecursive<countType>( index.model()->index( row, column, index ) );
+        }
+      }
+      return count;
     }
 };
 
@@ -110,29 +139,28 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     painter->setPen( option.palette.highlightedText().color() );
   }
 
+  Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+  Q_ASSERT(collection.isValid());
+
+  CollectionStatistics statistics = collection.statistics();
+
+  qint64 unreadCount = statistics.unreadCount();
+  qint64 unreadRecursiveCount = d->getCountRecursive<UnreadCount>( index.sibling( index.row(), 0 ) );
+
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
-
-    QVariant unreadCount = index.model()->data( index,
-                           CollectionStatisticsModel::UnreadRole );
-    QVariant unreadRecursiveCount = index.model()->data( index,
-                           CollectionStatisticsModel::RecursiveUnreadRole );
-    Q_ASSERT( unreadCount.type() == QVariant::LongLong );
-    Q_ASSERT( unreadRecursiveCount.type() == QVariant::LongLong );
-
     // Construct the string which will appear after the foldername (with the
     // unread count)
     QString unread;
-    QString unreadCountInChilds = QString::number( unreadRecursiveCount.toLongLong() -
-                                                   unreadCount.toLongLong() );
-    if ( expanded && unreadCount.toLongLong() > 0 )
-      unread = QString( QLatin1String(" (%1)") ).arg( unreadCount.toLongLong() );
+//     qDebug() << expanded << unreadCount << unreadRecursiveCount;
+    if ( expanded && unreadCount > 0 )
+      unread = QString( QLatin1String(" (%1)") ).arg( unreadCount );
     else if ( !expanded ) {
-      if ( unreadCount.toLongLong() != unreadRecursiveCount.toLongLong() )
-        unread = QString( QLatin1String(" (%1 + %2)") ).arg( unreadCount.toString(),
-                                                             unreadCountInChilds );
-      else if ( unreadCount.toLongLong() > 0 )
-        unread = QString( QLatin1String(" (%1)") ).arg( unreadCount.toString() );
+      if ( unreadCount != unreadRecursiveCount )
+        unread = QString( QLatin1String(" (%1 + %2)") ).arg( unreadCount ).arg( unreadRecursiveCount - unreadCount );
+      else if ( unreadCount > 0 )
+        unread = QString( QLatin1String(" (%1)") ).arg( unreadCount );
     }
 
     painter->save();
@@ -180,33 +208,22 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     painter->save();
 
-    int role = 0;
-    if ( index.column() == 1 ) {
-      if ( !expanded )
-        role = CollectionStatisticsModel::RecursiveUnreadRole;
-      else
-        role = CollectionStatisticsModel::UnreadRole;
-    }
-    else if ( index.column() == 2 ) {
-      if ( !expanded )
-        role = CollectionStatisticsModel::RecursiveTotalRole;
-      else
-        role = CollectionStatisticsModel::TotalRole;
-    }
-
-    QVariant sum = index.model()->data( index, role );
-    Q_ASSERT( sum.type() == QVariant::LongLong );
     QStyleOptionViewItem opt = option;
-    if ( index.column() == 1 && sum.toLongLong() > 0 ) {
+
+    QString sumText;
+    if ( index.column() == 1 && ( ( !expanded && unreadRecursiveCount > 0 ) || ( expanded && unreadCount > 0 ) ) ) {
       QFont font = painter->font();
       font.setBold( true );
       painter->setFont( font );
+      sumText = QString::number( expanded ? unreadCount : unreadRecursiveCount );
+    } else {
+
+      qint64 totalCount = statistics.unreadCount();
+      qint64 totalRecursiveCount = d->getCountRecursive<TotalCount>( index.sibling( index.row(), 0 ) );
+      if (index.column() == 2 && ( ( !expanded && totalRecursiveCount > 0 ) || ( expanded && totalCount > 0 ) ) ) {
+        sumText = QString::number( expanded ? totalCount : totalRecursiveCount );
+      }
     }
-    QString sumText;
-    if ( sum.toLongLong() <= 0 )
-      sumText = text;
-    else
-      sumText = sum.toString();
 
     painter->drawText( textRect, Qt::AlignRight, sumText );
     painter->restore();
