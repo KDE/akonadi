@@ -869,14 +869,14 @@ QModelIndexList EntityTreeModel::match( const QModelIndex& start, int role, cons
     return list;
   }
 
-  if ( role == ItemIdRole ) {
+  if ( role == ItemIdRole || role == ItemRole ) {
     Item::Id id;
-    if ( role == CollectionRole ) {
+    if ( role == ItemRole ) {
       const Item item = value.value<Item>();
       id = item.id();
+    } else {
+      id = value.toLongLong();
     }
-
-    id = value.toLongLong();
     QModelIndexList list;
 
     const Item item = d->m_items.value( id );
