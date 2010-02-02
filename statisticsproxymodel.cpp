@@ -213,6 +213,8 @@ QModelIndex Akonadi::StatisticsProxyModel::index( int row, int column, const QMo
 
 QVariant StatisticsProxyModel::data( const QModelIndex & index, int role) const
 {
+  if (!sourceModel())
+    return QVariant();
   if ( role == Qt::DisplayRole && index.column()>=d->sourceColumnCount( index.parent() ) ) {
     const QModelIndex sourceIndex = mapToSource( index.sibling( index.row(), 0 ) );
     Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
