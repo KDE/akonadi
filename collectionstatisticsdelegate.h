@@ -44,17 +44,21 @@ class CollectionStatisticsDelegatePrivate;
  * Example:
  * @code
  *
- * QTreeView *view = new QTreeView( this );
+ * Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView( this );
  *
- * Akonadi::CollectionStatisticsModel *model = new Akonadi::CollectionStatisticsModel( view );
- * view->setModel( model );
+ * Akonadi::StatisticsProxyModel *statisticsProxy = new Akonadi::StatisticsProxyModel( view );
+ * view->setModel( statisticsProxy );
  *
  * Akonadi::CollectionStatisticsDelegate *delegate = new Akonadi::CollectionStatisticsDelegate( view );
  * view->setItemDelegate( delegate );
  *
  * @endcode
  *
- * @author Thomas McGuire <mcguire@kde.org>
+ * @note This proxy model is intended to be used on top of the EntityTreeModel. One of the proxies
+ * between the EntityTreeModel (the root model) and the view must be a StatisticsProxyModel. That
+ * proxy model may appear anywhere in the chain.
+ *
+ * @author Thomas McGuire <thomas.mcguire@gmx.net>
  */
 class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
 {
