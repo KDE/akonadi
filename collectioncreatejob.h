@@ -38,7 +38,7 @@ class CollectionCreateJobPrivate;
  *
  * // create a new top-level collection
  * Akonadi::Collection collection;
- * collection.setParent( Collection::root() );
+ * collection.setParentCollection( Collection::root() );
  * collection.setName( "Events" );
  * collection.setContentMimeTypes( QStringList( "text/calendar" ) );
  *
