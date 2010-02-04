@@ -58,7 +58,7 @@ class CollectionStatisticsDelegatePrivate
     template<CountType countType>
     qint64 getCountRecursive( const QModelIndex &index ) const
     {
-      Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
       Q_ASSERT( collection.isValid() );
       CollectionStatistics statistics = collection.statistics();
       qint64 count = countType == UnreadCount ? statistics.unreadCount() : statistics.count();
