@@ -39,7 +39,7 @@ class ResourceManager : public QObject
     ResourceManager( QObject *parent = 0 );
 
   public Q_SLOTS:
-    void addResourceInstance( const QString &name, const QStringList &capabilites );
+    void addResourceInstance( const QString &name, const QStringList &capabilities );
     void removeResourceInstance( const QString &name );
 
   private:

@@ -80,7 +80,7 @@ class HandlerHelper
 
     /**
       Parse cache policy and update the given Collection object accoordingly.
-      @param changed Indicates wether or not the cache policy already available in @p col
+      @param changed Indicates whether or not the cache policy already available in @p col
       has actually changed
       @todo Error handling.
     */

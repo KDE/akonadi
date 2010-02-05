@@ -162,7 +162,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 
     /**
       Adds the given list of positive integer numbers to the set.
-      The list is sorted and splitted into as large as possible intervals.
+      The list is sorted and split into as large as possible intervals.
       No interval merging is performed.
       @param values List of positive integer numbers in arbitrary order
     */

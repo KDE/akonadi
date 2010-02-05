@@ -170,7 +170,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
      * is actually a new item arrival).
      *
      * This function does NOT verify if the item was *really* hidden: this is
-     * responsability of the caller.
+     * responsibility of the caller.
      */
     bool unhidePimItem( PimItem &pimItem );
 

@@ -23,7 +23,7 @@
 /**
   @file capabilites_p.h Shared constants for agent capabilities.
 
-  @todo Fill this file with the missing capabilites.
+  @todo Fill this file with the missing capabilities.
 */
 
 #define AKONADI_AGENT_CAPABILITY_AUTOSTART "Autostart"

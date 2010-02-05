@@ -161,7 +161,7 @@ protected:
    * Attempts to abort the processing of the current item.
    * May be called only if isBusy() returns true and an assertion
    * will remind you of that.
-   * Returns true if the abort request was succesfully sent
+   * Returns true if the abort request was successfully sent
    * (but not necessarily handled by the slave) and false
    * if the request couldn't be sent for some reason.
    */

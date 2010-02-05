@@ -324,12 +324,12 @@ class AgentManager : public QObject
     void save();
 
     /**
-     * Reads the plugin infos from directory.
+     * Reads the plugin information from directory.
      */
     void readPluginInfos();
 
     /**
-     * Reads the plugin infos from directory.
+     * Reads the plugin information from directory.
      *
      * @param directory the directory to get plugin information from
      */

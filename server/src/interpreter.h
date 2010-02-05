@@ -47,7 +47,7 @@ class AKONADIPRIVATE_EXPORT SearchInterpreterItem
     /**
      * Creates a new solver item which combines the given child items by a given relation.
      *
-     * Ownership of the child items is transfered to the item.
+     * Ownership of the child items is transferred to the item.
      */
     SearchInterpreterItem( Relation relation );
 

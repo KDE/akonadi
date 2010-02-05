@@ -63,9 +63,9 @@ namespace Akonadi {
   The @c filter-list is used to restrict the listing to collection of a specific
   resource or content type.
 
-  The @c option-list allows to specifiy the response content to some extend:
+  The @c option-list allows to specify the response content to some extend:
   - @c STATISTICS (boolean) allows to include the collection statistics (see Status)
-  - @c ANCESTORDEPTH (numeric) allows you to specifiy the number of ancestor nodes that
+  - @c ANCESTORDEPTH (numeric) allows you to specify the number of ancestor nodes that
     should be included additionally to the @c parent-id included anyway.
     Possible values are @c 0 (the default), @c 1 for the direct parent node and @c INF for all,
     terminating with the root collection.
