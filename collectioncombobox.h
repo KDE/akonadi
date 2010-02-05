@@ -117,6 +117,12 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
      */
     Akonadi::Collection currentCollection() const;
 
+    /**
+     * Exclude resources type (as virtual collection)
+     * @since 4.5
+     */
+    void addExcludeResourcesType( const QStringList &resourcesList );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the current selection

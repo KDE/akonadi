@@ -31,6 +31,7 @@
 #include <akonadi/session.h>
 
 #include "kdescendantsproxymodel_p.h"
+#include "collectionutils_p.h"
 
 #include <QtCore/QAbstractItemModel>
 
@@ -158,6 +159,11 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
     return modelIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Collection>();
   else
     return Akonadi::Collection();
+}
+
+void CollectionComboBox::addExcludeResourcesType( const QStringList &exclude )
+{
+  d->mMimeTypeFilterModel->addExcludeResourcesType( exclude );
 }
 
 #include "collectioncombobox.moc"
