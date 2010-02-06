@@ -119,6 +119,10 @@ void ProxyModelsTest::testMatch()
     QCOMPARE( results.size(), 0 );
     results = m_krfptest->match( QModelIndex(), Qt::DisplayRole, "three" );
     QCOMPARE( results.size(), 0 );
+
+    const QModelIndex index = m_model.index( 0, 0, QModelIndex() );
+    results = m_model.match( index, Qt::DisplayRole, "three", -1, Qt::MatchRecursive | Qt::MatchStartsWith | Qt::MatchWrap );
+    QCOMPARE( results.size(), 2 );
 }
 
 #include "proxymodelstest.moc"
