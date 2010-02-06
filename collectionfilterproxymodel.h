@@ -100,10 +100,13 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      */
     void addExcludeResourcesType( const QStringList &resourcesList );
 
+    /**
+     * @since 4.5
+     */
     QStringList excludeResourcesType() const;
 
   protected:
-    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;
+    virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
 
   private:
     //@cond PRIVATE
