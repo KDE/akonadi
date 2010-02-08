@@ -231,6 +231,10 @@ void AgentBasePrivate::init()
   KGlobal::ref();
   KGlobal::setAllowQuit( true );
 
+  // disable session management
+  if ( KApplication::kApplication() )
+    KApplication::kApplication()->disableSessionManagement();
+
   QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
 }
 
@@ -430,8 +434,6 @@ AgentBase::AgentBase( const QString & id )
   sAgentBase = this;
   d_ptr->mId = id;
   d_ptr->init();
-  if ( KApplication::kApplication() )
-    KApplication::kApplication()->disableSessionManagement();
 }
 
 AgentBase::AgentBase( AgentBasePrivate* d, const QString &id ) :
