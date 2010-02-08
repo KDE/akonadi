@@ -105,9 +105,10 @@ class DebugPrivate
       return QDebug( fileStream );
     }
 
-    void setName( const QString &baseName )
+    void setName( const QString &appName )
     {
-      name = baseName;
+      // Keep only the executable name, e.g. akonadi_control
+      name = appName.mid( appName.lastIndexOf( QLatin1Char('/') ) + 1 );
       fileStream->setFileName( errorLogFileName() );
     }
 
@@ -133,10 +134,10 @@ QDebug akDebug()
   return sInstance()->stream( QtDebugMsg );
 }
 
-void akInit( const QString &baseName )
+void akInit( const QString &appName )
 {
   AkonadiCrash::init();
-  sInstance()->setName( baseName );
+  sInstance()->setName( appName );
 
   QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
   if ( infoOld.exists() ) {

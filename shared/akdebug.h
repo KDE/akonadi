@@ -39,9 +39,9 @@ QDebug akError();
 QDebug akDebug();
 
 /**
- * Rotate error logs.
+ * Init and rotate error logs.
  */
-void akInit( const QString &baseName );
+void akInit( const QString &appName );
 
 /**
  * Returns the contents of @p name environment variable if it is defined,
