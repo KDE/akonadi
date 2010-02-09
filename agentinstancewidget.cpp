@@ -120,6 +120,7 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
   d->mView->setItemDelegate( new AgentInstanceWidgetDelegate( d->mView ) );
   d->mView->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
   d->mView->setAlternatingRowColors( true );
+  d->mView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   layout->addWidget( d->mView );
 
   d->mModel = new AgentInstanceModel( this );
@@ -154,6 +155,29 @@ AgentInstance AgentInstanceWidget::currentAgentInstance() const
 
   return index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 }
+
+QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
+{
+  QList<AgentInstance> list;
+  QItemSelectionModel *selectionModel = d->mView->selectionModel();
+  if ( !selectionModel )
+    return list;
+
+  QModelIndexList indexes = selectionModel->selection().indexes();
+
+  foreach (const QModelIndex &index, indexes )
+  {
+    list.append( index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>() );
+  }
+
+  return list;
+}
+
+QAbstractItemView* AgentInstanceWidget::view() const
+{
+  return d->mView;
+}
+
 
 AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const
 {

@@ -24,6 +24,7 @@
 
 #include <QtGui/QWidget>
 
+class QAbstractItemView;
 namespace Akonadi {
 
 class AgentInstance;
@@ -85,10 +86,22 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     AgentInstance currentAgentInstance() const;
 
     /**
+     * Returns the selected agent instances.
+     * @since 4.5
+     */
+    QList<AgentInstance> selectedAgentInstances() const;
+
+    /**
       Returns the agent filter proxy model, use this to filter by
       agent mimetype or capabilities.
     */
     AgentFilterProxyModel* agentFilterProxyModel() const;
+
+    /**
+     * Returns the view used in the widget.
+     * @since 4.5
+     */
+    QAbstractItemView* view() const;
 
   Q_SIGNALS:
     /**
