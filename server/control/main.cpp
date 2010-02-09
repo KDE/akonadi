@@ -52,8 +52,14 @@ int main( int argc, char **argv )
   app.setDescription( "Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi." );
   app.parseCommandLine();
 
-  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) )
-    akFatal() << "Unable to register service: " << QDBusConnection::sessionBus().lastError().message();
+  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
+    // We couldn't register. Most likely, it's already running.
+    const QString lastError = QDBusConnection::sessionBus().lastError().message();
+    if (lastError.isEmpty())
+      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "Maybe it's already running?";
+    else
+      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "Error was:" << lastError;
+  }
 
   new ControlManager;
 
