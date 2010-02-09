@@ -40,21 +40,34 @@ namespace {
     {
     public:
         QDBusConnectionPerThreadHelper()
-            : m_counter( 0 ) {
+            : m_connection( QDBusConnection::connectToBus(
+                                QDBusConnection::SessionBus,
+                                QString::fromLatin1("NepomukQueryServiceConnection%1").arg(newNumber()) ) )
+        {
+        }
+        ~QDBusConnectionPerThreadHelper() {
+            QDBusConnection::disconnectFromBus( m_connection.name() );
         }
 
-        QDBusConnection newConnection() {
-            QMutexLocker lock( &m_mutex );
-            return QDBusConnection::connectToBus( QDBusConnection::SessionBus,
-                                                  QString::fromLatin1("NepomukQueryServiceConnection%1").arg(++m_counter) );
-        }
+        static QDBusConnection threadConnection();
 
     private:
-        int m_counter;
-        QMutex m_mutex;
+        int newNumber() {
+            return m_counter.fetchAndAddAcquire(1);
+        }
+        QAtomicInt m_counter;
+        QDBusConnection m_connection;
     };
 
-    Q_GLOBAL_STATIC(QDBusConnectionPerThreadHelper, s_globalDBusConnectionPerThreadHelper)
+    QThreadStorage<QDBusConnectionPerThreadHelper *> s_perThreadConnection;
+
+    QDBusConnection QDBusConnectionPerThreadHelper::threadConnection()
+    {
+        if (!s_perThreadConnection.hasLocalData()) {
+            s_perThreadConnection.setLocalData(new QDBusConnectionPerThreadHelper);
+        }
+        return s_perThreadConnection.localData()->m_connection;
+    }
 }
 
 
@@ -64,7 +77,7 @@ public:
     Private()
         : queryServiceInterface( 0 ),
           queryInterface( 0 ),
-          dbusConnection( s_globalDBusConnectionPerThreadHelper()->newConnection() ),
+          dbusConnection( QDBusConnectionPerThreadHelper::threadConnection() ),
           loop( 0 ) {
     }
 
