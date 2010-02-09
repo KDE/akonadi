@@ -143,6 +143,7 @@ Nepomuk::Search::QueryServiceClient::QueryServiceClient( QObject* parent )
 
 Nepomuk::Search::QueryServiceClient::~QueryServiceClient()
 {
+    delete d->queryServiceInterface;
     close();
     delete d;
 }
