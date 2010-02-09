@@ -31,6 +31,7 @@
 // D-Bus service names
 #define AKONADI_DBUS_SERVER_SERVICE "org.freedesktop.Akonadi"
 #define AKONADI_DBUS_CONTROL_SERVICE "org.freedesktop.Akonadi.Control"
+#define AKONADI_DBUS_CONTROL_SERVICE_LOCK "org.freedesktop.Akonadi.Control.lock"
 
 #define AKONADI_DBUS_AGENTMANAGER_PATH "/AgentManager"
 

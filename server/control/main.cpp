@@ -52,19 +52,30 @@ int main( int argc, char **argv )
   app.setDescription( "Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi." );
   app.parseCommandLine();
 
-  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
+  // try to aquire the lock first, that means there is no second instance trying to start up at the same time
+  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE_LOCK ) ) {
     // We couldn't register. Most likely, it's already running.
     const QString lastError = QDBusConnection::sessionBus().lastError().message();
     if (lastError.isEmpty())
-      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "Maybe it's already running?";
+      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE_LOCK << "Maybe it's already running?";
     else
-      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "Error was:" << lastError;
+      akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE_LOCK << "Error was:" << lastError;
   }
+
+  // older Akonadi server versions don't use the lock service yet, so check if one is already running before we try to start another one
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) )
+    akFatal() << "Another Akonadi control process is already running.";
 
   new ControlManager;
 
   sAgentManager = new AgentManager;
   AkonadiCrash::setEmergencyMethod( crashHandler );
+
+  // register the real service name once everything is up an running
+  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
+    // besides a race with an older Akonadi server I have no idea how we could possibly get here...
+    akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
+  }
 
   int retval = app.exec();
 

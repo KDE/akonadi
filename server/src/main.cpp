@@ -58,7 +58,7 @@ int main( int argc, char ** argv )
     app.parseCommandLine();
 
     if ( !app.commandLineArguments().count( "start-without-control" ) &&
-         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
+         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
       akError() << "Akonadi control process not found - aborting.";
       akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }
