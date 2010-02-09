@@ -202,12 +202,12 @@ QString ResourceBase::parseArguments( int argc, char **argv )
     catalog = QByteArray( argv[0] );
 
   KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
-                      ki18nc("@title, application name", "Akonadi Resource"), "0.1",
-                      ki18nc("@title, application description", "Akonadi Resource") );
+                      ki18nc("@title application name", "Akonadi Resource"), "0.1",
+                      ki18nc("@title application description", "Akonadi Resource") );
 
   KCmdLineOptions options;
   options.add( "identifier <argument>",
-               ki18nc("@label, commandline option", "Resource identifier") );
+               ki18nc("@label commandline option", "Resource identifier") );
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;
