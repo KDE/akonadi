@@ -30,6 +30,9 @@
 #include <KGlobal>
 
 #include <QtDBus>
+#include <QTimer>
+
+#include <boost/scoped_ptr.hpp>
 
 #define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
 #define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
@@ -40,9 +43,12 @@ class Akonadi::ServerManagerPrivate
 {
   public:
     ServerManagerPrivate() :
-      instance( new ServerManager( this ) )
+      instance( new ServerManager( this ) ), mState( ServerManager::NotRunning ), mSafetyTimer( new QTimer )
     {
-      operational = instance->isRunning();
+      mState = instance->state();
+      mSafetyTimer->setSingleShot( true );
+      mSafetyTimer->setInterval( 10000 );
+      QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
     }
 
     ~ServerManagerPrivate()
@@ -62,19 +68,37 @@ class Akonadi::ServerManagerPrivate
 
     void checkStatusChanged()
     {
-      const bool status = instance->isRunning();
-      if ( status == operational )
-        return;
-      operational = status;
-      if ( operational )
-        emit instance->started();
-      else
-        emit instance->stopped();
+      setState( instance->state() );
+    }
+
+    void setState( ServerManager::State state )
+    {
+
+      if ( mState != state ) {
+        mState = state;
+        emit instance->stateChanged( state );
+        if ( state == ServerManager::Running )
+          emit instance->started();
+        else if ( state == ServerManager::NotRunning || state == ServerManager::Broken )
+          emit instance->stopped();
+
+        if ( state == ServerManager::Starting || state == ServerManager::Stopping )
+          mSafetyTimer->start();
+        else
+          mSafetyTimer->stop();
+      }
+    }
+
+    void timeout()
+    {
+      if ( mState == ServerManager::Starting || mState == ServerManager::Stopping )
+        setState( ServerManager::Broken );
     }
 
     ServerManager *instance;
     static int serverProtocolVersion;
-    bool operational;
+    ServerManager::State mState;
+    boost::scoped_ptr<QTimer> mSafetyTimer;
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
@@ -103,6 +127,20 @@ ServerManager * Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
+  const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
+  const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  if (  controlRegistered && serverRegistered )
+    return true;
+
+  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
+  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String(".lock") );
+  if ( controlLockRegistered || controlRegistered ) {
+    kDebug() << "Akonadi server is already starting up";
+    sInstance->setState( Starting );
+    return true;
+  }
+
+  kDebug() << "executing akonadi_control";
   const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
@@ -113,6 +151,7 @@ bool ServerManager::start()
       return false;
     }
   }
+  sInstance->setState( Starting );
   return true;
 }
 
@@ -124,6 +163,7 @@ bool ServerManager::stop()
   if ( !iface.isValid() )
     return false;
   iface.call( QDBus::NoBlock, QString::fromLatin1("shutdown") );
+  sInstance->setState( Stopping );
   return true;
 }
 
@@ -136,31 +176,57 @@ void ServerManager::showSelfTestDialog( QWidget *parent )
 
 bool ServerManager::isRunning()
 {
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ||
-       !QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
-    return false;
+  return state() == Running;
+}
+
+ServerManager::State ServerManager::state()
+{
+  ServerManager::State previousState = NotRunning;
+  if ( sInstance.exists() ) // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
+    previousState = sInstance->mState;
+
+  const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
+  const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  if (  controlRegistered && serverRegistered ) {
+    // check if the server protocol is recent enough
+    if ( sInstance.exists() ) {
+      if ( Internal::serverProtocolVersion() >= 0 &&
+           Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() )
+        return Broken;
+    }
+
+    // HACK see if we are a agent ourselves and skip the test below which can in some cases deadlock the server
+    // and is not really needed in this case anyway since we happen to know at least one agent is available
+    QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
+    if ( obj && dynamic_cast<AgentBase*>( obj ) )
+      return Running;
+
+    // besides the running server processes we also need at least one resource to be operational
+    AgentType::List agentTypes = AgentManager::self()->types();
+    foreach ( const AgentType &type, agentTypes ) {
+      if ( type.capabilities().contains( QLatin1String("Resource") ) )
+        return Running;
+    }
+    return Broken;
   }
 
-  // check if the server protocol is recent enough
-  if ( sInstance.exists() ) {
-    if ( Internal::serverProtocolVersion() >= 0 &&
-         Internal::serverProtocolVersion() < SessionPrivate::minimumProtocolVersion() )
-      return false;
+  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
+  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String(".lock") );
+  if ( controlLockRegistered || controlRegistered ) {
+    kDebug() << "Akonadi server is already starting up";
+    if ( previousState == Running )
+      return NotRunning; // we don't know if it's starting or stopping, probably triggered by someone else
+    return previousState;
   }
 
-  // HACK see if we are a agent ourselves and skip the test below which can in some cases deadlock the server
-  // and is not really needed in this case anyway since we happen to know at least one agent is available
-  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
-  if ( obj && dynamic_cast<AgentBase*>( obj ) )
-    return true;
-
-  // besides the running server processes we also need at least one resource to be operational
-  AgentType::List agentTypes = AgentManager::self()->types();
-  foreach ( const AgentType &type, agentTypes ) {
-    if ( type.capabilities().contains( QLatin1String("Resource") ) )
-      return true;
+  if ( serverRegistered ) {
+    kWarning() << "Akonadi server running without control process!";
+    return Broken;
   }
-  return false;
+
+  if ( previousState == Starting || previousState == Broken ) // valid cases where nothing might be running (yet)
+    return previousState;
+  return NotRunning;
 }
 
 int Internal::serverProtocolVersion()

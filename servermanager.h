@@ -42,6 +42,15 @@ class AKONADI_EXPORT ServerManager : public QObject
 {
   Q_OBJECT
   public:
+    /** Enum for the various states the server can be in. */
+    enum State {
+        NotRunning, ///< Server is not running, could be noone started it yet or it failed to start.
+        Starting, ///< Server was started but is not yet running.
+        Running, ///< Server is running and operational.
+        Stopping, ///< Server is shutting down.
+        Broken ///< Server is not operational and an error has been detected.
+    };
+
     /**
      * Starts the server. This method returns imediately and does not wait
      * until the server is actually up and running. It is not checked if the
@@ -74,6 +83,11 @@ class AKONADI_EXPORT ServerManager : public QObject
     static bool isRunning();
 
     /**
+     * Returns the state of the server.
+     */
+    static State state();
+
+    /**
      * Returns the singleton instance of this class, for connecting to its
      * signals
      */
@@ -90,6 +104,11 @@ class AKONADI_EXPORT ServerManager : public QObject
      */
     void stopped();
 
+    /**
+     * Emitted when the server state changes.
+     */
+    void stateChanged( ServerManager::State state );
+
   private:
     //@cond PRIVATE
     friend class ServerManagerPrivate;
@@ -97,6 +116,7 @@ class AKONADI_EXPORT ServerManager : public QObject
     ServerManagerPrivate* const d;
     Q_PRIVATE_SLOT( d, void serviceOwnerChanged( const QString&, const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void checkStatusChanged() )
+    Q_PRIVATE_SLOT( d, void timeout() )
     //@endcond
 };
 

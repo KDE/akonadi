@@ -18,7 +18,7 @@
 */
 
 #include "erroroverlay_p.h"
-#include "servermanager.h"
+#include "ui_erroroverlay.h"
 #include "selftestdialog_p.h"
 
 #include <KDebug>
@@ -53,7 +53,8 @@ static bool isParentOf( QObject* o1, QObject* o2 )
 
 ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     QWidget( parent ? parent : baseWidget->window() ),
-    mBaseWidget( baseWidget )
+    mBaseWidget( baseWidget ),
+    ui( new Ui::ErrorOverlay )
 {
   Q_ASSERT( baseWidget );
 
@@ -85,35 +86,26 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   connect( baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()) );
   mPreviousState = mBaseWidget->isEnabled();
 
-  QBoxLayout *topLayout = new QVBoxLayout( this );
-  topLayout->addStretch();
-  mIconLabel = new QLabel( this );
-  mIconLabel->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
-  mIconLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
-  topLayout->addWidget( mIconLabel );
+  ui->setupUi( this );
+  ui->staticIconLabel->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
+  ui->progressIconLabel->setPixmap( KIcon( QLatin1String( "akonadi") ).pixmap( 32 ) );
 
-  mDescLabel = new QLabel( this );
-  mDescLabel->setText( i18n( "<p style=\"color: white;\"><b>Akonadi not operational.<br/>"
+  ui->staticDescriptionLabel->setText( i18n( "<p><b>Akonadi not operational.<br/>"
       "<a href=\"details\" style=\"color: white;\">Details...</a></b></p>" ) );
-  mDescLabel->setWordWrap( true );
-  mDescLabel->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
-  connect( mDescLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated()) );
-  topLayout->addWidget( mDescLabel );
-  topLayout->addStretch();
+  connect( ui->staticDescriptionLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated()) );
 
-  setToolTip( i18n( "The Akonadi personal information management framework is not operational.\n"
+  ui->staticPage->setToolTip( i18n( "The Akonadi personal information management framework is not operational.\n"
       "Click on \"Details...\" to obtain detailed information on this problem." ) );
+  ui->stackWidget->setCurrentWidget( ui->staticPage );
 
-  mOverlayActive = ServerManager::isRunning();
-  if ( mOverlayActive )
-    started();
-  else
-    stopped();
-  connect( ServerManager::self(), SIGNAL(started()), SLOT(started()) );
-  connect( ServerManager::self(), SIGNAL(stopped()), SLOT(stopped()) );
+  const ServerManager::State state = ServerManager::state();
+  mOverlayActive = state == ServerManager::Running;
+  serverStateChanged( state );
+  connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)));
 
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );
+  p.setColor( foregroundRole(), Qt::white );
   setPalette( p );
   setAutoFillBackground( true );
 
@@ -174,25 +166,44 @@ void ErrorOverlay::linkActivated()
   dlg.exec();
 }
 
-void ErrorOverlay::started()
+void ErrorOverlay::serverStateChanged( ServerManager::State state )
 {
   if ( !mBaseWidget )
     return;
-  mOverlayActive = false;
-  hide();
-  mBaseWidget->setEnabled( mPreviousState );
-}
 
-void ErrorOverlay::stopped()
-{
-  if ( !mBaseWidget )
-    return;
-  mOverlayActive = true;
-  if ( mBaseWidget->isVisible() )
-    show();
-  mPreviousState = mBaseWidget->isEnabled();
-  mBaseWidget->setEnabled( false );
-  reposition();
+  if ( state == ServerManager::Running && mOverlayActive ) {
+    mOverlayActive = false;
+    hide();
+    mBaseWidget->setEnabled( mPreviousState );
+  } else if ( !mOverlayActive ) {
+    mOverlayActive = true;
+    if ( mBaseWidget->isVisible() )
+      show();
+    mPreviousState = mBaseWidget->isEnabled();
+    mBaseWidget->setEnabled( false );
+    reposition();
+  }
+
+  if ( mOverlayActive ) {
+    switch ( state ) {
+      case ServerManager::NotRunning:
+      case ServerManager::Broken:
+        ui->stackWidget->setCurrentWidget( ui->staticPage );
+        break;
+      case ServerManager::Starting:
+        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is starting...") );
+        ui->progressDescriptionLabel->setText( i18n( "Akonadi personal information management service is starting...") );
+        ui->stackWidget->setCurrentWidget( ui->progressPage );
+        break;
+      case ServerManager::Stopping:
+        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is shutting down...") );
+        ui->progressDescriptionLabel->setText( i18n( "Akonadi personal information management service is shutting down...") );
+        ui->stackWidget->setCurrentWidget( ui->progressPage );
+        break;
+      case ServerManager::Running:
+        break;
+    }
+  }
 }
 
 //@endcond

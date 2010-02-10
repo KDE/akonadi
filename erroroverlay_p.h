@@ -20,10 +20,16 @@
 #ifndef AKONADI_ERROROVERLAY_P_H
 #define AKONADI_ERROROVERLAY_P_H
 
+#include "servermanager.h"
+
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
-class QLabel;
+#include <boost/scoped_ptr.hpp>
+
+namespace Ui {
+  class ErrorOverlay;
+}
 
 namespace Akonadi {
 
@@ -54,15 +60,13 @@ class ErrorOverlay : public QWidget
 
   private slots:
     void linkActivated();
-    void started();
-    void stopped();
+    void serverStateChanged( ServerManager::State state );
 
   private:
     QPointer<QWidget> mBaseWidget;
-    QLabel *mIconLabel;
-    QLabel *mDescLabel;
     bool mPreviousState;
     bool mOverlayActive;
+    boost::scoped_ptr<Ui::ErrorOverlay> ui;
 
 };
 
