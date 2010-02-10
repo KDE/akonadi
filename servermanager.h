@@ -31,8 +31,8 @@ class ServerManagerPrivate;
 /**
  * @short Provides methods to control the Akonadi server process.
  *
- * Low-level control of the Akonadi server.
- * Usually Akonadi::Control should be preferred over this.
+ * Asynchronous, low-level control of the Akonadi server.
+ * Akonadi::Control provides a synchronous interface to some of the methods in here.
  *
  * @author Volker Krause <vkrause@kde.org>
  * @see Akonadi::Control
@@ -42,7 +42,10 @@ class AKONADI_EXPORT ServerManager : public QObject
 {
   Q_OBJECT
   public:
-    /** Enum for the various states the server can be in. */
+    /**
+     * Enum for the various states the server can be in.
+     * @since 4.5
+     */
     enum State {
         NotRunning, ///< Server is not running, could be noone started it yet or it failed to start.
         Starting, ///< Server was started but is not yet running.
@@ -53,10 +56,9 @@ class AKONADI_EXPORT ServerManager : public QObject
 
     /**
      * Starts the server. This method returns imediately and does not wait
-     * until the server is actually up and running. It is not checked if the
-     * server is already running.
+     * until the server is actually up and running.
      * @return @c true if the start was possible (which not necessarily means
-     * the server is really running though) and @c false if an error occurred.
+     * the server is really running though) and @c false if an immediate error occurred.
      * @see Akonadi::Control::start()
      */
     static bool start();
@@ -78,12 +80,15 @@ class AKONADI_EXPORT ServerManager : public QObject
     static void showSelfTestDialog( QWidget *parent );
 
     /**
-     * Checks if the server is available currently.
+     * Checks if the server is available currently. For more detailed status information
+     * see state().
+     * @see state()
      */
     static bool isRunning();
 
     /**
      * Returns the state of the server.
+     * @since 4.5
      */
     static State state();
 

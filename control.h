@@ -29,16 +29,19 @@ namespace Akonadi {
 /**
  * @short Provides methods to control the Akonadi server process.
  *
- * This class provides high-level methods to control the Akonadi
- * server. These methods are synchronously (ie. use a sub-eventloop)
- * and can show dialogs. For more low-level methods see
+ * This class provides synchronous methods (ie. use a sub-eventloop)
+ * to control the Akonadi service. For asynchronous methods see
  * Akonadi::ServerManager.
  *
- * While the Akonadi server normally is started by the KDE session
- * manager, it is not guaranteed that your application is running
- * inside a KDE session. Therefore it is recommended to execute
- * Akonadi::Control::start() during startup to ensure the Akonadi
- * server is running.
+ * The most important method in here is widgetNeedsAkonadi(). It is
+ * recommended to call it with every top-level widget of your application
+ * as argument, assuming your application relies on Akonadi being operational
+ * of course.
+ *
+ * While the Akonadi server automatically started by Akonadi::Session
+ * on first use, it might be necessary for some use-cases to guarantee
+ * a running Akonadi service at some point. This can be done using
+ * start().
  *
  * Example:
  *
@@ -114,7 +117,7 @@ class AKONADI_EXPORT Control : public QObject
     /**
      * Disable the given widget when Akonadi is not operational and show
      * an error overlay (given enough space). Cascading use is automatically
-     * detected.
+     * detected and resolved.
      * @param widget The widget depending on Akonadi being operational.
      * @since 4.2
      */
@@ -131,8 +134,7 @@ class AKONADI_EXPORT Control : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void serverStarted() )
-    Q_PRIVATE_SLOT( d, void serverStopped() )
+    Q_PRIVATE_SLOT( d, void serverStateChanged(ServerManager::State) )
     Q_PRIVATE_SLOT( d, void createErrorOverlays() )
     Q_PRIVATE_SLOT( d, void cleanup() )
     //@endcond

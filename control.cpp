@@ -111,8 +111,7 @@ class Control::Private
     }
 
     bool exec();
-    void serverStarted();
-    void serverStopped();
+    void serverStateChanged(ServerManager::State state);
 
     QPointer<Control> mParent;
     QEventLoop *mEventLoop;
@@ -130,10 +129,8 @@ bool Control::Private::exec()
   if ( mProgressIndicator )
     mProgressIndicator->show();
 
-  kDebug() << "Starting Akonadi (using an event loop).";
+  kDebug() << "Starting/Stopping Akonadi (using an event loop).";
   mEventLoop = new QEventLoop( mParent );
-  // safety timeout
-  QTimer::singleShot( 10000, mEventLoop, SLOT(quit()) );
   mEventLoop->exec();
   mEventLoop->deleteLater();
   mEventLoop = 0;
@@ -159,30 +156,22 @@ bool Control::Private::exec()
   return rv;
 }
 
-void Control::Private::serverStarted()
+void Control::Private::serverStateChanged(ServerManager::State state)
 {
-  if ( mEventLoop && mEventLoop->isRunning() && mStarting ) {
+  kDebug() << state;
+  if ( mEventLoop && mEventLoop->isRunning() ) {
     mEventLoop->quit();
-    mSuccess = true;
+    mSuccess = (mStarting && state == ServerManager::Running) || (mStopping && state == ServerManager::NotRunning);
   }
-  if ( !mFirstRunner )
+
+  if ( !mFirstRunner && ServerManager::state() == ServerManager::Running )
     mFirstRunner = new Firstrun( mParent );
 }
-
-void Control::Private::serverStopped()
-{
-  if ( mEventLoop && mEventLoop->isRunning() && mStopping ) {
-    mEventLoop->quit();
-    mSuccess = true;
-  }
-}
-
 
 Control::Control()
   : d( new Private( this ) )
 {
-  connect( ServerManager::self(), SIGNAL( started() ), SLOT( serverStarted() ) );
-  connect( ServerManager::self(), SIGNAL( stopped() ), SLOT( serverStopped() ) );
+  connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)) );
   // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
   // Otherwise we get a crash in QCursor code with Qt-4.5
   if ( QCoreApplication::instance() )
@@ -196,19 +185,25 @@ Control::~Control()
 
 bool Control::start()
 {
-  if ( s_instance->d->mStopping )
+  if ( ServerManager::state() == ServerManager::Stopping ) {
+    kDebug() << "Server is currently being stopped, wont try to start it now";
     return false;
-  if ( ServerManager::isRunning() || s_instance->d->mEventLoop )
+  }
+  if ( ServerManager::isRunning() || s_instance->d->mEventLoop ) {
+    kDebug() << "Server is already running";
     return true;
+  }
   s_instance->d->mStarting = true;
-  if ( !ServerManager::start() )
+  if ( !ServerManager::start() ) {
+    kDebug() << "ServerManager::start failed -> return false";
     return false;
+  }
   return s_instance->d->exec();
 }
 
 bool Control::stop()
 {
-  if ( s_instance->d->mStarting )
+  if ( ServerManager::state() == ServerManager::Starting )
     return false;
   if ( !ServerManager::isRunning() || s_instance->d->mEventLoop )
     return true;
