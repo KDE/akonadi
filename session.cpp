@@ -23,6 +23,7 @@
 #include "imapparser_p.h"
 #include "job.h"
 #include "job_p.h"
+#include "servermanager.h"
 #include "servermanager_p.h"
 #include "xdgbasedirs_p.h"
 
@@ -60,6 +61,7 @@ void SessionPrivate::reconnect()
 #else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     const QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
+    kDebug() << "connectToServer" << path;
     socket->connectToServer( path );
 #endif
   }
@@ -77,7 +79,7 @@ void SessionPrivate::socketDisconnected()
   if ( currentJob )
     currentJob->d_ptr->lostConnection();
   connected = false;
-  QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+  QTimer::singleShot( 30000, mParent, SLOT(reconnect()) );
 }
 
 void SessionPrivate::dataReceived()
@@ -231,6 +233,12 @@ void SessionPrivate::writeData(const QByteArray & data)
   socket->write( data );
 }
 
+void SessionPrivate::serverStateChanged( ServerManager::State state )
+{
+  if ( state == ServerManager::Running && !connected )
+    reconnect();
+}
+
 //@endcond
 
 
@@ -241,6 +249,7 @@ SessionPrivate::SessionPrivate( Session *parent )
 
 void SessionPrivate::init( const QByteArray &id )
 {
+  kDebug() << id;
   parser = new ImapParser();
 
   if ( !id.isEmpty() ) {
@@ -254,14 +263,18 @@ void SessionPrivate::init( const QByteArray &id )
   theNextTag = 1;
   jobRunning = false;
 
+  if ( ServerManager::state() == ServerManager::NotRunning )
+    ServerManager::start();
+
+  // TODO: shouldn't this be done in reconnect() instead? we wont read the file if the server was only started later otherwise...
   const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
 
   QFileInfo fileInfo( connectionConfigFile );
   if ( !fileInfo.exists() ) {
-    kWarning() << "Akonadi Client Session: connection config file '"
-               << "akonadi/akonadiconnectionrc can not be found in '"
-               << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-               << XdgBaseDirs::systemPathList( "config" );
+    kDebug() << "Akonadi Client Session: connection config file '"
+                "akonadi/akonadiconnectionrc' can not be found in"
+             << XdgBaseDirs::homePath( "config" ) << "nor in any of"
+             << XdgBaseDirs::systemPathList( "config" );
   }
 
   mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
@@ -272,6 +285,7 @@ void SessionPrivate::init( const QByteArray &id )
   mParent->connect( socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
   mParent->connect( socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
   mParent->connect( socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
+  mParent->connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)) );
   reconnect();
 }
 

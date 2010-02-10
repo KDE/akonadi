@@ -120,6 +120,7 @@ class AKONADI_EXPORT Session : public QObject
     Q_PRIVATE_SLOT( d, void jobDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void jobWriteFinished( Akonadi::Job* ) )
     Q_PRIVATE_SLOT( d, void jobDestroyed( QObject* ) )
+    Q_PRIVATE_SLOT( d, void serverStateChanged( ServerManager::State ) )
     //@endcond PRIVATE
 };
 

@@ -23,6 +23,7 @@
 #include "session.h"
 #include "imapparser_p.h"
 #include "akonadiprivate_export.h"
+#include "servermanager.h"
 
 #include <QtNetwork/QLocalSocket>
 
@@ -52,6 +53,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     void startNext();
     void reconnect();
+    void serverStateChanged( ServerManager::State );
     void socketDisconnected();
     void socketError( QLocalSocket::LocalSocketError error );
     void dataReceived();
