@@ -171,6 +171,7 @@ kde4_add_ui_files( akonadikde_LIB_SRC
   subscriptiondialog.ui
   controlprogressindicator.ui
   selftestdialog.ui
+  erroroverlay.ui
 )
 
 kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
