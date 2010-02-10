@@ -28,6 +28,7 @@
 #include "akdebug.h"
 #include "resource_manager.h"
 #include "preprocessor_manager.h"
+#include "libs/protocol_p.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -55,7 +56,7 @@ AgentManager::AgentManager( QObject *parent )
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.freedesktop.Akonadi" ) )
-    qFatal( "akonadiserver already running!" );
+    akFatal() << "akonadiserver already running!";
 
   mStorageController = new Akonadi::ProcessControl;
   connect( mStorageController, SIGNAL(unableToStart()),
@@ -90,6 +91,13 @@ void AgentManager::continueStartup()
   load();
   foreach ( const AgentType &info, mAgents )
     ensureAutoStart( info );
+
+  // register the real service name once everything is up an running
+  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
+    // besides a race with an older Akonadi server I have no idea how we could possibly get here...
+    akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
+  }
+  akDebug() << "Akonadi server is now operational.";
 }
 
 AgentManager::~AgentManager()

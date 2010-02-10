@@ -53,6 +53,7 @@ int main( int argc, char **argv )
   app.parseCommandLine();
 
   // try to aquire the lock first, that means there is no second instance trying to start up at the same time
+  // registering the real service name happens in AgentManager::continueStartup(), when everything is in fact up and running
   if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE_LOCK ) ) {
     // We couldn't register. Most likely, it's already running.
     const QString lastError = QDBusConnection::sessionBus().lastError().message();
@@ -70,12 +71,6 @@ int main( int argc, char **argv )
 
   sAgentManager = new AgentManager;
   AkonadiCrash::setEmergencyMethod( crashHandler );
-
-  // register the real service name once everything is up an running
-  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
-    // besides a race with an older Akonadi server I have no idea how we could possibly get here...
-    akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
-  }
 
   int retval = app.exec();
 
