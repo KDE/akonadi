@@ -264,7 +264,7 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identi
   return instance;
 }
 
-void AgentManagerPrivate::serviceOwnderChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
+void AgentManagerPrivate::serviceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
 {
   Q_UNUSED( newOwner );
   if ( service == QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) && oldOwner.isEmpty() )

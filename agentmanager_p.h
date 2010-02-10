@@ -76,7 +76,7 @@ class AgentManagerPrivate
     void synchronize( const AgentInstance& );
     void synchronizeCollectionTree( const AgentInstance& );
 
-    void serviceOwnderChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
     AgentType fillAgentType( const QString &identifier ) const;
     AgentInstance fillAgentInstance( const QString &identifier ) const;
