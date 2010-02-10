@@ -43,6 +43,7 @@
 #include <akonadi/itemmovejob.h>
 #include <akonadi/linkjob.h>
 #include <akonadi/session.h>
+#include <akonadi/servermanager.h>
 
 #include <kdebug.h>
 
@@ -106,6 +107,9 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
            SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
+  Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
+  q->connect( serverManager, SIGNAL(started()), SLOT(serverStarted()) );
+
   QList<Collection> list = monitor->collectionsMonitored();
   if ( list.size() == 1 )
     m_rootCollection = list.first();
@@ -115,6 +119,12 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   m_rootCollectionDisplayName = QLatin1String( "[*]" );
 
   fillModel();
+}
+
+void EntityTreeModelPrivate::serverStarted()
+{
+  // Don't emit about to be reset. Too late for that.
+  endResetModel();
 }
 
 int EntityTreeModelPrivate::indexOf( const QList<Node*> &nodes, Entity::Id id ) const

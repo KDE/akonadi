@@ -133,6 +133,8 @@ public:
   void rootCollectionFetched( const Collection::List &list );
   void startFirstListJob();
 
+  void serverStarted();
+
   void fetchJobDone( KJob *job );
   void updateJobDone( KJob *job );
   void pasteJobDone( KJob *job );

@@ -531,7 +531,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void rootCollectionFetched(Akonadi::Collection::List) )
     Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
-    // Q_PRIVATE_SLOT( d_func(), void slotModelReset() )
+    Q_PRIVATE_SLOT( d_func(), void serverStarted() )
 
     // TODO: Can I merge these into one jobResult slot?
     Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
