@@ -87,16 +87,12 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   mPreviousState = mBaseWidget->isEnabled();
 
   ui->setupUi( this );
-  ui->staticIconLabel->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
-  ui->progressIconLabel->setPixmap( KIcon( QLatin1String( "akonadi") ).pixmap( 32 ) );
+  ui->notRunningIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 64 ) );
+  ui->brokenIcon->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
+  ui->progressIcon->setPixmap( KIcon( QLatin1String( "akonadi") ).pixmap( 32 ) );
 
-  ui->staticDescriptionLabel->setText( i18n( "<p><b>Akonadi not operational.<br/>"
-      "<a href=\"details\" style=\"color: white;\">Details...</a></b></p>" ) );
-  connect( ui->staticDescriptionLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated()) );
-
-  ui->staticPage->setToolTip( i18n( "The Akonadi personal information management framework is not operational.\n"
-      "Click on \"Details...\" to obtain detailed information on this problem." ) );
-  ui->stackWidget->setCurrentWidget( ui->staticPage );
+  connect( ui->startButton, SIGNAL(clicked()), SLOT(startClicked()) );
+  connect( ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()) );
 
   const ServerManager::State state = ServerManager::state();
   mOverlayActive = state == ServerManager::Running;
@@ -160,7 +156,12 @@ bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
   return QWidget::eventFilter( object, event );
 }
 
-void ErrorOverlay::linkActivated()
+void ErrorOverlay::startClicked()
+{
+  ServerManager::start();
+}
+
+void ErrorOverlay::selfTestClicked()
 {
   SelfTestDialog dlg;
   dlg.exec();
@@ -187,17 +188,19 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
   if ( mOverlayActive ) {
     switch ( state ) {
       case ServerManager::NotRunning:
+        ui->stackWidget->setCurrentWidget( ui->notRunningPage );
+        break;
       case ServerManager::Broken:
-        ui->stackWidget->setCurrentWidget( ui->staticPage );
+        ui->stackWidget->setCurrentWidget( ui->brokenPage );
         break;
       case ServerManager::Starting:
         ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is starting...") );
-        ui->progressDescriptionLabel->setText( i18n( "Akonadi personal information management service is starting...") );
+        ui->progressDescription->setText( i18n( "Akonadi personal information management service is starting...") );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Stopping:
         ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is shutting down...") );
-        ui->progressDescriptionLabel->setText( i18n( "Akonadi personal information management service is shutting down...") );
+        ui->progressDescription->setText( i18n( "Akonadi personal information management service is shutting down...") );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Running:

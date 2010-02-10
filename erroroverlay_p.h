@@ -59,7 +59,8 @@ class ErrorOverlay : public QWidget
     void reposition();
 
   private slots:
-    void linkActivated();
+    void startClicked();
+    void selfTestClicked();
     void serverStateChanged( ServerManager::State state );
 
   private:

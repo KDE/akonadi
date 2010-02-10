@@ -47,7 +47,7 @@ class Akonadi::ServerManagerPrivate
     {
       mState = instance->state();
       mSafetyTimer->setSingleShot( true );
-      mSafetyTimer->setInterval( 10000 );
+      mSafetyTimer->setInterval( 30000 );
       QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
     }
 
