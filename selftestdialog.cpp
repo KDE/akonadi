@@ -86,6 +86,7 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   connect( this, SIGNAL(user1Clicked()), SLOT(saveReport()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(copyReport()) );
 
+  connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(runTests()) );
   runTests();
 }
 
@@ -133,6 +134,8 @@ void SelfTestDialog::selectionChanged(const QModelIndex &index )
 
 void SelfTestDialog::runTests()
 {
+  mTestModel->clear();
+
   const QString driver = serverSetting( QLatin1String("General"), "Driver", QLatin1String("QMYSQL") ).toString();
   testSQLDriver();
   if (driver == QLatin1String( "QPSQL" )) {

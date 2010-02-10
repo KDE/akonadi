@@ -62,6 +62,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void saveReport();
     void copyReport();
     void linkActivated( const QString &link );
+    void runTests();
 
   private:
     enum ResultType {
@@ -71,7 +72,6 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
       Error
     };
     QStandardItem* report( ResultType type, const KLocalizedString &summary, const KLocalizedString &details );
-    void runTests();
     QVariant serverSetting( const QString &group, const char *key, const QVariant &def ) const;
     bool useStandaloneMysqlServer() const;
     bool runProcess( const QString &app, const QStringList &args, QString &result ) const;
