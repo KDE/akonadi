@@ -22,6 +22,7 @@
 
 #include "agenttype_p.h"
 #include "agentinstance_p.h"
+#include <akonadi/private/protocol_p.h>
 
 #include "collection.h"
 
@@ -263,6 +264,13 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identi
   return instance;
 }
 
+void AgentManagerPrivate::serviceOwnderChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
+{
+  Q_UNUSED( newOwner );
+  if ( service == QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) && oldOwner.isEmpty() )
+    readAgentTypes();
+}
+
 AgentManager* AgentManagerPrivate::mSelf = 0;
 
 AgentManager::AgentManager()
@@ -310,6 +318,8 @@ AgentManager::AgentManager()
       }
     }
   }
+
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)), SLOT(serviceOwnerChanged(QString,QString,QString)) );
 }
 
 // @endcond

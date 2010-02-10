@@ -40,7 +40,8 @@ class AgentManagerPrivate
 
   public:
     AgentManagerPrivate( AgentManager *parent )
-      : mParent( parent )
+      : mParent( parent ),
+        mManager( 0 )
     {
     }
 
@@ -74,6 +75,8 @@ class AgentManagerPrivate
     void configure( const AgentInstance&, QWidget* );
     void synchronize( const AgentInstance& );
     void synchronizeCollectionTree( const AgentInstance& );
+
+    void serviceOwnderChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
     AgentType fillAgentType( const QString &identifier ) const;
     AgentInstance fillAgentInstance( const QString &identifier ) const;
