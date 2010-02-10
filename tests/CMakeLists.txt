@@ -37,8 +37,8 @@ endmacro(add_akonadi_demo)
 macro(add_akonadi_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test} fakesession.cpp fakemonitor.cpp fakeserver.cpp akonadieventqueue.cpp modelspy.cpp)
-  target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
+  kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
+  target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
 endmacro(add_akonadi_test)
 
 # convenience macro to add akonadi testrunner unit-tests
@@ -81,6 +81,9 @@ macro(add_akonadi_isolated_test _source)
   #add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite.xml ${_executable} )
 endmacro(add_akonadi_isolated_test)
 
+
+# akonadi test fake library
+kde4_add_library(akonaditestfake STATIC fakesession.cpp fakemonitor.cpp fakeserver.cpp akonadieventqueue.cpp modelspy.cpp)
 
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
