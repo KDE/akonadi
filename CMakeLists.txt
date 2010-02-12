@@ -161,9 +161,13 @@ endif (WIN32)
 # but then removes the RPATH when installing.
 # These two options below make it set the RPATH of the installed targets to all
 # RPATH directories outside the current CMAKE_BINARY_DIR and also the library
-# install directory. Alex
+# install directory, but only if this directory is not a default system library directory. Alex
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
+
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemLibDir)
+if("${_isSystemLibDir}" STREQUAL "-1")
+  set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
+endif("${_isSystemLibDir}" STREQUAL "-1")
 
 if(APPLE)
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
