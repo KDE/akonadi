@@ -86,6 +86,7 @@ class CollectionDialog::Private
 
       mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
                         mParent, SLOT( slotSelectionChanged() ) );
+      mParent->connect( mView,SIGNAL(doubleClicked(const QModelIndex &)),mParent, SLOT(accept()));
     }
 
     ~Private()
