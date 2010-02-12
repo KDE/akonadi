@@ -171,10 +171,6 @@ class EntityCache : public EntityCacheBase
 
     void fetchResult( KJob* job )
     {
-      if ( job->error() ) {
-        kWarning() << "Fetch failed:" << job->errorString();
-        return;
-      }
       typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
       EntityCacheNode<T> *node = cacheNodeForId( id );
       if ( !node )
