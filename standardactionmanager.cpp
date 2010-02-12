@@ -331,7 +331,7 @@ class StandardActionManager::Private
         return;
 
       const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder"),
-                                                  i18nc( "@label:textbox, name of a thing", "Name"),
+                                                  i18nc( "@label:textbox name of a thing", "Name"),
                                                   QString(), 0, parentWidget );
       if ( name.isEmpty() )
         return;
