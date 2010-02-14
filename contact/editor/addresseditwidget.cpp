@@ -468,7 +468,7 @@ void AddressEditDialog::editLabel()
     mLabel = result;
 }
 
-void AddressEditDialog::setAddress(const KABC::Address &address)
+void AddressEditDialog::setAddress( const KABC::Address &address )
 {
   mAddress = address;
 
@@ -515,15 +515,17 @@ void AddressEditDialog::fillCountryCombo()
 {
   QStringList countries;
 
-  foreach( const QString &cc, KGlobal::locale()->allCountriesList() ) {
-    countries.append( KGlobal::locale()->countryCodeToName(cc) );
-  }
+  foreach ( const QString &cc, KGlobal::locale()->allCountriesList() )
+    countries.append( KGlobal::locale()->countryCodeToName( cc ) );
 
   countries = sortLocaleAware( countries );
 
   mCountryCombo->addItems( countries );
   mCountryCombo->completionObject()->setItems( countries );
   mCountryCombo->setAutoCompletion( true );
+
+  const QString currentCountry = KGlobal::locale()->countryCodeToName( KGlobal::locale()->country() );
+  mCountryCombo->setCurrentIndex( mCountryCombo->findText( currentCountry ) );
 }
 
 
