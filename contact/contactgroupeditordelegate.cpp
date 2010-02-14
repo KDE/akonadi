@@ -151,6 +151,7 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
     if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
       KComboBox *comboBox = new KComboBox( parent );
       comboBox->setFrame( false );
+      comboBox->setAutoFillBackground( true );
       return comboBox;
     } else {
       KLineEdit *lineEdit = new KLineEdit( parent );
