@@ -33,16 +33,44 @@
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QCompleter>
 #include <QtGui/QMouseEvent>
+#include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QToolButton>
 
 using namespace Akonadi;
+
+/**
+ * @short Model that filters out all contacts without email address.
+ */
+class ContactsWithEmailFilterModel : public QSortFilterProxyModel
+{
+  public:
+    ContactsWithEmailFilterModel( QObject *parent )
+      : QSortFilterProxyModel( parent )
+    {
+      // contact names should be sorted correctly
+      setSortLocaleAware( true );
+    }
+
+  protected:
+    virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const
+    {
+      const QModelIndex index = sourceModel()->index( row, Akonadi::ContactCompletionModel::EmailColumn, parent );
+      if ( !index.isValid() )
+        return false;
+
+      return !index.data().toString().isEmpty();
+    }
+};
 
 ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
   : KLineEdit( parent ), mIsReference( isReference )
 {
   setFrame( false );
 
-  QCompleter *completer = new QCompleter( Akonadi::ContactCompletionModel::self(), this );
+  ContactsWithEmailFilterModel *filter = new ContactsWithEmailFilterModel( this );
+  filter->setSourceModel( Akonadi::ContactCompletionModel::self() );
+
+  QCompleter *completer = new QCompleter( filter, this );
   completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameColumn );
   completer->setCaseSensitivity( Qt::CaseInsensitive );
   connect( completer, SIGNAL( activated( const QModelIndex& ) ), SLOT( completed( const QModelIndex& ) ) );
