@@ -122,6 +122,11 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
 
   connect( this, SIGNAL( clicked() ), SLOT( changeImage() ) );
 
+  if ( mType == Photo )
+    setToolTip( i18n( "The photo of the contact (click to change)" ) );
+  else
+    setToolTip( i18n( "The logo of the company (click to change)" ) );
+
   updateView();
 }
 
@@ -159,7 +164,10 @@ void ImageWidget::updateView()
   if ( mHasImage ) {
     setIcon( QPixmap::fromImage( mImage ) );
   } else {
-    setIcon( KIcon( QLatin1String( "user-identity" ) ) );
+    if ( mType == Photo )
+      setIcon( KIcon( QLatin1String( "user-identity" ) ) );
+    else
+      setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
   }
 }
 
