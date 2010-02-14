@@ -83,7 +83,7 @@ void PhoneTypeCombo::update()
     if ( mTypeList.at( i ) == -1 ) // "Other..." entry
       addItem( i18nc( "@item:inlistbox Category of contact info field", "Other..." ) );
     else
-      addItem( KABC::PhoneNumber::typeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
+      addItem( KABC::PhoneNumber::fullTypeLabel( KABC::PhoneNumber::Type( mTypeList.at( i ) ) ) );
   }
 
   setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );

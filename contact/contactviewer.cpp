@@ -179,7 +179,7 @@ static QString contactAsHtml( const KABC::Addressee &contact )
       counter++;
 
       dynamicPart += rowFmtStr
-        .arg( KABC::PhoneNumber::typeLabel( number.type() ).replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
+        .arg( number.typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
         .arg( url );
   }
 
