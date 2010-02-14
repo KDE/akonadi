@@ -125,7 +125,7 @@ void ContactViewer::itemChanged( const Item &contactItem )
   if ( !contactItem.hasPayload<KABC::Addressee>() )
     return;
 
-  static QPixmap defaultPixmap = KIcon( QLatin1String( "x-office-contact" ) ).pixmap( QSize( 100, 140 ) );
+  static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 140 ) );
 
   d->mCurrentContact = contactItem.payload<KABC::Addressee>();
 
