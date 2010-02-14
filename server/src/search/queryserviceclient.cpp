@@ -31,6 +31,8 @@
 #include <QtCore/QTimer>
 
 namespace {
+
+    QAtomicInt s_connectionCounter;
     /**
      * Each thread needs its own QDBusConnection. We do it the very easy
      * way and just create a new connection for each client
@@ -52,10 +54,9 @@ namespace {
         static QDBusConnection threadConnection();
 
     private:
-        int newNumber() {
-            return m_counter.fetchAndAddAcquire(1);
+        static int newNumber() {
+            return s_connectionCounter.fetchAndAddAcquire(1);
         }
-        QAtomicInt m_counter;
         QDBusConnection m_connection;
     };
 
