@@ -635,7 +635,9 @@ class StandardActionManager::Private
         if ( model->rowCount( index ) > 0 ) {
           // new level
           QMenu* popup = new QMenu( menu );
-
+          const bool itemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
+          const bool collectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
+          const bool moveAction = ( type == MoveCollectionToMenu || type == MoveItemToMenu);
           popup->setObjectName( QString::fromUtf8( "subMenu" ) );
           popup->setTitle( label );
           popup->setIcon( icon );
@@ -645,7 +647,7 @@ class StandardActionManager::Private
           if ( !readOnly ) {
             popup->addSeparator();
 
-            QAction *act = popup->addAction( i18n("Copy to This Folder") );
+            QAction *act = popup->addAction( moveAction ? i18n("Move to This Folder") : i18n("Copy to This Folder") );
             act->setData( QVariant::fromValue<QModelIndex>( index ) );
           }
 
