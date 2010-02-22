@@ -33,6 +33,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 
+#include <KLineEdit>
+#include <KLocale>
+
 using namespace Akonadi;
 
 class CollectionDialog::Private
@@ -50,6 +53,12 @@ class CollectionDialog::Private
       mTextLabel = new QLabel;
       layout->addWidget( mTextLabel );
       mTextLabel->hide();
+
+      KLineEdit* filterCollectionLineEdit = new KLineEdit( widget );
+      filterCollectionLineEdit->setClearButtonShown( true );
+      filterCollectionLineEdit->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
+                                                   "textbox, verb to search", "Search" ) );
+      layout->addWidget( filterCollectionLineEdit );
 
       mView = new EntityTreeView;
       mView->header()->hide();
@@ -82,7 +91,14 @@ class CollectionDialog::Private
       mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
       mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
                         mParent, SLOT( slotCollectionAvailable( const QModelIndex& ) ) );
-      mView->setModel( mRightsFilterModel );
+
+      KRecursiveFilterProxyModel* filterCollection = new KRecursiveFilterProxyModel( mParent );
+      filterCollection->setDynamicSortFilter( true );
+      filterCollection->setSourceModel( mRightsFilterModel );
+      filterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
+      mView->setModel( filterCollection );
+
+      mParent->connect( filterCollectionLineEdit, SIGNAL( textChanged(QString) ), filterCollection, SLOT( setFilterFixedString(QString) ) );
 
       mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
                         mParent, SLOT( slotSelectionChanged() ) );
