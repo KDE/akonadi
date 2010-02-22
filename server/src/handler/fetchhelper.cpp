@@ -47,11 +47,12 @@ using namespace Akonadi;
 static const int itemQueryIdColumn = 0;
 static const int itemQueryRevColumn = 1;
 static const int itemQueryRidColumn = 2;
-static const int itemQueryMimeTypeColumn = 3;
-static const int itemQueryResouceColumn = 4;
-static const int itemQuerySizeColumn = 5;
-static const int itemQueryDatetimeColumn = 6;
-static const int itemQueryCollectionIdColumn = 7;
+static const int itemQueryRemoteRevisionColumn = 3;
+static const int itemQueryMimeTypeColumn = 4;
+static const int itemQueryResouceColumn = 5;
+static const int itemQuerySizeColumn = 6;
+static const int itemQueryDatetimeColumn = 7;
+static const int itemQueryCollectionIdColumn = 8;
 
 static const int partQueryIdColumn = 0;
 static const int partQueryNameColumn = 1;
@@ -80,6 +81,7 @@ void FetchHelper::init()
   mSizeRequested = false;
   mMTimeRequested = false;
   mExternalPayloadSupported = false;
+  mRemoteRevisionRequested = false;
   mConnection = 0;
 }
 
@@ -141,6 +143,10 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       mMTimeRequested = true;
       continue;
     }
+    if ( b == "REMOTEREVISION" ) {
+      mRemoteRevisionRequested = true;
+      continue;
+    }
     partList << QString::fromLatin1( b );
     if ( b.startsWith( "PLD:" ) )
       payloadList << QString::fromLatin1( b );
@@ -182,6 +188,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       // Date time is always stored in UTC time zone by the server.
       QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
+    }
+    if ( mRemoteRevisionRequested ) {
+      attributes.append( "REMOTEREVISION " + ImapParser::quote( mItemQuery.query().value( itemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
     }
 
     if ( mRequestedParts.contains( "FLAGS" ) ) {
@@ -327,6 +336,7 @@ void FetchHelper::buildItemQuery()
   mItemQuery.addColumn( PimItem::idFullColumnName() );
   mItemQuery.addColumn( PimItem::revFullColumnName() );
   mItemQuery.addColumn( PimItem::remoteIdFullColumnName() );
+  mItemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
   mItemQuery.addColumn( MimeType::nameFullColumnName() );
   mItemQuery.addColumn( Resource::nameFullColumnName() );
   mItemQuery.addColumn( PimItem::sizeFullColumnName() );

@@ -34,9 +34,11 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
   Collection col = source;
   col.setParentId( target.id() );
   col.setResourceId( target.resourceId() );
-  // clear remote id on inter-resource copies
-  if ( source.resourceId() != target.resourceId() )
+  // clear remote id and revision on inter-resource copies
+  if ( source.resourceId() != target.resourceId() ) {
     col.setRemoteId( QString() );
+    col.setRemoteRevision( QString() );
+  }
 
   DataStore *db = connection()->storageBackend();
   if ( !db->appendCollection( col ) )

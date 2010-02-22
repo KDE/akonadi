@@ -133,6 +133,13 @@ bool Modify::parseStream()
         continue;
       collection.setRemoteId( rid );
       changes.append( AKONADI_PARAM_REMOTEID );
+    } else if ( type == AKONADI_PARAM_REMOTEREVISION ) {
+      QString remoteRevision;
+      pos = ImapParser::parseString( line, remoteRevision, pos );
+      if ( remoteRevision == collection.remoteRevision() )
+        continue;
+      collection.setRemoteRevision( remoteRevision );
+      changes.append( AKONADI_PARAM_REMOTEREVISION );
     } else if ( type.isEmpty() ) {
       break; // input end
     } else {

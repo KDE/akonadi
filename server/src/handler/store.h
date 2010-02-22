@@ -55,6 +55,7 @@ class PimItem;
   SIZE <int>
   [+-]FLAGS <flag-list>
   REMOTEID <remote-identifier>
+  REMOTEREVISION <remote-revision>
   DIRTY
   <attribute-id> <attribute-value>
   <part-id> <part-value>
@@ -68,6 +69,7 @@ class PimItem;
 
   The following item properties can be mofidied:
   - the remote identifier (@c REMOTEID)
+  - the remote revision (@c REMOTEREVISION)
   - resetting the dirty flag indication local changes not yet replicated to the backend (@c DIRTY)
   - adding/deleting/setting item flags (@c FLAGS)
   - setting the item size hint (@c SIZE)
@@ -82,6 +84,7 @@ class PimItem;
   The following operations are only allowed by resources:
   - resetting the dirty flag
   - modifying the remote identifier
+  - modifying the remote revision
 
   Conflict detection:
   - only available when modifying a single item

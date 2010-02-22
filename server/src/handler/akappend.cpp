@@ -58,6 +58,7 @@ bool Akonadi::AkAppend::commit()
 
     QByteArray mt;
     QString remote_id;
+    QString remote_revision;
     QList<QByteArray> flags;
     foreach( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
@@ -68,6 +69,10 @@ bool Akonadi::AkAppend::commit()
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
+      } else if ( flag.startsWith( "\\RemoteRevision" ) ) {
+        int pos1 = flag.indexOf( '[' );
+        int pos2 = flag.lastIndexOf( ']' );
+        remote_revision = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
       } else
         flags << flag;
     }
@@ -100,7 +105,7 @@ bool Akonadi::AkAppend::commit()
       m_parts.append( hiddenAttribute );
     }
 
-    bool ok = db->appendPimItem( m_parts, mimeType, col, m_dateTime, remote_id, item );
+    bool ok = db->appendPimItem( m_parts, mimeType, col, m_dateTime, remote_id, remote_revision, item );
 
     response.setTag( tag() );
     if ( !ok ) {

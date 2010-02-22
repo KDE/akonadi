@@ -130,6 +130,8 @@ bool Create::parseStream()
     const QByteArray value = attributes.at( i + 1 );
     if ( key == "REMOTEID" ) {
       collection.setRemoteId( QString::fromUtf8( value ) );
+    } else if ( key == "REMOTEREVISION" ) {
+      collection.setRemoteRevision( QString::fromUtf8( value ) );
     } else if ( key == "MIMETYPE" ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
       mimeTypesSet = true;

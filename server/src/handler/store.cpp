@@ -197,6 +197,16 @@ bool Store::parseStream()
       }
     }
 
+    else if ( command == AKONADI_PARAM_REMOTEREVISION ) {
+      const QString remoteRevision = m_streamParser->readUtf8String();
+      if ( item.remoteRevision() != remoteRevision ) {
+        if ( !connection()->isOwnerResource( item ) )
+          throw HandlerException( "Only resources can modify remote revisions" );
+        item.setRemoteRevision( remoteRevision );
+        changes << AKONADI_PARAM_REMOTEREVISION;
+      }
+    }
+
     else if ( command == AKONADI_PARAM_UNDIRTY ) {
       m_streamParser->readString(); // ### ???
       item.setDirty( false );

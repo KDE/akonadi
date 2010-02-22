@@ -44,6 +44,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   newItem.setDatetime( QDateTime::currentDateTime() );
   newItem.setAtime( QDateTime::currentDateTime() );
   newItem.setRemoteId( QString() );
+  newItem.setRemoteRevision( QString() );
   newItem.setCollectionId( target.id() );
   Part::List parts;
   foreach ( const Part &part, item.parts() ) {
@@ -52,7 +53,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
     newPart.setPimItemId( -1 );
     parts << newPart;
   }
-  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), newItem ) )
+  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), newItem ) )
     return false;
   foreach ( const Flag &flag, item.flags() ) {
     if ( !newItem.addFlag( flag ) )

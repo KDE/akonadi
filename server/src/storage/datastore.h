@@ -150,6 +150,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
                         const Collection & collection,
                         const QDateTime & dateTime,
                         const QString & remote_id,
+                        const QString & remoteRevision,
                         PimItem &pimItem );
 
     /**

@@ -152,6 +152,10 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   msg.setRemoteId( item.remoteId() );
   msg.setItemParts( parts );
 
+  //HACK: store remoteRevision in itemparts for deletion
+  if ( op == NotificationMessage::Remove )
+    msg.setItemParts( QSet<QByteArray>() << item.remoteRevision().toUtf8() );
+
   Collection col = collection;
   if ( !col.isValid() )
     col = item.collection();
@@ -185,6 +189,10 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
   msg.setParentCollection( source );
   msg.setParentDestCollection( destination );
   msg.setItemParts( changes );
+
+  //HACK: store remoteRevision in itemparts for deletion
+  if ( op == NotificationMessage::Remove )
+    msg.setItemParts( QSet<QByteArray>() << collection.remoteRevision().toUtf8() );
 
   QByteArray res = resource;
   if ( res.isEmpty() )
