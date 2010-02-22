@@ -25,6 +25,7 @@
 #include "subscriptionchangeproxymodel_p.h"
 #include "flatcollectionproxymodel_p.h"
 #include "control.h"
+#include "krecursivefilterproxymodel.h"
 
 #include <kdebug.h>
 
@@ -89,6 +90,7 @@ class SubscriptionDialog::Private
     SubscriptionDialog* q;
     Ui::SubscriptionDialog ui;
     SubscriptionModel* model;
+    KRecursiveFilterProxyModel *filterTreeViewModel;
 };
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
@@ -106,7 +108,12 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   d->ui.unsubscribeButton->setIcon( icon );
 
   d->model = new SubscriptionModel( this );
-  d->ui.collectionView->setModel( d->model );
+
+  d->filterTreeViewModel = new KRecursiveFilterProxyModel( this );
+  d->filterTreeViewModel->setDynamicSortFilter( true );
+  d->filterTreeViewModel->setSourceModel( d->model );
+  d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  d->ui.collectionView->setModel( d->filterTreeViewModel );
 
   d->setupChangeView( d->ui.subscribeView, true );
   d->setupChangeView( d->ui.unsubscribeView, false );
@@ -116,6 +123,8 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   connect( d->ui.unsubscribeButton, SIGNAL(clicked()), SLOT(unsubscribeClicked()) );
   connect( this, SIGNAL(okClicked()), SLOT(done()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
+  connect( d->ui.klineedit, SIGNAL( textChanged(QString) ), d->filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
+
 
   Control::widgetNeedsAkonadi( mainWidget() );
 }

@@ -32,11 +32,8 @@
      </item>
      <item>
       <widget class="KLineEdit" name="klineedit" >
-       <property name="enabled" >
-        <bool>false</bool>
-       </property>
        <property name="clickMessage" >
-        <string>TODO</string>
+        <string>Search</string>
        </property>
        <property name="showClearButton" stdset="0" >
         <bool>true</bool>
