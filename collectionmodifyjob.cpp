@@ -77,6 +77,8 @@ void CollectionModifyJob::doStart()
     changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
   if ( !d->mCollection.remoteId().isNull() )
     changes += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
+  if ( !d->mCollection.remoteRevision().isNull() )
+    changes += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
   if ( d->mCollection.d_func()->cachePolicyChanged )
     changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   if ( d->mCollection.attributes().count() > 0 )

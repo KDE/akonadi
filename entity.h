@@ -89,6 +89,16 @@ class AKONADI_EXPORT Entity
     QString remoteId() const;
 
     /**
+     * Sets the remote @p revision of the entity.
+     */
+    void setRemoteRevision( const QString& revision );
+
+    /**
+     * Returns the remote revision of the entity.
+     */
+    QString remoteRevision() const;
+
+    /**
      * Returns whether the entity is valid.
      */
     bool isValid() const;

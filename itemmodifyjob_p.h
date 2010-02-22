@@ -33,6 +33,7 @@ class ItemModifyJobPrivate : public JobPrivate
     enum Operation
     {
       RemoteId,
+      RemoteRevision,
       Dirty
     };
 

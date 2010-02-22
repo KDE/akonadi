@@ -97,7 +97,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     */
     void writeData( const QByteArray &data );
 
-    static int minimumProtocolVersion() { return 23; }
+    static int minimumProtocolVersion() { return 24; }
 
     Session *mParent;
     QByteArray sessionId;

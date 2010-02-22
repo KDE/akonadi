@@ -57,6 +57,7 @@ class EntityPrivate : public QSharedData
     {
       mId = other.mId;
       mRemoteId = other.mRemoteId;
+      mRemoteRevision = other.mRemoteRevision;
       foreach ( Attribute* attr, other.mAttributes )
         mAttributes.insert( attr->type(), attr->clone() );
       mDeletedAttributes = other.mDeletedAttributes;
@@ -73,6 +74,7 @@ class EntityPrivate : public QSharedData
 
     Entity::Id mId;
     QString mRemoteId;
+    QString mRemoteRevision;
     QHash<QByteArray, Attribute*> mAttributes;
     QSet<QByteArray> mDeletedAttributes;
     mutable Collection* mParent;

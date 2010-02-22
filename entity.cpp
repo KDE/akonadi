@@ -85,6 +85,16 @@ QString Entity::remoteId() const
   return d_ptr->mRemoteId;
 }
 
+void Entity::setRemoteRevision( const QString& revision )
+{
+  d_ptr->mRemoteRevision = revision;
+}
+
+QString Entity::remoteRevision() const
+{
+  return d_ptr->mRemoteRevision;
+}
+
 bool Entity::isValid() const
 {
   return ( d_ptr->mId >= 0 );

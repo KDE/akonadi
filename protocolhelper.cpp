@@ -138,6 +138,8 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       collection.setName( QString::fromUtf8( value ) );
     } else if ( key == "REMOTEID" ) {
       collection.setRemoteId( QString::fromUtf8( value ) );
+    } else if ( key == "REMOTEREVISION" ) {
+      collection.setRemoteRevision( QString::fromUtf8( value ) );
     } else if ( key == "RESOURCE" ) {
       collection.setResource( QString::fromUtf8( value ) );
     } else if ( key == "MIMETYPE" ) {
@@ -258,7 +260,7 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
-  command += " (UID REMOTEID COLLECTIONID FLAGS SIZE DATETIME";
+  command += " (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, fetchScope.attributes() )
@@ -274,6 +276,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   Item::Id uid = -1;
   int rev = -1;
   QString rid;
+  QString remoteRevision;
   QString mimeType;
   Entity::Id cid = -1;
 
@@ -290,10 +293,13 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         rid = QString::fromUtf8( value );
       else
         rid.clear();
+    } else if ( key == "REMOTEREVISION" ) {
+      remoteRevision = QString::fromUtf8( value );
     } else if ( key == "COLLECTIONID" ) {
       cid = value.toInt();
-    } else if ( key == "MIMETYPE" )
+    } else if ( key == "MIMETYPE" ) {
       mimeType = QString::fromLatin1( value );
+    }
   }
 
   if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
@@ -304,6 +310,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   item = Item( uid );
   item.setRemoteId( rid );
   item.setRevision( rev );
+  item.setRemoteRevision( remoteRevision );
   item.setMimeType( mimeType );
   item.setStorageCollectionId( cid );
   if ( !item.isValid() )
@@ -313,7 +320,8 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   for ( int i = 0; i < lineTokens.count() - 1; i += 2 ) {
     const QByteArray key = lineTokens.value( i );
     // skip stuff we dealt with already
-    if ( key == "UID" || key == "REV" || key == "REMOTEID" || key == "MIMETYPE"  || key == "COLLECTIONID")
+    if ( key == "UID" || key == "REV" || key == "REMOTEID" ||
+         key == "MIMETYPE"  || key == "COLLECTIONID" || key == "REMOTEREVISION" )
       continue;
     // flags
     if ( key == "FLAGS" ) {

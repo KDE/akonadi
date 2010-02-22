@@ -74,6 +74,8 @@ void ItemCreateJob::doStart()
   flags.append( "\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' );
   if ( !d->mItem.remoteId().isEmpty() )
     flags.append( ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' ) );
+  if ( !d->mItem.remoteRevision().isEmpty() )
+    flags.append( ImapParser::quote( "\\RemoteRevision[" + d->mItem.remoteRevision().toUtf8() + ']' ) );
   flags += d->mItem.flags().toList();
 
   // switch between a normal APPEND and a multipart X-AKAPPEND, based on the number of parts

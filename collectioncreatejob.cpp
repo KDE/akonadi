@@ -76,6 +76,7 @@ void CollectionCreateJob::doStart( )
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
   command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
+  command += " REMOTEREVISION \"" + d->mCollection.remoteRevision().toUtf8() + '"';
   foreach ( Attribute* attr, d->mCollection.attributes() )
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
@@ -104,6 +105,7 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
     col.setParentCollection( d->mCollection.parentCollection() );
     col.setName( d->mCollection.name() );
     col.setRemoteId( d->mCollection.remoteId() );
+    col.setRemoteRevision( d->mCollection.remoteRevision() );
     d->mCollection = col;
   } else {
     Job::doHandleResponse( tag, data );
