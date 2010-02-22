@@ -81,6 +81,7 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   Q_D( ItemModifyJob );
 
   d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
+  d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
 }
 
 ItemModifyJob::~ItemModifyJob()
@@ -98,6 +99,12 @@ void ItemModifyJob::doStart()
         if ( !d->mItem.remoteId().isNull() ) {
           changes << "REMOTEID.SILENT";
           changes << ImapParser::quote( d->mItem.remoteId().toUtf8() );
+        }
+        break;
+      case ItemModifyJobPrivate::RemoteRevision:
+        if ( !d->mItem.remoteId().isNull() ) {
+          changes << "REMOTEREVISION.SILENT";
+          changes << ImapParser::quote( d->mItem.remoteRevision().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::Dirty:
