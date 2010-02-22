@@ -57,7 +57,7 @@ class CollectionDialog::Private
       KLineEdit* filterCollectionLineEdit = new KLineEdit( widget );
       filterCollectionLineEdit->setClearButtonShown( true );
       filterCollectionLineEdit->setClickMessage( i18nc( "@info/plain Displayed grayed-out inside the "
-                                                   "textbox, verb to search", "Search" ) );
+                                                        "textbox, verb to search", "Search" ) );
       layout->addWidget( filterCollectionLineEdit );
 
       mView = new EntityTreeView;
@@ -98,11 +98,14 @@ class CollectionDialog::Private
       filterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
       mView->setModel( filterCollection );
 
-      mParent->connect( filterCollectionLineEdit, SIGNAL( textChanged(QString) ), filterCollection, SLOT( setFilterFixedString(QString) ) );
+      mParent->connect( filterCollectionLineEdit, SIGNAL( textChanged( const QString& ) ),
+                        filterCollection, SLOT( setFilterFixedString( const QString& ) ) );
 
-      mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( QItemSelection, QItemSelection ) ),
+      mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
                         mParent, SLOT( slotSelectionChanged() ) );
-      mParent->connect( mView,SIGNAL(doubleClicked(const QModelIndex &)),mParent, SLOT(accept()));
+
+      mParent->connect( mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
+                        mParent, SLOT( accept() ) );
     }
 
     ~Private()
