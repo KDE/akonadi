@@ -29,7 +29,6 @@ kde4_add_executable(akonaditest NOGUI ${akonaditest_SRCS})
 target_link_libraries(akonaditest
   akonadi-kde
   ${KDE4_KDEUI_LIBS}
-  ${Boost_LIBRARIES}
   ${KDE4_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
