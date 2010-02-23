@@ -34,7 +34,6 @@ target_link_libraries(akonadi_benchmarker
   akonadi-kde
   akonadi-kmime
   ${KDE4_KDEUI_LIBS}
-  ${Boost_LIBRARIES}
   ${KDE4_AKONADI_LIBS}
   ${KDE4_KMIME_LIBRARY}
   ${KDE4_KDECORE_LIBS}
