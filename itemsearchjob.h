@@ -23,6 +23,8 @@
 #include <akonadi/item.h>
 #include <akonadi/job.h>
 
+#include <QtCore/QUrl>
+
 namespace Akonadi {
 
 class ItemFetchScope;
@@ -33,6 +35,13 @@ class ItemSearchJobPrivate;
  *
  * This job searches for items that match a given search query and returns
  * the list of matching item.
+ *
+ * <b>Attention:</b> Since this is an ordinary SPARQL query, potentially the whole Nepomuk
+ *                   store is searched, which can be very slow. Therefore, you should create
+ *                   SPARQL queries that only search for items that Akonadi fed into Nepomuk.
+ *                   This can be done by limiting the results to statements that contain the
+ *                   predicate with the akonadiItemIdUri() URI. This limits the search result to
+ *                   to Nepomuk resources that were added by the Akonadi Nepomuk feeders.
  *
  * @code
  *
@@ -112,6 +121,19 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      * Returns the items that matched the search query.
      */
     Item::List items() const;
+
+    /**
+     * Returns an Uri that represents a predicate that is always added to the Nepomuk resource
+     * by the Akonadi Nepomuk feeders.
+     *
+     * The statement containing this predicate has the Akonadi Item ID of the resource as string
+     * as the object, and the Nepomuk resource, e.g. a PersonContact, as the subject.
+     *
+     * Always limit your searches to statements that contain this URI as predicate.
+     *
+     * @since 4.5
+     */
+    static QUrl akonadiItemIdUri();
 
   Q_SIGNALS:
     /**
