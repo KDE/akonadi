@@ -138,7 +138,7 @@ Item::List ItemSearchJob::items() const
   return d->mItems;
 }
 
-QUrl ItemSearchJob:: akonadiItemIdUri()
+QUrl ItemSearchJob::akonadiItemIdUri()
 {
   return QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) );
 }

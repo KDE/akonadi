@@ -123,7 +123,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
     Item::List items() const;
 
     /**
-     * Returns an Uri that represents a predicate that is always added to the Nepomuk resource
+     * Returns an URI that represents a predicate that is always added to the Nepomuk resource
      * by the Akonadi Nepomuk feeders.
      *
      * The statement containing this predicate has the Akonadi Item ID of the resource as string
