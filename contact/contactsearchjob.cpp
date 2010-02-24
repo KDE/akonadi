@@ -54,21 +54,34 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
             "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
 
   if ( criterion == Name ) {
-    query += QString::fromLatin1( "SELECT DISTINCT ?r WHERE {"
-                                  "  graph ?g { ?r a nco:PersonContact ."
-                                  "  ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
-                                  "} } " );
+    query += QString::fromLatin1(
+        "SELECT DISTINCT ?r "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?r a nco:PersonContact . "
+        "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
+        "  } "
+        "} " );
   } else if ( criterion == Email ) {
-    query += QString::fromLatin1( "SELECT DISTINCT ?person WHERE {"
-                                  "  graph ?g { ?person a nco:PersonContact ;"
-                                  "          nco:hasEmailAddress ?email ."
-                                  "  ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-                                  " } }" );
+    query += QString::fromLatin1(
+        "SELECT DISTINCT ?person "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?person a nco:PersonContact ; "
+        "            nco:hasEmailAddress ?email . "
+        "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
+        "  } "
+        "}" );
   } else if ( criterion == NickName ) {
-    query += QString::fromLatin1( "SELECT DISTINCT ?r WHERE {"
-                                  "  graph ?g { ?r a nco:PersonContact ."
-                                  "  ?r nco:nickname ?v . ?v bif:contains \"'%1'\" ."
-                                  " } }" );
+    query += QString::fromLatin1(
+        "SELECT DISTINCT ?r "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?r a nco:PersonContact . "
+        "    ?r nco:nickname ?v . "
+        "    ?v bif:contains \"'%1'\" . "
+        "  } "
+        "}" );
   }
 
   if ( d->mLimit != -1 ) {
