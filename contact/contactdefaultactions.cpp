@@ -46,7 +46,7 @@ void ContactDefaultActions::connectToView( QObject *view )
 {
   const QMetaObject *metaObject = view->metaObject();
 
-  if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "urlClicked( const QUrl& )" ) ) != -1 )
+  if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "urlClicked( const KUrl& )" ) ) != -1 )
     connect( view, SIGNAL( urlClicked( const KUrl& ) ), SLOT( showUrl( const KUrl& ) ) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "emailClicked( const QString&, const QString& )" ) ) != -1 )
