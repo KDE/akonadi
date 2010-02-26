@@ -61,6 +61,7 @@ class CollectionDialog::Private
       layout->addWidget( filterCollectionLineEdit );
 
       mView = new EntityTreeView;
+      mView->setDragDropMode( QAbstractItemView::NoDragDrop );
       mView->header()->hide();
       layout->addWidget( mView );
 
