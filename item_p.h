@@ -42,7 +42,8 @@ class ItemPrivate : public EntityPrivate
         mSize( 0 ),
         mModificationTime(),
         mFlagsOverwritten( false ),
-        mSizeChanged( false )
+        mSizeChanged( false ),
+        mClearPayload( false )
     {
     }
 
@@ -63,6 +64,7 @@ class ItemPrivate : public EntityPrivate
       mFlagsOverwritten = other.mFlagsOverwritten;
       mSizeChanged = other.mSizeChanged;
       mCollectionId = other.mCollectionId;
+      mClearPayload = other.mClearPayload;
     }
 
     ~ItemPrivate()
@@ -94,6 +96,7 @@ class ItemPrivate : public EntityPrivate
     Item::Flags mDeletedFlags;
     bool mFlagsOverwritten;
     bool mSizeChanged;
+    bool mClearPayload;
 };
 
 }

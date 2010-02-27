@@ -114,6 +114,9 @@ void ItemModifyJob::doStart()
     }
   }
 
+  if ( d->mItem.d_func()->mClearPayload )
+    changes << "INVALIDATECACHE.SILENT";
+
   if ( d->mItem.d_func()->mFlagsOverwritten ) {
     changes << "FLAGS.SILENT";
     changes << '(' + ImapParser::join( d->mItem.flags(), " " ) + ')';

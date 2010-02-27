@@ -209,6 +209,12 @@ class AKONADI_EXPORT Item : public Entity
     QSet<QByteArray> loadedPayloadParts() const;
 
     /**
+     * Clears the payload data from the cache, so they will be refetched
+     * from the backend on next access.
+     */
+    void clearPayload();
+
+    /**
      * Sets the @p revision number of the item.
      *
      * @note Do not modify this value from within an application,

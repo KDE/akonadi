@@ -132,6 +132,11 @@ void Item::setPayloadFromData( const QByteArray &data )
   ItemSerializer::deserialize( *this, FullPayload, data, 0, false );
 }
 
+void Item::clearPayload()
+{
+  d_func()->mClearPayload = true;
+}
+
 int Item::revision() const
 {
   return d_func()->mRevision;
