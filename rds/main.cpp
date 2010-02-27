@@ -27,6 +27,7 @@ int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
   new BridgeServer<AkonadiBridgeConnection>( 31415 );
+  new BridgeServer<DBusBridgeConnection>( 31416 );
   return app.exec();
 }
 
