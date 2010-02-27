@@ -56,7 +56,7 @@ class PimItem;
   [+-]FLAGS <flag-list>
   REMOTEID <remote-identifier>
   REMOTEREVISION <remote-revision>
-  DIRTY
+  DIRTY false
   INVALIDATECACHE
   <attribute-id> <attribute-value>
   <part-id> <part-value>

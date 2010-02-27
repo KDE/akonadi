@@ -209,7 +209,7 @@ bool Store::parseStream()
     }
 
     else if ( command == AKONADI_PARAM_UNDIRTY ) {
-      m_streamParser->readString(); // ### ???
+      m_streamParser->readString(); // read the 'false' string
       item.setDirty( false );
     }
 
