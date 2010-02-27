@@ -226,6 +226,7 @@ if (XSLTPROC_EXECUTABLE)
    add_subdirectory(server)
 endif (XSLTPROC_EXECUTABLE)
 
+add_subdirectory(rds)
 
 ############### install stuff ###############
 
