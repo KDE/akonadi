@@ -57,6 +57,7 @@ class PimItem;
   REMOTEID <remote-identifier>
   REMOTEREVISION <remote-revision>
   DIRTY
+  INVALIDATECACHE
   <attribute-id> <attribute-value>
   <part-id> <part-value>
   @endverbatim
@@ -83,6 +84,7 @@ class PimItem;
 
   The following operations are only allowed by resources:
   - resetting the dirty flag
+  - invalidating the cache
   - modifying the remote identifier
   - modifying the remote revision
 

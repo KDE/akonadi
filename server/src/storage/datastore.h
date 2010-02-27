@@ -124,6 +124,9 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
 
+    // removes all payload parts for this item.
+    bool invalidateItemCache( const PimItem &item );
+
     /* --- Collection ------------------------------------------------------ */
     bool appendCollection( Collection &collection );
     /// removes the given collection and all its content

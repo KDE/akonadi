@@ -206,6 +206,35 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
   return true;
 }
 
+bool DataStore::invalidateItemCache( const PimItem &item )
+{
+  // find all expired item parts
+  SelectQueryBuilder<Part> qb;
+  qb.addTable( PimItem::tableName() );
+  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+  qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
+  qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
+  qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
+
+  if ( !qb.exec() )
+    return false;
+
+  Part::List parts = qb.result();
+  PartHelper::loadData(parts); //FIXME: not needed anymore to read back the data itself?
+
+  if ( parts.isEmpty() )
+    return true;
+
+  // clear data field
+  for ( int i = 0; i < parts.count(); ++i) {
+    if ( !PartHelper::update( &(parts[ i ]), QByteArray(), 0) )
+      return false;
+  }
+
+  return true;
+}
+
 /* --- Collection ------------------------------------------------------ */
 bool DataStore::appendCollection( Collection &collection )
 {

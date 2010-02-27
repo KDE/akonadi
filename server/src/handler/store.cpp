@@ -129,6 +129,7 @@ bool Store::parseStream()
 
   QSet<QByteArray> changes;
   qint64 partSizes = 0;
+  bool invalidateCache = false;
 
   // apply modifications
   m_streamParser->beginList();
@@ -210,6 +211,10 @@ bool Store::parseStream()
     else if ( command == AKONADI_PARAM_UNDIRTY ) {
       m_streamParser->readString(); // ### ???
       item.setDirty( false );
+    }
+
+    else if ( command == AKONADI_PARAM_INVALIDATECACHE ) {
+      invalidateCache = true;
     }
 
     else if ( command == AKONADI_PARAM_SIZE ) {
@@ -331,6 +336,13 @@ bool Store::parseStream()
         item.setDirty( true );
       if ( !item.update() )
         throw HandlerException( "Unable to write item changes into the database" );
+
+      if ( invalidateCache ) {
+        if ( !store->invalidateItemCache( item ) ) {
+          throw HandlerException( "Unable to invalidate item cache in the database" );
+        }
+      }
+
       store->notificationCollector()->itemChanged( item, changes );
     }
 
