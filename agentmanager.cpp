@@ -26,6 +26,7 @@
 
 #include "collection.h"
 
+#include <QtDBus/QDBusServiceWatcher>
 #include <QtGui/QWidget>
 
 #include <KGlobal>
@@ -264,10 +265,9 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identi
   return instance;
 }
 
-void AgentManagerPrivate::serviceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
+void AgentManagerPrivate::serviceOwnerChanged( const QString&, const QString &oldOwner, const QString& )
 {
-  Q_UNUSED( newOwner );
-  if ( service == QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) && oldOwner.isEmpty() )
+  if ( oldOwner.isEmpty() )
     readAgentTypes();
 }
 
@@ -319,7 +319,11 @@ AgentManager::AgentManager()
     }
   }
 
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)), SLOT(serviceOwnerChanged(QString,QString,QString)) );
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                                                          QDBusConnection::sessionBus(),
+                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
+  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 }
 
 // @endcond

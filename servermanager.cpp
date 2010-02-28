@@ -56,12 +56,8 @@ class Akonadi::ServerManagerPrivate
       delete instance;
     }
 
-    void serviceOwnerChanged( const QString &service, const QString &oldOwner, const QString &newOwner )
+    void serviceOwnerChanged( const QString&, const QString&, const QString& )
     {
-      Q_UNUSED( oldOwner );
-      Q_UNUSED( newOwner );
-      if ( service != AKONADI_SERVER_SERVICE && service != AKONADI_CONTROL_SERVICE )
-        return;
       serverProtocolVersion = -1,
       checkStatusChanged();
     }
@@ -108,9 +104,13 @@ K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
 ServerManager::ServerManager(ServerManagerPrivate * dd ) :
     d( dd )
 {
-  connect( QDBusConnection::sessionBus().interface(),
-           SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           SLOT(serviceOwnerChanged(QString,QString,QString)) );
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AKONADI_SERVER_SERVICE,
+                                                          QDBusConnection::sessionBus(),
+                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
+  watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
+
+  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
   // HACK see if we are a agent ourselves and skip AgentManager creation since that can cause deadlocks
   QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );

@@ -38,6 +38,7 @@
 
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusServiceWatcher>
 #include <QtCore/QMetaMethod>
 #include <QtCore/QTime>
 #include <QtCore/QTimer>
@@ -544,9 +545,11 @@ void GetLockJob::Private::doStart()
     //kDebug() << "Got lock immediately.";
     q->emitResult();
   } else {
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, QDBusConnection::sessionBus(),
+                                                            QDBusServiceWatcher::WatchForOwnerChange, q );
     //kDebug() << "Waiting for lock.";
-    connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
-             q, SLOT( serviceOwnerChanged( QString, QString, QString ) ) );
+    connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+             q, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
     mSafetyTimer = new QTimer( q );
     mSafetyTimer->setSingleShot( true );
@@ -556,11 +559,9 @@ void GetLockJob::Private::doStart()
   }
 }
 
-void GetLockJob::Private::serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
+void GetLockJob::Private::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
-  Q_UNUSED( oldOwner );
-
-  if ( name == DBUS_SERVICE_NAME && newOwner.isEmpty() ) {
+  if ( newOwner.isEmpty() ) {
     const bool gotIt = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
     if ( gotIt ) {
       mSafetyTimer->stop();
