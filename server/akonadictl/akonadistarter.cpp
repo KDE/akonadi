@@ -21,19 +21,23 @@
 
 #include "../../libs/protocol_p.h"
 
-#include <QCoreApplication>
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
-#include <QDebug>
-#include <QProcess>
-#include <QTimer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
+#include <QtCore/QProcess>
+#include <QtCore/QTimer>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusServiceWatcher>
 
 AkonadiStarter::AkonadiStarter(QObject * parent) :
     QObject( parent ),
     mRegistered( false )
 {
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           SLOT( serviceOwnerChanged(QString,QString,QString)) );
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                                                          QDBusConnection::sessionBus(),
+                                                          QDBusServiceWatcher::WatchForOwnerChange, this );
+
+  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 }
 
 bool AkonadiStarter::start()
@@ -60,11 +64,11 @@ bool AkonadiStarter::start()
   return true;
 }
 
-void AkonadiStarter::serviceOwnerChanged(const QString & name, const QString & oldOwner, const QString & newOwner)
+void AkonadiStarter::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
-  Q_UNUSED( oldOwner );
-  if ( name != QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) || newOwner.isEmpty() )
+  if ( newOwner.isEmpty() )
     return;
+
   mRegistered = true;
   QCoreApplication::instance()->quit();
 }

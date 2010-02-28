@@ -42,6 +42,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
+#include <QtDBus/QDBusServiceWatcher>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -144,8 +145,12 @@ AkonadiServer::AkonadiServer( QObject* parent )
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 
-    connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-             SLOT(serviceOwnerChanged(QString,QString,QString)) );
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                                                            QDBusConnection::sessionBus(),
+                                                            QDBusServiceWatcher::WatchForOwnerChange, this );
+
+    connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+             this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
     // Unhide all the items that are actually hidden.
     // The hidden flag was probably left out after an (abrupt)
@@ -290,10 +295,9 @@ void AkonadiServer::stopDatabaseProcess()
   DbConfig::configuredDatabase()->stopInternalServer();
 }
 
-void AkonadiServer::serviceOwnerChanged(const QString & name, const QString & oldOwner, const QString & newOwner)
+void AkonadiServer::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
-  Q_UNUSED( oldOwner );
-  if ( name == QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ) && newOwner.isEmpty() ) {
+  if ( newOwner.isEmpty() ) {
     akError() << "Control process died, committing suicide!";
     quit();
   }

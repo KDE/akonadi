@@ -29,7 +29,7 @@ class AkonadiStarter : public QObject
     explicit AkonadiStarter( QObject *parent = 0 );
     bool start();
 
-  private slots:
+  private Q_SLOTS:
     void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
   private:
