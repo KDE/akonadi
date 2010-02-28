@@ -35,8 +35,10 @@
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
 #include <QtCore/QTimer>
+#include <QSettings>
 
 #include <QtNetwork/QLocalSocket>
+#include <QtNetwork/QTcpSocket>
 
 #define PIPELINE_LENGTH 2
 
@@ -52,25 +54,104 @@ void SessionPrivate::startNext()
 
 void SessionPrivate::reconnect()
 {
-  // should be checking connection method and value validity
-  if ( socket->state() != QLocalSocket::ConnectedState &&
-       socket->state() != QLocalSocket::ConnectingState ) {
+  QLocalSocket *localSocket = qobject_cast<QLocalSocket*>( socket );
+  if ( localSocket && (localSocket->state() == QLocalSocket::ConnectedState
+                       || localSocket->state() == QLocalSocket::ConnectingState ) ) {
+    // nothing to do, we are still/already connected
+    return;
+  }
+
+  QTcpSocket *tcpSocket = qobject_cast<QTcpSocket*>( socket );
+  if ( tcpSocket && (tcpSocket->state() == QTcpSocket::ConnectedState
+                     || tcpSocket->state() == QTcpSocket::ConnectingState ) ) {
+    // same here, but for TCP
+    return;
+  }
+
+  // try to figure out where to connect to
+  QString serverAddress;
+  quint16 port = 0;
+  bool useTcp = false;
+
+  // env var has precedence
+  const QByteArray serverAddressEnvVar = qgetenv( "AKONADI_SERVER_ADDRESS" );
+  if ( !serverAddressEnvVar.isEmpty() ) {
+    const int pos = serverAddressEnvVar.indexOf( ':' );
+    const QByteArray protocol = serverAddressEnvVar.left( pos  );
+    QMap<QString, QString> options;
+    foreach ( const QString entry, QString::fromLatin1( serverAddressEnvVar.mid( pos + 1 ) ).split( QLatin1Char(',') ) ) {
+      const QStringList pair = entry.split( QLatin1Char('=') );
+      if ( pair.size() != 2 )
+        continue;
+      options.insert( pair.first(), pair.last() );
+    }
+    kDebug() << protocol << options;
+
+    if ( protocol == "tcp" ) {
+      serverAddress = options.value( QLatin1String("host") );
+      port = options.value( QLatin1String( "port") ).toUInt();
+      useTcp = true;
+    } else if ( protocol == "unix" ) {
+      serverAddress = options.value( QLatin1String("path") );
+    } else if ( protocol == "pipe" ) {
+      serverAddress = options.value( QLatin1String("name" ) );
+    }
+  }
+
+  // try config file next, fall back to defaults if that fails as well
+  if ( serverAddress.isEmpty() ) {
+    const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    const QFileInfo fileInfo( connectionConfigFile );
+    if ( !fileInfo.exists() ) {
+      kDebug() << "Akonadi Client Session: connection config file '"
+                  "akonadi/akonadiconnectionrc' can not be found in"
+               << XdgBaseDirs::homePath( "config" ) << "nor in any of"
+               << XdgBaseDirs::systemPathList( "config" );
+    }
+    const QSettings connectionSettings( connectionConfigFile, QSettings::IniFormat );
+
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
-    const QString namedPipe = mConnectionSettings->value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
-    socket->connectToServer( namedPipe );
+    serverAddress = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
 #else
     const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-    const QString path = mConnectionSettings->value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
-    kDebug() << "connectToServer" << path;
-    socket->connectToServer( path );
+    serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
 #endif
+  }
+
+  // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
+  // but that's probably not something we need to support anyway
+  if ( !socket ) {
+    if ( !useTcp ) {
+      socket = localSocket = new QLocalSocket( mParent );
+      mParent->connect( localSocket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
+    } else {
+      socket = tcpSocket = new QTcpSocket( mParent );
+      mParent->connect( tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError(QAbstractSocket::SocketError)) );
+    }
+    mParent->connect( socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
+    mParent->connect( socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
+  }
+
+  // actually do connect
+  kDebug() << "connectToServer" << serverAddress;
+  if ( !useTcp ) {
+    localSocket->connectToServer( serverAddress );
+  } else {
+    tcpSocket->connectToHost( serverAddress, port );
   }
 }
 
 void SessionPrivate::socketError( QLocalSocket::LocalSocketError )
 {
   Q_ASSERT( mParent->sender() == socket );
-  kWarning() << "Socket error occurred:" << socket->errorString();
+  kWarning() << "Socket error occurred:" << qobject_cast<QLocalSocket*>( socket )->errorString();
+  socketDisconnected();
+}
+
+void SessionPrivate::socketError( QAbstractSocket::SocketError )
+{
+  Q_ASSERT( mParent->sender() == socket );
+  kWarning() << "Socket error occurred:" << qobject_cast<QTcpSocket*>( socket )->errorString();
   socketDisconnected();
 }
 
@@ -243,7 +324,7 @@ void SessionPrivate::serverStateChanged( ServerManager::State state )
 
 
 SessionPrivate::SessionPrivate( Session *parent )
-    : mParent( parent ), mConnectionSettings( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
+    : mParent( parent ), socket( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
 {
 }
 
@@ -265,27 +346,8 @@ void SessionPrivate::init( const QByteArray &id )
 
   if ( ServerManager::state() == ServerManager::NotRunning )
     ServerManager::start();
-
-  // TODO: shouldn't this be done in reconnect() instead? we wont read the file if the server was only started later otherwise...
-  const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
-
-  QFileInfo fileInfo( connectionConfigFile );
-  if ( !fileInfo.exists() ) {
-    kDebug() << "Akonadi Client Session: connection config file '"
-                "akonadi/akonadiconnectionrc' can not be found in"
-             << XdgBaseDirs::homePath( "config" ) << "nor in any of"
-             << XdgBaseDirs::systemPathList( "config" );
-  }
-
-  mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );
-
-  // should check connection method
-  socket = new QLocalSocket( mParent );
-
-  mParent->connect( socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
-  mParent->connect( socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
-  mParent->connect( socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   mParent->connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)) );
+
   reconnect();
 }
 

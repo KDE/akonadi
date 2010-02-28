@@ -28,10 +28,9 @@
 #include <QtNetwork/QLocalSocket>
 
 #include <QtCore/QQueue>
-#include <QtCore/QSettings>
 #include <QtCore/QThreadStorage>
 
-class QLocalSocket;
+class QIODevice;
 
 namespace Akonadi {
 
@@ -46,7 +45,6 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     virtual ~SessionPrivate()
     {
       delete parser;
-      delete mConnectionSettings;
     }
 
     virtual void init( const QByteArray &sessionId );
@@ -56,6 +54,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     void serverStateChanged( ServerManager::State );
     void socketDisconnected();
     void socketError( QLocalSocket::LocalSocketError error );
+    void socketError( QAbstractSocket::SocketError error );
     void dataReceived();
     void doStartNext();
     void startJob( Job* job );
@@ -101,8 +100,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     Session *mParent;
     QByteArray sessionId;
-    QSettings *mConnectionSettings;
-    QLocalSocket* socket;
+    QIODevice* socket;
     bool connected;
     int theNextTag;
     int protocolVersion;

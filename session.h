@@ -114,6 +114,7 @@ class AKONADI_EXPORT Session : public QObject
 
     Q_PRIVATE_SLOT( d, void reconnect() )
     Q_PRIVATE_SLOT( d, void socketError(QLocalSocket::LocalSocketError) )
+    Q_PRIVATE_SLOT( d, void socketError(QAbstractSocket::SocketError) )
     Q_PRIVATE_SLOT( d, void socketDisconnected() )
     Q_PRIVATE_SLOT( d, void dataReceived() )
     Q_PRIVATE_SLOT( d, void doStartNext() )
