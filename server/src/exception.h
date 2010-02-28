@@ -27,7 +27,7 @@
 namespace Akonadi {
 
 /**
-  Base class for execpetion used internally by the Akonadi server.
+  Base class for exception used internally by the Akonadi server.
 */
 class Exception : public std::exception
 {
