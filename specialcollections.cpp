@@ -184,13 +184,12 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     return false;
   }
 
-  {
+  if ( !collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type ) {
     Collection attributeCollection( collection );
     SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>( Collection::AddIfMissing );
     attribute->setCollectionType( type );
 
-    CollectionModifyJob *job = new CollectionModifyJob( attributeCollection );
-    job->start();
+    new CollectionModifyJob( attributeCollection );
   }
 
   if ( !d->mFoldersForResource.contains( resourceId ) ) {
