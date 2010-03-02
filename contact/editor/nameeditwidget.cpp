@@ -21,12 +21,16 @@
 
 #include "nameeditwidget.h"
 
+#include "nameeditdialog.h"
+
 #include <QtCore/QString>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QToolButton>
 
 #include <kabc/addressee.h>
 #include <kdialog.h>
 #include <klineedit.h>
+#include <klocale.h>
 
 NameEditWidget::NameEditWidget( QWidget *parent )
   : QWidget( parent )
@@ -38,7 +42,12 @@ NameEditWidget::NameEditWidget( QWidget *parent )
   mNameEdit = new KLineEdit;
   layout->addWidget( mNameEdit );
 
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), SLOT( textChanged( const QString& ) ) );
+  QToolButton *button = new QToolButton;
+  button->setText( i18n( "..." ) );
+  layout->addWidget( button );
+
+  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+  connect( button, SIGNAL( clicked() ), this, SLOT( openNameEditDialog() ) );
 }
 
 NameEditWidget::~NameEditWidget()
@@ -52,20 +61,52 @@ void NameEditWidget::setReadOnly( bool readOnly )
 
 void NameEditWidget::loadContact( const KABC::Addressee &contact )
 {
+  mContact = contact;
+
+  disconnect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
   mNameEdit->setText( contact.assembledName() );
+  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
 }
 
 void NameEditWidget::storeContact( KABC::Addressee &contact ) const
 {
-  contact.setNameFromString( mNameEdit->text() );
+  contact.setPrefix( mContact.prefix() );
+  contact.setGivenName( mContact.givenName() );
+  contact.setAdditionalName( mContact.additionalName() );
+  contact.setFamilyName( mContact.familyName() );
+  contact.setSuffix( mContact.suffix() );
 }
 
 void NameEditWidget::textChanged( const QString &text )
 {
-  KABC::Addressee contact;
-  contact.setNameFromString( text );
+  mContact.setNameFromString( text );
 
-  emit nameChanged( contact );
+  emit nameChanged( mContact );
+}
+
+void NameEditWidget::openNameEditDialog()
+{
+  NameEditDialog dlg( this );
+
+  dlg.setPrefix( mContact.prefix() );
+  dlg.setGivenName( mContact.givenName() );
+  dlg.setAdditionalName( mContact.additionalName() );
+  dlg.setFamilyName( mContact.familyName() );
+  dlg.setSuffix( mContact.suffix() );
+
+  if ( dlg.exec() ) {
+    mContact.setPrefix( dlg.prefix() );
+    mContact.setGivenName( dlg.givenName() );
+    mContact.setAdditionalName( dlg.additionalName() );
+    mContact.setFamilyName( dlg.familyName() );
+    mContact.setSuffix( dlg.suffix() );
+
+    disconnect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+    mNameEdit->setText( mContact.assembledName() );
+    connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+
+    emit nameChanged( mContact );
+  }
 }
 
 #include "nameeditwidget.moc"

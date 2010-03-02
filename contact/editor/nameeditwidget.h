@@ -58,6 +58,7 @@ class NameEditWidget : public QWidget
 
   private Q_SLOTS:
     void textChanged( const QString& );
+    void openNameEditDialog();
 
   private:
     KLineEdit *mNameEdit;

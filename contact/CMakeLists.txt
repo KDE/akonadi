@@ -33,6 +33,7 @@ set(akonadicontact_editor_SRCS
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp
   editor/kedittagsdialog.cpp
+  editor/nameeditdialog.cpp
   editor/nameeditwidget.cpp
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
