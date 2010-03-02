@@ -118,7 +118,7 @@ ResourceBase::ResourceBase( const QString & id )
 {
   Q_D( ResourceBase );
 
-  new ResourceAdaptor( this );
+  new Akonadi__ResourceAdaptor( this );
 
   d->scheduler = new ResourceScheduler( this );
 

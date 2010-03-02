@@ -30,7 +30,7 @@
 #include <akonadi/item.h>
 
 class KJob;
-class ResourceAdaptor;
+class Akonadi__ResourceAdaptor;
 
 namespace Akonadi {
 
@@ -485,7 +485,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     static int init( ResourceBase *r );
 
     // dbus resource interface
-    friend class ::ResourceAdaptor;
+    friend class ::Akonadi__ResourceAdaptor;
 
     bool requestItemDelivery( qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &parts );
 
