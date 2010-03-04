@@ -27,6 +27,7 @@
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
+#include <kpimutils/email.h>
 #include <ktoolinvocation.h>
 
 #include <QtCore/QUrl>
@@ -71,10 +72,7 @@ void ContactDefaultActions::sendEmail( const QString &name, const QString &addre
 {
   KABC::Addressee contact;
   contact.setNameFromString( name );
-
-  KUrl mailtoUrl( QString::fromLatin1( "mailto:%1" ).arg( contact.fullEmail( address ) ) );
-
-  KToolInvocation::invokeMailer( mailtoUrl );
+  KToolInvocation::invokeMailer( KPIMUtils::encodeMailtoUrl( contact.fullEmail( address ) ) );
 }
 
 void ContactDefaultActions::dialPhoneNumber( const KABC::PhoneNumber &number )
