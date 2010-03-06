@@ -131,6 +131,8 @@ bool Modify::parseStream()
       pos = ImapParser::parseString( line, rid, pos );
       if ( rid == collection.remoteId() )
         continue;
+      if ( !connection()->isOwnerResource( collection ) )
+        throw HandlerException( "Only resources can modify remote identifiers" );
       collection.setRemoteId( rid );
       changes.append( AKONADI_PARAM_REMOTEID );
     } else if ( type == AKONADI_PARAM_REMOTEREVISION ) {

@@ -292,4 +292,13 @@ bool AkonadiConnection::isOwnerResource(const PimItem& item) const
   return false;
 }
 
+bool AkonadiConnection::isOwnerResource(const Collection &collection) const
+{
+  if ( resourceContext().isValid() )
+    return true;
+  if ( sessionId() == collection.resource().name().toUtf8() )
+    return true;
+  return false;
+}
+
 #include "akonadiconnection.moc"

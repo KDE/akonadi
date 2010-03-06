@@ -56,6 +56,7 @@ public:
       Returns @c true if this connection belongs to the owning resource of @p item.
     */
     bool isOwnerResource( const PimItem &item ) const;
+    bool isOwnerResource( const Collection &collection ) const;
 
     const Collection selectedCollection();
 
