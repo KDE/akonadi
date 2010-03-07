@@ -8,6 +8,7 @@ include_directories(
 
 add_subdirectory(tests)
 add_subdirectory(kcm)
+add_subdirectory(editor/im)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
 
@@ -29,6 +30,10 @@ set(akonadicontact_editor_SRCS
   editor/emaileditwidget.cpp
   editor/freebusyeditwidget.cpp
   editor/geoeditwidget.cpp
+  editor/im/imdelegate.cpp
+  editor/im/imeditordialog.cpp
+  editor/im/immodel.cpp
+  editor/im/improtocols.cpp
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp

@@ -1,7 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,42 +19,33 @@
     02110-1301, USA.
 */
 
-#ifndef IMEDITWIDGET_H
-#define IMEDITWIDGET_H
+#ifndef IMPROTOCOLS_H
+#define IMPROTOCOLS_H
 
-#include <QtGui/QWidget>
+#include <kplugininfo.h>
 
-#include <kabc/addressee.h>
-
-#include "im/immodel.h"
-
-class KLineEdit;
-class QToolButton;
-
-/**
- * This widget displays an input field for changing
- * the instant messaging id of a contact.
- */
-class IMEditWidget : public QWidget
+class IMProtocols
 {
-  Q_OBJECT
-
   public:
-    IMEditWidget( QWidget *parent = 0 );
-    ~IMEditWidget();
+    ~IMProtocols();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    static IMProtocols* self();
 
-    void setReadOnly( bool readOnly );
+    /**
+     * Returns the protocol identifiers in a sorted order.
+     */
+    QStringList protocols() const;
 
-  private Q_SLOTS:
-    void edit();
+    QString name( const QString &protocol ) const;
+    QString icon( const QString &protocol ) const;
 
   private:
-    KLineEdit *mIMEdit;
-    QToolButton *mEditButton;
-    IMAddress::List mIMAddresses;
+    IMProtocols();
+
+    static IMProtocols* mSelf;
+
+    QMap<QString, KPluginInfo> mPluginInfos;
+    QStringList mSortedProtocols;
 };
 
 #endif

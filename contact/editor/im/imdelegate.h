@@ -1,7 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,42 +19,22 @@
     02110-1301, USA.
 */
 
-#ifndef IMEDITWIDGET_H
-#define IMEDITWIDGET_H
+#ifndef IMDELEGATE_H
+#define IMDELEGATE_H
 
-#include <QtGui/QWidget>
+#include <QtGui/QStyledItemDelegate>
 
-#include <kabc/addressee.h>
-
-#include "im/immodel.h"
-
-class KLineEdit;
-class QToolButton;
-
-/**
- * This widget displays an input field for changing
- * the instant messaging id of a contact.
- */
-class IMEditWidget : public QWidget
+class IMDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
-
   public:
-    IMEditWidget( QWidget *parent = 0 );
-    ~IMEditWidget();
+    explicit IMDelegate( QObject *parent = 0 );
+    ~IMDelegate();
 
-    void loadContact( const KABC::Addressee &contact );
-    void storeContact( KABC::Addressee &contact ) const;
+    virtual QWidget* createEditor( QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 
-    void setReadOnly( bool readOnly );
-
-  private Q_SLOTS:
-    void edit();
-
-  private:
-    KLineEdit *mIMEdit;
-    QToolButton *mEditButton;
-    IMAddress::List mIMAddresses;
+    virtual void setEditorData( QWidget *editor, const QModelIndex &index ) const;
+    virtual void setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const;
+    virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
 #endif

@@ -1,0 +1,34 @@
+[Desktop Entry]
+Type=Service
+Icon=irc_protocol
+X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-InstantMessagingKABCField=messaging/irc
+Comment=Internet Relay Chat
+Comment[bg]=Протокол IRC
+Comment[fa]=گپ بازپخش اینترنت
+Comment[hu]=IRC (Internet Relay Chat)
+Comment[is]=Internet spjall
+Comment[ja]=インターネットリレーチャット
+Comment[ka]=IRC
+Comment[kk]=Internet Relay Chat хабарласу
+Comment[km]=ជជែក​កំសាន្ត​តាមអ៊ីនធឺណិត
+Comment[ko]=인터넷 릴레이 채팅
+Comment[lt]=Estafetinis Interneto pokalbis
+Comment[lv]=Interneta tērzēšana
+Comment[ne]=इन्टरनेटबाट प्रसारण कुराकानी
+Comment[pa]=ਇੰਟਰਨੈੱਟ ਰੀਲੇਅ ਚਾਟ
+Comment[pl]=IRC (Internet Relay Chat)
+Comment[pt_BR]=Protocolo de bate-papo na Internet - IRC
+Comment[ru]=IRC
+Comment[sl]=Internet Relay Chat (»internetno prenešen klepet«)
+Comment[ta]=இணைய வழங்கும் அறட்டை
+Comment[tg]=IRC (Internet Relay Chat)
+Comment[tr]=İnternet Genel Sohbeti
+Comment[uk]=IRChat
+Comment[x-test]=xxInternet Relay Chatxx
+Comment[zh_CN]=Internet 中继聊天
+Comment[zh_TW]=IRC
+Name=IRC
+Name[ne]=आईआरसी
+Name[x-test]=xxIRCxx
+

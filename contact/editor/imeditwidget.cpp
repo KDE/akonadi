@@ -21,10 +21,30 @@
 
 #include "imeditwidget.h"
 
+#include "im/imeditordialog.h"
+#include "im/improtocols.h"
+
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QToolButton>
 
 #include <kabc/addressee.h>
 #include <klineedit.h>
+#include <klocale.h>
+
+static void splitCustomField( const QString &str, QString &app, QString &name, QString &value )
+{
+  const int colon = str.indexOf( QLatin1Char( ':' ) );
+  if ( colon != -1 ) {
+    const QString tmp = str.left( colon );
+    value = str.mid( colon + 1 );
+
+    const int dash = tmp.indexOf( QLatin1Char( '-' ) );
+    if ( dash != -1 ) {
+      app = tmp.left( dash );
+      name = tmp.mid( dash + 1 );
+    }
+  }
+}
 
 IMEditWidget::IMEditWidget( QWidget *parent )
   : QWidget( parent )
@@ -34,6 +54,12 @@ IMEditWidget::IMEditWidget( QWidget *parent )
 
   mIMEdit = new KLineEdit;
   layout->addWidget( mIMEdit );
+
+  mEditButton = new QToolButton;
+  mEditButton->setText( i18n( "..." ) );
+  layout->addWidget( mEditButton );
+
+  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
 }
 
 IMEditWidget::~IMEditWidget()
@@ -43,6 +69,23 @@ IMEditWidget::~IMEditWidget()
 void IMEditWidget::loadContact( const KABC::Addressee &contact )
 {
   mIMEdit->setText( contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) ) );
+
+  const QStringList customs = contact.customs();
+
+  foreach ( const QString &custom, customs ) {
+    QString app, name, value;
+    splitCustomField( custom, app, name, value );
+
+    if ( app.startsWith( QLatin1String( "messaging/" ) ) ) {
+      if ( name == QLatin1String( "All" ) ) {
+        const QString protocol = app;
+        const QStringList names = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
+
+        foreach ( const QString &name, names )
+          mIMAddresses << IMAddress( protocol, name, (name == mIMEdit->text()) );
+      }
+    }
+  }
 }
 
 void IMEditWidget::storeContact( KABC::Addressee &contact ) const
@@ -51,11 +94,52 @@ void IMEditWidget::storeContact( KABC::Addressee &contact ) const
     contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ), mIMEdit->text() );
   else
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) );
+
+  // create a map with protocol as key and list of names for that protocol as value
+  QMap<QString, QStringList> protocolMap;
+
+  // fill map with all known protocols
+  foreach ( const QString &protocol, IMProtocols::self()->protocols() )
+    protocolMap.insert( protocol, QStringList() );
+
+  // add the configured addresses
+  foreach ( const IMAddress &address, mIMAddresses )
+    protocolMap[ address.protocol() ].append( address.name() );
+
+  // iterate over this list and modify the contact according
+  QMapIterator<QString, QStringList> it( protocolMap );
+  while ( it.hasNext() ) {
+    it.next();
+
+    if ( !it.value().isEmpty() ) {
+      contact.insertCustom( it.key(), QLatin1String( "All" ), it.value().join( QString( 0xE000 ) ) );
+    } else {
+      contact.removeCustom( it.key(), QLatin1String( "All" ) );
+    }
+  }
 }
 
 void IMEditWidget::setReadOnly( bool readOnly )
 {
   mIMEdit->setReadOnly( readOnly );
+  mEditButton->setEnabled( !readOnly );
+}
+
+void IMEditWidget::edit()
+{
+  IMEditorDialog dlg( this );
+  dlg.setAddresses( mIMAddresses );
+
+  if ( dlg.exec() ) {
+    mIMAddresses = dlg.addresses();
+
+    foreach ( const IMAddress &address, mIMAddresses ) {
+      if ( address.preferred() ) {
+        mIMEdit->setText( address.name() );
+        break;
+      }
+    }
+  }
 }
 
 #include "imeditwidget.moc"
