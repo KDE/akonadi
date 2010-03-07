@@ -41,6 +41,8 @@ QWidget* IMDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &
 {
   if ( index.column() == 0 ) {
     KComboBox *comboBox = new KComboBox( parent );
+    comboBox->setFrame( false );
+    comboBox->setAutoFillBackground( true );
 
     const QStringList protocols = IMProtocols::self()->protocols();
     foreach ( const QString &protocol, protocols ) {
