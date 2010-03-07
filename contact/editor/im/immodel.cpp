@@ -199,7 +199,7 @@ QVariant IMModel::headerData( int section, Qt::Orientation orientation, int role
 Qt::ItemFlags IMModel::flags( const QModelIndex &index ) const
 {
   if ( !index.isValid() || index.row() < 0 || index.row() >= mAddresses.count() )
-    return Qt::ItemFlags();
+    return QAbstractItemModel::flags( index );
 
   const Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
   return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
@@ -228,7 +228,7 @@ bool IMModel::insertRows( int row, int count, const QModelIndex &parent )
 
   beginInsertRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i )
-    mAddresses.insert( row + i, IMAddress() );
+    mAddresses.insert( row, IMAddress() );
   endInsertRows();
 
   return true;
