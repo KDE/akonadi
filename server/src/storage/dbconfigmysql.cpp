@@ -66,7 +66,8 @@ bool DbConfigMysql::init( QSettings &settings )
       << QLatin1String( "/usr/local/libexec" )
       << QLatin1String( "/usr/libexec" )
       << QLatin1String( "/opt/mysql/libexec" )
-      << QLatin1String( "/opt/local/lib/mysql5/bin" );
+      << QLatin1String( "/opt/local/lib/mysql5/bin" )
+      << QLatin1String( "/opt/mysql/sbin" );
   if ( defaultServerPath.isEmpty() )
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqld" ), mysqldSearchPath );
 
