@@ -3,6 +3,12 @@ Type=ServiceType
 X-KDE-ServiceType=KABC/IMProtocol
 X-KDE-KAddressBook-CEWVersion=1
 Name=KAddressbook Instant Messaging Protocol
+Name[nb]=KAdressbook lynmeldingsprotokoll
+Name[nn]=Lynmeldingsprotokoll for KDE-adresseboka
+Name[pt]=Protocolo de Mensagens Instantâneas do KAddressbook
+Name[sv]=Addressbokens direktmeddelandeprotokoll
+Name[uk]=Протокол миттєвого обміну повідомленнями KAddressbook
+Name[x-test]=xxKAddressbook Instant Messaging Protocolxx
 [PropertyDef::X-KDE-InstantMessagingKABCField]
 Type=QString
 

@@ -4,5 +4,17 @@ Icon=icq_protocol
 X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/icq
 Comment=ICQ Protocol
+Comment[nb]=ICQ-protokoll
+Comment[nn]=ICQ-protokoll
+Comment[pt]=Protocolo ICQ
+Comment[sv]=ICQ-protokoll
+Comment[uk]=Протокол ICQ
+Comment[x-test]=xxICQ Protocolxx
 Name=ICQ
+Name[nb]=ICQ
+Name[nn]=ICQ
+Name[pt]=ICQ
+Name[sv]=ICQ
+Name[uk]=ICQ
+Name[x-test]=xxICQxx
 

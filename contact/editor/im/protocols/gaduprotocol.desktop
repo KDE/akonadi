@@ -4,5 +4,17 @@ Icon=gadu_protocol
 X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/gadu
 Comment=Gadu-Gadu Protocol
+Comment[nb]=Gadu-Gadu-protokoll
+Comment[nn]=Gadu-Gadu-protokoll
+Comment[pt]=Protocolo Gadu-Gadu
+Comment[sv]=Gadu-Gadu protokoll
+Comment[uk]=Протокол Gadu-Gadu
+Comment[x-test]=xxGadu-Gadu Protocolxx
 Name=Gadu-Gadu
+Name[nb]=Gadu-Gadu
+Name[nn]=Gadu-Gadu
+Name[pt]=Gadu-Gadu
+Name[sv]=Gadu-Gadu
+Name[uk]=Gadu-Gadu
+Name[x-test]=xxGadu-Gaduxx
 
