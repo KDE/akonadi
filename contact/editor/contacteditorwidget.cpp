@@ -25,6 +25,7 @@
 #include "categorieseditwidget.h"
 #include "contacteditorpageplugin.h"
 #include "contactmetadata_p.h"
+#include "customfieldseditwidget.h"
 #include "dateeditwidget.h"
 #include "displaynameeditwidget.h"
 #include "emaileditwidget.h"
@@ -64,6 +65,7 @@ class ContactEditorWidget::Private
     void initGuiLocationTab();
     void initGuiBusinessTab();
     void initGuiPersonalTab();
+    void initGuiCustomFieldsTab();
 
     void loadCustomPages();
 
@@ -120,6 +122,9 @@ class ContactEditorWidget::Private
     // widgets from family group
     KLineEdit *mPartnerWidget;
 
+    // widgets from custom fields group
+    CustomFieldsEditWidget *mCustomFieldsWidget;
+
     // custom editor pages
     QList<Akonadi::ContactEditorPagePlugin*> mCustomPages;
 };
@@ -136,6 +141,7 @@ void ContactEditorWidget::Private::initGui()
   initGuiLocationTab();
   initGuiBusinessTab();
   initGuiPersonalTab();
+  initGuiCustomFieldsTab();
 
   loadCustomPages();
 }
@@ -432,6 +438,17 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   familyLayout->setRowStretch( 1, 1 );
 }
 
+void ContactEditorWidget::Private::initGuiCustomFieldsTab()
+{
+  QWidget *widget = new QWidget;
+  QVBoxLayout *layout = new QVBoxLayout( widget );
+
+  mTabWidget->addTab( widget, i18n( "Custom Fields" ) );
+
+  mCustomFieldsWidget = new CustomFieldsEditWidget;
+  layout->addWidget( mCustomFieldsWidget );
+}
+
 void ContactEditorWidget::Private::loadCustomPages()
 {
   qDeleteAll( mCustomPages );
@@ -537,6 +554,10 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
 
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
 
+  // custom fields group
+  d->mCustomFieldsWidget->setLocalCustomFieldDescriptions( metaData.customFieldDescriptions() );
+  d->mCustomFieldsWidget->loadContact( contact );
+
   // custom pages
   foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
     plugin->loadContact( contact );
@@ -591,6 +612,10 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
 
   // family group
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
+
+  // custom fields group
+  d->mCustomFieldsWidget->storeContact( contact );
+  metaData.setCustomFieldDescriptions( d->mCustomFieldsWidget->localCustomFieldDescriptions() );
 
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
 
@@ -648,6 +673,9 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
 
   // widgets from family group
   d->mPartnerWidget->setReadOnly( readOnly );
+
+  // widgets from custom fields group
+  d->mCustomFieldsWidget->setReadOnly( readOnly );
 
   // custom pages
   foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )

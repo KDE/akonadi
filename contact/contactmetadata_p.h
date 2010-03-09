@@ -23,6 +23,7 @@
 #define AKONADI_CONTACTMETADATA_P_H
 
 #include <QtCore/QStringList>
+#include <QtCore/QVariant>
 
 namespace Akonadi
 {
@@ -66,6 +67,29 @@ class ContactMetaData
      * name of that contact.
      */
     int displayNameMode() const;
+
+    /**
+     * Sets the @p descriptions of the custom fields of that contact.
+     *
+     * The description list contains a QVariantMap for each custom field
+     * with the following keys:
+     *   - key   (string) The identifier of the field
+     *   - title (string) The i18n'ed title of the field
+     *   - type  (string) The type description of the field
+     *     Possible values for type description are
+     *       - text
+     *       - numeric
+     *       - boolean
+     *       - date
+     *       - time
+     *       - datetime
+     */
+    void setCustomFieldDescriptions( const QVariantList &descriptions );
+
+    /**
+     * Returns the descriptions of the custom fields of the contact.
+     */
+    QVariantList customFieldDescriptions() const;
 
   private:
     //@cond PRIVATE

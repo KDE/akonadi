@@ -21,6 +21,9 @@
 
 #include "contactviewer.h"
 
+#include "contactmetadata_p.h"
+#include "contactmetadataattribute_p.h"
+#include "customfieldmanager_p.h"
 #include "textbrowser_p.h"
 
 #include <akonadi/item.h>
@@ -36,7 +39,7 @@
 
 using namespace Akonadi;
 
-static QString contactAsHtml( const KABC::Addressee &contact );
+static QString contactAsHtml( const KABC::Addressee &contact, const QVariantList &customFieldDescriptions );
 
 class ContactViewer::Private
 {
@@ -103,6 +106,7 @@ ContactViewer::ContactViewer( QWidget *parent )
 
   // always fetch full payload for contacts
   fetchScope().fetchFullPayload();
+  fetchScope().fetchAttribute<ContactMetaDataAttribute>();
 }
 
 ContactViewer::~ContactViewer()
@@ -141,7 +145,23 @@ void ContactViewer::itemChanged( const Item &contactItem )
                                           defaultPixmap );
   }
 
-  d->mBrowser->setHtml( contactAsHtml( d->mCurrentContact ) );
+  // merge the local...
+  ContactMetaData metaData;
+  metaData.load( contactItem );
+
+  QVariantList customFieldDescriptions = metaData.customFieldDescriptions();
+
+  // ... and global custom field descriptions
+  const CustomField::List globalCustomFields = CustomFieldManager::globalCustomFieldDescriptions();
+  foreach ( const CustomField &field, globalCustomFields ) {
+    QVariantMap description;
+    description.insert( QLatin1String( "key" ), field.key() );
+    description.insert( QLatin1String( "title" ), field.title() );
+
+    customFieldDescriptions << description;
+  }
+
+  d->mBrowser->setHtml( contactAsHtml( d->mCurrentContact, customFieldDescriptions ) );
 }
 
 void ContactViewer::itemRemoved()
@@ -149,7 +169,7 @@ void ContactViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-static QString contactAsHtml( const KABC::Addressee &contact )
+static QString contactAsHtml( const KABC::Addressee &contact, const QVariantList &customFieldDescriptions )
 {
   // We'll be building a table to display the vCard in.
   // Each row of the table will be built using this string for its HTML.
@@ -282,9 +302,20 @@ static QString contactAsHtml( const KABC::Addressee &contact )
         if ( blacklistedKeys.contains( key ) )
           continue;
 
+        // check whether we have a mapping for the title
         const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
-        if ( keyIt != titleMap.constEnd() )
+        if ( keyIt != titleMap.constEnd() ) {
           key = keyIt.value();
+        } else {
+          // check whether it is a custom local field
+          foreach ( const QVariant &description, customFieldDescriptions ) {
+            const QVariantMap field = description.toMap();
+            if ( field.value( QLatin1String( "key" ) ).toString() == key ) {
+              key = field.value( QLatin1String( "title" ) ).toString();
+              break;
+            }
+          }
+        }
 
         customData += rowFmtStr.arg( key ).arg( value ) ;
       }

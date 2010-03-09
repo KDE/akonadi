@@ -25,6 +25,10 @@ set(akonadicontact_editor_SRCS
   editor/addresseditwidget.cpp
   editor/categorieseditwidget.cpp
   editor/contacteditorwidget.cpp
+  editor/customfieldeditordialog.cpp
+  editor/customfieldsdelegate.cpp
+  editor/customfieldseditwidget.cpp
+  editor/customfieldsmodel.cpp
   editor/dateeditwidget.cpp
   editor/displaynameeditwidget.cpp
   editor/emaileditwidget.cpp
@@ -68,6 +72,8 @@ set(akonadicontact_LIB_SRC
   contactsearchjob.cpp
   contactviewer.cpp
   contactviewerdialog.cpp
+  customfields.cpp
+  customfieldmanager.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
   waitingoverlay.cpp

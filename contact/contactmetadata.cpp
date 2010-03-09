@@ -36,6 +36,7 @@ class ContactMetaData::Private
     }
 
     int mDisplayNameMode;
+    QVariantList mCustomFieldDescriptions;
 };
 
 ContactMetaData::ContactMetaData()
@@ -60,6 +61,8 @@ void ContactMetaData::load( const Akonadi::Item &contact )
     d->mDisplayNameMode = metaData.value( QLatin1String( "DisplayNameMode" ) ).toInt();
   else
     d->mDisplayNameMode = -1;
+
+  d->mCustomFieldDescriptions = metaData.value( QLatin1String( "CustomFieldDescriptions" ) ).toList();
 }
 
 void ContactMetaData::store( Akonadi::Item &contact )
@@ -69,6 +72,9 @@ void ContactMetaData::store( Akonadi::Item &contact )
   QVariantMap metaData;
   if ( d->mDisplayNameMode != -1 )
     metaData.insert( QLatin1String( "DisplayNameMode" ), QVariant( d->mDisplayNameMode ) );
+
+  if ( !d->mCustomFieldDescriptions.isEmpty() )
+    metaData.insert( QLatin1String( "CustomFieldDescriptions" ), d->mCustomFieldDescriptions );
 
   attribute->setMetaData( metaData );
 }
@@ -81,4 +87,14 @@ void ContactMetaData::setDisplayNameMode( int mode )
 int ContactMetaData::displayNameMode() const
 {
   return d->mDisplayNameMode;
+}
+
+void ContactMetaData::setCustomFieldDescriptions( const QVariantList &descriptions )
+{
+  d->mCustomFieldDescriptions = descriptions;
+}
+
+QVariantList ContactMetaData::customFieldDescriptions() const
+{
+  return d->mCustomFieldDescriptions;
 }
