@@ -186,11 +186,13 @@ static QString contactAsHtml( const KABC::Addressee &contact, const QVariantList
 
   // Birthday
   const QDate date = contact.birthday().date();
+  const int years = (date.daysTo( QDate::currentDate() ) / 365);
 
   if ( date.isValid() )
     dynamicPart += rowFmtStr
       .arg( KABC::Addressee::birthdayLabel() )
-      .arg( KGlobal::locale()->formatDate( date, KLocale::ShortDate ) );
+      .arg( KGlobal::locale()->formatDate( date, KLocale::ShortDate ) +
+            QLatin1String( "&nbsp;&nbsp;" ) + i18np( "(One year old)", "(%1 years old)", years ) );
 
   // Phone Numbers
   int counter = 0;
