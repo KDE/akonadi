@@ -209,8 +209,13 @@ class AKONADI_EXPORT Item : public Entity
     QSet<QByteArray> loadedPayloadParts() const;
 
     /**
-     * Clears the payload data from the cache, so they will be refetched
-     * from the backend on next access.
+     * Marks that the payload shall be cleared from the cache when this
+     * item is passed to an ItemModifyJob the next time.
+     * This will trigger a refetch of the payload from the backend when the
+     * item is accessed afterwards. Only resources should have a need for
+     * this functionality.
+     *
+     * @since 4.5
      */
     void clearPayload();
 
