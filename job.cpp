@@ -21,6 +21,7 @@
 
 #include "job.h"
 #include "job_p.h"
+#include <QTime>
 #include "imapparser_p.h"
 #include "session.h"
 #include "session_p.h"
@@ -97,12 +98,25 @@ void JobPrivate::init( QObject *parent )
   else
     mParentJob->addSubjob( q );
 
-  // if there's a job tracer running, tell it about the new job
-  if ( !s_jobtracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
-      s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
-                                         QLatin1String("/jobtracker"),
-                                         QLatin1String("org.freedesktop.Akonadi.JobTracker"),
-                                         QDBusConnection::sessionBus(), 0 );
+  // if there's a job tracker running, tell it about the new job
+  if ( !s_jobtracker ) {
+    // Let's only check for the debugging console every 3 seconds, otherwise every single job
+    // makes a dbus call to the dbus daemon, doesn't help performance.
+    static QTime s_lastTime;
+    if ( s_lastTime.isNull() )
+      s_lastTime.start();
+    if ( s_lastTime.elapsed() > 3000 ) {
+      if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
+        s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
+                                           QLatin1String("/jobtracker"),
+                                           QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+                                           QDBusConnection::sessionBus(), 0 );
+      } else {
+        s_lastTime.restart();
+      }
+    }
+    // Note: we never reset s_jobtracker to 0 when a call fails; but if we did
+    // then we should restart s_lastTime.
   }
   QMetaObject::invokeMethod( q, "signalCreationToJobTracker", Qt::QueuedConnection );
 }
@@ -138,7 +152,7 @@ void JobPrivate::startQueued()
   q->doStart();
   QTimer::singleShot( 0, q, SLOT(startNext()) );
 
-  // if there's a job tracer running, tell it a job started
+  // if there's a job tracker running, tell it a job started
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
