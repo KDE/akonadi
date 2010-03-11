@@ -521,8 +521,9 @@ void AddressEditDialog::fillCountryCombo()
   countries = sortLocaleAware( countries );
 
   mCountryCombo->addItems( countries );
-  mCountryCombo->completionObject()->setItems( countries );
   mCountryCombo->setAutoCompletion( true );
+  mCountryCombo->completionObject()->setItems( countries );
+  mCountryCombo->completionObject()->setIgnoreCase( true );
 
   const QString currentCountry = KGlobal::locale()->countryCodeToName( KGlobal::locale()->country() );
   mCountryCombo->setCurrentIndex( mCountryCombo->findText( currentCountry ) );
