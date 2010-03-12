@@ -44,10 +44,6 @@
 #include "resourceselectjob_p.h"
 #include "collectionfetchscope.h"
 
-#include <QDBusConnection>
-#include <QDBusConnectionInterface>
-
-
 using namespace Akonadi;
 
 QTEST_AKONADIMAIN( CollectionJobTest, NoGUI )
