@@ -25,7 +25,7 @@
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include "public_etm.h"
-#include <Akonadi/EntityTreeView>
+#include <akonadi/entitytreeview.h>
 
 using namespace Akonadi;
 

@@ -22,7 +22,7 @@
 #include <QLocalServer>
 #include <KStandardDirs>
 #include <QDir>
-#include <Akonadi/ItemFetchJob>
+#include <akonadi/itemfetchjob.h>
 
 FakeServerData::FakeServerData(PublicETM *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
   : QObject(parent),
