@@ -379,9 +379,15 @@ static const char s_taskTypes[][25] = {
 
 QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
 {
-  d << task.serial << s_taskTypes[task.type] << "collection" << task.collection.id() << "item" << task.item.id();
-  if ( !task.methodName.isEmpty() )
-    d << task.methodName << task.argument;
+  d << task.serial << s_taskTypes[task.type];
+  if ( task.type != ResourceScheduler::Invalid ) {
+    if ( task.collection.id() != -1 )
+      d << "collection" << task.collection.id();
+    if ( task.item.id() != -1 )
+      d << "item" << task.item.id();
+    if ( !task.methodName.isEmpty() )
+      d << task.methodName << task.argument;
+  }
   return d;
 }
 

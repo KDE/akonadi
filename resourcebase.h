@@ -197,6 +197,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     QString name() const;
 
+    /**
+     * Dump debug output about the resource (currently: only its scheduler)
+     * @since 4.5
+     */
+    void dump();
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the resource has changed.

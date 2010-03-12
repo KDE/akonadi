@@ -674,4 +674,10 @@ void ResourceBase::taskDone()
   d->scheduler->taskDone();
 }
 
+void ResourceBase::dump()
+{
+  Q_D( ResourceBase );
+  d->scheduler->dump();
+}
+
 #include "resourcebase.moc"
