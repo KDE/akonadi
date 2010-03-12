@@ -28,8 +28,8 @@
 class FakeSessionPrivate : public SessionPrivate
 {
   public:
-    FakeSessionPrivate(Session* parent)
-      : SessionPrivate( parent )
+    FakeSessionPrivate(FakeSession* parent)
+      : SessionPrivate( parent ), q_ptr( parent )
     {
 
     }
@@ -38,11 +38,12 @@ class FakeSessionPrivate : public SessionPrivate
 
     /* reimp */ void addJob( Job *job )
     {
+      emit q_ptr->jobAdded( job );
       // Return immediately so that no actual communication happens with the server and
       // the started jobs are completed.
       endJob( job );
     }
-
+    FakeSession *q_ptr;
 };
 
 FakeSession::FakeSession(const QByteArray& sessionId, QObject* parent)

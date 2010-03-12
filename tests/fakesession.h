@@ -36,6 +36,9 @@ public:
 
 signals:
   void bytesRead(int numBytes);
+  void jobAdded( Akonadi::Job* );
+
+  friend class FakeSessionPrivate;
 
 };
 
