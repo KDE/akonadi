@@ -20,6 +20,7 @@ include_directories(
 # add testrunner (application for managing a self-contained test
 # environment)
 
+add_subdirectory(etm_test_app)
 add_subdirectory(testrunner)
 
 # add benchmarker
