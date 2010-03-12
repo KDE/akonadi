@@ -67,10 +67,12 @@ class ResourceScheduler : public QObject
         Collection collection;
         Item item;
         QSet<QByteArray> itemParts;
-        QDBusMessage dbusMsg;
+        QList<QDBusMessage> dbusMsgs;
         QObject *receiver;
         QByteArray methodName;
         QVariant argument;
+
+        void sendDBusReplies( bool success );
 
         bool operator==( const Task &other ) const
         {

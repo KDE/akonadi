@@ -79,9 +79,22 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
   t.type = FetchItem;
   t.item = item;
   t.itemParts = parts;
-  t.dbusMsg = msg;
-  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+
+  // if the current task does already fetch the requested item, break here but
+  // keep the dbus message, so we can send the reply later on
+  if ( mCurrentTask == t ) {
+    mCurrentTask.dbusMsgs << msg;
     return;
+  }
+
+  // If this task is already in the queue, merge with it.
+  const int idx = mTaskList.indexOf( t );
+  if ( idx != -1 ) {
+    mTaskList[ idx ].dbusMsgs << msg;
+    return;
+  }
+
+  t.dbusMsgs << msg;
   mTaskList << t;
   signalTaskToTracker( t, "FetchItem" );
   scheduleNext();
@@ -302,6 +315,15 @@ void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection
       kDebug() << " erasing";
     } else
       ++it;
+  }
+}
+
+void ResourceScheduler::Task::sendDBusReplies( bool success )
+{
+  Q_FOREACH( const QDBusMessage &msg, dbusMsgs ) {
+    QDBusMessage reply( msg );
+    reply << success;
+    QDBusConnection::sessionBus().send( reply );
   }
 }
 

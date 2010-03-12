@@ -226,9 +226,7 @@ void ResourceBase::itemRetrieved( const Item &item )
   Q_D( ResourceBase );
   Q_ASSERT( d->scheduler->currentTask().type == ResourceScheduler::FetchItem );
   if ( !item.isValid() ) {
-    QDBusMessage reply( d->scheduler->currentTask().dbusMsg );
-    reply << false;
-    QDBusConnection::sessionBus().send( reply );
+    d->scheduler->currentTask().sendDBusReplies( false );
     d->scheduler->taskDone();
     return;
   }
@@ -251,14 +249,10 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
 {
   Q_Q( ResourceBase );
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::FetchItem );
-  QDBusMessage reply( scheduler->currentTask().dbusMsg );
   if ( job->error() ) {
     emit q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
-    reply << false;
-  } else {
-    reply << true;
   }
-  QDBusConnection::sessionBus().send( reply );
+  scheduler->currentTask().sendDBusReplies( !job->error() );
   scheduler->taskDone();
 }
 
