@@ -43,9 +43,10 @@ void ResourceScheduler::scheduleFullSync()
 {
   Task t;
   t.type = SyncAll;
-  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
     return;
-  mTaskList << t;
+  queue << t;
   signalTaskToTracker( t, "SyncAll" );
   scheduleNext();
 }
@@ -54,9 +55,10 @@ void ResourceScheduler::scheduleCollectionTreeSync()
 {
   Task t;
   t.type = SyncCollectionTree;
-  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
     return;
-  mTaskList << t;
+  queue << t;
   signalTaskToTracker( t, "SyncCollectionTree" );
   scheduleNext();
 }
@@ -66,9 +68,10 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   Task t;
   t.type = SyncCollection;
   t.collection = col;
-  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
     return;
-  mTaskList << t;
+  queue << t;
   signalTaskToTracker( t, "SyncCollection" );
   scheduleNext();
 }
@@ -88,14 +91,15 @@ void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArr
   }
 
   // If this task is already in the queue, merge with it.
-  const int idx = mTaskList.indexOf( t );
+  TaskList& queue = queueForTaskType( t.type );
+  const int idx = queue.indexOf( t );
   if ( idx != -1 ) {
-    mTaskList[ idx ].dbusMsgs << msg;
+    queue[ idx ].dbusMsgs << msg;
     return;
   }
 
   t.dbusMsgs << msg;
-  mTaskList << t;
+  queue << t;
   signalTaskToTracker( t, "FetchItem" );
   scheduleNext();
 }
@@ -104,9 +108,10 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
 {
   Task t;
   t.type = DeleteResourceCollection;
-  if ( !mTaskList.isEmpty() && ( mTaskList.last() == t || mCurrentTask == t ) )
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
     return;
-  mTaskList << t;
+  queue << t;
   signalTaskToTracker( t, "DeleteResourceCollection" );
   scheduleNext();
 }
@@ -115,12 +120,10 @@ void ResourceScheduler::scheduleChangeReplay()
 {
   Task t;
   t.type = ChangeReplay;
-  if ( mTaskList.contains( t ) )
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
     return;
-  // change replays have to happen before we pull changes from the backend, otherwise
-  // we will overwrite our still unsaved local changes if the backend can't do
-  // incremental retrieval
-  mTaskList.prepend( t );
+  queue << t;
   signalTaskToTracker( t, "ChangeReplay" );
   scheduleNext();
 }
@@ -129,7 +132,10 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
 {
   Task t;
   t.type = SyncAllDone;
-  mTaskList << t;
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+  queue << t;
   signalTaskToTracker( t, "SyncAllDone" );
   scheduleNext();
 }
@@ -141,30 +147,21 @@ void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const ch
   t.receiver = receiver;
   t.methodName = methodName;
   t.argument = argument;
-  if ( mTaskList.contains( t ) )
+  QueueType queueType = GenericTaskQueue;
+  if ( priority == ResourceBase::AfterChangeReplay )
+    queueType = AfterChangeReplayQueue;
+  TaskList& queue = mTaskList[ queueType ];
+
+  if ( queue.contains( t ) )
     return;
 
   switch (priority) {
   case ResourceBase::Prepend:
-    mTaskList.prepend(t);
-    break;
-  case ResourceBase::AfterChangeReplay:
-    {
-      QMutableListIterator<Task> it(mTaskList);
-      bool inserted = false;
-      while (it.hasNext() && !inserted) {
-        if (it.next().type != ChangeReplay) {
-          it.previous(); // next returns the item *and* advances the iterator.
-          it.insert(t);
-          inserted = true;
-        }
-      }
-      if (!inserted)
-        mTaskList.append(t);
-    }
+    queue.prepend( t );
     break;
   default:
-    mTaskList.append(t);
+    queue.append(t);
+    break;
   }
 
   signalTaskToTracker( t, "Custom-" + t.methodName );
@@ -198,7 +195,7 @@ void ResourceScheduler::deferTask()
 
   Task t = mCurrentTask;
   mCurrentTask = Task();
-  mTaskList << t;
+  mTaskList[GenericTaskQueue] << t;
   signalTaskToTracker( t, "DeferedTask" );
 
   scheduleNext();
@@ -206,22 +203,31 @@ void ResourceScheduler::deferTask()
 
 bool ResourceScheduler::isEmpty()
 {
-  return mTaskList.isEmpty();
+  for ( int i = 0; i < NQueueCount; ++i ) {
+    if ( !mTaskList[i].isEmpty() )
+      return false;
+  }
+  return true;
 }
 
 void ResourceScheduler::scheduleNext()
 {
-  if ( mCurrentTask.type != Invalid || mTaskList.isEmpty() || !mOnline )
+  if ( mCurrentTask.type != Invalid || isEmpty() || !mOnline )
     return;
   QTimer::singleShot( 0, this, SLOT(executeNext()) );
 }
 
 void ResourceScheduler::executeNext()
 {
-  if( mCurrentTask.type != Invalid || mTaskList.isEmpty() )
+  if( mCurrentTask.type != Invalid || isEmpty() )
     return;
 
-  mCurrentTask = mTaskList.takeFirst();
+  for ( int i = 0; i < NQueueCount; ++i ) {
+    if ( !mTaskList[ i ].isEmpty() ) {
+      mCurrentTask = mTaskList[ i ].takeFirst();
+      break;
+    }
+  }
 
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
@@ -280,7 +286,7 @@ void ResourceScheduler::setOnline(bool state)
     scheduleNext();
   } else if ( mCurrentTask.type != Invalid ) {
     // abort running task
-    mTaskList.prepend( mCurrentTask );
+    queueForTaskType( mCurrentTask.type ).prepend( mCurrentTask );
     mCurrentTask = Task();
   }
 }
@@ -309,9 +315,10 @@ void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection
 {
   if ( !collection.isValid() ) // should not happen, but you never know...
     return;
-  for ( QList<Task>::iterator it = mTaskList.begin(); it != mTaskList.end(); ) {
+  TaskList& queue = queueForTaskType( SyncCollection );
+  for ( QList<Task>::iterator it = queue.begin(); it != queue.end(); ) {
     if ( (*it).type == SyncCollection && (*it).collection == collection ) {
-      it = mTaskList.erase( it );
+      it = queue.erase( it );
       kDebug() << " erasing";
     } else
       ++it;
@@ -325,6 +332,57 @@ void ResourceScheduler::Task::sendDBusReplies( bool success )
     reply << success;
     QDBusConnection::sessionBus().send( reply );
   }
+}
+
+ResourceScheduler::QueueType ResourceScheduler::queueTypeForTaskType( TaskType type )
+{
+  switch( type ) {
+  case ChangeReplay:
+    return ChangeReplayQueue;
+  case FetchItem:
+    return ItemFetchQueue;
+  default:
+    return GenericTaskQueue;
+  }
+}
+
+ResourceScheduler::TaskList& ResourceScheduler::queueForTaskType( TaskType type )
+{
+  const QueueType qt = queueTypeForTaskType( type );
+  return mTaskList[ qt ];
+}
+
+void ResourceScheduler::dump()
+{
+  kDebug() << "ResourceScheduler: Online:" << mOnline;
+  kDebug() << " current task:" << mCurrentTask;
+  for ( int i = 0; i < NQueueCount; ++i ) {
+    const TaskList& queue = mTaskList[i];
+    kDebug() << " queue" << i << queue.size() << "tasks:";
+    for ( QList<Task>::const_iterator it = queue.begin(); it != queue.end(); ++it ) {
+      kDebug() << "  " << (*it);
+    }
+  }
+}
+
+static const char s_taskTypes[][25] = {
+      "Invalid",
+      "SyncAll",
+      "SyncCollectionTree",
+      "SyncCollection",
+      "FetchItem",
+      "ChangeReplay",
+      "DeleteResourceCollection",
+      "SyncAllDone",
+      "Custom"
+};
+
+QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
+{
+  d << task.serial << s_taskTypes[task.type] << "collection" << task.collection.id() << "item" << task.item.id();
+  if ( !task.methodName.isEmpty() )
+    d << task.methodName << task.argument;
+  return d;
 }
 
 //@endcond
