@@ -35,36 +35,7 @@
 #include <entitydisplayattribute.h>
 #include <KStandardDirs>
 #include <entitytreemodel_p.h>
-
-class PublicETMPrivate;
-
-class PublicETM : public EntityTreeModel
-{
-  Q_OBJECT
-  Q_DECLARE_PRIVATE(PublicETM)
-  public:
-    PublicETM( ChangeRecorder *monitor, QObject *parent );
-
-    EntityTreeModelPrivate *privateClass() const { return d_ptr; }
-};
-
-class PublicETMPrivate : public EntityTreeModelPrivate
-{
-  Q_DECLARE_PUBLIC(PublicETM)
-
-  public:
-    PublicETMPrivate( PublicETM *p );
-};
-
-PublicETM::PublicETM( ChangeRecorder *monitor, QObject *parent )
-    : EntityTreeModel( monitor, new PublicETMPrivate( this ), parent )
-{
-}
-
-PublicETMPrivate::PublicETMPrivate( PublicETM *p )
-    : EntityTreeModelPrivate( p )
-{
-}
+#include "public_etm.h"
 
 class EntityTreeModelTest : public QObject
 {

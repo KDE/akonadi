@@ -83,7 +83,7 @@ endmacro(add_akonadi_isolated_test)
 
 
 # akonadi test fake library
-kde4_add_library(akonaditestfake STATIC fakesession.cpp fakemonitor.cpp fakeserver.cpp akonadieventqueue.cpp modelspy.cpp)
+kde4_add_library(akonaditestfake STATIC fakesession.cpp fakemonitor.cpp fakeserver.cpp public_etm.cpp akonadieventqueue.cpp modelspy.cpp)
 
 # demo applications
 add_akonadi_demo(itemdumper.cpp)
