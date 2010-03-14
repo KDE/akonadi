@@ -34,7 +34,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QTextDocument>
 
-using namespace Akonadi;
+namespace Akonadi {
+namespace Internal {
 
 struct Icons
 {
@@ -66,6 +67,10 @@ class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 
     QTextDocument* document( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
+
+}
+
+using Akonadi::Internal::AgentInstanceWidgetDelegate;
 
 /**
  * @internal
@@ -117,7 +122,7 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
 
   d->mView = new QListView( this );
   d->mView->setContextMenuPolicy( Qt::NoContextMenu );
-  d->mView->setItemDelegate( new AgentInstanceWidgetDelegate( d->mView ) );
+  d->mView->setItemDelegate( new Internal::AgentInstanceWidgetDelegate( d->mView ) );
   d->mView->setVerticalScrollMode( QAbstractItemView::ScrollPerPixel );
   d->mView->setAlternatingRowColors( true );
   d->mView->setSelectionMode( QAbstractItemView::ExtendedSelection );
@@ -311,6 +316,8 @@ void AgentInstanceWidgetDelegate::drawFocus( QPainter *painter, const QStyleOpti
                                                   ? QPalette::Highlight : QPalette::Background );
     QApplication::style()->drawPrimitive( QStyle::PE_FrameFocusRect, &o, painter );
   }
+}
+
 }
 
 #include "agentinstancewidget.moc"

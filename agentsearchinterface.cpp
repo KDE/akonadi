@@ -27,7 +27,7 @@ using namespace Akonadi;
 AgentSearchInterfacePrivate::AgentSearchInterfacePrivate( AgentSearchInterface* qq ) :
  q( qq )
 {
-  new SearchAdaptor( this );
+  new Akonadi__SearchAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Search" ),
                                                 this, QDBusConnection::ExportAdaptors );
 }

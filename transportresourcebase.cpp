@@ -32,7 +32,7 @@ using namespace Akonadi;
 TransportResourceBasePrivate::TransportResourceBasePrivate( TransportResourceBase *qq )
   : QObject(), q( qq )
 {
-  new TransportAdaptor( this );
+  new Akonadi__TransportAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Transport" ),
                                                 this, QDBusConnection::ExportAdaptors );
 }

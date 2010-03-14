@@ -30,7 +30,8 @@
 #include "agenttype.h"
 #include "agenttypemodel.h"
 
-using namespace Akonadi;
+namespace Akonadi {
+namespace Internal {
 
 /**
  * @internal
@@ -46,6 +47,10 @@ class AgentTypeWidgetDelegate : public QAbstractItemDelegate
   private:
     void drawFocus( QPainter*, const QStyleOptionViewItem&, const QRect& ) const;
 };
+
+}
+
+using Akonadi::Internal::AgentTypeWidgetDelegate;
 
 
 /**
@@ -253,6 +258,8 @@ void AgentTypeWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionVi
                                              ? QPalette::Highlight : QPalette::Background);
     QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
   }
+}
+
 }
 
 #include "agenttypewidget.moc"

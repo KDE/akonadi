@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-class TransportAdaptor;
+class Akonadi__TransportAdaptor;
 
 namespace Akonadi {
 
@@ -55,7 +55,7 @@ class TransportResourceBasePrivate : public QObject
 
   private:
     friend class TransportResourceBase;
-    friend class ::TransportAdaptor;
+    friend class ::Akonadi__TransportAdaptor;
 
     void send( Akonadi::Item::Id message ); // D-Bus call
 

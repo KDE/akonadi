@@ -175,8 +175,8 @@ void AgentBasePrivate::init()
   mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
-  new ControlAdaptor( q );
-  new StatusAdaptor( q );
+  new Akonadi__ControlAdaptor( q );
+  new Akonadi__StatusAdaptor( q );
   if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
 

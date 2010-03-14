@@ -32,7 +32,7 @@ PreprocessorBasePrivate::PreprocessorBasePrivate( PreprocessorBase *parent )
     mInDelayedProcessing( false ),
     mDelayedProcessingItemId( 0 )
 {
-  new PreprocessorAdaptor( this );
+  new Akonadi__PreprocessorAdaptor( this );
 }
 
 void PreprocessorBasePrivate::delayedInit()

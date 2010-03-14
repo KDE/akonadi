@@ -30,8 +30,8 @@
 
 #include <QtDBus/QDBusContext>
 
-class ControlAdaptor;
-class StatusAdaptor;
+class Akonadi__ControlAdaptor;
+class Akonadi__StatusAdaptor;
 
 namespace Akonadi {
 
@@ -569,8 +569,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     void quit();
 
     // dbus agent interface
-    friend class ::StatusAdaptor;
-    friend class ::ControlAdaptor;
+    friend class ::Akonadi__StatusAdaptor;
+    friend class ::Akonadi__ControlAdaptor;
 
     Q_DECLARE_PRIVATE( AgentBase )
     Q_PRIVATE_SLOT( d_func(), void delayedInit() )

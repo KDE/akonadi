@@ -30,6 +30,9 @@
 
 using namespace Akonadi;
 
+namespace Akonadi {
+namespace Internal {
+
 /**
  * @internal
  */
@@ -57,15 +60,6 @@ class DefaultAttribute : public Attribute
 /**
  * @internal
  */
-class AttributeFactory::Private
-{
-  public:
-    QHash<QByteArray, Attribute*> attributes;
-};
-
-/**
- * @internal
- */
 class StaticAttributeFactory : public AttributeFactory
 {
   public:
@@ -85,6 +79,19 @@ class StaticAttributeFactory : public AttributeFactory
 };
 
 K_GLOBAL_STATIC( StaticAttributeFactory, s_attributeInstance )
+
+}
+
+using Akonadi::Internal::s_attributeInstance;
+
+/**
+ * @internal
+ */
+class AttributeFactory::Private
+{
+  public:
+    QHash<QByteArray, Attribute*> attributes;
+};
 
 
 AttributeFactory* AttributeFactory::self()
@@ -120,5 +127,8 @@ Attribute* AttributeFactory::createAttribute(const QByteArray &type)
   Attribute* attr = self()->d->attributes.value( type );
   if ( attr )
     return attr->clone();
-  return new DefaultAttribute( type );
+  return new Internal::DefaultAttribute( type );
 }
+
+}
+

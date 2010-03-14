@@ -35,6 +35,9 @@
 
 using namespace Akonadi;
 
+namespace Akonadi {
+namespace Internal {
+
 class ControlProgressIndicator : public QFrame
 {
   public:
@@ -64,7 +67,9 @@ class StaticControl : public Control
     StaticControl() : Control() {}
 };
 
-K_GLOBAL_STATIC( StaticControl, s_instance )
+}
+
+K_GLOBAL_STATIC( Internal::StaticControl, s_instance )
 
 /**
  * @internal
@@ -92,7 +97,7 @@ class Control::Private
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
     {
       if ( !mProgressIndicator )
-        mProgressIndicator = new ControlProgressIndicator( parent );
+        mProgressIndicator = new Internal::ControlProgressIndicator( parent );
 
       mProgressIndicator->setMessage( msg );
     }
@@ -115,7 +120,7 @@ class Control::Private
 
     QPointer<Control> mParent;
     QEventLoop *mEventLoop;
-    QPointer<ControlProgressIndicator> mProgressIndicator;
+    QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
     QList<QPointer<QWidget> > mPendingOverlays;
     Firstrun *mFirstRunner;
     bool mSuccess;
@@ -249,6 +254,8 @@ void Control::widgetNeedsAkonadi(QWidget * widget)
   // delay the overlay creation since we rely on widget being reparented
   // correctly already
   QTimer::singleShot( 0, s_instance, SLOT(createErrorOverlays()) );
+}
+
 }
 
 #include "control.moc"
