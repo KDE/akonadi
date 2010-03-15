@@ -122,6 +122,11 @@ if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
 
+#### Sqlite ####
+set(SQLITE_MIN_VERSION 3.6.23)
+find_package(Sqlite)
+macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" TRUE "" "")
+
 ############### Compilers flags ###############
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
@@ -231,6 +236,9 @@ if (XSLTPROC_EXECUTABLE)
 endif (XSLTPROC_EXECUTABLE)
 
 add_subdirectory(rds)
+if (SQLITE_FOUND)
+  add_subdirectory(qsqlite)
+endif (SQLITE_FOUND)
 
 ############### install stuff ###############
 
