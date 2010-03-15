@@ -61,4 +61,3 @@ void Fetch::slotFailureResponse( const QString &msg )
 {
   failureResponse( msg );
 }
-
