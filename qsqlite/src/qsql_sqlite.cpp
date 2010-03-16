@@ -20,10 +20,9 @@
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** In addition, as a special exception, Nokia gives you certain
-** additional rights. These rights are described in the Nokia Qt LGPL
-** Exception version 1.0, included in the file LGPL_EXCEPTION.txt in this
-** package.
+** In addition, as a special exception, Nokia gives you certain additional
+** rights.  These rights are described in the Nokia Qt LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
 ** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
@@ -33,8 +32,8 @@
 ** ensure the GNU General Public License version 3.0 requirements will be
 ** met: http://www.gnu.org/copyleft/gpl.html.
 **
-** If you are unsure which license is appropriate for your use, please
-** contact the sales department at http://www.qtsoftware.com/contact.
+** If you have questions regarding the use of this file, please contact
+** Nokia at qt-info@nokia.com.
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
@@ -49,9 +48,7 @@
 #include <qsqlquery.h>
 #include <qstringlist.h>
 #include <qvector.h>
-
 #include <qdebug.h>
-#include <qthread.h>
 
 #if defined Q_OS_WIN
 # include <qt_windows.h>
@@ -61,12 +58,24 @@
 
 #include <sqlite3.h>
 
+#include <qthread.h>
 #include "sqlite_blocking.h"
 
 Q_DECLARE_METATYPE(sqlite3*)
 Q_DECLARE_METATYPE(sqlite3_stmt*)
 
 QT_BEGIN_NAMESPACE
+
+static QString _q_escapeIdentifier(const QString &identifier)
+{
+    QString res = identifier;
+    if(!identifier.isEmpty() && identifier.left(1) != QString(QLatin1Char('"')) && identifier.right(1) != QString(QLatin1Char('"')) ) {
+        res.replace(QLatin1Char('"'), QLatin1String("\"\""));
+        res.prepend(QLatin1Char('"')).append(QLatin1Char('"'));
+        res.replace(QLatin1Char('.'), QLatin1String("\".\""));
+    }
+    return res;
+}
 
 static QVariant::Type qGetColumnType(const QString &tpName)
 {
@@ -115,17 +124,14 @@ public:
 
     sqlite3_stmt *stmt;
 
-    uint skippedStatus: 1; // the status of the fetchNext() that's skipped
-    uint skipRow: 1; // skip the next fetchNext()?
-    uint utf8: 1;
+    bool skippedStatus; // the status of the fetchNext() that's skipped
+    bool skipRow; // skip the next fetchNext()?
     QSqlRecord rInf;
-    QSql::NumericalPrecisionPolicy precisionPolicy;
+    QVector<QVariant> firstRow;
 };
 
-static const uint initial_cache_size = 128;
-
 QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res) : q(res), access(0),
-    stmt(0), skippedStatus(false), skipRow(false), utf8(false), precisionPolicy(QSql::HighPrecision)
+    stmt(0), skippedStatus(false), skipRow(false)
 {
 }
 
@@ -145,7 +151,6 @@ void QSQLiteResultPrivate::finalize()
     if (!stmt)
         return;
 
-    qDebug() << debugString() + "finalize" << stmt;
     sqlite3_finalize(stmt);
     stmt = 0;
 }
@@ -186,9 +191,16 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
         // already fetched
         Q_ASSERT(!initialFetch);
         skipRow = false;
+        for(int i=0;i<firstRow.count();i++)
+            values[i]=firstRow[i];
         return skippedStatus;
     }
     skipRow = initialFetch;
+
+    if(initialFetch) {
+        firstRow.clear();
+        firstRow.resize(sqlite3_column_count(stmt));
+    }
 
     if (!stmt) {
         q->setLastError(QSqlError(QCoreApplication::translate("QSQLiteResult", "Unable to fetch row"),
@@ -217,7 +229,7 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
                 values[i + idx] = sqlite3_column_int64(stmt, i);
                 break;
             case SQLITE_FLOAT:
-                switch(precisionPolicy) {
+                switch(q->numericalPrecisionPolicy()) {
                     case QSql::LowPrecisionInt32:
                         values[i + idx] = sqlite3_column_int(stmt, i);
                         break;
@@ -225,13 +237,9 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
                         values[i + idx] = sqlite3_column_int64(stmt, i);
                         break;
                     case QSql::LowPrecisionDouble:
-                        values[i + idx] = sqlite3_column_double(stmt, i);
-                        break;
                     case QSql::HighPrecision:
                     default:
-                        values[i + idx] = QString::fromUtf16(static_cast<const ushort *>(
-                                            sqlite3_column_text16(stmt, i)),
-                                            sqlite3_column_bytes16(stmt, i) / sizeof(ushort));
+                        values[i + idx] = sqlite3_column_double(stmt, i);
                         break;
                 };
                 break;
@@ -291,16 +299,11 @@ void QSQLiteResult::virtual_hook(int id, void *data)
 {
     switch (id) {
     case QSqlResult::DetachFromResultSet:
-        qDebug() << debugString() + "Detaching" << (d->stmt != 0);
         if (d->stmt)
             sqlite3_reset(d->stmt);
         break;
-    case QSqlResult::SetNumericalPrecision:
-        Q_ASSERT(data);
-        d->precisionPolicy = *reinterpret_cast<QSql::NumericalPrecisionPolicy *>(data);
-        break;
     default:
-        QSqlResult::virtual_hook(id, data);
+        QSqlCachedResult::virtual_hook(id, data);
     }
 }
 
@@ -320,10 +323,11 @@ bool QSQLiteResult::prepare(const QString &query)
 
     setSelect(false);
 
+    Q_ASSERT(SQLITE_VERSION_NUMBER == 3006023);
 #if (SQLITE_VERSION_NUMBER >= 3003011)
-    int res = sqlite3_blocking_prepare16_v2(d->access,
-                                            query.constData(),
-                                            (query.size() + 1) * sizeof(QChar),
+//    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
+//                                   &d->stmt, 0);
+    int res = sqlite3_blocking_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
                                             &d->stmt, 0);
 #else
     int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
@@ -408,7 +412,7 @@ bool QSQLiteResult::exec()
                         "Parameter count mismatch"), QString(), QSqlError::StatementError));
         return false;
     }
-    d->skippedStatus = d->fetchNext(cache(), 0, true);
+    d->skippedStatus = d->fetchNext(d->firstRow, 0, true);
     if (lastError().isValid()) {
         setSelect(false);
         setActive(false);
@@ -478,8 +482,7 @@ QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
 
 QSQLiteDriver::~QSQLiteDriver()
 {
-  qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER DTOR";
-  delete d;
+    delete d;
 }
 
 bool QSQLiteDriver::hasFeature(DriverFeature f) const
@@ -493,11 +496,11 @@ bool QSQLiteDriver::hasFeature(DriverFeature f) const
     case PositionalPlaceholders:
     case SimpleLocking:
     case FinishQuery:
+    case LowPrecisionNumbers:
         return true;
     case QuerySize:
     case NamedPlaceholders:
     case BatchOperations:
-    case LowPrecisionNumbers:
     case EventNotifications:
     case MultipleResultSets:
         return false;
@@ -510,13 +513,26 @@ static int qGetSqliteTimeout(QString opts)
     enum { DefaultTimeout = 5000 };
 
     opts.remove(QLatin1Char(' '));
-    if (opts.startsWith(QLatin1String("QSQLITE_BUSY_TIMEOUT="))) {
-        bool ok;
-        int nt = opts.mid(21).toInt(&ok);
-        if (ok)
-            return nt;
+    foreach(QString option, opts.split(QLatin1Char(';'))) {
+        if (option.startsWith(QLatin1String("QSQLITE_BUSY_TIMEOUT="))) {
+            bool ok;
+            int nt = option.mid(21).toInt(&ok);
+            if (ok)
+                return nt;
+        }
     }
     return DefaultTimeout;
+}
+
+static int qGetSqliteOpenMode(QString opts)
+{
+    opts.remove(QLatin1Char(' '));
+    foreach(QString option, opts.split(QLatin1Char(';'))) {
+        if (option == QLatin1String("QSQLITE_OPEN_READONLY"))
+                return SQLITE_OPEN_READONLY;
+    }
+    // The SQLITE_OPEN_NOMUTEX flag causes the database connection to be in the multi-thread mode
+    return SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX;
 }
 
 /*
@@ -525,18 +541,14 @@ static int qGetSqliteTimeout(QString opts)
 */
 bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, const QString &, int, const QString &conOpts)
 {
+    qDebug() << db;
     if (isOpen())
         close();
 
     if (db.isEmpty())
         return false;
 
-    //if (sqlite3_open16(db.constData(), &d->access) == SQLITE_OK) {
-    if (sqlite3_open_v2(db.toUtf8().constData(),
-                        &d->access,
-                        // The SQLITE_OPEN_NOMUTEX flag causes the database connection to be in the multi-thread mode
-                        SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_NOMUTEX,
-                        0) == SQLITE_OK) {
+    if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, qGetSqliteOpenMode(conOpts), NULL) == SQLITE_OK) {
         sqlite3_busy_timeout(d->access, qGetSqliteTimeout(conOpts));
         setOpen(true);
         setOpenError(false);
@@ -648,12 +660,12 @@ static QSqlIndex qGetTableInfo(QSqlQuery &q, const QString &tableName, bool only
 {
     QString schema;
     QString table(tableName);
-    int indexOfSeparator = tableName.indexOf(QLatin1String("."));
+    int indexOfSeparator = tableName.indexOf(QLatin1Char('.'));
     if (indexOfSeparator > -1) {
-        schema = tableName.left(indexOfSeparator).append(QLatin1String("."));
+        schema = tableName.left(indexOfSeparator).append(QLatin1Char('.'));
         table = tableName.mid(indexOfSeparator + 1);
     }
-    q.exec(QLatin1String("PRAGMA ") + schema + QLatin1String("table_info ('") + table + QLatin1String("')"));
+    q.exec(QLatin1String("PRAGMA ") + schema + QLatin1String("table_info (") + _q_escapeIdentifier(table) + QLatin1String(")"));
 
     QSqlIndex ind;
     while (q.next()) {
@@ -678,9 +690,13 @@ QSqlIndex QSQLiteDriver::primaryIndex(const QString &tblname) const
     if (!isOpen())
         return QSqlIndex();
 
+    QString table = tblname;
+    if (isIdentifierEscaped(table, QSqlDriver::TableName))
+        table = stripDelimiters(table, QSqlDriver::TableName);
+
     QSqlQuery q(createResult());
     q.setForwardOnly(true);
-    return qGetTableInfo(q, tblname, true);
+    return qGetTableInfo(q, table, true);
 }
 
 QSqlRecord QSQLiteDriver::record(const QString &tbl) const
@@ -688,9 +704,13 @@ QSqlRecord QSQLiteDriver::record(const QString &tbl) const
     if (!isOpen())
         return QSqlRecord();
 
+    QString table = tbl;
+    if (isIdentifierEscaped(table, QSqlDriver::TableName))
+        table = stripDelimiters(table, QSqlDriver::TableName);
+
     QSqlQuery q(createResult());
     q.setForwardOnly(true);
-    return qGetTableInfo(q, tbl);
+    return qGetTableInfo(q, table);
 }
 
 QVariant QSQLiteDriver::handle() const
@@ -698,15 +718,10 @@ QVariant QSQLiteDriver::handle() const
     return qVariantFromValue(d->access);
 }
 
-QString QSQLiteDriver::escapeIdentifier(const QString &identifier, IdentifierType /*type*/) const
+QString QSQLiteDriver::escapeIdentifier(const QString &identifier, IdentifierType type) const
 {
-    QString res = identifier;
-    if(!identifier.isEmpty() && identifier.left(1) != QString(QLatin1Char('"')) && identifier.right(1) != QString(QLatin1Char('"')) ) {
-        res.replace(QLatin1Char('"'), QLatin1String("\"\""));
-        res.prepend(QLatin1Char('"')).append(QLatin1Char('"'));
-        res.replace(QLatin1Char('.'), QLatin1String("\".\""));
-    }
-    return res;
+    Q_UNUSED(type);
+    return _q_escapeIdentifier(identifier);
 }
 
 QT_END_NAMESPACE
