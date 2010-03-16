@@ -20,6 +20,7 @@
 #include "modelspy.h"
 
 #include <kdebug.h>
+#include <QTest>
 
 ModelSpy::ModelSpy(QObject *parent)
     : QObject(parent), QList<QVariantList>(), m_isSpying(false)
@@ -31,6 +32,46 @@ void ModelSpy::setModel(QAbstractItemModel *model)
 {
   Q_ASSERT(model);
   m_model = model;
+}
+
+void ModelSpy::setExpectedSignals( QList< ExpectedSignal > expectedSignals )
+{
+  m_expectedSignals = expectedSignals;
+}
+
+void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int start, int end )
+{
+  ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+  QVERIFY( type == expectedSignal.signalType );
+  QVERIFY( parent.data() == expectedSignal.parentData );
+  QVERIFY( start == expectedSignal.startRow );
+  QVERIFY( end == expectedSignal.endRow );
+  if ( !expectedSignal.newData.isEmpty() )
+  {
+    // TODO
+  }
+}
+
+void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int start, int end, const QModelIndex& destParent, int destStart )
+{
+  ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+  QVERIFY( type == expectedSignal.signalType );
+}
+
+void ModelSpy::verifySignal( SignalType type, const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( type == DataChanged );
+  ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+  QVERIFY( type == expectedSignal.signalType );
+  QModelIndex parent = topLeft.parent();
+  if ( expectedSignal.parentData.isValid() )
+    QVERIFY( parent.data() == expectedSignal.parentData );
+  QVERIFY( topLeft.row() == expectedSignal.startRow );
+  QVERIFY( bottomRight.row() == expectedSignal.endRow );
+  for ( int i = 0, row = topLeft.row(); row <= bottomRight.row(); ++row, ++i )
+  {
+    QVERIFY( expectedSignal.newData.at( i ) == m_model->index( row, 0, parent ).data() );
+  }
 }
 
 void ModelSpy::startSpying()
@@ -100,35 +141,49 @@ void ModelSpy::stopSpying()
 void ModelSpy::rowsAboutToBeInserted(const QModelIndex &parent, int start, int end)
 {
   append(QVariantList() << RowsAboutToBeInserted << QVariant::fromValue(parent) << start << end);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsAboutToBeInserted, parent, start, end );
 }
 
 void ModelSpy::rowsInserted(const QModelIndex &parent, int start, int end)
 {
   append(QVariantList() << RowsInserted << QVariant::fromValue(parent) << start << end);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsInserted, parent, start, end );
 }
 
 void ModelSpy::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int end)
 {
   append(QVariantList() << RowsAboutToBeRemoved << QVariant::fromValue(parent) << start << end);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsAboutToBeRemoved, parent, start, end );
 }
 
 void ModelSpy::rowsRemoved(const QModelIndex &parent, int start, int end)
 {
   append(QVariantList() << RowsRemoved << QVariant::fromValue(parent) << start << end);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsRemoved, parent, start, end );
 }
 
 void ModelSpy::rowsAboutToBeMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart)
 {
   append(QVariantList() << RowsAboutToBeMoved << QVariant::fromValue(srcParent) << start << end << QVariant::fromValue(destParent) << destStart);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsAboutToBeMoved, srcParent, start, end, destParent, destStart );
 }
 
 void ModelSpy::rowsMoved(const QModelIndex &srcParent, int start, int end, const QModelIndex &destParent, int destStart)
 {
   append(QVariantList() << RowsMoved << QVariant::fromValue(srcParent) << start << end << QVariant::fromValue(destParent) << destStart);
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( RowsMoved, srcParent, start, end, destParent, destStart );
 }
 
 void ModelSpy::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
   append(QVariantList() << DataChanged << QVariant::fromValue(topLeft) << QVariant::fromValue(bottomRight));
+  if ( !m_expectedSignals.isEmpty() )
+    verifySignal( DataChanged, topLeft, bottomRight );
 }
 

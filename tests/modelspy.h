@@ -37,6 +37,15 @@ enum SignalType
   DataChanged
 };
 
+struct ExpectedSignal
+{
+  SignalType signalType;
+  int startRow;
+  int endRow;
+  QVariant parentData;
+  QVariantList newData;
+};
+
 Q_DECLARE_METATYPE( QModelIndex )
 
 class ModelSpy : public QObject, public QList<QVariantList>
@@ -46,6 +55,11 @@ public:
   ModelSpy(QObject *parent);
 
   void setModel(QAbstractItemModel *model);
+
+  void setExpectedSignals( QList<ExpectedSignal> expectedSignals );
+  void verifySignal( SignalType type, const QModelIndex &parent, int start, int end );
+  void verifySignal( SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart );
+  void verifySignal( SignalType type, const QModelIndex &topLeft, const QModelIndex &bottomRight );
 
   void startSpying();
   void stopSpying();
@@ -64,6 +78,7 @@ protected slots:
 private:
   QAbstractItemModel *m_model;
   bool m_isSpying;
+  QList<ExpectedSignal> m_expectedSignals;
 };
 
 #endif
