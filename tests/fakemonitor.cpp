@@ -20,8 +20,6 @@
 
 #include "fakemonitor.h"
 
-#include "akonadieventqueue.h"
-#include "fakeserver.h"
 #include <QMetaMethod>
 
 using namespace Akonadi;

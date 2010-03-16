@@ -23,10 +23,8 @@
 #include <QTimer>
 
 #include "fakeserverdata.h"
-#include "fakeserver.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
-#include "akonadieventqueue.h"
 #include "modelspy.h"
 
 #include "imapparser_p.h"

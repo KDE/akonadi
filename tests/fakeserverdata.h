@@ -25,7 +25,6 @@
 #include <akonadi/job.h>
 #include <akonadi/entitytreemodel.h>
 
-#include "fakeserver.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include "fakeakonadiservercommand.h"

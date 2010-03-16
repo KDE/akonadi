@@ -17,7 +17,6 @@
 */
 
 #include "fakeserverdata.h"
-#include "fakeserver.h"
 
 #include <QLocalServer>
 #include <KStandardDirs>
