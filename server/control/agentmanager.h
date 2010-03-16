@@ -41,7 +41,7 @@ namespace Akonadi {
  * for .desktop files in the agent directory) and the available configured
  * instances.
  */
-class AgentManager : public QObject
+class AgentManager : public QObject, protected QDBusContext
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentManager" )

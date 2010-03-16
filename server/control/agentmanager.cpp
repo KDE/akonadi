@@ -187,11 +187,18 @@ QString AgentManager::createAgentInstance( const QString &identifier )
     return QString();
   }
 
+  // Return from this dbus call before we do the next. Otherwise dbus brakes for
+  // this process.
+  if ( calledFromDBus() )
+    connection().send( message().createReply( instance->identifier() ) );
+
   if ( !instance->start( agentInfo ) )
     return QString();
+
   mAgentInstances.insert( instance->identifier(), instance );
   registerAgentAtServer( instance, agentInfo );
   save();
+
   return instance->identifier();
 }
 
