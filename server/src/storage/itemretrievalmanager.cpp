@@ -49,6 +49,8 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
   connect( this, SIGNAL(syncCollection(QString,qint64)), this, SLOT(triggerCollectionSync(QString,qint64)), Qt::QueuedConnection );
+  connect( this, SIGNAL( syncResource( const QString& ) ),
+           this, SLOT( triggerResourceSync( const QString& ) ), Qt::QueuedConnection );
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
@@ -202,8 +204,13 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
   emit requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
-void ItemRetrievalManager::requestCollectionSync(const Collection& collection)
+void ItemRetrievalManager::requestCollectionSync( const Collection& collection )
 {
+  // if the collection is a resource collection we trigger a synchronization
+  // of the collection hierarchy as well
+  if ( collection.parentId() == 0 )
+    emit syncResource( collection.resource().name() );
+
   emit syncCollection( collection.resource().name(), collection.id() );
 }
 
@@ -214,5 +221,11 @@ void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64
     interface->synchronizeCollection( colId );
 }
 
+void ItemRetrievalManager::triggerResourceSync( const QString& resource )
+{
+  OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
+  if ( interface )
+    interface->synchronize();
+}
 
 #include "itemretrievalmanager.moc"
