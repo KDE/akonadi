@@ -135,13 +135,13 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
       QString optionalSection = parts.first().trimmed();
       if ( optionalSection.startsWith( QLatin1Char( '\'' ) ) )
       {
-          optionalSection.remove( 0, 1 );
-          QStringList optionalParts = optionalSection.split( QLatin1Char( '\'' ) );
-          displayName = optionalParts.takeFirst();
-          EntityDisplayAttribute *eda = new EntityDisplayAttribute();
-          eda->setDisplayName( displayName );
-          collection.addAttribute( eda );
-          optionalSection = optionalParts.first();
+        optionalSection.remove( 0, 1 );
+        QStringList optionalParts = optionalSection.split( QLatin1Char( '\'' ) );
+        displayName = optionalParts.takeFirst();
+        EntityDisplayAttribute *eda = new EntityDisplayAttribute();
+        eda->setDisplayName( displayName );
+        collection.addAttribute( eda );
+        optionalSection = optionalParts.first();
       }
 
       QString orderString = optionalSection.trimmed();
