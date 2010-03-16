@@ -22,6 +22,7 @@
 
 #include <QTimer>
 
+#include "fakeserverdata.h"
 #include "fakeserver.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
@@ -112,7 +113,12 @@ void EntityTreeModelTest::init()
   fakeMonitor->setSession( m_fakeSession );
   fakeMonitor->setCollectionMonitored(Collection::root());
   m_model = new PublicETM( fakeMonitor, this );
-  m_model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+
+  FakeServerData *serverData = new FakeServerData( m_model, m_fakeSession, m_fakeMonitor );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
+    "- C (inode/directory)"
+    "- - C ()"
+  );
 
   m_modelSpy = new ModelSpy(this);
   m_modelSpy->setModel(m_model);
@@ -121,6 +127,8 @@ void EntityTreeModelTest::init()
 
 void EntityTreeModelTest::testCollectionFetch()
 {
+  QTest::qWait(1000);
+  return;
   Collection::List collectionList;
 
   collectionList << getCollection(Collection::root(), "Col0");

@@ -22,7 +22,7 @@
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/entitytreemodel_p.h>
+#include "entitytreemodel_p.h"
 
 using namespace Akonadi;
 
@@ -34,8 +34,6 @@ class PublicETM : public EntityTreeModel
   Q_DECLARE_PRIVATE(PublicETM)
 public:
   PublicETM( ChangeRecorder *monitor, QObject *parent );
-
-  void interpret( const QString &stringData );
 
   EntityTreeModelPrivate *privateClass() const { return d_ptr; }
 };

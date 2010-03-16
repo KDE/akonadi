@@ -38,7 +38,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   PublicETM *model = new PublicETM( monitor, this );
   FakeServerData *serverData = new FakeServerData( model, session, monitor );
-  serverData->interpret(
+
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
     "- C (inode/directory) 4"
     "- - C (text/directory, message/rfc822) 3"
     "- - - I text/directory"
@@ -50,6 +51,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
     "- - - - C (text/directory) 1"
     "- - - - - I text/directory"
     "- - - - - I text/directory"
+    "- - - - I text/directory"
     "- - - I text/directory"
     "- - - I text/directory"
     "- - C (message/rfc822) 3"
@@ -61,6 +63,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
     "- - - I message/rfc822"
     "- - - I message/rfc822"
   );
+  serverData->setCommands( initialFetchResponse );
 
   EntityTreeView *view = new EntityTreeView( this );
   view->setModel( model );

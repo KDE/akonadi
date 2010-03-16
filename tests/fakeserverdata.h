@@ -20,6 +20,7 @@
 #define FAKE_SERVER_DATA_H
 
 #include <QSharedPointer>
+#include <QQueue>
 
 #include <akonadi/job.h>
 
@@ -27,43 +28,41 @@
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include "public_etm.h"
+#include "fakeakonadiservercommand.h"
 
-         class QLocalServer;
 using namespace Akonadi;
 
 class FakeServerData : public QObject
 {
-  struct Token
-  {
-    enum Type { Branch, Leaf };
-    Type type;
-    QString content;
-  };
   Q_OBJECT
 public:
   FakeServerData( PublicETM *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0 );
 
-  void interpret( const QString &serverData );
+  void setCommands( QList<FakeAkonadiServerCommand*> list );
+
+  Entity::Id nextCollectionId() const { return m_nextCollectionId++; }
+  Entity::Id nextItemId()       const { return m_nextItemId++;       }
 
 signals:
   void emit_itemsFetched( const Akonadi::Item::List &list );
+  void emit_collectionsFetched( const Akonadi::Collection::List &list );
 
 private slots:
   void jobAdded( Akonadi::Job *job );
 
 private:
-  void parseTreeString(const QString& treeString);
-  QList<FakeServerData::Token> tokenize(const QString& treeString);
-  void parseEntityString(const QString& entityString, int depth);
+  void processNotifications();
+  bool returnCollections( Entity::Id fetchColId );
+  void returnItems( Entity::Id fetchColId );
+  void returnEntities( Entity::Id fetchColId );
 
 private:
   PublicETM *m_model;
   FakeSession *m_session;
   FakeMonitor *m_monitor;
 
-  QHash<Collection::Id, Collection> m_collections;
-  QHash<Item::Id, Item> m_items;
-  QHash<Collection::Id, QList<Entity::Id> > m_childElements;
+  QList<FakeAkonadiServerCommand*> m_commandList;
+  QQueue<FakeAkonadiServerCommand*> m_communicationQueue;
 
   Collection::List m_recentCollections;
   QList<Collection::List> m_collectionSequence;

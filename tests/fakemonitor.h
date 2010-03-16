@@ -22,8 +22,16 @@
 
 #include "changerecorder.h"
 
+namespace Akonadi
+{
+class Collection;
+class Item;
+}
+
 class EventQueue;
 class FakeAkonadiServer;
+
+using namespace Akonadi;
 
 class FakeMonitor : public Akonadi::ChangeRecorder
 {
@@ -31,8 +39,24 @@ class FakeMonitor : public Akonadi::ChangeRecorder
 public:
   FakeMonitor(QObject* parent = 0);
 
+signals:
+  void emit_collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent  );
+  void emit_collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &target );
+  void emit_collectionRemoved( const Akonadi::Collection &collection );
+
+  void emit_itemAdded( const Akonadi::Item &item, const Akonadi::Collection &parent  );
+  void emit_itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &target );
+  void emit_itemRemoved( const Akonadi::Item &item );
+
+  void emit_itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+  void emit_itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+
 public slots:
   void processNextEvent();
+
+private:
+  void connectForwardingSignals();
 
 private:
   EventQueue *m_eventQueue;

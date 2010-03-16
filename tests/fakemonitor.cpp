@@ -22,14 +22,29 @@
 
 #include "akonadieventqueue.h"
 #include "fakeserver.h"
+#include <QMetaMethod>
 
 using namespace Akonadi;
 
 FakeMonitor::FakeMonitor(QObject* parent)
   : ChangeRecorder(parent)
 {
+  connectForwardingSignals();
 }
 
+void FakeMonitor::connectForwardingSignals()
+{
+  for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex)
+  {
+    QMetaMethod mm = metaObject()->method(methodIndex);
+    if (mm.methodType() == QMetaMethod::Signal && QString(mm.signature()).startsWith("emit_"))
+    {
+      int monitorSignalIndex = metaObject()->indexOfSignal( QString ( mm.signature() ).remove( 0, 5 ).toAscii().data() );
+      Q_ASSERT( monitorSignalIndex >= 0 );
+      metaObject()->connect(this, methodIndex, this, monitorSignalIndex );
+    }
+  }
+}
 
 void FakeMonitor::processNextEvent()
 {
