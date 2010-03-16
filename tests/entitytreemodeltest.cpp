@@ -45,7 +45,24 @@ class EntityTreeModelTest : public QObject
 private slots:
   void initTestCase();
 
-  void init();
+  void testInitialFetch();
+
+private:
+  ExpectedSignal getExpectedSignal( SignalType type, int start, int end, const QVariantList newData)
+  {
+    return getExpectedSignal( type, start, end, QVariant(), newData );
+  }
+
+  ExpectedSignal getExpectedSignal( SignalType type, int start, int end, const QVariant &parentData = QVariant(), const QVariantList newData = QVariantList() )
+  {
+    ExpectedSignal expectedSignal;
+    expectedSignal.signalType = type;
+    expectedSignal.startRow = start;
+    expectedSignal.endRow = end;
+    expectedSignal.parentData = parentData;
+    expectedSignal.newData = newData;
+    return expectedSignal;
+  }
 
 private:
   PublicETM *m_model;
@@ -55,18 +72,85 @@ private:
   FakeMonitor *m_fakeMonitor;
   QByteArray m_sessionName;
 
-  Entity::Id m_collectionId;
-
 };
-
 
 void EntityTreeModelTest::initTestCase()
 {
-  m_collectionId = 1;
   m_sessionName = "EntityTreeModelTest fake session";
   m_fakeSession = new FakeSession( m_sessionName, this);
 
   qRegisterMetaType<QModelIndex>("QModelIndex");
+}
+
+void EntityTreeModelTest::testInitialFetch()
+{
+  FakeMonitor *fakeMonitor = new FakeMonitor(this);
+
+  fakeMonitor->setSession( m_fakeSession );
+  fakeMonitor->setCollectionMonitored(Collection::root());
+  m_model = new PublicETM( fakeMonitor, this );
+
+  FakeServerData *serverData = new FakeServerData( m_model, m_fakeSession, m_fakeMonitor );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
+    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
+    // The dashes show the depth in the heirarchy
+    // Collections have a list of mimetypes they can contain, followed by an optional
+    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
+    // which is the order in which the collections are returned from the job to the ETM.
+    "- C (inode/directory) 'Col 1' 4"
+    "- - C (text/directory, message/rfc822) 'Col 2' 3"
+    // Items just have the mimetype they contain in the payload.
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+    "- - C (text/directory) 'Col 3' 3"
+    "- - - C (text/directory) 'Col 4' 2"
+    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
+    "- - - - - I text/directory"
+    "- - - - - I text/directory"
+    "- - - - I text/directory"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - C (message/rfc822) 'Col 6' 3"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+    "- - C (text/directory, message/rfc822) 'Col 7' 3"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+  );
+  serverData->setCommands( initialFetchResponse );
+
+  m_modelSpy = new ModelSpy(this);
+  m_modelSpy->setModel(m_model);
+  m_modelSpy->startSpying();
+
+  QList<ExpectedSignal> expectedSignals;
+
+  // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
+  // It uses the parentCollection heirarchy to put placeholder collections in the model until the root is reached.
+  // Then it inserts only one row and emits the correct signals. After that, when the other collections
+  // arrive, dataChanged is emitted for them.
+
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0 );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0 );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 4" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 3" );
+  // New collections are prepended
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 2" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 6" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 7" );
+  expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
+
+  m_modelSpy->setExpectedSignals( expectedSignals );
+
+  // Give the model a change to run the event loop to process the signals.
+  QTest::qWait(1000);
 }
 
 #include "entitytreemodeltest.moc"
