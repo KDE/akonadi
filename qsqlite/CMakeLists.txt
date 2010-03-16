@@ -9,6 +9,7 @@ SET(QSqlite_MOC_HDRS
   src/qsql_sqlite.h
 )
 
+message(STATUS SQlite ${SQLITE_LIBRARIES})
 message(STATUS "Building QSQLITE3 driver")
 message(STATUS "Make sure that you add " ${CMAKE_INSTALL_PREFIX}/lib/kde4/plugins/sqldrivers " to QT_PLUGIN_PATH")
 
@@ -19,8 +20,11 @@ add_definitions(-DQT_SHARED)
 
 qt4_wrap_cpp(QSqlite_MOC_SRCS ${QSqlite_MOC_HDRS})
 
-include_directories(${CMAKE_BINARY_DIR})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(
+  ${CMAKE_BINARY_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  ${SQLITE_INCLUDE_DIR}
+)
 
 add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 
