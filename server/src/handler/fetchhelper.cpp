@@ -103,7 +103,50 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   if ( mUseScope )
     triggerOnDemandFetch();
 
+  // retrieve missing parts
+  QStringList partList, payloadList;
+  foreach( const QByteArray &b, mRequestedParts ) {
+    // filter out non-part attributes
+    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+      continue;
+    if ( b == "SIZE" ) {
+      mSizeRequested = true;
+      continue;
+    }
+    if ( b == "DATETIME" ) {
+      mMTimeRequested = true;
+      continue;
+    }
+    if ( b == "REMOTEREVISION" ) {
+      mRemoteRevisionRequested = true;
+      continue;
+    }
+    partList << QString::fromLatin1( b );
+    if ( b.startsWith( "PLD:" ) )
+      payloadList << QString::fromLatin1( b );
+  }
+
   buildItemQuery();
+  retrieveMissingPayloads( payloadList );
+
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    // The Item Query was closed by retrieveMissingPayloads in case of SQLITE
+    // so we have to execute it again.
+    if ( !mItemQuery.exec() )
+      throw HandlerException("Unable to list items");
+    mItemQuery.query().next();
+  }
+
+  // build part query if needed
+  QueryBuilder partQuery;
+  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+    if ( !partQuery.exec() ) {
+      emit failureResponse( QLatin1String( "Unable to retrieve item parts" ) );
+      return false;
+    }
+    partQuery.query().next();
+  }
 
   // build flag query if needed
   QueryBuilder flagQuery;
@@ -129,49 +172,6 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
   const int flagQueryIdColumn = 0;
   const int flagQueryNameColumn = 1;
-
-  // retrieve missing parts
-  QStringList partList, payloadList;
-  foreach( const QByteArray &b, mRequestedParts ) {
-    // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
-      continue;
-    if ( b == "SIZE" ) {
-      mSizeRequested = true;
-      continue;
-    }
-    if ( b == "DATETIME" ) {
-      mMTimeRequested = true;
-      continue;
-    }
-    if ( b == "REMOTEREVISION" ) {
-      mRemoteRevisionRequested = true;
-      continue;
-    }
-    partList << QString::fromLatin1( b );
-    if ( b.startsWith( "PLD:" ) )
-      payloadList << QString::fromLatin1( b );
-  }
-  retrieveMissingPayloads( payloadList );
-
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    // The Item Query was closed by retrieveMissingPayloads in case of SQLITE
-    // so we have to execute it again.
-    if ( !mItemQuery.exec() )
-      throw HandlerException("Unable to list items");
-    mItemQuery.query().next();
-  }
-
-  // build part query if needed
-  QueryBuilder partQuery;
-  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.exec() ) {
-      emit failureResponse( QLatin1String( "Unable to retrieve item parts" ) );
-      return false;
-    }
-    partQuery.query().next();
-  }
 
   // build responses
   Response response;
