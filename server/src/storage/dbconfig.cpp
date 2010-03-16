@@ -70,7 +70,7 @@ DbConfig* DbConfig::configuredDatabase()
       s_DbConfigInstance = new DbConfigMysql;
     else if ( driverName == QLatin1String( "QMYSQL_EMBEDDED" ) )
       s_DbConfigInstance = new DbConfigMysqlEmbedded;
-    else if ( driverName == QLatin1String( "QSQLITE" ) )
+    else if ( driverName == QLatin1String( "QSQLITE3" ) )
       s_DbConfigInstance = new DbConfigSqlite;
     else if ( driverName == QLatin1String( "QPSQL" ) )
       s_DbConfigInstance = new DbConfigPostgresql;

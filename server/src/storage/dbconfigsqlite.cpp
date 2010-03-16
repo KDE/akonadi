@@ -60,7 +60,7 @@ DbConfigSqlite::DbConfigSqlite()
 
 QString DbConfigSqlite::driverName() const
 {
-  return QLatin1String( "QSQLITE" );
+  return QLatin1String( "QSQLITE3" );
 }
 
 QString DbConfigSqlite::databaseName() const
