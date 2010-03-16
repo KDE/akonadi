@@ -20,7 +20,7 @@
 
 #include <QStringList>
 #include "fakeserverdata.h"
-#include <Akonadi/EntityDisplayAttribute>
+#include <akonadi/entitydisplayattribute.h>
 
 using namespace Akonadi;
 

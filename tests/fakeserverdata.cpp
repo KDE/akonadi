@@ -22,8 +22,8 @@
 #include <QLocalServer>
 #include <KStandardDirs>
 #include <QDir>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/CollectionFetchJob>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/collectionfetchjob.h>
 
 FakeServerData::FakeServerData(PublicETM *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
   : QObject(parent),
