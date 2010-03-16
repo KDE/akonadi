@@ -20,6 +20,7 @@
 
 #include <QStringList>
 #include "fakeserverdata.h"
+#include <Akonadi/EntityDisplayAttribute>
 
 using namespace Akonadi;
 
@@ -130,7 +131,20 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     int order = 0;
     if ( !parts.first().isEmpty() )
     {
-      QString orderString = parts.first().trimmed();
+      QString displayName;
+      QString optionalSection = parts.first().trimmed();
+      if ( optionalSection.startsWith( QLatin1Char( '\'' ) ) )
+      {
+          optionalSection.remove( 0, 1 );
+          QStringList optionalParts = optionalSection.split( QLatin1Char( '\'' ) );
+          displayName = optionalParts.takeFirst();
+          EntityDisplayAttribute *eda = new EntityDisplayAttribute();
+          eda->setDisplayName( displayName );
+          collection.addAttribute( eda );
+          optionalSection = optionalParts.first();
+      }
+
+      QString orderString = optionalSection.trimmed();
       if ( !orderString.isEmpty() )
       {
         bool ok;

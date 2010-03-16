@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   FakeServerData *serverData = new FakeServerData( model, session, monitor );
 
   QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
-    "- C (inode/directory) 4"
+    "- C (inode/directory) 'MyResource' 4"
     "- - C (text/directory, message/rfc822) 3"
     "- - - I text/directory"
     "- - - I text/directory"
