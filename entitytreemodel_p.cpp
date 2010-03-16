@@ -161,7 +161,7 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   // TODO: This hack is probably not needed anymore. Remove it.
   // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
   // That is not provided by akonadi, so we attach it in a property.
-  itemFetchJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
+  itemFetchJob->setProperty( FetchCollectionId(), QVariant( parent.id() ) );
 
   q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
               q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
@@ -181,6 +181,9 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 {
   Q_Q( EntityTreeModel );
   CollectionFetchJob *job = new CollectionFetchJob( collection, type, m_session );
+
+  job->setProperty( FetchCollectionId(), QVariant( collection.id() ) );
+
   job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
   job->fetchScope().setIncludeStatistics( m_includeStatistics );
   job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
@@ -305,7 +308,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
   Q_ASSERT( job );
 
-  const Collection::Id collectionId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
+  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
   Item::List itemsToInsert;
   Item::List itemsToUpdate;
 

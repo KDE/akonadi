@@ -148,8 +148,8 @@ public:
    * The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
    * in itemsReceivedFromJob to correctly insert items into the model.
    */
-  static QByteArray ItemFetchCollectionId() {
-    return "ItemFetchCollectionId";
+  static QByteArray FetchCollectionId() {
+    return "FetchCollectionId";
   }
 
   Session *m_session;
