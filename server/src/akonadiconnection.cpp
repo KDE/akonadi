@@ -47,8 +47,6 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_parser( 0 )
     , m_streamParser( 0 )
 {
-    m_identifier.sprintf( "%p", static_cast<void*>( this ) );
-    Tracer::self()->beginConnection( m_identifier, QString() );
     m_parser = new ImapParser;
 }
 
@@ -262,6 +260,9 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
 
 void AkonadiConnection::setSessionId(const QByteArray &id)
 {
+  m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void*>( this ) );
+  Tracer::self()->beginConnection( m_identifier, QString() );
+
   m_sessionId = id;
   storageBackend()->setSessionId( id );
   storageBackend()->notificationCollector()->setSessionId( id );
