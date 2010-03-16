@@ -242,9 +242,7 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
 {
   kDebug() << name << oldOwner << newOwner;
 
-  // TODO: find out why it does not work properly when reacting on
-  // org.freedesktop.Akonadi.Control
-  if ( name == QLatin1String( "org.freedesktop.Akonadi" ) ) {
+  if ( name == QLatin1String( "org.freedesktop.Akonadi.Control" ) ) {
     if ( oldOwner.isEmpty() ) // startup
       setupAgents();
     else if ( mShuttingDown ) // our own shutdown
