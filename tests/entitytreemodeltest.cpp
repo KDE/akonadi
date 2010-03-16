@@ -36,7 +36,6 @@
 #include <entitydisplayattribute.h>
 #include <KStandardDirs>
 #include <entitytreemodel_p.h>
-#include "public_etm.h"
 
 class EntityTreeModelTest : public QObject
 {
@@ -65,7 +64,7 @@ private:
   }
 
 private:
-  PublicETM *m_model;
+  EntityTreeModel *m_model;
 
   ModelSpy *m_modelSpy;
   FakeSession *m_fakeSession;
@@ -88,7 +87,7 @@ void EntityTreeModelTest::testInitialFetch()
 
   fakeMonitor->setSession( m_fakeSession );
   fakeMonitor->setCollectionMonitored(Collection::root());
-  m_model = new PublicETM( fakeMonitor, this );
+  m_model = new EntityTreeModel( fakeMonitor, this );
 
   FakeServerData *serverData = new FakeServerData( m_model, m_fakeSession, m_fakeMonitor );
   QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,

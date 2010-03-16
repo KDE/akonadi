@@ -25,7 +25,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/collectionfetchjob.h>
 
-FakeServerData::FakeServerData(PublicETM *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
+FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent )
   : QObject(parent),
     m_model( model ),
     m_session( session ),

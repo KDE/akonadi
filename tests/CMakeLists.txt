@@ -88,10 +88,7 @@ kde4_add_library(akonaditestfake STATIC
   fakeakonadiservercommand.cpp
   fakesession.cpp
   fakemonitor.cpp
-  fakeserver.cpp
   fakeserverdata.cpp
-  public_etm.cpp
-  akonadieventqueue.cpp
   modelspy.cpp
 )
 

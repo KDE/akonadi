@@ -23,11 +23,11 @@
 #include <QQueue>
 
 #include <akonadi/job.h>
+#include <akonadi/entitytreemodel.h>
 
 #include "fakeserver.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
-#include "public_etm.h"
 #include "fakeakonadiservercommand.h"
 
 using namespace Akonadi;
@@ -36,7 +36,7 @@ class FakeServerData : public QObject
 {
   Q_OBJECT
 public:
-  FakeServerData( PublicETM *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0 );
+  FakeServerData( EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = 0 );
 
   void setCommands( QList<FakeAkonadiServerCommand*> list );
 
@@ -57,7 +57,7 @@ private:
   void returnEntities( Entity::Id fetchColId );
 
 private:
-  PublicETM *m_model;
+  EntityTreeModel *m_model;
   FakeSession *m_session;
   FakeMonitor *m_monitor;
 

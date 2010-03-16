@@ -24,7 +24,6 @@
 #include "fakeserverdata.h"
 #include "fakesession.h"
 #include "fakemonitor.h"
-#include "public_etm.h"
 #include <akonadi/entitytreeview.h>
 
 using namespace Akonadi;
@@ -36,7 +35,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   FakeSession *session = new FakeSession( "FS1", this );
   monitor->setSession( session );
 
-  PublicETM *model = new PublicETM( monitor, this );
+  EntityTreeModel *model = new EntityTreeModel( monitor, this );
   FakeServerData *serverData = new FakeServerData( model, session, monitor );
 
   QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
