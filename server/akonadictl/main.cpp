@@ -57,7 +57,7 @@ static bool stopServer()
 {
   org::freedesktop::Akonadi::ControlManager iface( AKONADI_DBUS_CONTROL_SERVICE, "/ControlManager", QDBusConnection::sessionBus(), 0 );
   if ( !iface.isValid() ) {
-    qDebug( "Unable to connect to dbus interface of control service" );
+    qDebug( "Akonadi is not running." );
     return false;
   }
 
@@ -151,7 +151,7 @@ int main( int argc, char **argv )
         } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
         if ( !startServer() )
           return 3;
-      } 
+      }
   }
 
   return 0;
