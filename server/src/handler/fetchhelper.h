@@ -59,6 +59,7 @@ class FetchHelper : public QObject
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
+    QString driverName();
 
   private:
     Scope mScope;

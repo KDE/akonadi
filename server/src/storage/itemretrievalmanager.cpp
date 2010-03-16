@@ -49,8 +49,6 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
   connect( this, SIGNAL(syncCollection(QString,qint64)), this, SLOT(triggerCollectionSync(QString,qint64)), Qt::QueuedConnection );
-  connect( this, SIGNAL( syncResource( const QString& ) ),
-           this, SLOT( triggerResourceSync( const QString& ) ), Qt::QueuedConnection );
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
@@ -114,28 +112,33 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
   req->resourceId = resource;
   req->parts = parts;
 
+  requestItemDelivery( req );
+}
+
+void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
+{
   mLock->lockForWrite();
-  qDebug() << "posting retrieval request for item" << uid << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ resource ].size() << " items in mine";
-  mPendingRequests[ resource ].append( req );
+  qDebug() << "posting retrieval request for item" << req->id << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ req->resourceId ].size() << " items in mine";
+  mPendingRequests[ req->resourceId ].append( req );
   mLock->unlock();
 
   emit requestAdded();
 
   mLock->lockForRead();
   forever {
-    qDebug() << "checking if request for item" << uid << "has been processed...";
+    qDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
-      qDebug() << "request for item" << uid << "processed, error:" << errorMsg;
+      qDebug() << "request for item" << req->id << "processed, error:" << errorMsg;
       delete req;
       if ( errorMsg.isEmpty() )
         return;
       else
         throw ItemRetrieverException( errorMsg );
     } else {
-      qDebug() << "request for item" << uid << "still pending - waiting";
+      qDebug() << "request for item" << req->id << "still pending - waiting";
       mWaitCondition->wait( mLock );
       qDebug() << "continuing";
     }
@@ -204,13 +207,8 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
   emit requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
-void ItemRetrievalManager::requestCollectionSync( const Collection& collection )
+void ItemRetrievalManager::requestCollectionSync(const Collection& collection)
 {
-  // if the collection is a resource collection we trigger a synchronization
-  // of the collection hierarchy as well
-  if ( collection.parentId() == 0 )
-    emit syncResource( collection.resource().name() );
-
   emit syncCollection( collection.resource().name(), collection.id() );
 }
 
@@ -221,11 +219,5 @@ void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64
     interface->synchronizeCollection( colId );
 }
 
-void ItemRetrievalManager::triggerResourceSync( const QString& resource )
-{
-  OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
-  if ( interface )
-    interface->synchronize();
-}
 
 #include "itemretrievalmanager.moc"
