@@ -214,9 +214,14 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     QStringList::const_iterator it    = fullPathList.constBegin();
     QStringList::const_iterator endIt = fullPathList.constEnd();
     for ( ; it != endIt; ++it ) {
-      QFileInfo fileInfo(*it);
+      const QFileInfo fileInfo( *it );
 
-      if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isExecutable() ) {
+      // resolve symlinks, happens eg. with Maemo optify
+      if ( fileInfo.canonicalFilePath().isEmpty() )
+        continue;
+      const QFileInfo canonicalFileInfo( fileInfo.canonicalFilePath() );
+
+      if ( canonicalFileInfo.exists() && canonicalFileInfo.isFile() && canonicalFileInfo.isExecutable() ) {
         return *it;
       }
     }
