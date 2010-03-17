@@ -172,7 +172,7 @@ void EntityTreeModelTest::testInitialFetch()
   m_modelSpy->setExpectedSignals( expectedSignals );
 
   // Give the model a chance to run the event loop to process the signals.
-  QTest::qWait(1000);
+  QTest::qWait(10);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -190,7 +190,7 @@ void EntityTreeModelTest::testCollectionMove()
   serverData->setCommands( initialFetchResponse );
 
   // Give the model a chance to populate
-  QTest::qWait(1000);
+  QTest::qWait(10);
 
   FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", model );
 
@@ -210,7 +210,7 @@ void EntityTreeModelTest::testCollectionMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(1000);
+  QTest::qWait(10);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
@@ -228,7 +228,7 @@ void EntityTreeModelTest::testItemMove()
   serverData->setCommands( initialFetchResponse );
 
   // Give the model a chance to populate
-  QTest::qWait(1000);
+  QTest::qWait(10);
 
   FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( "Item 1", "Col 6", "Col 7", model );
 
@@ -248,7 +248,7 @@ void EntityTreeModelTest::testItemMove()
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
-  QTest::qWait(1000);
+  QTest::qWait(10);
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
