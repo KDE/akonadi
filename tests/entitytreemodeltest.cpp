@@ -173,6 +173,8 @@ void EntityTreeModelTest::testInitialFetch()
 
   // Give the model a chance to run the event loop to process the signals.
   QTest::qWait(1000);
+
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 void EntityTreeModelTest::testCollectionMove()
@@ -209,6 +211,8 @@ void EntityTreeModelTest::testCollectionMove()
 
   // Give the model a change to run the event loop to process the signals.
   QTest::qWait(1000);
+
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 void EntityTreeModelTest::testItemMove()
@@ -245,6 +249,8 @@ void EntityTreeModelTest::testItemMove()
 
   // Give the model a change to run the event loop to process the signals.
   QTest::qWait(1000);
+
+  QVERIFY( m_modelSpy->isEmpty() );
 }
 
 
