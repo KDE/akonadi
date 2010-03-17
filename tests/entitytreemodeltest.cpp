@@ -44,6 +44,7 @@ private slots:
 
   void testInitialFetch();
   void testCollectionMove();
+  void testItemMove();
 
 private:
   ExpectedSignal getExpectedSignal( SignalType type, int start, int end, const QVariantList newData)
@@ -228,11 +229,6 @@ void EntityTreeModelTest::testCollectionMove()
 
   QList<ExpectedSignal> expectedSignals;
 
-  // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
-  // It uses the parentCollection heirarchy to put placeholder collections in the model until the root is reached.
-  // Then it inserts only one row and emits the correct signals. After that, when the other collections
-  // arrive, dataChanged is emitted for them.
-
   expectedSignals << getExpectedSignal( RowsAboutToBeMoved, 0, 0, "Col 3", 0, "Col 7", QVariantList() << "Col 4" );
   expectedSignals << getExpectedSignal( RowsMoved, 0, 0, "Col 3", 0, "Col 7" , QVariantList() << "Col 4" );
 
@@ -242,7 +238,71 @@ void EntityTreeModelTest::testCollectionMove()
 
   // Give the model a change to run the event loop to process the signals.
   QTest::qWait(1000);
+}
 
+void EntityTreeModelTest::testItemMove()
+{
+  FakeMonitor *fakeMonitor = new FakeMonitor(this);
+
+  fakeMonitor->setSession( m_fakeSession );
+  fakeMonitor->setCollectionMonitored(Collection::root());
+  EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
+
+  FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
+    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
+    // The dashes show the depth in the heirarchy
+    // Collections have a list of mimetypes they can contain, followed by an optional
+    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
+    // which is the order in which the collections are returned from the job to the ETM.
+    "- C (inode/directory) 'Col 1' 4"
+    "- - C (text/directory, message/rfc822) 'Col 2' 3"
+    // Items just have the mimetype they contain in the payload.
+    "- - - I text/directory"
+    "- - - I text/directory 'Item 1'"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+    "- - C (text/directory) 'Col 3' 3"
+    "- - - C (text/directory) 'Col 4' 2"
+    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
+    "- - - - - I text/directory"
+    "- - - - - I text/directory"
+    "- - - - I text/directory"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - C (message/rfc822) 'Col 6' 3"
+    "- - - I message/rfc822 'Item 1'"
+    "- - - I message/rfc822"
+    "- - C (text/directory, message/rfc822) 'Col 7' 3"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+  );
+  serverData->setCommands( initialFetchResponse );
+
+  // Give the model a chance to populate
+  QTest::qWait(1000);
+
+  FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( "Item 1", "Col 6", "Col 7", model );
+
+  m_modelSpy = new ModelSpy(this);
+  m_modelSpy->setModel(model);
+  m_modelSpy->startSpying();
+
+  serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
+
+  QList<ExpectedSignal> expectedSignals;
+
+  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, 0, 0, "Col 6", 4, "Col 7", QVariantList() << "Item 1" );
+  expectedSignals << getExpectedSignal( RowsMoved, 0, 0, "Col 6", 4, "Col 7" , QVariantList() << "Item 1" );
+
+  m_modelSpy->setExpectedSignals( expectedSignals );
+
+  serverData->processNotifications();
+
+  // Give the model a change to run the event loop to process the signals.
+  QTest::qWait(1000);
 }
 
 
