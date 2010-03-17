@@ -42,15 +42,14 @@ public:
   Entity::Id nextCollectionId() const { return m_nextCollectionId++; }
   Entity::Id nextItemId()       const { return m_nextItemId++;       }
 
-signals:
-  void emit_itemsFetched( const Akonadi::Item::List &list );
-  void emit_collectionsFetched( const Akonadi::Collection::List &list );
+  Akonadi::EntityTreeModel* model() const { return m_model; }
+
+  void processNotifications();
 
 private slots:
   void jobAdded( Akonadi::Job *job );
 
 private:
-  void processNotifications();
   bool returnCollections( Entity::Id fetchColId );
   void returnItems( Entity::Id fetchColId );
   void returnEntities( Entity::Id fetchColId );
@@ -63,17 +62,8 @@ private:
   QList<FakeAkonadiServerCommand*> m_commandList;
   QQueue<FakeAkonadiServerCommand*> m_communicationQueue;
 
-  Collection::List m_recentCollections;
-  QList<Collection::List> m_collectionSequence;
-  QList<QHash<Item::Id, Item> > m_itemSequence;
-  FakeAkonadiServer *m_fakeServer;
-  int m_jobsActioned;
-  QString m_serverDataString;
-
   mutable Entity::Id m_nextCollectionId;
   mutable Entity::Id m_nextItemId;
-
-
 };
 
 #endif

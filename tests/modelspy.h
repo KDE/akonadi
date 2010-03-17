@@ -43,6 +43,8 @@ struct ExpectedSignal
   int startRow;
   int endRow;
   QVariant parentData;
+  QVariant sourceParentData;
+  int destRow;
   QVariantList newData;
 };
 

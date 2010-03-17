@@ -24,8 +24,34 @@
 
 using namespace Akonadi;
 
+FakeAkonadiServerCommand::FakeAkonadiServerCommand( FakeAkonadiServerCommand::Type type, EntityTreeModel *model )
+  : m_type( type ), m_model( model )
+{
+  connect(this, SIGNAL(emit_itemsFetched(Akonadi::Item::List)), model, SLOT(itemsFetched(Akonadi::Item::List)));
+  connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), model, SLOT(collectionsFetched(Akonadi::Collection::List)));
+  connect(this, SIGNAL(emit_collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
+          model, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
+}
+
+Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString& displayName) const
+{
+  QModelIndexList list = m_model->match( m_model->index( 0, 0 ), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive );
+  if ( list.isEmpty() )
+    return Collection();
+  return list.first().data( EntityTreeModel::CollectionRole ).value<Collection>();
+}
+
 void FakeJobResponse::doCommand()
 {
+  if ( m_type == RespondToCollectionFetch )
+  {
+    emit_collectionsFetched( m_collections.values() );
+  }
+  else if ( m_type == RespondToItemFetch )
+  {
+    setProperty( "FetchCollectionId", m_parentCollection.id() );
+    emit_itemsFetched( m_items.values() );
+  }
 }
 
 QList<FakeJobResponse::Token> FakeJobResponse::tokenize(const QString& treeString)
@@ -157,7 +183,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     }
     while ( collectionResponseList.size() < order )
     {
-      collectionResponseList.append( new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToCollectionFetch ) );
+      collectionResponseList.append( new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToCollectionFetch, fakeServerData->model() ) );
     }
     collectionResponseList[ order - 1 ]->appendCollection( collection );
   }
@@ -184,10 +210,22 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     Collection::Id colId = recentCollections[ depth ].id();
     if ( !itemResponseMap.contains( colId ) )
     {
-      FakeJobResponse *newResponse = new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToItemFetch );
+      FakeJobResponse *newResponse = new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToItemFetch, fakeServerData->model() );
       itemResponseMap.insert( colId, newResponse );
       collectionResponseList.append( newResponse );
     }
     itemResponseMap[ colId ]->appendItem( item );
   }
 }
+
+void FakeCollectionMovedCommand::doCommand()
+{
+  Collection collection = getCollectionByDisplayName( m_collectionName );
+  Collection source = getCollectionByDisplayName( m_sourceName );
+  Collection target = getCollectionByDisplayName( m_targetName );
+
+  collection.setParentCollection( target );
+
+  emit_collectionMoved( collection, source, target );
+}
+

@@ -29,13 +29,10 @@ FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, Fa
     m_model( model ),
     m_session( session ),
     m_monitor( monitor ),
-    m_jobsActioned( 0 ),
     m_nextCollectionId( 1 ),
     m_nextItemId( 0 )
 {
   connect(session, SIGNAL(jobAdded(Akonadi::Job *)), SLOT(jobAdded(Akonadi::Job *)), Qt::QueuedConnection);
-  connect(this, SIGNAL(emit_itemsFetched(Akonadi::Item::List)), model, SLOT(itemsFetched(Akonadi::Item::List)));
-  connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), model, SLOT(collectionsFetched(Akonadi::Collection::List)));
 }
 
 void FakeServerData::setCommands(QList< FakeAkonadiServerCommand* > list)
@@ -88,7 +85,7 @@ bool FakeServerData::returnCollections( Entity::Id fetchColId )
        && fetchColId == fetchCollection.id() )
   {
     FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
-    emit_collectionsFetched( command->m_collections.values() );
+    command->doCommand();
     if ( !m_communicationQueue.isEmpty() )
       returnEntities( fetchColId );
     return true;
@@ -100,13 +97,10 @@ void FakeServerData::returnItems( Entity::Id fetchColId )
 {
   FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
 
-  Collection fetchCollection = m_communicationQueue.head()->fetchCollection();
-
   if ( commType == FakeAkonadiServerCommand::RespondToItemFetch )
   {
     FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
-    setProperty( "FetchCollectionId", fetchCollection.id() );
-    emit_itemsFetched( command->m_items.values() );
+    command->doCommand();
     if ( !m_communicationQueue.isEmpty() )
       returnEntities( fetchColId );
   }
