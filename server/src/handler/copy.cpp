@@ -37,7 +37,7 @@ using namespace Akonadi;
 bool Copy::copyItem(const PimItem & item, const Collection & target)
 {
   qDebug() << "Copy::copyItem";
-  DataStore *store = connection()->storageBackend();
+
   PimItem newItem = item;
   newItem.setId( -1 );
   newItem.setRev( 0 );
@@ -53,6 +53,8 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
     newPart.setPimItemId( -1 );
     parts << newPart;
   }
+
+  DataStore *store = connection()->storageBackend();
   if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), newItem ) )
     return false;
   foreach ( const Flag &flag, item.flags() ) {
@@ -74,8 +76,8 @@ bool Copy::parseStream()
   retriever.exec();
 
   const QByteArray tmp = m_streamParser->readString();
-  const Collection col = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !col.isValid() )
+  const Collection targetCollection = HandlerHelper::collectionFromIdOrName( tmp );
+  if ( !targetCollection.isValid() )
     return failureResponse( "No valid target specified" );
 
   SelectQueryBuilder<PimItem> qb;
@@ -83,12 +85,13 @@ bool Copy::parseStream()
   if ( !qb.exec() )
     return failureResponse( "Unable to retrieve items" );
   PimItem::List items = qb.result();
+  qb.query().finish();
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
   foreach ( const PimItem &item, items ) {
-    if ( !copyItem( item, col ) )
+    if ( !copyItem( item, targetCollection ) )
       return failureResponse( "Unable to copy item" );
   }
 
