@@ -107,6 +107,26 @@ private:
     return expectedSignal;
   }
 
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> populateModel( const QString &serverContent )
+  {
+    FakeMonitor *fakeMonitor = new FakeMonitor(this);
+
+    fakeMonitor->setSession( m_fakeSession );
+    fakeMonitor->setCollectionMonitored(Collection::root());
+    EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
+
+    m_modelSpy = new ModelSpy(this);
+    m_modelSpy->setModel(model);
+
+    FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
+    QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent );
+    serverData->setCommands( initialFetchResponse );
+
+    // Give the model a chance to populate
+    QTest::qWait(10);
+    return qMakePair( serverData, model );
+  }
+
 private:
   ModelSpy *m_modelSpy;
   FakeSession *m_fakeSession;
@@ -181,40 +201,30 @@ void EntityTreeModelTest::testInitialFetch()
 
 void EntityTreeModelTest::testCollectionMove_data()
 {
+  QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "movedCollection" );
   QTest::addColumn<int>( "sourceRow" );
   QTest::addColumn<QString>( "sourceCollection" );
   QTest::addColumn<QString>( "targetCollection" );
 
-  QTest::newRow("move-collection01") << "Col 4" << 0 << "Col 3" << "Col 7";
+  QTest::newRow("move-collection01") << serverContent1 << "Col 4" << 0 << "Col 3" << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionMove()
 {
+  QFETCH( QString, serverContent );
   QFETCH( QString, movedCollection );
   QFETCH( int, sourceRow );
   QFETCH( QString, sourceCollection );
   QFETCH( QString, targetCollection );
 
-  FakeMonitor *fakeMonitor = new FakeMonitor(this);
-
-  fakeMonitor->setSession( m_fakeSession );
-  fakeMonitor->setCollectionMonitored(Collection::root());
-  EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
-
-  FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent1 );
-  serverData->setCommands( initialFetchResponse );
-
-  // Give the model a chance to populate
-  QTest::qWait(10);
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
+  FakeServerData *serverData = testDrivers.first;
+  Akonadi::EntityTreeModel *model = testDrivers.second;
 
   FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( movedCollection, sourceCollection, targetCollection, model );
 
-  m_modelSpy = new ModelSpy(this);
-  m_modelSpy->setModel(model);
   m_modelSpy->startSpying();
-
   serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
 
   QList<ExpectedSignal> expectedSignals;
@@ -223,7 +233,6 @@ void EntityTreeModelTest::testCollectionMove()
   expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection , QVariantList() << movedCollection );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
-
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
@@ -234,42 +243,32 @@ void EntityTreeModelTest::testCollectionMove()
 
 void EntityTreeModelTest::testItemMove_data()
 {
+  QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "movedItem" );
   QTest::addColumn<int>( "sourceRow" );
   QTest::addColumn<QString>( "sourceCollection" );
   QTest::addColumn<QString>( "targetCollection" );
   QTest::addColumn<int>( "targetRow" );
 
-  QTest::newRow( "move-item01" ) << "Item 1" << 0 << "Col 6" << "Col 7" << 4;
+  QTest::newRow( "move-item01" ) << serverContent1 << "Item 1" << 0 << "Col 6" << "Col 7" << 4;
 }
 
 void EntityTreeModelTest::testItemMove()
 {
+  QFETCH( QString, serverContent );
   QFETCH( QString, movedItem );
   QFETCH( int, sourceRow );
   QFETCH( QString, sourceCollection );
   QFETCH( QString, targetCollection );
   QFETCH( int, targetRow );
 
-  FakeMonitor *fakeMonitor = new FakeMonitor(this);
-
-  fakeMonitor->setSession( m_fakeSession );
-  fakeMonitor->setCollectionMonitored(Collection::root());
-  EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
-
-  FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent1 );
-  serverData->setCommands( initialFetchResponse );
-
-  // Give the model a chance to populate
-  QTest::qWait(10);
+  QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
+  FakeServerData *serverData = testDrivers.first;
+  Akonadi::EntityTreeModel *model = testDrivers.second;
 
   FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( movedItem, sourceCollection, targetCollection, model );
 
-  m_modelSpy = new ModelSpy(this);
-  m_modelSpy->setModel(model);
   m_modelSpy->startSpying();
-
   serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
 
   QList<ExpectedSignal> expectedSignals;
@@ -278,7 +277,6 @@ void EntityTreeModelTest::testItemMove()
   expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
-
   serverData->processNotifications();
 
   // Give the model a change to run the event loop to process the signals.
