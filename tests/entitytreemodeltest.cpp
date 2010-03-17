@@ -29,11 +29,40 @@
 
 #include "imapparser_p.h"
 
-
 #include "entitytreemodel.h"
 #include <entitydisplayattribute.h>
 #include <KStandardDirs>
 #include <entitytreemodel_p.h>
+
+static const QString serverContent1 =
+    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
+    // The dashes show the depth in the heirarchy
+    // Collections have a list of mimetypes they can contain, followed by an optional
+    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
+    // which is the order in which the collections are returned from the job to the ETM.
+    "- C (inode/directory) 'Col 1' 4"
+    "- - C (text/directory, message/rfc822) 'Col 2' 3"
+    // Items just have the mimetype they contain in the payload.
+    "- - - I text/directory"
+    "- - - I text/directory 'Item 1'"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822"
+    "- - C (text/directory) 'Col 3' 3"
+    "- - - C (text/directory) 'Col 4' 2"
+    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
+    "- - - - - I text/directory"
+    "- - - - - I text/directory"
+    "- - - - I text/directory"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - C (message/rfc822) 'Col 6' 3"
+    "- - - I message/rfc822 'Item 1'"
+    "- - - I message/rfc822"
+    "- - C (text/directory, message/rfc822) 'Col 7' 3"
+    "- - - I text/directory"
+    "- - - I text/directory"
+    "- - - I message/rfc822"
+    "- - - I message/rfc822";
 
 class EntityTreeModelTest : public QObject
 {
@@ -100,36 +129,7 @@ void EntityTreeModelTest::testInitialFetch()
   EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
 
   FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
-    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
-    // The dashes show the depth in the heirarchy
-    // Collections have a list of mimetypes they can contain, followed by an optional
-    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
-    // which is the order in which the collections are returned from the job to the ETM.
-    "- C (inode/directory) 'Col 1' 4"
-    "- - C (text/directory, message/rfc822) 'Col 2' 3"
-    // Items just have the mimetype they contain in the payload.
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory) 'Col 3' 3"
-    "- - - C (text/directory) 'Col 4' 2"
-    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
-    "- - - - - I text/directory"
-    "- - - - - I text/directory"
-    "- - - - I text/directory"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - C (message/rfc822) 'Col 6' 3"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 'Col 7' 3"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-  );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent1 );
   serverData->setCommands( initialFetchResponse );
 
   m_modelSpy = new ModelSpy(this);
@@ -184,36 +184,7 @@ void EntityTreeModelTest::testCollectionMove()
   EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
 
   FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
-    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
-    // The dashes show the depth in the heirarchy
-    // Collections have a list of mimetypes they can contain, followed by an optional
-    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
-    // which is the order in which the collections are returned from the job to the ETM.
-    "- C (inode/directory) 'Col 1' 4"
-    "- - C (text/directory, message/rfc822) 'Col 2' 3"
-    // Items just have the mimetype they contain in the payload.
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory) 'Col 3' 3"
-    "- - - C (text/directory) 'Col 4' 2"
-    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
-    "- - - - - I text/directory"
-    "- - - - - I text/directory"
-    "- - - - I text/directory"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - C (message/rfc822) 'Col 6' 3"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 'Col 7' 3"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-  );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent1 );
   serverData->setCommands( initialFetchResponse );
 
   // Give the model a chance to populate
@@ -249,36 +220,7 @@ void EntityTreeModelTest::testItemMove()
   EntityTreeModel *model = new EntityTreeModel( fakeMonitor, this );
 
   FakeServerData *serverData = new FakeServerData( model, m_fakeSession, fakeMonitor );
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
-    // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
-    // The dashes show the depth in the heirarchy
-    // Collections have a list of mimetypes they can contain, followed by an optional
-    // displayName which is put into the EntityDisplayAttribute, followed by an optional order
-    // which is the order in which the collections are returned from the job to the ETM.
-    "- C (inode/directory) 'Col 1' 4"
-    "- - C (text/directory, message/rfc822) 'Col 2' 3"
-    // Items just have the mimetype they contain in the payload.
-    "- - - I text/directory"
-    "- - - I text/directory 'Item 1'"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory) 'Col 3' 3"
-    "- - - C (text/directory) 'Col 4' 2"
-    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
-    "- - - - - I text/directory"
-    "- - - - - I text/directory"
-    "- - - - I text/directory"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - C (message/rfc822) 'Col 6' 3"
-    "- - - I message/rfc822 'Item 1'"
-    "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 'Col 7' 3"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-  );
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData, serverContent1 );
   serverData->setCommands( initialFetchResponse );
 
   // Give the model a chance to populate
