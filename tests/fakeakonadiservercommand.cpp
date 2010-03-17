@@ -31,6 +31,8 @@ FakeAkonadiServerCommand::FakeAkonadiServerCommand( FakeAkonadiServerCommand::Ty
   connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), model, SLOT(collectionsFetched(Akonadi::Collection::List)));
   connect(this, SIGNAL(emit_collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
           model, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
+  connect(this, SIGNAL(emit_itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+          model, SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
 }
 
 Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString& displayName) const
@@ -39,6 +41,14 @@ Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString& d
   if ( list.isEmpty() )
     return Collection();
   return list.first().data( EntityTreeModel::CollectionRole ).value<Collection>();
+}
+
+Item FakeAkonadiServerCommand::getItemByDisplayName(const QString& displayName) const
+{
+  QModelIndexList list = m_model->match( m_model->index( 0, 0 ), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive );
+  if ( list.isEmpty() )
+    return Item();
+  return list.first().data( EntityTreeModel::ItemRole ).value<Item>();
 }
 
 void FakeJobResponse::doCommand()
@@ -246,5 +256,16 @@ void FakeCollectionMovedCommand::doCommand()
   collection.setParentCollection( target );
 
   emit_collectionMoved( collection, source, target );
+}
+
+void FakeItemMovedCommand::doCommand()
+{
+  Item item = getItemByDisplayName( m_itemName );
+  Collection source = getCollectionByDisplayName( m_sourceName );
+  Collection target = getCollectionByDisplayName( m_targetName );
+
+  item.setParentCollection( target );
+
+  emit_itemMoved( item, source, target );
 }
 

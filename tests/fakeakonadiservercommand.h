@@ -53,9 +53,11 @@ signals:
   void emit_itemsFetched( const Akonadi::Item::List &list );
   void emit_collectionsFetched( const Akonadi::Collection::List &list );
   void emit_collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &target );
+  void emit_itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &target );
 
 protected:
   Akonadi::Collection getCollectionByDisplayName( const QString &displayName ) const;
+  Akonadi::Item getItemByDisplayName( const QString &displayName ) const;
 
 protected:
   Akonadi::EntityTreeModel *m_model;
@@ -91,6 +93,26 @@ public:
 
 private:
   QString m_collectionName;
+  QString m_sourceName;
+  QString m_targetName;
+  FakeServerData *m_serverData;
+};
+
+class FakeItemMovedCommand : public FakeMonitorCommand
+{
+public:
+  FakeItemMovedCommand( const QString &item, const QString &source, const QString &target, Akonadi::EntityTreeModel *model )
+    : FakeMonitorCommand( model ), m_itemName( item ), m_sourceName( source ), m_targetName( target )
+  {
+
+  }
+
+  virtual ~FakeItemMovedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_itemName;
   QString m_sourceName;
   QString m_targetName;
   FakeServerData *m_serverData;
