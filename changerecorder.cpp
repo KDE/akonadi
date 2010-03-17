@@ -18,109 +18,23 @@
 */
 
 #include "changerecorder.h"
-#include "monitor_p.h"
+#include "changerecorder_p.h"
 
 #include <kdebug.h>
 #include <QtCore/QSettings>
 
 using namespace Akonadi;
 
-class Akonadi::ChangeRecorderPrivate : public MonitorPrivate
-{
-  public:
-    ChangeRecorderPrivate( ChangeRecorder* parent ) :
-      MonitorPrivate( parent ),
-      settings( 0 ),
-      enableChangeRecording( true )
-    {
-    }
-
-    Q_DECLARE_PUBLIC( ChangeRecorder )
-    QSettings *settings;
-    bool enableChangeRecording;
-
-    virtual int pipelineSize() const
-    {
-      if ( enableChangeRecording )
-        return 0; // we fill the pipeline ourselves when using change recording
-      return MonitorPrivate::pipelineSize();
-    }
-
-    virtual void slotNotify( const NotificationMessage::List &msgs )
-    {
-      Q_Q( ChangeRecorder );
-      const int oldChanges = pendingNotifications.size();
-      MonitorPrivate::slotNotify( msgs ); // with change recording disabled this will automatically take care of dispatching notification messages
-      if ( enableChangeRecording && pendingNotifications.size() != oldChanges ) {
-        saveNotifications();
-        emit q->changesAdded();
-      }
-    }
-
-    void loadNotifications()
-    {
-      pendingNotifications.clear();
-      QStringList list;
-      settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
-      int size = settings->beginReadArray( QLatin1String( "change" ) );
-      for ( int i = 0; i < size; ++i ) {
-        settings->setArrayIndex( i );
-        NotificationMessage msg;
-        msg.setSessionId( settings->value( QLatin1String( "sessionId" ) ).toByteArray() );
-        msg.setType( (NotificationMessage::Type)settings->value( QLatin1String( "type" ) ).toInt() );
-        msg.setOperation( (NotificationMessage::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
-        msg.setUid( settings->value( QLatin1String( "uid" ) ).toLongLong() );
-        msg.setRemoteId( settings->value( QLatin1String( "rid" ) ).toString() );
-        msg.setResource( settings->value( QLatin1String( "resource" ) ).toByteArray() );
-        msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
-        msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() );
-        msg.setMimeType( settings->value( QLatin1String( "mimeType" ) ).toString() );
-        list = settings->value( QLatin1String( "itemParts" ) ).toStringList();
-        QSet<QByteArray> itemParts;
-        Q_FOREACH( const QString &entry, list )
-          itemParts.insert( entry.toLatin1() );
-        msg.setItemParts( itemParts );
-        pendingNotifications << msg;
-      }
-      settings->endArray();
-      settings->endGroup();
-    }
-
-    void saveNotifications()
-    {
-      if ( !settings )
-        return;
-      settings->beginGroup( QLatin1String( "ChangeRecorder" ) );
-      settings->beginWriteArray( QLatin1String( "change" ), pendingNotifications.count() );
-      for ( int i = 0; i < pendingNotifications.count(); ++i ) {
-        settings->setArrayIndex( i );
-        NotificationMessage msg = pendingNotifications.at( i );
-        settings->setValue( QLatin1String( "sessionId" ), msg.sessionId() );
-        settings->setValue( QLatin1String( "type" ), msg.type() );
-        settings->setValue( QLatin1String( "op" ), msg.operation() );
-        settings->setValue( QLatin1String( "uid" ), msg.uid() );
-        settings->setValue( QLatin1String( "rid" ), msg.remoteId() );
-        settings->setValue( QLatin1String( "resource" ), msg.resource() );
-        settings->setValue( QLatin1String( "parentCol" ), msg.parentCollection() );
-        settings->setValue( QLatin1String( "parentDestCol" ), msg.parentDestCollection() );
-        settings->setValue( QLatin1String( "mimeType" ), msg.mimeType() );
-
-        QStringList list;
-        const QSet<QByteArray> itemParts = msg.itemParts();
-        QSetIterator<QByteArray> it( itemParts );
-        while ( it.hasNext() )
-          list.append( QString::fromLatin1( it.next() ) );
-
-        settings->setValue( QLatin1String( "itemParts" ), list );
-      }
-      settings->endArray();
-      settings->endGroup();
-    }
-
-};
-
-ChangeRecorder::ChangeRecorder(QObject * parent) :
+ChangeRecorder::ChangeRecorder( QObject * parent ) :
     Monitor( new ChangeRecorderPrivate( this ), parent )
+{
+  Q_D( ChangeRecorder );
+  d->init();
+  d->connectToNotificationManager();
+}
+
+ChangeRecorder::ChangeRecorder( ChangeRecorderPrivate *privateclass, QObject * parent ) :
+    Monitor( privateclass, parent )
 {
   Q_D( ChangeRecorder );
   d->init();

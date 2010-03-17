@@ -28,6 +28,8 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/session.h>
 
+#include "akonadiprivate_export.h"
+
 #include <qobject.h>
 #include <QQueue>
 #include <QVariant>
@@ -41,7 +43,7 @@ namespace Akonadi {
   @internal
   QObject part of EntityCache.
 */
-class EntityCacheBase : public QObject
+class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
 {
   Q_OBJECT
   public:

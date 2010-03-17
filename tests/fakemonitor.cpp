@@ -19,35 +19,33 @@
 
 
 #include "fakemonitor.h"
+#include "changerecorder_p.h"
+
+#include "entitycache_p.h"
 
 #include <QMetaMethod>
 
 using namespace Akonadi;
 
-FakeMonitor::FakeMonitor(QObject* parent)
-  : ChangeRecorder(parent)
+class FakeMonitorPrivate : public ChangeRecorderPrivate
 {
-  connectForwardingSignals();
-}
-
-void FakeMonitor::connectForwardingSignals()
-{
-  for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex)
+  Q_DECLARE_PUBLIC(FakeMonitor)
+public:
+  FakeMonitorPrivate( FakeMonitor *monitor )
+    : ChangeRecorderPrivate( monitor )
   {
-    QMetaMethod mm = metaObject()->method(methodIndex);
-    if (mm.methodType() == QMetaMethod::Signal && QString(mm.signature()).startsWith("emit_"))
-    {
-      int monitorSignalIndex = metaObject()->indexOfSignal( QString ( mm.signature() ).remove( 0, 5 ).toAscii().data() );
-      Q_ASSERT( monitorSignalIndex >= 0 );
-      metaObject()->connect(this, methodIndex, this, monitorSignalIndex );
-    }
   }
-}
 
-void FakeMonitor::processNextEvent()
+  /* reimp */ bool connectToNotificationManager()
+  {
+    // Do nothing. This monitor should not connect to the notification manager.
+    return true;
+  }
+
+};
+
+FakeMonitor::FakeMonitor(QObject* parent)
+  : ChangeRecorder( new FakeMonitorPrivate( this ), parent )
 {
+
 }
-
-
-
-

@@ -20,6 +20,7 @@
 #ifndef AKONADI_MONITOR_P_H
 #define AKONADI_MONITOR_P_H
 
+#include "akonadiprivate_export.h"
 #include "monitor.h"
 #include "collection.h"
 #include "collectionstatisticsjob.h"
@@ -43,7 +44,7 @@ class Monitor;
 /**
  * @internal
  */
-class MonitorPrivate
+class AKONADI_TESTS_EXPORT MonitorPrivate
 {
   public:
     MonitorPrivate( Monitor *parent );
@@ -91,7 +92,8 @@ class MonitorPrivate
       return sessions.contains( sessionId );
     }
 
-    bool connectToNotificationManager();
+    // Virtual so it can be overridden in FakeMonitor.
+    virtual bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg );
     void dispatchNotifications();
     bool ensureDataAvailable( const NotificationMessage &msg );
