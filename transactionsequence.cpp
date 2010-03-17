@@ -147,7 +147,7 @@ void TransactionSequence::continueOnJobFailure( KJob *job )
   Q_D( TransactionSequence );
 
   // make sure this is one of our sub jobs
-  Q_ASSERT( subJobs().contains( job ) );
+  Q_ASSERT( subjobs().contains( job ) );
 
   d->mIgnoredErrorJobs.insert( job );
 }
