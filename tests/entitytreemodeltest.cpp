@@ -203,24 +203,26 @@ void EntityTreeModelTest::testCollectionMove_data()
 {
   QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "movedCollection" );
-  QTest::addColumn<int>( "sourceRow" );
-  QTest::addColumn<QString>( "sourceCollection" );
   QTest::addColumn<QString>( "targetCollection" );
 
-  QTest::newRow("move-collection01") << serverContent1 << "Col 4" << 0 << "Col 3" << "Col 7";
+  QTest::newRow("move-collection01") << serverContent1 << "Col 4" << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionMove()
 {
   QFETCH( QString, serverContent );
   QFETCH( QString, movedCollection );
-  QFETCH( int, sourceRow );
-  QFETCH( QString, sourceCollection );
   QFETCH( QString, targetCollection );
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
   FakeServerData *serverData = testDrivers.first;
   Akonadi::EntityTreeModel *model = testDrivers.second;
+
+  QModelIndexList list = model->match( model->index( 0, 0 ), Qt::DisplayRole, movedCollection, 1, Qt::MatchRecursive );
+  Q_ASSERT( !list.isEmpty() );
+  QModelIndex movedIndex = list.first();
+  QString sourceCollection = movedIndex.parent().data().toString();
+  int sourceRow = movedIndex.row();
 
   FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( movedCollection, sourceCollection, targetCollection, model );
 
@@ -245,26 +247,31 @@ void EntityTreeModelTest::testItemMove_data()
 {
   QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "movedItem" );
-  QTest::addColumn<int>( "sourceRow" );
-  QTest::addColumn<QString>( "sourceCollection" );
   QTest::addColumn<QString>( "targetCollection" );
-  QTest::addColumn<int>( "targetRow" );
 
-  QTest::newRow( "move-item01" ) << serverContent1 << "Item 1" << 0 << "Col 6" << "Col 7" << 4;
+  QTest::newRow( "move-item01" ) << serverContent1 << "Item 1" << "Col 7";
 }
 
 void EntityTreeModelTest::testItemMove()
 {
   QFETCH( QString, serverContent );
   QFETCH( QString, movedItem );
-  QFETCH( int, sourceRow );
-  QFETCH( QString, sourceCollection );
   QFETCH( QString, targetCollection );
-  QFETCH( int, targetRow );
 
   QPair<FakeServerData*, Akonadi::EntityTreeModel*> testDrivers = populateModel( serverContent );
   FakeServerData *serverData = testDrivers.first;
   Akonadi::EntityTreeModel *model = testDrivers.second;
+
+  QModelIndexList list = model->match( model->index( 0, 0 ), Qt::DisplayRole, movedItem, 1, Qt::MatchRecursive );
+  Q_ASSERT( !list.isEmpty() );
+  QModelIndex movedIndex = list.first();
+  QString sourceCollection = movedIndex.parent().data().toString();
+  int sourceRow = movedIndex.row();
+
+  QModelIndexList targetList = model->match( model->index( 0, 0 ), Qt::DisplayRole, targetCollection, 1, Qt::MatchRecursive );
+  Q_ASSERT( !targetList.isEmpty() );
+  QModelIndex targetIndex = targetList.first();
+  int targetRow = model->rowCount( targetIndex );
 
   FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( movedItem, sourceCollection, targetCollection, model );
 
