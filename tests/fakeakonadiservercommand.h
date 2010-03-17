@@ -112,6 +112,60 @@ private:
   QString m_targetName;
 };
 
+class FakeCollectionAddedCommand : public FakeMonitorCommand
+{
+public:
+  FakeCollectionAddedCommand( const QString &collection, const QString &parent, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_collectionName( collection ), m_parentName( parent )
+  {
+
+  }
+
+  virtual ~FakeCollectionAddedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_collectionName;
+  QString m_parentName;
+};
+
+class FakeCollectionRemovedCommand : public FakeMonitorCommand
+{
+public:
+  FakeCollectionRemovedCommand( const QString &collection, const QString &source, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_collectionName( collection ), m_parentName( source )
+  {
+
+  }
+
+  virtual ~FakeCollectionRemovedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_collectionName;
+  QString m_parentName;
+};
+
+class FakeCollectionChangedCommand : public FakeMonitorCommand
+{
+public:
+  FakeCollectionChangedCommand( const QString &collection, const QString &parent, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_collectionName( collection ), m_parentName( parent )
+  {
+
+  }
+
+  virtual ~FakeCollectionChangedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_collectionName;
+  QString m_parentName;
+};
+
 class FakeItemMovedCommand : public FakeMonitorCommand
 {
 public:
@@ -129,7 +183,61 @@ private:
   QString m_itemName;
   QString m_sourceName;
   QString m_targetName;
+};
+
+class FakeItemAddedCommand : public FakeMonitorCommand
+{
+public:
+  FakeItemAddedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_itemName( item ), m_parentName( parent )
+  {
+
+  }
+
+  virtual ~FakeItemAddedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_itemName;
+  QString m_parentName;
+};
+
+class FakeItemRemovedCommand : public FakeMonitorCommand
+{
+public:
+  FakeItemRemovedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_itemName( item ), m_parentName( parent )
+  {
+
+  }
+
+  virtual ~FakeItemRemovedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_itemName;
+  QString m_parentName;
   FakeServerData *m_serverData;
+};
+
+class FakeItemChangedCommand : public FakeMonitorCommand
+{
+public:
+  FakeItemChangedCommand( const QString &item, const QString &parent, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_itemName( item ), m_parentName( parent )
+  {
+
+  }
+
+  virtual ~FakeItemChangedCommand() {}
+
+  /* reimp */ void doCommand();
+
+private:
+  QString m_itemName;
+  QString m_parentName;
 };
 
 class FakeJobResponse : public FakeAkonadiServerCommand

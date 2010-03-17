@@ -273,6 +273,45 @@ void FakeCollectionMovedCommand::doCommand()
   emit_monitoredCollectionMoved( collection, source, target );
 }
 
+void FakeCollectionAddedCommand::doCommand()
+{
+  Collection parent = getCollectionByDisplayName( m_parentName );
+
+  Q_ASSERT( parent.isValid() );
+
+  Collection collection;
+  collection.setId( m_serverData->nextCollectionId() );
+  collection.setName( QString("Collection %1").arg( collection.id() ) );
+  collection.setRemoteId( QString( "remoteId %1" ).arg( collection.id() ) );
+  collection.setParentCollection( parent );
+
+  EntityDisplayAttribute *eda = new EntityDisplayAttribute();
+  eda->setDisplayName( m_collectionName );
+  collection.addAttribute( eda );
+
+  emit_monitoredCollectionAdded( collection, parent );
+}
+
+void FakeCollectionRemovedCommand::doCommand()
+{
+  Collection collection = getCollectionByDisplayName( m_collectionName );
+
+  Q_ASSERT( collection.isValid() );
+
+  emit_monitoredCollectionRemoved( collection );
+}
+
+void FakeCollectionChangedCommand::doCommand()
+{
+  Collection collection = getCollectionByDisplayName( m_collectionName );
+  Collection parent = getCollectionByDisplayName( m_parentName );
+
+  Q_ASSERT( collection.isValid() );
+  Q_ASSERT( parent.isValid() );
+
+  emit_monitoredCollectionChanged( collection );
+}
+
 void FakeItemMovedCommand::doCommand()
 {
   Item item = getItemByDisplayName( m_itemName );
@@ -288,3 +327,40 @@ void FakeItemMovedCommand::doCommand()
   emit_monitoredItemMoved( item, source, target );
 }
 
+void FakeItemAddedCommand::doCommand()
+{
+  Collection parent = getCollectionByDisplayName( m_parentName );
+
+  Q_ASSERT( parent.isValid() );
+
+  Item item;
+  item.setId( m_serverData->nextItemId() );
+  item.setRemoteId( QString( "remoteId %1" ).arg( item.id() ) );
+  item.setParentCollection( parent );
+
+  EntityDisplayAttribute *eda = new EntityDisplayAttribute();
+  eda->setDisplayName( m_itemName );
+  item.addAttribute( eda );
+
+  emit_monitoredItemAdded( item, parent );
+}
+
+void FakeItemRemovedCommand::doCommand()
+{
+  Item item = getItemByDisplayName( m_itemName );
+
+  Q_ASSERT( item.isValid() );
+
+  emit_monitoredItemRemoved( item );
+}
+
+void FakeItemChangedCommand::doCommand()
+{
+  Item item = getItemByDisplayName( m_itemName );
+  Collection parent = getCollectionByDisplayName( m_parentName );
+
+  Q_ASSERT( item.isValid() );
+  Q_ASSERT( parent.isValid() );
+
+  emit_monitoredItemChanged( item, QSet<QByteArray>() );
+}
