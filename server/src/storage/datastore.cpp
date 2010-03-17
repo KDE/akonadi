@@ -25,6 +25,7 @@
 #include "dbupdater.h"
 #include "notificationmanager.h"
 #include "tracer.h"
+#include "transaction.h"
 #include "selectquerybuilder.h"
 #include "handlerhelper.h"
 #include "countquerybuilder.h"
@@ -270,12 +271,17 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 
 static bool recursiveSetResourceId( const Collection & collection, qint64 resourceId )
 {
+  Transaction transaction( DataStore::self() );
+
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( Collection::tableName() );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
   if ( !qb.exec() )
     return false;
+
+  transaction.commit();
+
   foreach ( const Collection &col, collection.children() ) {
     if ( !recursiveSetResourceId( col, resourceId ) )
       return false;

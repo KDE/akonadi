@@ -34,6 +34,7 @@
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
+#include "storage/transaction.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -275,6 +276,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
 void FetchHelper::updateItemAccessTime()
 {
+  Transaction transaction( mConnection->storageBackend() );
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
@@ -285,6 +287,8 @@ void FetchHelper::updateItemAccessTime()
 
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
+  else
+    transaction.commit();
 }
 
 void FetchHelper::triggerOnDemandFetch()
