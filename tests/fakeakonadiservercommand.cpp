@@ -191,14 +191,33 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
   {
     Item item;
     entityString.remove( 0, 2 );
+    entityString = entityString.trimmed();
     QString type;
     int order = 0;
-    if ( entityString.contains( ' ' ) )
+    int iFirstSpace = entityString.indexOf( QLatin1Char( ' ' ) );
+    type = entityString.left( iFirstSpace );
+    entityString.remove( 0, iFirstSpace + 1 );
+    if ( iFirstSpace > 0 && !entityString.isEmpty() )
     {
-      QStringList parts = entityString.split( ' ' );
-      type = parts.takeFirst();
-      bool ok;
-      order = parts.first().toInt(&ok);
+      QString displayName;
+      QString optionalSection = entityString;
+      if ( optionalSection.startsWith( QLatin1Char( '\'' ) ) )
+      {
+        optionalSection.remove( 0, 1 );
+        QStringList optionalParts = optionalSection.split( QLatin1Char( '\'' ) );
+        displayName = optionalParts.takeFirst();
+        EntityDisplayAttribute *eda = new EntityDisplayAttribute();
+        eda->setDisplayName( displayName );
+        item.addAttribute( eda );
+        optionalSection = optionalParts.first();
+      }
+      QString orderString = optionalSection.trimmed();
+      if ( !orderString.isEmpty() )
+      {
+        bool ok;
+        order = orderString.toInt( &ok );
+        Q_ASSERT( ok );
+      }
     } else
       type = entityString;
 

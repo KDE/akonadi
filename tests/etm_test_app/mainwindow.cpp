@@ -44,7 +44,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
     "- - C (text/directory, message/rfc822) 'Col 2' 3"
     // Items just have the mimetype they contain in the payload.
     "- - - I text/directory"
-    "- - - I text/directory"
+    "- - - I text/directory 'Item 1'"
     "- - - I message/rfc822"
     "- - - I message/rfc822"
     "- - C (text/directory) 'Col 3' 3"
