@@ -121,7 +121,8 @@ void ResourceScheduler::scheduleChangeReplay()
   Task t;
   t.type = ChangeReplay;
   TaskList& queue = queueForTaskType( t.type );
-  if ( queue.contains( t ) || mCurrentTask == t )
+  // see ResourceBase::changeProcessed() for why we do not check for mCurrentTask == t here like in the other tasks
+  if ( queue.contains( t ) )
     return;
   queue << t;
   signalTaskToTracker( t, "ChangeReplay" );
