@@ -28,6 +28,11 @@ ModelSpy::ModelSpy(QObject *parent)
   qRegisterMetaType<QModelIndex>("QModelIndex");
 }
 
+bool ModelSpy::isEmpty() const
+{
+  return QList<QVariantList>::isEmpty() && m_expectedSignals.isEmpty();
+}
+
 void ModelSpy::setModel(QAbstractItemModel *model)
 {
   Q_ASSERT(model);

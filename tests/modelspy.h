@@ -58,6 +58,8 @@ public:
 
   void setModel(QAbstractItemModel *model);
 
+  bool isEmpty() const;
+
   void setExpectedSignals( QList<ExpectedSignal> expectedSignals );
   void verifySignal( SignalType type, const QModelIndex &parent, int start, int end );
   void verifySignal( SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart );
