@@ -63,6 +63,7 @@ class ItemSync::Private
     void createLocalItem( const Item &item );
     void checkDone();
     void slotLocalListDone( KJob* );
+    void slotLocalDeleteDone( KJob* );
     void slotLocalChangeDone( KJob* );
     void execute();
     void processItems();
@@ -350,8 +351,24 @@ void ItemSync::Private::deleteItems( const Item::List &items )
 
     mPendingJobs++;
     ItemDeleteJob *job = new ItemDeleteJob( delItem, subjobParent() );
-    q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
+    q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalDeleteDone( KJob* ) ) );
+
+    // It can happen that the groupware servers report us deleted items
+    // twice, in this case this item delete job will fail on the second try.
+    // To avoid a rollback of the complete transaction we gracefully allow the job
+    // to fail :)
+    TransactionSequence *transaction = qobject_cast<TransactionSequence*>( subjobParent() );
+    if ( transaction )
+      transaction->continueOnJobFailure( job );
   }
+}
+
+void ItemSync::Private::slotLocalDeleteDone( KJob* )
+{
+  mPendingJobs--;
+  mProgress++;
+
+  checkDone();
 }
 
 void ItemSync::Private::slotLocalChangeDone( KJob * job )

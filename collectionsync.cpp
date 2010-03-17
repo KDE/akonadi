@@ -416,14 +416,19 @@ class CollectionSync::Private
         ++pendingJobs;
         CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
         connect( job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)) );
+
+        // It can happen that the groupware servers report us deleted collections
+        // twice, in this case this collection delete job will fail on the second try.
+        // To avoid a rollback of the complete transaction we gracefully allow the job
+        // to fail :)
+        q->continueOnJobFailure( job );
       }
     }
 
-    void deleteLocalCollectionsResult( KJob *job )
+    void deleteLocalCollectionsResult( KJob* )
     {
       --pendingJobs;
-      if ( job->error() )
-        return; // handled by the base class
+
       ++progress;
       checkDone();
     }

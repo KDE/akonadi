@@ -87,6 +87,14 @@ class AKONADI_EXPORT TransactionSequence : public Job
      */
     void commit();
 
+    /**
+     * Sets which job of the sequence might fail without rolling back the
+     * complete transaction.
+     *
+     * @since 4.5
+     */
+    void continueOnJobFailure( KJob *job );
+
   protected:
     bool addSubjob( KJob* job );
     void doStart();

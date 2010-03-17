@@ -160,6 +160,7 @@ class AKONADI_EXPORT ItemSync : public Job
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void slotLocalListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotLocalDeleteDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotLocalChangeDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void slotTransactionResult( KJob* ) )
     //@endcond

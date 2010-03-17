@@ -22,6 +22,8 @@
 
 #include "job_p.h"
 
+#include <QtCore/QSet>
+
 using namespace Akonadi;
 
 class Akonadi::TransactionSequencePrivate : public JobPrivate
@@ -45,6 +47,7 @@ class Akonadi::TransactionSequencePrivate : public JobPrivate
     Q_DECLARE_PUBLIC( TransactionSequence )
 
     TransactionState mState;
+    QSet<KJob*> mIgnoredErrorJobs;
 
     void commitResult( KJob *job )
     {
@@ -90,8 +93,15 @@ void TransactionSequence::slotResult(KJob * job)
 {
   Q_D( TransactionSequence );
 
-  if ( !job->error() ) {
-    Job::slotResult( job );
+  if ( !job->error() || d->mIgnoredErrorJobs.contains( job ) ) {
+    // If we have an error but want to ignore it, we can't call Job::slotResult
+    // because it would confuse the subjob queue processing logic. Just removing
+    // the subjob instead is fine.
+    if ( !job->error() )
+      Job::slotResult( job );
+    else
+      Job::removeSubjob( job );
+
     if ( subjobs().isEmpty() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
@@ -130,6 +140,16 @@ void TransactionSequence::commit()
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
     }
   }
+}
+
+void TransactionSequence::continueOnJobFailure( KJob *job )
+{
+  Q_D( TransactionSequence );
+
+  // make sure this is one of our sub jobs
+  Q_ASSERT( subJobs().contains( job ) );
+
+  d->mIgnoredErrorJobs.insert( job );
 }
 
 void TransactionSequence::doStart()
