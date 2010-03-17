@@ -19,6 +19,8 @@
 #include "fakeakonadiservercommand.h"
 
 #include <QStringList>
+#include <QMetaMethod>
+
 #include "fakeserverdata.h"
 #include <akonadi/entitydisplayattribute.h>
 
@@ -27,12 +29,21 @@ using namespace Akonadi;
 FakeAkonadiServerCommand::FakeAkonadiServerCommand( FakeAkonadiServerCommand::Type type, FakeServerData *serverData )
   : m_type( type ), m_serverData( serverData ), m_model( serverData->model() )
 {
-  connect(this, SIGNAL(emit_itemsFetched(Akonadi::Item::List)), m_model, SLOT(itemsFetched(Akonadi::Item::List)));
-  connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), m_model, SLOT(collectionsFetched(Akonadi::Collection::List)));
-  connect(this, SIGNAL(emit_collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
-          m_model, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
-  connect(this, SIGNAL(emit_itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-          m_model, SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+  connectForwardingSignals();
+}
+
+void FakeAkonadiServerCommand::connectForwardingSignals()
+{
+  for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex)
+  {
+    QMetaMethod mm = metaObject()->method(methodIndex);
+    if (mm.methodType() == QMetaMethod::Signal && QString(mm.signature()).startsWith("emit_"))
+    {
+      int modelSlotIndex = m_model->metaObject()->indexOfSlot( QString ( mm.signature() ).remove( 0, 5 ).toAscii().data() );
+      Q_ASSERT( modelSlotIndex >= 0 );
+      metaObject()->connect( this, methodIndex, m_model, modelSlotIndex );
+    }
+  }
 }
 
 Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString& displayName) const
@@ -255,7 +266,7 @@ void FakeCollectionMovedCommand::doCommand()
 
   collection.setParentCollection( target );
 
-  emit_collectionMoved( collection, source, target );
+  emit_monitoredCollectionMoved( collection, source, target );
 }
 
 void FakeItemMovedCommand::doCommand()
@@ -266,6 +277,6 @@ void FakeItemMovedCommand::doCommand()
 
   item.setParentCollection( target );
 
-  emit_itemMoved( item, source, target );
+  emit_monitoredItemMoved( item, source, target );
 }
 

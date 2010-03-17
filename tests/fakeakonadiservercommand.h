@@ -52,8 +52,19 @@ public:
 signals:
   void emit_itemsFetched( const Akonadi::Item::List &list );
   void emit_collectionsFetched( const Akonadi::Collection::List &list );
-  void emit_collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &target );
-  void emit_itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &target );
+
+  void emit_monitoredCollectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &target );
+  void emit_monitoredCollectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+  void emit_monitoredCollectionRemoved( const Akonadi::Collection &collection );
+  void emit_monitoredCollectionChanged( const Akonadi::Collection &collection );
+
+  void emit_monitoredItemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &target );
+  void emit_monitoredItemAdded( const Akonadi::Item &item, const Akonadi::Collection &parent );
+  void emit_monitoredItemRemoved( const Akonadi::Item &item );
+  void emit_monitoredItemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts );
+
+  void emit_monitoredItemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+  void emit_monitoredItemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
 protected:
   Akonadi::Collection getCollectionByDisplayName( const QString &displayName ) const;
@@ -66,6 +77,9 @@ protected:
   QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
   QHash<Akonadi::Item::Id, Akonadi::Item> m_items;
   QHash<Akonadi::Item::Id, QList<Akonadi::Entity::Id> > m_childElements;
+
+private:
+  void connectForwardingSignals();
 };
 
 class FakeMonitorCommand : public FakeAkonadiServerCommand
