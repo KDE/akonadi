@@ -24,15 +24,15 @@
 
 using namespace Akonadi;
 
-FakeAkonadiServerCommand::FakeAkonadiServerCommand( FakeAkonadiServerCommand::Type type, EntityTreeModel *model )
-  : m_type( type ), m_model( model )
+FakeAkonadiServerCommand::FakeAkonadiServerCommand( FakeAkonadiServerCommand::Type type, FakeServerData *serverData )
+  : m_type( type ), m_serverData( serverData ), m_model( serverData->model() )
 {
-  connect(this, SIGNAL(emit_itemsFetched(Akonadi::Item::List)), model, SLOT(itemsFetched(Akonadi::Item::List)));
-  connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), model, SLOT(collectionsFetched(Akonadi::Collection::List)));
+  connect(this, SIGNAL(emit_itemsFetched(Akonadi::Item::List)), m_model, SLOT(itemsFetched(Akonadi::Item::List)));
+  connect(this, SIGNAL(emit_collectionsFetched(Akonadi::Collection::List)), m_model, SLOT(collectionsFetched(Akonadi::Collection::List)));
   connect(this, SIGNAL(emit_collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
-          model, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
+          m_model, SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
   connect(this, SIGNAL(emit_itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-          model, SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
+          m_model, SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
 }
 
 Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString& displayName) const
@@ -193,7 +193,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     }
     while ( collectionResponseList.size() < order )
     {
-      collectionResponseList.append( new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToCollectionFetch, fakeServerData->model() ) );
+      collectionResponseList.append( new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToCollectionFetch, fakeServerData ) );
     }
     collectionResponseList[ order - 1 ]->appendCollection( collection );
   }
@@ -239,7 +239,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     Collection::Id colId = recentCollections[ depth ].id();
     if ( !itemResponseMap.contains( colId ) )
     {
-      FakeJobResponse *newResponse = new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToItemFetch, fakeServerData->model() );
+      FakeJobResponse *newResponse = new FakeJobResponse( recentCollections[ depth ], FakeJobResponse::RespondToItemFetch, fakeServerData );
       itemResponseMap.insert( colId, newResponse );
       collectionResponseList.append( newResponse );
     }

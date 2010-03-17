@@ -78,7 +78,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 void MainWindow::moveCollection()
 {
   // Move Col 3 from Col 4 to Col 7
-  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", m_model );
+  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", m_serverData );
 
   m_serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
   m_serverData->processNotifications();

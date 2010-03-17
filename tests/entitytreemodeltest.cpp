@@ -224,7 +224,7 @@ void EntityTreeModelTest::testCollectionMove()
   QString sourceCollection = movedIndex.parent().data().toString();
   int sourceRow = movedIndex.row();
 
-  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( movedCollection, sourceCollection, targetCollection, model );
+  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( movedCollection, sourceCollection, targetCollection, serverData );
 
   m_modelSpy->startSpying();
   serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
@@ -273,7 +273,7 @@ void EntityTreeModelTest::testItemMove()
   QModelIndex targetIndex = targetList.first();
   int targetRow = model->rowCount( targetIndex );
 
-  FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( movedItem, sourceCollection, targetCollection, model );
+  FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( movedItem, sourceCollection, targetCollection, serverData );
 
   m_modelSpy->startSpying();
   serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );

@@ -38,7 +38,7 @@ public:
     RespondToItemFetch
   };
 
-  FakeAkonadiServerCommand( Type type, Akonadi::EntityTreeModel *model );
+  FakeAkonadiServerCommand( Type type, FakeServerData *serverData );
 
   virtual ~FakeAkonadiServerCommand() {}
 
@@ -60,6 +60,7 @@ protected:
   Akonadi::Item getItemByDisplayName( const QString &displayName ) const;
 
 protected:
+  FakeServerData *m_serverData;
   Akonadi::EntityTreeModel *m_model;
   Akonadi::Collection m_parentCollection;
   QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
@@ -70,8 +71,8 @@ protected:
 class FakeMonitorCommand : public FakeAkonadiServerCommand
 {
 public:
-  explicit FakeMonitorCommand( Akonadi::EntityTreeModel *model )
-    : FakeAkonadiServerCommand( Notification, model )
+  explicit FakeMonitorCommand( FakeServerData *serverData )
+    : FakeAkonadiServerCommand( Notification, serverData )
   {
 
   }
@@ -81,8 +82,8 @@ public:
 class FakeCollectionMovedCommand : public FakeMonitorCommand
 {
 public:
-  FakeCollectionMovedCommand( const QString &collection, const QString &source, const QString &target, Akonadi::EntityTreeModel *model )
-    : FakeMonitorCommand( model ), m_collectionName( collection ), m_sourceName( source ), m_targetName( target )
+  FakeCollectionMovedCommand( const QString &collection, const QString &source, const QString &target, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_collectionName( collection ), m_sourceName( source ), m_targetName( target )
   {
 
   }
@@ -95,14 +96,13 @@ private:
   QString m_collectionName;
   QString m_sourceName;
   QString m_targetName;
-  FakeServerData *m_serverData;
 };
 
 class FakeItemMovedCommand : public FakeMonitorCommand
 {
 public:
-  FakeItemMovedCommand( const QString &item, const QString &source, const QString &target, Akonadi::EntityTreeModel *model )
-    : FakeMonitorCommand( model ), m_itemName( item ), m_sourceName( source ), m_targetName( target )
+  FakeItemMovedCommand( const QString &item, const QString &source, const QString &target, FakeServerData *serverData )
+    : FakeMonitorCommand( serverData ), m_itemName( item ), m_sourceName( source ), m_targetName( target )
   {
 
   }
@@ -127,8 +127,8 @@ class FakeJobResponse : public FakeAkonadiServerCommand
     QString content;
   };
 public:
-  FakeJobResponse( Akonadi::Collection parentCollection, Type respondTo, Akonadi::EntityTreeModel *model )
-    : FakeAkonadiServerCommand( respondTo, model )
+  FakeJobResponse( Akonadi::Collection parentCollection, Type respondTo, FakeServerData *serverData )
+    : FakeAkonadiServerCommand( respondTo, serverData )
   {
     m_parentCollection = parentCollection;
   }
