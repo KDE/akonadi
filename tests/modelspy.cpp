@@ -63,7 +63,9 @@ void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int sta
   QVERIFY( destStart == expectedSignal.destRow );
   QVariantList moveList;
   QModelIndex _parent = type == RowsAboutToBeMoved ? parent : destParent;
-  for ( int row = start; row <= end; ++row )
+  int _start = type == RowsAboutToBeMoved ? start : destStart;
+  int _end = type == RowsAboutToBeMoved ? end : destStart + (end - start);
+  for ( int row = _start; row <= _end; ++row )
     moveList << m_model->index( row, 0, _parent ).data();
   QVERIFY( moveList == expectedSignal.newData );
 }
