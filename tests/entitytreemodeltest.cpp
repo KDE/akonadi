@@ -143,6 +143,19 @@ void EntityTreeModelTest::testInitialFetch()
   expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 0, "Collection 1" );
   expectedSignals << getExpectedSignal( RowsInserted, 0, 0, "Collection 1", QVariantList() << "Col 7" );
   expectedSignals << getExpectedSignal( DataChanged, 0, 0, QVariantList() << "Col 1" );
+  // The items in the collections are appended.
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 2" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 2" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, "Col 5" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 5" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 1, "Col 4" );
+  expectedSignals << getExpectedSignal( RowsInserted, 1, 1, "Col 4" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 1, 2, "Col 3" );
+  expectedSignals << getExpectedSignal( RowsInserted, 1, 2, "Col 3" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 1, "Col 6" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 1, "Col 6" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, 0, 3, "Col 7" );
+  expectedSignals << getExpectedSignal( RowsInserted, 0, 3, "Col 7" );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
