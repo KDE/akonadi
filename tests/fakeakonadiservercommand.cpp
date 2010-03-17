@@ -264,6 +264,10 @@ void FakeCollectionMovedCommand::doCommand()
   Collection source = getCollectionByDisplayName( m_sourceName );
   Collection target = getCollectionByDisplayName( m_targetName );
 
+  Q_ASSERT( collection.isValid() );
+  Q_ASSERT( source.isValid() );
+  Q_ASSERT( target.isValid() );
+
   collection.setParentCollection( target );
 
   emit_monitoredCollectionMoved( collection, source, target );
@@ -274,6 +278,10 @@ void FakeItemMovedCommand::doCommand()
   Item item = getItemByDisplayName( m_itemName );
   Collection source = getCollectionByDisplayName( m_sourceName );
   Collection target = getCollectionByDisplayName( m_targetName );
+
+  Q_ASSERT( item.isValid() );
+  Q_ASSERT( source.isValid() );
+  Q_ASSERT( target.isValid() );
 
   item.setParentCollection( target );
 
