@@ -25,6 +25,7 @@
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include <akonadi/entitytreeview.h>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -35,39 +36,52 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   FakeSession *session = new FakeSession( "FS1", this );
   monitor->setSession( session );
 
-  EntityTreeModel *model = new EntityTreeModel( monitor, this );
-  FakeServerData *serverData = new FakeServerData( model, session, monitor );
+  m_model = new EntityTreeModel( monitor, this );
+  m_serverData = new FakeServerData( m_model, session, monitor );
 
-  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( serverData,
-    "- C (inode/directory) 'MyResource' 4"
-    "- - C (text/directory, message/rfc822) 3"
+  QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret( m_serverData,
+    "- C (inode/directory) 'Col 1' 4"
+    "- - C (text/directory, message/rfc822) 'Col 2' 3"
+    // Items just have the mimetype they contain in the payload.
     "- - - I text/directory"
     "- - - I text/directory"
     "- - - I message/rfc822"
     "- - - I message/rfc822"
-    "- - C (text/directory) 3"
-    "- - - C (text/directory) 2"
-    "- - - - C (text/directory) 1"
+    "- - C (text/directory) 'Col 3' 3"
+    "- - - C (text/directory) 'Col 4' 2"
+    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
     "- - - - - I text/directory"
     "- - - - - I text/directory"
     "- - - - I text/directory"
     "- - - I text/directory"
     "- - - I text/directory"
-    "- - C (message/rfc822) 3"
+    "- - C (message/rfc822) 'Col 6' 3"
     "- - - I message/rfc822"
     "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 3"
+    "- - C (text/directory, message/rfc822) 'Col 7' 3"
     "- - - I text/directory"
     "- - - I text/directory"
     "- - - I message/rfc822"
     "- - - I message/rfc822"
   );
-  serverData->setCommands( initialFetchResponse );
+  m_serverData->setCommands( initialFetchResponse );
 
   EntityTreeView *view = new EntityTreeView( this );
-  view->setModel( model );
+  view->setModel( m_model );
 
+  view->expandAll();
   setCentralWidget( view );
+
+  QTimer::singleShot(5000, this, SLOT(moveCollection()));
+}
+
+void MainWindow::moveCollection()
+{
+  // Move Col 3 from Col 4 to Col 7
+  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", m_model );
+
+  m_serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
+  m_serverData->processNotifications();
 }
 
 #include "mainwindow.moc"

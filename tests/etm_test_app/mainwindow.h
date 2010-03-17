@@ -22,11 +22,25 @@
 
 #include <QMainWindow>
 
+namespace Akonadi
+{
+class EntityTreeModel;
+}
+
+class FakeServerData;
+
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
 public:
   MainWindow(QWidget* parent = 0, Qt::WindowFlags flags = 0);
+
+private slots:
+  void moveCollection();
+
+private:
+  FakeServerData *m_serverData;
+  Akonadi::EntityTreeModel *m_model;
 };
 
 #endif
