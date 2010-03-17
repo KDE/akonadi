@@ -58,7 +58,8 @@ bool DbConfigMysql::init( QSettings &settings )
   defaultDbName = QLatin1String( "akonadi" );
   const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
-  defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
+   if ( QFile::exists( QLatin1String( MYSQLD_EXECUTABLE ) ) )
+     defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
 #endif
   const QStringList mysqldSearchPath = QStringList()
       << QLatin1String( "/usr/sbin" )
