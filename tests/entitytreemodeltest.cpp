@@ -72,7 +72,9 @@ private slots:
   void initTestCase();
 
   void testInitialFetch();
+  void testCollectionMove_data();
   void testCollectionMove();
+  void testItemMove_data();
   void testItemMove();
 
 private:
@@ -177,8 +179,23 @@ void EntityTreeModelTest::testInitialFetch()
   QVERIFY( m_modelSpy->isEmpty() );
 }
 
+void EntityTreeModelTest::testCollectionMove_data()
+{
+  QTest::addColumn<QString>( "movedCollection" );
+  QTest::addColumn<int>( "sourceRow" );
+  QTest::addColumn<QString>( "sourceCollection" );
+  QTest::addColumn<QString>( "targetCollection" );
+
+  QTest::newRow("move-collection01") << "Col 4" << 0 << "Col 3" << "Col 7";
+}
+
 void EntityTreeModelTest::testCollectionMove()
 {
+  QFETCH( QString, movedCollection );
+  QFETCH( int, sourceRow );
+  QFETCH( QString, sourceCollection );
+  QFETCH( QString, targetCollection );
+
   FakeMonitor *fakeMonitor = new FakeMonitor(this);
 
   fakeMonitor->setSession( m_fakeSession );
@@ -192,7 +209,7 @@ void EntityTreeModelTest::testCollectionMove()
   // Give the model a chance to populate
   QTest::qWait(10);
 
-  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( "Col 4", "Col 3", "Col 7", model );
+  FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand( movedCollection, sourceCollection, targetCollection, model );
 
   m_modelSpy = new ModelSpy(this);
   m_modelSpy->setModel(model);
@@ -202,8 +219,8 @@ void EntityTreeModelTest::testCollectionMove()
 
   QList<ExpectedSignal> expectedSignals;
 
-  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, 0, 0, "Col 3", 0, "Col 7", QVariantList() << "Col 4" );
-  expectedSignals << getExpectedSignal( RowsMoved, 0, 0, "Col 3", 0, "Col 7" , QVariantList() << "Col 4" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, QVariantList() << movedCollection );
+  expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection , QVariantList() << movedCollection );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
@@ -215,8 +232,25 @@ void EntityTreeModelTest::testCollectionMove()
   QVERIFY( m_modelSpy->isEmpty() );
 }
 
+void EntityTreeModelTest::testItemMove_data()
+{
+  QTest::addColumn<QString>( "movedItem" );
+  QTest::addColumn<int>( "sourceRow" );
+  QTest::addColumn<QString>( "sourceCollection" );
+  QTest::addColumn<QString>( "targetCollection" );
+  QTest::addColumn<int>( "targetRow" );
+
+  QTest::newRow( "move-item01" ) << "Item 1" << 0 << "Col 6" << "Col 7" << 4;
+}
+
 void EntityTreeModelTest::testItemMove()
 {
+  QFETCH( QString, movedItem );
+  QFETCH( int, sourceRow );
+  QFETCH( QString, sourceCollection );
+  QFETCH( QString, targetCollection );
+  QFETCH( int, targetRow );
+
   FakeMonitor *fakeMonitor = new FakeMonitor(this);
 
   fakeMonitor->setSession( m_fakeSession );
@@ -230,7 +264,7 @@ void EntityTreeModelTest::testItemMove()
   // Give the model a chance to populate
   QTest::qWait(10);
 
-  FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( "Item 1", "Col 6", "Col 7", model );
+  FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand( movedItem, sourceCollection, targetCollection, model );
 
   m_modelSpy = new ModelSpy(this);
   m_modelSpy->setModel(model);
@@ -240,8 +274,8 @@ void EntityTreeModelTest::testItemMove()
 
   QList<ExpectedSignal> expectedSignals;
 
-  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, 0, 0, "Col 6", 4, "Col 7", QVariantList() << "Item 1" );
-  expectedSignals << getExpectedSignal( RowsMoved, 0, 0, "Col 6", 4, "Col 7" , QVariantList() << "Item 1" );
+  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
+  expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
 
