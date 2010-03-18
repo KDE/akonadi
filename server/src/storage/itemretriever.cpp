@@ -100,7 +100,6 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
   // make sure the columns indexes here and in the constants defined above match
   itemQuery.addColumn( PimItem::idFullColumnName() );
   itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
-  itemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
   itemQuery.addColumn( MimeType::nameFullColumnName() );
   itemQuery.addColumn( Resource::nameFullColumnName() );
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
