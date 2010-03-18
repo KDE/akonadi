@@ -333,7 +333,6 @@ bool QSQLiteResult::prepare(const QString &query)
     int res = sqlite3_prepare16(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
                                 &d->stmt, 0);
 #endif
-    qDebug() << debugString() + "Prepared:" << query << d->stmt;
 
     if (res != SQLITE_OK) {
         setLastError(qMakeError(d->access, QCoreApplication::translate("QSQLiteResult",
@@ -465,14 +464,12 @@ QVariant QSQLiteResult::handle() const
 QSQLiteDriver::QSQLiteDriver(QObject * parent)
     : QSqlDriver(parent)
 {
-    qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER CTOR 1";
     d = new QSQLiteDriverPrivate();
 }
 
 QSQLiteDriver::QSQLiteDriver(sqlite3 *connection, QObject *parent)
     : QSqlDriver(parent)
 {
-    qDebug() << debugString() + "CUSTOM SQLITE3 DRIVER CTOR 2";
     d = new QSQLiteDriverPrivate();
     d->access = connection;
     setOpen(true);
@@ -541,7 +538,6 @@ static int qGetSqliteOpenMode(QString opts)
 */
 bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, const QString &, int, const QString &conOpts)
 {
-    qDebug() << db;
     if (isOpen())
         close();
 

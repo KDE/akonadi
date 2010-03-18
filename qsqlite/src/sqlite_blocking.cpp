@@ -32,7 +32,6 @@ int sqlite3_blocking_step( sqlite3_stmt *pStmt )
     }
   }
 
-  qDebug() << debugString() + "sqlite3_blocking_step Returning" << rc;
   return rc;
 }
 
@@ -56,6 +55,5 @@ int sqlite3_blocking_prepare16_v2( sqlite3 *db,           /* Database handle. */
     }
   }
 
-  qDebug() << debugString() + "sqlite3_blocking_prepare16_v2 Returning" << rc;
   return rc;
 }
