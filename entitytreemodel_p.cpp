@@ -1007,7 +1007,8 @@ Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item 
   QHashIterator<Collection::Id, QList<Node*> > iter( m_childEntities );
   while ( iter.hasNext() ) {
     iter.next();
-    if ( indexOf( iter.value(), item.id() ) != -1 ) {
+    int nodeIndex = indexOf( iter.value(), item.id() );
+    if ( nodeIndex != -1 && iter.value().at( nodeIndex )->type == Node::Item ) {
       list << m_collections.value( iter.key() );
     }
   }

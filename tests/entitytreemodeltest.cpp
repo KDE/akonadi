@@ -218,7 +218,18 @@ void EntityTreeModelTest::testCollectionMove_data()
   QTest::addColumn<QString>( "movedCollection" );
   QTest::addColumn<QString>( "targetCollection" );
 
-  QTest::newRow("move-collection01") << serverContent1 << "Col 4" << "Col 7";
+  QTest::newRow("move-collection01") << serverContent1 << "Col 5" << "Col 1";
+  QTest::newRow("move-collection02") << serverContent1 << "Col 5" << "Col 2";
+  QTest::newRow("move-collection03") << serverContent1 << "Col 5" << "Col 3";
+  QTest::newRow("move-collection04") << serverContent1 << "Col 5" << "Col 6";
+  QTest::newRow("move-collection05") << serverContent1 << "Col 5" << "Col 7";
+  QTest::newRow("move-collection06") << serverContent1 << "Col 3" << "Col 2";
+  QTest::newRow("move-collection07") << serverContent1 << "Col 3" << "Col 6";
+  QTest::newRow("move-collection08") << serverContent1 << "Col 3" << "Col 7";
+  QTest::newRow("move-collection09") << serverContent1 << "Col 7" << "Col 2";
+  QTest::newRow("move-collection10") << serverContent1 << "Col 7" << "Col 5";
+  QTest::newRow("move-collection11") << serverContent1 << "Col 7" << "Col 4";
+  QTest::newRow("move-collection12") << serverContent1 << "Col 7" << "Col 3";
 }
 
 void EntityTreeModelTest::testCollectionMove()
@@ -263,7 +274,13 @@ void EntityTreeModelTest::testCollectionAdded_data()
   QTest::addColumn<QString>( "addedCollection" );
   QTest::addColumn<QString>( "parentCollection" );
 
-  QTest::newRow("add-collection01") << serverContent1 << "new Collection" << "Col 3";
+  QTest::newRow("add-collection01") << serverContent1 << "new Collection" << "Col 1";
+  QTest::newRow("add-collection02") << serverContent1 << "new Collection" << "Col 2";
+  QTest::newRow("add-collection03") << serverContent1 << "new Collection" << "Col 3";
+  QTest::newRow("add-collection04") << serverContent1 << "new Collection" << "Col 4";
+  QTest::newRow("add-collection05") << serverContent1 << "new Collection" << "Col 5";
+  QTest::newRow("add-collection06") << serverContent1 << "new Collection" << "Col 6";
+  QTest::newRow("add-collection07") << serverContent1 << "new Collection" << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionAdded()
@@ -300,7 +317,14 @@ void EntityTreeModelTest::testCollectionRemoved_data()
   QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "removedCollection" );
 
-  QTest::newRow("remove-collection01") << serverContent1 << "Col 4";
+  // The test suite doesn't handle this case yet.
+//   QTest::newRow("remove-collection01") << serverContent1 << "Col 1";
+  QTest::newRow("remove-collection02") << serverContent1 << "Col 2";
+  QTest::newRow("remove-collection03") << serverContent1 << "Col 3";
+  QTest::newRow("remove-collection04") << serverContent1 << "Col 4";
+  QTest::newRow("remove-collection05") << serverContent1 << "Col 5";
+  QTest::newRow("remove-collection06") << serverContent1 << "Col 6";
+  QTest::newRow("remove-collection07") << serverContent1 << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionRemoved()
@@ -342,7 +366,13 @@ void EntityTreeModelTest::testCollectionChanged_data()
   QTest::addColumn<QString>( "serverContent" );
   QTest::addColumn<QString>( "collectionName" );
 
-  QTest::newRow("change-collection01") << serverContent1 << "Col 4";
+//   QTest::newRow("change-collection01") << serverContent1 << "Col 1";
+  QTest::newRow("change-collection02") << serverContent1 << "Col 2";
+  QTest::newRow("change-collection03") << serverContent1 << "Col 3";
+  QTest::newRow("change-collection04") << serverContent1 << "Col 4";
+  QTest::newRow("change-collection05") << serverContent1 << "Col 5";
+  QTest::newRow("change-collection06") << serverContent1 << "Col 6";
+  QTest::newRow("change-collection07") << serverContent1 << "Col 7";
 }
 
 void EntityTreeModelTest::testCollectionChanged()
@@ -385,6 +415,11 @@ void EntityTreeModelTest::testItemMove_data()
   QTest::addColumn<QString>( "targetCollection" );
 
   QTest::newRow( "move-item01" ) << serverContent1 << "Item 1" << "Col 7";
+  QTest::newRow( "move-item02" ) << serverContent1 << "Item 5" << "Col 4"; // Move item to grandparent.
+  QTest::newRow( "move-item03" ) << serverContent1 << "Item 7" << "Col 5"; // Move item to sibling.
+  QTest::newRow( "move-item04" ) << serverContent1 << "Item 8" << "Col 5"; // Move item to nephew
+  QTest::newRow( "move-item05" ) << serverContent1 << "Item 8" << "Col 6"; // Move item to uncle
+  QTest::newRow( "move-item02" ) << serverContent1 << "Item 5" << "Col 3"; // Move item to great-grandparent.
 }
 
 void EntityTreeModelTest::testItemMove()
@@ -433,7 +468,13 @@ void EntityTreeModelTest::testItemAdded_data()
   QTest::addColumn<QString>( "addedItem" );
   QTest::addColumn<QString>( "parentCollection" );
 
-  QTest::newRow( "add-item01" ) << serverContent1 << "new Item" << "Col 6";
+  QTest::newRow( "add-item01" ) << serverContent1 << "new Item" << "Col 1";
+  QTest::newRow( "add-item02" ) << serverContent1 << "new Item" << "Col 2";
+  QTest::newRow( "add-item03" ) << serverContent1 << "new Item" << "Col 3";
+  QTest::newRow( "add-item04" ) << serverContent1 << "new Item" << "Col 4";
+  QTest::newRow( "add-item05" ) << serverContent1 << "new Item" << "Col 5";
+  QTest::newRow( "add-item06" ) << serverContent1 << "new Item" << "Col 6";
+  QTest::newRow( "add-item07" ) << serverContent1 << "new Item" << "Col 7";
 }
 
 void EntityTreeModelTest::testItemAdded()
@@ -476,6 +517,20 @@ void EntityTreeModelTest::testItemRemoved_data()
   QTest::addColumn<QString>( "removedItem" );
 
   QTest::newRow( "remove-item01" ) << serverContent1 << "Item 1";
+  QTest::newRow( "remove-item02" ) << serverContent1 << "Item 2";
+  QTest::newRow( "remove-item03" ) << serverContent1 << "Item 3";
+  QTest::newRow( "remove-item04" ) << serverContent1 << "Item 4";
+  QTest::newRow( "remove-item05" ) << serverContent1 << "Item 5";
+  QTest::newRow( "remove-item06" ) << serverContent1 << "Item 6";
+  QTest::newRow( "remove-item07" ) << serverContent1 << "Item 7";
+  QTest::newRow( "remove-item08" ) << serverContent1 << "Item 8";
+  QTest::newRow( "remove-item09" ) << serverContent1 << "Item 9";
+  QTest::newRow( "remove-item10" ) << serverContent1 << "Item 10";
+  QTest::newRow( "remove-item11" ) << serverContent1 << "Item 11";
+  QTest::newRow( "remove-item12" ) << serverContent1 << "Item 12";
+  QTest::newRow( "remove-item13" ) << serverContent1 << "Item 13";
+  QTest::newRow( "remove-item14" ) << serverContent1 << "Item 14";
+  QTest::newRow( "remove-item15" ) << serverContent1 << "Item 15";
 }
 
 void EntityTreeModelTest::testItemRemoved()
@@ -493,10 +548,10 @@ void EntityTreeModelTest::testItemRemoved()
   QString sourceCollection = removedIndex.parent().data().toString();
   int sourceRow = removedIndex.row();
 
-  FakeItemRemovedCommand *moveCommand = new FakeItemRemovedCommand( removedItem, sourceCollection, serverData );
+  FakeItemRemovedCommand *removeCommand = new FakeItemRemovedCommand( removedItem, sourceCollection, serverData );
 
   m_modelSpy->startSpying();
-  serverData->setCommands( QList<FakeAkonadiServerCommand*>() << moveCommand );
+  serverData->setCommands( QList<FakeAkonadiServerCommand*>() << removeCommand );
 
   QList<ExpectedSignal> expectedSignals;
 
@@ -518,6 +573,20 @@ void EntityTreeModelTest::testItemChanged_data()
   QTest::addColumn<QString>( "changedItem" );
 
   QTest::newRow( "change-item01" ) << serverContent1 << "Item 1";
+  QTest::newRow( "change-item02" ) << serverContent1 << "Item 2";
+  QTest::newRow( "change-item03" ) << serverContent1 << "Item 3";
+  QTest::newRow( "change-item04" ) << serverContent1 << "Item 4";
+  QTest::newRow( "change-item05" ) << serverContent1 << "Item 5";
+  QTest::newRow( "change-item06" ) << serverContent1 << "Item 6";
+  QTest::newRow( "change-item07" ) << serverContent1 << "Item 7";
+  QTest::newRow( "change-item08" ) << serverContent1 << "Item 8";
+  QTest::newRow( "change-item09" ) << serverContent1 << "Item 9";
+  QTest::newRow( "change-item10" ) << serverContent1 << "Item 10";
+  QTest::newRow( "change-item11" ) << serverContent1 << "Item 11";
+  QTest::newRow( "change-item12" ) << serverContent1 << "Item 12";
+  QTest::newRow( "change-item13" ) << serverContent1 << "Item 13";
+  QTest::newRow( "change-item14" ) << serverContent1 << "Item 14";
+  QTest::newRow( "change-item15" ) << serverContent1 << "Item 15";
 }
 
 void EntityTreeModelTest::testItemChanged()
