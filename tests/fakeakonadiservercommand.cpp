@@ -217,7 +217,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     int order = 0;
     int iFirstSpace = entityString.indexOf( QLatin1Char( ' ' ) );
     type = entityString.left( iFirstSpace );
-    entityString.remove( 0, iFirstSpace + 1 );
+    entityString = entityString.remove( 0, iFirstSpace + 1 ).trimmed();
     if ( iFirstSpace > 0 && !entityString.isEmpty() )
     {
       QString displayName;

@@ -40,29 +40,30 @@ static const QString serverContent1 =
     // Collections have a list of mimetypes they can contain, followed by an optional
     // displayName which is put into the EntityDisplayAttribute, followed by an optional order
     // which is the order in which the collections are returned from the job to the ETM.
-    "- C (inode/directory) 'Col 1' 4"
-    "- - C (text/directory, message/rfc822) 'Col 2' 3"
+
+    "- C (inode/directory)                  'Col 1'     4"
+    "- - C (text/directory, message/rfc822) 'Col 2'     3"
     // Items just have the mimetype they contain in the payload.
-    "- - - I text/directory"
-    "- - - I text/directory 'Item 1'"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822"
-    "- - C (text/directory) 'Col 3' 3"
-    "- - - C (text/directory) 'Col 4' 2"
-    "- - - - C (text/directory) 'Col 5' 1"  // <-- First collection to be returned
-    "- - - - - I text/directory"
-    "- - - - - I text/directory"
-    "- - - - I text/directory"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - C (message/rfc822) 'Col 6' 3"
-    "- - - I message/rfc822 'Item 1'"
-    "- - - I message/rfc822"
-    "- - C (text/directory, message/rfc822) 'Col 7' 3"
-    "- - - I text/directory"
-    "- - - I text/directory"
-    "- - - I message/rfc822"
-    "- - - I message/rfc822";
+    "- - - I text/directory                 'Item 1'"
+    "- - - I text/directory                 'Item 2'"
+    "- - - I message/rfc822                 'Item 3'"
+    "- - - I message/rfc822                 'Item 4'"
+    "- - C (text/directory)                 'Col 3'     3"
+    "- - - C (text/directory)               'Col 4'     2"
+    "- - - - C (text/directory)             'Col 5'     1"  // <-- First collection to be returned
+    "- - - - - I text/directory             'Item 5'"
+    "- - - - - I text/directory             'Item 6'"
+    "- - - - I text/directory               'Item 7'"
+    "- - - I text/directory                 'Item 8'"
+    "- - - I text/directory                 'Item 9'"
+    "- - C (message/rfc822)                 'Col 6'     3"
+    "- - - I message/rfc822                 'Item 10'"
+    "- - - I message/rfc822                 'Item 11'"
+    "- - C (text/directory, message/rfc822) 'Col 7'     3"
+    "- - - I text/directory                 'Item 12'"
+    "- - - I text/directory                 'Item 13'"
+    "- - - I message/rfc822                 'Item 14'"
+    "- - - I message/rfc822                 'Item 15'";
 
 class EntityTreeModelTest : public QObject
 {
