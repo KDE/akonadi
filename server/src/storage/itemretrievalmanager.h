@@ -47,12 +47,6 @@ class ItemRetrievalManager : public QObject
     void requestItemDelivery( qint64 uid, const QByteArray& remoteId, const QByteArray& mimeType,
                               const QString &resource, const QStringList &parts );
 
-    /**
-     * Added for convenience. ItemRetrievalManager takes ownership over the
-     * pointer and deletes it when the request is processed.
-     */
-    void requestItemDelivery( ItemRetrievalRequest *request );
-
     void requestCollectionSync( const Collection &collection );
 
     static ItemRetrievalManager* instance();
