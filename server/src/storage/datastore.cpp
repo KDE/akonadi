@@ -673,9 +673,10 @@ bool Akonadi::DataStore::rollbackTransaction()
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
     }
+
+    sTransactionMutex.unlock();
   }
 
-  sTransactionMutex.unlock();
   return true;
 }
 
