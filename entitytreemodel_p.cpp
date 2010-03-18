@@ -691,6 +691,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   const Collection collection = parents.first();
 
   Q_ASSERT( m_collections.contains( collection.id() ) );
+  Q_ASSERT( m_childEntities.contains( collection.id() ) );
 
   const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
 
@@ -1036,6 +1037,7 @@ Entity::Id EntityTreeModelPrivate::childAt( Collection::Id id, int position, boo
 
 int EntityTreeModelPrivate::indexOf( Collection::Id parent, Collection::Id collectionId ) const
 {
+  Q_ASSERT( m_childEntities.contains( parent ) );
   return indexOf( m_childEntities.value( parent ), collectionId );
 }
 
