@@ -61,6 +61,7 @@ class ItemRetriever
   private:
     QueryBuilder buildItemQuery() const;
     QueryBuilder buildPartQuery() const;
+    QString driverName();
 
   private:
     ImapSet mItemSet;

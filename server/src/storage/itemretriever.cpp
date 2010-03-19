@@ -19,9 +19,12 @@
 
 #include "itemretriever.h"
 
+#include "akdebug.h"
 #include "akonadiconnection.h"
+#include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
+#include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/querybuilder.h"
 
@@ -166,6 +169,7 @@ void ItemRetriever::exec()
     throw ItemRetrieverException( "Unable to retrieve item parts" );
   partQuery.query().next();
 
+  QList<ItemRetrievalRequest*> requests;
   while ( itemQuery.query().isValid() ) {
     const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = mParts;
@@ -195,12 +199,46 @@ void ItemRetriever::exec()
       QStringList missingPayloadIds;
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
-      ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
-        itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-        itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
-        itemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
+
+      ItemRetrievalRequest *req = new ItemRetrievalRequest();
+      req->id = pimItemId;
+      req->remoteId = itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.query().value( itemQueryResouceColumn ).toString();
+      req->parts = missingPayloadIds;
+
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
+        requests.append( req );
+      else {
+        try {
+          ItemRetrievalManager::instance()->requestItemDelivery( req );
+        } catch ( const ItemRetrieverException &e ) {
+          akError() << e.type() << ": " << e.what();
+        }
+      }
     }
     itemQuery.query().next();
+  }
+
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    akDebug() << "Closing queries and sending out requests.";
+
+    // Close the queries so we can start writing without endig up in a lock.
+    partQuery.query().finish();
+    itemQuery.query().finish();
+
+    // Now both reading queries are closed, start sending out the
+    foreach ( ItemRetrievalRequest *req, requests ) {
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      try {
+        ItemRetrievalManager::instance()->requestItemDelivery( req );
+      } catch ( const ItemRetrieverException &e ) {
+        akError() << e.type() << ": " << e.what();
+      }
+    }
   }
 
   // retrieve items in child collections if requested
@@ -214,4 +252,9 @@ void ItemRetriever::exec()
     }
   }
   qDebug() << "ItemRetriever::exec() done";
+}
+
+QString ItemRetriever::driverName()
+{
+  return mConnection->storageBackend()->database().driverName();
 }
