@@ -59,8 +59,13 @@ void TestRunner::triggerTermination( int exitCode )
 
 void TestRunner::processFinished( int exitCode )
 {
-  kDebug() << exitCode;
-  mExitCode = exitCode;
+  // Only update the exit code when it is 0. This prevents overwriting a non-zero
+  // value with 0. This can happen when multiple processes finish or triggerTermination
+  // is called after a proces has finished.
+  if ( mExitCode == 0 ) {
+    mExitCode = exitCode;
+    kDebug() << exitCode;
+  }
   emit finished();
 }
 
