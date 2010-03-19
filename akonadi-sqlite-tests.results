@@ -1,0 +1,30 @@
+====
+- kdepimlibs: r1104404
+- akonadi-sqlite: r1105242
+ 1/26 Test #15: akonadi-sqlite-testenvironmenttest ..........   Passed    9.30 sec
+ 2/26 Test #18: akonadi-sqlite-autoincrementtest ............   Passed   71.87 sec
+ 3/26 Test #21: akonadi-sqlite-attributefactorytest .........   Passed    9.31 sec
+ 4/26 Test #24: akonadi-sqlite-collectionjobtest ............   Passed   10.42 sec
+ 5/26 Test #27: akonadi-sqlite-collectionpathresolvertest ...   Passed    9.30 sec
+ 6/26 Test #30: akonadi-sqlite-collectionattributetest ......   Passed    9.32 sec
+ 7/26 Test #33: akonadi-sqlite-itemfetchtest ................   Passed   10.38 sec
+ 8/26 Test #36: akonadi-sqlite-itemappendtest ...............   Passed   11.00 sec
+ 9/26 Test #39: akonadi-sqlite-itemstoretest ................   Passed   13.17 sec
+10/26 Test #42: akonadi-sqlite-itemdeletetest ...............   Passed    9.31 sec
+11/26 Test #45: akonadi-sqlite-entitycachetest ..............   Passed   15.60 sec
+12/26 Test #48: akonadi-sqlite-monitortest ..................***Failed   23.75 sec
+13/26 Test #51: akonadi-sqlite-searchjobtest ................***Failed    9.29 sec
+14/26 Test #54: akonadi-sqlite-changerecordertest ...........   Passed   14.68 sec
+15/26 Test #57: akonadi-sqlite-resourcetest .................   Passed   13.98 sec
+16/26 Test #60: akonadi-sqlite-subscriptiontest .............   Passed    9.29 sec
+17/26 Test #63: akonadi-sqlite-transactiontest ..............   Passed    9.29 sec
+18/26 Test #66: akonadi-sqlite-itemcopytest .................***Failed   58.00 sec
+19/26 Test #69: akonadi-sqlite-itemmovetest .................***Failed   57.67 sec
+20/26 Test #72: akonadi-sqlite-collectioncopytest ...........***Failed   32.62 sec
+21/26 Test #75: akonadi-sqlite-collectionmovetest ...........***Failed  107.38 sec
+22/26 Test #78: akonadi-sqlite-collectionsynctest ...........   Passed   20.46 sec
+23/26 Test #81: akonadi-sqlite-itemsynctest .................   Passed   10.04 sec
+24/26 Test #84: akonadi-sqlite-linktest .....................***Failed    9.39 sec
+25/26 Test #87: akonadi-sqlite-cachetest ....................***Failed   32.87 sec
+====
+
