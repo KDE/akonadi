@@ -32,6 +32,7 @@
 #include "resourceinterface.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
+#include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/transaction.h"
 
@@ -128,6 +129,14 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
   buildItemQuery();
   retrieveMissingPayloads( payloadList );
+
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    // The Item Query was closed by retrieveMissingPayloads in case of SQLITE
+    // so we have to execute it again.
+    if ( !mItemQuery.exec() )
+      throw HandlerException("Unable to list items");
+    mItemQuery.query().next();
+  }
 
   // build part query if needed
   QueryBuilder partQuery;
@@ -371,6 +380,7 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
     throw HandlerException( "Unable to retrieve item parts" );
   partQuery.query().next();
 
+  QList<ItemRetrievalRequest*> requests;
   while ( mItemQuery.query().isValid() ) {
     const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = payloadList;
@@ -401,23 +411,49 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
       foreach ( const QString &s, missingParts )
         missingPayloadIds << s.mid( 4 );
 
+      ItemRetrievalRequest *req = new ItemRetrievalRequest();
+      req->id = pimItemId;
+      req->remoteId = mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
+      req->mimeType = mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = mItemQuery.query().value( itemQueryResouceColumn ).toString();
+      req->parts = missingPayloadIds;
+
       // TODO: how should we handle retrieval errors here? so far they have been ignored,
       // which makes sense in some cases, do we need a command parameter for this?
-      try {
-        ItemRetrievalManager::instance()->requestItemDelivery( pimItemId,
-                                                               mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8(),
-                                                               mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8(),
-                                                               mItemQuery.query().value( itemQueryResouceColumn ).toString(), missingPayloadIds );
-
-      } catch ( const ItemRetrieverException &e ) {
-        akError() << e.type() << ": " << e.what();
+      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
+        requests.append( req );
+      else {
+        try {
+          ItemRetrievalManager::instance()->requestItemDelivery( req );
+        } catch ( const ItemRetrieverException &e ) {
+          akError() << e.type() << ": " << e.what();
+        }
       }
     }
     mItemQuery.query().next();
   }
 
-  // rewind item query
-  mItemQuery.query().first();
+  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+    akDebug() << "Closing queries and sending out requests.";
+
+    // Close the queries so we can start writing without endig up in a lock.
+    partQuery.query().finish();
+    mItemQuery.query().finish();
+
+    // Now both reading queries are closed, start sending out the
+    foreach ( ItemRetrievalRequest *req, requests ) {
+      // TODO: how should we handle retrieval errors here? so far they have been ignored,
+      // which makes sense in some cases, do we need a command parameter for this?
+      try {
+        ItemRetrievalManager::instance()->requestItemDelivery( req );
+      } catch ( const ItemRetrieverException &e ) {
+        akError() << e.type() << ": " << e.what();
+      }
+    }
+  } else {
+    // rewind item query
+    mItemQuery.query().first();
+  }
 }
 
 void FetchHelper::parseCommandStream()
@@ -467,4 +503,9 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   }
   mAncestorCache.insert( parentColId, ancestors );
   return ancestors;
+}
+
+QString FetchHelper::driverName()
+{
+  return mConnection->storageBackend()->database().driverName();
 }
