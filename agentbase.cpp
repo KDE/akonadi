@@ -159,7 +159,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
 
 AgentBasePrivate::~AgentBasePrivate()
 {
-  mMonitor->setConfig( 0 );
+  mChangeRecorder->setConfig( 0 );
   delete mSettings;
 }
 
@@ -182,10 +182,10 @@ void AgentBasePrivate::init()
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
-  mMonitor = new ChangeRecorder( q );
-  mMonitor->ignoreSession( Session::defaultSession() );
-  mMonitor->itemFetchScope().setCacheOnly( true );
-  mMonitor->setConfig( mSettings );
+  mChangeRecorder = new ChangeRecorder( q );
+  mChangeRecorder->ignoreSession( Session::defaultSession() );
+  mChangeRecorder->itemFetchScope().setCacheOnly( true );
+  mChangeRecorder->setConfig( mSettings );
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
 
@@ -198,27 +198,27 @@ void AgentBasePrivate::init()
     }
   }
 
-  connect( mMonitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+  connect( mChangeRecorder, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
            SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-  connect( mMonitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+  connect( mChangeRecorder, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
            SLOT( itemRemoved( const Akonadi::Item& ) ) );
-  connect( mMonitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
            SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
            SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
+  connect( mChangeRecorder, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
            SLOT( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
-  connect( mMonitor, SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+  connect( mChangeRecorder, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
 
   connect( q, SIGNAL( status( int, const QString& ) ), q, SLOT( slotStatus( int, const QString& ) ) );
@@ -372,8 +372,8 @@ void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection 
 
 void AgentBasePrivate::changeProcessed()
 {
-  mMonitor->changeProcessed();
-  QTimer::singleShot( 0, mMonitor, SLOT( replayNext() ) );
+  mChangeRecorder->changeProcessed();
+  QTimer::singleShot( 0, mChangeRecorder, SLOT( replayNext() ) );
 }
 
 void AgentBasePrivate::slotStatus( int status, const QString &message )
@@ -596,7 +596,7 @@ void AgentBase::quit()
   aboutToQuit();
 
   if ( d->mSettings ) {
-    d->mMonitor->setConfig( 0 );
+    d->mChangeRecorder->setConfig( 0 );
     d->mSettings->sync();
   }
 
@@ -612,7 +612,7 @@ void AgentBase::cleanup()
   Q_D( AgentBase );
   // prevent the monitor from picking up deletion signals for our own data if we are a resource
   // and thus avoid that we kill our own data as last act before our own death
-  d->mMonitor->blockSignals( true );
+  d->mChangeRecorder->blockSignals( true );
 
   aboutToQuit();
 
@@ -621,7 +621,7 @@ void AgentBase::cleanup()
   /*
    * First destroy the settings object...
    */
-  d->mMonitor->setConfig( 0 );
+  d->mChangeRecorder->setConfig( 0 );
   delete d->mSettings;
   d->mSettings = 0;
 
@@ -686,7 +686,7 @@ void AgentBase::changeProcessed()
 
 ChangeRecorder * AgentBase::changeRecorder() const
 {
-  return d_ptr->mMonitor;
+  return d_ptr->mChangeRecorder;
 }
 
 void AgentBase::abort()

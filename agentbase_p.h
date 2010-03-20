@@ -85,7 +85,7 @@ class AgentBasePrivate : public QObject
 
     QSettings *mSettings;
 
-    ChangeRecorder *mMonitor;
+    ChangeRecorder *mChangeRecorder;
 
     org::freedesktop::Akonadi::Tracer *mTracer;
 

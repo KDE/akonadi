@@ -80,8 +80,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     virtual void changeProcessed()
     {
-      mMonitor->changeProcessed();
-      if ( !mMonitor->isEmpty() )
+      mChangeRecorder->changeProcessed();
+      if ( !mChangeRecorder->isEmpty() )
         scheduler->scheduleChangeReplay();
       scheduler->taskDone();
     }
@@ -122,11 +122,11 @@ ResourceBase::ResourceBase( const QString & id )
 
   d->scheduler = new ResourceScheduler( this );
 
-  d->mMonitor->setChangeRecordingEnabled( true );
-  connect( d->mMonitor, SIGNAL( changesAdded() ),
+  d->mChangeRecorder->setChangeRecordingEnabled( true );
+  connect( d->mChangeRecorder, SIGNAL( changesAdded() ),
            d->scheduler, SLOT( scheduleChangeReplay() ) );
 
-  d->mMonitor->setResourceMonitored( d->mId.toLatin1() );
+  d->mChangeRecorder->setResourceMonitored( d->mId.toLatin1() );
 
   connect( d->scheduler, SIGNAL( executeFullSync() ),
            SLOT( retrieveCollections() ) );
@@ -141,17 +141,17 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL( status( int, const QString& ) ),
            SIGNAL( status( int, const QString& ) ) );
   connect( d->scheduler, SIGNAL( executeChangeReplay() ),
-           d->mMonitor, SLOT( replayNext() ) );
+           d->mChangeRecorder, SLOT( replayNext() ) );
   connect( d->scheduler, SIGNAL( fullSyncComplete() ), SIGNAL( synchronized() ) );
-  connect( d->mMonitor, SIGNAL( nothingToReplay() ), d->scheduler, SLOT( taskDone() ) );
-  connect( d->mMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+  connect( d->mChangeRecorder, SIGNAL( nothingToReplay() ), d->scheduler, SLOT( taskDone() ) );
+  connect( d->mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
            d->scheduler, SLOT(collectionRemoved(Akonadi::Collection)) );
   connect( this, SIGNAL( synchronized() ), d->scheduler, SLOT( taskDone() ) );
   connect( this, SIGNAL( agentNameChanged( const QString& ) ),
            this, SIGNAL( nameChanged( const QString& ) ) );
 
   d->scheduler->setOnline( d->mOnline );
-  if ( !d->mMonitor->isEmpty() )
+  if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
 
   new ResourceSelectJob( identifier() );
@@ -315,7 +315,7 @@ void ResourceBasePrivate::changeCommittedResult( KJob *job )
   Q_Q( ResourceBase );
   if ( job->error() )
     emit q->error( i18nc( "@info", "Updating local collection failed: %1.", job->errorText() ) );
-  mMonitor->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
+  mChangeRecorder->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
   changeProcessed();
 }
 
