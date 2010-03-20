@@ -90,11 +90,12 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
       --count;
       continue;
     }
-    if ( data[i] == ' ' )
-      continue;
+    if ( data[i] == ' ' || data[i] == '\n' )
+       continue;
     if ( count == 0 ) {
       QByteArray ba;
-      i = ImapParser::parseString( data, ba, i ) - 1; // compensate the increment
+      const int consumed = ImapParser::parseString( data, ba, i );
+      i = consumed - 1; // compensate for the for loop increment
       result.append( ba );
     }
   }
