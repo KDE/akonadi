@@ -449,12 +449,14 @@ class StandardActionManager::Private
       Q_ASSERT( itemSelectionModel );
 
       // TODO: fix this once ItemModifyJob can handle item lists
+      Item::List items;
       foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
         bool ok;
         qlonglong id = index.data( ItemModel::IdRole ).toLongLong(&ok);
         Q_ASSERT(ok);
-        new ItemDeleteJob( Item( id ), q );
+        items << Item( id );
       }
+      new ItemDeleteJob( items, q );
     }
 
     void slotLocalSubscription()
