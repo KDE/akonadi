@@ -60,7 +60,10 @@ class ImapParser::Private {
     }
 };
 
-int ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
+namespace {
+
+template <typename T>
+int parseParenthesizedListHelper( const QByteArray & data, T& result, int start )
 {
   result.clear();
   if ( start >= data.length() )
@@ -91,50 +94,25 @@ int ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArra
       continue;
     if ( count == 0 ) {
       QByteArray ba;
-      i = parseString( data, ba, i ) - 1; // compensate the increment
+      i = ImapParser::parseString( data, ba, i ) - 1; // compensate the increment
       result.append( ba );
     }
   }
   return data.length();
+}
+
 }
 
 int ImapParser::parseParenthesizedList( const QByteArray & data, QVarLengthArray<QByteArray,16> &result, int start )
 {
-  result.clear();
-  if ( start >= data.length() )
-    return data.length();
-
-  int begin = data.indexOf( '(', start );
-  if ( begin < 0 )
-    return start;
-
-  int count = 0;
-  int sublistbegin = start;
-  for ( int i = begin + 1; i < data.length(); ++i ) {
-    if ( data[i] == '(' ) {
-      ++count;
-      if ( count == 1 )
-        sublistbegin = i;
-      continue;
-    }
-    if ( data[i] == ')' ) {
-      if ( count <= 0 )
-        return i + 1;
-      if ( count == 1 )
-        result.append( data.mid( sublistbegin, i - sublistbegin + 1 ) );
-      --count;
-      continue;
-    }
-    if ( data[i] == ' ' )
-      continue;
-    if ( count == 0 ) {
-      QByteArray ba;
-      i = parseString( data, ba, i ) - 1; // compensate the increment
-      result.append( ba );
-    }
-  }
-  return data.length();
+  return parseParenthesizedListHelper( data, result, start );
 }
+
+int ImapParser::parseParenthesizedList( const QByteArray & data, QList<QByteArray> &result, int start )
+{
+    return parseParenthesizedListHelper( data, result, start );
+}
+
 
 
 int ImapParser::parseString( const QByteArray & data, QByteArray & result, int start )
