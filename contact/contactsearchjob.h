@@ -98,15 +98,37 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
      */
     enum Criterion
     {
-      Name,    ///< The name of the contact.
-      Email,   ///< The email address of the contact.
-      NickName ///< The case-insensitive nickname of the contact
+      Name,       ///< The name of the contact.
+      Email,      ///< The email address of the contact.
+      NickName,   ///< The nickname of the contact.
+      NameOrEmail ///< The name or email address of the contact. @since 4.5
+    };
+
+    /**
+     * Describes the type of pattern matching that shall be used.
+     *
+     * @since 4.5
+     */
+    enum Match
+    {
+      ExactMatch,      ///< The result must match exactly the pattern (case sensitive).
+      StartsWithMatch, ///< The result must start with the pattern (case insensitive).
+      ContainsMatch    ///< The result must contain the pattern (case insensitive).
     };
 
     /**
      * Sets the @p criterion and @p value for the search.
+     *
+     * @note ExactMatch is used for the matching.
      */
     void setQuery( Criterion criterion, const QString &value );
+
+    /**
+     * Sets the @p criterion and @p value for the search with @p match.
+     *
+     * @since 4.5
+     */
+    void setQuery( Criterion criterion, const QString &value, Match match );
 
     /**
      * Sets a @p limit on how many results will be returned by this search job.

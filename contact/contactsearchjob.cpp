@@ -50,41 +50,165 @@ ContactSearchJob::~ContactSearchJob()
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 {
+  setQuery( criterion, value, ContainsMatch );
+}
+
+void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
+{
+  if ( match == StartsWithMatch && value.size() < 4 )
+    match = ExactMatch;
+
   QString query = QString::fromLatin1(
             "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
 
-  if ( criterion == Name ) {
-    query += QString::fromLatin1(
-        "SELECT DISTINCT ?r "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-        "    ?r a nco:PersonContact . "
-        "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
-        "  } "
-        "} " );
-  } else if ( criterion == Email ) {
-    query += QString::fromLatin1(
-        "SELECT DISTINCT ?person "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-        "    ?person a nco:PersonContact ; "
-        "            nco:hasEmailAddress ?email . "
-        "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
-        "  } "
-        "}" );
-  } else if ( criterion == NickName ) {
-    query += QString::fromLatin1(
-        "SELECT DISTINCT ?r "
-        "WHERE { "
-        "  graph ?g { "
-        "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-        "    ?r a nco:PersonContact . "
-        "    ?r nco:nickname ?v . "
-        "    ?v bif:contains \"'%1'\" . "
-        "  } "
-        "}" );
+  if ( match == ExactMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
+          "  } "
+          "} " );
+    } else if ( criterion == Email ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?person "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person a nco:PersonContact ; "
+          "            nco:hasEmailAddress ?email . "
+          "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
+          "  } "
+          "}" );
+    } else if ( criterion == NickName ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
+          "  } "
+          "}" );
+    } else if ( criterion == NameOrEmail ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    { ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. } "
+          "    UNION "
+          "    { ?r nco:hasEmailAddress ?email . "
+          "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
+          "  } "
+          "}" );
+    }
+  } else if ( match == StartsWithMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:fullname ?v . "
+          "    ?v bif:contains \"'%1*'\" . "
+          "  } "
+          "} " );
+    } else if ( criterion == Email ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?person "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person a nco:PersonContact ; "
+          "            nco:hasEmailAddress ?email . "
+          "    ?email nco:emailAddress ?v . "
+          "    ?v bif:contains \"'%1*'\" . "
+          "  } "
+          "}" );
+    } else if ( criterion == NickName ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:nickname ?v . "
+          "    ?v bif:contains \"'%1*'\" . "
+          "  } "
+          "}" );
+    } else if ( criterion == NameOrEmail ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    { ?r nco:fullname ?v . "
+          "      ?v bif:contains \"'%1*'\" . } "
+          "    UNION "
+          "    { ?r nco:hasEmailAddress ?email . "
+          "      ?email nco:emailAddress ?v . "
+          "      ?v bif:contains \"'%1*'\" . } "
+          "  } "
+          "}" );
+    }
+  } else if ( match == ContainsMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:fullname ?v . "
+          "    ?v bif:contains \"'%1'\" . "
+          "  } "
+          "} " );
+    } else if ( criterion == Email ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?person "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person a nco:PersonContact ; "
+          "            nco:hasEmailAddress ?email . "
+          "    ?email nco:emailAddress ?v . "
+          "    ?v bif:contains \"'%1'\" . "
+          "  } "
+          "}" );
+    } else if ( criterion == NickName ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:nickname ?v . "
+          "    ?v bif:contains \"'%1'\" . "
+          "  } "
+          "}" );
+    } else if ( criterion == NameOrEmail ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    { ?r nco:fullname ?v . "
+          "      ?v bif:contains \"'%1'\" . } "
+          "    UNION "
+          "    { ?r nco:hasEmailAddress ?email . "
+          "      ?email nco:emailAddress ?v . "
+          "      ?v bif:contains \"'%1'\" . } "
+          "  } "
+          "}" );
+    }
   }
 
   if ( d->mLimit != -1 ) {
