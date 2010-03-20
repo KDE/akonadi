@@ -90,7 +90,7 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
       --count;
       continue;
     }
-    if ( data[i] == ' ' || data[i] == '\n' )
+    if ( data[i] == ' ' || data[i] == '\n' || data[i] == '\r' )
        continue;
     if ( count == 0 ) {
       QByteArray ba;
