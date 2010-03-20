@@ -631,6 +631,11 @@ void AgentBase::cleanup()
   QFile::remove( fileName );
 
   /*
+   * ... and remove the changes file from hd.
+   */
+  QFile::remove( fileName + QLatin1String( "_changes.dat" ) );
+
+  /*
    * ... and also remove the agent configuration file if there is one.
    */
   QString configFile = KStandardDirs::locateLocal( "config", KGlobal::config()->name() );
