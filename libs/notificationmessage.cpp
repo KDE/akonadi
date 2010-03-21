@@ -53,9 +53,9 @@ class NotificationMessage::Private : public QSharedData
 
     bool compareWithoutOpAndParts( const Private &other ) const
     {
-      return sessionId == other.sessionId
+      return uid == other.uid
           && type == other.type
-          && uid == other.uid
+          && sessionId == other.sessionId
           && remoteId == other.remoteId
           && resource == other.resource
           && parentCollection == other.parentCollection
@@ -263,8 +263,9 @@ QString NotificationMessage::toString() const
 
 void NotificationMessage::appendAndCompress(NotificationMessage::List & list, const NotificationMessage & msg)
 {
-  for ( NotificationMessage::List::Iterator it = list.begin(); it != list.end(); ) {
-    if ( msg.d->compareWithoutOpAndParts( *((*it).d) ) ) {
+  NotificationMessage::List::Iterator end = list.end();
+  for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
+    if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
       // same operation: merge changed parts and drop the new one
       if ( msg.operation() == (*it).operation() ) {
         (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
@@ -277,6 +278,7 @@ void NotificationMessage::appendAndCompress(NotificationMessage::List & list, co
       // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
       else if ( msg.operation() == Remove && (*it).operation() == Modify ) {
         it = list.erase( it );
+        end = list.end();
       }
       // keep looking
       else {
