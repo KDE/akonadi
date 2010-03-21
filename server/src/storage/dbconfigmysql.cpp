@@ -83,6 +83,9 @@ bool DbConfigMysql::init( QSettings &settings )
 #endif
   }
 
+  mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_install_db" ), mysqldSearchPath );
+  akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
+
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
   if ( mInternalServer ) {
     const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
@@ -228,6 +231,12 @@ void DbConfigMysql::startInternalServer()
     }
   }
 
+  // first run, some MySQL versions need a mysql_install_db run for that
+  if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
+    QProcess::execute( mMysqlInstallDbPath, arguments );
+  }
+  
   // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
   if ( confUpdate ) {
     QFile( dataDir + QDir::separator() + QString::fromLatin1( "ib_logfile0" ) ).remove();
