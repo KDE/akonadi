@@ -75,14 +75,15 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
 
   int count = 0;
   int sublistbegin = start;
+  bool insideQuote = false;
   for ( int i = begin + 1; i < data.length(); ++i ) {
-    if ( data[i] == '(' ) {
+    if ( data[i] == '(' && !insideQuote ) {
       ++count;
       if ( count == 1 )
         sublistbegin = i;
       continue;
     }
-    if ( data[i] == ')' ) {
+    if ( data[i] == ')' && !insideQuote ) {
       if ( count <= 0 )
         return i + 1;
       if ( count == 1 )
@@ -97,6 +98,13 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
       const int consumed = ImapParser::parseString( data, ba, i );
       i = consumed - 1; // compensate for the for loop increment
       result.append( ba );
+    } else if ( count > 0 ) {
+      if ( data[i] == '"' ) {
+        insideQuote = !insideQuote;
+      } else if ( data[i] == '\\' && insideQuote ) {
+        ++i;
+        continue;
+      }
     }
   }
   return data.length();
