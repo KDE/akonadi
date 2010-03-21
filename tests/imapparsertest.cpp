@@ -200,6 +200,11 @@ void ImapParserTest::testParseParenthesizedList_data()
   reference << "NAME";
   reference << "net)";
   QTest::newRow( "spurious newline" ) << QByteArray("(NAME \"net)\"\n)") << reference << 14;
+
+  reference.clear();
+  reference << "(42 \"net)\")";
+  reference << "(0 \"\")";
+  QTest::newRow( "list of lists" ) << QByteArray( "((42 \"net)\") (0 \"\"))" ) << reference << 20;
 }
 
 void ImapParserTest::testParseParenthesizedList( )

@@ -77,6 +77,33 @@ class ProtocolHelperTest : public QObject
       QCOMPARE( didThrow, shouldThrow );
     }
 
+    void testAncestorParsing_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<Collection>( "parent" );
+
+      const QByteArray b0 = "((0 \"\"))";
+      QTest::newRow( "top-level" ) << b0 << Collection::root();
+
+      const QByteArray b1 = "((42 \"net)\") (0 \"\"))";
+      Collection c1;
+      c1.setRemoteId( "net)" );
+      c1.setId( 42 );
+      c1.setParentCollection( Collection::root() );
+      QTest::newRow( "till's obscure folder" ) << b1 << c1;
+    }
+
+    void testAncestorParsing()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( Collection, parent );
+
+      Item i;
+      ProtocolHelper::parseAncestors( input, &i );
+      QCOMPARE( i.parentCollection().id(), parent.id() );
+      QCOMPARE( i.parentCollection().remoteId(), parent.remoteId() );
+    }
+
     void testCollectionParsing_data()
     {
       QTest::addColumn<QByteArray>( "input" );
@@ -150,11 +177,11 @@ class ProtocolHelperTest : public QObject
       Collection c;
       c.setParentCollection( Collection::root() );
       c.setRemoteId( "r1" );
-      QTest::newRow( "one level" ) << c << QByteArray( "(-20 \"r1\") (0 \"\")" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(-22 \"r1\") (0 \"\")" );
       Collection c2;
       c2.setParentCollection( c );
       c2.setRemoteId( "r2" );
-      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-21 \"r2\") (-20 \"r1\") (0 \"\")" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-23 \"r2\") (-22 \"r1\") (0 \"\")" );
     }
 
     void testHRidToByteArray()
