@@ -134,8 +134,7 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
   Task t;
   t.type = SyncAllDone;
   TaskList& queue = queueForTaskType( t.type );
-  if ( queue.contains( t ) || mCurrentTask == t )
-    return;
+  // no compression here, all this does is emitting a D-Bus signal anyway, and compression can trigger races on the receiver side with the signal being lost
   queue << t;
   signalTaskToTracker( t, "SyncAllDone" );
   scheduleNext();

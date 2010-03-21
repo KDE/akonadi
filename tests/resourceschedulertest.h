@@ -33,6 +33,9 @@ class ResourceSchedulerTest : public QObject
     void testTaskComparision();
     void testChangeReplaySchedule();
     void testCustomTask();
+    void testCompression();
+    void testSyncCompletion();
+    void testPriorities();
 
   private:
     int mCustomCallCount;
