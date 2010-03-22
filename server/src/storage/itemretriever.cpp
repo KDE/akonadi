@@ -97,39 +97,44 @@ Scope ItemRetriever::scope() const
   return mScope;
 }
 
-static const int itemQueryIdColumn = 0;
-static const int itemQueryRidColumn = 1;
-static const int itemQueryMimeTypeColumn = 2;
-static const int itemQueryResouceColumn = 3;
-
-Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
+Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery() const
 {
+  // make sure the columns indexes here and in the constants defined in the header match
   QueryBuilder itemQuery;
   itemQuery.addTable( PimItem::tableName() );
   itemQuery.addTable( MimeType::tableName() );
   itemQuery.addTable( Collection::tableName() );
   itemQuery.addTable( Resource::tableName() );
-  // make sure the columns indexes here and in the constants defined above match
+
   itemQuery.addColumn( PimItem::idFullColumnName() );
   itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   itemQuery.addColumn( MimeType::nameFullColumnName() );
   itemQuery.addColumn( Resource::nameFullColumnName() );
+
   itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   itemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   itemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
+
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+  else
+    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
+
+  itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+
+  return itemQuery;
+}
+
+
+Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
+{
+  QueryBuilder itemQuery = buildGenericItemQuery();
 
   // prevent a resource to trigger item retrieval from itself
   if ( mConnection ) {
     itemQuery.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
                                  QString::fromLatin1( mConnection->sessionId() ) );
   }
-
-  if ( mScope.scope() != Scope::Invalid )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
-  else
-    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
-  itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-
 
   if ( !itemQuery.exec() )
     throw ItemRetrieverException( "Unable to list items" );
@@ -180,7 +185,7 @@ void ItemRetriever::exec()
 
   QList<ItemRetrievalRequest*> requests;
   while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
+    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
     QStringList missingParts = mParts;
     while ( partQuery.query().isValid() ) {
       const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
@@ -210,9 +215,9 @@ void ItemRetriever::exec()
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = itemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.query().value( itemQueryResouceColumn ).toString();
+      req->remoteId = itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.query().value( sItemQueryResouceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,

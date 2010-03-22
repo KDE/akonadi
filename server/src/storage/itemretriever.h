@@ -64,6 +64,18 @@ class ItemRetriever
 
   protected:
     /**
+     * Returns the QueryBuilder containing the subset of the item query which is
+     * not specific for the ItemRetriever for use by subclasses.
+     */
+    QueryBuilder buildGenericItemQuery() const;
+
+    /** Column indices of the generic item query. */
+    static const int sItemQueryPimItemIdColumn = 0;
+    static const int sItemQueryPimItemRidColumn = 1;
+    static const int sItemQueryMimeTypeColumn = 2;
+    static const int sItemQueryResouceColumn = 3;
+
+    /**
      * Returns the QueryBuilder containing the subset of the part query which is
      * not specific for the ItemRetrieverQuery for use by subclasses.
      */

@@ -46,12 +46,8 @@
 
 using namespace Akonadi;
 
-static const int itemQueryIdColumn = 0;
-static const int itemQueryRevColumn = 1;
-static const int itemQueryRidColumn = 2;
-static const int itemQueryRemoteRevisionColumn = 3;
-static const int itemQueryMimeTypeColumn = 4;
-static const int itemQueryResouceColumn = 5;
+static const int itemQueryRevColumn = 4;
+static const int itemQueryRemoteRevisionColumn = 5;
 static const int itemQuerySizeColumn = 6;
 static const int itemQueryDatetimeColumn = 7;
 static const int itemQueryCollectionIdColumn = 8;
@@ -158,14 +154,14 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   Response response;
   response.setUntagged();
   while ( mItemQuery.query().isValid() ) {
-    const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
+    const qint64 pimItemId = mItemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
     const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8() ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8() ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8() ) );
     Collection::Id parentCollectionId = mItemQuery.query().value( itemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
@@ -310,25 +306,13 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
 
 void FetchHelper::buildItemQuery()
 {
-  mItemQuery.addTable( PimItem::tableName() );
-  mItemQuery.addTable( MimeType::tableName() );
-  mItemQuery.addTable( Collection::tableName() );
-  mItemQuery.addTable( Resource::tableName() );
-  // make sure the columns indexes here and in the constants defined above match
-  mItemQuery.addColumn( PimItem::idFullColumnName() );
+  mItemQuery = buildGenericItemQuery(); // Has 4 colums
+  // make sure the columns indexes here and in the constants defined at the top of the file
   mItemQuery.addColumn( PimItem::revFullColumnName() );
-  mItemQuery.addColumn( PimItem::remoteIdFullColumnName() );
   mItemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
-  mItemQuery.addColumn( MimeType::nameFullColumnName() );
-  mItemQuery.addColumn( Resource::nameFullColumnName() );
   mItemQuery.addColumn( PimItem::sizeFullColumnName() );
   mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
   mItemQuery.addColumn( PimItem::collectionIdFullColumnName() );
-  mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-  mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
-  mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  ItemQueryHelper::scopeToQuery( scope(), connection(), mItemQuery );
-  mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )
     throw HandlerException("Unable to list items");
@@ -348,7 +332,7 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
 
   QList<ItemRetrievalRequest*> requests;
   while ( mItemQuery.query().isValid() ) {
-    const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
+    const qint64 pimItemId = mItemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
     QStringList missingParts = payloadList;
     while ( partQuery.query().isValid() ) {
       const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
@@ -378,9 +362,9 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = mItemQuery.query().value( itemQueryRidColumn ).toString().toUtf8();
-      req->mimeType = mItemQuery.query().value( itemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = mItemQuery.query().value( itemQueryResouceColumn ).toString();
+      req->remoteId = mItemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = mItemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = mItemQuery.query().value( sItemQueryResouceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,
