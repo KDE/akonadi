@@ -59,7 +59,7 @@ static const int itemQueryCollectionIdColumn = 8;
 static const int partQueryVersionColumn = 4;
 
 FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
-  : ItemRetriever( connection ), mUseScope( true )
+  : ItemRetriever( connection )
 {
   setScope( scope );
   init();
@@ -85,9 +85,7 @@ void FetchHelper::setStreamParser( ImapStreamParser *parser )
 bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 {
   parseCommandStream();
-
-  if ( mUseScope )
-    triggerOnDemandFetch();
+  triggerOnDemandFetch();
 
   // retrieve missing parts
   QStringList partList, payloadList;
@@ -144,10 +142,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( scope(), connection(), flagQuery );
-    else
-      ItemQueryHelper::itemSetToQuery( mSet, true, connection(), flagQuery );
+    ItemQueryHelper::scopeToQuery( scope(), connection(), flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() ) {
@@ -265,10 +260,7 @@ void FetchHelper::updateItemAccessTime()
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( scope(), connection(), qb );
-  else
-    ItemQueryHelper::itemSetToQuery( mSet, true, connection(), qb );
+  ItemQueryHelper::scopeToQuery( scope(), connection(), qb );
 
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
@@ -310,10 +302,7 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
 
-    if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( scope(), connection(), partQuery );
-    else
-      ItemQueryHelper::itemSetToQuery( mSet, true, connection(), partQuery );
+    ItemQueryHelper::scopeToQuery( scope(), connection(), partQuery );
   }
   return partQuery;
 }
@@ -337,10 +326,7 @@ void FetchHelper::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-  if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( scope(), connection(), mItemQuery );
-  else
-    ItemQueryHelper::itemSetToQuery( mSet, true, connection(), mItemQuery );
+  ItemQueryHelper::scopeToQuery( scope(), connection(), mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )

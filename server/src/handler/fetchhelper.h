@@ -61,9 +61,6 @@ class FetchHelper : public QObject, public ItemRetriever
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
 
   private:
-    ImapSet mSet;
-    bool mUseScope;
-
     ImapStreamParser *mStreamParser;
 
     QueryBuilder mItemQuery;
