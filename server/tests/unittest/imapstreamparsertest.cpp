@@ -435,5 +435,25 @@ void ImapStreamParserTest::testReadUntilCommandEnd2()
   }
 }
 
+void ImapStreamParserTest::testAbortCommand()
+{
+  QByteArray input( "12 UID STORE 63696 REV 2 (REMOTEID.SILENT \"225\" REMOTEREVISION.SILENT "" FLAGS.SILENT (\\SEEN ) PLD:HEAD.SILENT {2226}\nNEXTCOMMAND " );
+  QBuffer buffer( &input, this );
+  buffer.open( QIODevice::ReadOnly );
+  ImapStreamParser parser( &buffer );
+
+  try {
+    // read some stuff and then notice that we can't process the command and abort early
+    QCOMPARE( parser.readString(), QByteArray( "12" ) );
+    QCOMPARE( parser.readString(), QByteArray( "UID" ) );
+    QCOMPARE( parser.readString(), QByteArray( "STORE" ) );
+    qDebug() << "!!!";
+    parser.skipCurrentCommand();
+    QCOMPARE( parser.readString(), QByteArray( "NEXTCOMMAND" ) );
+  } catch ( const Akonadi::Exception &e ) {
+    qDebug() << e.type() << e.what();
+    QFAIL( "Exception caught" );
+  }  
+}
 
 #include "imapstreamparsertest.moc"

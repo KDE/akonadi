@@ -39,6 +39,7 @@ class ImapStreamParserTest : public QObject
     void testParseDateTime();
     void testReadUntilCommandEnd();
     void testReadUntilCommandEnd2();
+    void testAbortCommand();
 
 };
 

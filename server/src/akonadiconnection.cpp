@@ -113,7 +113,7 @@ void AkonadiConnection::slotNewData()
   // On Windows, calling readLiteralPart() triggers the readyRead() signal recursively and leads to parse errors
   if ( m_currentHandler )
     return;
-    
+
   while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty() ) {
     try {
       const QByteArray tag = m_streamParser->readString();
@@ -132,12 +132,12 @@ void AkonadiConnection::slotNewData()
       m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );
       if ( !m_currentHandler->parseStream() ) {
-        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+        m_streamParser->skipCurrentCommand();
       }
     } catch ( const Akonadi::HandlerException &e ) {
       m_currentHandler->failureResponse( e.what() );
       try {
-        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+        m_streamParser->skipCurrentCommand();
       } catch ( ... ) {}
     } catch ( const Akonadi::Exception &e ) {
       if ( m_currentHandler ) {
@@ -145,7 +145,7 @@ void AkonadiConnection::slotNewData()
           + QLatin1String( ": " ) + QString::fromLatin1( e.what()  ) );
       }
       try {
-        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+        m_streamParser->skipCurrentCommand();
       } catch ( ... ) {}
     } catch ( ... ) {
       akError() << "Unknown exception caught: " << akBacktrace();
@@ -153,7 +153,7 @@ void AkonadiConnection::slotNewData()
         m_currentHandler->failureResponse( "Unknown exception caught" );
       }
       try {
-        m_streamParser->readUntilCommandEnd(); //just eat the ending newline
+        m_streamParser->skipCurrentCommand();
       } catch ( ... ) {}
     }
     delete m_currentHandler;

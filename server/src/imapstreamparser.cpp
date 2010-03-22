@@ -745,6 +745,26 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
   return result;
 }
 
+void ImapStreamParser::skipCurrentCommand()
+{
+  int i = m_position;
+  Q_FOREVER {
+    if ( !waitForMoreData( m_data.length() <= i ) ) {
+      m_position = i;
+      throw ImapParserException("Unable to read more data");
+    }
+    if ( m_data[i] == '\n'  || m_data[i] == '\r' )
+      break; //command end
+    ++i;
+  }
+  m_position = i + 1;
+  // We'd better empty m_data from time to time before it grows out of control
+  if ( !m_peeking ) {
+    m_data = m_data.right(m_data.size()-m_position);
+    m_position = 0;
+  }
+}
+
 void ImapStreamParser::sendContinuationResponse()
 {
   QByteArray block = "+ Ready for literal data (expecting "

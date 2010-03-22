@@ -202,10 +202,19 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     bool atCommandEnd();
 
     /**
-     * Return everything that remained from the command.
+     * Return everything that remained from the command, <em>including not yet
+     * requested</em> literal parts.
      * @return the remaining command data
+     * @see skipCurrentCommand
      */
     QByteArray readUntilCommandEnd();
+
+    /**
+     * This reads until the end of the <em>already sent</em> command and does not
+     * request not yet sent literal parts.
+     * @see readUntilCommandEnd
+     */
+    void skipCurrentCommand();
 
     /**
      * Return all the data that was read from the socket, but not processed yet.
