@@ -231,7 +231,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
       bool partIsExternal = partQuery.query().value( partQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
-        data = PartHelper::translateData(id, data, partIsExternal );
+        data = PartHelper::translateData( data, partIsExternal );
       int version = partQuery.query().value( partQueryVersionColumn ).toInt();
       if ( version != 0 ) { // '0' is the default, so don't send it
         part += "[" + QByteArray::number( version ) + "]";
@@ -390,9 +390,8 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
       }
       QString partName = partQuery.query().value( partQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        qint64 partId = partQuery.query().value( partQueryIdColumn ).toLongLong();
         QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData(partId, data, partQuery.query().value( partQueryExternalColumn ).toBool());
+        data = PartHelper::translateData( data, partQuery.query().value( partQueryExternalColumn ).toBool() );
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;

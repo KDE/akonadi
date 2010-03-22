@@ -194,11 +194,10 @@ void ItemRetriever::exec()
         break;
       }
       const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
-      qint64 partId = partQuery.query().value( partQueryIdColumn ).toLongLong();
       QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
       // FIXME: loading the actual data is not needed here!
       // ### maybe add an flag indicating if a part is cached?
-      data = PartHelper::translateData(partId, data, partQuery.query().value( sPartQueryExternalColumn ).toBool());
+      data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool() );
       if ( data.isNull() ) {
         if ( mFullPayload && !missingParts.contains( partName ) )
           missingParts << partName;

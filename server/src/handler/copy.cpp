@@ -49,7 +49,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   Part::List parts;
   foreach ( const Part &part, item.parts() ) {
     Part newPart( part );
-    newPart.setData(PartHelper::translateData(newPart.id(), newPart.data(), part.external()));
+    newPart.setData(PartHelper::translateData( newPart.data(), part.external() ) );
     newPart.setPimItemId( -1 );
     parts << newPart;
   }

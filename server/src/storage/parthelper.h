@@ -45,7 +45,7 @@ class PartHelper
     static bool remove( const QString &column, const QVariant &value );
     static bool loadData( Part::List &parts );
     static bool loadData( Part &part );
-    static QByteArray translateData( qint64 id, const QByteArray &data, bool isExternal  );
+    static QByteArray translateData( const QByteArray &data, bool isExternal  );
     static QByteArray translateData( const Part& part );
         /** Returns the record with id @p id. */
     static Part retrieveById( qint64 id );

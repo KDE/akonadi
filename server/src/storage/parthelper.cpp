@@ -225,13 +225,10 @@ bool PartHelper::loadData( Part &part )
   return true;
 }
 
-QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool isExternal )
+QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 {
-  Q_UNUSED(id);
-
   if ( DbConfig::configuredDatabase()->useExternalPayloadFile() && isExternal )
   {
-    //qDebug() << "translateData " << id;
     QString fileName = QString::fromUtf8( data );
     QFile file( fileName );
     if (file.open( QIODevice::ReadOnly ))
@@ -255,7 +252,7 @@ QByteArray PartHelper::translateData( qint64 id, const QByteArray &data, bool is
 
 QByteArray PartHelper::translateData( const Part& part )
 {
-  return translateData( part.id(), part.data(), part.external() );
+  return translateData( part.data(), part.external() );
 }
 
 /** Returns the record with id @p id. */
