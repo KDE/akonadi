@@ -138,23 +138,26 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
   return itemQuery;
 }
 
-static const int partQueryPimIdColumn = 0;
-static const int partQueryIdColumn = 1;
-static const int partQueryNameColumn = 2;
-static const int partQueryDataColumn = 3;
-static const int partQueryExternalColumn = 4;
-
-Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
+Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery() const
 {
   QueryBuilder partQuery;
   partQuery.addTable( PimItem::tableName() );
   partQuery.addTable( Part::tableName() );
   partQuery.addColumn( PimItem::idFullColumnName() );
-  partQuery.addColumn( Part::idFullColumnName() );
   partQuery.addColumn( Part::nameFullColumnName() );
   partQuery.addColumn( Part::dataFullColumnName() );
   partQuery.addColumn( Part::externalFullColumnName() );
   partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+
+  return partQuery;
+}
+
+static const int partQueryIdColumn = 4;
+
+Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
+{
+  QueryBuilder partQuery = buildGenericPartQuery();
+  partQuery.addColumn( Part::idFullColumnName() );
   partQuery.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
 
   if ( !mParts.isEmpty() )
@@ -183,19 +186,19 @@ void ItemRetriever::exec()
     const qint64 pimItemId = itemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = mParts;
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( partQueryPimIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      const QString partName = partQuery.query().value( partQueryNameColumn ).toString();
+      const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
       qint64 partId = partQuery.query().value( partQueryIdColumn ).toLongLong();
-      QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
+      QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
       // FIXME: loading the actual data is not needed here!
       // ### maybe add an flag indicating if a part is cached?
-      data = PartHelper::translateData(partId, data, partQuery.query().value( partQueryExternalColumn ).toBool());
+      data = PartHelper::translateData(partId, data, partQuery.query().value( sPartQueryExternalColumn ).toBool());
       if ( data.isNull() ) {
         if ( mFullPayload && !missingParts.contains( partName ) )
           missingParts << partName;

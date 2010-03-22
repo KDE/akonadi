@@ -63,10 +63,24 @@ class ItemRetriever
     void exec();
 
   protected:
+    /**
+     * Returns the QueryBuilder containing the subset of the part query which is
+     * not specific for the ItemRetrieverQuery for use by subclasses.
+     */
+    QueryBuilder buildGenericPartQuery() const;
+
+    /** Column indices of the generic part query. */
+    static const int sPartQueryPimIdColumn = 0;
+    static const int sPartQueryNameColumn = 1;
+    static const int sPartQueryDataColumn = 2;
+    static const int sPartQueryExternalColumn = 3;
+
+    /** Convenience method which returns the database driver name */
     QString driverName();
 
   private:
     QueryBuilder buildItemQuery() const;
+    /** Extends the generic query with ItemRetriever specific query information. */
     QueryBuilder buildPartQuery() const;
 
   private:
