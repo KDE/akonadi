@@ -212,7 +212,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       }
       QByteArray partName = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
       QByteArray part = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
-      QByteArray data = partQuery.query().value( sPartQueryNameColumn ).toByteArray();
+      QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
       bool partIsExternal = partQuery.query().value( sPartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );
@@ -292,6 +292,7 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
   QueryBuilder partQuery;
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
     partQuery = buildGenericPartQuery();
+    partQuery.addColumn( Part::versionFullColumnName() );
 
     Query::Condition cond( Query::Or );
     if ( !partList.isEmpty() )
