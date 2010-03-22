@@ -56,11 +56,7 @@ static const int itemQuerySizeColumn = 6;
 static const int itemQueryDatetimeColumn = 7;
 static const int itemQueryCollectionIdColumn = 8;
 
-static const int partQueryIdColumn = 0;
-static const int partQueryNameColumn = 1;
-static const int partQueryDataColumn = 2;
-static const int partQueryVersionColumn = 3;
-static const int partQueryExternalColumn = 4;
+static const int partQueryVersionColumn = 4;
 
 FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
   : ItemRetriever( connection ), mUseScope( true )
@@ -219,17 +215,17 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      QByteArray partName = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-      QByteArray part = partQuery.query().value( partQueryNameColumn ).toString().toUtf8();
-      QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
-      bool partIsExternal = partQuery.query().value( partQueryExternalColumn ).toBool();
+      QByteArray partName = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
+      QByteArray part = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
+      QByteArray data = partQuery.query().value( sPartQueryNameColumn ).toByteArray();
+      bool partIsExternal = partQuery.query().value( sPartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );
       int version = partQuery.query().value( partQueryVersionColumn ).toInt();
@@ -310,14 +306,8 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
 {
   QueryBuilder partQuery;
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
-    partQuery.addTable( PimItem::tableName() );
-    partQuery.addTable( Part::tableName() );
-    partQuery.addColumn( PimItem::idFullColumnName() );
-    partQuery.addColumn( Part::nameFullColumnName() );
-    partQuery.addColumn( Part::dataFullColumnName() );
-    partQuery.addColumn( Part::versionFullColumnName() );
-    partQuery.addColumn( Part::externalFullColumnName() );
-    partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+    partQuery = buildGenericPartQuery();
+
     Query::Condition cond( Query::Or );
     if ( !partList.isEmpty() )
       cond.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
@@ -381,17 +371,17 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
     const qint64 pimItemId = mItemQuery.query().value( itemQueryIdColumn ).toLongLong();
     QStringList missingParts = payloadList;
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( partQueryIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      QString partName = partQuery.query().value( partQueryNameColumn ).toString();
+      QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.query().value( partQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.query().value( partQueryExternalColumn ).toBool() );
+        QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool());
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;
