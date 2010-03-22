@@ -316,11 +316,11 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
     if ( allAttrs )
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
+
     if ( mUseScope )
       ItemQueryHelper::scopeToQuery( scope(), connection(), partQuery );
     else
       ItemQueryHelper::itemSetToQuery( mSet, true, connection(), partQuery );
-    partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   }
   return partQuery;
 }

@@ -148,6 +148,7 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery() const
   partQuery.addColumn( Part::dataFullColumnName() );
   partQuery.addColumn( Part::externalFullColumnName() );
   partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+  partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   return partQuery;
 }
@@ -161,7 +162,6 @@ Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
     partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
 
   ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
-  partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   return partQuery;
 }
 
