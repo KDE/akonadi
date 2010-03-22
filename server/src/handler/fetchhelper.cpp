@@ -62,15 +62,17 @@ static const int partQueryDataColumn = 2;
 static const int partQueryVersionColumn = 3;
 static const int partQueryExternalColumn = 4;
 
-FetchHelper::FetchHelper( const Scope &scope )
-  : mScope( scope ), mUseScope( true )
+FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
+  : ItemRetriever( connection ), mUseScope( true )
 {
+  setScope( scope );
   init();
 }
 
-FetchHelper::FetchHelper( const ImapSet &set )
-  : mScope( Scope::None ), mSet( set ), mUseScope( false )
+FetchHelper::FetchHelper( AkonadiConnection *connection, const ImapSet &set )
+  : ItemRetriever( connection ), mSet( set ), mUseScope( false )
 {
+  setScope( Scope::None );
   init();
 }
 
@@ -85,11 +87,6 @@ void FetchHelper::init()
   mExternalPayloadSupported = false;
   mRemoteRevisionRequested = false;
   mConnection = 0;
-}
-
-void FetchHelper::setConnection( AkonadiConnection *connection )
-{
-  mConnection = connection;
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -160,7 +157,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
     if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
+      ItemQueryHelper::scopeToQuery( scope(), mConnection, flagQuery );
     else
       ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
@@ -281,7 +278,7 @@ void FetchHelper::updateItemAccessTime()
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+    ItemQueryHelper::scopeToQuery( scope(), mConnection, qb );
   else
     ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, qb );
 
@@ -293,7 +290,7 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
+  if ( scope().scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
     return;
 
   Collection collection = mConnection->selectedCollection();
@@ -331,7 +328,7 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
     if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+      ItemQueryHelper::scopeToQuery( scope(), mConnection, partQuery );
     else
       ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
@@ -359,7 +356,7 @@ void FetchHelper::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
   if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, mItemQuery );
+    ItemQueryHelper::scopeToQuery( scope(), mConnection, mItemQuery );
   else
     ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );

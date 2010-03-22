@@ -53,8 +53,10 @@ class ItemRetriever
     void setItem( const Akonadi::Entity::Id &id );
     /** Retrieve all items in the given collection. */
     void setCollection( const Akonadi::Collection &collection, bool recursive = true );
+
     /** Retrieve all items matching the given item scope. */
     void setScope( const Scope &scope );
+    Scope scope() const;
 
     void exec();
 

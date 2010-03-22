@@ -37,8 +37,7 @@ ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
   mConnection( connection ),
   mFullPayload( false ),
   mRecursive( false )
-{
-}
+{ }
 
 void ItemRetriever::setRetrieveParts(const QStringList& parts)
 {
@@ -86,6 +85,11 @@ void ItemRetriever::setCollection(const Collection& collection, bool recursive)
 void ItemRetriever::setScope(const Scope& scope)
 {
   mScope = scope;
+}
+
+Scope ItemRetriever::scope() const
+{
+  return mScope;
 }
 
 static const int itemQueryIdColumn = 0;

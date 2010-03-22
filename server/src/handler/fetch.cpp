@@ -36,8 +36,7 @@ bool Fetch::parseStream()
   // sequence set
   mScope.parseScope( m_streamParser );
 
-  FetchHelper fetchHelper( mScope );
-  fetchHelper.setConnection( connection() );
+  FetchHelper fetchHelper( connection(), mScope );
   fetchHelper.setStreamParser( m_streamParser );
   connect( &fetchHelper, SIGNAL( responseAvailable( const Response& ) ),
            this, SIGNAL( responseAvailable( const Response& ) ) );

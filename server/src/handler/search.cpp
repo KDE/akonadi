@@ -64,8 +64,7 @@ bool Search::parseStream()
 
   itemSet.add( imapIds );
 
-  FetchHelper fetchHelper( itemSet );
-  fetchHelper.setConnection( connection() );
+  FetchHelper fetchHelper( connection(), itemSet );
   fetchHelper.setStreamParser( m_streamParser );
   connect( &fetchHelper, SIGNAL( responseAvailable( const Response& ) ),
            this, SIGNAL( responseAvailable( const Response& ) ) );

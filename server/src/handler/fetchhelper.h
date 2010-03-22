@@ -20,10 +20,12 @@
 #ifndef AKONADI_FETCHHELPER_H
 #define AKONADI_FETCHHELPER_H
 
+#include <QtCore/QStack>
+
 #include "scope.h"
 #include "libs/imapset_p.h"
 #include "storage/datastore.h"
-#include <QtCore/QStack>
+#include "storage/itemretriever.h"
 
 namespace Akonadi {
 
@@ -32,15 +34,14 @@ class ImapSet;
 class QueryBuilder;
 class Response;
 
-class FetchHelper : public QObject
+class FetchHelper : public QObject, public ItemRetriever
 {
   Q_OBJECT
 
   public:
-    FetchHelper( const Scope &scope );
-    FetchHelper( const ImapSet &imapSet );
+    FetchHelper( AkonadiConnection *connection, const Scope &scope );
+    FetchHelper( AkonadiConnection *connection, const ImapSet &imapSet );
 
-    void setConnection( AkonadiConnection *connection );
     void setStreamParser( ImapStreamParser *parser );
 
     bool parseStream( const QByteArray &responseIdentifier );
@@ -62,7 +63,6 @@ class FetchHelper : public QObject
     QString driverName();
 
   private:
-    Scope mScope;
     ImapSet mSet;
     bool mUseScope;
 
