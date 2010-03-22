@@ -88,6 +88,11 @@ ImapSet Scope::uidSet() const
   return mUidSet;
 }
 
+void Scope::setUidSet( const ImapSet &uidSet )
+{
+  mUidSet = uidSet;
+}
+
 QStringList Scope::ridSet() const
 {
   return mRidSet;

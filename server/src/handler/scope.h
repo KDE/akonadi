@@ -58,6 +58,7 @@ class Scope
     SelectionScope scope() const;
     void setScope( SelectionScope scope );
     ImapSet uidSet() const;
+    void setUidSet( const ImapSet &uidSet );
     QStringList ridSet() const;
     QStringList ridChain() const;
 

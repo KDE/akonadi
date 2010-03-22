@@ -56,15 +56,16 @@ bool Search::parseStream()
   }
 
   // create imap query
-  ImapSet itemSet;
-
   QList<ImapSet::Id> imapIds;
   foreach ( const QString &uid, uids )
     imapIds.append( uid.toULongLong() );
 
+  ImapSet itemSet;
   itemSet.add( imapIds );
+  Scope scope( Scope::Uid );
+  scope.setUidSet( itemSet );
 
-  FetchHelper fetchHelper( connection(), itemSet );
+  FetchHelper fetchHelper( connection(), scope );
   fetchHelper.setStreamParser( m_streamParser );
   connect( &fetchHelper, SIGNAL( responseAvailable( const Response& ) ),
            this, SIGNAL( responseAvailable( const Response& ) ) );

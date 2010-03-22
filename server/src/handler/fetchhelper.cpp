@@ -65,13 +65,6 @@ FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
   init();
 }
 
-FetchHelper::FetchHelper( AkonadiConnection *connection, const ImapSet &set )
-  : ItemRetriever( connection ), mSet( set ), mUseScope( false )
-{
-  setScope( Scope::None );
-  init();
-}
-
 void FetchHelper::init()
 {
   mAncestorDepth = 0;

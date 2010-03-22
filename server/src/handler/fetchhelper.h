@@ -40,7 +40,6 @@ class FetchHelper : public QObject, public ItemRetriever
 
   public:
     FetchHelper( AkonadiConnection *connection, const Scope &scope );
-    FetchHelper( AkonadiConnection *connection, const ImapSet &imapSet );
 
     void setStreamParser( ImapStreamParser *parser );
 
