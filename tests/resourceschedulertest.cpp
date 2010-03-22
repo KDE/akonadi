@@ -183,7 +183,7 @@ void ResourceSchedulerTest::testCompression()
   ResourceScheduler scheduler;
   scheduler.setOnline( true );
   qRegisterMetaType<Akonadi::Collection>("Akonadi::Collection");
-  qRegisterMetaType<Akonadi::Item>( "Akoandi::Item" );
+  qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
   QSignalSpy fullSyncSpy( &scheduler, SIGNAL(executeFullSync()) );
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
   QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection) ) );
@@ -275,7 +275,7 @@ void ResourceSchedulerTest::testPriorities()
   ResourceScheduler scheduler;
   scheduler.setOnline( true );
   qRegisterMetaType<Akonadi::Collection>("Akonadi::Collection");
-  qRegisterMetaType<Akonadi::Item>( "Akoandi::Item" );
+  qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
   QSignalSpy changeReplaySpy( &scheduler, SIGNAL( executeChangeReplay() ) );
   QSignalSpy fullSyncSpy( &scheduler, SIGNAL(executeFullSync()) );
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
