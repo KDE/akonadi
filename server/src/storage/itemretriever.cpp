@@ -152,12 +152,9 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery() const
   return partQuery;
 }
 
-static const int partQueryIdColumn = 4;
-
 Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
 {
   QueryBuilder partQuery = buildGenericPartQuery();
-  partQuery.addColumn( Part::idFullColumnName() );
   partQuery.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
 
   if ( !mParts.isEmpty() )
