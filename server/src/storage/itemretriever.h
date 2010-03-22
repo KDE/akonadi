@@ -46,6 +46,8 @@ class ItemRetriever
   public:
     ItemRetriever( AkonadiConnection *connection );
 
+    AkonadiConnection *connection() const;
+
     void setRetrieveParts( const QStringList &parts );
     void setRetrieveFullPayload( bool fullPayload );
     void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
@@ -60,10 +62,12 @@ class ItemRetriever
 
     void exec();
 
+  protected:
+    QString driverName();
+
   private:
     QueryBuilder buildItemQuery() const;
     QueryBuilder buildPartQuery() const;
-    QString driverName();
 
   private:
     ImapSet mItemSet;

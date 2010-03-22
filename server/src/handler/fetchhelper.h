@@ -60,13 +60,11 @@ class FetchHelper : public QObject, public ItemRetriever
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
-    QString driverName();
 
   private:
     ImapSet mSet;
     bool mUseScope;
 
-    AkonadiConnection *mConnection;
     ImapStreamParser *mStreamParser;
 
     QueryBuilder mItemQuery;

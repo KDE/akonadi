@@ -86,7 +86,6 @@ void FetchHelper::init()
   mMTimeRequested = false;
   mExternalPayloadSupported = false;
   mRemoteRevisionRequested = false;
-  mConnection = 0;
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -157,9 +156,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
     if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( scope(), mConnection, flagQuery );
+      ItemQueryHelper::scopeToQuery( scope(), connection(), flagQuery );
     else
-      ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, flagQuery );
+      ItemQueryHelper::itemSetToQuery( mSet, true, connection(), flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() ) {
@@ -273,14 +272,14 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
 void FetchHelper::updateItemAccessTime()
 {
-  Transaction transaction( mConnection->storageBackend() );
+  Transaction transaction( connection()->storageBackend() );
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( scope(), mConnection, qb );
+    ItemQueryHelper::scopeToQuery( scope(), connection(), qb );
   else
-    ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, qb );
+    ItemQueryHelper::itemSetToQuery( mSet, true, connection(), qb );
 
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
@@ -290,16 +289,16 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( scope().scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
+  if ( scope().scope() != Scope::None || connection()->selectedCollectionId() <= 0 || mCacheOnly )
     return;
 
-  Collection collection = mConnection->selectedCollection();
+  Collection collection = connection()->selectedCollection();
 
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
-  if ( mConnection->sessionId() == collection.resource().name().toLatin1() )
+  if ( connection()->sessionId() == collection.resource().name().toLatin1() )
     return;
 
-  DataStore *store = mConnection->storageBackend();
+  DataStore *store = connection()->storageBackend();
   store->activeCachePolicy( collection );
   if ( !collection.cachePolicySyncOnDemand() )
     return;
@@ -328,9 +327,9 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
     if ( mUseScope )
-      ItemQueryHelper::scopeToQuery( scope(), mConnection, partQuery );
+      ItemQueryHelper::scopeToQuery( scope(), connection(), partQuery );
     else
-      ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, partQuery );
+      ItemQueryHelper::itemSetToQuery( mSet, true, connection(), partQuery );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
   }
   return partQuery;
@@ -356,9 +355,9 @@ void FetchHelper::buildItemQuery()
   mItemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   mItemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
   if ( mUseScope )
-    ItemQueryHelper::scopeToQuery( scope(), mConnection, mItemQuery );
+    ItemQueryHelper::scopeToQuery( scope(), connection(), mItemQuery );
   else
-    ItemQueryHelper::itemSetToQuery( mSet, true, mConnection, mItemQuery );
+    ItemQueryHelper::itemSetToQuery( mSet, true, connection(), mItemQuery );
   mItemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !mItemQuery.exec() )
@@ -500,9 +499,4 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   }
   mAncestorCache.insert( parentColId, ancestors );
   return ancestors;
-}
-
-QString FetchHelper::driverName()
-{
-  return mConnection->storageBackend()->database().driverName();
 }

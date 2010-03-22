@@ -39,6 +39,11 @@ ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
   mRecursive( false )
 { }
 
+AkonadiConnection *ItemRetriever::connection() const
+{
+  return mConnection;
+}
+
 void ItemRetriever::setRetrieveParts(const QStringList& parts)
 {
   mParts = parts;
