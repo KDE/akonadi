@@ -125,7 +125,7 @@ endif(NOT Boost_USE_STATIC_LIBS)
 #### Sqlite ####
 set(SQLITE_MIN_VERSION 3.6.23)
 find_package(Sqlite)
-macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" TRUE "" "")
+macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" FALSE "${SQLITE_MIN_VERSION}" "")
 
 ############### Compilers flags ###############
 
