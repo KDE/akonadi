@@ -50,6 +50,9 @@ AkonadiConnection *ItemRetriever::connection() const
 void ItemRetriever::setRetrieveParts(const QStringList& parts)
 {
   mParts = parts;
+  // HACK, we need a full payload available flag in PimItem
+  if ( mFullPayload && !mParts.contains( QLatin1String( "PLD:RFC822" ) ) )
+    mParts.append( QLatin1String( "PLD:RFC822" ) );
 }
 
 void ItemRetriever::setItemSet(const ImapSet& set, const Collection &collection )
@@ -80,7 +83,7 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
   mFullPayload = fullPayload;
   // HACK, we need a full payload available flag in PimItem
   if ( fullPayload && !mParts.contains( QLatin1String( "PLD:RFC822" ) ) )
-    mParts += QLatin1String( "PLD:RFC822" );
+    mParts.append( QLatin1String( "PLD:RFC822" ) );
 }
 
 void ItemRetriever::setCollection(const Collection& collection, bool recursive)
