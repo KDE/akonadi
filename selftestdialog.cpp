@@ -347,15 +347,20 @@ void SelfTestDialog::testPSQLServer()
 {
   const QString dbname = serverSetting( QLatin1String( "QPSQL" ), "Name", QLatin1String( "akonadi" )).toString();
   const QString hostname = serverSetting( QLatin1String( "QPSQL" ), "Host", QLatin1String( "localhost" )).toString();
-  const QString username = serverSetting( QLatin1String( "QPSQL" ), "User", QLatin1String( "akonadi" )).toString();
-  const QString password = serverSetting( QLatin1String( "QPSQL" ), "Password", QLatin1String( "akonadi" )).toString();
+  const QString username = serverSetting( QLatin1String( "QPSQL" ), "User", QString() ).toString();
+  const QString password = serverSetting( QLatin1String( "QPSQL" ), "Password", QString() ).toString();
   const int port = serverSetting( QLatin1String( "QPSQL" ), "Port", 5432).toInt();
 
   QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QPSQL" ) );
   db.setHostName( hostname );
   db.setDatabaseName( dbname );
-  db.setUserName( username );
-  db.setPassword( password );
+
+  if ( !username.isEmpty() )
+    db.setUserName( username );
+
+  if ( !password.isEmpty() )
+    db.setPassword( password );
+
   db.setPort( port );
 
   if ( !db.open() ) {
