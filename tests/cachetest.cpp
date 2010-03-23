@@ -91,6 +91,7 @@ class CacheTest : public QObject
         item = fetch->items().first();
         QVERIFY( item.isValid() );
         QVERIFY( item.hasPayload() );
+        QVERIFY( item.revision() > 0 ); // was changed by the resource delivering the payload
       }
 
       fetch = new ItemFetchJob( item, this );
