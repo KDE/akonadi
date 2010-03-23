@@ -76,7 +76,7 @@ bool Select::parseStream()
       if ( !connection()->resourceContext().isValid() )
         throw HandlerException( "Cannot select based on remote identifier without a resource scope" );
       SelectQueryBuilder<Collection> qb;
-      qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, buffer );
+      qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8( buffer ) );
       qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
       if ( !qb.exec() )
         throw HandlerException( "Failed to select collection" );
