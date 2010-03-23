@@ -32,6 +32,7 @@ class KUrl;
 
 namespace KABC {
 class Address;
+class Addressee;
 class PhoneNumber;
 }
 
@@ -41,15 +42,26 @@ namespace Akonadi {
  * @short A viewer component for contacts in Akonadi.
  *
  * This widgets provides a way to show a contact from the
- * Akonadi storage.
+ * Akonadi storage or a raw contact object.
  *
- * Example:
+ * Examples:
  *
  * @code
  *
  * using namespace Akonadi;
  *
  * const Item contact = ...
+ *
+ * ContactViewer *viewer = new ContactViewer( this );
+ * viewer->setContact( contact );
+ *
+ * @endcode
+
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * const KABC::Addressee contact = ...
  *
  * ContactViewer *viewer = new ContactViewer( this );
  * viewer->setContact( contact );
@@ -78,14 +90,31 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
 
     /**
      * Returns the contact that is currently displayed.
+     *
+     * @note The returned contact is only valid if it was
+     *       set with setContact() before.
      */
     Akonadi::Item contact() const;
+
+    /**
+     * Returns the raw contact that is currently displayed.
+     *
+     * @since 4.5
+     */
+    KABC::Addressee rawContact() const;
 
   public Q_SLOTS:
     /**
      * Sets the @p contact that shall be displayed in the viewer.
      */
     void setContact( const Akonadi::Item &contact );
+
+    /**
+     * Sets the raw @p contact object that shall be displayed in the viewer.
+     *
+     * @since 4.5
+     */
+    void setRawContact( const KABC::Addressee &contact );
 
   Q_SIGNALS:
     /**

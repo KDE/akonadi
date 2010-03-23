@@ -51,6 +51,7 @@ set(akonadicontact_editor_SRCS
 )
 
 set(akonadicontact_LIB_SRC
+  abstractcontactformatter.cpp
   attributeregistrar.cpp
   collectionfiltermodel.cpp
   ../kdescendantsproxymodel.cpp
@@ -78,6 +79,7 @@ set(akonadicontact_LIB_SRC
   customfieldmanager.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
+  standardcontactformatter.cpp
   waitingoverlay.cpp
   ${akonadicontact_actions_SRCS}
   ${akonadicontact_editor_SRCS}
@@ -114,6 +116,7 @@ install(FILES editor/data/zone.tab DESTINATION ${DATA_INSTALL_DIR}/akonadi/conta
 install(FILES recentcontactscollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
 install( FILES
+  abstractcontactformatter.h
   akonadi-contact_export.h
   contactdefaultactions.h
   contacteditor.h
@@ -131,5 +134,6 @@ install( FILES
   contactviewer.h
   contactviewerdialog.h
   recentcontactscollectionrequestjob.h
+  standardcontactformatter.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
 )

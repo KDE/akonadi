@@ -24,6 +24,7 @@
 #include "contactmetadata_p.h"
 #include "contactmetadataattribute_p.h"
 #include "customfieldmanager_p.h"
+#include "standardcontactformatter.h"
 #include "textbrowser_p.h"
 
 #include <akonadi/item.h>
@@ -39,14 +40,52 @@
 
 using namespace Akonadi;
 
-static QString contactAsHtml( const KABC::Addressee &contact, const QVariantList &customFieldDescriptions );
-
 class ContactViewer::Private
 {
   public:
     Private( ContactViewer *parent )
       : mParent( parent )
     {
+      mContactFormatter = new StandardContactFormatter;
+    }
+
+    ~Private()
+    {
+      delete mContactFormatter;
+    }
+
+    void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList() )
+    {
+      static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 140 ) );
+
+      mParent->setWindowTitle( i18n( "Contact %1", mCurrentContact.assembledName() ) );
+
+      if ( mCurrentContact.photo().isIntern() ) {
+        mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                           QUrl( QLatin1String( "contact_photo" ) ),
+                                           mCurrentContact.photo().data() );
+      } else {
+        mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                           QUrl( QLatin1String( "contact_photo" ) ),
+                                           defaultPixmap );
+      }
+
+      // merge local and global custom field descriptions
+      QVariantList customFieldDescriptions( localCustomFieldDescriptions );
+
+      const CustomField::List globalCustomFields = CustomFieldManager::globalCustomFieldDescriptions();
+      foreach ( const CustomField &field, globalCustomFields ) {
+        QVariantMap description;
+        description.insert( QLatin1String( "key" ), field.key() );
+        description.insert( QLatin1String( "title" ), field.title() );
+
+        customFieldDescriptions << description;
+      }
+
+      mContactFormatter->setContact( mCurrentContact );
+      mContactFormatter->setCustomFieldDescriptions( customFieldDescriptions );
+
+      mBrowser->setHtml( mContactFormatter->toHtml() );
     }
 
     void slotMailClicked( const QString&, const QString &email )
@@ -86,6 +125,7 @@ class ContactViewer::Private
     ContactViewer *mParent;
     TextBrowser *mBrowser;
     KABC::Addressee mCurrentContact;
+    AbstractContactFormatter *mContactFormatter;
 };
 
 ContactViewer::ContactViewer( QWidget *parent )
@@ -119,9 +159,21 @@ Akonadi::Item ContactViewer::contact() const
   return ItemMonitor::item();
 }
 
+KABC::Addressee ContactViewer::rawContact() const
+{
+  return d->mCurrentContact;
+}
+
 void ContactViewer::setContact( const Akonadi::Item &contact )
 {
   ItemMonitor::setItem( contact );
+}
+
+void ContactViewer::setRawContact( const KABC::Addressee &contact )
+{
+  d->mCurrentContact = contact;
+
+  d->updateView();
 }
 
 void ContactViewer::itemChanged( const Item &contactItem )
@@ -129,249 +181,18 @@ void ContactViewer::itemChanged( const Item &contactItem )
   if ( !contactItem.hasPayload<KABC::Addressee>() )
     return;
 
-  static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 140 ) );
-
   d->mCurrentContact = contactItem.payload<KABC::Addressee>();
 
-  setWindowTitle( i18n( "Contact %1", d->mCurrentContact.assembledName() ) );
-
-  if ( d->mCurrentContact.photo().isIntern() ) {
-    d->mBrowser->document()->addResource( QTextDocument::ImageResource,
-                                          QUrl( QLatin1String( "contact_photo" ) ),
-                                          d->mCurrentContact.photo().data() );
-  } else {
-    d->mBrowser->document()->addResource( QTextDocument::ImageResource,
-                                          QUrl( QLatin1String( "contact_photo" ) ),
-                                          defaultPixmap );
-  }
-
-  // merge the local...
+  // load the local meta data of the item
   ContactMetaData metaData;
   metaData.load( contactItem );
 
-  QVariantList customFieldDescriptions = metaData.customFieldDescriptions();
-
-  // ... and global custom field descriptions
-  const CustomField::List globalCustomFields = CustomFieldManager::globalCustomFieldDescriptions();
-  foreach ( const CustomField &field, globalCustomFields ) {
-    QVariantMap description;
-    description.insert( QLatin1String( "key" ), field.key() );
-    description.insert( QLatin1String( "title" ), field.title() );
-
-    customFieldDescriptions << description;
-  }
-
-  d->mBrowser->setHtml( contactAsHtml( d->mCurrentContact, customFieldDescriptions ) );
+  d->updateView( metaData.customFieldDescriptions() );
 }
 
 void ContactViewer::itemRemoved()
 {
   d->mBrowser->clear();
-}
-
-static QString contactAsHtml( const KABC::Addressee &contact, const QVariantList &customFieldDescriptions )
-{
-  // We'll be building a table to display the vCard in.
-  // Each row of the table will be built using this string for its HTML.
-
-  QString rowFmtStr = QString::fromLatin1(
-        "<tr>"
-        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>\n"
-        "<td align=\"left\" valign=\"top\" width=\"70%\"><font size=\"-1\">%2</font></td>\n"
-        "</tr>\n"
-        );
-
-  // Build the table's rows here
-  QString dynamicPart;
-
-  // Birthday
-  const QDate date = contact.birthday().date();
-  const int years = (date.daysTo( QDate::currentDate() ) / 365);
-
-  if ( date.isValid() )
-    dynamicPart += rowFmtStr
-      .arg( KABC::Addressee::birthdayLabel() )
-      .arg( KGlobal::locale()->formatDate( date, KLocale::ShortDate ) +
-            QLatin1String( "&nbsp;&nbsp;" ) + i18np( "(One year old)", "(%1 years old)", years ) );
-
-  // Phone Numbers
-  int counter = 0;
-  foreach ( const KABC::PhoneNumber &number, contact.phoneNumbers() ) {
-      const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
-      counter++;
-
-      dynamicPart += rowFmtStr
-        .arg( number.typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
-        .arg( url );
-  }
-
-  // EMails
-  foreach ( const QString &email, contact.emails() ) {
-    QString type = i18nc( "a contact's email address", "Email" );
-
-    const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail( email ) ) );
-
-    dynamicPart += rowFmtStr.arg( type )
-      .arg( QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
-      .arg( fullEmail, email ) );
-  }
-
-  // Homepage
-  if ( contact.url().isValid() ) {
-    QString url = contact.url().url();
-    if ( !url.startsWith( QLatin1String( "http://" ) ) && !url.startsWith( QLatin1String( "https://" ) ) )
-      url = QLatin1String( "http://" ) + url;
-
-    url = KStringHandler::tagUrls( url );
-    dynamicPart += rowFmtStr.arg( i18n( "Homepage" ) ).arg( url );
-  }
-
-  // Blog Feed
-  const QString blog = contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
-  if ( !blog.isEmpty() )
-    dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( blog ) );
-
-  // Addresses
-  counter = 0;
-  foreach ( const KABC::Address &address, contact.addresses() ) {
-    QString formattedAddress;
-
-    if ( address.label().isEmpty() ) {
-      formattedAddress = address.formattedAddress().trimmed();
-    } else {
-      formattedAddress = address.label();
-    }
-
-    formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
-
-    const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).arg( counter).arg( formattedAddress );
-    counter++;
-
-    dynamicPart += rowFmtStr
-      .arg( KABC::Address::typeLabel( address.type() ) )
-      .arg( url );
-  }
-
-  // Note
-  QString notes;
-  if ( !contact.note().isEmpty() )
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( contact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
-
-  // Custom Data
-  QString customData;
-  static QMap<QString, QString> titleMap;
-  if ( titleMap.isEmpty() ) {
-    titleMap.insert( QLatin1String( "Department" ), i18n( "Department" ) );
-    titleMap.insert( QLatin1String( "Profession" ), i18n( "Profession" ) );
-    titleMap.insert( QLatin1String( "AssistantsName" ), i18n( "Assistant's Name" ) );
-    titleMap.insert( QLatin1String( "ManagersName" ), i18n( "Manager's Name" ) );
-    titleMap.insert( QLatin1String( "SpousesName" ), i18nc( "Wife/Husband/...", "Partner's Name" ) );
-    titleMap.insert( QLatin1String( "Office" ), i18n( "Office" ) );
-    titleMap.insert( QLatin1String( "IMAddress" ), i18n( "IM Address" ) );
-    titleMap.insert( QLatin1String( "Anniversary" ), i18n( "Anniversary" ) );
-  }
-
-  static QSet<QString> blacklistedKeys;
-  if ( blacklistedKeys.isEmpty() ) {
-    blacklistedKeys.insert( QLatin1String( "CRYPTOPROTOPREF" ) );
-    blacklistedKeys.insert( QLatin1String( "OPENPGPFP" ) );
-    blacklistedKeys.insert( QLatin1String( "SMIMEFP" ) );
-    blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
-    blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
-  }
-
-  if ( !contact.customs().empty() ) {
-    const QStringList customs = contact.customs();
-    foreach ( QString custom, customs ) { //krazy:exclude=foreach
-      if ( custom.startsWith( QLatin1String( "KADDRESSBOOK-" ) ) ) {
-        custom.remove( QLatin1String( "KADDRESSBOOK-X-" ) );
-        custom.remove( QLatin1String( "KADDRESSBOOK-" ) );
-
-        int pos = custom.indexOf( QLatin1Char( ':' ) );
-        QString key = custom.left( pos );
-        QString value = custom.mid( pos + 1 );
-
-        // convert anniversary correctly
-        if ( key == QLatin1String( "Anniversary" ) ) {
-          const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
-          value = KGlobal::locale()->formatDate( dateTime.date(), KLocale::ShortDate );
-        }
-
-        // blog is handled separated
-        if ( key == QLatin1String( "BlogFeed" ) )
-          continue;
-
-        if ( blacklistedKeys.contains( key ) )
-          continue;
-
-        // check whether we have a mapping for the title
-        const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
-        if ( keyIt != titleMap.constEnd() ) {
-          key = keyIt.value();
-        } else {
-          // check whether it is a custom local field
-          foreach ( const QVariant &description, customFieldDescriptions ) {
-            const QVariantMap field = description.toMap();
-            if ( field.value( QLatin1String( "key" ) ).toString() == key ) {
-              key = field.value( QLatin1String( "title" ) ).toString();
-              break;
-            }
-          }
-        }
-
-        customData += rowFmtStr.arg( key ).arg( value ) ;
-      }
-    }
-  }
-
-  // Assemble all parts
-  QString role = contact.title();
-  if ( role.isEmpty() )
-    role = contact.role();
-  if ( role.isEmpty() )
-    role = contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
-
-  QString strAddr = QString::fromLatin1(
-    "<div align=\"center\">"
-    "<table cellpadding=\"3\" cellspacing=\"0\">"
-    "<tr>"
-    "<td align=\"right\" valign=\"top\" width=\"30%\" rowspan=\"3\">"
-    "<img src=\"%1\" width=\"100\" vspace=\"1\">" // image
-    "</td>"
-    "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
-    "</tr>"
-    "<tr>"
-    "<td align=\"left\" width=\"70%\">%3</td>"  // role
-    "</tr>"
-    "<tr>"
-    "<td align=\"left\" width=\"70%\">%4</td>"  // organization
-    "</tr>")
-      .arg( QLatin1String( "contact_photo" ) )
-      .arg( contact.realName() )
-      .arg( role )
-      .arg( contact.organization() );
-
-  strAddr.append( dynamicPart );
-  strAddr.append( notes );
-  strAddr.append( customData );
-  strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
-
-  const QString document = QString::fromLatin1(
-    "<html>"
-    "<head>"
-    " <style type=\"text/css\">"
-    "  a {text-decoration:none; color:%1}"
-    " </style>"
-    "</head>"
-    "<body text=\"%1\" bgcolor=\"%2\">" // text and background color
-    "%3" // contact part
-    "</body>"
-    "</html>" )
-     .arg( KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() )
-     .arg( KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() )
-     .arg( strAddr );
-
-  return document;
 }
 
 #include "contactviewer.moc"
