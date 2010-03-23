@@ -27,7 +27,13 @@ class QProcess;
 class DbConfigSqlite : public DbConfig
 {
   public:
-    DbConfigSqlite();
+    enum Version {
+      Default, /** Uses the Qt sqlite driver */
+      Custom   /** Uses the custom qsqlite driver from akonadi/qsqlite */
+    };
+
+  public:
+    DbConfigSqlite( Version driver );
 
     /**
      * Returns the name of the used driver.
@@ -60,6 +66,7 @@ class DbConfigSqlite : public DbConfig
     virtual bool useInternalServer() const;
 
   private:
+    Version mDriverVersion;
     QString mDatabaseName;
     QString mHostName;
     QString mUserName;

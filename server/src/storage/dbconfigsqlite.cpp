@@ -54,13 +54,17 @@ static QString sqliteDataFile()
 }
 
 
-DbConfigSqlite::DbConfigSqlite()
+DbConfigSqlite::DbConfigSqlite( Version driverVersion )
+  : mDriverVersion( driverVersion )
 {
 }
 
 QString DbConfigSqlite::driverName() const
 {
-  return QLatin1String( "QSQLITE3" );
+  if ( mDriverVersion == Default )
+    return QLatin1String( "QSQLITE" );
+  else
+    return QLatin1String( "QSQLITE3" );
 }
 
 QString DbConfigSqlite::databaseName() const
