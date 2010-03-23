@@ -54,7 +54,7 @@ class FetchHelper : public QObject, public ItemRetriever
     void parseCommand( const QByteArray &line );
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    void buildItemQuery();
+    QueryBuilder buildItemQuery();
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
     void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
@@ -63,7 +63,6 @@ class FetchHelper : public QObject, public ItemRetriever
   private:
     ImapStreamParser *mStreamParser;
 
-    QueryBuilder mItemQuery;
     QList<QByteArray> mRequestedParts;
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     int mAncestorDepth;

@@ -196,15 +196,15 @@ void ItemRetriever::exec()
         break;
       }
       const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
-      QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
-      // FIXME: loading the actual data is not needed here!
-      // ### maybe add an flag indicating if a part is cached?
-      data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool() );
-      if ( data.isNull() ) {
-        if ( mFullPayload && !missingParts.contains( partName ) )
-          missingParts << partName;
-      } else {
-        missingParts.removeAll( partName );
+      if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
+        QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool() );
+        if ( data.isNull() ) {
+          if ( mFullPayload && !missingParts.contains( partName ) )
+            missingParts << partName;
+        } else {
+          missingParts.removeAll( partName );
+        }
       }
       partQuery.query().next();
     }

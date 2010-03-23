@@ -106,16 +106,13 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       payloadList << QString::fromLatin1( b );
   }
 
-  buildItemQuery();
-  retrieveMissingPayloads( payloadList );
+  if ( !mCacheOnly )
+    retrieveMissingPayloads( payloadList );
 
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    // The Item Query was closed by retrieveMissingPayloads in case of SQLITE
-    // so we have to execute it again.
-    if ( !mItemQuery.exec() )
-      throw HandlerException("Unable to list items");
-    mItemQuery.query().next();
-  }
+  QueryBuilder itemQuery = buildItemQuery();
+  if ( !itemQuery.exec() )
+    throw HandlerException("Unable to list items");
+  itemQuery.query().next();
 
   // build part query if needed
   QueryBuilder partQuery;
@@ -153,30 +150,30 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   // build responses
   Response response;
   response.setUntagged();
-  while ( mItemQuery.query().isValid() ) {
-    const qint64 pimItemId = mItemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
-    const int pimItemRev = mItemQuery.query().value( itemQueryRevColumn ).toInt();
+  while ( itemQuery.query().isValid() ) {
+    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
+    const int pimItemRev = itemQuery.query().value( itemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( mItemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8() ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( mItemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8() ) );
-    Collection::Id parentCollectionId = mItemQuery.query().value( itemQueryCollectionIdColumn ).toLongLong();
+    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8() ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    Collection::Id parentCollectionId = itemQuery.query().value( itemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
     if ( mSizeRequested ) {
-      const qint64 pimItemSize = mItemQuery.query().value( itemQuerySizeColumn ).toLongLong();
+      const qint64 pimItemSize = itemQuery.query().value( itemQuerySizeColumn ).toLongLong();
       attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
     }
     if ( mMTimeRequested ) {
-      const QDateTime pimItemDatetime = mItemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
+      const QDateTime pimItemDatetime = itemQuery.query().value( itemQueryDatetimeColumn ).toDateTime();
       // Date time is always stored in UTC time zone by the server.
       QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
-      attributes.append( "REMOTEREVISION " + ImapParser::quote( mItemQuery.query().value( itemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
+      attributes.append( "REMOTEREVISION " + ImapParser::quote( itemQuery.query().value( itemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
     }
 
     if ( mRequestedParts.contains( "FLAGS" ) ) {
@@ -241,7 +238,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     response.setString( attr );
     emit responseAvailable( response );
 
-    mItemQuery.query().next();
+    itemQuery.query().next();
   }
 
   // update atime
@@ -304,36 +301,39 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
   return partQuery;
 }
 
-void FetchHelper::buildItemQuery()
+QueryBuilder FetchHelper::buildItemQuery()
 {
-  mItemQuery = buildGenericItemQuery(); // Has 4 colums
+  QueryBuilder itemQuery = buildGenericItemQuery(); // Has 4 colums
   // make sure the columns indexes here and in the constants defined at the top of the file
-  mItemQuery.addColumn( PimItem::revFullColumnName() );
-  mItemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
-  mItemQuery.addColumn( PimItem::sizeFullColumnName() );
-  mItemQuery.addColumn( PimItem::datetimeFullColumnName() );
-  mItemQuery.addColumn( PimItem::collectionIdFullColumnName() );
+  itemQuery.addColumn( PimItem::revFullColumnName() );
+  itemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
+  itemQuery.addColumn( PimItem::sizeFullColumnName() );
+  itemQuery.addColumn( PimItem::datetimeFullColumnName() );
+  itemQuery.addColumn( PimItem::collectionIdFullColumnName() );
 
-  if ( !mItemQuery.exec() )
+  if ( !itemQuery.exec() )
     throw HandlerException("Unable to list items");
-  mItemQuery.query().next();
+
+  itemQuery.query().next();
+  return itemQuery;
 }
 
-void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
+void FetchHelper::retrieveMissingPayloads( const QStringList &mParts )
 {
-  if ( mCacheOnly || (payloadList.isEmpty() && !mFullPayload) )
+  if ( mParts.isEmpty() && !mFullPayload )
     return;
 
   // TODO: I'm sure this can be done with a single query instead of manually
-  QueryBuilder partQuery = buildPartQuery( payloadList, mFullPayload, false );
+  QueryBuilder itemQuery = buildItemQuery();
+  QueryBuilder partQuery = buildPartQuery( mParts , mFullPayload, false );
   if ( !partQuery.exec() )
     throw HandlerException( "Unable to retrieve item parts" );
   partQuery.query().next();
 
   QList<ItemRetrievalRequest*> requests;
-  while ( mItemQuery.query().isValid() ) {
-    const qint64 pimItemId = mItemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
-    QStringList missingParts = payloadList;
+  while ( itemQuery.query().isValid() ) {
+    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
+    QStringList missingParts = mParts;
     while ( partQuery.query().isValid() ) {
       const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
@@ -342,7 +342,7 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
       } else if ( id > pimItemId ) {
         break;
       }
-      QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
+      const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
         QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
         data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool());
@@ -362,9 +362,9 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = mItemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = mItemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = mItemQuery.query().value( sItemQueryResouceColumn ).toString();
+      req->remoteId = itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.query().value( sItemQueryResouceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,
@@ -379,7 +379,7 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
         }
       }
     }
-    mItemQuery.query().next();
+    itemQuery.query().next();
   }
 
   if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
@@ -387,7 +387,7 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
 
     // Close the queries so we can start writing without endig up in a lock.
     partQuery.query().finish();
-    mItemQuery.query().finish();
+    itemQuery.query().finish();
 
     // Now both reading queries are closed, start sending out the
     foreach ( ItemRetrievalRequest *req, requests ) {
@@ -399,9 +399,6 @@ void FetchHelper::retrieveMissingPayloads(const QStringList & payloadList)
         akError() << e.type() << ": " << e.what();
       }
     }
-  } else {
-    // rewind item query
-    mItemQuery.query().first();
   }
 }
 
