@@ -39,6 +39,9 @@ ItemRetriever::ItemRetriever( AkonadiConnection *connection ) :
   mRecursive( false )
 { }
 
+ItemRetriever::~ItemRetriever()
+{ }
+
 AkonadiConnection *ItemRetriever::connection() const
 {
   return mConnection;
@@ -168,6 +171,11 @@ Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
 
   ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
   return partQuery;
+}
+
+QStringList ItemRetriever::retrieveParts() const
+{
+  return mParts;
 }
 
 void ItemRetriever::exec()

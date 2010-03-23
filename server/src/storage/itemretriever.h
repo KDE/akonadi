@@ -45,6 +45,7 @@ class ItemRetriever
 {
   public:
     ItemRetriever( AkonadiConnection *connection );
+    virtual ~ItemRetriever();
 
     AkonadiConnection *connection() const;
 
@@ -90,10 +91,12 @@ class ItemRetriever
     /** Convenience method which returns the database driver name */
     QString driverName();
 
-  private:
-    QueryBuilder buildItemQuery() const;
     /** Extends the generic query with ItemRetriever specific query information. */
-    QueryBuilder buildPartQuery() const;
+    virtual QueryBuilder buildItemQuery() const;
+    /** Extends the generic query with ItemRetriever specific query information. */
+    virtual QueryBuilder buildPartQuery() const;
+
+    QStringList retrieveParts() const;
 
   private:
     ImapSet mItemSet;

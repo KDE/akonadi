@@ -106,8 +106,13 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       payloadList << QString::fromLatin1( b );
   }
 
-  if ( !mCacheOnly )
-    retrieveMissingPayloads( payloadList );
+  if ( !mCacheOnly ) {
+    // Prepare for a call to ItemRetriever::exec();
+    // From a resource perspective the only parts that can be fetched are payloads.
+    setRetrieveParts( payloadList );
+    setRetrieveFullPayload( mFullPayload );
+    exec(); // There we go, retrieve the missing parts from the resource.
+  }
 
   QueryBuilder itemQuery = buildItemQuery();
   if ( !itemQuery.exec() )
@@ -318,88 +323,9 @@ QueryBuilder FetchHelper::buildItemQuery()
   return itemQuery;
 }
 
-void FetchHelper::retrieveMissingPayloads( const QStringList &mParts )
+QueryBuilder FetchHelper::buildPartQuery()
 {
-  if ( mParts.isEmpty() && !mFullPayload )
-    return;
-
-  // TODO: I'm sure this can be done with a single query instead of manually
-  QueryBuilder itemQuery = buildItemQuery();
-  QueryBuilder partQuery = buildPartQuery( mParts , mFullPayload, false );
-  if ( !partQuery.exec() )
-    throw HandlerException( "Unable to retrieve item parts" );
-  partQuery.query().next();
-
-  QList<ItemRetrievalRequest*> requests;
-  while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
-    QStringList missingParts = mParts;
-    while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
-      if ( id < pimItemId ) {
-        partQuery.query().next();
-        continue;
-      } else if ( id > pimItemId ) {
-        break;
-      }
-      const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
-      if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool());
-        if ( data.isNull() ) {
-          if ( mFullPayload && !missingParts.contains( partName ) )
-            missingParts << partName;
-        } else {
-          missingParts.removeAll( partName );
-        }
-      }
-      partQuery.query().next();
-    }
-    if ( !missingParts.isEmpty() ) {
-      QStringList missingPayloadIds;
-      foreach ( const QString &s, missingParts )
-        missingPayloadIds << s.mid( 4 );
-
-      ItemRetrievalRequest *req = new ItemRetrievalRequest();
-      req->id = pimItemId;
-      req->remoteId = itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.query().value( sItemQueryResouceColumn ).toString();
-      req->parts = missingPayloadIds;
-
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
-        requests.append( req );
-      else {
-        try {
-          ItemRetrievalManager::instance()->requestItemDelivery( req );
-        } catch ( const ItemRetrieverException &e ) {
-          akError() << e.type() << ": " << e.what();
-        }
-      }
-    }
-    itemQuery.query().next();
-  }
-
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    akDebug() << "Closing queries and sending out requests.";
-
-    // Close the queries so we can start writing without endig up in a lock.
-    partQuery.query().finish();
-    itemQuery.query().finish();
-
-    // Now both reading queries are closed, start sending out the
-    foreach ( ItemRetrievalRequest *req, requests ) {
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      try {
-        ItemRetrievalManager::instance()->requestItemDelivery( req );
-      } catch ( const ItemRetrieverException &e ) {
-        akError() << e.type() << ": " << e.what();
-      }
-    }
-  }
+  return buildPartQuery( retrieveParts() , mFullPayload, false );
 }
 
 void FetchHelper::parseCommandStream()

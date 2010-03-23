@@ -49,14 +49,16 @@ class FetchHelper : public QObject, public ItemRetriever
     void responseAvailable( const Response& );
     void failureResponse( const QString& );
 
+  protected:
+    virtual QueryBuilder buildItemQuery();
+    virtual QueryBuilder buildPartQuery();
+
   private:
     void init();
     void parseCommand( const QByteArray &line );
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    QueryBuilder buildItemQuery();
     QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
-    void retrieveMissingPayloads( const QStringList &payloadList );
     void parseCommandStream();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
 
