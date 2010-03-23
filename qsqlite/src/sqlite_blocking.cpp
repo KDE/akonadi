@@ -8,7 +8,7 @@
 
 QString debugString()
 {
-  return QString("[QSQLITE3: " + QString::number(QThread::currentThreadId()) + "] ");
+  return QString("[QSQLITE3: " + QString::number( reinterpret_cast<long>( QThread::currentThreadId() ) ) + "] ");
 }
 
 int sqlite3_blocking_step( sqlite3_stmt *pStmt )
