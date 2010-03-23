@@ -32,5 +32,5 @@ target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} ${SQLITE
 
 # -DCMAKE_INSTALL_PREFIX=/d/4.x/install
 INSTALL(TARGETS qsqlite3
-  LIBRARY DESTINATION lib/kde4/plugins/sqldrivers
+  LIBRARY DESTINATION ${LIB_INSTALL_DIR}/kde4/plugins/sqldrivers
 )
