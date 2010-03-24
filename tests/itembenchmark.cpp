@@ -23,6 +23,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
 #include "qtest_akonadi.h"
@@ -69,8 +70,8 @@ class ItemBenchmark : public QObject
       QTest::addColumn<int>( "count" );
       QTest::addColumn<int>( "size" );
 
-      QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
-      QList<int> sizes = QList<int>() << 0 << 256 << 1024;
+      QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000; // << 10000;
+      QList<int> sizes = QList<int>() << 0 << 256 << 1024 << (1024 * 1024);
       foreach( int count, counts )
         foreach( int size, sizes )
           QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( size ).toLatin1().constData() )
@@ -111,11 +112,16 @@ class ItemBenchmark : public QObject
       // be there.
       QVERIFY( mCreatedItems.value( size ).count() >= count );
 
-      Job *lastJob = 0;
       QBENCHMARK {
-        lastJob = new ItemFetchJob( mCreatedItems.value( size ), this );
-        connect( lastJob, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
-        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+        Item::List items;
+        for ( int i = 0; i < count; ++i )
+          items << mCreatedItems[size].at(i);
+
+        ItemFetchJob *fetchJob = new ItemFetchJob( items, this );
+        fetchJob->fetchScope().fetchFullPayload();
+        fetchJob->fetchScope().setCacheOnly( true );
+        connect( fetchJob, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
+        QTest::kWaitForSignal( fetchJob, SIGNAL(result(KJob*)) );
       }
     }
 
