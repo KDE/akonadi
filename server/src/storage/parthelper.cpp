@@ -148,7 +148,7 @@ bool PartHelper::remove( Akonadi::Part *part )
 
   if (DbConfig::configuredDatabase()->useExternalPayloadFile()  && part->external())
   {
-    qDebug() << "remove part file " << part->data();
+    // qDebug() << "remove part file " << part->data();
     QString fileName = QString::fromUtf8( part->data() );
     QFile::remove( fileName );
   }
@@ -174,7 +174,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
       if ((*it).external())
       {
         QString fileName = QString::fromUtf8( (*it).data() );
-        qDebug() << "remove part file " << fileName;
+        // qDebug() << "remove part file " << fileName;
         QFile::remove( fileName );
       }
     }

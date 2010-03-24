@@ -183,7 +183,6 @@ QStringList ItemRetriever::retrieveParts() const
 
 void ItemRetriever::exec()
 {
-  qDebug() << "ItemRetriever::exec()";
   if ( mParts.isEmpty() && !mFullPayload )
     return;
 
@@ -275,7 +274,6 @@ void ItemRetriever::exec()
       retriever.exec();
     }
   }
-  qDebug() << "ItemRetriever::exec() done";
 }
 
 QString ItemRetriever::driverName()
