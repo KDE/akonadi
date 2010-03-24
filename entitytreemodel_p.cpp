@@ -302,7 +302,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       foreach( const Collection::Id &collectionId, collectionIt.value() )
         fetchItems( m_collections.value( collectionId ) );
   }
-  qWarning() << "Built the tree in: " << t.elapsed();
+  kDebug() << "Built the tree in: " << t.elapsed();
 }
 
 void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
@@ -834,7 +834,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
   if ( job->error() )
     kWarning() << "Job error: " << job->errorString() << endl;
-  qWarning() << "LISTING in:" << m_time.elapsed();
+  kDebug() << "LISTING in:" << m_time.elapsed();
 }
 
 void EntityTreeModelPrivate::pasteJobDone( KJob *job )
