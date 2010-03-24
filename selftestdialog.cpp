@@ -142,6 +142,7 @@ void SelfTestDialog::runTests()
     testPSQLServer();
   }
   else {
+    testRootUser();
     testMySQLServer();
     testMySQLServerLog();
     testMySQLServerConfig();
@@ -552,6 +553,16 @@ void SelfTestDialog::testControlLog()
   }
 }
 
+
+void SelfTestDialog::testRootUser()
+{
+  KUser user;
+  if ( user.isSuperUser() ) {
+    report( Error, ki18n( "Akonadi was started as root" ), ki18n( "Running Internet-facing applications as root/administrator exposes you to many security risks. MySQL, used by this Akonadi installation, will not allow itself to run as root to protect you from these risks." ) );
+  } else {
+    report( Success, ki18n( "Akonadi is not running as root" ), ki18n( "Akonadi is not running as a root/administrator user, which is the recommended setup for a secure system." ) );
+  }
+}
 
 QString SelfTestDialog::createReport()
 {

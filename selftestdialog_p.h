@@ -88,6 +88,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
     void testResources();
     void testServerLog();
     void testControlLog();
+    void testRootUser();
 
     QString createReport();
 
