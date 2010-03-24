@@ -4,6 +4,8 @@ else(${EXECUTABLE_OUTPUT_PATH})
     set( PREVIOUS_EXEC_OUTPUT_PATH . )
 endif(${EXECUTABLE_OUTPUT_PATH})
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+set( TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults )
+file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -69,17 +71,22 @@ macro(add_akonadi_isolated_test _source)
 
   find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
   if ( MYSQLD_EXECUTABLE )
-    add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable} )
-    add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable} )
+    add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable} 
+      -xml -o ${TEST_RESULT_OUTPUT_PATH}/mysql-db-${_name}.xml  )
+    add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable} 
+      -xml -o ${TEST_RESULT_OUTPUT_PATH}/mysql-fs-${_name}.xml )
   endif ( MYSQLD_EXECUTABLE )
 
   find_program( POSTGRES_EXECUTABLE postgres )
   if ( POSTGRES_EXECUTABLE )
-    add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable} )
-    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable} )
+    add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
+       -xml -o ${TEST_RESULT_OUTPUT_PATH}/postgresql-db-${_name}.xml  )
+    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable} 
+      -xml -o ${TEST_RESULT_OUTPUT_PATH}/postgresql-fs-${_name}.xml )
   endif ( POSTGRES_EXECUTABLE )
 
-  #add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite.xml ${_executable} )
+  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite.xml ${_executable} 
+    -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml)
 endmacro(add_akonadi_isolated_test)
 
 
