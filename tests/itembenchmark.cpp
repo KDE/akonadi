@@ -22,6 +22,8 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include "qtest_akonadi.h"
 #include "test_utils.h"
@@ -37,11 +39,22 @@ class ItemBenchmark : public QObject
     void createResult( KJob * job )
     {
       Q_ASSERT( job->error() == KJob::NoError );
-      mCreatedItems << static_cast<ItemCreateJob*>( job )->item();
+      Item createdItem = static_cast<ItemCreateJob*>( job )->item();
+      mCreatedItems[createdItem.size()].append( createdItem );
+    }
+
+    void fetchResult( KJob * job )
+    {
+      Q_ASSERT( job->error() == KJob::NoError );
+    }
+
+    void modifyResult( KJob * job )
+    {
+      Q_ASSERT( job->error() == KJob::NoError );
     }
 
   private:
-    Item::List mCreatedItems;
+    QMap<int, Item::List> mCreatedItems;
 
   private slots:
     void initTestCase()
@@ -51,7 +64,7 @@ class ItemBenchmark : public QObject
         agent.setIsOnline( false );
     }
 
-    void itemCreateDelete_data()
+    void data()
     {
       QTest::addColumn<int>( "count" );
       QTest::addColumn<int>( "size" );
@@ -64,7 +77,8 @@ class ItemBenchmark : public QObject
             << count << size;
     }
 
-    void itemCreateDelete()
+    void itemBenchmarkCreate_data() { data(); }
+    void itemBenchmarkCreate() /// Tests performance of creating items in the cache
     {
       QFETCH( int, count );
       QFETCH( int, size );
@@ -74,26 +88,83 @@ class ItemBenchmark : public QObject
 
       Item item( "application/octet-stream" );
       item.setPayload( QByteArray( size, 'X' ) );
+      item.setSize( size );
 
       Job *lastJob = 0;
-      QBENCHMARK
-      {
+      QBENCHMARK {
         for ( int i = 0; i < count; ++i ) {
           lastJob = new ItemCreateJob( item, parent, this );
           connect( lastJob, SIGNAL(result(KJob*)), SLOT(createResult(KJob*)) );
         }
         QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
+    }
 
-      QBENCHMARK
-      {
-        Item::List items;
-        for ( int i = 0; i < count && !mCreatedItems.isEmpty(); ++i )
-          items << mCreatedItems.takeFirst();
-        lastJob = new ItemDeleteJob( items, this );
-        if ( lastJob )
-          QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+    void itemBenchmarkFetch_data() { data(); }
+    void itemBenchmarkFetch() /// Tests performance of fetching cached items
+    {
+      QFETCH( int, count );
+      QFETCH( int, size );
+
+      // With only one iteration itemBenchmarkCreate() should have created count
+      // items, otherwise iterations * count, however, at least count items should
+      // be there.
+      QVERIFY( mCreatedItems.value( size ).count() >= count );
+
+      Job *lastJob = 0;
+      QBENCHMARK {
+        lastJob = new ItemFetchJob( mCreatedItems.value( size ), this );
+        connect( lastJob, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
+        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
+    }
+
+    void itemBenchmarkModifyPayload_data() { data(); }
+    void itemBenchmarkModifyPayload() /// Tests performance of modifying payload of cached items
+    {
+      QFETCH( int, count );
+      QFETCH( int, size );
+
+      // With only one iteration itemBenchmarkCreate() should have created count
+      // items, otherwise iterations * count, however, at least count items should
+      // be there.
+      QVERIFY( mCreatedItems.value( size ).count() >= count );
+
+      Job *lastJob = 0;
+      QBENCHMARK {
+        for ( int i = 0; i < count; ++i ) {
+          Item item = mCreatedItems.value( size ).at( i );
+          item.setPayload( QByteArray( size, 'Y' ) );
+          ItemModifyJob *job = new ItemModifyJob( item, this );
+          job->disableRevisionCheck();
+          lastJob = job;
+          connect( lastJob, SIGNAL(result(KJob*)), SLOT(modifyResult(KJob*)) );
+        }
+        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+      }
+    }
+
+    void itemBenchmarkDelete_data() { data(); }
+    void itemBenchmarkDelete()  /// Tests performance of removing items from the cache
+    {
+      QFETCH( int, count );
+      QFETCH( int, size );
+
+      Job *lastJob = 0;
+      int emptyItemArrayIterations = 0;
+      QBENCHMARK {
+        if ( mCreatedItems[size].isEmpty() )
+          ++emptyItemArrayIterations;
+
+        Item::List items;
+        for ( int i = 0; i < count && !mCreatedItems[size].isEmpty(); ++i )
+          items << mCreatedItems[size].takeFirst();
+        lastJob = new ItemDeleteJob( items, this );
+        QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
+      }
+
+      if ( emptyItemArrayIterations )
+        qDebug() << "Delete Benchmark performed" << emptyItemArrayIterations << "times on an empty list.";
     }
 };
 
