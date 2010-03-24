@@ -31,6 +31,7 @@
 #include <KMessageBox>
 #include <KRun>
 #include <KStandardDirs>
+#include <KUser>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
