@@ -305,6 +305,7 @@ class AgentManager : public QObject, protected QDBusContext
     void updatePluginInfos();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
     void agentExeChanged( const QString &fileName );
+    void serverFailure();
 
   private:
     /**

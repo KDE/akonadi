@@ -59,8 +59,7 @@ AgentManager::AgentManager( QObject *parent )
     akFatal() << "akonadiserver already running!";
 
   mStorageController = new Akonadi::ProcessControl;
-  connect( mStorageController, SIGNAL(unableToStart()),
-           QCoreApplication::instance(), SLOT(quit()) );
+  connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 
   connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
@@ -714,6 +713,11 @@ void AgentManager::removeSearch(quint64 resultCollectionId)
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
       instance->searchInterface()->removeSearch( resultCollectionId );
   }
+}
+
+void AgentManager::serverFailure()
+{
+  QCoreApplication::instance()->exit( 255 );
 }
 
 #include "agentmanager.moc"
