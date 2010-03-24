@@ -64,7 +64,7 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 
     if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
     {
-      qDebug() << "Update part file " << fileName <<" with " << QString::fromUtf8(data).left(50);
+//      qDebug() << "Update part file " << fileName <<" with " << QString::fromUtf8(data).left(50);
 
       file.write( data );
       QByteArray fileNameData = fileName.toLocal8Bit();
@@ -72,12 +72,12 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
       part->setDatasize( fileNameData.size() );
       part->setExternal( true );
       file.close();
-      qDebug() << "Removing part file " << origFileName;
+//      qDebug() << "Removing part file " << origFileName;
       QFile::remove(origFileName);
     } else
     {
-      qDebug() << "Update: payload file " << fileName << " could not be open for writing!";
-      qDebug() << "Error: " << file.errorString();
+//      qDebug() << "Update: payload file " << fileName << " could not be open for writing!";
+//      qDebug() << "Error: " << file.errorString();
       return false;
     }
   } else
@@ -123,7 +123,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
     if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
     {
-      qDebug() << "Insert: create part file " << fileName << "with " << QString::fromUtf8(data).left(50);
+//      qDebug() << "Insert: create part file " << fileName << "with " << QString::fromUtf8(data).left(50);
 
       file.write(data);
       fileNameData = fileName.toLocal8Bit();
@@ -133,8 +133,8 @@ bool PartHelper::insert( Part *part, qint64* insertId )
       file.close();
     } else
     {
-      qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
-      qDebug() << "Error: " << file.errorString();
+//      qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
+//      qDebug() << "Error: " << file.errorString();
       return false;
     }
   }
@@ -162,8 +162,8 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
     SelectQueryBuilder<Part> builder;
     builder.addValueCondition( column, Query::Equals, value );
     if ( !builder.exec() ) {
-      qDebug() << "Error selecting records to be deleted from table"
-          << Part::tableName() << builder.query().lastError().text();
+//      qDebug() << "Error selecting records to be deleted from table"
+//          << Part::tableName() << builder.query().lastError().text();
       return false;
     }
     Part::List parts = builder.result();
@@ -208,12 +208,12 @@ bool PartHelper::loadData( Part &part )
       QByteArray data = file.readAll();
       part.setData( data );
       part.setDatasize( data.size() );
-      qDebug() << "load part file " << fileName << QString::fromUtf8(data).left(50);
+//      qDebug() << "load part file " << fileName << QString::fromUtf8(data).left(50);
       file.close();
     } else
     {
-      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-      qDebug() << "Error: " << file.errorString();
+//      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+//      qDebug() << "Error: " << file.errorString();
       return false;
     }
   } else
@@ -238,8 +238,8 @@ QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
       return payload;
     } else
     {
-      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-      qDebug() << "Error: " << file.errorString();
+//      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+//      qDebug() << "Error: " << file.errorString();
       return QByteArray();
     }
   } else
