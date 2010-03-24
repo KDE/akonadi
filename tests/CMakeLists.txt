@@ -85,7 +85,7 @@ macro(add_akonadi_isolated_test _source)
       -xml -o ${TEST_RESULT_OUTPUT_PATH}/postgresql-fs-${_name}.xml )
   endif ( POSTGRES_EXECUTABLE )
 
-  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite.xml ${_executable} 
+  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable} 
     -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml)
 endmacro(add_akonadi_isolated_test)
 
