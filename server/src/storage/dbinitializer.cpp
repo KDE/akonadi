@@ -156,8 +156,12 @@ bool DbInitializer::checkTable( const QDomElement &element )
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
       QString values = columnElement.attribute( QLatin1String("values") );
-      if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) )
+      if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
         values.replace( QLatin1String("\\"), QLatin1String("\\\\") );
+      } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+        values.replace( QLatin1String("true"), QLatin1String( "1" ) );
+        values.replace( QLatin1String("false"), QLatin1String( "0" ) );
+      }
       QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
           .arg( tableName )
           .arg( columnElement.attribute( QLatin1String("columns") ) )
