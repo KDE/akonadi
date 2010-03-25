@@ -43,7 +43,7 @@ class Transaction
       the lifetime of a Transaction object.
       @param beginTransaction if false, the transaction won't be started, until begin is eplicitely called. The default is to begin the transaction right away.
     */
-    Transaction( DataStore *db, bool beginTransaction = true);
+    explicit Transaction( DataStore *db, bool beginTransaction = true);
 
     /**
       Rolls back the transaction if it hasn't been committed explicitly.

@@ -52,7 +52,7 @@ int main( int argc, char **argv )
   app.setDescription( "Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi." );
   app.parseCommandLine();
 
-  // try to aquire the lock first, that means there is no second instance trying to start up at the same time
+  // try to acquire the lock first, that means there is no second instance trying to start up at the same time
   // registering the real service name happens in AgentManager::continueStartup(), when everything is in fact up and running
   if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE_LOCK ) ) {
     // We couldn't register. Most likely, it's already running.

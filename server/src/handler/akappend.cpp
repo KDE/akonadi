@@ -17,11 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "akappend.h"
+
 #include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
 
 #include "append.h"
-#include "akappend.h"
 #include "response.h"
 #include "handlerhelper.h"
 

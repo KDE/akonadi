@@ -71,12 +71,12 @@ void Response::setTag( const QByteArray& tag )
 
 void Response::setUntagged( )
 {
-    m_tag = "*";
+    m_tag = QByteArray(1, '*');
 }
 
 void Response::setContinuation( )
 {
-    m_tag = "+";
+    m_tag = QByteArray(1, '+');
 }
 
 void Response::setString( const QByteArray & string )

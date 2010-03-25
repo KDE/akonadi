@@ -18,7 +18,7 @@
 */
 
 #include <QObject>
-#include <QtTest>
+#include <QtTest/QTest>
 
 #include "handlerhelper.cpp"
 

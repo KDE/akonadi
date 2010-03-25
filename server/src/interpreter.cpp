@@ -77,7 +77,7 @@ QString SearchInterpreterItem::dump() const
   if ( mIsLeaf ) {
     return QString( "(%1 %2 %3)" ).arg( mKey, mComparator, mPattern );
   } else {
-    QString text = "(";
+    QString text = '(';
     text += ( mRelation == And ? "&" : "|" );
     for ( int i = 0; i < mItems.count(); ++i )
       text += mItems[ i ]->dump();
@@ -163,7 +163,7 @@ QStringList SearchParser::tokenize( const QString &query ) const
           tokens.append( token );
 
         tokens.append( "(" );
-        token = QString();
+        token.clear();
 
         ++i;
         while ( pattern[ i ].isSpace() )
@@ -177,7 +177,7 @@ QStringList SearchParser::tokenize( const QString &query ) const
           tokens.append( token );
 
         tokens.append( ")" );
-        token = QString();
+        token.clear();
 
         ++i;
         while ( pattern[ i ].isSpace() )
@@ -189,7 +189,7 @@ QStringList SearchParser::tokenize( const QString &query ) const
       // we found a separator
       if ( pattern[ i ].isSpace() ) {
         tokens.append( token );
-        token = QString();
+        token.clear();
 
         while ( pattern[ i ].isSpace() )
           ++i;

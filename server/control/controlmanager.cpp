@@ -17,12 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
+#include "controlmanager.h"
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 
 #include "controlmanageradaptor.h"
-
-#include "controlmanager.h"
 
 ControlManager::ControlManager( QObject *parent )
   : QObject( parent )

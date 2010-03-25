@@ -22,8 +22,8 @@
  *
  *****************************************************************************/
 
-#ifndef _PREPROCESSORMANAGER_H_
-#define _PREPROCESSORMANAGER_H_
+#ifndef AKONADI_PREPROCESSORMANAGER_H
+#define AKONADI_PREPROCESSORMANAGER_H
 
 #include <QtCore/QObject>
 #include <QtCore/QList>

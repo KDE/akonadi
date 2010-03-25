@@ -216,7 +216,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         data = PartHelper::translateData( data, partIsExternal );
       int version = partQuery.query().value( partQueryVersionColumn ).toInt();
       if ( version != 0 ) { // '0' is the default, so don't send it
-        part += "[" + QByteArray::number( version ) + "]";
+        part += '[' + QByteArray::number( version ) + ']';
       }
       if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
         part += " [FILE] ";
@@ -308,7 +308,7 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
 
 QueryBuilder FetchHelper::buildItemQuery()
 {
-  QueryBuilder itemQuery = buildGenericItemQuery(); // Has 4 colums
+  QueryBuilder itemQuery = buildGenericItemQuery(); // Has 4 columns
   // make sure the columns indexes here and in the constants defined at the top of the file
   itemQuery.addColumn( PimItem::revFullColumnName() );
   itemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );

@@ -22,8 +22,8 @@
  *
  *****************************************************************************/
 
-#ifndef _PREPROCESSORINSTANCE_H_
-#define _PREPROCESSORINSTANCE_H_
+#ifndef AKONADI_PREPROCESSORINSTANCE_H
+#define AKONADI_PREPROCESSORINSTANCE_H
 
 #include <QtCore/QObject>
 #include <QtCore/QList>

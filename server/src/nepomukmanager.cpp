@@ -17,11 +17,11 @@
     02110-1301, USA.
 */
 
+#include "nepomukmanager.h"
+
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
 #include <QMetaObject>
-
-#include "nepomukmanager.h"
 
 #include "search/result.h"
 

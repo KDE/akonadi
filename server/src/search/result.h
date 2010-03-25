@@ -40,7 +40,7 @@ namespace Nepomuk {
         {
         public:
             Result();
-            Result( const QUrl& uri, double score = 0.0 );
+            explicit Result( const QUrl& uri, double score = 0.0 );
             Result( const Result& );
             ~Result();
 

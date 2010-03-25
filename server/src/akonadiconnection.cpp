@@ -121,7 +121,7 @@ void AkonadiConnection::slotNewData()
       if ( tag.isEmpty() && m_streamParser->atCommandEnd() )
         continue;
       const QByteArray command = m_streamParser->readString();
-      Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + " " + command + " " + m_streamParser->readRemainingData() ) );
+      Tracer::self()->connectionInput( m_identifier, QString::fromUtf8( tag + ' ' + command + ' ' + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
       connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),

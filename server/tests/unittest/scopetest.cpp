@@ -18,7 +18,8 @@
 */
 
 #include <QObject>
-#include <QtTest>
+#include <QtTest/QTest>
+#include <QtCore/QBuffer>
 
 #include "handler/scope.cpp"
 #include "imapstreamparser.h"

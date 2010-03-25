@@ -22,7 +22,7 @@
 
 #include <notificationmessage_p.h>
 
-#include <QtTest>
+#include <QtTest/QTest>
 
 QTEST_APPLESS_MAIN( NotificationMessageTest )
 

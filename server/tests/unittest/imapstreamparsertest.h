@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef IMAPPARSER_TEST_H
-#define IMAPPARSER_TEST_H
+#ifndef IMAPSTREAMPARSERTEST_H
+#define IMAPSTREAMPARSERTEST_H
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>

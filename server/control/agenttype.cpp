@@ -44,12 +44,12 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   file.beginGroup( "Desktop Entry" );
 
   foreach(const QString& key, file.allKeys() ) {
-    if ( key.startsWith( "Name[" ) ) {
+    if ( key.startsWith( QLatin1String("Name[") ) ) {
       QString lang = key.mid( 5, key.length()-6);
       name.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );
     } else if ( key == "Name" ) {
       name.insert( "en_US", QString::fromUtf8( file.value( "Name" ).toByteArray() ) );
-    } else if ( key.startsWith( "Comment[" ) ) {
+    } else if ( key.startsWith( QLatin1String("Comment[") ) ) {
       QString lang = key.mid( 8, key.length()-9);
       comment.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() )  );
     } else if ( key == "Comment" ) {

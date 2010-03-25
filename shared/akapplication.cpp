@@ -19,7 +19,7 @@
 
 #include "akapplication.h"
 #include "akdebug.h"
-#include "config-akonadi.h"
+#include <config-akonadi.h>
 
 #include <QDBusConnection>
 #include <QTimer>

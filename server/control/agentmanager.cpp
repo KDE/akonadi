@@ -505,7 +505,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
     continueStartup();
   }
 
-  if ( name.startsWith( "org.freedesktop.Akonadi.Agent." ) ) {
+  if ( name.startsWith( QLatin1String("org.freedesktop.Akonadi.Agent.") ) ) {
 
     // An agent service went up or down
 
@@ -525,7 +525,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
       emit agentInstanceAdded( identifier );
   }
 
-  else if ( name.startsWith( "org.freedesktop.Akonadi.Resource." ) ) {
+  else if ( name.startsWith( QLatin1String("org.freedesktop.Akonadi.Resource.") ) ) {
 
     // A resource service went up or down
 
@@ -539,7 +539,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
     mAgentInstances.value( identifier )->obtainResourceInterface();
   }
 
-  else if ( name.startsWith( "org.freedesktop.Akonadi.Preprocessor." ) ) {
+  else if ( name.startsWith( QLatin1String("org.freedesktop.Akonadi.Preprocessor.") ) ) {
 
     // A preprocessor service went up or down
 

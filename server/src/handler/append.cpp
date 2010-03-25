@@ -200,7 +200,7 @@ bool Append::commit()
     // Date time is always stored in UTC time zone by the server.
     QString datetime = QLocale::c().toString( item.datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
 
-    QByteArray res( "[UIDNEXT " + QByteArray::number( item.id() ) + " " );
+    QByteArray res( "[UIDNEXT " + QByteArray::number( item.id() ) + ' ' );
     res.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     res.append( ']' );
 
