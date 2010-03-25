@@ -189,6 +189,9 @@ void AgentBasePrivate::init()
 
   mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
 
+  // reinitialize the status message now that online state is available
+  mStatusMessage = defaultReadyMessage();
+
   mName = mSettings->value( QLatin1String( "Agent/Name" ) ).toString();
   if ( mName.isEmpty() ) {
     mName = mSettings->value( QLatin1String( "Resource/Name" ) ).toString();
