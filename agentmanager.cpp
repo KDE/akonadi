@@ -94,12 +94,11 @@ void AgentManagerPrivate::agentInstanceAdded( const QString &identifier )
     // The server-side agent manager then emits the instance added signal when
     // the D-Bus interface for the agent comes up.
     // In this case, we simply notify that the instance status has changed.
-    bool newAgentInstance = !mInstances.contains( identifier );
+    const bool newAgentInstance = !mInstances.contains( identifier );
     if ( newAgentInstance ) {
       mInstances.insert( identifier, instance );
       emit mParent->instanceAdded( instance );
-    }
-    else {
+    } else {
       mInstances.remove( identifier );
       mInstances.insert( identifier, instance );
       emit mParent->instanceStatusChanged( instance );
