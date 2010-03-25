@@ -20,6 +20,7 @@
 #include "resourcescheduler_p.h"
 
 #include <kdebug.h>
+#include <klocale.h>
 
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusInterface>
@@ -171,7 +172,7 @@ void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const ch
 void ResourceScheduler::taskDone()
 {
   if ( isEmpty() )
-    emit status( AgentBase::Idle );
+    emit status( AgentBase::Idle, i18nc( "@info:status Application ready for work", "Ready" ) );
 
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
