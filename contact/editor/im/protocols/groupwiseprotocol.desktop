@@ -12,6 +12,7 @@ Comment[nn]=Lynmeldingstenesta Novell GroupWise
 Comment[pt]=Novell GroupWise Messenger
 Comment[pt_BR]=Mensageiro do GroupWise da Novell
 Comment[sv]=Novell GroupWise-meddelandeklient
+Comment[th]=ข้อความด่วนทันใจ GroupWise ของโนเวลล์
 Comment[uk]=Програма обміну повідомленнями Novell GroupWise
 Comment[x-test]=xxNovell GroupWise Messengerxx
 Name=GroupWise
@@ -23,6 +24,7 @@ Name[nn]=GroupWise
 Name[pt]=GroupWise
 Name[pt_BR]=GroupWise
 Name[sv]=GroupWise
+Name[th]=GroupWise
 Name[uk]=GroupWise
 Name[x-test]=xxGroupWisexx
 

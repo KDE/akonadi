@@ -12,6 +12,7 @@ Comment[nn]=SMS-protokoll
 Comment[pt]=Protocolo SMS
 Comment[pt_BR]=Protocolo SMS
 Comment[sv]=SMS-protokoll
+Comment[th]=โพรโทคอล SMS
 Comment[uk]=Протокол SMS
 Comment[x-test]=xxSMS Protocolxx
 Name=SMS
@@ -23,6 +24,7 @@ Name[nn]=SMS
 Name[pt]=SMS
 Name[pt_BR]=SMS
 Name[sv]=SMS
+Name[th]=SMS
 Name[uk]=SMS
 Name[x-test]=xxSMSxx
 
