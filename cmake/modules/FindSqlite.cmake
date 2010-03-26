@@ -4,7 +4,6 @@
 #  SQLITE_FOUND - system has Sqlite
 #  SQLITE_INCLUDE_DIR - the Sqlite include directory
 #  SQLITE_LIBRARIES - Link these to use Sqlite
-#  SQLITE_DEFINITIONS - Compiler switches required for using Sqlite
 #  SQLITE_MIN_VERSION - The minimum SQLite version
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
