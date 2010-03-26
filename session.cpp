@@ -40,7 +40,11 @@
 #include <QtNetwork/QLocalSocket>
 #include <QtNetwork/QTcpSocket>
 
-#define PIPELINE_LENGTH 2
+// ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
+// in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still
+// sends responses for the next one to the already finished one
+#define PIPELINE_LENGTH 0
+//#define PIPELINE_LENGTH 2
 
 using namespace Akonadi;
 
