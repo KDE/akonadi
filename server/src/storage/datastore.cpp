@@ -54,6 +54,8 @@
 using namespace Akonadi;
 
 static QMutex sTransactionMutex;
+#define TRANSACTION_MUTEX_LOCK if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) sTransactionMutex.lock()
+#define TRANSACTION_MUTEX_UNLOCK if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) sTransactionMutex.unlock()
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -639,11 +641,11 @@ bool Akonadi::DataStore::beginTransaction()
     return false;
 
   if ( m_transactionLevel == 0 ) {
-    sTransactionMutex.lock();
+    TRANSACTION_MUTEX_LOCK; 
     QSqlDriver *driver = m_database.driver();
     if ( !driver->beginTransaction() ) {
       debugLastDbError( "DataStore::beginTransaction" );
-      sTransactionMutex.unlock();
+      TRANSACTION_MUTEX_UNLOCK;
       return false;
     }
   }
@@ -669,12 +671,12 @@ bool Akonadi::DataStore::rollbackTransaction()
     QSqlDriver *driver = m_database.driver();
     emit transactionRolledBack();
     if ( !driver->rollbackTransaction() ) {
-      sTransactionMutex.unlock();
+      TRANSACTION_MUTEX_UNLOCK;
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
     }
 
-    sTransactionMutex.unlock();
+    TRANSACTION_MUTEX_UNLOCK;
   }
 
   return true;
@@ -697,7 +699,7 @@ bool Akonadi::DataStore::commitTransaction()
       rollbackTransaction();
       return false;
     } else {
-      sTransactionMutex.unlock();
+      TRANSACTION_MUTEX_UNLOCK;
       emit transactionCommitted();
     }
   }
