@@ -42,7 +42,7 @@ namespace Akonadi {
   @author Constantin Berzan <exit3219@gmail.com>
   @since 4.4
 */
-class AKONADI_TESTS_EXPORT ResourceScanJob : public TransactionSequence
+class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
 {
   Q_OBJECT
 

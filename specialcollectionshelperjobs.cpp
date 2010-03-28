@@ -141,18 +141,18 @@ void ResourceScanJob::Private::fetchResult( KJob *job )
   if ( !mRootCollection.isValid() ) {
     q->setError( Unknown );
     q->setErrorText( i18n( "Could not fetch root collection of resource %1.", mResourceId ) );
-    q->commit();
+    q->emitResult();
     return;
   }
 
   // We are done!
-  q->commit();
+  q->emitResult();
 }
 
 
 
 ResourceScanJob::ResourceScanJob( const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent )
-  : TransactionSequence( parent ),
+  : Job( parent ),
     d( new Private( settings, this ) )
 {
   setResourceId( resourceId );
@@ -190,8 +190,6 @@ void ResourceScanJob::doStart()
     setError( Job::Unknown );
     setErrorText( i18n( "No resource ID given." ) );
     emitResult();
-    TransactionSequence::doStart(); // HACK: probable misuse of TransactionSequence API.
-                                    // Calling commit() here hangs :-/
     return;
   }
 
@@ -301,7 +299,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
       q->emitResult();
       return;
     }
-                         
+
     QMapIterator<QString, QVariant> it( mDefaultResourceOptions );
     while ( it.hasNext() ) {
       it.next();
@@ -314,7 +312,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
       if ( argType == QVariant::Invalid ) {
         q->setError( Job::Unknown );
         q->setErrorText( i18n( "Failed to configure default resource via D-Bus." ) );
-        q->commit();
+        q->emitResult();
         return;
       }
 
@@ -322,7 +320,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
       if ( !reply.isValid() ) {
         q->setError( Job::Unknown );
         q->setErrorText( i18n( "Failed to configure default resource via D-Bus." ) );
-        q->commit();
+        q->emitResult();
         return;
       }
     }
@@ -381,7 +379,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
   if ( !resourceCollection.isValid() ) {
     q->setError( Job::Unknown );
     q->setErrorText( i18n( "Failed to fetch the resource collection." ) );
-    q->commit();
+    q->emitResult();
     return;
   }
 
@@ -425,7 +423,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
   }
 
   if ( mPendingModifyJobs == 0 )
-    q->commit();
+    q->emitResult();
 }
 
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
@@ -507,7 +505,7 @@ void DefaultResourceJob::slotResult( KJob *job )
     }
   }
 
-  TransactionSequence::slotResult( job );
+  Job::slotResult( job );
 }
 
 // ===================== GetLockJob ============================
