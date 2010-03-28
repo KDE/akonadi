@@ -149,24 +149,23 @@ QVariant EntityMimeTypeFilterModel::headerData(int section, Qt::Orientation orie
   return sourceModel()->headerData(section, orientation, role);
 }
 
-QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
+QModelIndexList EntityMimeTypeFilterModel::match( const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
 {
-  if (!sourceModel())
+  if ( !sourceModel() )
     return QModelIndexList();
 
-  if (EntityTreeModel::AmazingCompletionRole != role)
-  {
-    if (role < Qt::UserRole)
-      return QSortFilterProxyModel::match(start, role, value, hits, flags);
+  if ( EntityTreeModel::AmazingCompletionRole != role ) {
+    if ( role < Qt::UserRole )
+      return QSortFilterProxyModel::match( start, role, value, hits, flags );
 
     QModelIndexList list;
     QModelIndex proxyIndex;
-    foreach(const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
-    {
+    foreach ( const QModelIndex &idx, sourceModel()->match( mapToSource( start ), role, value, hits, flags ) ) {
       proxyIndex = mapFromSource(idx);
       if (proxyIndex.isValid())
         list << proxyIndex;
     }
+
     return list;
   }
   // We match everything in the source model because sorting will change what we should show.
@@ -174,27 +173,26 @@ QModelIndexList EntityMimeTypeFilterModel::match(const QModelIndex& start, int r
 
   QModelIndexList proxyList;
   QMap<int, QModelIndex> proxyMap;
-  QModelIndexList sourceList = sourceModel()->match(mapToSource(start), role, value, allHits, flags);
+  const QModelIndexList sourceList = sourceModel()->match( mapToSource( start ), role, value, allHits, flags );
   QModelIndexList::const_iterator it;
   const QModelIndexList::const_iterator begin = sourceList.constBegin();
   const QModelIndexList::const_iterator end = sourceList.constEnd();
   QModelIndex proxyIndex;
-  for (it = begin; it != end; ++it)
-  {
-    proxyIndex = mapFromSource(*it);
+  for ( it = begin; it != end; ++it ) {
+    proxyIndex = mapFromSource( *it );
 
     // Any filtered indexes will be invalid when mapped.
-    if (!proxyIndex.isValid())
+    if ( !proxyIndex.isValid() )
       continue;
 
     // Inserting in a QMap gives us sorting by key for free.
-    proxyMap.insert(proxyIndex.row(), proxyIndex);
+    proxyMap.insert( proxyIndex.row(), proxyIndex );
   }
 
-  if (hits == -1)
+  if ( hits == -1 )
     return proxyMap.values();
 
-  return proxyMap.values().mid(0, hits);
+  return proxyMap.values().mid( 0, hits );
 }
 
 int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
@@ -204,10 +202,11 @@ int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
   if (!sourceModel())
     return 0;
 
-  QVariant var = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
-  if( !var.isValid() )
+  const QVariant value = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
+  if ( !value.isValid() )
     return 0;
-  return var.toInt();
+
+  return value.toInt();
 }
 
 bool EntityMimeTypeFilterModel::hasChildren(const QModelIndex &parent) const

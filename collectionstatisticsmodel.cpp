@@ -63,7 +63,7 @@ qint64 CollectionStatisticsModelPrivate::countRecursive( Collection::Id collecti
   }
 
   QList<Collection::Id> children = childCollections.value( collection );
-  foreach( Collection::Id currentCollection, children ) {
+  foreach ( Collection::Id currentCollection, children ) {
     result += countRecursive( currentCollection, type );
   }
   return result;

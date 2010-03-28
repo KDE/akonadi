@@ -483,8 +483,7 @@ For example, when using an ItemFetchJob to fetch the items in a collection, the 
   Collection::List getCollections(QList<Collection::Id> idsToGet)
   {
     Collection::List getList;
-    foreach(Collection::Id id, idsToGet)
-    {
+    foreach ( Collection::Id id, idsToGet ) {
       getList << Collection(id);
     }
     CollectionFetchJob *job = CollectionFetchJob(getList);

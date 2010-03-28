@@ -98,7 +98,7 @@ void ItemCreateJob::doStart()
 
     QList<QByteArray> partSpecs;
     int totalSize = 0;
-    foreach( const QByteArray &partName, d->mParts ) {
+    foreach ( const QByteArray &partName, d->mParts ) {
       QByteArray partData;
       int version = 0;
       ItemSerializer::serialize( d->mItem, partName, partData, version );

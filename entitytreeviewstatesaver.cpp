@@ -182,7 +182,7 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
     return;
 
   const QStringList selection = configGroup.readEntry( "Selection", QStringList() );
-  foreach( const QString &key, selection ) {
+  foreach ( const QString &key, selection ) {
     Entity::Id id = key.mid( 1 ).toLongLong();
     if ( id < 0 )
       continue;
@@ -193,7 +193,7 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
   }
 
   const QStringList expansion = configGroup.readEntry( "Expansion", QStringList() );
-  foreach( const QString &key, expansion ) {
+  foreach ( const QString &key, expansion ) {
     Entity::Id id = key.mid( 1 ).toLongLong();
     if ( id < 0 )
       continue;

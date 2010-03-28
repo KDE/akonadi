@@ -265,7 +265,7 @@ void SessionPrivate::endJob( Job *job )
 
 void SessionPrivate::jobDone(KJob * job)
 {
-  if( job == currentJob ) {
+  if ( job == currentJob ) {
     if ( pipeline.isEmpty() ) {
       jobRunning = false;
       currentJob = 0;

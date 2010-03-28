@@ -216,7 +216,7 @@ void ItemModel::Private::itemsAdded( const Akonadi::Item::List &list )
   if ( list.isEmpty() )
     return;
   mParent->beginInsertRows( QModelIndex(), items.count(), items.count() + list.count() - 1 );
-  foreach( const Item &item, list ) {
+  foreach ( const Item &item, list ) {
     ItemContainer *c = new ItemContainer( item, items.count() );
     items.append( c );
     itemHash[ item ] = c;

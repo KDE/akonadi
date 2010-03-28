@@ -293,9 +293,9 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
     QDBusInterface conf( QString::fromLatin1( "org.freedesktop.Akonadi.Resource." ) + defaultId,
                          QString::fromLatin1( "/Settings" ), QString() );
 
-    if( ! conf.isValid() ) {
+    if ( !conf.isValid() ) {
       q->setError( -1 );
-      q->setErrorText( i18n( "Invalid resource identifier '%1'", defaultId) );
+      q->setErrorText( i18n( "Invalid resource identifier '%1'", defaultId ) );
       q->emitResult();
       return;
     }

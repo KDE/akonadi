@@ -200,11 +200,12 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
         q->beginInsertRows( parentIndex,
                             currentChildCount,      // Start index is at the end of existing collections.
                             currentChildCount + newChildCount - 1 ); // End index is the result of the insertion.
-        foreach( Collection::Id id, newChildCols )
-        {
+
+        foreach ( Collection::Id id, newChildCols ) {
           Collection c = m_newCollections.take( id );
           collections.insert( id, c );
         }
+
         childCollections[ colId ] << newChildCols;
         q->endInsertRows();
         i.remove();
@@ -265,7 +266,7 @@ bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & pa
 
   q->beginRemoveRows( parent, row, row );
   Collection::Id delColId = list.takeAt( row );
-  foreach( Collection::Id childColId, childCollections[ delColId ] )
+  foreach ( Collection::Id childColId, childCollections[ delColId ] )
     collections.remove( childColId );
   collections.remove( delColId );
   childCollections.remove( delColId ); // remove children of deleted collection

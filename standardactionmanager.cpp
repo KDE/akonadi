@@ -161,10 +161,8 @@ class StandardActionManager::Private
 
       QAbstractItemModel *model = const_cast<QAbstractItemModel *>( selModel->model() );
 
-      foreach( const QModelIndex &index, selModel->selectedRows() )
-      {
+      foreach ( const QModelIndex &index, selModel->selectedRows() )
         model->setData( index, true, EntityTreeModel::PendingCutRole );
-      }
     }
 
     void updateActions()
@@ -596,18 +594,15 @@ class StandardActionManager::Private
       if ( itemAction )
       {
         list = itemSelectionModel->selectedRows();
-        foreach(const QModelIndex &idx, list)
-        {
+        foreach ( const QModelIndex &idx, list )
           mimetypes << idx.data( EntityTreeModel::MimeTypeRole ).toString();
-        }
       }
 
       if ( collectionAction )
       {
         list = collectionSelectionModel->selectedRows();
-        foreach(const QModelIndex &idx, list)
-        {
-          Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+        foreach ( const QModelIndex &idx, list ) {
+          const Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
           // The mimetypes that the selected collection can possibly contain
           mimetypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();

@@ -250,7 +250,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
         collectionsToInsert.insert( parent.parentCollection().id(), parent.parentCollection() );
       }
 
-      foreach( Collection::Id collectionId, subTreesToInsert.take( parent.id() ) ) {
+      foreach ( Collection::Id collectionId, subTreesToInsert.take( parent.id() ) ) {
         if ( !subTreesToInsert[ parent.parentCollection().id() ].contains( collectionId ) )
           subTreesToInsert[ parent.parentCollection().id() ].append( collectionId );
       }
@@ -284,7 +284,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     Q_ASSERT( !collectionIt.value().isEmpty() );
     Q_ASSERT( m_collections.contains( parents.value( topCollectionId ).id() ) );
 
-    foreach( Collection::Id collectionId, collectionIt.value() ) {
+    foreach ( Collection::Id collectionId, collectionIt.value() ) {
       const Collection collection = collectionsToInsert.take( collectionId );
       Q_ASSERT( collection.isValid() );
 
@@ -299,7 +299,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     q->endInsertRows();
 
     if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
-      foreach( const Collection::Id &collectionId, collectionIt.value() )
+      foreach ( const Collection::Id &collectionId, collectionIt.value() )
         fetchItems( m_collections.value( collectionId ) );
   }
   kDebug() << "Built the tree in: " << t.elapsed();
@@ -961,7 +961,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
 void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collection::List& list )
 {
   Q_Q( EntityTreeModel );
-  foreach( const Collection &collection, list ) {
+  foreach ( const Collection &collection, list ) {
     // These collections have been explicitly shown in the Monitor,
     // but hidden trumps that for now. This may change in the future if we figure out a use for it.
     if ( isHidden( collection ) )

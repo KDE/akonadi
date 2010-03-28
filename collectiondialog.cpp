@@ -187,7 +187,7 @@ void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
   d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
 
   if ( d->mMonitor )
-    foreach( const QString &mimetype, mimeTypes )
+    foreach ( const QString &mimetype, mimeTypes )
       d->mMonitor->setMimeTypeMonitored( mimetype );
 }
 

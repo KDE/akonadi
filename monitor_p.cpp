@@ -241,7 +241,7 @@ void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )
 
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
-  foreach( Collection::Id collection, recentlyChangedCollections ) {
+  foreach ( Collection::Id collection, recentlyChangedCollections ) {
     if ( fetchCollectionStatistics ) {
       fetchStatistics( collection );
     } else {

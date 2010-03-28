@@ -76,9 +76,8 @@ EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
 
-  foreach( const QList<Node*> &list, d->m_childEntities ) {
+  foreach ( const QList<Node*> &list, d->m_childEntities )
     qDeleteAll( list );
-  }
 
   delete d_ptr;
 }
@@ -630,7 +629,7 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
 
   QMimeData *data = new QMimeData();
   KUrl::List urls;
-  foreach( const QModelIndex &index, indexes ) {
+  foreach ( const QModelIndex &index, indexes ) {
     if ( index.column() != 0 )
       continue;
 

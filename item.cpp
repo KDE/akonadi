@@ -239,7 +239,7 @@ void Item::apply( const Item &other )
   setStorageCollectionId( other.storageCollectionId() );
   setRemoteId( other.remoteId() );
 
-  foreach( Attribute *attribute, other.attributes() )
+  foreach ( Attribute *attribute, other.attributes() )
     addAttribute( attribute->clone() );
 
   ItemSerializer::apply( *this, other );

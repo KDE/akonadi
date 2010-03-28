@@ -220,7 +220,7 @@ void ResourceScheduler::scheduleNext()
 
 void ResourceScheduler::executeNext()
 {
-  if( mCurrentTask.type != Invalid || isEmpty() )
+  if ( mCurrentTask.type != Invalid || isEmpty() )
     return;
 
   for ( int i = 0; i < NQueueCount; ++i ) {

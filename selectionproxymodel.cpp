@@ -31,10 +31,9 @@ class SelectionProxyModelPrivate
 public:
   SelectionProxyModelPrivate( SelectionProxyModel *selectionProxyModel )
     : q_ptr( selectionProxyModel )
-    {
+  {
       Q_Q( SelectionProxyModel );
-      foreach( const QModelIndex &rootIndex, q->sourceRootIndexes() )
-      {
+      foreach ( const QModelIndex &rootIndex, q->sourceRootIndexes() ) {
         rootIndexAdded( rootIndex );
         q->sourceModel()->fetchMore( rootIndex );
       }

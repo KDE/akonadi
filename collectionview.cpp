@@ -90,7 +90,7 @@ void CollectionView::Private::init()
 bool CollectionView::Private::hasParent( const QModelIndex& idx, Collection::Id parentId )
 {
   QModelIndex idx2 = idx;
-  while( idx2.isValid() ) {
+  while ( idx2.isValid() ) {
     if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole).toLongLong() == parentId )
       return true;
 
@@ -181,7 +181,7 @@ void CollectionView::dragMoveEvent( QDragMoveEvent * event )
   const QStringList supportedContentTypes = model()->data( index, CollectionModel::CollectionRole ).value<Collection>().contentMimeTypes();
   const QMimeData *mimeData = event->mimeData();
   const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
-  foreach( const KUrl &url, urls ) {
+  foreach ( const KUrl &url, urls ) {
 
     const Collection collection = Collection::fromUrl( url );
     if ( collection.isValid() ) {
