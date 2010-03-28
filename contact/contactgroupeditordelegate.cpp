@@ -282,7 +282,7 @@ bool ContactGroupEditorDelegate::editorEvent( QEvent *event, QAbstractItemModel 
 
       if ( buttonRect.contains( mouseEvent->pos() ) ) {
         model->removeRows( index.row(), 1 );
-        QTimer::singleShot( 0, this, SLOT( setLastRowAsCurrent() ) );
+        QTimer::singleShot( 0, this, SLOT( setFirstColumnAsCurrent() ) );
         return true;
       }
     }
@@ -296,9 +296,9 @@ void ContactGroupEditorDelegate::completed( QWidget *widget )
   emit closeEditor( widget );
 }
 
-void ContactGroupEditorDelegate::setLastRowAsCurrent()
+void ContactGroupEditorDelegate::setFirstColumnAsCurrent()
 {
-  d->mItemView->setCurrentIndex( d->mItemView->model()->index( d->mItemView->model()->rowCount() - 1, 0 ) );
+  d->mItemView->setCurrentIndex( d->mItemView->model()->index( d->mItemView->currentIndex().row(), 0 ) );
 }
 
 #include "contactgroupeditordelegate_p.moc"
