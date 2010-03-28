@@ -87,7 +87,7 @@ class EntityTreeViewStateSaverPrivate
         view->setExpanded( index, true );
       if ( state.currentIndex )
         view->setCurrentIndex( index );
-      QTimer::singleShot( 0, q, SLOT(restoreScrollBarState()) );
+      QTimer::singleShot( 0, q, SLOT( restoreScrollBarState() ) );
     }
 
     void restoreState( const QModelIndex &index )
@@ -126,7 +126,8 @@ class EntityTreeViewStateSaverPrivate
     void rowsInserted( const QModelIndex &index, int start, int end )
     {
       if ( !hasChanges() ) {
-        QObject::disconnect( view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), q, SLOT(rowsInserted(QModelIndex,int,int)) );
+        QObject::disconnect( view->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+                             q, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
         return;
       }
 
@@ -223,7 +224,8 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
 
   // watch the model for stuff coming in delayed
   if ( d->hasChanges() )
-    connect( d->view->model(), SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(rowsInserted(QModelIndex,int,int)), Qt::QueuedConnection );
+    connect( d->view->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+             SLOT( rowsInserted( const QModelIndex&, int, int ) ), Qt::QueuedConnection );
 }
 
 } // namespace Akonadi

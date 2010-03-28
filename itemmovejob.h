@@ -40,7 +40,7 @@ class ItemMoveJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( item, collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(moveResult(KJob*)) );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( moveResult( KJob* ) ) );
  *
  * @endcode
  *

@@ -108,7 +108,7 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
            SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
   Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
-  q->connect( serverManager, SIGNAL(started()), SLOT(serverStarted()) );
+  q->connect( serverManager, SIGNAL( started() ), SLOT( serverStarted() ) );
 
   QList<Collection> list = monitor->collectionsMonitored();
   if ( list.size() == 1 )
@@ -1216,8 +1216,9 @@ void EntityTreeModelPrivate::fillModel()
     QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
   } else {
     CollectionFetchJob *rootFetchJob = new CollectionFetchJob( m_rootCollection, CollectionFetchJob::Base, m_session );
-    q->connect( rootFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(rootCollectionFetched(Akonadi::Collection::List)) );
-    q->connect( rootFetchJob, SIGNAL(result(KJob *)), SLOT(fetchJobDone(KJob *)) );
+    q->connect( rootFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                SLOT( rootCollectionFetched( const Akonadi::Collection::List& ) ) );
+    q->connect( rootFetchJob, SIGNAL( result( KJob* ) ), SLOT( fetchJobDone( KJob* ) ) );
   }
 }
 

@@ -77,8 +77,8 @@ CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type,
   d->mEmitTimer = new QTimer( this );
   d->mEmitTimer->setSingleShot( true );
   d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
+  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
+  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
 }
 
 CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject * parent )
@@ -97,8 +97,8 @@ CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject *
   d->mEmitTimer = new QTimer( this );
   d->mEmitTimer->setSingleShot( true );
   d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
-  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
+  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
+  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
 }
 
 CollectionFetchJob::~CollectionFetchJob()

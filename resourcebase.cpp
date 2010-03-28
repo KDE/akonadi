@@ -144,8 +144,8 @@ ResourceBase::ResourceBase( const QString & id )
            d->mChangeRecorder, SLOT( replayNext() ) );
   connect( d->scheduler, SIGNAL( fullSyncComplete() ), SIGNAL( synchronized() ) );
   connect( d->mChangeRecorder, SIGNAL( nothingToReplay() ), d->scheduler, SLOT( taskDone() ) );
-  connect( d->mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
-           d->scheduler, SLOT(collectionRemoved(Akonadi::Collection)) );
+  connect( d->mChangeRecorder, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+           d->scheduler, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
   connect( this, SIGNAL( synchronized() ), d->scheduler, SLOT( taskDone() ) );
   connect( this, SIGNAL( agentNameChanged( const QString& ) ),
            this, SIGNAL( nameChanged( const QString& ) ) );
@@ -307,7 +307,7 @@ void ResourceBase::changeCommitted( const Item& item )
 void ResourceBase::changeCommitted( const Collection &collection )
 {
   CollectionModifyJob *job = new CollectionModifyJob( collection );
-  connect( job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( changeCommittedResult( KJob* ) ) );
 }
 
 void ResourceBasePrivate::changeCommittedResult( KJob *job )
@@ -470,7 +470,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval( const Akonadi::Item &item )
   foreach ( const QByteArray &attribute, attributes )
     fetch->fetchScope().fetchAttribute( attribute );
 
-  q->connect( fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemRetrievalResult(KJob*)) );
+  q->connect( fetch, SIGNAL( result( KJob* ) ), SLOT( slotPrepareItemRetrievalResult( KJob* ) ) );
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )

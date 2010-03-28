@@ -155,7 +155,7 @@ class EntityCache : public EntityCacheBase
       FetchJob* job = createFetchJob( id );
       job->setFetchScope( scope );
       job->setProperty( "EntityCacheNode", QVariant::fromValue<typename T::Id>( id ) );
-      connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
       mCache.enqueue( node );
     }
 

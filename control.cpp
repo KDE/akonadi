@@ -176,7 +176,8 @@ void Control::Private::serverStateChanged(ServerManager::State state)
 Control::Control()
   : d( new Private( this ) )
 {
-  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+  connect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ),
+           SLOT( serverStateChanged( Akonadi::ServerManager::State ) ) );
   // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
   // Otherwise we get a crash in QCursor code with Qt-4.5
   if ( QCoreApplication::instance() )
@@ -253,7 +254,7 @@ void Control::widgetNeedsAkonadi(QWidget * widget)
   s_instance->d->mPendingOverlays.append( widget );
   // delay the overlay creation since we rely on widget being reparented
   // correctly already
-  QTimer::singleShot( 0, s_instance, SLOT(createErrorOverlays()) );
+  QTimer::singleShot( 0, s_instance, SLOT( createErrorOverlays() ) );
 }
 
 }

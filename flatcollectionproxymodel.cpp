@@ -91,10 +91,10 @@ FlatCollectionProxyModel::~FlatCollectionProxyModel()
 void FlatCollectionProxyModel::setSourceModel(QAbstractItemModel * sourceModel)
 {
   QAbstractProxyModel::setSourceModel( sourceModel );
-  connect( sourceModel, SIGNAL(modelReset()), SIGNAL(modelReset()) );
-  connect( sourceModel, SIGNAL(layoutChanged()), SIGNAL(layoutChanged()) );
-  connect( sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-           SLOT(sourceDataChanged(QModelIndex,QModelIndex)) );
+  connect( sourceModel, SIGNAL( modelReset() ), SIGNAL( modelReset() ) );
+  connect( sourceModel, SIGNAL( layoutChanged() ), SIGNAL( layoutChanged() ) );
+  connect( sourceModel, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+           SLOT( sourceDataChanged( const QModelIndex&, const QModelIndex& ) ) );
 }
 
 int FlatCollectionProxyModel::rowCount(const QModelIndex & parent) const

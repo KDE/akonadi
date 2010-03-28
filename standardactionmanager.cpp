@@ -62,24 +62,24 @@ static const struct {
   const char* slot;
   bool isActionMenu;
 } actionData[] = {
-  { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT(slotCreateCollection()), false },
-  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()), false },
-  { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT(slotDeleteCollection()), false },
-  { "akonadi_collection_sync", I18N_NOOP( "&Synchronize Folder" ), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), false },
-  { "akonadi_collection_properties", I18N_NOOP( "Folder &Properties" ), "configure", 0, SLOT(slotCollectionProperties()), false },
-  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()), false },
-  { "akonadi_paste", I18N_NOOP( "&Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), false },
-  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()), false },
-  { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), 0, 0, SLOT(slotLocalSubscription()), false },
-  { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
-  { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
-  { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
-  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
-  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
-  { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
-  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
+  { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT( slotCreateCollection() ), false },
+  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT( slotCopyCollections() ), false },
+  { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT( slotDeleteCollection() ), false },
+  { "akonadi_collection_sync", I18N_NOOP( "&Synchronize Folder" ), "view-refresh", Qt::Key_F5, SLOT( slotSynchronizeCollection() ), false },
+  { "akonadi_collection_properties", I18N_NOOP( "Folder &Properties" ), "configure", 0, SLOT( slotCollectionProperties() ), false },
+  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT( slotCopyItems() ), false },
+  { "akonadi_paste", I18N_NOOP( "&Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT( slotPaste() ), false },
+  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT( slotDeleteItems() ), false },
+  { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), 0, 0, SLOT( slotLocalSubscription() ), false },
+  { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), false },
+  { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), false },
+  { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), false },
+  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo( QAction* ) ), true },
+  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo( QAction* ) ), true },
+  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), true },
+  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), true },
+  { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), false },
+  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -343,7 +343,7 @@ class StandardActionManager::Private
       col.setName( name );
       col.parentCollection().setId( parentId );
       CollectionCreateJob *job = new CollectionCreateJob( col );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionCreationResult(KJob*)) );
+      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionCreationResult( KJob* ) ) );
     }
 
     void slotCopyCollections()
@@ -380,7 +380,7 @@ class StandardActionManager::Private
         return;
 
       CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ), q );
-      q->connect( job, SIGNAL(result(KJob*)), q, SLOT(collectionDeletionResult(KJob*)) );
+      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionDeletionResult( KJob* ) ) );
     }
 
     void slotSynchronizeCollection()
@@ -725,7 +725,7 @@ StandardActionManager::StandardActionManager( KActionCollection * actionCollecti
 {
   d->parentWidget = parent;
   d->actionCollection = actionCollection;
-  connect( QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(clipboardChanged(QClipboard::Mode)) );
+  connect( QApplication::clipboard(), SIGNAL( changed( QClipboard::Mode ) ), SLOT( clipboardChanged( QClipboard::Mode ) ) );
 }
 
 StandardActionManager::~ StandardActionManager()
@@ -736,8 +736,8 @@ StandardActionManager::~ StandardActionManager()
 void StandardActionManager::setCollectionSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->collectionSelectionModel = selectionModel;
-  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(collectionSelectionChanged()) );
+  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           SLOT( collectionSelectionChanged() ) );
 
   d->checkModelsConsistency();
 }
@@ -745,8 +745,8 @@ void StandardActionManager::setCollectionSelectionModel( QItemSelectionModel * s
 void StandardActionManager::setItemSelectionModel( QItemSelectionModel * selectionModel )
 {
   d->itemSelectionModel = selectionModel;
-  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(updateActions()) );
+  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           SLOT( updateActions() ) );
 }
 
 void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
@@ -758,8 +758,8 @@ void StandardActionManager::setFavoriteCollectionsModel( FavoriteCollectionsMode
 void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
 {
   d->favoriteSelectionModel = selectionModel;
-  connect( selectionModel, SIGNAL(selectionChanged( const QItemSelection&, const QItemSelection& )),
-           SLOT(favoriteSelectionChanged()) );
+  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           SLOT( favoriteSelectionChanged() ) );
   d->checkModelsConsistency();
 }
 
@@ -787,10 +787,10 @@ KAction* StandardActionManager::createAction( Type type )
   action->setShortcut( actionData[type].shortcut );
 
   if ( actionData[type].slot && !actionData[type].isActionMenu ) {
-    connect( action, SIGNAL(triggered()), actionData[type].slot );
+    connect( action, SIGNAL( triggered() ), actionData[type].slot );
   } else if ( actionData[type].slot ) {
     KActionMenu *actionMenu = qobject_cast<KActionMenu*>( action );
-    connect( actionMenu->menu(), SIGNAL(triggered(QAction*)), actionData[type].slot );
+    connect( actionMenu->menu(), SIGNAL( triggered( QAction* ) ), actionData[type].slot );
   }
 
   d->actionCollection->addAction( QString::fromLatin1(actionData[type].name), action );

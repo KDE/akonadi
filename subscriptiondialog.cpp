@@ -53,7 +53,7 @@ class SubscriptionDialog::Private
       SubscriptionJob *job = new SubscriptionJob( q );
       job->subscribe( model->subscribed() );
       job->unsubscribe( model->unsubscribed() );
-      connect( job, SIGNAL(result(KJob*)), q, SLOT(subscriptionResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), q, SLOT( subscriptionResult( KJob* ) ) );
     }
 
     void subscriptionResult( KJob *job )
@@ -118,13 +118,13 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   d->setupChangeView( d->ui.subscribeView, true );
   d->setupChangeView( d->ui.unsubscribeView, false );
 
-  connect( d->model, SIGNAL(loaded()), SLOT(modelLoaded()) );
-  connect( d->ui.subscribeButton, SIGNAL(clicked()), SLOT(subscribeClicked()) );
-  connect( d->ui.unsubscribeButton, SIGNAL(clicked()), SLOT(unsubscribeClicked()) );
-  connect( this, SIGNAL(okClicked()), SLOT(done()) );
-  connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
-  connect( d->ui.klineedit, SIGNAL( textChanged(QString) ), d->filterTreeViewModel, SLOT( setFilterFixedString(QString) ) );
-
+  connect( d->model, SIGNAL( loaded() ), SLOT( modelLoaded() ) );
+  connect( d->ui.subscribeButton, SIGNAL( clicked() ), SLOT( subscribeClicked() ) );
+  connect( d->ui.unsubscribeButton, SIGNAL( clicked() ), SLOT( unsubscribeClicked() ) );
+  connect( this, SIGNAL( okClicked() ), SLOT( done() ) );
+  connect( this, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
+  connect( d->ui.klineedit, SIGNAL( textChanged( const QString& ) ),
+           d->filterTreeViewModel, SLOT( setFilterFixedString( const QString& ) ) );
 
   Control::widgetNeedsAkonadi( mainWidget() );
 }

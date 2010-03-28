@@ -105,7 +105,7 @@ void TransactionSequence::slotResult(KJob * job)
     if ( subjobs().isEmpty() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( commitResult( KJob* ) ) );
     }
   } else {
     setError( job->error() );
@@ -115,7 +115,7 @@ void TransactionSequence::slotResult(KJob * job)
     if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
       d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( rollbackResult( KJob* ) ) );
     }
   }
 }
@@ -133,11 +133,11 @@ void TransactionSequence::commit()
     if ( !error() ) {
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( commitResult( KJob* ) ) );
     } else {
       d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
-      connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
+      connect( job, SIGNAL( result( KJob* ) ), SLOT( rollbackResult( KJob* ) ) );
     }
   }
 }

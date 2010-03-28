@@ -121,7 +121,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
     }
     nextJob = new CollectionFetchJob( mCurrentNode, CollectionFetchJob::Base, q );
   }
-  q->connect( nextJob, SIGNAL(result(KJob*)), q, SLOT(jobResult(KJob*)) );
+  q->connect( nextJob, SIGNAL( result( KJob* ) ), q, SLOT( jobResult( KJob* ) ) );
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * parent)
@@ -195,7 +195,7 @@ void CollectionPathResolver::doStart()
     }
     job = new CollectionFetchJob( d->mCurrentNode, CollectionFetchJob::Base, this );
   }
-  connect( job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)) );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( jobResult( KJob* ) ) );
 }
 
 //@endcond

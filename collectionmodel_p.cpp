@@ -73,8 +73,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
     CollectionFetchJob *job = new CollectionFetchJob( newParent, CollectionFetchJob::Recursive, session );
     job->fetchScope().setIncludeUnsubscribed( unsubscribed );
     job->fetchScope().setIncludeStatistics( fetchStatistics );
-    q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
+    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                q, SLOT( collectionsChanged( const Akonadi::Collection::List& ) ) );
     q->connect( job, SIGNAL( result( KJob* ) ),
                  q, SLOT( listDone( KJob* ) ) );
 
@@ -83,8 +83,8 @@ void CollectionModelPrivate::collectionChanged( const Akonadi::Collection &colle
     CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Base, session );
     job->fetchScope().setIncludeUnsubscribed( unsubscribed );
     job->fetchScope().setIncludeStatistics( fetchStatistics );
-    q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
+    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                q, SLOT( collectionsChanged( const Akonadi::Collection::List& ) ) );
     q->connect( job, SIGNAL( result( KJob* ) ),
                  q, SLOT( listDone( KJob* ) ) );
   }
@@ -295,7 +295,7 @@ void CollectionModelPrivate::init()
 
   session = new Session( QCoreApplication::instance()->applicationName().toUtf8()
       + QByteArray( "-CollectionModel-" ) + QByteArray::number( qrand() ), q );
-  QTimer::singleShot( 0, q, SLOT(startFirstListJob()) );
+  QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
 
   // monitor collection changes
   monitor = new Monitor();
@@ -307,14 +307,14 @@ void CollectionModelPrivate::init()
   KIconLoader::global()->addAppDir( QLatin1String( "kdepim" ) );
 
   // monitor collection changes
-  q->connect( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)),
-              q, SLOT(collectionChanged(const Akonadi::Collection&)) );
-  q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-              q, SLOT(collectionChanged(Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-              q, SLOT(collectionRemoved(Akonadi::Collection)) );
-  q->connect( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)),
-              q, SLOT(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
+  q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+              q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+              q, SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
+              q, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
+              q, SLOT( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 }
 
 void CollectionModelPrivate::startFirstListJob()
@@ -325,9 +325,9 @@ void CollectionModelPrivate::startFirstListJob()
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, session );
   job->fetchScope().setIncludeUnsubscribed( unsubscribed );
   job->fetchScope().setIncludeStatistics( fetchStatistics );
-  q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-              q, SLOT(collectionsChanged(Akonadi::Collection::List)) );
-  q->connect( job, SIGNAL(result(KJob*)), q, SLOT(listDone(KJob*)) );
+  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+              q, SLOT( collectionsChanged( const Akonadi::Collection::List& ) ) );
+  q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( listDone( KJob* ) ) );
 }
 
 //@endcond

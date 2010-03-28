@@ -80,14 +80,14 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
 
   mTestModel = new QStandardItemModel( this );
   ui.testView->setModel( mTestModel );
-  connect( ui.testView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-           SLOT(selectionChanged(QModelIndex)) );
-  connect( ui.detailsLabel, SIGNAL(linkActivated(QString)), SLOT(linkActivated(QString)) );
+  connect( ui.testView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           SLOT( selectionChanged( const QModelIndex& ) ) );
+  connect( ui.detailsLabel, SIGNAL( linkActivated( const QString& ) ), SLOT( linkActivated( const QString& ) ) );
 
-  connect( this, SIGNAL(user1Clicked()), SLOT(saveReport()) );
-  connect( this, SIGNAL(user2Clicked()), SLOT(copyReport()) );
+  connect( this, SIGNAL( user1Clicked() ), SLOT( saveReport() ) );
+  connect( this, SIGNAL( user2Clicked() ), SLOT( copyReport() ) );
 
-  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(runTests()) );
+  connect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ), SLOT( runTests() ) );
   runTests();
 }
 

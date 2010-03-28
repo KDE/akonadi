@@ -214,14 +214,14 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     void fetchStatistics( Collection::Id colId )
     {
       CollectionStatisticsJob *job = new CollectionStatisticsJob( Collection( colId ), session );
-      QObject::connect( job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)) );
+      QObject::connect( job, SIGNAL( result( KJob* ) ), q_ptr, SLOT( slotStatisticsChangedFinished( KJob* ) ) );
     }
 
     void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource )
     {
       if ( isCollectionMonitored( collection, resource ) ) {
         if (recentlyChangedCollections.empty() )
-          QTimer::singleShot( 500, q_ptr, SLOT(slotFlushRecentlyChangedCollections()) );
+          QTimer::singleShot( 500, q_ptr, SLOT( slotFlushRecentlyChangedCollections() ) );
         recentlyChangedCollections.insert( collection );
       }
     }

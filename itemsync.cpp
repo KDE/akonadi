@@ -265,7 +265,7 @@ void ItemSync::Private::execute()
   if ( (mTransactionMode == Single && !mCurrentTransaction) || mTransactionMode == Chunkwise ) {
     ++mTransactionJobs;
     mCurrentTransaction = new TransactionSequence( q );
-    connect( mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)) );
+    connect( mCurrentTransaction, SIGNAL( result( KJob* ) ), q, SLOT( slotTransactionResult( KJob* ) ) );
   }
 
   processItems();

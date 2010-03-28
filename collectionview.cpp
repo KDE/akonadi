@@ -79,7 +79,7 @@ void CollectionView::Private::init()
   mParent->setDragEnabled( true );
 
   dragExpandTimer.setSingleShot( true );
-  mParent->connect( &dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
+  mParent->connect( &dragExpandTimer, SIGNAL( timeout() ), SLOT( dragExpand() ) );
 
   mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );

@@ -43,7 +43,7 @@ class CollectionCreateJobPrivate;
  * collection.setContentMimeTypes( QStringList( "text/calendar" ) );
  *
  * Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(createResult(KJob*)) );
+ * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( createResult( KJob* ) ) );
  *
  * @endcode
  *

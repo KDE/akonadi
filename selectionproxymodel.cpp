@@ -69,8 +69,8 @@ public:
 SelectionProxyModel::SelectionProxyModel( QItemSelectionModel *selectionModel, QObject *parent )
   : KSelectionProxyModel( selectionModel, parent ), d_ptr( new SelectionProxyModelPrivate( this ) )
 {
-  connect( this, SIGNAL(rootIndexAdded(const QModelIndex &)), SLOT(rootIndexAdded(const QModelIndex &)));
-  connect( this, SIGNAL(rootIndexAboutToBeRemoved(const QModelIndex &)), SLOT(rootIndexAboutToBeRemoved(const QModelIndex &)));
+  connect( this, SIGNAL( rootIndexAdded( const QModelIndex& ) ), SLOT( rootIndexAdded( const QModelIndex& ) ) );
+  connect( this, SIGNAL( rootIndexAboutToBeRemoved( const QModelIndex& ) ), SLOT( rootIndexAboutToBeRemoved( const QModelIndex& ) ) );
 }
 
 #include "selectionproxymodel.moc"

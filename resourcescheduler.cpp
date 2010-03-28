@@ -215,7 +215,7 @@ void ResourceScheduler::scheduleNext()
 {
   if ( mCurrentTask.type != Invalid || isEmpty() || !mOnline )
     return;
-  QTimer::singleShot( 0, this, SLOT(executeNext()) );
+  QTimer::singleShot( 0, this, SLOT( executeNext() ) );
 }
 
 void ResourceScheduler::executeNext()

@@ -51,8 +51,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
       mEmitTimer = new QTimer( q );
       mEmitTimer->setSingleShot( true );
       mEmitTimer->setInterval( 100 );
-      q->connect( mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
-      q->connect( q, SIGNAL(result(KJob*)), q, SLOT(timeout()) );
+      q->connect( mEmitTimer, SIGNAL( timeout() ), q, SLOT( timeout() ) );
+      q->connect( q, SIGNAL( result( KJob* ) ), q, SLOT( timeout() ) );
     }
 
     void timeout()
@@ -151,7 +151,7 @@ void ItemFetchJob::doStart()
       emitResult();
     }
     CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
-    connect( job, SIGNAL(result(KJob*)), SLOT(selectDone(KJob*)) );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( selectDone( KJob* ) ) );
     addSubjob( job );
   } else
     d->startFetchJob();

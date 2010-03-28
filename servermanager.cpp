@@ -48,7 +48,7 @@ class Akonadi::ServerManagerPrivate
       mState = instance->state();
       mSafetyTimer->setSingleShot( true );
       mSafetyTimer->setInterval( 30000 );
-      QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
+      QObject::connect( mSafetyTimer.get(), SIGNAL( timeout() ), instance, SLOT( timeout() ) );
     }
 
     ~ServerManagerPrivate()
@@ -116,8 +116,8 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String( "/" ) );
   if ( obj && dynamic_cast<AgentBase*>( obj ) )
     return;
-  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
-  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL( typeAdded( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
+  connect( AgentManager::self(), SIGNAL( typeRemoved( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
 }
 
 ServerManager * Akonadi::ServerManager::self()

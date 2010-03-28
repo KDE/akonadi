@@ -150,7 +150,7 @@ void JobPrivate::startQueued()
 
   emit q->aboutToStart( q );
   q->doStart();
-  QTimer::singleShot( 0, q, SLOT(startNext()) );
+  QTimer::singleShot( 0, q, SLOT( startNext() ) );
 
   // if there's a job tracker running, tell it a job started
   if ( s_jobtracker ) {
@@ -277,8 +277,8 @@ bool Job::addSubjob( KJob * job )
 {
   bool rv = KCompositeJob::addSubjob( job );
   if ( rv ) {
-    connect( job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)) );
-    QTimer::singleShot( 0, this, SLOT(startNext()) );
+    connect( job, SIGNAL( aboutToStart( Akonadi::Job* ) ), SLOT( slotSubJobAboutToStart( Akonadi::Job* ) ) );
+    QTimer::singleShot( 0, this, SLOT( startNext() ) );
   }
   return rv;
 }
@@ -288,7 +288,7 @@ bool Job::removeSubjob(KJob * job)
   bool rv = KCompositeJob::removeSubjob( job );
   if ( job == d_ptr->mCurrentSubJob ) {
     d_ptr->mCurrentSubJob = 0;
-    QTimer::singleShot( 0, this, SLOT(startNext()) );
+    QTimer::singleShot( 0, this, SLOT( startNext() ) );
   }
   return rv;
 }
@@ -304,7 +304,7 @@ void Job::slotResult(KJob * job)
   d_ptr->mCurrentSubJob = 0;
   KCompositeJob::slotResult( job );
   if ( !job->error() )
-    QTimer::singleShot( 0, this, SLOT(startNext()) );
+    QTimer::singleShot( 0, this, SLOT( startNext() ) );
 }
 
 void Job::emitWriteFinished()

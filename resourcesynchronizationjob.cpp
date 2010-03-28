@@ -62,7 +62,7 @@ ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance& inst
 {
   d->instance = instance;
   d->safetyTimer = new QTimer( this );
-  connect( d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()) );
+  connect( d->safetyTimer, SIGNAL( timeout() ), SLOT( slotTimeout() ) );
   d->safetyTimer->setInterval( 10 * 1000 );
   d->safetyTimer->setSingleShot( false );
 }
@@ -87,9 +87,9 @@ void ResourceSynchronizationJobPrivate::doStart()
   }
 
   interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
-                                      QString::fromLatin1( "/" ),
-                                      QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ), QDBusConnection::sessionBus(), this );
-  connect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+                                  QString::fromLatin1( "/" ),
+                                  QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ), QDBusConnection::sessionBus(), this );
+  connect( interface, SIGNAL( synchronized() ), q, SLOT( slotSynchronized() ) );
 
   if ( interface->isValid() ) {
     instance.synchronize();
@@ -104,7 +104,7 @@ void ResourceSynchronizationJobPrivate::doStart()
 
 void ResourceSynchronizationJobPrivate::slotSynchronized()
 {
-  q->disconnect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+  q->disconnect( interface, SIGNAL( synchronized() ), q, SLOT( slotSynchronized() ) );
   safetyTimer->stop();
   q->emitResult();
 }
