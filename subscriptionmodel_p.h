@@ -27,6 +27,7 @@ namespace Akonadi {
 
 /**
  * @internal
+ * @deprecated This should be replaced by something based on EntityTreeModel
  *
  * An extended collection model used for the subscription dialog.
  */

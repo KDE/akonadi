@@ -27,9 +27,11 @@
 namespace Akonadi {
 
 /**
-  Message threading information. Used eg. by MessageThreaderProxyModel
-*/
-class AKONADI_KMIME_EXPORT MessageThreadingAttribute : public Attribute
+ * Message threading information. Used eg. by MessageThreaderProxyModel
+ * @deprecated This attribute is not used for threading and will not work.
+ *             Use the messagelist component in the kdepim module instead.
+ */
+class AKONADI_KMIME_EXPORT_DEPRECATED MessageThreadingAttribute : public Attribute
 {
   public:
     /**

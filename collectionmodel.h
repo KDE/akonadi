@@ -49,8 +49,9 @@ class CollectionModelPrivate;
  * CollectionFilterProxyModel on top of this model.
  *
  * @author Volker Krause <vkrause@kde.org>
+ * @deprecated Use Akonadi::EntityTreeModel instead
  */
-class AKONADI_EXPORT CollectionModel : public QAbstractItemModel
+class AKONADI_EXPORT_DEPRECATED CollectionModel : public QAbstractItemModel
 {
   Q_OBJECT
 

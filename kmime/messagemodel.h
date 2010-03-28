@@ -24,12 +24,18 @@
 #include <akonadi/itemmodel.h>
 #include <akonadi/job.h>
 
+#if defined(MAKE_AKONADI_KMIME_LIB)
+#  define AKONADI_IGNORE_DEPRECATED_WARNINGS
+#endif
+
 namespace Akonadi {
 
 /**
-  A flat self-updating message model.
-*/
-class AKONADI_KMIME_EXPORT MessageModel : public Akonadi::ItemModel
+ * A flat self-updating message model.
+ * @deprecated Subclass Akonadi::EntityTreeModel instead. An example can be seen in AkonadiConsole,
+ *             have a look at AkonadiBrowserModel there.
+ */
+class AKONADI_KMIME_EXPORT_DEPRECATED MessageModel : public Akonadi::ItemModel
 {
   Q_OBJECT
 
