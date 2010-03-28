@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "contactsfilterproxymodel.h"
+#include "contactsfiltermodel.h"
 
 #include "contactstreemodel.h"
 
@@ -201,4 +201,4 @@ bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &
   return false;
 }
 
-#include "contactsfilterproxymodel.moc"
+#include "contactsfiltermodel.moc"

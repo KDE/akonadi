@@ -71,7 +71,7 @@ set(akonadicontact_LIB_SRC
   contactmetadata.cpp
   contactmetadataattribute.cpp
   contactsearchjob.cpp
-  contactsfilterproxymodel.cpp
+  contactsfiltermodel.cpp
   contactstreemodel.cpp
   contactviewer.cpp
   contactviewerdialog.cpp
@@ -129,7 +129,7 @@ install( FILES
   contactgroupviewer.h
   contactgroupviewerdialog.h
   contactsearchjob.h
-  contactsfilterproxymodel.h
+  contactsfiltermodel.h
   contactstreemodel.h
   contactviewer.h
   contactviewerdialog.h
