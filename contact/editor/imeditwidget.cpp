@@ -24,6 +24,7 @@
 #include "im/imeditordialog.h"
 #include "im/improtocols.h"
 
+#include <QtCore/QPointer>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QToolButton>
 
@@ -127,11 +128,11 @@ void IMEditWidget::setReadOnly( bool readOnly )
 
 void IMEditWidget::edit()
 {
-  IMEditorDialog dlg( this );
-  dlg.setAddresses( mIMAddresses );
+  QPointer<IMEditorDialog> dlg = new IMEditorDialog( this );
+  dlg->setAddresses( mIMAddresses );
 
-  if ( dlg.exec() ) {
-    mIMAddresses = dlg.addresses();
+  if ( dlg->exec() == QDialog::Accepted ) {
+    mIMAddresses = dlg->addresses();
 
     foreach ( const IMAddress &address, mIMAddresses ) {
       if ( address.preferred() ) {
@@ -140,6 +141,8 @@ void IMEditWidget::edit()
       }
     }
   }
+
+  delete dlg;
 }
 
 #include "imeditwidget.moc"

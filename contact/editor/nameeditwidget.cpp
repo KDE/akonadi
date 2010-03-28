@@ -23,6 +23,7 @@
 
 #include "nameeditdialog.h"
 
+#include <QtCore/QPointer>
 #include <QtCore/QString>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QToolButton>
@@ -86,20 +87,20 @@ void NameEditWidget::textChanged( const QString &text )
 
 void NameEditWidget::openNameEditDialog()
 {
-  NameEditDialog dlg( this );
+  QPointer<NameEditDialog> dlg = new NameEditDialog( this );
 
-  dlg.setPrefix( mContact.prefix() );
-  dlg.setGivenName( mContact.givenName() );
-  dlg.setAdditionalName( mContact.additionalName() );
-  dlg.setFamilyName( mContact.familyName() );
-  dlg.setSuffix( mContact.suffix() );
+  dlg->setPrefix( mContact.prefix() );
+  dlg->setGivenName( mContact.givenName() );
+  dlg->setAdditionalName( mContact.additionalName() );
+  dlg->setFamilyName( mContact.familyName() );
+  dlg->setSuffix( mContact.suffix() );
 
-  if ( dlg.exec() ) {
-    mContact.setPrefix( dlg.prefix() );
-    mContact.setGivenName( dlg.givenName() );
-    mContact.setAdditionalName( dlg.additionalName() );
-    mContact.setFamilyName( dlg.familyName() );
-    mContact.setSuffix( dlg.suffix() );
+  if ( dlg->exec() == QDialog::Accepted ) {
+    mContact.setPrefix( dlg->prefix() );
+    mContact.setGivenName( dlg->givenName() );
+    mContact.setAdditionalName( dlg->additionalName() );
+    mContact.setFamilyName( dlg->familyName() );
+    mContact.setSuffix( dlg->suffix() );
 
     disconnect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
     mNameEdit->setText( mContact.assembledName() );
@@ -107,6 +108,8 @@ void NameEditWidget::openNameEditDialog()
 
     emit nameChanged( mContact );
   }
+
+  delete dlg;
 }
 
 #include "nameeditwidget.moc"

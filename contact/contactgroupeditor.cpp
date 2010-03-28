@@ -161,13 +161,13 @@ void ContactGroupEditor::Private::storeDone( KJob *job )
 
 void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArray>& )
 {
-  QMessageBox dlg( mParent );
+  AutoQPointer<QMessageBox> dlg = new QMessageBox( mParent );
 
-  dlg.setInformativeText( i18n( "The contact group has been changed by someone else.\nWhat should be done?" ) );
-  dlg.addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
-  dlg.addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
+  dlg->setInformativeText( i18n( "The contact group has been changed by someone else.\nWhat should be done?" ) );
+  dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
+  dlg->addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
 
-  if ( dlg.exec() == QMessageBox::AcceptRole ) {
+  if ( dlg->exec() == QMessageBox::AcceptRole ) {
     ItemFetchJob *job = new ItemFetchJob( mItem );
     job->fetchScope().fetchFullPayload();
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );

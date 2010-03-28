@@ -30,6 +30,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QUuid>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPushButton>
@@ -250,19 +251,21 @@ void CustomFieldsEditWidget::slotAdd()
 
   field.setKey( key );
 
-  CustomFieldEditorDialog dlg( this );
-  dlg.setCustomField( field );
+  QPointer<CustomFieldEditorDialog> dlg = new CustomFieldEditorDialog( this );
+  dlg->setCustomField( field );
 
-  if ( dlg.exec() ) {
+  if ( dlg->exec() == QDialog::Accepted ) {
     const int lastRow = mModel->rowCount();
     mModel->insertRow( lastRow );
 
-    field = dlg.customField();
+    field = dlg->customField();
     mModel->setData( mModel->index( lastRow, 2 ), field.key(), Qt::EditRole );
     mModel->setData( mModel->index( lastRow, 0 ), field.title(), Qt::EditRole );
     mModel->setData( mModel->index( lastRow, 0 ), field.type(), CustomFieldsModel::TypeRole );
     mModel->setData( mModel->index( lastRow, 0 ), field.scope(), CustomFieldsModel::ScopeRole );
   }
+
+  delete dlg;
 }
 
 void CustomFieldsEditWidget::slotEdit()
@@ -277,16 +280,18 @@ void CustomFieldsEditWidget::slotEdit()
   field.setType( static_cast<CustomField::Type>( currentIndex.data( CustomFieldsModel::TypeRole ).toInt() ) );
   field.setScope( static_cast<CustomField::Scope>( currentIndex.data( CustomFieldsModel::ScopeRole ).toInt() ) );
 
-  CustomFieldEditorDialog dlg( this );
-  dlg.setCustomField( field );
+  QPointer<CustomFieldEditorDialog> dlg = new CustomFieldEditorDialog( this );
+  dlg->setCustomField( field );
 
-  if ( dlg.exec() ) {
-    field = dlg.customField();
+  if ( dlg->exec() == QDialog::Accepted ) {
+    field = dlg->customField();
     mModel->setData( mModel->index( currentIndex.row(), 2 ), field.key(), Qt::EditRole );
     mModel->setData( mModel->index( currentIndex.row(), 0 ), field.title(), Qt::EditRole );
     mModel->setData( currentIndex, field.type(), CustomFieldsModel::TypeRole );
     mModel->setData( currentIndex, field.scope(), CustomFieldsModel::ScopeRole );
   }
+
+  delete dlg;
 }
 
 void CustomFieldsEditWidget::slotRemove()

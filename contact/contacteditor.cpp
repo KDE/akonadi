@@ -38,6 +38,7 @@
 #include <kabc/addressee.h>
 #include <klocale.h>
 
+#include <QtCore/QPointer>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QMessageBox>
 
@@ -150,13 +151,13 @@ void ContactEditor::Private::storeDone( KJob *job )
 
 void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
 {
-  QMessageBox dlg( mParent );
+  QPointer<QMessageBox> dlg = new QMessageBox( mParent );
 
-  dlg.setInformativeText( i18n( "The contact has been changed by someone else.\nWhat should be done?" ) );
-  dlg.addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
-  dlg.addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
+  dlg->setInformativeText( i18n( "The contact has been changed by someone else.\nWhat should be done?" ) );
+  dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
+  dlg->addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
 
-  if ( dlg.exec() == QMessageBox::AcceptRole ) {
+  if ( dlg->exec() == QMessageBox::AcceptRole ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
     job->fetchScope().fetchFullPayload();
     job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
@@ -164,6 +165,8 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
 
     mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( itemFetchDone( KJob* ) ) );
   }
+
+  delete dlg;
 }
 
 void ContactEditor::Private::loadContact( const KABC::Addressee &addr, const ContactMetaData &metaData )
