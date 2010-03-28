@@ -134,13 +134,13 @@ void PluginLoader::scan()
       QString name = group2.readEntry( "Name" );
       if ( name.isEmpty() ) {
         kWarning( 5300 ) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
-        name = i18n("Unnamed plugin");
+        name = i18n( "Unnamed plugin" );
       }
 
       QString comment = group2.readEntry( "Comment" );
       if ( comment.isEmpty() ) {
         kWarning( 5300 ) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
-        comment = i18n("No description available");
+        comment = i18n( "No description available" );
       }
 
       if ( type.contains( QLatin1Char( ',' ) ) ) {

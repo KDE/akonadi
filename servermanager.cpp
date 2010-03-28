@@ -34,8 +34,8 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#define AKONADI_CONTROL_SERVICE QLatin1String("org.freedesktop.Akonadi.Control")
-#define AKONADI_SERVER_SERVICE QLatin1String("org.freedesktop.Akonadi")
+#define AKONADI_CONTROL_SERVICE QLatin1String( "org.freedesktop.Akonadi.Control" )
+#define AKONADI_SERVER_SERVICE QLatin1String( "org.freedesktop.Akonadi" )
 
 using namespace Akonadi;
 
@@ -113,7 +113,7 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
   // HACK see if we are a agent ourselves and skip AgentManager creation since that can cause deadlocks
-  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
+  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String( "/" ) );
   if ( obj && dynamic_cast<AgentBase*>( obj ) )
     return;
   connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
@@ -133,7 +133,7 @@ bool ServerManager::start()
     return true;
 
   // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String(".lock") );
+  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     sInstance->setState( Starting );
@@ -141,7 +141,7 @@ bool ServerManager::start()
   }
 
   kDebug() << "executing akonadi_control";
-  const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
+  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
     QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
@@ -158,11 +158,11 @@ bool ServerManager::start()
 bool ServerManager::stop()
 {
   QDBusInterface iface( AKONADI_CONTROL_SERVICE,
-                        QString::fromLatin1("/ControlManager"),
-                        QString::fromLatin1("org.freedesktop.Akonadi.ControlManager") );
+                        QString::fromLatin1( "/ControlManager" ),
+                        QString::fromLatin1( "org.freedesktop.Akonadi.ControlManager" ) );
   if ( !iface.isValid() )
     return false;
-  iface.call( QDBus::NoBlock, QString::fromLatin1("shutdown") );
+  iface.call( QDBus::NoBlock, QString::fromLatin1( "shutdown" ) );
   sInstance->setState( Stopping );
   return true;
 }
@@ -197,21 +197,21 @@ ServerManager::State ServerManager::state()
 
     // HACK see if we are a agent ourselves and skip the test below which can in some cases deadlock the server
     // and is not really needed in this case anyway since we happen to know at least one agent is available
-    QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String("/") );
+    QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String( "/" ) );
     if ( obj && dynamic_cast<AgentBase*>( obj ) )
       return Running;
 
     // besides the running server processes we also need at least one resource to be operational
     AgentType::List agentTypes = AgentManager::self()->types();
     foreach ( const AgentType &type, agentTypes ) {
-      if ( type.capabilities().contains( QLatin1String("Resource") ) )
+      if ( type.capabilities().contains( QLatin1String( "Resource" ) ) )
         return Running;
     }
     return Broken;
   }
 
   // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String(".lock") );
+  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     if ( previousState == Running )

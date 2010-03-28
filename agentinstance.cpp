@@ -130,11 +130,11 @@ bool AgentInstance::operator==( const AgentInstance &other ) const
 
 void AgentInstance::abortCurrentTask() const
 {
-  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
-                        QString::fromLatin1("/"),
-                        QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control") );
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( identifier() ),
+                        QString::fromLatin1( "/" ),
+                        QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
   if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1("abort") );
+    QDBusReply<void> reply = iface.call( QString::fromLatin1( "abort" ) );
     if( !reply.isValid() ) {
       kWarning() << "Failed to place D-Bus call.";
     }
@@ -145,11 +145,11 @@ void AgentInstance::abortCurrentTask() const
 
 void AgentInstance::reconfigure() const
 {
-  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( identifier() ),
-                        QString::fromLatin1("/"),
-                        QString::fromLatin1("org.freedesktop.Akonadi.Agent.Control") );
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( identifier() ),
+                        QString::fromLatin1( "/" ),
+                        QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
   if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1("reconfigure") );
+    QDBusReply<void> reply = iface.call( QString::fromLatin1( "reconfigure" ) );
     if( !reply.isValid() ) {
       kWarning() << "Failed to place D-Bus call.";
     }
@@ -160,11 +160,11 @@ void AgentInstance::reconfigure() const
 
 void Akonadi::AgentInstance::restart() const
 {
-  QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Control"),
-                        QString::fromLatin1("/AgentManager"),
-                        QString::fromLatin1("org.freedesktop.Akonadi.AgentManager") );
+  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Control" ),
+                        QString::fromLatin1( "/AgentManager" ),
+                        QString::fromLatin1( "org.freedesktop.Akonadi.AgentManager" ) );
   if ( iface.isValid() ) {
-    QDBusReply<void> reply = iface.call( QString::fromLatin1("restartAgentInstance"), identifier() );
+    QDBusReply<void> reply = iface.call( QString::fromLatin1( "restartAgentInstance" ), identifier() );
     if( !reply.isValid() ) {
       kWarning() << "Failed to place D-Bus call.";
     }

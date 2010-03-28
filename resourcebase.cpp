@@ -202,12 +202,12 @@ QString ResourceBase::parseArguments( int argc, char **argv )
     catalog = QByteArray( argv[0] );
 
   KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
-                      ki18nc("@title application name", "Akonadi Resource"), "0.1",
-                      ki18nc("@title application description", "Akonadi Resource") );
+                      ki18nc( "@title application name", "Akonadi Resource" ), "0.1",
+                      ki18nc( "@title application description", "Akonadi Resource" ) );
 
   KCmdLineOptions options;
   options.add( "identifier <argument>",
-               ki18nc("@label commandline option", "Resource identifier") );
+               ki18nc( "@label commandline option", "Resource identifier" ) );
   KCmdLineArgs::addCmdLineOptions( options );
 
   return identifier;
@@ -485,7 +485,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )
   }
   ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( fetch->items().count() != 1 ) {
-    q->cancelTask( QLatin1String("The requested item does no longer exist") );
+    q->cancelTask( QLatin1String( "The requested item does no longer exist" ) );
     return;
   }
   const Item item = fetch->items().first();

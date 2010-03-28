@@ -106,10 +106,10 @@ void JobPrivate::init( QObject *parent )
     if ( s_lastTime.isNull() )
       s_lastTime.start();
     if ( s_lastTime.elapsed() > 3000 ) {
-      if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
-        s_jobtracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
-                                           QLatin1String("/jobtracker"),
-                                           QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+      if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
+        s_jobtracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
+                                           QLatin1String( "/jobtracker" ),
+                                           QLatin1String( "org.freedesktop.Akonadi.JobTracker" ),
                                            QDBusConnection::sessionBus(), 0 );
       } else {
         s_lastTime.restart();
@@ -133,7 +133,7 @@ void JobPrivate::signalCreationToJobTracker()
                    << QString::number(reinterpret_cast<unsigned long>( q ), 16)
                    << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QString() )
                    << QString::fromLatin1( q->metaObject()->className() );
-      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobCreated"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobCreated" ), argumentList);
   }
 }
 
@@ -156,7 +156,7 @@ void JobPrivate::startQueued()
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
-      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobStarted"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobStarted" ), argumentList);
   }
 }
 
@@ -234,7 +234,7 @@ Job::~Job()
       QList<QVariant> argumentList;
       argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
                    << errorString();
-      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String("jobEnded"), argumentList);
+      s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobEnded" ), argumentList);
   }
 }
 

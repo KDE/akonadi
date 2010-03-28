@@ -39,13 +39,13 @@
 #define QTEST_AKONADIMAIN(TestObject, flags) \
 int main(int argc, char *argv[]) \
 { \
-  setenv("LC_ALL", "C", 1); \
-  unsetenv("KDE_COLOR_DEBUG"); \
-  KAboutData aboutData( QByteArray("qttest"), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
+  setenv( "LC_ALL", "C", 1); \
+  unsetenv( "KDE_COLOR_DEBUG" ); \
+  KAboutData aboutData( QByteArray( "qttest" ), QByteArray(), ki18n( "KDE Test Program" ), QByteArray( "version" ) );  \
   KDEMainFlags mainFlags = flags;                         \
   KComponentData cData(&aboutData); \
   QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
-  app.setApplicationName( QLatin1String("qttest") ); \
+  app.setApplicationName( QLatin1String( "qttest" ) ); \
   qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
   qRegisterMetaType<KUrl::List>(); \
   TestObject tc; \

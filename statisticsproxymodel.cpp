@@ -81,8 +81,8 @@ class StatisticsProxyModel::Private
       tip += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"
         "      <strong>%3</strong>: %4<br><br>\n"
-        ).arg( i18n("Total Messages") ).arg( collection.statistics().count() )
-         .arg( i18n("Unread Messages") ).arg( collection.statistics().unreadCount() );
+        ).arg( i18n( "Total Messages" ) ).arg( collection.statistics().count() )
+         .arg( i18n( "Unread Messages" ) ).arg( collection.statistics().unreadCount() );
 
       if ( collection.hasAttribute<CollectionQuotaAttribute>() ) {
         CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
@@ -100,7 +100,7 @@ class StatisticsProxyModel::Private
 
       tip += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"
-        ).arg( i18n("Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
+        ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
 
 
       QString iconName = CollectionUtils::defaultIconName( collection );
@@ -119,7 +119,7 @@ class StatisticsProxyModel::Private
       }
 
       if ( iconPath.isEmpty() ) {
-        iconPath = KIconLoader::global()->iconPath( QLatin1String("folder"), -32, false );
+        iconPath = KIconLoader::global()->iconPath( QLatin1String( "folder" ), -32, false );
       }
 
       tip += QString::fromLatin1(

@@ -143,8 +143,8 @@ void Collection::setParentRemoteId(const QString & remoteParent)
 KUrl Collection::url() const
 {
   KUrl url;
-  url.setProtocol( QString::fromLatin1("akonadi") );
-  url.addQueryItem( QLatin1String("collection"), QString::number( id() ) );
+  url.setProtocol( QString::fromLatin1( "akonadi" ) );
+  url.addQueryItem( QLatin1String( "collection" ), QString::number( id() ) );
   return url;
 }
 
@@ -172,7 +172,7 @@ Collection Collection::root()
 
 QString Collection::mimeType( )
 {
-  return QString::fromLatin1("inode/directory");
+  return QString::fromLatin1( "inode/directory" );
 }
 
 QString Collection::resource() const

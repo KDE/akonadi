@@ -66,7 +66,7 @@ class ItemModel::Private
       : mParent( parent ), monitor( new Monitor() )
     {
       session = new Session( QCoreApplication::instance()->applicationName().toUtf8()
-          + QByteArray("-ItemModel-") + QByteArray::number( qrand() ), mParent );
+          + QByteArray( "-ItemModel-" ) + QByteArray::number( qrand() ), mParent );
 
       monitor->ignoreSession( session );
 
@@ -112,7 +112,7 @@ class ItemModel::Private
 bool ItemModel::Private::collectionIsCompatible() const
 {
   // in the generic case, we show any collection
-  if ( mParent->mimeTypes() == QStringList( QLatin1String("text/uri-list") ) )
+  if ( mParent->mimeTypes() == QStringList( QLatin1String( "text/uri-list" ) ) )
     return true;
   // if the model's mime types are more specific, limit to those
   // collections that have matching types
@@ -400,7 +400,7 @@ Qt::ItemFlags ItemModel::flags( const QModelIndex &index ) const
 
 QStringList ItemModel::mimeTypes() const
 {
-  return QStringList() << QLatin1String("text/uri-list");
+  return QStringList() << QLatin1String( "text/uri-list" );
 }
 
 Session * ItemModel::session() const

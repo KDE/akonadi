@@ -187,7 +187,7 @@ bool Item::hasPayload() const
 KUrl Item::url( UrlType type ) const
 {
   KUrl url;
-  url.setProtocol( QString::fromLatin1("akonadi") );
+  url.setProtocol( QString::fromLatin1( "akonadi" ) );
   url.addQueryItem( QLatin1String( "item" ), QString::number( id() ) );
 
   if ( type == UrlWithMimeType )

@@ -69,7 +69,7 @@ void CollectionSelectJob::doStart( )
     d->writeData( command + d->mCollection.remoteId().toUtf8() + '\n' );
   } else {
     setError( Unknown );
-    setErrorText( i18n("Invalid collection specified") );
+    setErrorText( i18n( "Invalid collection specified" ) );
     emitResult();
   }
 }

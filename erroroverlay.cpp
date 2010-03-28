@@ -88,8 +88,8 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
 
   ui->setupUi( this );
   ui->notRunningIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 64 ) );
-  ui->brokenIcon->setPixmap( KIcon( QString::fromLatin1("dialog-error") ).pixmap( 64 ) );
-  ui->progressIcon->setPixmap( KIcon( QLatin1String( "akonadi") ).pixmap( 32 ) );
+  ui->brokenIcon->setPixmap( KIcon( QString::fromLatin1( "dialog-error" ) ).pixmap( 64 ) );
+  ui->progressIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 32 ) );
 
   connect( ui->startButton, SIGNAL(clicked()), SLOT(startClicked()) );
   connect( ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()) );
@@ -194,13 +194,13 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
         ui->stackWidget->setCurrentWidget( ui->brokenPage );
         break;
       case ServerManager::Starting:
-        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is starting...") );
-        ui->progressDescription->setText( i18n( "Akonadi personal information management service is starting...") );
+        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is starting..." ) );
+        ui->progressDescription->setText( i18n( "Akonadi personal information management service is starting..." ) );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Stopping:
-        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is shutting down...") );
-        ui->progressDescription->setText( i18n( "Akonadi personal information management service is shutting down...") );
+        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is shutting down..." ) );
+        ui->progressDescription->setText( i18n( "Akonadi personal information management service is shutting down..." ) );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Running:

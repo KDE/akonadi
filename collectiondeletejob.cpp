@@ -56,7 +56,7 @@ void CollectionDeleteJob::doStart()
 
   if ( !d->mCollection.isValid() && d->mCollection.remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( i18n("Invalid collection") );
+    setErrorText( i18n( "Invalid collection" ) );
     emitResult();
     return;
   }

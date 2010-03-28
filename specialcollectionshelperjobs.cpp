@@ -295,7 +295,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
 
     if( ! conf.isValid() ) {
       q->setError( -1 );
-      q->setErrorText( i18n("Invalid resource identifier '%1'", defaultId) );
+      q->setErrorText( i18n( "Invalid resource identifier '%1'", defaultId) );
       q->emitResult();
       return;
     }

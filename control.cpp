@@ -84,7 +84,7 @@ class Control::Private
         mSuccess( false ),
         mStarting( false ), mStopping( false )
     {
-      KGlobal::locale()->insertCatalog( QString::fromLatin1("libakonadi") );
+      KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
       if ( ServerManager::isRunning() )
         mFirstRunner = new Firstrun( mParent );
     }

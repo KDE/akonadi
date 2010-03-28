@@ -92,13 +92,13 @@ void SessionPrivate::reconnect()
     kDebug() << protocol << options;
 
     if ( protocol == "tcp" ) {
-      serverAddress = options.value( QLatin1String("host") );
-      port = options.value( QLatin1String( "port") ).toUInt();
+      serverAddress = options.value( QLatin1String( "host" ) );
+      port = options.value( QLatin1String( "port" ) ).toUInt();
       useTcp = true;
     } else if ( protocol == "unix" ) {
-      serverAddress = options.value( QLatin1String("path") );
+      serverAddress = options.value( QLatin1String( "path" ) );
     } else if ( protocol == "pipe" ) {
-      serverAddress = options.value( QLatin1String("name" ) );
+      serverAddress = options.value( QLatin1String( "name" ) );
     }
   }
 
@@ -178,7 +178,7 @@ void SessionPrivate::dataReceived()
         continue; // response not yet completed
 
       // handle login response
-      if ( parser->tag() == QByteArray("0") ) {
+      if ( parser->tag() == QByteArray( "0" ) ) {
         if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
           connected = true;
           startNext();

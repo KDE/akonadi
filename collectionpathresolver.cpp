@@ -84,7 +84,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
   const Collection::List cols = list->collections();
   if ( cols.isEmpty() ) {
       q->setError( CollectionPathResolver::Unknown );
-      q->setErrorText( i18n( "No such collection.") );
+      q->setErrorText( i18n( "No such collection." ) );
       q->emitResult();
       return;
   }
@@ -101,7 +101,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job )
     }
     if ( !found ) {
       q->setError( CollectionPathResolver::Unknown );
-      q->setErrorText( i18n( "No such collection.") );
+      q->setErrorText( i18n( "No such collection." ) );
       q->emitResult();
       return;
     }

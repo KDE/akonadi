@@ -32,7 +32,7 @@ public:
       completeInsert(false),
       completeRemove(false)
   {
-    qRegisterMetaType<QModelIndex>("QModelIndex");
+    qRegisterMetaType<QModelIndex>( "QModelIndex" );
   }
 
   inline void invokeDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)

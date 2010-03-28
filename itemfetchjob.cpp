@@ -146,7 +146,7 @@ void ItemFetchJob::doStart()
 
   if ( d->mRequestedItems.isEmpty() ) { // collection content listing
     if ( d->mCollection == Collection::root() ) {
-      setErrorText( i18n("Cannot list root collection.") );
+      setErrorText( i18n( "Cannot list root collection." ) );
       setError( Unknown );
       emitResult();
     }

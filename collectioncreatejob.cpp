@@ -55,7 +55,7 @@ void CollectionCreateJob::doStart( )
   Q_D( CollectionCreateJob );
   if ( d->mCollection.parentCollection().id() < 0 && d->mCollection.parentCollection().remoteId().isEmpty() ) {
     setError( Unknown );
-    setErrorText( i18n("Invalid parent") );
+    setErrorText( i18n( "Invalid parent" ) );
     emitResult();
     return;
   }

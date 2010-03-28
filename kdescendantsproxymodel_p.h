@@ -53,7 +53,7 @@ KDescendantsProxyModel *descProxy = new KDescendantesProxyModel(this);
 descProxy->setSourceModel(entityTree);
 
 // #### This is new
-descProxy->setDisplayAncestorData(true, QString(" / "));
+descProxy->setDisplayAncestorData(true, QString( " / " ));
 
 view->setModel(descProxy);
 

@@ -101,9 +101,9 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   d->ui.setupUi( mainWidget() );
   KIcon icon;
   if ( QApplication::isLeftToRight() )
-    icon = KIcon( QLatin1String("go-next") );
+    icon = KIcon( QLatin1String( "go-next" ) );
   else
-    icon = KIcon( QLatin1String("go-previous") );
+    icon = KIcon( QLatin1String( "go-previous" ) );
   d->ui.subscribeButton->setIcon( icon );
   d->ui.unsubscribeButton->setIcon( icon );
 

@@ -178,7 +178,7 @@ void ResourceScheduler::taskDone()
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial )
                  << QString();
-    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobEnded" ), argumentList);
   }
 
   mCurrentTask = Task();
@@ -191,7 +191,7 @@ void ResourceScheduler::deferTask()
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial )
                  << QString();
-    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobEnded"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobEnded" ), argumentList);
   }
 
   Task t = mCurrentTask;
@@ -233,7 +233,7 @@ void ResourceScheduler::executeNext()
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial );
-    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobStarted"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobStarted" ), argumentList);
   }
 
   switch ( mCurrentTask.type ) {
@@ -295,10 +295,10 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType )
 {
   // if there's a job tracer running, tell it about the new job
-  if ( !s_resourcetracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String("org.kde.akonadiconsole") ) ) {
-    s_resourcetracker = new QDBusInterface( QLatin1String("org.kde.akonadiconsole"),
-                                       QLatin1String("/resourcesJobtracker"),
-                                       QLatin1String("org.freedesktop.Akonadi.JobTracker"),
+  if ( !s_resourcetracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
+    s_resourcetracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
+                                       QLatin1String( "/resourcesJobtracker" ),
+                                       QLatin1String( "org.freedesktop.Akonadi.JobTracker" ),
                                        QDBusConnection::sessionBus(), 0 );
   }
 
@@ -308,7 +308,7 @@ void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray 
                  << QString::number( task.serial )
                  << QString()
                  << QString::fromLatin1( taskType );
-    s_resourcetracker->asyncCallWithArgumentList(QLatin1String("jobCreated"), argumentList);
+    s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobCreated" ), argumentList);
   }
 }
 

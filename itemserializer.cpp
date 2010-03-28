@@ -140,7 +140,7 @@ class PluginRegistry
 {
   public:
     PluginRegistry() :
-      mDefaultPlugin( PluginEntry( QLatin1String("application/octet-stream"), s_defaultItemSerializerPlugin ) )
+      mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream" ), s_defaultItemSerializerPlugin ) )
     {
       const PluginLoader* pl = PluginLoader::self();
       if ( !pl ) {

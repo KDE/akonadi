@@ -62,24 +62,24 @@ static const struct {
   const char* slot;
   bool isActionMenu;
 } actionData[] = {
-  { "akonadi_collection_create", I18N_NOOP("&New Folder..."), "folder-new", 0, SLOT(slotCreateCollection()), false },
+  { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT(slotCreateCollection()), false },
   { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT(slotCopyCollections()), false },
-  { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), "edit-delete", 0, SLOT(slotDeleteCollection()), false },
-  { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), false },
-  { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), "configure", 0, SLOT(slotCollectionProperties()), false },
+  { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT(slotDeleteCollection()), false },
+  { "akonadi_collection_sync", I18N_NOOP( "&Synchronize Folder" ), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), false },
+  { "akonadi_collection_properties", I18N_NOOP( "Folder &Properties" ), "configure", 0, SLOT(slotCollectionProperties()), false },
   { "akonadi_item_copy", 0, "edit-copy", 0, SLOT(slotCopyItems()), false },
-  { "akonadi_paste", I18N_NOOP("&Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), false },
+  { "akonadi_paste", I18N_NOOP( "&Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), false },
   { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()), false },
-  { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), 0, 0, SLOT(slotLocalSubscription()), false },
-  { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
-  { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
-  { "akonadi_collection_rename_favorite", I18N_NOOP("Rename Favorite..."), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
-  { "akonadi_collection_copy_to_menu", I18N_NOOP("Copy Folder To..."), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
-  { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
-  { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
-  { "akonadi_item_cut", I18N_NOOP("&Cut Item"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
-  { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
+  { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), 0, 0, SLOT(slotLocalSubscription()), false },
+  { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT(slotAddToFavorites()), false },
+  { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), false },
+  { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT(slotRenameFavorite()), false },
+  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT(slotCopyCollectionTo(QAction*)), true },
+  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), true },
+  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), true },
+  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), true },
+  { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), false },
+  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -330,8 +330,8 @@ class StandardActionManager::Private
       if ( !canCreateCollection( collection ) )
         return;
 
-      const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder"),
-                                                  i18nc( "@label:textbox name of a thing", "Name"),
+      const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
+                                                  i18nc( "@label:textbox name of a thing", "Name" ),
                                                   QString(), 0, parentWidget );
       if ( name.isEmpty() )
         return;
@@ -372,7 +372,7 @@ class StandardActionManager::Private
         text = i18n( "Do you really want to delete the search view '%1'?", index.data().toString() );
 
       if ( KMessageBox::questionYesNo( parentWidget, text,
-           i18n("Delete folder?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           i18n( "Delete folder?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
       const Collection::Id colId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
@@ -407,7 +407,7 @@ class StandardActionManager::Private
       Q_ASSERT( col.isValid() );
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, parentWidget );
-      dlg->setCaption(i18n("Properties of Folder %1",col.name()));
+      dlg->setCaption(i18n( "Properties of Folder %1",col.name()));
       dlg->show();
     }
 
@@ -442,7 +442,7 @@ class StandardActionManager::Private
     {
       if ( KMessageBox::questionYesNo( parentWidget,
            i18n( "Do you really want to delete all selected items?" ),
-           i18n("Delete?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           i18n( "Delete?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
@@ -561,24 +561,24 @@ class StandardActionManager::Private
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n("Could not create folder: %1", job->errorString()),
-                            i18n("Folder creation failed") );
+        KMessageBox::error( parentWidget, i18n( "Could not create folder: %1", job->errorString()),
+                            i18n( "Folder creation failed" ) );
       }
     }
 
     void collectionDeletionResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n("Could not delete folder: %1", job->errorString()),
-                            i18n("Folder deletion failed") );
+        KMessageBox::error( parentWidget, i18n( "Could not delete folder: %1", job->errorString()),
+                            i18n( "Folder deletion failed" ) );
       }
     }
 
     void pasteResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n("Could not paste data: %1", job->errorString()),
-                            i18n("Paste failed") );
+        KMessageBox::error( parentWidget, i18n( "Could not paste data: %1", job->errorString()),
+                            i18n( "Paste failed" ) );
       }
     }
 
