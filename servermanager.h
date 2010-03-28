@@ -47,7 +47,7 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @since 4.5
      */
     enum State {
-        NotRunning, ///< Server is not running, could be noone started it yet or it failed to start.
+        NotRunning, ///< Server is not running, could be no one started it yet or it failed to start.
         Starting, ///< Server was started but is not yet running.
         Running, ///< Server is running and operational.
         Stopping, ///< Server is shutting down.

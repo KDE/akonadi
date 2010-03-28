@@ -30,11 +30,11 @@ IMProtocols::IMProtocols()
 {
   KIconLoader::global()->addAppDir( QLatin1String( "akonadi/contact" ) );
 
-  const QList<KPluginInfo> infos = KPluginInfo::fromServices( KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
+  const QList<KPluginInfo> list = KPluginInfo::fromServices( KServiceTypeTrader::self()->query( QString::fromLatin1( "KABC/IMProtocol" ) ) );
 
-  // sort the protocol infos by user visible name
+  // sort the protocol information by user visible name
   QMap<QString, KPluginInfo> sortingMap;
-  foreach ( const KPluginInfo &info, infos ) {
+  foreach ( const KPluginInfo &info, list ) {
     sortingMap.insert( info.name(), info );
 
     mPluginInfos.insert( info.property( QLatin1String( "X-KDE-InstantMessagingKABCField" ) ).toString(), info );

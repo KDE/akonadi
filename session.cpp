@@ -83,7 +83,7 @@ void SessionPrivate::reconnect()
     const int pos = serverAddressEnvVar.indexOf( ':' );
     const QByteArray protocol = serverAddressEnvVar.left( pos  );
     QMap<QString, QString> options;
-    foreach ( const QString entry, QString::fromLatin1( serverAddressEnvVar.mid( pos + 1 ) ).split( QLatin1Char(',') ) ) {
+    foreach ( const QString &entry, QString::fromLatin1( serverAddressEnvVar.mid( pos + 1 ) ).split( QLatin1Char(',') ) ) {
       const QStringList pair = entry.split( QLatin1Char('=') );
       if ( pair.size() != 2 )
         continue;
