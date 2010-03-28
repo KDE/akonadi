@@ -134,7 +134,7 @@ class AKONADI_EXPORT Control : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void serverStateChanged(ServerManager::State) )
+    Q_PRIVATE_SLOT( d, void serverStateChanged(Akonadi::ServerManager::State) )
     Q_PRIVATE_SLOT( d, void createErrorOverlays() )
     Q_PRIVATE_SLOT( d, void cleanup() )
     //@endcond

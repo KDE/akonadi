@@ -97,7 +97,7 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   const ServerManager::State state = ServerManager::state();
   mOverlayActive = state == ServerManager::Running;
   serverStateChanged( state );
-  connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)));
+  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(serverStateChanged(Akonadi::ServerManager::State)));
 
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );

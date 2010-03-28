@@ -350,7 +350,7 @@ void SessionPrivate::init( const QByteArray &id )
 
   if ( ServerManager::state() == ServerManager::NotRunning )
     ServerManager::start();
-  mParent->connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(serverStateChanged(ServerManager::State)) );
+  mParent->connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   reconnect();
 }

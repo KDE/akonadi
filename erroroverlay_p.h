@@ -61,7 +61,7 @@ class ErrorOverlay : public QWidget
   private slots:
     void startClicked();
     void selfTestClicked();
-    void serverStateChanged( ServerManager::State state );
+    void serverStateChanged( Akonadi::ServerManager::State state );
 
   private:
     QPointer<QWidget> mBaseWidget;

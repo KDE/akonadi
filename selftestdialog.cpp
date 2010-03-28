@@ -87,7 +87,7 @@ SelfTestDialog::SelfTestDialog(QWidget * parent) :
   connect( this, SIGNAL(user1Clicked()), SLOT(saveReport()) );
   connect( this, SIGNAL(user2Clicked()), SLOT(copyReport()) );
 
-  connect( ServerManager::self(), SIGNAL(stateChanged(ServerManager::State)), SLOT(runTests()) );
+  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)), SLOT(runTests()) );
   runTests();
 }
 

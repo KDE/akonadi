@@ -111,8 +111,9 @@ class AKONADI_EXPORT ServerManager : public QObject
 
     /**
      * Emitted when the server state changes.
+     * @since 4.5
      */
-    void stateChanged( ServerManager::State state );
+    void stateChanged( Akonadi::ServerManager::State state );
 
   private:
     //@cond PRIVATE
