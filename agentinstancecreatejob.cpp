@@ -20,6 +20,7 @@
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
 #include "agentmanager_p.h"
+#include "kjobprivatebase_p.h"
 
 #include "agentinstance.h"
 #include "controlinterface.h"
@@ -41,7 +42,7 @@ static const int safetyTimeout = 10000; // ms
 /**
  * @internal
  */
-class AgentInstanceCreateJob::Private
+class AgentInstanceCreateJob::Private : public KJobPrivateBase
 {
   public:
     Private( AgentInstanceCreateJob* parent ) : q( parent ),
@@ -122,6 +123,8 @@ class AgentInstanceCreateJob::Private
       q->emitResult();
     }
 
+    void doStart();
+
     AgentInstanceCreateJob* q;
     AgentType agentType;
     AgentInstance agentInstance;
@@ -161,20 +164,25 @@ AgentInstance AgentInstanceCreateJob::instance() const
 
 void AgentInstanceCreateJob::start()
 {
-  d->agentInstance = AgentManager::self()->d->createInstance( d->agentType );
-  if ( !d->agentInstance.isValid() ) {
-    setError( KJob::UserDefinedError );
-    setErrorText( i18n("Unable to create agent instance." ) );
-    QTimer::singleShot( 0, this , SLOT( emitResult() ) );
+  d->start();
+}
+
+void AgentInstanceCreateJob::Private::doStart()
+{
+  agentInstance = AgentManager::self()->d->createInstance( agentType );
+  if ( !agentInstance.isValid() ) {
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n("Unable to create agent instance." ) );
+    QTimer::singleShot( 0, q, SLOT( emitResult() ) );
   } else {
     int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX
     // Increate the timeout when valgrinding the agent, because that slows down things a log.
     QString agentValgrind = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND" ) );
-    if ( !agentValgrind.isEmpty() && d->agentType.identifier().contains( agentValgrind ) )
+    if ( !agentValgrind.isEmpty() && agentType.identifier().contains( agentValgrind ) )
       timeout *= 15;
 #endif
-    d->safetyTimer->start( timeout );
+    safetyTimer->start( timeout );
   }
 }
 

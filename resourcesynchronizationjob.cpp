@@ -16,6 +16,7 @@
  */
 
 #include "resourcesynchronizationjob.h"
+#include "kjobprivatebase_p.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
@@ -30,7 +31,7 @@
 namespace Akonadi
 {
 
-class ResourceSynchronizationJobPrivate
+class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 {
   public:
     ResourceSynchronizationJobPrivate( ResourceSynchronizationJob* parent ) :
@@ -39,6 +40,8 @@ class ResourceSynchronizationJobPrivate
       safetyTimer( 0 ),
       timeoutCount( 0 )
     {}
+
+    void doStart();
 
     ResourceSynchronizationJob *q;
     AgentInstance instance;
@@ -71,25 +74,30 @@ ResourceSynchronizationJob::~ResourceSynchronizationJob()
 
 void ResourceSynchronizationJob::start()
 {
-  if ( !d->instance.isValid() ) {
-    setError( UserDefinedError );
-    setErrorText( i18n( "Invalid resource instance." ) );
-    emitResult();
+  d->start();
+}
+
+void ResourceSynchronizationJobPrivate::doStart()
+{
+  if ( !instance.isValid() ) {
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "Invalid resource instance." ) );
+    q->emitResult();
     return;
   }
 
-  d->interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( d->instance.identifier() ),
+  interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
                                       QString::fromLatin1( "/" ),
                                       QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ), QDBusConnection::sessionBus(), this );
-  connect( d->interface, SIGNAL(synchronized()), SLOT(slotSynchronized()) );
+  connect( interface, SIGNAL(synchronized()), SLOT(slotSynchronized()) );
 
-  if ( d->interface->isValid() ) {
-    d->instance.synchronize();
-    d->safetyTimer->start();
+  if ( interface->isValid() ) {
+    instance.synchronize();
+    safetyTimer->start();
   } else {
-    setError( UserDefinedError );
-    setErrorText( i18n( "Unable to obtain D-Bus interface for resource '%1'", d->instance.identifier() ) );
-    emitResult();
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n( "Unable to obtain D-Bus interface for resource '%1'", instance.identifier() ) );
+    q->emitResult();
     return;
   }
 }
