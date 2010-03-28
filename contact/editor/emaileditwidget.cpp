@@ -156,7 +156,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
 {
   setCaption( i18n( "Edit Email Addresses" ) );
   setButtons( KDialog::Ok | KDialog::Cancel );
-  setDefaultButton( KDialog::Help );
+  setDefaultButton( KDialog::Cancel );
 
   QWidget *page = new QWidget( this);
   setMainWidget( page );
