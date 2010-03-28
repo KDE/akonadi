@@ -89,7 +89,7 @@ void ResourceSynchronizationJobPrivate::doStart()
   interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
                                       QString::fromLatin1( "/" ),
                                       QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ), QDBusConnection::sessionBus(), this );
-  connect( interface, SIGNAL(synchronized()), SLOT(slotSynchronized()) );
+  connect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
 
   if ( interface->isValid() ) {
     instance.synchronize();
