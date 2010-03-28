@@ -79,6 +79,14 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
     explicit AgentInstanceCreateJob( const AgentType &type, QObject *parent = 0 );
 
     /**
+     * Create a new agent instance creation job.
+     * @param typeId The identifier of type of the agent to create.
+     * @param parent The parent object.
+     * @since 4.5
+     */
+    explicit AgentInstanceCreateJob( const QString &typeId, QObject *parent = 0 );
+
+    /**
      * Destroys the agent instance creation job.
      */
     ~AgentInstanceCreateJob();

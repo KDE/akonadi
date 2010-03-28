@@ -47,14 +47,13 @@ class AgentInstanceCreateJob::Private : public KJobPrivateBase
   public:
     Private( AgentInstanceCreateJob* parent ) : q( parent ),
       parentWidget( 0 ),
-      safetyTimer( 0 ),
+      safetyTimer( new QTimer( parent ) ),
       doConfig( false ),
       tooLate( false )
     {
-    }
-
-    ~Private()
-    {
+      QObject::connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
+                        q, SLOT(agentInstanceAdded(Akonadi::AgentInstance)) );
+      QObject::connect( safetyTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
     }
 
     void agentInstanceAdded( const AgentInstance &instance )
@@ -127,6 +126,7 @@ class AgentInstanceCreateJob::Private : public KJobPrivateBase
 
     AgentInstanceCreateJob* q;
     AgentType agentType;
+    QString agentTypeId;
     AgentInstance agentInstance;
     QWidget* parentWidget;
     QTimer *safetyTimer;
@@ -139,12 +139,15 @@ AgentInstanceCreateJob::AgentInstanceCreateJob( const AgentType & agentType, QOb
     d( new Private( this ) )
 {
   d->agentType = agentType;
-  connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
-           this, SLOT( agentInstanceAdded( const Akonadi::AgentInstance& ) ) );
-
-  d->safetyTimer = new QTimer( this );
-  connect( d->safetyTimer, SIGNAL( timeout() ), SLOT( timeout() ) );
 }
+
+AgentInstanceCreateJob::AgentInstanceCreateJob(const QString& typeId, QObject* parent) :
+  KJob( parent ),
+  d( new Private( this ) )
+{
+  d->agentTypeId = typeId;
+}
+
 
 AgentInstanceCreateJob::~ AgentInstanceCreateJob()
 {
@@ -169,6 +172,16 @@ void AgentInstanceCreateJob::start()
 
 void AgentInstanceCreateJob::Private::doStart()
 {
+  if ( !agentType.isValid() && !agentTypeId.isEmpty() )
+    agentType = AgentManager::self()->type( agentTypeId );
+
+  if ( !agentType.isValid() ) {
+    q->setError( KJob::UserDefinedError );
+    q->setErrorText( i18n("Unable to obtain agent type '%1'.", agentTypeId) );
+    QTimer::singleShot( 0, q, SLOT( emitResult() ) );
+    return;
+  }
+
   agentInstance = AgentManager::self()->d->createInstance( agentType );
   if ( !agentInstance.isValid() ) {
     q->setError( KJob::UserDefinedError );
