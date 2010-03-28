@@ -21,6 +21,7 @@
 #define AKONADI_KJOBPRIVATEBASE_P_H 
 
 #include <QtCore/QObject>
+
 #include <akonadi/servermanager.h>
 
 namespace Akonadi {
@@ -30,10 +31,11 @@ namespace Akonadi {
  * require the Akonadi server to be operational.
  * Delays job execution until that is the case.
  * @internal
- */ 
+ */
 class KJobPrivateBase : public QObject
 {
   Q_OBJECT
+
   public:
     /** Call from KJob::start() reimplementation. */
     void start();
@@ -41,8 +43,8 @@ class KJobPrivateBase : public QObject
     /** Reimplement and put here what was in KJob::start() before. */
     virtual void doStart() = 0;
 
-  private slots:
-    void serverStateChanged(Akonadi::ServerManager::State state);
+  private Q_SLOTS:
+    void serverStateChanged( Akonadi::ServerManager::State state );
 };
 
 }

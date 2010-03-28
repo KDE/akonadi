@@ -23,14 +23,16 @@ using namespace Akonadi;
 
 void KJobPrivateBase::start()
 {
-  ServerManager::State serverState = ServerManager::state();
+  const ServerManager::State serverState = ServerManager::state();
+
   if ( serverState == ServerManager::Running ) {
     doStart();
     return;
   }
 
-  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+  connect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ),
+           this, SLOT( serverStateChanged( Akonadi::ServerManager::State ) ) );
+
   if ( serverState == ServerManager::NotRunning )
     ServerManager::start();
 }
@@ -38,11 +40,10 @@ void KJobPrivateBase::start()
 void KJobPrivateBase::serverStateChanged( Akonadi::ServerManager::State state )
 {
   if ( state == ServerManager::Running ) {
-    disconnect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                this, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+    disconnect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ),
+                this, SLOT( serverStateChanged( Akonadi::ServerManager::State ) ) );
     doStart();
   }
 }
 
 #include "kjobprivatebase_p.moc"
-

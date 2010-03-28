@@ -18,12 +18,12 @@
 */
 
 #include "agentinstancecreatejob.h"
-#include "agentmanager.h"
-#include "agentmanager_p.h"
-#include "kjobprivatebase_p.h"
 
 #include "agentinstance.h"
+#include "agentmanager.h"
+#include "agentmanager_p.h"
 #include "controlinterface.h"
+#include "kjobprivatebase_p.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -51,9 +51,9 @@ class AgentInstanceCreateJob::Private : public KJobPrivateBase
       doConfig( false ),
       tooLate( false )
     {
-      QObject::connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
-                        q, SLOT(agentInstanceAdded(Akonadi::AgentInstance)) );
-      QObject::connect( safetyTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
+      QObject::connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
+                        q, SLOT( agentInstanceAdded( const Akonadi::AgentInstance& ) ) );
+      QObject::connect( safetyTimer, SIGNAL( timeout() ), q, SLOT( timeout() ) );
     }
 
     void agentInstanceAdded( const AgentInstance &instance )
@@ -134,20 +134,19 @@ class AgentInstanceCreateJob::Private : public KJobPrivateBase
     bool tooLate;
 };
 
-AgentInstanceCreateJob::AgentInstanceCreateJob( const AgentType & agentType, QObject * parent )
+AgentInstanceCreateJob::AgentInstanceCreateJob( const AgentType &agentType, QObject *parent )
   : KJob( parent ),
     d( new Private( this ) )
 {
   d->agentType = agentType;
 }
 
-AgentInstanceCreateJob::AgentInstanceCreateJob(const QString& typeId, QObject* parent) :
-  KJob( parent ),
-  d( new Private( this ) )
+AgentInstanceCreateJob::AgentInstanceCreateJob( const QString &typeId, QObject *parent )
+  : KJob( parent ),
+    d( new Private( this ) )
 {
   d->agentTypeId = typeId;
 }
-
 
 AgentInstanceCreateJob::~ AgentInstanceCreateJob()
 {
