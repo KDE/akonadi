@@ -126,6 +126,7 @@ PhoneNumberWidget::PhoneNumberWidget( QWidget *parent )
   layout->addWidget( mTypeCombo );
   layout->addWidget( mNumberEdit );
 
+  connect( mTypeCombo, SIGNAL( activated( int ) ), SIGNAL( modified() ) );
   connect( mNumberEdit, SIGNAL( textChanged( const QString& ) ), SIGNAL( modified() ) );
 }
 
@@ -133,7 +134,10 @@ void PhoneNumberWidget::setNumber( const KABC::PhoneNumber &number )
 {
   mNumber = number;
 
+  disconnect( mTypeCombo, SIGNAL( activated( int ) ), this, SIGNAL( modified() ) );
   mTypeCombo->setType( number.type() );
+  connect( mTypeCombo, SIGNAL( activated( int ) ), SIGNAL( modified() ) );
+
   mNumberEdit->setText( number.number() );
 }
 
