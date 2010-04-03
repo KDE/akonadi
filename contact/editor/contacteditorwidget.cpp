@@ -370,8 +370,6 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setBuddy( mAssistantWidget );
   generalLayout->addWidget( mAssistantWidget, 6, 1 );
 
-  generalLayout->setRowStretch( 7, 1 );
-
   // setup groupware group box
   label = new QLabel( i18n( "Free/Busy:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
@@ -380,8 +378,6 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   mFreeBusyWidget = new FreeBusyEditWidget;
   label->setBuddy( mFreeBusyWidget );
   groupwareLayout->addWidget( mFreeBusyWidget, 0, 1 );
-
-  groupwareLayout->setRowStretch( 1, 1 );
 
   // setup notes group box
   mNotesWidget = new KTextEdit;
