@@ -238,12 +238,12 @@ void DbConfigPostgresql::stopInternalServer()
   // first, try the nicest approach
   if ( !mCleanServerShutdownCommand.isEmpty() ) {
     QProcess::execute( mCleanServerShutdownCommand );
-    if ( mDatabaseProcess->waitForFinished( 5000 ) )
+    if ( mDatabaseProcess->waitForFinished( 3000 ) )
       return;
   }
 
   mDatabaseProcess->terminate();
-  const bool result = mDatabaseProcess->waitForFinished( 5000 );
+  const bool result = mDatabaseProcess->waitForFinished( 3000 );
   // We've waited nicely for 3 seconds, to no avail, let's be rude.
   if ( !result )
     mDatabaseProcess->kill();
