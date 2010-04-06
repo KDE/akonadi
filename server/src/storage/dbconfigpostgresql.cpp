@@ -242,9 +242,20 @@ void DbConfigPostgresql::stopInternalServer()
       return;
   }
 
-  mDatabaseProcess->terminate();
-  const bool result = mDatabaseProcess->waitForFinished( 3000 );
-  // We've waited nicely for 3 seconds, to no avail, let's be rude.
-  if ( !result )
-    mDatabaseProcess->kill();
+  // if pg_ctl couldn't terminate all the postgres processes, we have to kill the master one.
+  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
+  const QString pidFileName = QString::fromLatin1( "%1/postmaster.pid" ).arg( dataDir );
+  QFile pidFile( pidFileName );
+  if ( pidFile.open( QIODevice::ReadOnly ) ) {
+    QString postmasterPid = QString::fromUtf8( pidFile.readLine( 0 ).trimmed() );
+    akError() << "The postmaster is still running. Killing it.";
+
+    QStringList arguments;
+    arguments << QString::fromLatin1( "kill")
+              << QString::fromLatin1( "ABRT" )
+              << QString::fromLatin1( "%1" ).arg( postmasterPid );
+
+    const QString command = QString::fromLatin1( "%1" ).arg( mServerPath );
+    QProcess::execute( command, arguments );
+  }
 }
