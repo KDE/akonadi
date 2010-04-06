@@ -368,11 +368,17 @@ void AkonadiServer::startPostgresqlDatabaseProcess()
 void AkonadiServer::startMysqlDatabaseProcess()
 {
   const QString mysqldPath = DbConfig::serverPath();
+  const QStringList mysqldSearchPath = DbConfig::mysqldSearchPath();
 
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
   const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
   const QString fileDataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
+  const QString mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_install_db" ), mysqldSearchPath );
+  akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
+  const QString mMysqlUpgradeDBPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_upgrade" ), mysqldSearchPath );
+  akDebug() << "Found mysql_upgrade: " << mMysqlUpgradeDBPath;
+
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
@@ -441,6 +447,16 @@ void AkonadiServer::startMysqlDatabaseProcess()
     } else {
       akError() << "Failed to open MySQL error log.";
     }
+  }
+
+  // first run, some MySQL versions need a mysql_install_db run for that
+  if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=/etc/akonadi/mysql-global.conf") <<  QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
+    QProcess::execute( mMysqlInstallDbPath, arguments );
+  } 
+  else if ( !mMysqlUpgradeDBPath.isEmpty() ) {
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+    QProcess::execute( mMysqlUpgradeDBPath, arguments );
   }
 
   // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
