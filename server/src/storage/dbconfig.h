@@ -76,6 +76,12 @@ namespace DbConfig {
    * exists.
    */
   QString cleanServerShutdownCommand();
+
+  /**
+   * Returns the path where mysql binaries are searched
+   */
+  QStringList mysqldSearchPath() ;
+
 }
 
 #endif
