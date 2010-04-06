@@ -207,13 +207,13 @@ void DbConfigMysql::startInternalServer()
     actualFile.setPermissions( allowedPerms );
 
   if ( dataDir.isEmpty() )
-    akFatal() << "Akonadi server was not able not create database data directory";
+    akFatal() << "Akonadi server was not able to create database data directory";
 
   if ( akDir.isEmpty() )
-    akFatal() << "Akonadi server was not able not create database log directory";
+    akFatal() << "Akonadi server was not able to create database log directory";
 
   if ( miscDir.isEmpty() )
-    akFatal() << "Akonadi server was not able not create database misc directory";
+    akFatal() << "Akonadi server was not able to create database misc directory";
 
   // the socket path must not exceed 103 characters, so check for max dir length right away
   if ( miscDir.length() >= 90 )
