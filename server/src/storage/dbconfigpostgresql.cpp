@@ -251,7 +251,7 @@ void DbConfigPostgresql::stopInternalServer()
     akError() << "The postmaster is still running. Killing it.";
 
     QStringList arguments;
-    arguments << QString::fromLatin1( "kill")
+    arguments << QString::fromLatin1( "kill" )
               << QString::fromLatin1( "ABRT" )
               << QString::fromLatin1( "%1" ).arg( postmasterPid );
 
