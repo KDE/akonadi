@@ -118,6 +118,12 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
   m_rootCollectionDisplayName = QLatin1String( "[*]" );
 
+  QHash<int, QByteArray> names = q->roleNames();
+
+  names.insert( EntityTreeModel::ChildCountRole, "childCount" );
+
+  q->setRoleNames(names);
+
   fillModel();
 }
 

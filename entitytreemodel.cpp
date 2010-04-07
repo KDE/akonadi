@@ -197,6 +197,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if ( ColumnCountRole == role )
     return entityColumnCount( headerGroup );
 
+  if ( role == ChildCountRole )
+  {
+    return rowCount( index );
+  }
+
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
   if ( ParentCollectionRole == role ) {
