@@ -454,10 +454,6 @@ void AkonadiServer::startMysqlDatabaseProcess()
     const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=/etc/akonadi/mysql-global.conf") <<  QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
     QProcess::execute( mMysqlInstallDbPath, arguments );
   } 
-  else if ( !mMysqlUpgradeDBPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
-    QProcess::execute( mMysqlUpgradeDBPath, arguments );
-  }
 
   // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
   if ( confUpdate ) {
@@ -478,6 +474,11 @@ void AkonadiServer::startMysqlDatabaseProcess()
     akError() << "executable:" << mysqldPath;
     akError() << "arguments:" << arguments;
     akFatal() << "process error:" << mDatabaseProcess->errorString();
+  }
+
+  if ( !mMysqlUpgradeDBPath.isEmpty() ) {
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+    QProcess::execute( mMysqlUpgradeDBPath, arguments );
   }
 
   const QLatin1String initCon( "initConnection" );
