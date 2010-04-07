@@ -250,6 +250,13 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
         }
         // fall through.
       }
+      case UnreadCount:
+      {
+        CollectionStatistics statistics = collection.statistics();
+        if ( statistics.unreadCount() > 0 )
+          return statistics.unreadCount();
+        return QVariant();
+      }
       default:
         return entityData( collection, index.column(), role );
         break;
