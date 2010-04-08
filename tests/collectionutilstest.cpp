@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "entitycache.cpp"
-
 #include <qtest_akonadi.h>
 #include <akonadi/collection.h>
 #include "../collectionutils_p.h"
