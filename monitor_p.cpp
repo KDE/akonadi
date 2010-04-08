@@ -323,8 +323,10 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
   // HACK: We have the remoteRevision stored in the itemParts set
   //       for delete operations to avoid protocol breakage
   if ( msg.operation() == NotificationMessage::Remove ) {
-    const QString remoteRevision = QString::fromUtf8( msg.itemParts().toList().first() );
-    it.setRemoteRevision( remoteRevision );
+    if ( !msg.itemParts().isEmpty() ) { //TODO: investigate why it could be empty
+      const QString remoteRevision = QString::fromUtf8( msg.itemParts().toList().first() );
+      it.setRemoteRevision( remoteRevision );
+    }
   }
 
   switch ( msg.operation() ) {
@@ -380,8 +382,10 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
   // HACK: We have the remoteRevision stored in the itemParts set
   //       for delete operations to avoid protocol breakage
   if ( msg.operation() == NotificationMessage::Remove ) {
-    const QString remoteRevision = QString::fromUtf8( msg.itemParts().toList().first() );
-    collection.setRemoteRevision( remoteRevision );
+    if ( !msg.itemParts().isEmpty() ) { //TODO: investigate why it could be empty
+      const QString remoteRevision = QString::fromUtf8( msg.itemParts().toList().first() );
+      collection.setRemoteRevision( remoteRevision );
+    }
   }
 
   switch ( msg.operation() ) {
