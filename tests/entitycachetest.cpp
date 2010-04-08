@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "entitycache.cpp"
+#include "entitycache_p.h"
 
 #include <QSignalSpy>
 #include <qtest_akonadi.h>
