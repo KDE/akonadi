@@ -260,7 +260,7 @@ void ResourceScheduler::executeNext()
       break;
     case Custom:
     {
-      bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );;
+      bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
       if ( !success )
         success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName );
 
@@ -268,8 +268,11 @@ void ResourceScheduler::executeNext()
         kError() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
       break;
     }
-    default:
+    default: {
+      kError() << "Unhandled task type" << mCurrentTask.type;
+      dump();
       Q_ASSERT( false );
+    }
   }
 }
 
