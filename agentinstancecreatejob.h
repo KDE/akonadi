@@ -29,6 +29,7 @@
 namespace Akonadi {
 
 class AgentInstance;
+class AgentInstanceCreateJobPrivate;
 
 /**
  * @short Job for creating new agent instances.
@@ -110,8 +111,8 @@ class AKONADI_EXPORT AgentInstanceCreateJob : public KJob
 
   private:
     //@cond PRIVATE
-    class Private;
-    Private* const d;
+    friend class Akonadi::AgentInstanceCreateJobPrivate;
+    AgentInstanceCreateJobPrivate* const d;
 
     Q_PRIVATE_SLOT( d, void agentInstanceAdded( const Akonadi::AgentInstance& ) )
     Q_PRIVATE_SLOT( d, void doConfigure() )

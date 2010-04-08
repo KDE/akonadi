@@ -39,13 +39,14 @@ using namespace Akonadi;
 
 static const int safetyTimeout = 10000; // ms
 
+namespace Akonadi {
 /**
  * @internal
  */
-class AgentInstanceCreateJob::Private : public KJobPrivateBase
+class AgentInstanceCreateJobPrivate : public KJobPrivateBase
 {
   public:
-    Private( AgentInstanceCreateJob* parent ) : q( parent ),
+    AgentInstanceCreateJobPrivate( AgentInstanceCreateJob* parent ) : q( parent ),
       parentWidget( 0 ),
       safetyTimer( new QTimer( parent ) ),
       doConfig( false ),
@@ -134,16 +135,18 @@ class AgentInstanceCreateJob::Private : public KJobPrivateBase
     bool tooLate;
 };
 
+}
+
 AgentInstanceCreateJob::AgentInstanceCreateJob( const AgentType &agentType, QObject *parent )
   : KJob( parent ),
-    d( new Private( this ) )
+    d( new AgentInstanceCreateJobPrivate( this ) )
 {
   d->agentType = agentType;
 }
 
 AgentInstanceCreateJob::AgentInstanceCreateJob( const QString &typeId, QObject *parent )
   : KJob( parent ),
-    d( new Private( this ) )
+    d( new AgentInstanceCreateJobPrivate( this ) )
 {
   d->agentTypeId = typeId;
 }
@@ -169,7 +172,7 @@ void AgentInstanceCreateJob::start()
   d->start();
 }
 
-void AgentInstanceCreateJob::Private::doStart()
+void AgentInstanceCreateJobPrivate::doStart()
 {
   if ( !agentType.isValid() && !agentTypeId.isEmpty() )
     agentType = AgentManager::self()->type( agentTypeId );

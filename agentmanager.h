@@ -55,7 +55,7 @@ class Collection;
 class AKONADI_EXPORT AgentManager : public QObject
 {
   friend class AgentInstance;
-  friend class AgentInstanceCreateJob;
+  friend class AgentInstanceCreateJobPrivate;
   friend class AgentManagerPrivate;
 
   Q_OBJECT
