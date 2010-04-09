@@ -190,6 +190,7 @@ endif(KDE_IS_AT_LEAST_42)
 
 
 set_target_properties( akonadi PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties( akonadi PROPERTIES OUTPUT_NAME akonadi-kde)
 install( TARGETS akonadi EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
@@ -292,5 +293,5 @@ install( FILES
 
 install( FILES
   kcfg2dbus.xsl
-  DESTINATION ${DATA_INSTALL_DIR}/akonadi
+  DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde
 )
