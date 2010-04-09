@@ -23,7 +23,7 @@
 #include "akonadiprivate_export.h"
 #include "monitor_p.h"
 
-class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public MonitorPrivate
+class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::MonitorPrivate
 {
   public:
     ChangeRecorderPrivate( ChangeRecorder* parent ) :
