@@ -79,9 +79,10 @@ class GeoDialog : public KDialog
 
   private:
     enum ExceptType {
-      ExceptNone,
-      ExceptSexagesimal,
-      ExceptDecimal
+      ExceptNone = 0,
+      ExceptCity = 1,
+      ExceptSexagesimal = 2,
+      ExceptDecimal = 4
     };
 
   private Q_SLOTS:

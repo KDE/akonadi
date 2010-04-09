@@ -364,7 +364,7 @@ void GeoDialog::cityInputChanged()
     mCoordinates.setLongitude( 0 );
   }
 
-  updateInputs();
+  updateInputs( ExceptCity );
 }
 
 void GeoDialog::decimalInputChanged()
@@ -432,16 +432,19 @@ void GeoDialog::updateInputs( ExceptType type )
     mLongSeconds->setValue( seconds );
     mLongDirection->setCurrentIndex( mLongitude < 0 ? 1 : 0 );
   }
+
   if ( !(type & ExceptDecimal) ) {
     mLatitude->setValue( mCoordinates.latitude() );
     mLongitude->setValue( mCoordinates.longitude() );
   }
 
-  const int index = nearestCity( mCoordinates.longitude(), mCoordinates.latitude() );
-  if ( index != -1 )
-    mCityCombo->setCurrentIndex( index + 1 );
-  else
-    mCityCombo->setCurrentIndex( 0 );
+  if ( !(type & ExceptCity) ) {
+    const int index = nearestCity( mCoordinates.longitude(), mCoordinates.latitude() );
+    if ( index != -1 )
+      mCityCombo->setCurrentIndex( index + 1 );
+    else
+      mCityCombo->setCurrentIndex( 0 );
+  }
 
   mCityCombo->blockSignals( false );
   mLatitude->blockSignals( false );
@@ -517,7 +520,7 @@ int GeoDialog::nearestCity( double x, double y ) const
   for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos ) {
     double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +
                   ( (*it).latitude - y ) * ( (*it).latitude - y );
-    if ( dist < 1.5 )
+    if ( dist < 0.0005 )
       return pos;
   }
 
