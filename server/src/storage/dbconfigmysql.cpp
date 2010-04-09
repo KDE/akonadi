@@ -235,8 +235,9 @@ void DbConfigMysql::startInternalServer()
   }
 
   // first run, some MySQL versions need a mysql_install_db run for that
+  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/mysql-global.conf" ));
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=/etc/akonadi/mysql-global.conf") << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1").arg(confFile) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
     QProcess::execute( mMysqlInstallDbPath, arguments );
   } 
 
