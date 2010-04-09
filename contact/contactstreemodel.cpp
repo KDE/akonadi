@@ -83,7 +83,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
         if ( picture.isIntern() ) {
           return picture.data().scaled( QSize( 16, 16 ) );
         } else {
-          return KIcon( QLatin1String( "x-office-contact" ) );
+          return KIcon( QLatin1String( "user-identity" ) );
         }
       }
       return QVariant();
