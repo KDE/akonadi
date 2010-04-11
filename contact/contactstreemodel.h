@@ -52,6 +52,8 @@ namespace Akonadi {
  * changeRecorder->setSession( session );
  * // include fetching the collection tree
  * changeRecorder->fetchCollection( true );
+ * // set the fetch scope that shall be used
+ * changeRecorder->setItemFetchScope( scope );
  * // monitor all collections below the root collection for changes
  * changeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
  * // list only contacts and contact groups
