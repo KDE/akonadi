@@ -245,7 +245,7 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
             return i18nc( "@title:column home address of a person", "Home" );
             break;
           case BusinessAddress:
-            return i18nc( "@title:column home address of a person", "Work" );
+            return i18nc( "@title:column work address of a person", "Work" );
             break;
           case PhoneNumbers:
             return i18nc( "@title:column phone numbers of a person", "Phone Numbers" );
