@@ -248,9 +248,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       case UnreadCount:
       {
         CollectionStatistics statistics = collection.statistics();
-        if ( statistics.unreadCount() > 0 )
-          return statistics.unreadCount();
-        return QVariant();
+        return statistics.unreadCount();
       }
       default:
         return entityData( collection, index.column(), role );
