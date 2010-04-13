@@ -24,6 +24,7 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/searchcreatejob.h>
+#include <akonadi/searchmodifyjob.h>
 
 #include "collectionutils_p.h"
 
@@ -53,4 +54,22 @@ void SearchJobTest::testCreateDeleteSearch()
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( col, this );
   QVERIFY( delJob->exec() );
+}
+
+void SearchJobTest::testModifySearch()
+{
+  // make sure there is a virtual collection
+  SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
+  QVERIFY( create->exec() );
+  Collection created = create->createdCollection();
+  QVERIFY( created.isValid() );
+
+  // modify it
+  SearchModifyJob *mod = new SearchModifyJob( created, "<request><userQuery>AkonadiModified</userQuery></request>", this );
+  QVERIFY( mod->exec() );
+  Collection modified = mod->modifiedCollection();
+  QVERIFY( modified.isValid() );
+
+  // verify that the query changed
+  QCOMPARE( modified.remoteId(), QLatin1String("AkonadiModified") );
 }
