@@ -27,6 +27,7 @@
 
 #include "entities.h"
 #include "storage/notificationcollector.h"
+#include "storage/selectquerybuilder.h"
 #include "notificationmanager.h"
 
 using namespace Akonadi;
@@ -74,9 +75,8 @@ bool NepomukManager::addSearch( const Collection &collection )
   if ( collection.remoteId().isEmpty() )
     return false;
 
-  // TODO: search statement is stored in remoteId currently, port to attributes!
   QMetaObject::invokeMethod( const_cast<NepomukManager*>( this ), "addSearchInternal", Qt::QueuedConnection,
-                             Q_ARG(qint64, collection.id()), Q_ARG(QString, collection.remoteId()) );
+                             Q_ARG(qint64, collection.id()), Q_ARG(QString, collection.queryString()) );
 
   return true;
 }
@@ -122,28 +122,30 @@ bool NepomukManager::removeSearch( qint64 collectionId )
 
 void NepomukManager::reloadSearches()
 {
-  Resource resource = Resource::retrieveByName( QLatin1String( "akonadi_search_resource" ) );
-  if ( !resource.isValid() ) {
-    qWarning() << "Nepomuk QueryServer: No valid search resource found!";
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
+  if ( !qb.exec() ) {
+    qWarning() << "Nepomuk QueryServer: Unable to execute query!";
     return;
   }
 
-  const Collection::List collections = resource.collections();
-  Q_FOREACH ( const Collection &collection, collections ) {
+  Q_FOREACH ( const Collection &collection, qb.result() ) {
+    qDebug() << "adding search" << collection.name();
     addSearch( collection );
   }
 }
 
 void NepomukManager::stopSearches()
 {
-  Resource resource = Resource::retrieveByName( QLatin1String( "akonadi_search_resource" ) );
-  if ( !resource.isValid() ) {
-    qWarning() << "Nepomuk QueryServer: No valid search resource found!";
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
+  if ( !qb.exec() ) {
+    qWarning() << "Nepomuk QueryServer: Unable to execute query!";
     return;
   }
 
-  const Collection::List collections = resource.collections();
-  Q_FOREACH ( const Collection &collection, collections ) {
+  Q_FOREACH ( const Collection &collection, qb.result() ) {
+    qDebug() << "removing search" << collection.name();
     removeSearch( collection.id() );
   }
 }

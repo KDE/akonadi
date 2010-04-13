@@ -192,8 +192,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
 
-  // FIXME: escape " and "\"
-  b += "NAME \"" + col.name() + "\" ";
+  b += "NAME "+ ImapParser::quote( col.name() ) + ' ';
   if ( hidden )
     b+= "MIMETYPE () ";
   else
@@ -206,6 +205,13 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
       b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
       b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) ) ) + ' ';
       b += "SIZE " + QByteArray::number( HandlerHelper::itemsTotalSize( col ) ) + ' ';
+  }
+
+  if ( !col.queryLanguage().isEmpty() ) {
+    b += AKONADI_PARAM_PERSISTENTSEARCH " (";
+    b += AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG " " + col.queryLanguage().toLatin1();
+    b += " " AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING " " + ImapParser::quote( col.queryString().toUtf8() );
+    b += ") ";
   }
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';

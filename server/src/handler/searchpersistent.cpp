@@ -56,12 +56,14 @@ bool SearchPersistent::parseStream()
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  QByteArray queryString = m_streamParser->readString();
+  const QString queryString = m_streamParser->readUtf8String();
   if ( queryString.isEmpty() )
     return failureResponse( "No query specified" );
 
   Collection col;
-  col.setRemoteId( QString::fromUtf8( queryString ) );
+  col.setQueryString( queryString );
+  col.setQueryLanguage( QLatin1String( "SPARQL" ) ); // TODO receive from client
+  col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource
   col.setName( collectionName );
@@ -88,9 +90,9 @@ bool SearchPersistent::parseStream()
                            QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
   if ( agentMgr.isValid() ) {
     QList<QVariant> args;
-    args << QString::fromUtf8( queryString );
-    args << QString::fromLatin1( "SPARQL" );
-    args << col.id();
+    args << col.queryString()
+         << col.queryLanguage()
+         << col.id();
     agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "addSearch" ), args );
   } else {
     akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
@@ -103,12 +105,7 @@ bool SearchPersistent::parseStream()
   colResponse.setString( b );
   emit responseAvailable( colResponse );
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "SEARCH_STORE completed" );
-  emit responseAvailable( response );
-  return true;
+  return successResponse( "SEARCH_STORE completed" );
 }
 
 #include "searchpersistent.moc"

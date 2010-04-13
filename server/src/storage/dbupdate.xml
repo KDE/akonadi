@@ -90,4 +90,9 @@
     UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';
   </update>
 
+  <update version="15" abortOnFailure="false">
+    UPDATE CollectionTable SET queryString = remoteId WHERE resourceId = 1 AND parentId IS NOT NULL;
+    UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;
+  </update>
+
 </updates>
