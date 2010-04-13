@@ -437,7 +437,8 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     enum CollectionFetchStrategy {
       FetchNoCollections,               ///< Fetches nothing. This creates an empty model.
       FetchFirstLevelChildCollections,  ///< Fetches first level collections in the root collection.
-      FetchCollectionsRecursive         ///< Fetches collections in the root collection recursively. This is the default.
+      FetchCollectionsRecursive,        ///< Fetches collections in the root collection recursively. This is the default.
+      InvisibleFetch                    ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections. The ParentCollectionRole can still be used to retrieve the parent collection of an Item.
     };
 
     /**
@@ -541,6 +542,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List ) )
     Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List ) )
+    Q_PRIVATE_SLOT( d_func(), void collectionListFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void topLevelCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void ancestorsFetched( Akonadi::Collection::List ) )
 

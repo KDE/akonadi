@@ -541,6 +541,9 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
+  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+    return QModelIndex();
+
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
   if ( !node )
@@ -569,6 +572,14 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
 int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
+
+  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+  {
+    if ( parent.isValid() )
+      return 0;
+    else
+      return d->m_items.size();
+  }
 
   const Node *node = reinterpret_cast<Node*>( parent.internalPointer() );
 
@@ -770,6 +781,9 @@ bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
   Q_D( const EntityTreeModel );
   const Item item = parent.data( ItemRole ).value<Item>();
 
+  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+    return false;
+
   if ( item.isValid() ) {
     // items can't have more rows.
     // TODO: Should I use this for fetching more of an item, ie more payload parts?
@@ -807,6 +821,9 @@ void EntityTreeModel::fetchMore( const QModelIndex & parent )
   if ( !canFetchMore( parent ) )
     return;
 
+  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+    return;
+
   if ( d->m_itemPopulation == ImmediatePopulation )
     // Nothing to do. The items are already in the model.
     return;
@@ -823,6 +840,10 @@ void EntityTreeModel::fetchMore( const QModelIndex & parent )
 bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
 {
   Q_D( const EntityTreeModel );
+
+  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+    return parent.isValid() ? false : !d->m_items.isEmpty();
+
   // TODO: Empty collections right now will return true and get a little + to expand.
   // There is probably no way to tell if a collection
   // has child items in akonadi without first attempting an itemFetchJob...
@@ -1030,7 +1051,7 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
   d->m_collectionFetchStrategy = strategy;
 
 
-  if ( strategy == FetchNoCollections ) {
+  if ( strategy == FetchNoCollections || strategy == InvisibleFetch ) {
     disconnect( d->m_monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
             this, SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
     disconnect( d->m_monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),

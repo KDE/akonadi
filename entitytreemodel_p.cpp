@@ -191,11 +191,18 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   job->setProperty( FetchCollectionId(), QVariant( collection.id() ) );
 
   job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
-  job->fetchScope().setIncludeStatistics( m_includeStatistics );
   job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
-  job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-              q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
+
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+  {
+    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                q, SLOT( collectionListFetched( const Akonadi::Collection::List& ) ) );
+  } else {
+    job->fetchScope().setIncludeStatistics( m_includeStatistics );
+    job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
+    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
+  }
   q->connect( job, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
   m_time.start();
@@ -217,6 +224,28 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
     return isHidden( parent );
 
   return false;
+}
+
+void EntityTreeModelPrivate::collectionListFetched( const Akonadi::Collection::List& collections )
+{
+  QListIterator<Akonadi::Collection> it( collections );
+
+  while ( it.hasNext() ) {
+    const Collection collection = it.next();
+
+    if ( isHidden( collection ) )
+      continue;
+
+    m_collections.insert( collection.id(), collection );
+
+    Node *node = new Node;
+    node->id = collection.id();
+    node->parent = -1;
+    node->type = Node::Collection;
+    m_childEntities[ -1 ].prepend( node );
+
+    fetchItems( collection );
+  }
 }
 
 void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List& collections )
@@ -340,24 +369,25 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       }
     }
   }
-
   if ( itemsToInsert.size() > 0 ) {
-    const int startRow = m_childEntities.value( collectionId ).size();
+    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ? 0 : collectionId;
+    const int startRow = m_childEntities.value( colId ).size();
 
-    Q_ASSERT( m_collections.contains( collectionId ) );
+    Q_ASSERT( m_collections.contains( colId ) );
 
-    const QModelIndex parentIndex = indexForCollection( m_collections.value( collectionId ) );
+    const QModelIndex parentIndex = indexForCollection( m_collections.value( colId ) );
     q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
+
     foreach ( const Item &item, items ) {
       const Item::Id itemId = item.id();
       m_items.insert( itemId, item );
 
       Node *node = new Node;
       node->id = itemId;
-      node->parent = collectionId;
+      node->parent = colId;
       node->type = Node::Item;
 
-      m_childEntities[ collectionId ].append( node );
+      m_childEntities[ colId ].append( node );
     }
     q->endInsertRows();
   }
@@ -657,20 +687,25 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
   if ( isHidden( item ) )
     return;
 
-  if ( !m_collections.contains( collection.id() ) ) {
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch && !m_collections.contains( collection.id() ) ) {
     kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
     return;
   }
 
-  Q_ASSERT( m_collections.contains( collection.id() ) );
+  Q_ASSERT( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch ? m_collections.contains( collection.id() ) : true );
 
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
-  const int row = m_childEntities.value( collection.id() ).size();
-
-  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
-
+  int row;
+  QModelIndex parentIndex;
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch )
+  {
+    row = m_childEntities.value( collection.id() ).size();
+    parentIndex = indexForCollection( m_collections.value( collection.id() ) );
+  } else {
+    row = q->rowCount();
+  }
   q->beginInsertRows( parentIndex, row, row );
   m_items.insert( item.id(), item );
   Node *node = new Node;
@@ -937,7 +972,8 @@ void EntityTreeModelPrivate::startFirstListJob()
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
 
-  if ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
+  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
+    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ) )
     fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
@@ -1164,6 +1200,9 @@ void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIn
 QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collection ) const
 {
   Q_Q( const EntityTreeModel );
+
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+    return QModelIndex();
 
   // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
   // we ensure that we use -1 for the invalid Collection.
