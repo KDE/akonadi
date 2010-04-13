@@ -508,9 +508,17 @@ void CollectionJobTest::testIllegalModify()
   QVERIFY( !mod->exec() );
 }
 
+void CollectionJobTest::testUtf8CollectionName_data()
+{
+  QTest::addColumn<QString>( "folderName" );
+
+  QTest::newRow( "Umlaut" ) << QString::fromUtf8( "ä" );
+  QTest::newRow( "Garbage" ) << QString::fromUtf8( "đ→³}đþøæſð" );
+}
+
 void CollectionJobTest::testUtf8CollectionName()
 {
-  QString folderName = QString::fromUtf8( "ä" );
+  QFETCH( QString, folderName );
 
   // create collection
   Collection col;
