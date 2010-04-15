@@ -122,6 +122,7 @@ set( akonadikde_LIB_SRC
   monitor_p.cpp
   partfetcher.cpp
   pastehelper.cpp
+  persistentsearchattribute.cpp
   preprocessorbase.cpp
   preprocessorbase_p.cpp
   protocolhelper.cpp
@@ -267,6 +268,7 @@ install( FILES
   mimetypechecker.h
   monitor.h
   partfetcher.h
+  persistentsearchattribute.h
   preprocessorbase.h
   qtest_akonadi.h
   resourcebase.h
