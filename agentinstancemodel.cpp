@@ -50,6 +50,7 @@ class AgentInstanceModel::Private
 
 void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
 {
+  emit mParent->layoutAboutToBeChanged();
   mInstances.append( instance );
 
   emit mParent->layoutChanged();
@@ -57,6 +58,7 @@ void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
 
 void AgentInstanceModel::Private::instanceRemoved( const AgentInstance &instance )
 {
+  emit mParent->layoutAboutToBeChanged();
   mInstances.removeAll( instance );
 
   emit mParent->layoutChanged();
