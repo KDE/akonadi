@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "xesammanager.h"
+#include "xesamsearchengine.h"
 
 #include "storage/datastore.h"
 #include "entities.h"
@@ -29,13 +29,10 @@
 
 using namespace Akonadi;
 
-XesamManager::XesamManager(QObject * parent) :
+XesamSearchEngine::XesamSearchEngine(QObject * parent) :
     QObject( parent ),
     mValid( true )
 {
-  Q_ASSERT( mInstance == 0 );
-  mInstance = this;
-
   mInterface = new OrgFreedesktopXesamSearchInterface(
       QLatin1String("org.freedesktop.xesam.searcher"),
       QLatin1String("/org/freedesktop/xesam/searcher/main"),
@@ -63,14 +60,14 @@ XesamManager::XesamManager(QObject * parent) :
     qWarning() << "No valid XESAM interface found!";
 }
 
-XesamManager::~XesamManager()
+XesamSearchEngine::~XesamSearchEngine()
 {
   stopSearches();
   if ( !mSession.isEmpty() )
     mInterface->CloseSession( mSession );
 }
 
-void XesamManager::slotHitsAdded(const QString & search, int count)
+void XesamSearchEngine::slotHitsAdded(const QString & search, int count)
 {
   qDebug() << "hits added: " << search << count;
   mMutex.lock();
@@ -90,7 +87,7 @@ void XesamManager::slotHitsAdded(const QString & search, int count)
   }
 }
 
-void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hits)
+void XesamSearchEngine::slotHitsRemoved(const QString & search, const QList<int> & hits)
 {
   qDebug() << "hits removed: " << search << hits;
   mMutex.lock();
@@ -108,12 +105,12 @@ void XesamManager::slotHitsRemoved(const QString & search, const QList<int> & hi
   }
 }
 
-void XesamManager::slotHitsModified(const QString & search, const QList< int > & hits)
+void XesamSearchEngine::slotHitsModified(const QString & search, const QList< int > & hits)
 {
   qDebug() << "hits modified: " << search << hits;
 }
 
-void XesamManager::reloadSearches()
+void XesamSearchEngine::reloadSearches()
 {
   Resource res = Resource::retrieveByName( QLatin1String("akonadi_search_resource") );
   if ( !res.isValid() ) {
@@ -126,15 +123,15 @@ void XesamManager::reloadSearches()
   }
 }
 
-bool XesamManager::addSearch(const Collection & col)
+void XesamSearchEngine::addSearch(const Collection & col)
 {
-  if ( !mInterface->isValid() || !mValid )
-    return false;
+  if ( !mInterface->isValid() || !mValid || col.queryLanguage() != QLatin1String( "XESAM" ) )
+    return;
   QMutexLocker lock( &mMutex );
   if ( col.remoteId().isEmpty() )
-    return false;
+    return;
   QString searchId = mInterface->NewSearch( mSession, col.remoteId() );
-  qDebug() << "XesamManager::addSeach" << col << searchId;
+  qDebug() << "XesamSearchEngine::addSeach" << col << searchId;
   mSearchMap[ searchId ] = col.id();
   mInvSearchMap[ col.id() ] = searchId;
   mInterface->StartSearch( searchId );
@@ -145,22 +142,19 @@ bool XesamManager::addSearch(const Collection & col)
   int count = mInterface->CountHits( searchId );
   slotHitsAdded( searchId, count );
 #endif
-
-  return true;
 }
 
-bool XesamManager::removeSearch(qint64 col)
+void XesamSearchEngine::removeSearch(qint64 col)
 {
   QMutexLocker lock( &mMutex );
   if ( !mInvSearchMap.contains( col ) )
-    return false;
+    return;
   QString searchId = mInvSearchMap.value( col );
   mInvSearchMap.remove( col );
   mSearchMap.remove( searchId );
-  return true;
 }
 
-void XesamManager::stopSearches()
+void XesamSearchEngine::stopSearches()
 {
   Resource res = Resource::retrieveByName( QLatin1String("akonadi_search_resource") );
   if ( !res.isValid() ) {
@@ -173,10 +167,10 @@ void XesamManager::stopSearches()
   }
 }
 
-qint64 XesamManager::uriToItemId(const QString & uri)
+qint64 XesamSearchEngine::uriToItemId(const QString & uri)
 {
   // TODO implement me!
   return uri.toLongLong();
 }
 
-#include "xesammanager.moc"
+#include "xesamsearchengine.moc"

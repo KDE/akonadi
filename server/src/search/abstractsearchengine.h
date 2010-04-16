@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,35 +18,39 @@
     02110-1301, USA.
 */
 
-#include "abstractsearchmanager.h"
+#ifndef AKONADI_ABSTRACTSEARCHENGINE_H
+#define AKONADI_ABSTRACTSEARCHENGINE_H
 
-using namespace Akonadi;
+#include <qglobal.h>
 
-AbstractSearchManager* AbstractSearchManager::mInstance = 0;
+namespace Akonadi {
 
-AbstractSearchManager::~AbstractSearchManager()
+class Collection;
+
+/**
+ * Abstract interface for search engines.
+ * Executed in the main thread. Must not block.
+ */
+class AbstractSearchEngine
 {
-  mInstance = 0;
+  public:
+    virtual ~AbstractSearchEngine() {}
+
+    /**
+     * Adds the given @p collection to the search.
+     *
+     * @returns true if the collection was added successfully, false otherwise.
+     */
+    virtual void addSearch( const Collection &collection ) = 0;
+
+    /**
+     * Removes the collection with the given @p id from the search.
+     *
+     * @returns true if the collection was removed successfully, false otherwise.
+     */
+    virtual void removeSearch( qint64 id ) = 0;
+};
+
 }
 
-AbstractSearchManager* AbstractSearchManager::instance()
-{
-  Q_ASSERT( mInstance != 0 );
-
-  return mInstance;
-}
-
-DummySearchManager::DummySearchManager()
-{
-  mInstance = this;
-}
-
-bool DummySearchManager::addSearch( const Collection& )
-{
-  return true;
-}
-
-bool DummySearchManager::removeSearch( qint64 )
-{
-  return true;
-}
+#endif

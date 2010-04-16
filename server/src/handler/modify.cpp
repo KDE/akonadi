@@ -31,8 +31,7 @@
 #include <storage/selectquerybuilder.h>
 #include <storage/collectionqueryhelper.h>
 #include <libs/protocol_p.h>
-#include <abstractsearchmanager.h>
-#include <QDBusInterface>
+#include <search/searchmanager.h>
 #include <akdebug.h>
 
 using namespace Akonadi;
@@ -146,8 +145,10 @@ bool Modify::parseStream()
       collection.setRemoteRevision( remoteRevision );
       changes.append( AKONADI_PARAM_REMOTEREVISION );
     } else if ( type == AKONADI_PARAM_PERSISTENTSEARCH ) {
+      QByteArray tmp;
       QList<QByteArray> queryArgs;
-      pos = ImapParser::parseParenthesizedList( line, queryArgs, pos );
+      pos = ImapParser::parseString( line, tmp, pos );
+      ImapParser::parseParenthesizedList( tmp, queryArgs );
       QString queryLang, queryString;
       for ( int i = 0; i < queryArgs.size() - 1; i += 2 ) {
         const QByteArray key = queryArgs.at( i );
@@ -161,27 +162,8 @@ bool Modify::parseStream()
         collection.setQueryLanguage( queryLang );
         collection.setQueryString( queryString );
 
-        // TODO get rid of the code duplication here, in delete and search
-        //BEGIN temporary
-        AbstractSearchManager::instance()->removeSearch( collection.id() );
-        AbstractSearchManager::instance()->addSearch( collection );
-
-        QDBusInterface agentMgr( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
-                                QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
-                                QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
-        if ( agentMgr.isValid() ) {
-          QList<QVariant> args;
-          args << collection.id();
-          agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "removeSearch" ), args );
-          args.clear();
-          args << collection.queryString()
-              << collection.queryLanguage()
-              << collection.id();
-          agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "addSearch" ), args );
-        } else {
-          akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
-        }
-        //END temporary
+        SearchManager::instance()->removeSearch( collection.id() );
+        SearchManager::instance()->addSearch( collection );
 
         changes.append( AKONADI_PARAM_PERSISTENTSEARCH );
       }
@@ -199,7 +181,7 @@ bool Modify::parseStream()
         pos = ImapParser::parseString( line, value, pos );
 
         SelectQueryBuilder<CollectionAttribute> qb;
-        qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, collection.id() );
+          qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, collection.id() );
         qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, type );
         if ( !qb.exec() )
           throw HandlerException( "Unable to retrieve collection attribute" );

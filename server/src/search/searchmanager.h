@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,62 +17,56 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ABSTRACTSEARCHMANAGER_H
-#define AKONADI_ABSTRACTSEARCHMANAGER_H
+#ifndef SEARCHMANAGER_H
+#define SEARCHMANAGER_H
 
-#include <QtCore/QGlobalStatic>
+#include <QStringList>
+#include <QVector>
+#include <QObject>
 
 namespace Akonadi {
 
+class AbstractSearchEngine;
 class Collection;
 
 /**
- * AbstractSearchManager is an abstract interface for search managers.
- *
- * Currently we have the XesamManager and NepomukManager as implementations,
- * but both don't work completely.
+ * SearchManager creates and deletes persistent searches for all currently
+ * active search engines.
  */
-class AbstractSearchManager
+class SearchManager : public QObject
 {
+  Q_OBJECT
   public:
-    /**
-     * Destroys the abstract search manager.
-     */
-    virtual ~AbstractSearchManager();
+    /** Create a new search manager with the given @p searchEngines. */
+    SearchManager( const QStringList &searchEngines, QObject* parent = 0 );
+    ~SearchManager();
 
     /**
-     * Returns a global instance of the search manager implementation.
+     * Returns a global instance of the search manager.
      */
-    static AbstractSearchManager* instance();
+    static SearchManager* instance();
 
     /**
      * Adds the given @p collection to the search.
      *
      * @returns true if the collection was added successfully, false otherwise.
      */
-    virtual bool addSearch( const Collection &collection ) = 0;
+    bool addSearch( const Collection &collection );
 
     /**
      * Removes the collection with the given @p id from the search.
      *
      * @returns true if the collection was removed successfully, false otherwise.
      */
-    virtual bool removeSearch( qint64 id ) = 0;
-
-  protected:
-    static AbstractSearchManager* mInstance;
-};
-
-/**
- * DummySearchManager is a dummy implementation of AbstractSearchManager
- * which does nothing.
- */
-class DummySearchManager : public AbstractSearchManager
-{
-  public:
-    DummySearchManager();
-    bool addSearch( const Collection &collection );
     bool removeSearch( qint64 id );
+
+  private slots:
+    void addSearchInternal( const Collection &collection );
+    void removeSearchInternal( qint64 id );
+
+  private:
+    static SearchManager* m_instance;
+    QVector<AbstractSearchEngine*> m_engines;
 };
 
 }

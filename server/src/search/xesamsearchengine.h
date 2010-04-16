@@ -17,28 +17,28 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_XESAMMANAGER_H
-#define AKONADI_XESAMMANAGER_H
+#ifndef AKONADI_XESAMENGINE_H
+#define AKONADI_XESAMENGINE_H
+
+#include "abstractsearchengine.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QMutex>
 #include <QtCore/QObject>
 
-#include "abstractsearchmanager.h"
-
 class OrgFreedesktopXesamSearchInterface;
 
 namespace Akonadi {
 
-class XesamManager : public QObject, public AbstractSearchManager
+class XesamSearchEngine : public QObject, public AbstractSearchEngine
 {
   Q_OBJECT
   public:
-    XesamManager( QObject* parent = 0 );
-    ~XesamManager();
+    XesamSearchEngine( QObject* parent = 0 );
+    ~XesamSearchEngine();
 
-    bool addSearch( const Collection &collection );
-    bool removeSearch( qint64 collection );
+    void addSearch( const Collection &collection );
+    void removeSearch( qint64 collection );
 
   private:
     void reloadSearches();

@@ -25,7 +25,7 @@
 #include <storage/datastore.h>
 #include <storage/entity.h>
 #include <storage/transaction.h>
-#include "abstractsearchmanager.h"
+#include <search/searchmanager.h>
 #include "imapstreamparser.h"
 #include <storage/selectquerybuilder.h>
 #include <storage/collectionqueryhelper.h>
@@ -81,19 +81,7 @@ bool Delete::parseStream()
     if ( collection.parentId() == 0 )
       return failureResponse( "Cannot delete virtual root collection" );
 
-    AbstractSearchManager::instance()->removeSearch( collection.id() );
-
-    // disable remote searches
-    QDBusInterface agentMgr( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
-                             QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
-                             QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
-    if ( agentMgr.isValid() ) {
-      QList<QVariant> args;
-      args << collection.id();
-      agentMgr.callWithArgumentList( QDBus::NoBlock, QLatin1String( "removeSearch" ), args );
-    } else {
-      akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
-    }
+    SearchManager::instance()->removeSearch( collection.id() );
   }
 
   if ( !deleteRecursive( collection ) )

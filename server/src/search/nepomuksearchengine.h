@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,31 +18,31 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NEPOMUKMANAGER_H
-#define AKONADI_NEPOMUKMANAGER_H
+#ifndef AKONADI_NEPOMUKSEARCHENGINE_H
+#define AKONADI_NEPOMUKSEARCHENGINE_H
+
+#include "abstractsearchengine.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QMutex>
 #include <QtCore/QObject>
 
-#include "abstractsearchmanager.h"
-
-#include "search/queryserviceclient.h"
+#include <nepomuk/queryserviceclient.h>
 
 namespace Akonadi {
 
 class NotificationCollector;
 
-class NepomukManager : public QObject, public AbstractSearchManager
+class NepomukSearchEngine : public QObject, public AbstractSearchEngine
 {
   Q_OBJECT
 
   public:
-    NepomukManager( QObject* parent = 0 );
-    ~NepomukManager();
+    NepomukSearchEngine( QObject* parent = 0 );
+    ~NepomukSearchEngine();
 
-    bool addSearch( const Collection &collection );
-    bool removeSearch( qint64 collection );
+    void addSearch( const Collection &collection );
+    void removeSearch( qint64 collection );
 
   private:
     void reloadSearches();
@@ -50,7 +51,6 @@ class NepomukManager : public QObject, public AbstractSearchManager
   private Q_SLOTS:
     void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
     void hitsRemoved( const QList<QUrl> &entries );
-    void addSearchInternal( qint64 id, const QString &searchStatement );
 
   private:
     bool mValid;

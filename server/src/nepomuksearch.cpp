@@ -23,7 +23,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QUrl>
 
-#include "search/result.h"
+#include "nepomuk/result.h"
 
 using namespace Akonadi;
 

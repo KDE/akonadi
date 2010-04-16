@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,13 +18,13 @@
     02110-1301, USA.
 */
 
-#include "nepomukmanager.h"
+#include "nepomuksearchengine.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
 #include <QMetaObject>
 
-#include "search/result.h"
+#include "nepomuk/result.h"
 
 #include "entities.h"
 #include "storage/notificationcollector.h"
@@ -44,15 +45,14 @@ static qint64 uriToItemId( const QUrl &url )
     return id;
 }
 
-NepomukManager::NepomukManager( QObject* parent )
+NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
   : QObject( parent ),
     mValid( true ),
     mCollector( new NotificationCollector( this ) )
 {
-  Q_ASSERT( mInstance == 0 );
-  mInstance = this;
   NotificationManager::self()->connectNotificationCollector( mCollector );
 
+  // FIXME: service availability might change, and we probably should attempt something to change it
   if ( !Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
     qWarning() << "Nepomuk QueryServer interface not available!";
     mValid = false;
@@ -61,28 +61,17 @@ NepomukManager::NepomukManager( QObject* parent )
   }
 }
 
-NepomukManager::~NepomukManager()
+NepomukSearchEngine::~NepomukSearchEngine()
 {
   if ( mValid )
     stopSearches();
 }
 
-bool NepomukManager::addSearch( const Collection &collection )
+void NepomukSearchEngine::addSearch( const Collection &collection )
 {
-  if ( !mValid )
-    return false;
+  if ( !mValid || collection.queryLanguage() != QLatin1String( "SPARQL" ) )
+    return;
 
-  if ( collection.remoteId().isEmpty() )
-    return false;
-
-  QMetaObject::invokeMethod( const_cast<NepomukManager*>( this ), "addSearchInternal", Qt::QueuedConnection,
-                             Q_ARG(qint64, collection.id()), Q_ARG(QString, collection.queryString()) );
-
-  return true;
-}
-
-void NepomukManager::addSearchInternal( qint64 id, const QString &searchStatement )
-{
   Nepomuk::Search::QueryServiceClient *query = new Nepomuk::Search::QueryServiceClient( this );
 
   connect( query, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
@@ -91,23 +80,23 @@ void NepomukManager::addSearchInternal( qint64 id, const QString &searchStatemen
            this, SLOT( hitsRemoved( const QList<QUrl>& ) ) );
 
   mMutex.lock();
-  mQueryMap.insert( query, id );
-  mQueryInvMap.insert( id, query ); // needed for fast lookup in removeSearch()
+  mQueryMap.insert( query, collection.id() );
+  mQueryInvMap.insert( collection.id(), query ); // needed for fast lookup in removeSearch()
   mMutex.unlock();
 
   // query with SPARQL statement
-  query->query( searchStatement );
+  query->query( collection.queryString() );
 }
 
-bool NepomukManager::removeSearch( qint64 collectionId )
+void NepomukSearchEngine::removeSearch( qint64 collectionId )
 {
   Nepomuk::Search::QueryServiceClient *query = mQueryInvMap.value( collectionId );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Query could not be removed!";
-    return false;
-  } else {
-    query->close();
+    return;
   }
+
+  query->close();
 
   // cleanup mappings
   mMutex.lock();
@@ -116,11 +105,9 @@ bool NepomukManager::removeSearch( qint64 collectionId )
   mMutex.unlock();
 
   query->deleteLater();
-
-  return true;
 }
 
-void NepomukManager::reloadSearches()
+void NepomukSearchEngine::reloadSearches()
 {
   SelectQueryBuilder<Collection> qb;
   qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
@@ -135,7 +122,7 @@ void NepomukManager::reloadSearches()
   }
 }
 
-void NepomukManager::stopSearches()
+void NepomukSearchEngine::stopSearches()
 {
   SelectQueryBuilder<Collection> qb;
   qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
@@ -150,7 +137,7 @@ void NepomukManager::stopSearches()
   }
 }
 
-void NepomukManager::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
+void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
 {
   Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
   if ( !query ) {
@@ -176,7 +163,7 @@ void NepomukManager::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
   mCollector->dispatchNotifications();
 }
 
-void NepomukManager::hitsRemoved( const QList<QUrl> &entries )
+void NepomukSearchEngine::hitsRemoved( const QList<QUrl> &entries )
 {
   Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
   if ( !query ) {
@@ -202,4 +189,4 @@ void NepomukManager::hitsRemoved( const QList<QUrl> &entries )
   mCollector->dispatchNotifications();
 }
 
-#include "nepomukmanager.moc"
+#include "nepomuksearchengine.moc"

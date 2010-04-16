@@ -29,11 +29,10 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
-#include "xesammanager.h"
-#include "nepomukmanager.h"
 #include "debuginterface.h"
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
+#include "search/searchmanager.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -131,11 +130,10 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
 
-    const QString searchManager = settings.value( QLatin1String( "Search/Manager" ), QLatin1String( "Nepomuk" ) ).toString();
-    if ( searchManager == QLatin1String( "Nepomuk" ) )
-      mSearchManager = new NepomukManager( this );
-    else
-      mSearchManager = new DummySearchManager;
+    const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
+                                                       QStringList() << QLatin1String( "Nepomuk" )
+                                                                     << QLatin1String( "Agent" ) ).toStringList();
+    mSearchManager = new SearchManager( searchManagers, this );
 
     new ServerAdaptor( this );
     QDBusConnection::sessionBus().registerObject( QLatin1String( "/Server" ), this );

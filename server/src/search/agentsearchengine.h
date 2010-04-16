@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +17,19 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NEPOMUKSEARCH_H
-#define AKONADI_NEPOMUKSEARCH_H
+#ifndef AGENTSEARCHENGINE_H
+#define AGENTSEARCHENGINE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QSet>
-#include <QtCore/QString>
-
-#include "nepomuk/queryserviceclient.h"
+#include "abstractsearchengine.h"
 
 namespace Akonadi {
 
-class NepomukSearch : public QObject
+/** Search engine for distributing searches to agents. */
+class AgentSearchEngine : public AbstractSearchEngine
 {
-  Q_OBJECT
-
   public:
-    NepomukSearch( QObject* parent = 0 );
-    ~NepomukSearch();
-
-    QStringList search( const QString &query );
-
-  private Q_SLOTS:
-    void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
-
-  private:
-    QSet<QString> mMatchingUIDs;
-    Nepomuk::Search::QueryServiceClient* mSearchService;
+    virtual void addSearch(const Akonadi::Collection& collection);
+    virtual void removeSearch(qint64 id);
 };
 
 }

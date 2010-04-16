@@ -26,7 +26,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "handlerhelper.h"
-#include "abstractsearchmanager.h"
+#include <search/searchmanager.h>
 #include "imapstreamparser.h"
 #include "libs/protocol_p.h"
 #include <akdebug.h>
@@ -90,10 +90,10 @@ bool SearchPersistentModify::parseStream()
   }
 
 
-  if ( !AbstractSearchManager::instance()->removeSearch( existingCollection.id() ) )
+  if ( !SearchManager::instance()->removeSearch( existingCollection.id() ) )
     return failureResponse( "Unable to remove the original search from the search manager" );
 
-  if ( !AbstractSearchManager::instance()->addSearch( col ) )
+  if ( !SearchManager::instance()->addSearch( col ) )
     return failureResponse( "Unable to add search to search manager" );
 
   if ( !transaction.commit() )

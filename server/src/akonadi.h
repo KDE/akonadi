@@ -34,7 +34,7 @@ namespace Akonadi {
 
 class AkonadiConnection;
 class CacheCleaner;
-class AbstractSearchManager;
+class SearchManager;
 class ItemRetrievalThread;
 
 class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
@@ -74,7 +74,7 @@ class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
     ItemRetrievalThread *mItemRetrievalThread;
     QProcess *mDatabaseProcess;
     QList< QPointer<AkonadiConnection> > mConnections;
-    AbstractSearchManager *mSearchManager;
+    SearchManager* mSearchManager;
     bool mAlreadyShutdown;
 };
 
