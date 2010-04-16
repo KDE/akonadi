@@ -186,9 +186,14 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
         }
       }
 
-      // increase item revision of own copy of item
-      d->mItem.setRevision( d->mItem.revision() + 1 );
-      d->mItem.setModificationTime( modificationDateTime );
+      if ( d->mItem.modificationTime() != modificationDateTime )
+      {
+        // increase item revision of own copy of item
+        d->mItem.setRevision( d->mItem.revision() + 1 );
+        d->mItem.setModificationTime( modificationDateTime );
+      } else {
+        kDebug() << "No changes on item" << d->mItem.id();
+      }
       d->mItem.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );
