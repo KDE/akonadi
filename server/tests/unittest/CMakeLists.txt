@@ -18,5 +18,3 @@ add_server_test(imapstreamparsertest.cpp akonadiprivate)
 add_server_test(scopetest.cpp akonadiprivate)
 add_server_test(handlerhelpertest.cpp akonadiprivate)
 add_server_test(querybuildertest.cpp akonadiprivate)
-#interpreter.cpp is not currently included in the build...
-#add_server_test(interpretertest.cpp)
