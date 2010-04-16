@@ -354,6 +354,8 @@ bool Store::parseStream()
     datetime = QLocale::c().toString( pimItems.first().datetime(), QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
   }
 
+  // TODO: When implementing support for modifying multiple items at once, the revisions of the items should be in the responses.
+  // or only modified items should appear in the repsponse.
   Response response;
   response.setTag( tag() );
   response.setSuccess();
