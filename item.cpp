@@ -239,8 +239,18 @@ void Item::apply( const Item &other )
   setStorageCollectionId( other.storageCollectionId() );
   setRemoteId( other.remoteId() );
 
+  QList<QByteArray> attrs;
   foreach ( Attribute *attribute, other.attributes() )
+  {
     addAttribute( attribute->clone() );
+    attrs.append( attribute->type() );
+  }
+
+  foreach ( const QByteArray attrType, d_ptr->mAttributes.keys() )
+  {
+    if ( !attrs.contains( attrType ) )
+      delete d_ptr->mAttributes.take( attrType );
+  }
 
   ItemSerializer::apply( *this, other );
 }
