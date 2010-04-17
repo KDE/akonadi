@@ -24,7 +24,7 @@
 #include <QtCore/QUrl>
 #include <QMetaObject>
 
-#include "nepomuk/result.h"
+#include "src/nepomuk/result.h"
 
 #include "entities.h"
 #include "storage/notificationcollector.h"

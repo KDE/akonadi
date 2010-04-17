@@ -27,7 +27,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QObject>
 
-#include <nepomuk/queryserviceclient.h>
+#include <src/nepomuk/queryserviceclient.h>
 
 namespace Akonadi {
 
