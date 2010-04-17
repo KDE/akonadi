@@ -23,6 +23,7 @@
 #include "collectionrightsattribute_p.h"
 #include "entitydisplayattribute.h"
 #include "entityhiddenattribute.h"
+#include "persistentsearchattribute.h"
 
 #include <KGlobal>
 
@@ -74,6 +75,7 @@ class StaticAttributeFactory : public AttributeFactory
       AttributeFactory::registerAttribute<CollectionRightsAttribute>();
       AttributeFactory::registerAttribute<EntityDisplayAttribute>();
       AttributeFactory::registerAttribute<EntityHiddenAttribute>();
+      AttributeFactory::registerAttribute<PersistentSearchAttribute>();
     }
     bool initialized;
 };
