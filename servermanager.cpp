@@ -25,6 +25,7 @@
 #include "agentmanager.h"
 #include "selftestdialog_p.h"
 #include "session_p.h"
+#include "firstrun_p.h"
 
 #include <KDebug>
 #include <KGlobal>
@@ -43,12 +44,18 @@ class Akonadi::ServerManagerPrivate
 {
   public:
     ServerManagerPrivate() :
-      instance( new ServerManager( this ) ), mState( ServerManager::NotRunning ), mSafetyTimer( new QTimer )
+      instance( new ServerManager( this ) ),
+      mState( ServerManager::NotRunning ),
+      mSafetyTimer( new QTimer ),
+      mFirstRunner( 0 )
     {
       mState = instance->state();
       mSafetyTimer->setSingleShot( true );
       mSafetyTimer->setInterval( 30000 );
       QObject::connect( mSafetyTimer.get(), SIGNAL( timeout() ), instance, SLOT( timeout() ) );
+      KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
+      if ( mState == ServerManager::Running )
+        mFirstRunner = new Firstrun( instance );
     }
 
     ~ServerManagerPrivate()
@@ -73,10 +80,13 @@ class Akonadi::ServerManagerPrivate
       if ( mState != state ) {
         mState = state;
         emit instance->stateChanged( state );
-        if ( state == ServerManager::Running )
+        if ( state == ServerManager::Running ) {
           emit instance->started();
-        else if ( state == ServerManager::NotRunning || state == ServerManager::Broken )
+          if ( !mFirstRunner )
+            mFirstRunner = new Firstrun( instance );
+        } else if ( state == ServerManager::NotRunning || state == ServerManager::Broken ) {
           emit instance->stopped();
+        }
 
         if ( state == ServerManager::Starting || state == ServerManager::Stopping )
           mSafetyTimer->start();
@@ -95,6 +105,7 @@ class Akonadi::ServerManagerPrivate
     static int serverProtocolVersion;
     ServerManager::State mState;
     boost::scoped_ptr<QTimer> mSafetyTimer;
+    Firstrun *mFirstRunner;
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
