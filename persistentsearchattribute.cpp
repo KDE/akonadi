@@ -82,7 +82,7 @@ QByteArray PersistentSearchAttribute::serialized() const
   l.append( "QUERYLANGUAGE" );
   l.append( d->queryLanguage.toLatin1() );
   l.append( "QUERYSTRING" );
-  l.append( d->queryString.toUtf8() );
+  l.append( ImapParser::quote( d->queryString.toUtf8() ) );
   return ImapParser::join( l, " " );
 }
 
@@ -93,8 +93,8 @@ void PersistentSearchAttribute::deserialize(const QByteArray& data)
   for ( int i = 0; i < l.size() - 1; i += 2 ) {
     const QByteArray key = l.at( i );
     if ( key == "QUERYLANGUAGE" )
-      d->queryLanguage = QString::fromLatin1( l.at( i ) );
+      d->queryLanguage = QString::fromLatin1( l.at( i + 1 ) );
     else if ( key == "QUERYSTRING" )
-      d->queryString = QString::fromUtf8( l.at( i ) );
+      d->queryString = QString::fromUtf8( l.at( i + 1 ) );
   }
 }
