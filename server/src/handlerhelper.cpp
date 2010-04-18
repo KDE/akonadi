@@ -208,10 +208,14 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   }
 
   if ( !col.queryLanguage().isEmpty() ) {
-    b += AKONADI_PARAM_PERSISTENTSEARCH " (";
-    b += AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG " " + col.queryLanguage().toLatin1();
-    b += " " AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING " " + ImapParser::quote( col.queryString().toUtf8() );
-    b += ") ";
+    b += AKONADI_PARAM_PERSISTENTSEARCH " ";
+    QList<QByteArray> args;
+    args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG );
+    args.append( col.queryLanguage().toLatin1() );
+    args.append( AKONADI_PARAM_PERSISTENTSEARCH_QUERYSTRING );
+    args.append( ImapParser::quote( col.queryString().toUtf8() ) );
+    b += ImapParser::quote( "(" + ImapParser::join( args, " " ) + ")" );
+    b += ' ';
   }
 
   b += HandlerHelper::cachePolicyToByteArray( col ) + ' ';
