@@ -21,8 +21,6 @@
 
 #include "contactcompletionmodel_p.h"
 
-#include "../kdescendantsproxymodel_p.h"
-
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/itemfetchscope.h>
@@ -47,11 +45,8 @@ QAbstractItemModel* ContactCompletionModel::self()
 
   ContactCompletionModel *model = new ContactCompletionModel( monitor );
 
-  KDescendantsProxyModel *descModel = new KDescendantsProxyModel( model );
-  descModel->setSourceModel( model );
-
   EntityMimeTypeFilterModel *filter = new Akonadi::EntityMimeTypeFilterModel( model );
-  filter->setSourceModel( descModel );
+  filter->setSourceModel( model );
   filter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   filter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
@@ -63,6 +58,7 @@ QAbstractItemModel* ContactCompletionModel::self()
 ContactCompletionModel::ContactCompletionModel( ChangeRecorder *monitor, QObject *parent )
   : EntityTreeModel( monitor, parent )
 {
+  setCollectionFetchStrategy( InvisibleFetch );
 }
 
 ContactCompletionModel::~ContactCompletionModel()
