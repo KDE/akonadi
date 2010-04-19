@@ -122,8 +122,6 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
-    KLineEdit* groupName() const;
-
   public Q_SLOTS:
     /**
      * Loads the contact @p group into the editor.
@@ -153,6 +151,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
 
   private:
     //@cond PRIVATE
+    friend class ContactGroupEditorDialog;
+
     class Private;
     Private* const d;
 

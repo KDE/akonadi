@@ -22,6 +22,7 @@
 #include "contactgroupeditordialog.h"
 
 #include "contactgroupeditor.h"
+#include "contactgroupeditor_p.h"
 
 #include <akonadi/collectioncombobox.h>
 #include <akonadi/item.h>
@@ -38,18 +39,24 @@ using namespace Akonadi;
 class ContactGroupEditorDialog::Private
 {
   public:
-    Private( ContactGroupEditorDialog::Mode mode )
-      : mAddressBookBox( 0 ), mMode( mode )
+    Private( ContactGroupEditorDialog *qq, ContactGroupEditorDialog::Mode mode )
+      : q( qq ), mAddressBookBox( 0 ), mMode( mode )
     {
     }
 
+    void slotGroupNameChanged( const QString& name )
+    {
+      q->button( Ok )->setEnabled( !name.isEmpty() );
+    }
+
+    ContactGroupEditorDialog *q;
     CollectionComboBox *mAddressBookBox;
     ContactGroupEditor *mEditor;
     ContactGroupEditorDialog::Mode mMode;
 };
 
 ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode ) )
+  : KDialog( parent ), d( new Private( this, mode ) )
 {
   KGlobal::locale()->insertCatalog( QLatin1String( "akonadicontact" ) );
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
@@ -85,20 +92,17 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
 
   connect( d->mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
            this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
-  connect( d->mEditor->groupName(), SIGNAL( textChanged( const QString& ) ),
+  connect( d->mEditor->d->mGui.groupName, SIGNAL( textChanged( const QString& ) ),
            this, SLOT( slotGroupNameChanged( const QString& ) ) );
-  button( Ok )->setEnabled( !d->mEditor->groupName()->text().isEmpty() );
+
+  button( Ok )->setEnabled( !d->mEditor->d->mGui.groupName->text().isEmpty() );
+
   setInitialSize( QSize( 470, 400 ) );
 }
 
 ContactGroupEditorDialog::~ContactGroupEditorDialog()
 {
   delete d;
-}
-
-void ContactGroupEditorDialog::slotGroupNameChanged( const QString& name )
-{
-  button( Ok )->setEnabled( !name.isEmpty() );
 }
 
 void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )

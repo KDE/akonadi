@@ -20,11 +20,11 @@
 */
 
 #include "contactgroupeditor.h"
+#include "contactgroupeditor_p.h"
 
 #include "autoqpointer_p.h"
 #include "contactgroupmodel_p.h"
 #include "contactgroupeditordelegate_p.h"
-#include "ui_contactgroupeditor.h"
 #include "waitingoverlay_p.h"
 
 #include <akonadi/collectiondialog.h>
@@ -45,52 +45,23 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QTableView>
 
-namespace Akonadi
+using namespace Akonadi;
+
+ContactGroupEditor::Private::Private( ContactGroupEditor *parent )
+  : mParent( parent ), mMonitor( 0 ), mReadOnly( false )
 {
-
-class ContactGroupEditor::Private
-{
-  public:
-    Private( ContactGroupEditor *parent )
-      : mParent( parent ), mMonitor( 0 ), mReadOnly( false )
-    {
-    }
-
-    ~Private()
-    {
-      delete mMonitor;
-    }
-
-    void itemFetchDone( KJob* );
-    void parentCollectionFetchDone( KJob* );
-    void storeDone( KJob* );
-    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& );
-    void memberChanged();
-    void setReadOnly( bool );
-
-    void adaptHeaderSizes()
-    {
-      mGui.membersView->header()->setDefaultSectionSize( mGui.membersView->header()->width() / 2 );
-      mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
-    }
-
-    void loadContactGroup( const KABC::ContactGroup &group );
-    bool storeContactGroup( KABC::ContactGroup &group );
-    void setupMonitor();
-
-    ContactGroupEditor *mParent;
-    ContactGroupEditor::Mode mMode;
-    Item mItem;
-    Monitor *mMonitor;
-    Collection mDefaultCollection;
-    Ui::ContactGroupEditor mGui;
-    bool mReadOnly;
-    ContactGroupModel *mGroupModel;
-};
-
 }
 
-using namespace Akonadi;
+ContactGroupEditor::Private::~Private()
+{
+  delete mMonitor;
+}
+
+void ContactGroupEditor::Private::adaptHeaderSizes()
+{
+  mGui.membersView->header()->setDefaultSectionSize( mGui.membersView->header()->width() / 2 );
+  mGui.membersView->header()->resizeSections( QHeaderView::Interactive );
+}
 
 void ContactGroupEditor::Private::itemFetchDone( KJob *job )
 {
@@ -252,11 +223,6 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
 ContactGroupEditor::~ContactGroupEditor()
 {
    delete d;
-}
-
-KLineEdit *ContactGroupEditor::groupName() const
-{
-  return d->mGui.groupName;
 }
 
 void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )

@@ -125,12 +125,13 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
 
   protected Q_SLOTS:
     virtual void slotButtonClicked( int button );
-    void slotGroupNameChanged( const QString& );
 
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotGroupNameChanged( const QString& ) )
     //@endcond
 };
 
