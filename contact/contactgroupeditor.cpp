@@ -254,6 +254,11 @@ ContactGroupEditor::~ContactGroupEditor()
    delete d;
 }
 
+KLineEdit *ContactGroupEditor::groupName() const
+{
+  return d->mGui.groupName;
+}
+
 void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
 {
   if ( d->mMode == CreateMode )

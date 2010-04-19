@@ -28,6 +28,7 @@
 #include <kabc/contactgroup.h>
 #include <klocale.h>
 #include <kpushbutton.h>
+#include <klineedit.h>
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -84,13 +85,20 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
 
   connect( d->mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
            this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
-
+  connect( d->mEditor->groupName(), SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( slotGroupNameChanged( const QString& ) ) );
+  button( Ok )->setEnabled( !d->mEditor->groupName()->text().isEmpty() );
   setInitialSize( QSize( 470, 400 ) );
 }
 
 ContactGroupEditorDialog::~ContactGroupEditorDialog()
 {
   delete d;
+}
+
+void ContactGroupEditorDialog::slotGroupNameChanged( const QString& name )
+{
+  button( Ok )->setEnabled( !name.isEmpty() );
 }
 
 void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )

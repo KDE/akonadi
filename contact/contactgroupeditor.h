@@ -26,6 +26,8 @@
 
 #include <QtGui/QWidget>
 
+class KLineEdit;
+
 namespace KABC {
 class ContactGroup;
 }
@@ -119,6 +121,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      * contact groups.
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
+
+    KLineEdit* groupName() const;
 
   public Q_SLOTS:
     /**
