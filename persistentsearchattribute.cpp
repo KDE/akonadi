@@ -83,7 +83,7 @@ QByteArray PersistentSearchAttribute::serialized() const
   l.append( d->queryLanguage.toLatin1() );
   l.append( "QUERYSTRING" );
   l.append( ImapParser::quote( d->queryString.toUtf8() ) );
-  return ImapParser::join( l, " " );
+  return "(" + ImapParser::join( l, " " ) + ")";
 }
 
 void PersistentSearchAttribute::deserialize(const QByteArray& data)
