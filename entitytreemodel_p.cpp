@@ -963,22 +963,28 @@ void EntityTreeModelPrivate::startFirstListJob()
     m_collections.insert( m_rootCollection.id(), m_rootCollection );
   }
 
+
+  const bool noMimetypes = m_mimeChecker.wantedMimeTypes().isEmpty();
+  const bool noResources = m_monitor->resourcesMonitored().isEmpty();
+  const bool generalPopulation = !noMimetypes || ( noMimetypes && noResources );
+
+  kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
   // HACK: fix this for recursive listing if we filter on mimetypes that only exit deeper
   // in the hierarchy
-  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections )
+  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections && generalPopulation )
     /*|| ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )*/ ) {
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
 
-  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
-    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ) )
+  if ( ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
+    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ) ) && generalPopulation )
     fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
 
-  if ( m_itemPopulation != EntityTreeModel::NoItemPopulation ) {
+  if ( m_itemPopulation != EntityTreeModel::NoItemPopulation && generalPopulation ) {
     if ( m_rootCollection != Collection::root() )
       fetchItems( m_rootCollection );
   }
