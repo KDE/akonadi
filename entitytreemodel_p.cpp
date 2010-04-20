@@ -376,9 +376,9 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
     Q_ASSERT( m_collections.contains( colId ) );
 
     const QModelIndex parentIndex = indexForCollection( m_collections.value( colId ) );
-    q->beginInsertRows( parentIndex, startRow, startRow + items.size() - 1 );
+    q->beginInsertRows( parentIndex, startRow, startRow + itemsToInsert.size() - 1 );
 
-    foreach ( const Item &item, items ) {
+    foreach ( const Item &item, itemsToInsert ) {
       const Item::Id itemId = item.id();
       m_items.insert( itemId, item );
 
