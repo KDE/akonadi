@@ -138,7 +138,7 @@ void CollectionFetchJob::doStart()
     else
       command += " " AKONADI_CMD_RID;
   }
-  if ( d->mScope.includeUnubscribed() )
+  if ( d->mScope.includeUnsubscribed() )
     command += " LIST ";
   else
     command += " LSUB ";

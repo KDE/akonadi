@@ -82,6 +82,11 @@ bool CollectionFetchScope::isEmpty () const
 
 bool CollectionFetchScope::includeUnubscribed () const
 {
+  return includeUnsubscribed();
+}
+
+bool CollectionFetchScope::includeUnsubscribed () const
+{
   return d->unsubscribed;
 }
 
