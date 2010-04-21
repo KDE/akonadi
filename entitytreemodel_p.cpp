@@ -133,17 +133,6 @@ void EntityTreeModelPrivate::serverStarted()
   endResetModel();
 }
 
-int EntityTreeModelPrivate::indexOf( const QList<Node*> &nodes, Entity::Id id ) const
-{
-  int i = 0;
-  foreach ( const Node *node, nodes ) {
-    if ( node->id == id )
-      return i;
-    i++;
-  }
-
-  return -1;
-}
 
 ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const
 {
@@ -552,7 +541,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   Q_ASSERT( m_childEntities.contains( parentId ) );
 
-  const int row = indexOf( m_childEntities.value( parentId ), collection.id() );
+  const int row = indexOf<Node::Collection>( m_childEntities.value( parentId ), collection.id() );
 
   Q_ASSERT( row >= 0 );
 
@@ -619,7 +608,7 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
 
   Q_ASSERT( collection.parentCollection() == destCollection );
 
-  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), collection.id() );
+  const int srcRow = indexOf<Node::Collection>( m_childEntities.value( sourceCollection.id() ), collection.id() );
   const int destRow = 0; // Prepend collections
 
   if ( !q->beginMoveRows( srcParentIndex, srcRow, srcRow, destParentIndex, destRow ) ) {
@@ -724,7 +713,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   Q_ASSERT( m_collections.contains( collection.id() ) );
   Q_ASSERT( m_childEntities.contains( collection.id() ) );
 
-  const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
+  const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
@@ -790,7 +779,7 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
 
   const Item::Id itemId = item.id();
 
-  const int srcRow = indexOf( m_childEntities.value( sourceCollection.id() ), itemId );
+  const int srcRow = indexOf<Node::Item>( m_childEntities.value( sourceCollection.id() ), itemId );
   const int destRow = q->rowCount( destIndex );
 
   if ( !q->beginMoveRows( srcIndex, srcRow, srcRow, destIndex, destRow ) ) {
@@ -848,7 +837,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
   Q_ASSERT( m_collections.contains( collection.id() ) );
 
-  const int row = indexOf( m_childEntities.value( collection.id() ), item.id() );
+  const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
@@ -1034,7 +1023,7 @@ Collection::List EntityTreeModelPrivate::getParentCollections( const Item &item 
   QHashIterator<Collection::Id, QList<Node*> > iter( m_childEntities );
   while ( iter.hasNext() ) {
     iter.next();
-    int nodeIndex = indexOf( iter.value(), item.id() );
+    int nodeIndex = indexOf<Node::Item>( iter.value(), item.id() );
     if ( nodeIndex != -1 && iter.value().at( nodeIndex )->type == Node::Item ) {
       list << m_collections.value( iter.key() );
     }
@@ -1180,7 +1169,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collec
   // we ensure that we use -1 for the invalid Collection.
   const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
 
-  const int row = indexOf( m_childEntities.value( parentId ), collection.id() );
+  const int row = indexOf<Node::Collection>( m_childEntities.value( parentId ), collection.id() );
 
   if ( row < 0 )
     return QModelIndex();
@@ -1196,10 +1185,9 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
   QModelIndexList indexes;
 
   const Collection::List collections = getParentCollections( item );
-  const qint64 id = item.id();
 
   foreach ( const Collection &collection, collections ) {
-    const int row = indexOf( m_childEntities.value( collection.id() ), id );
+    const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
 
     Node *node = m_childEntities.value( collection.id() ).at( row );
 

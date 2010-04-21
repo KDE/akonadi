@@ -142,7 +142,20 @@ public:
   /**
    * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
    */
-  int indexOf( const QList<Node*> &list, Entity::Id id ) const;
+  template<Node::Type Type>
+  int indexOf( const QList<Node*> &nodes, Entity::Id id ) const
+  {
+    int i = 0;
+    foreach ( const Node *node, nodes ) {
+      if ( node->id == id && node->type == Type )
+      {
+        return i;
+      }
+      i++;
+    }
+
+    return -1;
+  }
 
   /**
    * The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
