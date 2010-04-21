@@ -504,6 +504,11 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
+
+  if ( m_monitor->resourcesMonitored().contains( collection.resource().toUtf8() ) && collection.parentCollection() == Collection::root() )
+    return topLevelCollectionsFetched( Collection::List() << collection );
+
+
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedCollection( collection ) )
     return;
 
