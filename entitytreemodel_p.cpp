@@ -384,7 +384,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
       Node *node = new Node;
       node->id = itemId;
-      node->parent = colId;
+      node->parent = collectionId;
       node->type = Node::Item;
 
       m_childEntities[ colId ].append( node );
