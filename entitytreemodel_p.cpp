@@ -349,7 +349,6 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
   Item::List itemsToInsert;
-  Item::List itemsToUpdate;
 
   const Collection collection = m_collections.value( collectionId );
 
@@ -361,14 +360,10 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
     if ( isHidden( item ) )
       continue;
 
-    if ( indexOf( collectionEntities, item.id() ) != -1 ) {
-      itemsToUpdate << item;
-    } else {
-      if ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) {
-        itemsToInsert << item;
-      }
-    }
+    if ( ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) && !m_items.contains( item.id() ) )
+      itemsToInsert << item;
   }
+
   if ( itemsToInsert.size() > 0 ) {
     Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ? 0 : collectionId;
     const int startRow = m_childEntities.value( colId ).size();
@@ -390,15 +385,6 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       m_childEntities[ colId ].append( node );
     }
     q->endInsertRows();
-  }
-
-  if ( itemsToUpdate.size() > 0 ) {
-    foreach ( const Item &item, itemsToUpdate ) {
-      m_items[ item.id() ].apply( item );
-      foreach ( const QModelIndex &index, indexesForItem( item ) ) {
-        dataChanged( index, index );
-      }
-    }
   }
 }
 
