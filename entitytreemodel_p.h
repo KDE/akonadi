@@ -92,11 +92,9 @@ public:
 
   void monitoredMimeTypeChanged( const QString &mimeType, bool monitored );
 
-  Collection getParentCollection( Entity::Id id ) const;
   Collection::List getParentCollections( const Item &item ) const;
   Collection getParentCollection( const Collection &collection ) const;
   Entity::Id childAt( Collection::Id, int position, bool *ok ) const;
-  int indexOf( Collection::Id parent, Collection::Id id ) const;
   Item getItem( Item::Id id ) const;
   void removeChildEntities( Collection::Id collectionId );
   void retrieveAncestors( const Akonadi::Collection& collection );
