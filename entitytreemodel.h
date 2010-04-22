@@ -66,19 +66,7 @@ class EntityTreeModelPrivate;
  * and the EntityTreeModel.
  *
  * If you want to retrieve a Collection for a particular Collection::Id  and you do not yet
- * have a valid QModelIndex, use match:
- *
- * @code
- * QModelIndexList list = model->match( QModelIndex(), CollectionIdRole, id );
- * if ( list.isEmpty() )
- *   return; // A Collection with that Id is not in the model.
- * Q_ASSERT( list.size() == 1 ); // Otherwise there must be only one instance of it.
- * Collection collection = list.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
- * @endcode
- *
- * Not that a single Item may appear multiple times in a model, so the list size may not be 1
- * if it is not empty in that case, so the Q_ASSERT should not be used.
- * @see virtual-collections
+ * have a valid QModelIndex, use modelIndexForCollection.
  *
  * <h3>Using EntityTreeModel in your application</h3>
  *
@@ -505,6 +493,8 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * This can be useful for example if an id is stored in a config file and needs to be used in the application.
      *
      * Note however, that to restore view state such as scrolling, selection and expansion of items in trees, the EntityTreeViewStateSaver can be used for convenience.
+     *
+     * @see modelIndexesForItem
      */
     static QModelIndex modelIndexForCollection( QAbstractItemModel *model, const Collection &collection );
 
