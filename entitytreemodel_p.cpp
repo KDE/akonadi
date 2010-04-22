@@ -1234,6 +1234,7 @@ void EntityTreeModelPrivate::beginResetModel()
 void EntityTreeModelPrivate::endResetModel()
 {
   Q_Q( EntityTreeModel );
+  m_session->clear();
   m_collections.clear();
   m_items.clear();
   m_childEntities.clear();
