@@ -433,17 +433,24 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
   // about the top-level one. The rest will be found auotmatically by the view.
   q->beginInsertRows( parent, row, row );
 
+  m_collections.insert( collection.id(), collection );
+  Node *node = new Node;
+  node->id = collection.id();
+  node->parent = collection.parentCollection().id();
+  node->type = Node::Collection;
+  m_childEntities[ node->parent ].prepend( node );
+
   Collection::List::const_iterator it;
   const Collection::List::const_iterator begin = ancestors.constBegin();
   const Collection::List::const_iterator end = ancestors.constEnd();
 
   for ( it = begin; it != end; ++it ) {
-    const Collection collection = *it;
-    m_collections.insert( collection.id(), collection );
+    const Collection ancestor = *it;
+    m_collections.insert( ancestor.id(), ancestor );
 
     Node *node = new Node;
-    node->id = collection.id();
-    node->parent = collection.parentCollection().id();
+    node->id = ancestor.id();
+    node->parent = ancestor.parentCollection().id();
     node->type = Node::Collection;
     m_childEntities[ node->parent ].prepend( node );
   }
