@@ -112,14 +112,6 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
   q->connect( serverManager, SIGNAL( started() ), SLOT( serverStarted() ) );
 
-  QList<Collection> list = monitor->collectionsMonitored();
-  if ( list.size() == 1 )
-    m_rootCollection = list.first();
-  else
-    m_rootCollection = Collection::root();
-
-  m_rootCollectionDisplayName = QLatin1String( "[*]" );
-
   QHash<int, QByteArray> names = q->roleNames();
 
   names.insert( EntityTreeModel::UnreadCount, "unreadCount" );
@@ -1254,6 +1246,15 @@ void EntityTreeModelPrivate::endResetModel()
 void EntityTreeModelPrivate::fillModel()
 {
   Q_Q( EntityTreeModel );
+
+  QList<Collection> list = m_monitor->collectionsMonitored();
+  if ( list.size() == 1 )
+    m_rootCollection = list.first();
+  else
+    m_rootCollection = Collection::root();
+
+  m_rootCollectionDisplayName = QLatin1String( "[*]" );
+
   if ( m_rootCollection == Collection::root() )
   {
     QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
