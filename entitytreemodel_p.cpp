@@ -1172,7 +1172,25 @@ QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collec
 
   // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
   // we ensure that we use -1 for the invalid Collection.
-  const Collection::Id parentId = collection.parentCollection().isValid() ? collection.parentCollection().id() : -1;
+  Collection::Id parentId = -1;
+
+  if ( collection == Collection::root() )
+    parentId = -1;
+  else if ( collection.parentCollection().isValid() )
+    parentId = collection.parentCollection().id();
+  else {
+    QHash<Entity::Id, QList<Node *> >::const_iterator it = m_childEntities.constBegin();
+    const QHash<Entity::Id, QList<Node *> >::const_iterator end = m_childEntities.constEnd();
+    for ( ; it != end; ++it ) {
+      const int row = indexOf<Node::Collection>( it.value(), collection.id() );
+      if ( row < 0 )
+        continue;
+
+      Node *node = it.value().at( row );
+      return q->createIndex( row, 0, reinterpret_cast<void*>( node ) );
+    }
+    return QModelIndex();
+  }
 
   const int row = indexOf<Node::Collection>( m_childEntities.value( parentId ), collection.id() );
 
