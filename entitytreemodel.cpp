@@ -25,6 +25,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
+#include <QtGui/QAbstractProxyModel>
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
 
@@ -1069,6 +1070,52 @@ EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrateg
 {
   Q_D( const EntityTreeModel );
   return d->m_collectionFetchStrategy;
+}
+
+static QPair<QList<const QAbstractProxyModel *>, EntityTreeModel *> proxiesAndModel( QAbstractItemModel *model )
+{
+  QList<const QAbstractProxyModel *> proxyChain;
+  QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>( model );
+  QAbstractItemModel *_model = model;
+  while ( proxy )
+  {
+    proxyChain.prepend( proxy );
+    _model = proxy->sourceModel();
+    proxy = qobject_cast<QAbstractProxyModel *>( _model );
+  }
+
+  EntityTreeModel *etm = qobject_cast<EntityTreeModel *>( _model );
+  return qMakePair(proxyChain, etm);
+}
+
+static QModelIndex proxiedIndex( const QModelIndex &idx, QList<const QAbstractProxyModel *> proxyChain )
+{
+  QListIterator<const QAbstractProxyModel *> it( proxyChain );
+  QModelIndex _idx = idx;
+  while ( it.hasNext() )
+    _idx = it.next()->mapFromSource( _idx );
+  return _idx;
+}
+
+QModelIndex EntityTreeModel::modelIndexForCollection( QAbstractItemModel *model, const Collection &collection )
+{
+  QPair<QList<const QAbstractProxyModel *>, EntityTreeModel*> pair = proxiesAndModel( model );
+  QModelIndex idx = pair.second->d_ptr->indexForCollection( collection );
+  return proxiedIndex( idx, pair.first );
+}
+
+QModelIndexList EntityTreeModel::modelIndexesForItem( QAbstractItemModel *model, const Item &item )
+{
+  QPair<QList<const QAbstractProxyModel *>, EntityTreeModel*> pair = proxiesAndModel( model );
+  QModelIndexList list = pair.second->d_ptr->indexesForItem( item );
+  QModelIndexList proxyList;
+  foreach( const QModelIndex &idx, list )
+  {
+    const QModelIndex pIdx = proxiedIndex( idx, pair.first );
+    if ( pIdx.isValid() )
+      proxyList << pIdx;
+  }
+  return proxyList;
 }
 
 #include "entitytreemodel.moc"

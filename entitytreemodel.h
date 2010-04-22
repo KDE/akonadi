@@ -478,6 +478,43 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
+    /**
+     * Returns a QModelIndex in @p model which points to @p collection.
+     * This method can be used through proxy models if @p model is a proxy model.
+     *
+     * @code
+     * EntityTreeModel *model = getEntityTreeModel();
+     * QSortFilterProxyModel *proxy1 = new QSortFilterProxyModel;
+     * proxy1->setSourceModel(model);
+     * QSortFilterProxyModel *proxy2 = new QSortFilterProxyModel;
+     * proxy2->setSourceModel(proxy1);
+     *
+     * ...
+     *
+     * QModelIndex idx = EntityTreeModel::modelIndexForCollection(proxy2, Collection(colId));
+     * if (!idx.isValid())
+     *   // Collection with id colId is not in the proxy2.
+     *   // Maybe it is filtered out if proxy 2 is only showing items? Make sure you use the correct proxy.
+     *   return;
+     *
+     * Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+     * // collection has the id colId, and all other attributes already fetched by the model such as name, remoteId, Akonadi::Attributes etc.
+     *
+     * @endcode
+     *
+     * This can be useful for example if an id is stored in a config file and needs to be used in the application.
+     *
+     * Note however, that to restore view state such as scrolling, selection and expansion of items in trees, the EntityTreeViewStateSaver can be used for convenience.
+     */
+    static QModelIndex modelIndexForCollection( QAbstractItemModel *model, const Collection &collection );
+
+    /**
+     * Returns a QModelIndex in @p model which points to @p item.
+     * This method can be used through proxy models if @p model is a proxy model.
+     *
+     * @see modelIndexForCollection
+     */
+    static QModelIndexList modelIndexesForItem( QAbstractItemModel *model, const Item &item );
   protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
