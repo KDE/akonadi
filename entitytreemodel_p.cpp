@@ -68,6 +68,8 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
   m_monitor->setChangeRecordingEnabled( false );
 
+  m_rootCollectionDisplayName = QLatin1String( "[*]" );
+
   m_includeStatistics = true;
   m_monitor->fetchCollectionStatistics( true );
   m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
@@ -1253,8 +1255,6 @@ void EntityTreeModelPrivate::fillModel()
     m_rootCollection = list.first();
   else
     m_rootCollection = Collection::root();
-
-  m_rootCollectionDisplayName = QLatin1String( "[*]" );
 
   if ( m_rootCollection == Collection::root() )
   {
