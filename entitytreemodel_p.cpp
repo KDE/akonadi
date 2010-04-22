@@ -348,7 +348,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
   }
 
   if ( itemsToInsert.size() > 0 ) {
-    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ? 0 : collectionId;
+    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ? m_rootCollection.id() : collectionId;
     const int startRow = m_childEntities.value( colId ).size();
 
     Q_ASSERT( m_collections.contains( colId ) );
