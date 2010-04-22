@@ -76,6 +76,8 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
   q->connect( monitor, SIGNAL( mimeTypeMonitored( const QString&, bool ) ),
               SLOT( monitoredMimeTypeChanged( const QString&, bool ) ) );
+  q->connect( monitor, SIGNAL( collectionMonitored(Akonadi::Collection,bool)),
+              SLOT( monitoredCollectionsChanged( const Collection&, bool ) ) );
 
   // monitor collection changes
   q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
@@ -384,6 +386,12 @@ void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType,
     m_mimeChecker.addWantedMimeType( mimeType );
   else
     m_mimeChecker.removeWantedMimeType( mimeType );
+  endResetModel();
+}
+
+void EntityTreeModelPrivate::monitoredCollectionsChanged( const Collection &collection, bool monitored )
+{
+  beginResetModel();
   endResetModel();
 }
 
