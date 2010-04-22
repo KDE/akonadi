@@ -72,8 +72,6 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   m_monitor->fetchCollectionStatistics( true );
   m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
 
-  m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
-
   q->connect( monitor, SIGNAL( mimeTypeMonitored( const QString&, bool ) ),
               SLOT( monitoredMimeTypeChanged( const QString&, bool ) ) );
   q->connect( monitor, SIGNAL( collectionMonitored(Akonadi::Collection,bool)),
@@ -1246,6 +1244,8 @@ void EntityTreeModelPrivate::endResetModel()
 void EntityTreeModelPrivate::fillModel()
 {
   Q_Q( EntityTreeModel );
+
+  m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
 
   QList<Collection> list = m_monitor->collectionsMonitored();
   if ( list.size() == 1 )
