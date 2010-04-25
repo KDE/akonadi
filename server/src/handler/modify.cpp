@@ -163,6 +163,7 @@ bool Modify::parseStream()
         collection.setQueryString( queryString );
 
         SearchManager::instance()->removeSearch( collection.id() );
+        collection.clearPimItems();
         SearchManager::instance()->addSearch( collection );
 
         changes.append( AKONADI_PARAM_PERSISTENTSEARCH );
