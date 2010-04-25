@@ -24,7 +24,6 @@
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/searchcreatejob.h>
-#include <akonadi/searchmodifyjob.h>
 
 #include "collectionutils_p.h"
 
@@ -64,12 +63,4 @@ void SearchJobTest::testModifySearch()
   Collection created = create->createdCollection();
   QVERIFY( created.isValid() );
 
-  // modify it
-  SearchModifyJob *mod = new SearchModifyJob( created, "<request><userQuery>AkonadiModified</userQuery></request>", this );
-  QVERIFY( mod->exec() );
-  Collection modified = mod->modifiedCollection();
-  QVERIFY( modified.isValid() );
-
-  // verify that the query changed
-  QCOMPARE( modified.remoteId(), QLatin1String("AkonadiModified") );
 }

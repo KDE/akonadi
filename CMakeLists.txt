@@ -131,7 +131,6 @@ set( akonadikde_LIB_SRC
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
   searchcreatejob.cpp
-  searchmodifyjob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
   session.cpp
@@ -274,7 +273,6 @@ install( FILES
   resourcebase.h
   resourcesynchronizationjob.h
   searchcreatejob.h
-  searchmodifyjob.h
   selectionproxymodel.h
   session.h
   servermanager.h
