@@ -23,14 +23,17 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
     bool hasChildren( const QModelIndex &parent = QModelIndex() ) const;
     QModelIndex buddy( const QModelIndex &index ) const;
     void fetchMore( const QModelIndex &index );
-/*
+
     void setSourceModel( QAbstractItemModel *sourceModel );
 
   public Q_SLOTS:
+/*
     void sourceRowsAboutToBeInserted(const QModelIndex &, int, int);
     void sourceRowsInserted(const QModelIndex &, int, int);
+*/
     void sourceRowsAboutToBeRemoved(const QModelIndex &, int, int);
     void sourceRowsRemoved(const QModelIndex &, int, int);
+/*
     void sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int);
     void sourceRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
     void sourceModelAboutToBeReset();
@@ -42,8 +45,9 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
     void sourceModelDestroyed();
 */
   private:
-    mutable QList<QModelIndex> mParentIndexes;
+    mutable QMap<qint64, QModelIndex> mParentIndexes;
     mutable QSet<QModelIndex> mOwnIndexes;
+    mutable qint64 mUniqueKeyCounter;
 };
 
 #endif

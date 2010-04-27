@@ -8,7 +8,7 @@
 #include "leafextensionproxymodel.h"
 
 LeafExtensionProxyModel::LeafExtensionProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent )
+  : QSortFilterProxyModel( parent ), mUniqueKeyCounter( 0 )
 {
 }
 
@@ -22,14 +22,23 @@ QModelIndex LeafExtensionProxyModel::index( int row, int column, const QModelInd
     const QModelIndex sourceParent = mapToSource( parent );
     const QModelIndex sourceIndex = sourceModel()->index( row, column, sourceParent );
     if ( !sourceIndex.isValid() ) {
-      int parentOffset = mParentIndexes.indexOf( parent );
-      if ( parentOffset == -1 ) {
-        mParentIndexes.append( parent );
-        parentOffset = mParentIndexes.count() - 1;
+
+      qint64 key = -1;
+      QMapIterator<qint64, QModelIndex> it( mParentIndexes );
+      while ( it.hasNext() ) {
+        it.next();
+        if ( it.value() == parent ) {
+          key = it.key();
+          break;
+        }
       }
 
-      qDebug() << "count" << mParentIndexes.count() << mOwnIndexes.count();
-      const QModelIndex index = createIndex( row, column, parentOffset );
+      if ( key == -1 ) {
+        key = ++mUniqueKeyCounter;
+        mParentIndexes.insert( key, parent );
+      }
+
+      const QModelIndex index = createIndex( row, column, static_cast<quint32>( key ) );
       mOwnIndexes.insert( index );
       return index;
     }
@@ -41,7 +50,7 @@ QModelIndex LeafExtensionProxyModel::index( int row, int column, const QModelInd
 QModelIndex LeafExtensionProxyModel::parent( const QModelIndex &index ) const
 {
   if ( mOwnIndexes.contains( index ) )
-    return mParentIndexes.at( index.internalId() );
+    return mParentIndexes.value( index.internalId() );
 
   return QSortFilterProxyModel::parent( index );
 }
@@ -129,7 +138,6 @@ void LeafExtensionProxyModel::fetchMore( const QModelIndex &index )
   QSortFilterProxyModel::fetchMore( index );
 }
 
-/*
 void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
 {
   if ( _sourceModel == sourceModel() )
@@ -137,14 +145,17 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
 
   beginResetModel();
   if ( _sourceModel ) {
+    /*
     disconnect(_sourceModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
             this, SLOT(sourceRowsAboutToBeInserted(const QModelIndex &, int, int)));
     disconnect(_sourceModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
             this, SLOT(sourceRowsInserted(const QModelIndex &, int, int)));
+    */
     disconnect(_sourceModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
             this, SLOT(sourceRowsAboutToBeRemoved(const QModelIndex &, int, int)));
     disconnect(_sourceModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
             this, SLOT(sourceRowsRemoved(const QModelIndex &, int, int)));
+    /*
     disconnect(_sourceModel, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
             this, SLOT(sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
     disconnect(_sourceModel, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
@@ -163,17 +174,22 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
             this, SLOT(sourceLayoutChanged()));
     disconnect(_sourceModel, SIGNAL(destroyed()),
             this, SLOT(sourceModelDestroyed()));
+    */
   }
-  QAbstractProxyModel::setSourceModel( _sourceModel );
 
+  QSortFilterProxyModel::setSourceModel( _sourceModel );
+
+  /*
   connect(_sourceModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
           SLOT(sourceRowsAboutToBeInserted(const QModelIndex &, int, int)));
   connect(_sourceModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
           SLOT(sourceRowsInserted(const QModelIndex &, int, int)));
+  */
   connect(_sourceModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
           SLOT(sourceRowsAboutToBeRemoved(const QModelIndex &, int, int)));
   connect(_sourceModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
           SLOT(sourceRowsRemoved(const QModelIndex &, int, int)));
+  /*
   connect(_sourceModel, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
           SLOT(sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
   connect(_sourceModel, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
@@ -192,10 +208,12 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
           SLOT(sourceLayoutChanged()));
   connect(_sourceModel, SIGNAL(destroyed()),
           SLOT(sourceModelDestroyed()));
+  */
 
   endResetModel();
 }
 
+/*
 void LeafExtensionProxyModel::sourceRowsAboutToBeInserted( const QModelIndex &index, int start, int end )
 {
   beginInsertRows( index, start, end );
@@ -205,17 +223,43 @@ void LeafExtensionProxyModel::sourceRowsInserted( const QModelIndex &index, int 
 {
   endInsertRows();
 }
+*/
 
-void LeafExtensionProxyModel::sourceRowsAboutToBeRemoved( const QModelIndex &index, int start, int end )
+void LeafExtensionProxyModel::sourceRowsAboutToBeRemoved( const QModelIndex &sourceParentIndex, int start, int end )
 {
-  beginRemoveRows( index, start, end );
+  qDebug() << "Source:" << sourceParentIndex << start << end << sourceParentIndex.data();
+  const QModelIndex parentIndex = mapFromSource( sourceParentIndex );
+  qDebug() << "Proxy:" << parentIndex << start << end << parentIndex.data();
+
+  beginRemoveRows( parentIndex, start, end );
+
+  qDebug() << "Parentindexes:" << mParentIndexes;
+
+  // iterate over all of our stored parent indexes
+  QMutableMapIterator<qint64, QModelIndex> it( mParentIndexes );
+  while ( it.hasNext() ) {
+    it.next();
+    qDebug() << "check against" << it.value().parent();
+    qDebug() << " ";
+    if ( it.value().parent() == parentIndex ) {
+      qDebug() << "found matching item" << it.value().data();
+      qDebug() << "it.value.row=" << it.value().row();
+      if ( it.value().row() >= start && it.value().row() <= end )
+        it.remove();
+      else if ( it.value().row() > end ) {
+        const QModelIndex newIndex = index( it.value().row() - (end-start) - 1, it.value().column(), parentIndex );
+        qDebug() << "newIndex:" << newIndex;
+        it.setValue( newIndex );
+      }
+    }
+  }
 }
 
 void LeafExtensionProxyModel::sourceRowsRemoved( const QModelIndex &index, int start, int end )
 {
   endRemoveRows();
 }
-
+/*
 void LeafExtensionProxyModel::sourceRowsAboutToBeMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow )
 {
   beginMoveRows( sourceParent, sourceStart, sourceEnd, destinationParent, destinationRow );
