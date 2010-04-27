@@ -42,14 +42,18 @@ ContactGroupSearchJob::~ContactGroupSearchJob()
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  QString query;
+  QString query = QString::fromLatin1(
+            "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
 
   if ( criterion == Name ) {
-    query = QString::fromLatin1( ""
-                                 "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                 "SELECT ?group WHERE {"
-                                 "  ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
-                                 "}" );
+    query += QString::fromLatin1(
+        "SELECT DISTINCT ?group "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
+        "  } "
+        "}" );
   }
 
   query = query.arg( value );
