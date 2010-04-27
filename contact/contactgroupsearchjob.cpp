@@ -25,10 +25,17 @@
 
 using namespace Akonadi;
 
+class ContactGroupSearchJob::Private
+{
+  public:
+    int mLimit;
+};
+
 ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
-  : ItemSearchJob( QString(), parent ), d( 0 )
+  : ItemSearchJob( QString(), parent ), d( new Private )
 {
   fetchScope().fetchFullPayload();
+  d->mLimit = -1;
 
   // by default search for all contact groups
   ItemSearchJob::setQuery( QLatin1String( ""
@@ -38,6 +45,7 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
 {
+  delete d;
 }
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
@@ -56,9 +64,17 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value 
         "}" );
   }
 
+  if ( d->mLimit != -1 )
+    query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
+
   query = query.arg( value );
 
   ItemSearchJob::setQuery( query );
+}
+
+void ContactGroupSearchJob::setLimit( int limit )
+{
+  d->mLimit = limit;
 }
 
 KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const

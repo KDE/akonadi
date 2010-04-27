@@ -87,6 +87,19 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public ItemSearchJob
     void setQuery( Criterion criterion, const QString &value );
 
     /**
+     * Sets a @p limit on how many results will be returned by this search job.
+     * This is useful in situation where for example only the first search result is needed anyway,
+     * setting a limit of 1 here will greatly reduce the resource usage of Nepomuk during the
+     * search.
+     *
+     * This needs to be called before calling setQuery() to have an effect.
+     * By default, the number of results is unlimited.
+     *
+     * @since 4.5
+     */
+    void setLimit( int limit );
+
+    /**
      * Returns the contact groups that matched the search criteria.
      */
     KABC::ContactGroup::List contactGroups() const;
