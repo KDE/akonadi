@@ -77,6 +77,7 @@ set(akonadicontact_LIB_SRC
   contactviewerdialog.cpp
   customfields.cpp
   customfieldmanager.cpp
+  emailaddressselectiondialog.cpp
   emailaddressselectionproxymodel.cpp
   emailaddressselectionview.cpp
   leafextensionproxymodel.cpp

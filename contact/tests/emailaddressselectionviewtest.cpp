@@ -69,7 +69,7 @@ void MainWidget::showSelection()
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "emailaddressselectionviewtest", 0, ki18n( "Test EmailAddressSelectionView"), "0.1" );
+  KAboutData aboutData( "emailaddressselectionviewtest", 0, ki18n( "Test EmailAddressSelectionView" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KApplication app;

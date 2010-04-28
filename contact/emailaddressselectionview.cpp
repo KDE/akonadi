@@ -37,6 +37,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 
+#include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -192,6 +193,8 @@ void EmailAddressSelectionView::Private::init()
   Control::widgetNeedsAkonadi( q );
 
   mSearchLine->setFocus();
+
+  QTimer::singleShot( 1000, mView, SLOT( expandAll() ) );
 }
 
 

@@ -20,86 +20,56 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_EMAILADDRESSSELECTIONVIEW_H
-#define AKONADI_EMAILADDRESSSELECTIONVIEW_H
+#ifndef AKONADI_EMAILADDRESSSELECTIONDIALOG_H
+#define AKONADI_EMAILADDRESSSELECTIONDIALOG_H
 
 #include "akonadi-contact_export.h"
 
-#include <akonadi/item.h>
+#include "emailaddressselectionview.h"
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QWidget>
-
-class QAbstractItemModel;
-class QTreeView;
+#include <kdialog.h>
 
 namespace Akonadi {
 
 /**
- * @short A widget to select email addresses from Akonadi.
+ * @short A dialog to select email addresses from Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
+class AKONADI_CONTACT_EXPORT EmailAddressSelectionDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    class Selection
-    {
-      public:
-        typedef QList<Selection> List;
-
-        Selection();
-        Selection( const Selection &other );
-        Selection &operator=( const Selection& );
-        ~Selection();
-
-        bool isValid() const;
-
-        QString name() const;
-        QString email() const;
-
-        Akonadi::Item item() const;
-
-      private:
-        //@cond PRIVATE
-        friend class EmailAddressSelectionView;
-
-        class Private;
-        QSharedDataPointer<Private> d;
-        //@endcond
-    };
-
     /**
-     * Creates a new email address selection view.
+     * Creates a new email address selection dialog.
      *
      * @param parent The parent widget.
      */
-    explicit EmailAddressSelectionView( QWidget *parent = 0 );
+    explicit EmailAddressSelectionDialog( QWidget *parent = 0 );
 
     /**
-     * Creates a new email address selection view.
+     * Creates a new email address selection dialog.
      *
      * @param model A custom, ContactsTreeModel based model to use.
      * @param parent The parent widget.
      */
-    explicit EmailAddressSelectionView( QAbstractItemModel *model, QWidget *parent = 0 );
+    explicit EmailAddressSelectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
 
     /**
-     * Destroys the email address selection view.
+     * Destroys the email address selection dialog.
      */
-    ~EmailAddressSelectionView();
+    ~EmailAddressSelectionDialog();
 
     /**
      * Returns the list of selected email addresses.
      */
-    Selection::List selectedAddresses() const;
+    EmailAddressSelectionView::Selection::List selectedAddresses() const;
 
     /**
-     * Returns the tree view that is used to list the items.
+     * Returns the email address selection view that is used.
      */
-    QTreeView *view() const;
+    EmailAddressSelectionView *view() const;
 
   private:
     //@cond PRIVATE
