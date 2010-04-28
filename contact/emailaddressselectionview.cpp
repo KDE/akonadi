@@ -40,10 +40,35 @@
 #include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
+#include <QtGui/QKeyEvent>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 
 using namespace Akonadi;
+
+/**
+ * @internal
+ */
+class SearchLineEdit : public KLineEdit
+{
+  public:
+    SearchLineEdit( QWidget *receiver, QWidget *parent = 0 )
+      : KLineEdit( parent ), mReceiver( receiver )
+    {
+    }
+
+  protected:
+    virtual void keyPressEvent( QKeyEvent *event )
+    {
+      if ( event->key() == Qt::Key_Down )
+        QMetaObject::invokeMethod( mReceiver, "setFocus" );
+
+      KLineEdit::keyPressEvent( event );
+    }
+
+  private:
+    QObject *mReceiver;
+};
 
 /**
  * @internal
@@ -129,7 +154,7 @@ class EmailAddressSelectionView::Private
     EmailAddressSelectionView *q;
     QAbstractItemModel *mModel;
     QLabel *mDescriptionLabel;
-    KLineEdit *mSearchLine;
+    SearchLineEdit *mSearchLine;
     Akonadi::EntityTreeView *mView;
     EmailAddressSelectionProxyModel *mSelectionModel;
 };
@@ -168,13 +193,14 @@ void EmailAddressSelectionView::Private::init()
   QHBoxLayout *searchLayout = new QHBoxLayout;
   layout->addLayout( searchLayout );
 
+  mView = new Akonadi::EntityTreeView;
+
   QLabel *label = new QLabel( i18n( "Search:" ) );
-  mSearchLine = new KLineEdit;
+  mSearchLine = new SearchLineEdit( mView );
   label->setBuddy( mSearchLine );
   searchLayout->addWidget( label );
   searchLayout->addWidget( mSearchLine );
 
-  mView = new Akonadi::EntityTreeView;
   mView->setDragDropMode( QAbstractItemView::NoDragDrop );
   layout->addWidget( mView );
 
@@ -234,6 +260,11 @@ EmailAddressSelectionView::Selection::List EmailAddressSelectionView::selectedAd
   }
 
   return selections;
+}
+
+KLineEdit* EmailAddressSelectionView::searchLineEdit() const
+{
+  return d->mSearchLine;
 }
 
 QTreeView* EmailAddressSelectionView::view() const
