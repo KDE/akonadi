@@ -168,6 +168,7 @@ void CollectionFetchJob::doStart()
   QList<QByteArray> filter;
   if ( !d->mScope.resource().isEmpty() ) {
     filter.append( "RESOURCE" );
+    // FIXME: Does this need to be quoted??
     filter.append( d->mScope.resource().toUtf8() );
   }
 
@@ -175,6 +176,7 @@ void CollectionFetchJob::doStart()
     filter.append( "MIMETYPE" );
     QList<QByteArray> mts;
     foreach ( const QString &mt, d->mScope.contentMimeTypes() )
+      // FIXME: Does this need to be quoted??
       mts.append( mt.toUtf8() );
     filter.append( '(' + ImapParser::join( mts, " " ) + ')' );
   }

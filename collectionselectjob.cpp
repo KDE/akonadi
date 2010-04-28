@@ -66,6 +66,7 @@ void CollectionSelectJob::doStart( )
     QByteArray command( d->newTag() + " " AKONADI_CMD_RID " SELECT " );
     if ( d->mSilent )
       command += "SILENT ";
+    // FIXME: Should this be quoted??
     d->writeData( command + d->mCollection.remoteId().toUtf8() + '\n' );
   } else {
     setError( Unknown );
