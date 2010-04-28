@@ -4,6 +4,8 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
+namespace Akonadi {
+
 class LeafExtensionProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -26,6 +28,23 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
 
     void setSourceModel( QAbstractItemModel *sourceModel );
 
+  protected:
+    /**
+     * This method is called to retrieve the row count for the given leaf @p index.
+     */
+    virtual int leafRowCount( const QModelIndex &index ) const = 0;
+
+    /**
+     * This method is called to retrieve the column count for the given leaf @p index.
+     */
+    virtual int leafColumnCount( const QModelIndex &index ) const = 0;
+
+    /**
+     * This method is called to retrieve the data of the child of the given leaf @p index
+     * at @p row and @p column with the given @p role.
+     */
+    virtual QVariant leafData( const QModelIndex &index, int row, int column, int role = Qt::DisplayRole ) const = 0;
+
   private:
     //@cond PRIVATE
     class Private;
@@ -35,5 +54,7 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
     Q_PRIVATE_SLOT( d, void sourceRowsRemoved( const QModelIndex&, int, int ) )
     //@endcond
 };
+
+}
 
 #endif

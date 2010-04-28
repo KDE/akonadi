@@ -22,7 +22,7 @@
 
 #include "emailaddressselectionview.h"
 
-#include "leafextensionproxymodel.h"
+#include "emailaddressselectionproxymodel_p.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/contact/contactsfiltermodel.h>
@@ -130,7 +130,7 @@ class EmailAddressSelectionView::Private
     QLabel *mDescriptionLabel;
     KLineEdit *mSearchLine;
     Akonadi::EntityTreeView *mView;
-    LeafExtensionProxyModel *mLeaf;
+    EmailAddressSelectionProxyModel *mSelectionModel;
 };
 
 void EmailAddressSelectionView::Private::init()
@@ -174,16 +174,17 @@ void EmailAddressSelectionView::Private::init()
   searchLayout->addWidget( mSearchLine );
 
   mView = new Akonadi::EntityTreeView;
+  mView->setDragDropMode( QAbstractItemView::NoDragDrop );
   layout->addWidget( mView );
 
   Akonadi::ContactsFilterModel *filter = new Akonadi::ContactsFilterModel( q );
   filter->setSourceModel( mModel );
 
-  mLeaf = new LeafExtensionProxyModel( q );
-  mLeaf->setSourceModel( filter );
+  mSelectionModel = new EmailAddressSelectionProxyModel( q );
+  mSelectionModel->setSourceModel( filter );
 
-  mView->setModel( mLeaf );
-//  mView->header()->hide();
+  mView->setModel( mSelectionModel );
+  mView->header()->hide();
 
   q->connect( mSearchLine, SIGNAL( textChanged( const QString& ) ),
               filter, SLOT( setFilterString( const QString& ) ) );
@@ -215,14 +216,21 @@ EmailAddressSelectionView::Selection::List EmailAddressSelectionView::selectedAd
 {
   Selection::List selections;
 
-  //TODO: extract selection from view
+  if ( !d->mView->selectionModel() )
+    return selections;
+
+  const QModelIndexList selectedRows = d->mView->selectionModel()->selectedRows( 0 );
+  foreach ( const QModelIndex &index, selectedRows ) {
+    Selection selection;
+    selection.d->mName = index.data( EmailAddressSelectionProxyModel::NameRole ).toString();
+    selection.d->mEmailAddress = index.data( EmailAddressSelectionProxyModel::EmailAddressRole ).toString();
+    selection.d->mItem = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
+
+    if ( !selection.d->mEmailAddress.isEmpty() )
+      selections << selection;
+  }
 
   return selections;
-}
-
-void EmailAddressSelectionView::setSelectionMode( QAbstractItemView::SelectionMode mode )
-{
-  //TODO: remove in favor of QTreeView::setSelectionMode
 }
 
 QTreeView* EmailAddressSelectionView::view() const

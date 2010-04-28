@@ -54,7 +54,7 @@ MainWidget::MainWidget()
 
 void MainWidget::selectionModeChanged( int index )
 {
-  mAddressesView->setSelectionMode( index == 0 ? QTreeView::SingleSelection : QTreeView::MultiSelection );
+  mAddressesView->view()->setSelectionMode( index == 0 ? QTreeView::SingleSelection : QTreeView::MultiSelection );
 }
 
 void MainWidget::showSelection()

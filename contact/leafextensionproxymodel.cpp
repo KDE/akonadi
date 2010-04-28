@@ -1,11 +1,9 @@
 
-#include <QtCore/QDebug>
+#include "leafextensionproxymodel_p.h"
 
-#include <akonadi/item.h>
-#include <akonadi/entitytreemodel.h>
-#include <kabc/addressee.h>
+#include <QtCore/QSet>
 
-#include "leafextensionproxymodel.h"
+using namespace Akonadi;
 
 class LeafExtensionProxyModel::Private
 {
@@ -115,14 +113,8 @@ int LeafExtensionProxyModel::rowCount( const QModelIndex &index ) const
     return 0;
 
   const QModelIndex sourceIndex = mapToSource( index );
-  if ( sourceModel()->rowCount( sourceIndex ) == 0 ) {
-    const Akonadi::Item item = sourceIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    if ( item.hasPayload<KABC::Addressee>() ) {
-      const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      return contact.emails().count();
-    }
-    return 0;
-  }
+  if ( sourceModel()->rowCount( sourceIndex ) == 0 )
+    return leafRowCount( index );
 
   return QSortFilterProxyModel::rowCount( index );
 }
@@ -137,22 +129,8 @@ int LeafExtensionProxyModel::columnCount( const QModelIndex &index ) const
 
 QVariant LeafExtensionProxyModel::data( const QModelIndex &index, int role ) const
 {
-  if ( d->mOwnIndexes.contains( index ) ) {
-    if ( role == Qt::DisplayRole ) {
-      const Akonadi::Item item = index.parent().data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-      if ( item.hasPayload<KABC::Addressee>() ) {
-        const KABC::Addressee contact = item.payload<KABC::Addressee>();
-        if ( index.row() < 0 || index.row() >= contact.emails().count() )
-          return QVariant();
-
-        return contact.emails().at( index.row() );
-      } else {
-        return QLatin1String( "unknown" );
-      }
-    }
-
-    return index.parent().data( role );
-  }
+  if ( d->mOwnIndexes.contains( index ) )
+    return leafData( index.parent(), index.row(), index.column(), role );
 
   return QSortFilterProxyModel::data( index, role );
 }
@@ -180,7 +158,7 @@ bool LeafExtensionProxyModel::hasChildren( const QModelIndex &parent ) const
 
   const QModelIndex sourceParent = mapToSource( parent );
   if ( sourceModel() && sourceModel()->rowCount( sourceParent ) == 0 )
-    return true; // fake virtual children here for leaf nodes
+    return (leafRowCount( parent ) != 0);
 
   return QSortFilterProxyModel::hasChildren( parent );
 }
@@ -223,4 +201,4 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
   endResetModel();
 }
 
-#include "leafextensionproxymodel.moc"
+#include "leafextensionproxymodel_p.moc"

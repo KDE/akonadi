@@ -99,13 +99,6 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
     Selection::List selectedAddresses() const;
 
     /**
-     * Sets the selection @p mode of the address selection view.
-     *
-     * Possible values are QAbstractItemView::SingleSelection or QAbstractItemView::MultiSelection.
-     */
-    void setSelectionMode( QAbstractItemView::SelectionMode mode );
-
-    /**
      * Returns the tree view that is used to list the items.
      */
     QTreeView *view() const;
