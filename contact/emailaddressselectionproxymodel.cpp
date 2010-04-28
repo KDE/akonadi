@@ -29,6 +29,32 @@
 
 using namespace Akonadi;
 
+static QString createToolTip( const KABC::ContactGroup &group )
+{
+  QString txt = QLatin1String( "<qt>" );
+
+  txt += QString::fromLatin1( "<b>%1</b>" ).arg( i18n( "Distribution List %1", group.name() ) );
+  txt += QLatin1String( "<ul>" );
+  for ( uint i = 0; i < group.dataCount(); ++i ) {
+    txt += QLatin1String( "<li>" );
+    txt += group.data( i ).name() + QLatin1Char( ' ' );
+    txt += QLatin1String( "<em>" );
+    txt += group.data( i ).email();
+    txt += QLatin1String("</em></li>" );
+  }
+  txt += QLatin1String( "</ul>" );
+  txt += QLatin1String( "</qt>" );
+
+  return txt;
+}
+
+static QString createToolTip( const QString &name, const QString &email )
+{
+  return QString::fromLatin1( "<qt>%1<b>%2</b></qt>" )
+      .arg( name.isEmpty() ? QString() : name + QLatin1String( "<br/>" ) )
+      .arg( email );
+}
+
 EmailAddressSelectionProxyModel::EmailAddressSelectionProxyModel( QObject *parent )
   : LeafExtensionProxyModel( parent )
 {
@@ -60,6 +86,14 @@ QVariant EmailAddressSelectionProxyModel::data( const QModelIndex &index, int ro
       } else if ( item.hasPayload<KABC::ContactGroup>() ) {
         const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
         return group.name(); // the name must be resolved by the caller
+      }
+    } else if ( role == Qt::ToolTipRole ) {
+      const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        const KABC::Addressee contact = item.payload<KABC::Addressee>();
+        return createToolTip( contact.realName(), contact.preferredEmail() );
+      } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+        return createToolTip( item.payload<KABC::ContactGroup>() );
       }
     }
   }
@@ -128,6 +162,17 @@ QVariant EmailAddressSelectionProxyModel::leafData( const QModelIndex &index, in
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
       if ( row >= 0 && row < (int)group.dataCount() )
         return group.data( row ).email();
+    }
+  } else if ( role == Qt::ToolTipRole ) {
+    const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
+    if ( item.hasPayload<KABC::Addressee>() ) {
+      const KABC::Addressee contact = item.payload<KABC::Addressee>();
+      if ( row >= 0 && row < contact.emails().count() )
+        return createToolTip( contact.realName(), contact.emails().at( row ) );
+    } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+      const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+      if ( row >= 0 && row < (int)group.dataCount() )
+        return createToolTip( group.data( row ).name(), group.data( row ).email() );
     }
   } else
     return index.data( role );
