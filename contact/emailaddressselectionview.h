@@ -39,6 +39,7 @@ namespace Akonadi {
  * @short A widget to select email addresses from Akonadi.
  *
  * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.5
  */
 class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
 {

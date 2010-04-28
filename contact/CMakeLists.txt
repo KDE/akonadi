@@ -137,6 +137,8 @@ install( FILES
   contactstreemodel.h
   contactviewer.h
   contactviewerdialog.h
+  emailaddressselectiondialog.h
+  emailaddressselectionview.h
   recentcontactscollectionrequestjob.h
   standardcontactformatter.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
