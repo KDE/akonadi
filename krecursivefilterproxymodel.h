@@ -98,7 +98,8 @@ public:
   */
   virtual ~KRecursiveFilterProxyModel();
 
-  /* reimp */ void setSourceModel( QAbstractItemModel *model );
+  /** @reimp */
+  void setSourceModel( QAbstractItemModel *model );
 
 protected:
   /**
@@ -107,7 +108,8 @@ protected:
   virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
-  /* reimp */ bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+  /** @reimp */ 
+  bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 protected:
   KRecursiveFilterProxyModelPrivate * const d_ptr;
