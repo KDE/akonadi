@@ -7,24 +7,77 @@
 
 #include "leafextensionproxymodel.h"
 
+class LeafExtensionProxyModel::Private
+{
+  public:
+    Private( LeafExtensionProxyModel *qq )
+      : q( qq ), mUniqueKeyCounter( 0 )
+    {
+    }
+
+    void sourceRowsInserted( const QModelIndex&, int, int );
+    void sourceRowsRemoved( const QModelIndex&, int, int );
+
+    LeafExtensionProxyModel *q;
+    QMap<qint64, QModelIndex> mParentIndexes;
+    QSet<QModelIndex> mOwnIndexes;
+    qint64 mUniqueKeyCounter;
+};
+
+void LeafExtensionProxyModel::Private::sourceRowsInserted( const QModelIndex &parentIndex, int start, int end )
+{
+  // iterate over all of our stored parent indexes
+  QMutableMapIterator<qint64, QModelIndex> it( mParentIndexes );
+  while ( it.hasNext() ) {
+    it.next();
+    if ( it.value().parent() == parentIndex ) {
+      if ( it.value().row() >= start ) {
+        const QModelIndex newIndex = q->QSortFilterProxyModel::index( it.value().row() + (end-start) + 1, it.value().column(), parentIndex );
+        it.setValue( newIndex );
+      }
+    }
+  }
+}
+
+void LeafExtensionProxyModel::Private::sourceRowsRemoved( const QModelIndex &parentIndex, int start, int end )
+{
+  // iterate over all of our stored parent indexes
+  QMutableMapIterator<qint64, QModelIndex> it( mParentIndexes );
+  while ( it.hasNext() ) {
+    it.next();
+    if ( it.value().parent() == parentIndex ) {
+      if ( it.value().row() >= start && it.value().row() <= end ) {
+        it.remove();
+      } else if ( it.value().row() > end ) {
+        const QModelIndex newIndex = q->index( it.value().row() - (end-start) - 1, it.value().column(), parentIndex );
+        it.setValue( newIndex );
+      }
+    }
+  }
+}
+
 LeafExtensionProxyModel::LeafExtensionProxyModel( QObject *parent )
-  : QSortFilterProxyModel( parent ), mUniqueKeyCounter( 0 )
+  : QSortFilterProxyModel( parent ), d( new Private( this ) )
 {
 }
 
 LeafExtensionProxyModel::~LeafExtensionProxyModel()
 {
+  delete d;
 }
 
 QModelIndex LeafExtensionProxyModel::index( int row, int column, const QModelIndex &parent ) const
 {
+  if ( row < 0 || column < 0 )
+    return QModelIndex();
+
   if ( parent.isValid() ) {
     const QModelIndex sourceParent = mapToSource( parent );
     const QModelIndex sourceIndex = sourceModel()->index( row, column, sourceParent );
     if ( !sourceIndex.isValid() ) {
 
       qint64 key = -1;
-      QMapIterator<qint64, QModelIndex> it( mParentIndexes );
+      QMapIterator<qint64, QModelIndex> it( d->mParentIndexes );
       while ( it.hasNext() ) {
         it.next();
         if ( it.value() == parent ) {
@@ -34,12 +87,13 @@ QModelIndex LeafExtensionProxyModel::index( int row, int column, const QModelInd
       }
 
       if ( key == -1 ) {
-        key = ++mUniqueKeyCounter;
-        mParentIndexes.insert( key, parent );
+        key = ++(d->mUniqueKeyCounter);
+        d->mParentIndexes.insert( key, parent );
       }
 
       const QModelIndex index = createIndex( row, column, static_cast<quint32>( key ) );
-      mOwnIndexes.insert( index );
+      d->mOwnIndexes.insert( index );
+
       return index;
     }
   }
@@ -49,14 +103,17 @@ QModelIndex LeafExtensionProxyModel::index( int row, int column, const QModelInd
 
 QModelIndex LeafExtensionProxyModel::parent( const QModelIndex &index ) const
 {
-  if ( mOwnIndexes.contains( index ) )
-    return mParentIndexes.value( index.internalId() );
+  if ( d->mOwnIndexes.contains( index ) )
+    return d->mParentIndexes.value( index.internalId() );
 
   return QSortFilterProxyModel::parent( index );
 }
 
 int LeafExtensionProxyModel::rowCount( const QModelIndex &index ) const
 {
+  if ( d->mOwnIndexes.contains( index ) )
+    return 0;
+
   const QModelIndex sourceIndex = mapToSource( index );
   if ( sourceModel()->rowCount( sourceIndex ) == 0 ) {
     const Akonadi::Item item = sourceIndex.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
@@ -72,23 +129,29 @@ int LeafExtensionProxyModel::rowCount( const QModelIndex &index ) const
 
 int LeafExtensionProxyModel::columnCount( const QModelIndex &index ) const
 {
+  if ( d->mOwnIndexes.contains( index ) )
+    return 1;
+
   return QSortFilterProxyModel::columnCount( index );
 }
 
 QVariant LeafExtensionProxyModel::data( const QModelIndex &index, int role ) const
 {
-  if ( mOwnIndexes.contains( index ) ) {
+  if ( d->mOwnIndexes.contains( index ) ) {
     if ( role == Qt::DisplayRole ) {
       const Akonadi::Item item = index.parent().data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
       if ( item.hasPayload<KABC::Addressee>() ) {
         const KABC::Addressee contact = item.payload<KABC::Addressee>();
+        if ( index.row() < 0 || index.row() >= contact.emails().count() )
+          return QVariant();
+
         return contact.emails().at( index.row() );
       } else {
         return QLatin1String( "unknown" );
       }
     }
 
-    return QVariant();
+    return index.parent().data( role );
   }
 
   return QSortFilterProxyModel::data( index, role );
@@ -96,7 +159,7 @@ QVariant LeafExtensionProxyModel::data( const QModelIndex &index, int role ) con
 
 Qt::ItemFlags LeafExtensionProxyModel::flags( const QModelIndex &index ) const
 {
-  if ( mOwnIndexes.contains( index ) )
+  if ( d->mOwnIndexes.contains( index ) )
     return Qt::ItemIsEnabled|Qt::ItemIsSelectable;
 
   return QSortFilterProxyModel::flags( index );
@@ -104,7 +167,7 @@ Qt::ItemFlags LeafExtensionProxyModel::flags( const QModelIndex &index ) const
 
 bool LeafExtensionProxyModel::setData( const QModelIndex &index, const QVariant &data, int role )
 {
-  if ( mOwnIndexes.contains( index ) )
+  if ( d->mOwnIndexes.contains( index ) )
     return false;
 
   return QSortFilterProxyModel::setData( index, data, role );
@@ -112,11 +175,11 @@ bool LeafExtensionProxyModel::setData( const QModelIndex &index, const QVariant 
 
 bool LeafExtensionProxyModel::hasChildren( const QModelIndex &parent ) const
 {
-  if ( mOwnIndexes.contains( parent ) )
+  if ( d->mOwnIndexes.contains( parent ) )
     return false; // extensible in the future?
 
   const QModelIndex sourceParent = mapToSource( parent );
-  if ( sourceModel()->rowCount( sourceParent ) == 0 )
+  if ( sourceModel() && sourceModel()->rowCount( sourceParent ) == 0 )
     return true; // fake virtual children here for leaf nodes
 
   return QSortFilterProxyModel::hasChildren( parent );
@@ -124,7 +187,7 @@ bool LeafExtensionProxyModel::hasChildren( const QModelIndex &parent ) const
 
 QModelIndex LeafExtensionProxyModel::buddy( const QModelIndex &index ) const
 {
-  if ( mOwnIndexes.contains( index ) )
+  if ( d->mOwnIndexes.contains( index ) )
     return index;
 
   return QSortFilterProxyModel::buddy( index );
@@ -132,7 +195,7 @@ QModelIndex LeafExtensionProxyModel::buddy( const QModelIndex &index ) const
 
 void LeafExtensionProxyModel::fetchMore( const QModelIndex &index )
 {
-  if ( mOwnIndexes.contains( index ) )
+  if ( d->mOwnIndexes.contains( index ) )
     return;
 
   QSortFilterProxyModel::fetchMore( index );
@@ -144,165 +207,20 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
     return;
 
   beginResetModel();
-  if ( _sourceModel ) {
-    /*
-    disconnect(_sourceModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
-            this, SLOT(sourceRowsAboutToBeInserted(const QModelIndex &, int, int)));
-    disconnect(_sourceModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-            this, SLOT(sourceRowsInserted(const QModelIndex &, int, int)));
-    */
-    disconnect(_sourceModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-            this, SLOT(sourceRowsAboutToBeRemoved(const QModelIndex &, int, int)));
-    disconnect(_sourceModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
-            this, SLOT(sourceRowsRemoved(const QModelIndex &, int, int)));
-    /*
-    disconnect(_sourceModel, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-            this, SLOT(sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-    disconnect(_sourceModel, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-            this, SLOT(sourceRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-    disconnect(_sourceModel, SIGNAL(modelAboutToBeReset()),
-            this, SLOT(sourceModelAboutToBeReset()));
-    disconnect(_sourceModel, SIGNAL(modelReset()),
-            this, SLOT(sourceModelReset()));
-    disconnect(_sourceModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-            this, SLOT(sourceDataChanged(const QModelIndex &, const QModelIndex & )));
-    disconnect(_sourceModel, SIGNAL(headerDataChanged(Qt::Orientation, int, int)),
-            this, SLOT(sourceHeaderDataChanged(Qt::Orientation, int, int)));
-    disconnect(_sourceModel, SIGNAL(layoutAboutToBeChanged()),
-            this, SLOT(sourceLayoutAboutToBeChanged()));
-    disconnect(_sourceModel, SIGNAL(layoutChanged()),
-            this, SLOT(sourceLayoutChanged()));
-    disconnect(_sourceModel, SIGNAL(destroyed()),
-            this, SLOT(sourceModelDestroyed()));
-    */
-  }
+
+  disconnect( this, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+              this, SLOT( sourceRowsInserted( const QModelIndex&, int, int ) ) );
+  disconnect( this, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+              this, SLOT( sourceRowsRemoved( const QModelIndex&, int, int ) ) );
 
   QSortFilterProxyModel::setSourceModel( _sourceModel );
 
-  /*
-  connect(_sourceModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex &, int, int)),
-          SLOT(sourceRowsAboutToBeInserted(const QModelIndex &, int, int)));
-  connect(_sourceModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
-          SLOT(sourceRowsInserted(const QModelIndex &, int, int)));
-  */
-  connect(_sourceModel, SIGNAL(rowsAboutToBeRemoved(const QModelIndex &, int, int)),
-          SLOT(sourceRowsAboutToBeRemoved(const QModelIndex &, int, int)));
-  connect(_sourceModel, SIGNAL(rowsRemoved(const QModelIndex &, int, int)),
-          SLOT(sourceRowsRemoved(const QModelIndex &, int, int)));
-  /*
-  connect(_sourceModel, SIGNAL(rowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-          SLOT(sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-  connect(_sourceModel, SIGNAL(rowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)),
-          SLOT(sourceRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)));
-  connect(_sourceModel, SIGNAL(modelAboutToBeReset()),
-          SLOT(sourceModelAboutToBeReset()));
-  connect(_sourceModel, SIGNAL(modelReset()),
-          SLOT(sourceModelReset()));
-  connect(_sourceModel, SIGNAL(dataChanged(const QModelIndex &, const QModelIndex &)),
-          SLOT(sourceDataChanged(const QModelIndex &, const QModelIndex & )));
-  connect(_sourceModel, SIGNAL(headerDataChanged(Qt::Orientation, int, int)),
-          SLOT(sourceHeaderDataChanged(Qt::Orientation, int, int)));
-  connect(_sourceModel, SIGNAL(layoutAboutToBeChanged()),
-          SLOT(sourceLayoutAboutToBeChanged()));
-  connect(_sourceModel, SIGNAL(layoutChanged()),
-          SLOT(sourceLayoutChanged()));
-  connect(_sourceModel, SIGNAL(destroyed()),
-          SLOT(sourceModelDestroyed()));
-  */
+  connect( this, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+           this, SLOT( sourceRowsInserted( const QModelIndex&, int, int ) ) );
+  connect( this, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
+           this, SLOT( sourceRowsRemoved( const QModelIndex&, int, int ) ) );
 
   endResetModel();
 }
-
-/*
-void LeafExtensionProxyModel::sourceRowsAboutToBeInserted( const QModelIndex &index, int start, int end )
-{
-  beginInsertRows( index, start, end );
-}
-
-void LeafExtensionProxyModel::sourceRowsInserted( const QModelIndex &index, int start, int end )
-{
-  endInsertRows();
-}
-*/
-
-void LeafExtensionProxyModel::sourceRowsAboutToBeRemoved( const QModelIndex &sourceParentIndex, int start, int end )
-{
-  qDebug() << "Source:" << sourceParentIndex << start << end << sourceParentIndex.data();
-  const QModelIndex parentIndex = mapFromSource( sourceParentIndex );
-  qDebug() << "Proxy:" << parentIndex << start << end << parentIndex.data();
-
-  beginRemoveRows( parentIndex, start, end );
-
-  qDebug() << "Parentindexes:" << mParentIndexes;
-
-  // iterate over all of our stored parent indexes
-  QMutableMapIterator<qint64, QModelIndex> it( mParentIndexes );
-  while ( it.hasNext() ) {
-    it.next();
-    qDebug() << "check against" << it.value().parent();
-    qDebug() << " ";
-    if ( it.value().parent() == parentIndex ) {
-      qDebug() << "found matching item" << it.value().data();
-      qDebug() << "it.value.row=" << it.value().row();
-      if ( it.value().row() >= start && it.value().row() <= end )
-        it.remove();
-      else if ( it.value().row() > end ) {
-        const QModelIndex newIndex = index( it.value().row() - (end-start) - 1, it.value().column(), parentIndex );
-        qDebug() << "newIndex:" << newIndex;
-        it.setValue( newIndex );
-      }
-    }
-  }
-}
-
-void LeafExtensionProxyModel::sourceRowsRemoved( const QModelIndex &index, int start, int end )
-{
-  endRemoveRows();
-}
-/*
-void LeafExtensionProxyModel::sourceRowsAboutToBeMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow )
-{
-  beginMoveRows( sourceParent, sourceStart, sourceEnd, destinationParent, destinationRow );
-}
-
-void LeafExtensionProxyModel::sourceRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd, const QModelIndex &destinationParent, int destinationRow )
-{
-  endMoveRows();
-}
-
-void LeafExtensionProxyModel::sourceModelAboutToBeReset()
-{
-  beginResetModel();
-}
-
-void LeafExtensionProxyModel::sourceModelReset()
-{
-  endResetModel();
-}
-
-void LeafExtensionProxyModel::sourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
-{
-  emit dataChanged( topLeft, bottomRight );
-}
-
-void LeafExtensionProxyModel::sourceHeaderDataChanged( Qt::Orientation orientation, int first, int last )
-{
-  emit headerDataChanged( orientation, first, last );
-}
-
-void LeafExtensionProxyModel::sourceLayoutAboutToBeChanged()
-{
-  emit layoutAboutToBeChanged();
-}
-
-void LeafExtensionProxyModel::sourceLayoutChanged()
-{
-  emit layoutChanged();
-}
-
-void LeafExtensionProxyModel::sourceModelDestroyed()
-{
-}
-*/
 
 #include "leafextensionproxymodel.moc"

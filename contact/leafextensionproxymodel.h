@@ -26,28 +26,14 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
 
     void setSourceModel( QAbstractItemModel *sourceModel );
 
-  public Q_SLOTS:
-/*
-    void sourceRowsAboutToBeInserted(const QModelIndex &, int, int);
-    void sourceRowsInserted(const QModelIndex &, int, int);
-*/
-    void sourceRowsAboutToBeRemoved(const QModelIndex &, int, int);
-    void sourceRowsRemoved(const QModelIndex &, int, int);
-/*
-    void sourceRowsAboutToBeMoved(const QModelIndex &, int, int, const QModelIndex &, int);
-    void sourceRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int);
-    void sourceModelAboutToBeReset();
-    void sourceModelReset();
-    void sourceDataChanged(const QModelIndex &, const QModelIndex & );
-    void sourceHeaderDataChanged( Qt::Orientation, int first, int last );
-    void sourceLayoutAboutToBeChanged();
-    void sourceLayoutChanged();
-    void sourceModelDestroyed();
-*/
   private:
-    mutable QMap<qint64, QModelIndex> mParentIndexes;
-    mutable QSet<QModelIndex> mOwnIndexes;
-    mutable qint64 mUniqueKeyCounter;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+
+    Q_PRIVATE_SLOT( d, void sourceRowsInserted( const QModelIndex&, int, int ) )
+    Q_PRIVATE_SLOT( d, void sourceRowsRemoved( const QModelIndex&, int, int ) )
+    //@endcond
 };
 
 #endif
