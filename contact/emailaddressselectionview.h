@@ -39,6 +39,26 @@ namespace Akonadi {
 /**
  * @short A widget to select email addresses from Akonadi.
  *
+ * This view allows the user to select an name and email address from
+ * the Akonadi storage.
+ * The selected addresses are returned as EmailAddressSelectionView::Selection objects
+ * which encapsulate the name, email address and the Akonadi item that has been selected.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * Akonadi::EmailAddressSelectionView *view = new Akonadi::EmailAddressSelectionView( this );
+ * view->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+ * ...
+ *
+ * const Akonadi::EmailAddressSelectionView::Selection::List selections = view->selectedAddresses();
+ * foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, selections ) {
+ *   qDebug() << "Name:" << selection.name() << "Email:" << selection.email();
+ * }
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
@@ -47,21 +67,58 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
   Q_OBJECT
 
   public:
+    /**
+     * The selection of an email address.
+     */
     class Selection
     {
       public:
+        /**
+         * A list of selection objects.
+         */
         typedef QList<Selection> List;
 
+        /**
+         * Creates a new selection.
+         */
         Selection();
+
+        /**
+         * Creates a new selection from an @p other selection.
+         */
         Selection( const Selection &other );
-        Selection &operator=( const Selection& );
+
+        /**
+         * Replaces this selection with the @p other selection.
+         */
+        Selection &operator=( const Selection &other );
+
+        /**
+         * Destroys the selection.
+         */
         ~Selection();
 
+        /**
+         * Returns whether the selection is valid.
+         */
         bool isValid() const;
 
+        /**
+         * Returns the name that is associated with the selected email address.
+         */
         QString name() const;
+
+        /**
+         * Returns the address part of the selected email address.
+         *
+         * @note If a contact group has been selected, the name of the contact
+         *       group is returned here and must be expanded by the caller.
+         */
         QString email() const;
 
+        /**
+         * Returns the Akonadi item that is associated with the selected email address.
+         */
         Akonadi::Item item() const;
 
       private:

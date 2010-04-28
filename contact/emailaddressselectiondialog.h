@@ -34,6 +34,25 @@ namespace Akonadi {
 /**
  * @short A dialog to select email addresses from Akonadi.
  *
+ * This dialog allows the user to select an name and email address from
+ * the Akonadi storage.
+ * The selected addresses are returned as EmailAddressSelectionView::Selection objects
+ * which encapsulate the name, email address and the Akonadi item that has been selected.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * Akonadi::EmailAddressSelectionDialog dlg( this );
+ * if ( dlg.exec() ) {
+ *   const Akonadi::EmailAddressSelectionView::Selection::List selections = dlg.selectedAddresses();
+ *   foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, selections ) {
+ *     qDebug() << "Name:" << selection.name() << "Email:" << selection.email();
+ *   }
+ * }
+ *
+ * @endcode
+ *
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
