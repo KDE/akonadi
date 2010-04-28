@@ -27,20 +27,83 @@
 
 class KRecursiveFilterProxyModelPrivate;
 
+/**
+  @brief Implements recursive filtering of models
+
+  QSortFilterProxyModel does not recurse when invoking a filtering stage, so that
+  if a particular row is filtered out, its children are not even checked to see if they match the filter.
+
+  For example, given a source model:
+
+  @verbatim
+    - A
+    - B
+    - - C
+    - - - D
+    - - - - E
+    - - - F
+    - - G
+    - - H
+    - I
+  @endverbatim
+
+  If a QSortFilterProxyModel is used with a filter matching A, D, G and I, the QSortFilterProxyModel will contain
+
+  @verbatim
+    - A
+    - I
+  @endverbatim
+
+  That is, even though D and E match the filter, they are not represented in the proxy model because B does not
+  match the filter and is filtered out.
+
+  The KRecursiveFilterProxyModel checks child indexes for filter matching and ensures that all matching indexes
+  are represented in the model.
+
+  In the above example, the KRecursiveFilterProxyModel will contain
+
+  @verbatim
+    - A
+    - B
+    - - C
+    - - - D
+    - - G
+    - I
+  @endverbatim
+
+  That is, the leaves in the model match the filter, but not necessarily the inner branches.
+
+  QSortFilterProxyModel provides the virtual method filterAcceptsRow to allow custom filter implementations.
+  Custom filter implementations can be written for KRecuriveFilterProxyModel using the acceptRow virtual method.
+
+  Note that using this proxy model is additional overhead compared to QSortFilterProxyModel as every index in the
+  model must be visited and queried.
+
+  @author Stephen Kelly <steveire@gmail.com>
+
+  @since 4.5
+
+*/
 class AKONADI_EXPORT KRecursiveFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
+  /**
+    Constructor
+  */
   KRecursiveFilterProxyModel(QObject* parent = 0);
 
+  /**
+    Destructor
+  */
   virtual ~KRecursiveFilterProxyModel();
 
   /* reimp */ void setSourceModel( QAbstractItemModel *model );
 
-  virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value, int hits = 1,
-                                Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
-
 protected:
+  /**
+    Reimplement this method for custom filtering strategies.
+  */
   virtual bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:

@@ -265,6 +265,8 @@ KRecursiveFilterProxyModel::~KRecursiveFilterProxyModel()
 
 bool KRecursiveFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& sourceParent) const
 {
+  // TODO: Implement some caching so that if one match is found on the first pass, we can return early results
+  // when the subtrees are checked by QSFPM.
   if (acceptRow(sourceRow, sourceParent))
     return true;
 
@@ -337,22 +339,5 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
       this, SLOT(sourceRowsRemoved(QModelIndex,int,int)));
 
 }
-
-QModelIndexList KRecursiveFilterProxyModel::match(const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags) const
-{
-  if (role < Qt::UserRole)
-    return QSortFilterProxyModel::match(start, role, value, hits, flags);
-
-  QModelIndexList list;
-  QModelIndex proxyIndex;
-  foreach(const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags))
-  {
-    proxyIndex = mapFromSource(idx);
-    if (proxyIndex.isValid())
-      list << proxyIndex;
-  }
-  return list;
-}
-
 
 #include "krecursivefilterproxymodel.moc"
