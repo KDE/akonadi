@@ -63,7 +63,7 @@ void CollectionCreateJob::doStart( )
   QByteArray command = d->newTag();
   if ( d->mCollection.parentCollection().id() < 0 )
     command += " RID";
-  command += " CREATE \"" + d->mCollection.name().toUtf8() + "\" ";
+  command += " CREATE " + ImapParser::quote( d->mCollection.name().toUtf8() ) + ' ';
   if ( d->mCollection.parentCollection().id() >= 0 )
     command += QByteArray::number( d->mCollection.parentCollection().id() );
   else
@@ -75,8 +75,8 @@ void CollectionCreateJob::doStart( )
     foreach ( const QString &s, d->mCollection.contentMimeTypes() ) cList << s.toLatin1();
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
-  command += " REMOTEID \"" + d->mCollection.remoteId().toUtf8() + '"';
-  command += " REMOTEREVISION \"" + d->mCollection.remoteRevision().toUtf8() + '"';
+  command += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
+  command += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
   foreach ( Attribute* attr, d->mCollection.attributes() )
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
