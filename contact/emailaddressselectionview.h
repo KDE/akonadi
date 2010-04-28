@@ -117,6 +117,14 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
         QString email() const;
 
         /**
+         * Returns the name and email address together, properly quoted if needed.
+         *
+         * @note If a contact group has been selected, the name of the contact
+         *       group is returned here and must be expanded by the caller.
+         */
+        QString quotedEmail() const;
+
+        /**
          * Returns the Akonadi item that is associated with the selected email address.
          */
         Akonadi::Item item() const;

@@ -36,6 +36,7 @@
 #include <kabc/contactgroup.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kmime/kmime_header_parsing.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
@@ -129,6 +130,20 @@ QString EmailAddressSelectionView::Selection::name() const
 QString EmailAddressSelectionView::Selection::email() const
 {
   return d->mEmailAddress;
+}
+
+QString EmailAddressSelectionView::Selection::quotedEmail() const
+{
+  if ( d->mItem.hasPayload<KABC::ContactGroup>() ) {
+    if ( d->mEmailAddress == d->mName )
+      return d->mName;
+  }
+
+  KMime::Types::Mailbox mailbox;
+  mailbox.setAddress( d->mEmailAddress.toUtf8() );
+  mailbox.setName( d->mName );
+
+  return mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary );
 }
 
 Akonadi::Item EmailAddressSelectionView::Selection::item() const
