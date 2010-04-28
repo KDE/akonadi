@@ -601,12 +601,21 @@ void CollectionJobTest::testRidFetch()
   QCOMPARE( col.remoteId(), QString::fromLatin1( "10" ) );
 }
 
+void CollectionJobTest::testRidCreateDelete_data()
+{
+  QTest::addColumn<QString>( "remoteId" );
+  QTest::newRow( "ASCII" ) << QString::fromUtf8( "MY REMOTE ID" );
+  QTest::newRow( "LATIN1" ) << QString::fromUtf8( "MY REMÖTE ID" );
+  QTest::newRow( "UTF8" ) << QString::fromUtf8( "MY REMOTE 検索表" );
+}
+
 void CollectionJobTest::testRidCreateDelete()
 {
+  QFETCH( QString, remoteId );
   Collection collection;
   collection.setName( "rid create" );
   collection.parentCollection().setRemoteId( "8" );
-  collection.setRemoteId( "MY REMOTE ID" );
+  collection.setRemoteId( remoteId );
 
   ResourceSelectJob *resSel = new ResourceSelectJob( "akonadi_knut_resource_2" );
   AKVERIFYEXEC( resSel );

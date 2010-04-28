@@ -46,6 +46,7 @@ class CollectionJobTest : public QObject
     void testMultiList();
     void testSelect();
     void testRidFetch();
+    void testRidCreateDelete_data();
     void testRidCreateDelete();
     void testAncestorRetrieval();
 };
