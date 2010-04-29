@@ -103,7 +103,7 @@ Scope ItemRetriever::scope() const
   return mScope;
 }
 
-Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery() const
+Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery(const Scope& scope, AkonadiConnection* connection)
 {
   // make sure the columns indexes here and in the constants defined in the header match
   QueryBuilder itemQuery;
@@ -121,12 +121,10 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery() const
   itemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
   itemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
 
-  if ( mScope.scope() != Scope::Invalid )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
-  else
-    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
-
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+
+  if ( scope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( scope, connection, itemQuery );
 
   return itemQuery;
 }
@@ -134,7 +132,10 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery() const
 
 Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
 {
-  QueryBuilder itemQuery = buildGenericItemQuery();
+  QueryBuilder itemQuery = buildGenericItemQuery(mScope, mConnection);
+
+  if ( mScope.scope() == Scope::Invalid )
+    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
 
   // prevent a resource to trigger item retrieval from itself
   if ( mConnection ) {
@@ -149,7 +150,7 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
   return itemQuery;
 }
 
-Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery() const
+Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery()
 {
   QueryBuilder partQuery;
   partQuery.addTable( PimItem::tableName() );
@@ -195,20 +196,20 @@ void ItemRetriever::exec()
 
   QList<ItemRetrievalRequest*> requests;
   while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
+    const qint64 pimItemId = itemQuery.query().value( GenericItemQueryPimItemIdColumn ).toLongLong();
     QStringList missingParts = mParts;
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( GenericPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      const QString partName = partQuery.query().value( sPartQueryNameColumn ).toString();
+      const QString partName = partQuery.query().value( GenericPartQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.query().value( sPartQueryExternalColumn ).toBool() );
+        QByteArray data = partQuery.query().value( GenericPartQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData( data, partQuery.query().value( GenericPartQueryExternalColumn ).toBool() );
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;
@@ -225,9 +226,9 @@ void ItemRetriever::exec()
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.query().value( sItemQueryResouceColumn ).toString();
+      req->remoteId = itemQuery.query().value( GenericItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.query().value( GenericItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.query().value( GenericItemQueryResourceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,

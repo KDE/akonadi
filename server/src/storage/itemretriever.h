@@ -45,11 +45,12 @@ class ItemRetriever
 {
   public:
     ItemRetriever( AkonadiConnection *connection );
-    virtual ~ItemRetriever();
+    ~ItemRetriever();
 
     AkonadiConnection *connection() const;
 
     void setRetrieveParts( const QStringList &parts );
+    QStringList retrieveParts() const;
     void setRetrieveFullPayload( bool fullPayload );
     void setItemSet( const ImapSet &set, const Collection &collection = Collection() );
     void setItemSet( const ImapSet &set, bool isUid );
@@ -63,42 +64,42 @@ class ItemRetriever
 
     void exec();
 
-  protected:
     /**
      * Returns the QueryBuilder containing the subset of the item query which is
      * not specific for the ItemRetriever for use by subclasses.
      */
-    QueryBuilder buildGenericItemQuery() const;
+    static QueryBuilder buildGenericItemQuery(const Akonadi::Scope& scope, Akonadi::AkonadiConnection* connection);
 
     /** Column indices of the generic item query. */
-    static const int sItemQueryPimItemIdColumn = 0;
-    static const int sItemQueryPimItemRidColumn = 1;
-    static const int sItemQueryMimeTypeColumn = 2;
-    static const int sItemQueryResouceColumn = 3;
+    enum GenericItemQueryColumns {
+      GenericItemQueryPimItemIdColumn = 0,
+      GenericItemQueryPimItemRidColumn = 1,
+      GenericItemQueryMimeTypeColumn = 2,
+      GenericItemQueryResourceColumn = 3
+    };
 
     /**
      * Returns the QueryBuilder containing the subset of the part query which is
      * not specific for the ItemRetrieverQuery for use by subclasses.
      */
-    QueryBuilder buildGenericPartQuery() const;
+    static QueryBuilder buildGenericPartQuery();
 
     /** Column indices of the generic part query. */
-    static const int sPartQueryPimIdColumn = 0;
-    static const int sPartQueryNameColumn = 1;
-    static const int sPartQueryDataColumn = 2;
-    static const int sPartQueryExternalColumn = 3;
+    enum GenericPartQueryColumns {
+      GenericPartQueryPimIdColumn = 0,
+      GenericPartQueryNameColumn = 1,
+      GenericPartQueryDataColumn = 2,
+      GenericPartQueryExternalColumn = 3
+    };
 
+  private:
     /** Convenience method which returns the database driver name */
     QString driverName();
 
-    /** Extends the generic query with ItemRetriever specific query information. */
-    virtual QueryBuilder buildItemQuery() const;
-    /** Extends the generic query with ItemRetriever specific query information. */
-    virtual QueryBuilder buildPartQuery() const;
+    QueryBuilder buildItemQuery() const;
+    QueryBuilder buildPartQuery() const;
 
-    QStringList retrieveParts() const;
 
-  private:
     ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;

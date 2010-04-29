@@ -55,9 +55,8 @@ static const int itemQueryCollectionIdColumn = 8;
 static const int partQueryVersionColumn = 4;
 
 FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
-  : ItemRetriever( connection )
+  : mConnection( connection ), mScope( scope )
 {
-  setScope( scope );
   init();
 }
 
@@ -109,9 +108,11 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   if ( !mCacheOnly ) {
     // Prepare for a call to ItemRetriever::exec();
     // From a resource perspective the only parts that can be fetched are payloads.
-    setRetrieveParts( payloadList );
-    setRetrieveFullPayload( mFullPayload );
-    exec(); // There we go, retrieve the missing parts from the resource.
+    ItemRetriever retriever( mConnection );
+    retriever.setScope( mScope );
+    retriever.setRetrieveParts( payloadList );
+    retriever.setRetrieveFullPayload( mFullPayload );
+    retriever.exec(); // There we go, retrieve the missing parts from the resource.
   }
 
   QueryBuilder itemQuery = buildItemQuery();
@@ -140,7 +141,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     flagQuery.addColumn( Flag::nameFullColumnName() );
     flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
     flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    ItemQueryHelper::scopeToQuery( scope(), connection(), flagQuery );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
     flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     if ( !flagQuery.exec() ) {
@@ -156,14 +157,14 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   Response response;
   response.setUntagged();
   while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( sItemQueryPimItemIdColumn ).toLongLong();
+    const qint64 pimItemId = itemQuery.query().value( ItemRetriever::GenericItemQueryPimItemIdColumn ).toLongLong();
     const int pimItemRev = itemQuery.query().value( itemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( sItemQueryPimItemRidColumn ).toString().toUtf8() ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( sItemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( ItemRetriever::GenericItemQueryPimItemRidColumn ).toString().toUtf8() ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( ItemRetriever::GenericItemQueryMimeTypeColumn ).toString().toUtf8() ) );
     Collection::Id parentCollectionId = itemQuery.query().value( itemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
@@ -201,17 +202,17 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( sPartQueryPimIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( ItemRetriever::GenericPartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      QByteArray partName = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
-      QByteArray part = partQuery.query().value( sPartQueryNameColumn ).toString().toUtf8();
-      QByteArray data = partQuery.query().value( sPartQueryDataColumn ).toByteArray();
-      bool partIsExternal = partQuery.query().value( sPartQueryExternalColumn ).toBool();
+      QByteArray partName = partQuery.query().value( ItemRetriever::GenericPartQueryNameColumn ).toString().toUtf8();
+      QByteArray part = partQuery.query().value( ItemRetriever::GenericPartQueryNameColumn ).toString().toUtf8();
+      QByteArray data = partQuery.query().value( ItemRetriever::GenericPartQueryDataColumn ).toByteArray();
+      bool partIsExternal = partQuery.query().value( ItemRetriever::GenericPartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );
       int version = partQuery.query().value( partQueryVersionColumn ).toInt();
@@ -254,11 +255,11 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
 void FetchHelper::updateItemAccessTime()
 {
-  Transaction transaction( connection()->storageBackend() );
+  Transaction transaction( mConnection->storageBackend() );
   QueryBuilder qb( QueryBuilder::Update );
   qb.addTable( PimItem::tableName() );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
-  ItemQueryHelper::scopeToQuery( scope(), connection(), qb );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
 
   if ( !qb.exec() )
     qWarning() << "Unable to update item access time";
@@ -268,16 +269,16 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( scope().scope() != Scope::None || connection()->selectedCollectionId() <= 0 || mCacheOnly )
+  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
     return;
 
-  Collection collection = connection()->selectedCollection();
+  Collection collection = mConnection->selectedCollection();
 
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
-  if ( connection()->sessionId() == collection.resource().name().toLatin1() )
+  if ( mConnection->sessionId() == collection.resource().name().toLatin1() )
     return;
 
-  DataStore *store = connection()->storageBackend();
+  DataStore *store = mConnection->storageBackend();
   store->activeCachePolicy( collection );
   if ( !collection.cachePolicySyncOnDemand() )
     return;
@@ -289,7 +290,7 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
 {
   QueryBuilder partQuery;
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
-    partQuery = buildGenericPartQuery();
+    partQuery = ItemRetriever::buildGenericPartQuery();
     partQuery.addColumn( Part::versionFullColumnName() );
 
     Query::Condition cond( Query::Or );
@@ -301,14 +302,14 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
 
-    ItemQueryHelper::scopeToQuery( scope(), connection(), partQuery );
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
   }
   return partQuery;
 }
 
 QueryBuilder FetchHelper::buildItemQuery()
 {
-  QueryBuilder itemQuery = buildGenericItemQuery(); // Has 4 columns
+  QueryBuilder itemQuery = ItemRetriever::buildGenericItemQuery(mScope, mConnection); // Has 4 columns
   // make sure the columns indexes here and in the constants defined at the top of the file
   itemQuery.addColumn( PimItem::revFullColumnName() );
   itemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
@@ -316,16 +317,7 @@ QueryBuilder FetchHelper::buildItemQuery()
   itemQuery.addColumn( PimItem::datetimeFullColumnName() );
   itemQuery.addColumn( PimItem::collectionIdFullColumnName() );
 
-  if ( !itemQuery.exec() )
-    throw HandlerException("Unable to list items");
-
-  itemQuery.query().next();
   return itemQuery;
-}
-
-QueryBuilder FetchHelper::buildPartQuery()
-{
-  return buildPartQuery( retrieveParts() , mFullPayload, false );
 }
 
 void FetchHelper::parseCommandStream()
