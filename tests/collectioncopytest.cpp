@@ -40,7 +40,7 @@ class CollectionCopyTest : public QObject
     {
       Control::start();
       // switch target resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) {
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
         if ( agent.identifier() == "akonadi_knut_resource_2" )
           agent.setIsOnline( false );
       }
@@ -65,7 +65,7 @@ class CollectionCopyTest : public QObject
       QHash<Collection, Item::List> referenceData;
       Collection::List cols = fetch->collections();
       cols << source;
-      foreach ( const Collection c, cols ) {
+      foreach ( const Collection &c, cols ) {
         ItemFetchJob *job = new ItemFetchJob( c, this );
         QVERIFY( job->exec() );
         referenceData.insert( c, job->items() );

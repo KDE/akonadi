@@ -39,7 +39,7 @@ class CacheTest : public QObject
   private:
     void enableAgent( const QString &id, bool enable )
     {
-      foreach ( AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+      foreach ( AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
         if ( agent.identifier() == id )
           agent.setIsOnline( enable );
     }

@@ -93,7 +93,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
 
   if ( !collection().contentMimeTypes().contains( QLatin1String("message/rfc822") ) ) {
      if ( role == Qt::DisplayRole )
-       return i18n( "This model can only handle email folders. The current collection holds mimetypes: %1",
+       return i18nc( "@label", "This model can only handle email folders. The current collection holds mimetypes: %1",
                        collection().contentMimeTypes().join( QLatin1String(",") ) );
      else
        return QVariant();
@@ -115,7 +115,7 @@ QVariant MessageModel::data( const QModelIndex & index, int role ) const
         return KGlobal::locale()->formatDateTime( msg->date()->dateTime().toLocalZone(), KLocale::FancyLongDate );
       case Size:
         if ( item.size() == 0 )
-          return i18nc( "No size available", "-" );
+          return i18nc( "@label No size available", "-" );
         else
           return KGlobal::locale()->formatByteSize( item.size() );
       default:

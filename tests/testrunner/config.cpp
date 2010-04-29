@@ -63,7 +63,7 @@ void Config::readConfiguration(const QString &configfile)
   if ( root.tagName() != "config" )
     qFatal( "could not file root tag" );
 
-  const QString basePath = QFileInfo( configfile ).absolutePath() + "/";
+  const QString basePath = QFileInfo( configfile ).absolutePath() + '/';
 
   QDomNode node = root.firstChild();
   while ( !node.isNull() ) {

@@ -37,7 +37,7 @@ class CollectionCreator : public QObject
     void initTestCase()
     {
       // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
         agent.setIsOnline( false );
     }
     
@@ -49,7 +49,7 @@ class CollectionCreator : public QObject
       QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
       QList<bool> transactions = QList<bool>() << false << true;
       foreach( int count, counts )
-        foreach( bool transaction, transactions )
+        foreach( bool transaction, transactions ) //krazy:exclude=foreach
           QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? "trans" : "notrans" ).toLatin1().constData() )
             << count << transaction;
     }

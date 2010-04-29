@@ -132,7 +132,7 @@ void ContactGroupEditor::Private::storeDone( KJob *job )
 
 void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArray>& )
 {
-  AutoQPointer<QMessageBox> dlg = new QMessageBox( mParent );
+  AutoQPointer<QMessageBox> dlg = new QMessageBox( mParent ); //krazy:exclude=qclasses
 
   dlg->setInformativeText( i18n( "The contact group has been changed by someone else.\nWhat should be done?" ) );
   dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );

@@ -273,7 +273,7 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
 
 void SetupTest::synchronizeResources()
 {
-  foreach ( const QString id, mPendingSyncs ) {
+  foreach ( const QString &id, mPendingSyncs ) {
     QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1").arg( id ),
       "/", "org.freedesktop.Akonadi.Resource", mInternalBus, this );
     mSyncMapper->setMapping( iface, id );

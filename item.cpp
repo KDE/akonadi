@@ -246,10 +246,13 @@ void Item::apply( const Item &other )
     attrs.append( attribute->type() );
   }
 
-  foreach ( const QByteArray attrType, d_ptr->mAttributes.keys() )
-  {
-    if ( !attrs.contains( attrType ) )
-      delete d_ptr->mAttributes.take( attrType );
+  QMutableHashIterator<QByteArray, Attribute*> it( d_ptr->mAttributes );
+  while ( it.hasNext() ) {
+    it.next();
+    if ( !attrs.contains( it.key() ) ) {
+      delete it.value();
+      it.remove();
+    }
   }
 
   ItemSerializer::apply( *this, other );

@@ -83,7 +83,7 @@ void ItemDumper::done( KJob * job )
 
 int main( int argc, char** argv )
 {
-  KCmdLineArgs::init( argc, argv, "test", 0, ki18n("Test") ,"1.0" ,ki18n("test app") );
+  KCmdLineArgs::init( argc, argv, "test", 0, ki18n("Test Application") ,"1.0" ,ki18n("test app") );
 
   KCmdLineOptions options;
   options.add("path <argument>", ki18n("IMAP destination path"));

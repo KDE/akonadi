@@ -210,7 +210,7 @@ void EmailAddressSelectionView::Private::init()
 
   mView = new Akonadi::EntityTreeView;
 
-  QLabel *label = new QLabel( i18n( "Search:" ) );
+  QLabel *label = new QLabel( i18nc( "@label Search in a list of contacts", "Search:" ) );
   mSearchLine = new SearchLineEdit( mView );
   label->setBuddy( mSearchLine );
   searchLayout->addWidget( label );

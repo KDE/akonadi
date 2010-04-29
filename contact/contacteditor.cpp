@@ -151,7 +151,7 @@ void ContactEditor::Private::storeDone( KJob *job )
 
 void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
 {
-  QPointer<QMessageBox> dlg = new QMessageBox( mParent );
+  QPointer<QMessageBox> dlg = new QMessageBox( mParent ); //krazy:exclude=qclasses
 
   dlg->setInformativeText( i18n( "The contact has been changed by someone else.\nWhat should be done?" ) );
   dlg->addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );

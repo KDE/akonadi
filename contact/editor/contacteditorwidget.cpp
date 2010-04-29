@@ -151,11 +151,11 @@ void ContactEditorWidget::Private::initGuiContactTab()
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
 
-  mTabWidget->addTab( widget, i18n( "Contact" ) );
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Contact" ) );
 
-  QGroupBox *nameGroupBox = new QGroupBox( i18n( "Name" ) );
-  QGroupBox *internetGroupBox = new QGroupBox( i18n( "Internet" ) );
-  QGroupBox *phonesGroupBox = new QGroupBox( i18n( "Phones" ) );
+  QGroupBox *nameGroupBox = new QGroupBox( i18nc( "@title:group", "Name" ) );
+  QGroupBox *internetGroupBox = new QGroupBox( i18nc( "@title:group", "Internet" ) );
+  QGroupBox *phonesGroupBox = new QGroupBox( i18nc( "@title:group", "Phones" ) );
 
   layout->addWidget( nameGroupBox );
   layout->addWidget( internetGroupBox );
@@ -168,7 +168,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   QLabel *label = 0;
 
   // setup name group box
-  label = new QLabel( i18n( "Name:" ) );
+  label = new QLabel( i18nc( "@label The name of a contact", "Name:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 0, 0 );
 
@@ -180,7 +180,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   mPhotoWidget->setMinimumSize( QSize( 100, 140 ) );
   nameLayout->addWidget( mPhotoWidget, 0, 2, 4, 1 );
 
-  label = new QLabel( i18n( "Display:" ) );
+  label = new QLabel( i18nc( "@label The display name of a contact", "Display:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 1, 0 );
 
@@ -188,7 +188,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label->setBuddy( mDisplayNameWidget );
   nameLayout->addWidget( mDisplayNameWidget, 1, 1 );
 
-  label = new QLabel( i18n( "Nickname:" ) );
+  label = new QLabel( i18nc( "@label The nickname of a contact", "Nickname:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   nameLayout->addWidget( label, 2, 0 );
 
@@ -207,7 +207,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   nameLayout->setRowStretch( 4, 1 );
 
   // setup Internet group box
-  label = new QLabel( i18n( "Email:" ) );
+  label = new QLabel( i18nc( "The email address of a contact", "Email:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   internetLayout->addWidget( label, 0, 0 );
 
@@ -266,7 +266,7 @@ void ContactEditorWidget::Private::initGuiLocationTab()
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
 
-  mTabWidget->addTab( widget, i18n( "Location" ) );
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Location" ) );
 
   QGroupBox *addressesGroupBox = new QGroupBox( i18n( "Addresses" ) );
   QGroupBox *coordinatesGroupBox = new QGroupBox( i18n( "Coordinates" ) );
@@ -294,11 +294,11 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
 
-  mTabWidget->addTab( widget, i18n( "Business" ) );
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Business" ) );
 
-  QGroupBox *generalGroupBox = new QGroupBox( i18n( "General" ) );
-  QGroupBox *groupwareGroupBox = new QGroupBox( i18n( "Groupware" ) );
-  QGroupBox *notesGroupBox = new QGroupBox( i18n( "Notes" ) );
+  QGroupBox *generalGroupBox = new QGroupBox( i18nc( "@title:group", "General" ) );
+  QGroupBox *groupwareGroupBox = new QGroupBox( i18nc( "@title:group", "Groupware" ) );
+  QGroupBox *notesGroupBox = new QGroupBox( i18nc( "@title:group", "Notes" ) );
 
   layout->addWidget( generalGroupBox );
   layout->addWidget( groupwareGroupBox );
@@ -330,7 +330,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   label->setBuddy( mProfessionWidget );
   generalLayout->addWidget( mProfessionWidget, 1, 1 );
 
-  label = new QLabel( i18n( "Title:" ) );
+  label = new QLabel( i18nc( "The title of a contact", "Title:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   generalLayout->addWidget( label, 2, 0 );
 
@@ -389,10 +389,10 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
 
-  mTabWidget->addTab( widget, i18n( "Personal" ) );
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Personal" ) );
 
-  QGroupBox *datesGroupBox = new QGroupBox( i18n( "Dates" ) );
-  QGroupBox *familyGroupBox = new QGroupBox( i18n( "Family" ) );
+  QGroupBox *datesGroupBox = new QGroupBox( i18nc( "@title:group", "Dates" ) );
+  QGroupBox *familyGroupBox = new QGroupBox( i18nc( "@title:group", "Family" ) );
 
   layout->addWidget( datesGroupBox );
   layout->addWidget( familyGroupBox );
@@ -439,7 +439,7 @@ void ContactEditorWidget::Private::initGuiCustomFieldsTab()
   QWidget *widget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( widget );
 
-  mTabWidget->addTab( widget, i18n( "Custom Fields" ) );
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Custom Fields" ) );
 
   mCustomFieldsWidget = new CustomFieldsEditWidget;
   layout->addWidget( mCustomFieldsWidget );

@@ -93,7 +93,7 @@ class CollectionMoveTest : public QObject
       fetch = new CollectionFetchJob( source, CollectionFetchJob::Recursive );
       AKVERIFYEXEC( fetch );
       QHash<Collection, Item::List> referenceData;
-      foreach ( const Collection c, fetch->collections() ) {
+      foreach ( const Collection &c, fetch->collections() ) {
         ItemFetchJob *job = new ItemFetchJob( c, this );
         AKVERIFYEXEC( job );
         referenceData.insert( c, job->items() );
@@ -130,7 +130,7 @@ class CollectionMoveTest : public QObject
         job->fetchScope().fetchFullPayload();
         AKVERIFYEXEC( job );
         QCOMPARE( job->items().count(), it.value().count() );
-        foreach ( const Item item, job->items() ) {
+        foreach ( const Item &item, job->items() ) {
           QVERIFY( it.value().contains( item ) );
           QVERIFY( item.hasPayload() );
         }

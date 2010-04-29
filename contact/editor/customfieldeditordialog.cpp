@@ -45,8 +45,8 @@ CustomFieldEditorDialog::CustomFieldEditorDialog( QWidget *parent )
   mType = new KComboBox;
   mScope = new QCheckBox( i18n( "Use field for all contacts" ) );
 
-  layout->addRow( i18n( "Title" ), mTitle );
-  layout->addRow( i18n( "Type" ), mType );
+  layout->addRow( i18nc( "The title of a custom field", "Title" ), mTitle );
+  layout->addRow( i18nc( "The type of a custom field", "Type" ), mType );
   layout->addRow( QString(), mScope );
 
   QWidget *detailsWidget = new QWidget;
@@ -54,7 +54,7 @@ CustomFieldEditorDialog::CustomFieldEditorDialog( QWidget *parent )
   detailsLayout->addRow( i18n( "Key" ), mKey );
 
   setDetailsWidget( detailsWidget );
-  setButtonText( Details, i18n( "Advanced" ) );
+  setButtonText( Details, i18nc( "@label Opens the advanced dialog", "Advanced" ) );
 
   mType->addItem( i18n( "Text" ), CustomField::TextType );
   mType->addItem( i18n( "Numeric" ), CustomField::NumericType );

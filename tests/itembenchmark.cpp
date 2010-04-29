@@ -61,7 +61,7 @@ class ItemBenchmark : public QObject
     void initTestCase()
     {
       // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() )
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
         agent.setIsOnline( false );
     }
 

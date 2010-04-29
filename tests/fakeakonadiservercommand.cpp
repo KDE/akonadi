@@ -77,7 +77,7 @@ void FakeJobResponse::doCommand()
 
 QList<FakeJobResponse::Token> FakeJobResponse::tokenize(const QString& treeString)
 {
-  QStringList parts = treeString.split("-");
+  QStringList parts = treeString.split('-');
 
   QList<Token> tokens;
   const QStringList::const_iterator begin = parts.constBegin();
@@ -142,7 +142,7 @@ QList<FakeJobResponse *> FakeJobResponse::parseTreeString( FakeServerData *fakeS
 void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionResponseList, QHash<Collection::Id, FakeJobResponse *> &itemResponseMap, Collection::List &recentCollections, FakeServerData *fakeServerData, const QString& _entityString, int depth )
 {
   QString entityString = _entityString;
-  if ( entityString.startsWith( "C" ) )
+  if ( entityString.startsWith( 'C' ) )
   {
     Collection collection;
     entityString.remove( 0, 2 );
@@ -208,7 +208,7 @@ void FakeJobResponse::parseEntityString( QList<FakeJobResponse *> &collectionRes
     }
     collectionResponseList[ order - 1 ]->appendCollection( collection );
   }
-  if ( entityString.startsWith( "I" ) )
+  if ( entityString.startsWith( 'I' ) )
   {
     Item item;
     entityString.remove( 0, 2 );

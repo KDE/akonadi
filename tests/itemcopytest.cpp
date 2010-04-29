@@ -40,7 +40,7 @@ class ItemCopyTest : public QObject
     {
       Control::start();
       // switch target resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) {
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
         if ( agent.identifier() == "akonadi_knut_resource_2" )
           agent.setIsOnline( false );
       }
