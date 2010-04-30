@@ -173,7 +173,10 @@ QSqlQuery ItemRetriever::buildPartQuery() const
   if ( !mParts.isEmpty() )
     partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
 
-  ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+  else
+    ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
 
   if ( !partQuery.exec() )
     throw ItemRetrieverException( "Unable to retrieve item parts" );
