@@ -103,10 +103,17 @@ Scope ItemRetriever::scope() const
   return mScope;
 }
 
-Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery(const Scope& scope, AkonadiConnection* connection)
+enum ItemQueryColumns {
+  ItemQueryPimItemIdColumn,
+  ItemQueryPimItemRidColumn,
+  ItemQueryMimeTypeColumn,
+  ItemQueryResourceColumn
+};
+
+Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
 {
-  // make sure the columns indexes here and in the constants defined in the header match
   QueryBuilder itemQuery;
+
   itemQuery.addTable( PimItem::tableName() );
   itemQuery.addTable( MimeType::tableName() );
   itemQuery.addTable( Collection::tableName() );
@@ -123,18 +130,9 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericItemQuery(const Scope& scope, A
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
-  if ( scope.scope() != Scope::Invalid )
-    ItemQueryHelper::scopeToQuery( scope, connection, itemQuery );
-
-  return itemQuery;
-}
-
-
-Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
-{
-  QueryBuilder itemQuery = buildGenericItemQuery(mScope, mConnection);
-
-  if ( mScope.scope() == Scope::Invalid )
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+  else
     ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
 
   // prevent a resource to trigger item retrieval from itself
@@ -150,9 +148,17 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
   return itemQuery;
 }
 
-Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery()
+enum PartQueryColumns {
+  PartQueryPimIdColumn,
+  PartQueryNameColumn,
+  PartQueryDataColumn,
+  PartQueryExternalColumn
+};
+
+Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
 {
   QueryBuilder partQuery;
+
   partQuery.addTable( PimItem::tableName() );
   partQuery.addTable( Part::tableName() );
   partQuery.addColumn( PimItem::idFullColumnName() );
@@ -161,13 +167,6 @@ Akonadi::QueryBuilder ItemRetriever::buildGenericPartQuery()
   partQuery.addColumn( Part::externalFullColumnName() );
   partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
   partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-
-  return partQuery;
-}
-
-Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
-{
-  QueryBuilder partQuery = buildGenericPartQuery();
   partQuery.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
 
   if ( !mParts.isEmpty() )
@@ -196,20 +195,20 @@ void ItemRetriever::exec()
 
   QList<ItemRetrievalRequest*> requests;
   while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( GenericItemQueryPimItemIdColumn ).toLongLong();
+    const qint64 pimItemId = itemQuery.query().value( ItemQueryPimItemIdColumn ).toLongLong();
     QStringList missingParts = mParts;
     while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( GenericPartQueryPimIdColumn ).toLongLong();
+      const qint64 id = partQuery.query().value( PartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
         partQuery.query().next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      const QString partName = partQuery.query().value( GenericPartQueryNameColumn ).toString();
+      const QString partName = partQuery.query().value( PartQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.query().value( GenericPartQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.query().value( GenericPartQueryExternalColumn ).toBool() );
+        QByteArray data = partQuery.query().value( PartQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData( data, partQuery.query().value( PartQueryExternalColumn ).toBool() );
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;
@@ -226,9 +225,9 @@ void ItemRetriever::exec()
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = itemQuery.query().value( GenericItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.query().value( GenericItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.query().value( GenericItemQueryResourceColumn ).toString();
+      req->remoteId = itemQuery.query().value( ItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.query().value( ItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.query().value( ItemQueryResourceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,

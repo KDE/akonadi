@@ -64,34 +64,6 @@ class ItemRetriever
 
     void exec();
 
-    /**
-     * Returns the QueryBuilder containing the subset of the item query which is
-     * not specific for the ItemRetriever for use by subclasses.
-     */
-    static QueryBuilder buildGenericItemQuery(const Akonadi::Scope& scope, Akonadi::AkonadiConnection* connection);
-
-    /** Column indices of the generic item query. */
-    enum GenericItemQueryColumns {
-      GenericItemQueryPimItemIdColumn = 0,
-      GenericItemQueryPimItemRidColumn = 1,
-      GenericItemQueryMimeTypeColumn = 2,
-      GenericItemQueryResourceColumn = 3
-    };
-
-    /**
-     * Returns the QueryBuilder containing the subset of the part query which is
-     * not specific for the ItemRetrieverQuery for use by subclasses.
-     */
-    static QueryBuilder buildGenericPartQuery();
-
-    /** Column indices of the generic part query. */
-    enum GenericPartQueryColumns {
-      GenericPartQueryPimIdColumn = 0,
-      GenericPartQueryNameColumn = 1,
-      GenericPartQueryDataColumn = 2,
-      GenericPartQueryExternalColumn = 3
-    };
-
   private:
     /** Convenience method which returns the database driver name */
     QString driverName();
