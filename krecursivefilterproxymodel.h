@@ -23,8 +23,6 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
-#include "akonadi_export.h"
-
 class KRecursiveFilterProxyModelPrivate;
 
 /**
@@ -84,7 +82,7 @@ class KRecursiveFilterProxyModelPrivate;
   @since 4.5
 
 */
-class AKONADI_EXPORT KRecursiveFilterProxyModel : public QSortFilterProxyModel
+class KRecursiveFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
