@@ -73,9 +73,16 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) )
-        kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
-      AgentBasePrivate::delayedInit();
+      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
+        QString reason = QDBusConnection::sessionBus().lastError().message();
+        if ( reason.isEmpty() ) {
+          reason = QString::fromLatin1( "this service is probably running already." );
+        }
+        kError() << "Unable to register service at D-Bus: " << reason;
+        QCoreApplication::instance()->exit(1);
+      } else {
+        AgentBasePrivate::delayedInit();
+      }
     }
 
     virtual void changeProcessed()
