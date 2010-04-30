@@ -75,7 +75,7 @@
          <item>
           <widget class="KPushButton" name="startButton">
            <property name="text">
-            <string>Start</string>
+            <string comment="@action:button Start the Akonadi server">Start</string>
            </property>
           </widget>
          </item>

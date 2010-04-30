@@ -33,7 +33,7 @@
      <item>
       <widget class="KLineEdit" name="klineedit" >
        <property name="clickMessage" >
-        <string>Search</string>
+        <string comment="@label:textbox The clickMessage of a search line edit">Search</string>
        </property>
        <property name="showClearButton" stdset="0" >
         <bool>true</bool>

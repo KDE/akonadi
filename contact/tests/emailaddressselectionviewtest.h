@@ -25,7 +25,7 @@
 
 #include <QtGui/QWidget>
 
-class QTextBrowser;
+class KTextBrowser;
 
 class MainWidget : public QWidget
 {
@@ -40,7 +40,7 @@ class MainWidget : public QWidget
 
   private:
     Akonadi::EmailAddressSelectionView *mAddressesView;
-    QTextBrowser *mInfo;
+    KTextBrowser *mInfo;
 };
 
 #endif

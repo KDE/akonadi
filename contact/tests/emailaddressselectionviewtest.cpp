@@ -22,12 +22,12 @@
 
 #include <kaboutdata.h>
 #include <kapplication.h>
+#include <kcombobox.h>
 #include <kcmdlineargs.h>
+#include <ktextbrowser.h>
 
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QPushButton>
-#include <QtGui/QTextBrowser>
 #include <QtGui/QTreeView>
 
 MainWidget::MainWidget()
@@ -38,10 +38,10 @@ MainWidget::MainWidget()
   mAddressesView = new Akonadi::EmailAddressSelectionView;
   layout->addWidget( mAddressesView, 0, 0 );
 
-  mInfo = new QTextBrowser;
+  mInfo = new KTextBrowser;
   layout->addWidget( mInfo, 0, 1 );
 
-  QComboBox *box = new QComboBox;
+  KComboBox *box = new KComboBox;
   box->addItem( QLatin1String( "Single Selection" ) );
   box->addItem( QLatin1String( "Multi Selection" ) );
   connect( box, SIGNAL( activated( int ) ), SLOT( selectionModeChanged( int ) ) );
