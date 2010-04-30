@@ -21,6 +21,8 @@
 #ifndef RECURSIVEFILTERPROXYMODEL_H
 #define RECURSIVEFILTERPROXYMODEL_H
 
+#include "akonadiprivate_export.h"
+
 #include <QtGui/QSortFilterProxyModel>
 
 class KRecursiveFilterProxyModelPrivate;
@@ -82,7 +84,7 @@ class KRecursiveFilterProxyModelPrivate;
   @since 4.5
 
 */
-class KRecursiveFilterProxyModel : public QSortFilterProxyModel
+class AKONADI_TESTS_EXPORT KRecursiveFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
