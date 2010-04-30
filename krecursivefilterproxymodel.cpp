@@ -21,6 +21,16 @@
 
 #include <kdebug.h>
 
+// Maintainability note:
+// This class invokes some Q_PRIVATE_SLOTs in QSortFilterProxyModel which are
+// private API and could be renamed or removed at any time.
+// If they are renamed, the invokations can be updated with an #if (QT_VERSION(...))
+// If they are removed, then layout{AboutToBe}Changed signals should be used when the source model
+// gets new rows or has rowsremoved or moved. The Q_PRIVATE_SLOT invokation is an optimization
+// because layout{AboutToBe}Changed is expensive and causes the entire mapping of the tree in QSFPM
+// to be cleared, even if only a part of it is dirty.
+// Stephen Kelly, 30 April 2010.
+
 class KRecursiveFilterProxyModelPrivate
 {
   Q_DECLARE_PUBLIC(KRecursiveFilterProxyModel)
@@ -35,6 +45,8 @@ public:
     qRegisterMetaType<QModelIndex>( "QModelIndex" );
   }
 
+  // Convenience methods for invoking the QSFPM slots. Those slots must be invoked with invokeMethod
+  // because they are Q_PRIVATE_SLOTs
   inline void invokeDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
   {
     Q_Q(KRecursiveFilterProxyModel);
