@@ -105,8 +105,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayl
     ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
 
     if ( !partQuery.exec() ) {
-      //TODO: exception?
-      return partQuery.query();
+      throw HandlerException("Unable to list item parts");
     }
 
     partQuery.query().next();
@@ -156,9 +155,9 @@ QSqlQuery FetchHelper::buildItemQuery()
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
 
-  //TODO: the other build* use emit failureResponse(...) and return false - shouldn't we do that here as well?
-  if ( !itemQuery.exec() )
+  if ( !itemQuery.exec() ) {
     throw HandlerException("Unable to list items");
+  }
 
   itemQuery.query().next();
 
@@ -184,8 +183,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
   if ( !flagQuery.exec() ) {
-    //TODO: Exception?
-    return flagQuery.query();
+    throw HandlerException("Unable to retrieve item flags");
   }
 
   flagQuery.query().next();
@@ -237,21 +235,12 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   QSqlQuery partQuery;
   if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
     partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.isValid() ) {
-      emit failureResponse( QLatin1String( "Unable to retrieve item parts" ) );
-      return false;
-    }
   }
 
   // build flag query if needed
   QSqlQuery flagQuery;
   if ( mRequestedParts.contains( "FLAGS" ) ) {
     flagQuery = buildFlagQuery();
-
-    if ( !flagQuery.isValid() ) {
-      emit failureResponse( QLatin1String( "Unable to retrieve item flags" ) );
-      return false;
-    }
   }
 
   // build responses
