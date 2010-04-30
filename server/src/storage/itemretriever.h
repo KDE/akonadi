@@ -68,8 +68,8 @@ class ItemRetriever
     /** Convenience method which returns the database driver name */
     QString driverName();
 
-    QueryBuilder buildItemQuery() const;
-    QueryBuilder buildPartQuery() const;
+    QSqlQuery buildItemQuery() const;
+    QSqlQuery buildPartQuery() const;
 
 
     ImapSet mItemSet;

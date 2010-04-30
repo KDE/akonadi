@@ -110,7 +110,7 @@ enum ItemQueryColumns {
   ItemQueryResourceColumn
 };
 
-Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
+QSqlQuery ItemRetriever::buildItemQuery() const
 {
   QueryBuilder itemQuery;
 
@@ -145,7 +145,8 @@ Akonadi::QueryBuilder ItemRetriever::buildItemQuery() const
     throw ItemRetrieverException( "Unable to list items" );
 
   itemQuery.query().next();
-  return itemQuery;
+
+  return itemQuery.query();
 }
 
 enum PartQueryColumns {
@@ -155,7 +156,7 @@ enum PartQueryColumns {
   PartQueryExternalColumn
 };
 
-Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
+QSqlQuery ItemRetriever::buildPartQuery() const
 {
   QueryBuilder partQuery;
 
@@ -173,7 +174,13 @@ Akonadi::QueryBuilder ItemRetriever::buildPartQuery() const
     partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
 
   ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
-  return partQuery;
+
+  if ( !partQuery.exec() )
+    throw ItemRetrieverException( "Unable to retrieve item parts" );
+
+  partQuery.query().next();
+
+  return partQuery.query();
 }
 
 QStringList ItemRetriever::retrieveParts() const
@@ -187,28 +194,25 @@ void ItemRetriever::exec()
     return;
 
   // TODO: I'm sure this can be done with a single query instead of manually
-  QueryBuilder itemQuery = buildItemQuery();
-  QueryBuilder partQuery = buildPartQuery();
-  if ( !partQuery.exec() )
-    throw ItemRetrieverException( "Unable to retrieve item parts" );
-  partQuery.query().next();
+  QSqlQuery itemQuery = buildItemQuery();
+  QSqlQuery partQuery = buildPartQuery();
 
   QList<ItemRetrievalRequest*> requests;
-  while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( ItemQueryPimItemIdColumn ).toLongLong();
+  while ( itemQuery.isValid() ) {
+    const qint64 pimItemId = itemQuery.value( ItemQueryPimItemIdColumn ).toLongLong();
     QStringList missingParts = mParts;
-    while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( PartQueryPimIdColumn ).toLongLong();
+    while ( partQuery.isValid() ) {
+      const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
-        partQuery.query().next();
+        partQuery.next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      const QString partName = partQuery.query().value( PartQueryNameColumn ).toString();
+      const QString partName = partQuery.value( PartQueryNameColumn ).toString();
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.query().value( PartQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.query().value( PartQueryExternalColumn ).toBool() );
+        QByteArray data = partQuery.value( PartQueryDataColumn ).toByteArray();
+        data = PartHelper::translateData( data, partQuery.value( PartQueryExternalColumn ).toBool() );
         if ( data.isNull() ) {
           if ( mFullPayload && !missingParts.contains( partName ) )
             missingParts << partName;
@@ -216,7 +220,7 @@ void ItemRetriever::exec()
           missingParts.removeAll( partName );
         }
       }
-      partQuery.query().next();
+      partQuery.next();
     }
     if ( !missingParts.isEmpty() ) {
       QStringList missingPayloadIds;
@@ -225,9 +229,9 @@ void ItemRetriever::exec()
 
       ItemRetrievalRequest *req = new ItemRetrievalRequest();
       req->id = pimItemId;
-      req->remoteId = itemQuery.query().value( ItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.query().value( ItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.query().value( ItemQueryResourceColumn ).toString();
+      req->remoteId = itemQuery.value( ItemQueryPimItemRidColumn ).toString().toUtf8();
+      req->mimeType = itemQuery.value( ItemQueryMimeTypeColumn ).toString().toUtf8();
+      req->resourceId = itemQuery.value( ItemQueryResourceColumn ).toString();
       req->parts = missingPayloadIds;
 
       // TODO: how should we handle retrieval errors here? so far they have been ignored,
@@ -242,15 +246,15 @@ void ItemRetriever::exec()
         }
       }
     }
-    itemQuery.query().next();
+    itemQuery.next();
   }
 
   if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
     akDebug() << "Closing queries and sending out requests.";
 
     // Close the queries so we can start writing without endig up in a lock.
-    partQuery.query().finish();
-    itemQuery.query().finish();
+    partQuery.finish();
+    itemQuery.finish();
 
     // Now both reading queries are closed, start sending out the
     foreach ( ItemRetrievalRequest *req, requests ) {

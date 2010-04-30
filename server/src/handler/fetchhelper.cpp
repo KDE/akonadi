@@ -77,7 +77,7 @@ enum PartQueryColumns {
   PartQueryVersionColumn
 };
 
-QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )
+QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )
 {
   QueryBuilder partQuery;
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
@@ -103,8 +103,16 @@ QueryBuilder FetchHelper::buildPartQuery( const QStringList &partList, bool allP
     partQuery.addCondition( cond );
 
     ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+
+    if ( !partQuery.exec() ) {
+      //TODO: exception?
+      return partQuery.query();
+    }
+
+    partQuery.query().next();
   }
-  return partQuery;
+
+  return partQuery.query();
 }
 
 enum ItemQueryColumns {
@@ -119,7 +127,7 @@ enum ItemQueryColumns {
   ItemQueryCollectionIdColumn
 };
 
-QueryBuilder FetchHelper::buildItemQuery()
+QSqlQuery FetchHelper::buildItemQuery()
 {
   QueryBuilder itemQuery;
 
@@ -148,8 +156,41 @@ QueryBuilder FetchHelper::buildItemQuery()
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
 
+  //TODO: the other build* use emit failureResponse(...) and return false - shouldn't we do that here as well?
+  if ( !itemQuery.exec() )
+    throw HandlerException("Unable to list items");
 
-  return itemQuery;
+  itemQuery.query().next();
+
+  return itemQuery.query();
+}
+
+enum FlagQueryColumns {
+  FlagQueryIdColumn,
+  FlagQueryNameColumn
+};
+
+QSqlQuery FetchHelper::buildFlagQuery()
+{
+  QueryBuilder flagQuery;
+  flagQuery.addTable( PimItem::tableName() );
+  flagQuery.addTable( PimItemFlagRelation::tableName() );
+  flagQuery.addTable( Flag::tableName() );
+  flagQuery.addColumn( PimItem::idFullColumnName() );
+  flagQuery.addColumn( Flag::nameFullColumnName() );
+  flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
+  ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
+  flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+
+  if ( !flagQuery.exec() ) {
+    //TODO: Exception?
+    return flagQuery.query();
+  }
+
+  flagQuery.query().next();
+
+  return flagQuery.query();
 }
 
 bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
@@ -190,85 +231,70 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.exec(); // There we go, retrieve the missing parts from the resource.
   }
 
-  QueryBuilder itemQuery = buildItemQuery();
-  if ( !itemQuery.exec() )
-    throw HandlerException("Unable to list items");
-  itemQuery.query().next();
+  QSqlQuery itemQuery = buildItemQuery();
 
   // build part query if needed
-  QueryBuilder partQuery;
+  QSqlQuery partQuery;
   if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
     partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
-    if ( !partQuery.exec() ) {
+    if ( !partQuery.isValid() ) {
       emit failureResponse( QLatin1String( "Unable to retrieve item parts" ) );
       return false;
     }
-    partQuery.query().next();
   }
 
   // build flag query if needed
-  QueryBuilder flagQuery;
+  QSqlQuery flagQuery;
   if ( mRequestedParts.contains( "FLAGS" ) ) {
-    flagQuery.addTable( PimItem::tableName() );
-    flagQuery.addTable( PimItemFlagRelation::tableName() );
-    flagQuery.addTable( Flag::tableName() );
-    flagQuery.addColumn( PimItem::idFullColumnName() );
-    flagQuery.addColumn( Flag::nameFullColumnName() );
-    flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-    flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
-    flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+    flagQuery = buildFlagQuery();
 
-    if ( !flagQuery.exec() ) {
+    if ( !flagQuery.isValid() ) {
       emit failureResponse( QLatin1String( "Unable to retrieve item flags" ) );
       return false;
     }
-    flagQuery.query().next();
   }
-  const int flagQueryIdColumn = 0;
-  const int flagQueryNameColumn = 1;
 
   // build responses
   Response response;
   response.setUntagged();
-  while ( itemQuery.query().isValid() ) {
-    const qint64 pimItemId = itemQuery.query().value( ItemQueryPimItemIdColumn ).toLongLong();
-    const int pimItemRev = itemQuery.query().value( ItemQueryRevColumn ).toInt();
+  while ( itemQuery.isValid() ) {
+    const qint64 pimItemId = itemQuery.value( ItemQueryPimItemIdColumn ).toLongLong();
+    const int pimItemRev = itemQuery.value( ItemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.query().value( ItemQueryPimItemRidColumn ).toString().toUtf8() ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.query().value( ItemQueryMimeTypeColumn ).toString().toUtf8() ) );
-    Collection::Id parentCollectionId = itemQuery.query().value( ItemQueryCollectionIdColumn ).toLongLong();
+    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.value( ItemQueryPimItemRidColumn ).toString().toUtf8() ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.value( ItemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    Collection::Id parentCollectionId = itemQuery.value( ItemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
     if ( mSizeRequested ) {
-      const qint64 pimItemSize = itemQuery.query().value( ItemQuerySizeColumn ).toLongLong();
+      const qint64 pimItemSize = itemQuery.value( ItemQuerySizeColumn ).toLongLong();
       attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
     }
     if ( mMTimeRequested ) {
-      const QDateTime pimItemDatetime = itemQuery.query().value( ItemQueryDatetimeColumn ).toDateTime();
+      const QDateTime pimItemDatetime = itemQuery.value( ItemQueryDatetimeColumn ).toDateTime();
       // Date time is always stored in UTC time zone by the server.
       QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
-      attributes.append( "REMOTEREVISION " + ImapParser::quote( itemQuery.query().value( ItemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
+      attributes.append( "REMOTEREVISION " + ImapParser::quote( itemQuery.value( ItemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
     }
 
     if ( mRequestedParts.contains( "FLAGS" ) ) {
       QList<QByteArray> flags;
-      while ( flagQuery.query().isValid() ) {
-        const qint64 id = flagQuery.query().value( flagQueryIdColumn ).toLongLong();
+      while ( flagQuery.isValid() ) {
+        const qint64 id = flagQuery.value( FlagQueryIdColumn ).toLongLong();
         if ( id < pimItemId ) {
-          flagQuery.query().next();
+          flagQuery.next();
           continue;
         } else if ( id > pimItemId ) {
           break;
         }
-        flags << flagQuery.query().value( flagQueryNameColumn ).toString().toUtf8();
-        flagQuery.query().next();
+        flags << flagQuery.value( FlagQueryNameColumn ).toString().toUtf8();
+        flagQuery.next();
       }
       attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
     }
@@ -276,21 +302,21 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     if ( mAncestorDepth > 0 )
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
-    while ( partQuery.query().isValid() ) {
-      const qint64 id = partQuery.query().value( PartQueryPimIdColumn ).toLongLong();
+    while ( partQuery.isValid() ) {
+      const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
       if ( id < pimItemId ) {
-        partQuery.query().next();
+        partQuery.next();
         continue;
       } else if ( id > pimItemId ) {
         break;
       }
-      QByteArray partName = partQuery.query().value( PartQueryNameColumn ).toString().toUtf8();
-      QByteArray part = partQuery.query().value( PartQueryNameColumn ).toString().toUtf8();
-      QByteArray data = partQuery.query().value( PartQueryDataColumn ).toByteArray();
-      bool partIsExternal = partQuery.query().value( PartQueryExternalColumn ).toBool();
+      QByteArray partName = partQuery.value( PartQueryNameColumn ).toString().toUtf8();
+      QByteArray part = partQuery.value( PartQueryNameColumn ).toString().toUtf8();
+      QByteArray data = partQuery.value( PartQueryDataColumn ).toByteArray();
+      bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );
-      int version = partQuery.query().value( PartQueryVersionColumn ).toInt();
+      int version = partQuery.value( PartQueryVersionColumn ).toInt();
       if ( version != 0 ) { // '0' is the default, so don't send it
         part += '[' + QByteArray::number( version ) + ']';
       }
@@ -309,7 +335,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
         attributes << part;
 
-      partQuery.query().next();
+      partQuery.next();
     }
 
     // IMAP protocol violation: should actually be the sequence number
@@ -319,7 +345,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     response.setString( attr );
     emit responseAvailable( response );
 
-    itemQuery.query().next();
+    itemQuery.next();
   }
 
   // update atime

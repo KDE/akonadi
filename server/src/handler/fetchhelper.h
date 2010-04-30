@@ -54,8 +54,9 @@ class FetchHelper : public QObject
     void parseCommand( const QByteArray &line );
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    QueryBuilder buildItemQuery();
-    QueryBuilder buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
+    QSqlQuery buildItemQuery();
+    QSqlQuery buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
+    QSqlQuery buildFlagQuery();
     void parseCommandStream();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
 
