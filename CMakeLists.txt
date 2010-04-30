@@ -5,7 +5,6 @@ cmake_minimum_required(VERSION 2.6.2 FATAL_ERROR)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
-
 ############### Build Options ###############
 
 include(CTest)
@@ -71,6 +70,11 @@ endif(NOT QT_QTSQL_FOUND)
 # properly set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...)
 include(${QT_USE_FILE})
 
+if(WINCE)
+    SET(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
+    SET(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
+endif(WINCE)
+
 #### Soprano ####
 
 # There are different cases :
@@ -114,8 +118,10 @@ if(MSVC)
   set (_ENABLE_EXCEPTIONS -EHsc)
 endif(MSVC)
 
-find_package(Boost COMPONENTS program_options)
-macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries.")
+if(NOT WINCE)
+    find_package(Boost COMPONENTS program_options)
+    macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries.")
+endif(NOT WINCE)
 
 # should be handled by FindBoost.cmake -> cmake bug #8335
 if(NOT Boost_USE_STATIC_LIBS)

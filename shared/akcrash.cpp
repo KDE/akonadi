@@ -25,7 +25,9 @@
 #include <QtCore/QString>
 
 #include <string.h>
+#ifndef _WIN32_WCE
 #include <signal.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -82,6 +84,8 @@ void AkonadiCrash::setShutdownMethod( HandlerType method )
 
 static void defaultCrashHandler( int sig )
 {
+/* FIXME it is temporarily removed because win ce does not have signals*/
+#ifndef _WIN32_WCE
   ++recursionCount;
   if ( recursionCount <= 2 ) {
     if ( sig != SIGTERM && sig != SIGINT ) {
@@ -97,7 +101,7 @@ static void defaultCrashHandler( int sig )
         s_shutdownMethod( sig );
     }
   }
-
+#endif
 #ifdef Q_CC_MINGW
   _Exit(255);
 #else

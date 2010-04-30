@@ -176,9 +176,12 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
-  ${Boost_PROGRAM_OPTIONS_LIBRARY}
   ${SOPRANO_LIBRARIES}
 )
+if(NOT WINCE)
+    target_link_libraries( akonadiprivate ${Boost_PROGRAM_OPTIONS_LIBRARY})
+endif(NOT WINCE)
+
 
 set_target_properties( akonadiprivate PROPERTIES
                         VERSION ${AKONADI_VERSION}

@@ -32,7 +32,9 @@
 
 #include <cstdlib>
 
+#ifndef _WIN32_WCE
 namespace po = boost::program_options;
+#endif
 
 void shutdownHandler( int )
 {
@@ -56,8 +58,15 @@ int main( int argc, char ** argv )
 #endif
 
     app.parseCommandLine();
+    
+    //Needed for wince build
+    #undef interface
 
+#ifndef _WIN32_WCE
     if ( !app.commandLineArguments().count( "start-without-control" ) &&
+#else
+    if (
+#endif
          !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
       akError() << "Akonadi control process not found - aborting.";
       akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";

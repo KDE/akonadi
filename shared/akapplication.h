@@ -22,7 +22,9 @@
 
 #include <QtCore/QCoreApplication>
 
+#ifndef _WIN32_WCE
 #include <boost/program_options.hpp>
+#endif
 
 /**
  * D-Bus session bus monitoring and command line handling.
@@ -35,9 +37,11 @@ class AkApplication : public QCoreApplication
     void parseCommandLine();
     void setDescription( const QString &desc ) { mDescription = desc; }
 
+ #ifndef _WIN32_WCE
     void addCommandLineOptions( const boost::program_options::options_description &desc );
     const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
-
+#endif
+    
     void printUsage() const;
 
   private slots:
@@ -48,8 +52,10 @@ class AkApplication : public QCoreApplication
     char **mArgv;
     QString mDescription;
 
+#ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
     boost::program_options::variables_map mCmdLineArguments;
+#endif
 };
 
 #endif

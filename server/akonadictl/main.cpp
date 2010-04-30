@@ -44,6 +44,8 @@
 
 static bool startServer()
 {
+  //Needed for wince build
+  #undef interface
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE )
        || QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE ) ) {
     qDebug() << "Akonadi is already running.";
@@ -120,6 +122,7 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "status" ) );
   optionsList.append( QLatin1String( "restart" ) );
 
+#ifndef _WIN32_WCE
   const QStringList arguments = app.arguments();
   if ( arguments.count() != 2 ) {
     app.printUsage();
@@ -128,6 +131,11 @@ int main( int argc, char **argv )
     app.printUsage();
     return 2;
   }
+#else
+    /* For Windows Ce just start it*/
+    QStringList arguments = app.arguments();
+    arguments.append(QLatin1String("start"));
+#endif
 
   if ( arguments[ 1 ] == QLatin1String( "start" ) ) {
     if ( !startServer() )
