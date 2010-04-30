@@ -20,7 +20,6 @@
 #ifndef AKONADI_ENTITYRIGHTSFILTERMODEL_H
 #define AKONADI_ENTITYRIGHTSFILTERMODEL_H
 
-#include "akonadi_export.h"
 #include "entitytreemodel.h"
 
 #include "krecursivefilterproxymodel.h"
@@ -54,9 +53,9 @@ class EntityRightsFilterModelPrivate;
  * @li For items the access rights are checked against the item's parent collection rights.
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.4
+ * @since 4.6
  */
-class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
+class EntityRightsFilterModel : public KRecursiveFilterProxyModel
 {
   Q_OBJECT
 
