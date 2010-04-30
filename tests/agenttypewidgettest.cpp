@@ -17,24 +17,27 @@
     02110-1301, USA.
 */
 
-#include "agenttype.h"
 #include "agenttypewidgettest.h"
+
+#include "agenttype.h"
 #include <akonadi/agentfilterproxymodel.h>
 
+#include <kcombobox.h>
 #include <kcomponentdata.h>
 
 #include <QtGui/QApplication>
-#include <QtGui/QComboBox>
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
+
+//krazy:excludeall=qclasses
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  mFilter = new QComboBox( this );
+  mFilter = new KComboBox( this );
   mFilter->addItem( "None" );
   mFilter->addItem( "text/calendar" );
   mFilter->addItem( "text/directory" );

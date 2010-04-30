@@ -17,9 +17,10 @@
     02110-1301, USA.
 */
 
+#include "collectionjobtest.h"
+
 #include <sys/types.h>
 
-#include "collectionjobtest.h"
 #include <qtest_akonadi.h>
 #include "test_utils.h"
 #include "testattribute.h"

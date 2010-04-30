@@ -17,7 +17,7 @@
 
 #include "shellscript.h"
 
-#include "config.h"
+#include "config.h" //krazy:exclude=includes
 #include "symbols.h"
 
 #include <KDebug>

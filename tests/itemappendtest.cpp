@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "control.h"
 #include "itemappendtest.h"
+
+#include "control.h"
 #include "testattribute.h"
 #include "test_utils.h"
 

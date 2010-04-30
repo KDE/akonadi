@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_TEST_UTIL_H
-#define AKONADI_TEST_UTIL_H
+#ifndef AKONADI_TEST_UTILS_H
+#define AKONADI_TEST_UTILS_H
 
 #include "collectionpathresolver_p.h"
 #include "qtest_akonadi.h"

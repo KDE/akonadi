@@ -17,8 +17,9 @@
     02110-1301, USA.
 */
 
-#include "agentinstance.h"
 #include "agentinstancewidgettest.h"
+
+#include "agentinstance.h"
 
 #include <kcomponentdata.h>
 
@@ -26,6 +27,8 @@
 #include <QtGui/QDialogButtonBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
+
+//krazy:excludeall=qclasses
 
 Dialog::Dialog( QWidget *parent )
   : QDialog( parent )

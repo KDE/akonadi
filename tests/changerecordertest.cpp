@@ -21,7 +21,6 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/agentmanager.h>
-#include <akonadi/agentmanager.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>

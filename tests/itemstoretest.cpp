@@ -18,8 +18,9 @@
     02110-1301, USA.
 */
 
-#include "control.h"
 #include "itemstoretest.h"
+
+#include "control.h"
 #include "testattribute.h"
 #include <akonadi/agentmanager.h>
 #include <akonadi/agentinstance.h>
