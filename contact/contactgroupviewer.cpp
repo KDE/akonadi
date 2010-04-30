@@ -24,6 +24,7 @@
 #include "contactgroupexpandjob.h"
 #include "textbrowser_p.h"
 
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -39,14 +40,27 @@
 
 using namespace Akonadi;
 
-static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts );
+static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts,
+                               const QString &addressBookName );
 
 class ContactGroupViewer::Private
 {
   public:
     Private( ContactGroupViewer *parent )
-      : mParent( parent ), mExpandJob( 0 )
+      : mParent( parent ), mExpandJob( 0 ), mParentCollectionFetchJob( 0 )
     {
+      mBrowser = new TextBrowser;
+
+      static QPixmap groupPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
+      mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                         QUrl( QLatin1String( "group_photo" ) ),
+                                         groupPixmap );
+    }
+
+    void updateView()
+    {
+      mParent->setWindowTitle( i18n( "Contact Group %1", mCurrentGroupName ) );
+      mBrowser->setHtml( contactsAsHtml( mCurrentGroupName, mCurrentContacts, mCurrentAddressBookName ) );
     }
 
     void slotMailClicked( const QString&, const QString &email )
@@ -61,19 +75,47 @@ class ContactGroupViewer::Private
 
     void _k_expandResult( KJob *job )
     {
-      ContactGroupExpandJob *expandJob = qobject_cast<ContactGroupExpandJob*>( job );
-
-      const KABC::Addressee::List contacts = expandJob->contacts();
-
-      mBrowser->setHtml( contactsAsHtml( mGroupName, contacts ) );
-
       mExpandJob = 0;
+
+      if ( !job->error() ) {
+        ContactGroupExpandJob *expandJob = qobject_cast<ContactGroupExpandJob*>( job );
+        mCurrentContacts = expandJob->contacts();
+      }
+
+      // stop any running fetch job
+      if ( mParentCollectionFetchJob ) {
+        mParent->disconnect( mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), mParent, SLOT( slotParentCollectionFetched( KJob* ) ) );
+        delete mParentCollectionFetchJob;
+        mParentCollectionFetchJob = 0;
+      }
+
+      mParentCollectionFetchJob = new CollectionFetchJob( mCurrentItem.parentCollection(), CollectionFetchJob::Base, mParent );
+      mParent->connect( mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), SLOT( slotParentCollectionFetched( KJob* ) ) );
+    }
+
+    void slotParentCollectionFetched( KJob *job )
+    {
+      mParentCollectionFetchJob = 0;
+      mCurrentAddressBookName.clear();
+
+      if ( !job->error() ) {
+        CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
+        if ( !fetchJob->collections().isEmpty() ) {
+          mCurrentAddressBookName = fetchJob->collections().first().name();
+        }
+      }
+
+      updateView();
     }
 
     ContactGroupViewer *mParent;
     TextBrowser *mBrowser;
-    QString mGroupName;
+    QString mCurrentGroupName;
+    KABC::Addressee::List mCurrentContacts;
+    QString mCurrentAddressBookName;
+    Item mCurrentItem;
     ContactGroupExpandJob *mExpandJob;
+    CollectionFetchJob *mParentCollectionFetchJob;
 };
 
 ContactGroupViewer::ContactGroupViewer( QWidget *parent )
@@ -82,7 +124,6 @@ ContactGroupViewer::ContactGroupViewer( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
   layout->setMargin( 0 );
 
-  d->mBrowser = new TextBrowser;
   d->mBrowser->setNotifyClick( true );
 
   connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),
@@ -90,8 +131,9 @@ ContactGroupViewer::ContactGroupViewer( QWidget *parent )
 
   layout->addWidget( d->mBrowser );
 
-  // always fetch full payload for contacts
+  // always fetch full payload for contact groups
   fetchScope().fetchFullPayload();
+  fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
 }
 
 ContactGroupViewer::~ContactGroupViewer()
@@ -114,16 +156,9 @@ void ContactGroupViewer::itemChanged( const Item &item )
   if ( !item.hasPayload<KABC::ContactGroup>() )
     return;
 
-  static QPixmap groupPixmap = KIcon( QLatin1String( "x-mail-distribution-list" ) ).pixmap( QSize( 100, 140 ) );
-
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-  d->mGroupName = group.name();
-
-  setWindowTitle( i18n( "Contact Group %1", group.name() ) );
-
-  d->mBrowser->document()->addResource( QTextDocument::ImageResource,
-                                        QUrl( QLatin1String( "group_photo" ) ),
-                                        groupPixmap );
+  d->mCurrentGroupName = group.name();
+  d->mCurrentItem = item;
 
   if ( d->mExpandJob ) {
     disconnect( d->mExpandJob, SIGNAL( result( KJob* ) ), this, SLOT( _k_expandResult( KJob* ) ) );
@@ -140,7 +175,8 @@ void ContactGroupViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts )
+static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts,
+                               const QString &addressBookName )
 {
   // Assemble all parts
   QString strGroup = QString::fromLatin1(
@@ -171,6 +207,13 @@ static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::
                      .arg( contact.realName() )
                      .arg( fullEmail ) );
     }
+  }
+
+  if ( !addressBookName.isEmpty() ) {
+    strGroup.append( QString::fromLatin1( "<tr><td colspan=\"2\">&nbsp;</td></tr><tr><td align=\"right\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
+                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">%2</font></td></tr>" )
+                   .arg( i18n( "Address Book" ) )
+                   .arg( addressBookName ) );
   }
 
   strGroup.append( QString::fromLatin1( "</table>\n" ) );

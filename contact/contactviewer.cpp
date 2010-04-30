@@ -27,6 +27,8 @@
 #include "standardcontactformatter.h"
 #include "textbrowser_p.h"
 
+#include <akonadi/collection.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
@@ -44,7 +46,7 @@ class ContactViewer::Private
 {
   public:
     Private( ContactViewer *parent )
-      : mParent( parent )
+      : mParent( parent ), mParentCollectionFetchJob( 0 )
     {
       mContactFormatter = new StandardContactFormatter;
     }
@@ -54,7 +56,7 @@ class ContactViewer::Private
       delete mContactFormatter;
     }
 
-    void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList() )
+    void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList(), const QString &addressBookName = QString() )
     {
       static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 140 ) );
 
@@ -82,7 +84,12 @@ class ContactViewer::Private
         customFieldDescriptions << description;
       }
 
-      mContactFormatter->setContact( mCurrentContact );
+      KABC::Addressee contact( mCurrentContact );
+      if ( !addressBookName.isEmpty() ) {
+        contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "AddressBook" ), addressBookName );
+      }
+
+      mContactFormatter->setContact( contact );
       mContactFormatter->setCustomFieldDescriptions( customFieldDescriptions );
 
       mBrowser->setHtml( mContactFormatter->toHtml() );
@@ -122,10 +129,32 @@ class ContactViewer::Private
       }
     }
 
+    void slotParentCollectionFetched( KJob *job )
+    {
+      mParentCollectionFetchJob = 0;
+
+      QString addressBookName;
+
+      if ( !job->error() ) {
+        CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
+        if ( !fetchJob->collections().isEmpty() ) {
+          addressBookName = fetchJob->collections().first().name();
+        }
+      }
+
+      // load the local meta data of the item
+      ContactMetaData metaData;
+      metaData.load( mCurrentItem );
+
+      updateView( metaData.customFieldDescriptions(), addressBookName );
+    }
+
     ContactViewer *mParent;
     TextBrowser *mBrowser;
     KABC::Addressee mCurrentContact;
+    Item mCurrentItem;
     AbstractContactFormatter *mContactFormatter;
+    CollectionFetchJob *mParentCollectionFetchJob;
 };
 
 ContactViewer::ContactViewer( QWidget *parent )
@@ -147,6 +176,7 @@ ContactViewer::ContactViewer( QWidget *parent )
   // always fetch full payload for contacts
   fetchScope().fetchFullPayload();
   fetchScope().fetchAttribute<ContactMetaDataAttribute>();
+  fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
 }
 
 ContactViewer::~ContactViewer()
@@ -181,13 +211,18 @@ void ContactViewer::itemChanged( const Item &contactItem )
   if ( !contactItem.hasPayload<KABC::Addressee>() )
     return;
 
+  d->mCurrentItem = contactItem;
   d->mCurrentContact = contactItem.payload<KABC::Addressee>();
 
-  // load the local meta data of the item
-  ContactMetaData metaData;
-  metaData.load( contactItem );
+  // stop any running fetch job
+  if ( d->mParentCollectionFetchJob ) {
+    disconnect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), this, SLOT( slotParentCollectionFetched( KJob* ) ) );
+    delete d->mParentCollectionFetchJob;
+    d->mParentCollectionFetchJob = 0;
+  }
 
-  d->updateView( metaData.customFieldDescriptions() );
+  d->mParentCollectionFetchJob = new CollectionFetchJob( contactItem.parentCollection(), CollectionFetchJob::Base, this );
+  connect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), SLOT( slotParentCollectionFetched( KJob* ) ) );
 }
 
 void ContactViewer::itemRemoved()

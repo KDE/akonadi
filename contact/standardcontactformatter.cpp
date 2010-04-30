@@ -161,6 +161,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     titleMap.insert( QLatin1String( "Office" ), i18n( "Office" ) );
     titleMap.insert( QLatin1String( "IMAddress" ), i18n( "IM Address" ) );
     titleMap.insert( QLatin1String( "Anniversary" ), i18n( "Anniversary" ) );
+    titleMap.insert( QLatin1String( "AddressBook" ), i18n( "Address Book" ) );
   }
 
   static QSet<QString> blacklistedKeys;

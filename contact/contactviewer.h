@@ -169,6 +169,7 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
 
     Q_PRIVATE_SLOT( d, void slotMailClicked( const QString&, const QString& ) )
     Q_PRIVATE_SLOT( d, void slotUrlClicked( const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotParentCollectionFetched( KJob* ) )
     //@endcond
 };
 
