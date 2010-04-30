@@ -240,7 +240,6 @@ install( FILES
   entityhiddenattribute.h
   entitylistview.h
   entitymimetypefiltermodel.h
-  entityrightsfiltermodel.h
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h
@@ -263,7 +262,6 @@ install( FILES
   itemview.h
   job.h
   linkjob.h
-  krecursivefilterproxymodel.h
   mimetypechecker.h
   monitor.h
   partfetcher.h
