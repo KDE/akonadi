@@ -61,7 +61,7 @@ class DisplayNameDelegate : public QStyledItemDelegate
       mDescriptions.append( i18n( "Reverse Name with Comma" ) );
       mDescriptions.append( i18n( "Reverse Name" ) );
       mDescriptions.append( i18n( "Organization" ) );
-      mDescriptions.append( i18n( "Custom" ) );
+      mDescriptions.append( i18nc( "@item:inlistbox A custom name format", "Custom" ) );
 
       QFont font = view->font();
       font.setStyle( QFont::StyleItalic );

@@ -99,21 +99,21 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
   mMap = new GeoMapWidget;
   layout->addWidget( mMap, 0, 0, 1, 4, Qt::AlignCenter|Qt::AlignVCenter );
 
-  QLabel *label = new QLabel( i18n( "Latitude:" ) );
+  QLabel *label = new QLabel( i18nc( "@label", "Latitude:" ) );
   label->setAlignment( Qt::AlignRight );
   layout->addWidget( label, 1, 0 );
 
   mLatitudeLabel = new QLabel;
   layout->addWidget( mLatitudeLabel, 1, 1 );
 
-  label = new QLabel( i18n( "Longitude:" ) );
+  label = new QLabel( i18nc( "@label", "Longitude:" ) );
   label->setAlignment( Qt::AlignRight );
   layout->addWidget( label, 1, 2 );
 
   mLongitudeLabel = new QLabel;
   layout->addWidget( mLongitudeLabel, 1, 3 );
 
-  mChangeButton = new QPushButton( i18n( "Change..." ) );
+  mChangeButton = new QPushButton( i18nc( "@label Change the coordinates", "Change..." ) );
   layout->addWidget( mChangeButton, 2, 0, 1, 4, Qt::AlignRight );
 
   layout->setRowStretch( 3, 1 );
@@ -146,11 +146,11 @@ void GeoEditWidget::setReadOnly( bool readOnly )
 void GeoEditWidget::updateView()
 {
   if ( !mCoordinates.isValid() ) {
-    mLatitudeLabel->setText( i18n( "n/a" ) );
-    mLongitudeLabel->setText( i18n( "n/a" ) );
+    mLatitudeLabel->setText( i18nc( "@label Coordinates are not available", "n/a" ) );
+    mLongitudeLabel->setText( i18nc( "@label Coordinates are not available", "n/a" ) );
   } else {
-    mLatitudeLabel->setText( i18n( "%1 %2", mCoordinates.latitude(), QChar( 176 ) ) );
-    mLongitudeLabel->setText( i18n( "%1 %2", mCoordinates.longitude(), QChar( 176 ) ) );
+    mLatitudeLabel->setText( i18nc( "@label The formatted coordinates", "%1 %2", mCoordinates.latitude(), QChar( 176 ) ) );
+    mLongitudeLabel->setText( i18nc( "@label The formatted coordinates", "%1 %2", mCoordinates.longitude(), QChar( 176 ) ) );
   }
   mMap->setCoordinates( mCoordinates );
 }
@@ -221,7 +221,7 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
   mCityCombo = new KComboBox( page );
   layout->addWidget( mCityCombo );
 
-  QGroupBox *decimalGroup = new QGroupBox( i18nc( "@title:group", "Decimal" ), page );
+  QGroupBox *decimalGroup = new QGroupBox( i18nc( "@title:group Decimal representation of coordinates", "Decimal" ), page );
   QGridLayout *decimalLayout = new QGridLayout();
   decimalGroup->setLayout( decimalLayout );
   decimalLayout->setSpacing( spacingHint() );

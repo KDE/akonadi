@@ -14,7 +14,7 @@
    <item row="0" column="0">
     <widget class="QLabel" name="groupNameLabel">
      <property name="text">
-      <string>Name:</string>
+      <string comment="@label The name of a contact group">Name:</string>
      </property>
     </widget>
    </item>
@@ -40,7 +40,7 @@
    <item row="2" column="0" colspan="2">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Contact group members:</string>
+      <string comment="@label">Contact group members:</string>
      </property>
     </widget>
    </item>
