@@ -45,15 +45,14 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
     void removeSearch( qint64 collection );
 
   private:
-    void reloadSearches();
     void stopSearches();
 
   private Q_SLOTS:
+    void reloadSearches();
     void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
     void hitsRemoved( const QList<QUrl> &entries );
 
   private:
-    bool mValid;
     QMutex mMutex;
     NotificationCollector* mCollector;
 

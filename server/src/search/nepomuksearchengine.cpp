@@ -30,6 +30,8 @@
 #include "storage/notificationcollector.h"
 #include "storage/selectquerybuilder.h"
 #include "notificationmanager.h"
+#include <qdbusservicewatcher.h>
+#include <qdbusconnection.h>
 
 using namespace Akonadi;
 
@@ -47,29 +49,32 @@ static qint64 uriToItemId( const QUrl &url )
 
 NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
   : QObject( parent ),
-    mValid( true ),
     mCollector( new NotificationCollector( this ) )
 {
   NotificationManager::self()->connectNotificationCollector( mCollector );
 
-  // FIXME: service availability might change, and we probably should attempt something to change it
-  if ( !Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
-    qWarning() << "Nepomuk QueryServer interface not available!";
-    mValid = false;
-  } else {
+  QDBusServiceWatcher *watcher =
+    new QDBusServiceWatcher( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice"),
+                             QDBusConnection::sessionBus(),
+                             QDBusServiceWatcher::WatchForRegistration, this );
+  connect( watcher, SIGNAL(serviceRegistered(QString)), SLOT(reloadSearches()) );
+
+  if ( Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
     reloadSearches();
+  } else {
+    // FIXME: try to start the nepomuk server
+    qDebug() << "Nepomuk Query Server not available";
   }
 }
 
 NepomukSearchEngine::~NepomukSearchEngine()
 {
-  if ( mValid )
-    stopSearches();
+  stopSearches();
 }
 
 void NepomukSearchEngine::addSearch( const Collection &collection )
 {
-  if ( !mValid || collection.queryLanguage() != QLatin1String( "SPARQL" ) )
+  if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) )
     return;
 
   Nepomuk::Search::QueryServiceClient *query = new Nepomuk::Search::QueryServiceClient( this );
@@ -109,6 +114,7 @@ void NepomukSearchEngine::removeSearch( qint64 collectionId )
 
 void NepomukSearchEngine::reloadSearches()
 {
+  qDebug() << this << sender();
   SelectQueryBuilder<Collection> qb;
   qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
   if ( !qb.exec() ) {
@@ -117,7 +123,15 @@ void NepomukSearchEngine::reloadSearches()
   }
 
   Q_FOREACH ( const Collection &collection, qb.result() ) {
-    qDebug() << "adding search" << collection.name();
+    mMutex.lock();
+    if ( mQueryInvMap.contains( collection.id() ) ) {
+      mMutex.unlock();
+      qDebug() << "updating search" << collection.name();
+      removeSearch( collection.id() );
+    } else  {
+      mMutex.unlock();
+      qDebug() << "adding search" << collection.name();
+    }
     addSearch( collection );
   }
 }
