@@ -103,7 +103,7 @@ int main( int argc, char **argv )
     QObject::connect( runner, SIGNAL( finished() ), setup, SLOT( shutdown() ) );
   }
 
-  int exitCode = app.exec(); //krazy:exclude=crashy
+  int exitCode = app.exec();
   if ( runner ) {
     exitCode += runner->exitCode();
     delete runner;
