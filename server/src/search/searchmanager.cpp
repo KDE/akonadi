@@ -23,6 +23,7 @@
 #include "nepomuksearchengine.h"
 #include "entities.h"
 #include "xesamsearchengine.h"
+#include <storage/notificationcollector.h>
 
 using namespace Akonadi;
 
@@ -90,6 +91,15 @@ void SearchManager::removeSearchInternal(qint64 id)
 {
   foreach ( AbstractSearchEngine* engine, m_engines )
     engine->removeSearch( id );
+}
+
+void SearchManager::updateSearch(const Akonadi::Collection& collection, NotificationCollector* collector)
+{
+  removeSearch( collection.id() );
+  foreach ( const PimItem &item, collection.pimItems() )
+    collector->itemUnlinked( item, collection );
+  collection.clearPimItems();
+  addSearch( collection );
 }
 
 #include "searchmanager.moc"

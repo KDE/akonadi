@@ -26,6 +26,9 @@
 
 namespace Akonadi {
 
+class NotificationCollector;
+
+
 class AbstractSearchEngine;
 class Collection;
 
@@ -59,6 +62,11 @@ class SearchManager : public QObject
      * @returns true if the collection was removed successfully, false otherwise.
      */
     bool removeSearch( qint64 id );
+
+    /**
+     * Update the search query of the given collection.
+     */
+    void updateSearch( const Collection &collection, NotificationCollector* collector );
 
   private slots:
     void addSearchInternal( const Collection &collection );

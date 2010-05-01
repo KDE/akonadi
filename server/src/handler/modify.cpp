@@ -162,9 +162,7 @@ bool Modify::parseStream()
         collection.setQueryLanguage( queryLang );
         collection.setQueryString( queryString );
 
-        SearchManager::instance()->removeSearch( collection.id() );
-        collection.clearPimItems();
-        SearchManager::instance()->addSearch( collection );
+        SearchManager::instance()->updateSearch( collection, db->notificationCollector() );
 
         changes.append( AKONADI_PARAM_PERSISTENTSEARCH );
       }
