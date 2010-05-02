@@ -70,7 +70,7 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
     /**
      * The selection of an email address.
      */
-    class Selection
+    class AKONADI_CONTACT_EXPORT Selection
     {
       public:
         /**
