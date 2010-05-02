@@ -191,4 +191,3 @@ void CustomFieldsDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
   QStyledItemDelegate::paint( painter, option, index );
 }
 
-#include "customfieldsdelegate.moc"
