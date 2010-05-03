@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2009 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Milian Wolff <mail@milianw.de>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -103,171 +104,140 @@ Scope ItemRetriever::scope() const
   return mScope;
 }
 
-enum ItemQueryColumns {
-  ItemQueryPimItemIdColumn,
-  ItemQueryPimItemRidColumn,
-  ItemQueryMimeTypeColumn,
-  ItemQueryResourceColumn
-};
-
-QSqlQuery ItemRetriever::buildItemQuery() const
-{
-  QueryBuilder itemQuery;
-
-  itemQuery.addTable( PimItem::tableName() );
-  itemQuery.addTable( MimeType::tableName() );
-  itemQuery.addTable( Collection::tableName() );
-  itemQuery.addTable( Resource::tableName() );
-
-  itemQuery.addColumn( PimItem::idFullColumnName() );
-  itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
-  itemQuery.addColumn( MimeType::nameFullColumnName() );
-  itemQuery.addColumn( Resource::nameFullColumnName() );
-
-  itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-  itemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
-  itemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
-
-  itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-
-  if ( mScope.scope() != Scope::Invalid )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
-  else
-    ItemQueryHelper::itemSetToQuery( mItemSet, itemQuery, mCollection );
-
-  // prevent a resource to trigger item retrieval from itself
-  if ( mConnection ) {
-    itemQuery.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
-                                 QString::fromLatin1( mConnection->sessionId() ) );
-  }
-
-  if ( !itemQuery.exec() )
-    throw ItemRetrieverException( "Unable to list items" );
-
-  itemQuery.query().next();
-
-  return itemQuery.query();
-}
-
-enum PartQueryColumns {
-  PartQueryPimIdColumn,
-  PartQueryNameColumn,
-  PartQueryDataColumn,
-  PartQueryExternalColumn
-};
-
-QSqlQuery ItemRetriever::buildPartQuery() const
-{
-  QueryBuilder partQuery;
-
-  partQuery.addTable( PimItem::tableName() );
-  partQuery.addTable( Part::tableName() );
-  partQuery.addColumn( PimItem::idFullColumnName() );
-  partQuery.addColumn( Part::nameFullColumnName() );
-  partQuery.addColumn( Part::dataFullColumnName() );
-  partQuery.addColumn( Part::externalFullColumnName() );
-  partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
-  partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
-  partQuery.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
-
-  if ( !mParts.isEmpty() )
-    partQuery.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
-
-  if ( mScope.scope() != Scope::Invalid )
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
-  else
-    ItemQueryHelper::itemSetToQuery( mItemSet, partQuery, mCollection );
-
-  if ( !partQuery.exec() )
-    throw ItemRetrieverException( "Unable to retrieve item parts" );
-
-  partQuery.query().next();
-
-  return partQuery.query();
-}
-
 QStringList ItemRetriever::retrieveParts() const
 {
   return mParts;
 }
+
+enum QueryColumns {
+  PimItemIdColumn,
+  PimItemRidColumn,
+
+  MimeTypeColumn,
+
+  ResourceColumn,
+
+  PartNameColumn,
+  PartDataColumn,
+  PartExternalColumn,
+};
+
+QSqlQuery ItemRetriever::buildQuery() const
+{
+  QueryBuilder qb;
+
+  qb.addTable( PimItem::tableName() );
+
+  qb.addLeftJoin( MimeType::tableName(), PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );
+
+  qb.addLeftJoin( Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+
+  qb.addLeftJoin( Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
+
+  Query::Condition partJoinCondition;
+  partJoinCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
+  if ( !mFullPayload && !mParts.isEmpty() ) {
+    partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
+  }
+  partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  qb.addLeftJoin( Part::tableName(), partJoinCondition );
+
+  qb.addColumn( PimItem::idFullColumnName() );
+  qb.addColumn( PimItem::remoteIdFullColumnName() );
+  qb.addColumn( MimeType::nameFullColumnName() );
+  qb.addColumn( Resource::nameFullColumnName() );
+  qb.addColumn( Part::nameFullColumnName() );
+  qb.addColumn( Part::dataFullColumnName() );
+  qb.addColumn( Part::externalFullColumnName() );
+
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+  else
+    ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
+
+  // prevent a resource to trigger item retrieval from itself
+  if ( mConnection ) {
+    qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
+                          QString::fromLatin1( mConnection->sessionId() ) );
+  }
+
+  qb.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+
+  if ( !qb.exec() )
+    throw ItemRetrieverException( "Unable to retrieve items" );
+
+  qb.query().next();
+
+  return qb.query();
+}
+
 
 void ItemRetriever::exec()
 {
   if ( mParts.isEmpty() && !mFullPayload )
     return;
 
-  // TODO: I'm sure this can be done with a single query instead of manually
-  QSqlQuery itemQuery = buildItemQuery();
-  QSqlQuery partQuery = buildPartQuery();
-
+  QSqlQuery query = buildQuery();
+  ItemRetrievalRequest* lastRequest = 0;
   QList<ItemRetrievalRequest*> requests;
-  while ( itemQuery.isValid() ) {
-    const qint64 pimItemId = itemQuery.value( ItemQueryPimItemIdColumn ).toLongLong();
-    QStringList missingParts = mParts;
-    while ( partQuery.isValid() ) {
-      const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
-      if ( id < pimItemId ) {
-        partQuery.next();
-        continue;
-      } else if ( id > pimItemId ) {
-        break;
-      }
-      const QString partName = partQuery.value( PartQueryNameColumn ).toString();
-      if ( partName.startsWith( QLatin1String( "PLD:" ) ) ) {
-        QByteArray data = partQuery.value( PartQueryDataColumn ).toByteArray();
-        data = PartHelper::translateData( data, partQuery.value( PartQueryExternalColumn ).toBool() );
-        if ( data.isNull() ) {
-          if ( mFullPayload && !missingParts.contains( partName ) )
-            missingParts << partName;
-        } else {
-          missingParts.removeAll( partName );
-        }
-      }
-      partQuery.next();
-    }
-    if ( !missingParts.isEmpty() ) {
-      QStringList missingPayloadIds;
-      foreach ( const QString &s, missingParts )
-        missingPayloadIds << s.mid( 4 );
 
-      ItemRetrievalRequest *req = new ItemRetrievalRequest();
-      req->id = pimItemId;
-      req->remoteId = itemQuery.value( ItemQueryPimItemRidColumn ).toString().toUtf8();
-      req->mimeType = itemQuery.value( ItemQueryMimeTypeColumn ).toString().toUtf8();
-      req->resourceId = itemQuery.value( ItemQueryResourceColumn ).toString();
-      req->parts = missingPayloadIds;
-
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
-        requests.append( req );
-      else {
-        try {
-          ItemRetrievalManager::instance()->requestItemDelivery( req );
-        } catch ( const ItemRetrieverException &e ) {
-          akError() << e.type() << ": " << e.what();
-        }
-      }
+  QStringList parts;
+  foreach ( const QString part, mParts ) {
+    if ( part.startsWith( QLatin1String( "PLD:" ) ) ) {
+      parts << part.mid(4);
     }
-    itemQuery.next();
   }
 
-  if ( driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    akDebug() << "Closing queries and sending out requests.";
+  while ( query.isValid() ) {
+    const qint64 pimItemId = query.value( PimItemIdColumn ).toLongLong();
+    if ( !lastRequest || lastRequest->id != pimItemId ) {
+      lastRequest = new ItemRetrievalRequest();
+      lastRequest->id = pimItemId;
+      lastRequest->remoteId = query.value( PimItemRidColumn ).toString().toUtf8();
+      lastRequest->mimeType = query.value( MimeTypeColumn ).toString().toUtf8();
+      lastRequest->resourceId = query.value( ResourceColumn ).toString();
+      lastRequest->parts = parts;
+      requests << lastRequest;
+    }
 
-    // Close the queries so we can start writing without endig up in a lock.
-    partQuery.finish();
-    itemQuery.finish();
+    if ( query.value( PartNameColumn ).isNull() ) {
+      // LEFT JOIN did not find anything, retrieve all parts
+      query.next();
+      continue;
+    }
 
-    // Now both reading queries are closed, start sending out the
-    foreach ( ItemRetrievalRequest *req, requests ) {
-      // TODO: how should we handle retrieval errors here? so far they have been ignored,
-      // which makes sense in some cases, do we need a command parameter for this?
-      try {
-        ItemRetrievalManager::instance()->requestItemDelivery( req );
-      } catch ( const ItemRetrieverException &e ) {
-        akError() << e.type() << ": " << e.what();
+    QByteArray data = query.value( PartDataColumn ).toByteArray();
+    data = PartHelper::translateData( data, query.value( PartExternalColumn ).toBool() );
+    QString partName = query.value( PartNameColumn ).toString();
+    Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
+    partName = partName.mid( 4 );
+    if ( data.isNull() ) {
+      // request update for this part
+      if ( mFullPayload && !lastRequest->parts.contains( partName ) )
+        lastRequest->parts << partName;
+    } else {
+      // data available, don't request update
+      lastRequest->parts.removeAll( partName );
+      if ( lastRequest->parts.isEmpty() ) {
+        delete requests.takeLast();
+        lastRequest = 0;
       }
+    }
+    query.next();
+  }
+
+  akDebug() << "Closing queries and sending out requests.";
+
+  query.finish();
+
+  foreach ( ItemRetrievalRequest* request, requests ) {
+    Q_ASSERT( !request->parts.isEmpty() );
+    // TODO: how should we handle retrieval errors here? so far they have been ignored,
+    // which makes sense in some cases, do we need a command parameter for this?
+    try {
+      ItemRetrievalManager::instance()->requestItemDelivery( request );
+    } catch ( const ItemRetrieverException &e ) {
+      akError() << e.type() << ": " << e.what();
     }
   }
 

@@ -67,10 +67,35 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     void setDatabaseType( DatabaseType type );
 
     /**
-      Add a table to the FROM part of the query.
+      Add a table to the FROM part of the query. Use this together with WHERE conditions
+      for natural joins.
+
+      NOTE: it is _not_ supported to use this for natural join together with a left join.
       @param table The table name.
     */
     void addTable( const QString &table );
+
+    /**
+      Add a table to the LEFT JOIN part of the query.
+
+      NOTE: only supported for Select queries.
+      NOTE: it is _not_ supported to use natural join (i.e. @c addTable()) together with a left join.
+      @param table The table to join.
+      @param condition the ON condition for this join.
+    */
+    void addLeftJoin(const QString &table, const Query::Condition &condition);
+
+    /**
+     Add a table to the LEFT JOIN part of the query.
+     This is a convenience method to create simple 'LEFT JOIN t ON c1 = c2' joins.
+
+     NOTE: only supported for Select queries.
+     NOTE: it is _not_ supported to use natural join (i.e. @c addTable()) together with a left join.
+     @param table The table to join.
+     @param col1 The first column for the ON statement.
+     @param col2 The second column for the ON statement.
+    */
+    void addLeftJoin(const QString &table, const QString &col1, const QString &col2);
 
     /**
       Adds the given columns to a select query.
@@ -166,6 +191,7 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     QList<QVariant> mBindValues;
     QList<QPair<QString, Query::SortOrder> > mSortColumns;
     QList<QPair<QString, QVariant> > mColumnValues;
+    QMap<QString, Query::Condition> mLeftJoins;
     bool mDistinct;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;

@@ -98,8 +98,23 @@ void QueryBuilder::setDatabaseType( DatabaseType type )
 
 void QueryBuilder::addTable(const QString & table)
 {
+  Q_ASSERT( mTables.isEmpty() || mLeftJoins.isEmpty() );
   if ( !mTables.contains( table ) )
     mTables << table;
+}
+
+void QueryBuilder::addLeftJoin(const QString& table, const Query::Condition& condition)
+{
+  Q_ASSERT( mType == Select );
+  Q_ASSERT( mTables.count() <= 1 );
+  mLeftJoins.insert( table, condition );
+}
+
+void QueryBuilder::addLeftJoin(const QString& table, const QString& col1, const QString& col2)
+{
+  Query::Condition condition;
+  condition.addColumnCondition( col1, Akonadi::Query::Equals, col2 );
+  addLeftJoin(table, condition);
 }
 
 void QueryBuilder::addValueCondition(const QString & column, Query::CompareOperator op, const QVariant & value)
@@ -131,6 +146,16 @@ bool QueryBuilder::exec()
       statement += QLatin1String(" FROM ");
       Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
       statement += mTables.join( QLatin1String( ", " ) );
+      if ( !mLeftJoins.isEmpty() ) {
+        QMap< QString, Query::Condition >::const_iterator it = mLeftJoins.constBegin();
+        while ( it != mLeftJoins.constEnd() ) {
+          statement += QLatin1String( " LEFT JOIN " );
+          statement += it.key();
+          statement += QLatin1String( " ON " );
+          statement += buildWhereCondition( it.value() );
+          ++it;
+        }
+      }
      break;
     case Insert:
     {
