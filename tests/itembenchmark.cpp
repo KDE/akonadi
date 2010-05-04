@@ -137,10 +137,11 @@ class ItemBenchmark : public QObject
       QVERIFY( mCreatedItems.value( size ).count() >= count );
 
       Job *lastJob = 0;
+      const int newSize = qMax(size, 1);
       QBENCHMARK {
         for ( int i = 0; i < count; ++i ) {
           Item item = mCreatedItems.value( size ).at( i );
-          item.setPayload( QByteArray( size, 'Y' ) );
+          item.setPayload( QByteArray( newSize, 'Y' ) );
           ItemModifyJob *job = new ItemModifyJob( item, this );
           job->disableRevisionCheck();
           lastJob = job;
