@@ -119,7 +119,7 @@ enum QueryColumns {
 
   PartNameColumn,
   PartDataColumn,
-  PartExternalColumn,
+  PartExternalColumn
 };
 
 QSqlQuery ItemRetriever::buildQuery() const
