@@ -71,7 +71,7 @@ class ItemBenchmark : public QObject
       QTest::addColumn<int>( "size" );
 
       QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000; // << 10000;
-      QList<int> sizes = QList<int>() << 0 << 256 << 1024 << (1024 * 1024);
+      QList<int> sizes = QList<int>() << 0 << 256  << 1024 << 8192 << 32768 << 65536;
       foreach( int count, counts )
         foreach( int size, sizes )
           QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( size ).toLatin1().constData() )
