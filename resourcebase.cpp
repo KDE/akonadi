@@ -40,6 +40,7 @@
 #include "session.h"
 #include "resourceselectjob_p.h"
 #include "monitor_p.h"
+#include "servermanager_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -66,6 +67,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         mCollectionSyncer( 0 ),
         mHierarchicalRid( false )
     {
+      Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
     }
 

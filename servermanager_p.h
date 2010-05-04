@@ -27,6 +27,13 @@ namespace Internal {
   int serverProtocolVersion();
   void setServerProtocolVersion( int version );
 
+  enum ClientType {
+    User,
+    Agent,
+    Resource
+  };
+  ClientType clientType();
+  void setClientType( ClientType type );
 }
 
 }

@@ -54,7 +54,7 @@ class Akonadi::ServerManagerPrivate
       mSafetyTimer->setInterval( 30000 );
       QObject::connect( mSafetyTimer.get(), SIGNAL( timeout() ), instance, SLOT( timeout() ) );
       KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
-      if ( mState == ServerManager::Running )
+      if ( mState == ServerManager::Running && Internal::clientType() == Internal::User )
         mFirstRunner = new Firstrun( instance );
     }
 
@@ -82,7 +82,7 @@ class Akonadi::ServerManagerPrivate
         emit instance->stateChanged( state );
         if ( state == ServerManager::Running ) {
           emit instance->started();
-          if ( !mFirstRunner )
+          if ( !mFirstRunner && Internal::clientType() == Internal::User )
             mFirstRunner = new Firstrun( instance );
         } else if ( state == ServerManager::NotRunning || state == ServerManager::Broken ) {
           emit instance->stopped();
@@ -106,9 +106,11 @@ class Akonadi::ServerManagerPrivate
     ServerManager::State mState;
     boost::scoped_ptr<QTimer> mSafetyTimer;
     Firstrun *mFirstRunner;
+    static Internal::ClientType clientType;
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
+Internal::ClientType ServerManagerPrivate::clientType = Internal::User;
 
 K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
 
@@ -250,6 +252,16 @@ void Internal::setServerProtocolVersion( int version )
   ServerManagerPrivate::serverProtocolVersion = version;
   if ( sInstance.exists() )
     sInstance->checkStatusChanged();
+}
+
+Internal::ClientType Internal::clientType()
+{
+  return ServerManagerPrivate::clientType;
+}
+
+void Internal::setClientType( ClientType type )
+{
+  ServerManagerPrivate::clientType = type;
 }
 
 #include "servermanager.moc"

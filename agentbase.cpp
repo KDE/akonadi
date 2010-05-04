@@ -27,6 +27,7 @@
 #include "controladaptor.h"
 #include "itemfetchjob.h"
 #include "monitor_p.h"
+#include "servermanager_p.h"
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
@@ -155,6 +156,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mSettings( 0 ),
     mObserver( 0 )
 {
+  Internal::setClientType( Internal::Agent );
 }
 
 AgentBasePrivate::~AgentBasePrivate()

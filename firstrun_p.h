@@ -57,7 +57,7 @@ namespace Akonadi {
   <li>Id: A unique identifier of the setup description, should never change to avoid the agent
   being set up twice.</li>
   <li>Type: The agent type</li>
-  <li>Nanme: The user visible name for this agent (only used for resource agents currently)</li>
+  <li>Name: The user visible name for this agent (only used for resource agents currently)</li>
   </ul>
 
   The [Settings] group is optional and contains agent-dependent settings.
