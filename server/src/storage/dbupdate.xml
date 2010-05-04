@@ -95,4 +95,17 @@
     UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;
   </update>
 
+  <update version="16" abortOnFailure="false">
+    ALTER TABLE CollectionAttributeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE CollectionMimeTypeRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE CollectionPimItemRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE CollectionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE FlagTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE MimeTypeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE PartTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE PimItemFlagRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE PimitemTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+  </update>
 </updates>

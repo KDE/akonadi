@@ -193,7 +193,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
     if( element.hasAttribute( QLatin1String("properties") ) )
       columns.append( QLatin1String(", ") + element.attribute( QLatin1String("properties") ) );
 
-    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2);" ).arg( tableName, columns );
+    QString tableProperties;
+    if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
+      tableProperties += QLatin1String( " COLLATE=utf8_general_ci" );
+      tableProperties += QLatin1String( " DEFAULT CHARSET=utf8" );
+    }
+
+    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3;" ).arg( tableName, columns, tableProperties );
     qDebug() << statement;
 
     if ( !query.exec( statement ) ) {
