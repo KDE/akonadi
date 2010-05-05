@@ -772,10 +772,7 @@ void ImapStreamParser::sendContinuationResponse()
   m_socket->write(block);
   m_socket->waitForBytesWritten(30000);
 
-  QString identifier;
-  identifier.sprintf( "%p", static_cast<void*>( this ) );
-  Tracer::self()->connectionOutput( identifier, QString::fromUtf8( block ) );
-
+  Tracer::self()->connectionOutput( m_tracerId, QString::fromUtf8( block ) );
 }
 
 void ImapStreamParser::insertData( const QByteArray& data)
@@ -786,4 +783,9 @@ void ImapStreamParser::insertData( const QByteArray& data)
 void ImapStreamParser::appendData( const QByteArray& data)
 {
   m_data = m_data + data;
+}
+
+void ImapStreamParser::setTracerIdentifier(const QString& id)
+{
+  m_tracerId = id;
 }

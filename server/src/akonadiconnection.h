@@ -31,7 +31,6 @@ namespace Akonadi {
     class Handler;
     class Response;
     class DataStore;
-    class ImapParser;
     class Collection;
     class ImapStreamParser;
 
@@ -91,7 +90,6 @@ private:
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
-    ImapParser *m_parser;
     ImapStreamParser *m_streamParser;
     Resource m_resourceContext;
 };

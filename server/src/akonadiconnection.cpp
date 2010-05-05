@@ -27,7 +27,6 @@
 #include "response.h"
 #include "tracer.h"
 
-#include "libs/imapparser_p.h"
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
 #include "shared/akcrash.h"
@@ -44,10 +43,9 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
     , m_selectedConnection( 0 )
-    , m_parser( 0 )
     , m_streamParser( 0 )
 {
-    m_parser = new ImapParser;
+    m_identifier.sprintf( "%p", static_cast<void*>( this ) );
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -61,8 +59,6 @@ DataStore * Akonadi::AkonadiConnection::storageBackend()
 AkonadiConnection::~AkonadiConnection()
 {
     Tracer::self()->endConnection( m_identifier, QString() );
-
-    delete m_parser;
 }
 
 void AkonadiConnection::run()
@@ -96,6 +92,7 @@ void AkonadiConnection::run()
     writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 26]");
 
     m_streamParser = new ImapStreamParser( m_socket );
+    m_streamParser->setTracerIdentifier( m_identifier );
     exec();
     delete m_socket;
     m_socket = 0;
@@ -262,6 +259,7 @@ void AkonadiConnection::setSessionId(const QByteArray &id)
 {
   m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void*>( this ) );
   Tracer::self()->beginConnection( m_identifier, QString() );
+  m_streamParser->setTracerIdentifier( m_identifier );
 
   m_sessionId = id;
   storageBackend()->setSessionId( id );

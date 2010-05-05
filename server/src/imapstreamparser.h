@@ -241,6 +241,11 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
      */
     void stripLeadingSpaces();
 
+    /**
+     * Set the identification used for Tracer calls.
+     */
+    void setTracerIdentifier( const QString& id );
+
   private:
     QByteArray parseQuotedString();
 
@@ -260,6 +265,7 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     QIODevice *m_socket;
     QByteArray m_data;
     QByteArray m_tag;
+    QString m_tracerId;
     int m_position;
     qint64 m_literalSize;
     qint64 m_continuationSize;
