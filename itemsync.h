@@ -145,6 +145,7 @@ class AKONADI_EXPORT ItemSync : public Job
 
   protected:
     void doStart();
+    void slotResult(KJob* job);
 
     /**
      * Reimplement this method to customize the synchronization algorithm.

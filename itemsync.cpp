@@ -110,6 +110,9 @@ class ItemSync::Private
 
 void ItemSync::Private::createLocalItem( const Item & item )
 {
+  // don't try to do anything in error state
+  if ( q->error() )
+    return;
   mPendingJobs++;
   ItemCreateJob *create = new ItemCreateJob( item, mSyncCollection, subjobParent() );
   q->connect( create, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
@@ -201,6 +204,10 @@ void ItemSync::doStart()
 
 bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
 {
+  // we are in error state, better not change anything at all anymore
+  if ( error() )
+    return false;
+
   /*
    * We know that this item has changed (as it is part of the
    * incremental changed list), so we just put it into the
@@ -241,16 +248,15 @@ bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
 
 void ItemSync::Private::slotLocalListDone( KJob * job )
 {
-  if ( job->error() )
-    return;
-
-  const Item::List list = static_cast<ItemFetchJob*>( job )->items();
-  foreach ( const Item &item, list ) {
-    if ( item.remoteId().isEmpty() )
-      continue;
-    mLocalItemsById.insert( item.id(), item );
-    mLocalItemsByRemoteId.insert( item.remoteId(), item );
-    mUnprocessedLocalItems.insert( item );
+  if ( !job->error() ) {
+    const Item::List list = static_cast<ItemFetchJob*>( job )->items();
+    foreach ( const Item &item, list ) {
+      if ( item.remoteId().isEmpty() )
+        continue;
+      mLocalItemsById.insert( item.id(), item );
+      mLocalItemsByRemoteId.insert( item.remoteId(), item );
+      mUnprocessedLocalItems.insert( item );
+    }
   }
 
   mLocalListDone = true;
@@ -334,6 +340,10 @@ void ItemSync::Private::processItems()
 
 void ItemSync::Private::deleteItems( const Item::List &items )
 {
+  // if in error state, better not change anything anymore
+  if ( q->error() )
+    return;
+
   foreach ( const Item &item, items ) {
     Item delItem( item );
     if ( !item.isValid() ) {
@@ -373,9 +383,7 @@ void ItemSync::Private::slotLocalDeleteDone( KJob* )
 
 void ItemSync::Private::slotLocalChangeDone( KJob * job )
 {
-  if ( job->error() )
-    return;
-
+  Q_UNUSED( job );
   mPendingJobs--;
   mProgress++;
 
@@ -384,9 +392,6 @@ void ItemSync::Private::slotLocalChangeDone( KJob * job )
 
 void ItemSync::Private::slotTransactionResult( KJob *job )
 {
-  if ( job->error() )
-    return;
-
   --mTransactionJobs;
   if ( mCurrentTransaction == job )
     mCurrentTransaction = 0;
@@ -411,6 +416,21 @@ void ItemSync::deliveryDone()
   Q_ASSERT( d->mStreaming );
   d->mDeliveryDone = true;
   d->execute();
+}
+
+void ItemSync::slotResult(KJob* job)
+{
+  if ( job->error() ) {
+    // pretent there were no errors
+    Akonadi::Job::removeSubjob( job );
+    // propagate the first error we got but continue, we might still be fed with stuff from a resource
+    if ( !error() ) {
+      setError( job->error() );
+      setErrorText( job->errorText() );
+    }
+  } else {
+    Akonadi::Job::slotResult( job );
+  }
 }
 
 #include "itemsync.moc"
