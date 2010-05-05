@@ -259,8 +259,9 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
 
     /**
      * Inform the client to send more literal data.
+     * @param size size of the requested literal in bytes
      */
-    void sendContinuationResponse();
+    void sendContinuationResponse( qint64 size );
 
     QIODevice *m_socket;
     QByteArray m_data;
@@ -268,7 +269,6 @@ class AKONADIPRIVATE_EXPORT ImapStreamParser
     QString m_tracerId;
     int m_position;
     qint64 m_literalSize;
-    qint64 m_continuationSize;
     bool m_peeking;
 };
 

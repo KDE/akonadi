@@ -36,7 +36,6 @@ ImapStreamParser::ImapStreamParser( QIODevice *socket ) :
   m_socket = socket;
   m_position = 0;
   m_literalSize = 0;
-  m_continuationSize = 0;
 }
 
 ImapStreamParser::~ImapStreamParser()
@@ -132,9 +131,8 @@ bool ImapStreamParser::hasLiteral()
     if ( m_position < m_data.length() && m_data[m_position] == '\n' )
       ++m_position;
 
-    m_continuationSize = qMin(m_position + m_literalSize - m_data.length(), (qint64)4096);
-    if (m_continuationSize >= 0)
-      sendContinuationResponse();
+    if ( m_literalSize >= 0 )
+      sendContinuationResponse( m_literalSize );
     return true;
   } else
   {
@@ -765,10 +763,10 @@ void ImapStreamParser::skipCurrentCommand()
   }
 }
 
-void ImapStreamParser::sendContinuationResponse()
+void ImapStreamParser::sendContinuationResponse( qint64 size )
 {
-  QByteArray block = "+ Ready for literal data (expecting "
-                   + QByteArray::number(  m_continuationSize ) + " bytes)\r\n";
+  const QByteArray block = "+ Ready for literal data (expecting "
+                   + QByteArray::number( size ) + " bytes)\r\n";
   m_socket->write(block);
   m_socket->waitForBytesWritten(30000);
 
