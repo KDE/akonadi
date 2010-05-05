@@ -35,7 +35,7 @@ class SessionPrivate;
  *
  * Every Job object has to be associated with a Session.
  * The session is responsible of scheduling its jobs.
- * For now only a simple serial execution is impleneted (the IMAP-like
+ * For now only a simple serial execution is implemented (the IMAP-like
  * protocol to communicate with the storage backend is capable of parallel
  * execution on a single session though).
  *
