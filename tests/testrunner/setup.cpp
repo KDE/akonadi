@@ -23,6 +23,7 @@
 #include <kdebug.h>
 #include <KProcess>
 #include <KStandardDirs>
+#include <KToolInvocation>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -213,6 +214,12 @@ void SetupTest::setupAgents()
 {
   if ( mAgentsCreated )
     return;
+
+  // Start KLauncher now, so that kdeinit4 and kded4 are started. Otherwise, those might get started
+  // on demand, for example in the Knut resource.
+  // This on-demand starting can cause crashes due to timing issues.
+  KToolInvocation::klauncher();
+
   mAgentsCreated = true;
   Config *config = Config::instance();
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
