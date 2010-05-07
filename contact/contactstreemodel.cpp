@@ -81,7 +81,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
       if ( column == 0 ) {
         const KABC::Picture picture = contact.photo();
         if ( picture.isIntern() ) {
-          return picture.data().scaled( QSize( 16, 16 ) );
+          return picture.data().scaled( QSize( 16, 16 ), Qt::KeepAspectRatio );
         } else {
           return KIcon( QLatin1String( "user-identity" ) );
         }
