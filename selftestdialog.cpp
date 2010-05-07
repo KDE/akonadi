@@ -630,7 +630,11 @@ QString SelfTestDialog::createReport()
 
 void SelfTestDialog::saveReport()
 {
-  const QString fileName =  KFileDialog::getSaveFileName( KUrl(), QString(), this, i18n( "Save Test Report" ) );
+  const QString defaultFileName = QLatin1String( "akonadi-selftest-report-" )
+                   + QDate::currentDate().toString( QLatin1String( "yyyyMMdd" ) )
+                   + QLatin1String( ".txt" );
+  const QString fileName =  KFileDialog::getSaveFileName( defaultFileName, QString(), this,
+                                                          i18n( "Save Test Report" ) );
   if ( fileName.isEmpty() )
     return;
 
