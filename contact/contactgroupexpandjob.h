@@ -33,8 +33,8 @@ namespace Akonadi {
 /**
  * @short Job that expands a ContactGroup to a list of contacts.
  *
- * This job takes a KABC::ContactGroup object and expands it to a list
- * of KABC::Addressee objects by creating temporary KABC::Addressee objects
+ * This job takes a KABC::ContactGroup object or a name of a contact group and
+ * expands it to a list of KABC::Addressee objects by creating temporary KABC::Addressee objects
  * for the KABC::ContactGroup::Data objects of the group and fetching the
  * complete contacts from the Akonadi storage for the
  * KABC::ContactGroup::ContactReferences of the group.
@@ -75,6 +75,16 @@ class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
     explicit ContactGroupExpandJob( const KABC::ContactGroup &group, QObject *parent = 0 );
 
     /**
+     * Creates a new contact group expand job.
+     *
+     * @param name The name of the contact group to expand.
+     * @param parent The parent object.
+     *
+     * @since 4.5
+     */
+    explicit ContactGroupExpandJob( const QString &name, QObject *parent = 0 );
+
+    /**
      * Destroys the contact group expand job.
      */
     ~ContactGroupExpandJob();
@@ -95,6 +105,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupExpandJob : public KJob
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void searchResult( KJob* ) )
     //@endcond
 };
 

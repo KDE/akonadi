@@ -21,6 +21,7 @@
 
 #include "contactgroupexpandjob.h"
 
+#include <akonadi/contact/contactgroupsearchjob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsearchjob.h>
@@ -33,6 +34,59 @@ class ContactGroupExpandJob::Private
     Private( const KABC::ContactGroup &group, ContactGroupExpandJob *parent )
       : mParent( parent ), mGroup( group ), mFetchCount( 0 )
     {
+    }
+
+    Private( const QString &name, ContactGroupExpandJob *parent )
+      : mParent( parent ), mName( name ), mFetchCount( 0 )
+    {
+    }
+
+    void resolveGroup()
+    {
+      for ( unsigned int i = 0; i < mGroup.dataCount(); ++i ) {
+        const KABC::ContactGroup::Data data = mGroup.data( i );
+
+        KABC::Addressee contact;
+        contact.setNameFromString( data.name() );
+        contact.insertEmail( data.email(), true );
+
+        mContacts.append( contact );
+      }
+
+      for ( unsigned int i = 0; i < mGroup.contactReferenceCount(); ++i ) {
+        const KABC::ContactGroup::ContactReference reference = mGroup.contactReference( i );
+
+        ItemFetchJob *job = new ItemFetchJob( Item( reference.uid().toLongLong() ), mParent );
+        job->fetchScope().fetchFullPayload();
+        job->setProperty( "preferredEmail", reference.preferredEmail() );
+
+        mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( fetchResult( KJob* ) ) );
+
+        mFetchCount++;
+      }
+
+      if ( mFetchCount == 0 ) // nothing to fetch, so we can return immediately
+        mParent->emitResult();
+    }
+
+    void searchResult( KJob *job )
+    {
+      if ( job->error() ) {
+        mParent->setError( job->error() );
+        mParent->setErrorText( job->errorText() );
+        mParent->emitResult();
+        return;
+      }
+
+      ContactGroupSearchJob *searchJob = qobject_cast<ContactGroupSearchJob*>( job );
+
+      if ( searchJob->contactGroups().isEmpty() ) {
+        mParent->emitResult();
+        return;
+      }
+
+      mGroup = searchJob->contactGroups().first();
+      resolveGroup();
     }
 
     void fetchResult( KJob *job )
@@ -62,6 +116,7 @@ class ContactGroupExpandJob::Private
 
     ContactGroupExpandJob *mParent;
     KABC::ContactGroup mGroup;
+    QString mName;
     KABC::Addressee::List mContacts;
 
     int mFetchCount;
@@ -72,6 +127,11 @@ ContactGroupExpandJob::ContactGroupExpandJob( const KABC::ContactGroup &group, Q
 {
 }
 
+ContactGroupExpandJob::ContactGroupExpandJob( const QString &name, QObject * parent )
+  : KJob( parent ), d( new Private( name, this ) )
+{
+}
+
 ContactGroupExpandJob::~ContactGroupExpandJob()
 {
   delete d;
@@ -79,30 +139,15 @@ ContactGroupExpandJob::~ContactGroupExpandJob()
 
 void ContactGroupExpandJob::start()
 {
-  for ( unsigned int i = 0; i < d->mGroup.dataCount(); ++i ) {
-    const KABC::ContactGroup::Data data = d->mGroup.data( i );
-
-    KABC::Addressee contact;
-    contact.setNameFromString( data.name() );
-    contact.insertEmail( data.email(), true );
-
-    d->mContacts.append( contact );
+  if ( !d->mName.isEmpty() ) {
+    // we have to search the contact group first
+    ContactGroupSearchJob *searchJob = new ContactGroupSearchJob( this );
+    searchJob->setQuery( ContactGroupSearchJob::Name, d->mName );
+    searchJob->setLimit( 1 );
+    connect( searchJob, SIGNAL( result( KJob* ) ), this, SLOT( searchResult( KJob* ) ) );
+  } else {
+    d->resolveGroup();
   }
-
-  for ( unsigned int i = 0; i < d->mGroup.contactReferenceCount(); ++i ) {
-    const KABC::ContactGroup::ContactReference reference = d->mGroup.contactReference( i );
-
-    ItemFetchJob *job = new ItemFetchJob( Item( reference.uid().toLongLong() ) );
-    job->fetchScope().fetchFullPayload();
-    job->setProperty( "preferredEmail", reference.preferredEmail() );
-
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchResult( KJob* ) ) );
-
-    d->mFetchCount++;
-  }
-
-  if ( d->mFetchCount == 0 ) // nothing to fetch, so we can return immediately
-    emitResult();
 }
 
 KABC::Addressee::List ContactGroupExpandJob::contacts() const
