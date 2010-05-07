@@ -26,6 +26,7 @@
 #include <kabc/contactgroup.h>
 #include <kglobal.h>
 #include <kicon.h>
+#include <kiconloader.h>
 #include <klocale.h>
 
 using namespace Akonadi;
@@ -34,11 +35,13 @@ class ContactsTreeModel::Private
 {
   public:
     Private()
-      : mColumns( ContactsTreeModel::Columns() << ContactsTreeModel::FullName )
+      : mColumns( ContactsTreeModel::Columns() << ContactsTreeModel::FullName ),
+        mIconSize( KIconLoader::global()->currentSize( KIconLoader::Small ) )
     {
     }
 
     Columns mColumns;
+    const int mIconSize;
 };
 
 ContactsTreeModel::ContactsTreeModel( ChangeRecorder *monitor, QObject *parent )
@@ -81,7 +84,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
       if ( column == 0 ) {
         const KABC::Picture picture = contact.photo();
         if ( picture.isIntern() ) {
-          return picture.data().scaled( QSize( 16, 16 ), Qt::KeepAspectRatio );
+          return picture.data().scaled( QSize( d->mIconSize, d->mIconSize ), Qt::KeepAspectRatio );
         } else {
           return KIcon( QLatin1String( "user-identity" ) );
         }
