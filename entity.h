@@ -90,11 +90,15 @@ class AKONADI_EXPORT Entity
 
     /**
      * Sets the remote @p revision of the entity.
+     *
+     * @since 4.5
      */
     void setRemoteRevision( const QString& revision );
 
     /**
      * Returns the remote revision of the entity.
+     *
+     * @since 4.5
      */
     QString remoteRevision() const;
 

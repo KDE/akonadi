@@ -32,12 +32,12 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
   public:
     /**
-     * Creates a new search attribute.
+     * Creates a new persistent search attribute.
      */
     PersistentSearchAttribute();
 
     /**
-     * Destructor.
+     * Destroys the persistent search attribute.
      */
     ~PersistentSearchAttribute();
 
@@ -47,7 +47,7 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
     QString queryLanguage() const;
 
     /**
-     * Sets the query language usef for this search.
+     * Sets the query language used for this search.
      * @param language the query language
      */
     void setQueryLanguage( const QString &language );

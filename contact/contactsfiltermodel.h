@@ -86,8 +86,10 @@ class AKONADI_CONTACT_EXPORT ContactsFilterModel : public QSortFilterProxyModel
     virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
+    //@endcond
 };
 
 }

@@ -69,14 +69,14 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     virtual ~CollectionFilterProxyModel();
 
     /**
-     * Add mime types to be shown by the filter.
+     * Adds a list of mime types to be shown by the filter.
      *
      * @param mimeTypes A list of mime types to be shown.
      */
     void addMimeTypeFilters( const QStringList &mimeTypes );
 
     /**
-     * Add mime type to be shown by the filter.
+     * Adds a mime type to be shown by the filter.
      *
      * @param mimeType A mime type to be shown.
      */
@@ -88,19 +88,20 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     QStringList mimeTypeFilters() const;
 
     /**
-     * Clear all mime type filters.
+     * Clears all mime type filters.
      */
     void clearFilters();
 
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
     /**
-     * Define exclude resources type
+     * TODO: discuss API, give better name!
      * @since 4.5
      */
     void addExcludeResourcesType( const QStringList &resourcesList );
 
     /**
+     * TODO: discuss API, give better name!
      * @since 4.5
      */
     QStringList excludeResourcesType() const;

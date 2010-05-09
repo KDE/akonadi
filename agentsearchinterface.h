@@ -28,14 +28,14 @@ class Collection;
 class AgentSearchInterfacePrivate;
 
 /**
-  Interface for agents (or resources) that support searching in their backend.
-  Inherit from this additionally to Akonadi::AgentBase (or Akonadi::ResourceBase)
-  and implement its two pure virtual methods.
-
-  Make sure to add the @c Search capability to the agent desktop file.
-
-  @since 4.5
-*/
+ * Interface for agents (or resources) that support searching in their backend.
+ * Inherit from this additionally to Akonadi::AgentBase (or Akonadi::ResourceBase)
+ * and implement its two pure virtual methods.
+ *
+ * Make sure to add the @c Search capability to the agent desktop file.
+ *
+ * @since 4.5
+ */
 class AKONADI_EXPORT AgentSearchInterface
 {
   public:
@@ -68,7 +68,9 @@ class AKONADI_EXPORT AgentSearchInterface
     virtual void removeSearch( const Akonadi::Collection &resultCollection ) = 0;
 
   private:
+    //@cond PRIVATE
     AgentSearchInterfacePrivate* const d;
+    //@endcond
 };
 
 }

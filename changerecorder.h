@@ -96,10 +96,14 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     void nothingToReplay();
 
   protected:
+    //@cond PRIVATE
     explicit ChangeRecorder( ChangeRecorderPrivate *d, QObject *parent = 0  );
+    //@endcond
 
   private:
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( ChangeRecorder )
+    //@endcond
 };
 
 }

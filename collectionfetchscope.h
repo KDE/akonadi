@@ -109,6 +109,7 @@ class AKONADI_EXPORT CollectionFetchScope
      * Returns whether unsubscribed collection should be included.
      *
      * @see setIncludeUnsubscribed()
+     * @since 4.5
      */
     bool includeUnsubscribed() const;
 

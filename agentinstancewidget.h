@@ -92,9 +92,9 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     QList<AgentInstance> selectedAgentInstances() const;
 
     /**
-      Returns the agent filter proxy model, use this to filter by
-      agent mimetype or capabilities.
-    */
+     * Returns the agent filter proxy model, use this to filter by
+     * agent mimetype or capabilities.
+     */
     AgentFilterProxyModel* agentFilterProxyModel() const;
 
     /**

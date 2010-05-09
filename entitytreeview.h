@@ -110,11 +110,15 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 
     /**
      * Sets whether to @p show the drop action menu on drop operation.
+     *
+     * @since 4.5
      */
     void setShowDropActionMenu( bool show );
 
     /**
      * Returns whether the drop action menu is shown on drop operation.
+     *
+     * @since 4.5
      */
     bool showDropActionMenu() const;
 

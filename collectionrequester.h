@@ -58,7 +58,7 @@ namespace Akonadi {
 class AKONADI_EXPORT CollectionRequester : public KHBox
 {
     Q_OBJECT
-    Q_DISABLE_COPY(CollectionRequester)
+    Q_DISABLE_COPY( CollectionRequester )
 
   public:
     /**
@@ -113,7 +113,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
     /**
      * Sets the @p collection of the requester.
      */
-    void setCollection( const Akonadi::Collection& collection );
+    void setCollection( const Akonadi::Collection &collection );
 
   Q_SIGNALS:
     /**
@@ -123,7 +123,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      *
      * @since 4.5
      */
-   void collectionChanged( const Akonadi::Collection& collection );
+   void collectionChanged( const Akonadi::Collection &collection );
 
   private:
     class Private;
