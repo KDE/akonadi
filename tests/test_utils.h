@@ -56,4 +56,23 @@ bool restartAkonadiServer()
     }
 }
 
+
+bool trackAkonadiProcess( bool track )
+{
+    QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
+                                    QLatin1String( "/" ),
+                                    QLatin1String( "org.kde.Akonadi.Testrunner" ),
+                                    QDBusConnection::sessionBus() );
+    if ( !testrunnerIface.isValid() )
+        kWarning() << "Unable to get a dbus interface to the testrunner!";
+
+    QDBusReply<void> reply = testrunnerIface.call( "trackAkonadiProcess", track );
+    if ( !reply.isValid() ) {
+        kWarning() << reply.error();
+        return false;
+    } else {
+        return true;
+    }
+}
+
 #endif

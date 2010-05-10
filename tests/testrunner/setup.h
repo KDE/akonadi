@@ -44,6 +44,7 @@ class SetupTest : public QObject
     Q_SCRIPTABLE void shutdownHarder();
     /** Synchronously restarts the server. */
     Q_SCRIPTABLE void restartAkonadiServer();
+    Q_SCRIPTABLE void trackAkonadiProcess( bool track );
 
   Q_SIGNALS:
     void setupDone();
@@ -81,6 +82,7 @@ class SetupTest : public QObject
     bool mShuttingDown;
     QSignalMapper *mSyncMapper;
     bool mAgentsCreated;
+    bool mTrackAkonadiProcess;
 };
 
 #endif

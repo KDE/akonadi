@@ -373,7 +373,8 @@ SetupTest::SetupTest() :
   mInternalBus( QDBusConnection::sessionBus() ),
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
-  mAgentsCreated( false )
+  mAgentsCreated( false ),
+  mTrackAkonadiProcess( true )
 {
 
   clearEnvironment();
@@ -504,6 +505,14 @@ QString SetupTest::basePath() const
 
 void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
 {
-  kWarning() << "Akonadi server process was terminated externally!";
-  emit serverExited( exitCode );
+  if ( mTrackAkonadiProcess || exitCode != EXIT_SUCCESS ) {
+    kWarning() << "Akonadi server process was terminated externally!";
+    emit serverExited( exitCode );
+  }
 }
+
+void SetupTest::trackAkonadiProcess(bool track)
+{
+  mTrackAkonadiProcess = track;
+}
+

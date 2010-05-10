@@ -24,6 +24,8 @@
 
 #include <qtest_akonadi.h>
 
+#include "test_utils.h"
+
 using namespace Akonadi;
 
 class ServerManagerTest : public QObject
@@ -33,6 +35,12 @@ class ServerManagerTest : public QObject
     void initTestCase()
     {
       QVERIFY( Control::start() );
+      trackAkonadiProcess( false );
+    }
+
+    void cleanupTestCase()
+    {
+      trackAkonadiProcess( true );
     }
 
     void testStartStop()
