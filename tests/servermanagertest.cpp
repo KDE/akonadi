@@ -57,14 +57,14 @@ class ServerManagerTest : public QObject
       QVERIFY( stopSpy.isEmpty() );
 
       QVERIFY( ServerManager::stop() );
-      QTest::qWait( 30000 );
+      QVERIFY( QTest::kWaitForSignal( ServerManager::self(), SIGNAL(stopped()), 5000 ) );
       QVERIFY( !ServerManager::isRunning() );
       QVERIFY( startSpy.isEmpty() );
       QCOMPARE( stopSpy.count(), 1 );
 
       QVERIFY( !ServerManager::stop() );
       QVERIFY( ServerManager::start() );
-      QTest::qWait( 5000 );
+      QVERIFY( QTest::kWaitForSignal( ServerManager::self(), SIGNAL(started()), 5000 ) );
       QVERIFY( ServerManager::isRunning() );
       QCOMPARE( startSpy.count(), 1 );
       QCOMPARE( stopSpy.count(), 1 );
@@ -72,6 +72,7 @@ class ServerManagerTest : public QObject
 
     void testRestart()
     {
+      QVERIFY( ServerManager::isRunning() );
       QSignalSpy startSpy( ServerManager::self(), SIGNAL(started()) );
       QVERIFY( startSpy.isValid() );
 
