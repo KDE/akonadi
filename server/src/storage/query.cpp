@@ -44,7 +44,7 @@ void Condition::addColumnCondition(const QString & column, CompareOperator op, c
 }
 
 Query::Condition::Condition(LogicOperator op) :
-    mCombineOp( op )
+  mCompareOp( Equals ), mCombineOp( op )
 {
 }
 
@@ -67,4 +67,3 @@ void Query::Condition::addCondition(const Condition & condition)
 {
   mSubConditions << condition;
 }
-

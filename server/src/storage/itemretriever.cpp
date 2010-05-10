@@ -124,15 +124,13 @@ enum QueryColumns {
 
 QSqlQuery ItemRetriever::buildQuery() const
 {
-  QueryBuilder qb;
+  QueryBuilder qb( PimItem::tableName() );
 
-  qb.addTable( PimItem::tableName() );
+  qb.addJoin( QueryBuilder::InnerJoin, MimeType::tableName(), PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );
 
-  qb.addLeftJoin( MimeType::tableName(), PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
 
-  qb.addLeftJoin( Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
-
-  qb.addLeftJoin( Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
   Query::Condition partJoinCondition;
   partJoinCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
@@ -140,7 +138,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
   }
   partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
-  qb.addLeftJoin( Part::tableName(), partJoinCondition );
+  qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), partJoinCondition );
 
   qb.addColumn( PimItem::idFullColumnName() );
   qb.addColumn( PimItem::remoteIdFullColumnName() );

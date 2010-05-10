@@ -31,114 +31,182 @@
 
 QTEST_MAIN( QueryBuilderTest )
 
-Q_DECLARE_METATYPE( Akonadi::QueryBuilder )
-
 using namespace Akonadi;
 
 void QueryBuilderTest::testQueryBuilder_data()
 {
-  QTest::addColumn<QueryBuilder>( "qb" );
+  mBuilders.clear();
+  QTest::addColumn<int>( "qbId" );
   QTest::addColumn<QString>( "sql" );
   QTest::addColumn<QList<QVariant> >( "bindValues" );
 
-  QueryBuilder qb( QueryBuilder::Select );
-  qb.addTable( "table" );
+  QueryBuilder qb( "table", QueryBuilder::Select );
   qb.addColumn( "col1" );
-  QTest::newRow( "simple select" ) << qb << QString( "SELECT col1 FROM table" ) << QList<QVariant>();
+  mBuilders << qb;
+  QTest::newRow( "simple select" ) << mBuilders.count() << QString( "SELECT col1 FROM table" ) << QList<QVariant>();
 
   qb.addColumn( "col2" );
-  QTest::newRow( "simple select 2" ) << qb << QString( "SELECT col1, col2 FROM table" ) << QList<QVariant>();
+  mBuilders << qb;
+  QTest::newRow( "simple select 2" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table" ) << QList<QVariant>();
 
   qb.addValueCondition( "col1", Query::Equals, QVariant( 5 ) );
   QList<QVariant> bindVals;
   bindVals << QVariant( 5 );
-  QTest::newRow( "single where" ) << qb << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 )" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "single where" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 )" ) << bindVals;
 
   qb.addColumnCondition( "col1", Query::LessOrEqual, "col2" );
-  QTest::newRow( "flat where" ) << qb << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 AND col1 <= col2 )" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "flat where" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 AND col1 <= col2 )" ) << bindVals;
 
   qb.setSubQueryMode( Query::Or );
-  QTest::newRow( "flat where 2" ) << qb << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 )" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "flat where 2" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 )" ) << bindVals;
 
   Condition subCon;
   subCon.addColumnCondition( "col1", Query::Greater, "col2" );
   subCon.addValueCondition( "col1", Query::NotEquals, QVariant() );
   qb.addCondition( subCon );
-  QTest::newRow( "hierarchical where" ) << qb << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 OR ( col1 > col2 AND col1 <> NULL ) )" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "hierarchical where" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 OR ( col1 > col2 AND col1 <> NULL ) )" ) << bindVals;
 
-  qb = QueryBuilder();
-  qb.addTable( "table" );
+  qb = QueryBuilder( "table" );
   qb.addColumn( "col1" );
   qb.addSortColumn( "col1" );
-  QTest::newRow( "single order by" ) << qb << QString( "SELECT col1 FROM table ORDER BY col1 ASC" ) << QList<QVariant>();
+  mBuilders << qb;
+  QTest::newRow( "single order by" ) << mBuilders.count() << QString( "SELECT col1 FROM table ORDER BY col1 ASC" ) << QList<QVariant>();
 
   qb.addSortColumn( "col2", Query::Descending );
-  QTest::newRow( "multiple order by" ) << qb << QString( "SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC" ) << QList<QVariant>();
+  mBuilders << qb;
+  QTest::newRow( "multiple order by" ) << mBuilders.count() << QString( "SELECT col1 FROM table ORDER BY col1 ASC, col2 DESC" ) << QList<QVariant>();
 
-  qb = QueryBuilder();
-  qb.addTable( "table" );
+  qb = QueryBuilder( "table" );
   qb.addColumn( "col1" );
   QStringList vals;
   vals << "a" << "b" << "c";
   qb.addValueCondition( "col1", Query::In, vals );
   bindVals.clear();
   bindVals << QString("a") << QString("b") << QString("c");
-  QTest::newRow( "where in" ) << qb << QString( "SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2 ) )" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "where in" ) << mBuilders.count() << QString( "SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2 ) )" ) << bindVals;
 
-  qb = QueryBuilder( QueryBuilder::Update );
-  qb.addTable( "table" );
+  qb = QueryBuilder( "table", QueryBuilder::Update );
   qb.setColumnValue( "col1", QString( "bla" ) );
   bindVals.clear();
   bindVals << QString( "bla" );
-  QTest::newRow( "update" ) << qb << QString( "UPDATE table SET col1 = :0" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "update" ) << mBuilders.count() << QString( "UPDATE table SET col1 = :0" ) << bindVals;
 
-  qb = QueryBuilder( QueryBuilder::Update );
+  qb = QueryBuilder( "table1", QueryBuilder::Update );
   qb.setDatabaseType( QueryBuilder::MySQL );
-  qb.addTable( "table1" );
-  qb.addTable( "table2" );
+  qb.addJoin( QueryBuilder::InnerJoin, "table2", "table1.id", "table2.id" );
+  qb.addJoin( QueryBuilder::InnerJoin, "table3", "table1.id", "table3.id" );
   qb.setColumnValue( "col1", QString( "bla" ) );
-  qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
   bindVals.clear();
   bindVals << QString( "bla" );
-  QTest::newRow( "update multi table MYSQL" ) << qb << QString( "UPDATE table1, table2 SET col1 = :0 WHERE ( table1.id = table2.id )" )
+  mBuilders << qb;
+  QTest::newRow( "update multi table MYSQL" ) << mBuilders.count() << QString( "UPDATE table1, table2, table3 SET col1 = :0 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )" )
       << bindVals;
 
-  qb = QueryBuilder( QueryBuilder::Update );
+  qb = QueryBuilder( "table1", QueryBuilder::Update );
   qb.setDatabaseType( QueryBuilder::PostgreSQL );
-  qb.addTable( "table1" );
-  qb.addTable( "table2" );
+  qb.addJoin( QueryBuilder::InnerJoin, "table2", "table1.id", "table2.id" );
+  qb.addJoin( QueryBuilder::InnerJoin, "table3", "table1.id", "table3.id" );
   qb.setColumnValue( "col1", QString( "bla" ) );
-  qb.addColumnCondition( "table1.id", Query::Equals, "table2.id" );
-  QTest::newRow( "update multi table PSQL" ) << qb << QString( "UPDATE table1 SET col1 = :0 FROM table2 WHERE ( table1.id = table2.id )" )
+  mBuilders << qb;
+  QTest::newRow( "update multi table PSQL" ) << mBuilders.count() << QString( "UPDATE table1 SET col1 = :0 FROM table2 JOIN table3 WHERE ( ( table1.id = table2.id ) AND ( table1.id = table3.id ) )" )
       << bindVals;
+  ///TODO: test for subquery in SQLite case
 
-  qb = QueryBuilder( QueryBuilder::Insert );
-  qb.addTable( "table" );
+  qb = QueryBuilder( "table", QueryBuilder::Insert );
   qb.setColumnValue( "col1", QString( "bla" ) );
-  QTest::newRow( "insert single column" ) << qb << QString( "INSERT INTO table (col1) VALUES (:0)" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "insert single column" ) << mBuilders.count() << QString( "INSERT INTO table (col1) VALUES (:0)" ) << bindVals;
 
-  qb = QueryBuilder( QueryBuilder::Insert );
-  qb.addTable( "table" );
+  qb = QueryBuilder( "table", QueryBuilder::Insert );
   qb.setColumnValue( "col1", QString( "bla" ) );
   qb.setColumnValue( "col2", 5 );
   bindVals << 5;
-  QTest::newRow( "insert multi column" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1)" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "insert multi column" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1)" ) << bindVals;
 
-  qb = QueryBuilder( QueryBuilder::Insert );
+  qb = QueryBuilder( "table", QueryBuilder::Insert );
   qb.setDatabaseType( QueryBuilder::PostgreSQL );
-  qb.addTable( "table" );
   qb.setColumnValue( "col1", QString( "bla" ) );
   qb.setColumnValue( "col2", 5 );
-  QTest::newRow( "insert multi column PSQL" ) << qb << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
+  mBuilders << qb;
+  QTest::newRow( "insert multi column PSQL" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
+
+  {
+    /// SELECT with JOINS
+    QueryBuilder qbTpl = QueryBuilder( "table1", QueryBuilder::Select );
+    qbTpl.setDatabaseType( QueryBuilder::MySQL );
+    qbTpl.addColumn( "col" );
+    bindVals.clear();
+
+    QueryBuilder qb = qbTpl;
+    qb.addJoin( QueryBuilder::InnerJoin, "table2", "table2.t1_id", "table1.id" );
+    qb.addJoin( QueryBuilder::LeftJoin, "table3", "table1.id", "table3.t1_id" );
+    mBuilders << qb;
+    QTest::newRow( "select left join and inner join (different tables)" ) << mBuilders.count()
+        << QString( "SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id ) LEFT JOIN table3 ON ( table1.id = table3.t1_id )" ) << bindVals;
+
+    qb = qbTpl;
+    qb.addJoin( QueryBuilder::InnerJoin, "table2", "table2.t1_id", "table1.id" );
+    qb.addJoin( QueryBuilder::LeftJoin, "table2", "table2.t1_id", "table1.id" );
+    mBuilders << qb;
+    // join-condition too verbose but should not have any impact on speed
+    QTest::newRow( "select left join and inner join (same table)" ) << mBuilders.count()
+        << QString( "SELECT col FROM table1 INNER JOIN table2 ON ( table2.t1_id = table1.id AND ( table2.t1_id = table1.id ) )" ) << bindVals;
+
+    // order of joins in the query should be the same as we add the joins in code
+    qb = qbTpl;
+    qb.addJoin( QueryBuilder::InnerJoin, "b_table", "b_table.t1_id", "table1.id" );
+    qb.addJoin( QueryBuilder::InnerJoin, "a_table", "a_table.b_id", "b_table.id" );
+    mBuilders << qb;
+    QTest::newRow( "select join order" ) << mBuilders.count()
+        << QString( "SELECT col FROM table1 INNER JOIN b_table ON ( b_table.t1_id = table1.id ) INNER JOIN a_table ON ( a_table.b_id = b_table.id )" ) << bindVals;
+  }
+
+  {
+    /// UPDATE with INNER JOIN
+    QueryBuilder qbTpl = QueryBuilder( "table1", QueryBuilder::Update );
+    qbTpl.setColumnValue( "col", 42 );
+    qbTpl.addJoin( QueryBuilder::InnerJoin, "table2", "table2.t1_id", "table1.id" );
+    qbTpl.addValueCondition( "table2.answer", NotEquals, "foo" );
+    bindVals.clear();
+    bindVals << QVariant( 42 ) << QVariant( "foo" );
+
+    qb = qbTpl;
+    qb.setDatabaseType( QueryBuilder::MySQL );
+    mBuilders << qb;
+    QTest::newRow( "update inner join MySQL" ) << mBuilders.count()
+        << QString( "UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
+
+    qb = qbTpl;
+    qb.setDatabaseType( QueryBuilder::PostgreSQL );
+    mBuilders << qb;
+    QTest::newRow( "update inner join PSQL" ) << mBuilders.count()
+        << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
+
+    qb = qbTpl;
+    qb.setDatabaseType( QueryBuilder::Sqlite );
+    mBuilders << qb;
+    QTest::newRow( "update inner join SQLite" ) << mBuilders.count()
+        << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( ( SELECT table2.answer WHERE table2.t1_id = table1.id ) <> ( :2 ) )" ) << bindVals;
+  }
 }
 
 void QueryBuilderTest::testQueryBuilder()
 {
-  QFETCH( QueryBuilder, qb );
+  QFETCH( int, qbId );
   QFETCH( QString, sql );
   QFETCH( QList<QVariant>, bindValues );
 
-  QVERIFY( qb.exec() );
-  QCOMPARE( qb.mStatement, sql );
-  QCOMPARE( qb.mBindValues, bindValues );
+  --qbId;
+
+  QVERIFY( mBuilders[qbId].exec() );
+  QEXPECT_FAIL( "update inner join SQLite", "SubQuery not yet implemented as Join-alternative in SQLite", Abort );
+  QCOMPARE( mBuilders[qbId].mStatement, sql );
+  QCOMPARE( mBuilders[qbId].mBindValues, bindValues );
 }

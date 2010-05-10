@@ -55,8 +55,8 @@ bool Expunge::parseStream()
   }
 
   SelectQueryBuilder<PimItem> qb;
-  qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+              PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
   qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
   if ( qb.exec() ) {

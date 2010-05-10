@@ -79,7 +79,8 @@ static QString sortOrderToString( Query::SortOrder order )
   return QString();
 }
 
-QueryBuilder::QueryBuilder( QueryType type ) :
+QueryBuilder::QueryBuilder( const QString& table, QueryBuilder::QueryType type ) :
+    mTable( table ),
 #ifndef QUERYBUILDER_UNITTEST
     mDatabaseType( qsqlDriverNameToDatabaseType( DataStore::self()->database().driverName() ) ),
     mQuery( DataStore::self()->database() ),
@@ -96,25 +97,26 @@ void QueryBuilder::setDatabaseType( DatabaseType type )
   mDatabaseType = type;
 }
 
-void QueryBuilder::addTable(const QString & table)
+void QueryBuilder::addJoin( JoinType joinType, const QString& table, const Query::Condition& condition )
 {
-  Q_ASSERT( mTables.isEmpty() || mLeftJoins.isEmpty() );
-  if ( !mTables.contains( table ) )
-    mTables << table;
+  Q_ASSERT( ( joinType == InnerJoin && ( mType == Select || mType == Update ) ) ||
+            ( joinType == LeftJoin && mType == Select ) );
+
+  if ( mJoinedTables.contains( table ) ) {
+    // InnerJoin is more restrictive than a LeftJoin, hence use that in doubt
+    mJoins[table].first = qMin( joinType, mJoins.value( table ).first );
+    mJoins[table].second.addCondition( condition );
+  } else {
+    mJoins[table] = qMakePair( joinType, condition );
+    mJoinedTables << table;
+  }
 }
 
-void QueryBuilder::addLeftJoin(const QString& table, const Query::Condition& condition)
-{
-  Q_ASSERT( mType == Select );
-  Q_ASSERT( mTables.count() <= 1 );
-  mLeftJoins.insert( table, condition );
-}
-
-void QueryBuilder::addLeftJoin(const QString& table, const QString& col1, const QString& col2)
+void QueryBuilder::addJoin( JoinType joinType, const QString& table, const QString& col1, const QString& col2 )
 {
   Query::Condition condition;
-  condition.addColumnCondition( col1, Akonadi::Query::Equals, col2 );
-  addLeftJoin(table, condition);
+  condition.addColumnCondition( col1, Query::Equals, col2 );
+  addJoin( joinType, table, condition );
 }
 
 void QueryBuilder::addValueCondition(const QString & column, Query::CompareOperator op, const QVariant & value)
@@ -136,6 +138,10 @@ bool QueryBuilder::exec()
 {
   QString statement;
 
+  // we add the ON conditions of Inner Joins in a Update query here
+  // but don't want to change the mRootCondition on each exec().
+  Query::Condition whereCondition = mRootCondition;
+
   switch ( mType ) {
     case Select:
       statement += QLatin1String( "SELECT " );
@@ -144,24 +150,26 @@ bool QueryBuilder::exec()
       Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
-      Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
-      statement += mTables.join( QLatin1String( ", " ) );
-      if ( !mLeftJoins.isEmpty() ) {
-        QMap< QString, Query::Condition >::const_iterator it = mLeftJoins.constBegin();
-        while ( it != mLeftJoins.constEnd() ) {
-          statement += QLatin1String( " LEFT JOIN " );
-          statement += it.key();
-          statement += QLatin1String( " ON " );
-          statement += buildWhereCondition( it.value() );
-          ++it;
+      statement += mTable;
+      foreach ( const QString& joinedTable, mJoinedTables ) {
+        const QPair< JoinType, Query::Condition >& join = mJoins.value( joinedTable );
+        switch ( join.first ) {
+          case LeftJoin:
+            statement += QLatin1String( " LEFT JOIN " );
+            break;
+          case InnerJoin:
+            statement += QLatin1String( " INNER JOIN " );
+            break;
         }
+        statement += joinedTable;
+        statement += QLatin1String( " ON " );
+        statement += buildWhereCondition( join.second );
       }
      break;
     case Insert:
     {
       statement += QLatin1String( "INSERT INTO " );
-      Q_ASSERT_X( mTables.count() == 1, "QueryBuilder::exec()", "Specify exactly one table" );
-      statement += mTables.first();
+      statement += mTable;
       statement += QLatin1String(" (");
       typedef QPair<QString,QVariant> StringVariantPair;
       QStringList cols, vals;
@@ -179,13 +187,21 @@ bool QueryBuilder::exec()
     }
     case Update:
     {
-      statement += QLatin1String( "UPDATE " );
-      Q_ASSERT_X( mTables.count() > 0, "QueryBuilder::exec()", "No tables specified" );
+      ///TODO: fix joined Update tables for SQLite by using subqueries
+      // put the ON condition into the WHERE part of the UPDATE query
+      foreach ( const QString& table, mJoinedTables ) {
+        QPair< JoinType, Query::Condition > join = mJoins.value( table );
+        Q_ASSERT( join.first == InnerJoin );
+        whereCondition.addCondition( join.second );
+      }
 
-      if ( mDatabaseType == MySQL ) {
-        statement += mTables.join( QLatin1String( ", " ) );
-      } else {
-         statement += mTables.at( 0 );
+      statement += QLatin1String( "UPDATE " );
+      statement += mTable;
+
+      if ( mDatabaseType == MySQL && !mJoinedTables.isEmpty() ) {
+        // for mysql we list all tables directly
+        statement += QLatin1String( ", " );
+        statement += mJoinedTables.join( QLatin1String( ", " ) );
       }
 
       statement += QLatin1String( " SET " );
@@ -200,29 +216,26 @@ bool QueryBuilder::exec()
       }
       statement += updStmts.join( QLatin1String( ", " ) );
 
-      if ( mDatabaseType != MySQL ) {
-        // FROM TABLES
-        QString part = QLatin1String( " FROM" );
-        for ( int i = 1; i <  mTables.size(); i++ ) {
-          statement += part + QLatin1String( " " ) + mTables.at( i );
-          part = QLatin1String( " JOIN " );
-        }
+      if ( mDatabaseType == PostgreSQL && !mJoinedTables.isEmpty() ) {
+        // PSQL have this syntax
+        // FROM t1 JOIN t2 JOIN ...
+        statement += QLatin1String( " FROM " );
+        statement += mJoinedTables.join( QLatin1String( " JOIN " ) );
       }
 
       break;
     }
     case Delete:
       statement += QLatin1String( "DELETE FROM " );
-      Q_ASSERT_X( mTables.count() == 1, "QueryBuilder::exec()", "Exactly one table needed" );
-      statement += mTables.first();
+      statement += mTable;
       break;
     default:
       Q_ASSERT_X( false, "QueryBuilder::exec()", "Unknown enum value" );
   }
 
-  if ( !mRootCondition.isEmpty() ) {
+  if ( !whereCondition.isEmpty() ) {
     statement += QLatin1String(" WHERE ");
-    statement += buildWhereCondition( mRootCondition );
+    statement += buildWhereCondition( whereCondition );
   }
 
   if ( !mSortColumns.isEmpty() ) {

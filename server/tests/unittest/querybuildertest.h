@@ -22,12 +22,19 @@
 
 #include <QtCore/QObject>
 
+namespace Akonadi {
+class QueryBuilder;
+}
+
 class QueryBuilderTest : public QObject
 {
   Q_OBJECT
   private slots:
     void testQueryBuilder_data();
     void testQueryBuilder();
+
+  private:
+    QList< Akonadi::QueryBuilder > mBuilders;
 };
 
 

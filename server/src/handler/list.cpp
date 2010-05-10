@@ -172,9 +172,9 @@ bool List::parseStream()
        col = Collection::retrieveById( baseCollection );
     } else if ( mScope.scope() == Scope::Rid ) {
       SelectQueryBuilder<Collection> qb;
-      qb.addTable( Resource::tableName() );
       qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rid );
-      qb.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
+      qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
+                  Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
       if ( mResource.isValid() )
         qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, mResource.id() );
       else if ( connection()->resourceContext().isValid() )

@@ -79,10 +79,10 @@ enum PartQueryColumns {
 
 QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )
 {
-  QueryBuilder partQuery;
+  ///TODO: merge with ItemQuery
+  QueryBuilder partQuery( PimItem::tableName() );
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
-    partQuery.addTable( PimItem::tableName() );
-    partQuery.addTable( Part::tableName() );
+    partQuery.addJoin( QueryBuilder::InnerJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
     partQuery.addColumn( PimItem::idFullColumnName() );
     partQuery.addColumn( Part::nameFullColumnName() );
     partQuery.addColumn( Part::dataFullColumnName() );
@@ -90,7 +90,6 @@ QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayl
 
     partQuery.addColumn( Part::versionFullColumnName() );
 
-    partQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
     Query::Condition cond( Query::Or );
@@ -128,12 +127,14 @@ enum ItemQueryColumns {
 
 QSqlQuery FetchHelper::buildItemQuery()
 {
-  QueryBuilder itemQuery;
+  QueryBuilder itemQuery( PimItem::tableName() );
 
-  itemQuery.addTable( PimItem::tableName() );
-  itemQuery.addTable( MimeType::tableName() );
-  itemQuery.addTable( Collection::tableName() );
-  itemQuery.addTable( Resource::tableName() );
+  itemQuery.addJoin( QueryBuilder::InnerJoin, MimeType::tableName(),
+                     PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );
+  itemQuery.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+                     PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
+  itemQuery.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
+                     Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
   // make sure the columns indexes here and in the constants defined at the top of the file
   itemQuery.addColumn( PimItem::idFullColumnName() );
@@ -145,10 +146,6 @@ QSqlQuery FetchHelper::buildItemQuery()
   itemQuery.addColumn( PimItem::sizeFullColumnName() );
   itemQuery.addColumn( PimItem::datetimeFullColumnName() );
   itemQuery.addColumn( PimItem::collectionIdFullColumnName() );
-
-  itemQuery.addColumnCondition( PimItem::mimeTypeIdFullColumnName(), Query::Equals, MimeType::idFullColumnName() );
-  itemQuery.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
-  itemQuery.addColumnCondition( Collection::resourceIdFullColumnName(), Query::Equals, Resource::idFullColumnName() );
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
@@ -171,14 +168,13 @@ enum FlagQueryColumns {
 
 QSqlQuery FetchHelper::buildFlagQuery()
 {
-  QueryBuilder flagQuery;
-  flagQuery.addTable( PimItem::tableName() );
-  flagQuery.addTable( PimItemFlagRelation::tableName() );
-  flagQuery.addTable( Flag::tableName() );
+  QueryBuilder flagQuery( PimItem::tableName() );
+  flagQuery.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+                     PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
+  flagQuery.addJoin( QueryBuilder::InnerJoin, Flag::tableName(),
+                     Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   flagQuery.addColumn( PimItem::idFullColumnName() );
   flagQuery.addColumn( Flag::nameFullColumnName() );
-  flagQuery.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-  flagQuery.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
   ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
@@ -346,8 +342,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 void FetchHelper::updateItemAccessTime()
 {
   Transaction transaction( mConnection->storageBackend() );
-  QueryBuilder qb( QueryBuilder::Update );
-  qb.addTable( PimItem::tableName() );
+  QueryBuilder qb( PimItem::tableName(), QueryBuilder::Update );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
 

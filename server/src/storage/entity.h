@@ -67,8 +67,7 @@ class AKONADIPRIVATE_EXPORT Entity
       if ( !db.isOpen() )
         return -1;
 
-      CountQueryBuilder builder;
-      builder.addTable( T::tableName() );
+      CountQueryBuilder builder( T::tableName() );
       builder.addValueCondition( column, Query::Equals, value );
 
       if ( !builder.exec() ) {
@@ -89,8 +88,7 @@ class AKONADIPRIVATE_EXPORT Entity
       if ( !db.isOpen() )
         return false;
 
-      QueryBuilder builder( QueryBuilder::Delete );
-      builder.addTable( T::tableName() );
+      QueryBuilder builder( T::tableName(), QueryBuilder::Delete );
       builder.addValueCondition( column, Query::Equals, value );
 
       if ( !builder.exec() ) {
@@ -112,8 +110,7 @@ class AKONADIPRIVATE_EXPORT Entity
       if ( !db.isOpen() )
         return false;
 
-      CountQueryBuilder builder;
-      builder.addTable( T::tableName() );
+      CountQueryBuilder builder( T::tableName() );
       builder.addValueCondition( T::leftColumn(), Query::Equals, leftId );
       builder.addValueCondition( T::rightColumn(), Query::Equals, rightId );
 
@@ -172,8 +169,7 @@ class AKONADIPRIVATE_EXPORT Entity
       if ( !db.isOpen() )
         return false;
 
-      QueryBuilder builder( QueryBuilder::Delete );
-      builder.addTable( T::tableName() );
+      QueryBuilder builder( T::tableName(), QueryBuilder::Delete );
       builder.addValueCondition( T::leftColumn(), Query::Equals, leftId );
       builder.addValueCondition( T::rightColumn(), Query::Equals, rightId );
 
@@ -202,8 +198,7 @@ class AKONADIPRIVATE_EXPORT Entity
       if ( !db.isOpen() )
         return false;
 
-      QueryBuilder builder( QueryBuilder::Delete );
-      builder.addTable( T::tableName() );
+      QueryBuilder builder( T::tableName(), QueryBuilder::Delete );
       switch ( side ) {
         case Left:
           builder.addValueCondition( T::leftColumn(), Query::Equals, id );

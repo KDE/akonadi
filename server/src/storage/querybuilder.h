@@ -56,9 +56,23 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     };
 
     /**
+     * When the same table gets joined as both, Inner- and LeftJoin,
+     * it will be merged into a single InnerJoin since it is more
+     * restrictive.
+     */
+    enum JoinType {
+      ///NOTE: only supported for UPDATE and SELECT queries.
+      InnerJoin,
+      ///NOTE: only supported for SELECT queries
+      LeftJoin
+    };
+
+    /**
       Creates a new query builder.
+
+      @param table The main table to operate on.
     */
-    explicit QueryBuilder( QueryType type = Select );
+    explicit QueryBuilder( const QString& table, QueryType type = Select );
 
     /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
@@ -67,35 +81,26 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     void setDatabaseType( DatabaseType type );
 
     /**
-      Add a table to the FROM part of the query. Use this together with WHERE conditions
-      for natural joins.
+      Join a table to the query.
 
-      NOTE: it is _not_ supported to use this for natural join together with a left join.
-      @param table The table name.
-    */
-    void addTable( const QString &table );
-
-    /**
-      Add a table to the LEFT JOIN part of the query.
-
-      NOTE: only supported for Select queries.
-      NOTE: it is _not_ supported to use natural join (i.e. @c addTable()) together with a left join.
+      NOTE: make sure the @c JoinType is supported by the current @c QueryType
+      @param joinType The type of JOIN you want to add.
       @param table The table to join.
       @param condition the ON condition for this join.
     */
-    void addLeftJoin(const QString &table, const Query::Condition &condition);
+    void addJoin( JoinType joinType, const QString &table, const Query::Condition &condition );
 
     /**
-     Add a table to the LEFT JOIN part of the query.
-     This is a convenience method to create simple 'LEFT JOIN t ON c1 = c2' joins.
+      Join a table to the query.
+      This is a convenience method to create simple joins like e.g. 'LEFT JOIN t ON c1 = c2'.
 
-     NOTE: only supported for Select queries.
-     NOTE: it is _not_ supported to use natural join (i.e. @c addTable()) together with a left join.
-     @param table The table to join.
-     @param col1 The first column for the ON statement.
-     @param col2 The second column for the ON statement.
+      NOTE: make sure the @c JoinType is supported by the current @c QueryType
+      @param joinType The type of JOIN you want to add.
+      @param table The table to join.
+      @param col1 The first column for the ON statement.
+      @param col2 The second column for the ON statement.
     */
-    void addLeftJoin(const QString &table, const QString &col1, const QString &col2);
+    void addJoin( JoinType joinType, const QString &table, const QString &col1, const QString &col2 );
 
     /**
       Adds the given columns to a select query.
@@ -182,16 +187,20 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     QString buildWhereCondition( const Query::Condition &cond );
 
   private:
+    QString mTable;
     DatabaseType mDatabaseType;
     Query::Condition mRootCondition;
-    QStringList mTables;
     QSqlQuery mQuery;
     QueryType mType;
     QStringList mColumns;
     QList<QVariant> mBindValues;
     QList<QPair<QString, Query::SortOrder> > mSortColumns;
     QList<QPair<QString, QVariant> > mColumnValues;
-    QMap<QString, Query::Condition> mLeftJoins;
+
+    // we must make sure that the tables are joined in the correct order
+    // QMap sorts by key which might invalidate the queries
+    QStringList mJoinedTables;
+    QMap< QString, QPair< JoinType, Query::Condition > > mJoins;
     bool mDistinct;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;

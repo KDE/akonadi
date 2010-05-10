@@ -302,7 +302,6 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
     return QList&lt;<xsl:value-of select="$className"/>&gt;();
 
   SelectQueryBuilder&lt;<xsl:value-of select="$className"/>&gt; qb;
-  qb.addTable( tableName() );
   if ( value.isNull() )
     qb.addValueCondition( key, Query::Is, QVariant() );
   else
@@ -432,8 +431,7 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
   if ( !db.isOpen() )
     return false;
 
-  QueryBuilder qb( QueryBuilder::Insert );
-  qb.addTable( tableName() );
+  QueryBuilder qb( tableName(), QueryBuilder::Insert );
   <xsl:for-each select="column[@name != 'id']">
     <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
     <xsl:if test="$refColumn = 'id'">

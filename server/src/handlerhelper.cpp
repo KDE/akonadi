@@ -80,8 +80,7 @@ QString HandlerHelper::pathForCollection(const Collection & col)
 
 int HandlerHelper::itemCount(const Collection & col)
 {
-  CountQueryBuilder qb;
-  qb.addTable( PimItem::tableName() );
+  CountQueryBuilder qb( PimItem::tableName() );
   qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
   if ( !qb.exec() )
     return -1;
@@ -90,13 +89,12 @@ int HandlerHelper::itemCount(const Collection & col)
 
 int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & flag)
 {
-  CountQueryBuilder qb;
-  qb.addTable( PimItem::tableName() );
-  qb.addTable( Flag::tableName() );
-  qb.addTable( PimItemFlagRelation::tableName() );
+  CountQueryBuilder qb( PimItem::tableName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+              PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, Flag::tableName(),
+              Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, PimItemFlagRelation::leftFullColumnName() );
-  qb.addColumnCondition( Flag::idFullColumnName(), Query::Equals, PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
   if ( !qb.exec() )
     return -1;
@@ -115,8 +113,7 @@ int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & 
 
 qint64 HandlerHelper::itemsTotalSize(const Collection & col)
 {
-  QueryBuilder qb;
-  qb.addTable( PimItem::tableName() );
+  QueryBuilder qb( PimItem::tableName() );
   qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
   qb.addColumn( QLatin1String("sum(size)") );
 

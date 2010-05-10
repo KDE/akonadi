@@ -36,7 +36,7 @@ class CountQueryBuilder : public QueryBuilder
     /**
       Creates a new query builder.
     */
-    inline CountQueryBuilder() : QueryBuilder( Select )
+    inline CountQueryBuilder( const QString& table ) : QueryBuilder( table, Select )
     {
       addColumn( QLatin1String( "count(*)" ) );
     }

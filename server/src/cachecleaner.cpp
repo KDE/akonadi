@@ -63,8 +63,7 @@ void CacheCleaner::cleanCache()
 
     // find all expired item parts
     SelectQueryBuilder<Part> qb;
-    qb.addTable( PimItem::tableName() );
-    qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+    qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdColumn(), PimItem::idFullColumnName() );
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );

@@ -215,8 +215,7 @@ bool DataStore::invalidateItemCache( const PimItem &item )
 {
   // find all expired item parts
   SelectQueryBuilder<Part> qb;
-  qb.addTable( PimItem::tableName() );
-  qb.addColumnCondition( PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
   qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
   qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
@@ -277,8 +276,7 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
 {
   Transaction transaction( DataStore::self() );
 
-  QueryBuilder qb( QueryBuilder::Update );
-  qb.addTable( Collection::tableName() );
+  QueryBuilder qb( Collection::tableName(), QueryBuilder::Update );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
   if ( !qb.exec() )
@@ -490,14 +488,16 @@ bool DataStore::cleanupPimItems( const Collection &collection )
   if ( !m_dbOpened || !collection.isValid() )
     return false;
 
-  QueryBuilder qb( QueryBuilder::Select );
-  qb.addTable( Flag::tableName() );
-  qb.addTable( PimItemFlagRelation::tableName() );
-  qb.addTable( PimItem::tableName() );
+  QueryBuilder qb( Flag::tableName(), QueryBuilder::Select );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
+              PimItemFlagRelation::rightFullColumnName(), Flag::idFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(),
+              PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
+
   qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
+
   qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\Deleted") );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
-  qb.addColumnCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, Flag::idFullColumnName() );
 
   if ( !qb.exec() )
     return false;

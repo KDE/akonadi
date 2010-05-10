@@ -34,10 +34,9 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const
   QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
   if ( collection.isValid() ) {
     if ( collection.resource().isVirtual() ) {
-      qb.addTable( CollectionPimItemRelation::tableName() );
+      qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+                  CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
       qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id() );
-      qb.addColumnCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals,
-                             PimItem::idFullColumnName() );
     } else {
       qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, collection.id() );
     }
@@ -60,11 +59,10 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::In, rids );
 
   if ( connection->resourceContext().isValid() ) {
-    qb.addTable( Collection::tableName() );
-    qb.addColumnCondition( PimItem::collectionIdFullColumnName(), Query::Equals, Collection::idFullColumnName() );
+    qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+                PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
   } else if ( connection->selectedCollectionId() > 0 ) {
-    qb.addTable( Collection::tableName() );
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, connection->selectedCollectionId() );
   }
 }
