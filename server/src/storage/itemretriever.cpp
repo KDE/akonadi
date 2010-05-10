@@ -224,7 +224,7 @@ void ItemRetriever::exec()
     query.next();
   }
 
-  akDebug() << "Closing queries and sending out requests.";
+  //akDebug() << "Closing queries and sending out requests.";
 
   query.finish();
 
