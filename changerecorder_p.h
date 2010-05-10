@@ -153,8 +153,15 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
         return;
 
       QFile file( settings->fileName() + QLatin1String( "_changes.dat" ) );
-      if ( !file.open( QIODevice::WriteOnly ) )
+      QFileInfo info( file );
+      if ( !QFile::exists( info.absolutePath() ) ) {
+        QDir dir;
+        dir.mkpath( info.absolutePath() );
+      }
+      if ( !file.open( QIODevice::WriteOnly ) ) {
+        qWarning() << "could not save notifications to file " << file.fileName();
         return;
+      }
 
       QDataStream stream( &file );
       stream.setVersion( QDataStream::Qt_4_6 );
