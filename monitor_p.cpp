@@ -236,6 +236,7 @@ void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )
     kWarning() << "Error on fetching collection statistics: " << job->errorText();
   } else {
     CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob*>( job );
+    Q_ASSERT( statisticsJob->collection().isValid() );
     emit q_ptr->collectionStatisticsChanged( statisticsJob->collection().id(),
                                              statisticsJob->statistics() );
   }
@@ -244,6 +245,7 @@ void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
   foreach ( Collection::Id collection, recentlyChangedCollections ) {
+    Q_ASSERT( collection >= 0 );
     if ( fetchCollectionStatistics ) {
       fetchStatistics( collection );
     } else {

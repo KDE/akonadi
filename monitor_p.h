@@ -219,7 +219,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource )
     {
-      if ( isCollectionMonitored( collection, resource ) ) {
+      if ( collection > 0 && isCollectionMonitored( collection, resource ) ) {
         if (recentlyChangedCollections.empty() )
           QTimer::singleShot( 500, q_ptr, SLOT( slotFlushRecentlyChangedCollections() ) );
         recentlyChangedCollections.insert( collection );

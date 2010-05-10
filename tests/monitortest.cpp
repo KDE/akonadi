@@ -218,10 +218,14 @@ void MonitorTest::testMonitor()
   QVERIFY( move->exec() );
   QTest::qWait( 1000 );
 
-  QCOMPARE( cstatspy.count(), 1 );  //### shouldn't that be one for source and one for destination??
+  QCOMPARE( cstatspy.count(), 2 );
   arg = cstatspy.takeFirst();
+  ///TODO: maybe the order is random, i.e. first res3 then monitorCol - fix it once the MetaType issue is resolved
   QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
   QCOMPARE( arg.at(0).value<Collection::Id>(), monitorCol.id() );
+  arg = cstatspy.takeLast();
+  QEXPECT_FAIL( "", "Don't know how to handle 'Akonadi::Collection::Id', use qRegisterMetaType to register it. <-- I did this, but it still doesn't work!", Continue );
+  QCOMPARE( arg.at(0).value<Collection::Id>(), res3.id() );
 
   QCOMPARE( imvspy.count(), 1 );
   arg = imvspy.takeFirst();
