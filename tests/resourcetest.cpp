@@ -46,10 +46,10 @@ class ResourceTest : public QObject
 
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
       QVERIFY( job->exec() );
+
       AgentInstance instance = job->instance();
       QVERIFY( instance.isValid() );
 
-      QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 1 );
       QCOMPARE( spyAddInstance.first().at( 0 ).value<AgentInstance>(), instance );
       QVERIFY( AgentManager::self()->instance( instance.identifier() ).isValid() );
@@ -58,7 +58,6 @@ class ResourceTest : public QObject
       QVERIFY( job->exec() );
       AgentInstance instance2 = job->instance();
       QVERIFY( !( instance == instance2 ) );
-      QTest::qWait( 2000 );
       QCOMPARE( spyAddInstance.count(), 2 );
 
       AgentManager::self()->removeInstance( instance );
