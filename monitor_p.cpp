@@ -215,6 +215,8 @@ void MonitorPrivate::updatePendingStatistics( const NotificationMessage &msg )
 {
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
+    // FIXME use the proper resource of the target collection, for cross resource moves
+    notifyCollectionStatisticsWatchers( msg.parentDestCollection(), msg.resource() );
   } else if ( msg.type() == NotificationMessage::Collection && msg.operation() == NotificationMessage::Remove ) {
     // no need for statistics updates anymore
     recentlyChangedCollections.remove( msg.uid() );
