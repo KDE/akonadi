@@ -76,7 +76,7 @@ class ChangeRecorderTest : public QObject
       triggerChange( 1 );
       triggerChange( 1 );
       triggerChange( 3 );
-      QTest::qWait( 1000 ); // enter event loop and wait for change notifications from the server
+      QTest::qWait( 500 ); // enter event loop and wait for change notifications from the server
 
       QCOMPARE( spy.count(), 0 );
       QVERIFY( !cspy.isEmpty() );
@@ -92,20 +92,21 @@ class ChangeRecorderTest : public QObject
       QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
       QVERIFY( spy2.isValid() );
       rec->replayNext();
+      QTest::kWaitForSignal( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
+      QCOMPARE( spy2.count(), 1 );
       rec->changeProcessed();
       QVERIFY( !rec->isEmpty() );
-      QTest::qWait( 1000 );
-      QCOMPARE( spy2.count(), 1 );
       rec->replayNext();
-      rec->changeProcessed();
-      QVERIFY( rec->isEmpty() );
-      QTest::qWait( 1000 );
+      QTest::kWaitForSignal( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
       QCOMPARE( spy2.count(), 2 );
-
-      rec->replayNext();
       rec->changeProcessed();
       QVERIFY( rec->isEmpty() );
-      QTest::qWait( 1000 );
+
+      // nothing changes here
+      rec->replayNext();
+      QTest::kWaitForSignal( rec, SIGNAL(nothingToReplay()), 1000 );
+      rec->changeProcessed();
+      QVERIFY( rec->isEmpty() );
       QCOMPARE( spy2.count(), 2 );
       delete rec;
     }
@@ -123,21 +124,22 @@ class ChangeRecorderTest : public QObject
 
       // Nothing to replay, should emit that signal then.
       recorder.replayNext();
+      QTest::kWaitForSignal( &recorder, SIGNAL(nothingToReplay()), 1000 );
       QCOMPARE( nothingSpy.count(), 1 );
       QCOMPARE( changedSpy.count(), 0 );
 
       // Give it something to replay
       triggerChange( 1 );
-      QTest::qWait( 1000 ); // enter event loop and wait for change notifications from the server
+      QTest::qWait( 500 ); // enter event loop and wait for change notifications from the server
       recorder.replayNext();
-      QTest::qWait( 1000 );
+      QTest::kWaitForSignal( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
       QCOMPARE( nothingSpy.count(), 1 );
       QCOMPARE( changedSpy.count(), 1 );
 
       // Nothing else to replay now
       recorder.changeProcessed();
       recorder.replayNext();
-      QTest::qWait( 1000 );
+      QTest::kWaitForSignal( &recorder, SIGNAL(nothingToReplay()), 1000 );
       QCOMPARE( nothingSpy.count(), 2 );
       QCOMPARE( changedSpy.count(), 1 );
     };
