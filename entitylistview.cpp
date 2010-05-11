@@ -195,9 +195,13 @@ void EntityListView::contextMenuEvent( QContextMenuEvent * event )
   if ( collection.isValid() ) {
     popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
                                  QLatin1String( "akonadi_favoriteview_contextmenu" ), d->mXmlGuiClient ) );
-    if ( popup )
-      popup->exec( event->globalPos() );
+  } else {
+    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
+                                   QLatin1String( "akonadi_favoriteview_emptyselection_contextmenu" ), d->mXmlGuiClient) );
   }
+
+  if ( popup )
+    popup->exec( event->globalPos() );
 }
 
 void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
