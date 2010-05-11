@@ -168,7 +168,7 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
               q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
   q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
-  ifDebug(jobTimeTracker[itemFetchJob].start();)
+  ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )
@@ -201,7 +201,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   }
   q->connect( job, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
-  ifDebug(jobTimeTracker[job].start();)
+  ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
 bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
@@ -424,7 +424,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
                 q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
     q->connect( job, SIGNAL( result( KJob* ) ),
                 q, SLOT( fetchJobDone( KJob* ) ) );
-  ifDebug(jobTimeTracker[job].start();)
+    ifDebug(kDebug() << "collection:" << parentCollection.name(); jobTimeTracker[job].start();)
 
     temp = parentCollection.parentCollection();
     parentCollection = temp;
@@ -1019,7 +1019,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
               q, SLOT( topLevelCollectionsFetched( const Akonadi::Collection::List& ) ) );
   q->connect( job, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
-  ifDebug(jobTimeTracker[job].start();)
+  ifDebug(kDebug() << ""; jobTimeTracker[job].start();)
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collection::List& list )
@@ -1054,7 +1054,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
                   q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
       q->connect( job, SIGNAL( result( KJob* ) ),
                   q, SLOT( fetchJobDone( KJob* ) ) );
-      ifDebug(jobTimeTracker[job].start();)
+      ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
     }
   }
 }
@@ -1294,7 +1294,7 @@ void EntityTreeModelPrivate::fillModel()
     q->connect( rootFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                 SLOT( rootCollectionFetched( const Akonadi::Collection::List& ) ) );
     q->connect( rootFetchJob, SIGNAL( result( KJob* ) ), SLOT( fetchJobDone( KJob* ) ) );
-    ifDebug(jobTimeTracker[rootFetchJob].start();)
+    ifDebug(kDebug() << ""; jobTimeTracker[rootFetchJob].start();)
   }
 }
 
