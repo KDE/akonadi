@@ -1298,3 +1298,40 @@ void EntityTreeModelPrivate::fillModel()
   }
 }
 
+bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
+{
+  const Item item = parent.data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+    return false;
+
+  if ( item.isValid() ) {
+    // items can't have more rows.
+    // TODO: Should I use this for fetching more of an item, ie more payload parts?
+    return false;
+  } else {
+    // but collections can...
+    const Collection::Id colId = parent.data( EntityTreeModel::CollectionIdRole ).toULongLong();
+
+    // But the root collection can't...
+    if ( Collection::root().id() == colId )
+      return false;
+
+    foreach ( Node *node, m_childEntities.value( colId ) ) {
+      if ( Node::Item == node->type ) {
+        // Only try to fetch more from a collection if we don't already have items in it.
+        // Otherwise we'd spend all the time listing items in collections.
+        // This means that collections which don't contain items get a lot of item fetch jobs started on them.
+        // Will fix that later.
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // TODO: It might be possible to get akonadi to tell us if a collection is empty
+  //       or not and use that information instead of assuming all collections are not empty.
+  //       Using Collection statistics?
+}
+

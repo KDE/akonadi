@@ -236,6 +236,8 @@ public:
   * Returns the item for the given item @p id.
   */
   Item itemForId( Item::Id id ) const;
+
+  bool canFetchMore( const QModelIndex & parent ) const;
 };
 
 }
