@@ -76,7 +76,10 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   m_monitor = monitor;
   m_session = m_monitor->session();
   if (m_session == Session::defaultSession())
+  {
     m_session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), q );
+    m_monitor->setSession( m_session );
+  }
 
   m_monitor->setChangeRecordingEnabled( false );
 
