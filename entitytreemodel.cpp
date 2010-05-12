@@ -1039,19 +1039,19 @@ EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrateg
   return d->m_collectionFetchStrategy;
 }
 
-static QPair<QList<const QAbstractProxyModel *>, EntityTreeModel *> proxiesAndModel( QAbstractItemModel *model )
+static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxiesAndModel( const QAbstractItemModel *model )
 {
   QList<const QAbstractProxyModel *> proxyChain;
-  QAbstractProxyModel *proxy = qobject_cast<QAbstractProxyModel *>( model );
-  QAbstractItemModel *_model = model;
+  const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel *>( model );
+  const QAbstractItemModel *_model = model;
   while ( proxy )
   {
     proxyChain.prepend( proxy );
     _model = proxy->sourceModel();
-    proxy = qobject_cast<QAbstractProxyModel *>( _model );
+    proxy = qobject_cast<const QAbstractProxyModel *>( _model );
   }
 
-  EntityTreeModel *etm = qobject_cast<EntityTreeModel *>( _model );
+  const EntityTreeModel *etm = qobject_cast<const EntityTreeModel *>( _model );
   return qMakePair(proxyChain, etm);
 }
 
@@ -1064,16 +1064,16 @@ static QModelIndex proxiedIndex( const QModelIndex &idx, QList<const QAbstractPr
   return _idx;
 }
 
-QModelIndex EntityTreeModel::modelIndexForCollection( QAbstractItemModel *model, const Collection &collection )
+QModelIndex EntityTreeModel::modelIndexForCollection( const QAbstractItemModel *model, const Collection &collection )
 {
-  QPair<QList<const QAbstractProxyModel *>, EntityTreeModel*> pair = proxiesAndModel( model );
+  QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel*> pair = proxiesAndModel( model );
   QModelIndex idx = pair.second->d_ptr->indexForCollection( collection );
   return proxiedIndex( idx, pair.first );
 }
 
-QModelIndexList EntityTreeModel::modelIndexesForItem( QAbstractItemModel *model, const Item &item )
+QModelIndexList EntityTreeModel::modelIndexesForItem( const QAbstractItemModel *model, const Item &item )
 {
-  QPair<QList<const QAbstractProxyModel *>, EntityTreeModel*> pair = proxiesAndModel( model );
+  QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel*> pair = proxiesAndModel( model );
   QModelIndexList list = pair.second->d_ptr->indexesForItem( item );
   QModelIndexList proxyList;
   foreach( const QModelIndex &idx, list )

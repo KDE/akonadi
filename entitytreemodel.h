@@ -497,7 +497,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @see modelIndexesForItem
      * @since 4.5
      */
-    static QModelIndex modelIndexForCollection( QAbstractItemModel *model, const Collection &collection );
+    static QModelIndex modelIndexForCollection( const QAbstractItemModel *model, const Collection &collection );
 
     /**
      * Returns a QModelIndex in @p model which points to @p item.
@@ -506,7 +506,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @see modelIndexForCollection
      * @since 4.5
      */
-    static QModelIndexList modelIndexesForItem( QAbstractItemModel *model, const Item &item );
+    static QModelIndexList modelIndexesForItem( const QAbstractItemModel *model, const Item &item );
 
   protected:
     /**
