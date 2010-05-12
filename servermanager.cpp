@@ -125,9 +125,8 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
   connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
-  // HACK see if we are a agent ourselves and skip AgentManager creation since that can cause deadlocks
-  QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String( "/" ) );
-  if ( obj && dynamic_cast<AgentBase*>( obj ) )
+  // AgentManager is dangerous to use for agents themselves
+  if ( Internal::clientType() != Internal::User )
     return;
   connect( AgentManager::self(), SIGNAL( typeAdded( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
   connect( AgentManager::self(), SIGNAL( typeRemoved( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
@@ -208,19 +207,18 @@ ServerManager::State ServerManager::state()
         return Broken;
     }
 
-    // HACK see if we are a agent ourselves and skip the test below which can in some cases deadlock the server
-    // and is not really needed in this case anyway since we happen to know at least one agent is available
-    QObject *obj = QDBusConnection::sessionBus().objectRegisteredAt( QLatin1String( "/" ) );
-    if ( obj && dynamic_cast<AgentBase*>( obj ) )
+    // AgentManager is dangerous to use for agents themselves
+    if ( Internal::clientType() == Internal::User ) {
+      // besides the running server processes we also need at least one resource to be operational
+      AgentType::List agentTypes = AgentManager::self()->types();
+      foreach ( const AgentType &type, agentTypes ) {
+        if ( type.capabilities().contains( QLatin1String( "Resource" ) ) )
+          return Running;
+      }
+      return Broken;
+    } else {
       return Running;
-
-    // besides the running server processes we also need at least one resource to be operational
-    AgentType::List agentTypes = AgentManager::self()->types();
-    foreach ( const AgentType &type, agentTypes ) {
-      if ( type.capabilities().contains( QLatin1String( "Resource" ) ) )
-        return Running;
     }
-    return Broken;
   }
 
   // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
