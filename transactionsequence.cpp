@@ -31,7 +31,8 @@ class Akonadi::TransactionSequencePrivate : public JobPrivate
   public:
     TransactionSequencePrivate( TransactionSequence *parent )
       : JobPrivate( parent ),
-        mState( Idle )
+        mState( Idle ),
+        mAutoCommit( true )
     {
     }
 
@@ -48,6 +49,7 @@ class Akonadi::TransactionSequencePrivate : public JobPrivate
 
     TransactionState mState;
     QSet<KJob*> mIgnoredErrorJobs;
+    bool mAutoCommit;
 
     void commitResult( KJob *job )
     {
@@ -124,10 +126,15 @@ void TransactionSequence::commit()
 {
   Q_D( TransactionSequence );
 
-  if ( d->mState == TransactionSequencePrivate::Running )
+  if ( d->mState == TransactionSequencePrivate::Running ) {
     d->mState = TransactionSequencePrivate::WaitingForSubjobs;
-  else
+  } else {
+    // we never got any subjobs, that means we never started a transaction
+    // so we can just quit here
+    if ( d->mState == TransactionSequencePrivate::Idle )
+      emitResult();
     return;
+  }
 
   if ( subjobs().isEmpty() ) {
     if ( !error() ) {
@@ -156,10 +163,19 @@ void TransactionSequence::doStart()
 {
   Q_D( TransactionSequence );
 
-  if ( d->mState == TransactionSequencePrivate::Idle )
-    emitResult();
-  else
-    commit();
+  if ( d->mAutoCommit ) {
+    if ( d->mState == TransactionSequencePrivate::Idle )
+      emitResult();
+    else
+      commit();
+  }
 }
+
+void TransactionSequence::setAutomaticCommittingEnabled(bool enable)
+{
+  Q_D( TransactionSequence );
+  d->mAutoCommit = enable;
+}
+
 
 #include "transactionsequence.moc"

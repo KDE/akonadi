@@ -95,6 +95,18 @@ class AKONADI_EXPORT TransactionSequence : public Job
      */
     void continueOnJobFailure( KJob *job );
 
+    /**
+     * Disable automatic committing.
+     * Use this when you want to add jobs to this sequence after execution
+     * has been started, usually that is outside of the contstructor or the
+     * method that creates this transaction sequence.
+     * @note Calling this method after execution of this job has been started
+     * has no effect.
+     * @param enable @c true to enable autocommitting (default), @c false to disable it
+     * @since 4.5
+     */
+    void setAutomaticCommittingEnabled( bool enable );
+
   protected:
     bool addSubjob( KJob* job );
     void doStart();

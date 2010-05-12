@@ -271,6 +271,7 @@ void ItemSync::Private::execute()
   if ( (mTransactionMode == Single && !mCurrentTransaction) || mTransactionMode == Chunkwise ) {
     ++mTransactionJobs;
     mCurrentTransaction = new TransactionSequence( q );
+    mCurrentTransaction->setAutomaticCommittingEnabled( false );
     connect( mCurrentTransaction, SIGNAL( result( KJob* ) ), q, SLOT( slotTransactionResult( KJob* ) ) );
   }
 
