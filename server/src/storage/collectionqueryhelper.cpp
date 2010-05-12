@@ -68,8 +68,14 @@ bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const 
   else
     qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
   qb.addValueCondition( Collection::nameColumn(), Query::Equals, name );
-  if ( !qb.exec() || qb.result().count() > 0 )
+  if ( !qb.exec() )
     return false;
+  const QList<Collection> result = qb.result();
+  if ( result.size() > 0 ) {
+    if ( result.first().id() == collection.id() )
+      return true;
+    return false;
+  }
   return true;
 }
 
