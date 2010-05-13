@@ -252,6 +252,25 @@ void DefaultResourceJobPrivate::tryFetchResource()
     q->setResourceId( resourceId );
     q->ResourceScanJob::doStart();
   } else {
+    // Try harder: maybe the default resource has been removed and another one added
+    //             without updating the config file, in this case search for a resource
+    //             of the same type and the default name
+    const AgentInstance::List resources = AgentManager::self()->instances();
+    foreach ( const AgentInstance &resource, resources ) {
+      if ( resource.type().identifier() == mDefaultResourceType ) {
+        if ( resource.name() == mDefaultResourceOptions.value( QLatin1String( "Name" ) ).toString() ) {
+          // found a matching one...
+          setDefaultResourceId( mSettings, resource.identifier() );
+          mSettings->writeConfig();
+          mResourceWasPreexisting = true;
+          kDebug() << "Found resource" << resource.identifier();
+          q->setResourceId( resource.identifier() );
+          q->ResourceScanJob::doStart();
+          return;
+        }
+      }
+    }
+
     // Create the resource.
     mResourceWasPreexisting = false;
     kDebug() << "Creating maildir resource.";
