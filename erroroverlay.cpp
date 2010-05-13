@@ -195,13 +195,13 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
         ui->stackWidget->setCurrentWidget( ui->brokenPage );
         break;
       case ServerManager::Starting:
-        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is starting..." ) );
-        ui->progressDescription->setText( i18n( "Akonadi personal information management service is starting..." ) );
+        ui->progressPage->setToolTip( i18n( "Personal information management service is starting..." ) );
+        ui->progressDescription->setText( i18n( "Personal information management service is starting..." ) );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Stopping:
-        ui->progressPage->setToolTip( i18n( "Akonadi personal information management service is shutting down..." ) );
-        ui->progressDescription->setText( i18n( "Akonadi personal information management service is shutting down..." ) );
+        ui->progressPage->setToolTip( i18n( "Personal information management service is shutting down..." ) );
+        ui->progressDescription->setText( i18n( "Personal information management service is shutting down..." ) );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
       case ServerManager::Running:
