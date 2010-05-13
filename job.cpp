@@ -300,11 +300,18 @@ void Job::doHandleResponse(const QByteArray & tag, const QByteArray & data)
 
 void Job::slotResult(KJob * job)
 {
-  Q_ASSERT( job == d_ptr->mCurrentSubJob );
-  d_ptr->mCurrentSubJob = 0;
-  KCompositeJob::slotResult( job );
-  if ( !job->error() )
-    QTimer::singleShot( 0, this, SLOT( startNext() ) );
+  if ( d_ptr->mCurrentSubJob == job ) {
+    // current job finished, start the next one
+    d_ptr->mCurrentSubJob = 0;
+    KCompositeJob::slotResult( job );
+    if ( !job->error() )
+      QTimer::singleShot( 0, this, SLOT( startNext() ) );
+  } else {
+    // job that was still waiting for execution finished, probably canceled,
+    // so just remove it from the queue and move on without caring about
+    // its error code
+    KCompositeJob::removeSubjob( job );
+  }
 }
 
 void Job::emitWriteFinished()
