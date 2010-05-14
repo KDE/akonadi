@@ -26,6 +26,7 @@
 #include "handler/scope.h"
 #include "handler.h"
 #include "storage/queryhelper.h"
+#include "collectionqueryhelper.h"
 
 using namespace Akonadi;
 
@@ -71,10 +72,27 @@ void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connec
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );
-  } else if ( scope.scope() == Scope::Rid ) {
-    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
+    return;
+  }
+
+  if ( scope.scope() != Scope::Rid || scope.scope() != Scope::HierarchicalRid )
+    throw HandlerException( "Dude, WTF?!?" );
+
+  if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
+
+  if ( scope.scope() == Scope::Rid ) {
     ItemQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
-  } else
-    throw HandlerException( "WTF?" );
+    return;
+  } else if ( scope.scope() == Scope::HierarchicalRid ) {
+    QStringList ridChain = scope.ridChain();
+    const QString itemRid = ridChain.takeFirst();
+    const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID( ridChain, connection->resourceContext().id() );
+    const Collection::Id oldSelection = connection->selectedCollectionId();
+    remoteIdToQuery( QStringList() << itemRid, connection, qb );
+    connection->setSelectedCollection( oldSelection );
+    return;
+  }
+
+  throw HandlerException( "Dude, WTF?!?" );
 }
