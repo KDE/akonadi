@@ -263,7 +263,10 @@ bool Store::parseStream()
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
           part.setExternal( true ); //the part WILL be external
-          value = m_streamParser->readLiteralPart(); // ### why?
+          // first first part as value and insert into / update the database
+          // this will give us a proper filename to stream into
+          // NOTE: we set the correct size (== dataSize) directly
+          value = m_streamParser->readLiteralPart();
 
           if ( part.isValid() ) {
             if ( !PartHelper::update( &part, value, dataSize ) )
@@ -271,12 +274,13 @@ bool Store::parseStream()
           } else {
 //             qDebug() << "insert from Store::handleLine";
             part.setData( value );
-            part.setDatasize( value.size() ); // ### why not datasize?
+            part.setDatasize( dataSize );
             if ( !PartHelper::insert( &part ) )
               return failureResponse( "Unable to add item part" );
           }
 
-          //the actual streaming code, reads from the parser, writes immediately to the file
+          //the actual streaming code for the remaining parts:
+          // reads from the parser, writes immediately to the file
           // ### move this entire block to part helper? should be useful for append as well
           const QString fileName = QString::fromUtf8( part.data() );
           QFile file( fileName );
@@ -303,6 +307,7 @@ bool Store::parseStream()
         partSizes += value.size();
       }
 
+      // only relevant for non-literals or non-external literals
       const QByteArray origData = PartHelper::translateData( part );
       if ( origData != value ) {
         if ( part.isValid() ) {
