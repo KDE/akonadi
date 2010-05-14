@@ -145,8 +145,12 @@ QSqlQuery ItemRetriever::buildQuery() const
   qb.addColumn( MimeType::nameFullColumnName() );
   qb.addColumn( Resource::nameFullColumnName() );
   qb.addColumn( Part::nameFullColumnName() );
-  qb.addColumn( Part::dataFullColumnName() );
-  qb.addColumn( Part::externalFullColumnName() );
+
+  Query::Condition partWhereCondition;
+  partWhereCondition.setSubQueryMode( Query::Or );
+  partWhereCondition.addValueCondition( Part::idFullColumnName(), Query::Is, QVariant() );
+  partWhereCondition.addValueCondition( Part::datasizeFullColumnName(), Query::Equals, 0 );
+  qb.addCondition( partWhereCondition );
 
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
@@ -194,32 +198,20 @@ void ItemRetriever::exec()
       lastRequest->remoteId = query.value( PimItemRidColumn ).toString().toUtf8();
       lastRequest->mimeType = query.value( MimeTypeColumn ).toString().toUtf8();
       lastRequest->resourceId = query.value( ResourceColumn ).toString();
-      lastRequest->parts = parts;
       requests << lastRequest;
     }
 
     if ( query.value( PartNameColumn ).isNull() ) {
       // LEFT JOIN did not find anything, retrieve all parts
-      query.next();
-      continue;
-    }
-
-    QByteArray data = query.value( PartDataColumn ).toByteArray();
-    data = PartHelper::translateData( data, query.value( PartExternalColumn ).toBool() );
-    QString partName = query.value( PartNameColumn ).toString();
-    Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
-    partName = partName.mid( 4 );
-    if ( data.isNull() ) {
-      // request update for this part
-      if ( mFullPayload && !lastRequest->parts.contains( partName ) )
-        lastRequest->parts << partName;
+      lastRequest->parts = parts;
     } else {
-      // data available, don't request update
-      lastRequest->parts.removeAll( partName );
-      if ( lastRequest->parts.isEmpty() ) {
-        delete requests.takeLast();
-        lastRequest = 0;
-      }
+      // otherwise the datasize was zero and we request an update for only this part
+      QString partName = query.value( PartNameColumn ).toString();
+      Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
+      partName = partName.mid( 4 );
+      // request update for this part
+      if ( !lastRequest->parts.contains( partName ) )
+        lastRequest->parts << partName;
     }
     query.next();
   }
