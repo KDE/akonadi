@@ -25,6 +25,7 @@
 #include "textbrowser_p.h"
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
@@ -101,7 +102,11 @@ class ContactGroupViewer::Private
       if ( !job->error() ) {
         CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
-          mCurrentAddressBookName = fetchJob->collections().first().name();
+          const Collection collection = fetchJob->collections().first();
+          if ( collection.hasAttribute<EntityDisplayAttribute>() )
+            mCurrentAddressBookName = collection.attribute<EntityDisplayAttribute>()->displayName();
+          else
+            mCurrentAddressBookName = collection.name();
         }
       }
 

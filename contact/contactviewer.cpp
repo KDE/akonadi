@@ -29,6 +29,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/entitydisplayattribute.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
@@ -138,7 +139,11 @@ class ContactViewer::Private
       if ( !job->error() ) {
         CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
-          addressBookName = fetchJob->collections().first().name();
+          const Collection collection = fetchJob->collections().first();
+          if ( collection.hasAttribute<EntityDisplayAttribute>() )
+            addressBookName = collection.attribute<EntityDisplayAttribute>()->displayName();
+          else
+            addressBookName = collection.name();
         }
       }
 
