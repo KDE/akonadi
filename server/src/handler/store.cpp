@@ -263,9 +263,9 @@ bool Store::parseStream()
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
           part.setExternal( true ); //the part WILL be external
-          // first first part as value and insert into / update the database
-          // this will give us a proper filename to stream into
-          // NOTE: we set the correct size (== dataSize) directly
+          // use first part as value for the initial insert into / update to the database.
+          // this will give us a proper filename to stream the rest of the parts contents into
+          // NOTE: we have to set the correct size (== dataSize) directly
           value = m_streamParser->readLiteralPart();
 
           if ( part.isValid() ) {
