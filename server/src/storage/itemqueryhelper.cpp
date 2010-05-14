@@ -75,9 +75,6 @@ void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connec
     return;
   }
 
-  if ( scope.scope() != Scope::Rid || scope.scope() != Scope::HierarchicalRid )
-    throw HandlerException( "Dude, WTF?!?" );
-
   if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
 
