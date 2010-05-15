@@ -1,4 +1,6 @@
 /*
+    This file is part of Akonadi Contact.
+
     Copyright (c) 2010 KDAB
     Author: Tobias Koenig <tokoe@kde.org>
 
@@ -18,22 +20,27 @@
     02110-1301, USA.
 */
 
-#include "emailaddressselectiondialog.h"
+#ifndef AKONADI_EMAILADDRESSSELECTION_P_H
+#define AKONADI_EMAILADDRESSSELECTION_P_H
 
-#include <kaboutdata.h>
-#include <kapplication.h>
-#include <kcmdlineargs.h>
+#include <QtCore/QSharedData>
+#include <QtCore/QString>
 
-int main( int argc, char **argv )
+#include <akonadi/item.h>
+
+namespace Akonadi {
+
+class EmailAddressSelection::Private : public QSharedData
 {
-  KAboutData aboutData( "emailaddressselectiondialogtest", 0, ki18n( "Test EmailAddressSelectionDialog" ), "0.1" );
-  KCmdLineArgs::init( argc, argv, &aboutData );
+  public:
+    Private();
+    Private( const Private &other );
 
-  KApplication app;
+    QString mName;
+    QString mEmailAddress;
+    Akonadi::Item mItem;
+};
 
-  Akonadi::EmailAddressSelectionDialog dlg;
-  if ( dlg.exec() ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() )
-      qDebug( "%s: %s", qPrintable( selection.name() ), qPrintable( selection.email() ) );
-  }
 }
+
+#endif

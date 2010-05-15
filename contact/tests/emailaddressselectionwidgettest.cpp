@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-#include "emailaddressselectionviewtest.h"
+#include "emailaddressselectionwidgettest.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>
@@ -35,8 +35,8 @@ MainWidget::MainWidget()
 {
   QGridLayout *layout = new QGridLayout( this );
 
-  mAddressesView = new Akonadi::EmailAddressSelectionView;
-  layout->addWidget( mAddressesView, 0, 0 );
+  mAddressesWidget = new Akonadi::EmailAddressSelectionWidget;
+  layout->addWidget( mAddressesWidget, 0, 0 );
 
   mInfo = new KTextBrowser;
   layout->addWidget( mInfo, 0, 1 );
@@ -54,7 +54,7 @@ MainWidget::MainWidget()
 
 void MainWidget::selectionModeChanged( int index )
 {
-  mAddressesView->view()->setSelectionMode( index == 0 ? QTreeView::SingleSelection : QTreeView::MultiSelection );
+  mAddressesWidget->view()->setSelectionMode( index == 0 ? QTreeView::SingleSelection : QTreeView::MultiSelection );
 }
 
 void MainWidget::showSelection()
@@ -62,14 +62,13 @@ void MainWidget::showSelection()
   mInfo->append( QLatin1String( "===========================\n" ) );
   mInfo->append( QLatin1String( "Current selection:\n" ) );
 
-  const Akonadi::EmailAddressSelectionView::Selection::List selections = mAddressesView->selectedAddresses();
-  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, selections )
+  foreach ( const Akonadi::EmailAddressSelection &selection, mAddressesWidget->selectedAddresses() )
     mInfo->append( QString::fromLatin1( "%1: %2\n" ).arg( selection.name() ).arg( selection.email() ) );
 }
 
 int main( int argc, char **argv )
 {
-  KAboutData aboutData( "emailaddressselectionviewtest", 0, ki18n( "Test EmailAddressSelectionView" ), "0.1" );
+  KAboutData aboutData( "emailaddressselectionwidgettest", 0, ki18n( "Test EmailAddressSelectionWidget" ), "0.1" );
   KCmdLineArgs::init( argc, argv, &aboutData );
 
   KApplication app;

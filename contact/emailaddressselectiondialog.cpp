@@ -31,16 +31,16 @@ class EmailAddressSelectionDialog::Private
       : q( qq )
     {
       if ( model )
-        mView = new EmailAddressSelectionView( model, q );
+        mView = new EmailAddressSelectionWidget( model, q );
       else
-        mView = new EmailAddressSelectionView( q );
+        mView = new EmailAddressSelectionWidget( q );
 
       q->setButtons( Ok | Cancel );
       q->setMainWidget( mView );
     }
 
     EmailAddressSelectionDialog *q;
-    EmailAddressSelectionView *mView;
+    EmailAddressSelectionWidget *mView;
 };
 
 EmailAddressSelectionDialog::EmailAddressSelectionDialog( QWidget *parent )
@@ -58,12 +58,12 @@ EmailAddressSelectionDialog::~EmailAddressSelectionDialog()
   delete d;
 }
 
-EmailAddressSelectionView::Selection::List EmailAddressSelectionDialog::selectedAddresses() const
+EmailAddressSelection::List EmailAddressSelectionDialog::selectedAddresses() const
 {
   return d->mView->selectedAddresses();
 }
 
-EmailAddressSelectionView* EmailAddressSelectionDialog::view() const
+EmailAddressSelectionWidget* EmailAddressSelectionDialog::view() const
 {
   return d->mView;
 }

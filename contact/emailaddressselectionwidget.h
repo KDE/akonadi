@@ -20,21 +20,28 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_EMAILADDRESSSELECTIONDIALOG_H
-#define AKONADI_EMAILADDRESSSELECTIONDIALOG_H
+#ifndef AKONADI_EMAILADDRESSSELECTIONWIDGET_H
+#define AKONADI_EMAILADDRESSSELECTIONWIDGET_H
 
 #include "akonadi-contact_export.h"
 
-#include "emailaddressselectionwidget.h"
+#include "emailaddressselection.h"
 
-#include <kdialog.h>
+#include <akonadi/item.h>
+
+#include <QtGui/QAbstractItemView>
+#include <QtGui/QWidget>
+
+class KLineEdit;
+class QAbstractItemModel;
+class QTreeView;
 
 namespace Akonadi {
 
 /**
- * @short A dialog to select email addresses from Akonadi.
+ * @short A widget to select email addresses from Akonadi.
  *
- * This dialog allows the user to select an name and email address from
+ * This widget allows the user to select an name and email address from
  * the Akonadi storage.
  * The selected addresses are returned as EmailAddressSelectionWidget::Selection objects
  * which encapsulate the name, email address and the Akonadi item that has been selected.
@@ -43,12 +50,12 @@ namespace Akonadi {
  *
  * @code
  *
- * Akonadi::EmailAddressSelectionDialog dlg( this );
- * if ( dlg.exec() ) {
- *   const Akonadi::EmailAddressSelectionWidget::Selection::List selections = dlg.selectedAddresses();
- *   foreach ( const Akonadi::EmailAddressSelectionWidget::Selection &selection, selections ) {
- *     qDebug() << "Name:" << selection.name() << "Email:" << selection.email();
- *   }
+ * Akonadi::EmailAddressSelectionWidget *widget = new Akonadi::EmailAddressSelectionWidget( this );
+ * widget->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+ * ...
+ *
+ * foreach ( const Akonadi::EmailAddressSelection &selection, widget->selectedAddresses() ) {
+ *   qDebug() << "Name:" << selection.name() << "Email:" << selection.email();
  * }
  *
  * @endcode
@@ -56,30 +63,30 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
-class AKONADI_CONTACT_EXPORT EmailAddressSelectionDialog : public KDialog
+class AKONADI_CONTACT_EXPORT EmailAddressSelectionWidget : public QWidget
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new email address selection dialog.
+     * Creates a new email address selection widget.
      *
      * @param parent The parent widget.
      */
-    explicit EmailAddressSelectionDialog( QWidget *parent = 0 );
+    explicit EmailAddressSelectionWidget( QWidget *parent = 0 );
 
     /**
-     * Creates a new email address selection dialog.
+     * Creates a new email address selection widget.
      *
      * @param model A custom, ContactsTreeModel based model to use.
      * @param parent The parent widget.
      */
-    explicit EmailAddressSelectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
+    explicit EmailAddressSelectionWidget( QAbstractItemModel *model, QWidget *parent = 0 );
 
     /**
-     * Destroys the email address selection dialog.
+     * Destroys the email address selection widget.
      */
-    ~EmailAddressSelectionDialog();
+    ~EmailAddressSelectionWidget();
 
     /**
      * Returns the list of selected email addresses.
@@ -87,9 +94,14 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionDialog : public KDialog
     EmailAddressSelection::List selectedAddresses() const;
 
     /**
-     * Returns the email address selection view that is used.
+     * Returns the line edit that is used for the search line.
      */
-    EmailAddressSelectionWidget *view() const;
+    KLineEdit *searchLineEdit() const;
+
+    /**
+     * Returns the tree view that is used to list the items.
+     */
+    QTreeView *view() const;
 
   private:
     //@cond PRIVATE

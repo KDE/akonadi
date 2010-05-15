@@ -57,7 +57,6 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
-//AK_REVIEW: rename to ContactsFilterProxyModel, extend API docs
 class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -83,8 +82,10 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
     void setFilterString( const QString &filter );
 
   protected:
+    //@cond PRIVATE
     virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const;
     virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
+    //@endcond
 
   private:
     //@cond PRIVATE

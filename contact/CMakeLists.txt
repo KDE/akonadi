@@ -77,9 +77,10 @@ set(akonadicontact_LIB_SRC
   contactviewerdialog.cpp
   customfields.cpp
   customfieldmanager.cpp
+  emailaddressselection.cpp
   emailaddressselectiondialog.cpp
   emailaddressselectionproxymodel.cpp
-  emailaddressselectionview.cpp
+  emailaddressselectionwidget.cpp
   leafextensionproxymodel.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
@@ -139,8 +140,9 @@ install( FILES
   contactstreemodel.h
   contactviewer.h
   contactviewerdialog.h
+  emailaddressselection.h
   emailaddressselectiondialog.h
-  emailaddressselectionview.h
+  emailaddressselectionwidget.h
   recentcontactscollectionrequestjob.h
   standardcontactformatter.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel

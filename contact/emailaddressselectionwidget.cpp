@@ -20,8 +20,9 @@
     02110-1301, USA.
 */
 
-#include "emailaddressselectionview.h"
+#include "emailaddressselectionwidget.h"
 
+#include "emailaddressselection_p.h"
 #include "emailaddressselectionproxymodel_p.h"
 
 #include <akonadi/changerecorder.h>
@@ -36,7 +37,6 @@
 #include <kabc/contactgroup.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kmime/kmime_header_parsing.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
@@ -74,91 +74,10 @@ class SearchLineEdit : public KLineEdit
 /**
  * @internal
  */
-class EmailAddressSelectionView::Selection::Private : public QSharedData
+class EmailAddressSelectionWidget::Private
 {
   public:
-    Private()
-      : QSharedData()
-    {
-    }
-
-    Private( const Private &other )
-      : QSharedData( other )
-    {
-      mName = other.mName;
-      mEmailAddress = other.mEmailAddress;
-      mItem = other.mItem;
-    }
-
-    QString mName;
-    QString mEmailAddress;
-    Akonadi::Item mItem;
-};
-
-EmailAddressSelectionView::Selection::Selection()
-  : d( new Private )
-{
-}
-
-EmailAddressSelectionView::Selection::Selection( const Selection &other )
-  : d( other.d )
-{
-}
-
-EmailAddressSelectionView::Selection& EmailAddressSelectionView::Selection::operator=( const Selection &other )
-{
-  if ( this != &other )
-    d = other.d;
-
-  return *this;
-}
-
-EmailAddressSelectionView::Selection::~Selection()
-{
-}
-
-bool EmailAddressSelectionView::Selection::isValid() const
-{
-  return d->mItem.isValid();
-}
-
-QString EmailAddressSelectionView::Selection::name() const
-{
-  return d->mName;
-}
-
-QString EmailAddressSelectionView::Selection::email() const
-{
-  return d->mEmailAddress;
-}
-
-QString EmailAddressSelectionView::Selection::quotedEmail() const
-{
-  if ( d->mItem.hasPayload<KABC::ContactGroup>() ) {
-    if ( d->mEmailAddress == d->mName )
-      return d->mName;
-  }
-
-  KMime::Types::Mailbox mailbox;
-  mailbox.setAddress( d->mEmailAddress.toUtf8() );
-  mailbox.setName( d->mName );
-
-  return mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary );
-}
-
-Akonadi::Item EmailAddressSelectionView::Selection::item() const
-{
-  return d->mItem;
-}
-
-
-/**
- * @internal
- */
-class EmailAddressSelectionView::Private
-{
-  public:
-    Private( EmailAddressSelectionView *qq, QAbstractItemModel *model )
+    Private( EmailAddressSelectionWidget *qq, QAbstractItemModel *model )
       : q( qq ), mModel( model )
     {
       init();
@@ -166,7 +85,7 @@ class EmailAddressSelectionView::Private
 
     void init();
 
-    EmailAddressSelectionView *q;
+    EmailAddressSelectionWidget *q;
     QAbstractItemModel *mModel;
     QLabel *mDescriptionLabel;
     SearchLineEdit *mSearchLine;
@@ -174,11 +93,11 @@ class EmailAddressSelectionView::Private
     EmailAddressSelectionProxyModel *mSelectionModel;
 };
 
-void EmailAddressSelectionView::Private::init()
+void EmailAddressSelectionWidget::Private::init()
 {
   // setup internal model if needed
   if ( !mModel ) {
-    Akonadi::Session *session = new Akonadi::Session( "InternalEmailAddressSelectionViewModel", q );
+    Akonadi::Session *session = new Akonadi::Session( "InternalEmailAddressSelectionWidgetModel", q );
 
     Akonadi::ItemFetchScope scope;
     scope.fetchFullPayload( true );
@@ -239,33 +158,33 @@ void EmailAddressSelectionView::Private::init()
 }
 
 
-EmailAddressSelectionView::EmailAddressSelectionView( QWidget * parent )
+EmailAddressSelectionWidget::EmailAddressSelectionWidget( QWidget * parent )
   : QWidget( parent ),
     d( new Private( this, 0 ) )
 {
 }
 
-EmailAddressSelectionView::EmailAddressSelectionView( QAbstractItemModel *model, QWidget * parent )
+EmailAddressSelectionWidget::EmailAddressSelectionWidget( QAbstractItemModel *model, QWidget * parent )
   : QWidget( parent ),
     d( new Private( this, model ) )
 {
 }
 
-EmailAddressSelectionView::~EmailAddressSelectionView()
+EmailAddressSelectionWidget::~EmailAddressSelectionWidget()
 {
   delete d;
 }
 
-EmailAddressSelectionView::Selection::List EmailAddressSelectionView::selectedAddresses() const
+EmailAddressSelection::List EmailAddressSelectionWidget::selectedAddresses() const
 {
-  Selection::List selections;
+  EmailAddressSelection::List selections;
 
   if ( !d->mView->selectionModel() )
     return selections;
 
   const QModelIndexList selectedRows = d->mView->selectionModel()->selectedRows( 0 );
   foreach ( const QModelIndex &index, selectedRows ) {
-    Selection selection;
+    EmailAddressSelection selection;
     selection.d->mName = index.data( EmailAddressSelectionProxyModel::NameRole ).toString();
     selection.d->mEmailAddress = index.data( EmailAddressSelectionProxyModel::EmailAddressRole ).toString();
     selection.d->mItem = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
@@ -277,14 +196,14 @@ EmailAddressSelectionView::Selection::List EmailAddressSelectionView::selectedAd
   return selections;
 }
 
-KLineEdit* EmailAddressSelectionView::searchLineEdit() const
+KLineEdit* EmailAddressSelectionWidget::searchLineEdit() const
 {
   return d->mSearchLine;
 }
 
-QTreeView* EmailAddressSelectionView::view() const
+QTreeView* EmailAddressSelectionWidget::view() const
 {
   return d->mView;
 }
 
-#include "emailaddressselectionview.moc"
+#include "emailaddressselectionwidget.moc"

@@ -18,10 +18,10 @@
     02110-1301, USA.
 */
 
-#ifndef EMAILADDRESSSELECTIONVIEWTEST_H
-#define EMAILADDRESSSELECTIONVIEWTEST_H
+#ifndef EMAILADDRESSSELECTIONWIDGETTEST_H
+#define EMAILADDRESSSELECTIONWIDGETTEST_H
 
-#include "emailaddressselectionview.h"
+#include "emailaddressselectionwidget.h"
 
 #include <QtGui/QWidget>
 
@@ -39,7 +39,7 @@ class MainWidget : public QWidget
     void showSelection();
 
   private:
-    Akonadi::EmailAddressSelectionView *mAddressesView;
+    Akonadi::EmailAddressSelectionWidget *mAddressesWidget;
     KTextBrowser *mInfo;
 };
 

@@ -17,5 +17,5 @@ target_link_libraries(contactmetadataattributetest ${QT_QTTEST_LIBRARY} ${QT_QTC
 
 ########### next target ###############
 
-add_akonadi_contact_demo(emailaddressselectionviewtest.cpp)
+add_akonadi_contact_demo(emailaddressselectionwidgettest.cpp)
 add_akonadi_contact_demo(emailaddressselectiondialogtest.cpp)
