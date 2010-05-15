@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_CONTACTSFILTERMODEL_H
-#define AKONADI_CONTACTSFILTERMODEL_H
+#ifndef AKONADI_CONTACTSFILTERPROXYMODEL_H
+#define AKONADI_CONTACTSFILTERPROXYMODEL_H
 
 #include "akonadi-contact_export.h"
 
@@ -42,7 +42,7 @@ namespace Akonadi {
  *
  * Akonadi::ContactsTreeModel *model = new Akonadi::ContactsTreeModel( ... );
  *
- * Akonadi::ContactsFilterModel *filter = new Akonadi::ContactsFilterModel;
+ * Akonadi::ContactsFilterProxyModel *filter = new Akonadi::ContactsFilterProxyModel;
  * filter->setSourceModel( model );
  *
  * Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView;
@@ -58,22 +58,22 @@ namespace Akonadi {
  * @since 4.5
  */
 //AK_REVIEW: rename to ContactsFilterProxyModel, extend API docs
-class AKONADI_CONTACT_EXPORT ContactsFilterModel : public QSortFilterProxyModel
+class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new contacts filter model.
+     * Creates a new contacts filter proxy model.
      *
      * @param parent The parent object.
      */
-    explicit ContactsFilterModel( QObject *parent = 0 );
+    explicit ContactsFilterProxyModel( QObject *parent = 0 );
 
     /**
-     * Destroys the contacts filter model.
+     * Destroys the contacts filter proxy model.
      */
-    ~ContactsFilterModel();
+    ~ContactsFilterProxyModel();
 
   public Q_SLOTS:
     /**

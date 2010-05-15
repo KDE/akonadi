@@ -19,7 +19,7 @@
     02110-1301, USA.
 */
 
-#include "contactsfiltermodel.h"
+#include "contactsfilterproxymodel.h"
 
 #include "contactstreemodel.h"
 
@@ -32,31 +32,31 @@ static bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QS
 
 using namespace Akonadi;
 
-class ContactsFilterModel::Private
+class ContactsFilterProxyModel::Private
 {
   public:
     QString mFilter;
 };
 
-ContactsFilterModel::ContactsFilterModel( QObject *parent )
+ContactsFilterProxyModel::ContactsFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ), d( new Private )
 {
   // contact names should be sorted correctly
   setSortLocaleAware( true );
 }
 
-ContactsFilterModel::~ContactsFilterModel()
+ContactsFilterProxyModel::~ContactsFilterProxyModel()
 {
   delete d;
 }
 
-void ContactsFilterModel::setFilterString( const QString &filter )
+void ContactsFilterProxyModel::setFilterString( const QString &filter )
 {
   d->mFilter = filter;
   invalidateFilter();
 }
 
-bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
 {
   if ( d->mFilter.isEmpty() )
     return true;
@@ -76,7 +76,7 @@ bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent )
   return true;
 }
 
-bool ContactsFilterModel::lessThan( const QModelIndex &leftIndex, const QModelIndex &rightIndex ) const
+bool ContactsFilterProxyModel::lessThan( const QModelIndex &leftIndex, const QModelIndex &rightIndex ) const
 {
   const QDate leftDate = leftIndex.data( ContactsTreeModel::DateRole ).toDate();
   const QDate rightDate = rightIndex.data( ContactsTreeModel::DateRole ).toDate();
@@ -201,4 +201,4 @@ bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &
   return false;
 }
 
-#include "contactsfiltermodel.moc"
+#include "contactsfilterproxymodel.moc"

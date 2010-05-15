@@ -25,7 +25,7 @@
 #include "emailaddressselectionproxymodel_p.h"
 
 #include <akonadi/changerecorder.h>
-#include <akonadi/contact/contactsfiltermodel.h>
+#include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/control.h>
 #include <akonadi/entitydisplayattribute.h>
@@ -219,7 +219,7 @@ void EmailAddressSelectionView::Private::init()
   mView->setDragDropMode( QAbstractItemView::NoDragDrop );
   layout->addWidget( mView );
 
-  Akonadi::ContactsFilterModel *filter = new Akonadi::ContactsFilterModel( q );
+  Akonadi::ContactsFilterProxyModel *filter = new Akonadi::ContactsFilterProxyModel( q );
   filter->setSourceModel( mModel );
 
   mSelectionModel = new EmailAddressSelectionProxyModel( q );
