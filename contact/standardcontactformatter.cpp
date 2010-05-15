@@ -21,6 +21,7 @@
 
 #include "standardcontactformatter.h"
 
+#include <akonadi/item.h>
 #include <kabc/addressee.h>
 #include <kcolorscheme.h>
 #include <kglobal.h>
@@ -31,36 +32,25 @@
 
 using namespace Akonadi;
 
-class StandardContactFormatter::Private
-{
-  public:
-    KABC::Addressee mContact;
-    QVariantList mCustomFieldDescriptions;
-};
-
 StandardContactFormatter::StandardContactFormatter()
-  : d( new Private )
+  : d( 0 )
 {
 }
 
 StandardContactFormatter::~StandardContactFormatter()
 {
-  delete d;
-}
-
-void StandardContactFormatter::setContact( const KABC::Addressee &contact )
-{
-  d->mContact = contact;
-}
-
-void StandardContactFormatter::setCustomFieldDescriptions( const QVariantList &descriptions )
-{
-  d->mCustomFieldDescriptions = descriptions;
 }
 
 QString StandardContactFormatter::toHtml( HtmlForm form ) const
 {
-  if ( d->mContact.isEmpty() )
+  KABC::Addressee rawContact;
+  const Akonadi::Item localItem = item();
+  if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() )
+    rawContact = localItem.payload<KABC::Addressee>();
+  else
+    rawContact = contact();
+
+  if ( rawContact.isEmpty() )
     return QString();
 
   // We'll be building a table to display the vCard in.
@@ -77,7 +67,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   QString dynamicPart;
 
   // Birthday
-  const QDate date = d->mContact.birthday().date();
+  const QDate date = rawContact.birthday().date();
   const int years = (date.daysTo( QDate::currentDate() ) / 365);
 
   if ( date.isValid() )
@@ -88,7 +78,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Phone Numbers
   int counter = 0;
-  foreach ( const KABC::PhoneNumber &number, d->mContact.phoneNumbers() ) {
+  foreach ( const KABC::PhoneNumber &number, rawContact.phoneNumbers() ) {
       const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
       counter++;
 
@@ -98,10 +88,10 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // EMails
-  foreach ( const QString &email, d->mContact.emails() ) {
+  foreach ( const QString &email, rawContact.emails() ) {
     QString type = i18nc( "a contact's email address", "Email" );
 
-    const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( d->mContact.fullEmail( email ) ) );
+    const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
     dynamicPart += rowFmtStr.arg( type )
       .arg( QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
@@ -109,8 +99,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // Homepage
-  if ( d->mContact.url().isValid() ) {
-    QString url = d->mContact.url().url();
+  if ( rawContact.url().isValid() ) {
+    QString url = rawContact.url().url();
     if ( !url.startsWith( QLatin1String( "http://" ) ) && !url.startsWith( QLatin1String( "https://" ) ) )
       url = QLatin1String( "http://" ) + url;
 
@@ -119,13 +109,13 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // Blog Feed
-  const QString blog = d->mContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
+  const QString blog = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() )
     dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( blog ) );
 
   // Addresses
   counter = 0;
-  foreach ( const KABC::Address &address, d->mContact.addresses() ) {
+  foreach ( const KABC::Address &address, rawContact.addresses() ) {
     QString formattedAddress;
 
     if ( address.label().isEmpty() ) {
@@ -146,8 +136,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Note
   QString notes;
-  if ( !d->mContact.note().isEmpty() )
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( d->mContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
+  if ( !rawContact.note().isEmpty() )
+    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
 
   // Custom Data
   QString customData;
@@ -173,8 +163,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
   }
 
-  if ( !d->mContact.customs().empty() ) {
-    const QStringList customs = d->mContact.customs();
+  if ( !rawContact.customs().empty() ) {
+    const QStringList customs = rawContact.customs();
     foreach ( QString custom, customs ) { //krazy:exclude=foreach
       if ( custom.startsWith( QLatin1String( "KADDRESSBOOK-" ) ) ) {
         custom.remove( QLatin1String( "KADDRESSBOOK-X-" ) );
@@ -203,10 +193,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
           key = keyIt.value();
         } else {
           // check whether it is a custom local field
-          foreach ( const QVariant &description, d->mCustomFieldDescriptions ) {
-            const QVariantMap field = description.toMap();
-            if ( field.value( QLatin1String( "key" ) ).toString() == key ) {
-              key = field.value( QLatin1String( "title" ) ).toString();
+          foreach ( const QVariantMap &description, customFieldDescriptions() ) {
+            if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
+              key = description.value( QLatin1String( "title" ) ).toString();
               break;
             }
           }
@@ -218,11 +207,11 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // Assemble all parts
-  QString role = d->mContact.title();
+  QString role = rawContact.title();
   if ( role.isEmpty() )
-    role = d->mContact.role();
+    role = rawContact.role();
   if ( role.isEmpty() )
-    role = d->mContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
+    role = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
 
   QString strAddr = QString::fromLatin1(
     "<div align=\"center\">"
@@ -240,9 +229,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     "<td align=\"left\" width=\"70%\">%4</td>"  // organization
     "</tr>")
       .arg( QLatin1String( "contact_photo" ) )
-      .arg( d->mContact.realName() )
+      .arg( rawContact.realName() )
       .arg( role )
-      .arg( d->mContact.organization() );
+      .arg( rawContact.organization() );
 
   strAddr.append( dynamicPart );
   strAddr.append( notes );

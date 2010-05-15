@@ -74,7 +74,9 @@ class ContactViewer::Private
       }
 
       // merge local and global custom field descriptions
-      QVariantList customFieldDescriptions( localCustomFieldDescriptions );
+      QList<QVariantMap> customFieldDescriptions;
+      foreach ( const QVariant &entry, localCustomFieldDescriptions )
+        customFieldDescriptions << entry.toMap();
 
       const CustomField::List globalCustomFields = CustomFieldManager::globalCustomFieldDescriptions();
       foreach ( const CustomField &field, globalCustomFields ) {

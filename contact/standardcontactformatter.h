@@ -64,16 +64,6 @@ class AKONADI_CONTACT_EXPORT StandardContactFormatter : public AbstractContactFo
     virtual ~StandardContactFormatter();
 
     /**
-     * Sets the @p contact that shall be formatted.
-     */
-    virtual void setContact( const KABC::Addressee &contact );
-
-    /**
-     * Sets the custom field @p descriptions that shall be used.
-     */
-    virtual void setCustomFieldDescriptions( const QVariantList &descriptions );
-
-    /**
      * Returns the contact formatted as HTML
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
@@ -82,8 +72,6 @@ class AKONADI_CONTACT_EXPORT StandardContactFormatter : public AbstractContactFo
     //@cond PRIVATE
     class Private;
     Private* const d;
-
-    Q_DISABLE_COPY( StandardContactFormatter )
     //@endcond
 };
 

@@ -21,8 +21,55 @@
 
 #include "abstractcontactformatter.h"
 
+#include <akonadi/item.h>
+#include <kabc/addressee.h>
+
 using namespace Akonadi;
+
+class AbstractContactFormatter::Private
+{
+  public:
+    KABC::Addressee mContact;
+    Akonadi::Item mItem;
+    QList<QVariantMap> mCustomFieldDescriptions;
+};
+
+AbstractContactFormatter::AbstractContactFormatter()
+  : d( new Private )
+{
+}
 
 AbstractContactFormatter::~AbstractContactFormatter()
 {
+  delete d;
+}
+
+void AbstractContactFormatter::setContact( const KABC::Addressee &contact )
+{
+  d->mContact = contact;
+}
+
+KABC::Addressee AbstractContactFormatter::contact() const
+{
+  return d->mContact;
+}
+
+void AbstractContactFormatter::setItem( const Akonadi::Item &item )
+{
+  d->mItem = item;
+}
+
+Akonadi::Item AbstractContactFormatter::item() const
+{
+  return d->mItem;
+}
+
+void AbstractContactFormatter::setCustomFieldDescriptions( const QList<QVariantMap> &descriptions )
+{
+  d->mCustomFieldDescriptions = descriptions;
+}
+
+QList<QVariantMap> AbstractContactFormatter::customFieldDescriptions() const
+{
+  return d->mCustomFieldDescriptions;
 }
