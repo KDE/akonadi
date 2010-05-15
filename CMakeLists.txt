@@ -55,7 +55,7 @@ endif (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
 ############### Find what we need ###############
 
 #### Qt4 ####
-set(QT_MIN_VERSION 4.5.0)
+set(QT_MIN_VERSION 4.6.0)
 find_package(Qt4 REQUIRED)
 
 # We need QtDBus and QtSql
