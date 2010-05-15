@@ -26,8 +26,6 @@
 
 #include <QtGui/QWidget>
 
-class KLineEdit;
-
 namespace KABC {
 class ContactGroup;
 }

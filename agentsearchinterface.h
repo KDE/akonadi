@@ -28,7 +28,8 @@ class Collection;
 class AgentSearchInterfacePrivate;
 
 /**
- * Interface for agents (or resources) that support searching in their backend.
+ * @short An interface for agents (or resources) that support searching in their backend.
+ *
  * Inherit from this additionally to Akonadi::AgentBase (or Akonadi::ResourceBase)
  * and implement its two pure virtual methods.
  *

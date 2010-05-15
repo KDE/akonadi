@@ -95,7 +95,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public ItemSearchJob
      * This needs to be called before calling setQuery() to have an effect.
      * By default, the number of results is unlimited.
      *
-     * @since 4.5
+     * @since 4.4.3
      */
     void setLimit( int limit );
 

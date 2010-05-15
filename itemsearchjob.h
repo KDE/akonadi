@@ -131,7 +131,7 @@ class AKONADI_EXPORT ItemSearchJob : public Job
      *
      * Always limit your searches to statements that contain this URI as predicate.
      *
-     * @since 4.5
+     * @since 4.4.3
      */
     static QUrl akonadiItemIdUri();
 

@@ -113,6 +113,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @since 4.5
      */
+    //AK_REVIEW: rename to setDropActionMenuEnabled
     void setShowDropActionMenu( bool show );
 
     /**
@@ -120,6 +121,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      *
      * @since 4.5
      */
+    //AK_REVIEW: rename to isDropActionMenuEnabled
     bool showDropActionMenu() const;
 
   Q_SIGNALS:

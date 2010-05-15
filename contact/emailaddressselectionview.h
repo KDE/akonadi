@@ -62,6 +62,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
+ //AK_REVIEW: rename to EmailAddressSelectionWidget
 class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
 {
   Q_OBJECT
@@ -70,6 +71,7 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionView : public QWidget
     /**
      * The selection of an email address.
      */
+    //AK_REVIEW: move to EmailAddressSelection class
     class AKONADI_CONTACT_EXPORT Selection
     {
       public:

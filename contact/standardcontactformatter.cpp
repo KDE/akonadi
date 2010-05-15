@@ -249,7 +249,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   strAddr.append( customData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
 
-  if ( form == DivForm )
+  if ( form == EmbeddableForm )
     return strAddr;
 
   const QString document = QString::fromLatin1(

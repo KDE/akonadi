@@ -76,7 +76,7 @@ class AKONADI_CONTACT_EXPORT StandardContactFormatter : public AbstractContactFo
     /**
      * Returns the contact formatted as HTML
      */
-    virtual QString toHtml( HtmlForm form = FullForm ) const;
+    virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
 
   private:
     //@cond PRIVATE

@@ -161,13 +161,13 @@ class AKONADI_CONTACT_EXPORT ContactsTreeModel : public EntityTreeModel
      */
     enum Roles
     {
-      DateRole = UserRole + 1   ///< The QDate object for the current index.
+      DateRole = UserRole + 1,   ///< The QDate object for the current index.
+      UserRole = DateRole + 42
     };
 
     /**
      * Creates a new contacts tree model.
      *
-     * @param session The Session to use to communicate with Akonadi.
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
@@ -188,10 +188,12 @@ class AKONADI_CONTACT_EXPORT ContactsTreeModel : public EntityTreeModel
      */
     Columns columns() const;
 
+    //@cond PRIVATE
     virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
     virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
     virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
     virtual int entityColumnCount( HeaderGroup headerGroup ) const;
+    //@endcond
 
   private:
     //@cond PRIVATE

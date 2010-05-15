@@ -93,6 +93,7 @@ class AKONADI_EXPORT Entity
      *
      * @since 4.5
      */
+    //AK_REVIEW: extend documentation
     void setRemoteRevision( const QString& revision );
 
     /**
@@ -100,6 +101,7 @@ class AKONADI_EXPORT Entity
      *
      * @since 4.5
      */
+    //AK_REVIEW: extend documentation
     QString remoteRevision() const;
 
     /**

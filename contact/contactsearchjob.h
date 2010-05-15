@@ -120,6 +120,7 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
      * Sets the @p criterion and @p value for the search.
      *
      * @note ExactMatch is used for the matching.
+     * @todo Merge with the method below in KDE5
      */
     void setQuery( Criterion criterion, const QString &value );
 

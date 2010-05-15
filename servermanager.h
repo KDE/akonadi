@@ -47,11 +47,11 @@ class AKONADI_EXPORT ServerManager : public QObject
      * @since 4.5
      */
     enum State {
-        NotRunning, ///< Server is not running, could be no one started it yet or it failed to start.
-        Starting, ///< Server was started but is not yet running.
-        Running, ///< Server is running and operational.
-        Stopping, ///< Server is shutting down.
-        Broken ///< Server is not operational and an error has been detected.
+      NotRunning, ///< Server is not running, could be no one started it yet or it failed to start.
+      Starting, ///< Server was started but is not yet running.
+      Running, ///< Server is running and operational.
+      Stopping, ///< Server is shutting down.
+      Broken ///< Server is not operational and an error has been detected.
     };
 
     /**
@@ -110,7 +110,7 @@ class AKONADI_EXPORT ServerManager : public QObject
     void stopped();
 
     /**
-     * Emitted when the server state changes.
+     * Emitted whenever the server state changes.
      * @since 4.5
      */
     void stateChanged( Akonadi::ServerManager::State state );

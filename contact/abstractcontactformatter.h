@@ -38,6 +38,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
+//AK_REVIEW: extend api docs (usage), move class to libkabc
 class AKONADI_CONTACT_EXPORT AbstractContactFormatter
 {
   public:
@@ -46,8 +47,9 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
      */
     enum HtmlForm
     {
-      FullForm,  ///< Creates a complete HTML document
-      DivForm    ///< Creates a div HTML element that can be embedded.
+      SelfcontainedForm,                ///< Creates a complete HTML document
+      EmbeddableForm,                   ///< Creates a div HTML element that can be embedded.
+      UserForm = SelfcontainedForm + 42 ///< Point for extension
     };
 
     /**
@@ -58,17 +60,22 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
     /**
      * Sets the @p contact that shall be formatted.
      */
+    //AK_REVIEW: add getter and make it non-abstract
     virtual void setContact( const KABC::Addressee &contact ) = 0;
+
+    //AK_REVIEW: add method setItem( const Akonadi::Item ) and getter
 
     /**
      * Sets the custom field @p descriptions that shall be used.
      */
+    //AK_REVIEW: change QVariantList to QList<QMap<QString, QVariant>>
+    //AK_REVIEW: add getter and make it non-abstract
     virtual void setCustomFieldDescriptions( const QVariantList &descriptions ) = 0;
 
     /**
      * Returns the contact formatted as HTML
      */
-    virtual QString toHtml( HtmlForm form = FullForm ) const = 0;
+    virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const = 0;
 };
 
 }

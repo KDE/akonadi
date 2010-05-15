@@ -57,6 +57,7 @@ namespace Akonadi {
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.5
  */
+//AK_REVIEW: rename to ContactsFilterProxyModel, extend API docs
 class AKONADI_CONTACT_EXPORT ContactsFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -67,7 +68,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    ContactsFilterModel( QObject *parent );
+    explicit ContactsFilterModel( QObject *parent = 0 );
 
     /**
      * Destroys the contacts filter model.

@@ -98,12 +98,14 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
      * TODO: discuss API, give better name!
      * @since 4.5
      */
+    //AK_REVIEW: remove this method
     void addExcludeResourcesType( const QStringList &resourcesList );
 
     /**
      * TODO: discuss API, give better name!
      * @since 4.5
      */
+    //AK_REVIEW: remove this method
     QStringList excludeResourcesType() const;
 
   protected:

@@ -93,6 +93,7 @@ class AKONADI_EXPORT TransactionSequence : public Job
      *
      * @since 4.5
      */
+    //AK_REVIEW: rename to setIgnoreJobFailure
     void continueOnJobFailure( KJob *job );
 
     /**

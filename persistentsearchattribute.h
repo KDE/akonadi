@@ -28,6 +28,7 @@ namespace Akonadi {
  * Query properties of persistent search collections.
  * @since 4.5
  */
+//AK_REVIEW: extend API doc with usage example
 class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
   public:
@@ -63,10 +64,12 @@ class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
      */
     void setQueryString( const QString &query );
 
+    //@cond PRIVATE
     virtual QByteArray type() const;
     virtual Attribute *clone() const;
     virtual QByteArray serialized() const;
     virtual void deserialize( const QByteArray &data );
+    //@endcond
 
   private:
     //@cond PRIVATE

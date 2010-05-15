@@ -201,6 +201,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Dump debug output about the resource (currently: only its scheduler)
      * @since 4.5
      */
+    //AK_REVIEW: make it a private internal dbus slot
     void dump();
 
   Q_SIGNALS:
