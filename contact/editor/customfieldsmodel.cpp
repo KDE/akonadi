@@ -27,6 +27,8 @@
 
 #include <QtCore/QDateTime>
 
+Q_DECLARE_METATYPE( Qt::CheckState )
+
 CustomFieldsModel::CustomFieldsModel( QObject *parent )
   : QAbstractItemModel( parent )
 {
@@ -73,19 +75,6 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
 
   const CustomField &customField = mCustomFields[ index.row() ];
 
-  if ( role == Qt::DecorationRole ) {
-    if ( index.column() == 1 ) {
-      if ( customField.type() == CustomField::BooleanType ) {
-        if ( customField.value() == QLatin1String( "true" ) )
-          return KIcon( QLatin1String( "button_more" ) );
-        else
-          return KIcon( QLatin1String( "button_fewer" ) );
-      }
-    }
-
-    return QVariant();
-  }
-
   if ( role == Qt::DisplayRole ) {
     if ( index.column() == 0 )
       return customField.title();
@@ -96,7 +85,7 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
           return customField.value();
           break;
         case CustomField::BooleanType:
-          return QString(); // we use icons here
+          return QString();
           break;
         case CustomField::DateType:
           {
@@ -120,6 +109,14 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
       return customField.value();
     } else
       return customField.key();
+  }
+
+  if ( role == Qt::CheckStateRole ) {
+    if ( index.column() == 1 ) {
+      if ( customField.type() == CustomField::BooleanType ) {
+        return (customField.value() == QLatin1String( "true" ) ? Qt::Checked : Qt::Unchecked);
+      }
+    }
   }
 
   if ( role == Qt::EditRole ) {
@@ -165,6 +162,17 @@ bool CustomFieldsModel::setData( const QModelIndex &index, const QVariant &value
     return true;
   }
 
+  if ( role == Qt::CheckStateRole ) {
+    if ( index.column() == 1 ) {
+      if ( customField.type() == CustomField::BooleanType ) {
+        customField.setValue( static_cast<Qt::CheckState>( value.toInt() ) == Qt::Checked ?
+                              QLatin1String( "true" ) : QLatin1String( "false" ) );
+        emit dataChanged( index, index );
+        return true;
+      }
+    }
+  }
+
   if ( role == TypeRole ) {
     customField.setType( (CustomField::Type)value.toInt() );
     emit dataChanged( index, index );
@@ -202,8 +210,13 @@ Qt::ItemFlags CustomFieldsModel::flags( const QModelIndex &index ) const
   if ( !index.isValid() || index.row() < 0 || index.row() >= mCustomFields.count() )
     return QAbstractItemModel::flags( index );
 
+  const CustomField &customField = mCustomFields[ index.row() ];
+
   const Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
-  return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+  if ( (customField.type() == CustomField::BooleanType) && (index.column() == 1) )
+    return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable);
+  else
+    return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
 }
 
 int CustomFieldsModel::columnCount( const QModelIndex &parent ) const

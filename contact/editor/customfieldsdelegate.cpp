@@ -119,18 +119,21 @@ void CustomFieldsDelegate::setEditorData( QWidget *editor, const QModelIndex &in
       case CustomField::DateType:
         {
           QDateEdit *widget = qobject_cast<QDateEdit*>( editor );
+          widget->setDisplayFormat( QLatin1String( "dd.MM.yyyy" ) );
           widget->setDate( QDate::fromString( index.data( Qt::EditRole ).toString(), Qt::ISODate ) );
         }
         break;
       case CustomField::TimeType:
         {
           QTimeEdit *widget = qobject_cast<QTimeEdit*>( editor );
+          widget->setDisplayFormat( QLatin1String( "hh:mm" ) );
           widget->setTime( QTime::fromString( index.data( Qt::EditRole ).toString(), Qt::ISODate ) );
         }
         break;
       case CustomField::DateTimeType:
         {
           QDateTimeEdit *widget = qobject_cast<QDateTimeEdit*>( editor );
+          widget->setDisplayFormat( QLatin1String( "dd.MM.yyyy hh:mm" ) );
           widget->setDateTime( QDateTime::fromString( index.data( Qt::EditRole ).toString(), Qt::ISODate ) );
         }
         break;
@@ -190,4 +193,3 @@ void CustomFieldsDelegate::paint( QPainter *painter, const QStyleOptionViewItem 
   //TODO: somehow mark local/global/external fields
   QStyledItemDelegate::paint( painter, option, index );
 }
-
