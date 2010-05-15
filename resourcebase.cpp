@@ -59,6 +59,9 @@ using namespace Akonadi;
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 {
+  Q_OBJECT
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.dfaure" );
+
   public:
     ResourceBasePrivate( ResourceBase *parent )
       : AgentBasePrivate( parent ),
@@ -69,6 +72,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     {
       Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
+
+      QDBusConnection::sessionBus().registerObject( QLatin1String( "/Debug" ), this, QDBusConnection::ExportScriptableSlots );
     }
 
     Q_DECLARE_PUBLIC( ResourceBase )
@@ -113,6 +118,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void changeCommittedResult( KJob* job );
 
+  public Q_SLOTS:
+    Q_SCRIPTABLE void dump()
+    {
+      scheduler->dump();
+    }
+
+  public:
     // synchronize states
     Collection currentCollection;
 
@@ -683,10 +695,5 @@ void ResourceBase::taskDone()
   d->scheduler->taskDone();
 }
 
-void ResourceBase::dump()
-{
-  Q_D( ResourceBase );
-  d->scheduler->dump();
-}
-
 #include "resourcebase.moc"
+#include "moc_resourcebase.cpp"
