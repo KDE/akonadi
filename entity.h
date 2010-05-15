@@ -91,17 +91,20 @@ class AKONADI_EXPORT Entity
     /**
      * Sets the remote @p revision of the entity.
      *
+     * The remote revision can be used by resources to store some
+     * revision information of the backend to detect changes there.
+     *
+     * @note This method is supposed to be used by resources only.
      * @since 4.5
      */
-    //AK_REVIEW: extend documentation
     void setRemoteRevision( const QString& revision );
 
     /**
      * Returns the remote revision of the entity.
      *
+     * @note This method is supposed to be used by resources only.
      * @since 4.5
      */
-    //AK_REVIEW: extend documentation
     QString remoteRevision() const;
 
     /**

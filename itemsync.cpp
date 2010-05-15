@@ -370,7 +370,7 @@ void ItemSync::Private::deleteItems( const Item::List &items )
     // to fail :)
     TransactionSequence *transaction = qobject_cast<TransactionSequence*>( subjobParent() );
     if ( transaction )
-      transaction->continueOnJobFailure( job );
+      transaction->setIgnoreJobFailure( job );
   }
 }
 

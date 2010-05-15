@@ -25,10 +25,49 @@
 namespace Akonadi {
 
 /**
- * Query properties of persistent search collections.
+ * @short An attribute to store query properties of persistent search collections.
+ *
+ * This attribute is attached to persistent search collections automatically when
+ * creating a new persistent search with SearchCreateJob.
+ * Later on the search query can be changed by modifying this attribute of the
+ * persistent search collection with an CollectionModifyJob.
+ *
+ * Example:
+ *
+ * @code
+ *
+ * const QString name = "My search folder";
+ * const QString query = "...";
+ *
+ * Akonadi::SearchCreateJob *job = new Akonadi::SearchCreateJob( name, query );
+ * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
+ *
+ * MyClass::jobFinished( KJob *job )
+ * {
+ *   if ( job->error() ) {
+ *     qDebug() << "Error occurred";
+ *     return;
+ *   }
+ *
+ *   const Collection searchCollection = job->createdCollection();
+ *   ...
+ *
+ *   // now let's change the query
+ *   if ( searchCollection.hasAttribute<Akonadi::PersistentSearchAttribute>() ) {
+ *     Akonadi::PersistentSearchAttribute *attribute = searchCollection.attribute<Akonadi::PersistentSearchAttribute>();
+ *     attribute->setQueryString( "... another query string ..." );
+ *
+ *     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( searchCollection );
+ *     connect( modifyJob, SIGNAL( result( KJob* ) ), SLOT( modifyFinished( KJob* ) ) );
+ *   }
+ *   ...
+ * }
+ *
+ * @endcode
+ *
+ * @author Volker Krause <vkrause@kde.org>
  * @since 4.5
  */
-//AK_REVIEW: extend API doc with usage example
 class AKONADI_EXPORT PersistentSearchAttribute : public Akonadi::Attribute
 {
   public:

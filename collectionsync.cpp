@@ -421,7 +421,7 @@ class CollectionSync::Private
         // twice, in this case this collection delete job will fail on the second try.
         // To avoid a rollback of the complete transaction we gracefully allow the job
         // to fail :)
-        q->continueOnJobFailure( job );
+        q->setIgnoreJobFailure( job );
       }
     }
 

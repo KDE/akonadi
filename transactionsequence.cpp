@@ -149,7 +149,7 @@ void TransactionSequence::commit()
   }
 }
 
-void TransactionSequence::continueOnJobFailure( KJob *job )
+void TransactionSequence::setIgnoreJobFailure( KJob *job )
 {
   Q_D( TransactionSequence );
 
