@@ -47,7 +47,6 @@ class CollectionFilterProxyModel::Private
     QList< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
     MimeTypeChecker mimeChecker;
-    QStringList excludeResources;
 };
 
 bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index, bool checkResourceVisibility )
@@ -56,7 +55,7 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   const Collection collection = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
   // If this collection directly contains one valid mimetype, it is accepted
-  if ( mimeChecker.isWantedCollection( collection ) && !excludeResources.contains( collection.resource() ) ) {
+  if ( mimeChecker.isWantedCollection( collection ) ) {
     // The folder will be accepted, but we need to make sure the resource is visible too.
     if ( checkResourceVisibility ) {
 
@@ -151,17 +150,6 @@ Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) cons
     return QSortFilterProxyModel::flags( index );
   else
     return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable );
-}
-
-
-void CollectionFilterProxyModel::addExcludeResourcesType( const QStringList &resourcesList )
-{
-  d->excludeResources = resourcesList;
-}
-
-QStringList CollectionFilterProxyModel::excludeResourcesType() const
-{
-  return d->excludeResources;
 }
 
 #include "collectionfilterproxymodel.moc"

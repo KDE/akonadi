@@ -94,20 +94,6 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
 
     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
-    /**
-     * TODO: discuss API, give better name!
-     * @since 4.5
-     */
-    //AK_REVIEW: remove this method
-    void addExcludeResourcesType( const QStringList &resourcesList );
-
-    /**
-     * TODO: discuss API, give better name!
-     * @since 4.5
-     */
-    //AK_REVIEW: remove this method
-    QStringList excludeResourcesType() const;
-
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
 

@@ -161,9 +161,4 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
     return Akonadi::Collection();
 }
 
-void CollectionComboBox::addExcludeResourcesType( const QStringList &exclude )
-{
-  d->mMimeTypeFilterModel->addExcludeResourcesType( exclude );
-}
-
 #include "collectioncombobox.moc"
