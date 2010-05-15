@@ -60,7 +60,7 @@ using namespace Akonadi;
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 {
   Q_OBJECT
-  Q_CLASSINFO( "D-Bus Interface", "org.kde.dfaure" );
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.dfaure" )
 
   public:
     ResourceBasePrivate( ResourceBase *parent )
