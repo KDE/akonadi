@@ -189,20 +189,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * This method is used to set the name of the resource.
      */
-    //FIXME_API: make sure location is renamed to this by resourcebase
     void setName( const QString &name );
 
     /**
      * Returns the name of the resource.
      */
     QString name() const;
-
-    /**
-     * Dump debug output about the resource (currently: only its scheduler)
-     * @since 4.5
-     */
-    //AK_REVIEW: make it a private internal dbus slot
-    void dump();
 
   Q_SIGNALS:
     /**
