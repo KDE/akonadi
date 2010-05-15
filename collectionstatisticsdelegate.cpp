@@ -146,7 +146,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   CollectionStatistics statistics = collection.statistics();
 
-  qint64 unreadCount = statistics.unreadCount();
+  qint64 unreadCount = qMax( 0LL, statistics.unreadCount() );
   qint64 unreadRecursiveCount = d->getCountRecursive<UnreadCount>( index.sibling( index.row(), 0 ) );
 
   // Draw the unread count after the folder name (in parenthesis)
