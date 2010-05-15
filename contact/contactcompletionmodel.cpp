@@ -58,7 +58,7 @@ QAbstractItemModel* ContactCompletionModel::self()
 ContactCompletionModel::ContactCompletionModel( ChangeRecorder *monitor, QObject *parent )
   : EntityTreeModel( monitor, parent )
 {
-  setCollectionFetchStrategy( InvisibleFetch );
+  setCollectionFetchStrategy( InvisibleCollectionFetch );
 }
 
 ContactCompletionModel::~ContactCompletionModel()

@@ -327,8 +327,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
       PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
       EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
-      //AK_REVIEW: add Role suffix
-      UnreadCount,                            ///< Returns the number of unread items in a collection. @since 4.5
+      UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
       UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
       TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
       EndRole = 65535
@@ -427,8 +426,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       FetchNoCollections,               ///< Fetches nothing. This creates an empty model.
       FetchFirstLevelChildCollections,  ///< Fetches first level collections in the root collection.
       FetchCollectionsRecursive,        ///< Fetches collections in the root collection recursively. This is the default.
-      //AK_REVIEW: rename to InvisibleCollectionFetch
-      InvisibleFetch                    ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections. The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
+      InvisibleCollectionFetch          ///< Fetches collections, but does not put them in the model. This can be used to create a list of items in all collections. The ParentCollectionRole can still be used to retrieve the parent collection of an Item. @since 4.5
     };
 
     /**

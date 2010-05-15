@@ -129,7 +129,7 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
   QHash<int, QByteArray> names = q->roleNames();
 
-  names.insert( EntityTreeModel::UnreadCount, "unreadCount" );
+  names.insert( EntityTreeModel::UnreadCountRole, "unreadCount" );
 
   q->setRoleNames(names);
 
@@ -192,7 +192,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
   job->fetchScope().setContentMimeTypes( m_monitor->mimeTypesMonitored() );
 
-  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
   {
     q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                 q, SLOT( collectionListFetched( const Akonadi::Collection::List& ) ) );
@@ -364,7 +364,7 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
   }
 
   if ( itemsToInsert.size() > 0 ) {
-    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ? m_rootCollection.id() : collectionId;
+    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id() : collectionId;
     const int startRow = m_childEntities.value( colId ).size();
 
     Q_ASSERT( m_collections.contains( colId ) );
@@ -691,19 +691,19 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
   if ( isHidden( item ) )
     return;
 
-  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch && !m_collections.contains( collection.id() ) ) {
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch && !m_collections.contains( collection.id() ) ) {
     kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
     return;
   }
 
-  Q_ASSERT( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch ? m_collections.contains( collection.id() ) : true );
+  Q_ASSERT( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains( collection.id() ) : true );
 
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
   int row;
   QModelIndex parentIndex;
-  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleFetch )
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
   {
     row = m_childEntities.value( collection.id() ).size();
     parentIndex = indexForCollection( m_collections.value( collection.id() ) );
@@ -997,7 +997,7 @@ void EntityTreeModelPrivate::startFirstListJob()
   }
 
   if ( ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
-    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch ) ) && generalPopulation )
+    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ) ) && generalPopulation )
     fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
@@ -1207,7 +1207,7 @@ QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collec
 {
   Q_Q( const EntityTreeModel );
 
-  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
     return QModelIndex();
 
   // The id of the parent of Collection::root is not guaranteed to be -1 as assumed by startFirstListJob,
@@ -1305,7 +1305,7 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
 {
   const Item item = parent.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleFetch )
+  if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
     return false;
 
   if ( item.isValid() ) {

@@ -246,7 +246,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
         }
         // fall through.
       }
-      case UnreadCount:
+      case UnreadCountRole:
       {
         CollectionStatistics statistics = collection.statistics();
         return statistics.unreadCount();
@@ -542,7 +542,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
     return QModelIndex();
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
@@ -574,7 +574,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
   {
     if ( parent.isValid() )
       return 0;
@@ -789,7 +789,7 @@ void EntityTreeModel::fetchMore( const QModelIndex & parent )
   if ( !d->canFetchMore( parent ) )
     return;
 
-  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
     return;
 
   if ( d->m_itemPopulation == ImmediatePopulation )
@@ -809,7 +809,7 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( d->m_collectionFetchStrategy == InvisibleFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
     return parent.isValid() ? false : !d->m_items.isEmpty();
 
   // TODO: Empty collections right now will return true and get a little + to expand.
@@ -1019,7 +1019,7 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
   d->m_collectionFetchStrategy = strategy;
 
 
-  if ( strategy == FetchNoCollections || strategy == InvisibleFetch ) {
+  if ( strategy == FetchNoCollections || strategy == InvisibleCollectionFetch ) {
     disconnect( d->m_monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
             this, SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
     disconnect( d->m_monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
