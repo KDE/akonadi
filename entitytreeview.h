@@ -109,20 +109,20 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
     virtual void setModel( QAbstractItemModel * model );
 
     /**
-     * Sets whether to @p show the drop action menu on drop operation.
+     * Sets whether the drop action menu is @p enabled and will
+     * be shown on drop operation.
      *
      * @since 4.5
      */
-    //AK_REVIEW: rename to setDropActionMenuEnabled
-    void setShowDropActionMenu( bool show );
+    void setDropActionMenuEnabled( bool enabled );
 
     /**
-     * Returns whether the drop action menu is shown on drop operation.
+     * Returns whether the drop action menu is enabled and will
+     * be shown on drop operation.
      *
      * @since 4.5
      */
-    //AK_REVIEW: rename to isDropActionMenuEnabled
-    bool showDropActionMenu() const;
+    bool isDropActionMenuEnabled() const;
 
   Q_SIGNALS:
     /**
