@@ -61,7 +61,7 @@ class CollectionStatisticsDelegatePrivate
       Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
       Q_ASSERT( collection.isValid() );
       CollectionStatistics statistics = collection.statistics();
-      qint64 count = countType == UnreadCount ? statistics.unreadCount() : statistics.count();
+      qint64 count = qMax( 0LL, countType == UnreadCount ? statistics.unreadCount() : statistics.count() );
 
       if ( index.model()->hasChildren( index ) )
       {
