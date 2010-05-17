@@ -29,6 +29,7 @@
 
 #include "test_utils.h"
 #include <qtest_akonadi.h>
+#include <Akonadi/CollectionStatistics>
 
 using namespace Akonadi;
 
@@ -73,6 +74,8 @@ class ItemCopyTest : public QObject
       QCOMPARE( item.size(), source.size() );
       QCOMPARE( item.attributes().count(), 1 );
       QVERIFY( item.remoteId().isEmpty() );
+      QEXPECT_FAIL("", "statistics are not properly updated after copy", Abort);
+      QCOMPARE( target.statistics().count(), 1ll );
     }
 
     void testIlleagalCopy()
