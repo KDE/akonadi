@@ -118,8 +118,7 @@ enum QueryColumns {
   ResourceColumn,
 
   PartNameColumn,
-  PartDataColumn,
-  PartExternalColumn
+  PartDatasizeColumn
 };
 
 QSqlQuery ItemRetriever::buildQuery() const
@@ -145,8 +144,7 @@ QSqlQuery ItemRetriever::buildQuery() const
   qb.addColumn( MimeType::nameFullColumnName() );
   qb.addColumn( Resource::nameFullColumnName() );
   qb.addColumn( Part::nameFullColumnName() );
-  qb.addColumn( Part::dataFullColumnName() );
-  qb.addColumn( Part::externalFullColumnName() );
+  qb.addColumn( Part::datasizeFullColumnName() );
 
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
@@ -204,12 +202,11 @@ void ItemRetriever::exec()
       continue;
     }
 
-    QByteArray data = query.value( PartDataColumn ).toByteArray();
-    data = PartHelper::translateData( data, query.value( PartExternalColumn ).toBool() );
+    qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
     QString partName = query.value( PartNameColumn ).toString();
     Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
     partName = partName.mid( 4 );
-    if ( data.isNull() ) {
+    if ( datasize <= 0 ) {
       // request update for this part
       if ( mFullPayload && !lastRequest->parts.contains( partName ) )
         lastRequest->parts << partName;
