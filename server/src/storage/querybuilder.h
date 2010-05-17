@@ -68,6 +68,17 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     };
 
     /**
+     * Defines the place at which a condition should be evaluated.
+     */
+    enum ConditionType {
+      /// add condition to WHERE part of the query
+      WhereCondition,
+      /// add condition to HAVING part of the query
+      /// NOTE: only supported for SELECT queries
+      HavingCondition
+    };
+
+    /**
       Creates a new query builder.
 
       @param table The main table to operate on.
@@ -115,31 +126,41 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     void addColumn( const QString &col );
 
     /**
-      Add a WHERE condition which compares a column with a given value.
+      Add a WHERE or HAVING condition which compares a column with a given value.
       @param column The column that should be compared.
       @param op The operator used for comparison
       @param value The value @p column is compared to.
+      @param type Defines whether this condition should be part of the WHERE or the HAVING
+                  part of the query. Defaults to WHERE.
     */
-    void addValueCondition( const QString &column, Query::CompareOperator op, const QVariant &value );
+    void addValueCondition( const QString &column, Query::CompareOperator op, const QVariant &value, ConditionType type = WhereCondition );
 
     /**
-      Add a WHERE condition which compares a column with another column.
+      Add a WHERE or HAVING condition which compares a column with another column.
       @param column The column that should be compared.
       @param op The operator used for comparison.
       @param column2 The column @p column is compared to.
+      @param type Defines whether this condition should be part of the WHERE or the HAVING
+                  part of the query. Defaults to WHERE.
     */
-    void addColumnCondition( const QString &column, Query::CompareOperator op, const QString &column2 );
+    void addColumnCondition( const QString &column, Query::CompareOperator op, const QString &column2, ConditionType type = WhereCondition );
 
     /**
       Add a WHERE condition. Use this to build hierarchical conditions.
+      @param condition The condition that the resultset should satisfy.
+      @param type Defines whether this condition should be part of the WHERE or the HAVING
+                  part of the query. Defaults to WHERE.
     */
-    void addCondition( const Query::Condition &condition );
+    void addCondition( const Query::Condition &condition, ConditionType type = WhereCondition );
 
     /**
-      Define how WHERE condition are combined.
+      Define how WHERE or HAVING conditions are combined.
       @todo Give this method a better name.
+      @param op The logical operator that should be used to combine the conditions.
+      @param type Defines whether the operator should be used for WHERE or for HAVING
+                  conditions. Defaults to WHERE conditions.
     */
-    void setSubQueryMode( Query::LogicOperator op );
+    void setSubQueryMode( Query::LogicOperator op, ConditionType type = WhereCondition );
 
     /**
       Add sort column.
@@ -147,6 +168,20 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
       @param order Sort order
     */
     void addSortColumn( const QString &column, Query::SortOrder order = Query::Ascending );
+
+    /**
+      Add a GROUP BY column.
+      NOTE: Only supported in SELECT queries.
+      @param column Name of the column to use for grouping.
+    */
+    void addGroupColumn( const QString &column );
+
+    /**
+      Add list of columns to GROUP BY.
+      NOTE: Only supported in SELECT queries.
+      @param columns Names of columns to use for grouping.
+    */
+    void addGroupColumns( const QStringList &columns );
 
     /**
       Sets a column to the given value (only valid for INSERT and UPDATE queries).
@@ -189,12 +224,13 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
   private:
     QString mTable;
     DatabaseType mDatabaseType;
-    Query::Condition mRootCondition;
+    QHash<ConditionType, Query::Condition> mRootCondition;
     QSqlQuery mQuery;
     QueryType mType;
     QStringList mColumns;
     QList<QVariant> mBindValues;
     QList<QPair<QString, Query::SortOrder> > mSortColumns;
+    QStringList mGroupColumns;
     QList<QPair<QString, QVariant> > mColumnValues;
 
     // we must make sure that the tables are joined in the correct order

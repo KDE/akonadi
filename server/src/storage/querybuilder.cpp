@@ -119,14 +119,16 @@ void QueryBuilder::addJoin( JoinType joinType, const QString& table, const QStri
   addJoin( joinType, table, condition );
 }
 
-void QueryBuilder::addValueCondition(const QString & column, Query::CompareOperator op, const QVariant & value)
+void QueryBuilder::addValueCondition(const QString & column, Query::CompareOperator op, const QVariant & value, ConditionType type)
 {
-  mRootCondition.addValueCondition( column, op, value );
+  Q_ASSERT( type == WhereCondition || ( type == HavingCondition && mType == Select ) );
+  mRootCondition[type].addValueCondition( column, op, value );
 }
 
-void QueryBuilder::addColumnCondition(const QString & column, Query::CompareOperator op, const QString & column2)
+void QueryBuilder::addColumnCondition(const QString & column, Query::CompareOperator op, const QString & column2, ConditionType type)
 {
-  mRootCondition.addColumnCondition( column, op, column2 );
+  Q_ASSERT( type == WhereCondition || ( type == HavingCondition && mType == Select ) );
+  mRootCondition[type].addColumnCondition( column, op, column2 );
 }
 
 QSqlQuery& QueryBuilder::query()
@@ -140,7 +142,7 @@ bool QueryBuilder::exec()
 
   // we add the ON conditions of Inner Joins in a Update query here
   // but don't want to change the mRootCondition on each exec().
-  Query::Condition whereCondition = mRootCondition;
+  Query::Condition whereCondition = mRootCondition[WhereCondition];
 
   switch ( mType ) {
     case Select:
@@ -238,6 +240,16 @@ bool QueryBuilder::exec()
     statement += buildWhereCondition( whereCondition );
   }
 
+  if ( !mGroupColumns.isEmpty() ) {
+    statement += QLatin1String(" GROUP BY ");
+    statement += mGroupColumns.join( QLatin1String( ", " ) );
+  }
+
+  if ( !mRootCondition[HavingCondition].isEmpty() ) {
+    statement += QLatin1String(" HAVING ");
+    statement += buildWhereCondition( mRootCondition[HavingCondition] );
+  }
+
   if ( !mSortColumns.isEmpty() ) {
     Q_ASSERT_X( mType == Select, "QueryBuilder::exec()", "Order statements are only valid for SELECT queries" );
     QStringList orderStmts;
@@ -323,19 +335,33 @@ QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
   }
 }
 
-void QueryBuilder::setSubQueryMode(Query::LogicOperator op)
+void QueryBuilder::setSubQueryMode(Query::LogicOperator op, ConditionType type)
 {
-  mRootCondition.setSubQueryMode( op );
+  Q_ASSERT( type == WhereCondition || ( type == HavingCondition && mType == Select ) );
+  mRootCondition[type].setSubQueryMode( op );
 }
 
-void QueryBuilder::addCondition(const Query::Condition & condition)
+void QueryBuilder::addCondition(const Query::Condition & condition, ConditionType type)
 {
-  mRootCondition.addCondition( condition );
+  Q_ASSERT( type == WhereCondition || ( type == HavingCondition && mType == Select ) );
+  mRootCondition[type].addCondition( condition );
 }
 
 void QueryBuilder::addSortColumn(const QString & column, Query::SortOrder order )
 {
   mSortColumns << qMakePair( column, order );
+}
+
+void QueryBuilder::addGroupColumn(const QString& column)
+{
+  Q_ASSERT( mType == Select );
+  mGroupColumns << column;
+}
+
+void QueryBuilder::addGroupColumns(const QStringList& columns)
+{
+  Q_ASSERT( mType == Select );
+  mGroupColumns += columns;
 }
 
 void QueryBuilder::setColumnValue(const QString & column, const QVariant & value)

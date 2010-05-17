@@ -137,6 +137,37 @@ void QueryBuilderTest::testQueryBuilder_data()
   mBuilders << qb;
   QTest::newRow( "insert multi column PSQL" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
 
+  // test GROUP BY foo
+  bindVals.clear();
+  qb = QueryBuilder( "table", QueryBuilder::Select );
+  qb.addColumn( "foo" );
+  qb.addGroupColumn( "id1" );
+  mBuilders << qb;
+  QTest::newRow( "select group by single column" ) << mBuilders.count() << QString( "SELECT foo FROM table GROUP BY id1" ) << bindVals;
+  // test GROUP BY foo, bar
+  qb.addGroupColumn( "id2" );
+  mBuilders << qb;
+  QTest::newRow( "select group by two columns" ) << mBuilders.count() << QString( "SELECT foo FROM table GROUP BY id1, id2" ) << bindVals;
+  // test: HAVING .addValueCondition()
+  qb.addValueCondition( "bar", Equals, 1, QueryBuilder::HavingCondition );
+  mBuilders << qb;
+  bindVals << 1;
+  QTest::newRow( "select with having valueCond" ) << mBuilders.count() << QString( "SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 )" ) << bindVals;
+  // test: HAVING .addColumnCondition()
+  qb.addColumnCondition( "asdf", Equals, "yxcv", QueryBuilder::HavingCondition );
+  mBuilders << qb;
+  QTest::newRow( "select with having columnCond" ) << mBuilders.count() << QString( "SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv )" ) << bindVals;
+  // test: HAVING .addCondition()
+  qb.addCondition( subCon, QueryBuilder::HavingCondition );
+  mBuilders << qb;
+  QTest::newRow( "select with having condition" ) << mBuilders.count() << QString( "SELECT foo FROM table GROUP BY id1, id2 HAVING ( bar = :0 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )" ) << bindVals;
+  // test: HAVING and WHERE
+  qb.addValueCondition( "bla", Equals, 2, QueryBuilder::WhereCondition );
+  mBuilders << qb;
+  bindVals.clear();
+  bindVals << 2 << 1;
+  QTest::newRow( "select with having and where" ) << mBuilders.count() << QString( "SELECT foo FROM table WHERE ( bla = :0 ) GROUP BY id1, id2 HAVING ( bar = :1 AND asdf = yxcv AND ( col1 > col2 AND col1 <> NULL ) )" ) << bindVals;
+
   {
     /// SELECT with JOINS
     QueryBuilder qbTpl = QueryBuilder( "table1", QueryBuilder::Select );
