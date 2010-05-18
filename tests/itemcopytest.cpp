@@ -20,6 +20,7 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/collection.h>
+#include <akonadi/collectionstatistics.h>
 #include <akonadi/control.h>
 #include <akonadi/itemcopyjob.h>
 #include <akonadi/itemfetchjob.h>
@@ -29,7 +30,6 @@
 
 #include "test_utils.h"
 #include <qtest_akonadi.h>
-#include <Akonadi/CollectionStatistics>
 
 using namespace Akonadi;
 
