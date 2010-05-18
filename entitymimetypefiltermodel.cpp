@@ -202,7 +202,7 @@ int EntityMimeTypeFilterModel::columnCount(const QModelIndex &parent) const
   if (!sourceModel())
     return 0;
 
-  const QVariant value = sourceModel()->data(parent, EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
+  const QVariant value = sourceModel()->data(mapToSource(parent), EntityTreeModel::ColumnCountRole + (EntityTreeModel::TerminalUserRole * d->m_headerGroup));
   if ( !value.isValid() )
     return 0;
 
