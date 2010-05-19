@@ -60,40 +60,45 @@ Monitor::~Monitor()
 
 void Monitor::setCollectionMonitored( const Collection &collection, bool monitored )
 {
-  if ( monitored )
+  if ( monitored ) {
     d->collections << collection;
-  else
+  } else {
     d->collections.removeAll( collection );
-
+    d->cleanOldNotifications();
+  }
   emit collectionMonitored( collection, monitored );
 }
 
 void Monitor::setItemMonitored( const Item & item, bool monitored )
 {
-  if ( monitored )
+  if ( monitored ) {
     d->items.insert( item.id() );
-  else
+  } else {
     d->items.remove( item.id() );
-
+    d->cleanOldNotifications();
+  }
   emit itemMonitored( item,  monitored );
 }
 
 void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored )
 {
-  if ( monitored )
+  if ( monitored ) {
     d->resources.insert( resource );
-  else
+  } else {
     d->resources.remove( resource );
-
+    d->cleanOldNotifications();
+  }
   emit resourceMonitored( resource, monitored );
 }
 
 void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 {
-  if ( monitored )
+  if ( monitored ) {
     d->mimetypes.insert( mimetype );
-  else
+  } else {
     d->mimetypes.remove( mimetype );
+    d->cleanOldNotifications();
+  }
 
   emit mimeTypeMonitored( mimetype, monitored );
 }
@@ -101,6 +106,10 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
   d->monitorAll = monitored;
+
+  if ( !monitored ) {
+    d->cleanOldNotifications();
+  }
 
   emit allMonitored( monitored );
 }

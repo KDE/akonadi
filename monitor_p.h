@@ -96,6 +96,11 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     virtual bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg );
     void dispatchNotifications();
+
+    // Called when the monitored item/collection changes, checks if the queued messages
+    // are still accepted, if not they are removed
+    void cleanOldNotifications();
+
     bool ensureDataAvailable( const NotificationMessage &msg );
     void emitNotification( const NotificationMessage &msg );
     void updatePendingStatistics( const NotificationMessage &msg );

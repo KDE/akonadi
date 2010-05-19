@@ -159,6 +159,21 @@ void MonitorPrivate::dispatchNotifications()
   }
 }
 
+void MonitorPrivate::cleanOldNotifications()
+{
+  foreach ( const NotificationMessage &msg, pipeline ) {
+    if ( !acceptNotification( msg ) ) {
+      pipeline.removeOne( msg );
+    }
+  }
+
+  foreach ( const NotificationMessage &msg, pendingNotifications ) {
+    if ( !acceptNotification( msg ) ) {
+      pendingNotifications.removeOne( msg );
+    }
+  }
+}
+
 bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
 {
   bool allCached = true;
