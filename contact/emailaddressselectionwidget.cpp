@@ -68,7 +68,7 @@ class SearchLineEdit : public KLineEdit
     }
 
   private:
-    QObject *mReceiver;
+    QWidget *mReceiver;
 };
 
 /**
