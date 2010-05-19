@@ -217,8 +217,10 @@ void MonitorPrivate::dataAvailable()
   while ( !pipeline.isEmpty() ) {
     const NotificationMessage msg = pipeline.head();
     if ( ensureDataAvailable( msg ) ) {
-      emitNotification( msg );
+      // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
+      // being called again) and we end up dequeuing an empty pipeline
       pipeline.dequeue();
+      emitNotification( msg );
     } else {
       break;
     }
