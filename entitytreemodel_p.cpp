@@ -166,6 +166,7 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
   // That is not provided by akonadi, so we attach it in a property.
   itemFetchJob->setProperty( FetchCollectionId(), QVariant( parent.id() ) );
+  m_pendingCollectionRetrieveJobs.insert( parent.id() );
 
   q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
               q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
@@ -880,6 +881,10 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   if ( job->error() )
     kWarning() << "Job error: " << job->errorString() << endl;
 
+  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
+
+  m_pendingCollectionRetrieveJobs.remove( collectionId );
+
   #ifdef DBG_TRACK_JOB_TIMES
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     if ( CollectionFetchJob* cJob = dynamic_cast<CollectionFetchJob*>( job ) ) {
@@ -1318,6 +1323,10 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
 
     // But the root collection can't...
     if ( Collection::root().id() == colId )
+      return false;
+
+    // Don't start the same job multiple times.
+    if ( m_pendingCollectionRetrieveJobs.contains( colId ) )
       return false;
 
     foreach ( Node *node, m_childEntities.value( colId ) ) {

@@ -118,6 +118,7 @@ public:
 
   QList<Entity::Id> m_pendingCutItems;
   QList<Entity::Id> m_pendingCutCollections;
+  mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
 
   ChangeRecorder *m_monitor;
   Collection m_rootCollection;
