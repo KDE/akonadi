@@ -354,18 +354,35 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
   Q_ASSERT( collection.isValid() );
 
-  const QList<Node*> collectionEntities = m_childEntities.value( collectionId );
   foreach ( const Item &item, items ) {
 
     if ( isHidden( item ) )
       continue;
 
-    if ( ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) && !m_items.contains( item.id() ) )
+    if ( ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) )
       itemsToInsert << item;
+
+    // When listing virtual collections we might get results for items which are already in
+    // the model if their concrete collection has already been listed.
+    // In that case the collectionId should be different though.
+    if ( m_items.contains( item.id() ) )
+    {
+      const Akonadi::Collection::List parents = getParentCollections( item );
+      foreach ( const Akonadi::Collection &parent, parents )
+      {
+        if ( parent.id() == collectionId )
+        {
+          kWarning() << "Fetched an item which is already in the model";
+          // Update it in case the revision changed;
+          m_items[ item.id() ].apply( item );
+          break;
+        }
+      }
+    }
   }
 
   if ( itemsToInsert.size() > 0 ) {
-    Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id() : collectionId;
+    const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id() : collectionId;
     const int startRow = m_childEntities.value( colId ).size();
 
     Q_ASSERT( m_collections.contains( colId ) );
@@ -375,7 +392,9 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
 
     foreach ( const Item &item, itemsToInsert ) {
       const Item::Id itemId = item.id();
-      m_items.insert( itemId, item );
+      // Don't reinsert when listing virtual collections.
+      if ( !m_items.contains( item.id() ) )
+        m_items.insert( itemId, item );
 
       Node *node = new Node;
       node->id = itemId;
