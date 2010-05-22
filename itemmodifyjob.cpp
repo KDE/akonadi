@@ -102,7 +102,7 @@ void ItemModifyJob::doStart()
         }
         break;
       case ItemModifyJobPrivate::RemoteRevision:
-        if ( !d->mItem.remoteId().isNull() ) {
+        if ( !d->mItem.remoteRevision().isNull() ) {
           changes << "REMOTEREVISION.SILENT";
           changes << ImapParser::quote( d->mItem.remoteRevision().toUtf8() );
         }
