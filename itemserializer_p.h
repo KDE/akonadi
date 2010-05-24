@@ -26,12 +26,13 @@
 
 #include "akonadiprivate_export.h"
 
+#include "itemserializerplugin.h"
+
 class QIODevice;
 
 namespace Akonadi {
 
 class Item;
-class ItemSerializerPlugin;
 
 /**
   @internal
@@ -67,9 +68,19 @@ class AKONADI_TESTS_EXPORT ItemSerializer
        * @since 4.4
        */
       static QSet<QByteArray> availableParts( const Item &item );
+};
 
-  private:
-      static ItemSerializerPlugin* pluginForMimeType( const QString& mimetype );
+/**
+  @internal
+  Default implementation for serializer plugin.
+*/
+class DefaultItemSerializerPlugin : public ItemSerializerPlugin
+{
+  public:
+    DefaultItemSerializerPlugin();
+
+    bool deserialize( Item&, const QByteArray&, QIODevice&, int );
+    void serialize( const Item&, const QByteArray&, QIODevice&, int& );
 };
 
 }

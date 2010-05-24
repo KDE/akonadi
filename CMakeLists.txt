@@ -80,8 +80,8 @@ set( akonadikde_LIB_SRC
   collectionstatisticsmodel.cpp
   collectionsync.cpp
   collectionview.cpp
-  dragdropmanager.cpp
   control.cpp
+  dragdropmanager.cpp
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
@@ -148,6 +148,7 @@ set( akonadikde_LIB_SRC
   transactionjobs.cpp
   transactionsequence.cpp
   transportresourcebase.cpp
+  typepluginloader.cpp
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
