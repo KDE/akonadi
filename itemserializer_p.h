@@ -74,7 +74,7 @@ class AKONADI_TESTS_EXPORT ItemSerializer
   @internal
   Default implementation for serializer plugin.
 */
-class DefaultItemSerializerPlugin : public ItemSerializerPlugin
+class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 {
   public:
     DefaultItemSerializerPlugin();

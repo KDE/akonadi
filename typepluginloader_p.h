@@ -21,6 +21,7 @@
 #ifndef AKONADI_TYPEPLUGINLOADER_P_H
 #define AKONADI_TYPEPLUGINLOADER_P_H
 
+class QObject;
 class QString;
 
 namespace Akonadi {
@@ -37,11 +38,6 @@ class ItemSerializerPlugin;
  * To share the code of loading the plugins and finding the right plugin for a given mime type
  * the old code from ItemSerializer has been extracted into the pluginForMimeType() method
  * inside the TypePluginLoader namespace.
- * Currently it returns an ItemSerializerPlugin object to keep backwards compatibility, in KDE5
- * this should be changed to return a TypePlugin object, which provides a ItemSerializerInterface,
- * a DifferenceAlgorithmInterface etc.
- * In the meantime, the interfaces have to be requested via qobject_cast from the ItemSerializerPlugin
- * object.
  */
 namespace TypePluginLoader {
 
@@ -49,6 +45,11 @@ namespace TypePluginLoader {
  * Returns the item serializer plugin that matches the given @p mimetype.
  */
 ItemSerializerPlugin* pluginForMimeType( const QString &mimetype );
+
+/**
+ * Returns the type plugin object that matches the given @p mimetype.
+ */
+QObject* objectForMimeType( const QString &mimetype );
 
 }
 

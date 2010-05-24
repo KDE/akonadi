@@ -51,12 +51,12 @@ class PluginEntry
     {
     }
 
-    explicit PluginEntry( const QString &identifier, ItemSerializerPlugin *plugin = 0 )
+    explicit PluginEntry( const QString &identifier, QObject *plugin = 0 )
       : mIdentifier( identifier ), mPlugin( plugin )
     {
     }
 
-    inline ItemSerializerPlugin* plugin() const
+    inline QObject* plugin() const
     {
       if ( mPlugin )
         return mPlugin;
@@ -70,8 +70,8 @@ class PluginEntry
         mPlugin = s_defaultItemSerializerPlugin;
       }
 
-      mPlugin = qobject_cast<ItemSerializerPlugin*>( object );
-      if ( !mPlugin ) {
+      mPlugin = object;
+      if ( !qobject_cast<ItemSerializerPlugin*>( mPlugin ) ) {
         kWarning() << "ItemSerializerPluginLoader: "
                    << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
@@ -84,7 +84,10 @@ class PluginEntry
       return mPlugin;
     }
 
-    QString type() const { return mIdentifier; }
+    QString type() const
+    {
+      return mIdentifier;
+    }
 
     bool operator<( const PluginEntry &other ) const
     {
@@ -98,7 +101,7 @@ class PluginEntry
 
   private:
     QString mIdentifier;
-    mutable ItemSerializerPlugin *mPlugin;
+    mutable QObject *mPlugin;
 };
 
 static bool operator<( const QString &type, const PluginEntry &entry )
@@ -110,8 +113,8 @@ static bool operator<( const QString &type, const PluginEntry &entry )
 class PluginRegistry
 {
   public:
-    PluginRegistry() :
-      mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream" ), s_defaultItemSerializerPlugin ) )
+    PluginRegistry()
+      : mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream" ), s_defaultItemSerializerPlugin ) )
     {
       const PluginLoader* pl = PluginLoader::self();
       if ( !pl ) {
@@ -173,7 +176,7 @@ class PluginRegistry
     }
 
     QVector<PluginEntry> allPlugins;
-    QHash<QString, ItemSerializerPlugin*> cachedPlugins;
+    QHash<QString, QObject*> cachedPlugins;
 
   private:
     PluginEntry mDefaultPlugin;
@@ -181,13 +184,13 @@ class PluginRegistry
 
 K_GLOBAL_STATIC( PluginRegistry, s_pluginRegistry )
 
-ItemSerializerPlugin* TypePluginLoader::pluginForMimeType( const QString & mimetype )
+QObject* TypePluginLoader::objectForMimeType( const QString &mimetype )
 {
   // plugin cached, so let's take that one
   if ( s_pluginRegistry->cachedPlugins.contains( mimetype ) )
     return s_pluginRegistry->cachedPlugins.value( mimetype );
 
-  ItemSerializerPlugin *plugin = 0;
+  QObject *plugin = 0;
 
   // check if we have one that matches exactly
   const QVector<PluginEntry>::const_iterator it
@@ -205,6 +208,11 @@ ItemSerializerPlugin* TypePluginLoader::pluginForMimeType( const QString & mimet
   Q_ASSERT(plugin);
   s_pluginRegistry->cachedPlugins.insert( mimetype, plugin );
   return plugin;
+}
+
+ItemSerializerPlugin* TypePluginLoader::pluginForMimeType( const QString &mimetype )
+{
+  return qobject_cast<ItemSerializerPlugin*>( objectForMimeType( mimetype ) );
 }
 
 }
