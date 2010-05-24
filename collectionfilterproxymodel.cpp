@@ -143,6 +143,11 @@ void CollectionFilterProxyModel::clearFilters()
 
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const
 {
+  if ( !index.isValid() ) {
+    // Don't crash
+    return 0;
+  }
+  
   const Collection collection = sourceModel()->data( mapToSource( index ), CollectionModel::CollectionRole ).value<Collection>();
 
   // If this collection directly contains one valid mimetype, it is accepted
