@@ -269,6 +269,10 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     if ( m_collections.contains( collection.id() ) ) {
       // This is probably the result of a parent of a previous collection already being in the model.
       // Replace the dummy collection with the real one and move on.
+
+      // This could also be the result of a monitor signal having already inserted the collection
+      // into this model. There's no way to tell, so we just emit dataChanged.
+
       m_collections[ collection.id() ] = collection;
 
       const QModelIndex collectionIndex = indexForCollection( collection );
@@ -360,24 +364,33 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
       continue;
 
     if ( ( m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedItem( item ) ) )
-      itemsToInsert << item;
-
-    // When listing virtual collections we might get results for items which are already in
-    // the model if their concrete collection has already been listed.
-    // In that case the collectionId should be different though.
-    if ( m_items.contains( item.id() ) )
     {
-      const Akonadi::Collection::List parents = getParentCollections( item );
-      foreach ( const Akonadi::Collection &parent, parents )
+      // When listing virtual collections we might get results for items which are already in
+      // the model if their concrete collection has already been listed.
+      // In that case the collectionId should be different though.
+
+      // As an additional complication, new items might be both part of fetch job results and
+      // part of monitor notifications. We only insert items which are not already in the model
+      // considering their (possibly virtual) parent.
+      bool isNewItem = true;
+      if ( m_items.contains( item.id() ) )
       {
-        if ( parent.id() == collectionId )
+        const Akonadi::Collection::List parents = getParentCollections( item );
+        foreach ( const Akonadi::Collection &parent, parents )
         {
-          kWarning() << "Fetched an item which is already in the model";
-          // Update it in case the revision changed;
-          m_items[ item.id() ].apply( item );
-          break;
+          if ( parent.id() == collectionId )
+          {
+            kWarning() << "Fetched an item which is already in the model";
+            // Update it in case the revision changed;
+            m_items[ item.id() ].apply( item );
+            isNewItem = false;
+            break;
+          }
         }
       }
+
+      if (isNewItem)
+        itemsToInsert << item;
     }
   }
 
@@ -545,6 +558,12 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
 //     kWarning() << "Got a stale notification for a collection whose parent was already removed." << collection.id() << collection.remoteId();
 //     return;
 //   }
+
+  // If a fetch job is started and a collection is added to akonadi after the fetch job is started, the
+  // new collection will be added to the fetch job results. It will also be notified through the monitor.
+  // We return early here in that case.
+  if ( m_collections.contains( collection.id() ) )
+    return;
 
   // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
   // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
@@ -715,6 +734,9 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
     kWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
     return;
   }
+
+  if (m_items.contains(item.id()))
+    return;
 
   Q_ASSERT( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains( collection.id() ) : true );
 
