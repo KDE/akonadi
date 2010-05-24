@@ -512,7 +512,7 @@ void Akonadi::SelfTestDialog::testServerLog()
                    ki18n( "The Akonadi server did not report any errors during its current startup." ) );
   } else {
     QStandardItem *item = report( Error, ki18n( "Current Akonadi server error log found." ),
-      ki18n( "The Akonadi server did report error during startup into %1." ).subs( makeLink( serverLog ) ) );
+      ki18n( "The Akonadi server reported errors during its current startup. The log can be found in %1." ).subs( makeLink( serverLog ) ) );
     item->setData( serverLog, FileIncludeRole );
   }
 
@@ -523,7 +523,7 @@ void Akonadi::SelfTestDialog::testServerLog()
                    ki18n( "The Akonadi server did not report any errors during its previous startup." ) );
   } else {
     QStandardItem *item = report( Error, ki18n( "Previous Akonadi server error log found." ),
-      ki18n( "The Akonadi server did report error during its previous startup into %1." ).subs( makeLink( serverLog ) ) );
+      ki18n( "The Akonadi server reported errors during its previous startup. The log can be found in %1." ).subs( makeLink( serverLog ) ) );
     item->setData( serverLog, FileIncludeRole );
   }
 }
@@ -538,7 +538,7 @@ void SelfTestDialog::testControlLog()
                    ki18n( "The Akonadi control process did not report any errors during its current startup." ) );
   } else {
     QStandardItem *item = report( Error, ki18n( "Current Akonadi control error log found." ),
-      ki18n( "The Akonadi control process did report error during startup into %1." ).subs( makeLink( controlLog ) ) );
+      ki18n( "The Akonadi control process reported errors during its current startup. The log can be found in %1." ).subs( makeLink( controlLog ) ) );
     item->setData( controlLog, FileIncludeRole );
   }
 
@@ -549,7 +549,7 @@ void SelfTestDialog::testControlLog()
                    ki18n( "The Akonadi control process did not report any errors during its previous startup." ) );
   } else {
     QStandardItem *item = report( Error, ki18n( "Previous Akonadi control error log found." ),
-      ki18n( "The Akonadi control process did report error during its previous startup into %1." ).subs( makeLink( controlLog ) ) );
+      ki18n( "The Akonadi control process reported errors during its previous startup. The log can be found in %1." ).subs( makeLink( controlLog ) ) );
     item->setData( controlLog, FileIncludeRole );
   }
 }
