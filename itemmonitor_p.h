@@ -74,8 +74,10 @@ class ItemMonitor::Private : public QObject
 
       ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
 
-      if ( !fetchJob->items().isEmpty() )
-        slotItemChanged( fetchJob->items().first(), QSet<QByteArray>() );
+      if ( !fetchJob->items().isEmpty() ) {
+        mItem = fetchJob->items().first();
+        mParent->itemChanged( mItem );
+      }
     }
 };
 
