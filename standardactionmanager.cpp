@@ -209,7 +209,6 @@ class StandardActionManager::Private
       enableAction( DeleteCollections, singleColSelected && (col.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( col ) );
       enableAction( CopyCollections, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
       enableAction( CutCollections, canDeleteCollections && !isRootCollection( col ) && !CollectionUtils::isResource( col ) );
-      enableAction( CollectionProperties, singleColSelected && !isRootCollection( col ) );
       enableAction( SynchronizeCollections, singleColSelected && (CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) ) );
       enableAction( Paste, singleColSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
       enableAction( AddToFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( col ) ) );
