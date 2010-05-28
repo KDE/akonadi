@@ -200,7 +200,10 @@ set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
 target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} )
 
 install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
-install( FILES src/storage/mysql-global.conf DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )
+install( FILES 
+  src/storage/mysql-global.conf
+  src/storage/mysql-global-mobile.conf
+  DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )
 
 ## DBus XML files
 
