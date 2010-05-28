@@ -24,7 +24,8 @@
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
 
-#include "../../libs/xdgbasedirs_p.h"
+#include <akdebug.h>
+#include <libs/xdgbasedirs_p.h>
 
 using namespace Akonadi;
 
@@ -46,7 +47,7 @@ DbConfig::DbConfig()
   if ( mSizeThreshold < 0 )
     mSizeThreshold = 0;
 
-  mUseExternalPayloadFile = false;
+  mUseExternalPayloadFile = true;
   mUseExternalPayloadFile = settings.value( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile ).toBool();
 }
 
@@ -77,7 +78,7 @@ DbConfig* DbConfig::configuredDatabase()
     else if ( driverName == QLatin1String( "QPSQL" ) )
       s_DbConfigInstance = new DbConfigPostgresql;
     else
-      qDebug( "No sql driver defined!" );
+      akFatal() << "Unknown database driver: " << driverName;
   }
 
   return s_DbConfigInstance;
