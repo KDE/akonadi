@@ -76,6 +76,8 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 */
 class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 {
+  Q_OBJECT
+  Q_INTERFACES( Akonadi::ItemSerializerPlugin )
   public:
     DefaultItemSerializerPlugin();
 

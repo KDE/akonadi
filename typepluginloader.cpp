@@ -212,7 +212,9 @@ QObject* TypePluginLoader::objectForMimeType( const QString &mimetype )
 
 ItemSerializerPlugin* TypePluginLoader::pluginForMimeType( const QString &mimetype )
 {
-  return qobject_cast<ItemSerializerPlugin*>( objectForMimeType( mimetype ) );
+  ItemSerializerPlugin* plugin = qobject_cast<ItemSerializerPlugin*>( objectForMimeType( mimetype ) );
+  Q_ASSERT( plugin );
+  return plugin;
 }
 
 }
