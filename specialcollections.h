@@ -25,6 +25,7 @@
 #include <QtCore/QObject>
 
 #include "akonadi/collection.h"
+#include <akonadi/item.h>
 
 class KCoreConfigSkeleton;
 class KJob;
@@ -143,6 +144,8 @@ class AKONADI_EXPORT SpecialCollections : public QObject
     SpecialCollectionsPrivate *const d;
 
     Q_PRIVATE_SLOT( d, void collectionRemoved( Akonadi::Collection ) )
+    Q_PRIVATE_SLOT( d, void collectionStatisticsChanged( Akonadi::Collection::Id, Akonadi::CollectionStatistics ) )
+    Q_PRIVATE_SLOT( d, void  collectionFetchJobFinished( KJob* ) )
     //@endcond
 };
 

@@ -26,6 +26,8 @@
 #include "akonadiprivate_export.h"
 
 #include "akonadi/collection.h"
+#include <akonadi/collectionstatistics.h>
+#include <akonadi/item.h>
 
 class KCoreConfigSkeleton;
 class KJob;
@@ -48,6 +50,8 @@ class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
     QString defaultResourceId() const;
     void emitChanged( const QString &resourceId );
     void collectionRemoved( const Collection &col ); // slot
+    void collectionFetchJobFinished( KJob* ); // slot
+    void collectionStatisticsChanged( Akonadi::Collection::Id, Akonadi::CollectionStatistics ); // slot
 
     /**
       Forgets all folders owned by the given resource.
@@ -74,6 +78,7 @@ class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
     SpecialCollections *q;
     KCoreConfigSkeleton *mSettings;
     QHash<QString, QHash<QByteArray, Collection> > mFoldersForResource;
+    QHash< Akonadi::Collection::Id, Akonadi::CollectionStatistics > mColStatsTmp;
     bool mBatchMode;
     QSet<QString> mToEmitChangedFor;
     Monitor *mMonitor;
