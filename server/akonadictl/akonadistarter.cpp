@@ -32,7 +32,7 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
     QObject( parent ),
     mRegistered( false )
 {
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE_LOCK ),
                                                           QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
 
