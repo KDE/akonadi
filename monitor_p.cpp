@@ -82,7 +82,8 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
 {
   NotificationMessage::Operation op = msg.operation();
 
-  if ( ( msg.type() == NotificationMessage::Item ) && ( ( op == NotificationMessage::Add && q_ptr->receivers( SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) ) == 0 )
+  if ( !fetchCollectionStatistics &&
+       ( msg.type() == NotificationMessage::Item ) && ( ( op == NotificationMessage::Add && q_ptr->receivers( SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) ) == 0 )
     || ( op == NotificationMessage::Remove && q_ptr->receivers( SIGNAL( itemRemoved( const Akonadi::Item& ) ) ) == 0 )
     || ( op == NotificationMessage::Modify && q_ptr->receivers( SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) ) == 0 )
     || ( op == NotificationMessage::Move && q_ptr->receivers( SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) ) == 0 )
