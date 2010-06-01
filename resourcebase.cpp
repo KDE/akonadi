@@ -506,7 +506,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )
   }
   ItemFetchJob *fetch = qobject_cast<ItemFetchJob*>( job );
   if ( fetch->items().count() != 1 ) {
-    q->cancelTask( QLatin1String( "The requested item does no longer exist" ) );
+    q->cancelTask( i18n( "The requested item does no longer exist" ) );
     return;
   }
   const Item item = fetch->items().first();
