@@ -82,9 +82,28 @@ class AKONADI_CONTACT_EXPORT ContactGroupSearchJob : public ItemSearchJob
     };
 
     /**
+     * Describes the type of pattern matching that shall be used.
+     *
+     * @since 4.5
+     */
+    enum Match
+    {
+      ExactMatch,      ///< The result must match exactly the pattern (case sensitive).
+      StartsWithMatch, ///< The result must start with the pattern (case insensitive).
+      ContainsMatch    ///< The result must contain the pattern (case insensitive).
+    };
+
+    /**
      * Sets the @p criterion and @p value for the search.
      */
     void setQuery( Criterion criterion, const QString &value );
+
+    /**
+     * Sets the @p criterion and @p value for the search with @p match.
+     *
+     * @since 4.5
+     */
+    void setQuery( Criterion criterion, const QString &value, Match match );
 
     /**
      * Sets a @p limit on how many results will be returned by this search job.

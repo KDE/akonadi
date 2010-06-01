@@ -50,16 +50,42 @@ ContactGroupSearchJob::~ContactGroupSearchJob()
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value )
 {
+  // Exact match was the default in 4.4, so we have to keep it and ContactSearchJob has something
+  // else as default
+  setQuery( criterion, value, ExactMatch );
+}
+
+void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
+{
   QString query = QString::fromLatin1(
             "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
+
+  QString matchString;
+  switch ( match ) {
+    case ExactMatch:
+      matchString = QString::fromLatin1(
+                     " ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>." );
+      break;
+    case ContainsMatch:
+      matchString = QString::fromLatin1(
+                     " ?group nco:contactGroupName ?v . "
+                     " ?v bif:contains \"'%1'\"" );
+      break;
+    case StartsWithMatch:
+      matchString = QString::fromLatin1(
+                     " ?group nco:contactGroupName ?v . "
+                     " ?v bif:contains \"'%1*'\"" );
+      break;
+  }
 
   if ( criterion == Name ) {
     query += QString::fromLatin1(
         "SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
-        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
-        "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . " );
+    query += matchString;
+    query += QString::fromLatin1(
         "  } "
         "}" );
   }
