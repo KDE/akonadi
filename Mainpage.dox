@@ -115,13 +115,23 @@ Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
 
 \section libakonadi_resource Agents and Resources
 
+Agents are independent processes that watch the Akonadi store for changes and react to them if necessary.
+Example: The Nepomuk feeder (kdepim/runtime/agents/nepomukfeeder/) is an agent that watches Akonadi for
+new emails, retrieves the new items, and feeds them to Nepomuk for indexing.
+
 The class Akonadi::AgentBase is the common base class for all agents. It provides commonly needed
 functionality such as change monitoring and recording.
 
-Resources are a special kind of agents. Akonadi::ResourceBase is the base class for them. It provides the
+Resources are a special kind of agents. They are used as the actual backend for whatever data the resource represents.
+In this situation the akonadi server acts more like a proxy service. It caches data on behalf of its clients
+(client here being the Resource), not permanently storing it. The Akonadi server forwards item retrieval requests to the
+corresponding resource, if the item is not in the cache.
+Example: The imap resource is responsible for storing and fetching emails from an imap server.
+
+Akonadi::ResourceBase is the base class for them. It provides the
 necessary interfaces to the server as well as many convenience functions to make implementing
-a new resource as easy as possible. Note that a collection contains items belonging to a single 
-resource, although there are plans in the future for 'virtual' collections which will contain 
+a new resource as easy as possible. Note that a collection contains items belonging to a single
+resource, although there are plans in the future for 'virtual' collections which will contain
 the results of a search query spanning multiple resources.
 
 A resource can support multiple mimetypes. There are two places where a resource can specify 
