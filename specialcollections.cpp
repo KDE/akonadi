@@ -45,16 +45,15 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate( KCoreConfigSkeleton *setti
 {
   mMonitor = new Monitor( q );
   mMonitor->fetchCollectionStatistics( true );
+
   /// In order to know if items are added or deleted
-  ///  from one of our specialcollection folders,
-  ///  we have to watch all mail item add/move/delete notifications
-  ///  and check for the parent to see if it is one we care about
-//   mMonitor->setMimeTypeMonitored( QLatin1String( "message/rfc822" ) );
+  /// from one of our specialcollection folders,
+  /// we have to watch all mail item add/move/delete notifications
+  /// and check for the parent to see if it is one we care about
   QObject::connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
                     q, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
-  QObject::connect( mMonitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, Akonadi::CollectionStatistics ) ),
-                    q, SLOT( collectionStatisticsChanged( Akonadi::Collection::Id, Akonadi::CollectionStatistics ) ) );
-
+  QObject::connect( mMonitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
+                    q, SLOT( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 }
 
 SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
@@ -110,15 +109,15 @@ void SpecialCollectionsPrivate::collectionRemoved( const Collection &collection 
   }
 }
 
-void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection::Id colId, Akonadi::CollectionStatistics stats )
+void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection::Id collectionId, const Akonadi::CollectionStatistics &statistics )
 {
   // need to get the name of the collection in order to be able to check if we are storing it,
   // but we have the id from the monitor, so fetch the name.
-  Akonadi::CollectionFetchJob* fetchJob = new Akonadi::CollectionFetchJob( Collection( colId ), Akonadi::CollectionFetchJob::Base );
+  Akonadi::CollectionFetchJob* fetchJob = new Akonadi::CollectionFetchJob( Collection( collectionId ), Akonadi::CollectionFetchJob::Base );
   fetchJob->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::None );
+  fetchJob->setProperty( "statistics", QVariant::fromValue( statistics ) );
 
-  mColStatsTmp[ colId ] = stats;
-  QObject::connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchJobFinished( KJob* ) ) );
+  q->connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchJobFinished( KJob* ) ) );
 }
 
 
@@ -129,18 +128,13 @@ void SpecialCollectionsPrivate::collectionFetchJobFinished( KJob* job )
     return;
   }
 
-  Akonadi::CollectionFetchJob* cjob = qobject_cast< Akonadi::CollectionFetchJob* >( job );
+  const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
 
-  Q_ASSERT( cjob->collections().size() );
-  const Akonadi::Collection col = cjob->collections().first();
-  if ( !mColStatsTmp.contains( col.id() ) ) {
-    kWarning() << "SpecialCollections fetched collection to update statistics for that it didn't expect!!";
-    return;
-  }
+  Q_ASSERT( fetchJob->collections().size() > 0 );
+  const Akonadi::Collection collection = fetchJob->collections().first();
+  const Akonadi::CollectionStatistics statistics = fetchJob->property( "statistics" ).value<Akonadi::CollectionStatistics>();
 
-  mFoldersForResource[ col.resource() ][ col.name().toUtf8() ].setStatistics( mColStatsTmp[ col.id() ] );
-
-  mColStatsTmp.remove( col.id() );
+  mFoldersForResource[ collection.resource() ][ collection.name().toUtf8() ].setStatistics( statistics );
 }
 
 void SpecialCollectionsPrivate::beginBatchRegister()
