@@ -143,7 +143,7 @@ class AKONADI_EXPORT SpecialCollections : public QObject
 
     SpecialCollectionsPrivate *const d;
 
-    Q_PRIVATE_SLOT( d, void collectionRemoved( Akonadi::Collection ) )
+    Q_PRIVATE_SLOT( d, void collectionRemoved(  const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d, void collectionStatisticsChanged( Akonadi::Collection::Id, Akonadi::CollectionStatistics ) )
     Q_PRIVATE_SLOT( d, void  collectionFetchJobFinished( KJob* ) )
     //@endcond

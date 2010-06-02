@@ -62,6 +62,7 @@ SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
 
 QString SpecialCollectionsPrivate::defaultResourceId() const
 {
+  mSettings->readConfig();
   const KConfigSkeletonItem *item = mSettings->findItem( QLatin1String( "DefaultResourceId" ) );
   Q_ASSERT( item );
 
