@@ -124,8 +124,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection
 
 void SpecialCollectionsPrivate::collectionFetchJobFinished( KJob* job )
 {
-  if( job->error() )
-  {
+  if ( job->error() ) {
     kWarning() << "Error fetching collection to get name from id for statistics updating in specialcollections!";
     return;
   }
@@ -134,16 +133,12 @@ void SpecialCollectionsPrivate::collectionFetchJobFinished( KJob* job )
 
   Q_ASSERT( cjob->collections().size() );
   const Akonadi::Collection col = cjob->collections().first();
-  if( !mColStatsTmp.contains( col.id() ) )
-  {
+  if ( !mColStatsTmp.contains( col.id() ) ) {
     kWarning() << "SpecialCollections fetched collection to update statistics for that it didn't expect!!";
-    return;;
+    return;
   }
 
-  Akonadi::CollectionStatistics stat = mColStatsTmp[ col.id() ];
-  kDebug() << "new size:" << stat.count();
-  Akonadi::Collection coll2 = mFoldersForResource[ col.resource() ][ col.name().toUtf8() ];
-  mFoldersForResource[ col.resource() ][ col.name().toUtf8() ].setStatistics( stat );
+  mFoldersForResource[ col.resource() ][ col.name().toUtf8() ].setStatistics( mColStatsTmp[ col.id() ] );
 
   mColStatsTmp.remove( col.id() );
 }
