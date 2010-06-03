@@ -46,6 +46,8 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
   if (DbConfig::configuredDatabase()->useExternalPayloadFile() && part->external())
   {
     QString origFileName = QString::fromUtf8( part->data() );
+    if ( origFileName.isEmpty() )
+      origFileName = fileNameForId( part->pimItemId() );
     QString fileName = origFileName;
     QString rev = QString::fromAscii("_r0");
     if (fileName.contains( QString::fromAscii("_r") ))
@@ -123,7 +125,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
     if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
     {
-//      qDebug() << "Insert: create part file " << fileName << "with " << QString::fromUtf8(data).left(50);
+//       qDebug() << "Insert: create part file " << fileName << "with " << QString::fromUtf8(data).left(50);
 
       file.write(data);
       fileNameData = fileName.toLocal8Bit();
@@ -133,8 +135,8 @@ bool PartHelper::insert( Part *part, qint64* insertId )
       file.close();
     } else
     {
-//      qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
-//      qDebug() << "Error: " << file.errorString();
+//       qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
+//       qDebug() << "Error: " << file.errorString();
       return false;
     }
   }

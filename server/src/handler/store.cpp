@@ -267,6 +267,7 @@ bool Store::parseStream()
           // this will give us a proper filename to stream the rest of the parts contents into
           // NOTE: we have to set the correct size (== dataSize) directly
           value = m_streamParser->readLiteralPart();
+         // qDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
 
           if ( part.isValid() ) {
             if ( !PartHelper::update( &part, value, dataSize ) )
