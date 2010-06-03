@@ -21,6 +21,7 @@ Comment[sv]=Jabber-protokoll
 Comment[th]=โพรโทคอล Jabber
 Comment[uk]=Протокол Jabber
 Comment[x-test]=xxJabber Protocolxx
+Comment[zh_TW]=Jabber 協定
 Name=Jabber
 Name[ca]=Jabber
 Name[ca@valencia]=Jabber
@@ -39,4 +40,5 @@ Name[sv]=Jabber
 Name[th]=Jabber
 Name[uk]=Jabber
 Name[x-test]=xxJabberxx
+Name[zh_TW]=Jabber
 

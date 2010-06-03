@@ -21,6 +21,7 @@ Comment[sv]=AIM-protokoll
 Comment[th]=โพรโทคอล AIM
 Comment[uk]=Протокол AIM
 Comment[x-test]=xxAIM Protocolxx
+Comment[zh_TW]=AIM 協定
 Name=AIM
 Name[ca]=AIM
 Name[ca@valencia]=AIM
@@ -39,4 +40,5 @@ Name[sv]=AIM
 Name[th]=AIM
 Name[uk]=AIM
 Name[x-test]=xxAIMxx
+Name[zh_TW]=AIM
 

@@ -21,6 +21,7 @@ Comment[sv]=ICQ-protokoll
 Comment[th]=โพรโทคอล ICQ
 Comment[uk]=Протокол ICQ
 Comment[x-test]=xxICQ Protocolxx
+Comment[zh_TW]=ICQ 協定
 Name=ICQ
 Name[ca]=ICQ
 Name[ca@valencia]=ICQ
@@ -39,4 +40,5 @@ Name[sv]=ICQ
 Name[th]=ICQ
 Name[uk]=ICQ
 Name[x-test]=xxICQxx
+Name[zh_TW]=ICQ
 

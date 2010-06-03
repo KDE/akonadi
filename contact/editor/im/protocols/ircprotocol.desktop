@@ -18,6 +18,7 @@ Comment[pt_BR]=Bate-papo via Internet (IRC)
 Comment[sv]=Internet Relay Chat
 Comment[uk]=Internet Relay Chat
 Comment[x-test]=xxInternet Relay Chatxx
+Comment[zh_TW]=IRC
 Name=IRC
 Name[ca]=IRC
 Name[ca@valencia]=IRC
@@ -36,4 +37,5 @@ Name[sv]=IRC
 Name[th]=IRC
 Name[uk]=IRC
 Name[x-test]=xxIRCxx
+Name[zh_TW]=IRC
 
