@@ -49,7 +49,7 @@ class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
 
     QString defaultResourceId() const;
     void emitChanged( const QString &resourceId );
-    void collectionRemoved( const Collection &col ); // slot
+    void collectionRemoved( const Collection &collection ); // slot
     void collectionFetchJobFinished( KJob* ); // slot
     void collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ); // slot
 
