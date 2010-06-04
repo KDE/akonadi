@@ -92,7 +92,6 @@ QByteArray EntityDisplayAttribute::serialized() const
   l << ImapParser::quote( d->name.toUtf8() );
   l << ImapParser::quote( d->icon.toUtf8() );
   l << ImapParser::quote( d->activeIcon.toUtf8() );
-
   QList<QByteArray> components;
   if ( d->backgroundColor.isValid() )
   {
@@ -113,9 +112,10 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
   Q_ASSERT( size >= 2 );
   d->name = QString::fromUtf8( l[0] );
   d->icon = QString::fromUtf8( l[1] );
-  if ( size == 3 )
+  if ( size >= 3 ) {
     d->activeIcon = QString::fromUtf8( l[2] );
-  if ( size == 4 )
+  }
+  if ( size >= 4 )
   {
     if ( !l[3].isEmpty() )
     {
