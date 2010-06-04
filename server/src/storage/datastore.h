@@ -117,7 +117,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
 
     /* --- ItemFlags ----------------------------------------------------- */
     bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags,
+    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags, bool& flagsChanged,
                           bool checkIfExists = true, const Collection &col = Collection() );
     bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
 

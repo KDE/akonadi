@@ -166,8 +166,10 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
 }
 
 bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
-                                 bool checkIfExists, const Collection &col )
+                                 bool& flagsChanged, bool checkIfExists,
+                                 const Collection &col )
 {
+  flagsChanged = false;
   if ( !item.isValid() )
     return false;
   if ( flags.isEmpty() )
@@ -175,12 +177,13 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
 
   for ( int i = 0; i < flags.count(); ++i ) {
     if ( !checkIfExists || !item.relatesToFlag( flags[ i ] ) ) {
+      flagsChanged = true;
       if ( !item.addFlag( flags[i] ) )
         return false;
     }
   }
-
-  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS", col );
+  if ( flagsChanged )
+    mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS", col );
   return true;
 }
 

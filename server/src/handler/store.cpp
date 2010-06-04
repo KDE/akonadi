@@ -62,6 +62,7 @@ bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
   Flag::List currentFlags = item.flags();
   std::sort( flagList.begin(), flagList.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
   std::sort( currentFlags.begin(), currentFlags.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
+
   if ( flagList == currentFlags )
     return false;
 
@@ -71,12 +72,12 @@ bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
   return true;
 }
 
-bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags, bool& flagsChanged )
 {
   const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
 
-  if ( !store->appendItemFlags( item, flagList ) ) {
+  if ( !store->appendItemFlags( item, flagList, flagsChanged ) ) {
     qDebug( "Store::addFlags: Unable to add new item flags" );
     return false;
   }
@@ -163,7 +164,7 @@ bool Store::parseStream()
         if ( op == Replace ) {
           flagsChanged = replaceFlags( pimItems[ i ], flags );
         } else if ( op == Add ) {
-          if ( !addFlags( pimItems[ i ], flags ) )
+          if ( !addFlags( pimItems[ i ], flags, flagsChanged ) )
             return failureResponse( "Unable to add item flags." );
         } else if ( op == Delete ) {
           if ( !deleteFlags( pimItems[ i ], flags ) )
