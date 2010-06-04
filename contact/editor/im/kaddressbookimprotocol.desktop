@@ -19,6 +19,7 @@ Name[sv]=Addressbokens direktmeddelandeprotokoll
 Name[th]=โพรโทคอลข้อความด่วนทันใจของสมุดที่อยู่-K
 Name[uk]=Протокол миттєвого обміну повідомленнями KAddressbook
 Name[x-test]=xxKAddressbook Instant Messaging Protocolxx
+Name[zh_CN]=KAddressbook 即时通讯协议
 Name[zh_TW]=KAddressbook 即時通訊協定
 [PropertyDef::X-KDE-InstantMessagingKABCField]
 Type=QString

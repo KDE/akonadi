@@ -20,6 +20,7 @@ Comment[sv]=SMS-protokoll
 Comment[th]=โพรโทคอล SMS
 Comment[uk]=Протокол SMS
 Comment[x-test]=xxSMS Protocolxx
+Comment[zh_CN]=短消息协议
 Comment[zh_TW]=SMS 協定
 Name=SMS
 Name[ca]=SMS
@@ -38,5 +39,6 @@ Name[sv]=SMS
 Name[th]=SMS
 Name[uk]=SMS
 Name[x-test]=xxSMSxx
+Name[zh_CN]=SMS
 Name[zh_TW]=SMS
 

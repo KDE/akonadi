@@ -19,6 +19,7 @@ Comment[sv]=Novell GroupWise-meddelandeklient
 Comment[th]=ข้อความด่วนทันใจ GroupWise ของโนเวลล์
 Comment[uk]=Програма обміну повідомленнями Novell GroupWise
 Comment[x-test]=xxNovell GroupWise Messengerxx
+Comment[zh_CN]=Novell GroupWise Messenger
 Comment[zh_TW]=Novell GroupWise 即時訊息
 Name=GroupWise
 Name[ca]=GroupWise
@@ -36,5 +37,6 @@ Name[sv]=GroupWise
 Name[th]=GroupWise
 Name[uk]=GroupWise
 Name[x-test]=xxGroupWisexx
+Name[zh_CN]=GroupWise
 Name[zh_TW]=GroupWise
 
