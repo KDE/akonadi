@@ -95,4 +95,3 @@ void IMDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, c
     QStyledItemDelegate::paint( painter, option, index );
 }
 
-#include "imdelegate.moc"
