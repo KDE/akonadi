@@ -17,8 +17,7 @@
     </entry>
     <entry type="String" name="AddressUrl">
       <default>http://maps.google.com/maps?f=q&amp;hl=%1&amp;q=%n,%l,%s</default>
-      <whatsthis>This URL defines the website that shall be used to show a contact's
-                 postal address.</whatsthis>
+      <whatsthis>This URL defines the website that shall be used to show a contact's postal address.</whatsthis>
       <tooltip>The following placeholders can be used in the URL:
    %s: Street
    %r: Region
@@ -28,8 +27,7 @@
     </entry>
     <entry type="String" name="AddressCommand">
       <label>Address Command</label>
-      <whatsthis>This command defines the application that shall be executed to show a contact's
-                 postal address.</whatsthis>
+      <whatsthis>This command defines the application that shall be executed to show a contact's postal address.</whatsthis>
       <tooltip>The following placeholders can be used in the command:
    %s: Street
    %r: Region
@@ -50,12 +48,10 @@
     </entry>
     <entry type="String" name="PhoneCommand">
       <label>Phone Command</label>
-      <whatsthis>This command defines the application that shall be executed to dial a contact's
-                 phone number.</whatsthis>
+      <whatsthis>This command defines the application that shall be executed to dial a contact's phone number.</whatsthis>
       <tooltip>The following placeholders can be used in the command:
    %N: The raw number as stored in the address book.
-   %n: The normalized number with all non-digit characters removed.
-      </tooltip>
+   %n: The normalized number with all non-digit characters removed.</tooltip>
     </entry>
   </group>
 

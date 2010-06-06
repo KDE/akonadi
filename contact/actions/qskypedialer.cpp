@@ -91,7 +91,7 @@ bool QSkypeDialer::dialNumber( const QString &number )
   if ( !interface->isValid() ) {
     delete interface;
 
-    mErrorMessage = i18n( "Skype Public API (DBus) seems to be disabled." );
+    mErrorMessage = i18n( "Skype Public API (D-Bus) seems to be disabled." );
     return false;
   }
 

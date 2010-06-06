@@ -80,7 +80,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
           delete agentControlIface;
 
         q->setError( KJob::UserDefinedError );
-        q->setErrorText( i18n( "Unable to access dbus interface of created agent." ) );
+        q->setErrorText( i18n( "Unable to access D-Bus interface of created agent." ) );
         q->emitResult();
         return;
       }
