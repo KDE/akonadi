@@ -217,10 +217,10 @@ void SelfTestDialog::testMySQLServer()
   const QString driver = serverSetting( QLatin1String( "General" ), "Driver", QLatin1String( "QMYSQL" ) ).toString();
   const QString serverPath = serverSetting( driver,  "ServerPath", QLatin1String( "" ) ).toString(); // ### default?
 
-  const KLocalizedString details = ki18n( "You currently have configured Akonadi to use the MySQL server '%1'.\n"
+  const KLocalizedString details = ki18n( "You have currently configured Akonadi to use the MySQL server '%1'.\n"
       "Make sure you have the MySQL server installed, set the correct path and ensure you have the "
       "necessary read and execution rights on the server executable. The server executable is typically "
-      "called 'mysqld', its locations varies depending on the distribution." ).subs( serverPath );
+      "called 'mysqld'; its location varies depending on the distribution." ).subs( serverPath );
 
   QFileInfo info( serverPath );
   if ( !info.exists() )
@@ -259,7 +259,7 @@ void SelfTestDialog::testMySQLServerLog()
   const QFileInfo logFileInfo( logFileName );
   if ( !logFileInfo.exists() || logFileInfo.size() == 0 ) {
     report( Success, ki18n( "No current MySQL error log found." ),
-      ki18n( "The MySQL server did not report any errors during this startup into '%1'." ).subs( logFileName ) );
+      ki18n( "The MySQL server did not report any errors during this startup. The log can be found in '%1'." ).subs( logFileName ) );
     return;
   }
   QFile logFile( logFileName );
@@ -493,8 +493,8 @@ void SelfTestDialog::testResources()
       ki18n( "No resource agents have been found, Akonadi is not usable without at least one. "
             "This usually means that no resource agents are installed or that there is a setup problem. "
             "The following paths have been searched: '%1'. "
-            "The XDG_DATA_DIRS environment variable is set to '%2', make sure this includes all paths "
-            "where Akonadi agents are installed to." )
+            "The XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes all paths "
+            "where Akonadi agents are installed." )
           .subs( pathList.join( QLatin1String( " " ) ) )
           .subs( QString::fromLocal8Bit( qgetenv( "XDG_DATA_DIRS" ) ) ) );
   }
@@ -559,7 +559,7 @@ void SelfTestDialog::testRootUser()
 {
   KUser user;
   if ( user.isSuperUser() ) {
-    report( Error, ki18n( "Akonadi was started as root" ), ki18n( "Running Internet-facing applications as root/administrator exposes you to many security risks. MySQL, used by this Akonadi installation, will not allow itself to run as root to protect you from these risks." ) );
+    report( Error, ki18n( "Akonadi was started as root" ), ki18n( "Running Internet-facing applications as root/administrator exposes you to many security risks. MySQL, used by this Akonadi installation, will not allow itself to run as root, to protect you from these risks." ) );
   } else {
     report( Success, ki18n( "Akonadi is not running as root" ), ki18n( "Akonadi is not running as a root/administrator user, which is the recommended setup for a secure system." ) );
   }
