@@ -190,6 +190,18 @@ void AgentManagerPrivate::readAgentTypes()
   }
 }
 
+void AgentManagerPrivate::readAgentInstances()
+{
+  QDBusReply<QStringList> instances = mManager->agentInstances();
+  if ( instances.isValid() ) {
+    foreach ( const QString &instance, instances.value() ) {
+      if ( !mInstances.contains( instance ) ) {
+        agentInstanceAdded( instance );
+      }
+    }
+  }
+}
+
 AgentType AgentManagerPrivate::fillAgentType( const QString &identifier ) const
 {
   AgentType type;
@@ -266,8 +278,10 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight( const QString &identi
 
 void AgentManagerPrivate::serviceOwnerChanged( const QString&, const QString &oldOwner, const QString& )
 {
-  if ( oldOwner.isEmpty() )
+  if ( oldOwner.isEmpty() ) {
     readAgentTypes();
+    readAgentInstances();
+  }
 }
 
 void AgentManagerPrivate::createDBusInterface()
@@ -309,7 +323,6 @@ void AgentManagerPrivate::createDBusInterface()
         mTypes.insert( type, agentType );
       }
     }
-
     result = mManager->agentInstances();
     if ( result.isValid() ) {
       foreach ( const QString &instance, result.value() ) {
@@ -317,6 +330,8 @@ void AgentManagerPrivate::createDBusInterface()
         mInstances.insert( instance, agentInstance );
       }
     }
+  } else {
+    kWarning() << "AgentManager failed to get a valid AgentManager DBus interface. Error is:" << mManager->lastError().type() << mManager->lastError().name() << mManager->lastError().message();
   }
 }
 

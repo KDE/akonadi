@@ -70,6 +70,13 @@ class AgentManagerPrivate
      */
     void readAgentTypes();
 
+    /**
+     * Read the info about all known instances from the server. If AgentManager
+     *  is created before the Akonadi.Control interface is registered, the agent
+     *  instances aren't immediately found then.
+     */
+    void readAgentInstances();
+
     void setName( const AgentInstance&, const QString& );
     void setOnline( const AgentInstance&, bool );
     void configure( const AgentInstance&, QWidget* );
