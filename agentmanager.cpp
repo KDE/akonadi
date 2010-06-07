@@ -270,53 +270,62 @@ void AgentManagerPrivate::serviceOwnerChanged( const QString&, const QString &ol
     readAgentTypes();
 }
 
+void AgentManagerPrivate::createDBusInterface()
+{
+  mTypes.clear();
+  mInstances.clear();
+  delete mManager;
+
+  mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                                                          QLatin1String( "/AgentManager" ),
+                                                          QDBusConnection::sessionBus(), mParent );
+
+  QObject::connect( mManager, SIGNAL( agentTypeAdded( const QString& ) ),
+                    mParent, SLOT( agentTypeAdded( const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
+                    mParent, SLOT( agentTypeRemoved( const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
+                    mParent, SLOT( agentInstanceAdded( const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
+                    mParent, SLOT( agentInstanceRemoved( const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
+                    mParent, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
+                    mParent, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
+                    mParent, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceWarning( const QString&, const QString& ) ),
+                    mParent, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
+                    mParent, SLOT( agentInstanceError( const QString&, const QString& ) ) );
+  QObject::connect( mManager, SIGNAL( agentInstanceOnlineChanged( const QString&, bool ) ),
+                    mParent, SLOT( agentInstanceOnlineChanged( const QString&, bool ) ) );
+
+  if ( mManager->isValid() ) {
+    QDBusReply<QStringList> result = mManager->agentTypes();
+    if ( result.isValid() ) {
+      foreach ( const QString &type, result.value() ) {
+        const AgentType agentType = fillAgentType( type );
+        mTypes.insert( type, agentType );
+      }
+    }
+
+    result = mManager->agentInstances();
+    if ( result.isValid() ) {
+      foreach ( const QString &instance, result.value() ) {
+        const AgentInstance agentInstance = fillAgentInstance( instance );
+        mInstances.insert( instance, agentInstance );
+      }
+    }
+  }
+}
+
 AgentManager* AgentManagerPrivate::mSelf = 0;
 
 AgentManager::AgentManager()
   : QObject( 0 ), d( new AgentManagerPrivate( this ) )
 {
-  d->mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String( "org.freedesktop.Akonadi.Control" ),
-                                                     QLatin1String( "/AgentManager" ),
-                                                     QDBusConnection::sessionBus(), this );
-
-  connect( d->mManager, SIGNAL( agentTypeAdded( const QString& ) ),
-           this, SLOT( agentTypeAdded( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
-           this, SLOT( agentTypeRemoved( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
-           this, SLOT( agentInstanceAdded( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
-           this, SLOT( agentInstanceRemoved( const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
-           this, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
-           this, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
-           this, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceWarning( const QString&, const QString& ) ),
-           this, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
-           this, SLOT( agentInstanceError( const QString&, const QString& ) ) );
-  connect( d->mManager, SIGNAL( agentInstanceOnlineChanged( const QString&, bool ) ),
-           this, SLOT( agentInstanceOnlineChanged( const QString&, bool ) ) );
-
-  if ( d->mManager->isValid() ) {
-    QDBusReply<QStringList> result = d->mManager->agentTypes();
-    if ( result.isValid() ) {
-      foreach ( const QString &type, result.value() ) {
-        const AgentType agentType = d->fillAgentType( type );
-        d->mTypes.insert( type, agentType );
-      }
-    }
-
-    result = d->mManager->agentInstances();
-    if ( result.isValid() ) {
-      foreach ( const QString &instance, result.value() ) {
-        const AgentInstance agentInstance = d->fillAgentInstance( instance );
-        d->mInstances.insert( instance, agentInstance );
-      }
-    }
-  }
+  d->createDBusInterface();
 
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
                                                           QDBusConnection::sessionBus(),

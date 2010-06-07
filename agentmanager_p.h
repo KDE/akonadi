@@ -77,6 +77,7 @@ class AgentManagerPrivate
     void synchronizeCollectionTree( const AgentInstance& );
 
     void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
+    void createDBusInterface();
 
     AgentType fillAgentType( const QString &identifier ) const;
     AgentInstance fillAgentInstance( const QString &identifier ) const;
