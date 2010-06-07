@@ -235,6 +235,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       case EntityUrlRole:
         return collection.url().url();
         break;
+      case UnreadCountRole:
+      {
+        CollectionStatistics statistics = collection.statistics();
+        return statistics.unreadCount();
+      }
       case Qt::BackgroundRole:
       {
         if ( collection.hasAttribute<EntityDisplayAttribute>() )
@@ -245,11 +250,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
             return color;
         }
         // fall through.
-      }
-      case UnreadCountRole:
-      {
-        CollectionStatistics statistics = collection.statistics();
-        return statistics.unreadCount();
       }
       default:
         return entityData( collection, index.column(), role );
