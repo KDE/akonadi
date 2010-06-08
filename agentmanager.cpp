@@ -181,7 +181,7 @@ void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, c
 
 void AgentManagerPrivate::readAgentTypes()
 {
-  QDBusReply<QStringList> types = mManager->agentTypes();
+  const QDBusReply<QStringList> types = mManager->agentTypes();
   if ( types.isValid() ) {
     foreach ( const QString &type, types.value() ) {
       if ( !mTypes.contains( type ) )
