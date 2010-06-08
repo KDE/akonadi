@@ -192,7 +192,7 @@ void AgentManagerPrivate::readAgentTypes()
 
 void AgentManagerPrivate::readAgentInstances()
 {
-  QDBusReply<QStringList> instances = mManager->agentInstances();
+  const QDBusReply<QStringList> instances = mManager->agentInstances();
   if ( instances.isValid() ) {
     foreach ( const QString &instance, instances.value() ) {
       if ( !mInstances.contains( instance ) ) {

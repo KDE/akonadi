@@ -71,9 +71,9 @@ class AgentManagerPrivate
     void readAgentTypes();
 
     /**
-     * Read the info about all known instances from the server. If AgentManager
-     *  is created before the Akonadi.Control interface is registered, the agent
-     *  instances aren't immediately found then.
+     * Reads the information about all known agent instances from the server. If AgentManager
+     * is created before the Akonadi.Control interface is registered, the agent
+     * instances aren't immediately found then.
      */
     void readAgentInstances();
 
