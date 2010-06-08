@@ -51,19 +51,19 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
   // synchronize
   ContactActionsSettings::self()->readConfig();
 
-  QString command = ContactActionsSettings::self()->phoneCommand();
-
-  if ( command.isEmpty() ) {
-    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
-    return;
-  }
-
   // we handle skype separated
   if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
     QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
     if ( !dialer.dialNumber( strippedNumber( number.number().trimmed() ) ) ) {
       KMessageBox::sorry( 0, dialer.errorMessage() );
     }
+    return;
+  }
+
+  QString command = ContactActionsSettings::self()->phoneCommand();
+
+  if ( command.isEmpty() ) {
+    KMessageBox::sorry( 0, i18n( "There is no application set which could be executed. Please go to the settings dialog and configure one." ) );
     return;
   }
 
