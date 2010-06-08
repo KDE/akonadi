@@ -145,7 +145,7 @@ bool KnutResource::retrieveItem( const Item &item, const QSet<QByteArray> &parts
 
   const QDomElement itemElem = mDocument.itemElementByRemoteId( item.remoteId() );
   if ( itemElem.isNull() ) {
-    cancelTask( "No item found for remoteid " + item.remoteId() );
+    cancelTask( i18n("No item found for remoteid %1", item.remoteId() ) );
     return false;
   }
 
