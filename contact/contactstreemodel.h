@@ -161,7 +161,7 @@ class AKONADI_CONTACT_EXPORT ContactsTreeModel : public EntityTreeModel
      */
     enum Roles
     {
-      DateRole = UserRole + 1,   ///< The QDate object for the current index.
+      DateRole = EntityTreeModel::UserRole + 1,   ///< The QDate object for the current index.
       UserRole = DateRole + 42
     };
 
