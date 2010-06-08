@@ -25,6 +25,7 @@
 #include <QHash>
 #include <QStringList>
 #include <QObject>
+#include <QDBusConnection>
 
 class QReadWriteLock;
 class QWaitCondition;
@@ -85,6 +86,7 @@ class ItemRetrievalManager : public QObject
 
     // resource dbus interface cache
     QHash<QString, OrgFreedesktopAkonadiResourceInterface*> mResourceInterfaces;
+    QDBusConnection mDBusConnection;
 };
 
 }

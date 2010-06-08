@@ -35,7 +35,11 @@ using namespace Akonadi;
 ItemRetrievalManager* ItemRetrievalManager::sInstance = 0;
 
 ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
-  QObject( parent )
+  QObject( parent ),
+  mDBusConnection(
+      QDBusConnection::connectToBus(
+          QDBusConnection::SessionBus,
+          QString::fromLatin1("AkonadiServerItemRetrievalManager") ) )
 {
   // make sure we are created from the retrieval thread and only once
   Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
@@ -45,7 +49,8 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
   mLock = new QReadWriteLock();
   mWaitCondition = new QWaitCondition();
 
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+
+  connect( mDBusConnection.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
   connect( this, SIGNAL(syncCollection(QString,qint64)), this, SLOT(triggerCollectionSync(QString,qint64)), Qt::QueuedConnection );
@@ -92,7 +97,7 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
 
   delete iface;
   iface = new OrgFreedesktopAkonadiResourceInterface( QLatin1String("org.freedesktop.Akonadi.Resource.") + id,
-                                                      QLatin1String("/"), QDBusConnection::sessionBus(), this );
+                                                      QLatin1String("/"), mDBusConnection, this );
   if ( !iface || !iface->isValid() ) {
     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                                     .arg( id, iface ? iface->lastError().message() : QString() );
