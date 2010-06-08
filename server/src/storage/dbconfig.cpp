@@ -47,7 +47,7 @@ DbConfig::DbConfig()
   if ( mSizeThreshold < 0 )
     mSizeThreshold = 0;
 
-  mUseExternalPayloadFile = true;
+  mUseExternalPayloadFile = false;
   mUseExternalPayloadFile = settings.value( QLatin1String( "General/ExternalPayload" ), mUseExternalPayloadFile ).toBool();
 }
 
