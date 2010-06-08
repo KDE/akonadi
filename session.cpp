@@ -265,6 +265,8 @@ void SessionPrivate::endJob( Job *job )
 
 void SessionPrivate::jobDone(KJob * job)
 {
+  // ### careful, this method can be called from the QObject dtor of job (see jobDestroyed() below)
+  // so don't call any methods on job itself
   if ( job == currentJob ) {
     if ( pipeline.isEmpty() ) {
       jobRunning = false;
@@ -273,10 +275,11 @@ void SessionPrivate::jobDone(KJob * job)
       currentJob = pipeline.dequeue();
     }
     startNext();
-  }
-  // ### better handle the other cases too, user might have canceled jobs
-  else {
-    kDebug() << job << "Non-current job finished.";
+  } else {
+    // non-current job finished, likely canceled while still in the queue
+    queue.removeAll( static_cast<Akonadi::Job*>( job ) );
+    // ### likely not enough to really cancel already running jobs
+    pipeline.removeAll( static_cast<Akonadi::Job*>( job ) );
   }
 }
 
@@ -290,13 +293,8 @@ void SessionPrivate::jobWriteFinished( Akonadi::Job* job )
 
 void SessionPrivate::jobDestroyed(QObject * job)
 {
-  queue.removeAll( static_cast<Akonadi::Job*>( job ) );
-  // ### likely not enough to really cancel already running jobs
-  pipeline.removeAll( static_cast<Akonadi::Job*>( job ) );
-  if ( currentJob == job ) {
-    currentJob = 0;
-    jobRunning = false;
-  }
+  // careful, accessing non-QObject methods of job will fail here already
+  jobDone( static_cast<KJob*>( job ) );
 }
 
 void SessionPrivate::addJob(Job * job)
