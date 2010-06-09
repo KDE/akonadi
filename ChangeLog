@@ -1,3 +1,1247 @@
+2010-06-09 07:38 +0000 [r1136195]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.h:
+	  When selecting a top level collection, representing a resource,
+	  don't sync all of it's folders, and then the top level again,
+	  just to a collection tree sync and the individual folder sync.
+
+2010-06-08 13:30 +0000 [r1135951]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: disable
+	  the fs backend by default again for now, still contains at least
+	  one critical bug
+
+2010-06-08 12:34 +0000 [r1135936]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.h:
+	  Use our own connection to the session bus in the secondary
+	  thread. Avoids crashes.
+
+2010-06-04 15:58 +0000 [r1134564]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/store.h,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Avoid
+	  triggering flag change notifications when the flags didn't in
+	  fact, change.
+
+2010-06-03 11:17 +0000 [r1134082]  Andras Mantia amantia@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp:
+	  Always set a default name for file system storage files.
+
+2010-06-01 07:57 +0000 [r1133097]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/akonadistarter.cpp:
+	  silence false startup error
+
+2010-05-28 09:35 +0000 [r1131489-1131490]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp: enable
+	  fs payload store by default
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global-mobile.conf
+	  (added), trunk/kdesupport/akonadi/server/CMakeLists.txt: add a
+	  mysql config that is slightly better suited for use on an N900
+
+2010-05-27 06:56 +0000 [r1131067]  Dirk Mueller mueller@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: bump version
+
+2010-05-21 10:17 +0000 [r1129091]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
+	  set client default charset only changes charset in mysql cli
+	  client, akonadiconsole's DB Console already reports utf8 without
+	  this change
+
+2010-05-20 16:15 +0000 [r1128908]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
+	  set proper character set and collation for mysql server
+
+2010-05-17 16:17 +0000 [r1127784-1127785]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  optimize: don't send data over socket, instead rely on proper
+	  value in datasize to find invalidated cache entries
+
+	* trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.h,
+	  trunk/kdesupport/akonadi/server/tests/unittest/querybuildertest.cpp:
+	  make it possible to build select queries using GROUP BY or HAVING
+	  with the QueryBuilder, add tests
+
+2010-05-16 13:18 +0000 [r1127388]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  revert 1126817 for now, completely breaks message body load on
+	  demand with IMAP CCMAIL: Milian Wolff <mail@milianw.de>
+
+2010-05-15 18:18 +0000 [r1127186]  Michael Jansen kde@michael-jansen.biz
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: QDBusServiceWatcher is
+	  4.6 only.
+
+2010-05-14 22:52 +0000 [r1126816-1126817]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  optimize: only query for the empty parts in the parttable and
+	  request an update for them before we went through all parts of a
+	  collection and loaded the data (maybe from disk) and looked
+	  whether the data was null or non existing. now we use the power
+	  of the left join to find items without any fitting part (which
+	  triggers update of all requested parts). alternatively we cope
+	  with invalidated cache entries (which have datasize == 0).
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp: fix
+	  comment gibberish
+
+2010-05-14 20:33 +0000 [r1126766]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.cpp:
+	  remove wrong exception, those cases are handled below
+
+2010-05-14 17:39 +0000 [r1126711]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.cpp:
+	  Implement missing HRID version of the FETCH command.
+
+2010-05-14 14:38 +0000 [r1126652]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp: explain
+	  what's going on in store.cpp and write the proper datasize when
+	  inserting a new external part
+
+2010-05-12 14:39 +0000 [r1125861]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.cpp:
+	  don't fail here if the collection name didn't change at all
+
+2010-05-10 21:22 +0000 [r1125173]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  Less spam. I get hundreds of those on Akonadi startup.
+
+2010-05-10 13:41 +0000 [r1125001]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/query.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/entities-source.xsl,
+	  trunk/kdesupport/akonadi/server/tests/unittest/querybuildertest.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/entity.h,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.h,
+	  trunk/kdesupport/akonadi/server/src/storage/selectquerybuilder.h,
+	  trunk/kdesupport/akonadi/server/src/handler/expunge.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemqueryhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/cachecleaner.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/countquerybuilder.h,
+	  trunk/kdesupport/akonadi/server/tests/unittest/querybuildertest.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp:
+	  refactor JOIN in QueryBuilder, esp. in regard to INNER JOIN Now
+	  the QueryBuilder takes it's main table in the Ctor as it's
+	  required for all queries anyways. All joins, even INNER JOINs are
+	  handled via the new addJoin() method that takes a JoinType
+	  argument. - LEFT JOIN is only supported for SELECT queries -
+	  INNER JOIN is only supported for SELECT and UPDATE queries This
+	  change to the handling of INNER JOINs is required, since the ','
+	  as shortcut for an INNER JOIN cannot be mixed with LEFT JOINs,
+	  while the explicit version can be. See also:
+	  http://dev.mysql.com/doc/refman/5.0/en/join.html The part about
+	  'unknown column' when using ',' for INNER JOINs. Note: Since
+	  INNER JOINs are more restrictive than LEFT JOINs, the former will
+	  take precedence over the latter. Joining one and the same table
+	  twice is not supported, instead the JoinConditions will be
+	  merged. based on: http://reviewboard.kde.org/r/3907/
+
+2010-05-05 09:18 +0000 [r1123098]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/imapstreamparser.cpp,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.h: Always
+	  request the full literal size from the client and do not limit it
+	  to the block size used in the stream parser. It's ignored by the
+	  client anyway and only confuses me during debugging.
+
+2010-05-05 09:04 +0000 [r1123089]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadiconnection.h,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.cpp,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Make
+	  sure that continuation requests have the right tracer
+	  identification so they show up in the debugger in the right
+	  place. Remove some dead code while I was at it.
+
+2010-05-04 10:00 +0000 [r1122608]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml:
+	  increase version of newly created databases
+
+2010-05-04 09:48 +0000 [r1122604]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbupdate.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp:
+	  fix collation and charsets in mysql database Akonadi works with
+	  UTF internally but the MySQL database uses latin1 for collation
+	  and default charsets, which this patch should fix. I have no idea
+	  how to do that for SQLite or PSQL, nor whether it's actually a
+	  problem there. But for MySQL this also fixes the test cases that
+	  emit 'illegal mix of collations' error messages. review:
+	  http://reviewboard.kde.org/r/3877/
+
+2010-05-04 06:51 +0000 [r1122559]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  build with -pedantic
+
+2010-05-03 15:57 +0000 [r1122335]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.h,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/querybuilder.h: use
+	  single query in ItemRetriever This patch makes the ItemRetriever
+	  use a single SQL query with LeftJoins to achieve the same as
+	  before. This won't reduce the overall query time, since the same
+	  amount of items will be retrieved. But imo it makes the code much
+	  cleaner and also enables us to do some optimizations in the
+	  future: - data.isNull directly in the query - item retrieval from
+	  the resource for lists of items, not only single items Review:
+	  http://reviewboard.kde.org/r/3876/
+
+2010-05-01 14:24 +0000 [r1121513]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.cpp,
+	  trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.h:
+	  Make Nepomuk-based persistent search folders also work when
+	  Nepomuk is not yet running during Akonadi startup.
+
+2010-05-01 13:49 +0000 [r1121507]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/searchmanager.h,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/search/searchmanager.cpp:
+	  Emit correct change notifications when updating a query of a
+	  persistent search folder.
+
+2010-04-30 14:47 +0000 [r1121148]  Andreas Holzammer andy@kdab.com
+
+	* trunk/kdesupport/akonadi/server/shared/akcrash.cpp,
+	  trunk/kdesupport/akonadi/server/akonadictl/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.cpp,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.h,
+	  trunk/kdesupport/akonadi/server/src/main.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/control/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/akonadictl/main.cpp: - fixt
+	  akonadi to compile for Windows Ce - striped boost program_options
+	  for Windows Ce
+
+2010-04-30 12:24 +0000 [r1121122]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp: use
+	  exceptions when we cannot build the queries for parts or flags,
+	  just like we did for the item query fixes regression when part or
+	  flag table was empty (introduced by me in r1121073)
+
+2010-04-30 09:32 +0000 [r1121072-1121074]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  apply scope to part query, drastically improves performance for
+	  'lots-of-mails-in-different-collections' cases. still slow for
+	  large folders though
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp:
+	  cleanup: return QSqlQuery instead of QueryBuilder in
+	  buildXYZQuery move building of FlagQuery in FetchHelper into its
+	  won method
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp:
+	  Don't share code between ItemRetriever and FetchHelper Further
+	  step in separating the ItemRetriever from the FetchHelper. This
+	  help removes the code-sharing between the two in order to have
+	  free reign in optimizing the queries.
+	  http://reviewboard.kde.org/r/3844/
+
+2010-04-29 09:34 +0000 [r1120559]  Milian Wolff mail@milianw.de
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp: Use
+	  ItemRetriever as local var instead of inheriting from it in
+	  FetchHelper First step towards optimizing the queries in
+	  ItemRetriever: Let the ItemRetriever be used solely for making
+	  sure all items are in the database. To share code, make the
+	  generic*Query static and reuse it in the FetchHelper. Review:
+	  http://reviewboard.kde.org/r/3819/
+
+2010-04-25 11:37 +0000 [r1118608]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/searchpersistentmodify.cpp
+	  (removed), trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistentmodify.h
+	  (removed), trunk/kdesupport/akonadi/server/CMakeLists.txt: Remove
+	  the search modify special case again, it's handled via the
+	  regular collection modify now.
+
+2010-04-25 11:22 +0000 [r1118601]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/modify.cpp: Clear the
+	  old search results from the collection when updating a search.
+
+2010-04-18 10:30 +0000 [r1115984]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handlerhelper.cpp: fix
+	  quoting of the persistent search attribute
+
+2010-04-17 13:07 +0000 [r1115782]  Andreas Hartmetz ahartmetz@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.cpp,
+	  trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.h:
+	  Fix build by finding these includes in our source/build dirs, not
+	  in installed KDE include dirs. With much help from vkrause.
+
+2010-04-16 15:51 +0000 [r1115493]  Stephen Kelly steveire@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp: Add TODO
+	  for proper handling of no-op change jobs.
+
+2010-04-16 13:42 +0000 [r1115441]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/tests/unittest/interpretertest.cpp
+	  (removed),
+	  trunk/kdesupport/akonadi/server/tests/unittest/interpretertest.h
+	  (removed), trunk/kdesupport/akonadi/server/src/interpreter.cpp
+	  (removed),
+	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/interpreter.h (removed):
+	  unused
+
+2010-04-16 12:44 +0000 [r1115430]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/searchmanager.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/org.kde.nepomuk.QueryService.xml
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomukmanager.h
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/nepomuk/dbusoperators.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/agentsearchengine.cpp
+	  (added), trunk/kdesupport/akonadi/server/src/search/result.cpp
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/abstractsearchmanager.cpp
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/nepomuk/org.kde.nepomuk.QueryService.xml
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/querymetatype.h
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomuk/result.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/org.kde.nepomuk.Query.xml
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/search/xesamsearchengine.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/nepomuk/queryserviceclient.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.h
+	  (added), trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/search/searchmanager.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/dbusoperators.h
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomuksearch.h,
+	  trunk/kdesupport/akonadi/server/src/nepomuk/dbusoperators.cpp
+	  (added), trunk/kdesupport/akonadi/server/src/akonadi.h,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistentmodify.cpp,
+	  trunk/kdesupport/akonadi/server/src/xesammanager.h (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/delete.cpp,
+	  trunk/kdesupport/akonadi/server/src/search/agentsearchengine.h
+	  (added), trunk/kdesupport/akonadi/server/src/search/result.h
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/search/abstractsearchengine.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/abstractsearchmanager.h
+	  (removed), trunk/kdesupport/akonadi/server/src/nepomuk (added),
+	  trunk/kdesupport/akonadi/server/src/search/xesamsearchengine.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/queryserviceclient.h
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/search/nepomuksearchengine.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/nepomuk/querymetatype.h
+	  (added), trunk/kdesupport/akonadi/server/src/nepomuk/result.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/search/dbusoperators.cpp
+	  (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
+	  trunk/kdesupport/akonadi/server/src/nepomuksearch.cpp,
+	  trunk/kdesupport/akonadi/server/src/nepomuk/org.kde.nepomuk.Query.xml
+	  (added), trunk/kdesupport/akonadi/server/src/akonadi.cpp,
+	  trunk/kdesupport/akonadi/server/src/xesammanager.cpp (removed),
+	  trunk/kdesupport/akonadi/server/src/nepomuk/queryserviceclient.h
+	  (added): Refactor search handling in the Akonadi server to make
+	  the support for multiple search backends (Nepomuk and resources
+	  at the moment) much cleaner. Also, this makes search query
+	  modification on existing persistent search folders work finally.
+
+2010-04-13 07:13 +0000 [r1114341]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/modify.cpp:
+	  Preliminary support for modifying queries of search folders
+	  without needing to recreate them. Needs some refactoring though.
+
+2010-04-13 06:25 +0000 [r1114238]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbupdate.xml,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp:
+	  Start to clean up the search query handling by using explicit
+	  database fields for it. Also, prepare to support different query
+	  languages as well as modification of queries without needing to
+	  delete/add the collection.
+
+2010-04-13 04:32 +0000 [r1114219]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/searchpersistentmodify.cpp
+	  (added), trunk/kdesupport/akonadi/server/src/handler.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistentmodify.h
+	  (added), trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Add a
+	  command for changing the search string of a virtual collection.
+	  This is temporary, as the real solution is to store the sparql
+	  query as an attribute on the collection and then using a normal
+	  modify job, but that requires intrusive server changes and this
+	  makes the search in kmail work. Ok'd by Volker.
+
+2010-04-09 13:52 +0000 [r1112925]  Nicolas Lécureuil nlecureuil@mandriva.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Forward port commit 1112923 CCBUG:185395
+
+2010-04-07 12:42 +0000 [r1112128]  Nicolas Lécureuil nlecureuil@mandriva.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Use mysqk_upgrade after the creation of the socket
+
+2010-04-06 15:33 +0000 [r1111741]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  typo.
+
+2010-04-06 14:18 +0000 [r1111706]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp:
+	  Fix the database shutdown when using the Postgres backend.
+	  Killing the pg_ctl process after 3 seconds doesn't guarantee that
+	  the postmaster process is stopped (which would prevent the server
+	  from restarting). Instead, we now get the postmaster pid and
+	  force it to quit.
+
+2010-04-06 08:56 +0000 [r1111611]  Nicolas Lécureuil nlecureuil@mandriva.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.h,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Forward port of commit 1105780 Change mysql_install_db by using
+	  --force and give it a default conf file to use BUG:185395
+
+2010-04-05 18:10 +0000 [r1111454]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp:
+	  revertlast. The issue is not this timer.
+
+2010-04-05 16:18 +0000 [r1111422]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp:
+	  Postgres doesn't stop as fast as mysql (more processes to
+	  terminate). Wait a bit longer.
+
+2010-03-29 11:03 +0000 [r1108585]  Shaheed Haque srhaque@theiet.org
+
+	* trunk/kdesupport/akonadi/libs/tests/CMakeLists.txt: Fix build
+
+2010-03-27 17:09 +0000 [r1108044]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp: Use
+	  the transaction mutex only when really needed, that is when using
+	  sqlite. This is a poor workaround for the KMail startup hang for
+	  a new user caused by SpecialCollectionRequestJob having a
+	  transaction open and waiting for the resource to synchronize
+	  (which in itself is wrong already, you can't expect to see remote
+	  changes inside a transaction). Obviously, this does not help when
+	  using sqlite, but it makes KMail start again for everyone else.
+
+2010-03-26 13:10 +0000 [r1107676]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: install the
+	  qsqlite3 driver in a 'neutral' directory
+
+2010-03-26 13:02 +0000 [r1107675]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindSqlite.cmake: clean up
+
+2010-03-25 10:18 +0000 [r1107314]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/nepomukmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalthread.h,
+	  trunk/kdesupport/akonadi/server/tests/unittest/imapstreamparsertest.h,
+	  trunk/kdesupport/akonadi/server/src/preprocessorinstance.h,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/preprocessormanager.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/search/result.h,
+	  trunk/kdesupport/akonadi/libs/tests/notificationmessagetest.cpp,
+	  trunk/kdesupport/akonadi/server/control/agenttype.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/transaction.h,
+	  trunk/kdesupport/akonadi/server/shared/akapplication.cpp,
+	  trunk/kdesupport/akonadi/server/src/response.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/tests/unittest/scopetest.cpp,
+	  trunk/kdesupport/akonadi/server/src/interpreter.cpp,
+	  trunk/kdesupport/akonadi/server/control/controlmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/nepomuksearch.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp,
+	  trunk/kdesupport/akonadi/server/tests/unittest/handlerhelpertest.cpp:
+	  krazy fixes contributed by Glen Kaukola <gkaukola@cs.ucr.edu>
+
+2010-03-24 16:44 +0000 [r1107033]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml:
+	  Restore the booleans by default (breaks PostgreSQL otherwise) and
+	  hack around sqlite's inability to use them in INSERT statements
+	  instead.
+
+2010-03-24 15:51 +0000 [r1107017]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp:
+	  Comment out some qDebug() which caused a loft of output for the
+	  ${db}-fs tests.
+
+2010-03-24 15:38 +0000 [r1107013]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h: Propagate
+	  failures of akonadiserver to the akonadi_control exit code. Makes
+	  the unit tests in kdepimlibs detect when the server crashes or
+	  cannot be started at all.
+
+2010-03-24 11:26 +0000 [r1106973]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CTestConfig.cmake: Replace
+	  dashboard.akonadi-project.org with my.cdash.org
+
+2010-03-24 09:00 +0000 [r1106941]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp: Be
+	  less verbose so that I can actually read the benchmark output
+
+2010-03-23 20:30 +0000 [r1106741]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/cmake/modules/FindSqlite.cmake: Fix the
+	  Sqlite detection.
+
+2010-03-23 15:47 +0000 [r1106671]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: sqlite is optional.
+
+2010-03-23 15:27 +0000 [r1106668]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp:
+	  This should have been part of r1106656. Now most tests work with
+	  the default QSQLITE driver. However, it is not reliable because
+	  calls to the sqlite database return with SQLITE_BUSY, in stead of
+	  waiting and trying again later.
+
+2010-03-23 15:03 +0000 [r1106662]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: honor lib
+	  install dir suffix
+
+2010-03-23 14:31 +0000 [r1106656]  Bertjan Broeksema b.broeksema@home.nl
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.h:
+	  Enable easy switching between the default and our custom qsqlite
+	  drivers
+
+2010-03-23 14:24 +0000 [r1106655]  Andreas Hartmetz ahartmetz@gmail.com
+
+	* trunk/kdesupport/akonadi/qsqlite/src/sqlite_blocking.cpp: A
+	  constructor-style cast also works and is slightly less ugly
+
+2010-03-23 14:21 +0000 [r1106654]  Andreas Hartmetz ahartmetz@gmail.com
+
+	* trunk/kdesupport/akonadi/qsqlite/src/sqlite_blocking.cpp: Use a
+	  C-style cast to quint64. long is only 32 bits on most platforms,
+	  and reinterpret_cast to quint64, which is more suitable for
+	  pointers on 64-bit platforms, didn't work either. This fixes the
+	  build on Linux-AMD64 that I'm currently using.
+
+2010-03-23 13:17 +0000 [r1106630]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/qsqlite/src/sqlite_blocking.cpp: On OSX
+	  and Windows Qt::HANDLE is a void*, not an int, so cast it (it's
+	  debugging code, after all).
+
+2010-03-23 13:00 +0000 [r1106620]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/tests/unittest,
+	  trunk/kdesupport/akonadi/cmake/modules,
+	  trunk/kdesupport/akonadi/libs/notificationmessage_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/shared/akdebug.cpp,
+	  trunk/kdesupport/akonadi/libs/imapset_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/search.cpp,
+	  trunk/kdesupport/akonadi/libs/imapparser_p.h,
+	  trunk/kdesupport/akonadi/cmake/modules/COPYING-CMAKE-SCRIPTS,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp,
+	  trunk/kdesupport/akonadi/cmake/modules/FindSqlite.cmake (added),
+	  trunk/kdesupport/akonadi/server/src/handler/scope.h,
+	  trunk/kdesupport/akonadi/libs/tests/notificationmessagetest.h,
+	  trunk/kdesupport/akonadi/server/shared/akcrash.h,
+	  trunk/kdesupport/akonadi/config-akonadi.h.cmake,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.AgentManager.xml,
+	  trunk/kdesupport/akonadi/cmake,
+	  trunk/kdesupport/akonadi/interfaces,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.cpp,
+	  trunk/kdesupport/akonadi/libs/tests,
+	  trunk/kdesupport/akonadi/README.sqlite (added),
+	  trunk/kdesupport/akonadi/server/src/handler/scope.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akdebug.h,
+	  trunk/kdesupport/akonadi/libs/notificationmessage.cpp,
+	  trunk/kdesupport/akonadi/server/control/agenttype.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Tracer.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/Mainpage.dox,
+	  trunk/kdesupport/akonadi/libs/imapset.cpp,
+	  trunk/kdesupport/akonadi/libs/imapparser.cpp,
+	  trunk/kdesupport/akonadi/server/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.cpp,
+	  trunk/kdesupport/akonadi/libs/akonadiprotocolinternals_export.h,
+	  trunk/kdesupport/akonadi/libs,
+	  trunk/kdesupport/akonadi/libs/xdgbasedirs_p.h,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.h,
+	  trunk/kdesupport/akonadi,
+	  trunk/kdesupport/akonadi/server/src/search,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Agent.Status.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/server/control/agenttype.h,
+	  trunk/kdesupport/akonadi/server/shared,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.h,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Preprocessor.xml,
+	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/akonadi-mime.xml,
+	  trunk/kdesupport/akonadi/server/src/storage,
+	  trunk/kdesupport/akonadi/akonadi-sqlite-tests.results (added),
+	  trunk/kdesupport/akonadi/server/tests/enron_email_dataset,
+	  trunk/kdesupport/akonadi/akonadi-prefix.h.cmake,
+	  trunk/kdesupport/akonadi/server,
+	  trunk/kdesupport/akonadi/libs/tests/notificationmessagetest.cpp,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.NotificationManager.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akcrash.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler,
+	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp,
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/interfaces/org.freedesktop.Akonadi.Resource.xml,
+	  trunk/kdesupport/akonadi/qsqlite (added),
+	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Merged
+	  revisions
+	  1001917-1001918,1001921,1001923,1001929,1004527,1005098,1005164,1008344,1008377,1013088,1013289,1013291,1013316,1013330,1103599,1103970-1103971,1104028-1104030,1104067,1104078,1104352,1104354,1104685,1104737,1104755,1104771,1105241,1105250,1105262,1105265,1106222,1106224,1106251,1106275,1106278,1106281,1106332,1106336-1106337,1106349,1106373,1106568,1106577,1106582,1106586
+	  via svnmerge from
+	  https://vkrause@svn.kde.org/home/kde/branches/work/akonadi-sqlite
+	  ........ r1001917 | bbroeksema | 2009-07-24 15:40:52 +0200 (Fri,
+	  24 Jul 2009) | 2 lines Add the sligthly modified QSQLITE driver.
+	  ........ r1001918 | bbroeksema | 2009-07-24 15:43:18 +0200 (Fri,
+	  24 Jul 2009) | 3 lines The custom QSQLITE driver is named
+	  QSQLITE3. Take this in account in some of the checks. ........
+	  r1001921 | bbroeksema | 2009-07-24 16:04:08 +0200 (Fri, 24 Jul
+	  2009) | 2 lines Build and install the custom QSQLITE driver when
+	  sqlite is found. ........ r1001923 | bbroeksema | 2009-07-24
+	  16:06:07 +0200 (Fri, 24 Jul 2009) | 2 lines Compile fix. ........
+	  r1001929 | bbroeksema | 2009-07-24 16:20:10 +0200 (Fri, 24 Jul
+	  2009) | 2 lines Add a readme for sqlite. ........ r1004527 |
+	  bbroeksema | 2009-07-30 14:34:35 +0200 (Thu, 30 Jul 2009) | 7
+	  lines The fetch command does an ItemRetrieval request if an item
+	  is not in cache while iterating of the requested items. When
+	  using the SQLITE storage backend it is not possible to write to
+	  the database while there are still read queries active on the
+	  table that needs to be written too. So if using SQLITE store the
+	  ItemRetrievalRequest until all results of the reads are processed
+	  and only than start trigger the actual ItemRetrievalRequests.
+	  ........ r1005098 | bbroeksema | 2009-07-31 12:33:53 +0200 (Fri,
+	  31 Jul 2009) | 4 lines Add some code to make the
+	  sqlite3_{perpare|step} functions blocking. As far as I can see
+	  this seems to fix the creation of the testitems when running
+	  akonaditest. However, ItemFetch still does seem to block for some
+	  reason. ........ r1005164 | bbroeksema | 2009-07-31 15:26:49
+	  +0200 (Fri, 31 Jul 2009) | 9 lines The sqlite3_unlock_notify() is
+	  only ment when two or more connections access the same database
+	  in shared-cache mode. This is not the case here so remove that
+	  code. According to
+	  http://www.sqlite.org/cvstrac/wiki?p=MultiThreading we should
+	  just watch for SQLITE_BUSY and sleep for a while until SQLITE_OK
+	  or some error code is returned. I still get locks (also with the
+	  sqlite3_unlock_notify() usage) on akonatest so now and than.
+	  ........ r1008344 | bbroeksema | 2009-08-07 11:27:33 +0200 (Fri,
+	  07 Aug 2009) | 2 lines Add some extra debug information. ........
+	  r1008377 | bbroeksema | 2009-08-07 12:30:39 +0200 (Fri, 07 Aug
+	  2009) | 7 lines Move the flagQuery code after the
+	  retrieveMissingPayloads() in parseStream() to solve a
+	  reproducible lock. Now the fetch command sometimes passes but not
+	  reliably. Also moved the call to buildItemQuery() in parseStream
+	  to the point where it is needed first. ........ r1013088 |
+	  bbroeksema | 2009-08-18 21:25:56 +0200 (Tue, 18 Aug 2009) | 2
+	  lines SVN_SILENT Ignore some file types. ........ r1013289 |
+	  bbroeksema | 2009-08-19 15:01:31 +0200 (Wed, 19 Aug 2009) | 2
+	  lines SVN_SILENT Change the debug statements a bit. ........
+	  r1013291 | bbroeksema | 2009-08-19 15:02:41 +0200 (Wed, 19 Aug
+	  2009) | 2 lines Make sure that queries that alter the database
+	  are done as a transaction. ........ r1013316 | bbroeksema |
+	  2009-08-19 16:39:03 +0200 (Wed, 19 Aug 2009) | 2 lines Revert the
+	  added transaction in the xsl as it leads to nested transactions.
+	  ........ r1013330 | bbroeksema | 2009-08-19 17:27:20 +0200 (Wed,
+	  19 Aug 2009) | 3 lines Use mutext in the DataStore for
+	  transactions. During a transaction the mutex is locked until the
+	  transaction is committed or rolled back. ........ r1103599 |
+	  bbroeksema | 2010-03-15 14:15:24 +0100 (Mon, 15 Mar 2010) | 1
+	  line Too long no svn, restore sqlite stuff in CMakeList.txt again
+	  ........ r1103970 | bbroeksema | 2010-03-16 12:58:03 +0100 (Tue,
+	  16 Mar 2010) | 2 lines SQlite doesn't like true and false, use
+	  the (internally used) tinyint values 0 and 1. ........ r1103971 |
+	  bbroeksema | 2010-03-16 13:00:37 +0100 (Tue, 16 Mar 2010) | 4
+	  lines In this branch we use the customized QSQLITE driver in
+	  stead of the standard one delivered with Qt. This makes testing
+	  of modification on the driver a bit easier. ........ r1104028 |
+	  bbroeksema | 2010-03-16 15:22:48 +0100 (Tue, 16 Mar 2010) | 2
+	  lines Make sure we use the correct sqlite include dir. ........
+	  r1104029 | bbroeksema | 2010-03-16 15:23:52 +0100 (Tue, 16 Mar
+	  2010) | 2 lines Bring up to date with QtSql 4.6.2 ........
+	  r1104030 | bbroeksema | 2010-03-16 15:25:31 +0100 (Tue, 16 Mar
+	  2010) | 3 lines Also bring up to date with QtSql 4.6.2 but for
+	  now we keep our blocking calls in. ........ r1104067 | bbroeksema
+	  | 2010-03-16 17:30:05 +0100 (Tue, 16 Mar 2010) | 3 lines Restore
+	  r1004527. Akonadi console now works less or more, however the
+	  unit tests still fail even the environment test. ........
+	  r1104078 | bbroeksema | 2010-03-16 17:46:22 +0100 (Tue, 16 Mar
+	  2010) | 13 lines Restore r1008377. The environment test still
+	  fails.
+	  ------------------------------------------------------------------------
+	  r1008377 | bbroeksema | 2009-08-07 12:30:39 +0200 (Fri, 07 Aug
+	  2009) | 7 lines Changed paths: M
+	  /branches/work/akonadi-sqlite/server/src/handler/fetch.cpp Move
+	  the flagQuery code after the retrieveMissingPayloads() in
+	  parseStream() to solve a reproducible lock. Now the fetch command
+	  sometimes passes but not reliably. Also moved the call to
+	  buildItemQuery() in parseStream to the point where it is needed
+	  first. ........ r1104352 | bbroeksema | 2010-03-17 14:07:01 +0100
+	  (Wed, 17 Mar 2010) | 12 lines Restore the relevant parts of
+	  r1013291.
+	  ------------------------------------------------------------------------
+	  r1013291 | bbroeksema | 2009-08-19 15:02:41 +0200 (Wed, 19 Aug
+	  2009) | 2 lines Changed paths: M
+	  /branches/work/akonadi-sqlite/server/src/handler/fetch.cpp M
+	  /branches/work/akonadi-sqlite/server/src/storage/datastore.cpp M
+	  /branches/work/akonadi-sqlite/server/src/storage/entities-source.xsl
+	  M
+	  /branches/work/akonadi-sqlite/server/src/storage/transaction.cpp
+	  Make sure that queries that alter the database are done as a
+	  transaction. ........ r1104354 | bbroeksema | 2010-03-17 14:08:16
+	  +0100 (Wed, 17 Mar 2010) | 4 lines Rename col to target
+	  collection and move the DataStore variable to the place where it
+	  is actually used. Makes the code slightly more readable. ........
+	  r1104685 | bbroeksema | 2010-03-18 11:07:48 +0100 (Thu, 18 Mar
+	  2010) | 4 lines Remove most of the debug statements to reduce the
+	  noice. Only keep those in indicating a possible deadlock (i.e.
+	  when the blocking step enters the wait loop). ........ r1104737 |
+	  bbroeksema | 2010-03-18 13:04:14 +0100 (Thu, 18 Mar 2010) | 9
+	  lines Restore r1013330. We've an almost completely passing
+	  testsuite now.
+	  ------------------------------------------------------------------------
+	  r1013330 | bbroeksema | 2009-08-19 17:27:20 +0200 (Wed, 19 Aug
+	  2009) | 3 lines Changed paths: M
+	  /branches/work/akonadi-sqlite/server/src/storage/datastore.cpp
+	  Use mutext in the DataStore for transactions. During a
+	  transaction the mutex is locked until the transaction is
+	  committed or rolled back. ........ r1104755 | bbroeksema |
+	  2010-03-18 15:27:34 +0100 (Thu, 18 Mar 2010) | 3 lines Move one
+	  of the mutex unlocks to the correct place. This fixes test #78.
+	  Only one to go. ........ r1104771 | bbroeksema | 2010-03-18
+	  16:44:07 +0100 (Thu, 18 Mar 2010) | 8 lines Undo the caching of
+	  query results in memory in the ItemRetrievalManager.
+	  ItemRetriever contains almost equal code without the caching and
+	  this didn't cause problems in the unit tests. Therefore I removed
+	  it again from the ItemRetrievalManager too. It seems that the
+	  transaction serialization and the new sqlite version work good
+	  enough to make the tests actually pass. ........ r1105241 |
+	  bbroeksema | 2010-03-19 17:24:44 +0100 (Fri, 19 Mar 2010) | 1
+	  line revert r1105239, it is needed after all ........ r1105250 |
+	  bbroeksema | 2010-03-19 17:42:57 +0100 (Fri, 19 Mar 2010) | 1
+	  line Add a file with test results for specific revisions to keep
+	  track of progress ........ r1105262 | bbroeksema | 2010-03-19
+	  18:21:10 +0100 (Fri, 19 Mar 2010) | 7 lines Restore caching of
+	  query results in itemretriever. Seems to fix the following tests:
+	  - 66: itemcopytest - 72: collectioncopytest - 75:
+	  collectionmovetest ........ r1105265 | bbroeksema | 2010-03-19
+	  18:25:25 +0100 (Fri, 19 Mar 2010) | 3 lines Update test-results.
+	  It seems that r1105262 also fixed: - 90: servermanagertest
+	  ........ r1106222 | bbroeksema | 2010-03-22 10:18:32 +0100 (Mon,
+	  22 Mar 2010) | 4 lines FetchHelper refactoring: As a first step
+	  for getting rid of dupplicated code in FetchHelper and
+	  ItemRetriever we base FetchHelper on ItemRetriever. Remove scope
+	  from FetchHelper and use the one from ItemRetriever. ........
+	  r1106224 | bbroeksema | 2010-03-22 10:25:20 +0100 (Mon, 22 Mar
+	  2010) | 3 lines FetchHelper refactoring: Use AkonadiConnection
+	  and driverName() from ItemRetriever. ........ r1106251 |
+	  bbroeksema | 2010-03-22 12:23:19 +0100 (Mon, 22 Mar 2010) | 3
+	  lines FetchHelper refactoring: Start moving out the shared part
+	  (between ItemRetriever and FetchHelper) of the PartQuery in
+	  ItemRetriever. ........ r1106275 | bbroeksema | 2010-03-22
+	  13:39:49 +0100 (Mon, 22 Mar 2010) | 9 lines Remove the unused id
+	  argument from PartHelper::translateData. Update the calls where
+	  it was used. Motivation: The id wasn't used in translateData().
+	  Worse, fetch helper pretended to pass a partId to it, while it
+	  was actually a PimItem id. Conclussion: --confusion. ........
+	  r1106278 | bbroeksema | 2010-03-22 13:44:53 +0100 (Mon, 22 Mar
+	  2010) | 2 lines We don't need the PartId any more due to
+	  r1106275. ........ r1106281 | bbroeksema | 2010-03-22 13:57:54
+	  +0100 (Mon, 22 Mar 2010) | 2 lines FetchHelper refactoring: Use
+	  the PartQuery from ItemRetriever in fetchhelper. ........
+	  r1106332 | bbroeksema | 2010-03-22 14:48:00 +0100 (Mon, 22 Mar
+	  2010) | 2 lines Sort results of partQuery by PimItem id can be
+	  done in the generic query too. ........ r1106336 | bbroeksema |
+	  2010-03-22 14:50:47 +0100 (Mon, 22 Mar 2010) | 4 lines * Add a
+	  setUidSet() method to scope which deprecates the ImapSet ctor in
+	  FetchHelper. * Remove the deprecated ctor from FetchHelper.
+	  ........ r1106337 | bbroeksema | 2010-03-22 14:54:55 +0100 (Mon,
+	  22 Mar 2010) | 2 lines FetchHelper now always uses a scope, so
+	  get rid of all mUseScope checks. ........ r1106349 | bbroeksema |
+	  2010-03-22 16:23:35 +0100 (Mon, 22 Mar 2010) | 2 lines Fix a
+	  regression from r1106281 ........ r1106373 | bbroeksema |
+	  2010-03-22 17:45:59 +0100 (Mon, 22 Mar 2010) | 2 lines Factor out
+	  the shared parts of ItemQuery. ........ r1106568 | bbroeksema |
+	  2010-03-23 10:24:25 +0100 (Tue, 23 Mar 2010) | 3 lines Allign
+	  FetchHelper::retrieveMissingPayload and ItemRetriever::exec().
+	  They are almost identical now. ........ r1106577 | bbroeksema |
+	  2010-03-23 11:08:14 +0100 (Tue, 23 Mar 2010) | 2 lines Goodbye
+	  FetchHelper::retrieveMissingPayloads() ........ r1106582 |
+	  bbroeksema | 2010-03-23 11:14:11 +0100 (Tue, 23 Mar 2010) | 3
+	  lines Add a similar hack in setRetrieveParts as in
+	  setRetrieveFullPayload to make sure that things don't break when
+	  they're called in a different order. ........ r1106586 |
+	  bbroeksema | 2010-03-23 11:47:33 +0100 (Tue, 23 Mar 2010) | 2
+	  lines Use a string comparison for the remote id as done
+	  everywhere else. ........
+
+2010-03-22 12:42 +0000 [r1106277]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/tests/unittest/imapstreamparsertest.cpp,
+	  trunk/kdesupport/akonadi/server/tests/unittest/imapstreamparsertest.h,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.cpp,
+	  trunk/kdesupport/akonadi/server/src/imapstreamparser.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: When a
+	  command execution was aborted, only read the remaining data that
+	  already has been sent, don't ask for more, there is likely noone
+	  around to provide that anymore on the client side. This fixes the
+	  parser getting stuck on an early aborted APPEND/STORE commands.
+
+2010-03-21 15:59 +0000 [r1105888]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Fix parsing of
+	  cascaded lists containing quoted strings.
+
+2010-03-21 13:58 +0000 [r1105847]  Olivier Trichet nive@nivalis.org
+
+	* trunk/kdesupport/akonadi/libs/notificationmessage.cpp: Make
+	  NotificationMessage::appendAndCompress() a bit quicker
+
+2010-03-21 13:55 +0000 [r1105842]  Olivier Trichet nive@nivalis.org
+
+	* trunk/kdesupport/akonadi/server/control/processcontrol.cpp:
+	  valgrind do not start if one its arguments is the empty string
+
+2010-03-21 11:50 +0000 [r1105780]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.h,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Some MySQL versions need an explicit run of mysql_install_db when
+	  creating the database initially. So, let's do that if
+	  mysql_install_db is found. BUG: 185395
+
+2010-03-20 21:46 +0000 [r1105677]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: More robustness. I
+	  can now list my primary mail account again.
+
+2010-03-20 13:56 +0000 [r1105529]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Be robust against
+	  spurious newlines at the end of parenthesized lists.
+
+2010-03-20 13:31 +0000 [r1105518]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Factor duplicate
+	  code in the two overloads into a templated helper method.
+
+2010-03-18 20:32 +0000 [r1104892]  Till Adam adam@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp:
+	  Remove spurious column from a select statement that makes mime
+	  types be used where resource ids should be used, resulting in
+	  failing copy and move operations. Ok'd by Volker.
+
+2010-03-17 14:00 +0000 [r1104369]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Check if the MySQL server we found at compile time is actually
+	  there before using it.
+
+2010-03-17 09:31 +0000 [r1104281]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp: Resolve symlinks
+	  before checking if the file is executable. Should fix MySQL and
+	  agent launching when using maemo-optified packages.
+
+2010-03-16 15:05 +0000 [r1104044]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h: Merged
+	  revisions 1104027 via svnmerge from
+	  https://vkrause@svn.kde.org/home/kde/branches/work/akonadi-sqlite
+	  ........ r1104027 | bbroeksema | 2010-03-16 15:21:37 +0100 (Tue,
+	  16 Mar 2010) | 2 lines Return from the current dbus call before
+	  starting a next one. ........
+
+2010-03-16 12:42 +0000 [r1103984]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/main.cpp: Use a
+	  meaningful warning message
+
+2010-03-16 10:33 +0000 [r1103935]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp:
+	  Include the session id in the tracer message identifier, so
+	  akonadiconsole debugger is more useful BUG: 222294
+
+2010-03-16 09:25 +0000 [r1103919]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.h:
+	  Trigger a Resource::synchronize() when the interval checker
+	  starts the synchronization of a resource collection.
+
+2010-03-11 11:29 +0000 [r1101921]  David Faure faure@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Add support for
+	  CMAKE_BUILD_TYPE=debugfull
+
+2010-03-08 09:40 +0000 [r1100673]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Add MySQL default location on Maemo to the search path, should
+	  make the patch in the package unecessary.
+
+2010-03-06 10:14 +0000 [r1099894]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/akonadiconnection.h,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Allow
+	  RID changes on collections only for the owning resource.
+
+2010-02-28 11:21 +0000 [r1097064]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/akonadictl/akonadistarter.cpp,
+	  trunk/kdesupport/akonadi/server/akonadictl/akonadistarter.h,
+	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: Port to usage of
+	  QDBusServiceWatcher
+
+2010-02-27 17:07 +0000 [r1096788]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/rds/bridgeconnection.h,
+	  trunk/kdesupport/akonadi/rds/main.cpp,
+	  trunk/kdesupport/akonadi/rds/bridgeconnection.cpp: Add support
+	  for D-Bus connections. This got rather ugly since D-Bus uses
+	  abtract unix sockets on Linux, which is something QLocalSocket
+	  apparently doesn't support. Anyway, I can now use qdbusviewer
+	  remotely over TCP :)
+
+2010-02-27 15:48 +0000 [r1096771]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/rds (added),
+	  trunk/kdesupport/akonadi/rds/bridgeconnection.h (added),
+	  trunk/kdesupport/akonadi/rds/bridgeserver.cpp (added),
+	  trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/rds/main.cpp (added),
+	  trunk/kdesupport/akonadi/rds/bridgeserver.h (added),
+	  trunk/kdesupport/akonadi/rds/CMakeLists.txt (added),
+	  trunk/kdesupport/akonadi/rds/bridgeconnection.cpp (added): Start
+	  of the remote debugging server. It forwards the local Akonadi
+	  socket to a TCP socket, to allow connecting akonadiconsole to an
+	  Akonadi server running on e.g. a mobile device. To make this work
+	  we not only need to forward the Akonadi socket though, but also
+	  D-Bus and Nepomuk. Therefore this is not build into the Akonadi
+	  server itself (which would have been a lot easier), but a
+	  separate tools that will handle all those sockets eventually.
+
+2010-02-27 14:17 +0000 [r1096742]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/store.h: Correct
+	  documentation of the DIRTY command attribute
+
+2010-02-27 10:34 +0000 [r1096667]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/store.h,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp: Add
+	  functionality to clear the payloads of an item via the STORE
+	  command
+
+2010-02-22 14:00 +0000 [r1094302]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: Bump version (1.3.60)
+
+2010-02-22 11:53 +0000 [r1094273]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.h,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/store.h,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/colcopy.cpp,
+	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/list.h,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp: Add
+	  support for RemoteRevision property for entities
+
+2010-02-22 09:45 +0000 [r1094139]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf: Do
+	  not drop the connection to the DB after 8 hours of inactivity
+	  when using an internal MySQL server. This resolves the 'MySQL
+	  server has gone away QMYSQL: Unable to execute query' error.
+
+2010-02-14 11:02 +0000 [r1089960]  David Faure faure@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp:
+	  apply fix r1089483 by trueg: use a static counter to make sure we
+	  use unique names
+
+2010-02-12 18:58 +0000 [r1089239]  Alexander Neundorf neundorf@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: -only add the lib
+	  install dir to the RPATH if it is not a system library directory
+	  (i.e. listed in CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES), as
+	  requested by Rex on kde-buildsystem Alex
+
+2010-02-10 14:43 +0000 [r1088319]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.cpp:
+	  Register the D-Bus service name even later, once all agent
+	  information have been loaded.
+
+2010-02-09 10:53 +0000 [r1087546]  David Faure faure@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp:
+	  And now the real fix for the dbus connection leak problem :/ Next
+	  step: doing the same (but not the same) in kdelibs/nepomuk. But
+	  at least the akonadiserver leak (triggered by kmail) is fixed by
+	  this. CCMAIL: release-team@kde.org
+
+2010-02-09 09:59 +0000 [r1087524]  David Faure faure@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp:
+	  Fix the dbus connection leak (every time I switched mails in
+	  kmail, a new dbus connection would be made and would stay). Sorry
+	  for suspecting r1084698, it was not guilty. The bug -was- related
+	  to nepomuk, but wasn't -in- nepomuk :-) CCMAIL:
+	  sebastian@trueg.de, release-team@kde.org, thiago@kde.org
+
+2010-02-09 08:59 +0000 [r1087511]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/libs/protocol_p.h,
+	  trunk/kdesupport/akonadi/server/src/main.cpp: Fix a possible race
+	  on startup where the control D-Bus service would already be
+	  registered but its interfaces are not yet exported.
+
+2010-02-08 17:26 +0000 [r1087237]  David Faure faure@kde.org
+
+	* trunk/kdesupport/akonadi/server/control/main.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akdebug.cpp,
+	  trunk/kdesupport/akonadi/server/shared/akdebug.h: Fix confusing
+	  error message: unable to register service %s "" due to trying to
+	  write into a file that ended with akonadi_control's full path.
+	  Reviewed by Volker once I managed to drag him away from Jesper
+	  :-)
+
+2010-02-05 23:43 +0000 [r1085806]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/libs/capabilities_p.h,
+	  trunk/kdesupport/akonadi/server/src/handler/list.h,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
+	  trunk/kdesupport/akonadi/server/src/preprocessorinstance.h,
+	  trunk/kdesupport/akonadi/libs/imapset_p.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.h,
+	  trunk/kdesupport/akonadi/server/control/agentmanager.h,
+	  trunk/kdesupport/akonadi/server/src/resourcemanager.h,
+	  trunk/kdesupport/akonadi/server/src/interpreter.h: Fix the
+	  spelling errors reported on dashboard.
+
+2010-01-20 16:40 +0000 [r1077674]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  fix datadir path quoting on Windows, most likely also valid on
+	  Unix, but I'd like to test that there first
+
+2010-01-19 17:57 +0000 [r1077216]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/nepomuksearch.cpp: Work
+	  around a DBus bug that using a connection from within multiple
+	  threads can cause freezes. In this case, that connection was the
+	  session bus, on which we called isServiceRegistered. The
+	  workaround: Just don't check if the search service is available,
+	  just call the methods. They'll fail properly if the service is
+	  not there. Volker, can you backport this fix to older Akonadi
+	  releases and prepare tarballs, so that we can notify the release
+	  team about this? Should fix BUG: 219687
+
+2010-01-18 23:59 +0000 [r1076866]  Thomas McGuire mcguire@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/search/queryserviceclient.cpp:
+	  Better debug output
+
+2010-01-15 10:46 +0000 [r1075011]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp:
+	  Use BYTEA for the name column of CollectionTable in the
+	  PostgreSQL environment.
+
+2010-01-14 13:54 +0000 [r1074652]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  make the internal MySQL work on Windows
+
+2010-01-14 13:28 +0000 [r1074641]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
+	  Disable logging of slow queries by default, it's only needed for
+	  debugging and apparently not supported by all MySQL versions.
+
+2010-01-14 09:49 +0000 [r1074493]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  Make XdgBaseDirs find data and config files on Windows, cmake
+	  only provides us with relative paths there apparently.
+
+2010-01-13 20:12 +0000 [r1074290]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp:
+	  Solve some startup issues when using the Postgres backend, mainly
+	  because postgres needs to start several processes before being
+	  really available. the 'postgres' executable lacks several options
+	  like a nice way to stop the database or a timer before akonadi
+	  can start accessing the data. pg_ctl has everything we need.
+	  Instead of directly running 'postgres', we'll now use: 'pg_ctl
+	  start'. mCleanServerShutdownCommand was also added: the database
+	  is closed properly when calling akonadictl stop.
+
+2010-01-08 15:28 +0000 [r1071710]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysqlembedded.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
+	  compilation++
+
+2010-01-08 14:27 +0000 [r1071669]  Tobias Koenig tokoe@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.h
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysqlembedded.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysqlembedded.h
+	  (added), trunk/kdesupport/akonadi/server/src/storage/dbconfig.h,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp
+	  (added),
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp
+	  (added), trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.h
+	  (added), trunk/kdesupport/akonadi/server/src/akonadi.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.h
+	  (added): Refactor db abstraction, so every database backend has
+	  its own class that does configuration and initialization.
+
+2010-01-08 13:28 +0000 [r1071630]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt: increase version number
+
+2010-01-06 18:32 +0000 [r1070782]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: prepare the 1.2.90
+	  release
+
 2010-01-01 15:45 +0000 [r1068573]  Allen Winter winter@kde.org
 
 	* trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt:
@@ -132,10 +1376,11 @@
 	  (added), trunk/kdesupport/akonadi/server/src/tests (removed),
 	  trunk/kdesupport/akonadi/server/tests/unittest/interpretertest.h
 	  (added),
-	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/tests/unittest/querybuildertest.cpp
-	  (added), trunk/kdesupport/akonadi/server/src/interpreter.h: Merge
-	  unit test moving from the pe5.20091123 tag.
+	  (added),
+	  trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/interpreter.h: Merge unit
+	  test moving from the pe5.20091123 tag.
 
 2009-11-27 08:03 +0000 [r1054921]  Volker Krause vkrause@kde.org
 
@@ -189,8 +1434,8 @@
 	* trunk/kdesupport/akonadi/server/src/search/query.cpp (removed),
 	  trunk/kdesupport/akonadi/server/src/search/term.cpp (removed),
 	  trunk/kdesupport/akonadi/server/src/search/query.h (removed),
-	  trunk/kdesupport/akonadi/server/src/search/dbusoperators.cpp,
 	  trunk/kdesupport/akonadi/server/src/search/term.h (removed),
+	  trunk/kdesupport/akonadi/server/src/search/dbusoperators.cpp,
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/search/dbusoperators.h,
 	  trunk/kdesupport/akonadi/server/src/search/querymetatype.h:
@@ -389,12 +1634,12 @@
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/login.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/logout.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/expunge.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/list.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/expunge.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/select.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/capability.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/status.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/akappend.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/transaction.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/resourceselect.cpp,
@@ -500,16 +1745,17 @@
 
 2009-09-03 13:21 +0000 [r1019391-1019392]  Tobias Koenig tokoe@kde.org
 
-	* trunk/kdesupport/akonadi/server/src/handler/fetch.h,
-	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h
-	  (added), trunk/kdesupport/akonadi/server/src/handler/search.cpp,
+	* trunk/kdesupport/akonadi/server/src/handler/fetchhelper.h
+	  (added), trunk/kdesupport/akonadi/server/src/handler/fetch.h,
+	  trunk/kdesupport/akonadi/server/src/handler/search.cpp,
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp
+	  (added),
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/fetchhelper.cpp
-	  (added), trunk/kdesupport/akonadi/server/src/handler/search.h:
-	  Refactor fetch handler to allow code sharing with search handler
-	  The SEARCH command takes fetchScope information now and returns
+	  trunk/kdesupport/akonadi/server/src/handler/search.h: Refactor
+	  fetch handler to allow code sharing with search handler The
+	  SEARCH command takes fetchScope information now and returns
 	  complete item descriptions, not only uids
 
 	* trunk/kdesupport/akonadi/server/akonadictl/main.cpp: Give status
@@ -772,8 +2018,8 @@
 	  trunk/kdesupport/akonadi/server/src/storage/datastore.h,
 	  trunk/kdesupport/akonadi/server/src/handler/colmove.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/rename.cpp (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h:
@@ -1385,8 +2631,8 @@
 	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
 	  trunk/kdesupport/akonadi/server/tests/unittest/handlertest.h,
 	  trunk/kdesupport/akonadi/server/src/handler.cpp,
-	  trunk/kdesupport/akonadi/server/src/handler/store.h,
 	  trunk/kdesupport/akonadi/server/src/handler/uid.cpp (removed),
+	  trunk/kdesupport/akonadi/server/src/handler/store.h,
 	  trunk/kdesupport/akonadi/server/src/handler.h,
 	  trunk/kdesupport/akonadi/server/src/handler/uid.h (removed),
 	  trunk/kdesupport/akonadi/server/CMakeLists.txt,
