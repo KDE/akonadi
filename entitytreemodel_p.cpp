@@ -74,6 +74,10 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 {
   Q_Q( EntityTreeModel );
   m_monitor = monitor;
+  // The default is to FetchCollectionsRecursive, so we tell the monitor to fetch collections
+  // That way update signals from the monitor will contain the full collection.
+  // This may be updated if the CollectionFetchStrategy is changed.
+  m_monitor->fetchCollection( true );
   m_session = m_monitor->session();
   if (m_session == Session::defaultSession())
   {

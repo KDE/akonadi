@@ -1030,7 +1030,10 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
     disconnect( d->m_monitor,
             SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
             this, SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  }
+    d->m_monitor->fetchCollection( false );
+  } else
+    d->m_monitor->fetchCollection( true );
+
   d->endResetModel();
 }
 
