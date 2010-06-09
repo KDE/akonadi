@@ -581,51 +581,55 @@ class StandardActionManager::Private
     void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
                           const QAbstractItemModel *model, QModelIndex parentIndex )
     {
-      int rowCount = model->rowCount( parentIndex );
+      const int rowCount = model->rowCount( parentIndex );
 
       QModelIndexList list;
-      QSet<QString> mimetypes;
+      QSet<QString> mimeTypes;
 
-      const bool itemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
-      const bool collectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
+      const bool isItemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
+      const bool isCollectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
 
-      if ( itemAction )
-      {
+      if ( isItemAction ) {
         list = itemSelectionModel->selectedRows();
-        foreach ( const QModelIndex &idx, list )
-          mimetypes << idx.data( EntityTreeModel::MimeTypeRole ).toString();
+        foreach ( const QModelIndex &index, list )
+          mimeTypes << index.data( EntityTreeModel::MimeTypeRole ).toString();
       }
 
-      if ( collectionAction )
-      {
+      if ( isCollectionAction ) {
         list = collectionSelectionModel->selectedRows();
-        foreach ( const QModelIndex &idx, list ) {
-          const Collection collection = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+        foreach ( const QModelIndex &index, list ) {
+          const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
           // The mimetypes that the selected collection can possibly contain
-          mimetypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();
+          mimeTypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();
         }
       }
 
-      for ( int row = 0; row < rowCount; row++ ) {
-        QModelIndex index = model->index( row, 0, parentIndex );
-        Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
+      for ( int row = 0; row < rowCount; ++row ) {
+        const QModelIndex index = model->index( row, 0, parentIndex );
+        const Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
         if ( CollectionUtils::isVirtual( collection ) ) {
           continue;
         }
 
         QString label = model->data( index ).toString();
-        label.replace( QString::fromUtf8( "&" ), QString::fromUtf8( "&&" ) );
-        QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
+        label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
+
+        const QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
+
+        const bool canContainRequiredMimeTypes = !collection.contentMimeTypes().toSet().intersect( mimeTypes ).isEmpty();
+        const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
 
-        bool readOnly = CollectionUtils::isStructural( collection )
-              || ( itemAction && ( !( collection.rights() & Collection::CanCreateItem )
-                    || collection.contentMimeTypes().toSet().intersect( mimetypes ).isEmpty() ) )
-              || ( collectionAction && ( !( collection.rights() & Collection::CanCreateCollection )
-                    || QSet<QString>( mimetypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty()
-                    || !collection.contentMimeTypes().contains( Collection::mimeType() ) ) );
+        const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
+        const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
+        const bool resourceAllowsRequiredMimeTypes = !(QSet<QString>( mimeTypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty());
+
+        const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
+        const bool isReadOnlyForCollections = (isCollectionAction && (!canCreateNewCollections || !canContainCollections || !resourceAllowsRequiredMimeTypes));
+
+        const bool readOnly = CollectionUtils::isStructural( collection ) || isReadOnlyForItems || isReadOnlyForCollections;
 
         if ( model->rowCount( index ) > 0 ) {
           // new level
@@ -640,17 +644,17 @@ class StandardActionManager::Private
           if ( !readOnly ) {
             popup->addSeparator();
 
-            QAction *act = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
-            act->setData( QVariant::fromValue<QModelIndex>( index ) );
+            QAction *action = popup->addAction( moveAction ? i18n( "Move to This Folder" ) : i18n( "Copy to This Folder" ) );
+            action->setData( QVariant::fromValue<QModelIndex>( index ) );
           }
 
           menu->addMenu( popup );
 
         } else {
           // insert an item
-          QAction* act = menu->addAction( icon, label );
-          act->setData( QVariant::fromValue<QModelIndex>( index ) );
-          act->setEnabled( !readOnly );
+          QAction* action = menu->addAction( icon, label );
+          action->setData( QVariant::fromValue<QModelIndex>( index ) );
+          action->setEnabled( !readOnly );
         }
       }
     }
