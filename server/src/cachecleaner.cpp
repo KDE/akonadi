@@ -80,17 +80,15 @@ void CacheCleaner::cleanCache()
       qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, localParts );
     if ( !qb.exec() )
       continue;
-    Part::List parts = qb.result();
-    PartHelper::loadData(parts); //FIXME: not needed anymore to read back the data itself?
-
+    const Part::List parts = qb.result();
     if ( parts.isEmpty() )
       continue;
     qDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
 
     // clear data field
-    for ( int i = 0; i < parts.count(); ++i) {
-      if ( !PartHelper::update( &(parts[ i ]), QByteArray(), 0) )
-        qDebug() << "failed to update item part" << parts[ i ].id();
+    foreach ( Part part, parts ) {
+      if ( !PartHelper::truncate( part ) )
+        qDebug() << "failed to update item part" << part.id();
     }
     loopsWithExpiredItem++;
   }

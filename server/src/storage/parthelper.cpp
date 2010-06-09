@@ -186,29 +186,21 @@ bool PartHelper::loadData( Part::List &parts )
 
 bool PartHelper::loadData( Part &part )
 {
-  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() && part.external() )
-  {
-    QString fileName = QString::fromUtf8( part.data() );
+  if ( part.external() ) {
+    const QString fileName = QString::fromUtf8( part.data() );
     QFile file( fileName );
-    if (file.open( QIODevice::ReadOnly ))
-    {
-      QByteArray data = file.readAll();
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      const QByteArray data = file.readAll();
       part.setData( data );
       part.setDatasize( data.size() );
 //      qDebug() << "load part file " << fileName << QString::fromUtf8(data).left(50);
       file.close();
-    } else
-    {
-//      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-//      qDebug() << "Error: " << file.errorString();
+    } else {
+      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      qDebug() << "Error: " << file.errorString();
       return false;
     }
-  } else
-  if ( part.external() ) //external payload is disabled, but the item is marked as external
-  {
-    return false;
   }
-
   return true;
 }
 
@@ -251,4 +243,16 @@ QString PartHelper::fileNameForId( qint64 id )
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
   Q_ASSERT( dataDir != QDir::separator() );
   return dataDir + QString::number(id);
+}
+
+bool Akonadi::PartHelper::truncate(Part& part)
+{
+  if ( part.external() ) {
+    const QString fileName = QString::fromUtf8( part.data() );
+    QFile::remove( fileName );
+  } 
+
+  part.setData( QByteArray() );
+  part.setDatasize( 0 );
+  return part.update();
 }

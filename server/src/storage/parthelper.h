@@ -41,7 +41,9 @@ namespace PartHelper
   bool remove( Part *part );
   /** Deletes all parts which match the given constraint, including all corresponding filesystem data. */
   bool remove( const QString &column, const QVariant &value );
+  /** Call loadData() below for every part in @p parts. */
   bool loadData( Part::List &parts );
+  /** If the data for @p part is stored in the filesystem it is loaded into @p part. */
   bool loadData( Part &part );
   /** Returns the payload data. */
   QByteArray translateData( const QByteArray &data, bool isExternal  );
@@ -49,6 +51,10 @@ namespace PartHelper
   QByteArray translateData( const Part& part );
   /** Returns the record with id @p id. */
   Part retrieveById( qint64 id );
+  /** Truncate the payload of @p part and update filesystem/database accordingly.
+   *  This is more efficient than using update since it does not require the data to be loaded.
+   */
+  bool truncate( Part &part );
 
   QString fileNameForId( qint64 id );
 }

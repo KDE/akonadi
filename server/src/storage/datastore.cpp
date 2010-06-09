@@ -227,15 +227,10 @@ bool DataStore::invalidateItemCache( const PimItem &item )
   if ( !qb.exec() )
     return false;
 
-  Part::List parts = qb.result();
-  PartHelper::loadData(parts); //FIXME: not needed anymore to read back the data itself?
-
-  if ( parts.isEmpty() )
-    return true;
-
+  const Part::List parts = qb.result();
   // clear data field
-  for ( int i = 0; i < parts.count(); ++i) {
-    if ( !PartHelper::update( &(parts[ i ]), QByteArray(), 0) )
+  foreach ( Part part, parts ) {
+    if ( !PartHelper::truncate( part ) )
       return false;
   }
 
