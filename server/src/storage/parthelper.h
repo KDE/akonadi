@@ -29,29 +29,28 @@ class QVariant;
 namespace Akonadi
 {
 /**
-A specialized Part class that stores data in a file instead of the database.
-
-	@author Andras Mantia <amantia@kde.org>
-*/
-class PartHelper
+ * Helper methods that store data in a file instead of the database.
+ *
+ * @author Andras Mantia <amantia@kde.org>
+ */
+namespace PartHelper
 {
-  public:
-    PartHelper();
-    ~PartHelper();
+  bool update( Part *part, const QByteArray &data, qint64 dataSize );
+  bool insert( Part *part, qint64* insertId = 0 );
+  /** Deletes @p part from the database and also removes existing filesystem data if needed. */
+  bool remove( Part *part );
+  /** Deletes all parts which match the given constraint, including all corresponding filesystem data. */
+  bool remove( const QString &column, const QVariant &value );
+  bool loadData( Part::List &parts );
+  bool loadData( Part &part );
+  QByteArray translateData( const QByteArray &data, bool isExternal  );
+  QByteArray translateData( const Part& part );
+  /** Returns the record with id @p id. */
+  Part retrieveById( qint64 id );
 
-    static bool update( Part *part, const QByteArray &data, qint64 dataSize );
-    static bool insert( Part *part, qint64* insertId = 0 );
-    static bool remove( Part *part);
-    static bool remove( const QString &column, const QVariant &value );
-    static bool loadData( Part::List &parts );
-    static bool loadData( Part &part );
-    static QByteArray translateData( const QByteArray &data, bool isExternal  );
-    static QByteArray translateData( const Part& part );
-        /** Returns the record with id @p id. */
-    static Part retrieveById( qint64 id );
+  QString fileNameForId( qint64 id );
+}
 
-    static QString fileNameForId( qint64 id );
-};
 }
 
 #endif

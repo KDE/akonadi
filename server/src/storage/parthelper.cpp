@@ -21,22 +21,13 @@
 #include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
-#include "../../libs/xdgbasedirs_p.h"
+#include <libs/xdgbasedirs_p.h>
 
 #include <QDir>
 #include <QFile>
 #include <QDebug>
 
 using namespace Akonadi;
-
-PartHelper::PartHelper()
-{
-}
-
-
-PartHelper::~PartHelper()
-{
-}
 
 bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 {
@@ -148,10 +139,9 @@ bool PartHelper::remove( Akonadi::Part *part )
   if (!part)
     return false;
 
-  if (DbConfig::configuredDatabase()->useExternalPayloadFile()  && part->external())
-  {
+  if ( part->external() ) {
     // qDebug() << "remove part file " << part->data();
-    QString fileName = QString::fromUtf8( part->data() );
+    const QString fileName = QString::fromUtf8( part->data() );
     QFile::remove( fileName );
   }
   return part->remove();
@@ -159,27 +149,22 @@ bool PartHelper::remove( Akonadi::Part *part )
 
 bool PartHelper::remove( const QString &column, const QVariant &value )
 {
-  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() )
-  {
-    SelectQueryBuilder<Part> builder;
-    builder.addValueCondition( column, Query::Equals, value );
-    if ( !builder.exec() ) {
+  SelectQueryBuilder<Part> builder;
+  builder.addValueCondition( column, Query::Equals, value );
+  builder.addValueCondition( Part::externalColumn(), Query::Equals, true );
+  if ( !builder.exec() ) {
 //      qDebug() << "Error selecting records to be deleted from table"
 //          << Part::tableName() << builder.query().lastError().text();
-      return false;
-    }
-    Part::List parts = builder.result();
-    Part::List::Iterator it = parts.begin();
-    Part::List::Iterator end = parts.end();
-    for ( ; it != end; ++it )
-    {
-      if ((*it).external())
-      {
-        QString fileName = QString::fromUtf8( (*it).data() );
-        // qDebug() << "remove part file " << fileName;
-        QFile::remove( fileName );
-      }
-    }
+    return false;
+  }
+  const Part::List parts = builder.result();
+  Part::List::ConstIterator it = parts.constBegin();
+  Part::List::ConstIterator end = parts.constEnd();
+  for ( ; it != end; ++it )
+  {
+    const QString fileName = QString::fromUtf8( (*it).data() );
+    // qDebug() << "remove part file " << fileName;
+    QFile::remove( fileName );
   }
   return Part::remove( column, value );
 }
@@ -267,6 +252,8 @@ Part PartHelper::retrieveById( qint64 id )
 
 QString PartHelper::fileNameForId( qint64 id )
 {
+  Q_ASSERT( id >= 0 );
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
+  Q_ASSERT( dataDir != QDir::separator() );
   return dataDir + QString::number(id);
 }
