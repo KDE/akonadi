@@ -263,7 +263,6 @@ bool Store::parseStream()
         const bool storeInFile = ( DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold() );
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
-          part.setExternal( true ); //the part WILL be external
           // use first part as value for the initial insert into / update to the database.
           // this will give us a proper filename to stream the rest of the parts contents into
           // NOTE: we have to set the correct size (== dataSize) directly
@@ -271,12 +270,12 @@ bool Store::parseStream()
          // qDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
 
           if ( part.isValid() ) {
-            if ( !PartHelper::update( &part, value, dataSize ) )
-              return failureResponse( "Unable to update item part" );
+            PartHelper::update( &part, value, dataSize );
           } else {
 //             qDebug() << "insert from Store::handleLine";
             part.setData( value );
             part.setDatasize( dataSize );
+            part.setExternal( true ); //the part WILL be external
             if ( !PartHelper::insert( &part ) )
               return failureResponse( "Unable to add item part" );
           }
@@ -313,8 +312,7 @@ bool Store::parseStream()
       const QByteArray origData = PartHelper::translateData( part );
       if ( origData != value ) {
         if ( part.isValid() ) {
-          if ( !PartHelper::update( &part, value, value.size() ) )
-            return failureResponse( "Unable to update item part" );
+          PartHelper::update( &part, value, value.size() );
         } else {
 //           qDebug() << "insert from Store::handleLine: " << value.left(100);
           part.setData( value );

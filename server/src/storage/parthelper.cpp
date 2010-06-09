@@ -29,20 +29,24 @@
 
 using namespace Akonadi;
 
-bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
+void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 {
   if (!part)
-    return false;
+    throw PartHelperException( "Invalid part" );
 
-  if (DbConfig::configuredDatabase()->useExternalPayloadFile() && part->external())
-  {
-    QString origFileName = QString::fromUtf8( part->data() );
-    if ( origFileName.isEmpty() )
-      origFileName = fileNameForId( part->pimItemId() );
+  QString origFileName;
+  // currently external, so recover the filename to delete it after the update succeeded
+  if ( part->external() )
+    origFileName = QString::fromUtf8( part->data() );
+
+  const bool storeExternal = DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold();
+
+  if ( storeExternal ) {
     QString fileName = origFileName;
+    if ( fileName.isEmpty() )
+      fileName = fileNameForId( part->pimItemId() );
     QString rev = QString::fromAscii("_r0");
-    if (fileName.contains( QString::fromAscii("_r") ))
-    {
+    if ( fileName.contains( QString::fromAscii("_r") ) ) {
       int revIndex = fileName.indexOf(QString::fromAscii("_r"));
       rev = fileName.mid( revIndex + 2  );
       int r = rev.toInt();
@@ -53,33 +57,32 @@ bool PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     }
     fileName += rev;
 
-    QFile file(fileName);
-
-    if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
-    {
-//      qDebug() << "Update part file " << fileName <<" with " << QString::fromUtf8(data).left(50);
-
-      file.write( data );
-      QByteArray fileNameData = fileName.toLocal8Bit();
-      part->setData( fileNameData );
-      part->setDatasize( fileNameData.size() );
-      part->setExternal( true );
+    QFile file( fileName );
+    if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+      if ( file.write( data ) == data.size() ) {
+        part->setData( fileName.toLocal8Bit() );
+        part->setExternal( true );
+      } else {
+        throw PartHelperException( QString::fromLatin1( "Failed to write into '%1', error was '%2'" ).arg( fileName ).arg( file.errorString() ) );
+      }
       file.close();
-//      qDebug() << "Removing part file " << origFileName;
-      QFile::remove(origFileName);
-    } else
-    {
-//      qDebug() << "Update: payload file " << fileName << " could not be open for writing!";
-//      qDebug() << "Error: " << file.errorString();
-      return false;
+    } else  {
+     throw PartHelperException( QString::fromLatin1( "Could not open '%1' for writing, error was '%2'" ).arg( fileName ).arg( file.errorString() ) );
     }
-  } else
-  {
+
+  // internal storage
+  } else {
     part->setData( data );
-    part->setDatasize( dataSize );
     part->setExternal( false );
   }
-  return part->update();
+
+  part->setDatasize( dataSize );
+  const bool result = part->update();
+  if ( !result )
+    throw PartHelperException( "Failed to update database record" );
+  // everything worked, remove the old file
+  if ( !origFileName.isEmpty() )
+    QFile::remove( origFileName );
 }
 
 bool PartHelper::insert( Part *part, qint64* insertId )

@@ -22,12 +22,16 @@
 
 #include <QtGlobal>
 #include "entities.h"
+#include "exception.h"
 
 class QString;
 class QVariant;
 
 namespace Akonadi
 {
+
+AKONADI_EXCEPTION_MAKE_INSTANCE( PartHelperException );
+
 /**
  * Helper methods that store data in a file instead of the database.
  *
@@ -35,7 +39,12 @@ namespace Akonadi
  */
 namespace PartHelper
 {
-  bool update( Part *part, const QByteArray &data, qint64 dataSize );
+  /** Update payload of an existing part @p part to @p data and size @p dataSize.
+   *  Automatically decides whether or not the data should be stored in the databse
+   *  or the file system.
+   *  @throw PartHelperException if file operations failed
+   */
+  void update( Part *part, const QByteArray &data, qint64 dataSize );
   bool insert( Part *part, qint64* insertId = 0 );
   /** Deletes @p part from the database and also removes existing filesystem data if needed. */
   bool remove( Part *part );
