@@ -1351,6 +1351,7 @@ void EntityTreeModelPrivate::fillModel()
   {
     QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
   } else {
+    Q_ASSERT(m_rootCollection.isValid());
     CollectionFetchJob *rootFetchJob = new CollectionFetchJob( m_rootCollection, CollectionFetchJob::Base, m_session );
     q->connect( rootFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                 SLOT( rootCollectionFetched( const Akonadi::Collection::List& ) ) );
