@@ -133,10 +133,7 @@ bool Append::commit()
     part.setName( QLatin1String( "PLD:RFC822" ) );
     part.setData( m_data );
     part.setPimItemId( item.id() );
-    if (storeInFile) {
-      part.setDatasize( dataSize );
-      part.setExternal( true );//force external storage
-    }
+    part.setDatasize( dataSize );
 
     QList<Part> parts;
     parts.append( part );
@@ -151,11 +148,7 @@ bool Append::commit()
       hiddenAttribute.setName( QLatin1String( "ATR:HIDDEN" ) );
       hiddenAttribute.setData( QByteArray() );
       hiddenAttribute.setPimItemId( item.id() );
-      if ( storeInFile )
-      {
-        hiddenAttribute.setDatasize( 0 );
-        hiddenAttribute.setExternal( true ); // the hidden attribute shouldn't be external
-      }
+      hiddenAttribute.setDatasize( 0 );
       parts.append( hiddenAttribute );
     }
 
@@ -172,7 +165,6 @@ bool Append::commit()
       return failureResponse( "Unable to append item flags." );
 
     if (storeInFile) {
-      part.setExternal( true );
       //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
       //client knows about the item yet
       QString fileName = QString::fromUtf8( parts[0].data() );

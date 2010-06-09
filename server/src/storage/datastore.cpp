@@ -422,7 +422,8 @@ bool DataStore::appendPimItem( QList<Part> & parts,
     for(QList<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
 
       (*it).setPimItemId( pimItem.id() );
-      (*it).setDatasize( (*it).data().size() );
+      if ( (*it).datasize() < (*it).data().size() )
+        (*it).setDatasize( (*it).data().size() );
 
 //       qDebug() << "Insert from DataStore::appendPimItem";
       if( !PartHelper::insert(&(*it)) )

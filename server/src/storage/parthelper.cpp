@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Andras Mantia <amantia@kde.org>                    *
+ *   Copyright (C) 2009 by Andras Mantia <amantia@kde.org>                 *
+ *   Copyright (C) 2010 Volker Krause <vkrause@kde.org>                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -90,47 +91,40 @@ bool PartHelper::insert( Part *part, qint64* insertId )
   if (!part)
     return false;
 
-//   qDebug() << "Insert original data " << part->data();
-  QByteArray fileNameData("");
-  QByteArray data;
-  bool storeInFile = DbConfig::configuredDatabase()->useExternalPayloadFile()  && ( part->datasize() > DbConfig::configuredDatabase()->sizeThreshold() || part->external() );
+  const bool storeInFile = DbConfig::configuredDatabase()->useExternalPayloadFile()  && ( part->datasize() > DbConfig::configuredDatabase()->sizeThreshold() );
 
   //it is needed to insert first the metadata so a new id is generated for the part,
   //and we need this id for the payload file name
-  if (storeInFile)
-  {
+  QByteArray data;
+  if ( storeInFile ) {
     data = part->data();
-    part->setData( fileNameData );
-    part->setDatasize( fileNameData.size() );
+    part->setData( QByteArray() );
     part->setExternal( true );
-  } else
-  {
+  } else {
     part->setExternal( false );
   }
 
   bool result = part->insert( insertId );
 
-  if (storeInFile && result)
+  if ( storeInFile && result )
   {
     QString fileName = PartHelper::fileNameForId( part->id() );
     fileName +=  QString::fromUtf8("_r0");
 
     QFile file( fileName );
-
-    if (file.open( QIODevice::WriteOnly | QIODevice::Truncate ))
-    {
-//       qDebug() << "Insert: create part file " << fileName << "with " << QString::fromUtf8(data).left(50);
-
-      file.write(data);
-      fileNameData = fileName.toLocal8Bit();
-      part->setData(fileNameData);
-      part->setDatasize(fileNameData.size());
-      part->update();
+    if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
+      if ( file.write( data ) == data.size() ) {
+        part->setData( fileName.toLocal8Bit() );
+        result = part->update();
+      } else {
+        qDebug() << "Insert: payload file " << fileName << " could not be written to!";
+        qDebug() << "Error: " << file.errorString();
+        return false;
+      }
       file.close();
-    } else
-    {
-//       qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
-//       qDebug() << "Error: " << file.errorString();
+    } else {
+      qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
+      qDebug() << "Error: " << file.errorString();
       return false;
     }
   }

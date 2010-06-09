@@ -275,7 +275,6 @@ bool Store::parseStream()
 //             qDebug() << "insert from Store::handleLine";
             part.setData( value );
             part.setDatasize( dataSize );
-            part.setExternal( true ); //the part WILL be external
             if ( !PartHelper::insert( &part ) )
               return failureResponse( "Unable to add item part" );
           }
