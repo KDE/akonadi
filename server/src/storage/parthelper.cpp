@@ -169,41 +169,6 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   return Part::remove( column, value );
 }
 
-bool PartHelper::loadData( Part::List &parts )
-{
-  Part::List::Iterator it = parts.begin();
-  Part::List::Iterator end = parts.end();
-  for ( ; it != end; ++it )
-  {
-    if ( !loadData( (*it) ) )
-    {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-bool PartHelper::loadData( Part &part )
-{
-  if ( part.external() ) {
-    const QString fileName = QString::fromUtf8( part.data() );
-    QFile file( fileName );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      const QByteArray data = file.readAll();
-      part.setData( data );
-      part.setDatasize( data.size() );
-//      qDebug() << "load part file " << fileName << QString::fromUtf8(data).left(50);
-      file.close();
-    } else {
-      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-      qDebug() << "Error: " << file.errorString();
-      return false;
-    }
-  }
-  return true;
-}
-
 QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 {
   if ( isExternal ) {
@@ -227,14 +192,6 @@ QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 QByteArray PartHelper::translateData( const Part& part )
 {
   return translateData( part.data(), part.external() );
-}
-
-/** Returns the record with id @p id. */
-Part PartHelper::retrieveById( qint64 id )
-{
-  Part part = Part::retrieveById( id );
-  loadData(part);
-  return part;
 }
 
 QString PartHelper::fileNameForId( qint64 id )
