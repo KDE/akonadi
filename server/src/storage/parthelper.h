@@ -43,7 +43,9 @@ namespace PartHelper
   bool remove( const QString &column, const QVariant &value );
   bool loadData( Part::List &parts );
   bool loadData( Part &part );
+  /** Returns the payload data. */
   QByteArray translateData( const QByteArray &data, bool isExternal  );
+  /** Convenience overload of the above. */
   QByteArray translateData( const Part& part );
   /** Returns the record with id @p id. */
   Part retrieveById( qint64 id );

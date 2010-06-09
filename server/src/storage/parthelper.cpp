@@ -214,27 +214,22 @@ bool PartHelper::loadData( Part &part )
 
 QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 {
-  if ( DbConfig::configuredDatabase()->useExternalPayloadFile() && isExternal )
-  {
-    QString fileName = QString::fromUtf8( data );
+  if ( isExternal ) {
+    const QString fileName = QString::fromUtf8( data );
     QFile file( fileName );
-    if (file.open( QIODevice::ReadOnly ))
-    {
-      QByteArray payload = file.readAll();
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      const QByteArray payload = file.readAll();
       file.close();
       return payload;
-    } else
-    {
-//      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-//      qDebug() << "Error: " << file.errorString();
+    } else {
+      qDebug() << "Payload file " << fileName << " could not be open for reading!";
+      qDebug() << "Error: " << file.errorString();
       return QByteArray();
     }
-  } else
-  if ( isExternal ) //external payload is disabled, but the item is marked as external
-  {
-    return QByteArray();
-  } else
+  } else {
+    // not external
     return data;
+  }
 }
 
 QByteArray PartHelper::translateData( const Part& part )
