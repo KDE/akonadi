@@ -438,6 +438,8 @@ void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType,
 
 void EntityTreeModelPrivate::monitoredCollectionsChanged( const Akonadi::Collection &collection, bool monitored )
 {
+  Q_UNUSED(collection)
+  Q_UNUSED(monitored)
   beginResetModel();
   endResetModel();
 }

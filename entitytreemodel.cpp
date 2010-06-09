@@ -779,6 +779,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 bool EntityTreeModel::canFetchMore( const QModelIndex & parent ) const
 {
+  Q_UNUSED(parent)
   return false;
 }
 
