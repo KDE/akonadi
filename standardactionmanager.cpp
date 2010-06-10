@@ -150,38 +150,39 @@ class StandardActionManager::Private
       }
     }
 
-    void encodeToClipboard( QItemSelectionModel* selModel, bool cut = false )
+    void encodeToClipboard( QItemSelectionModel* selectionModel, bool cut = false )
     {
-      Q_ASSERT( selModel );
-      if ( selModel->selectedRows().count() <= 0 )
+      Q_ASSERT( selectionModel );
+      if ( selectionModel->selectedRows().count() <= 0 )
         return;
-      QMimeData *mimeData = selModel->model()->mimeData( selModel->selectedRows() );
+
+      QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
       markCutAction( mimeData, cut );
       QApplication::clipboard()->setMimeData( mimeData );
 
-      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( selModel->model() );
+      QAbstractItemModel *model = const_cast<QAbstractItemModel *>( selectionModel->model() );
 
-      foreach ( const QModelIndex &index, selModel->selectedRows() )
+      foreach ( const QModelIndex &index, selectionModel->selectedRows() )
         model->setData( index, true, EntityTreeModel::PendingCutRole );
     }
 
     void updateActions()
     {
-      bool singleColSelected = false;
-      bool multiColSelected = false;
+      bool singleCollectionSelected = false;
+      bool multipleCollectionsSelected = false;
       bool canDeleteCollections = true;
-      int colCount = 0;
+      int collectionCount = 0;
 
       QModelIndex selectedIndex;
       if ( !collectionSelectionModel ) {
         canDeleteCollections = false;
       } else {
-        colCount = collectionSelectionModel->selectedRows().count();
-        singleColSelected = colCount == 1;
-        multiColSelected = colCount > 1;
-        canDeleteCollections = colCount > 0;
+        collectionCount = collectionSelectionModel->selectedRows().count();
+        singleCollectionSelected = collectionCount == 1;
+        multipleCollectionsSelected = collectionCount > 1;
+        canDeleteCollections = collectionCount > 0;
 
-        if ( singleColSelected )
+        if ( singleCollectionSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
 
         if ( itemSelectionModel ) {
@@ -200,23 +201,23 @@ class StandardActionManager::Private
         }
       }
 
-      Collection col = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
+      const Collection collection = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
 
-      enableAction( CopyCollections, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
-      enableAction( CollectionProperties, singleColSelected && !isRootCollection( col ) );
+      enableAction( CopyCollections, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
+      enableAction( CollectionProperties, singleCollectionSelected && !isRootCollection( collection ) );
 
-      enableAction( CreateCollection, singleColSelected && canCreateCollection( col ) );
-      enableAction( DeleteCollections, singleColSelected && (col.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( col ) );
-      enableAction( CutCollections, canDeleteCollections && !isRootCollection( col ) && !CollectionUtils::isResource( col ) );
-      enableAction( SynchronizeCollections, singleColSelected && (CollectionUtils::isResource( col ) || CollectionUtils::isFolder( col ) ) );
-      enableAction( Paste, singleColSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), col ) );
-      enableAction( AddToFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( col ) ) );
-      enableAction( RemoveFromFavoriteCollections, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
-      enableAction( RenameFavoriteCollection, singleColSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( col ) ) );
-      enableAction( CopyCollectionToMenu, (singleColSelected || multiColSelected) && !isRootCollection( col ) );
-      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( col ) && !CollectionUtils::isResource( col ) );
+      enableAction( CreateCollection, singleCollectionSelected && canCreateCollection( collection ) );
+      enableAction( DeleteCollections, singleCollectionSelected && (collection.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( collection ) );
+      enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) );
+      enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
+      enableAction( Paste, singleCollectionSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) );
+      enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) );
+      enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
+      enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
+      enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
+      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) );
 
-      bool multiItemSelected = false;
+      bool multipleItemsSelected = false;
       bool canDeleteItems = true;
       int itemCount = 0;
       if ( !itemSelectionModel ) {
@@ -225,7 +226,7 @@ class StandardActionManager::Private
         const QModelIndexList rows = itemSelectionModel->selectedRows();
 
         itemCount = rows.count();
-        multiItemSelected = itemCount > 0;
+        multipleItemsSelected = itemCount > 0;
         canDeleteItems = itemCount > 0;
 
         foreach ( const QModelIndex &itemIndex, rows ) {
@@ -237,15 +238,15 @@ class StandardActionManager::Private
         }
       }
 
-      enableAction( CopyItems, multiItemSelected );
+      enableAction( CopyItems, multipleItemsSelected );
       enableAction( CutItems, canDeleteItems );
 
-      enableAction( DeleteItems, multiItemSelected && canDeleteItems );
+      enableAction( DeleteItems, multipleItemsSelected && canDeleteItems );
 
-      enableAction( CopyItemToMenu, multiItemSelected );
-      enableAction( MoveItemToMenu, multiItemSelected && canDeleteItems );
+      enableAction( CopyItemToMenu, multipleItemsSelected );
+      enableAction( MoveItemToMenu, multipleItemsSelected && canDeleteItems );
 
-      updatePluralLabel( CopyCollections, colCount );
+      updatePluralLabel( CopyCollections, collectionCount );
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
       updatePluralLabel( CutItems, itemCount );
@@ -260,7 +261,7 @@ class StandardActionManager::Private
         updateActions();
     }
 
-    QItemSelection mapToEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    QItemSelection mapToEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection ) const
     {
       const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
       if ( proxy ) {
@@ -270,11 +271,11 @@ class StandardActionManager::Private
       }
     }
 
-    QItemSelection mapFromEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection )
+    QItemSelection mapFromEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection ) const
     {
       const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model );
       if ( proxy ) {
-        QItemSelection select = mapFromEntityTreeModel( proxy->sourceModel(), selection );
+        const QItemSelection select = mapFromEntityTreeModel( proxy->sourceModel(), selection );
         return proxy->mapSelectionFromSource( select );
       } else {
         return selection;
@@ -283,7 +284,7 @@ class StandardActionManager::Private
 
     void collectionSelectionChanged()
     {
-      q->blockSignals(true);
+      q->blockSignals( true );
 
       QItemSelection selection = collectionSelectionModel->selection();
       selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
@@ -292,22 +293,25 @@ class StandardActionManager::Private
       if ( favoriteSelectionModel )
         favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
 
-      q->blockSignals(false);
+      q->blockSignals( false );
 
       updateActions();
     }
 
     void favoriteSelectionChanged()
     {
-      q->blockSignals(true);
+      q->blockSignals( true );
 
       QItemSelection selection = favoriteSelectionModel->selection();
-      if ( selection.indexes().isEmpty() ) return;
+      if ( selection.indexes().isEmpty() )
+        return;
+
       selection = mapToEntityTreeModel( favoritesModel, selection );
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
+
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
 
-      q->blockSignals(false);
+      q->blockSignals( false );
 
       updateActions();
     }
@@ -320,10 +324,10 @@ class StandardActionManager::Private
 
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      const Collection parentCollection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( parentCollection.isValid() );
 
-      if ( !canCreateCollection( collection ) )
+      if ( !canCreateCollection( parentCollection ) )
         return;
 
       const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
@@ -331,14 +335,11 @@ class StandardActionManager::Private
                                                   QString(), 0, parentWidget );
       if ( name.isEmpty() )
         return;
-      Collection::Id parentId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
-      if ( parentId <= 0 )
-        return;
 
-      Collection col;
-      col.setName( name );
-      col.parentCollection().setId( parentId );
-      CollectionCreateJob *job = new CollectionCreateJob( col );
+      Collection collection;
+      collection.setName( name );
+      collection.setParentCollection( parentCollection );
+      CollectionCreateJob *job = new CollectionCreateJob( collection );
       q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionCreationResult( KJob* ) ) );
     }
 
@@ -371,11 +372,12 @@ class StandardActionManager::Private
            i18n( "Delete folder?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
-      const Collection::Id colId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
-      if ( colId <= 0 )
+
+      const Collection::Id collectionId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
+      if ( collectionId <= 0 )
         return;
 
-      CollectionDeleteJob *job = new CollectionDeleteJob( Collection( colId ), q );
+      CollectionDeleteJob *job = new CollectionDeleteJob( Collection( collectionId ), q );
       q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionDeletionResult( KJob* ) ) );
     }
 
@@ -387,10 +389,10 @@ class StandardActionManager::Private
 
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      const Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
 
-      AgentManager::self()->synchronizeCollection( col );
+      AgentManager::self()->synchronizeCollection( collection );
     }
 
     void slotCollectionProperties()
@@ -399,11 +401,11 @@ class StandardActionManager::Private
         return;
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
-      Collection col = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( col.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
 
-      CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( col, parentWidget );
-      dlg->setCaption(i18n( "Properties of Folder %1",col.name()));
+      CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, parentWidget );
+      dlg->setCaption( i18n( "Properties of Folder %1", collection.name() ) );
       dlg->show();
     }
 
@@ -448,10 +450,11 @@ class StandardActionManager::Private
       Item::List items;
       foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
         bool ok;
-        qlonglong id = index.data( ItemModel::IdRole ).toLongLong(&ok);
-        Q_ASSERT(ok);
+        const qlonglong id = index.data( ItemModel::IdRole ).toLongLong( &ok );
+        Q_ASSERT( ok );
         items << Item( id );
       }
+
       new ItemDeleteJob( items, q );
     }
 
@@ -507,9 +510,9 @@ class StandardActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       bool ok;
-      QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
-                                             i18nc( "@label:textbox New name of the folder.", "Name:" ),
-                                             favoritesModel->favoriteLabel( collection ), &ok, parentWidget );
+      const QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
+                                                   i18nc( "@label:textbox New name of the folder.", "Name:" ),
+                                                   favoritesModel->favoriteLabel( collection ), &ok, parentWidget );
       if ( !ok )
         return;
 
@@ -544,9 +547,9 @@ class StandardActionManager::Private
       if ( selectionModel->selectedRows().count() <= 0 )
         return;
 
-      QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
+      const QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
 
-      QModelIndex index = action->data().value<QModelIndex>();
+      const QModelIndex index = action->data().value<QModelIndex>();
 
       Q_ASSERT( index.isValid() );
 
@@ -661,14 +664,14 @@ class StandardActionManager::Private
 
     void checkModelsConsistency()
     {
-      if ( favoritesModel==0 || favoriteSelectionModel==0 ) {
+      if ( favoritesModel == 0 || favoriteSelectionModel == 0 ) {
         // No need to check when the favorite collections feature is not used
         return;
       }
 
       // Check that the collection selection model maps to the same
       // EntityTreeModel than favoritesModel
-      if ( collectionSelectionModel!=0 ) {
+      if ( collectionSelectionModel != 0 ) {
         const QAbstractItemModel *model = collectionSelectionModel->model();
         while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
           model = proxy->sourceModel();
@@ -695,11 +698,11 @@ class StandardActionManager::Private
 
     bool isCutAction( const QMimeData *mimeData ) const
     {
-      QByteArray a = mimeData->data( QLatin1String( "application/x-kde.akonadi-cutselection" ) );
-      if ( a.isEmpty() )
+      const QByteArray data = mimeData->data( QLatin1String( "application/x-kde.akonadi-cutselection" ) );
+      if ( data.isEmpty() )
         return false;
       else
-        return (a.at(0) == '1'); // true if 1
+        return (data.at( 0 ) == '1'); // true if 1
     }
 
     StandardActionManager *q;
