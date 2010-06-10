@@ -22,7 +22,7 @@
 
 #include <QtGlobal>
 #include "entities.h"
-#include "exception.h"
+#include "../exception.h"
 
 class QString;
 class QVariant;
