@@ -88,9 +88,9 @@ class AKONADI_EXPORT Collection : public Entity
       CanChangeItem = 0x1,              ///< Can change items in this collection
       CanCreateItem = 0x2,              ///< Can create new items in this collection
       CanDeleteItem = 0x4,              ///< Can delete items in this collection
-      CanChangeCollection = 0x8,        ///< Can change subcollections in this collection
+      CanChangeCollection = 0x8,        ///< Can change this collection
       CanCreateCollection = 0x10,       ///< Can create new subcollections in this collection
-      CanDeleteCollection = 0x20,       ///< Can delete subcollections in this collection
+      CanDeleteCollection = 0x20,       ///< Can delete this collection
       CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection @since 4.4
       CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection @since 4.4
       AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
