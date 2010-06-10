@@ -604,7 +604,7 @@ class StandardActionManager::Private
           const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
           // The mimetypes that the selected collection can possibly contain
-          mimeTypes = AgentManager::self()->type( collection.resource() ).mimeTypes().toSet();
+          mimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet();
         }
       }
 
@@ -627,7 +627,7 @@ class StandardActionManager::Private
 
         const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
         const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
-        const bool resourceAllowsRequiredMimeTypes = !(QSet<QString>( mimeTypes ).subtract( AgentManager::self()->type( collection.resource() ).mimeTypes().toSet() ).isEmpty());
+        const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet().contains( mimeTypes );
 
         const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
         const bool isReadOnlyForCollections = (isCollectionAction && (!canCreateNewCollections || !canContainCollections || !resourceAllowsRequiredMimeTypes));
