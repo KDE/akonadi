@@ -434,4 +434,14 @@ void ItemSync::slotResult(KJob* job)
   }
 }
 
+void ItemSync::rollback()
+{
+  setError( UserCanceled );
+  if ( d->mCurrentTransaction )
+    d->mCurrentTransaction->rollback();
+  d->mDeliveryDone = true; // user wont deliver more data
+  d->execute(); // end this in an ordered way, since we have an error set no real change will be done
+}
+
+
 #include "itemsync.moc"

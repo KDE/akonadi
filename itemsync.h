@@ -143,6 +143,14 @@ class AKONADI_EXPORT ItemSync : public Job
      */
     ItemFetchScope &fetchScope();
 
+    /**
+     * Aborts the sync process and rolls back all not yet committed transactions.
+     * Use this if an external error occured during the sync process (such as the
+     * user canceling it).
+     * @since 4.5
+     */
+    void rollback();
+
   protected:
     void doStart();
     void slotResult( KJob* job );

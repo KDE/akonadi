@@ -88,6 +88,15 @@ class AKONADI_EXPORT TransactionSequence : public Job
     void commit();
 
     /**
+     * Rolls back the current transaction as soon as possible.
+     * You only need to call this method when you want to roll back due to external
+     * reasons (e.g. user cancellation), the transaction is automatically rolled back
+     * if one of its subjobs fails.
+     * @since 4.5
+     */
+    void rollback();
+
+    /**
      * Sets which job of the sequence might fail without rolling back the
      * complete transaction.
      *

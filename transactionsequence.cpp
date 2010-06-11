@@ -177,5 +177,23 @@ void TransactionSequence::setAutomaticCommittingEnabled(bool enable)
   d->mAutoCommit = enable;
 }
 
+void TransactionSequence::rollback()
+{
+  Q_D( TransactionSequence );
+
+  setError( UserCanceled );
+  // we never really started
+  if ( d->mState == TransactionSequencePrivate::Idle ) {
+    emitResult();
+    return;
+  }
+
+  // TODO cancel not yet executed sub-jobs here
+
+  d->mState = TransactionSequencePrivate::RollingBack;
+  TransactionRollbackJob *job = new TransactionRollbackJob( this );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( rollbackResult( KJob* ) ) );
+}
+
 
 #include "transactionsequence.moc"

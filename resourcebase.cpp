@@ -436,7 +436,8 @@ void ResourceBasePrivate::slotCollectionSyncDone( KJob * job )
   Q_Q( ResourceBase );
   mCollectionSyncer = 0;
   if ( job->error() ) {
-    emit q->error( job->errorString() );
+    if ( job->error() != Job::UserCanceled )
+      emit q->error( job->errorString() );
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
       CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
@@ -567,6 +568,19 @@ void ResourceBase::cancelTask()
     case ResourceScheduler::ChangeReplay:
       d->changeProcessed();
       break;
+    case ResourceScheduler::SyncCollectionTree:
+    case ResourceScheduler::SyncAll:
+      if ( d->mCollectionSyncer )
+        d->mCollectionSyncer->rollback();
+      else
+        d->scheduler->taskDone();
+      break;
+    case ResourceScheduler::SyncCollection:
+      if ( d->mItemSyncer )
+        d->mItemSyncer->rollback();
+      else
+        d->scheduler->taskDone();
+      break;
     default:
       d->scheduler->taskDone();
   }
@@ -664,7 +678,7 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 {
   mItemSyncer = 0;
   Q_Q( ResourceBase );
-  if ( job->error() ) {
+  if ( job->error() && job->error() != Job::UserCanceled ) {
     emit q->error( job->errorString() );
   }
   scheduler->taskDone();
