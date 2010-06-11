@@ -124,6 +124,11 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       scheduler->dump();
     }
 
+    Q_SCRIPTABLE void clear()
+    {
+      scheduler->clear();
+    }
+
   public:
     // synchronize states
     Collection currentCollection;

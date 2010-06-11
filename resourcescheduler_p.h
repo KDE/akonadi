@@ -149,6 +149,13 @@ class ResourceScheduler : public QObject
     */
     void dump();
 
+    /**
+       Clear the state of the scheduler. Warning: this is intended to be
+       used purely in debugging scenarios, as it might cause loss of uncommitted
+       local changes.
+    */
+    void clear();
+
   public Q_SLOTS:
     /**
       Schedules replaying changes.

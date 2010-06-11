@@ -369,6 +369,15 @@ void ResourceScheduler::dump()
   }
 }
 
+void ResourceScheduler::clear()
+{
+  kDebug() << "Clearing ResourceScheduler queues:";
+  for ( int i = 0; i < NQueueCount; ++i ) {
+    TaskList& queue = mTaskList[i];
+    queue.clear();
+  }
+}
+
 static const char s_taskTypes[][25] = {
       "Invalid",
       "SyncAll",
