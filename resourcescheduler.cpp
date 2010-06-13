@@ -376,6 +376,7 @@ void ResourceScheduler::clear()
     TaskList& queue = mTaskList[i];
     queue.clear();
   }
+  mCurrentTask = Task();
 }
 
 static const char s_taskTypes[][25] = {
