@@ -1006,7 +1006,9 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
 
 void EntityTreeModelPrivate::rootCollectionFetched( const Collection::List &list )
 {
-  Q_ASSERT( list.size() == 1 && "Actual list size" && list.size() );
+  if ( list.size() != 1 )
+      kDebug() << "Actual list size" << list.size();
+  Q_ASSERT( list.size() == 1 );
   m_rootCollection = list.first();
   startFirstListJob();
 }
