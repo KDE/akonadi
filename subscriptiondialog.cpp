@@ -84,6 +84,7 @@ class SubscriptionDialog::Private
       ui.unsubscribeButton->setEnabled( true );
       ui.subscribeView->setEnabled( true );
       ui.unsubscribeView->setEnabled( true );
+      ui.collectionView->expandAll();
       q->enableButtonOk( true );
     }
 
@@ -125,7 +126,6 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   connect( this, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
   connect( d->ui.klineedit, SIGNAL( textChanged( const QString& ) ),
            d->filterTreeViewModel, SLOT( setFilterFixedString( const QString& ) ) );
-
   Control::widgetNeedsAkonadi( mainWidget() );
 }
 
