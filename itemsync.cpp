@@ -224,15 +224,16 @@ bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
   }
 
   // Check whether the new item contains unknown parts
-  QSet<QByteArray> missingParts = storedItem.loadedPayloadParts();
-  missingParts.subtract( newItem.loadedPayloadParts() );
+  QSet<QByteArray> missingParts = newItem.loadedPayloadParts();
+  missingParts.subtract( storedItem.loadedPayloadParts() );
   if ( !missingParts.isEmpty() )
     return true;
 
   // ### FIXME SLOW!!!
   // If the available part identifiers don't differ, check
   // whether the content of the payload differs
-  if ( storedItem.payloadData() != newItem.payloadData() )
+  if ( newItem.hasPayload()
+    && storedItem.payloadData() != newItem.payloadData() )
     return true;
 
   // check if remote attributes have been changed
