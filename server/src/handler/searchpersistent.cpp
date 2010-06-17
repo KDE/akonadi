@@ -49,7 +49,7 @@ SearchPersistent::~SearchPersistent()
 
 bool SearchPersistent::parseStream()
 {
-  QByteArray collectionName = m_streamParser->readString();
+  QString collectionName = m_streamParser->readUtf8String();
   if ( collectionName.isEmpty() )
     return failureResponse( "No name specified" );
 

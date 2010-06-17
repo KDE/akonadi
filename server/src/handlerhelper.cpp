@@ -72,7 +72,7 @@ QString HandlerHelper::pathForCollection(const Collection & col)
   QStringList parts;
   Collection current = col;
   while ( current.isValid() ) {
-    parts.prepend( QString::fromUtf8( current.name() ) );
+    parts.prepend( current.name() );
     current = current.parent();
   }
   return parts.join( QLatin1String("/") );
@@ -189,7 +189,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
 
-  b += "NAME "+ ImapParser::quote( col.name() ) + ' ';
+  b += "NAME "+ ImapParser::quote( col.name().toUtf8() ) + ' ';
   if ( hidden )
     b+= "MIMETYPE () ";
   else

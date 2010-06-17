@@ -50,7 +50,7 @@ namespace CollectionQueryHelper
   /**
     Checks if a collection could exist in the given parent folder with the given name.
   */
-  bool hasAllowedName( const Collection &collection, const QByteArray &name, Collection::Id parent );
+  bool hasAllowedName( const Collection &collection, const QString &name, Collection::Id parent );
 
   /**
     Checks if a collection could be moved from its current parent into the given one.

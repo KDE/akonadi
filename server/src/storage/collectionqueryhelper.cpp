@@ -59,7 +59,7 @@ void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* 
     throw HandlerException( "WTF?" );
 }
 
-bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QByteArray & name, Collection::Id parent)
+bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QString & name, Collection::Id parent)
 {
   Q_UNUSED( collection );
   SelectQueryBuilder<Collection> qb;

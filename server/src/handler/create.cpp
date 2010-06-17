@@ -116,7 +116,7 @@ bool Create::parseStream()
   Collection collection;
   if ( parent.isValid() )
     collection.setParentId( parent.id() );
-  collection.setName( name.toUtf8() );
+  collection.setName( name );
   collection.setResourceId( resourceId );
 
   // attributes

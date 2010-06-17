@@ -109,7 +109,7 @@ bool Modify::parseStream()
       if ( changed )
         changes.append( AKONADI_PARAM_CACHEPOLICY );
     } else if ( type == AKONADI_PARAM_NAME ) {
-      QByteArray newName;
+      QString newName;
       pos = ImapParser::parseString( line, newName, pos );
       if ( collection.name() == newName )
         continue;
