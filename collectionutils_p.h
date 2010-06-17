@@ -35,12 +35,12 @@ namespace CollectionUtils
   inline bool isVirtualParent( const Collection &collection )
   {
     return (collection.parentCollection() == Collection::root() &&
-            collection.resource() == QLatin1String( "akonadi_search_resource" ));
+            ( collection.resource() == QLatin1String( "akonadi_search_resource" ) || collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
   }
 
   inline bool isVirtual( const Collection &collection )
   {
-    return (collection.resource() == QLatin1String( "akonadi_search_resource" ));
+    return ( (collection.resource() == QLatin1String( "akonadi_search_resource" ) || collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
   }
 
   inline bool isReadOnly( const Collection &collection )
@@ -62,6 +62,7 @@ namespace CollectionUtils
   {
     return (collection.parentCollection() != Collection::root() &&
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
+            collection.resource() != QLatin1String( "akonadi_nepomuktag_resource" ) &&
             !collection.contentMimeTypes().isEmpty());
   }
   inline QString defaultIconName( const Collection &col )
