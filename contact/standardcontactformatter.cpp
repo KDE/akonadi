@@ -73,7 +73,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   if ( date.isValid() )
     dynamicPart += rowFmtStr
       .arg( KABC::Addressee::birthdayLabel() )
-      .arg( KGlobal::locale()->formatDate( date, KLocale::ShortDate ) +
+      .arg( KGlobal::locale()->formatDate( date ) +
             QLatin1String( "&nbsp;&nbsp;" ) + i18np( "(One year old)", "(%1 years old)", years ) );
 
   // Phone Numbers
