@@ -288,10 +288,28 @@ void ResourceScheduler::setOnline(bool state)
   mOnline = state;
   if ( mOnline ) {
     scheduleNext();
-  } else if ( mCurrentTask.type != Invalid ) {
-    // abort running task
-    queueForTaskType( mCurrentTask.type ).prepend( mCurrentTask );
-    mCurrentTask = Task();
+  } else {
+    if ( mCurrentTask.type != Invalid ) {
+      // abort running task
+      queueForTaskType( mCurrentTask.type ).prepend( mCurrentTask );
+      mCurrentTask = Task();
+    }
+    // abort pending synchronous tasks, might take longer until the resource goes online again
+    TaskList& itemFetchQueue = queueForTaskType( FetchItem );
+    for ( QList< Task >::iterator it = itemFetchQueue.begin(); it != itemFetchQueue.end(); ) {
+      if ( (*it).type == FetchItem ) {
+        (*it).sendDBusReplies( false );
+        it = itemFetchQueue.erase( it );
+        if ( s_resourcetracker ) {
+          QList<QVariant> argumentList;
+          argumentList << QString::number( mCurrentTask.serial )
+                       << QLatin1String( "Job canceled." );
+          s_resourcetracker->asyncCallWithArgumentList( QLatin1String( "jobEnded" ), argumentList );
+        }
+      } else {
+        ++it;
+      }
+    }
   }
 }
 
