@@ -110,6 +110,16 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
           "  } "
           "}" );
+    } else if ( criterion == ContactUid ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
+          "  } "
+          "}" );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
@@ -167,7 +177,18 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?v bif:contains \"'%1*'\" . } "
           "  } "
           "}" );
-    }
+    } else if ( criterion == ContactUid ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:contactUID ?v . "
+          "    ?v bif:contains \"'%1*'\" . "
+          "  } "
+          "}" );
+    } 
   } else if ( match == ContainsMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
@@ -222,6 +243,17 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
           "      ?v bif:contains \"'%1'\" . } "
+          "  } "
+          "}" );
+    } else if ( criterion == ContactUid ) {
+      query += QString::fromLatin1(
+          "SELECT DISTINCT ?r "
+          "WHERE { "
+          "  graph ?g { "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r a nco:PersonContact . "
+          "    ?r nco:contactUID ?v . "
+          "    ?v bif:contains \"'%1'\" . "
           "  } "
           "}" );
     }
