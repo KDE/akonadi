@@ -109,24 +109,23 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
            SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 
-  if ( !monitor->itemFetchScope().isEmpty() ) {
-    // Monitor item changes.
-    q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-            SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-    q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-            SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-    q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-            SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-    q->connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-            SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  // Monitor item changes.
+  q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+              SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+              SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+              SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
+  q->connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
+              SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
 
-    q->connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-            SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-    q->connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-            SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  }
+  q->connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+              SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+              SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+
   q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
-           SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
+               SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
 
   Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
   q->connect( serverManager, SIGNAL( started() ), SLOT( serverStarted() ) );
