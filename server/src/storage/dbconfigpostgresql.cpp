@@ -136,8 +136,11 @@ void DbConfigPostgresql::startInternalServer()
     // postgres data directory not initialized yet, so call initdb on it
 
     // call 'initdb -D/home/user/.local/share/akonadi/data_db'
-    const QString command = QString::fromLatin1( "%1 -D%2" ).arg( mInitDbPath ).arg( dataDir );
-    QProcess::execute( command );
+    const QString command = QString::fromLatin1( "%1" ).arg( mInitDbPath );
+    QStringList arguments;
+    arguments << QString::fromLatin1( "-D%2" ).arg( dataDir )
+              << QString::fromLatin1( "--locale=en_US.UTF-8" );
+    QProcess::execute( command, arguments );
 
     const QString configFileName = dataDir + QDir::separator() + QLatin1String( "postgresql.conf" );
     QFile configFile( configFileName );
