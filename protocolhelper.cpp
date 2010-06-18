@@ -355,7 +355,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
           if ( fileKey == "[FILE]" ) {
             isExternal = true;
             i++;
-            kDebug() << "Payload is external: " << isExternal << " filename: " << lineTokens.value( i + 1 );
+            //kDebug() << "Payload is external: " << isExternal << " filename: " << lineTokens.value( i + 1 );
           }
           ItemSerializer::deserialize( item, plainKey, lineTokens.value( i + 1 ), version, isExternal );
           break;
