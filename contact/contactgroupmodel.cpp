@@ -201,12 +201,7 @@ bool ContactGroupModel::storeContactGroup( KABC::ContactGroup &group ) const
       group.append( member.reference );
     else {
       if ( i != (d->mMembers.count() - 1) ) {
-        if ( member.data.name().isEmpty() ) {
-          d->mLastErrorMessage =
-            i18n( "The member with email address <b>%1</b> is missing a name",
-                  member.data.email() );
-          return false;
-        } else if ( member.data.email().isEmpty() ) {
+        if ( member.data.email().isEmpty() ) {
           d->mLastErrorMessage =
             i18n( "The member with name <b>%1</b> is missing an email address",
                   member.data.name() );
