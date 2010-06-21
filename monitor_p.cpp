@@ -306,8 +306,8 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
+    updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
-      updatePendingStatistics( msg );
       appendAndCompress( msg );
     }
   }
