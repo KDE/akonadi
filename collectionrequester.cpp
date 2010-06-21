@@ -96,8 +96,9 @@ void CollectionRequester::Private::_k_slotOpenDialog()
   if ( dlg->exec() != QDialog::Accepted )
     return;
 
-  q->setCollection( dlg->selectedCollection() );
-  emit q->collectionChanged( dlg->selectedCollection() );
+  const Akonadi::Collection col = dlg->selectedCollection();
+  q->setCollection( col );
+  emit q->collectionChanged( col );
 }
 
 CollectionRequester::CollectionRequester( QWidget *parent )
