@@ -133,6 +133,7 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   QHash<int, QByteArray> names = q->roleNames();
 
   names.insert( EntityTreeModel::UnreadCountRole, "unreadCount" );
+  names.insert( EntityTreeModel::FetchStateRole, "fetchState" );
 
   q->setRoleNames(names);
 
