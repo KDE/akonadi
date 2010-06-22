@@ -286,11 +286,17 @@ class CollectionSync::Private
     */
     void updateLocalCollection( LocalNode *localNode, RemoteNode *remoteNode )
     {
-      ++pendingJobs;
       Collection upd( remoteNode->collection );
       upd.setId( localNode->collection.id() );
-      CollectionModifyJob *mod = new CollectionModifyJob( upd, q );
-      connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( updateLocalCollectionResult( KJob* ) ) );
+      {
+        // ### HACK to work around the implicit move attempts of CollectionModifyJob
+        // which we do explicitly below
+        Collection c( upd );
+        c.setParentCollection( localNode->collection.parentCollection() );
+        ++pendingJobs;
+        CollectionModifyJob *mod = new CollectionModifyJob( c, q );
+        connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( updateLocalCollectionResult( KJob* ) ) );
+      }
 
       // detecting moves is only possible with global RIDs
       if ( !hierarchicalRIDs ) {
