@@ -346,6 +346,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 
     /**
      * Describes the state of fetch jobs related to particular entities.
+     * @since 4.5
      */
     enum FetchState {
       IdleState,                              ///< There is no fetch in progress.
