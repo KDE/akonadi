@@ -478,15 +478,8 @@ bool <xsl:value-of select="$className"/>::update()
 
   QStringList cols;
   <xsl:for-each select="column[@name != 'id']">
-    <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
-    <xsl:if test="$refColumn = 'id'">
-    if ( d-&gt;<xsl:value-of select="@name"/>_changed  &amp;&amp; d-&gt;<xsl:value-of select="@name"/> &gt; 0 )
-      cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
-    </xsl:if>
-    <xsl:if test="$refColumn != 'id'">
     if ( d-&gt;<xsl:value-of select="@name"/>_changed )
       cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
-    </xsl:if>
   </xsl:for-each>
   statement += cols.join( QLatin1String( ", " ) );
   <xsl:if test="column[@name = 'id']">
@@ -496,9 +489,15 @@ bool <xsl:value-of select="$className"/>::update()
   QSqlQuery query( db );
   query.prepare( statement );
   <xsl:for-each select="column[@name != 'id']">
-  if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
-    query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
-  }
+    <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
+    if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
+      <xsl:if test="$refColumn = 'id'">
+      if ( d-&gt;<xsl:value-of select="@name"/> &lt;= 0 )
+        query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), QVariant() );
+      else
+      </xsl:if>
+        query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
+    }
   </xsl:for-each>
 
   <xsl:if test="column[@name = 'id']">
