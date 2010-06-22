@@ -244,6 +244,8 @@ void Job::start()
 
 bool Job::doKill()
 {
+  Q_D( Job );
+  d->mStarted = false;
   return true;
 }
 

@@ -408,6 +408,7 @@ void Session::clear()
   d->pipeline.clear();
   if ( d->currentJob )
     d->currentJob->kill( KJob::EmitResult );
+  d->jobRunning = false;
   d->connected = false;
   delete d->socket;
   d->socket = 0;
