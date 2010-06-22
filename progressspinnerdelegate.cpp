@@ -19,12 +19,12 @@
     02110-1301, USA.
 */
 
-#include "progressspinnerdelegate.h"
+#include "progressspinnerdelegate_p.h"
+
+#include "entitytreemodel.h"
 
 #include <QTimerEvent>
 #include <QAbstractItemView>
-
-#include <Akonadi/EntityTreeModel>
 
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
   : QObject(view), m_view(view)

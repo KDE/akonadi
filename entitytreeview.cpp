@@ -43,7 +43,7 @@
 #include <kdebug.h>
 #include <kxmlguiclient.h>
 
-#include "progressspinnerdelegate.h"
+#include "progressspinnerdelegate_p.h"
 
 using namespace Akonadi;
 
