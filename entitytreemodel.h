@@ -292,6 +292,16 @@ class EntityTreeModelPrivate;
  * itemList->setHeaderGroup( EntityTreeModel::ItemListHeaders );
  * @endcode
  *
+ * <h3>Progress reporting</h3>
+ *
+ * The EntityTreeModel uses asynchronous Akonadi::Job instances to fill and update itself.
+ * For example, a job is run to fetch the contents of collections (that is, list the items in it).
+ * Additionally, individual Akonadi::Items can be fetched in different parts at different times.
+ *
+ * To indicate that such a job is underway, the EntityTreeModel makes the FetchState available. The
+ * FetchState returned from a QModelIndex representing a Akonadi::Collection will be FetchingState if a
+ * listing of the items in that collection is underway, otherwise the state is IdleState.
+ *
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.4
  */
@@ -328,11 +338,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
       EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
       UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
+      FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
       UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
       TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
       EndRole = 65535
     };
 
+    /**
+     * Describes the state of fetch jobs related to particular entities.
+     */
+    enum FetchState {
+      IdleState,                              ///< There is no fetch in progress.
+      FetchingState                           ///< There is a fetch in progress.
+      // TODO: Change states for reporting of fetching payload parts of items.
+    };
 
     /**
      * Describes what header information the model shall return.

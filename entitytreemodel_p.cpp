@@ -170,12 +170,18 @@ ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Item &item, const I
 void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const Collection &parent ) const
 {
   Q_Q( const EntityTreeModel );
-
-  // TODO: This hack is probably not needed anymore. Remove it.
-  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
-  // That is not provided by akonadi, so we attach it in a property.
   itemFetchJob->setProperty( FetchCollectionId(), QVariant( parent.id() ) );
   m_pendingCollectionRetrieveJobs.insert( parent.id() );
+
+  // If collections are not in the model, there will be no valid index for them.
+  if (!((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
+      || (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections)))
+  {
+    QModelIndex collectionIndex = indexForCollection(parent);
+    // TODO: Add a signal to QAIM roleDataChanged(QModelIndex, QModelIndex, QSet<int> roles)
+    // Indicate to observers to re-query the FetchState.
+    emit const_cast<EntityTreeModel *>(q)->dataChanged(collectionIndex, collectionIndex);
+  }
 
   q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
               q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
@@ -936,6 +942,14 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
   m_pendingCollectionRetrieveJobs.remove( collectionId );
+
+  // If collections are not in the model, there will be no valid index for them.
+  if (!((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
+      || (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections)))
+  {
+    QModelIndex index = indexForCollection(Collection(collectionId));
+    emit dataChanged(index, index);
+  }
 
   #ifdef DBG_TRACK_JOB_TIMES
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";

@@ -240,6 +240,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
         CollectionStatistics statistics = collection.statistics();
         return statistics.unreadCount();
       }
+      case FetchStateRole :
+      {
+        return d->m_pendingCollectionRetrieveJobs.contains(collection.id()) ? FetchingState : IdleState;
+      }
       case Qt::BackgroundRole:
       {
         if ( collection.hasAttribute<EntityDisplayAttribute>() )
