@@ -403,8 +403,15 @@ void Session::clear()
   foreach ( Job* job, d->queue )
     job->kill( KJob::EmitResult );
   d->queue.clear();
+  foreach ( Job* job, d->pipeline )
+    job->kill( KJob::EmitResult );
+  d->pipeline.clear();
   if ( d->currentJob )
     d->currentJob->kill( KJob::EmitResult );
+  d->connected = false;
+  delete d->socket;
+  d->socket = 0;
+  QMetaObject::invokeMethod( this, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
 }
 
 #include "session.moc"
