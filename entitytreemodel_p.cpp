@@ -193,6 +193,8 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
 
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )
 {
+  Q_ASSERT(parent.isValid());
+  Q_ASSERT(m_collections.contains(parent.id()));
   // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
   ItemFetchJob *itemJob = getItemFetchJob( parent, m_monitor->itemFetchScope() );
 
