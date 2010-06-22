@@ -126,6 +126,7 @@ set( akonadikde_LIB_SRC
   preprocessorbase.cpp
   preprocessorbase_p.cpp
   protocolhelper.cpp
+  progressspinnerdelegate.cpp
   resourcebase.cpp
   resourcescheduler.cpp
   resourceselectjob.cpp

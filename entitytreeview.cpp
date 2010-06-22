@@ -43,6 +43,8 @@
 #include <kdebug.h>
 #include <kxmlguiclient.h>
 
+#include "progressspinnerdelegate.h"
+
 using namespace Akonadi;
 
 /**
@@ -71,6 +73,10 @@ public:
 
 void EntityTreeView::Private::init()
 {
+  DelegateAnimator *animator = new DelegateAnimator(mParent);
+  ProgessSpinnerDelegate *customDelegate = new ProgessSpinnerDelegate(animator, mParent);
+  mParent->setItemDelegate(customDelegate);
+
   mParent->header()->setClickable( true );
   mParent->header()->setStretchLastSection( false );
 //   mParent->setRootIsDecorated( false );
