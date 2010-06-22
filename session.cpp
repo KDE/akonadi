@@ -313,7 +313,10 @@ int SessionPrivate::nextTag()
 
 void SessionPrivate::writeData(const QByteArray & data)
 {
-  socket->write( data );
+  if ( socket )
+    socket->write( data );
+  else
+    kWarning() << "Trying to write while session is disconnected!" << kBacktrace();
 }
 
 void SessionPrivate::serverStateChanged( ServerManager::State state )
