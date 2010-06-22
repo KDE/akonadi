@@ -27,6 +27,8 @@
 
 #include <kpixmapsequence.h>
 
+namespace Akonadi {
+
 class DelegateAnimator : public QObject
 {
   Q_OBJECT
@@ -65,7 +67,7 @@ private:
   KPixmapSequence m_pixmapSequence;
 };
 
-uint qHash(DelegateAnimator::Animation anim);
+uint qHash(Akonadi::DelegateAnimator::Animation anim);
 
 /**
  *
@@ -82,5 +84,7 @@ protected:
 private:
   DelegateAnimator *m_animator;
 };
+
+}
 
 #endif

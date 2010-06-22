@@ -95,6 +95,10 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      */
     bool unreadCountShown() const;
 
+    void setProgressAnimationEnabled( bool enable );
+
+    bool progressAnimationEnabled() const;
+
   protected:
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option,
                         const QModelIndex &index ) const;

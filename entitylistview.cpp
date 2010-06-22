@@ -44,6 +44,8 @@
 #include <akonadi/item.h>
 #include <akonadi/entitytreemodel.h>
 
+#include <progressspinnerdelegate_p.h>
+
 using namespace Akonadi;
 
 /**
@@ -79,6 +81,10 @@ void EntityListView::Private::init()
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
   mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
                     mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
+
+  DelegateAnimator *animator = new DelegateAnimator(mParent);
+  ProgessSpinnerDelegate *customDelegate = new ProgessSpinnerDelegate(animator, mParent);
+  mParent->setItemDelegate(customDelegate);
 
   Control::widgetNeedsAkonadi( mParent );
 }

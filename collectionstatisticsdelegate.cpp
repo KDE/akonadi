@@ -32,6 +32,7 @@
 #include "entitytreemodel.h"
 #include "collectionstatistics.h"
 #include "collection.h"
+#include "progressspinnerdelegate_p.h"
 
 using namespace Akonadi;
 
@@ -48,10 +49,12 @@ class CollectionStatisticsDelegatePrivate
   public:
     QTreeView *parent;
     bool drawUnreadAfterFolder;
+    DelegateAnimator *animator;
 
     CollectionStatisticsDelegatePrivate( QTreeView *treeView )
         : parent( treeView ),
-          drawUnreadAfterFolder( false )
+          drawUnreadAfterFolder( false ),
+          animator( 0 )
     {
     }
 
@@ -81,6 +84,7 @@ CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
   : QStyledItemDelegate( parent ),
     d_ptr( new CollectionStatisticsDelegatePrivate( parent ) )
 {
+
 }
 
 CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
@@ -100,13 +104,56 @@ bool CollectionStatisticsDelegate::unreadCountShown() const
   return d->drawUnreadAfterFolder;
 }
 
+void CollectionStatisticsDelegate::setProgressAnimationEnabled( bool enable )
+{
+  Q_D( CollectionStatisticsDelegate );
+  if ( enable ) {
+    Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator( d->parent );
+    d->animator = animator;
+  } else {
+    delete d->animator;
+    d->animator = 0;
+  }
+}
+
+bool CollectionStatisticsDelegate::progressAnimationEnabled() const
+{
+  Q_D( const CollectionStatisticsDelegate );
+  return d->animator != 0;
+}
+
 void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option,
                                                     const QModelIndex &index ) const
 {
+  Q_D( const CollectionStatisticsDelegate );
+
   QStyleOptionViewItemV4 *noTextOption =
       qstyleoption_cast<QStyleOptionViewItemV4 *>( option );
   QStyledItemDelegate::initStyleOption( noTextOption, index );
   noTextOption->text.clear();
+
+  if ( d->animator ) {
+
+    const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+
+    if (!collection.isValid())
+    {
+      d->animator->pop(index);
+      return;
+    }
+
+    if (index.data(Akonadi::EntityTreeModel::FetchStateRole).toInt() != Akonadi::EntityTreeModel::FetchingState)
+    {
+      d->animator->pop(index);
+      return;
+    }
+
+    d->animator->push(index);
+
+    if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
+      v4->icon = d->animator->sequenceFrame(index);
+    }
+  }
 }
 
 void CollectionStatisticsDelegate::paint( QPainter *painter,

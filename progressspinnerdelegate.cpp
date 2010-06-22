@@ -26,6 +26,8 @@
 #include <QTimerEvent>
 #include <QAbstractItemView>
 
+using namespace Akonadi;
+
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
   : QObject(view), m_view(view)
 {
@@ -95,7 +97,7 @@ void ProgessSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, const
   }
 }
 
-uint qHash(DelegateAnimator::Animation anim)
+uint Akonadi::qHash(Akonadi::DelegateAnimator::Animation anim)
 {
   return qHash(anim.index);
 }
