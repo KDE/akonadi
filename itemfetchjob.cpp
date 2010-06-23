@@ -61,7 +61,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 
       mEmitTimer->stop(); // in case we are called by result()
       if ( !mPendingItems.isEmpty() ) {
-        emit q->itemsReceived( mPendingItems );
+        if ( !q->error() )
+          emit q->itemsReceived( mPendingItems );
         mPendingItems.clear();
       }
     }

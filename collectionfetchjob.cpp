@@ -60,7 +60,8 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 
       mEmitTimer->stop(); // in case we are called by result()
       if ( !mPendingCollections.isEmpty() ) {
-        emit q->collectionsReceived( mPendingCollections );
+        if ( !q->error() )
+          emit q->collectionsReceived( mPendingCollections );
         mPendingCollections.clear();
       }
     }
