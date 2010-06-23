@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef PROGESSSPINNERDELEGATE_H
-#define PROGESSSPINNERDELEGATE_H
+#ifndef PROGESSSPINNERDELEGATE_P_H
+#define PROGESSSPINNERDELEGATE_P_H
 
 #include <QStyledItemDelegate>
 #include <QSet>
