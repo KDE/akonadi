@@ -73,8 +73,8 @@ public:
 
 void EntityTreeView::Private::init()
 {
-  DelegateAnimator *animator = new DelegateAnimator(mParent);
-  ProgessSpinnerDelegate *customDelegate = new ProgessSpinnerDelegate(animator, mParent);
+  Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator(mParent);
+  Akonadi::ProgessSpinnerDelegate *customDelegate = new Akonadi::ProgessSpinnerDelegate(animator, mParent);
   mParent->setItemDelegate(customDelegate);
 
   mParent->header()->setClickable( true );
