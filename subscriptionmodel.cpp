@@ -20,6 +20,7 @@
 #include "subscriptionmodel_p.h"
 #include "collectionfetchjob.h"
 #include "collectionutils_p.h"
+#include "specialcollectionattribute_p.h"
 
 #include <kdebug.h>
 
@@ -67,6 +68,8 @@ class SubscriptionModel::Private
     {
       Collection col = q->collectionForId( id );
       if ( CollectionUtils::isVirtualParent( col ) || CollectionUtils::isStructural( col ) )
+        return false;
+      if ( col.hasAttribute<SpecialCollectionAttribute>() )
         return false;
       if ( col.contentMimeTypes().isEmpty() )
         return false;
