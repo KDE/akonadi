@@ -83,6 +83,19 @@ EntityTreeModel::~EntityTreeModel()
   delete d_ptr;
 }
 
+bool EntityTreeModel::includeUnsubscribed() const
+{
+  Q_D( const EntityTreeModel );
+  return d->m_includeUnsubscribed;
+}
+
+void EntityTreeModel::setIncludeUnsubscribed( bool show )
+{
+  Q_D( EntityTreeModel );
+  d->m_includeUnsubscribed = show;
+}
+
+
 bool EntityTreeModel::systemEntitiesShown() const
 {
   Q_D( const EntityTreeModel );

@@ -403,6 +403,20 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     bool systemEntitiesShown() const;
 
+
+    /**
+     * Returns @c true if insubscribed entity are shown, and @c false otherwise.
+     * @since 4.5
+     */
+    bool includeUnsubscribed() const;
+
+    /**
+     * Display unsubscribed entity. By default it's true
+     * @since 4.5
+     */
+    void setIncludeUnsubscribed( bool show );
+
+
     /**
      * Sets the item population @p strategy of the model.
      */
