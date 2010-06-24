@@ -18,6 +18,7 @@
 */
 
 #include "dragdropmanager_p.h"
+#include "specialcollectionattribute_p.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QDropEvent>
@@ -109,10 +110,9 @@ bool DragDropManager::processDropEvent( QDropEvent *event )
   moveAllowed = copyAllowed = linkAllowed = false;
 
   if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
-        && (event->possibleActions() & Qt::MoveAction) ) {
+       && (event->possibleActions() & Qt::MoveAction) ) {
     moveAllowed = true;
   }
-
   if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
         && (event->possibleActions() & Qt::CopyAction) ) {
     copyAllowed = true;
@@ -229,10 +229,9 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
         sourceDeletable = source.rights() & Collection::CanDeleteItem;
       } else {
         // index points to a collection
-        sourceDeletable = source.rights() & Collection::CanDeleteCollection;
+        sourceDeletable = ( source.rights() & Collection::CanDeleteCollection ) && !source.hasAttribute<SpecialCollectionAttribute>() ;
       }
     }
-
     indexes.append( index );
   }
 
