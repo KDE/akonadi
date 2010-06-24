@@ -184,23 +184,19 @@ class StandardActionManager::Private
 
         if ( singleCollectionSelected )
           selectedIndex = collectionSelectionModel->selectedRows().first();
-
         if ( itemSelectionModel ) {
           const QModelIndexList rows = itemSelectionModel->selectedRows();
           foreach ( const QModelIndex &itemIndex, rows ) {
             const Collection collection = itemIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( !collection.isValid() )
               continue;
-
             if ( collection == collection.root() )
               // The root collection is selected. There are no valid actions to enable.
               return;
-
             canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
           }
         }
       }
-
       const Collection collection = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
 
       enableAction( CopyCollections, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
@@ -208,14 +204,14 @@ class StandardActionManager::Private
 
       enableAction( CreateCollection, singleCollectionSelected && canCreateCollection( collection ) );
       enableAction( DeleteCollections, singleCollectionSelected && (collection.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( collection ) );
-      enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) );
+      enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
       enableAction( Paste, singleCollectionSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) );
       enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) );
       enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
-      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) );
+      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
