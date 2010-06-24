@@ -405,13 +405,16 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 
 
     /**
-     * Returns @c true if insubscribed entity are shown, and @c false otherwise.
+     * Returns whether unsubscribed entities will be included in the listing.
+     *
      * @since 4.5
      */
     bool includeUnsubscribed() const;
 
     /**
-     * Display unsubscribed entity. By default it's true
+     * Sets whether unsubscribed entities will be included in the listing.
+     * By default it's true
+     *
      * @since 4.5
      */
     void setIncludeUnsubscribed( bool show );
