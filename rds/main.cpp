@@ -26,8 +26,16 @@
 int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv );
-  new BridgeServer<AkonadiBridgeConnection>( 31415 );
-  new BridgeServer<DBusBridgeConnection>( 31416 );
-  return app.exec();
+  try {
+      new BridgeServer<AkonadiBridgeConnection>( 31415 );
+      new BridgeServer<DBusBridgeConnection>( 31416 );
+      return app.exec();
+  } catch ( const std::exception & e ) {
+      qDebug( "Caught exception: %s", e.what() );
+      return EXIT_FAILURE;
+  } catch ( ... ) {
+      qDebug( "Caught unknown exception - fix the program!" );
+      return EXIT_FAILURE;
+  }
 }
 

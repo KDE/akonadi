@@ -19,12 +19,16 @@
 
 #include "bridgeserver.h"
 
+#include "exception.h"
+
 BridgeServerBase::BridgeServerBase(quint16 port, QObject *parent) :
     QObject(parent),
     m_server( new QTcpServer( this ) )
 {
   connect( m_server, SIGNAL(newConnection()), SLOT(slotNewConnection()) );
-  m_server->listen( QHostAddress::Any, port );
+  if ( !m_server->listen( QHostAddress::Any, port ) )
+      throw Exception<std::runtime_error>( tr("Can't listen to port %1: %2")
+                                           .arg( port ).arg( m_server->errorString() ) );
 }
 
 #include "bridgeserver.moc"
