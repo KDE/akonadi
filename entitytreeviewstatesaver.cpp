@@ -162,7 +162,8 @@ void EntityTreeViewStateSaver::saveState( KConfigGroup &configGroup ) const
 
   configGroup.deleteGroup();
   QStringList selection, expansion;
-  for ( int i = 0; i < d->view->model()->rowCount(); ++i ) {
+  const int nbRow = d->view->model()->rowCount();
+  for ( int i = 0; i < nbRow; ++i ) {
     const QModelIndex index = d->view->model()->index( i, 0 );
     d->saveState( index, selection, expansion );
   }
