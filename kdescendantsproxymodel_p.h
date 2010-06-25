@@ -197,6 +197,9 @@ private:
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &, const QModelIndex &))
 
+  Q_PRIVATE_SLOT(d_func(), void processPendingParents())
+
+
   // Make these private, they shouldn't be called by applications
 //   virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());
 //   virtual bool insertColumns(int, int, const QModelIndex & = QModelIndex());

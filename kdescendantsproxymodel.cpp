@@ -64,6 +64,10 @@ class KDescendantsProxyModelPrivate
   */
   QModelIndex findSourceIndexForRow( int row, QModelIndex sourceParent) const;
 
+  void processPendingParents() {
+
+  }
+
   /**
   @internal
 
