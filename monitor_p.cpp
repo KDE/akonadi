@@ -334,6 +334,10 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     it = Item( msg.uid() );
     it.setRemoteId( msg.remoteId() );
     it.setMimeType( msg.mimeType() );
+  } else if ( it.remoteId().isEmpty() && !msg.remoteId().isEmpty() ) {
+    // recover RID, in case of inter-resource moves the source RID is only in the
+    // notification but not in the item loaded from Akonadi
+    it.setRemoteId( msg.remoteId() );
   }
   if ( !it.parentCollection().isValid() ) {
     if ( msg.operation() == NotificationMessage::Move )
