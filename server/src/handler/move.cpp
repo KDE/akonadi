@@ -73,9 +73,7 @@ bool Move::parseStream()
       if ( !source.isValid() )
         throw HandlerException( "Item without collection found!?" );
 
-      // reset remote id on inter-resource moves
-      if ( item.collection().resource().id() != destination.resource().id() )
-        item.setRemoteId( QString() );
+      const bool isInterResourceMove = item.collection().resource().id() != destResource.id();
 
       item.setCollectionId( destination.id() );
       item.setAtime( mtime );
@@ -84,10 +82,14 @@ bool Move::parseStream()
       if ( connection()->resourceContext().id() != destResource.id() )
         item.setDirty( true );
 
+      store->notificationCollector()->itemMoved( item, source, destination );
+      // reset RID on inter-resource moves, but only after generating the change notification
+      // so that this still contains the old one for the source resource
+      if ( isInterResourceMove )
+        item.setRemoteId( QString() );
+
       if ( !item.update() )
         throw HandlerException( "Unable to update item" );
-
-      store->notificationCollector()->itemMoved( item, source, destination );
     }
   } else {
     throw HandlerException( "Unable to execute query" );
