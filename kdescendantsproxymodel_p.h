@@ -88,16 +88,6 @@ class KDescendantsProxyModel : public QAbstractProxyModel
     virtual void setSourceModel( QAbstractItemModel *model );
 
     /**
-     * Sets the root index to @p index. This is the root of the proxy model.
-     *
-     * @param index The root index in the *source* model which will be shown in this model.
-     *              If the index is invalid, the model is empty.
-     *
-     * \note You must set the model before setting the root index.
-     */
-    void setRootIndex( const QModelIndex &index);
-
-    /**
      * Set whether to show ancestor data in the model. If @p display is true, then
      * a source model which is displayed as
      *
@@ -173,17 +163,10 @@ class KDescendantsProxyModel : public QAbstractProxyModel
 
     virtual Qt::DropActions supportedDropActions() const;
 
-    /**
-    Reimplemented to match all descendants.
-    */
-    virtual QModelIndexList match(const QModelIndex& start, int role, const QVariant& value,
-        int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
-
-
 private:
   Q_DECLARE_PRIVATE( KDescendantsProxyModel )
   //@cond PRIVATE
-  KDescendantsProxyModelPrivate *d_ptr;
+  KDescendantsProxyModelPrivate *const d_ptr;
 
   Q_PRIVATE_SLOT(d_func(), void sourceRowsAboutToBeInserted(const QModelIndex &, int, int))
   Q_PRIVATE_SLOT(d_func(), void sourceRowsInserted(const QModelIndex &, int, int))
@@ -196,6 +179,9 @@ private:
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutAboutToBeChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &, const QModelIndex &))
+
+  Q_PRIVATE_SLOT(d_func(), void processPendingParents())
+
 
   // Make these private, they shouldn't be called by applications
 //   virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());
