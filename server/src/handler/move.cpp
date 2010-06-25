@@ -73,6 +73,10 @@ bool Move::parseStream()
       if ( !source.isValid() )
         throw HandlerException( "Item without collection found!?" );
 
+      // reset remote id on inter-resource moves
+      if ( item.collection().resource().id() != destination.resource().id() )
+        item.setRemoteId( QString() );
+
       item.setCollectionId( destination.id() );
       item.setAtime( mtime );
       item.setDatetime( mtime );
