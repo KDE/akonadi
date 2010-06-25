@@ -358,7 +358,7 @@ QModelIndex KDescendantsProxyModel::mapToSource(const QModelIndex &proxyIndex) c
   for ( ; it != end; ++it) {
     if (it.value() == proxyIndex.row()) {
       Q_ASSERT(it.key().isValid());
-      return it.key();
+      return it.key().sibling(it.key().row(), proxyIndex.column());
     } else if (it.value() > proxyIndex.row()) {
       if (result == end || it.value() < result.value())
         result = it;
