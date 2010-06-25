@@ -767,15 +767,20 @@ void KDescendantsProxyModelPrivate::sourceLayoutChanged()
 void KDescendantsProxyModelPrivate::sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
   Q_Q(KDescendantsProxyModel);
-  // TODO: Do this better
-  q->beginResetModel();
-  resetInternalData();
-  if (q->sourceModel()->hasChildren())
+
+  const int topRow = topLeft.row();
+  const int bottomRow = bottomRight.row();
+
+  for(int i = topRow; i <= bottomRow; ++i)
   {
-    m_pendingParents.append(QModelIndex());
-    scheduleProcessPendingParents();
+    const QModelIndex sourceTopLeft = q->sourceModel()->index(i, topLeft.column(), topLeft.parent());
+    const QModelIndex proxyTopLeft = q->mapFromSource(sourceTopLeft);
+    // TODO. If an index does not have any descendants, then we can emit in blocks of rows.
+    // As it is we emit once for each row.
+    const QModelIndex sourceBottomRight = q->sourceModel()->index(i, bottomRight.column(), bottomRight.parent());
+    const QModelIndex proxyBottomRight = q->mapFromSource(sourceBottomRight);
+    emit q->dataChanged(proxyTopLeft, proxyBottomRight);
   }
-  q->endResetModel();
 }
 
 void KDescendantsProxyModelPrivate::sourceModelDestroyed()
