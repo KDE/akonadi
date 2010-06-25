@@ -31,6 +31,7 @@
 #include "itemmodel.h"
 #include "pastehelper_p.h"
 #include "subscriptiondialog_p.h"
+#include "specialcollectionattribute_p.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -211,7 +212,7 @@ class StandardActionManager::Private
       enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
-      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
+      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
