@@ -346,6 +346,7 @@ void ItemSync::Private::deleteItems( const Item::List &items )
   if ( q->error() )
     return;
 
+  Item::List itemsToDelete;
   foreach ( const Item &item, items ) {
     Item delItem( item );
     if ( !item.isValid() ) {
@@ -361,8 +362,17 @@ void ItemSync::Private::deleteItems( const Item::List &items )
       continue;
     }
 
+    if ( delItem.remoteId().isEmpty() ) {
+      // don't attempt to remove items that never were written to the backend
+      continue;
+    }
+
+    itemsToDelete.append ( delItem );
+  }
+
+  if ( !itemsToDelete.isEmpty() ) {
     mPendingJobs++;
-    ItemDeleteJob *job = new ItemDeleteJob( delItem, subjobParent() );
+    ItemDeleteJob *job = new ItemDeleteJob( itemsToDelete, subjobParent() );
     q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalDeleteDone( KJob* ) ) );
 
     // It can happen that the groupware servers report us deleted items
