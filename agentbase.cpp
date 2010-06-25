@@ -270,8 +270,11 @@ void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Coll
     // inter-resource moves, requires we know which resources the source and destination are in though
     if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
       if ( source.resource() != dest.resource() ) {
-        if ( source.resource() == q_ptr->identifier() ) // moved away from us
-          mObserver->itemRemoved( item );
+        if ( source.resource() == q_ptr->identifier() ) { // moved away from us
+          Akonadi::Item i( item );
+          i.setParentCollection( source );
+          mObserver->itemRemoved( i );
+        }
         else if ( dest.resource() == q_ptr->identifier() ) // moved to us
           mObserver->itemAdded( item, dest );
         else if ( observer2 )
