@@ -55,15 +55,15 @@ class CollectionComboBox::Private
         mModel = new EntityTreeModel( mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
-        KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
-        proxyModel->setDisplayAncestorData( true );
-        proxyModel->setSourceModel( mModel );
-
-        baseModel = proxyModel;
+        baseModel = mModel;
       }
 
+      KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
+      proxyModel->setDisplayAncestorData( true );
+      proxyModel->setSourceModel( baseModel );
+
       mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
-      mMimeTypeFilterModel->setSourceModel( baseModel );
+      mMimeTypeFilterModel->setSourceModel( proxyModel );
 
       mRightsFilterModel = new EntityRightsFilterModel( parent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
