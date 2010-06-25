@@ -498,9 +498,34 @@ int KDescendantsProxyModel::columnCount(const QModelIndex &parent) const
 
 QVariant KDescendantsProxyModel::data(const QModelIndex &index, int role) const
 {
+  Q_D(const KDescendantsProxyModel );
+
   if (!sourceModel())
     return QVariant();
-  return sourceModel()->data(mapToSource(index), role);
+
+  if (!index.isValid())
+    return sourceModel()->data(index, role);
+
+  QModelIndex sourceIndex = mapToSource( index );
+
+  if ((d->m_displayAncestorData) && ( role == Qt::DisplayRole ) )
+  {
+    if (!sourceIndex.isValid())
+    {
+      return QVariant();
+    }
+    QString displayData = sourceIndex.data().toString();
+    sourceIndex = sourceIndex.parent();
+    while (sourceIndex.isValid())
+    {
+      displayData.prepend(d->m_ancestorSeparator);
+      displayData.prepend(sourceIndex.data().toString());
+      sourceIndex = sourceIndex.parent();
+    }
+    return displayData;
+  } else {
+    return sourceIndex.data(role);
+  }
 }
 
 Qt::ItemFlags KDescendantsProxyModel::flags(const QModelIndex &index) const
