@@ -173,7 +173,6 @@ class StandardActionManager::Private
       bool multipleCollectionsSelected = false;
       bool canDeleteCollections = true;
       int collectionCount = 0;
-
       QModelIndex selectedIndex;
       if ( !collectionSelectionModel ) {
         canDeleteCollections = false;
@@ -208,7 +207,7 @@ class StandardActionManager::Private
       enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
       enableAction( Paste, singleCollectionSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) );
-      enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) );
+      enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) );
@@ -307,7 +306,6 @@ class StandardActionManager::Private
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
 
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
-
       q->blockSignals( false );
 
       updateActions();
