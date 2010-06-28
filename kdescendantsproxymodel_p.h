@@ -196,6 +196,7 @@ private:
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutAboutToBeChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceLayoutChanged())
   Q_PRIVATE_SLOT(d_func(), void sourceDataChanged(const QModelIndex &, const QModelIndex &))
+  Q_PRIVATE_SLOT(d_func(), void sourceModelDestroyed())
 
   Q_PRIVATE_SLOT(d_func(), void processPendingParents())
 
