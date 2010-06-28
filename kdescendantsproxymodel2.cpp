@@ -549,12 +549,26 @@ void KDescendantsProxyModelPrivate::sourceRowsAboutToBeInserted(const QModelInde
   }
 
   int proxyStart = -1;
-  if (q->sourceModel()->hasChildren(parent) && start > 0)
+
+  const int rowCount = q->sourceModel()->rowCount(parent);
+
+  if (rowCount > start)
   {
-    const QModelIndex aboveStart = q->sourceModel()->index(start - 1, 0, parent);
-    proxyStart = q->mapFromSource(aboveStart).row() + 1;
-  } else {
+    const QModelIndex belowStart = q->sourceModel()->index(start, 0, parent);
+    proxyStart = q->mapFromSource(belowStart).row();
+  } else if (rowCount == 0)
+  {
     proxyStart = q->mapFromSource(parent).row() + 1;
+  } else {
+    Q_ASSERT(rowCount == start);
+    static const int column = 0;
+    QModelIndex idx = q->sourceModel()->index(rowCount - 1, column, parent);
+    while (q->sourceModel()->hasChildren(idx))
+    {
+      idx = q->sourceModel()->index(q->sourceModel()->rowCount(idx) - 1, column, idx);
+    }
+    // The last item in the list is getting a sibling below it.
+    proxyStart = q->mapFromSource(idx).row() + 1;
   }
   const int proxyEnd = proxyStart + (end - start);
 
