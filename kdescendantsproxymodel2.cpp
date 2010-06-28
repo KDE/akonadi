@@ -460,7 +460,7 @@ QModelIndex KDescendantsProxyModel::mapFromSource(const QModelIndex &sourceIndex
         const QModelIndex ancestor = index.parent();
         if (ancestor == sourceParent)
         {
-          if (result == end || (*it < *result && index.row() >= sourceIndex.row()))
+          if (result == end || (*it > *result && index.row() >= sourceIndex.row()))
           {
             result = it;
           }
