@@ -93,7 +93,7 @@ class NotificationCollector : public QObject
     void itemMoved( const PimItem &item, const Collection &collectionSrc = Collection(),
                     const Collection &collectionDest = Collection(),
                     const QString &mimeType = QString(),
-                    const QByteArray &resource = QByteArray() );
+                    const QByteArray &sourceResource = QByteArray() );
 
     /**
       Notify about a removed item.

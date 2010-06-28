@@ -66,9 +66,9 @@ void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
                                                 const Collection &collectionSrc,
                                                 const Collection &collectionDest,
                                                 const QString &mimeType,
-                                                const QByteArray &resource )
+                                                const QByteArray &sourceResource )
 {
-  itemNotification( NotificationMessage::Move, item, collectionSrc, collectionDest, mimeType, resource );
+  itemNotification( NotificationMessage::Move, item, collectionSrc, collectionDest, mimeType, sourceResource );
 }
 
 
@@ -155,6 +155,10 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   //HACK: store remoteRevision in itemparts for deletion
   if ( op == NotificationMessage::Remove )
     msg.setItemParts( QSet<QByteArray>() << item.remoteRevision().toUtf8() );
+
+  // another HACK: store the destination resource for moves
+  if ( op == NotificationMessage::Move )
+    msg.setItemParts( QSet<QByteArray>() << collectionDest.resource().name().toLatin1() );
 
   Collection col = collection;
   if ( !col.isValid() )
