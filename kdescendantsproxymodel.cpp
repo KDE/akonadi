@@ -155,6 +155,7 @@ class KDescendantsProxyModelPrivate
   void sourceLayoutAboutToBeChanged();
   void sourceLayoutChanged();
   void sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+  void sourceModelDestroyed();
 
   QPersistentModelIndex m_rootDescendIndex;
   // Hmm, if I make this QHash<QPersistentModelIndex, int> instead then moves are
@@ -911,6 +912,11 @@ Qt::DropActions KDescendantsProxyModel::supportedDropActions() const
 {
   Q_ASSERT(sourceModel());
   return sourceModel()->supportedDropActions();
+}
+
+void KDescendantsProxyModelPrivate::sourceModelDestroyed()
+{
+
 }
 
 #include "moc_kdescendantsproxymodel_p.cpp"
