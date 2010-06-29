@@ -31,7 +31,7 @@
 
 #include "kbihash_p.h"
 
-typedef KBiHash<QPersistentModelIndex, int> Mapping;
+typedef KHash2Map<QPersistentModelIndex, int> Mapping;
 
 class KDescendantsProxyModelPrivate
 {
@@ -54,7 +54,6 @@ class KDescendantsProxyModelPrivate
   void scheduleProcessPendingParents() const;
   void processPendingParents();
 
-  QVector<QPersistentModelIndex> getParentItems(const QModelIndex &parent) const;
   void synchronousMappingRefresh();
 
   void updateInternalIndexes(int start, int offset);
@@ -94,23 +93,9 @@ void KDescendantsProxyModelPrivate::resetInternalData()
 {
   m_rowCount = 0;
   m_mapping.clear();
+  m_parentMapping.clear();
   m_layoutChangePersistentIndexes.clear();
   m_proxyIndexes.clear();
-}
-
-QVector<QPersistentModelIndex> KDescendantsProxyModelPrivate::getParentItems(const QModelIndex& parent) const
-{
-  Q_Q(const KDescendantsProxyModel);
-  const int rowCount = q->sourceModel()->rowCount(parent);
-  QVector<QPersistentModelIndex> list;
-  for (int row = 0; row < rowCount; ++row)
-  {
-    static const int column = 0;
-    const QModelIndex idx = q->sourceModel()->index(row, column, parent);
-    if (q->sourceModel()->hasChildren(idx))
-      list << QPersistentModelIndex(idx);
-  }
-  return list;
 }
 
 void KDescendantsProxyModelPrivate::synchronousMappingRefresh()
@@ -198,22 +183,29 @@ void KDescendantsProxyModelPrivate::processPendingParents()
 
 void KDescendantsProxyModelPrivate::updateInternalIndexes(int start, int offset)
 {
-  Q_ASSERT(start + offset >= 0);
-
+  // TODO: Make KHash2Map support key updates and do this backwards.
+  QHash<int, QPersistentModelIndex> updates;
   {
-    Mapping::left_iterator it = m_mapping.leftBegin();
+    Mapping::right_const_iterator it = m_mapping.rightLowerBound(start);
+    const Mapping::right_const_iterator end = m_mapping.rightEnd();
 
-    for ( ; it != m_mapping.leftEnd(); ++it) {
-      const int proxyRow = it.value();
-      Q_ASSERT(proxyRow >= 0);
-
-      if (proxyRow < start)
-        continue;
-
-      Q_ASSERT(proxyRow + offset >= 0);
-      m_mapping.updateRight(it, proxyRow + offset);
+    while (it != end)
+    {
+      updates.insert(it.key() + offset, *it);
+      ++it;
     }
   }
+
+  {
+    QHash<int, QPersistentModelIndex>::const_iterator it = updates.constBegin();
+    const QHash<int, QPersistentModelIndex>::const_iterator end = updates.constEnd();
+
+    for ( ; it != end; ++it)
+    {
+      m_mapping.insert(it.value(), it.key());
+    }
+  }
+
 }
 
 KDescendantsProxyModel::KDescendantsProxyModel(QObject *parent)
@@ -366,23 +358,11 @@ QModelIndex KDescendantsProxyModel::mapToSource(const QModelIndex &proxyIndex) c
   if (d->m_mapping.isEmpty() || !proxyIndex.isValid() || !sourceModel())
     return QModelIndex();
 
-  Mapping::left_const_iterator it = d->m_mapping.leftConstBegin();
-  const Mapping::left_const_iterator end = d->m_mapping.leftConstEnd();
+  const Mapping::right_const_iterator result = d->m_mapping.rightLowerBound(proxyIndex.row());
+  Q_ASSERT(result != d->m_mapping.rightEnd());
 
-  Mapping::left_const_iterator result = end;
-  for ( ; it != end; ++it) {
-    if (it.value() == proxyIndex.row()) {
-      Q_ASSERT(it.key().isValid());
-      return it.key().sibling(it.key().row(), proxyIndex.column());
-    } else if (it.value() > proxyIndex.row()) {
-      if (result == end || it.value() < result.value())
-        result = it;
-    }
-  }
-  Q_ASSERT(result != d->m_mapping.leftEnd());
-
-  const int proxyLastRow = result.value();
-  const QModelIndex sourceLastChild = result.key();
+  const int proxyLastRow = result.key();
+  const QModelIndex sourceLastChild = result.value();
   Q_ASSERT(sourceLastChild.isValid());
 
   // proxyLastRow is greater than proxyIndex.row().
@@ -445,32 +425,39 @@ QModelIndex KDescendantsProxyModel::mapFromSource(const QModelIndex &sourceIndex
 
 
   {
-    // Can do this faster with KHash2Map.
+    // TODO: Consider a parent Mapping to speed this up.
 
-    Mapping::left_const_iterator it = d->m_mapping.leftConstBegin();
-    const Mapping::left_const_iterator end = d->m_mapping.leftConstEnd();
+    Mapping::right_const_iterator it = d->m_mapping.rightConstBegin();
+    const Mapping::right_const_iterator end = d->m_mapping.rightConstEnd();
     const QModelIndex sourceParent = sourceIndex.parent();
-    Mapping::left_const_iterator result = end;
+    Mapping::right_const_iterator result = end;
 
     for ( ; it != end; ++it )
     {
-      QModelIndex index = it.key();
+      QModelIndex index = it.value();
+      bool found_block = false;
       while (index.isValid())
       {
         const QModelIndex ancestor = index.parent();
         if (ancestor == sourceParent && index.row() >= sourceIndex.row())
         {
-          if (result == end || *it > *result)
+          found_block = true;
+          if (result == end || it.key() < result.key())
           {
             result = it;
+            break; // Leave the while loop. index is still valid.
           }
         }
         index = ancestor;
       }
+      if (found_block && !index.isValid())
+        // Looked through the ascendants of it.key() without finding sourceParent.
+        // That means we've already got the result we need.
+        break;
     }
     Q_ASSERT(result != end);
-    const QModelIndex sourceLastChild = result.key();
-    int proxyRow = result.value();
+    const QModelIndex sourceLastChild = result.value();
+    int proxyRow = result.key();
     QModelIndex index = sourceLastChild;
     while (index.isValid())
     {
@@ -526,6 +513,14 @@ QVariant KDescendantsProxyModel::data(const QModelIndex &index, int role) const
   } else {
     return sourceIndex.data(role);
   }
+}
+
+QVariant KDescendantsProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (!sourceModel() || columnCount() <= section)
+    return QVariant();
+
+  return QAbstractProxyModel::headerData(section, orientation, role);
 }
 
 Qt::ItemFlags KDescendantsProxyModel::flags(const QModelIndex &index) const
@@ -682,20 +677,23 @@ void KDescendantsProxyModelPrivate::sourceRowsRemoved(const QModelIndex &parent,
 
   const int rowCount = q->sourceModel()->rowCount(parent);
 
-  Mapping::left_iterator it = m_mapping.leftBegin();
-
-  while (it != m_mapping.leftEnd())
-  {
-    if (!it.key().isValid())
-      it = m_mapping.eraseLeft(it);
-    else
-      ++it;
-  }
 
   const int proxyStart = m_removePair.first;
   const int proxyEnd = m_removePair.second;
 
   const int difference = proxyEnd - proxyStart + 1;
+  {
+    Mapping::right_iterator it = m_mapping.rightLowerBound(proxyStart);
+    const Mapping::right_iterator endIt = m_mapping.rightUpperBound(proxyEnd);
+
+    if (endIt != m_mapping.rightEnd())
+      while (it != endIt)
+        it = m_mapping.eraseRight(it);
+    else
+      while (it != m_mapping.rightUpperBound(proxyEnd))
+        it = m_mapping.eraseRight(it);
+  }
+
   m_removePair = qMakePair(-1, -1);
   m_rowCount -= difference;
   Q_ASSERT(m_rowCount >= 0);
