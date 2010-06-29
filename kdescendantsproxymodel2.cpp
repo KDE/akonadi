@@ -458,9 +458,9 @@ QModelIndex KDescendantsProxyModel::mapFromSource(const QModelIndex &sourceIndex
       while (index.isValid())
       {
         const QModelIndex ancestor = index.parent();
-        if (ancestor == sourceParent)
+        if (ancestor == sourceParent && index.row() >= sourceIndex.row())
         {
-          if (result == end || (*it > *result && index.row() >= sourceIndex.row()))
+          if (result == end || *it > *result)
           {
             result = it;
           }
@@ -831,6 +831,8 @@ void KDescendantsProxyModelPrivate::sourceModelDestroyed()
 
 QMimeData* KDescendantsProxyModel::mimeData( const QModelIndexList & indexes ) const
 {
+  if (!sourceModel())
+    return QAbstractProxyModel::mimeData(indexes);
   Q_ASSERT(sourceModel());
   QModelIndexList sourceIndexes;
   foreach(const QModelIndex& index, indexes)
@@ -840,13 +842,16 @@ QMimeData* KDescendantsProxyModel::mimeData( const QModelIndexList & indexes ) c
 
 QStringList KDescendantsProxyModel::mimeTypes() const
 {
+  if (!sourceModel())
+    return QAbstractProxyModel::mimeTypes();
   Q_ASSERT(sourceModel());
   return sourceModel()->mimeTypes();
 }
 
 Qt::DropActions KDescendantsProxyModel::supportedDropActions() const
 {
-  Q_ASSERT(sourceModel());
+  if (!sourceModel())
+    return QAbstractProxyModel::supportedDropActions();
   return sourceModel()->supportedDropActions();
 }
 
