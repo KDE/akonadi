@@ -479,7 +479,7 @@ QModelIndex KDescendantsProxyModel::mapFromSource(const QModelIndex &sourceIndex
       {
         return createIndex(proxyRow - (index.row() - sourceIndex.row()), sourceIndex.column());
       }
-      proxyRow -= (ancestor.row() + 1);
+      proxyRow -= (index.row() + 1);
       index = ancestor;
     }
     Q_ASSERT(!"Didn't find valid proxy mapping.");
