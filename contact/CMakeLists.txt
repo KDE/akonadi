@@ -55,6 +55,7 @@ set(akonadicontact_LIB_SRC
   abstractcontactformatter.cpp
   attributeregistrar.cpp
   collectionfiltermodel.cpp
+  ../kdescendantsproxymodel.cpp
   contactcompletionmodel.cpp
   contactdefaultactions.cpp
   contacteditor.cpp
