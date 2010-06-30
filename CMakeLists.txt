@@ -10,6 +10,8 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 include(CTest)
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
+option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
+
 if (AKONADI_BUILD_TESTS)
   enable_testing()
 endif (AKONADI_BUILD_TESTS)

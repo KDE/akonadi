@@ -11,7 +11,13 @@ SET(QSqlite_MOC_HDRS
 
 message(STATUS SQlite ${SQLITE_LIBRARIES})
 message(STATUS "Building QSQLITE3 driver")
-message(STATUS "Make sure that you add " ${CMAKE_INSTALL_PREFIX}/lib/qt4/plugins/sqldrivers " to QT_PLUGIN_PATH")
+
+if (INSTALL_QSQLITE_IN_QT_PREFIX)
+  set(QSQLITE_INSTALL_PREFIX "${QT_PLUGIN_PATH}")
+else()
+  set(QSQLITE_INSTALL_PREFIX "${LIB_INSTALL_DIR}/qt4/plugins/sqldrivers")
+  message(STATUS "Make sure that you add ${QSQLITE_INSTALL_PREFIX} to your QT_PLUGIN_PATH environment variable.")
+endif()
 
 add_definitions(-Wall)
 add_definitions(${QT_DEFINITIONS})
@@ -30,7 +36,11 @@ add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 
 target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} ${SQLITE_LIBRARIES})
 
-# -DCMAKE_INSTALL_PREFIX=/d/4.x/install
+if (INSTALL_QSQLITE_IN_QT_PREFIX)
+  set(QSQLITE_INSTALL_PREFIX "${QT_PLUGIN_PATH}")
+else()
+  set(QSQLITE_INSTALL_PREFIX "${LIB_INSTALL_DIR}/qt4/plugins/sqldrivers")
+endif()
 INSTALL(TARGETS qsqlite3
-  LIBRARY DESTINATION ${LIB_INSTALL_DIR}/qt4/plugins/sqldrivers
+  LIBRARY DESTINATION ${QSQLITE_INSTALL_PREFIX}
 )
