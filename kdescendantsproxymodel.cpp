@@ -203,6 +203,14 @@ KDescendantsProxyModel::~KDescendantsProxyModel()
   delete d_ptr;
 }
 
+QVariant KDescendantsProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+  if (!sourceModel() || columnCount() <= section)
+    return QVariant();
+
+  return QAbstractProxyModel::headerData(section, orientation, role);
+}
+
 QModelIndex KDescendantsProxyModelPrivate::findSourceIndexForRow( int row, QModelIndex idx ) const
 {
     Q_Q( const KDescendantsProxyModel );
