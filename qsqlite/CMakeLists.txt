@@ -13,7 +13,7 @@ message(STATUS SQlite ${SQLITE_LIBRARIES})
 message(STATUS "Building QSQLITE3 driver")
 
 if (INSTALL_QSQLITE_IN_QT_PREFIX)
-  set(QSQLITE_INSTALL_PREFIX "${QT_PLUGIN_PATH}")
+  set(QSQLITE_INSTALL_PREFIX "${QT_PLUGIN_DIR}")
 else()
   set(QSQLITE_INSTALL_PREFIX "${LIB_INSTALL_DIR}/qt4/plugins/sqldrivers")
   message(STATUS "Make sure that you add ${QSQLITE_INSTALL_PREFIX} to your QT_PLUGIN_PATH environment variable.")
