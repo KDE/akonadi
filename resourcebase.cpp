@@ -446,8 +446,8 @@ void ResourceBasePrivate::slotCollectionSyncDone( KJob * job )
   } else {
     if ( scheduler->currentTask().type == ResourceScheduler::SyncAll ) {
       CollectionFetchJob *list = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
+      list->setFetchScope( q->changeRecorder()->collectionFetchScope() );
       list->fetchScope().setResource( mId );
-      list->fetchScope().setAncestorRetrieval( q->changeRecorder()->collectionFetchScope().ancestorRetrieval() );
       q->connect( list, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalListDone( KJob* ) ) );
       return;
     }
@@ -612,8 +612,8 @@ void ResourceBase::doSetOnline( bool state )
 void ResourceBase::synchronizeCollection( qint64 collectionId )
 {
   CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
+  job->setFetchScope( changeRecorder()->collectionFetchScope() );
   job->fetchScope().setResource( identifier() );
-  job->fetchScope().setAncestorRetrieval( changeRecorder()->collectionFetchScope().ancestorRetrieval() );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionListDone( KJob* ) ) );
 }
 
