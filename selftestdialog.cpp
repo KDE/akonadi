@@ -143,7 +143,9 @@ void SelfTestDialog::runTests()
     testPSQLServer();
   }
   else {
+#ifndef Q_OS_WIN
     testRootUser();
+#endif
     testMySQLServer();
     testMySQLServerLog();
     testMySQLServerConfig();
