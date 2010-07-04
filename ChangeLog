@@ -1,3 +1,147 @@
+2010-07-01 14:59 +0000 [r1145040]  Bjoern Ricks bjoern.ricks@googlemail.com
+
+	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: fixed typo dir
+	  name is QT_PLUGINS_DIR
+
+2010-06-30 13:50 +0000 [r1144666]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: Cleanup. Fix the
+	  qsqlite install dir.
+
+2010-06-30 09:07 +0000 [r1144547]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/CMakeLists.txt,
+	  trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: Give packagers
+	  the ability to install the QSQLite plugin in QT_PLUGIN_DIR rather
+	  than a directory inside CMAKE_INSTALL_PREFIX. You have to pass
+	  -DINSTALL_QSQLITE_IN_QT_PREFIX=TRUE when running CMake to do
+	  that. CCMAIL: gokcen@pardus.org.tr
+
+2010-06-28 09:09 +0000 [r1143590]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/notificationcollector.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/notificationcollector.h:
+	  Provide the destination resource on intra-resource moves in the
+	  notification message to allow correct filtering in that case.
+
+2010-06-25 19:03 +0000 [r1142817]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/move.cpp: Reset the
+	  RID after generating the change notification message. This way
+	  the source resource still has a valid RID to work with.
+
+2010-06-25 09:10 +0000 [r1142631]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/move.cpp: reset
+	  remote ids on inter-resource moves
+
+2010-06-25 08:15 +0000 [r1142583]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global-mobile.conf:
+	  disable the bin log here as well
+
+2010-06-25 08:12 +0000 [r1142581]  Kevin Krammer kevin.krammer@gmx.at
+
+	* trunk/kdesupport/akonadi/server/src/storage/mysql-global.conf:
+	  Remove log_bin option from main config as this creates duplicates
+	  of all write operations and results in a lot of disk usage e.g.
+	  at mail import
+
+2010-06-24 12:44 +0000 [r1142233-1142234]  Marc Mutz mutz@kde.org
+
+	* trunk/kdesupport/akonadi/rds/exception.h (added): akonadi_rds:
+	  report listen() errors
+
+	* trunk/kdesupport/akonadi/rds/bridgeserver.cpp,
+	  trunk/kdesupport/akonadi/rds/main.cpp: akonadi_rds: report
+	  listen() errors
+
+2010-06-22 12:14 +0000 [r1141281]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/entities-source.xsl:
+	  Fix updateing reference columns to NULL. Fixes moving collections
+	  into root.
+
+2010-06-18 09:33 +0000 [r1139453]  Christophe Giboudeaux cgiboudeaux@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/dbconfigpostgresql.cpp:
+	  Use en_US to report the DB errors.
+
+2010-06-17 20:23 +0000 [r1139240]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.h,
+	  trunk/kdesupport/akonadi/server/src/handlerhelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/akonadidb.xml,
+	  trunk/kdesupport/akonadi/server/src/handler/create.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/searchpersistent.cpp,
+	  trunk/kdesupport/akonadi/server/src/handler/modify.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/collectionqueryhelper.cpp:
+	  fix unicode collection name encoding
+
+2010-06-10 22:02 +0000 [r1136839]  Pavel Heimlich tropikhajma@gmail.com
+
+	* trunk/kdesupport/akonadi/server/src/storage/parthelper.h: the
+	  exception.h include should be pointing to the internal one (fixes
+	  build with Sun Studio)
+
+2010-06-09 16:06 +0000 [r1136367]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h,
+	  trunk/kdesupport/akonadi/server/src/handler/append.cpp: Improve
+	  error handling in PartHelper::insert(). Also, do not interfere
+	  with PartHelper deciding whether or not data is supposed to be
+	  stored in a file or in the database.
+
+2010-06-09 14:37 +0000 [r1136332]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h: Handle
+	  moving between db and fs storage correctly when updating existing
+	  payload data. Also, improve error handling.
+
+2010-06-09 13:15 +0000 [r1136301]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h: remove
+	  dead code
+
+2010-06-09 13:10 +0000 [r1136299]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/datastore.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/cachecleaner.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h: - fix
+	  loadData() in case the fs store has been disabled after being in
+	  use at some point - introduce truncate() to remove payload
+	  content without prior loading, which should speed up cache
+	  cleaning and invalidation
+
+2010-06-09 11:41 +0000 [r1136273]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h: Make
+	  translateData() also work if payloads have been stored in the
+	  filesystem before the fs store was turned off.
+
+2010-06-09 09:24 +0000 [r1136231]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp,
+	  trunk/kdesupport/akonadi/server/src/storage/parthelper.h: - make
+	  PartHelper a namespace instead of a class - fixed
+	  PartHelper::remove() to also clean up files if the fs backend has
+	  been disabled in the meantime
+
+2010-06-09 08:14 +0000 [r1136208]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: prepare the 1.4 beta2
+	  release
+
 2010-06-09 07:38 +0000 [r1136195]  Till Adam adam@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/itemretrievalmanager.cpp,
@@ -536,7 +680,7 @@
 	  hack around sqlite's inability to use them in INSERT statements
 	  instead.
 
-2010-03-24 15:51 +0000 [r1107017]  Bertjan Broeksema b.broeksema@home.nl
+2010-03-24 15:51 +0000 [r1107017]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp:
 	  Comment out some qDebug() which caused a loft of output for the
@@ -555,7 +699,7 @@
 	* trunk/kdesupport/akonadi/CTestConfig.cmake: Replace
 	  dashboard.akonadi-project.org with my.cdash.org
 
-2010-03-24 09:00 +0000 [r1106941]  Bertjan Broeksema b.broeksema@home.nl
+2010-03-24 09:00 +0000 [r1106941]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/itemretriever.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/parthelper.cpp: Be
@@ -570,7 +714,7 @@
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: sqlite is optional.
 
-2010-03-23 15:27 +0000 [r1106668]  Bertjan Broeksema b.broeksema@home.nl
+2010-03-23 15:27 +0000 [r1106668]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/dbinitializer.cpp:
 	  This should have been part of r1106656. Now most tests work with
@@ -583,7 +727,7 @@
 	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: honor lib
 	  install dir suffix
 
-2010-03-23 14:31 +0000 [r1106656]  Bertjan Broeksema b.broeksema@home.nl
+2010-03-23 14:31 +0000 [r1106656]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/storage/dbconfig.cpp,
 	  trunk/kdesupport/akonadi/server/src/storage/dbconfigsqlite.cpp,
@@ -2193,13 +2337,13 @@
 	  trunk/kdesupport/akonadi/server/src/akonadiconnection.cpp:
 	  Server-side support for filtering by content mime types.
 
-2009-07-08 16:31 +0000 [r993403]  Mike Arthur mike@mikearthur.co.uk
+2009-07-08 16:31 +0000 [r993403]  mikearthur
 
 	* trunk/kdesupport/akonadi/cmake/modules/FindQt4.cmake: Add missing
 	  QtDBus Framework include for Qt SDK compilation on OSX.
 	  Backported from CMake 2.6.4.
 
-2009-07-08 14:47 +0000 [r993358]  Mike Arthur mike@mikearthur.co.uk
+2009-07-08 14:47 +0000 [r993358]  mikearthur
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: Add QT_USE_* options to
 	  fix building on OSX with Qt SDK.
@@ -4413,14 +4557,14 @@
 	  increment protocol version to detect the modification time
 	  support
 
-2008-07-24 12:27 +0000 [r837311]  Bertjan Broeksema b.broeksema@home.nl
+2008-07-24 12:27 +0000 [r837311]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/fetch.cpp: Make sure
 	  that all modification times are stored in UTC time zone.
 
-2008-07-23 08:31 +0000 [r836883]  Bertjan Broeksema b.broeksema@home.nl
+2008-07-23 08:31 +0000 [r836883]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/append.cpp,
@@ -4433,7 +4577,7 @@
 	  to 1.0.80. This is now akonadi unstable branch. Akonadi stable is
 	  in /branches/akonadi/1.0.
 
-2008-07-22 15:32 +0000 [r836583]  Bertjan Broeksema b.broeksema@home.nl
+2008-07-22 15:32 +0000 [r836583]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/libs/imapparser.cpp: Unquoted date time
 	  with a lenght of 26 characters was not parsed properly. Fixed by
@@ -4441,7 +4585,7 @@
 	  example of correct date which did not get parsed correctly:
 	  22-Jul-2008 16:31:48 +0000
 
-2008-07-21 15:33 +0000 [r836028]  Bertjan Broeksema b.broeksema@home.nl
+2008-07-21 15:33 +0000 [r836028]  Bertjan Broeksema broeksema@kde.org
 
 	* trunk/kdesupport/akonadi/server/src/handler/store.cpp,
 	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: Add
