@@ -23,6 +23,7 @@
 
 #include "autoqpointer_p.h"
 
+#include <QtCore/QEvent>
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -37,16 +38,33 @@
 #include <KListWidget>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kpimutils/email.h>
 
-class EmailValidator : public QRegExpValidator
+class EmailAddressExtracter : public QObject
 {
   public:
-    EmailValidator() : QRegExpValidator( 0 )
+    EmailAddressExtracter( QLineEdit *lineEdit )
+      : QObject( lineEdit ), mLineEdit( lineEdit )
     {
-      setObjectName( QLatin1String( "EmailValidator" ) );
-      QRegExp rx( QLatin1String( "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+" ) );
-      setRegExp( rx );
+      lineEdit->installEventFilter( this );
     }
+
+    virtual bool eventFilter( QObject *watched, QEvent *event )
+    {
+      if ( watched == mLineEdit && event->type() == QEvent::FocusOut ) {
+        const QString fullEmailAddress = mLineEdit->text();
+        const QString extractedEmailAddress = KPIMUtils::extractEmailAddress( fullEmailAddress );
+        mLineEdit->setText( extractedEmailAddress );
+
+        return true;
+      }
+
+      return QObject::eventFilter( watched, event );
+    }
+
+  private:
+    QLineEdit *mLineEdit;
+    bool mIgnoreFocusOutEvent;
 };
 
 class EmailItem : public QListWidgetItem
@@ -81,7 +99,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent )
   layout->setSpacing( KDialog::spacingHint() );
 
   mEmailEdit = new KLineEdit;
-  mEmailEdit->setValidator( new EmailValidator );
+  new EmailAddressExtracter( mEmailEdit );
   connect( mEmailEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   layout->addWidget( mEmailEdit );
@@ -237,14 +255,15 @@ QStringList EmailEditDialog::emails() const
 
 void EmailEditDialog::add()
 {
-  EmailValidator *validator = new EmailValidator;
   bool ok = false;
 
   QString email = KInputDialog::getText( i18n( "Add Email" ), i18n( "New Email:" ),
-                                         QString(), &ok, this, validator );
+                                         QString(), &ok, this );
 
   if ( !ok )
     return;
+
+  email = KPIMUtils::extractEmailAddress( email );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
@@ -259,18 +278,18 @@ void EmailEditDialog::add()
 
 void EmailEditDialog::edit()
 {
-  EmailValidator *validator = new EmailValidator;
   bool ok = false;
 
   QListWidgetItem *item = mEmailListBox->currentItem();
 
   QString email = KInputDialog::getText( i18n( "Edit Email" ),
                                          i18nc( "@label:textbox Inputfield for an email address", "Email:" ),
-                                         item->text(), &ok, this,
-                                         validator );
+                                         item->text(), &ok, this );
 
   if ( !ok )
     return;
+
+  email = KPIMUtils::extractEmailAddress( email );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
