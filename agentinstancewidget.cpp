@@ -37,6 +37,8 @@
 namespace Akonadi {
 namespace Internal {
 
+static void iconsEarlyCleanup();
+
 struct Icons
 {
   Icons()
@@ -45,11 +47,18 @@ struct Icons
    , errorPixmap( KIcon( QLatin1String( "dialog-error" ) ).pixmap( QSize( 16, 16 ) ) )
    , offlinePixmap( KIcon( QLatin1String( "network-disconnect" ) ).pixmap( QSize( 16, 16 ) ) )
   {
+    qAddPostRoutine( iconsEarlyCleanup );
   }
   QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
 };
 
 K_GLOBAL_STATIC( Icons, s_icons )
+
+// called as a Qt post routine, to prevent pixmap leaking
+void iconsEarlyCleanup() {
+  Icons * const ic = s_icons;
+  ic->readyPixmap = ic->syncPixmap = ic->errorPixmap = ic->offlinePixmap = QPixmap();
+}
 
 /**
  * @internal
