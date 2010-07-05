@@ -116,6 +116,7 @@ AttributeFactory::~ AttributeFactory()
 void AttributeFactory::registerAttribute(Attribute *attr)
 {
   Q_ASSERT( attr );
+  Q_ASSERT( !attr->type().contains(' ') && !attr->type().contains('\'') && !attr->type().contains('"') );
   QHash<QByteArray, Attribute*>::Iterator it = d->attributes.find( attr->type() );
   if ( it != d->attributes.end() ) {
     delete *it;
