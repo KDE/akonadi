@@ -67,7 +67,7 @@ void AsyncSelectionHandler::waitForCollection( const Collection &collection )
 {
   mCollection = collection;
 
-  scanSubTree( mModel->index( 0, 0 ), false );
+  scanSubTree( QModelIndex(), false );
 }
 
 void AsyncSelectionHandler::waitForItem( const Item &item )
