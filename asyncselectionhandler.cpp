@@ -67,14 +67,14 @@ void AsyncSelectionHandler::waitForCollection( const Collection &collection )
 {
   mCollection = collection;
 
-  scanSubTree( mModel->index( 0, 0 ), false );
+  scanSubTree( QModelIndex(), false );
 }
 
 void AsyncSelectionHandler::waitForItem( const Item &item )
 {
   mItem = item;
 
-  scanSubTree( mModel->index( 0, 0 ), true );
+  scanSubTree( QModelIndex(), true );
 }
 
 void AsyncSelectionHandler::rowsInserted( const QModelIndex &parent, int start, int end )
