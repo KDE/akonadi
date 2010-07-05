@@ -286,6 +286,10 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   col.setName( "foo2" );
   QTest::newRow( "already existing" ) << col << false;
 
+  col.parentCollection().setId( res2ColId ); // Sibling of collection 'foo2'
+  col.setName( "foo2 " );
+  QTest::newRow( "name of an sibling with an additional ending space" ) << col << true;
+
   col.setName( "Bla" );
   col.parentCollection().setId( 2 );
   QTest::newRow( "already existing with different case" ) << col << true;
