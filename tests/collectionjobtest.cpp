@@ -515,6 +515,7 @@ void CollectionJobTest::testUtf8CollectionName_data()
 
   QTest::newRow( "Umlaut" ) << QString::fromUtf8( "ä" );
   QTest::newRow( "Garbage" ) << QString::fromUtf8( "đ→³}đþøæſð" );
+  QTest::newRow( "Utf8" ) << QString::fromUtf8( "日本語" );
 }
 
 void CollectionJobTest::testUtf8CollectionName()
@@ -529,13 +530,14 @@ void CollectionJobTest::testUtf8CollectionName()
   AKVERIFYEXEC( create );
   col = create->collection();
   QVERIFY( col.isValid() );
+  QCOMPARE( col.name(), folderName );
 
   // list parent
   CollectionFetchJob *list = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::Recursive, this );
   QVERIFY( list->exec() );
   QCOMPARE( list->collections().count(), 1 );
-  QCOMPARE( col, list->collections().first() );
-  QCOMPARE( col.name(), folderName );
+  QCOMPARE( list->collections().first(), col );
+  QCOMPARE( list->collections().first().name(), col.name() );
 
   // modify collection
   col.setContentMimeTypes( QStringList( "message/rfc822'" ) );
