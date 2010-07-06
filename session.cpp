@@ -382,7 +382,7 @@ QByteArray Session::sessionId() const
   return d->sessionId;
 }
 
-QThreadStorage<Session*> instances;
+static QThreadStorage<Session*> instances;
 
 void SessionPrivate::createDefaultSession( const QByteArray &sessionId )
 {
