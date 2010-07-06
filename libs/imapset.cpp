@@ -173,7 +173,12 @@ ImapSet & ImapSet::operator =(const ImapSet & other)
 
 void ImapSet::add(const QList<Id> & values)
 {
-  QList<Id> vals = values;
+  add( values.toVector() );
+}
+
+void ImapSet::add(const QVector<Id> & values)
+{
+  QVector<Id> vals = values;
   qSort( vals );
   for( int i = 0; i < vals.count(); ++i ) {
     const int begin = vals[i];

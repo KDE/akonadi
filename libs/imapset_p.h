@@ -166,6 +166,12 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
       No interval merging is performed.
       @param values List of positive integer numbers in arbitrary order
     */
+    void add( const QVector<Id> &values );
+
+    /**
+       @overload
+       @deprecated Use the QVector version instead.
+    */
     void add( const QList<Id> &values );
 
     /**
