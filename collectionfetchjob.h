@@ -33,7 +33,7 @@ class CollectionFetchJobPrivate;
  * @short Job that fetches collections from the Akonadi storage.
  *
  * This class can be used to retrieve the complete or partial collection tree
- * from the Akonadi storage.
+ * from the Akonadi storage. This fetches collection data, not item data.
  *
  * @code
  *
@@ -69,9 +69,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * Creates a new collection fetch job. If the given base collection
      * has a unique identifier, this is used to identify the collection in the
      * Akonadi server. If only a remote identifier is avaiable the collection
-     * is identified using that, given a resource search context has been
-     * specified. There two ways of doing that: by calling setResource()
-     * or globally using Akonadi::ResourceSelectJob.
+     * is identified using that, provided that a resource search context has
+     * been specified. There are two ways of doing that: by calling
+     * setResource(), or globally using Akonadi::ResourceSelectJob.
      *
      * @param collection The base collection for the listing.
      * @param type The type of fetch depth.
@@ -81,7 +81,8 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
 
     /**
      * Creates a new collection fetch job to retrieve a list of collections.
-     * The same rules for identifiers apply as noted in the constructor above.
+     * The same rules for identifiers apply as noted in the constructor
+     * description.
      *
      * @param collections A list of collections to fetch. Must not be empty.
      * @param parent The parent object.
@@ -123,8 +124,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
      * Sets the collection fetch scope.
      *
-     * The CollectionFetchScope controls how much of a collection's data is fetched
-     * from the server as well as filter to select which collections to fetch.
+     * The CollectionFetchScope controls how much of a collection's data is
+     * fetched from the server as well as a filter to select which collections
+     * to fetch.
      *
      * @param fetchScope The new scope for collection fetch operations.
      *

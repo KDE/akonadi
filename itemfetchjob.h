@@ -36,6 +36,11 @@ class ItemFetchScope;
  * Which parts of the items (e.g. headers only, attachments or all)
  * can be specified by the ItemFetchScope.
  *
+ * Note that ItemFetchJob does not refresh the Akonadi storage from the
+ * backend; this is unnecessary due to the fact that backend updates
+ * automatically trigger an update to the Akonadi database whenever they occur
+ * (unless the resource is offline).
+ *
  * Example:
  *
  * @code
@@ -80,9 +85,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
      * Creates a new item fetch job that retrieves the specified item.
-     * If the item has an uid set, this is used to identify the item on the Akonadi
-     * server. If only a remote identifier is available, that one is used.
-     * However, as remote identifier are not necessarily globally unique, you
+     * If the item has a uid set, this is used to identify the item on the Akonadi
+     * server. If only a remote identifier is available, that is used.
+     * However, as remote identifiers are not necessarily globally unique, you
      * need to specify the resource and/or collection to search in in that case,
      * using setCollection() or Akonadi::ResourceSelectJob.
      *
@@ -93,9 +98,9 @@ class AKONADI_EXPORT ItemFetchJob : public Job
 
     /**
      * Creates a new item fetch job that retrieves the specified items.
-     * If the items have an uid set, this is used to identify the item on the Akonadi
-     * server. If only a remote identifier is available, that one is used.
-     * However, as remote identifier are not necessarily globally unique, you
+     * If the items have a uid set, this is used to identify the item on the Akonadi
+     * server. If only a remote identifier is available, that is used.
+     * However, as remote identifiers are not necessarily globally unique, you
      * need to specify the resource and/or collection to search in in that case,
      * using setCollection() or Akonadi::ResourceSelectJob.
      *
@@ -172,7 +177,7 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     /**
      * This signal is emitted whenever new items have been fetched completely.
      *
-     * @note This is an optimization, instead of waiting for the end of the job
+     * @note This is an optimization; instead of waiting for the end of the job
      *       and calling items(), you can connect to this signal and get the items
      *       incrementally.
      *

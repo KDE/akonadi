@@ -30,18 +30,27 @@ namespace Akonadi {
 /**
  * @short Represents the caching policy for a collection.
  *
- * There is one cache policy per collection, it can either define to
- * inherit all properties of the policy of the parent collection (the default)
- * or specify the following values:
+ * There is one cache policy per collection. It can either specify that all
+ * properties of the policy of the parent collection will be inherited (the
+ * default) or specify the following values:
  *
  * - The item parts that should be permanently kept locally and are downloaded
- *   during a collection sync (eg. full mail vs. just the headers).
- * - A time up to which non-permantly cached item parts have to be kept at
- *   least (0 - infinity).
- * - Whether or not a collection sync is triggered on demand, ie. as soon
+ *   during a collection sync (e.g. full mail vs. just the headers).
+ * - A minimum time for which non-permanently cached item parts have to be kept
+ *   (0 - infinity).
+ * - Whether or not a collection sync is triggered on demand, i.e. as soon
  *   as it is accessed by a client.
  * - An optional time interval for regular collection sync (aka interval
  *   mail check).
+ *
+ * Synching means fetching updates from the Akonadi database. The cache policy
+ * does not affect updates of the Akonadi database from the backend, since
+ * backend updates will normally immediately trigger the resource to update the
+ * Akonadi database.
+ *
+ * The cache policy applies only to reading from the collection. Writing to the
+ * collection is independent of cache policy - all updates are written to the
+ * backend as soon as the resource can schedule this.
  *
  * @code
  *
@@ -78,7 +87,7 @@ class AKONADI_EXPORT CachePolicy
     ~CachePolicy();
 
     /**
-     * Returns whether it inherits cache policy from parent collection.
+     * Returns whether it inherits cache policy from the parent collection.
      */
     bool inheritFromParent() const;
 
@@ -98,7 +107,7 @@ class AKONADI_EXPORT CachePolicy
     void setLocalParts( const QStringList &parts );
 
     /**
-     * Returns the cache timeout for non-permanently cached parts in minutes,
+     * Returns the cache timeout for non-permanently cached parts in minutes;
      * -1 means indefinitely.
      */
     int cacheTimeout() const;
@@ -121,12 +130,14 @@ class AKONADI_EXPORT CachePolicy
     void setIntervalCheckTime( int time );
 
     /**
-     * Returns whether the collection shall be synced automatically when necessary.
+     * Returns whether the collection will be synced automatically when necessary,
+     * i.e. as soon as it is accessed by a client.
      */
     bool syncOnDemand() const;
 
     /**
-     * Sets whether the collection shall be synced automatically when necessary.
+     * Sets whether the collection shall be synced automatically when necessary,
+     * i.e. as soon as it is accessed by a client.
      * @param enable If @c true the collection is synced.
      */
     void setSyncOnDemand( bool enable );
@@ -151,7 +162,7 @@ class AKONADI_EXPORT CachePolicy
 }
 
 /**
- * Allows to output a cache policy for debugging purposes.
+ * Allows a cache policy to be output for debugging purposes.
  */
 AKONADI_EXPORT QDebug operator<<( QDebug, const Akonadi::CachePolicy& );
 
