@@ -45,6 +45,10 @@
 #include &lt;QtCore/QString&gt;
 #include &lt;QtCore/QVariant&gt;
 
+template &lt;typename T&gt; class QList;
+class QSqlQuery;
+class QStringList;
+
 namespace Akonadi {
 
 // forward declaration for table classes

@@ -24,6 +24,7 @@
 #endif
 
 #include <QSqlRecord>
+#include <QSqlError>
 
 using namespace Akonadi;
 

@@ -37,6 +37,9 @@
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
 
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QSettings>

@@ -28,6 +28,8 @@
 #include <QFile>
 #include <QDebug>
 
+#include <QSqlError>
+
 using namespace Akonadi;
 
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )

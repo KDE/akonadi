@@ -21,6 +21,9 @@
 #include "entities.h"
 #include "akdebug.h"
 
+#include <QSqlQuery>
+#include <QSqlError>
+
 #include <QDomDocument>
 #include <QFile>
 

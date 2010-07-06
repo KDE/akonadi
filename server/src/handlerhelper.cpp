@@ -19,11 +19,14 @@
 
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
+#include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
 #include "handler.h"
+
+#include <QtSql/QSqlError>
 
 using namespace Akonadi;
 
