@@ -37,7 +37,7 @@ using namespace Akonadi;
 class ErrorOverlayStatic
 {
   public:
-    QList<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
+    QVector<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
 };
 
 K_GLOBAL_STATIC( ErrorOverlayStatic, sInstanceOverlay )
@@ -59,7 +59,7 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   Q_ASSERT( baseWidget );
 
   // check existing overlays to detect cascading
-  for ( QList<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
+  for ( QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
         it != sInstanceOverlay->baseWidgets.end(); ) {
     if ( (*it).first == 0 || (*it).second == 0 ) {
       // garbage collection

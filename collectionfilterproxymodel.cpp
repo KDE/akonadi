@@ -44,7 +44,7 @@ class CollectionFilterProxyModel::Private
 
     bool collectionAccepted( const QModelIndex &index, bool checkResourceVisibility = true );
 
-    QList< QModelIndex > acceptedResources;
+    QVector< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
     MimeTypeChecker mimeChecker;
 };

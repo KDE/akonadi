@@ -52,13 +52,13 @@ TagWidget::~TagWidget()
 {
 }
 
-void TagWidget::setTags( const QList<Nepomuk::Tag> &tags )
+void TagWidget::setTags( const QVector<Nepomuk::Tag> &tags )
 {
   mTags = tags;
   updateView();
 }
 
-QList<Nepomuk::Tag> TagWidget::tags() const
+QVector<Nepomuk::Tag> TagWidget::tags() const
 {
   return mTags;
 }

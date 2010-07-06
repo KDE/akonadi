@@ -255,7 +255,7 @@ bool CustomFieldsModel::removeRows( int row, int count, const QModelIndex &paren
 
   beginRemoveRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i )
-    mCustomFields.removeAt( row );
+    mCustomFields.remove( row );
   endRemoveRows();
 
   return true;

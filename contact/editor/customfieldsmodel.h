@@ -25,7 +25,7 @@
 #include "../customfields_p.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QtCore/QList>
+#include <QtCore/QVector>
 
 class CustomFieldsModel : public QAbstractItemModel
 {

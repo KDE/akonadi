@@ -41,13 +41,13 @@ class KEditTagsDialog : public KDialog
     Q_OBJECT
 
 public:
-    explicit KEditTagsDialog(const QList<Nepomuk::Tag>& tags,
+    explicit KEditTagsDialog(const QVector<Nepomuk::Tag>& tags,
                     QWidget* parent = 0,
                     Qt::WFlags flags = 0);
 
     virtual ~KEditTagsDialog();
 
-    QList<Nepomuk::Tag> tags() const;
+    QVector<Nepomuk::Tag> tags() const;
 
     virtual bool eventFilter(QObject* watched, QEvent* event);
 
@@ -65,7 +65,7 @@ private:
     void removeNewTagItem();
 
 private:
-    QList<Nepomuk::Tag> m_tags;
+    QVector<Nepomuk::Tag> m_tags;
     QListWidget* m_tagsList;
     QListWidgetItem* m_newTagItem;
     QListWidgetItem* m_deleteCandidate;

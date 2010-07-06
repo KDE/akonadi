@@ -114,7 +114,7 @@ QModelIndex CollectionModel::index( int row, int column, const QModelIndex & par
   Q_D( const CollectionModel );
   if (column >= columnCount() || column < 0) return QModelIndex();
 
-  QList<Collection::Id> list;
+  QVector<Collection::Id> list;
   if ( !parent.isValid() )
     list = d->childCollections.value( Collection::root().id() );
   else
@@ -146,8 +146,8 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
   if ( !parentCol.isValid() )
   {
     return QModelIndex();
-}
-  QList<Collection::Id> list;
+  }
+  QVector<Collection::Id> list;
   list = d->childCollections.value( parentCol.parentCollection().id() );
 
   int parentRow = list.indexOf( parentCol.id() );
@@ -160,7 +160,7 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
   const  Q_D( CollectionModel );
-  QList<Collection::Id> list;
+  QVector<Collection::Id> list;
   if ( parent.isValid() )
     list = d->childCollections.value( parent.internalId() );
   else

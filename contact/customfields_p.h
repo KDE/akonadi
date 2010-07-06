@@ -22,9 +22,11 @@
 #ifndef CUSTOMFIELDS_P_H
 #define CUSTOMFIELDS_P_H
 
-#include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QVariant>
+
+template <typename T>
+class QVector;
 
 /**
  * @short A class that represents non-standard contact fields.
@@ -45,7 +47,7 @@
 class CustomField
 {
   public:
-    typedef QList<CustomField> List;
+    typedef QVector<CustomField> List;
 
     enum Type
     {

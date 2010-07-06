@@ -171,7 +171,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
   {
     lastSize = currentSize;
 
-    QMutableHashIterator< Collection::Id, QList< Collection::Id > > i( m_newChildCollections );
+    QMutableHashIterator< Collection::Id, QVector< Collection::Id > > i( m_newChildCollections );
     while ( i.hasNext() )
     {
       i.next();
@@ -180,7 +180,7 @@ void CollectionModelPrivate::collectionsChanged( const Collection::List &cols )
       // but that will be handled later.
       Collection::Id colId = i.key();
 
-      QList< Collection::Id > newChildCols = i.value();
+      QVector< Collection::Id > newChildCols = i.value();
       int newChildCount = newChildCols.size();
 //       if ( newChildCount == 0 )
 //       {
@@ -238,7 +238,7 @@ QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) 
   if ( parentId != Collection::root().id() && !collections.contains( parentId ) )
     return QModelIndex();
 
-  QList<Collection::Id> list = childCollections.value( parentId );
+  QVector<Collection::Id> list = childCollections.value( parentId );
   int row = list.indexOf( id );
 
   if ( row >= 0 )
@@ -249,7 +249,7 @@ QModelIndex CollectionModelPrivate::indexForId( Collection::Id id, int column ) 
 bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & parent )
 {
   Q_Q( CollectionModel );
-  QList<Collection::Id> list;
+  QVector<Collection::Id> list;
   Collection parentCol;
   if ( parent.isValid() ) {
     parentCol = collections.value( parent.internalId() );
@@ -265,7 +265,8 @@ bool CollectionModelPrivate::removeRowFromModel( int row, const QModelIndex & pa
   }
 
   q->beginRemoveRows( parent, row, row );
-  Collection::Id delColId = list.takeAt( row );
+  const Collection::Id delColId = list[row];
+  list.remove( row );
   foreach ( Collection::Id childColId, childCollections[ delColId ] )
     collections.remove( childColId );
   collections.remove( delColId );

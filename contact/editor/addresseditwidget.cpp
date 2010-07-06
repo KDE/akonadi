@@ -47,6 +47,15 @@
 #include <kseparator.h>
 #include <ktextedit.h>
 
+#include <functional>
+
+struct LocaleAwareLessThan : std::binary_function<QString,QString,bool> {
+  bool operator()( const QString &s1, const QString &s2 ) const
+  {
+    return QString::localeAwareCompare( s1, s2 ) < 0 ;
+  }
+};
+
 class TabPressEater : public QObject
 {
   public:
@@ -518,7 +527,7 @@ void AddressEditDialog::fillCountryCombo()
   foreach ( const QString &cc, KGlobal::locale()->allCountriesList() )
     countries.append( KGlobal::locale()->countryCodeToName( cc ) );
 
-  countries = sortLocaleAware( countries );
+  qSort( countries.begin(), countries.end(), LocaleAwareLessThan() );
 
   mCountryCombo->addItems( countries );
   mCountryCombo->setAutoCompletion( true );
@@ -581,43 +590,6 @@ KABC::Address::Type AddressTypeDialog::type() const
   }
 
   return type;
-}
-
-/**
-  Small helper class, I hope we can remove it as soon as a general solution has
-  been committed to kdelibs
- */
-class LocaleAwareString : public QString
-{
-  public:
-    LocaleAwareString() : QString()
-    {}
-
-    LocaleAwareString( const QString &str ) : QString( str )
-    {}
-};
-
-static bool operator<( const LocaleAwareString &s1, const LocaleAwareString &s2 )
-{
-  return ( QString::localeAwareCompare( s1, s2 ) < 0 );
-}
-
-QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
-{
-  QList<LocaleAwareString> sortedList;
-
-  QStringList::ConstIterator it;
-  for ( it = list.constBegin(); it != list.constEnd(); ++it )
-    sortedList.append( LocaleAwareString( *it ) );
-
-  qSort( sortedList.begin(), sortedList.end() );
-
-  QStringList retval;
-  QList<LocaleAwareString>::ConstIterator retIt;
-  for ( retIt = sortedList.constBegin(); retIt != sortedList.constEnd(); ++retIt )
-    retval.append( *retIt );
-
-  return retval;
 }
 
 #include "addresseditwidget.moc"

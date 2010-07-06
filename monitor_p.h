@@ -178,7 +178,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       }
 
     private:
-      QList<Collection::Id> m_buffer;
+      QVector<Collection::Id> m_buffer;
       int m_index;
       int m_bufferSize;
     } m_buffer;

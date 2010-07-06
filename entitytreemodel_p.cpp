@@ -275,7 +275,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   QListIterator<Akonadi::Collection> it( collections );
 
   QHash<Collection::Id, Collection> collectionsToInsert;
-  QHash<Collection::Id, QList<Collection::Id> > subTreesToInsert;
+  QHash<Collection::Id, QVector<Collection::Id> > subTreesToInsert;
   QHash<Collection::Id, Collection> parents;
 
   while ( it.hasNext() ) {
@@ -326,7 +326,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
   const int row = 0;
 
-  QHashIterator<Collection::Id, QList<Collection::Id> > collectionIt( subTreesToInsert );
+  QHashIterator<Collection::Id, QVector<Collection::Id> > collectionIt( subTreesToInsert );
   while ( collectionIt.hasNext() ) {
     collectionIt.next();
 
@@ -544,7 +544,7 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
 
   // Or I can prepend and append for single signals, then 'change' the parent.
 
-//   QList<qint64> childCols = m_childEntities.value( parent.id() );
+//   QVector<qint64> childCols = m_childEntities.value( parent.id() );
 //   int row = childCols.size();
 //   int numChildCols = childCollections.value( parent.id() ).size();
 

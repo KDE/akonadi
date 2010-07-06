@@ -32,7 +32,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-KEditTagsDialog::KEditTagsDialog(const QList<Nepomuk::Tag>& tags,
+KEditTagsDialog::KEditTagsDialog(const QVector<Nepomuk::Tag>& tags,
                                  QWidget* parent,
                                  Qt::WFlags flags) :
     KDialog(parent, flags),
@@ -104,7 +104,7 @@ KEditTagsDialog::~KEditTagsDialog()
 {
 }
 
-QList<Nepomuk::Tag> KEditTagsDialog::tags() const
+QVector<Nepomuk::Tag> KEditTagsDialog::tags() const
 {
     return m_tags;
 }
@@ -226,8 +226,7 @@ void KEditTagsDialog::loadTags()
 {
     // load all available tags and mark those tags as checked
     // that have been passed to the KEditTagsDialog
-    const QList<Nepomuk::Tag> tags = Nepomuk::Tag::allTags();
-    foreach (const Nepomuk::Tag& tag, tags) {
+    foreach (const Nepomuk::Tag& tag, Nepomuk::Tag::allTags()) {
         const QString label = tag.label();
 
         QListWidgetItem* item = new QListWidgetItem(label, m_tagsList);

@@ -132,7 +132,7 @@ class ContactGroupModel::Private
           if ( !member.isReference && !(i == mMembers.count() - 1) ) {
             if ( member.data.name().isEmpty() && member.data.email().isEmpty() ) {
               mParent->beginRemoveRows( QModelIndex(), i, i );
-              mMembers.removeAt( i );
+              mMembers.remove( i );
               mParent->endRemoveRows();
               foundEmpty = true;
               break;
@@ -143,7 +143,7 @@ class ContactGroupModel::Private
     }
 
     ContactGroupModel *mParent;
-    QList<GroupMember> mMembers;
+    QVector<GroupMember> mMembers;
     KABC::ContactGroup mGroup;
     QString mLastErrorMessage;
 };
@@ -424,7 +424,7 @@ bool ContactGroupModel::removeRows( int row, int count, const QModelIndex &paren
 
   beginRemoveRows( QModelIndex(), row, row + count - 1 );
   for ( int i = 0; i < count; ++i )
-    d->mMembers.removeAt( row );
+    d->mMembers.remove( row );
   endRemoveRows();
 
   return true;

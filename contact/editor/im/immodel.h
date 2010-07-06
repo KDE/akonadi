@@ -23,12 +23,12 @@
 #define IMMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-#include <QtCore/QList>
+#include <QtCore/QVector>
 
 class IMAddress
 {
   public:
-    typedef QList<IMAddress> List;
+    typedef QVector<IMAddress> List;
 
     IMAddress();
     IMAddress( const QString &protocol, const QString &name, bool preferred );

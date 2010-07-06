@@ -138,6 +138,8 @@ class AKONADI_EXPORT AgentType
 
 }
 
+Q_DECLARE_TYPEINFO( Akonadi::AgentType, Q_MOVABLE_TYPE );
+
 Q_DECLARE_METATYPE( Akonadi::AgentType )
 
 #endif

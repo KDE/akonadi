@@ -63,7 +63,7 @@ void ItemCopyJob::doStart()
 {
   Q_D( ItemCopyJob );
 
-  QList<Item::Id> ids;
+  QVector<Item::Id> ids;
   foreach ( const Item &item, d->mItems )
     ids << item.id();
   ImapSet set;

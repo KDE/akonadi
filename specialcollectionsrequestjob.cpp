@@ -69,7 +69,7 @@ class Akonadi::SpecialCollectionsRequestJobPrivate
 
     // Output:
     QStringList mToForget;
-    QList< QPair<Collection, QByteArray> > mToRegister;
+    QVector< QPair<Collection, QByteArray> > mToRegister;
 };
 
 

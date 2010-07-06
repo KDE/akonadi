@@ -492,14 +492,14 @@ void MonitorPrivate::PurgeBuffer::purge( Collection::Id id )
   {
     if ( idx < 0 )
       break;
-    m_buffer.removeAt( idx );
+    m_buffer.remove( idx );
     if ( m_index > 0 )
       --m_index;
     idx = m_buffer.indexOf( id, idx );
   }
   while ( int idx = m_buffer.indexOf( id, m_index ) > -1 )
   {
-    m_buffer.removeAt( idx );
+    m_buffer.remove( idx );
   }
 }
 
@@ -512,7 +512,8 @@ Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
   Collection::Id bumpedId = -1;
   if ( m_buffer.size() == MAXBUFFERSIZE )
   {
-    bumpedId = m_buffer.takeAt( m_index );
+    bumpedId = m_buffer[ m_index ];
+    m_buffer.remove( m_index );
   }
 
   // Ensure that we don't put a duplicate @p id into the buffer.

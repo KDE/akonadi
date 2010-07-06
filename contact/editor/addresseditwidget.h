@@ -190,7 +190,6 @@ class AddressEditDialog : public KDialog
 
   private:
     void fillCountryCombo();
-    QStringList sortLocaleAware( const QStringList& );
 
     AddressTypeCombo *mTypeCombo;
     KTextEdit *mStreetTextEdit;

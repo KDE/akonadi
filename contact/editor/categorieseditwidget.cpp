@@ -55,7 +55,7 @@ void CategoriesEditWidget::setReadOnly( bool readOnly )
 
 void CategoriesEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  QList<Nepomuk::Tag> tags;
+  QVector<Nepomuk::Tag> tags;
 
   const QStringList categories = contact.categories();
   foreach ( const QString &category, categories )
@@ -68,7 +68,7 @@ void CategoriesEditWidget::storeContact( KABC::Addressee &contact ) const
 {
   QStringList categories;
 
-  const QList<Nepomuk::Tag> tags = mTagWidget->tags();
+  const QVector<Nepomuk::Tag> tags = mTagWidget->tags();
   foreach ( const Nepomuk::Tag &tag, tags )
     categories.append( tag.genericLabel() );
 

@@ -121,7 +121,7 @@ class CollectionSync::Private
 
       // add already existing children
       if ( localPendingCollections.contains( col.id() ) ) {
-        QList<Collection::Id> childIds = localPendingCollections.take( col.id() );
+        QVector<Collection::Id> childIds = localPendingCollections.take( col.id() );
         foreach ( Collection::Id childId, childIds ) {
           Q_ASSERT( localUidMap.contains( childId ) );
           LocalNode *childNode = localUidMap.value( childId );
@@ -518,7 +518,7 @@ class CollectionSync::Private
     QHash<QString, LocalNode*> localRidMap;
 
     // temporary during build-up of the local node tree, must be empty afterwards
-    QHash<Collection::Id, QList<Collection::Id> > localPendingCollections;
+    QHash<Collection::Id, QVector<Collection::Id> > localPendingCollections;
 
     // removed remote collections in incremental mode
     Collection::List removedRemoteCollections;

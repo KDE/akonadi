@@ -116,7 +116,7 @@ class ProtocolHelper
           rv += command;
           rv += ' ';
         }
-        QList<typename T::Id>  uids;
+        QVector<typename T::Id>  uids;
         foreach ( const T &object, objects )
           uids << object.id();
         ImapSet set;

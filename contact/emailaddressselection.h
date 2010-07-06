@@ -116,4 +116,6 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelection
 
 }
 
+Q_DECLARE_TYPEINFO( Akonadi::EmailAddressSelection, Q_MOVABLE_TYPE );
+
 #endif

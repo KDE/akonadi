@@ -160,6 +160,14 @@ QList<Item::Id> Monitor::itemsMonitored() const
   return d->items.toList();
 }
 
+QVector<Item::Id> Monitor::itemsMonitoredEx() const
+{
+  QVector<Item::Id> result;
+  result.reserve( d->items.size() );
+  qCopy( d->items.begin(), d->items.end(), std::back_inserter( result ) );
+  return result;
+}
+
 QStringList Monitor::mimeTypesMonitored() const
 {
   return d->mimetypes.toList();

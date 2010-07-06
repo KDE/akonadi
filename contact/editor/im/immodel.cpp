@@ -241,7 +241,7 @@ bool IMModel::removeRows( int row, int count, const QModelIndex &parent )
 
   beginRemoveRows( parent, row, row + count - 1 );
   for ( int i = 0; i < count; ++i )
-    mAddresses.removeAt( row );
+    mAddresses.remove( row );
   endRemoveRows();
 
   return true;
