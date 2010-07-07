@@ -39,6 +39,8 @@ Entity::Entity( qint64 id )
 {
 }
 
+Entity::~Entity() {}
+
 qint64 Entity::id() const
 {
   return m_id;

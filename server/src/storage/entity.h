@@ -120,6 +120,7 @@ class AKONADIPRIVATE_EXPORT Entity
   protected:
     Entity();
     Entity( qint64 id );
+    ~Entity();
 
   private:
     static int countImpl( const QString & tableName, const QString & column, const QVariant & value );
