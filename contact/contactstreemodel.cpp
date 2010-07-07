@@ -56,9 +56,9 @@ ContactsTreeModel::~ContactsTreeModel()
 
 void ContactsTreeModel::setColumns( const Columns &columns )
 {
-  emit layoutAboutToBeChanged();
+  emit beginResetModel();
   d->mColumns = columns;
-  emit layoutChanged();
+  emit endResetModel();
 }
 
 ContactsTreeModel::Columns ContactsTreeModel::columns() const
