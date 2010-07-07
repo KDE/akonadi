@@ -33,13 +33,22 @@
   </xsl:if>
   This class is implicitly shared.
 */
-class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : public Entity
+class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
 {
   friend class DataStore;
 
   public:
     /// List of <xsl:value-of select="$entityName"/> records.
     typedef QList&lt;<xsl:value-of select="$className"/>&gt; List;
+
+    // make some stuff accessible from Entity:
+    using Entity::Id;
+    using Entity::id;
+    using Entity::setId;
+    using Entity::isValid;
+    using Entity::joinByName;
+    using Entity::addToRelation;
+    using Entity::removeFromRelation;
 
     // constructor
     <xsl:value-of select="$className"/>();

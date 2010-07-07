@@ -41,11 +41,14 @@ class AKONADIPRIVATE_EXPORT Entity
 {
   public:
     typedef qint64 Id;
+
+  protected:
     qint64 id() const;
     void setId( qint64 id );
 
     bool isValid() const;
 
+  public:
     template <typename T> static QString joinByName( const QList<T> &list, const QString &sep )
     {
       QStringList tmp;
@@ -134,6 +137,46 @@ class AKONADIPRIVATE_EXPORT Entity
     static QSqlDatabase database();
     qint64 m_id;
 };
+
+namespace _detail {
+
+    /*!
+      Binary predicate to sort collections of Entity subclasses by
+      their id.
+
+      Example for sorting:
+      \code
+      std::sort( coll.begin(), coll.end(), _detail::ById<std::less>() );
+      \endcode
+
+      Example for finding by id:
+      \code
+      // linear:
+      std::find_if( coll.begin(), coll.end(), bind( _detail::ById<std::equal_to>(), _1, myId ) );
+      // binary:
+      std::lower_bound( coll.begin(), coll.end(), myId, _detail::ById<std::less>() );
+      \end
+    */
+    template <template <typename U> class Op>
+    struct ById {
+        typedef bool result_type;
+        bool operator()( Entity::Id lhs, Entity::Id rhs ) const {
+            return Op<Entity::Id>()( lhs, rhs );
+        }
+        template <typename E>
+        bool operator()( const E & lhs, const E & rhs ) const {
+            return this->operator()( lhs.id() , rhs.id() );
+        }
+        template <typename E>
+        bool operator()( const E & lhs, Entity::Id rhs ) const {
+            return this->operator()( lhs.id(), rhs );
+        }
+        template <typename E>
+        bool operator()( Entity::Id lhs, const E & rhs ) const {
+            return this->operator()( lhs, rhs.id() );
+        }
+    };
+}
 
 }
 

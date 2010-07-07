@@ -40,8 +40,8 @@
 #include <QDebug>
 #include <QFile>
 
-#include <boost/bind.hpp>
 #include <algorithm>
+#include <functional>
 
 using namespace Akonadi;
 
@@ -60,8 +60,8 @@ bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
   DataStore *store = connection()->storageBackend();
 
   Flag::List currentFlags = item.flags();
-  std::sort( flagList.begin(), flagList.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
-  std::sort( currentFlags.begin(), currentFlags.end(), boost::bind( &Flag::id, _1 ) < boost::bind( &Flag::id, _2 ) );
+  std::sort( flagList.begin(), flagList.end(), _detail::ById<std::less>() );
+  std::sort( currentFlags.begin(), currentFlags.end(), _detail::ById<std::less>() );
 
   if ( flagList == currentFlags )
     return false;
