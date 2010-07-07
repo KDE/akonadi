@@ -67,4 +67,6 @@ namespace Nepomuk {
     }
 }
 
+Q_DECLARE_TYPEINFO( Nepomuk::Search::Result, Q_MOVABLE_TYPE );
+
 #endif

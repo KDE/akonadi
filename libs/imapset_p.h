@@ -204,6 +204,9 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 
 AKONADIPROTOCOLINTERNALS_EXPORT QDebug& operator<<( QDebug& d, const Akonadi::ImapInterval &interval );
 
+Q_DECLARE_TYPEINFO( Akonadi::ImapInterval, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO( Akonadi::ImapSet,      Q_MOVABLE_TYPE );
+
 Q_DECLARE_METATYPE( Akonadi::ImapInterval )
 Q_DECLARE_METATYPE( Akonadi::ImapInterval::List )
 Q_DECLARE_METATYPE( Akonadi::ImapSet )
