@@ -23,6 +23,8 @@
 
 #include <QtCore/QSharedData>
 
+#include <limits>
+
 using namespace Akonadi;
 
 class ImapInterval::Private : public QSharedData
@@ -117,7 +119,7 @@ ImapInterval::Id ImapInterval::end() const
 {
   if ( hasDefinedEnd() )
     return d->end;
-  return 0xFFFFFFFF; // should be INT_MAX, but where is that defined again?
+  return std::numeric_limits<Id>::max();
 }
 
 void ImapInterval::setBegin(Id value)
