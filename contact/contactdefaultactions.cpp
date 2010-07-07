@@ -72,7 +72,11 @@ void ContactDefaultActions::sendEmail( const QString &name, const QString &addre
 {
   KABC::Addressee contact;
   contact.setNameFromString( name );
-  KToolInvocation::invokeMailer( KPIMUtils::encodeMailtoUrl( contact.fullEmail( address ) ) );
+
+  KUrl url;
+  url.setProtocol( QLatin1String( "mailto" ) );
+  url.setPath( contact.fullEmail( address ) );
+  KToolInvocation::invokeMailer( url );
 }
 
 void ContactDefaultActions::dialPhoneNumber( const KABC::PhoneNumber &number )
