@@ -115,6 +115,8 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
 
 uint qHash( const Akonadi::NotificationMessage &msg );
 
+Q_DECLARE_TYPEINFO( Akonadi::NotificationMessage, Q_MOVABLE_TYPE );
+
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage::List )
 
