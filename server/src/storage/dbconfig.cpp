@@ -23,6 +23,7 @@
 #include "dbconfigmysqlembedded.h"
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
+#include "dbconfigvirtuoso.h"
 
 #include <akdebug.h>
 #include <libs/xdgbasedirs_p.h>
@@ -77,6 +78,8 @@ DbConfig* DbConfig::configuredDatabase()
       s_DbConfigInstance = new DbConfigSqlite( DbConfigSqlite::Custom );
     else if ( driverName == QLatin1String( "QPSQL" ) )
       s_DbConfigInstance = new DbConfigPostgresql;
+    else if ( driverName == QLatin1String( "QODBC" ) )
+      s_DbConfigInstance = new DbConfigVirtuoso;
     else {
       akError() << "Unknown database driver: " << driverName;
       akError() << "Available drivers are: " << QSqlDatabase::drivers();
