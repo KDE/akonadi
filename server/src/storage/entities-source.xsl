@@ -292,9 +292,9 @@ bool <xsl:value-of select="$className"/>::exists( const <xsl:value-of select="co
 
 
 // result extraction
-QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::extractResult( QSqlQuery &amp; query )
+QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$className"/>::extractResult( QSqlQuery &amp; query )
 {
-  QList&lt;<xsl:value-of select="$className"/>&gt; rv;
+  QVector&lt;<xsl:value-of select="$className"/>&gt; rv;
   while ( query.next() ) {
     rv.append( <xsl:value-of select="$className"/>(
       <xsl:for-each select="column">
@@ -329,11 +329,11 @@ QList&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$classN
 }
 </xsl:if>
 
-QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveAll()
+QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveAll()
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
-    return QList&lt;<xsl:value-of select="$className"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$className"/>&gt;();
 
   QSqlQuery query( db );
   QString statement = QLatin1String( "SELECT <xsl:call-template name="column-list"/> FROM " );
@@ -342,16 +342,16 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
   if ( !query.exec() ) {
     qDebug() &lt;&lt; "Error during selection of all records from table" &lt;&lt; tableName()
       &lt;&lt; query.lastError().text();
-    return QList&lt;<xsl:value-of select="$className"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$className"/>&gt;();
   }
   return extractResult( query );
 }
 
-QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered( const QString &amp;key, const QVariant &amp;value )
+QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered( const QString &amp;key, const QVariant &amp;value )
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
-    return QList&lt;<xsl:value-of select="$className"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$className"/>&gt;();
 
   SelectQueryBuilder&lt;<xsl:value-of select="$className"/>&gt; qb;
   if ( value.isNull() )
@@ -362,7 +362,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
     qDebug() &lt;&lt; "Error during selection of records from table" &lt;&lt; tableName()
       &lt;&lt; "filtered by" &lt;&lt; key &lt;&lt; "=" &lt;&lt; value
       &lt;&lt; qb.query().lastError().text();
-    return QList&lt;<xsl:value-of select="$className"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$className"/>&gt;();
   }
   return qb.result();
 }
@@ -378,7 +378,7 @@ QList&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classNam
 
 // data retrieval for inverse referenced tables
 <xsl:for-each select="reference">
-QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
+QVector&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
 {
   return <xsl:value-of select="@table"/>::retrieveFiltered( <xsl:value-of select="@table"/>::<xsl:value-of select="@key"/>Column(), id() );
 }
@@ -392,11 +392,11 @@ QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="$className"/>
 <xsl:variable name="rightSideTable"><xsl:value-of select="@table2"/>Table</xsl:variable>
 
 // data retrieval for n:m relations
-QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
+QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$className"/>::<xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const
 {
   QSqlDatabase db = DataStore::self()->database();
   if ( !db.isOpen() )
-    return QList&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
 
   QSqlQuery query( db );
   QString statement = QLatin1String( "SELECT " );
@@ -415,7 +415,7 @@ QList&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$cla
   if ( !query.exec() ) {
     qDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
       &lt;&lt; query.lastError().text();
-    return QList&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
+    return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
   }
 
   return <xsl:value-of select="$rightSideClass"/>::extractResult( query );

@@ -45,7 +45,7 @@ bool Remove::parseStream()
   Transaction transaction( store );
 
   if ( qb.exec() ) {
-    const QList<PimItem> items = qb.result();
+    const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
     foreach ( const PimItem &item, items ) {

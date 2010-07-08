@@ -116,10 +116,10 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     static DataStore* self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    bool setItemFlags( const PimItem &item, const QList<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QList<Flag> &flags, bool& flagsChanged,
+    bool setItemFlags( const PimItem &item, const QVector<Flag> &flags );
+    bool appendItemFlags( const PimItem &item, const QVector<Flag> &flags, bool& flagsChanged,
                           bool checkIfExists = true, const Collection &col = Collection() );
-    bool removeItemFlags( const PimItem &item, const QList<Flag> &flags );
+    bool removeItemFlags( const PimItem &item, const QVector<Flag> &flags );
 
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
@@ -148,7 +148,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
 
     /* --- PimItem ------------------------------------------------------- */
-    bool appendPimItem( QList<Part> & parts,
+    bool appendPimItem( QVector<Part> & parts,
                         const MimeType & mimetype,
                         const Collection & collection,
                         const QDateTime & dateTime,

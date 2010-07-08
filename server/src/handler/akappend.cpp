@@ -178,7 +178,7 @@ bool AkAppend::parseStream()
   // by the database
 
   // parse part specification
-  QList<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
+  QVector<QPair<QByteArray, QPair<qint64, int> > > partSpecs;
   QByteArray partName = "";
   qint64 partSize = -1;
   qint64 partSizes = 0;

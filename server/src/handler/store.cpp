@@ -88,7 +88,8 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
-  QList<Flag> flagList;
+  QVector<Flag> flagList;
+  flagList.reserve( flags.size() );
   for ( int i = 0; i < flags.count(); ++i ) {
     Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
     if ( !flag.isValid() )
@@ -388,7 +389,7 @@ void Store::parseCommand()
 
 void Store::sendPimItemResponse( const PimItem &pimItem )
 {
-  QList<Flag> flags = pimItem.flags();
+  const QVector<Flag> flags = pimItem.flags();
   QStringList flagList;
   for ( int j = 0; j < flags.count(); ++j )
     flagList.append( flags[ j ].name() );

@@ -122,7 +122,7 @@ bool Create::parseStream()
   // attributes
   QList<QByteArray> attributes;
   QList<QByteArray> mimeTypes;
-  QList< QPair<QByteArray, QByteArray> > userDefAttrs;
+  QVector< QPair<QByteArray, QByteArray> > userDefAttrs;
   bool mimeTypesSet = false;
   attributes = m_streamParser->readParenthesizedList();
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {

@@ -62,10 +62,10 @@ bool Move::parseStream()
   const QDateTime mtime = QDateTime::currentDateTime();
 
   if ( qb.exec() ) {
-    const QList<PimItem> items = qb.result();
+    const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
-    foreach ( PimItem item, items ) {
+    foreach ( /*sic!*/ PimItem item, items ) {
       if ( !item.isValid() )
         throw HandlerException( "Invalid item in result set!?" );
       Q_ASSERT( item.collectionId() != destination.id() );

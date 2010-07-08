@@ -47,8 +47,8 @@ void IntervalCheck::doIntervalCheck()
 {
 
   // cycle over all collections
-  QList<Collection> collections = Collection::retrieveAll();
-  foreach ( Collection collection, collections ) {
+  const QVector<Collection> collections = Collection::retrieveAll();
+  Q_FOREACH ( /*sic!*/ Collection collection, collections ) {
     // determine active cache policy
     DataStore::self()->activeCachePolicy( collection );
 

@@ -49,7 +49,7 @@ class AKONADIPRIVATE_EXPORT Entity
     bool isValid() const;
 
   public:
-    template <typename T> static QString joinByName( const QList<T> &list, const QString &sep )
+    template <typename T> static QString joinByName( const QVector<T> &list, const QString &sep )
     {
       QStringList tmp;
       Q_FOREACH( const T & t, list )

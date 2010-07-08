@@ -135,7 +135,7 @@ bool Append::commit()
     part.setPimItemId( item.id() );
     part.setDatasize( dataSize );
 
-    QList<Part> parts;
+    QVector<Part> parts;
     parts.append( part );
 
     // If we have active preprocessors then we also set the hidden attribute

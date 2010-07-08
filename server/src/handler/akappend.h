@@ -49,7 +49,7 @@ protected:
 
 private:
     qint64 m_size;
-    QList<Part> m_parts;
+    QVector<Part> m_parts;
     QByteArray m_mailbox;
     QDateTime m_dateTime;
     QList<QByteArray> m_flags;

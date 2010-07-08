@@ -41,7 +41,7 @@ template <typename T> class SelectQueryBuilder : public QueryBuilder
     /**
       Returns the result of this SELECT query.
     */
-    QList<T> result()
+    QVector<T> result()
     {
       return T::extractResult( query() );
     }

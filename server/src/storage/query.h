@@ -22,6 +22,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 
 namespace Akonadi {
 
@@ -73,7 +74,7 @@ class Condition
   friend class Akonadi::QueryBuilder;
   public:
     /** A list of conditions. */
-    typedef QList<Condition> List;
+    typedef QVector<Condition> List;
 
     /**
       Create an empty condition.
@@ -129,5 +130,7 @@ class Condition
 }
 
 }
+
+Q_DECLARE_TYPEINFO( Akonadi::Query::Condition, Q_MOVABLE_TYPE );
 
 #endif

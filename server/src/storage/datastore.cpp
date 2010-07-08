@@ -149,7 +149,7 @@ DataStore * Akonadi::DataStore::self()
 
 /* --- ItemFlags ----------------------------------------------------- */
 
-bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
+bool DataStore::setItemFlags( const PimItem &item, const QVector<Flag> &flags )
 {
   // first delete all old flags of this pim item
   if ( !item.clearFlags() )
@@ -165,7 +165,7 @@ bool DataStore::setItemFlags( const PimItem &item, const QList<Flag> &flags )
   return true;
 }
 
-bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
+bool DataStore::appendItemFlags( const PimItem &item, const QVector<Flag> &flags,
                                  bool& flagsChanged, bool checkIfExists,
                                  const Collection &col )
 {
@@ -187,7 +187,7 @@ bool DataStore::appendItemFlags( const PimItem &item, const QList<Flag> &flags,
   return true;
 }
 
-bool DataStore::removeItemFlags( const PimItem &item, const QList<Flag> &flags )
+bool DataStore::removeItemFlags( const PimItem &item, const QVector<Flag> &flags )
 {
   for ( int i = 0; i < flags.count(); ++i ) {
     if ( !item.removeFlag( flags[ i ] ) )
@@ -390,7 +390,7 @@ bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 
 
 /* --- PimItem ------------------------------------------------------- */
-bool DataStore::appendPimItem( QList<Part> & parts,
+bool DataStore::appendPimItem( QVector<Part> & parts,
                                const MimeType & mimetype,
                                const Collection & collection,
                                const QDateTime & dateTime,
@@ -419,7 +419,7 @@ bool DataStore::appendPimItem( QList<Part> & parts,
   // insert every part
   if ( !parts.isEmpty() ) {
     //don't use foreach, the caller depends on knowing the part has changed, see the Append handler
-    for(QList<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
+    for(QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
 
       (*it).setPimItemId( pimItem.id() );
       if ( (*it).datasize() < (*it).data().size() )
@@ -501,7 +501,7 @@ bool DataStore::cleanupPimItems( const Collection &collection )
   if ( !qb.exec() )
     return false;
 
-  QList<PimItem> pimItems;
+  QVector<PimItem> pimItems;
   while ( qb.query().next() ) {
     PimItem item;
     item.setId( qb.query().value( 0 ).toLongLong() );

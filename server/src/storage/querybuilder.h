@@ -27,6 +27,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 #include <QtSql/QSqlQuery>
 
 #ifdef QUERYBUILDER_UNITTEST
@@ -229,9 +230,9 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     QueryType mType;
     QStringList mColumns;
     QList<QVariant> mBindValues;
-    QList<QPair<QString, Query::SortOrder> > mSortColumns;
+    QVector<QPair<QString, Query::SortOrder> > mSortColumns;
     QStringList mGroupColumns;
-    QList<QPair<QString, QVariant> > mColumnValues;
+    QVector<QPair<QString, QVariant> > mColumnValues;
 
     // we must make sure that the tables are joined in the correct order
     // QMap sorts by key which might invalidate the queries

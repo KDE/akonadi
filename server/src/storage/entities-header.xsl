@@ -39,7 +39,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
 
   public:
     /// List of <xsl:value-of select="$entityName"/> records.
-    typedef QList&lt;<xsl:value-of select="$className"/>&gt; List;
+    typedef QVector&lt;<xsl:value-of select="$className"/>&gt; List;
 
     // make some stuff accessible from Entity:
     using Entity::Id;
@@ -112,7 +112,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
       @param query A executed query containing a list of <xsl:value-of select="$entityName"/> records.
       Note that the fields need to be in the correct order (same as in the constructor)!
     */
-    static QList&lt; <xsl:value-of select="$className"/> &gt; extractResult( QSqlQuery&amp; query );
+    static QVector&lt; <xsl:value-of select="$className"/> &gt; extractResult( QSqlQuery&amp; query );
 
     /** Count records with value @p value in column @p column. */
     static int count( const QString &amp;column, const QVariant &amp;value );
@@ -158,12 +158,12 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
       Retrieve a list of all <xsl:value-of select="@table"/> records referring to this record
       in their column <xsl:value-of select="@key"/>.
     */
-    QList&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>() const;
+    QVector&lt;<xsl:value-of select="@table"/>&gt; <xsl:value-of select="@name"/>() const;
     </xsl:for-each>
 
     // data retrieval for n:m relations
     <xsl:for-each select="../relation[@table1 = $entityName]">
-    QList&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
+    QVector&lt;<xsl:value-of select="@table2"/>&gt; <xsl:value-of select="concat(translate(substring(@table2,1,1),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), substring(@table2,2))"/>s() const;
     </xsl:for-each>
 
     /**

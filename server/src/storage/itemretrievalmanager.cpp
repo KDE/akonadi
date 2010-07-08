@@ -157,7 +157,7 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
 // called within the retrieval thread
 void ItemRetrievalManager::processRequest()
 {
-  QList<QPair<ItemRetrievalJob*, QString> > newJobs;
+  QVector<QPair<ItemRetrievalJob*, QString> > newJobs;
 
   mLock->lockForWrite();
   // look for idle resources
@@ -187,7 +187,7 @@ void ItemRetrievalManager::processRequest()
     return;
   }
 
-  for ( QList< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it )
+  for ( QVector< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it )
     (*it).first->start( resourceInterface( (*it).second ) );
 }
 

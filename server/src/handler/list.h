@@ -97,7 +97,7 @@ class AKONADIPRIVATE_EXPORT List : public Handler
 
   private:
     Resource mResource;
-    QList<MimeType::Id> mMimeTypes;
+    QVector<MimeType::Id> mMimeTypes;
     Scope mScope;
     int mAncestorDepth;
     bool mOnlySubscribed;

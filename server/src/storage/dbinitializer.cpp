@@ -95,7 +95,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   typedef QPair<QString, QString> ColumnEntry;
 
-  QList<ColumnEntry> columnsList;
+  QVector<ColumnEntry> columnsList;
   QStringList dataList;
 
   QDomElement columnElement = element.firstChildElement();

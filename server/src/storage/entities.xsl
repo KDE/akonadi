@@ -45,7 +45,7 @@
 #include &lt;QtCore/QString&gt;
 #include &lt;QtCore/QVariant&gt;
 
-template &lt;typename T&gt; class QList;
+template &lt;typename T&gt; class QVector;
 class QSqlQuery;
 class QStringList;
 
@@ -73,6 +73,10 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 
 <xsl:for-each select="database/table">
 <xsl:call-template name="table-debug-header"/>
+</xsl:for-each>
+
+<xsl:for-each select="database/table">
+Q_DECLARE_TYPEINFO( Akonadi::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
 </xsl:for-each>
 #endif
 

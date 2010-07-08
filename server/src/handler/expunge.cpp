@@ -60,7 +60,7 @@ bool Expunge::parseStream()
   qb.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id() );
 
   if ( qb.exec() ) {
-    const QList<PimItem> items = qb.result();
+    const QVector<PimItem> items = qb.result();
     foreach ( const PimItem &item, items ) {
       if ( store->cleanupPimItem( item ) ) {
         response.setUntagged();

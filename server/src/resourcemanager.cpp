@@ -58,8 +58,8 @@ void Akonadi::ResourceManager::removeResourceInstance(const QString & name)
   // remove items and collections
   Resource resource = Resource::retrieveByName( name );
   if ( resource.isValid() ) {
-    QList<Collection> collections = resource.collections();
-    foreach ( Collection collection, collections )
+    const QVector<Collection> collections = resource.collections();
+    Q_FOREACH( /*sic!*/ Collection collection, collections )
       db->cleanupCollection( collection );
 
     // remove resource

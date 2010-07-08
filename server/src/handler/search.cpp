@@ -56,7 +56,7 @@ bool Search::parseStream()
   }
 
   // create imap query
-  QList<ImapSet::Id> imapIds;
+  QVector<ImapSet::Id> imapIds;
   foreach ( const QString &uid, uids )
     imapIds.append( uid.toULongLong() );
 

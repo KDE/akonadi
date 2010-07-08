@@ -70,7 +70,7 @@ bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const 
   qb.addValueCondition( Collection::nameColumn(), Query::Equals, name );
   if ( !qb.exec() )
     return false;
-  const QList<Collection> result = qb.result();
+  const QVector<Collection> result = qb.result();
   if ( result.size() > 0 ) {
     if ( result.first().id() == collection.id() )
       return true;
