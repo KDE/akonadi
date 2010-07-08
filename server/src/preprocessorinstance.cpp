@@ -89,13 +89,13 @@ void PreprocessorInstance::enqueueItem( qint64 itemId )
 {
   qDebug() << "PreprocessorInstance::enqueueItem(" << itemId << ")";
 
-  mItemQueue.append( itemId );
+  mItemQueue.push_back( itemId );
 
   // If the preprocessor is already busy processing another item then do nothing.
   if ( mBusy )
   {
     // The "head" item is the one being processed and we have just added another one.
-    Q_ASSERT( mItemQueue.count() > 1 );
+    Q_ASSERT( mItemQueue.size() > 1 );
     return;
   }
 
@@ -106,11 +106,11 @@ void PreprocessorInstance::enqueueItem( qint64 itemId )
 void PreprocessorInstance::processHeadItem()
 {
   // We shouldn't be called if there are no items in the queue
-  Q_ASSERT( mItemQueue.count() > 0 );
+  Q_ASSERT( mItemQueue.size() > 0 );
   // We shouldn't be here with no interface
   Q_ASSERT( mInterface );
 
-  qint64 itemId = mItemQueue.first();
+  qint64 itemId = mItemQueue.front();
 
   // Fetch the actual item data (as it may have changed since it was enqueued)
   // The fetch will hit the cache if the item wasn't changed.
@@ -123,8 +123,8 @@ void PreprocessorInstance::processHeadItem()
     // FIXME: Signal to the manager that the item is no longer valid!
     PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
 
-    mItemQueue.removeFirst();
-    if( mItemQueue.count() == 0 )
+    mItemQueue.pop_front();
+    if( mItemQueue.empty() )
     {
       // nothing more to process for this instance: jump out
       mBusy = false;
@@ -132,7 +132,7 @@ void PreprocessorInstance::processHeadItem()
     }
 
     // try the next one in the queue
-    itemId = mItemQueue.first();
+    itemId = mItemQueue.front();
     actualItem = PimItem::retrieveById( itemId );
   }
 
@@ -222,7 +222,7 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
   qDebug() << "PreprocessorInstance::itemProcessed(" << id << ")";
 
   // We shouldn't be called if there are no items in the queue
-  if( mItemQueue.count() < 1 )
+  if( mItemQueue.empty() )
   {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
@@ -237,7 +237,7 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
   // We should be busy now: this is more likely our fault, not the preprocessor's one.
   Q_ASSERT( mBusy );
 
-  qlonglong itemId = mItemQueue.first();
+  qlonglong itemId = mItemQueue.front();
 
   if( itemId != id )
   {
@@ -252,11 +252,11 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
     // FIXME: And what now ?
   }
 
-  mItemQueue.removeFirst();
+  mItemQueue.pop_front();
 
   PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
 
-  if( mItemQueue.count() < 1 )
+  if( mItemQueue.empty() )
   {
     // Nothing more to do
     mBusy = false;

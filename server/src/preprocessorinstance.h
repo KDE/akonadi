@@ -26,8 +26,9 @@
 #define AKONADI_PREPROCESSORINSTANCE_H
 
 #include <QtCore/QObject>
-#include <QtCore/QList>
 #include <QtCore/QDateTime>
+
+#include <deque>
 
 class OrgFreedesktopAkonadiPreprocessorInterface;
 
@@ -73,7 +74,7 @@ private:
    * The head item in the queue is the one currently being processed.
    * The other ones are waiting.
    */
-  QList< qint64 > mItemQueue;
+  std::deque< qint64 > mItemQueue;
 
   /**
    * Is this processor busy ?
@@ -146,7 +147,7 @@ protected:
    *
    * The returned pointer is granted to be non null.
    */
-  QList< qint64 > * itemQueue()
+  std::deque< qint64 > * itemQueue()
   {
     return &mItemQueue;
   }

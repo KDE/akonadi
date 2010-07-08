@@ -29,6 +29,8 @@
 #include <QtCore/QList>
 #include <QtCore/QHash>
 
+#include <deque>
+
 class QTimer;
 class QMutex;
 
@@ -96,7 +98,7 @@ protected:
    * The hashtable of transaction wait queues. There is one wait
    * queue for each DataStore that is currently in a transaction.
    */
-  QHash< const DataStore *, QList< qint64 > * > mTransactionWaitQueueHash;
+  QHash< const DataStore *, std::deque< qint64 > * > mTransactionWaitQueueHash;
 
   /**
    * The preprocessor chain.

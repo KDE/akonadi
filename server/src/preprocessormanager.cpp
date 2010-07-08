@@ -179,7 +179,7 @@ void PreprocessorManager::lockedUnregisterInstance( const QString &id )
 
   // All of the preprocessor's waiting items must be queued to the next preprocessor (if there is one)
 
-  QList< qint64 > * itemList = instance->itemQueue();
+  std::deque< qint64 > * itemList = instance->itemQueue();
   Q_ASSERT( itemList );
 
   int idx = mPreprocessorChain.indexOf( instance );
@@ -243,12 +243,12 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
     qDebug() << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
 
     // The calling thread data store is in a transaction: push the item into a wait queue
-    QList< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+    std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
 
     if( !waitQueue )
     {
       // No wait queue for this transaction yet...
-      waitQueue = new QList< qint64 >();
+        waitQueue = new std::deque< qint64 >();
 
       mTransactionWaitQueueHash.insert( dataStore, waitQueue );
 
@@ -258,7 +258,7 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
       QObject::connect( dataStore, SIGNAL( transactionRolledBack() ), this, SLOT( dataStoreTransactionRolledBack() ) );
     }
 
-    waitQueue->append( item.id() );
+    waitQueue->push_back( item.id() );
 
     // nothing more to do here
     return;
@@ -285,7 +285,7 @@ void PreprocessorManager::lockedActivateFirstPreprocessor( qint64 itemId )
 
 void PreprocessorManager::lockedKillWaitQueue( const DataStore * dataStore, bool disconnectSlots )
 {
-  QList< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+  std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
   if( !waitQueue )
   {
     qWarning() << "PreprocessorManager::lockedKillWaitQueue(): called for dataStore which has no wait queue";
@@ -335,7 +335,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
     return;
   }
 
-  QList< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+  std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
   if( !waitQueue )
   {
     qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): called for dataStore which has no wait queue";
