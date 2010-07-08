@@ -110,6 +110,7 @@ set(libakonadiprivate_SRCS
   src/storage/dbconfigmysqlembedded.cpp
   src/storage/dbconfigpostgresql.cpp
   src/storage/dbconfigsqlite.cpp
+  src/storage/dbconfigvirtuoso.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbupdater.cpp
   src/storage/itemqueryhelper.cpp
