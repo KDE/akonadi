@@ -107,7 +107,10 @@ bool CollectionStatisticsDelegate::unreadCountShown() const
 void CollectionStatisticsDelegate::setProgressAnimationEnabled( bool enable )
 {
   Q_D( CollectionStatisticsDelegate );
+  if ( enable == ( d->animator != 0 ) )
+      return;
   if ( enable ) {
+    Q_ASSERT( !d->animator );
     Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator( d->parent );
     d->animator = animator;
   } else {
