@@ -413,6 +413,8 @@ void Session::clear()
     d->currentJob->kill( KJob::EmitResult );
   d->jobRunning = false;
   d->connected = false;
+  if ( d->socket )
+    d->socket->disconnect( this ); // prevent signal emitted from close() causing mayhem - we might be called from ~QThreadStorage!
   delete d->socket;
   d->socket = 0;
   QMetaObject::invokeMethod( this, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
