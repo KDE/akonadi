@@ -422,12 +422,13 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
   foreach ( Collection collection, toRecover ) {          // krazy:exclude=foreach
 
     // Find the type for the collection.
-    QByteArray type;
     QString name = collection.name();
-    if ( collection.hasAttribute<EntityDisplayAttribute>() )
-      name = collection.attribute<EntityDisplayAttribute>()->displayName();
-    if ( typeForName.contains( name ) )
-      type = typeForName[ name ];
+    if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
+      const QString displayName = collection.attribute<EntityDisplayAttribute>()->displayName();
+      if (!displayName.isEmpty())
+        name = displayName;
+    }
+    const QByteArray type = typeForName.value( name );
 
     if ( !type.isEmpty() ) {
       kDebug() << "Recovering collection" << name;
