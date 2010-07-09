@@ -73,7 +73,7 @@
   <table name="Resource">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
-    <column name="isVirtual" type="bool" properties="DEFAULT false"/>
+    <column name="isVirtual" type="bool" default="false"/>
     <reference name="collections" table="Collection" key="resourceId"/>
     <data columns="name,isVirtual" values="'akonadi_search_resource',true"/>
   </table>
@@ -85,11 +85,11 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT NULL"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL"/>
-    <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
-    <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
-    <column name="cachePolicyCheckInterval" type="int" default="-1" properties="NOT NULL DEFAULT -1"/>
-    <column name="cachePolicyCacheTimeout" type="int" default="-1" properties="NOT NULL DEFAULT -1"/>
-    <column name="cachePolicySyncOnDemand" type="bool" default="false" properties="NOT NULL DEFAULT false"/>
+    <column name="subscribed" type="bool" default="true" properties="NOT NULL"/>
+    <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL"/>
+    <column name="cachePolicyCheckInterval" type="int" default="-1" properties="NOT NULL"/>
+    <column name="cachePolicyCacheTimeout" type="int" default="-1" properties="NOT NULL"/>
+    <column name="cachePolicySyncOnDemand" type="bool" default="false" properties="NOT NULL"/>
     <column name="cachePolicyLocalParts" type="QString"/>
     <column name="queryString" type="QString"/>
     <column name="queryLanguage" type="QString"/>
@@ -113,7 +113,7 @@
 
   <table name="PimItem">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
+    <column name="rev" type="int" default="0" properties="NOT NULL"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
@@ -127,7 +127,7 @@
     <column name="dirty" type="bool">
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
-    <column name="size" type="qint64" properties="NOT NULL DEFAULT 0"/>
+    <column name="size" type="qint64" default="0" properties="NOT NULL"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
@@ -152,7 +152,7 @@
     <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" properties="NOT NULL"/>
-    <column name="version" type="int" properties="DEFAULT 0"/>
+    <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>

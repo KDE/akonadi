@@ -153,12 +153,19 @@ bool DbInitializer::checkTable( const QDomElement &element )
           entry.second += refStmt;
       }
 
+      // DEFAULT statement for each column
+      if ( !columnElement.attribute( QLatin1String( "default" ) ).isEmpty() ) {
+        const QString defStmt = QString::fromLatin1( " DEFAULT %1" )
+          .arg( sqlValue( columnElement.attribute( QLatin1String( "type" ) ), columnElement.attribute( QLatin1String( "default" ) ) ) );
+        entry.second += defStmt;
+      }
+
       columnsList.append( entry );
     } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
       QString values = columnElement.attribute( QLatin1String("values") );
       if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
         values.replace( QLatin1String("\\"), QLatin1String("\\\\") );
-      } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
+      } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) || mDatabase.driverName() == QLatin1String( "QODBC" ) ) {
         values.replace( QLatin1String("true"), QLatin1String( "1" ) );
         values.replace( QLatin1String("false"), QLatin1String( "0" ) );
       }
@@ -343,7 +350,7 @@ QString DbInitializer::errorMsg() const
   return mErrorMsg;
 }
 
-QString DbInitializer::sqlType(const QString & type)
+QString DbInitializer::sqlType(const QString & type) const
 {
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
@@ -352,18 +359,36 @@ QString DbInitializer::sqlType(const QString & type)
             ? QLatin1String( "int8" )
             : QLatin1String( "BIGINT" );
   }
-  if ( type == QLatin1String("QString") )
+  if ( type == QLatin1String("QString") ) {
+    if ( mDatabase.driverName() == QLatin1String( "QODBC" ) )
+      return QLatin1String( "VARCHAR(255)" );
     return QLatin1String("TEXT");
-  if (type == QLatin1String("QByteArray") )
-    return ( mDatabase.driverName() == QLatin1String("QPSQL") )
-            ? QLatin1String("BYTEA")
-            : QLatin1String("LONGBLOB");
+  }
+  if (type == QLatin1String("QByteArray") ) {
+    if ( mDatabase.driverName() == QLatin1String("QPSQL") )
+      return QLatin1String("BYTEA");
+    if ( mDatabase.driverName() == QLatin1String("QODBC") )
+        return QLatin1String("LONG VARCHAR");
+      return QLatin1String("LONGBLOB");
+  }
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
-  if ( type == QLatin1String( "bool" ) )
+  if ( type == QLatin1String( "bool" ) ) {
+    if ( mDatabase.driverName() == QLatin1String("QODBC") )
+      return QLatin1String("CHAR");
     return QLatin1String("BOOL");
+  }
   Q_ASSERT( false );
   return QString();
+}
+
+QString DbInitializer::sqlValue( const QString &type, const QString &value ) const
+{
+  if ( mDatabase.driverName() == QLatin1String( "QODBC" ) && type == QLatin1String( "bool" ) ) {
+    if ( value == QLatin1String( "false" ) ) return QLatin1String( "0" );
+    if ( value == QLatin1String( "true" ) ) return QLatin1String( "1" );
+  }
+  return value;
 }
 
 bool DbInitializer::hasTable(const QString & tableName)

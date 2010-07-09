@@ -64,7 +64,8 @@ class DbInitializer
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );
 
-    QString sqlType( const QString &type );
+    QString sqlType( const QString &type ) const;
+    QString sqlValue( const QString &type, const QString &value ) const;
     bool hasTable( const QString &tableName );
     bool hasIndex( const QString &tableName, const QString &indexName );
 
