@@ -278,6 +278,4 @@ class AKONADI_EXPORT Entity
 
 }
 
-Q_DECLARE_TYPEINFO( Akonadi::Entity, Q_MOVABLE_TYPE );
-
 #endif
