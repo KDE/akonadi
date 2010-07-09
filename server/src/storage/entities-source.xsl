@@ -33,7 +33,7 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     Private() : QSharedData()
     <!-- BEGIN Variable Initializers - order as Variable Declarations below -->
     <xsl:for-each select="column[@type = 'qint64' and @name != 'id']">
-      , <xsl:value-of select="@name"/>( 0 )
+      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
 #ifdef Q_OS_WINCE // on wince, QDateTime is two int's
@@ -56,10 +56,10 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
 #endif
     </xsl:if>
     <xsl:for-each select="column[@type = 'int']">
-      , <xsl:value-of select="@name"/>( 0 )
+      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
     <xsl:for-each select="column[@type = 'bool']">
-      , <xsl:value-of select="@name"/>( false )
+      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
       , <xsl:value-of select="@name"/>_changed( false )
