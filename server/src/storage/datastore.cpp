@@ -118,9 +118,9 @@ void Akonadi::DataStore::close()
 
 bool Akonadi::DataStore::init()
 {
-  DbInitializer initializer( m_database, QLatin1String(":akonadidb.xml") );
-  if (! initializer.run() ) {
-    akError() << initializer.errorMsg();
+  DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, QLatin1String(":akonadidb.xml") );
+  if (! initializer->run() ) {
+    akError() << initializer->errorMsg();
     return false;
   }
 

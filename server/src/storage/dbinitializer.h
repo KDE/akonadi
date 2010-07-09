@@ -23,6 +23,8 @@
 #include <QtCore/QString>
 #include <QtSql/QSqlDatabase>
 
+#include <boost/shared_ptr.hpp>
+
 class QDomElement;
 
 /**
@@ -33,18 +35,17 @@ class QDomElement;
 class DbInitializer
 {
   public:
+   typedef boost::shared_ptr<DbInitializer> Ptr;
+
     /**
-     * Creates a new database initializer.
-     *
-     * @param database The reference to the database.
-     * @param templateFile The template file.
-     */
-    DbInitializer( const QSqlDatabase &database, const QString &templateFile );
+      Returns an initializer instance for a given backend.
+    */
+    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, const QString &templateFile );
 
     /**
      * Destroys the database initializer.
      */
-    ~DbInitializer();
+    virtual ~DbInitializer();
 
     /**
      * Starts the initialization process.
@@ -60,12 +61,24 @@ class DbInitializer
      */
     QString errorMsg() const;
 
+  protected:
+    /**
+     * Creates a new database initializer.
+     *
+     * @param database The reference to the database.
+     * @param templateFile The template file.
+     */
+    DbInitializer( const QSqlDatabase &database, const QString &templateFile );
+
+    /** Overwrite in backend-specific sub-classes to return the SQL type for a given C++ type. */
+    virtual QString sqlType( const QString &type ) const;
+    /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
+    virtual QString sqlValue( const QString &type, const QString &value ) const;
+
   private:
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );
 
-    QString sqlType( const QString &type ) const;
-    QString sqlValue( const QString &type, const QString &value ) const;
     bool hasTable( const QString &tableName );
     bool hasIndex( const QString &tableName, const QString &indexName );
 

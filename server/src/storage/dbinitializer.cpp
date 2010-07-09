@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "dbinitializer.h"
+#include "dbinitializer_p.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -31,6 +32,15 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
+
+DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
+{
+  if ( database.databaseName() == QLatin1String( "QPSQL" ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
+  if ( database.databaseName() == QLatin1String( "QODBC" ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
+  return boost::shared_ptr<DbInitializer>( new DbInitializer( database, templateFile ) );
+}
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
   : mDatabase( database ), mTemplateFile( templateFile )
@@ -357,40 +367,23 @@ QString DbInitializer::sqlType(const QString & type) const
 {
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
-  if ( type == QLatin1String("qint64") ) {
-    return ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
-            ? QLatin1String( "int8" )
-            : QLatin1String( "BIGINT" );
-  }
-  if ( type == QLatin1String("QString") ) {
-    if ( mDatabase.driverName() == QLatin1String( "QODBC" ) )
-      return QLatin1String( "VARCHAR(255)" );
+  if ( type == QLatin1String("qint64") )
+    return QLatin1String( "BIGINT" );
+  if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
-  }
-  if (type == QLatin1String("QByteArray") ) {
-    if ( mDatabase.driverName() == QLatin1String("QPSQL") )
-      return QLatin1String("BYTEA");
-    if ( mDatabase.driverName() == QLatin1String("QODBC") )
-        return QLatin1String("LONG VARCHAR");
-      return QLatin1String("LONGBLOB");
-  }
+  if (type == QLatin1String("QByteArray") )
+    return QLatin1String("LONGBLOB");
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
-  if ( type == QLatin1String( "bool" ) ) {
-    if ( mDatabase.driverName() == QLatin1String("QODBC") )
-      return QLatin1String("CHAR");
+  if ( type == QLatin1String( "bool" ) )
     return QLatin1String("BOOL");
-  }
   Q_ASSERT( false );
   return QString();
 }
 
 QString DbInitializer::sqlValue( const QString &type, const QString &value ) const
 {
-  if ( mDatabase.driverName() == QLatin1String( "QODBC" ) && type == QLatin1String( "bool" ) ) {
-    if ( value == QLatin1String( "false" ) ) return QLatin1String( "0" );
-    if ( value == QLatin1String( "true" ) ) return QLatin1String( "1" );
-  }
+  Q_UNUSED( type );
   return value;
 }
 
