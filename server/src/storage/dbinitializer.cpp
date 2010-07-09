@@ -35,9 +35,9 @@
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
-  if ( database.databaseName() == QLatin1String( "QPSQL" ) )
+  if ( database.databaseName().startsWith( QLatin1String( "QPSQL" ) ) )
     return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
-  if ( database.databaseName() == QLatin1String( "QODBC" ) )
+  if ( database.databaseName().startsWith( QLatin1String( "QODBC" ) ) )
     return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
   return boost::shared_ptr<DbInitializer>( new DbInitializer( database, templateFile ) );
 }

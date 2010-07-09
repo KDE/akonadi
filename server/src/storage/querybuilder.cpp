@@ -89,6 +89,7 @@ QueryBuilder::QueryBuilder( const QString& table, QueryBuilder::QueryType type )
     mDatabaseType( Unknown ),
 #endif
     mType( type ),
+    mLimit( -1 ),
     mDistinct( false )
 {
 }
@@ -150,6 +151,8 @@ bool QueryBuilder::exec()
       statement += QLatin1String( "SELECT " );
       if ( mDistinct )
         statement += QLatin1String( "DISTINCT " );
+      if ( mDatabaseType == Virtuoso && mLimit > 0 )
+        statement += QString::fromLatin1( "TOP %1 " ).arg( mLimit );
       Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
@@ -265,6 +268,10 @@ bool QueryBuilder::exec()
     statement += orderStmts.join( QLatin1String( ", " ) );
   }
 
+  if ( mLimit > 0 && mDatabaseType != Virtuoso ) {
+    statement += QString::fromLatin1( " LIMIT %1" ).arg( mLimit );
+  }
+
 #ifndef QUERYBUILDER_UNITTEST
   mQuery.prepare( statement );
   //too heavy debug info but worths to have from time to time
@@ -375,6 +382,11 @@ void QueryBuilder::setDistinct(bool distinct)
   mDistinct = distinct;
 }
 
+void QueryBuilder::setLimit(int limit)
+{
+  mLimit = limit;
+}
+
 qint64 QueryBuilder::insertId()
 {
   if ( mDatabaseType == PostgreSQL ) {
@@ -397,7 +409,9 @@ QueryBuilder::DatabaseType QueryBuilder::qsqlDriverNameToDatabaseType (const QSt
     return MySQL;
   if ( driverName == QLatin1String( "QPSQL" ) )
     return PostgreSQL;
-  if ( driverName.startsWith( QLatin1String( "SQLITE" ) ) )
+  if ( driverName.startsWith( QLatin1String( "QSQLITE" ) ) )
     return Sqlite;
+  if ( driverName.startsWith( QLatin1String( "QODBC" ) ) )
+    return Virtuoso;
   return Unknown;
 }
