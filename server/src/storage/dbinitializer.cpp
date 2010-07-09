@@ -222,7 +222,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       tableProperties += QLatin1String( " DEFAULT CHARSET=utf8" );
     }
 
-    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3;" ).arg( tableName, columns, tableProperties );
+    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3" ).arg( tableName, columns, tableProperties );
     qDebug() << statement;
 
     if ( !query.exec( statement ) ) {
@@ -253,7 +253,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
         /**
          * Add missing column to table.
          */
-        const QString statement = QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2 %3;" )
+        const QString statement = QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2 %3" )
                                          .arg( tableName, entry.first, entry.second );
 
         if ( !query.exec( statement ) ) {
@@ -282,7 +282,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
         statement += tableName;
         statement += QLatin1String( " (" );
         statement += columnElement.attribute( QLatin1String("columns") );
-        statement += QLatin1String(");");
+        statement += QLatin1String(")");
         QSqlQuery query( mDatabase );
         qDebug() << "adding index" << statement;
         if ( !query.exec( statement ) ) {
@@ -351,7 +351,7 @@ bool DbInitializer::checkRelation(const QDomElement & element)
         .arg( table2Name )
         .arg( col2 )
         .arg( columnOptions ),
-    statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4));" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
+    statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4))" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
     qDebug() << statement;
 
     QSqlQuery query( mDatabase );
