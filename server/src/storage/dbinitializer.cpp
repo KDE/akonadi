@@ -139,6 +139,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
           props.remove(QLatin1String("character set utf8 collate utf8_bin"));
       }
       entry.second += QLatin1String(" ") + props;
+      // special cases for virtuoso
+      if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
+        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
+          entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("IDENTITY"));
+        if ( entry.second.contains( QLatin1String("BINARY") ) )
+          entry.second.remove(QLatin1String("BINARY"));
+      }
       // special cases for PostgreSQL
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
         if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
@@ -160,6 +167,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
           entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
+      }
+      // special cases for Virtuoso
+      else if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
+        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
+          entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
+        }
+        // virtuoso does not support default on timestamp and identity
+        if ( entry.second.contains( QLatin1String("CURRENT_TIMESTAMP") ) )
+          entry.second.remove(QLatin1String("DEFAULT CURRENT_TIMESTAMP") ); 
       }
 
       if ( !columnElement.attribute( QLatin1String( "refTable" ) ).isEmpty()
