@@ -23,12 +23,29 @@
 
 #include "storage/dbinitializer.h"
 
+class DbInitializerMySql : public DbInitializer
+{
+  public:
+    DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile);
+  protected:
+    QString hasIndexQuery(const QString& tableName, const QString& indexName);
+};
+
+class DbInitializerSqlite : public DbInitializer
+{
+  public:
+    DbInitializerSqlite( const QSqlDatabase& database, const QString& templateFile);
+  protected:
+    QString hasIndexQuery(const QString& tableName, const QString& indexName);
+};
+
 class DbInitializerPostgreSql : public DbInitializer
 {
   public:
     DbInitializerPostgreSql(const QSqlDatabase& database, const QString& templateFile);
   protected:
     QString sqlType(const QString& type) const;
+    QString hasIndexQuery(const QString& tableName, const QString& indexName);
 };
 
 class DbInitializerVirtuoso : public DbInitializer
@@ -38,6 +55,7 @@ class DbInitializerVirtuoso : public DbInitializer
   protected:
     QString sqlType(const QString& type) const;
     QString sqlValue(const QString& type, const QString& value) const;
+    bool hasIndex(const QString& tableName, const QString& indexName);
 };
 
 #endif

@@ -20,6 +20,7 @@
 #include "dbinitializer.h"
 #include "dbinitializer_p.h"
 #include "querybuilder.h"
+#include "shared/akdebug.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -38,11 +39,16 @@ using namespace Akonadi;
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
+  if ( database.driverName().startsWith( QLatin1String( "QMYSQL" ) ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerMySql( database, templateFile ) );
+  if ( database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerSqlite( database, templateFile ) );
   if ( database.driverName().startsWith( QLatin1String( "QPSQL" ) ) )
     return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
   if ( database.driverName().startsWith( QLatin1String( "QODBC" ) ) )
     return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
-  return boost::shared_ptr<DbInitializer>( new DbInitializer( database, templateFile ) );
+  akFatal() << database.driverName() << "backend  not supported";
+  return boost::shared_ptr<DbInitializer>();
 }
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
@@ -398,29 +404,21 @@ bool DbInitializer::hasTable(const QString & tableName)
    return mDatabase.tables().contains( tableName, Qt::CaseInsensitive );
 }
 
-bool DbInitializer::hasIndex(const QString & tableName, const QString & indexName)
+bool DbInitializer::hasIndex(const QString& tableName, const QString& indexName)
 {
-  // create statement
-  QString statement;
-  if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-    statement  = QString::fromLatin1( "SHOW INDEXES FROM %1" ).arg( tableName );
-    statement += QString::fromLatin1( " WHERE `Key_name` = '%1'" ).arg( indexName );
-  } else if( mDatabase.driverName() == QLatin1String("QPSQL") ) {
-    statement  = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
-    statement += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
-    statement += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
-  } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
-  } else {
-    qFatal( "Implement index support for your database!" );
-  }
-
-  // query it
   QSqlQuery query( mDatabase );
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
     mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1.\n" ).arg( tableName );
     mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
     return false;
   }
   return query.next();
+}
+
+QString DbInitializer::hasIndexQuery(const QString& tableName, const QString& indexName)
+{
+  Q_UNUSED( tableName );
+  Q_UNUSED( indexName );
+  qFatal( "Implement index support for your database!" );
+  return QString();
 }
