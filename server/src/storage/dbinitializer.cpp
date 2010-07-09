@@ -19,6 +19,7 @@
 
 #include "dbinitializer.h"
 #include "dbinitializer_p.h"
+#include "querybuilder.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -32,6 +33,8 @@
 #include <QtXml/QDomDocument>
 #include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
+
+using namespace Akonadi;
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
@@ -294,12 +297,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
 
   // add initial data if table is empty
-  const QString statement = QString::fromLatin1( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
-  if ( !query.exec( statement ) ) {
+  QueryBuilder qb( tableName, QueryBuilder::Select );
+  qb.addColumn( QLatin1String( "*" ) );
+  qb.setLimit( 1 );
+  if ( !qb.exec() ) {
     mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableName );
-    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
+    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( qb.query().lastError().text() );
     return false;
   }
+  query = qb.query();
   if ( query.size() == 0  || !query.first() ) {
     foreach ( const QString &stmt, dataList ) {
       if ( !query.exec( stmt ) ) {
