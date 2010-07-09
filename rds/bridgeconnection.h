@@ -23,7 +23,7 @@
 #include <QObject>
 
 class QTcpSocket;
-class QLocalSocket;
+class QIODevice;
 
 class BridgeConnection : public QObject
 {
@@ -34,9 +34,10 @@ class BridgeConnection : public QObject
 
   protected slots:
     virtual void connectLocal() = 0;
+    void doConnects();
 
   protected:
-    QLocalSocket *m_localSocket;
+    QIODevice *m_localSocket;
 
   private slots:
     void slotDataAvailable();
@@ -45,12 +46,12 @@ class BridgeConnection : public QObject
     QTcpSocket *m_remoteSocket;
 };
 
+
 class AkonadiBridgeConnection : public BridgeConnection
 {
   Q_OBJECT
   public:
-    explicit AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObject *parent = 0 ) :
-      BridgeConnection( remoteSocket, parent ) {}
+    explicit AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObject *parent = 0 );
 
   protected:
     void connectLocal();
@@ -60,8 +61,7 @@ class DBusBridgeConnection : public BridgeConnection
 {
   Q_OBJECT
   public:
-    explicit DBusBridgeConnection( QTcpSocket* remoteSocket, QObject *parent = 0 ) :
-        BridgeConnection( remoteSocket, parent ) {}
+    explicit DBusBridgeConnection( QTcpSocket* remoteSocket, QObject *parent = 0 );
 
   protected:
     void connectLocal();

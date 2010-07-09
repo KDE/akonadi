@@ -50,7 +50,7 @@ int main( int argc, char ** argv )
     AkApplication app( argc, argv );
     app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
 
-#ifndef NDEBUG
+#if !defined(NDEBUG) && !defined(_WIN32_WCE)
     po::options_description debugOptions( "Debug options (use with care)" );
     debugOptions.add_options()
         ( "start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available" );
@@ -62,15 +62,15 @@ int main( int argc, char ** argv )
     //Needed for wince build
     #undef interface
 
-#ifndef _WIN32_WCE
-    if ( !app.commandLineArguments().count( "start-without-control" ) &&
-#else
-    if (
-#endif
-         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
-      akError() << "Akonadi control process not found - aborting.";
-      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
-    }
+//#ifndef _WIN32_WCE
+//    if ( !app.commandLineArguments().count( "start-without-control" ) &&
+//#else
+//    if (
+//#endif
+//         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
+//      akError() << "Akonadi control process not found - aborting.";
+//      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
+//    }
 
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
     AkonadiCrash::setShutdownMethod( shutdownHandler );

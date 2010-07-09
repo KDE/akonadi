@@ -111,6 +111,9 @@ find_program(XSLTPROC_EXECUTABLE xsltproc)
 if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
 endif(NOT XSLTPROC_EXECUTABLE)
+if(WINCE)
+set(XSLTPROC_EXECUTABLE "${HOST_BINDIR}/xsltproc.exe")
+endif(WINCE)
 
 #### Boost ####
 if(MSVC)

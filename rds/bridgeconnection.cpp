@@ -34,16 +34,11 @@
 
 BridgeConnection::BridgeConnection( QTcpSocket* remoteSocket, QObject *parent) :
     QObject(parent),
-    m_localSocket( new QLocalSocket( this ) ),
+    m_localSocket( NULL ),
     m_remoteSocket( remoteSocket )
 {
-  connect( m_localSocket, SIGNAL(disconnected()), SLOT(deleteLater()) );
-  connect( m_remoteSocket, SIGNAL(disconnected()), SLOT(deleteLater()) );
-  connect( m_localSocket, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
-  connect( m_remoteSocket, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
-  connect( m_localSocket, SIGNAL(connected()), SLOT(slotDataAvailable()) );
-
   // wait for the vtable to be complete
+  QMetaObject::invokeMethod( this, "doConnects", Qt::QueuedConnection );
   QMetaObject::invokeMethod( this, "connectLocal", Qt::QueuedConnection );
 }
 
@@ -60,16 +55,32 @@ void BridgeConnection::slotDataAvailable()
     m_localSocket->write( m_remoteSocket->read( m_remoteSocket->bytesAvailable() ) );
 }
 
+AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObject *parent ) :
+      BridgeConnection( remoteSocket, parent )
+{
+    m_localSocket = new QLocalSocket( this );
+}
+
 void AkonadiBridgeConnection::connectLocal()
 {
   const QSettings connectionSettings( Akonadi::XdgBaseDirs::akonadiConnectionConfigFile(), QSettings::IniFormat );
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
     const QString namedPipe = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
-    m_localSocket->connectToServer( namedPipe );
+    (static_cast <QLocalSocket*>(m_localSocket))->connectToServer( namedPipe );
 #else
     const QString defaultSocketDir = Akonadi::XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
-    m_localSocket->connectToServer( path );
+    (static_cast <QLocalSocket*>(m_localSocket))->connectToServer( path );
+#endif
+}
+
+DBusBridgeConnection::DBusBridgeConnection( QTcpSocket* remoteSocket, QObject *parent ) :
+        BridgeConnection( remoteSocket, parent )
+{
+#ifdef _WIN32_WCE
+        m_localSocket =  new QTcpSocket( this );
+#else
+        m_localSocket = new QLocalSocket( this );
 #endif
 }
 
@@ -92,10 +103,21 @@ void DBusBridgeConnection::connectLocal()
       /*sizeof(dbus_socket_addr) gives me a too large value for some reason, although that's what QLocalSocket uses*/
       const int result = ::connect(fd, (struct sockaddr *)&dbus_socket_addr, sizeof(dbus_socket_addr.sun_family) + dbusPath.size() + 1 /* for the leading \0 */);
       Q_ASSERT( result != -1 );
-      m_localSocket->setSocketDescriptor( fd, QLocalSocket::ConnectedState, QLocalSocket::ReadWrite );
+      (static_cast <QLocalSocket*>(m_localSocket))->setSocketDescriptor( fd, QLocalSocket::ConnectedState, QLocalSocket::ReadWrite );
     } else {
-      m_localSocket->connectToServer( dbusPath );
+      (static_cast <QLocalSocket*>(m_localSocket))->connectToServer( dbusPath );
     }
   }
+#elif _WIN32_WCE
+    (static_cast <QTcpSocket*>(m_localSocket))->connectToHost("127.0.0.1",12434);
 #endif
+}
+
+void BridgeConnection::doConnects()
+{
+  connect( m_localSocket, SIGNAL(disconnected()), SLOT(deleteLater()) );
+  connect( m_remoteSocket, SIGNAL(disconnected()), SLOT(deleteLater()) );
+  connect( m_localSocket, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
+  connect( m_remoteSocket, SIGNAL(readyRead()), SLOT(slotDataAvailable()) );
+  connect( m_localSocket, SIGNAL(connected()), SLOT(slotDataAvailable()) );
 }

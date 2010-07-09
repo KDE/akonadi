@@ -1,7 +1,12 @@
 #include "sqlite_blocking.h"
 
 #include <sqlite3.h>
+#ifndef _WIN32
 #include <unistd.h>
+#else
+#include <Windows.h>
+#define usleep(x) Sleep(x/1000)
+#endif
 
 #include "qdebug.h"
 #include "qthread.h"
