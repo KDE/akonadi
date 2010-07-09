@@ -249,8 +249,6 @@ AKONADI_EXPORT uint qHash( const Akonadi::Collection &collection );
  */
 AKONADI_EXPORT QDebug operator<<( QDebug d, const Akonadi::Collection &collection );
 
-Q_DECLARE_TYPEINFO( Akonadi::Collection, Q_MOVABLE_TYPE );
-
 Q_DECLARE_METATYPE(Akonadi::Collection)
 Q_DECLARE_METATYPE(Akonadi::Collection::List)
 Q_DECLARE_OPERATORS_FOR_FLAGS( Akonadi::Collection::Rights )
