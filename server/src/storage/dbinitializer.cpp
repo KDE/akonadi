@@ -154,10 +154,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
       }
 
       // DEFAULT statement for each column
-      if ( !columnElement.attribute( QLatin1String( "default" ) ).isEmpty() ) {
-        const QString defStmt = QString::fromLatin1( " DEFAULT %1" )
-          .arg( sqlValue( columnElement.attribute( QLatin1String( "type" ) ), columnElement.attribute( QLatin1String( "default" ) ) ) );
-        entry.second += defStmt;
+      const QString defaultAttr = columnElement.attribute( QLatin1String("default") );
+      if ( !defaultAttr.isEmpty() ) {
+        const QString defaultValue = sqlValue( columnElement.attribute( QLatin1String( "type" ) ), defaultAttr );
+        if ( !defaultValue.isEmpty() ) {
+          const QString defStmt = QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+          entry.second += defStmt;
+        }
       }
 
       columnsList.append( entry );
