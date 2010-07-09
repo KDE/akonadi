@@ -128,6 +128,12 @@ bool DbInitializer::checkTable( const QDomElement &element )
         entry.second = columnElement.attribute( QLatin1String("sqltype") ); 
       QString props = columnElement.attribute(QLatin1String("properties"));
 
+      if ( columnElement.attribute( QLatin1String( "allowNull" ) ) == QLatin1String( "false" ) ) {
+        if ( !props.isEmpty() )
+          props.append( QLatin1Char( ' ' ) );
+        props.append( QLatin1String( "NOT NULL" ) );
+      }
+
       // TODO: we need a nicer way for this...
       // special cases for sqlite
       if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
@@ -149,7 +155,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       // special cases for PostgreSQL
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
         if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
+          entry.second = QLatin1String("SERIAL PRIMARY KEY");
         if ( entry.second.contains( QLatin1String("BLOB") ) )
           entry.second = QLatin1String("BYTEA");
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )

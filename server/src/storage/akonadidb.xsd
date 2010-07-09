@@ -63,6 +63,7 @@
     <xsd:attribute name="type"        type="xsd:string"  use="required"/>
     <xsd:attribute name="sqltype"     type="xsd:string"/>
     <xsd:attribute name="default"     type="xsd:string"/>
+    <xsd:attribute name="allowNull"   type="xsd:boolean"/>
     <xsd:attribute name="refTable"    type="xsd:string"/>
     <xsd:attribute name="refColumn"   type="xsd:string"/>
     <xsd:attribute name="methodName"  type="xsd:string"/>
