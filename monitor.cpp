@@ -32,6 +32,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
 #include "collectionfetchscope.h"
+#include <iterator>
 
 using namespace Akonadi;
 
