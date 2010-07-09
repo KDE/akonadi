@@ -64,11 +64,6 @@ class AKONADI_EXPORT Entity
     typedef qint64 Id;
 
     /**
-     * Destroys the entity.
-     */
-    ~Entity();
-
-    /**
      * Sets the unique @p identifier of the entity.
      */
     void setId( Id identifier );
@@ -267,6 +262,11 @@ class AKONADI_EXPORT Entity
      * Creates an entity from an @p other entity.
      */
     Entity( const Entity &other );
+
+    /**
+     * Destroys the entity.
+     */
+    ~Entity();
 
     //@cond PRIVATE
     Entity( EntityPrivate *dd );
