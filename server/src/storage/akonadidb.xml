@@ -112,7 +112,7 @@
   </table>
 
   <table name="PimItem">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
     <column name="rev" type="int" default="0" allowNull="false"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
@@ -134,7 +134,7 @@
 
   <table name="Flag">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
     <column name="name" type="QString" allowNull="false" properties="UNIQUE"/>
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
@@ -147,7 +147,7 @@
   </table>
 
   <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
     <column name="name" type="QString" allowNull="false"/>
     <column name="data" type="QByteArray"/>
