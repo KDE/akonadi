@@ -35,8 +35,16 @@ class DelegateAnimator : public QObject
 public:
   DelegateAnimator(QAbstractItemView *view);
 
-  void push(const QModelIndex &index) { m_animations.insert(Animation(index)); }
-  void pop(const QModelIndex &index) { m_animations.remove(Animation(index)); }
+  void push(const QModelIndex &index) {
+    if (m_animations.isEmpty())
+      m_timerId = startTimer(200);
+    m_animations.insert(Animation(index));
+  }
+  void pop(const QModelIndex &index) {
+    m_animations.remove(Animation(index));
+    if (m_animations.isEmpty())
+      killTimer(m_timerId);
+  }
 
   QPixmap sequenceFrame(const QModelIndex &index);
 

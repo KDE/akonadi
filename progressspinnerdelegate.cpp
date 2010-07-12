@@ -29,10 +29,8 @@
 using namespace Akonadi;
 
 DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
-  : QObject(view), m_view(view)
+  : QObject(view), m_view(view), m_timerId(-1)
 {
-  m_timerId = startTimer(40);
-
   m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
 }
 
