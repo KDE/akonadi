@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef PROGESSSPINNERDELEGATE_P_H
-#define PROGESSSPINNERDELEGATE_P_H
+#ifndef PROGRESSSPINNERDELEGATE_P_H
+#define PROGRESSSPINNERDELEGATE_P_H
 
 #include <QStyledItemDelegate>
 #include <QSet>
@@ -35,8 +35,16 @@ class DelegateAnimator : public QObject
 public:
   DelegateAnimator(QAbstractItemView *view);
 
-  void push(const QModelIndex &index) { m_animations.insert(Animation(index)); }
-  void pop(const QModelIndex &index) { m_animations.remove(Animation(index)); }
+  void push(const QModelIndex &index) {
+    if (m_animations.isEmpty())
+      m_timerId = startTimer(200);
+    m_animations.insert(Animation(index));
+  }
+  void pop(const QModelIndex &index) {
+    m_animations.remove(Animation(index));
+    if (m_animations.isEmpty())
+      killTimer(m_timerId);
+  }
 
   QPixmap sequenceFrame(const QModelIndex &index);
 
@@ -72,11 +80,11 @@ uint qHash(Akonadi::DelegateAnimator::Animation anim);
 /**
  *
  */
-class ProgessSpinnerDelegate : public QStyledItemDelegate
+class ProgressSpinnerDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 public:
-  ProgessSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
+  ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
 
 protected:
   virtual void initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const;
