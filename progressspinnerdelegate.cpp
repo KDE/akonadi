@@ -66,13 +66,13 @@ QPixmap DelegateAnimator::sequenceFrame(const QModelIndex& index)
 }
 
 
-ProgessSpinnerDelegate::ProgessSpinnerDelegate(DelegateAnimator *animator, QObject* parent)
+ProgressSpinnerDelegate::ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent)
   : QStyledItemDelegate(parent), m_animator(animator)
 {
 
 }
 
-void ProgessSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const
+void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const
 {
   QStyledItemDelegate::initStyleOption(option, index);
 

@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef PROGESSSPINNERDELEGATE_P_H
-#define PROGESSSPINNERDELEGATE_P_H
+#ifndef PROGRESSSPINNERDELEGATE_P_H
+#define PROGRESSSPINNERDELEGATE_P_H
 
 #include <QStyledItemDelegate>
 #include <QSet>
@@ -72,11 +72,11 @@ uint qHash(Akonadi::DelegateAnimator::Animation anim);
 /**
  *
  */
-class ProgessSpinnerDelegate : public QStyledItemDelegate
+class ProgressSpinnerDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 public:
-  ProgessSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
+  ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
 
 protected:
   virtual void initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const;

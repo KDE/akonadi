@@ -83,7 +83,7 @@ void EntityListView::Private::init()
                     mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
 
   DelegateAnimator *animator = new DelegateAnimator(mParent);
-  ProgessSpinnerDelegate *customDelegate = new ProgessSpinnerDelegate(animator, mParent);
+  ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
   mParent->setItemDelegate(customDelegate);
 
   Control::widgetNeedsAkonadi( mParent );
