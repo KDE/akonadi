@@ -174,7 +174,14 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   <xsl:for-each select="column">
     (query.isNull(<xsl:value-of select="position() - 1"/>)) ?
       <xsl:value-of select="@type"/>() :
+      <xsl:choose>
+        <xsl:when test="starts-with(@type,'QString')">
+      QString::fromUtf8( query.value( <xsl:value-of select="position() - 1"/> ).toByteArray() )
+        </xsl:when>
+        <xsl:otherwise>
       query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
+        </xsl:otherwise>
+      </xsl:choose>
     <xsl:if test="position() != last()">,</xsl:if>
   </xsl:for-each>
   );

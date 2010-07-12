@@ -108,4 +108,21 @@
     ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
     ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
   </update>
+
+  <!-- change all string based columns to use BINARY flag, this makes the comparison operator
+       finally work -->
+  <update version="17" abortOnFailure="false">
+    ALTER TABLE ResourceTable CHANGE name name VARCHAR(255) BINARY UNIQUE;
+    ALTER TABLE CollectionTable CHANGE remoteId remoteId VARCHAR(255) BINARY;
+    ALTER TABLE CollectionTable CHANGE remoteRevision remoteRevision VARCHAR(255) BINARY;
+    ALTER TABLE CollectionTable CHANGE name name VARCHAR(255) BINARY;
+    ALTER TABLE CollectionTable CHANGE cachePolicyLocalParts cachePolicyLocalParts VARCHAR(255) BINARY;
+    ALTER TABLE CollectionTable CHANGE queryString queryString VARCHAR(255) BINARY;
+    ALTER TABLE CollectionTable CHANGE queryLanguage queryLanguage VARCHAR(255) BINARY;
+    ALTER TABLE MimeTypeTable CHANGE name name VARCHAR(255) BINARY UNIQUE;
+    ALTER TABLE PimItemTable CHANGE remoteId remoteId VARCHAR(255) BINARY;
+    ALTER TABLE PimItemTable CHANGE remoteRevision remoteRevision VARCHAR(255) BINARY;
+    ALTER TABLE FlagTable CHANGE name name VARCHAR(255) BINARY UNIQUE;
+    ALTER TABLE PartTable CHANGE name name VARCHAR(255) BINARY;
+  </update>
 </updates>

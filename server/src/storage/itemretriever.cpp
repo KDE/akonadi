@@ -189,9 +189,9 @@ void ItemRetriever::exec()
     if ( !lastRequest || lastRequest->id != pimItemId ) {
       lastRequest = new ItemRetrievalRequest();
       lastRequest->id = pimItemId;
-      lastRequest->remoteId = query.value( PimItemRidColumn ).toString().toUtf8();
-      lastRequest->mimeType = query.value( MimeTypeColumn ).toString().toUtf8();
-      lastRequest->resourceId = query.value( ResourceColumn ).toString();
+      lastRequest->remoteId = query.value( PimItemRidColumn ).toByteArray();
+      lastRequest->mimeType = query.value( MimeTypeColumn ).toByteArray();
+      lastRequest->resourceId = QString::fromUtf8( query.value( ResourceColumn ).toByteArray() );
       lastRequest->parts = parts;
       requests << lastRequest;
     }
@@ -203,7 +203,7 @@ void ItemRetriever::exec()
     }
 
     qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
-    QString partName = query.value( PartNameColumn ).toString();
+    QString partName = QString::fromUtf8( query.value( PartNameColumn ).toByteArray() );
     Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
     partName = partName.mid( 4 );
     if ( datasize <= 0 ) {
