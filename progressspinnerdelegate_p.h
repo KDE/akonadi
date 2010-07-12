@@ -42,7 +42,7 @@ public:
   }
   void pop(const QModelIndex &index) {
     m_animations.remove(Animation(index));
-    if (m_animations.isEmpty())
+    if (m_animations.isEmpty() && m_timerId != -1)
       killTimer(m_timerId);
   }
 
@@ -69,10 +69,10 @@ protected:
 
 private:
 
-  int m_timerId;
   mutable QSet<Animation> m_animations;
   QAbstractItemView *m_view;
   KPixmapSequence m_pixmapSequence;
+  int m_timerId;
 };
 
 uint qHash(Akonadi::DelegateAnimator::Animation anim);
