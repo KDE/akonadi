@@ -27,6 +27,14 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database, const QStri
 {
 }
 
+QString DbInitializerMySql::sqlType(const QString & type) const
+{
+  if ( type == QLatin1String( "QString" ) )
+    return QLatin1String( "VARCHAR(255) BINARY" );
+  else
+    return DbInitializer::sqlType( type );
+}
+
 QString DbInitializerMySql::hasIndexQuery(const QString& tableName, const QString& indexName)
 {
   return QString::fromLatin1( "SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'" )

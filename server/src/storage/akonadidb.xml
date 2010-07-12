@@ -72,7 +72,7 @@
 
   <table name="Resource">
     <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY UNIQUE"/>
+    <column name="name" type="QString" allowNull="false" properties="UNIQUE"/>
     <column name="isVirtual" type="bool" default="false"/>
     <reference name="collections" table="Collection" key="resourceId"/>
     <data columns="name,isVirtual" values="'akonadi_search_resource',true"/>
@@ -80,8 +80,8 @@
 
   <table name="Collection">
     <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
-    <column name="remoteId" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
-    <column name="remoteRevision" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
+    <column name="remoteId" type="QString"/>
+    <column name="remoteRevision" type="QString"/>
     <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY character set utf8 collate utf8_bin"/>
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT NULL"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
@@ -90,9 +90,9 @@
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicySyncOnDemand" type="bool" default="false" allowNull="false"/>
-    <column name="cachePolicyLocalParts" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
-    <column name="queryString" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
-    <column name="queryLanguage" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
+    <column name="cachePolicyLocalParts" type="QString"/>
+    <column name="queryString" type="QString"/>
+    <column name="queryLanguage" type="QString"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
     <reference name="children" table="Collection" key="parentId"/>
     <reference name="items" table="PimItem" key="collectionId"/>
@@ -103,7 +103,7 @@
   <table name="MimeType">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" allowNull="false" properties="PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY UNIQUE"/>
+    <column name="name" type="QString" allowNull="false" properties="UNIQUE"/>
     <data columns="name" values="'application/octet-stream'"/>
     <data columns="name" values="'message/rfc822'"/>
     <data columns="name" values="'text/calendar'"/>
@@ -114,8 +114,8 @@
   <table name="PimItem">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="rev" type="int" default="0" allowNull="false"/>
-    <column name="remoteId" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
-    <column name="remoteRevision" type="QString" sqltype="VARCHAR(255)" properties="BINARY"/>
+    <column name="remoteId" type="QString"/>
+    <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id"/>
     <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
@@ -135,7 +135,7 @@
   <table name="Flag">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY UNIQUE"/>
+    <column name="name" type="QString" allowNull="false" properties="UNIQUE"/>
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
     <data columns="name" values="'spam'"/>
@@ -149,7 +149,7 @@
   <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
     <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY"/>
+    <column name="name" type="QString" allowNull="false"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>

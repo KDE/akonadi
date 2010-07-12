@@ -28,6 +28,7 @@ class DbInitializerMySql : public DbInitializer
   public:
     DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile);
   protected:
+    QString sqlType(const QString& type) const;
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
 };
 
