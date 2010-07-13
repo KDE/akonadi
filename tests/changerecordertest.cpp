@@ -129,8 +129,8 @@ class ChangeRecorderTest : public QObject
       QCOMPARE( changedSpy.count(), 0 );
 
       // Give it something to replay
-      triggerChange( 1 );
-      QTest::qWait( 500 ); // enter event loop and wait for change notifications from the server
+      triggerChange( 2 );
+      QTest::kWaitForSignal( &recorder, SIGNAL(changesAdded()), 1000 );
       recorder.replayNext();
       QTest::kWaitForSignal( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
       QCOMPARE( nothingSpy.count(), 1 );
