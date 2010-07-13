@@ -97,9 +97,10 @@ class ItemsyncTest : public QObject
         Item::List l;
         l << origItems[i];
         syncer->setFullSyncItems( l );
-        if ( i < origItems.count() - 1 )
+        if ( i < origItems.count() - 1 ) {
           QTest::qWait( 10 ); // enter the event loop so itemsync actually can do something
-        QCOMPARE( spy.count(), 0 );
+          QCOMPARE( spy.count(), 0 );
+        }
       }
       QTest::qWait( 1000 ); // let it finish its job
       QCOMPARE( spy.count(), 1 );

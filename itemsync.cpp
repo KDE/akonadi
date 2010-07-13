@@ -53,7 +53,8 @@ class ItemSync::Private
       mStreaming( false ),
       mIncremental( false ),
       mLocalListDone( false ),
-      mDeliveryDone( false )
+      mDeliveryDone( false ),
+      mFinished( false )
     {
       // we want to fetch all data by default
       mFetchScope.fetchFullPayload();
@@ -106,6 +107,7 @@ class ItemSync::Private
     bool mIncremental;
     bool mLocalListDone;
     bool mDeliveryDone;
+    bool mFinished;
 };
 
 void ItemSync::Private::createLocalItem( const Item & item )
@@ -124,7 +126,10 @@ void ItemSync::Private::checkDone()
   if ( mPendingJobs > 0 || !mDeliveryDone || mTransactionJobs > 0 )
     return;
 
-  q->emitResult();
+  if ( !mFinished ) { // prevent double result emission, can happen since checkDone() is called from all over the place
+    mFinished = true;
+    q->emitResult();
+  }
 }
 
 ItemSync::ItemSync( const Collection &collection, QObject *parent ) :
