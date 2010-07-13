@@ -1,0 +1,4 @@
+CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTOINCREMENT INTEGER PRIMARY KEY,
+                                       collectionId BIGINT NOT NULL,
+                                       type LONGBLOB NOT NULL,
+                                       value LONGBLOB)

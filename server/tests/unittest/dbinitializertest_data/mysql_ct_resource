@@ -1,0 +1,4 @@
+CREATE TABLE ResourceTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                            name VARCHAR(255) BINARY NOT NULL UNIQUE,
+                            isVirtual BOOL DEFAULT false)
+                            COLLATE=utf8_general_ci DEFAULT CHARSET=utf8

@@ -20,12 +20,20 @@
 #ifndef DBINITIALIZER_H
 #define DBINITIALIZER_H
 
+#include <QtCore/QPair>
 #include <QtCore/QString>
 #include <QtSql/QSqlDatabase>
 
 #include <boost/shared_ptr.hpp>
 
 class QDomElement;
+
+class DebugInterface
+{
+  public:
+    virtual ~DebugInterface() {};
+    virtual void createTableStatement( const QString &tableName, const QString &statement ) = 0;
+};
 
 /**
  * A helper class which takes a reference to a database object and
@@ -84,15 +92,27 @@ class DbInitializer
     */
     virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
 
+    /**
+     * Sets the debug @p interface that shall be used.
+     * @note If an interface is set, no database operations will be executed.
+     */
+    void setDebugInterface( DebugInterface *interface );
+
   private:
+    friend class DbInitializerTest;
+
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );
 
     bool hasTable( const QString &tableName );
 
+    typedef QPair<QString, QString> ColumnEntry;
+    QString createTableStatement( const QDomElement&, QVector<ColumnEntry>&, QStringList& );
+
     QSqlDatabase mDatabase;
     QString mTemplateFile;
     QString mErrorMsg;
+    DebugInterface *mDebugInterface;
 };
 
 #endif

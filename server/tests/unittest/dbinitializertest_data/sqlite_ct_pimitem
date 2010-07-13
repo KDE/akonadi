@@ -1,0 +1,10 @@
+CREATE TABLE PimItemTable (id BIGINT NOT NULL AUTOINCREMENT INTEGER PRIMARY KEY,
+                           rev INTEGER NOT NULL DEFAULT 0,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
+                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           atime TIMESTAMP,
+                           dirty BOOL,
+                           size BIGINT NOT NULL DEFAULT 0)

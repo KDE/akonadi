@@ -1,0 +1,4 @@
+CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY AUTOINCREMENT PRIMARY KEY,
+                                       collectionId BIGINT NOT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                       type LONG VARCHAR NOT NULL,
+                                       value LONG VARCHAR)

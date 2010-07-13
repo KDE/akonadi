@@ -52,7 +52,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, c
 }
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
-  : mDatabase( database ), mTemplateFile( templateFile )
+  : mDatabase( database ), mTemplateFile( templateFile ), mDebugInterface( 0 )
 {
 }
 
@@ -106,18 +106,11 @@ bool DbInitializer::run()
   return true;
 }
 
-bool DbInitializer::checkTable( const QDomElement &element )
+QString DbInitializer::createTableStatement( const QDomElement &tableElement, QVector<ColumnEntry> &columnsList, QStringList &dataList )
 {
-  const QString tableName = element.attribute( QLatin1String("name") ) + QLatin1String("Table");
+  const QString tableName = tableElement.attribute( QLatin1String("name") ) + QLatin1String("Table");
 
-  qDebug() << "checking table " << tableName;
-
-  typedef QPair<QString, QString> ColumnEntry;
-
-  QVector<ColumnEntry> columnsList;
-  QStringList dataList;
-
-  QDomElement columnElement = element.firstChildElement();
+  QDomElement columnElement = tableElement.firstChildElement();
   while ( !columnElement.isNull() ) {
     if ( columnElement.tagName() == QLatin1String( "column" ) ) {
       ColumnEntry entry;
@@ -157,7 +150,6 @@ bool DbInitializer::checkTable( const QDomElement &element )
         if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
           props.remove(QLatin1String("character set utf8 collate utf8_bin"));
       }
-      entry.second += QLatin1String(" ") + props;
       // special cases for virtuoso
       if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
         if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
@@ -226,6 +218,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
         if ( entry.second.contains( QLatin1String("CURRENT_TIMESTAMP") ) )
           entry.second.remove(QLatin1String("DEFAULT CURRENT_TIMESTAMP") ); 
       }
+      entry.second += QLatin1String(" ") + props;
 
       if ( !columnElement.attribute( QLatin1String( "refTable" ) ).isEmpty()
         && !columnElement.attribute( QLatin1String( "refColumn" ) ).isEmpty() )
@@ -266,36 +259,53 @@ bool DbInitializer::checkTable( const QDomElement &element )
     columnElement = columnElement.nextSiblingElement();
   }
 
+  QString columns;
+  for ( int i = 0; i < columnsList.count(); ++i ) {
+    if ( i != 0 )
+      columns.append( QLatin1String(", ") );
+
+    columns.append( columnsList[ i ].first + QLatin1Char(' ') + columnsList[ i ].second );
+  }
+
+  /**
+   * Add optional extra table properties (such as foreign keys and cascaded updates/deletes)
+   */
+  if( tableElement.hasAttribute( QLatin1String("properties") ) )
+    columns.append( QLatin1String(", ") + tableElement.attribute( QLatin1String("properties") ) );
+
+  QString tableProperties;
+  if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
+    tableProperties += QLatin1String( " COLLATE=utf8_general_ci" );
+    tableProperties += QLatin1String( " DEFAULT CHARSET=utf8" );
+  }
+
+  const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3" ).arg( tableName, columns, tableProperties );
+
+  return statement;
+}
+
+bool DbInitializer::checkTable( const QDomElement &element )
+{
+  const QString tableName = element.attribute( QLatin1String("name") ) + QLatin1String("Table");
+
+  qDebug() << "checking table " << tableName;
+
+  QVector<ColumnEntry> columnsList;
+  QStringList dataList;
+
+  const QString statement = createTableStatement( element, columnsList, dataList );
+  mDebugInterface->createTableStatement( tableName, statement );
+
+  if ( mDebugInterface )
+    return true;
+
   QSqlQuery query( mDatabase );
 
   if ( !hasTable( tableName ) ) {
     /**
      * We have to create the entire table.
      */
-
-    QString columns;
-    for ( int i = 0; i < columnsList.count(); ++i ) {
-      if ( i != 0 )
-        columns.append( QLatin1String(", ") );
-
-      columns.append( columnsList[ i ].first + QLatin1Char(' ') + columnsList[ i ].second );
-    }
-
-    /**
-     * Add optional extra table properties (such as foreign keys and cascaded updates/deletes)
-     */
-    if( element.hasAttribute( QLatin1String("properties") ) )
-      columns.append( QLatin1String(", ") + element.attribute( QLatin1String("properties") ) );
-
-    QString tableProperties;
-    if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-      tableProperties += QLatin1String( " COLLATE=utf8_general_ci" );
-      tableProperties += QLatin1String( " DEFAULT CHARSET=utf8" );
-    }
-
-    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3" ).arg( tableName, columns, tableProperties );
     qDebug() << statement;
-
     if ( !query.exec( statement ) ) {
       mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
       mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
@@ -339,7 +349,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   }
 
   // add indices
-  columnElement = element.firstChildElement();
+  QDomElement columnElement = element.firstChildElement();
   while ( !columnElement.isNull() ) {
     if ( columnElement.tagName() == QLatin1String( "index" ) ) {
       QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( columnElement.attribute( QLatin1String("name") ) ); // sqlite3 needs unique index identifiers per db
@@ -402,6 +412,9 @@ bool DbInitializer::checkRelation(const QDomElement & element)
 
   QString tableName = table1 + table2 + QLatin1String("Relation");
   qDebug() << "checking relation " << tableName;
+
+  if ( mDebugInterface )
+    return true;
 
   QString columnOptions;
   // ### for MySQL as well?
@@ -486,4 +499,9 @@ QString DbInitializer::hasIndexQuery(const QString& tableName, const QString& in
   Q_UNUSED( indexName );
   qFatal( "Implement index support for your database!" );
   return QString();
+}
+
+void DbInitializer::setDebugInterface( DebugInterface *interface )
+{
+  mDebugInterface = interface;
 }

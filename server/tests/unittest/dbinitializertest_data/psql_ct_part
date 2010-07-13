@@ -1,0 +1,8 @@
+CREATE TABLE PartTable (id int8 NOT NULL SERIAL PRIMARY KEY,
+                        pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                        name TEXT NOT NULL,
+                        data BYTEA,
+                        datasize int8 NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        external BOOL DEFAULT false,
+                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE)

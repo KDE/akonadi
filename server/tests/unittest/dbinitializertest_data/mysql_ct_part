@@ -1,0 +1,9 @@
+CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                        pimItemId BIGINT NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                        name VARCHAR(255) BINARY NOT NULL,
+                        data LONGBLOB,
+                        datasize BIGINT NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        external BOOL DEFAULT false,
+                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
+                        COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
