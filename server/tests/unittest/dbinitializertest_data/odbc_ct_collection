@@ -1,4 +1,4 @@
-CREATE TABLE CollectionTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY AUTOINCREMENT PRIMARY KEY,
+CREATE TABLE CollectionTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                               remoteId VARCHAR(255),
                               remoteRevision VARCHAR(255),
                               name VARCHAR(255) BINARY character set utf8 collate utf8_bin NOT NULL,

@@ -1,4 +1,4 @@
-CREATE TABLE PimItemTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY AUTOINCREMENT PRIMARY KEY,
+CREATE TABLE PimItemTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId VARCHAR(255),
                            remoteRevision VARCHAR(255),

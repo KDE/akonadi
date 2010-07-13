@@ -162,8 +162,15 @@ QString DbInitializer::createTableStatement( const QDomElement &tableElement, QV
             props.append( QLatin1Char( ' ' ) );
           props.append( QLatin1String( "PRIMARY KEY" ) );
         }
-        if ( entry.second.contains( QLatin1String("BINARY") ) )
+        if ( entry.second.contains( QLatin1String("BINARY") ) ) {
           entry.second.remove(QLatin1String("BINARY"));
+        }
+        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
+          entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
+        }
+        // virtuoso does not support default on timestamp and identity
+        if ( entry.second.contains( QLatin1String("CURRENT_TIMESTAMP") ) )
+          entry.second.remove(QLatin1String("DEFAULT CURRENT_TIMESTAMP") ); 
       }
       // special cases for PostgreSQL
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
@@ -198,25 +205,6 @@ QString DbInitializer::createTableStatement( const QDomElement &tableElement, QV
         }
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-      }
-      // special cases for Virtuoso
-      else if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
-        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
-          if ( !props.isEmpty() )
-            props.append( QLatin1Char( ' ' ) );
-          props.append( QLatin1String( "AUTOINCREMENT" ) );
-        }
-        if ( columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
-          if ( !props.isEmpty() )
-            props.append( QLatin1Char( ' ' ) );
-          props.append( QLatin1String( "PRIMARY KEY" ) );
-        }
-        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
-          entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
-        }
-        // virtuoso does not support default on timestamp and identity
-        if ( entry.second.contains( QLatin1String("CURRENT_TIMESTAMP") ) )
-          entry.second.remove(QLatin1String("DEFAULT CURRENT_TIMESTAMP") ); 
       }
       entry.second += QLatin1String(" ") + props;
 
