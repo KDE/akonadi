@@ -335,8 +335,8 @@ void ItemStoreTest::testModificationTime()
   item2 = fjob->items().first();
   QCOMPARE( initialDateTime, item2.modificationTime() );
 
-  // Lets wait half a second.
-  QTest::qWait( 500 );
+  // Lets wait at least a second, which is the resolution of mtime
+  QTest::qWait( 1000 );
 
   // Modify the item
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
