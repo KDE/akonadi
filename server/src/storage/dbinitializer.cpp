@@ -133,12 +133,25 @@ bool DbInitializer::checkTable( const QDomElement &element )
           props.append( QLatin1Char( ' ' ) );
         props.append( QLatin1String( "NOT NULL" ) );
       }
+      if ( columnElement.attribute( QLatin1String( "isUnique" ) ) == QLatin1String( "true" ) ) {
+        if ( !props.isEmpty() )
+          props.append( QLatin1Char( ' ' ) );
+        props.append( QLatin1String( "UNIQUE" ) );
+      }
 
       // TODO: we need a nicer way for this...
       // special cases for sqlite
       if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-        if ( props.contains(QLatin1String("PRIMARY KEY")) && entry.second == QLatin1String("BIGINT") )
-            entry.second = QLatin1String("INTEGER");
+        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "AUTOINCREMENT" ) );
+        }
+        if ( columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "INTEGER PRIMARY KEY" ) );
+        }
         if ( props.contains(QLatin1String("BINARY")) && !props.contains(QLatin1String("COLLATE BINARY")) )
           props.replace(QLatin1String("BINARY"), QLatin1String("COLLATE BINARY"));
         if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
@@ -147,15 +160,27 @@ bool DbInitializer::checkTable( const QDomElement &element )
       entry.second += QLatin1String(" ") + props;
       // special cases for virtuoso
       if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
-        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("IDENTITY"));
+        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "IDENTITY" ) );
+        }
+        if ( columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "PRIMARY KEY" ) );
+        }
         if ( entry.second.contains( QLatin1String("BINARY") ) )
           entry.second.remove(QLatin1String("BINARY"));
       }
       // special cases for PostgreSQL
       if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
-        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second = QLatin1String("SERIAL PRIMARY KEY");
+        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) &&
+             columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "SERIAL PRIMARY KEY" ) );
+        }
         if ( entry.second.contains( QLatin1String("BLOB") ) )
           entry.second = QLatin1String("BYTEA");
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
@@ -169,13 +194,31 @@ bool DbInitializer::checkTable( const QDomElement &element )
       }
       // special cases for MySQL
       else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
+        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "AUTO_INCREMENT" ) );
+        }
+        if ( columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "PRIMARY KEY" ) );
+        }
         if ( entry.second.startsWith( QLatin1String("CHAR") ) )
           entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
       }
       // special cases for Virtuoso
       else if ( mDatabase.driverName().startsWith( QLatin1String("QODBC") ) ) {
+        if ( columnElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "AUTOINCREMENT" ) );
+        }
+        if ( columnElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ) ) {
+          if ( !props.isEmpty() )
+            props.append( QLatin1Char( ' ' ) );
+          props.append( QLatin1String( "PRIMARY KEY" ) );
+        }
         if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
           entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
         }
