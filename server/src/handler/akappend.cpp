@@ -225,6 +225,7 @@ bool AkAppend::parseStream()
     part.setData( allParts.mid( pos, partSpec.second.first ) );
     if ( partSpec.second.second != 0 )
       part.setVersion( partSpec.second.second );
+    part.setDatasize( partSpec.second.first );
     m_parts.append( part );
     pos += partSpec.second.first;
   }
