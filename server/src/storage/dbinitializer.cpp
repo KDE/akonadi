@@ -282,10 +282,11 @@ bool DbInitializer::checkTable( const QDomElement &element )
   QStringList dataList;
 
   const QString statement = createTableStatement( element, columnsList, dataList );
-  mDebugInterface->createTableStatement( tableName, statement );
 
-  if ( mDebugInterface )
+  if ( mDebugInterface ) {
+    mDebugInterface->createTableStatement( tableName, statement );
     return true;
+  }
 
   QSqlQuery query( mDatabase );
 
