@@ -113,7 +113,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   itemview.cpp
   job.cpp
-  kdescendantsproxymodel2.cpp
+  kdescendantsproxymodel.cpp
   kjobprivatebase.cpp
   krecursivefilterproxymodel.cpp
   linkjob.cpp
