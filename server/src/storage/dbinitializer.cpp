@@ -55,6 +55,9 @@ DbInitializer::TableDescription::TableDescription()
 {
 }
 
+DbInitializer::RelationDescription::RelationDescription()
+{
+}
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
@@ -183,6 +186,21 @@ DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDom
   return tableDescription;
 }
 
+DbInitializer::RelationDescription DbInitializer::parseRelationDescription( const QDomElement &element ) const
+{
+  RelationDescription relationDescription;
+
+  relationDescription.firstTable = element.attribute( QLatin1String( "table1" ) );
+  relationDescription.firstTableName = element.attribute( QLatin1String( "table1" ) ) + QLatin1String( "Table" );
+  relationDescription.firstColumn = element.attribute( QLatin1String( "column1" ) );
+
+  relationDescription.secondTable = element.attribute( QLatin1String( "table2" ) );
+  relationDescription.secondTableName = element.attribute( QLatin1String( "table2" ) ) + QLatin1String( "Table" );
+  relationDescription.secondColumn = element.attribute( QLatin1String( "column2" ) );
+
+  return relationDescription;
+}
+
 bool DbInitializer::checkTable( const QDomElement &element )
 {
   const QString tableName = element.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
@@ -198,6 +216,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
   QSqlQuery query( mDatabase );
 
   if ( !hasTable( tableName ) ) {
+    qDebug() << createTableStatement;
+
     // We have to create the entire table.
     if ( !query.exec( createTableStatement ) ) {
       mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
@@ -224,6 +244,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
+        qDebug() << statement;
 
         if ( !query.exec( statement ) ) {
           mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableName );
@@ -269,6 +290,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     foreach ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
       const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );
+      qDebug() << statement;
 
       if ( !query.exec( statement ) ) {
         mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableName );
@@ -282,38 +304,18 @@ bool DbInitializer::checkTable( const QDomElement &element )
   return true;
 }
 
-bool DbInitializer::checkRelation(const QDomElement & element)
+bool DbInitializer::checkRelation( const QDomElement &element )
 {
-  const QString table1 = element.attribute(QLatin1String("table1"));
-  const QString table1Name = table1 + QLatin1String( "Table" );
-  const QString table2 = element.attribute(QLatin1String("table2"));
-  const QString table2Name = table2 + QLatin1String ( "Table" );
-  const QString col1 = element.attribute(QLatin1String("column1"));
-  const QString col2 = element.attribute(QLatin1String("column2"));
+  const RelationDescription relationDescription = parseRelationDescription( element );
 
-  QString tableName = table1 + table2 + QLatin1String("Relation");
-  qDebug() << "checking relation " << tableName;
+  const QString relationTableName = relationDescription.firstTable +
+                                    relationDescription.secondTable +
+                                    QLatin1String( "Relation" );
 
-  QString columnOptions;
-  // ### for MySQL as well?
-  if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
-    columnOptions = QLatin1String( " ON DELETE CASCADE ON UPDATE CASCADE " );
+  qDebug() << "checking relation " << relationTableName;
 
-  if ( !hasTable( tableName ) ) {
-    QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-        .arg( table1  )
-        .arg( col1 )
-        .arg( table1Name )
-        .arg( col1 )
-        .arg( columnOptions );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-        .arg( table2 )
-        .arg( col2 )
-        .arg( table2Name )
-        .arg( col2 )
-        .arg( columnOptions ),
-    statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4))" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
+  if ( !hasTable( relationTableName ) ) {
+    const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
     qDebug() << statement;
 
     QSqlQuery query( mDatabase );
@@ -323,6 +325,7 @@ bool DbInitializer::checkRelation(const QDomElement & element)
       return false;
     }
   }
+
   return true;
 }
 
@@ -394,6 +397,31 @@ QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableD
                             .arg( indexName )
                             .arg( tableDescription.name )
                             .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
+}
+
+QString DbInitializer::buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const
+{
+  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
+
+  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
+      .arg( relationDescription.firstTable )
+      .arg( relationDescription.firstColumn )
+      .arg( relationDescription.firstTableName )
+      .arg( relationDescription.firstColumn );
+
+  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
+      .arg( relationDescription.secondTable )
+      .arg( relationDescription.secondColumn )
+      .arg( relationDescription.secondTableName )
+      .arg( relationDescription.secondColumn );
+
+  statement += QString::fromLatin1( "PRIMARY KEY (%1_%2, %3_%4))" )
+      .arg( relationDescription.firstTable )
+      .arg( relationDescription.firstColumn )
+      .arg( relationDescription.secondTable )
+      .arg( relationDescription.secondColumn );
+
+  return statement;
 }
 
 void DbInitializer::setDebugInterface( DebugInterface *interface )

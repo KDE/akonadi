@@ -132,6 +132,22 @@ class DbInitializer
     };
 
     /**
+     * @short A helper class that describes the relation between to tables for the DbInitializer
+     */
+    class RelationDescription
+    {
+      public:
+        RelationDescription();
+
+        QString firstTable;
+        QString firstTableName;
+        QString firstColumn;
+        QString secondTable;
+        QString secondTableName;
+        QString secondColumn;
+    };
+
+    /**
      * Creates a new database initializer.
      *
      * @param database The reference to the database.
@@ -158,6 +174,7 @@ class DbInitializer
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
+    virtual QString buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const;
 
   private:
     friend class DbInitializerTest;
@@ -181,6 +198,7 @@ class DbInitializer
     bool hasTable( const QString &tableName );
 
     TableDescription parseTableDescription( const QDomElement& ) const;
+    RelationDescription parseRelationDescription( const QDomElement& ) const;
 
     QSqlDatabase mDatabase;
     QString mTemplateFile;
