@@ -4,5 +4,4 @@ CREATE TABLE PartTable (id BIGINT NOT NULL AUTOINCREMENT INTEGER PRIMARY KEY,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
-                        external BOOL DEFAULT false,
-                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
+                        external BOOL DEFAULT false)

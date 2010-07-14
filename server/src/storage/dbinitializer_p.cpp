@@ -41,6 +41,72 @@ QString DbInitializerMySql::hasIndexQuery(const QString& tableName, const QStrin
       .arg( tableName ).arg( indexName );
 }
 
+QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &tableDescription ) const
+{
+  QStringList columns;
+  QStringList references;
+
+  foreach ( const ColumnDescription &columnDescription, tableDescription.columns ) {
+    columns.append( buildColumnStatement( columnDescription ) );
+
+    if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
+      references << QString::fromLatin1( "FOREIGN KEY (%1) REFERENCES %2Table(%3) ON DELETE CASCADE ON UPDATE CASCADE" )
+                                       .arg( columnDescription.name )
+                                       .arg( columnDescription.refTable )
+                                       .arg( columnDescription.refColumn );
+    }
+  }
+
+  columns << references;
+
+  const QString tableProperties = QLatin1String( " COLLATE=utf8_general_ci DEFAULT CHARSET=utf8" );
+
+  return QString::fromLatin1( "CREATE TABLE %1 (%2) %3" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ), tableProperties );
+}
+
+QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &columnDescription ) const
+{
+  QString column = columnDescription.name;
+
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+
+  if ( !columnDescription.allowNull )
+    column += QLatin1String( " NOT NULL" );
+
+  if ( columnDescription.isAutoIncrement )
+    column += QLatin1String( " AUTO_INCREMENT" );
+
+  if ( columnDescription.isPrimaryKey )
+    column += QLatin1String( " PRIMARY KEY" );
+
+  if ( columnDescription.isUnique )
+    column += QLatin1String( " UNIQUE" );
+
+  if ( !columnDescription.defaultValue.isEmpty() ) {
+    const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
+
+    if ( !defaultValue.isEmpty() )
+      column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+  }
+
+  return column;
+}
+
+QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
+{
+  QHash<QString, QString> data = dataDescription.data;
+  QMutableHashIterator<QString, QString> it( data );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value().replace( QLatin1String("\\"), QLatin1String("\\\\") );
+  }
+
+  return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
+                            .arg( tableDescription.name )
+                            .arg( QStringList( data.keys() ).join( QLatin1String( "," ) ) )
+                            .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
+}
+
 //END MySQL
 
 
@@ -55,6 +121,60 @@ DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database, const QSt
 QString DbInitializerSqlite::hasIndexQuery(const QString& tableName, const QString& indexName)
 {
   return QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
+}
+
+QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &tableDescription ) const
+{
+  QStringList columns;
+
+  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+    columns.append( buildColumnStatement( columnDescription ) );
+
+  return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
+}
+
+QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &columnDescription ) const
+{
+  QString column = columnDescription.name;
+
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+
+  if ( !columnDescription.allowNull )
+    column += QLatin1String( " NOT NULL" );
+
+  if ( columnDescription.isAutoIncrement )
+    column += QLatin1String( " AUTOINCREMENT" );
+
+  if ( columnDescription.isPrimaryKey )
+    column += QLatin1String( " INTEGER PRIMARY KEY" );
+
+  if ( columnDescription.isUnique )
+    column += QLatin1String( " UNIQUE" );
+
+  if ( !columnDescription.defaultValue.isEmpty() ) {
+    const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
+
+    if ( !defaultValue.isEmpty() )
+      column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+  }
+
+  return column;
+}
+
+QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
+{
+  QHash<QString, QString> data = dataDescription.data;
+  QMutableHashIterator<QString, QString> it( data );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value().replace( QLatin1String( "true" ), QLatin1String( "1" ) );
+    it.value().replace( QLatin1String( "false" ), QLatin1String( "0" ) );
+  }
+
+  return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
+                            .arg( tableDescription.name )
+                            .arg( QStringList( data.keys() ).join( QLatin1String( "," ) ) )
+                            .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
 
 //END Sqlite
@@ -85,6 +205,54 @@ QString DbInitializerPostgreSql::hasIndexQuery(const QString& tableName, const Q
   return query;
 }
 
+QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescription &tableDescription ) const
+{
+  QStringList columns;
+
+  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+    columns.append( buildColumnStatement( columnDescription ) );
+
+  return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
+}
+
+QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &columnDescription ) const
+{
+  QString column = columnDescription.name;
+
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+
+  if ( !columnDescription.allowNull )
+    column += QLatin1String( " NOT NULL" );
+
+  if ( columnDescription.isPrimaryKey && columnDescription.isAutoIncrement )
+    column += QLatin1String( " SERIAL PRIMARY KEY" );
+
+  if ( columnDescription.isUnique )
+    column += QLatin1String( " UNIQUE" );
+
+  if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
+    column += QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
+                                 .arg( columnDescription.refTable )
+                                 .arg( columnDescription.refColumn );
+  }
+
+  if ( !columnDescription.defaultValue.isEmpty() ) {
+    const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
+
+    if ( !defaultValue.isEmpty() )
+      column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+  }
+
+  return column;
+}
+
+QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
+{
+  return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
+                            .arg( tableDescription.name )
+                            .arg( QStringList( dataDescription.data.keys() ).join( QLatin1String( "," ) ) )
+                            .arg( QStringList( dataDescription.data.values() ).join( QLatin1String( "," ) ) );
+}
 
 //END PostgreSQL
 
@@ -123,5 +291,64 @@ bool DbInitializerVirtuoso::hasIndex(const QString& tableName, const QString& in
   return true;
 }
 
-//END Virtuoso
+QString DbInitializerVirtuoso::buildCreateTableStatement( const TableDescription &tableDescription ) const
+{
+  QStringList columns;
 
+  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+    columns.append( buildColumnStatement( columnDescription ) );
+
+  return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
+}
+
+QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &columnDescription ) const
+{
+  QString column = columnDescription.name;
+
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+
+  if ( !columnDescription.allowNull )
+    column += QLatin1String( " NOT NULL" );
+
+  if ( columnDescription.isAutoIncrement )
+    column += QLatin1String( " IDENTITY" );
+
+  if ( columnDescription.isPrimaryKey )
+    column += QLatin1String( " PRIMARY KEY" );
+
+  if ( columnDescription.isUnique )
+    column += QLatin1String( " UNIQUE" );
+
+  if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
+    column += QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
+                                 .arg( columnDescription.refTable )
+                                 .arg( columnDescription.refColumn );
+  }
+
+  if ( !columnDescription.defaultValue.isEmpty() ) {
+    const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
+
+    if ( !defaultValue.isEmpty() && (defaultValue != QLatin1String( "CURRENT_TIMESTAMP" )) )
+      column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+  }
+
+  return column;
+}
+
+QString DbInitializerVirtuoso::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
+{
+  QHash<QString, QString> data = dataDescription.data;
+  QMutableHashIterator<QString, QString> it( data );
+  while ( it.hasNext() ) {
+    it.next();
+    it.value().replace( QLatin1String( "true" ), QLatin1String( "1" ) );
+    it.value().replace( QLatin1String( "false" ), QLatin1String( "0" ) );
+  }
+
+  return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
+                            .arg( tableDescription.name )
+                            .arg( QStringList( data.keys() ).join( QLatin1String( "," ) ) )
+                            .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
+}
+
+//END Virtuoso

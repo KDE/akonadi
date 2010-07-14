@@ -30,6 +30,10 @@ class DbInitializerMySql : public DbInitializer
   protected:
     QString sqlType(const QString& type) const;
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
+
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
 class DbInitializerSqlite : public DbInitializer
@@ -38,6 +42,10 @@ class DbInitializerSqlite : public DbInitializer
     DbInitializerSqlite( const QSqlDatabase& database, const QString& templateFile);
   protected:
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
+
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
 class DbInitializerPostgreSql : public DbInitializer
@@ -47,6 +55,10 @@ class DbInitializerPostgreSql : public DbInitializer
   protected:
     QString sqlType(const QString& type) const;
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
+
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
 class DbInitializerVirtuoso : public DbInitializer
@@ -57,6 +69,10 @@ class DbInitializerVirtuoso : public DbInitializer
     QString sqlType(const QString& type) const;
     QString sqlValue(const QString& type, const QString& value) const;
     bool hasIndex(const QString& tableName, const QString& indexName);
+
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
 #endif

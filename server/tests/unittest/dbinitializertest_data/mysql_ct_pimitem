@@ -2,10 +2,12 @@ CREATE TABLE PimItemTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId VARCHAR(255) BINARY,
                            remoteRevision VARCHAR(255) BINARY,
-                           collectionId BIGINT REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                           mimeTypeId BIGINT REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            atime TIMESTAMP,
                            dirty BOOL,
-                           size BIGINT NOT NULL DEFAULT 0)
+                           size BIGINT NOT NULL DEFAULT 0,
+                           FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                           FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
                            COLLATE=utf8_general_ci DEFAULT CHARSET=utf8

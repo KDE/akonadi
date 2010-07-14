@@ -1,5 +1,5 @@
 CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        pimItemId BIGINT NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                        pimItemId BIGINT NOT NULL,
                         name VARCHAR(255) BINARY NOT NULL,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,

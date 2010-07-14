@@ -45,7 +45,7 @@ void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier
 
   Debugger *debugger = new Debugger;
   initializer->setDebugInterface( debugger );
-  initializer->run();
+  initializer->unitTestRun();
 
   QHashIterator<QString, QString> it( debugger->hash );
   while ( it.hasNext() ) {

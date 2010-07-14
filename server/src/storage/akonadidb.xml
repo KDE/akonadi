@@ -31,7 +31,6 @@
 
   Table attributes (can contain column, reference and data elements)
   - name: The entity class name, the table will be named FooTable.
-  - properties: additional SQL properties such as foreign keys
 
   Column attributes:
   - name: The column name, will be also used as accessor name in the entity class.
@@ -40,7 +39,6 @@
   - default: Default value for entity class constructor.
   - refTable, refColumn: foreign key, also used to generate accessor methods for 1:n relations
   - methodName: method name to access referred records, the table name is used if not given
-  - properties: SQL properties such as constraints
 
   Indices:
   - name: The name of the index
@@ -82,8 +80,8 @@
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" allowNull="false" properties="BINARY character set utf8 collate utf8_bin"/>
-    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT NULL"/>
+    <column name="name" type="QString" allowNull="false"/>
+    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
     <column name="subscribed" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
@@ -118,7 +116,7 @@
     <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id"/>
-    <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
+    <column name="datetime" type="QDateTime" default="QDateTime::currentDateTime()">
       <comment>create/modified time</comment>
     </column>
     <column name="atime" type="QDateTime">
@@ -146,7 +144,7 @@
     <data columns="name" values="'\Draft'"/>
   </table>
 
-  <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
+  <table name="Part">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
     <column name="name" type="QString" allowNull="false"/>

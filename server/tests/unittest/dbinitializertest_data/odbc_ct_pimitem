@@ -4,7 +4,7 @@ CREATE TABLE PimItemTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                            remoteRevision VARCHAR(255),
                            collectionId BIGINT REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
                            mimeTypeId BIGINT REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           datetime TIMESTAMP,
                            atime TIMESTAMP,
                            dirty CHAR,
                            size BIGINT NOT NULL DEFAULT 0)

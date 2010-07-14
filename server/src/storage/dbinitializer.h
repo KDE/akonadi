@@ -20,8 +20,9 @@
 #ifndef DBINITIALIZER_H
 #define DBINITIALIZER_H
 
+#include <QtCore/QHash>
 #include <QtCore/QPair>
-#include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtSql/QSqlDatabase>
 
 #include <boost/shared_ptr.hpp>
@@ -71,6 +72,66 @@ class DbInitializer
 
   protected:
     /**
+     * @short A helper class that describes a column of a table for the DbInitializer
+     */
+    class ColumnDescription
+    {
+      public:
+        ColumnDescription();
+
+        QString name;
+        QString type;
+        bool allowNull;
+        bool isAutoIncrement;
+        bool isPrimaryKey;
+        bool isUnique;
+        QString refTable;
+        QString refColumn;
+        QString defaultValue;
+    };
+
+    /**
+     * @short A helper class that describes indexes of a table for the DbInitializer
+     */
+    class IndexDescription
+    {
+      public:
+        IndexDescription();
+
+        QString name;
+        QStringList columns;
+        bool isUnique;
+    };
+
+    /**
+     * @short A helper class that describes the predefined data of a table for the DbInitializer
+     */
+    class DataDescription
+    {
+      public:
+        DataDescription();
+
+        /**
+         * Key contains the column name, value the data.
+         */
+        QHash<QString, QString> data;
+    };
+
+    /**
+     * @short A helper class that describes a table for the DbInitializer
+     */
+    class TableDescription
+    {
+      public:
+        TableDescription();
+
+        QString name;
+        QList<ColumnDescription> columns;
+        QList<IndexDescription> indexes;
+        QList<DataDescription> data;
+    };
+
+    /**
      * Creates a new database initializer.
      *
      * @param database The reference to the database.
@@ -92,22 +153,34 @@ class DbInitializer
     */
     virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
 
-    /**
-     * Sets the debug @p interface that shall be used.
-     * @note If an interface is set, no database operations will be executed.
-     */
-    void setDebugInterface( DebugInterface *interface );
+    virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const = 0;
+    virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
+    virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
+    virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
 
   private:
     friend class DbInitializerTest;
+
+    /**
+     * Sets the debug @p interface that shall be used on unit test run.
+     */
+    void setDebugInterface( DebugInterface *interface );
+
+    /**
+     * Runs the DbInitializer in unit test mode.
+     * This won't change anything in the database, only calls the code
+     * to generate SQL statements.
+     */
+    void unitTestRun();
+
 
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );
 
     bool hasTable( const QString &tableName );
 
-    typedef QPair<QString, QString> ColumnEntry;
-    QString createTableStatement( const QDomElement&, QVector<ColumnEntry>&, QStringList& );
+    TableDescription parseTableDescription( const QDomElement& ) const;
 
     QSqlDatabase mDatabase;
     QString mTemplateFile;

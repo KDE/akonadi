@@ -1,5 +1,6 @@
 CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                                       collectionId BIGINT NOT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                       collectionId BIGINT NOT NULL,
                                        type LONGBLOB NOT NULL,
-                                       value LONGBLOB)
+                                       value LONGBLOB,
+                                       FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
                                        COLLATE=utf8_general_ci DEFAULT CHARSET=utf8

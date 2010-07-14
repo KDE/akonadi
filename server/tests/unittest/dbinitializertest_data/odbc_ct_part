@@ -4,5 +4,4 @@ CREATE TABLE PartTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                         data LONG VARCHAR,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
-                        external CHAR DEFAULT 0,
-                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
+                        external CHAR DEFAULT 0)

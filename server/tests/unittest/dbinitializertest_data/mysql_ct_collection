@@ -1,9 +1,9 @@
 CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               remoteId VARCHAR(255) BINARY,
                               remoteRevision VARCHAR(255) BINARY,
-                              name VARCHAR(255) BINARY character set utf8 collate utf8_bin NOT NULL,
-                              parentId BIGINT DEFAULT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                              resourceId BIGINT NOT NULL REFERENCES ResourceTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                              name VARCHAR(255) BINARY NOT NULL,
+                              parentId BIGINT,
+                              resourceId BIGINT NOT NULL,
                               subscribed BOOL NOT NULL DEFAULT true,
                               cachePolicyInherit BOOL NOT NULL DEFAULT true,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
@@ -11,5 +11,7 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
                               cachePolicyLocalParts VARCHAR(255) BINARY,
                               queryString VARCHAR(255) BINARY,
-                              queryLanguage VARCHAR(255) BINARY)
+                              queryLanguage VARCHAR(255) BINARY,
+                              FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                              FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON DELETE CASCADE ON UPDATE CASCADE)
                               COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
