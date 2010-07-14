@@ -159,11 +159,30 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
   }
 }
 
+class PainterStateSaver
+{
+  public:
+    PainterStateSaver( QPainter *painter )
+    {
+      mPainter = painter;
+      mPainter->save();
+    }
+
+    ~PainterStateSaver()
+    {
+      mPainter->restore();
+    }
+
+  private:
+    QPainter *mPainter;
+};
+
 void CollectionStatisticsDelegate::paint( QPainter *painter,
                                           const QStyleOptionViewItem &option,
                                           const QModelIndex &index ) const
 {
   Q_D( const CollectionStatisticsDelegate );
+  PainterStateSaver stateSaver( painter );
 
   // First, paint the basic, but without the text. We remove the text
   // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
@@ -186,8 +205,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   bool expanded = d->parent->isExpanded( firstColumn );
 
   if ( option.state & QStyle::State_Selected ) {
-    painter->save();
     painter->setPen( option.palette.highlightedText().color() );
+  } else {
+    painter->setPen( option.palette.text().color() );
   }
 
   Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -214,7 +234,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
         unread = QString( QLatin1String( " (%1)" ) ).arg( unreadCount );
     }
 
-    painter->save();
+    PainterStateSaver stateSaver( painter );
 
     if ( !unread.isEmpty() ) {
       QFont font = painter->font();
@@ -245,11 +265,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
                                    foreground( KColorScheme::LinkText ).color();
     painter->setPen( unreadColor );
     painter->drawText( unreadRect, Qt::AlignLeft, unread );
-    painter->restore();
 
-    if ( option.state & QStyle::State_Selected ) {
-      painter->restore();
-    }
     return;
   }
 
@@ -257,7 +273,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   // is collapsed
   if ( ( index.column() == 1 || index.column() == 2 ) ) {
 
-    painter->save();
+    PainterStateSaver stateSaver( painter );
 
     QStyleOptionViewItem opt = option;
 
@@ -277,19 +293,11 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     }
 
     painter->drawText( textRect, Qt::AlignRight, sumText );
-    painter->restore();
 
-    if ( option.state & QStyle::State_Selected ) {
-      painter->restore();
-    }
     return;
   }
 
   painter->drawText( textRect, option4.displayAlignment, text );
-
-  if ( option.state & QStyle::State_Selected ) {
-    painter->restore();
-  }
 }
 
 #include "collectionstatisticsdelegate.moc"
