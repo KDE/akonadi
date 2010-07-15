@@ -66,7 +66,8 @@ QString SpecialCollectionsPrivate::defaultResourceId() const
   const KConfigSkeletonItem *item = mSettings->findItem( QLatin1String( "DefaultResourceId" ) );
   Q_ASSERT( item );
 
-  return item->property().toString();
+  mDefaultResourceId = item->property().toString();
+  return mDefaultResourceId;
 }
 
 void SpecialCollectionsPrivate::emitChanged( const QString &resourceId )
@@ -75,9 +76,10 @@ void SpecialCollectionsPrivate::emitChanged( const QString &resourceId )
     mToEmitChangedFor.insert( resourceId );
   } else {
     kDebug() << "Emitting changed for" << resourceId;
-    const AgentInstance agentInstance = AgentManager::self()->instance( resourceId ); 
+    const AgentInstance agentInstance = AgentManager::self()->instance( resourceId );
     emit q->collectionsChanged( agentInstance );
-    if ( resourceId == defaultResourceId() ) {
+    // first compare with local value then with config value (which also updates the local value)
+    if ( resourceId == mDefaultResourceId || resourceId == defaultResourceId() ) {
       kDebug() << "Emitting defaultFoldersChanged.";
       emit q->defaultCollectionsChanged();
     }
