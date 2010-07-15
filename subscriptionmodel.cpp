@@ -67,7 +67,7 @@ class SubscriptionModel::Private
     bool isSubscribable( Collection::Id id )
     {
       Collection col = q->collectionForId( id );
-      if ( CollectionUtils::isVirtualParent( col ) || CollectionUtils::isStructural( col ) )
+      if ( CollectionUtils::isStructural( col ) || CollectionUtils::isVirtual( col ) )
         return false;
       if ( col.hasAttribute<SpecialCollectionAttribute>() )
         return false;
