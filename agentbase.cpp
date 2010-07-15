@@ -541,11 +541,7 @@ bool AgentBase::isOnline() const
 void AgentBase::setNeedsNetwork( bool needsNetwork )
 {
   Q_D( AgentBase );
-  /* d->mNeedsNetwork = needsNetwork; */
-  // We can't trust the above code, because there are a lot of broken NetworkManager
-  // installations around, which would cause the resource to be offline, even if there
-  // is an actual network connection available. Instead fake an online state.
-  d->mNeedsNetwork = false;
+  d->mNeedsNetwork = needsNetwork;
 
   if ( d->mNeedsNetwork ) {
     connect( Solid::Networking::notifier()
