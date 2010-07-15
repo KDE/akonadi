@@ -10,8 +10,9 @@ set(CTEST_CUSTOM_ERROR_EXCEPTION
   ${CTEST_CUSTOM_ERROR_EXCEPTION}
   "ICECC"
   "Segmentation fault"
-  "GConf Error: No D-BUS daemon running"
+  "GConf Error"
   "Client failed to connect to the D-BUS daemon"
+  "Failed to connect to socket"
   )
 
 # No coverage for these files
