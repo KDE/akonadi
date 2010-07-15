@@ -24,6 +24,7 @@
 #include "libs/capabilities_p.h"
 
 #include <QtDBus/QDBusConnection>
+#include "storage/transaction.h"
 
 using namespace Akonadi;
 
@@ -38,6 +39,7 @@ Akonadi::ResourceManager::ResourceManager(QObject * parent) :
 
 void Akonadi::ResourceManager::addResourceInstance(const QString & name, const QStringList &capabilities)
 {
+  Transaction transaction( DataStore::self() );
   Resource resource = Resource::retrieveByName( name );
   if ( resource.isValid() ) {
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Resource '%1' already exists.").arg(name) );
@@ -49,6 +51,7 @@ void Akonadi::ResourceManager::addResourceInstance(const QString & name, const Q
   resource.setIsVirtual( capabilities.contains( QLatin1String( AKONADI_AGENT_CAPABILITY_VIRTUAL ) ) );
   if ( !resource.insert() )
     Tracer::self()->error( "ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name) );
+  transaction.commit();
 }
 
 void Akonadi::ResourceManager::removeResourceInstance(const QString & name)
