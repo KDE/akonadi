@@ -1,4 +1,4 @@
-CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTOINCREMENT INTEGER PRIMARY KEY,
+CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                               remoteId TEXT,
                               remoteRevision TEXT,
                               name TEXT NOT NULL,

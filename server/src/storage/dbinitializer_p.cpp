@@ -135,21 +135,23 @@ QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &
 
 QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &columnDescription ) const
 {
-  QString column = columnDescription.name;
+  QString column = columnDescription.name + QLatin1Char( ' ' );
 
-  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+  if ( columnDescription.isAutoIncrement )
+    column += QLatin1String( "INTEGER" );
+  else
+    column += sqlType( columnDescription.type );
 
-  if ( !columnDescription.allowNull )
-    column += QLatin1String( " NOT NULL" );
+  if ( columnDescription.isPrimaryKey )
+    column += QLatin1String( " PRIMARY KEY" );
+  else if ( columnDescription.isUnique )
+    column += QLatin1String( " UNIQUE" );
 
   if ( columnDescription.isAutoIncrement )
     column += QLatin1String( " AUTOINCREMENT" );
 
-  if ( columnDescription.isPrimaryKey )
-    column += QLatin1String( " INTEGER PRIMARY KEY" );
-
-  if ( columnDescription.isUnique )
-    column += QLatin1String( " UNIQUE" );
+  if ( !columnDescription.allowNull )
+    column += QLatin1String( " NOT NULL" );
 
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );

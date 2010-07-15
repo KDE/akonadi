@@ -1,4 +1,4 @@
-CREATE TABLE PartTable (id BIGINT NOT NULL AUTOINCREMENT INTEGER PRIMARY KEY,
+CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         pimItemId BIGINT NOT NULL,
                         name TEXT NOT NULL,
                         data LONGBLOB,
