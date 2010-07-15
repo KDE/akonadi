@@ -1,2 +1,2 @@
-CREATE TABLE FlagTable (id int8 NOT NULL SERIAL PRIMARY KEY,
-                        name TEXT NOT NULL UNIQUE)
+CREATE TABLE FlagTable (id SERIAL PRIMARY KEY,
+                        name TEXT UNIQUE NOT NULL)

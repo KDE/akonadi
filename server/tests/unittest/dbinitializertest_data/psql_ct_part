@@ -1,4 +1,4 @@
-CREATE TABLE PartTable (id int8 NOT NULL SERIAL PRIMARY KEY,
+CREATE TABLE PartTable (id SERIAL PRIMARY KEY,
                         pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
                         name TEXT NOT NULL,
                         data BYTEA,

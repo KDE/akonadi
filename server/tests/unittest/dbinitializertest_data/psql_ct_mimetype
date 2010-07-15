@@ -1,2 +1,2 @@
-CREATE TABLE MimeTypeTable (id int8 NOT NULL SERIAL PRIMARY KEY,
-                            name TEXT NOT NULL UNIQUE)
+CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
+                            name TEXT UNIQUE NOT NULL)

@@ -217,18 +217,20 @@ QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescripti
 
 QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &columnDescription ) const
 {
-  QString column = columnDescription.name;
+  QString column = columnDescription.name + QLatin1Char( ' ' );
 
-  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+  if ( columnDescription.isAutoIncrement )
+    column += QLatin1String( "SERIAL" );
+  else
+    column += sqlType( columnDescription.type );
 
-  if ( !columnDescription.allowNull )
-    column += QLatin1String( " NOT NULL" );
-
-  if ( columnDescription.isPrimaryKey && columnDescription.isAutoIncrement )
-    column += QLatin1String( " SERIAL PRIMARY KEY" );
-
-  if ( columnDescription.isUnique )
+  if ( columnDescription.isPrimaryKey )
+    column += QLatin1String( " PRIMARY KEY" );
+  else if ( columnDescription.isUnique )
     column += QLatin1String( " UNIQUE" );
+
+  if ( !columnDescription.allowNull && !columnDescription.isPrimaryKey )
+    column += QLatin1String( " NOT NULL" );
 
   if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
     column += QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
