@@ -81,6 +81,8 @@ class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
     bool mBatchMode;
     QSet<QString> mToEmitChangedFor;
     Monitor *mMonitor;
+
+    mutable QString mDefaultResourceId;
 };
 
 } // namespace Akonadi
