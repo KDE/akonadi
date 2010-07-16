@@ -13,6 +13,9 @@ set(CTEST_CUSTOM_ERROR_EXCEPTION
   "GConf Error"
   "Client failed to connect to the D-BUS daemon"
   "Failed to connect to socket"
+  "qlist.h.*increases required alignment of target type"
+  "qmap.h.*increases required alignment of target type"
+  "qhash.h.*increases required alignment of target type"
   )
 
 # No coverage for these files
