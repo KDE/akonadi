@@ -432,7 +432,7 @@ void AgentBasePrivate::slotError( const QString& message )
 void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
 {
   Q_Q( AgentBase );
-  q->setOnline( stat == Solid::Networking::Connected );
+  q->setOnline( stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected );
 }
 
 
