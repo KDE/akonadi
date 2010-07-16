@@ -206,8 +206,6 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   if ( option.state & QStyle::State_Selected ) {
     painter->setPen( option.palette.highlightedText().color() );
-  } else {
-    painter->setPen( option.palette.text().color() );
   }
 
   Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
