@@ -27,13 +27,57 @@
 #include <QDomDocument>
 #include <QFile>
 
-DbUpdater::DbUpdater(const QSqlDatabase & database, const QString & filename) :
-    m_database( database ),
+DbUpdater::DbUpdater( const QSqlDatabase & database, const QString & filename )
+  : m_database( database ),
     m_filename( filename )
 {
 }
 
 bool DbUpdater::run()
+{
+  // TODO error handling
+  Akonadi::SchemaVersion currentVersion = Akonadi::SchemaVersion::retrieveAll().first();
+
+  UpdateSet::Map updates;
+
+  if ( !parseUpdateSets( currentVersion.version(), updates ) )
+    return false;
+
+  // QMap is sorted, so we should be replaying the changes in correct order
+  for ( QMap<int, UpdateSet>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it ) {
+    Q_ASSERT( it.key() > currentVersion.version() );
+    akDebug() << "DbUpdater: update to version:" << it.key() << " mandatory:" << it.value().abortOnFailure;
+
+    bool success = m_database.transaction();
+    if ( success ) {
+      foreach ( const QString &statement, it.value().statements ) {
+        QSqlQuery query( m_database );
+        success = query.exec( statement );
+        if ( !success ) {
+          akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
+          akError() << "Query was: " << statement;
+          akError() << "Target version was: " << it.key();
+          akError() << "Mandatory: " << it.value().abortOnFailure;
+        }
+      }
+    }
+    if ( success ) {
+      currentVersion.setVersion( it.key() );
+      success = currentVersion.update();
+    }
+
+    if ( !success || !m_database.commit() ) {
+      akError() << "Failed to commit transaction for database update";
+      m_database.rollback();
+      if ( it.value().abortOnFailure )
+        return false;
+    }
+  }
+
+  return true;
+}
+
+bool DbUpdater::parseUpdateSets( int currentVersion, UpdateSet::Map &updates ) const
 {
   QFile file( m_filename );
   if ( !file.open( QIODevice::ReadOnly ) ) {
@@ -50,69 +94,74 @@ bool DbUpdater::run()
         << errorMsg << "at line" << line << "column" << column;
     return false;
   }
+
   const QDomElement documentElement = document.documentElement();
   if ( documentElement.tagName() != QLatin1String( "updates" ) ) {
     akError() << "Invalid update description file formant";
     return false;
   }
 
-  // TODO error handling
-  Akonadi::SchemaVersion currentVersion = Akonadi::SchemaVersion::retrieveAll().first();
-
+  // iterate over the xml document and extract update information into an UpdateSet
   QDomElement updateElement = documentElement.firstChildElement();
-  QMap<int, QDomElement> updates;
   while ( !updateElement.isNull() ) {
-    if ( updateElement.tagName() == QLatin1String("update") ) {
-      int version = updateElement.attribute( QLatin1String( "version" ), QLatin1String( "-1" ) ).toInt();
+    if ( updateElement.tagName() == QLatin1String( "update" ) ) {
+      const int version = updateElement.attribute( QLatin1String( "version" ), QLatin1String( "-1" ) ).toInt();
       if ( version <= 0 ) {
         akError() << "Invalid version attribute in database update description";
         return false;
       }
+
       if ( updates.contains( version ) ) {
         akError() << "Duplicate version attribute in database update description";
         return false;
       }
-      if ( version > currentVersion.version() ) {
-        updates.insert( version, updateElement );
-      } else {
+
+      if ( version <= currentVersion ) {
         akDebug() << "skipping update" << version;
+      } else {
+        UpdateSet updateSet;
+        updateSet.version = version;
+        updateSet.abortOnFailure = (updateElement.attribute( QLatin1String( "abortOnFailure" ) ) == QLatin1String( "true" ));
+
+        QDomElement childElement = updateElement.firstChildElement();
+        while ( !childElement.isNull() ) {
+          if ( childElement.tagName() == QLatin1String( "raw-sql" ) ) {
+            if ( updateApplicable( childElement.attribute( QLatin1String( "backends" ) ) ) ) {
+              updateSet.statements << buildRawSqlStatement( childElement );
+            }
+          }
+          //TODO: check for generic tags here in the future
+
+          childElement = childElement.nextSiblingElement();
+        }
+
+        updates.insert( version, updateSet );
       }
     }
     updateElement = updateElement.nextSiblingElement();
   }
 
-  // QMap is sorted, so we should be replaying the changes in correct order
-  for ( QMap<int,QDomElement>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it ) {
-    Q_ASSERT( it.key() > currentVersion.version() );
-    const QString sql = it.value().text().trimmed();
-    bool abortOnFailure = false;
-    if ( it.value().attribute( QLatin1String( "abortOnFailure" ) ) == QLatin1String( "true" ) )
-      abortOnFailure = true;
-    akDebug() << "DbUpdater: update to version:" << it.key() << " mandatory:" << abortOnFailure << " code:" << sql;
-
-    bool success = m_database.transaction();
-    if ( success ) {
-      QSqlQuery query( m_database );
-      success = query.exec( sql );
-      if ( !success ) {
-        akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
-        akError() << "Query was: " << sql;
-        akError() << "Target version was: " << it.key();
-        akError() << "Mandatory: " << abortOnFailure;
-      }
-    }
-    if ( success ) {
-      currentVersion.setVersion( it.key() );
-      success = currentVersion.update();
-    }
-
-    if ( !success || !m_database.commit() ) {
-      akError() << "Failed to commit transaction for database update";
-      m_database.rollback();
-      if ( abortOnFailure )
-        return false;
-    }
-  }
-
   return true;
+}
+
+bool DbUpdater::updateApplicable( const QString &backends ) const
+{
+  const QStringList matchingBackends = backends.split( QLatin1Char( ',' ) );
+
+  QString currentBackend;
+  if ( m_database.driverName() == QLatin1String( "QMYSQL" ) )
+    currentBackend = QLatin1String( "mysql" );
+  else if ( m_database.driverName() == QLatin1String( "QPSQL" ) )
+    currentBackend = QLatin1String( "psql" );
+  else if ( m_database.driverName() == QLatin1String( "QSQLITE" ) )
+    currentBackend = QLatin1String( "sqlite" );
+  else if ( m_database.driverName() == QLatin1String( "QODBC" ) )
+    currentBackend = QLatin1String( "odbc" );
+
+  return matchingBackends.contains( currentBackend );
+}
+
+QString DbUpdater::buildRawSqlStatement( const QDomElement &element ) const
+{
+  return element.text().trimmed();
 }
