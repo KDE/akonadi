@@ -59,7 +59,7 @@ public:
       { return index == other.index; }
 
 
-      inline void animate() const { frame = ++frame % sCount; }
+      inline void animate() const { frame = ( frame + 1 ) % sCount; }
       mutable int frame;
       QPersistentModelIndex index;
   };
