@@ -36,7 +36,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QTreeView>
 
-static void splitCustomField( const QString &str, QString &app, QString &name, QString &value )
+void splitCustomField( const QString &str, QString &app, QString &name, QString &value )
 {
   const int colon = str.indexOf( QLatin1Char( ':' ) );
   if ( colon != -1 ) {
