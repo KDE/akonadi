@@ -153,7 +153,7 @@ bool DbUpdater::updateApplicable( const QString &backends ) const
     currentBackend = QLatin1String( "mysql" );
   else if ( m_database.driverName() == QLatin1String( "QPSQL" ) )
     currentBackend = QLatin1String( "psql" );
-  else if ( m_database.driverName() == QLatin1String( "QSQLITE" ) )
+  else if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) // QSQLITE or QSQLITE3
     currentBackend = QLatin1String( "sqlite" );
   else if ( m_database.driverName() == QLatin1String( "QODBC" ) )
     currentBackend = QLatin1String( "odbc" );

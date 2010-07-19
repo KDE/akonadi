@@ -82,7 +82,7 @@ void DbInitializerTest::testPsqlCreateTableStatement()
 
 void DbInitializerTest::testSqliteCreateTableStatement()
 {
-  runCreateTableStatementTest( QLatin1String( "QSQLITE" ), QLatin1String( ":sqlite_ct_" ) );
+  runCreateTableStatementTest( QLatin1String( "QSQLITE3" ), QLatin1String( ":sqlite_ct_" ) );
 }
 
 void DbInitializerTest::testOdbcCreateTableStatement()
