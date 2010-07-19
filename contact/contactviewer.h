@@ -38,6 +38,8 @@ class PhoneNumber;
 
 namespace Akonadi {
 
+class AbstractContactFormatter;
+
 /**
  * @short A viewer component for contacts in Akonadi.
  *
@@ -102,6 +104,16 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
      * @since 4.5
      */
     KABC::Addressee rawContact() const;
+
+    /**
+     * Sets the contact @p formatter that should be used for formatting the
+     * contact. If formatter is @c 0, the standard formatter will be used.
+     *
+     * @note The contact viewer won't take ownership of the formatter.
+     *
+     * @since 4.6
+     */
+    void setContactFormatter( AbstractContactFormatter *formatter );
 
   public Q_SLOTS:
     /**

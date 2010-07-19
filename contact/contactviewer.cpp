@@ -49,12 +49,13 @@ class ContactViewer::Private
     Private( ContactViewer *parent )
       : mParent( parent ), mParentCollectionFetchJob( 0 )
     {
-      mContactFormatter = new StandardContactFormatter;
+      mStandardContactFormatter = new StandardContactFormatter;
+      mContactFormatter = mStandardContactFormatter;
     }
 
     ~Private()
     {
-      delete mContactFormatter;
+      delete mStandardContactFormatter;
     }
 
     void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList(), const QString &addressBookName = QString() )
@@ -161,6 +162,7 @@ class ContactViewer::Private
     KABC::Addressee mCurrentContact;
     Item mCurrentItem;
     AbstractContactFormatter *mContactFormatter;
+    AbstractContactFormatter *mStandardContactFormatter;
     CollectionFetchJob *mParentCollectionFetchJob;
 };
 
@@ -199,6 +201,14 @@ Akonadi::Item ContactViewer::contact() const
 KABC::Addressee ContactViewer::rawContact() const
 {
   return d->mCurrentContact;
+}
+
+void ContactViewer::setContactFormatter( AbstractContactFormatter *formatter )
+{
+  if ( formatter == 0 )
+    d->mContactFormatter = d->mStandardContactFormatter;
+  else
+    d->mContactFormatter = formatter;
 }
 
 void ContactViewer::setContact( const Akonadi::Item &contact )
