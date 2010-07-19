@@ -30,10 +30,17 @@
   </xsd:element>
 
   <xsd:complexType name="updateType">
+    <xsd:sequence>
+      <xsd:element name="raw-sql" type="rawSqlType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="version"        type="xsd:int"     use="required"/>
+    <xsd:attribute name="abortOnFailure" type="xsd:boolean" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="rawSqlType">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
-        <xsd:attribute name="version"        type="xsd:int"     use="required"/>
-        <xsd:attribute name="abortOnFailure" type="xsd:boolean" use="required"/>
+        <xsd:attribute name="backends" type="xsd:string"/>
       </xsd:extension>
     </xsd:simpleContent>
   </xsd:complexType>
