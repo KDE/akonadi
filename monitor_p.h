@@ -92,6 +92,14 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       return sessions.contains( sessionId );
     }
 
+    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
+    {
+      if ( msg.operation() != NotificationMessage::Move || msg.itemParts().isEmpty() )
+        return false;
+      const QByteArray res = *(msg.itemParts().begin());
+      return resources.contains( res );
+    }
+
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg );

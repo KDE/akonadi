@@ -139,11 +139,13 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
     case NotificationMessage::Item:
       return isItemMonitored( msg.uid(), msg.parentCollection(), msg.parentDestCollection(), msg.mimeType(), msg.resource() )
           || isCollectionMonitored( msg.parentCollection(), msg.resource() )
-          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() );
+          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() )
+          || isMoveDestinationResourceMonitored( msg );
     case NotificationMessage::Collection:
       return isCollectionMonitored( msg.uid(), msg.resource() )
           || isCollectionMonitored( msg.parentCollection(), msg.resource() )
-          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() );
+          || isCollectionMonitored( msg.parentDestCollection(), msg.resource() )
+          || isMoveDestinationResourceMonitored( msg );
   }
   Q_ASSERT( false );
   return false;
@@ -327,7 +329,9 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
   }
   if ( !colDest.isValid() ) {
     colDest = Collection( msg.parentDestCollection() );
-    // FIXME setResource here required ?
+    // HACK: destination resource is delivered in the parts field...
+    if ( !msg.itemParts().isEmpty() )
+      colDest.setResource( QString::fromLatin1( *(msg.itemParts().begin()) ) );
   }
   Item it = item;
   if ( !it.isValid() || msg.operation() == NotificationMessage::Remove ) {
