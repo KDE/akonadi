@@ -30,7 +30,7 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database, const QStri
 QString DbInitializerMySql::sqlType(const QString & type) const
 {
   if ( type == QLatin1String( "QString" ) )
-    return QLatin1String( "VARCHAR(255) BINARY" );
+    return QLatin1String( "VARBINARY(255)" );
   else
     return DbInitializer::sqlType( type );
 }
