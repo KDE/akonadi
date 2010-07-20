@@ -20,6 +20,7 @@
 */
 
 #include "imeditwidget.h"
+#include "customfieldseditwidget.h"
 
 #include "im/imeditordialog.h"
 #include "im/improtocols.h"
@@ -32,20 +33,6 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-static void splitCustomField( const QString &str, QString &app, QString &name, QString &value )
-{
-  const int colon = str.indexOf( QLatin1Char( ':' ) );
-  if ( colon != -1 ) {
-    const QString tmp = str.left( colon );
-    value = str.mid( colon + 1 );
-
-    const int dash = tmp.indexOf( QLatin1Char( '-' ) );
-    if ( dash != -1 ) {
-      app = tmp.left( dash );
-      name = tmp.mid( dash + 1 );
-    }
-  }
-}
 
 IMEditWidget::IMEditWidget( QWidget *parent )
   : QWidget( parent )

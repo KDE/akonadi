@@ -33,6 +33,8 @@ class Addressee;
 class QPushButton;
 class QTreeView;
 
+void splitCustomField(  const QString &str, QString &app, QString &name, QString &value );
+
 class CustomFieldsEditWidget : public QWidget
 {
   Q_OBJECT
