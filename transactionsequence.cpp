@@ -70,14 +70,6 @@ class Akonadi::TransactionSequencePrivate : public JobPrivate
       Q_UNUSED( job );
       q->emitResult();
     }
-
-    bool transactionsDisabled() const // KDE5: remove once SpecialCollectionsRequestJob has been fixed
-    {
-      const Q_Q( TransactionSequence );
-      if ( q->property( "transactionsDisabled" ).toBool() )
-        return true;
-      return false;
-    }
 };
 
 TransactionSequence::TransactionSequence( QObject * parent )
@@ -93,7 +85,8 @@ bool TransactionSequence::addSubjob(KJob * job)
 {
   Q_D( TransactionSequence );
 
-  if ( d->mState == TransactionSequencePrivate::Idle && !d->transactionsDisabled() ) {
+  // TODO KDE5: remove property hack once SpecialCollectionsRequestJob has been fixed
+  if ( d->mState == TransactionSequencePrivate::Idle && !property( "transactionsDisabled" ).toBool() ) {
     d->mState = TransactionSequencePrivate::Running;
     new TransactionBeginJob( this );
   }
