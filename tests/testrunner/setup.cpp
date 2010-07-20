@@ -430,29 +430,34 @@ void SetupTest::shutdown()
     QDBusReply<void> reply = controlIface.call( "shutdown" );
     if ( !reply.isValid() ) {
       kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
+      shutdownKde();
       shutdownHarder();
     } else {
       // safety timeout
       QTimer::singleShot( 30 * 1000, this, SLOT( shutdownHarder() ) );
     }
-
     // in case we indirectly started KDE processes, stop those before we kill their D-Bus
-    if ( mInternalBus.interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
-      QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
-                                   QLatin1String( "org.kde.KLauncher" ), mInternalBus );
-      QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
-      if ( !reply.isValid() )
-        kDebug() << reply.error();
-    }
-    if ( mInternalBus.interface()->isServiceRegistered( "org.kde.kded" ) ) {
-      QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
-                                   QLatin1String( "org.kde.kded" ), mInternalBus );
-      QDBusReply<void> reply = klauncherIface.call( "quit" );
-      if ( !reply.isValid() )
-        kDebug() << reply.error();
-    }
+    shutdownKde();
   } else {
     shutdownHarder();
+  }
+}
+
+void SetupTest::shutdownKde()
+{
+  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
+    QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
+                                  QLatin1String( "org.kde.KLauncher" ), mInternalBus );
+    QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
+    if ( !reply.isValid() )
+      kDebug() << reply.error();
+  }
+  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.kded" ) ) {
+    QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
+                                  QLatin1String( "org.kde.kded" ), mInternalBus );
+    QDBusReply<void> reply = klauncherIface.call( "quit" );
+    if ( !reply.isValid() )
+      kDebug() << reply.error();
   }
 }
 

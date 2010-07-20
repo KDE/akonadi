@@ -68,6 +68,7 @@ class SetupTest : public QObject
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
+    void shutdownKde();
 
   private slots:
     void synchronizeResources();
