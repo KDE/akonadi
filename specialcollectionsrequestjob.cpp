@@ -274,10 +274,12 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult( KJob *job )
 
 
 
+// TODO KDE5: do not inherit from TransactionSequence
 SpecialCollectionsRequestJob::SpecialCollectionsRequestJob( SpecialCollections *collections, QObject *parent )
   : TransactionSequence( parent ),
     d( new SpecialCollectionsRequestJobPrivate( collections, this ) )
 {
+  setProperty( "transactionsDisabled", true );
 }
 
 SpecialCollectionsRequestJob::~SpecialCollectionsRequestJob()

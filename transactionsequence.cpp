@@ -23,6 +23,7 @@
 #include "job_p.h"
 
 #include <QtCore/QSet>
+#include <QtCore/QVariant>
 
 using namespace Akonadi;
 
@@ -69,6 +70,14 @@ class Akonadi::TransactionSequencePrivate : public JobPrivate
       Q_UNUSED( job );
       q->emitResult();
     }
+
+    bool transactionsDisabled() const // KDE5: remove once SpecialCollectionsRequestJob has been fixed
+    {
+      const Q_Q( TransactionSequence );
+      if ( q->property( "transactionsDisabled" ).toBool() )
+        return true;
+      return false;
+    }
 };
 
 TransactionSequence::TransactionSequence( QObject * parent )
@@ -84,7 +93,7 @@ bool TransactionSequence::addSubjob(KJob * job)
 {
   Q_D( TransactionSequence );
 
-  if ( d->mState == TransactionSequencePrivate::Idle ) {
+  if ( d->mState == TransactionSequencePrivate::Idle && !d->transactionsDisabled() ) {
     d->mState = TransactionSequencePrivate::Running;
     new TransactionBeginJob( this );
   }
@@ -118,6 +127,9 @@ void TransactionSequence::slotResult(KJob * job)
       d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
       connect( job, SIGNAL( result( KJob* ) ), SLOT( rollbackResult( KJob* ) ) );
+    } else if ( d->mState == TransactionSequencePrivate::Idle ) {
+      // we can get here if transactions are disabled
+      emitResult();
     }
   }
 }
