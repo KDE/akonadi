@@ -191,6 +191,12 @@ void SetupTest::registerWithInternalDBus( const QString &address )
 
 bool SetupTest::startAkonadiDaemon()
 {
+  if ( !mAkonadiDaemonProcess ) {
+    mAkonadiDaemonProcess = new KProcess( this );
+    connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
+            this, SLOT(slotAkonadiDaemonProcessFinished(int)) );
+  }
+
   mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
@@ -198,8 +204,10 @@ bool SetupTest::startAkonadiDaemon()
   return started;
 }
 
-bool SetupTest::stopAkonadiDaemon()
+void SetupTest::stopAkonadiDaemon()
 {
+  if ( !mAkonadiDaemonProcess )
+    return;
   disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
@@ -207,7 +215,8 @@ bool SetupTest::stopAkonadiDaemon()
     kDebug() << "Problem finishing process.";
   }
   mAkonadiDaemonProcess->close();
-  return finished;
+  mAkonadiDaemonProcess->deleteLater();
+  mAkonadiDaemonProcess = 0;
 }
 
 void SetupTest::setupAgents()
@@ -370,6 +379,7 @@ void SetupTest::cleanTempEnvironment()
 }
 
 SetupTest::SetupTest() :
+  mAkonadiDaemonProcess( 0 ),
   mInternalBus( QDBusConnection::sessionBus() ),
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
@@ -404,17 +414,12 @@ SetupTest::SetupTest() :
   registerWithInternalDBus( dbusAddress );
 #endif
 
-  mAkonadiDaemonProcess = new KProcess( this );
-  connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
-           this, SLOT(slotAkonadiDaemonProcessFinished(int)));
-
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }
 
 SetupTest::~SetupTest()
 {
   cleanTempEnvironment();
-  delete mAkonadiDaemonProcess;
 }
 
 void SetupTest::shutdown()
@@ -479,7 +484,11 @@ void SetupTest::restartAkonadiServer()
   QDBusReply<void> reply = controlIface.call( "shutdown" );
   if ( !reply.isValid() )
     kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
-  Q_ASSERT( mAkonadiDaemonProcess->waitForFinished() );
+  const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
+  if ( !shutdownResult ) {
+    kWarning() << "Akonadi control did not shut down in time, killing it.";
+    mAkonadiDaemonProcess->kill();
+  }
   // we don't use Control::start() since we want to be able to kill
   // it forcefully, if necessary, and know the pid
   startAkonadiDaemon();
@@ -514,6 +523,7 @@ void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
     kWarning() << "Akonadi server process was terminated externally!";
     emit serverExited( exitCode );
   }
+  mAkonadiDaemonProcess = 0;
 }
 
 void SetupTest::trackAkonadiProcess(bool track)

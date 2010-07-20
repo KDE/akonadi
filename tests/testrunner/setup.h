@@ -36,7 +36,7 @@ class SetupTest : public QObject
     SetupTest();
     ~SetupTest();
     bool startAkonadiDaemon();
-    bool stopAkonadiDaemon();
+    void stopAkonadiDaemon();
     QString basePath() const;
 
   public Q_SLOTS:
