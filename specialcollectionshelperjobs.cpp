@@ -450,8 +450,11 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
     }
   }
 
-  if ( mPendingModifyJobs == 0 )
-    q->emitResult();
+  if ( mPendingModifyJobs == 0 ) {
+    // Scan the resource.
+    q->setResourceId( defaultResourceId( mSettings ) );
+    q->ResourceScanJob::doStart();
+  }
 }
 
 void DefaultResourceJobPrivate::collectionModifyResult( KJob *job )
