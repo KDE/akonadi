@@ -21,6 +21,7 @@
 #define AKONADI_TEST_UTILS_H
 
 #include "collectionpathresolver_p.h"
+#include "servermanager.h"
 #include "qtest_akonadi.h"
 
 #include <QDBusInterface>
@@ -51,8 +52,10 @@ bool restartAkonadiServer()
     if ( !reply.isValid() ) {
         kWarning() << reply.error();
         return false;
-    } else {
+    } else if ( Akonadi::ServerManager::isRunning() ) {
         return true;
+    } else {
+        return QTest::kWaitForSignal( Akonadi::ServerManager::self(), SIGNAL(started()), 10000 );
     }
 }
 
