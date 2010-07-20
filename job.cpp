@@ -103,9 +103,9 @@ void JobPrivate::init( QObject *parent )
     // Let's only check for the debugging console every 3 seconds, otherwise every single job
     // makes a dbus call to the dbus daemon, doesn't help performance.
     static QTime s_lastTime;
-    if ( s_lastTime.isNull() )
-      s_lastTime.start();
-    if ( s_lastTime.elapsed() > 3000 ) {
+    if ( s_lastTime.isNull() || s_lastTime.elapsed() > 3000 ) {
+      if ( s_lastTime.isNull() )
+        s_lastTime.start();
       if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
         s_jobtracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
                                            QLatin1String( "/jobtracker" ),
