@@ -302,7 +302,7 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
           <xsl:value-of select="@type"/>() :
           <xsl:choose>
             <xsl:when test="starts-with(@type,'QString')">
-          QString::fromUtf8( query.value( <xsl:value-of select="position() - 1"/> ).toByteArray() )
+          Utils::variantToString( query.value( <xsl:value-of select="position() - 1"/> ) )
             </xsl:when>
             <xsl:otherwise>
           query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()

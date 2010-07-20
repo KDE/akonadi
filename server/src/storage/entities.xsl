@@ -87,6 +87,7 @@ Q_DECLARE_TYPEINFO( Akonadi::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
 #include &lt;entities.h&gt;
 #include &lt;storage/datastore.h&gt;
 #include &lt;storage/selectquerybuilder.h&gt;
+#include &lt;utils.h&gt;
 
 #include &lt;qsqldatabase.h&gt;
 #include &lt;QLatin1String&gt;
@@ -176,7 +177,7 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
       <xsl:value-of select="@type"/>() :
       <xsl:choose>
         <xsl:when test="starts-with(@type,'QString')">
-      QString::fromUtf8( query.value( <xsl:value-of select="position() - 1"/> ).toByteArray() )
+      Utils::variantToString( query.value( <xsl:value-of select="position() - 1"/> ) )
         </xsl:when>
         <xsl:otherwise>
       query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
