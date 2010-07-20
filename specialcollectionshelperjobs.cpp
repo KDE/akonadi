@@ -251,7 +251,11 @@ void DefaultResourceJobPrivate::tryFetchResource()
     mResourceWasPreexisting = true;
     kDebug() << "Found resource" << resourceId;
     q->setResourceId( resourceId );
-    q->ResourceScanJob::doStart();
+
+    CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, q );
+    fetchJob->fetchScope().setResource( resourceId );
+    fetchJob->fetchScope().setIncludeStatistics( true );
+    q->connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchResult( KJob* ) ) );
   } else {
     // Try harder: maybe the default resource has been removed and another one added
     //             without updating the config file, in this case search for a resource
@@ -420,6 +424,9 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
   // found the folders on disk. So give them the necessary attributes now.
   Q_ASSERT( mPendingModifyJobs == 0 );
   foreach ( Collection collection, toRecover ) {          // krazy:exclude=foreach
+
+    if ( collection.hasAttribute<SpecialCollectionAttribute>() )
+      continue;
 
     // Find the type for the collection.
     QString name = collection.name();
