@@ -28,6 +28,7 @@
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/querybuilder.h"
+#include "utils.h"
 
 #include <QDebug>
 
@@ -189,9 +190,9 @@ void ItemRetriever::exec()
     if ( !lastRequest || lastRequest->id != pimItemId ) {
       lastRequest = new ItemRetrievalRequest();
       lastRequest->id = pimItemId;
-      lastRequest->remoteId = query.value( PimItemRidColumn ).toString().toUtf8();
-      lastRequest->mimeType = query.value( MimeTypeColumn ).toString().toUtf8();
-      lastRequest->resourceId = query.value( ResourceColumn ).toString();
+      lastRequest->remoteId = Utils::variantToByteArray( query.value( PimItemRidColumn ) );
+      lastRequest->mimeType = Utils::variantToByteArray( query.value( MimeTypeColumn ) );
+      lastRequest->resourceId = Utils::variantToString( query.value( ResourceColumn ) );
       lastRequest->parts = parts;
       requests << lastRequest;
     }
@@ -203,7 +204,7 @@ void ItemRetriever::exec()
     }
 
     qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
-    QString partName = query.value( PartNameColumn ).toString();
+    QString partName = Utils::variantToString( query.value( PartNameColumn ) );
     Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
     partName = partName.mid( 4 );
     if ( datasize <= 0 ) {

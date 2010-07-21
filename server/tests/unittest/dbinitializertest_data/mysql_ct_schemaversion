@@ -1,0 +1,2 @@
+CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
+                                COLLATE=utf8_general_ci DEFAULT CHARSET=utf8

@@ -1,0 +1,2 @@
+CREATE TABLE FlagTable (id SERIAL PRIMARY KEY,
+                        name BYTEA UNIQUE NOT NULL)

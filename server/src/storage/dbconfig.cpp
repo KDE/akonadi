@@ -77,8 +77,11 @@ DbConfig* DbConfig::configuredDatabase()
       s_DbConfigInstance = new DbConfigSqlite( DbConfigSqlite::Custom );
     else if ( driverName == QLatin1String( "QPSQL" ) )
       s_DbConfigInstance = new DbConfigPostgresql;
-    else
-      akFatal() << "Unknown database driver: " << driverName;
+    else {
+      akError() << "Unknown database driver: " << driverName;
+      akError() << "Available drivers are: " << QSqlDatabase::drivers();
+      akFatal();
+    }
   }
 
   return s_DbConfigInstance;

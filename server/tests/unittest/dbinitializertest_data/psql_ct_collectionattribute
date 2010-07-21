@@ -1,0 +1,4 @@
+CREATE TABLE CollectionAttributeTable (id SERIAL PRIMARY KEY,
+                                       collectionId int8 NOT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                       type BYTEA NOT NULL,
+                                       value BYTEA)

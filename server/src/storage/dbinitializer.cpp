@@ -18,6 +18,9 @@
  ***************************************************************************/
 
 #include "dbinitializer.h"
+#include "dbinitializer_p.h"
+#include "querybuilder.h"
+#include "shared/akdebug.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -32,8 +35,44 @@
 #include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
 
+using namespace Akonadi;
+
+DbInitializer::ColumnDescription::ColumnDescription()
+  : allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false )
+{
+}
+
+DbInitializer::IndexDescription::IndexDescription()
+  : isUnique( false )
+{
+}
+
+DbInitializer::DataDescription::DataDescription()
+{
+}
+
+DbInitializer::TableDescription::TableDescription()
+{
+}
+
+DbInitializer::RelationDescription::RelationDescription()
+{
+}
+
+DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
+{
+  if ( database.driverName().startsWith( QLatin1String( "QMYSQL" ) ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerMySql( database, templateFile ) );
+  if ( database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerSqlite( database, templateFile ) );
+  if ( database.driverName().startsWith( QLatin1String( "QPSQL" ) ) )
+    return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
+  akFatal() << database.driverName() << "backend  not supported";
+  return boost::shared_ptr<DbInitializer>();
+}
+
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
-  : mDatabase( database ), mTemplateFile( templateFile )
+  : mDatabase( database ), mTemplateFile( templateFile ), mDebugInterface( 0 )
 {
 }
 
@@ -75,7 +114,7 @@ bool DbInitializer::run()
     } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
       if ( !checkRelation( tableElement ) )
         return false;
-    }else {
+    } else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
       return false;
     }
@@ -87,154 +126,126 @@ bool DbInitializer::run()
   return true;
 }
 
+DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
+{
+  TableDescription tableDescription;
+
+  tableDescription.name = tableElement.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
+
+  QDomElement childElement = tableElement.firstChildElement();
+  while ( !childElement.isNull() ) {
+    if ( childElement.tagName() == QLatin1String( "column" ) ) {
+      ColumnDescription columnDescription;
+
+      columnDescription.name = childElement.attribute( QLatin1String( "name" ) );
+      columnDescription.type = childElement.attribute( QLatin1String( "type" ) );
+
+      if ( childElement.hasAttribute( QLatin1String( "allowNull" ) ) )
+        columnDescription.allowNull = (childElement.attribute( QLatin1String( "allowNull" ) ) == QLatin1String( "true" ));
+
+      if ( childElement.hasAttribute( QLatin1String( "isAutoIncrement" ) ) )
+        columnDescription.isAutoIncrement = (childElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ));
+
+      if ( childElement.hasAttribute( QLatin1String( "isPrimaryKey" ) ) )
+        columnDescription.isPrimaryKey = (childElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ));
+
+      if ( childElement.hasAttribute( QLatin1String( "isUnique" ) ) )
+        columnDescription.isUnique = (childElement.attribute( QLatin1String( "isUnique" ) ) == QLatin1String( "true" ));
+
+      columnDescription.refTable = childElement.attribute( QLatin1String( "refTable" ) );
+      columnDescription.refColumn = childElement.attribute( QLatin1String( "refColumn" ) );
+      columnDescription.defaultValue = childElement.attribute( QLatin1String( "default" ) );
+
+      tableDescription.columns.append( columnDescription );
+    } else if ( childElement.tagName() == QLatin1String( "index" ) ) {
+      IndexDescription indexDescription;
+
+      indexDescription.name = childElement.attribute( QLatin1String( "name" ) );
+      indexDescription.columns = childElement.attribute( QLatin1String( "columns" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+      indexDescription.isUnique = (childElement.attribute( QLatin1String( "unique" ) ) == QLatin1String( "true" ));
+
+      tableDescription.indexes.append( indexDescription );
+    } else if ( childElement.tagName() == QLatin1String( "data" ) ) {
+      DataDescription dataDescription;
+
+      const QStringList columns = childElement.attribute( QLatin1String( "columns" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+      const QStringList values = childElement.attribute( QLatin1String( "values" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+      Q_ASSERT( columns.count() == values.count() );
+
+      for ( int i = 0; i < columns.count(); ++i )
+        dataDescription.data.insert( columns.at( i ), values.at( i ) );
+
+      tableDescription.data.append( dataDescription );
+    }
+
+    childElement = childElement.nextSiblingElement();
+  }
+
+  return tableDescription;
+}
+
+DbInitializer::RelationDescription DbInitializer::parseRelationDescription( const QDomElement &element ) const
+{
+  RelationDescription relationDescription;
+
+  relationDescription.firstTable = element.attribute( QLatin1String( "table1" ) );
+  relationDescription.firstTableName = element.attribute( QLatin1String( "table1" ) ) + QLatin1String( "Table" );
+  relationDescription.firstColumn = element.attribute( QLatin1String( "column1" ) );
+
+  relationDescription.secondTable = element.attribute( QLatin1String( "table2" ) );
+  relationDescription.secondTableName = element.attribute( QLatin1String( "table2" ) ) + QLatin1String( "Table" );
+  relationDescription.secondColumn = element.attribute( QLatin1String( "column2" ) );
+
+  return relationDescription;
+}
+
 bool DbInitializer::checkTable( const QDomElement &element )
 {
-  const QString tableName = element.attribute( QLatin1String("name") ) + QLatin1String("Table");
+  const QString tableName = element.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
 
   qDebug() << "checking table " << tableName;
 
-  typedef QPair<QString, QString> ColumnEntry;
+  // Parse the abstract table description from XML file
+  const TableDescription tableDescription = parseTableDescription( element );
 
-  QList<ColumnEntry> columnsList;
-  QStringList dataList;
-
-  QDomElement columnElement = element.firstChildElement();
-  while ( !columnElement.isNull() ) {
-    if ( columnElement.tagName() == QLatin1String( "column" ) ) {
-      ColumnEntry entry;
-      entry.first = columnElement.attribute( QLatin1String("name") );
-      if ( columnElement.attribute( QLatin1String("sqltype") ).isEmpty() )
-        entry.second = sqlType( columnElement.attribute( QLatin1String("type") ) );
-      else
-        entry.second = columnElement.attribute( QLatin1String("sqltype") ); 
-      QString props = columnElement.attribute(QLatin1String("properties"));
-
-      // TODO: we need a nicer way for this...
-      // special cases for sqlite
-      if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-        if ( props.contains(QLatin1String("PRIMARY KEY")) && entry.second == QLatin1String("BIGINT") )
-            entry.second = QLatin1String("INTEGER");
-        if ( props.contains(QLatin1String("BINARY")) && !props.contains(QLatin1String("COLLATE BINARY")) )
-          props.replace(QLatin1String("BINARY"), QLatin1String("COLLATE BINARY"));
-        if ( props.contains(QLatin1String("character set utf8 collate utf8_bin")) )
-          props.remove(QLatin1String("character set utf8 collate utf8_bin"));
-      }
-      entry.second += QLatin1String(" ") + props;
-      // special cases for PostgreSQL
-      if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) ) {
-        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second = QLatin1String("SERIAL PRIMARY KEY NOT NULL");
-        if ( entry.second.contains( QLatin1String("BLOB") ) )
-          entry.second = QLatin1String("BYTEA");
-        if ( entry.second.startsWith( QLatin1String("CHAR") ) )
-          entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-        if ( entry.second.contains( QLatin1String( "BINARY" ) ) )
-          entry.second.remove( QLatin1String( "BINARY" ) );
-        if ( entry.second.contains(QLatin1String("character set utf8 collate utf8_bin")) ) {
-          entry.second.remove(QLatin1String("character set utf8 collate utf8_bin"));
-          entry.second.replace(QLatin1String("VARCHAR(255)"), QLatin1String("BYTEA"));
-        }
-      }
-      // special cases for MySQL
-      else if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-        if ( entry.second.contains( QLatin1String("AUTOINCREMENT") ) )
-          entry.second.replace(QLatin1String("AUTOINCREMENT"), QLatin1String("AUTO_INCREMENT"));
-        if ( entry.second.startsWith( QLatin1String("CHAR") ) )
-          entry.second.replace(QLatin1String("CHAR"), QLatin1String("VARCHAR"));
-      }
-
-      if ( !columnElement.attribute( QLatin1String( "refTable" ) ).isEmpty()
-        && !columnElement.attribute( QLatin1String( "refColumn" ) ).isEmpty() )
-      {
-        const QString refStmt = QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
-          .arg( columnElement.attribute( QLatin1String( "refTable" ) ) )
-          .arg( columnElement.attribute( QLatin1String( "refColumn" ) ) );
-        if ( !mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
-          entry.second += refStmt;
-      }
-
-      columnsList.append( entry );
-    } else if ( columnElement.tagName() == QLatin1String( "data" ) ) {
-      QString values = columnElement.attribute( QLatin1String("values") );
-      if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-        values.replace( QLatin1String("\\"), QLatin1String("\\\\") );
-      } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-        values.replace( QLatin1String("true"), QLatin1String( "1" ) );
-        values.replace( QLatin1String("false"), QLatin1String( "0" ) );
-      }
-      QString statement = QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
-          .arg( tableName )
-          .arg( columnElement.attribute( QLatin1String("columns") ) )
-          .arg( values );
-      dataList << statement;
-    }
-
-    columnElement = columnElement.nextSiblingElement();
-  }
+  // Get the CREATE TABLE statement for the specific SQL dialect
+  const QString createTableStatement = buildCreateTableStatement( tableDescription );
 
   QSqlQuery query( mDatabase );
 
   if ( !hasTable( tableName ) ) {
-    /**
-     * We have to create the entire table.
-     */
+    qDebug() << createTableStatement;
 
-    QString columns;
-    for ( int i = 0; i < columnsList.count(); ++i ) {
-      if ( i != 0 )
-        columns.append( QLatin1String(", ") );
-
-      columns.append( columnsList[ i ].first + QLatin1Char(' ') + columnsList[ i ].second );
-    }
-
-    /**
-     * Add optional extra table properties (such as foreign keys and cascaded updates/deletes)
-     */
-    if( element.hasAttribute( QLatin1String("properties") ) )
-      columns.append( QLatin1String(", ") + element.attribute( QLatin1String("properties") ) );
-
-    QString tableProperties;
-    if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-      tableProperties += QLatin1String( " COLLATE=utf8_general_ci" );
-      tableProperties += QLatin1String( " DEFAULT CHARSET=utf8" );
-    }
-
-    const QString statement = QString::fromLatin1( "CREATE TABLE %1 (%2) %3;" ).arg( tableName, columns, tableProperties );
-    qDebug() << statement;
-
-    if ( !query.exec( statement ) ) {
+    // We have to create the entire table.
+    if ( !query.exec( createTableStatement ) ) {
       mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
       mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
       return false;
     }
   } else {
-    /**
-     * Check for every column whether it exists.
-     */
-
+    // Check for every column whether it exists.
     const QSqlRecord table = mDatabase.record( tableName );
 
-    for ( int i = 0; i < columnsList.count(); ++i ) {
-      const ColumnEntry entry = columnsList[ i ];
-
+    foreach ( const ColumnDescription &columnDescription, tableDescription.columns ) {
       bool found = false;
-      for ( int j = 0; j < table.count(); ++j ) {
-        const QSqlField column = table.field( j );
+      for ( int i = 0; i < table.count(); ++i ) {
+        const QSqlField column = table.field( i );
 
-        if ( columnsList[ i ].first.toLower() == column.name().toLower() ) {
+        if ( columnDescription.name.toLower() == column.name().toLower() ) {
           found = true;
+          break;
         }
       }
 
       if ( !found ) {
-        /**
-         * Add missing column to table.
-         */
-        const QString statement = QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2 %3;" )
-                                         .arg( tableName, entry.first, entry.second );
+        // Add missing column to table.
+
+        // Get the ADD COLUMN statement for the specific SQL dialect
+        const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
+        qDebug() << statement;
 
         if ( !query.exec( statement ) ) {
-          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( entry.first, tableName );
+          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableName );
           mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
           return false;
         }
@@ -244,48 +255,45 @@ bool DbInitializer::checkTable( const QDomElement &element )
     // TODO: remove obsolete columns (when sqlite will support it) and adapt column type modifications
   }
 
-  // add indices
-  columnElement = element.firstChildElement();
-  while ( !columnElement.isNull() ) {
-    if ( columnElement.tagName() == QLatin1String( "index" ) ) {
-      QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( columnElement.attribute( QLatin1String("name") ) ); // sqlite3 needs unique index identifiers per db
-      if ( !hasIndex( tableName, indexName ) ) {
-        QString statement = QLatin1String( "CREATE " );
-        if ( columnElement.attribute( QLatin1String("unique") ) == QLatin1String( "true" ) )
-          statement += QLatin1String( "UNIQUE " );
-        statement += QLatin1String( "INDEX " );
-        statement += indexName;
-        statement += QLatin1String( " ON " );
-        statement += tableName;
-        statement += QLatin1String( " (" );
-        statement += columnElement.attribute( QLatin1String("columns") );
-        statement += QLatin1String(");");
-        QSqlQuery query( mDatabase );
-        qDebug() << "adding index" << statement;
-        if ( !query.exec( statement ) ) {
-          mErrorMsg = QLatin1String( "Unable to create index.\n" );
-          mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-          return false;
-        }
+  // Add indices
+  foreach ( const IndexDescription &indexDescription, tableDescription.indexes ) {
+    // sqlite3 needs unique index identifiers per db
+    const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( indexDescription.name );
+    if ( !hasIndex( tableName, indexName ) ) {
+      // Get the CREATE INDEX statement for the specific SQL dialect
+      const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
+
+      QSqlQuery query( mDatabase );
+      qDebug() << "adding index" << statement;
+      if ( !query.exec( statement ) ) {
+        mErrorMsg = QLatin1String( "Unable to create index.\n" );
+        mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
+        return false;
       }
     }
-    columnElement = columnElement.nextSiblingElement();
   }
 
-
-  // add initial data if table is empty
-  const QString statement = QString::fromLatin1( "SELECT * FROM %1 LIMIT 1" ).arg( tableName );
-  if ( !query.exec( statement ) ) {
+  // Add initial data if table is empty
+  QueryBuilder queryBuilder( tableName, QueryBuilder::Select );
+  queryBuilder.addColumn( QLatin1String( "*" ) );
+  queryBuilder.setLimit( 1 );
+  if ( !queryBuilder.exec() ) {
     mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableName );
-    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
+    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( queryBuilder.query().lastError().text() );
     return false;
   }
-  if ( query.size() == 0  || !query.first() ) {
-    foreach ( const QString &stmt, dataList ) {
-      if ( !query.exec( stmt ) ) {
+
+  query = queryBuilder.query();
+  if ( query.size() == 0  || !query.first() ) { // table is empty
+    foreach ( const DataDescription &dataDescription, tableDescription.data ) {
+      // Get the INSERT VALUES statement for the specific SQL dialect
+      const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );
+      qDebug() << statement;
+
+      if ( !query.exec( statement ) ) {
         mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableName );
         mErrorMsg += QString::fromLatin1( "Query error: '%1'\n" ).arg( query.lastError().text() );
-        mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( stmt );
+        mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( statement );
         return false;
       }
     }
@@ -294,38 +302,18 @@ bool DbInitializer::checkTable( const QDomElement &element )
   return true;
 }
 
-bool DbInitializer::checkRelation(const QDomElement & element)
+bool DbInitializer::checkRelation( const QDomElement &element )
 {
-  const QString table1 = element.attribute(QLatin1String("table1"));
-  const QString table1Name = table1 + QLatin1String( "Table" );
-  const QString table2 = element.attribute(QLatin1String("table2"));
-  const QString table2Name = table2 + QLatin1String ( "Table" );
-  const QString col1 = element.attribute(QLatin1String("column1"));
-  const QString col2 = element.attribute(QLatin1String("column2"));
+  const RelationDescription relationDescription = parseRelationDescription( element );
 
-  QString tableName = table1 + table2 + QLatin1String("Relation");
-  qDebug() << "checking relation " << tableName;
+  const QString relationTableName = relationDescription.firstTable +
+                                    relationDescription.secondTable +
+                                    QLatin1String( "Relation" );
 
-  QString columnOptions;
-  // ### for MySQL as well?
-  if ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
-    columnOptions = QLatin1String( " ON DELETE CASCADE ON UPDATE CASCADE " );
+  qDebug() << "checking relation " << relationTableName;
 
-  if ( !hasTable( tableName ) ) {
-    QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-        .arg( table1  )
-        .arg( col1 )
-        .arg( table1Name )
-        .arg( col1 )
-        .arg( columnOptions );
-    statement += QString::fromLatin1("%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-        .arg( table2 )
-        .arg( col2 )
-        .arg( table2Name )
-        .arg( col2 )
-        .arg( columnOptions ),
-    statement += QString::fromLatin1("PRIMARY KEY (%1_%2, %3_%4));" ).arg( table1 ).arg( col1 ).arg( table2 ).arg( col2 );
+  if ( !hasTable( relationTableName ) ) {
+    const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
     qDebug() << statement;
 
     QSqlQuery query( mDatabase );
@@ -335,6 +323,7 @@ bool DbInitializer::checkRelation(const QDomElement & element)
       return false;
     }
   }
+
   return true;
 }
 
@@ -343,21 +332,16 @@ QString DbInitializer::errorMsg() const
   return mErrorMsg;
 }
 
-QString DbInitializer::sqlType(const QString & type)
+QString DbInitializer::sqlType(const QString & type) const
 {
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
-  if ( type == QLatin1String("qint64") ) {
-    return ( mDatabase.driverName() == QLatin1String( "QPSQL" ) )
-            ? QLatin1String( "int8" )
-            : QLatin1String( "BIGINT" );
-  }
+  if ( type == QLatin1String("qint64") )
+    return QLatin1String( "BIGINT" );
   if ( type == QLatin1String("QString") )
     return QLatin1String("TEXT");
   if (type == QLatin1String("QByteArray") )
-    return ( mDatabase.driverName() == QLatin1String("QPSQL") )
-            ? QLatin1String("BYTEA")
-            : QLatin1String("LONGBLOB");
+    return QLatin1String("LONGBLOB");
   if ( type == QLatin1String("QDateTime") )
     return QLatin1String("TIMESTAMP");
   if ( type == QLatin1String( "bool" ) )
@@ -366,34 +350,121 @@ QString DbInitializer::sqlType(const QString & type)
   return QString();
 }
 
+QString DbInitializer::sqlValue( const QString &type, const QString &value ) const
+{
+  if ( type == QLatin1String( "QDateTime" ) && value == QLatin1String( "QDateTime::currentDateTime()" ) )
+    return QLatin1String( "CURRENT_TIMESTAMP" );
+
+  return value;
+}
+
 bool DbInitializer::hasTable(const QString & tableName)
 {
    return mDatabase.tables().contains( tableName, Qt::CaseInsensitive );
 }
 
-bool DbInitializer::hasIndex(const QString & tableName, const QString & indexName)
+bool DbInitializer::hasIndex(const QString& tableName, const QString& indexName)
 {
-  // create statement
-  QString statement;
-  if ( mDatabase.driverName().startsWith( QLatin1String("QMYSQL") ) ) {
-    statement  = QString::fromLatin1( "SHOW INDEXES FROM %1" ).arg( tableName );
-    statement += QString::fromLatin1( " WHERE `Key_name` = '%1'" ).arg( indexName );
-  } else if( mDatabase.driverName() == QLatin1String("QPSQL") ) {
-    statement  = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
-    statement += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
-    statement += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
-  } else if ( mDatabase.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) {
-    statement  = QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
-  } else {
-    qFatal( "Implement index support for your database!" );
-  }
-
-  // query it
   QSqlQuery query( mDatabase );
-  if ( !query.exec( statement ) ) {
+  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
     mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1.\n" ).arg( tableName );
     mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
     return false;
   }
   return query.next();
+}
+
+QString DbInitializer::hasIndexQuery(const QString& tableName, const QString& indexName)
+{
+  Q_UNUSED( tableName );
+  Q_UNUSED( indexName );
+  qFatal( "Implement index support for your database!" );
+  return QString();
+}
+
+QString DbInitializer::buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const
+{
+  return QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2" ).arg( tableDescription.name, buildColumnStatement( columnDescription ) );
+}
+
+QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const
+{
+  const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableDescription.name ).arg( indexDescription.name );
+  return QString::fromLatin1( "CREATE %1 INDEX %2 ON %3 (%4)" )
+                            .arg( indexDescription.isUnique ? QLatin1String( "UNIQUE" ) : QString() )
+                            .arg( indexName )
+                            .arg( tableDescription.name )
+                            .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
+}
+
+QString DbInitializer::buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const
+{
+  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
+
+  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
+      .arg( relationDescription.firstTable )
+      .arg( relationDescription.firstColumn )
+      .arg( relationDescription.firstTableName )
+      .arg( relationDescription.firstColumn );
+
+  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
+      .arg( relationDescription.secondTable )
+      .arg( relationDescription.secondColumn )
+      .arg( relationDescription.secondTableName )
+      .arg( relationDescription.secondColumn );
+
+  statement += QString::fromLatin1( "PRIMARY KEY (%1_%2, %3_%4))" )
+      .arg( relationDescription.firstTable )
+      .arg( relationDescription.firstColumn )
+      .arg( relationDescription.secondTable )
+      .arg( relationDescription.secondColumn );
+
+  return statement;
+}
+
+void DbInitializer::setDebugInterface( DebugInterface *interface )
+{
+  mDebugInterface = interface;
+}
+
+void DbInitializer::unitTestRun()
+{
+  QFile file( mTemplateFile );
+  if ( !file.open( QIODevice::ReadOnly ) ) {
+    mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
+    return;
+  }
+
+  QDomDocument document;
+
+  QString errorMsg;
+  int line, column;
+  if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
+    mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
+                       .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
+    return;
+  }
+
+  const QDomElement documentElement = document.documentElement();
+  if ( documentElement.tagName() != QLatin1String( "database" ) ) {
+    mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
+    return;
+  }
+
+  QDomElement tableElement = documentElement.firstChildElement();
+  while ( !tableElement.isNull() ) {
+    if ( tableElement.tagName() == QLatin1String( "table" ) ) {
+      const QString tableName = tableElement.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
+      const TableDescription tableDescription = parseTableDescription( tableElement );
+      const QString createTableStatement = buildCreateTableStatement( tableDescription );
+      if ( mDebugInterface )
+        mDebugInterface->createTableStatement( tableName, createTableStatement );
+    } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
+    } else {
+      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
+      return;
+    }
+
+    tableElement = tableElement.nextSiblingElement();
+  }
 }

@@ -35,77 +35,110 @@
 <updates>
 
   <update version="2" abortOnFailure="false">
-    ALTER TABLE LocationTable DROP COLUMN existCount;
-    ALTER TABLE LocationTable DROP COLUMN recentCount;
-    ALTER TABLE LocationTable DROP COLUMN unseenCount;
-    ALTER TABLE LocationTable DROP COLUMN firstUnseen;
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN existCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN recentCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN unseenCount;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN firstUnseen;</raw-sql>
   </update>
 
   <update version="3" abortOnFailure="false">
-    UPDATE LocationTable SET subscribed = true;
+    <raw-sql backends="mysql,psql,sqlite">UPDATE LocationTable SET subscribed = true;</raw-sql>
   </update>
 
   <update version="4" abortOnFailure="false">
-    ALTER TABLE LocationTable DROP COLUMN cachePolicyId;
-    ALTER TABLE ResourceTable DROP COLUMN cachePolicyId;
-    DROP TABLE CachePolicyTable;
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable DROP COLUMN cachePolicyId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE ResourceTable DROP COLUMN cachePolicyId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CachePolicyTable;</raw-sql>
   </update>
 
   <update version="8" abortOnFailure="false">
-    UPDATE PartTable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';
-    UPDATE PartTable SET name = 'PLD:RFC822' WHERE name = 'RFC822';
-    UPDATE PartTable SET name = 'PLD:HEAD' WHERE name = 'HEAD';
-    UPDATE PartTable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:ENVELOPE' WHERE name = 'ENVELOPE';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:RFC822' WHERE name = 'RFC822';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = 'PLD:HEAD' WHERE name = 'HEAD';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET name = concat( 'ATR:', name ) WHERE substr( name, 1, 4 ) != 'PLD:';</raw-sql>
   </update>
 
   <!-- the initializer runs first, so we will have all the new tables and columns already
        therefore we have to clean that up first -->
   <update version="10" abortOnFailure="true">
-    DROP TABLE CollectionTable;
-    ALTER TABLE LocationTable RENAME TO CollectionTable;
-    ALTER TABLE PimItemTable DROP COLUMN collectionId;
-    ALTER TABLE PimItemTable CHANGE locationId collectionId BIGINT;
-    DROP TABLE CollectionAttributeTable;
-    ALTER TABLE LocationAttributeTable CHANGE locationId collectionId BIGINT;
-    ALTER TABLE LocationAttributeTable RENAME TO CollectionAttributeTable;
-    DROP TABLE CollectionMimeTypeRelation;
-    ALTER TABLE LocationMimeTypeRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';
-    ALTER TABLE LocationMimeTypeRelation RENAME TO CollectionMimeTypeRelation;
-    DROP TABLE CollectionPimItemRelation;
-    ALTER TABLE LocationPimItemRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';
-    ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationTable RENAME TO CollectionTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemTable DROP COLUMN collectionId;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemTable CHANGE locationId collectionId BIGINT;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionAttributeTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationAttributeTable CHANGE locationId collectionId BIGINT;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationAttributeTable RENAME TO CollectionAttributeTable;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionMimeTypeRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationMimeTypeRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationMimeTypeRelation RENAME TO CollectionMimeTypeRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">DROP TABLE CollectionPimItemRelation;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationPimItemRelation CHANGE Location_Id Collection_Id BIGINT NOT NULL DEFAULT '0';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE LocationPimItemRelation RENAME TO CollectionPimItemRelation;</raw-sql>
   </update>
 
   <update version="12" abortOnFailure="false">
-    ALTER TABLE PartTable CHANGE datasize datasize BIGINT;
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable CHANGE datasize datasize BIGINT;</raw-sql>
   </update>
 
   <update version="13" abortOnFailure="true">
-    UPDATE CollectionTable SET parentId = NULL WHERE parentId = 0;
-    ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET parentId = NULL WHERE parentId = 0;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionTable CHANGE parentId parentId BIGINT DEFAULT NULL;</raw-sql>
   </update>
 
   <update version="14" abortOnFailure="false">
-    UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';
-    UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';
+    <raw-sql backends="mysql,psql,sqlite">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_nepomuktag_resource';</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE ResourceTable SET isVirtual = true WHERE name = 'akonadi_search_resource';</raw-sql>
   </update>
 
   <update version="15" abortOnFailure="false">
-    UPDATE CollectionTable SET queryString = remoteId WHERE resourceId = 1 AND parentId IS NOT NULL;
-    UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET queryString = remoteId WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET queryLanguage = 'SPARQL' WHERE resourceId = 1 AND parentId IS NOT NULL;</raw-sql>
   </update>
 
   <update version="16" abortOnFailure="false">
-    ALTER TABLE CollectionAttributeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE CollectionMimeTypeRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE CollectionPimItemRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE CollectionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE FlagTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE MimeTypeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE PartTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE PimItemFlagRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE PimitemTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
-    ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionAttributeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionMimeTypeRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionPimItemRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE CollectionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE FlagTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE MimeTypeTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimItemFlagRelation CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PimitemTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE ResourceTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE SchemaVersionTable CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;</raw-sql>
+  </update>
+
+  <!-- change all string based columns to use BINARY flag, this makes the comparison operator
+       finally work -->
+  <update version="17" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE ResourceTable CHANGE name name VARCHAR(255) BINARY UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE remoteId remoteId VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE remoteRevision remoteRevision VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE name name VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE cachePolicyLocalParts cachePolicyLocalParts VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryLanguage queryLanguage VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE MimeTypeTable CHANGE name name VARCHAR(255) BINARY UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable CHANGE remoteId remoteId VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable CHANGE remoteRevision remoteRevision VARCHAR(255) BINARY;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE FlagTable CHANGE name name VARCHAR(255) BINARY UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PartTable CHANGE name name VARCHAR(255) BINARY;</raw-sql>
+  </update>
+
+  <!-- change all string based columns to VARBINARY to make indexes and comparison operator work -->
+  <update version="18" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE ResourceTable CHANGE name name VARBINARY(255) UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE remoteId remoteId VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE remoteRevision remoteRevision VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE name name VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE cachePolicyLocalParts cachePolicyLocalParts VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryLanguage queryLanguage VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE MimeTypeTable CHANGE name name VARBINARY(255) UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable CHANGE remoteId remoteId VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable CHANGE remoteRevision remoteRevision VARBINARY(255);</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE FlagTable CHANGE name name VARBINARY(255) UNIQUE;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PartTable CHANGE name name VARBINARY(255);</raw-sql>
   </update>
 </updates>

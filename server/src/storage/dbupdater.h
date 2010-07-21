@@ -20,13 +20,36 @@
 #ifndef AKONADI_DBUPDATER_H
 #define AKONADI_DBUPDATER_H
 
-#include <QString>
-#include <QSqlDatabase>
+#include <QtCore/QMap>
+#include <QtCore/QStringList>
+#include <QtSql/QSqlDatabase>
+
+#include "../akonadiprivate_export.h"
+
+class QDomElement;
+
+/**
+ * @short A helper class that contains an update set.
+ */
+class UpdateSet
+{
+  public:
+    typedef QMap<int, UpdateSet> Map;
+
+    UpdateSet()
+      : version( -1 ), abortOnFailure( false )
+    {
+    }
+
+    int version;
+    bool abortOnFailure;
+    QStringList statements;
+};
 
 /**
   Updates the database schema.
 */
-class DbUpdater
+class AKONADIPRIVATE_EXPORT DbUpdater
 {
   public:
     /**
@@ -44,6 +67,13 @@ class DbUpdater
     bool run();
 
   private:
+    friend class DbUpdaterTest;
+
+    bool updateApplicable( const QString& ) const;
+    QString buildRawSqlStatement( const QDomElement& ) const;
+
+    bool parseUpdateSets( int, UpdateSet::Map& ) const;
+
     QSqlDatabase m_database;
     QString m_filename;
 };

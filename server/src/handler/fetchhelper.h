@@ -24,6 +24,7 @@
 
 #include "scope.h"
 #include "libs/imapset_p.h"
+#include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 
@@ -31,7 +32,6 @@ namespace Akonadi {
 
 class AkonadiConnection;
 class ImapSet;
-class QueryBuilder;
 class Response;
 
 class FetchHelper : public QObject

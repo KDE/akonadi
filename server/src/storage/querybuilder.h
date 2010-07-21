@@ -197,6 +197,13 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     void setDistinct( bool distinct );
 
     /**
+     * Limits the amount of retrieved rows.
+     * @param limit the maximum number of rows to retrieve.
+     * @note This has no effect on anything but SELECT queries.
+     */
+    void setLimit( int limit );
+
+    /**
       Returns the query, only valid after exec().
     */
     QSqlQuery& query();
@@ -237,6 +244,7 @@ class AKONADIPRIVATE_EXPORT QueryBuilder
     // QMap sorts by key which might invalidate the queries
     QStringList mJoinedTables;
     QMap< QString, QPair< JoinType, Query::Condition > > mJoins;
+    int mLimit;
     bool mDistinct;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;

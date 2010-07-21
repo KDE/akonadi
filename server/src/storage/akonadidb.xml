@@ -31,7 +31,6 @@
 
   Table attributes (can contain column, reference and data elements)
   - name: The entity class name, the table will be named FooTable.
-  - properties: additional SQL properties such as foreign keys
 
   Column attributes:
   - name: The column name, will be also used as accessor name in the entity class.
@@ -40,7 +39,6 @@
   - default: Default value for entity class constructor.
   - refTable, refColumn: foreign key, also used to generate accessor methods for 1:n relations
   - methodName: method name to access referred records, the table name is used if not given
-  - properties: SQL properties such as constraints
 
   Indices:
   - name: The name of the index
@@ -66,30 +64,30 @@
 
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
-    <column name="version" type="int" default="0" properties="NOT NULL"/>
-    <data columns="version" values="16"/>
+    <column name="version" type="int" default="0" allowNull="false"/>
+    <data columns="version" values="18"/>
   </table>
 
   <table name="Resource">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY NOT NULL UNIQUE"/>
-    <column name="isVirtual" type="bool" properties="DEFAULT false"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
+    <column name="isVirtual" type="bool" default="false"/>
     <reference name="collections" table="Collection" key="resourceId"/>
     <data columns="name,isVirtual" values="'akonadi_search_resource',true"/>
   </table>
 
   <table name="Collection">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="BINARY character set utf8 collate utf8_bin NOT NULL"/>
-    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent" properties="DEFAULT NULL"/>
-    <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" properties="NOT NULL"/>
-    <column name="subscribed" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
-    <column name="cachePolicyInherit" type="bool" default="true" properties="NOT NULL DEFAULT true"/>
-    <column name="cachePolicyCheckInterval" type="int" default="-1" properties="NOT NULL DEFAULT -1"/>
-    <column name="cachePolicyCacheTimeout" type="int" default="-1" properties="NOT NULL DEFAULT -1"/>
-    <column name="cachePolicySyncOnDemand" type="bool" default="false" properties="NOT NULL DEFAULT false"/>
+    <column name="name" type="QString" allowNull="false"/>
+    <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
+    <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
+    <column name="subscribed" type="bool" default="true" allowNull="false"/>
+    <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
+    <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
+    <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>
+    <column name="cachePolicySyncOnDemand" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyLocalParts" type="QString"/>
     <column name="queryString" type="QString"/>
     <column name="queryLanguage" type="QString"/>
@@ -102,8 +100,8 @@
 
   <table name="MimeType">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
     <data columns="name" values="'application/octet-stream'"/>
     <data columns="name" values="'message/rfc822'"/>
     <data columns="name" values="'text/calendar'"/>
@@ -112,13 +110,13 @@
   </table>
 
   <table name="PimItem">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="rev" type="int" properties="NOT NULL DEFAULT 0"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="rev" type="int" default="0" allowNull="false"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id"/>
-    <column name="datetime" type="QDateTime" properties="DEFAULT CURRENT_TIMESTAMP">
+    <column name="datetime" type="QDateTime" default="QDateTime::currentDateTime()">
       <comment>create/modified time</comment>
     </column>
     <column name="atime" type="QDateTime">
@@ -127,15 +125,15 @@
     <column name="dirty" type="bool">
       <comment>Indicates that this item has unsaved changes.</comment>
     </column>
-    <column name="size" type="qint64" properties="NOT NULL DEFAULT 0"/>
+    <column name="size" type="qint64" default="0" allowNull="false"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
 
   <table name="Flag">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL UNIQUE"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
     <data columns="name" values="'spam'"/>
@@ -146,21 +144,21 @@
     <data columns="name" values="'\Draft'"/>
   </table>
 
-  <table name="Part" properties="FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" properties="NOT NULL"/>
-    <column name="name" type="QString" sqltype="VARCHAR(255)" properties="NOT NULL"/>
+  <table name="Part">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
+    <column name="name" type="QString" allowNull="false"/>
     <column name="data" type="QByteArray"/>
-    <column name="datasize" type="qint64" properties="NOT NULL"/>
-    <column name="version" type="int" properties="DEFAULT 0"/>
+    <column name="datasize" type="qint64" allowNull="false"/>
+    <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
   </table>
 
   <table name="CollectionAttribute">
-    <column name="id" type="qint64" properties="NOT NULL PRIMARY KEY AUTOINCREMENT"/>
-    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" properties="NOT NULL"/>
-    <column name="type" type="QByteArray" properties="NOT NULL"/>
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="collectionId" type="qint64" refTable="Collection" refColumn="id" allowNull="false"/>
+    <column name="type" type="QByteArray" allowNull="false"/>
     <column name="value" type="QByteArray"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
   </table>

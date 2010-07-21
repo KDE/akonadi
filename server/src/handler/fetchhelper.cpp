@@ -35,6 +35,7 @@
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/transaction.h"
+#include "utils.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -249,8 +250,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( itemQuery.value( ItemQueryPimItemRidColumn ).toString().toUtf8() ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( itemQuery.value( ItemQueryMimeTypeColumn ).toString().toUtf8() ) );
+    attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemRidColumn ) ) ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryMimeTypeColumn ) ) ) );
     Collection::Id parentCollectionId = itemQuery.value( ItemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
@@ -265,7 +266,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
-      attributes.append( "REMOTEREVISION " + ImapParser::quote( itemQuery.value( ItemQueryRemoteRevisionColumn ).toString().toUtf8() ) );
+      attributes.append( "REMOTEREVISION " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryRemoteRevisionColumn ) ) ) );
     }
 
     if ( mRequestedParts.contains( "FLAGS" ) ) {
@@ -278,7 +279,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         } else if ( id > pimItemId ) {
           break;
         }
-        flags << flagQuery.value( FlagQueryNameColumn ).toString().toUtf8();
+        flags << Utils::variantToByteArray( flagQuery.value( FlagQueryNameColumn ) );
         flagQuery.next();
       }
       attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
@@ -295,9 +296,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       } else if ( id > pimItemId ) {
         break;
       }
-      QByteArray partName = partQuery.value( PartQueryNameColumn ).toString().toUtf8();
-      QByteArray part = partQuery.value( PartQueryNameColumn ).toString().toUtf8();
-      QByteArray data = partQuery.value( PartQueryDataColumn ).toByteArray();
+      QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
+      QByteArray part = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
+      QByteArray data = Utils::variantToByteArray( partQuery.value( PartQueryDataColumn ) );
       bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );

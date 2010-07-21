@@ -1,0 +1,2 @@
+CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
+                            name BYTEA UNIQUE NOT NULL)

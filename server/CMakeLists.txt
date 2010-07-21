@@ -111,6 +111,7 @@ set(libakonadiprivate_SRCS
   src/storage/dbconfigpostgresql.cpp
   src/storage/dbconfigsqlite.cpp
   src/storage/dbinitializer.cpp
+  src/storage/dbinitializer_p.cpp
   src/storage/dbupdater.cpp
   src/storage/itemqueryhelper.cpp
   src/storage/itemretriever.cpp

@@ -1,0 +1,30 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+ <file>mysql_ct_collection</file>
+ <file>mysql_ct_collectionattribute</file>
+ <file>mysql_ct_flag</file>
+ <file>mysql_ct_mimetype</file>
+ <file>mysql_ct_part</file>
+ <file>mysql_ct_pimitem</file>
+ <file>mysql_ct_resource</file>
+ <file>mysql_ct_schemaversion</file>
+
+ <file>psql_ct_collection</file>
+ <file>psql_ct_collectionattribute</file>
+ <file>psql_ct_flag</file>
+ <file>psql_ct_mimetype</file>
+ <file>psql_ct_part</file>
+ <file>psql_ct_pimitem</file>
+ <file>psql_ct_resource</file>
+ <file>psql_ct_schemaversion</file>
+
+ <file>sqlite_ct_collection</file>
+ <file>sqlite_ct_collectionattribute</file>
+ <file>sqlite_ct_flag</file>
+ <file>sqlite_ct_mimetype</file>
+ <file>sqlite_ct_part</file>
+ <file>sqlite_ct_pimitem</file>
+ <file>sqlite_ct_resource</file>
+ <file>sqlite_ct_schemaversion</file>
+</qresource>
+</RCC>

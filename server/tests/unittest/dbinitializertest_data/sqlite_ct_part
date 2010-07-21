@@ -1,0 +1,7 @@
+CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        pimItemId BIGINT NOT NULL,
+                        name TEXT NOT NULL,
+                        data LONGBLOB,
+                        datasize BIGINT NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        external BOOL DEFAULT false)
