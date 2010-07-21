@@ -1,6 +1,6 @@
 CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         pimItemId BIGINT NOT NULL,
-                        name VARCHAR(255) BINARY NOT NULL,
+                        name VARBINARY(255) NOT NULL,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
