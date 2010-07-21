@@ -38,7 +38,7 @@ class HandlerHelperTest : public QObject
 
       Collection c;
       c.setCachePolicyInherit( true );
-      QTest::newRow( "inherit" ) << c << QByteArray( "CACHEPOLICY (INHERIT true INTERVAL -1 CACHETIMEOUT -1 SYNCONDEMAND false LOCALPARTS ())" );
+      QTest::newRow( "inherit" ) << c << QByteArray( "CACHEPOLICY (INHERIT true INTERVAL 0 CACHETIMEOUT 0 SYNCONDEMAND false LOCALPARTS ())" );
 
       c.setCachePolicyInherit( false );
       c.setCachePolicyCheckInterval( 1 );
