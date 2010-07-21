@@ -237,6 +237,8 @@ void EntityTreeView::dropEvent( QDropEvent * event )
 {
   if ( d->mDragDropManager->processDropEvent( event ) )
     QTreeView::dropEvent( event );
+
+  d->mDragExpandTimer.stop();
 }
 
 void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
