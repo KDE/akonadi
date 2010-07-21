@@ -106,7 +106,7 @@ bool Status::parseStream()
     else
       statusResponse += "UNSEEN ";
 
-    const int count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
+    const int count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) );
     if ( count < 0 )
       return failureResponse( "Unable to retrieve unread count" );
     statusResponse += QByteArray::number( count );

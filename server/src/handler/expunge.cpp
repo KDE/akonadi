@@ -45,10 +45,10 @@ bool Expunge::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  Flag flag = Flag::retrieveByName( QLatin1String("\\Deleted") );
+  Flag flag = Flag::retrieveByName( QLatin1String("\\DELETED") );
   if ( !flag.isValid() ) {
     response.setError();
-    response.setString( "\\Deleted flag unknown" );
+    response.setString( "\\DELETED flag unknown" );
 
     emit responseAvailable( response );
     return true;

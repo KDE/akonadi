@@ -162,7 +162,7 @@ class AKONADIPRIVATE_EXPORT DataStore : public QObject
     bool cleanupPimItem( const PimItem &item );
 
     /**
-     * Cleanups all items which have the '\\Deleted' flag set
+     * Cleanups all items which have the '\\DELETED' flag set
      */
     bool cleanupPimItems( const Collection &collection );
 

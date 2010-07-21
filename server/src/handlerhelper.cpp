@@ -200,7 +200,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
 
   if ( includeStatistics ) {
       b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
-      b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) ) ) + ' ';
+      b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) ) ) + ' ';
       b += "SIZE " + QByteArray::number( HandlerHelper::itemsTotalSize( col ) ) + ' ';
   }
 

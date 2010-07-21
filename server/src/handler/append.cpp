@@ -225,8 +225,8 @@ bool Append::parseStream()
     // parse optional flag parenthesized list
     // Syntax:
     // flag-list      = "(" [flag *(SP flag)] ")"
-  // flag           = "\Answered" / "\Flagged" / "\Deleted" / "\Seen" /
-    //                  "\Draft" / flag-keyword / flag-extension
+    // flag           = "\ANSWERED" / "\FLAGGED" / "\DELETED" / "\SEEN" /
+    //                  "\DRAFT" / flag-keyword / flag-extension
     //                    ; Does not include "\Recent"
     // flag-extension = "\" atom
     // flag-keyword   = atom

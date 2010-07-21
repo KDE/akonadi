@@ -65,7 +65,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="18"/>
+    <data columns="version" values="19"/>
   </table>
 
   <table name="Resource">
@@ -137,11 +137,11 @@
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
     <data columns="name" values="'spam'"/>
-    <data columns="name" values="'\Answered'"/>
-    <data columns="name" values="'\Flagged'"/>
-    <data columns="name" values="'\Deleted'"/>
-    <data columns="name" values="'\Seen'"/>
-    <data columns="name" values="'\Draft'"/>
+    <data columns="name" values="'\ANSWERED'"/>
+    <data columns="name" values="'\FLAGGED'"/>
+    <data columns="name" values="'\DELETED'"/>
+    <data columns="name" values="'\SEEN'"/>
+    <data columns="name" values="'\DRAFT'"/>
   </table>
 
   <table name="Part">

@@ -495,7 +495,7 @@ bool DataStore::cleanupPimItems( const Collection &collection )
 
   qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
 
-  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\Deleted") );
+  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\DELETED") );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
 
   if ( !qb.exec() )
