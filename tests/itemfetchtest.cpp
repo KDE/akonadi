@@ -80,13 +80,13 @@ void ItemFetchTest::testFetch()
   QCOMPARE( item.remoteId(), QString( "A" ) );
 
   QCOMPARE( item.flags().count(), 3 );
-  QVERIFY( item.hasFlag( "\\Seen" ) );
-  QVERIFY( item.hasFlag( "\\Flagged" ) );
-  QVERIFY( item.hasFlag( "\\Draft" ) );
+  QVERIFY( item.hasFlag( "\\SEEN" ) );
+  QVERIFY( item.hasFlag( "\\FLAGGED" ) );
+  QVERIFY( item.hasFlag( "\\DRAFT" ) );
 
   item = items[1];
   QCOMPARE( item.flags().count(), 1 );
-  QVERIFY( item.hasFlag( "\\Flagged" ) );
+  QVERIFY( item.hasFlag( "\\FLAGGED" ) );
 
   item = items[2];
   QVERIFY( item.flags().isEmpty() );

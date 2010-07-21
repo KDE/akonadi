@@ -47,7 +47,7 @@ void MailDir20PercentAsRead::runTest() {
     Item::List itemlist = ifj->items();
     for ( int i = ifj->items().count() - 1; i >= 0; i -= 5) {
       Item item = itemlist[i];
-      item.setFlag( "\\Seen" );
+      item.setFlag( "\\SEEN" );
       ItemModifyJob *isj = new ItemModifyJob( item, this );
       isj->exec();
     }
