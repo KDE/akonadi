@@ -165,4 +165,10 @@ Collection::Rights CollectionRequester::accessRightsFilter() const
     return Akonadi::Collection::ReadOnly;
 }
 
+void CollectionRequester::changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options )
+{
+  if ( d->collectionDialog )
+    d->collectionDialog->changeCollectionDialogOptions( options );
+}
+
 #include "collectionrequester.moc"

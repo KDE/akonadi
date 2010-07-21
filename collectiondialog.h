@@ -1,5 +1,6 @@
 /*
     Copyright 2008 Ingo Klöcker <kloecker@kde.org>
+    Copyright 2010 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -67,6 +68,17 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     Q_DISABLE_COPY( CollectionDialog )
 
   public:
+    /* @since 4.6
+     */
+    enum CollectionDialogOption
+    {
+      None = 0,
+      AllowToCreateNewChildCollection = 1
+    };
+
+    Q_DECLARE_FLAGS( CollectionDialogOptions, CollectionDialogOption )
+
+
     /**
      * Creates a new collection dialog.
      *
@@ -86,6 +98,21 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      * @since 4.4
      */
     explicit CollectionDialog( QAbstractItemModel *model, QWidget *parent = 0 );
+
+    /**
+     * Creates a new collection dialog with a custom @p model.
+     *
+     * The filtering by content mime type and access rights is done
+     * on top of the custom model.
+     *
+     * @param options The collection dialog options.
+     * @param model The custom model to use.
+     * @param parent The parent widget.
+     *
+     * @since 4.6
+     */
+
+    explicit CollectionDialog( CollectionDialogOptions options, QAbstractItemModel *model = 0, QWidget *parent = 0 );
 
     /**
      * Destroys the collection dialog.
@@ -155,6 +182,12 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      */
     Akonadi::Collection::List selectedCollections() const;
 
+    /**
+     * Change collection dialog options
+     * @since 4.6
+     */
+    void changeCollectionDialogOptions( CollectionDialogOptions options );
+
   private:
     //@cond PRIVATE
     class Private;
@@ -162,6 +195,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     Q_PRIVATE_SLOT( d, void slotCollectionAvailable( const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+    Q_PRIVATE_SLOT( d, void slotAddChildCollection() )
+    Q_PRIVATE_SLOT( d, void slotCollectionCreationResult(KJob* job) )
     //@endcond
 };
 

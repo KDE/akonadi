@@ -1,5 +1,6 @@
 /*
     Copyright 2008 Ingo Klöcker <kloecker@kde.org>
+    Copyright 2010 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -28,6 +29,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/session.h>
+#include <akonadi/collectioncreatejob.h>
 
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -35,13 +37,15 @@
 
 #include <KLineEdit>
 #include <KLocale>
+#include <KInputDialog>
+#include <KMessageBox>
 
 using namespace Akonadi;
 
 class CollectionDialog::Private
 {
   public:
-    Private( QAbstractItemModel *customModel, CollectionDialog *parent )
+    Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options )
       : mParent( parent ),
         mMonitor( 0 ),
         mModel( 0 )
@@ -49,6 +53,8 @@ class CollectionDialog::Private
       // setup GUI
       QWidget *widget = mParent->mainWidget();
       QVBoxLayout *layout = new QVBoxLayout( widget );
+
+      changeCollectionDialogOptions( options );
 
       mTextLabel = new QLabel;
       layout->addWidget( mTextLabel );
@@ -107,6 +113,7 @@ class CollectionDialog::Private
 
       mParent->connect( mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
                         mParent, SLOT( accept() ) );
+
     }
 
     ~Private()
@@ -128,26 +135,107 @@ class CollectionDialog::Private
     EntityTreeView *mView;
     AsyncSelectionHandler *mSelectionHandler;
     QLabel *mTextLabel;
+    bool mAllowToCreateNewChildCollection;
 
     void slotSelectionChanged();
+    void slotAddChildCollection();
+    void slotCollectionCreationResult(KJob* job);
+    bool canCreateCollection( Akonadi::Collection & parentCol );
+    void changeCollectionDialogOptions( CollectionDialogOptions options );
+
 };
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
   mParent->enableButton( KDialog::Ok, mView->selectionModel()->selectedIndexes().count() > 0 );
+  if ( mAllowToCreateNewChildCollection ) {
+    Akonadi::Collection parentCollection;
+    mParent->enableButton(KDialog::User1, canCreateCollection( parentCollection ) );
+    if ( parentCollection.isValid() ) {
+      const bool canCreateMessages = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
+      mParent->enableButton( KDialog::Ok, canCreateMessages );
+    }
+  }
 }
+
+void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogOptions options )
+{
+  mAllowToCreateNewChildCollection = ( options & AllowToCreateNewChildCollection );
+  if ( mAllowToCreateNewChildCollection ) {
+    mParent->setButtons( Ok | Cancel | User1 );
+    mParent->setButtonGuiItem( User1, KGuiItem( i18n("&New Subfolder..."), QLatin1String( "folder-new" ),
+                                                i18n("Create a new subfolder under the currently selected folder") ) );
+    mParent->enableButton( KDialog::User1, false );
+    connect( mParent, SIGNAL( user1Clicked() ), mParent, SLOT( slotAddChildCollection() ) );
+  }
+}
+
+
+
+bool CollectionDialog::Private::canCreateCollection( Akonadi::Collection & parentCollection )
+{
+  parentCollection = mParent->selectedCollection();
+  if ( !parentCollection.isValid() )
+    return false;
+  if ( ( parentCollection.rights() & Akonadi::Collection::CanCreateCollection ) ) {
+    const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
+    const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
+    Q_FOREACH( const QString& mimetype, dialogMimeTypeFilter ) {
+      if ( parentCollectionMimeTypes.contains( mimetype ) )
+        return true;
+    }
+    return true;
+  }
+  return false;
+}
+
+
+void CollectionDialog::Private::slotAddChildCollection()
+{
+  Akonadi::Collection parentCollection;
+  if ( canCreateCollection( parentCollection ) ){
+    const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder"),
+                                                i18nc( "@label:textbox, name of a thing", "Name"),
+                                                QString(), 0, mParent );
+    if ( name.isEmpty() )
+      return;
+
+    Akonadi::Collection collection;
+    collection.setName( name );
+    collection.parentCollection().setId( parentCollection.id() );
+    Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
+    connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)) );
+  }
+}
+
+void CollectionDialog::Private::slotCollectionCreationResult(KJob* job)
+{
+  if ( job->error() ) {
+    KMessageBox::error( mParent, i18n("Could not create folder: %1", job->errorString()),
+                        i18n("Folder creation failed") );
+  }
+}
+
+
 
 CollectionDialog::CollectionDialog( QWidget *parent )
   : KDialog( parent ),
-    d( new Private( 0, this ) )
+    d( new Private( 0, this, CollectionDialog::None ) )
 {
 }
 
 CollectionDialog::CollectionDialog( QAbstractItemModel *model, QWidget *parent )
   : KDialog( parent ),
-    d( new Private( model, this ) )
+    d( new Private( model, this, CollectionDialog::None ) )
 {
 }
+
+CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent )
+  : KDialog( parent ),
+    d( new Private( model, this, options ) )
+{
+}
+
 
 CollectionDialog::~CollectionDialog()
 {
@@ -225,6 +313,11 @@ void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )
 QAbstractItemView::SelectionMode CollectionDialog::selectionMode() const
 {
   return d->mView->selectionMode();
+}
+
+void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions options )
+{
+  d->changeCollectionDialogOptions( options );
 }
 
 #include "collectiondialog.moc"

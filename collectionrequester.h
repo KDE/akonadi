@@ -23,7 +23,7 @@
 #include "akonadi_export.h"
 
 #include <akonadi/collection.h>
-
+#include <akonadi/collectiondialog.h>
 #include <khbox.h>
 
 namespace Akonadi {
@@ -108,6 +108,8 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      * @since 4.4
      */
     Collection::Rights accessRightsFilter() const;
+
+    void changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options );
 
   public Q_SLOTS:
     /**
