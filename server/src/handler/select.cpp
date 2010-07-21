@@ -107,7 +107,7 @@ bool Select::parseStream()
     response.setString( QByteArray::number( count ) + " RECENT" );
     emit responseAvailable( response );
 
-    count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\Seen" ) );
+    count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) );
     if ( count < 0 )
       return failureResponse( "Unable to retrieve unseen count" );
     response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message 0 is first unseen" );

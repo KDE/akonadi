@@ -141,4 +141,8 @@
     <raw-sql backends="mysql">ALTER TABLE FlagTable CHANGE name name VARBINARY(255) UNIQUE;</raw-sql>
     <raw-sql backends="mysql">ALTER TABLE PartTable CHANGE name name VARBINARY(255);</raw-sql>
   </update>
+  <update version="19" abortOnFailure="false">
+    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE pimitemflagrelation SET Flag_id=(SELECT id FROM flagtable WHERE name='\\SEEN') WHERE Flag_id=(SELECT id FROM flagtable WHERE name='\\Seen');</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite,odbc">DELETE FROM flagtable WHERE name='\\Seen';</raw-sql>
+  </update>
 </updates>
