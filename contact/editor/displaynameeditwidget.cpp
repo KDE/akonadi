@@ -213,7 +213,7 @@ bool DisplayNameEditWidget::eventFilter( QObject *object, QEvent *event )
     return false;
   }
 
-  return eventFilter( object, event );
+  return QWidget::eventFilter( object, event );
 }
 
 void DisplayNameEditWidget::updateView()
@@ -236,9 +236,15 @@ void DisplayNameEditWidget::updateView()
   // CustomName:
   mView->setItemText( 5, mContact.formattedName() );
 
-  mView->setEditable( mDisplayType == CustomName );
+  // delay the state change here, since we might have been called from mView via a signal
+  QMetaObject::invokeMethod( this, "setComboBoxEditable", Qt::QueuedConnection, Q_ARG( bool, mDisplayType == CustomName ) );
 
   mView->setCurrentIndex( (int)mDisplayType );
+}
+
+void DisplayNameEditWidget::setComboBoxEditable( bool value )
+{
+  mView->setEditable( value );
 }
 
 #include "displaynameeditwidget.moc"
