@@ -72,6 +72,7 @@ class DisplayNameEditWidget : public QWidget
 
   private Q_SLOTS:
     void displayTypeChanged( int );
+    void setComboBoxEditable( bool );
 
   private:
     void updateView();
