@@ -47,8 +47,7 @@ class CollectionDialog::Private
   public:
     Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options )
       : mParent( parent ),
-        mMonitor( 0 ),
-        mModel( 0 )
+        mMonitor( 0 )
     {
       // setup GUI
       QWidget *widget = mParent->mainWidget();
@@ -84,9 +83,9 @@ class CollectionDialog::Private
         mMonitor->fetchCollection( true );
         mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-        mModel = new EntityTreeModel( mMonitor, mParent );
-        mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
-        baseModel = mModel;
+        EntityTreeModel *model = new EntityTreeModel( mMonitor, mParent );
+        model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
+        baseModel = model;
       }
 
       mMimeTypeFilterModel = new CollectionFilterProxyModel( mParent );
@@ -129,7 +128,6 @@ class CollectionDialog::Private
     CollectionDialog *mParent;
 
     ChangeRecorder *mMonitor;
-    EntityTreeModel *mModel;
     CollectionFilterProxyModel *mMimeTypeFilterModel;
     EntityRightsFilterModel *mRightsFilterModel;
     EntityTreeView *mView;
