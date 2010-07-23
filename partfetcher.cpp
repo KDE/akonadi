@@ -105,6 +105,11 @@ PartFetcher::PartFetcher( const QModelIndex &index, const QByteArray &partName, 
 {
 }
 
+PartFetcher::~PartFetcher()
+{
+  delete d_ptr;
+}
+
 void PartFetcher::start()
 {
   Q_D( PartFetcher );
