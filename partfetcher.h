@@ -84,7 +84,11 @@ class AKONADI_EXPORT PartFetcher : public KJob
      */
     PartFetcher( const QModelIndex &index, const QByteArray &partName, QObject *parent = 0 );
 
+    /**
+     * Destroys the part fetcher.
+     */
     virtual ~PartFetcher();
+
     /**
      * Starts the fetch operation.
      */
