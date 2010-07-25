@@ -220,9 +220,8 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   : QWidget( parent ), mReadOnly( false )
 {
   QGridLayout *layout = new QGridLayout( this );
-  layout->setSpacing( 2 );
-  layout->setMargin( 4 );
   layout->setSpacing( KDialog::spacingHint() );
+  layout->setMargin( 0 );
 
   mAddressSelectionWidget = new AddressSelectionWidget( this );
   connect( mAddressSelectionWidget, SIGNAL( selectionChanged( const KABC::Address& ) ),
