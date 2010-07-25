@@ -65,6 +65,7 @@ class ContactEditorWidget::Private
     void initGuiLocationTab();
     void initGuiBusinessTab();
     void initGuiPersonalTab();
+    void initGuiNotesTab();
     void initGuiCustomFieldsTab();
 
     void loadCustomPages();
@@ -141,6 +142,7 @@ void ContactEditorWidget::Private::initGui()
   initGuiLocationTab();
   initGuiBusinessTab();
   initGuiPersonalTab();
+  initGuiNotesTab();
   initGuiCustomFieldsTab();
 
   loadCustomPages();
@@ -149,7 +151,7 @@ void ContactEditorWidget::Private::initGui()
 void ContactEditorWidget::Private::initGuiContactTab()
 {
   QWidget *widget = new QWidget;
-  QVBoxLayout *layout = new QVBoxLayout( widget );
+  QGridLayout *layout = new QGridLayout( widget );
 
   mTabWidget->addTab( widget, i18nc( "@title:tab", "Contact" ) );
 
@@ -157,9 +159,9 @@ void ContactEditorWidget::Private::initGuiContactTab()
   QGroupBox *internetGroupBox = new QGroupBox( i18nc( "@title:group", "Internet" ) );
   QGroupBox *phonesGroupBox = new QGroupBox( i18nc( "@title:group", "Phones" ) );
 
-  layout->addWidget( nameGroupBox );
-  layout->addWidget( internetGroupBox );
-  layout->addWidget( phonesGroupBox );
+  layout->addWidget( nameGroupBox, 0, 0 );
+  layout->addWidget( internetGroupBox, 0, 1 );
+  layout->addWidget( phonesGroupBox, 1, 0, 2, 1 );
 
   QGridLayout *nameLayout = new QGridLayout( nameGroupBox );
   QGridLayout *internetLayout = new QGridLayout( internetGroupBox );
@@ -258,13 +260,14 @@ void ContactEditorWidget::Private::initGuiContactTab()
   categoriesLayout->addWidget( label );
   categoriesLayout->addWidget( mCategoriesWidget );
 
-  layout->addLayout( categoriesLayout );
+  layout->addLayout( categoriesLayout, 1, 1 );
+  layout->setRowStretch( 2, 1 );
 }
 
 void ContactEditorWidget::Private::initGuiLocationTab()
 {
   QWidget *widget = new QWidget;
-  QVBoxLayout *layout = new QVBoxLayout( widget );
+  QHBoxLayout *layout = new QHBoxLayout( widget );
 
   mTabWidget->addTab( widget, i18nc( "@title:tab", "Location" ) );
 
@@ -298,15 +301,12 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
 
   QGroupBox *generalGroupBox = new QGroupBox( i18nc( "@title:group General properties of a contact", "General" ) );
   QGroupBox *groupwareGroupBox = new QGroupBox( i18nc( "@title:group", "Groupware" ) );
-  QGroupBox *notesGroupBox = new QGroupBox( i18nc( "@title:group", "Notes" ) );
 
   layout->addWidget( generalGroupBox );
   layout->addWidget( groupwareGroupBox );
-  layout->addWidget( notesGroupBox );
 
   QGridLayout *generalLayout = new QGridLayout( generalGroupBox );
   QGridLayout *groupwareLayout = new QGridLayout( groupwareGroupBox );
-  QGridLayout *notesLayout = new QGridLayout( notesGroupBox );
 
   QLabel *label = 0;
 
@@ -378,10 +378,7 @@ void ContactEditorWidget::Private::initGuiBusinessTab()
   mFreeBusyWidget = new FreeBusyEditWidget;
   label->setBuddy( mFreeBusyWidget );
   groupwareLayout->addWidget( mFreeBusyWidget, 0, 1 );
-
-  // setup notes group box
-  mNotesWidget = new KTextEdit;
-  notesLayout->addWidget( mNotesWidget, 0, 0 );
+  groupwareLayout->setRowStretch( 1, 1 );
 }
 
 void ContactEditorWidget::Private::initGuiPersonalTab()
@@ -432,6 +429,17 @@ void ContactEditorWidget::Private::initGuiPersonalTab()
   familyLayout->addWidget( mPartnerWidget, 0, 1 );
 
   familyLayout->setRowStretch( 1, 1 );
+}
+
+void ContactEditorWidget::Private::initGuiNotesTab()
+{
+  QWidget *widget = new QWidget;
+  QVBoxLayout *layout = new QVBoxLayout( widget );
+
+  mTabWidget->addTab( widget, i18nc( "@title:tab", "Notes" ) );
+
+  mNotesWidget = new KTextEdit;
+  layout->addWidget( mNotesWidget );
 }
 
 void ContactEditorWidget::Private::initGuiCustomFieldsTab()

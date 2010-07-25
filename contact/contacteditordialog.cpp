@@ -76,7 +76,7 @@ class ContactEditorDialog::Private
       connect( q, SIGNAL( okClicked() ), q, SLOT( slotOkClicked() ) );
       connect( q, SIGNAL( cancelClicked() ), q, SLOT( slotCancelClicked() ) );
 
-      q->setInitialSize( QSize( 550, 650 ) );
+      q->setInitialSize( QSize( 800, 500 ) );
     }
 
     void slotOkClicked()
