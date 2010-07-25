@@ -59,7 +59,7 @@ class ContactViewer::Private
 
     void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList(), const QString &addressBookName = QString() )
     {
-      static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 140 ) );
+      static QPixmap defaultPixmap = KIcon( QLatin1String( "user-identity" ) ).pixmap( QSize( 100, 100 ) );
 
       mParent->setWindowTitle( i18n( "Contact %1", mCurrentContact.assembledName() ) );
 

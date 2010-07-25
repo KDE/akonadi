@@ -87,7 +87,7 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   QPixmap pixmap = QPixmap::fromImage( image );
 
-  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
+  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 100, mParent );
   if ( image.isNull() ) {
     (*ok) = false;
     return image;
@@ -117,8 +117,8 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
 {
   setAcceptDrops( true );
 
-  setIconSize( QSize( 100, 130 ) );
-  setFixedSize( QSize( 120, 160 ) );
+  setIconSize( QSize( 100, 100 ) );
+  setFixedSize( QSize( 120, 120 ) );
 
   connect( this, SIGNAL( clicked() ), SLOT( changeImage() ) );
 
