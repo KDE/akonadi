@@ -168,11 +168,12 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
 
     mSpecialCollections->d->endBatchRegister();
 
+    // Release the lock once the transaction has been committed.
+    QObject::connect( q, SIGNAL( result( KJob* ) ), q, SLOT( releaseLock() ) );
+
     // We are done!
     q->commit();
 
-    // Release the lock once the transaction has been committed.
-    QObject::connect( q, SIGNAL( result( KJob* ) ), q, SLOT( releaseLock() ) );
   } else {
     const QString resourceId = mFoldersForResource.keys().first();
     kDebug() << "A resource is done," << mFoldersForResource.count()
@@ -355,10 +356,9 @@ void SpecialCollectionsRequestJob::slotResult( KJob *job )
   if ( job->error() ) {
     // If we failed, let others try.
     kWarning() << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
+
+    d->releaseLock();
   }
-
-  d->releaseLock();
-
   TransactionSequence::slotResult( job );
 }
 
