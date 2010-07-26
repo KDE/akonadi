@@ -27,8 +27,6 @@
 #include <QtCore/QDateTime>
 #include <QtGui/QWidgetAction>
 
-using namespace KPIM;
-
 class KDatePickerAction : public QWidgetAction
 {
   public:

@@ -27,8 +27,6 @@
 
 class KDatePicker;
 
-namespace KPIM {
-
 /**
    @short This menu helps the user to select a date quickly.
 
@@ -114,7 +112,5 @@ class KDatePickerPopup: public QMenu
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Items )
-
-}
 
 #endif

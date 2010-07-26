@@ -26,10 +26,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QWidget>
 
-namespace KPIM
-{
 class KDatePickerPopup;
-}
 
 class QContextMenuEvent;
 class QToolButton;
@@ -80,7 +77,7 @@ class DateEditWidget : public QWidget
     DateView *mView;
     QToolButton *mSelectButton;
     QToolButton *mClearButton;
-    KPIM::KDatePickerPopup *mMenu;
+    KDatePickerPopup *mMenu;
     bool mReadOnly;
 };
 

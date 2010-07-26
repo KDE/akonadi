@@ -83,7 +83,7 @@ DateEditWidget::DateEditWidget( Type type, QWidget *parent )
 
   layout->addWidget( mSelectButton );
 
-  mMenu = new KPIM::KDatePickerPopup( KPIM::KDatePickerPopup::DatePicker, QDate(), this );
+  mMenu = new KDatePickerPopup( KDatePickerPopup::DatePicker, QDate(), this );
   mSelectButton->setMenu( mMenu );
 
   connect( mClearButton, SIGNAL( clicked() ), SLOT( resetDate() ) );
