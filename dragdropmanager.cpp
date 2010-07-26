@@ -19,6 +19,7 @@
 
 #include "dragdropmanager_p.h"
 #include "specialcollectionattribute_p.h"
+#include "collectionutils_p.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QDropEvent>
@@ -229,7 +230,7 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
         sourceDeletable = source.rights() & Collection::CanDeleteItem;
       } else {
         // index points to a collection
-        sourceDeletable = ( source.rights() & Collection::CanDeleteCollection ) && !source.hasAttribute<SpecialCollectionAttribute>() ;
+        sourceDeletable = ( source.rights() & Collection::CanDeleteCollection ) && !source.hasAttribute<SpecialCollectionAttribute>() && !CollectionUtils::isVirtual( source );
       }
     }
     indexes.append( index );
