@@ -354,8 +354,10 @@ void SpecialCollectionsRequestJob::slotResult( KJob *job )
 {
   if ( job->error() ) {
     // If we failed, let others try.
-    releaseLock();
+    kWarning() << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
   }
+
+  d->releaseLock();
 
   TransactionSequence::slotResult( job );
 }
