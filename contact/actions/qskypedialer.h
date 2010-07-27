@@ -24,16 +24,21 @@
 
 #include <QtCore/QString>
 
+class QDBusInterface;
+
 class QSkypeDialer
 {
   public:
     QSkypeDialer( const QString &applicationName );
 
     bool dialNumber( const QString &number );
+    bool sendSMS( const QString &number, const QString &text );
 
     QString errorMessage() const;
 
   private:
+    QDBusInterface* initSkype();
+
     QString mApplicationName;
     QString mErrorMessage;
 };
