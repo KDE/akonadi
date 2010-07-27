@@ -529,7 +529,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      *
      * This can be useful for example if an id is stored in a config file and needs to be used in the application.
      *
-     * Note however, that to restore view state such as scrolling, selection and expansion of items in trees, the EntityTreeViewStateSaver can be used for convenience.
+     * Note however, that to restore view state such as scrolling, selection and expansion of items in trees, the ETMViewStateSaver can be used for convenience.
      *
      * @see modelIndexesForItem
      * @since 4.5
