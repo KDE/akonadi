@@ -92,6 +92,7 @@ set( akonadikde_LIB_SRC
   entitytreemodel_p.cpp
   entitytreeview.cpp
   entitytreeviewstatesaver.cpp
+  etmviewstatesaver.cpp
   erroroverlay.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
@@ -250,6 +251,7 @@ install( FILES
   entitytreemodel.h
   entitytreeview.h
   entitytreeviewstatesaver.h
+  etmviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
   item.h
