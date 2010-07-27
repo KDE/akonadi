@@ -52,9 +52,11 @@ class ContactEditor::Private
     {
       if ( editorWidget )
         mEditorWidget = editorWidget;
+#ifndef DISABLE_EDITOR_WIDGES
       else
         mEditorWidget = new ContactEditorWidget();
-
+#endif
+        
       QVBoxLayout *layout = new QVBoxLayout( mParent );
       layout->setMargin( 0 );
       layout->setSpacing( 0 );
