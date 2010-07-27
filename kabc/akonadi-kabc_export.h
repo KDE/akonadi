@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef AKONADI_KABC_EXPORT
-# if defined(MAKE_AKONADI_KABC_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define AKONADI_KABC_EXPORT
+# elif defined(MAKE_AKONADI_KABC_LIB)
    /* We are building this library */
 #  define AKONADI_KABC_EXPORT KDE_EXPORT
 # else

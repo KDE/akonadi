@@ -11,7 +11,7 @@ set( kcalakonadi_LIB_SRC
   incidencemimetypevisitor.cpp
 )
 
-kde4_add_library( akonadi-kcal SHARED ${kcalakonadi_LIB_SRC} )
+kde4_add_library( akonadi-kcal ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
 
 target_link_libraries( akonadi-kcal kcal akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} )
 set_target_properties( akonadi-kcal PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

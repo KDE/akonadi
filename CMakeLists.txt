@@ -113,7 +113,6 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   itemview.cpp
   job.cpp
-  kdescendantsproxymodel2.cpp
   kjobprivatebase.cpp
   krecursivefilterproxymodel.cpp
   linkjob.cpp
@@ -155,6 +154,12 @@ set( akonadikde_LIB_SRC
   pluginloader.cpp
 )
 
+if (NOT WINCE)
+  set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
+    kdescendantsproxymodel2.cpp
+  )
+endif (NOT WINCE)
+
 # DBus interfaces and adaptors
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
 set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
@@ -178,7 +183,7 @@ kde4_add_ui_files( akonadikde_LIB_SRC
   erroroverlay.ui
 )
 
-kde4_add_library( akonadi-kde SHARED ${akonadikde_LIB_SRC} )
+kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
 macro_ensure_version( "4.2.0" ${KDE_VERSION} KDE_IS_AT_LEAST_42 )
 

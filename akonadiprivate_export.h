@@ -25,7 +25,10 @@
 
 #ifdef COMPILING_TESTS
 # ifndef AKONADI_TESTS_EXPORT
-#  if defined(MAKE_AKONADI_KDE_LIB)
+#  if defined(KDEPIM_STATIC_LIBS)
+    /* No export/import for static libraries */
+#   define AKONADI_TESTS_EXPORT
+#  elif defined(MAKE_AKONADI_KDE_LIB)
     /* We are building this library */
 #   define AKONADI_TESTS_EXPORT KDE_EXPORT
 #  else

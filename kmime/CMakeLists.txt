@@ -31,7 +31,7 @@ endif (KDE4_BUILD_TESTS)
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC specialmailcollectionssettings.kcfgc )
 install( FILES specialmailcollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
-kde4_add_library( akonadi-kmime SHARED ${kmimeakonadi_LIB_SRC} )
+kde4_add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
 
 target_link_libraries( akonadi-kmime akonadi-kde kmime ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 set_target_properties( akonadi-kmime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

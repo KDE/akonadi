@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef AKONADI_KMIME_EXPORT
-# if defined(MAKE_AKONADI_KMIME_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define AKONADI_KMIME_EXPORT
+# elif defined(MAKE_AKONADI_KMIME_LIB)
    /* We are building this library */
 #  define AKONADI_KMIME_EXPORT KDE_EXPORT
 # else
@@ -43,7 +46,10 @@
 
 #ifdef COMPILING_TESTS
 # ifndef AKONADI_KMIME_TEST_EXPORT
-#  if defined(MAKE_AKONADI_KMIME_LIB)
+#  if defined(KDEPIM_STATIC_LIBS)
+    /* No export/import for static libraries */
+#   define AKONADI_KMIME_TEST_EXPORT
+#  elif defined(MAKE_AKONADI_KMIME_LIB)
     /* We are building this library */
 #   define AKONADI_KMIME_TEST_EXPORT KDE_EXPORT
 #  else

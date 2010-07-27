@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef AKONADI_CONTACT_TESTS_EXPORT
-# if defined(MAKE_AKONADI_CONTACT_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define AKONADI_CONTACT_TESTS_EXPORT
+# elif defined(MAKE_AKONADI_CONTACT_LIB)
    /* We are building this library */
 #  define AKONADI_CONTACT_TESTS_EXPORT KDE_EXPORT
 # else

@@ -55,7 +55,6 @@ set(akonadicontact_LIB_SRC
   abstractcontactformatter.cpp
   attributeregistrar.cpp
   collectionfiltermodel.cpp
-  ../kdescendantsproxymodel.cpp
   contactcompletionmodel.cpp
   contactdefaultactions.cpp
   contacteditor.cpp
@@ -89,6 +88,13 @@ set(akonadicontact_LIB_SRC
   waitingoverlay.cpp
   ${akonadicontact_actions_SRCS}
 )
+
+if (NOT WINCE)
+  set(akonadicontact_LIB_SRC ${akonadicontact_LIB_SRC}
+    ../kdescendantsproxymodel.cpp
+  )
+endif (NOT WINCE)
+
 if(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
 set(akonadicontact_LIB_SRC
     ${akonadicontact_LIB_SRC}
@@ -101,7 +107,7 @@ endif(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
 
 kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
-kde4_add_library(akonadi-contact SHARED ${akonadicontact_LIB_SRC})
+kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
 
 target_link_libraries(akonadi-contact akonadi-kde
                                       kabc
