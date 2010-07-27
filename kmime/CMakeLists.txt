@@ -17,6 +17,7 @@ set( kmimeakonadi_LIB_SRC
   messagefolderattribute.cpp
   messagemodel.cpp
   messageparts.cpp
+  messageflags.cpp
   messagethreadingattribute.cpp
   messagethreaderproxymodel.cpp
 )
@@ -47,6 +48,7 @@ install( FILES
   messagefolderattribute.h
   messagemodel.h
   messageparts.h
+  messageflags.h
   messagethreadingattribute.h
   messagethreaderproxymodel.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kmime COMPONENT Devel
