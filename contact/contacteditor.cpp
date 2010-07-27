@@ -52,7 +52,7 @@ class ContactEditor::Private
     {
       if ( editorWidget )
         mEditorWidget = editorWidget;
-#ifndef DISABLE_EDITOR_WIDGES
+#ifndef DISABLE_EDITOR_WIDGETS
       else
         mEditorWidget = new ContactEditorWidget();
 #endif
