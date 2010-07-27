@@ -25,7 +25,7 @@ set( akonadixml_SRCS
   xmlwritejob.cpp
 )
 
-kde4_add_library(akonadi-xml SHARED ${akonadixml_SRCS})
+kde4_add_library(akonadi-xml ${LIBRARY_TYPE} ${akonadixml_SRCS})
 
 target_link_libraries(akonadi-xml
   ${KDE4_KIO_LIBS}

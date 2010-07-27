@@ -24,7 +24,10 @@
 #include <kdemacros.h>
 
 #ifndef AKONADI_XML_EXPORT
-# if defined(MAKE_AKONADI_XML_LIB)
+# if defined(KDEPIM_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define AKONADI_XML_EXPORT
+# elif defined(MAKE_AKONADI_XML_LIB)
    /* We are building this library */
 #  define AKONADI_XML_EXPORT KDE_EXPORT
 # else
