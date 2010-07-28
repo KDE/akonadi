@@ -100,11 +100,11 @@ set(akonadicontact_LIB_SRC
     ${akonadicontact_LIB_SRC}
     ${akonadicontact_editor_SRCS}
 )
-qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 else(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
 add_definitions(-DDISABLE_EDITOR_WIDGETS)
 endif(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
 
+qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
 kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
