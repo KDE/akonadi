@@ -22,8 +22,8 @@
 #include "entitytreemodel.h"
 #include "entityhiddenattribute.h"
 
-#include <KMime/Message>
-#include <KABC/Addressee>
+#include <kmime/kmime_message.h>
+#include <kabc/addressee.h>
 
 #include <kdebug.h>
 
