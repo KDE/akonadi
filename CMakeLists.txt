@@ -130,6 +130,7 @@ set( akonadikde_LIB_SRC
   resourcescheduler.cpp
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
+  recursivecollectionfilterproxymodel.cpp
   searchcreatejob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
@@ -278,6 +279,7 @@ install( FILES
   qtest_akonadi.h
   resourcebase.h
   resourcesynchronizationjob.h
+  recursivecollectionfilterproxymodel.h
   searchcreatejob.h
   selectionproxymodel.h
   session.h
