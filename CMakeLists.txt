@@ -29,7 +29,6 @@ include_directories(
   ${KDE4_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
-  ${CMAKE_SOURCE_DIR}/kabc
 )
 
 # libakonadi-kde
