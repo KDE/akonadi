@@ -22,7 +22,7 @@
 
 #include <QTimer>
 
-#include "krecursivefilterproxymodel.h"
+#include <krecursivefilterproxymodel.h>
 #include <QStandardItemModel>
 
 class KRFPTestModel : public KRecursiveFilterProxyModel

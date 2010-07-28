@@ -25,8 +25,8 @@
 #include "subscriptionchangeproxymodel_p.h"
 #include "flatcollectionproxymodel_p.h"
 #include "control.h"
-#include "krecursivefilterproxymodel.h"
 
+#include <krecursivefilterproxymodel.h>
 #include <kdebug.h>
 
 using namespace Akonadi;

@@ -22,7 +22,7 @@
 
 #include "entitytreemodel.h"
 
-#include "krecursivefilterproxymodel.h"
+#include <krecursivefilterproxymodel.h>
 
 namespace Akonadi {
 
