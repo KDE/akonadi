@@ -22,9 +22,6 @@
 #include "entitytreemodel.h"
 #include "entityhiddenattribute.h"
 
-#include <kmime/kmime_message.h>
-#include <kabc/addressee.h>
-
 #include <kdebug.h>
 
 using namespace Akonadi;
