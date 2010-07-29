@@ -30,6 +30,8 @@
 
 namespace Akonadi {
 
+class AbstractContactGroupFormatter;
+
 /**
  * @short A viewer component for contact groups in Akonadi.
  *
@@ -73,6 +75,16 @@ class AKONADI_CONTACT_EXPORT ContactGroupViewer : public QWidget, public Akonadi
      * Returns the contact group that is currently displayed.
      */
     Akonadi::Item contactGroup() const;
+
+    /**
+     * Sets the contact group @p formatter that should be used for formatting the
+     * contact group. If formatter is @c 0, the standard formatter will be used.
+     *
+     * @note The contact viewer won't take ownership of the formatter.
+     *
+     * @since 4.6
+     */
+    void setContactGroupFormatter( AbstractContactGroupFormatter *formatter );
 
   public Q_SLOTS:
     /**

@@ -19,17 +19,17 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_STANDARDCONTACTFORMATTER_H
-#define AKONADI_STANDARDCONTACTFORMATTER_H
+#ifndef AKONADI_STANDARDCONTACTGROUPFORMATTER_H
+#define AKONADI_STANDARDCONTACTGROUPFORMATTER_H
 
 #include "akonadi-contact_export.h"
 
-#include "abstractcontactformatter.h"
+#include "abstractcontactgroupformatter.h"
 
 namespace Akonadi {
 
 /**
- * @short A class that formats a contact as HTML code.
+ * @short A class that formats a contact group as HTML code.
  *
  * Examples:
  *
@@ -37,10 +37,10 @@ namespace Akonadi {
  *
  * using namespace Akonadi;
  *
- * const KABC::Addressee contact = ...
+ * const KABC::ContactGroup group = ...
  *
- * StandardContactFormatter formatter;
- * formatter.setContact( contact );
+ * StandardContactGroupFormatter formatter;
+ * formatter.setContactGroup( group );
  *
  * QTextBrowser *view = new QTextBrowser;
  * view->setHtml( formatter.toHtml() );
@@ -48,23 +48,23 @@ namespace Akonadi {
  * @endcode
  *
  * @author Tobias Koenig <tokoe@kde.org>
- * @since 4.5
+ * @since 4.6
  */
-class AKONADI_CONTACT_EXPORT StandardContactFormatter : public AbstractContactFormatter
+class AKONADI_CONTACT_EXPORT StandardContactGroupFormatter : public AbstractContactGroupFormatter
 {
   public:
     /**
-     * Creates a new standard contact formatter.
+     * Creates a new standard contact group formatter.
      */
-    StandardContactFormatter();
+    StandardContactGroupFormatter();
 
     /**
-     * Destroys the standard contact formatter.
+     * Destroys the standard contact group formatter.
      */
-    virtual ~StandardContactFormatter();
+    virtual ~StandardContactGroupFormatter();
 
     /**
-     * Returns the contact formatted as HTML.
+     * Returns the contact group formatted as HTML.
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
 

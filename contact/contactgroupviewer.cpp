@@ -22,6 +22,7 @@
 #include "contactgroupviewer.h"
 
 #include "contactgroupexpandjob.h"
+#include "standardcontactgroupformatter.h"
 #include "textbrowser_p.h"
 
 #include <akonadi/collectionfetchjob.h>
@@ -41,9 +42,6 @@
 
 using namespace Akonadi;
 
-static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts,
-                               const QString &addressBookName );
-
 class ContactGroupViewer::Private
 {
   public:
@@ -56,12 +54,40 @@ class ContactGroupViewer::Private
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "group_photo" ) ),
                                          groupPixmap );
+
+      mStandardContactGroupFormatter = new StandardContactGroupFormatter;
+      mContactGroupFormatter = mStandardContactGroupFormatter;
+    }
+
+    ~Private()
+    {
+      delete mStandardContactGroupFormatter;
     }
 
     void updateView()
     {
       mParent->setWindowTitle( i18n( "Contact Group %1", mCurrentGroupName ) );
-      mBrowser->setHtml( contactsAsHtml( mCurrentGroupName, mCurrentContacts, mCurrentAddressBookName ) );
+
+      KABC::ContactGroup group;
+      group.setName( mCurrentGroupName );
+      foreach ( const KABC::Addressee &contact, mCurrentContacts )
+        group.append( KABC::ContactGroup::Data( contact.realName(), contact.preferredEmail() ) );
+
+      mContactGroupFormatter->setContactGroup( group );
+
+      QList<QVariantMap> additionalFields;
+
+      if ( !mCurrentAddressBookName.isEmpty() ) {
+        QVariantMap addressBookName;
+        addressBookName.insert( QLatin1String( "title" ), i18n( "Address Book" ) );
+        addressBookName.insert( QLatin1String( "value" ), mCurrentAddressBookName );
+
+        additionalFields << addressBookName;
+      }
+
+      mContactGroupFormatter->setAdditionalFields( additionalFields );
+
+      mBrowser->setHtml( mContactGroupFormatter->toHtml() );
     }
 
     void slotMailClicked( const QString&, const QString &email )
@@ -121,6 +147,8 @@ class ContactGroupViewer::Private
     Item mCurrentItem;
     ContactGroupExpandJob *mExpandJob;
     CollectionFetchJob *mParentCollectionFetchJob;
+    AbstractContactGroupFormatter *mStandardContactGroupFormatter;
+    AbstractContactGroupFormatter *mContactGroupFormatter;
 };
 
 ContactGroupViewer::ContactGroupViewer( QWidget *parent )
@@ -156,6 +184,14 @@ void ContactGroupViewer::setContactGroup( const Akonadi::Item &group )
   ItemMonitor::setItem( group );
 }
 
+void ContactGroupViewer::setContactGroupFormatter( AbstractContactGroupFormatter *formatter )
+{
+  if ( formatter == 0 )
+    d->mContactGroupFormatter = d->mStandardContactGroupFormatter;
+  else
+    d->mContactGroupFormatter = formatter;
+}
+
 void ContactGroupViewer::itemChanged( const Item &item )
 {
   if ( !item.hasPayload<KABC::ContactGroup>() )
@@ -178,67 +214,6 @@ void ContactGroupViewer::itemChanged( const Item &item )
 void ContactGroupViewer::itemRemoved()
 {
   d->mBrowser->clear();
-}
-
-static QString contactsAsHtml( const QString &groupName, const KABC::Addressee::List &contacts,
-                               const QString &addressBookName )
-{
-  // Assemble all parts
-  QString strGroup = QString::fromLatin1(
-    "<table cellpadding=\"1\" cellspacing=\"0\" width=\"100%\">"
-    "<tr>"
-    "<td align=\"right\" valign=\"top\" width=\"30%\">"
-    "<img src=\"%1\" width=\"75\" height=\"105\" vspace=\"1\">" // image
-    "</td>"
-    "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
-    "</tr>"
-    "</table>" )
-      .arg( QLatin1String( "group_photo" ) )
-      .arg( groupName );
-
-  strGroup += QLatin1String( "<table width=\"100%\">" );
-
-
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    if ( contact.preferredEmail().isEmpty() ) {
-      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                            "<td width=\"50%\"></td></tr>" )
-                     .arg( contact.realName() ) );
-    } else {
-      const QString fullEmail = QLatin1String( "<a href=\"mailto:" ) + QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) + QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
-
-      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                            "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></tr>" )
-                     .arg( contact.realName() )
-                     .arg( fullEmail ) );
-    }
-  }
-
-  if ( !addressBookName.isEmpty() ) {
-    strGroup.append( QString::fromLatin1( "<tr><td colspan=\"2\">&nbsp;</td></tr><tr><td align=\"right\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">%2</font></td></tr>" )
-                   .arg( i18n( "Address Book" ) )
-                   .arg( addressBookName ) );
-  }
-
-  strGroup.append( QString::fromLatin1( "</table>\n" ) );
-
-  const QString document = QString::fromLatin1(
-    "<html>"
-    "<head>"
-    " <style type=\"text/css\">"
-    "  a {text-decoration:none; color:%1}"
-    " </style>"
-    "</head>"
-    "<body text=\"%1\" bgcolor=\"%2\">" // text and background color
-    "%3" // contact part
-    "</body>"
-    "</html>" )
-     .arg( KColorScheme( QPalette::Active, KColorScheme::View ).foreground().color().name() )
-     .arg( KColorScheme( QPalette::Active, KColorScheme::View ).background().color().name() )
-     .arg( strGroup );
-
-  return document;
 }
 
 #include "contactgroupviewer.moc"
