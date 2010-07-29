@@ -645,6 +645,9 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   // Remove deleted collection from its parent.
   m_childEntities[ parentId ].removeAt( row );
 
+  // Remove deleted collection itself.
+  m_collections.remove( collection.id() );
+
   q->endRemoveRows();
 }
 
