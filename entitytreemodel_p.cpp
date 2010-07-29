@@ -611,6 +611,13 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if ( isHidden( collection ) )
     return;
 
+  if ( collection == m_rootCollection )
+  {
+    beginResetModel();
+    endResetModel();
+    return;
+  }
+
   Collection::Id parentId = collection.parentCollection().id();
 
   if ( parentId < 0 ) parentId = -1;
@@ -676,13 +683,16 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   if ( isHidden( collection ) )
     return;
 
-  if ( isHidden( sourceCollection ) ) {
-    if ( isHidden( destCollection ) )
+  // We can't just bundle the ( sourceCollection == m_rootCollection ) check into isHidden
+  // because that is called from other places and would cause the rootCollection not
+  // to be updated in the m_collections hash because of early returns in other functions.
+  if ( isHidden( sourceCollection ) || ( sourceCollection == m_rootCollection ) ) {
+    if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) )
       return;
 
     monitoredCollectionAdded( collection, destCollection );
     return;
-  } else if ( isHidden( destCollection ) ) {
+  } else if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) ) {
     monitoredCollectionRemoved( collection );
     return;
   }
@@ -728,6 +738,11 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 
   m_collections[ collection.id() ] = collection;
 
+  if ( collection == m_rootCollection )
+    // If the root of the model is not Collection::root it might be modified.
+    // But it doesn't exist in the accessible model structure, so we need to early return
+    return;
+
   const QModelIndex index = indexForCollection( collection );
   Q_ASSERT( index.isValid() );
   dataChanged( index, index );
@@ -740,6 +755,11 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
     kWarning() << "Got statistics response for non-existing collection:" << id;
   } else {
     m_collections[ id ].setStatistics( statistics );
+
+    if ( id == m_rootCollection.id() )
+      // If the root of the model is not Collection::root it might be modified.
+      // But it doesn't exist in the accessible model structure, so we need to early return
+      return;
 
     const QModelIndex index = indexForCollection( m_collections[ id ] );
     dataChanged( index, index );
@@ -847,13 +867,13 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   if ( isHidden( item ) )
     return;
 
-  if ( isHidden( sourceCollection ) ) {
-    if ( isHidden( destCollection ) )
+  if ( isHidden( sourceCollection ) || ( sourceCollection == m_rootCollection ) ) {
+    if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) )
       return;
 
     monitoredItemAdded( item, destCollection );
     return;
-  } else if ( isHidden( destCollection ) ) {
+  } else if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) ) {
     monitoredItemRemoved( item );
     return;
   }
