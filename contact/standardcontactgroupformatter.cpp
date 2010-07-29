@@ -67,10 +67,10 @@ QString StandardContactGroupFormatter::toHtml( HtmlForm form ) const
 
   // Assemble all parts
   QString strGroup = QString::fromLatin1(
-    "<table cellpadding=\"1\" cellspacing=\"0\" width=\"100%\">"
+    "<table cellpadding=\"3\" cellspacing=\"0\" width=\"100%\">"
     "<tr>"
     "<td align=\"right\" valign=\"top\" width=\"30%\">"
-    "<img src=\"%1\" width=\"75\" height=\"105\" vspace=\"1\">" // image
+    "<img src=\"%1\" width=\"100\" vspace=\"1\">" // image
     "</td>"
     "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
     "</tr>"
