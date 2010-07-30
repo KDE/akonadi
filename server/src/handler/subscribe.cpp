@@ -20,6 +20,7 @@
 #include "subscribe.h"
 
 #include "imapstreamparser.h"
+#include <protocol_p.h>
 #include <handlerhelper.h>
 #include <akonadiconnection.h>
 #include <storage/datastore.h>
@@ -51,6 +52,10 @@ bool Subscribe::parseStream()
     col.setSubscribed( mSubscribe );
     if ( !col.update() )
       return failureResponse( "Unable to change subscription" );
+    if( mSubscribe )
+      store->notificationCollector()->collectionSubscribed( col );
+    else
+      store->notificationCollector()->collectionUnsubscribed( col );
   }
 
   if ( !transaction.commit() )

@@ -148,7 +148,17 @@ class NotificationCollector : public QObject
     void collectionRemoved( const Collection &collection,
                             const QByteArray &resource = QByteArray() );
 
-
+    /**
+     *      Notify about a collection subscription.
+     */
+    void collectionSubscribed( const Collection &collection,
+                            const QByteArray &resource = QByteArray() );
+    /**
+     *      Notify about a collection unsubscription
+     */
+    void collectionUnsubscribed( const Collection &collection,
+                            const QByteArray &resource = QByteArray() );
+    
     /**
       Trigger sending of collected notifications.
     */
