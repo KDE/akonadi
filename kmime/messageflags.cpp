@@ -24,3 +24,4 @@ const char* Akonadi::MessageFlags::Seen = "\\SEEN";
 const char* Akonadi::MessageFlags::Deleted = "\\DELETED";
 const char* Akonadi::MessageFlags::Answered = "\\ANSWERED";
 const char* Akonadi::MessageFlags::Flagged = "\\FLAGGED";
+const char* Akonadi::MessageFlags::Attachment = "$ATTACHMENT";

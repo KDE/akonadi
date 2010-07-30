@@ -1,6 +1,8 @@
 /*  -*- mode: C++ -*-
     This file is part of Akonadi.
     Copyright (c) 2005 Andreas Gungl <a.gungl@gmx.de>
+    Copyright (c) 2010 KDAB
+    Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -42,6 +44,9 @@ namespace Akonadi {
   be unset at the same time.
 
   The stati Unread/Read are mutually exclusive
+
+  Note that this class does not sync with the Akonadi storage. It is
+  used as an in-memory helper when manipulating Akonadi items.
 
   @since 4.6.
 */

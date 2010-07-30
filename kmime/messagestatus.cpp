@@ -1,6 +1,8 @@
 /*
     This file is part of Akonadi.
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
+    Copyright (c) 2010 KDAB
+    Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -25,33 +27,33 @@
 #include "messageflags.h"
 
 /** The message status format. These can be or'd together.
-    Note, that the KMMsgStatusIgnored implies the
+    Note, that the StatusIgnored implies the
     status to be Read even if the flags are set
-    to Unread or New. This is done in isRead()
+    to Unread. This is done in isRead()
     and related getters. So we can preserve the state
     when switching a thread to Ignored and back. */
-enum MsgStatus {
-    KMMsgStatusUnknown =           0x00000000,
-    KMMsgStatusUnread =            0x00000002,
-    KMMsgStatusRead =              0x00000004,
-    KMMsgStatusDeleted =           0x00000010,
-    KMMsgStatusReplied =           0x00000020,
-    KMMsgStatusForwarded =         0x00000040,
-    KMMsgStatusQueued =            0x00000080,
-    KMMsgStatusSent =              0x00000100,
-    KMMsgStatusFlag =              0x00000200, // flag means important
-    KMMsgStatusWatched =           0x00000400,
-    KMMsgStatusIgnored =           0x00000800, // forces isRead()
-    KMMsgStatusToAct =             0x00001000,
-    KMMsgStatusSpam =              0x00002000,
-    KMMsgStatusHam =               0x00004000,
-    KMMsgStatusHasAttach =         0x00008000,
-    KMMsgStatusHasInvitation =     0x00010000
+enum Status {
+    StatusUnknown =           0x00000000,
+    StatusUnread =            0x00000002,
+    StatusRead =              0x00000004,
+    StatusDeleted =           0x00000010,
+    StatusReplied =           0x00000020,
+    StatusForwarded =         0x00000040,
+    StatusQueued =            0x00000080,
+    StatusSent =              0x00000100,
+    StatusFlag =              0x00000200, // flag means important
+    StatusWatched =           0x00000400,
+    StatusIgnored =           0x00000800, // forces isRead()
+    StatusToAct =             0x00001000,
+    StatusSpam =              0x00002000,
+    StatusHam =               0x00004000,
+    StatusHasAttach =         0x00008000,
+    StatusHasInvitation =     0x00010000
 };
 
 Akonadi::MessageStatus::MessageStatus()
 {
-  mStatus = KMMsgStatusUnknown;
+  mStatus = StatusUnknown;
 }
 
 Akonadi::MessageStatus &Akonadi::MessageStatus::operator = ( const Akonadi::MessageStatus &other )
@@ -77,7 +79,7 @@ bool Akonadi::MessageStatus::operator & ( const Akonadi::MessageStatus &other ) 
 
 void Akonadi::MessageStatus::clear()
 {
-  mStatus = KMMsgStatusUnknown;
+  mStatus = StatusUnknown;
 }
 
 void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
@@ -85,10 +87,10 @@ void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
   // Those stati are exclusive, but we have to lock at the
   // internal representation because Ignored can manipulate
   // the result of the getter methods.
-  if ( other.mStatus & KMMsgStatusUnread ) {
+  if ( other.mStatus & StatusUnread ) {
     setUnread();
   }
-  if ( other.mStatus & KMMsgStatusRead ) {
+  if ( other.mStatus & StatusRead ) {
     setRead();
   }
   if ( other.isDeleted() ) {
@@ -136,196 +138,196 @@ void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
 void Akonadi::MessageStatus::toggle( const Akonadi::MessageStatus &other )
 {
   if ( other.isDeleted() ) {
-    setDeleted( !( mStatus & KMMsgStatusDeleted ) );
+    setDeleted( !( mStatus & StatusDeleted ) );
   }
   if ( other.isReplied() ) {
-    setReplied( !( mStatus & KMMsgStatusReplied ) );
+    setReplied( !( mStatus & StatusReplied ) );
   }
   if ( other.isForwarded() ) {
-    setForwarded( !( mStatus & KMMsgStatusForwarded ) );
+    setForwarded( !( mStatus & StatusForwarded ) );
   }
   if ( other.isQueued() ) {
-    setQueued( !( mStatus & KMMsgStatusQueued ) );
+    setQueued( !( mStatus & StatusQueued ) );
   }
   if ( other.isSent() ) {
-    setSent( !( mStatus & KMMsgStatusSent ) );
+    setSent( !( mStatus & StatusSent ) );
   }
   if ( other.isImportant() ) {
-    setImportant( !( mStatus & KMMsgStatusFlag ) );
+    setImportant( !( mStatus & StatusFlag ) );
   }
 
   if ( other.isWatched() ) {
-    setWatched( !( mStatus & KMMsgStatusWatched ) );
+    setWatched( !( mStatus & StatusWatched ) );
   }
   if ( other.isIgnored() ) {
-    setIgnored( !( mStatus & KMMsgStatusIgnored ) );
+    setIgnored( !( mStatus & StatusIgnored ) );
   }
   if ( other.isToAct() ) {
-    setToAct( !( mStatus & KMMsgStatusToAct ) );
+    setToAct( !( mStatus & StatusToAct ) );
   }
   if ( other.isSpam() ) {
-    setSpam( !( mStatus & KMMsgStatusSpam ) );
+    setSpam( !( mStatus & StatusSpam ) );
   }
   if ( other.isHam() ) {
-    setHam( !( mStatus & KMMsgStatusHam ) );
+    setHam( !( mStatus & StatusHam ) );
   }
   if ( other.hasAttachment() ) {
-    setHasAttachment( !( mStatus & KMMsgStatusHasAttach ) );
+    setHasAttachment( !( mStatus & StatusHasAttach ) );
   }
   if( other.hasInvitation() ) {
-    setHasInvitation( !( mStatus & KMMsgStatusHasInvitation ) );
+    setHasInvitation( !( mStatus & StatusHasInvitation ) );
   }
 }
 
 bool Akonadi::MessageStatus::isOfUnknownStatus() const
 {
-  return ( mStatus == KMMsgStatusUnknown );
+  return ( mStatus == StatusUnknown );
 }
 
 bool Akonadi::MessageStatus::isUnread() const
 {
-  return ( mStatus & KMMsgStatusUnread && !( mStatus & KMMsgStatusIgnored ) );
+  return ( mStatus & StatusUnread && !( mStatus & StatusIgnored ) );
 }
 
 bool Akonadi::MessageStatus::isRead() const
 {
-  return ( mStatus & KMMsgStatusRead || mStatus & KMMsgStatusIgnored );
+  return ( mStatus & StatusRead || mStatus & StatusIgnored );
 }
 
 bool Akonadi::MessageStatus::isDeleted() const
 {
-  return ( mStatus & KMMsgStatusDeleted );
+  return ( mStatus & StatusDeleted );
 }
 
 bool Akonadi::MessageStatus::isReplied() const
 {
-  return ( mStatus & KMMsgStatusReplied );
+  return ( mStatus & StatusReplied );
 }
 
 bool Akonadi::MessageStatus::isForwarded() const
 {
-  return ( mStatus & KMMsgStatusForwarded );
+  return ( mStatus & StatusForwarded );
 }
 
 bool Akonadi::MessageStatus::isQueued() const
 {
-  return ( mStatus & KMMsgStatusQueued );
+  return ( mStatus & StatusQueued );
 }
 
 bool Akonadi::MessageStatus::isSent() const
 {
-   return ( mStatus & KMMsgStatusSent );
+   return ( mStatus & StatusSent );
 }
 
 bool Akonadi::MessageStatus::isImportant() const
 {
-  return ( mStatus & KMMsgStatusFlag );
+  return ( mStatus & StatusFlag );
 }
 
 bool Akonadi::MessageStatus::isWatched() const
 {
-  return ( mStatus & KMMsgStatusWatched );
+  return ( mStatus & StatusWatched );
 }
 
 bool Akonadi::MessageStatus::isIgnored() const
 {
-  return ( mStatus & KMMsgStatusIgnored );
+  return ( mStatus & StatusIgnored );
 }
 
 bool Akonadi::MessageStatus::isToAct() const
 {
-  return ( mStatus & KMMsgStatusToAct );
+  return ( mStatus & StatusToAct );
 }
 
 bool Akonadi::MessageStatus::isSpam() const
 {
-  return ( mStatus & KMMsgStatusSpam );
+  return ( mStatus & StatusSpam );
 }
 
 bool Akonadi::MessageStatus::isHam() const
 {
-  return ( mStatus & KMMsgStatusHam );
+  return ( mStatus & StatusHam );
 }
 
 bool Akonadi::MessageStatus::hasAttachment() const
 {
-  return ( mStatus & KMMsgStatusHasAttach );
+  return ( mStatus & StatusHasAttach );
 }
 
 bool Akonadi::MessageStatus::hasInvitation() const
 {
-  return ( mStatus & KMMsgStatusHasInvitation );
+  return ( mStatus & StatusHasInvitation );
 }
 
 
 void Akonadi::MessageStatus::setUnread()
 {
   // unread overrides read
-  mStatus &= ~KMMsgStatusRead;
-  mStatus |= KMMsgStatusUnread;
+  mStatus &= ~StatusRead;
+  mStatus |= StatusUnread;
 }
 
 void Akonadi::MessageStatus::setRead()
 {
   // Unset unread and set read
-  mStatus &= ~KMMsgStatusUnread;
-  mStatus |= KMMsgStatusRead;
+  mStatus &= ~StatusUnread;
+  mStatus |= StatusRead;
 }
 
 void Akonadi::MessageStatus::setDeleted( bool deleted )
 {
   if ( deleted ) {
-    mStatus |= KMMsgStatusDeleted;
+    mStatus |= StatusDeleted;
   } else {
-    mStatus &= ~KMMsgStatusDeleted;
+    mStatus &= ~StatusDeleted;
   }
 }
 
 void Akonadi::MessageStatus::setReplied( bool replied )
 {
   if ( replied ) {
-    mStatus |= KMMsgStatusReplied;
+    mStatus |= StatusReplied;
   } else {
-    mStatus &= ~KMMsgStatusReplied;
+    mStatus &= ~StatusReplied;
   }
 }
 
 void Akonadi::MessageStatus::setForwarded( bool forwarded )
 {
   if ( forwarded ) {
-    mStatus |= KMMsgStatusForwarded;
+    mStatus |= StatusForwarded;
   } else {
-    mStatus &= ~KMMsgStatusForwarded;
+    mStatus &= ~StatusForwarded;
   }
 }
 
 void Akonadi::MessageStatus::setQueued( bool queued )
 {
   if ( queued ) {
-    mStatus |= KMMsgStatusQueued;
+    mStatus |= StatusQueued;
   } else {
-    mStatus &= ~KMMsgStatusQueued;
+    mStatus &= ~StatusQueued;
   }
 }
 
 void Akonadi::MessageStatus::setSent( bool sent )
 {
   if ( sent ) {
-    mStatus &= ~KMMsgStatusQueued;
+    mStatus &= ~StatusQueued;
     // FIXME to be discussed if sent messages are Read
-    mStatus &= ~KMMsgStatusUnread;
-    mStatus |= KMMsgStatusSent;
+    mStatus &= ~StatusUnread;
+    mStatus |= StatusSent;
   } else {
-    mStatus &= ~KMMsgStatusSent;
+    mStatus &= ~StatusSent;
   }
 }
 
 void Akonadi::MessageStatus::setImportant( bool important )
 {
   if ( important ) {
-    mStatus |= KMMsgStatusFlag;
+    mStatus |= StatusFlag;
   } else {
-    mStatus &= ~KMMsgStatusFlag;
+    mStatus &= ~StatusFlag;
   }
 }
 
@@ -333,29 +335,29 @@ void Akonadi::MessageStatus::setImportant( bool important )
 void Akonadi::MessageStatus::setWatched( bool watched )
 {
   if ( watched ) {
-    mStatus &= ~KMMsgStatusIgnored;
-    mStatus |= KMMsgStatusWatched;
+    mStatus &= ~StatusIgnored;
+    mStatus |= StatusWatched;
   } else {
-    mStatus &= ~KMMsgStatusWatched;
+    mStatus &= ~StatusWatched;
   }
 }
 
 void Akonadi::MessageStatus::setIgnored( bool ignored )
 {
   if ( ignored ) {
-    mStatus &= ~KMMsgStatusWatched;
-    mStatus |= KMMsgStatusIgnored;
+    mStatus &= ~StatusWatched;
+    mStatus |= StatusIgnored;
   } else {
-    mStatus &= ~KMMsgStatusIgnored;
+    mStatus &= ~StatusIgnored;
   }
 }
 
 void Akonadi::MessageStatus::setToAct( bool toAct )
 {
   if ( toAct ) {
-    mStatus |= KMMsgStatusToAct;
+    mStatus |= StatusToAct;
   } else {
-    mStatus &= ~KMMsgStatusToAct;
+    mStatus &= ~StatusToAct;
   }
 }
 
@@ -363,38 +365,38 @@ void Akonadi::MessageStatus::setToAct( bool toAct )
 void Akonadi::MessageStatus::setSpam( bool spam )
 {
   if ( spam ) {
-    mStatus &= ~KMMsgStatusHam;
-    mStatus |= KMMsgStatusSpam;
+    mStatus &= ~StatusHam;
+    mStatus |= StatusSpam;
   } else {
-    mStatus &= ~KMMsgStatusSpam;
+    mStatus &= ~StatusSpam;
   }
 }
 
 void Akonadi::MessageStatus::setHam( bool ham )
 {
   if ( ham ) {
-    mStatus &= ~KMMsgStatusSpam;
-    mStatus |= KMMsgStatusHam;
+    mStatus &= ~StatusSpam;
+    mStatus |= StatusHam;
   } else {
-    mStatus &= ~KMMsgStatusHam;
+    mStatus &= ~StatusHam;
   }
 }
 
 void Akonadi::MessageStatus::setHasAttachment( bool withAttachment )
 {
   if ( withAttachment ) {
-    mStatus |= KMMsgStatusHasAttach;
+    mStatus |= StatusHasAttach;
   } else {
-    mStatus &= ~KMMsgStatusHasAttach;
+    mStatus &= ~StatusHasAttach;
   }
 }
 
 void Akonadi::MessageStatus::setHasInvitation( bool withInvitation )
 {
   if ( withInvitation ) {
-    mStatus |= KMMsgStatusHasInvitation;
+    mStatus |= StatusHasInvitation;
   } else {
-    mStatus &= ~KMMsgStatusHasInvitation;
+    mStatus &= ~StatusHasInvitation;
   }
 }
 
@@ -412,46 +414,46 @@ void Akonadi::MessageStatus::fromQInt32( qint32 status )
 QString Akonadi::MessageStatus::statusStr() const
 {
   QByteArray sstr;
-  if ( mStatus & KMMsgStatusUnread ) {
+  if ( mStatus & StatusUnread ) {
     sstr += 'U';
   }
-  if ( mStatus & KMMsgStatusRead ) {
+  if ( mStatus & StatusRead ) {
     sstr += 'R';
   }
-  if ( mStatus & KMMsgStatusDeleted ) {
+  if ( mStatus & StatusDeleted ) {
     sstr += 'D';
   }
-  if ( mStatus & KMMsgStatusReplied ) {
+  if ( mStatus & StatusReplied ) {
     sstr += 'A';
   }
-  if ( mStatus & KMMsgStatusForwarded ) {
+  if ( mStatus & StatusForwarded ) {
     sstr += 'F';
   }
-  if ( mStatus & KMMsgStatusQueued ) {
+  if ( mStatus & StatusQueued ) {
     sstr += 'Q';
   }
-  if ( mStatus & KMMsgStatusToAct ) {
+  if ( mStatus & StatusToAct ) {
     sstr += 'K';
   }
-  if ( mStatus & KMMsgStatusSent ) {
+  if ( mStatus & StatusSent ) {
     sstr += 'S';
   }
-  if ( mStatus & KMMsgStatusFlag ) {
+  if ( mStatus & StatusFlag ) {
     sstr += 'G';
   }
-  if ( mStatus & KMMsgStatusWatched ) {
+  if ( mStatus & StatusWatched ) {
     sstr += 'W';
   }
-  if ( mStatus & KMMsgStatusIgnored ) {
+  if ( mStatus & StatusIgnored ) {
     sstr += 'I';
   }
-  if ( mStatus & KMMsgStatusSpam ) {
+  if ( mStatus & StatusSpam ) {
     sstr += 'P';
   }
-  if ( mStatus & KMMsgStatusHam ) {
+  if ( mStatus & StatusHam ) {
     sstr += 'H';
   }
-  if ( mStatus & KMMsgStatusHasAttach ) {
+  if ( mStatus & StatusHasAttach ) {
     sstr += 'T';
   }
 
@@ -460,7 +462,7 @@ QString Akonadi::MessageStatus::statusStr() const
 
 void Akonadi::MessageStatus::setStatusFromStr( const QString& aStr )
 {
-  mStatus = KMMsgStatusUnknown;
+  mStatus = StatusUnknown;
 
   if ( aStr.contains( QLatin1Char( 'U' ) ) ) {
     setUnread();
@@ -514,32 +516,32 @@ QSet<QByteArray> Akonadi::MessageStatus::statusFlags() const
   QSet<QByteArray> flags;
 
   // Non handled status:
-  // * KMMsgStatusQueued
-  // * KMMsgStatusSent
-  // * KMMsgStatusSpam
-  // * KMMsgStatusHam
-  // * KMMsgStatusHasAttach
+  // * StatusQueued
+  // * StatusSent
+  // * StatusSpam
+  // * StatusHam
+  // * StatusHasAttach
 
-  if ( mStatus & KMMsgStatusDeleted ) {
+  if ( mStatus & StatusDeleted ) {
     flags+= Akonadi::MessageFlags::Deleted;
   } else {
-    if ( mStatus &  KMMsgStatusRead )
+    if ( mStatus &  StatusRead )
       flags+= Akonadi::MessageFlags::Seen;
-    if ( mStatus & KMMsgStatusReplied )
+    if ( mStatus & StatusReplied )
       flags+= Akonadi::MessageFlags::Answered;
-    if ( mStatus & KMMsgStatusFlag )
+    if ( mStatus & StatusFlag )
       flags+= Akonadi::MessageFlags::Flagged;
     // non standard flags
-    if ( mStatus & KMMsgStatusForwarded )
+    if ( mStatus & StatusForwarded )
       flags+= "$FORWARDED";
-    if ( mStatus & KMMsgStatusToAct )
+    if ( mStatus & StatusToAct )
       flags+= "$TODO";
-    if ( mStatus & KMMsgStatusWatched )
+    if ( mStatus & StatusWatched )
       flags+= "$WATCHED";
-    if ( mStatus & KMMsgStatusIgnored )
+    if ( mStatus & StatusIgnored )
       flags+= "$IGNORED";
-    if ( mStatus & KMMsgStatusHasAttach )
-      flags+= "$ATTACHMENT";
+    if ( mStatus & StatusHasAttach )
+      flags+= Akonadi::MessageFlags::Attachment;
   }
 
   return flags;
@@ -547,14 +549,14 @@ QSet<QByteArray> Akonadi::MessageStatus::statusFlags() const
 
 void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 {
-  mStatus = KMMsgStatusUnknown;
+  mStatus = StatusUnknown;
   setUnread();
   // Non handled status:
-  // * KMMsgStatusQueued
-  // * KMMsgStatusSent
-  // * KMMsgStatusSpam
-  // * KMMsgStatusHam
-  // * KMMsgStatusHasAttach
+  // * StatusQueued
+  // * StatusSent
+  // * StatusSpam
+  // * StatusHam
+  // * StatusHasAttach
 
   foreach ( const QByteArray &flag, flags ) {
     const QByteArray &upperedFlag = flag.toUpper();
@@ -580,7 +582,7 @@ void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
       setSpam();
     } else if ( upperedFlag ==  "$NOTJUNK" ) {
       setHam();
-    } else if ( upperedFlag ==  "$ATTACHMENT" ) {
+    } else if ( upperedFlag ==  Akonadi::MessageFlags::Attachment ) {
       setHasAttachment( true );
     } else {
       kWarning() << "Unknown flag:" << flag;

@@ -53,6 +53,11 @@ namespace Akonadi
      */
     AKONADI_KMIME_EXPORT extern const char* Flagged;
 
+    /**
+     * The flag for a message being marked as having an attachment.
+     */
+    AKONADI_KMIME_EXPORT extern const char* Attachment;
+
   }
 }
 
