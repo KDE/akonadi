@@ -167,11 +167,8 @@ struct PayloadBase
 template <typename T>
 struct Payload : public PayloadBase
 {
-    Payload( T p ) { payload = p; }
-    Payload( const Payload& other )
-    {
-       payload = other.payload;
-    }
+    Payload( const T& p ) : payload( p ) {}
+    Payload( const Payload& other ) : payload( other.payload ) {}
     Payload & operator=( const Payload & other )
     {
        payload = other.payload;
