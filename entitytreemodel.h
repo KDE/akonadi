@@ -415,6 +415,10 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * Sets whether unsubscribed entities will be included in the listing.
      * By default it's true
      *
+     * Note that it is possible to change the monitor's fetchscope directly,
+     *  bypassing this method, which will lead to inconsistencies. Use
+     *  this method for turning on/off listing of subscribed folders.
+     *
      * @since 4.5
      */
     void setIncludeUnsubscribed( bool show );
@@ -621,6 +625,8 @@ private:
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionChanged( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&,
                                                              const Akonadi::Collection&) )
+    Q_PRIVATE_SLOT( d_func(), void collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d_func(), void monitoredCollectionUnsubscribed( const Akonadi::Collection& ) )
 
     Q_PRIVATE_SLOT( d_func(), void monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredItemRemoved( const Akonadi::Item& ) )

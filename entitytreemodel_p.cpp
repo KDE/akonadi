@@ -104,7 +104,11 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   q->connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-           SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
+              SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+              SLOT( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL( collectionUnsubscribed( const Akonadi::Collection& ) ),
+              SLOT( monitoredCollectionUnsubscribed( const Akonadi::Collection& ) ) );
   q->connect( monitor,
            SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
            SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
@@ -657,6 +661,33 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   q->endRemoveRows();
 }
+
+void EntityTreeModelPrivate::collectionSubscribed( const Akonadi::Collection& col, const Akonadi::Collection& parent )
+{
+  // If we are including unsubscribed, we don't need to deal with subscribed / unsubscribed signals.
+  //  We shouldn't even be getting them as Monitor should only send them if we are watching subscribed-only,
+  //  but this is just in case.
+  if( m_includeUnsubscribed || m_collections.contains( col.id() ) )
+    return;
+
+  // Otherwise, it's a valid subscription notice. Let's add it to the collection.
+    monitoredCollectionAdded( col, parent );
+}
+
+void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Collection& col )
+{
+  // If we are including unsubscribed, we don't need to deal with subscribed / unsubscribed signals.
+  //  We shouldn't even be getting them as Monitor should only send them if we are watching subscribed-only,
+  //  but this is just in case.
+  //
+  // We don't want to remove a collection if we are including all of them.
+  if( m_includeUnsubscribed || !m_collections.contains( col.id() ) )
+    return;
+
+  // Otherwise, it's a valid unsubscription notice.
+    monitoredCollectionRemoved( col );
+}
+
 
 void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
 {

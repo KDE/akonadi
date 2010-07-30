@@ -366,6 +366,27 @@ class AKONADI_EXPORT Monitor : public QObject
     void collectionRemoved( const Akonadi::Collection &collection );
 
     /**
+     * This signal is emitted if a collection has been subscribed to by the user.
+     *  It will be emitted even for unmonitored collections as the check for whether to
+     *  monitor it has not been applied yet.
+     *
+     * @param collection The subscribed collection
+     * @param parent The parent collection of the subscribed collection.
+     *
+     * @since 4.6
+     */
+    void collectionSubscribed( const Akonadi::Collection& collection, const Akonadi::Collection &parent  );
+
+    /**
+     * This signal is emitted if a user unsubscribes from a collection.
+     *
+     * @param collection The unsubscribed collection
+     *
+     * @since 4.6
+     */
+    void collectionUnsubscribed( const Akonadi::Collection& collection );
+
+    /**
      * This signal is emitted if the statistics information of a monitored collection
      * has changed.
      *

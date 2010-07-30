@@ -92,7 +92,10 @@ bool EntityTreeModel::includeUnsubscribed() const
 void EntityTreeModel::setIncludeUnsubscribed( bool show )
 {
   Q_D( EntityTreeModel );
+  d->beginResetModel();
   d->m_includeUnsubscribed = show;
+  d->m_monitor->setAllMonitored( show );
+  d->endResetModel();
 }
 
 

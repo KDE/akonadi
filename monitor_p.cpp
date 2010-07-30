@@ -432,6 +432,14 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
     case NotificationMessage::Remove:
       emit q_ptr->collectionRemoved( collection );
       break;
+    case NotificationMessage::Subscribe:
+      if ( !monitorAll )
+        emit q_ptr->collectionSubscribed( collection, parent );
+      break;
+    case NotificationMessage::Unsubscribe:
+      if ( !monitorAll )
+        emit q_ptr->collectionUnsubscribed( collection );
+      break;
     default:
       kDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
   }
