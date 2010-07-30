@@ -49,7 +49,7 @@ SubscriptionChangeProxyModel::~ SubscriptionChangeProxyModel()
 
 bool SubscriptionChangeProxyModel::filterAcceptsRow(int row, const QModelIndex & parent) const
 {
-  QModelIndex index = sourceModel()->index( row, 0, parent );
+  const QModelIndex index = sourceModel()->index( row, 0, parent );
   if ( !index.data( SubscriptionModel::SubscriptionChangedRole ).toBool() )
     return false;
   if ( index.data( Qt::CheckStateRole ) != d->subscribed )
