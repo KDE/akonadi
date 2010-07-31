@@ -1,3 +1,130 @@
+2010-07-31 09:45 +0000 [r1157499-1157500]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/notificationcollector.h,
+	  branches/akonadi/1.4/libs/notificationmessage.cpp,
+	  branches/akonadi/1.4/libs/notificationmessage_p.h,
+	  branches/akonadi/1.4/server/src/handler/subscribe.cpp,
+	  branches/akonadi/1.4/server/src/storage/notificationcollector.cpp:
+	  Backport subscribe/unsubscribe notifications.
+
+	* branches/akonadi/1.4/makechangelog: use the right branch for
+	  changelog generation
+
+2010-07-30 09:29 +0000 [r1157128]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/dbconfig.cpp: Backport
+	  enabling of FS store. BUG: 243775
+
+2010-07-21 16:09 +0000 [r1152627-1152629]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/handler/expunge.cpp,
+	  branches/akonadi/1.4/server/src/storage/datastore.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbupdate.xml,
+	  branches/akonadi/1.4/server/src/handler/select.cpp,
+	  branches/akonadi/1.4/server/src/handlerhelper.cpp,
+	  branches/akonadi/1.4/server/src/storage/akonadidb.xml,
+	  branches/akonadi/1.4/server/src/storage/datastore.h,
+	  branches/akonadi/1.4/server/src/handler/akappend.cpp,
+	  branches/akonadi/1.4/server/src/handler/status.cpp,
+	  branches/akonadi/1.4/server/src/handler/append.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbupdatertest.cpp: Use
+	  uppercase names for the standard flags
+
+	* branches/akonadi/1.4/server/tests/unittest/handlerhelpertest.cpp:
+	  Revert wrong part of the backport
+
+2010-07-21 14:49 +0000 [r1152600]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_schemaversion
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_part
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/CMakeLists.txt,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest.h
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_flag
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_mimetype
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data
+	  (added), branches/akonadi/1.4/server/src/storage/akonadidb.xsd,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_resource
+	  (added), branches/akonadi/1.4/server/src/storage/akonadidb.xml,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_collection
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/dbinitializertestdata.qrc
+	  (added), branches/akonadi/1.4/server/src/storage/dbinitializer.h,
+	  branches/akonadi/1.4/server/tests/unittest/dbupdatertest.cpp
+	  (added), branches/akonadi/1.4/server/src/utils.h (added),
+	  branches/akonadi/1.4/server/CMakeLists.txt,
+	  branches/akonadi/1.4/server/src/handler/fetchhelper.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/handlerhelpertest.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_resource
+	  (added), branches/akonadi/1.4/server/src/storage/dbupdate.xsd,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_part
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_schemaversion
+	  (added), branches/akonadi/1.4/server/src/storage/dbupdate.xml,
+	  branches/akonadi/1.4/server/src/storage/parthelper.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_pimitem
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_collection
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_flag
+	  (added), branches/akonadi/1.4/server/src/storage/entities.xsl,
+	  branches/akonadi/1.4/server/src/storage/dbinitializer_p.cpp
+	  (added), branches/akonadi/1.4/server/src/storage/dbupdater.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest.cpp
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_pimitem
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_collectionattribute
+	  (added), branches/akonadi/1.4/server/src/storage/querybuilder.h,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_resource
+	  (added),
+	  branches/akonadi/1.4/server/src/storage/itemretriever.cpp,
+	  branches/akonadi/1.4/server/src/storage/datastore.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_collection
+	  (added),
+	  branches/akonadi/1.4/server/src/storage/dbinitializer.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_collectionattribute
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_mimetype
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_pimitem
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/querybuildertest.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/psql_ct_mimetype
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbupdatertest.h
+	  (added),
+	  branches/akonadi/1.4/server/src/storage/entities-source.xsl,
+	  branches/akonadi/1.4/server/src/handler/fetchhelper.h,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_part
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_schemaversion
+	  (added),
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/mysql_ct_flag
+	  (added), branches/akonadi/1.4/server/src/storage/dbconfig.cpp,
+	  branches/akonadi/1.4/server/src/storage/querybuilder.cpp,
+	  branches/akonadi/1.4/server/tests/unittest/dbinitializertest_data/sqlite_ct_collectionattribute
+	  (added),
+	  branches/akonadi/1.4/server/src/storage/dbinitializer_p.h
+	  (added), branches/akonadi/1.4/server/src/storage/dbupdater.h:
+	  Backport the UTF-8 collection name fix
+
+2010-07-07 11:20 +0000 [r1147084]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.4 (added): Branch Akonadi server 1.4, right
+	  before Marc's changes.
+
+2010-07-04 14:11 +0000 [r1145895]  Volker Krause vkrause@kde.org
+
+	* trunk/kdesupport/akonadi/ChangeLog,
+	  trunk/kdesupport/akonadi/NEWS,
+	  trunk/kdesupport/akonadi/CMakeLists.txt: Prepare for Akonadi
+	  1.4.0 RC1 release.
+
 2010-07-01 14:59 +0000 [r1145040]  Bjoern Ricks bjoern.ricks@googlemail.com
 
 	* trunk/kdesupport/akonadi/qsqlite/CMakeLists.txt: fixed typo dir
