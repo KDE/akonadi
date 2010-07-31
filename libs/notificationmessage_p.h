@@ -53,7 +53,9 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
       Move,
       Remove,
       Link,
-      Unlink
+      Unlink,
+      Subscribe,
+      Unsubscribe
     };
 
     NotificationMessage();

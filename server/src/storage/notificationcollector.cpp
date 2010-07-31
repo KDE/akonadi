@@ -116,6 +116,19 @@ void Akonadi::NotificationCollector::collectionRemoved( const Collection &collec
   collectionNotification( NotificationMessage::Remove, collection, collection.parentId(), -1, resource );
 }
 
+void NotificationCollector::collectionSubscribed( const Collection& collection,
+                                                  const QByteArray& resource )
+{
+  collectionNotification( NotificationMessage::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+}
+
+void NotificationCollector::collectionUnsubscribed( const Collection& collection,
+                                                    const QByteArray& resource )
+{
+  collectionNotification( NotificationMessage::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+}
+
+
 void Akonadi::NotificationCollector::transactionCommitted()
 {
   dispatchNotifications();
