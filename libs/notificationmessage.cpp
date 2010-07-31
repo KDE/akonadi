@@ -253,6 +253,12 @@ QString NotificationMessage::toString() const
     case Unlink:
       rv += QLatin1String( "unlinked" );
       break;
+    case Subscribe:
+      rv += QLatin1String( "subscribed" );
+      break;
+    case Unsubscribe:
+      rv += QLatin1String( "unsubscribed" );
+      break;
     case InvalidOp: // TODO: an error?
       break;
   }
