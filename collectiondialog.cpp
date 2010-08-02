@@ -30,6 +30,7 @@
 #include <akonadi/entitytreeview.h>
 #include <akonadi/session.h>
 #include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectionutils_p.h>
 
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -149,6 +150,8 @@ void CollectionDialog::Private::slotSelectionChanged()
   if ( mAllowToCreateNewChildCollection ) {
     Akonadi::Collection parentCollection;
     mParent->enableButton(KDialog::User1, canCreateCollection( parentCollection ) );
+    const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
+    mParent->enableButton( KDialog::User1, !isVirtual );
     if ( parentCollection.isValid() ) {
       const bool canCreateMessages = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
       mParent->enableButton( KDialog::Ok, canCreateMessages );
