@@ -80,6 +80,8 @@ set( akonadikde_LIB_SRC
   collectionstatisticsmodel.cpp
   collectionsync.cpp
   collectionview.cpp
+  conflicthandling/conflicthandler.cpp
+  conflicthandling/conflictresolvedialog.cpp
   control.cpp
   dragdropmanager.cpp
   entitycache.cpp
@@ -242,6 +244,8 @@ install( FILES
   collectionstatistics.h
   collectionstatisticsjob.h
   collectionview.h
+  conflicthandling/abstractdifferencesreporter.h
+  conflicthandling/differencesalgorithminterface.h
   control.h
   entity.h
   entitydisplayattribute.h

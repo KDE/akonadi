@@ -42,6 +42,9 @@ class ItemModifyJobPrivate : public JobPrivate
     void setClean();
     QByteArray nextPartHeader();
 
+    void conflictResolved();
+    void conflictResolveError( const QString& );
+
     Q_DECLARE_PUBLIC( ItemModifyJob )
 
     QSet<int> mOperations;

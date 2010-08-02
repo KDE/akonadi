@@ -21,11 +21,12 @@
 #include "itemmodifyjob_p.h"
 
 #include "collection.h"
+#include "conflicthandling/conflicthandler_p.h"
 #include "entity_p.h"
 #include "imapparser_p.h"
+#include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
-#include "item_p.h"
 #include "protocolhelper_p.h"
 
 #include <kdebug.h>
@@ -72,6 +73,23 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
     command += ")\n";
   }
   return command;
+}
+
+void ItemModifyJobPrivate::conflictResolved()
+{
+  Q_Q( ItemModifyJob );
+
+  q->setError( KJob::NoError );
+  q->setErrorText( QString() );
+  q->emitResult();
+}
+
+void ItemModifyJobPrivate::conflictResolveError( const QString &message )
+{
+  Q_Q( ItemModifyJob );
+
+  q->setErrorText( q->errorText() + message );
+  q->emitResult();
 }
 
 
@@ -198,6 +216,16 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );
+
+      if ( data.contains( "[LLCONFLICT]" ) ) {
+        ConflictHandler *handler = new ConflictHandler( ConflictHandler::LocalLocalConflict, this );
+        handler->setConflictingItems( d->mItem, d->mItem );
+        connect( handler, SIGNAL( conflictResolved() ), SLOT( conflictResolved() ) );
+        connect( handler, SIGNAL( error( const QString& ) ), SLOT( conflictResolveError( const QString& ) ) );
+
+        QMetaObject::invokeMethod( handler, "start", Qt::QueuedConnection );
+        return;
+      }
     }
     emitResult();
     return;

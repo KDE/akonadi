@@ -128,7 +128,12 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
 
   private:
+    //@cond PRIVATE
     Q_DECLARE_PRIVATE( ItemModifyJob )
+
+    Q_PRIVATE_SLOT( d_func(), void conflictResolved() )
+    Q_PRIVATE_SLOT( d_func(), void conflictResolveError( const QString& ) )
+    //@endcond
 };
 
 }
