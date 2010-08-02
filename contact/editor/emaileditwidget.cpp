@@ -55,8 +55,6 @@ class EmailAddressExtracter : public QObject
         const QString fullEmailAddress = mLineEdit->text();
         const QString extractedEmailAddress = KPIMUtils::extractEmailAddress( fullEmailAddress );
         mLineEdit->setText( extractedEmailAddress );
-
-        return true;
       }
 
       return QObject::eventFilter( watched, event );
