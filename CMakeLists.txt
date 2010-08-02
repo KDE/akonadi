@@ -159,7 +159,7 @@ set( akonadikde_LIB_SRC
 
 if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
-    kdescendantsproxymodel2.cpp
+    kdescendantsproxymodel.cpp
   )
 endif (NOT WINCE)
 
