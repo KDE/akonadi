@@ -121,6 +121,7 @@ class Store : public Handler
     int mPos;
     qint64 mPreviousRevision;
     qint64 mSize;
+    bool mCheckRevision;
 };
 
 }

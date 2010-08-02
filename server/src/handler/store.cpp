@@ -51,6 +51,7 @@ Store::Store( Scope::SelectionScope scope )
   , mPos( 0 )
   , mPreviousRevision( -1 )
   , mSize( 0 )
+  , mCheckRevision( false )
 {
 }
 
@@ -122,10 +123,18 @@ bool Store::parseStream()
   if ( pimItems.isEmpty() )
     return failureResponse( "No items found" );
 
-  // check and update revisions
   for ( int i = 0; i < pimItems.size(); ++i ) {
-    if ( mPreviousRevision >= 0 && pimItems.at( i ).rev() != (int)mPreviousRevision )
-      throw HandlerException( "Item was modified elsewhere, aborting STORE." );
+    if ( mCheckRevision ) {
+      // check for conflicts if a resources tries to overwrite an item with dirty payload
+      if ( connection()->isOwnerResource( pimItems.at( i ) ) ) {
+        if ( pimItems.at( i ).dirty() )
+          throw HandlerException( "[LRCONFLICT] Resource tries to modify item with dirty payload, aborting STORE." );
+      }
+
+      // check and update revisions
+      if ( pimItems.at( i ).rev() != (int)mPreviousRevision )
+        throw HandlerException( "[LLCONFLICT] Item was modified elsewhere, aborting STORE." );
+    }
     pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
   }
 
@@ -381,6 +390,7 @@ void Store::parseCommand()
       throw HandlerException( "No modification list provided in STORE command" );
     } else if ( command == AKONADI_PARAM_REVISION ) {
       mPreviousRevision = m_streamParser->readNumber();
+      mCheckRevision = true;
     } else if ( command == AKONADI_PARAM_SIZE ) {
       mSize = m_streamParser->readNumber();
     }
