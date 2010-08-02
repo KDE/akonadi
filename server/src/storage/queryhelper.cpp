@@ -32,13 +32,18 @@ void QueryHelper::setToQuery(const ImapSet& set, const QString &column, QueryBui
       if ( i.size() == 1 ) {
         cond.addValueCondition( column, Query::Equals, i.begin() );
       } else {
-        Query::Condition subCond( Query::And );
-        subCond.addValueCondition( column, Query::GreaterOrEqual, i.begin() );
-        subCond.addValueCondition( column, Query::LessOrEqual, i.end() );
-        cond.addCondition( subCond );
+        if ( i.begin() != 1 ) { // 1 is our standard lower bound, so we don't have to check for it explicitly
+          Query::Condition subCond( Query::And );
+          subCond.addValueCondition( column, Query::GreaterOrEqual, i.begin() );
+          subCond.addValueCondition( column, Query::LessOrEqual, i.end() );
+          cond.addCondition( subCond );
+        } else {
+          cond.addValueCondition( column, Query::LessOrEqual, i.end() );
+        }
       }
     } else if ( i.hasDefinedBegin() ) {
-      cond.addValueCondition( column, Query::GreaterOrEqual, i.begin() );
+      if ( i.begin() != 1 ) // 1 is our standard lower bound, so we don't have to check for it explicitly
+        cond.addValueCondition( column, Query::GreaterOrEqual, i.begin() );
     } else if ( i.hasDefinedEnd() ) {
       cond.addValueCondition( column, Query::LessOrEqual, i.end() );
     }
