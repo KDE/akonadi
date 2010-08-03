@@ -267,11 +267,6 @@ void DbConfigMysql::startInternalServer()
     akFatal() << "process error:" << mDatabaseProcess->errorString();
   }
 
-  if ( !mMysqlUpgradeDBPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
-    QProcess::execute( mMysqlUpgradeDBPath, arguments );
-  }
-
   const QLatin1String initCon( "initConnection" );
   {
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), initCon );
@@ -298,6 +293,11 @@ void DbConfigMysql::startInternalServer()
     }
 
     if ( opened ) {
+      if ( !mMysqlUpgradeDBPath.isEmpty() ) {
+        const QStringList arguments = QStringList() << QLatin1String( "--verbose" ) << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+        QProcess::execute( mMysqlUpgradeDBPath, arguments );
+      }
+
       {
         QSqlQuery query( db );
         if ( !query.exec( QString::fromLatin1( "USE %1" ).arg( mDatabaseName ) ) ) {
