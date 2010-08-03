@@ -50,7 +50,7 @@ ContactSearchJob::~ContactSearchJob()
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 {
-  setQuery( criterion, value, ContainsMatch );
+  setQuery( criterion, value, ExactMatch );
 }
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
