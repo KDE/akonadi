@@ -50,12 +50,18 @@ class CollectionStatisticsDelegatePrivate
     QTreeView *parent;
     bool drawUnreadAfterFolder;
     DelegateAnimator *animator;
+    QColor mSelectedUnreadColor;
+    QColor mDeselectedUnreadColor;
 
     CollectionStatisticsDelegatePrivate( QTreeView *treeView )
         : parent( treeView ),
           drawUnreadAfterFolder( false ),
           animator( 0 )
     {
+      mSelectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::Selection )
+                                         .foreground( KColorScheme::LinkText ).color();
+      mDeselectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::View )
+                                           .foreground( KColorScheme::LinkText ).color();
     }
 
     template<CountType countType>
@@ -257,10 +263,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     // Draw folder name and unread count
     painter->drawText( folderRect, Qt::AlignLeft, folderName );
-    KColorScheme::ColorSet cs = ( option.state & QStyle::State_Selected ) ?
-                                 KColorScheme::Selection : KColorScheme::View;
-    QColor unreadColor = KColorScheme( QPalette::Active, cs ).
-                                   foreground( KColorScheme::LinkText ).color();
+
+    const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
     painter->setPen( unreadColor );
     painter->drawText( unreadRect, Qt::AlignLeft, unread );
 
