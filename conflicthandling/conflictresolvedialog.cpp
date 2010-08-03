@@ -158,28 +158,29 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
 
 void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem, const Akonadi::Item &otherItem )
 {
-  Q_ASSERT( localItem.hasPayload() );
-  Q_ASSERT( otherItem.hasPayload() );
-
   mLocalItem = localItem;
   mOtherItem = otherItem;
 
-  HtmlDifferencesReporter reporter;
+  if ( mLocalItem.hasPayload() && mOtherItem.hasPayload() ) {
+    HtmlDifferencesReporter reporter;
 
-  QObject *object = TypePluginLoader::objectForMimeType( localItem.mimeType() );
-  if ( object ) {
-    DifferencesAlgorithmInterface *algorithm = qobject_cast<DifferencesAlgorithmInterface*>( object );
-    if ( algorithm ) {
-      algorithm->compare( &reporter, localItem, otherItem );
-      mView->setHtml( reporter.toHtml() );
-      return;
+    QObject *object = TypePluginLoader::objectForMimeType( localItem.mimeType() );
+    if ( object ) {
+      DifferencesAlgorithmInterface *algorithm = qobject_cast<DifferencesAlgorithmInterface*>( object );
+      if ( algorithm ) {
+        algorithm->compare( &reporter, localItem, otherItem );
+        mView->setHtml( reporter.toHtml() );
+        return;
+      }
     }
-  }
 
-  const QString html = reporter.toHtml( i18n( "Data" ),
-                                        QString::fromUtf8( mLocalItem.payloadData() ),
-                                        QString::fromUtf8( mOtherItem.payloadData() ) );
-  mView->setHtml( html );
+    const QString html = reporter.toHtml( i18n( "Data" ),
+                                          QString::fromUtf8( mLocalItem.payloadData() ),
+                                          QString::fromUtf8( mOtherItem.payloadData() ) );
+    mView->setHtml( html );
+  } else {
+    mView->setHtml( QLatin1String( "<html><body>Conflicting flags or attributes</body></html>" ) );
+  }
 }
 
 ConflictHandler::ResolveStrategy ConflictResolveDialog::resolveStrategy() const

@@ -40,11 +40,6 @@ ConflictHandler::ConflictHandler( ConflictType type, QObject *parent )
 
 void ConflictHandler::setConflictingItems( const Akonadi::Item &changedItem, const Akonadi::Item &conflictingItem )
 {
-  Q_ASSERT( changedItem.hasPayload() );
-
-  if ( mConflictType == BackendConflict )
-    Q_ASSERT( conflictingItem.hasPayload() );
-
   mChangedItem = changedItem;
   mConflictingItem = conflictingItem;
 }
