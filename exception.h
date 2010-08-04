@@ -68,11 +68,11 @@ class AKONADI_EXPORT Exception : public std::exception
     /**
       Returns the type of this exception.
     */
-    virtual QByteArray type() const throw();
+    virtual QByteArray type() const throw(); // ### Akonadi 2: return const char*
 
   private:
     class Private;
-    Private * const d;
+    Private * d;
 };
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \

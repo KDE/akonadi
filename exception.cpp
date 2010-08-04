@@ -22,7 +22,9 @@
 #include <KDebug>
 #include <QString>
 
-namespace Akonadi {
+#include <memory>
+
+using namespace Akonadi;
 
 class Exception::Private
 {
@@ -32,27 +34,44 @@ class Exception::Private
 };
 
 Exception::Exception(const char* what) throw() :
-  d( new Private )
+  d( 0 )
 {
-  d->what = what;
+  try {
+    std::auto_ptr<Private> nd( new Private );
+    nd->what = what;
+    d = nd.release();
+  } catch ( ... ) {}
 }
 
 Exception::Exception(const QByteArray& what) throw() :
-  d( new Private )
+  d( 0 )
 {
-  d->what = what;
+  try {
+    std::auto_ptr<Private> nd( new Private );
+    nd->what = what;
+    d = nd.release();
+  } catch ( ... ) {}
 }
 
 Exception::Exception(const QString& what) throw() :
-  d( new Private )
+  d( 0 )
 {
-  d->what = what.toUtf8();
+  try {
+    std::auto_ptr<Private> nd( new Private );
+    nd->what = what.toUtf8();
+    d = nd.release();
+  } catch ( ... ) {}
 }
 
 Exception::Exception(const Akonadi::Exception& other) throw() :
-  std::exception( other ), d( new Private )
+  std::exception( other ), d( 0 )
 {
-  d->what = other.d->what;
+  if ( !other.d )
+    return;
+  try {
+    std::auto_ptr<Private> nd( new Private( *other.d ) );
+    d = nd.release();
+  } catch ( ... ) {}
 }
 
 Exception::~Exception() throw()
@@ -62,20 +81,38 @@ Exception::~Exception() throw()
 
 QByteArray Exception::type() const throw()
 {
-  return "Akonadi::Exception";
+  static const char mytype[] = "Akonadi::Exception";
+  try {
+    return QByteArray::fromRawData( "Akonadi::Exception", sizeof(mytype)-1 );
+  } catch ( ... ) {
+    return QByteArray();
+  }
 }
 
 const char* Exception::what() const throw()
 {
-  d->assembledWhat = QByteArray( type() + ": " + d->what );
+  static const char fallback[] = "<some exception was thrown during construction: message lost>";
+  if ( !d )
+    return fallback;
+  if ( d->assembledWhat.isEmpty() )
+    try {
+      d->assembledWhat = QByteArray( type() + ": " + d->what );
+    } catch ( ... ) {
+      return "caught some exception while assembling Akonadi::Exception::what() return value";
+    }
   return d->assembledWhat.constData();
 }
 
-}
-
-#define AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( classname ) \
-Akonadi::classname::~classname() throw() {} \
-QByteArray Akonadi::classname::type() const throw() { return QByteArray( "Akonadi::" #classname ); }
+#define AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( classname )       \
+    Akonadi::classname::~classname() throw() {}                         \
+    QByteArray Akonadi::classname::type() const throw() {               \
+        static const char mytype[] = "Akonadi::" #classname ;           \
+        try {                                                           \
+            return QByteArray::fromRawData( mytype, sizeof(mytype)-1 ); \
+        } catch ( ... ) {                                               \
+            return QByteArray();                                        \
+        }                                                               \
+    }
 
 AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( PayloadException )
 
