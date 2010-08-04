@@ -72,3 +72,11 @@ const char* Exception::what() const throw()
 }
 
 }
+
+#define AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( classname ) \
+Akonadi::classname::~classname() throw() {} \
+QByteArray Akonadi::classname::type() const throw() { return QByteArray( "Akonadi::" #classname ); }
+
+AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE( PayloadException )
+
+#undef AKONADI_EXCEPTION_IMPLEMENT_TRIVIAL_INSTANCE

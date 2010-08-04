@@ -76,13 +76,14 @@ class AKONADI_EXPORT Exception : public std::exception
 };
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \
-class classname : public Akonadi::Exception \
+class AKONADI_EXPORT classname : public Akonadi::Exception \
 { \
   public: \
     classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \
     classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) {} \
     classname ( const QString &what ) throw() : Akonadi::Exception( what ) {} \
-    QByteArray type() const throw() { return QByteArray( "Akonadi::" #classname ); } \
+    ~classname() throw(); \
+    QByteArray type() const throw(); \
 }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( PayloadException );
