@@ -86,8 +86,8 @@ bool DbConfigMysql::init( QSettings &settings )
   mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_install_db" ), mysqldSearchPath );
   akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-  mMysqlUpgradeDBPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_upgrade" ), mysqldSearchPath );
-  akDebug() << "Found mysql_upgrade: " << mMysqlUpgradeDBPath;
+  mMysqlCheckPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqlcheck" ), mysqldSearchPath );
+  akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
   if ( mInternalServer ) {
@@ -239,7 +239,7 @@ void DbConfigMysql::startInternalServer()
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
     const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1").arg(confFile) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
     QProcess::execute( mMysqlInstallDbPath, arguments );
-  } 
+  }
 
   // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
   if ( confUpdate ) {
@@ -293,9 +293,13 @@ void DbConfigMysql::startInternalServer()
     }
 
     if ( opened ) {
-      if ( !mMysqlUpgradeDBPath.isEmpty() ) {
-        const QStringList arguments = QStringList() << QLatin1String( "--verbose" ) << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
-        QProcess::execute( mMysqlUpgradeDBPath, arguments );
+
+      if ( !mMysqlCheckPath.isEmpty() ) {
+        const QStringList arguments = QStringList() << QLatin1String( "--check-upgrade" )
+                                                    << QLatin1String( "--all-databases" )
+                                                    << QLatin1String( "--auto-repair" )
+                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+        QProcess::execute( mMysqlCheckPath, arguments );
       }
 
       {

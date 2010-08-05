@@ -78,7 +78,7 @@ class DbConfigMysql : public DbConfig
     QString mServerPath;
     QString mCleanServerShutdownCommand;
     QString mMysqlInstallDbPath;
-    QString mMysqlUpgradeDBPath;
+    QString mMysqlCheckPath;
     bool mInternalServer;
     QProcess *mDatabaseProcess;
 };
