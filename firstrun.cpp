@@ -77,6 +77,7 @@ void Firstrun::findPendingDefaults()
   }
 }
 
+#ifndef KDEPIM_NO_KRESOURCES
 static QString resourceTypeForMimetype( const QStringList &mimeTypes )
 {
   if ( mimeTypes.contains( QLatin1String( "text/directory" ) ) )
@@ -135,6 +136,7 @@ void Firstrun::migrationFinished( int exitCode )
 
   setupNext();
 }
+#endif
 
 
 void Firstrun::setupNext()
@@ -157,6 +159,7 @@ void Firstrun::setupNext()
     return;
   }
 
+#ifndef KDEPIM_NO_KRESOURCES
   // KDE5: remove me
   // check if there is a kresource setup for this type already
   const QString kresType = resourceTypeForMimetype( type.mimeTypes() );
@@ -183,6 +186,7 @@ void Firstrun::setupNext()
       return;
     }
   }
+#endif
 
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( instanceCreated( KJob* ) ) );
