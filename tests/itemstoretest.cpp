@@ -32,6 +32,7 @@
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemmodifyjob_p.h>
 #include <akonadi/resourceselectjob_p.h>
 #include <qtest_akonadi.h>
 #include "test_utils.h"
@@ -188,6 +189,8 @@ void ItemStoreTest::testRemoteId()
 
   item.setRemoteId( rid );
   ItemModifyJob *store = new ItemModifyJob( item, this );
+  store->disableRevisionCheck();
+  store->ignorePayload(); // we only want to update the remote id
   AKVERIFYEXEC( store );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
@@ -298,6 +301,7 @@ void ItemStoreTest::testRevisionCheck()
   // try to store second item with modifications (should be detected as a conflict)
   item2.attribute<TestAttribute>( Item::AddIfMissing )->data = "random stuff 2";
   ItemModifyJob *sjob2 = new ItemModifyJob( item2 );
+  sjob2->disableAutomaticConflictHandling();
   QVERIFY( !sjob2->exec() );
 
   // fetch same again
