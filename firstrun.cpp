@@ -38,6 +38,8 @@
 #include <QtCore/QMetaMethod>
 #include <QtCore/QMetaObject>
 
+static char FIRSTRUN_DBUSLOCK[] = "org.kde.Akonadi.Firstrun.lock";
+
 using namespace Akonadi;
 
 Firstrun::Firstrun( QObject *parent )
@@ -46,13 +48,20 @@ Firstrun::Firstrun( QObject *parent )
     mCurrentDefault( 0 ),
     mProcess( 0 )
 {
-  findPendingDefaults();
-  kDebug() << mPendingDefaults;
-  setupNext();
+  kDebug();
+  if ( QDBusConnection::sessionBus().registerService( QLatin1String( FIRSTRUN_DBUSLOCK ) ) ) {
+    findPendingDefaults();
+    kDebug() << mPendingDefaults;
+    setupNext();
+  } else {
+    kDebug() << "D-Bus lock found, so someone else does the work for us already.";
+    deleteLater();
+  }
 }
 
 Firstrun::~Firstrun()
 {
+  QDBusConnection::sessionBus().unregisterService( QLatin1String( FIRSTRUN_DBUSLOCK ) );
   delete mConfig;
   kDebug() << "done";
 }
