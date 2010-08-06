@@ -126,11 +126,10 @@ bool Store::parseStream()
   for ( int i = 0; i < pimItems.size(); ++i ) {
     if ( mCheckRevision ) {
       // check for conflicts if a resources tries to overwrite an item with dirty payload
-      // FIXME: STORE is also used to mark items as no longer dirty by the resource!
-/*      if ( connection()->isOwnerResource( pimItems.at( i ) ) ) {
+      if ( connection()->isOwnerResource( pimItems.at( i ) ) ) {
         if ( pimItems.at( i ).dirty() )
           throw HandlerException( "[LRCONFLICT] Resource tries to modify item with dirty payload, aborting STORE." );
-      }*/
+      }
 
       // check and update revisions
       if ( pimItems.at( i ).rev() != (int)mPreviousRevision )
