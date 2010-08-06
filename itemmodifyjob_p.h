@@ -54,6 +54,7 @@ class ItemModifyJobPrivate : public JobPrivate
     QSet<QByteArray> mParts;
     QByteArray mPendingData;
     bool mIgnorePayload;
+    bool mAutomaticConflictHandlingEnabled;
 };
 
 }

@@ -37,7 +37,8 @@ ItemModifyJobPrivate::ItemModifyJobPrivate( ItemModifyJob *parent, const Item &i
   : JobPrivate( parent ),
     mItem( item ),
     mRevCheck( true ),
-    mIgnorePayload( false )
+    mIgnorePayload( false ),
+    mAutomaticConflictHandlingEnabled( true )
 {
   mParts = mItem.loadedPayloadParts();
 }
@@ -91,7 +92,6 @@ void ItemModifyJobPrivate::conflictResolveError( const QString &message )
   q->setErrorText( q->errorText() + message );
   q->emitResult();
 }
-
 
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   : Job( new ItemModifyJobPrivate( this, item ), parent )
@@ -218,13 +218,15 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       setErrorText( QString::fromUtf8( data ) );
 
       if ( data.contains( "[LLCONFLICT]" ) ) {
-        ConflictHandler *handler = new ConflictHandler( ConflictHandler::LocalLocalConflict, this );
-        handler->setConflictingItems( d->mItem, d->mItem );
-        connect( handler, SIGNAL( conflictResolved() ), SLOT( conflictResolved() ) );
-        connect( handler, SIGNAL( error( const QString& ) ), SLOT( conflictResolveError( const QString& ) ) );
+        if ( d->mAutomaticConflictHandlingEnabled ) {
+          ConflictHandler *handler = new ConflictHandler( ConflictHandler::LocalLocalConflict, this );
+          handler->setConflictingItems( d->mItem, d->mItem );
+          connect( handler, SIGNAL( conflictResolved() ), SLOT( conflictResolved() ) );
+          connect( handler, SIGNAL( error( const QString& ) ), SLOT( conflictResolveError( const QString& ) ) );
 
-        QMetaObject::invokeMethod( handler, "start", Qt::QueuedConnection );
-        return;
+          QMetaObject::invokeMethod( handler, "start", Qt::QueuedConnection );
+          return;
+        }
       }
     }
     emitResult();
@@ -261,6 +263,13 @@ void ItemModifyJob::disableRevisionCheck()
   Q_D( ItemModifyJob );
 
   d->mRevCheck = false;
+}
+
+void ItemModifyJob::disableAutomaticConflictHandling()
+{
+  Q_D( ItemModifyJob );
+
+  d->mAutomaticConflictHandlingEnabled = false;
 }
 
 Item ItemModifyJob::item() const

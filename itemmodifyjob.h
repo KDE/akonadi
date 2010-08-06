@@ -123,6 +123,18 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      */
     Item item() const;
 
+    /**
+     * Disables the automatic handling of conflicts.
+     *
+     * By default the item modify job will bring up a dialog to resolve
+     * a conflict that might happen when modifying an item.
+     * Calling this method will avoid that and the job returns with an
+     * error in case of a conflict.
+     *
+     * @since 4.6
+     */
+    void disableAutomaticConflictHandling();
+
   protected:
     virtual void doStart();
     virtual void doHandleResponse( const QByteArray &tag, const QByteArray &data );
