@@ -50,15 +50,6 @@ class HtmlDifferencesReporter : public AbstractDifferencesReporter
       return header() + mContent + footer();
     }
 
-    QString toHtml( const QString &name, const QString &leftValue, const QString &rightValue ) const
-    {
-      const QString content = QString::fromLatin1( "<tr><td align=\"right\"><b>%1:</b></td><td>%2</td><td></td><td>%3</td></tr>" )
-                                                 .arg( name )
-                                                 .arg( textToHTML( leftValue ) )
-                                                 .arg( textToHTML( rightValue ) );
-      return header() + content + footer();
-    }
-
     void setPropertyNameTitle( const QString &title )
     {
       mNameTitle = title;
@@ -131,6 +122,64 @@ class HtmlDifferencesReporter : public AbstractDifferencesReporter
     QString mRightTitle;
 };
 
+static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::Item &localItem, const Akonadi::Item &otherItem )
+{
+  if ( localItem.modificationTime() != otherItem.modificationTime() ) {
+    reporter->addProperty( AbstractDifferencesReporter::ConflictMode, i18n( "Modification Time" ),
+                           KGlobal::locale()->formatDateTime( localItem.modificationTime(), KLocale::ShortDate, true ),
+                           KGlobal::locale()->formatDateTime( otherItem.modificationTime(), KLocale::ShortDate, true ) );
+  }
+
+  if ( localItem.flags() != otherItem.flags() ) {
+    QStringList localFlags;
+    foreach ( const QByteArray &localFlag, localItem.flags() )
+      localFlags.append( QString::fromUtf8( localFlag ) );
+
+    QStringList otherFlags;
+    foreach ( const QByteArray &otherFlag, otherItem.flags() )
+      otherFlags.append( QString::fromUtf8( otherFlag ) );
+
+    reporter->addProperty( AbstractDifferencesReporter::ConflictMode, i18n( "Flags" ),
+                           localFlags.join( QLatin1String( ", " ) ),
+                           otherFlags.join( QLatin1String( ", " ) ) );
+  }
+
+  QHash<QByteArray, QByteArray> localAttributes;
+  foreach ( Akonadi::Attribute *attribute, localItem.attributes() ) {
+    localAttributes.insert( attribute->type(), attribute->serialized() );
+  }
+
+  QHash<QByteArray, QByteArray> otherAttributes;
+  foreach ( Akonadi::Attribute *attribute, otherItem.attributes() ) {
+    otherAttributes.insert( attribute->type(), attribute->serialized() );
+  }
+
+  if ( localAttributes != otherAttributes ) {
+    foreach ( const QByteArray &localKey, localAttributes.keys() ) {
+      if ( !otherAttributes.contains( localKey ) ) {
+        reporter->addProperty( AbstractDifferencesReporter::AdditionalLeftMode, i18n( "Attribute: %1", QString::fromUtf8( localKey ) ),
+                               QString::fromUtf8( localAttributes.value( localKey ) ),
+                               QString() );
+      } else {
+        const QByteArray localValue = localAttributes.value( localKey );
+        const QByteArray otherValue = otherAttributes.value( localKey );
+        if ( localValue != otherValue ) {
+          reporter->addProperty( AbstractDifferencesReporter::ConflictMode, i18n( "Attribute: %1", QString::fromUtf8( localKey ) ),
+                                 QString::fromUtf8( localValue ),
+                                 QString::fromUtf8( otherValue ) );
+        }
+      }
+    }
+
+    foreach ( const QByteArray &otherKey, otherAttributes.keys() ) {
+      if ( !localAttributes.contains( otherKey ) ) {
+        reporter->addProperty( AbstractDifferencesReporter::AdditionalRightMode, i18n( "Attribute: %1", QString::fromUtf8( otherKey ) ),
+                               QString(),
+                               QString::fromUtf8( otherAttributes.value( otherKey ) ) );
+      }
+    }
+  }
+}
 
 ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
   : KDialog( parent ), mResolveStrategy( ConflictHandler::UseBothItems )
@@ -161,8 +210,9 @@ void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem,
   mLocalItem = localItem;
   mOtherItem = otherItem;
 
+  HtmlDifferencesReporter reporter;
+
   if ( mLocalItem.hasPayload() && mOtherItem.hasPayload() ) {
-    HtmlDifferencesReporter reporter;
 
     QObject *object = TypePluginLoader::objectForMimeTypeAndClass( localItem.mimeType(), localItem.availablePayloadMetaTypeIds() );
     if ( object ) {
@@ -174,13 +224,14 @@ void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem,
       }
     }
 
-    const QString html = reporter.toHtml( i18n( "Data" ),
-                                          QString::fromUtf8( mLocalItem.payloadData() ),
-                                          QString::fromUtf8( mOtherItem.payloadData() ) );
-    mView->setHtml( html );
-  } else {
-    mView->setHtml( QLatin1String( "<html><body>Conflicting flags or attributes</body></html>" ) );
+    reporter.addProperty( HtmlDifferencesReporter::NormalMode, i18n( "Data" ),
+                          QString::fromUtf8( mLocalItem.payloadData() ),
+                          QString::fromUtf8( mOtherItem.payloadData() ) );
   }
+
+  compareItems( &reporter, localItem, otherItem );
+
+  mView->setHtml( reporter.toHtml() );
 }
 
 ConflictHandler::ResolveStrategy ConflictResolveDialog::resolveStrategy() const
