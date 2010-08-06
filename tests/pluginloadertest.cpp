@@ -35,14 +35,14 @@ int main()
 
   PluginLoader *loader = PluginLoader::self();
 
-  const QStringList types = loader->types();
+  const QStringList types = loader->names();
   qDebug( "Types:" );
   for ( int i = 0; i < types.count(); ++i )
     qDebug( "%s", qPrintable( types.at( i ) ) );
 
-  QObject *object = loader->createForName( "text/vcard" );
+  QObject *object = loader->createForName( "text/vcard@KABC::Addressee" );
   if ( qobject_cast<ItemSerializerPlugin*>( object ) != 0 )
-    qDebug( "Loaded plugin for mimetype 'text/vcard' successfully" );
+    qDebug( "Loaded plugin for mimetype 'text/vcard@KABC::Addressee' successfully" );
   else
     qDebug( "Unable to load plugin for mimetype 'text/vcard'" );
 

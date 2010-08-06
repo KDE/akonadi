@@ -39,6 +39,7 @@ class ItemHydra: public QObject
     void testNullPointerPayload();
     void testQSharedPointerPayload();
     void testHasPayload();
+    void testSharedPointerConversions();
 };
 
 #endif

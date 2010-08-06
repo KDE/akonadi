@@ -164,7 +164,7 @@ void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem,
   if ( mLocalItem.hasPayload() && mOtherItem.hasPayload() ) {
     HtmlDifferencesReporter reporter;
 
-    QObject *object = TypePluginLoader::objectForMimeType( localItem.mimeType() );
+    QObject *object = TypePluginLoader::objectForMimeTypeAndClass( localItem.mimeType(), localItem.availablePayloadMetaTypeIds() );
     if ( object ) {
       DifferencesAlgorithmInterface *algorithm = qobject_cast<DifferencesAlgorithmInterface*>( object );
       if ( algorithm ) {

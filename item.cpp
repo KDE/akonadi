@@ -23,10 +23,52 @@
 #include "protocol_p.h"
 
 #include <kurl.h>
+#include <kdebug.h>
 
 #include <QtCore/QStringList>
 
+#include <algorithm>
+#include <map>
+#include <utility>
+
 using namespace Akonadi;
+
+namespace {
+
+struct nodelete {
+    template <typename T>
+    void operator()( T * ) {}
+};
+
+struct ByTypeId {
+    typedef bool result_type;
+    bool operator()( const boost::shared_ptr<PayloadBase> & lhs, const boost::shared_ptr<PayloadBase> & rhs ) const {
+        return strcmp( lhs->typeName(), rhs->typeName() ) < 0 ;
+    }
+};
+
+} // anon namespace
+
+typedef QHash< QString, std::map< boost::shared_ptr<PayloadBase>, std::pair<int,int>, ByTypeId > > LegacyMap;
+Q_GLOBAL_STATIC( LegacyMap, typeInfoToMetaTypeIdMap )
+
+void Item::addToLegacyMappingImpl( const QString & mimeType, int spid, int mtid, std::auto_ptr<PayloadBase> p ) {
+    if ( !p.get() )
+        return;
+    const boost::shared_ptr<PayloadBase> sp( p );
+    std::pair<int,int> & item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
+    item.first = spid;
+    item.second = mtid;
+}
+
+static const std::pair<int,int> * lookupLegacyMapping( const QString & mimeType, PayloadBase * p ) {
+    const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind( mimeType );
+    if ( hit == typeInfoToMetaTypeIdMap()->end() )
+        return 0;
+    const boost::shared_ptr<PayloadBase> sp( p, nodelete() );
+    const LegacyMap::mapped_type::const_iterator it = hit->find( sp );
+    return it == hit->end() ? 0 : &it->second ;
+}
 
 // Change to something != RFC822 as soon as the server supports it
 const char* Item::FullPayload = "RFC822";
@@ -181,7 +223,7 @@ void Item::setMimeType( const QString & mimeType )
 
 bool Item::hasPayload() const
 {
-  return d_func()->mPayload != 0;
+  return d_func()->hasMetaTypeId( -1 );
 }
 
 KUrl Item::url( UrlType type ) const
@@ -212,19 +254,148 @@ Item Item::fromUrl( const KUrl &url )
 
 PayloadBase* Item::payloadBase() const
 {
-  return d_func()->mPayload;
+  Q_D( const Item );
+  d->tryEnsureLegacyPayload();
+  return d->mLegacyPayload.get();
 }
+
+void ItemPrivate::tryEnsureLegacyPayload() const
+{
+  if ( !mLegacyPayload )
+    for ( PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end() ; it != end ; ++it )
+      if ( lookupLegacyMapping( mMimeType, it->payload.get() ) )
+          mLegacyPayload = it->payload; // clones
+}
+
+PayloadBase* Item::payloadBaseV2( int spid, int mtid ) const
+{
+  return d_func()->payloadBaseImpl( spid, mtid );
+}
+
+namespace {
+    class ConversionGuard {
+        const bool old;
+        bool & b;
+    public:
+        explicit ConversionGuard( bool & b )
+            : old( b ), b( b )
+        {
+            b = true;
+        }
+        ~ConversionGuard() {
+            b = old;
+        }
+    };
+}
+            
+
+bool Item::ensureMetaTypeId( int mtid ) const
+{
+  Q_D( const Item );
+  // 0. Nothing there - nothing to convert from, either
+  if ( d->mPayloads.empty() )
+    return false;
+
+  // 1. Look whether we already have one:
+  if ( d->hasMetaTypeId( mtid ) )
+    return true;
+
+  // recursion detection (shouldn't trigger, but does if the
+  // serialiser plugins are acting funky):
+  if ( d->mConversionInProgress )
+      return false;
+
+  // 2. Try to create one by conversion from a different representation:
+  try {
+    const ConversionGuard guard( d->mConversionInProgress );
+    Item converted = ItemSerializer::convert( *this, mtid );
+    return d->movePayloadFrom( converted.d_func(), mtid );
+  } catch ( const std::exception & e ) {
+    kDebug() << "conversion threw:" << e.what();
+    return false;
+  } catch ( ... ) {
+    kDebug() << "conversion threw something not derived from std::exception: fix the program!";
+    return false;
+  }
+}
+
+static QString format_type( int spid, int mtid ) {
+  return QString::fromLatin1( "sp(%1)<%2>" )
+      .arg( spid ).arg( QLatin1String( QMetaType::typeName( mtid ) ) );
+}
+
+static QString format_types( const PayloadContainer & c ) {
+  QStringList result;
+  for ( PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it )
+    result.push_back( format_type( it->sharedPointerId, it->metaTypeId ) );
+  return result.join( QLatin1String(", ") );
+}
+
+#if 0
+QString Item::payloadExceptionText( int spid, int mtid ) const
+{
+  Q_D( const Item );
+  if ( d->mPayloads.empty() )
+    return QLatin1String( "No payload set" );
+  else
+    return QString::fromLatin1( "Wrong payload type (requested: %1; present: %2" )
+        .arg( format_type( spid, mtid ), format_types( d->mPayloads ) );
+}
+#else
+void Item::throwPayloadException( int spid, int mtid ) const
+{
+  Q_D( const Item );
+  if ( d->mPayloads.empty() )
+    throw PayloadException( "No payload set" );
+  else
+    throw PayloadException( QString::fromLatin1( "Wrong payload type (requested: %1; present: %2" )
+                            .arg( format_type( spid, mtid ), format_types( d->mPayloads ) ) );
+}
+#endif
 
 void Item::setPayloadBase( PayloadBase* p )
 {
-  Q_D( Item );
-  delete d->mPayload;
-  d->mPayload = p;
+  d_func()->setLegacyPayloadBaseImpl( std::auto_ptr<PayloadBase>( p ) );
+}
+
+void ItemPrivate::setLegacyPayloadBaseImpl( std::auto_ptr<PayloadBase> p )
+{
+  if ( const std::pair<int,int> * pair = lookupLegacyMapping( mMimeType, p.get() ) ) {
+    std::auto_ptr<PayloadBase> clone;
+    if ( p.get() )
+      clone.reset( p->clone() );
+    setPayloadBaseImpl( pair->first, pair->second, p, false );
+    mLegacyPayload.reset( clone.release() );
+  } else {
+    mPayloads.clear();
+    mLegacyPayload.reset( p.release() );
+  }
+}
+
+void Item::setPayloadBaseV2( int spid, int mtid, std::auto_ptr<PayloadBase> p )
+{
+  d_func()->setPayloadBaseImpl( spid, mtid, p, false );
+}
+
+void Item::addPayloadBaseVariant( int spid, int mtid, std::auto_ptr<PayloadBase> p ) const
+{
+  d_func()->setPayloadBaseImpl( spid, mtid, p, true );
 }
 
 QSet<QByteArray> Item::availablePayloadParts() const
 {
   return ItemSerializer::availableParts( *this );
+}
+
+QVector<int> Item::availablePayloadMetaTypeIds() const
+{
+  QVector<int> result;
+  Q_D( const Item );
+  result.reserve( d->mPayloads.size() );
+  // Stable Insertion Sort - N is typically _very_ low (1 or 2).
+  for ( PayloadContainer::const_iterator it = d->mPayloads.begin(), end = d->mPayloads.end() ; it != end ; ++it )
+      result.insert( std::upper_bound( result.begin(), result.end(), it->metaTypeId ), it->metaTypeId );
+  return result;
 }
 
 void Item::apply( const Item &other )

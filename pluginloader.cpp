@@ -63,47 +63,47 @@ PluginLoader* PluginLoader::self()
   return mSelf;
 }
 
-QStringList PluginLoader::types() const
+QStringList PluginLoader::names() const
 {
   return mPluginInfos.keys();
 }
 
-QObject* PluginLoader::createForName( const QString &type )
+QObject* PluginLoader::createForName( const QString & name )
 {
-  if ( !mPluginInfos.contains( type ) ) {
-    kWarning( 5300 ) << "plugin type \"" << type << "\" is unknown to the plugin loader." << endl;
+  if ( !mPluginInfos.contains( name ) ) {
+    kWarning( 5300 ) << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
     return 0;
   }
 
-  PluginMetaData &info = mPluginInfos[ type ];
+  PluginMetaData &info = mPluginInfos[ name ];
   if ( !info.loaded ) {
     const QString path = KLibLoader::findLibrary( info.library );
     if ( path.isEmpty() ) {
-      kWarning( 5300 ) << "unable to find library for plugin type \"" << type << "\"." << endl;
+      kWarning( 5300 ) << "unable to find library for plugin name \"" << name << "\"." << endl;
       return 0;
     }
 
-    mPluginLoaders.insert( type, new QPluginLoader( path ) );
+    mPluginLoaders.insert( name, new QPluginLoader( path ) );
     info.loaded = true;
   }
 
-  QPluginLoader *loader = mPluginLoaders[ type ];
+  QPluginLoader *loader = mPluginLoaders[ name ];
 
   QObject *object = loader->instance();
   if ( !object ) {
-    kWarning( 5300 ) << "unable to load plugin for plugin type \"" << type << "\"." << endl;
+    kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
     return 0;
   }
 
   return object;
 }
 
-PluginMetaData PluginLoader::infoForName( const QString & type ) const
+PluginMetaData PluginLoader::infoForName( const QString & name ) const
 {
-  if ( !mPluginInfos.contains( type ) )
+  if ( !mPluginInfos.contains( name ) )
     return PluginMetaData();
 
-  return mPluginInfos.value( type );
+  return mPluginInfos.value( name );
 }
 
 void PluginLoader::scan()
@@ -120,6 +120,15 @@ void PluginLoader::scan()
       const QString type = group.readEntry( "Type" ).toLower();
       if ( type.isEmpty() ) {
         kWarning( 5300 ) << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
+        continue;
+      }
+
+      // read Class entry as a list so that types like QPair<A,B> are
+      // properly escaped and don't end up being split into QPair<A
+      // and B>.
+      const QStringList classes = group.readXdgListEntry( "X-Akonadi-Class" );
+      if ( classes.isEmpty() ) {
+        kWarning( 5300 ) << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
         continue;
       }
 
@@ -143,13 +152,13 @@ void PluginLoader::scan()
         comment = i18n( "No description available" );
       }
 
-      if ( type.contains( QLatin1Char( ',' ) ) ) {
-        const QStringList subTypes = type.split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-        for ( int j = 0; j < subTypes.count(); ++j )
-          mPluginInfos.insert( subTypes.at( j ), PluginMetaData( library, name, comment ) );
-      } else {
-        mPluginInfos.insert( type, PluginMetaData( library, name, comment ) );
-      }
+      const QStringList mimeTypes = type.split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+
+      kDebug( 5300 ) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
+      Q_FOREACH( const QString & mimeType, mimeTypes )
+        Q_FOREACH( const QString & classType, classes )
+          mPluginInfos.insert( mimeType + QLatin1Char('@') + classType, PluginMetaData( library, name, comment ) );
+
     } else {
       kWarning( 5300 ) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
     }

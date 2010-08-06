@@ -33,13 +33,15 @@
 
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/utility/enable_if.hpp>
+
 #include <typeinfo>
+#include <memory>
 
 class KUrl;
 
-namespace std {
-  template <typename T> class auto_ptr;
-}
+template <typename T>
+class QVector;
 
 namespace Akonadi {
 
@@ -57,31 +59,58 @@ class ItemPrivate;
  * to items in order to handle them but the meta data should not be stored back to the
  * resource.
  *
- * This class contains beside some type-agnostic information (flags, revision)
- * a single payload object representing its actual data. Which objects these actually
- * are depends on the mimetype of the item and the corresponding serializer plugin.
- *
  * This class is implicitly shared.
  *
  * <h4>Payload</h4>
+ *
+ * This class contains, beside some type-agnostic information (flags, revision),
+ * zero or more payload objects representing its actual data. Which objects these actually
+ * are depends on the mimetype of the item and the corresponding serializer plugin(s).
  *
  * Technically the only restriction on payload objects is that they have to be copyable.
  * For safety reasons, pointer payloads are forbidden as well though, as the
  * ownership would not be clear. In this case, usage of a shared pointer is
  * recommended (such as boost::shared_ptr or QSharedPointer).
  *
- * Using a shared pointer is also recommended in case the payload uses polymorphic
- * types. For supported shared pointer types implicit casting is provided when possible.
+ * Using a shared pointer is also required in case the payload is a polymorphic
+ * type. For supported shared pointer types implicit casting is provided when possible.
  *
  * When using a value-based class as payload, it is recommended to use one that does
  * support implicit sharing as setting and retrieving a payload as well as copying
  * an Akonadi::Item object imply copying of the payload object.
  *
+ * Since KDE 4.6, Item supports multiple payload types per mime type,
+ * and will automatically convert between them using the serialiser
+ * plugins (which is slow). It also supports mixing shared pointer
+ * types, e.g. inserting a boost::shared_ptr<Foo> and extracting a
+ * QSharedPointer<Foo>. Since the two shared pointer types cannot
+ * share ownership of the same object, the payload class @c T needs to
+ * provide a @c clone() method with the usual signature, ie.
+ *
+ * @code
+ * virtual T * T::clone() const
+ * @endcode
+ *
+ * If the class that does not have a @c clone() method, asking for an
+ * incompatible shared pointer will throw a PayloadException.
+ *
+ * Since using different shared pointer types and different payload
+ * types for the same mimetype incurs slow conversions (between
+ * payload types) and cloning (between shared pointer types), as well
+ * as manifold memory usage (results of conversions are cached inside
+ * the Item, and only destroyed when a new payload is set by the user
+ * of the class), you want to restrict yourself to just one type and
+ * one shared pointer type. This mechanism was mainly introduced for
+ * backwards compatibility (e.g., putting in a
+ * boost::shared_ptr<KCal::Incidence> and extracting a
+ * QSharedPointer<KCalCore::Incidence>), so it is not optimized for
+ * performance.
+ *
  * The availability of a payload of a specific type can be checked using hasPayload(),
  * payloads can be retrieved by using payload() and set by using setPayload(). Refer
  * to the documentation of those methods for more details.
  *
- * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>
+ * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>
  */
 class AKONADI_EXPORT Item : public Entity
 {
@@ -267,6 +296,14 @@ class AKONADI_EXPORT Item : public Entity
     QString mimeType() const;
 
     /**
+     * Returns a list of metatype-ids, describing the different
+     * variants of payload that are currently contained in this item.
+     *
+     * The result is always sorted (increasing ids).
+     */
+    QVector<int> availablePayloadMetaTypeIds() const;
+
+    /**
      * Sets the payload object of this PIM item.
      *
      * @param p The payload object. Must be copyable and must not be a pointer,
@@ -353,6 +390,17 @@ class AKONADI_EXPORT Item : public Entity
      */
     void apply( const Item &other );
 
+    /**
+     * Registers \a T as a legacy type for mime type \a mimeType.
+     *
+     * This is required information for Item to return the correct
+     * type from payload() when clients have not been recompiled to
+     * use the new code.
+     *
+     * @since 4.6
+     */
+    template <typename T> static void addToLegacyMapping( const QString & mimeType );
+
   private:
     //@cond PRIVATE
     friend class ItemCreateJob;
@@ -360,6 +408,46 @@ class AKONADI_EXPORT Item : public Entity
     friend class ProtocolHelper;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
+    PayloadBase* payloadBaseV2( int sharedPointerId, int metaTypeId ) const;
+    //std::auto_ptr<PayloadBase> takePayloadBase( int sharedPointerId, int metaTypeId );
+    void setPayloadBaseV2( int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p );
+    void addPayloadBaseVariant( int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p ) const;
+    static void addToLegacyMappingImpl( const QString & mimeType, int sharedPointerId, int metaTypeId, std::auto_ptr<PayloadBase> p );
+
+    /**
+     * Try to ensure that we have a variant of the payload for metatype id @a mtid.
+     * @return @c true if a type exists or could be created through conversion, @c false otherwise.
+     */
+    bool ensureMetaTypeId( int mtid ) const;
+
+    template <typename T>
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
+    setPayloadImpl( const T & );
+    template <typename T>
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
+    setPayloadImpl( const T & );
+
+    template <typename T>
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+    payloadImpl() const;
+    template <typename T>
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+    payloadImpl() const;
+
+    template <typename T>
+    typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+    hasPayloadImpl() const;
+    template <typename T>
+    typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+    hasPayloadImpl() const;
+
+    template <typename T>
+    typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
+    tryToClone( T * ) const;
+    template <typename T>
+    typename boost::disable_if<Internal::is_shared_pointer<T>,bool>::type
+    tryToClone( T * ) const;
+    
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
      * @param collectionId the unique identifier of the the collection where this item is stored in.
@@ -367,6 +455,23 @@ class AKONADI_EXPORT Item : public Entity
      */
     void setStorageCollectionId( Entity::Id collectionId);
 
+#if 0
+    /**
+     * Helper function for non-template throwing of PayloadException.
+     */
+    QString payloadExceptionText( int spid, int mtid ) const;
+
+    /**
+     * Non-template throwing of PayloadException.
+     * Needs to be inline, otherwise catch (Akonadi::PayloadException)
+     * won't work (only catch (Akonadi::Exception))
+     */
+    inline void throwPayloadException( int spid, int mtid ) const {
+        throw PayloadException( payloadExceptionText( spid, mtid ) );
+    }
+#else
+    void throwPayloadException( int spid, int mtid ) const;
+#endif
     //@endcond
 
     AKONADI_DECLARE_PRIVATE( Item )
@@ -378,60 +483,168 @@ T Item::payload() const
 {
   BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
 
-  if ( !payloadBase() )
-    throw PayloadException( "No payload set" );
+  if ( !hasPayload() )
+    throwPayloadException( -1, -1 );
 
+  return payloadImpl<T>();
+}
+
+template <typename T>
+typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+Item::payloadImpl() const
+{
   typedef Internal::PayloadTrait<T> PayloadType;
-  if ( PayloadType::isPolymorphic ) {
-    try {
-      const typename PayloadType::SuperType sp = payload<typename PayloadType::SuperType>();
-      return PayloadType::castFrom( sp );
-    } catch ( const Akonadi::PayloadException& ) {}
+  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
+
+  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+  typedef Internal::PayloadTrait<Root_T> RootType;
+  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+
+  return PayloadType::castFrom( payloadImpl<Root_T>() );
+}
+
+template <typename T>
+typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
+Item::payloadImpl() const
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+
+  const int metaTypeId = PayloadType::elementMetaTypeId();
+
+  // make sure that we have a payload format represented by 'metaTypeId':
+  if ( !ensureMetaTypeId( metaTypeId ) )
+      throwPayloadException( PayloadType::sharedPointerId, metaTypeId );
+
+  // Check whether we have the exact payload
+  // (metatype id and shared pointer type match)
+  if ( const Payload<T> * const p = Internal::payload_cast<T>( payloadBaseV2( PayloadType::sharedPointerId, metaTypeId ) ) )
+      return p->payload;
+
+  T ret;
+  if ( !tryToClone<T>( &ret ) )
+      throwPayloadException( PayloadType::sharedPointerId, metaTypeId );
+  return ret;
+}
+
+template <typename T>
+typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
+Item::tryToClone( T * ret ) const
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+
+  const int metaTypeId = PayloadType::elementMetaTypeId();
+
+  // Check whether we have the same payload in 'the other
+  // shared pointer' (### make it recurse, trying to find one, but
+  // don't introduce infinite recursion):
+  typedef typename Internal::shared_pointer_traits<T>::next_shared_ptr NewT;
+  typedef Internal::PayloadTrait<NewT> NewPayloadType;
+
+  if ( const Payload<NewT> * const p = Internal::payload_cast<NewT>( payloadBaseV2( NewPayloadType::sharedPointerId, metaTypeId ) ) ) {
+      // If found, attempt to make a clone (required the payload to provide virtual T * T::clone() const)
+      const T nt = PayloadType::clone( p->payload );
+      if ( !PayloadType::isNull( nt ) ) {
+          // if clone succeeded, add the clone to the Item:
+          std::auto_ptr<PayloadBase> npb( new Payload<T>( nt ) );
+          addPayloadBaseVariant( PayloadType::sharedPointerId, metaTypeId, npb  );
+          // and return it
+          if ( ret ) *ret = nt;
+          return true;
+      }
   }
 
-  Payload<T> *p = Internal::payload_cast<T>( payloadBase() );
-  if ( !p ) {
-    throw PayloadException( QString::fromLatin1( "Wrong payload type (is '%1', requested '%2')" )
-      .arg( QLatin1String( payloadBase()->typeName() ) )
-      .arg( QLatin1String( typeid(p).name() ) ) );
-  }
-  return p->payload;
+  return false;
+}
+
+template <typename T>
+typename boost::disable_if<Internal::is_shared_pointer<T>, bool>::type
+Item::tryToClone( T * ) const
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+
+  return false;
 }
 
 template <typename T>
 bool Item::hasPayload() const
 {
   BOOST_STATIC_ASSERT( !boost::is_pointer<T>::value );
+  return hasPayload() && hasPayloadImpl<T>();
+}
 
-  if ( !hasPayload() )
-    return false;
-
+template <typename T>
+typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+Item::hasPayloadImpl() const
+{
   typedef Internal::PayloadTrait<T> PayloadType;
-  if ( PayloadType::isPolymorphic ) {
-    try {
-      const typename PayloadType::SuperType sp = payload<typename PayloadType::SuperType>();
-      return PayloadType::canCastFrom( sp );
-    } catch ( const Akonadi::PayloadException& ) {}
-  }
+  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
 
-  return Internal::payload_cast<T>( payloadBase() );
+  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+  typedef Internal::PayloadTrait<Root_T> RootType;
+  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+
+  try {
+      return hasPayloadImpl<Root_T>()
+          && PayloadType::canCastFrom( payload<Root_T>() );
+  } catch ( const Akonadi::PayloadException & ) {
+      return false;
+  }
+}
+
+template <typename T>
+typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
+Item::hasPayloadImpl() const
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+
+  const int metaTypeId = PayloadType::elementMetaTypeId();
+
+  // make sure that we have a payload format represented by 'metaTypeId':
+  if ( !ensureMetaTypeId( metaTypeId ) )
+      return false;
+
+  // Check whether we have the exact payload
+  // (metatype id and shared pointer type match)
+  if ( const Payload<T> * const p = Internal::payload_cast<T>( payloadBaseV2( PayloadType::sharedPointerId, metaTypeId ) ) )
+      return true;
+
+  return tryToClone<T>( 0 );
 }
 
 template <typename T>
 void Item::setPayload( const T &p )
 {
+  BOOST_STATIC_ASSERT(( !boost::is_pointer<T>::value ));
+  setPayloadImpl( p );
+}
+
+template <typename T>
+typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
+Item::setPayloadImpl( const T & p )
+{
   typedef Internal::PayloadTrait<T> PayloadType;
-  if ( PayloadType::isPolymorphic ) {
-    const typename PayloadType::SuperType sp
-      = PayloadType::template castTo<typename PayloadType::SuperElementType>( p );
-    if ( !Internal::PayloadTrait<typename PayloadType::SuperType>::isNull( sp )
-         || PayloadType::isNull( p ) )
-    {
-      setPayload( sp );
-      return;
-    }
-  }
-  setPayloadBase( new Payload<T>( p ) );
+  BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
+
+  typedef typename Internal::get_hierarchy_root<T>::type Root_T;
+  typedef Internal::PayloadTrait<Root_T> RootType;
+  BOOST_STATIC_ASSERT(( !RootType::isPolymorphic )); // prevent endless recursion
+
+  setPayloadImpl<Root_T>( p );
+}
+
+template <typename T>
+typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
+Item::setPayloadImpl( const T & p )
+{
+  typedef Internal::PayloadTrait<T> PayloadType;
+  std::auto_ptr<PayloadBase> pb( new Payload<T>( p ) );
+  setPayloadBaseV2( PayloadType::sharedPointerId,
+                    PayloadType::elementMetaTypeId(),
+                    pb );
 }
 
 template <typename T>
@@ -444,6 +657,14 @@ template <typename T>
 void Item::setPayload( std::auto_ptr<T> p )
 {
   p.Nice_try_but_a_std_auto_ptr_is_not_allowed_as_payload_either;
+}
+
+template <typename T>
+void Item::addToLegacyMapping( const QString & mimeType ) {
+  typedef Internal::PayloadTrait<T> PayloadType;
+  BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
+  std::auto_ptr<PayloadBase> p( new Payload<T> );
+  addToLegacyMappingImpl( mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p );
 }
 
 }

@@ -48,11 +48,11 @@ class AKONADI_TESTS_EXPORT PluginLoader
 
     static PluginLoader* self();
 
-    QStringList types() const;
+    QStringList names() const;
 
-    QObject* createForName( const QString &type );
+    QObject* createForName( const QString & name );
 
-    PluginMetaData infoForName( const QString & type ) const;
+    PluginMetaData infoForName( const QString & name ) const;
 
     void scan();
 

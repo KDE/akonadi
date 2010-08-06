@@ -21,8 +21,12 @@
 #ifndef AKONADI_TYPEPLUGINLOADER_P_H
 #define AKONADI_TYPEPLUGINLOADER_P_H
 
+#include <QtCore/qglobal.h>
+
 class QObject;
 class QString;
+template <typename T>
+class QVector;
 
 namespace Akonadi {
 class ItemSerializerPlugin;
@@ -41,18 +45,56 @@ class ItemSerializerPlugin;
  */
 namespace TypePluginLoader {
 
+enum Option {
+    NoOptions,
+    NoDefault = 1,
+
+    _LastOption,
+    OptionMask = 2*_LastOption-1
+};
+Q_DECLARE_FLAGS( Options, Option );
+
+
+#if 0
 /**
- * Returns the item serializer plugin that matches the given @p mimetype.
+ * Returns the legacy (pre-KDE-4.6) item serializer plugin that matches the given @p mimetype.
  */
-ItemSerializerPlugin* pluginForMimeType( const QString &mimetype );
+ItemSerializerPlugin* legacyPluginForMimeType( const QString &mimetype );
+#endif
 
 /**
- * Returns the type plugin object that matches the given @p mimetype.
+ * Returns the default item serializer plugin that matches the given @p mimetype.
  */
-QObject* objectForMimeType( const QString &mimetype );
+ItemSerializerPlugin* defaultPluginForMimeType( const QString &mimetype );
+
+/**
+ * Returns the item serializer plugin that matches the given
+ * @p mimetype, and any of the classes described by @p metaTypeIds.
+ */
+ItemSerializerPlugin* pluginForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
+
+#if 0
+/**
+ * Returns the legacy (pre-KDE-4.6) type plugin object that matches the given @p mimetype.
+ */
+QObject* legacyObjectForMimeType( const QString &mimetype );
+#endif
+
+/**
+ * Returns the default type plugin object that matches the given @p mimetype.
+ */
+QObject* defaultObjectForMimeType( const QString &mimetype );
+
+/**
+ * Returns the type plugin object that matches the given @p mimetype,
+ * and any of the classes described by @p metaTypeIds.
+ */
+QObject* objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
 
 }
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( Akonadi::TypePluginLoader::Options )
 
 #endif

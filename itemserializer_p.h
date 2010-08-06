@@ -28,6 +28,8 @@
 
 #include "itemserializerplugin.h"
 
+#include <memory>
+
 class QIODevice;
 
 namespace Akonadi {
@@ -68,6 +70,16 @@ class AKONADI_TESTS_EXPORT ItemSerializer
        * @since 4.4
        */
       static QSet<QByteArray> availableParts( const Item &item );
+
+      /**
+       * Tries to convert the payload in \a item into type with
+       * metatype-id \a metaTypeId.
+       *
+       * Throws ItemSerializerException or returns an Item w/o payload on failure.
+       *
+       * @since 4.6
+       */
+      static Item convert( const Item & item, int metaTypeId );
 };
 
 /**
@@ -83,6 +95,21 @@ class DefaultItemSerializerPlugin : public QObject, public ItemSerializerPlugin
 
     bool deserialize( Item&, const QByteArray&, QIODevice&, int );
     void serialize( const Item&, const QByteArray&, QIODevice&, int& );
+};
+
+/**
+ @internal
+ Serializer plugin implementation for std::string
+*/
+class StdStringItemSerializerPlugin : public QObject, public ItemSerializerPlugin
+{
+  Q_OBJECT
+  Q_INTERFACES( Akonadi::ItemSerializerPlugin )
+public:
+  StdStringItemSerializerPlugin();
+
+  bool deserialize( Item&, const QByteArray&, QIODevice&, int );
+  void serialize( const Item&, const QByteArray&, QIODevice&, int& );
 };
 
 }

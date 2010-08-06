@@ -37,6 +37,7 @@ struct Volker
         return f.who == who;
     }
     virtual ~Volker() { }
+    virtual Volker * clone() const = 0;
     QString who;
 };
 typedef shared_ptr<Volker> VolkerPtr;
@@ -46,6 +47,7 @@ struct Rudi: public Volker
 {
     Rudi() { who = "Rudi"; }
     virtual ~Rudi() { }
+    /* reimp */ Rudi * clone() const { return new Rudi( *this ); }
 };
 
 typedef shared_ptr<Rudi> RudiPtr;
@@ -54,10 +56,18 @@ typedef QSharedPointer<Rudi> RudiQPtr;
 struct Gerd: public Volker
 {
     Gerd() { who = "Gerd"; }
+    /* reimp */ Gerd * clone() const { return new Gerd( *this ); }
 };
 
 typedef shared_ptr<Gerd> GerdPtr;
 typedef QSharedPointer<Gerd> GerdQPtr;
+
+Q_DECLARE_METATYPE( Volker* );
+Q_DECLARE_METATYPE( Rudi* );
+Q_DECLARE_METATYPE( Gerd* );
+
+Q_DECLARE_METATYPE( Rudi );
+Q_DECLARE_METATYPE( Gerd );
 
 namespace KPIMUtils
 {
@@ -142,13 +152,30 @@ void ItemHydra::testEmptyPayload()
     QVERIFY( !i1.hasPayload<RudiPtr>() );
 
     bool caughtException = false;
+    bool caughtRightException = true;
     try {
       Rudi r = i1.payload<Rudi>();
     } catch ( const Akonadi::PayloadException &e ) {
       qDebug() << e.what();
       caughtException = true;
+      caughtRightException = true;
+    } catch ( const Akonadi::Exception & e ) {
+      qDebug() << "Caught Akonadi exception of type " << typeid(e).name() << ": " << e.what()
+               << ", expected type" << typeid(Akonadi::PayloadException).name();
+      caughtException = true;
+      caughtRightException = false;
+    } catch ( const std::exception & e ) {
+      qDebug() << "Caught exception of type " << typeid(e).name() << ": " << e.what()
+               << ", expected type" << typeid(Akonadi::PayloadException).name();
+      caughtException = true;
+      caughtRightException = false;
+    } catch ( ... ) {
+      qDebug() << "Caught unknown exception";
+      caughtException = true;
+      caughtRightException = false;
     }
     QVERIFY( caughtException );
+    QVERIFY( caughtRightException );
 }
 
 void ItemHydra::testPointerPayload()
@@ -275,6 +302,34 @@ void ItemHydra::testHasPayload()
   i1.setPayload( r );
   QVERIFY( i1.hasPayload<Rudi>() );
   QVERIFY( !i1.hasPayload<Gerd>() );
+}
+
+void ItemHydra::testSharedPointerConversions()
+{
+
+    Item a;
+    RudiQPtr rudi( new Rudi );
+    a.setPayload( rudi );
+    // only the root base classes should show up with their metatype ids:
+    QVERIFY(  a.availablePayloadMetaTypeIds().contains( qMetaTypeId<Volker*>() ) );
+    QVERIFY(  a.hasPayload<RudiQPtr>() );
+    QVERIFY(  a.hasPayload<VolkerPtr>() );
+    QVERIFY(  a.hasPayload<RudiPtr>() );
+    QVERIFY( !a.hasPayload<GerdPtr>() );
+    QVERIFY(  a.payload<RudiPtr>() );
+    QVERIFY(  a.payload<VolkerPtr>() );
+    bool thrown = false, thrownCorrectly = true;
+    try {
+        QVERIFY( !a.payload<GerdPtr>() );
+    } catch ( const Akonadi::PayloadException & e ) {
+        thrown = thrownCorrectly = true;
+    } catch ( ... ) {
+        thrown = true;
+        thrownCorrectly = false;
+    }
+    QVERIFY( thrown );
+    QVERIFY( thrownCorrectly );
+
 }
 
 #include "itemhydratest.moc"
