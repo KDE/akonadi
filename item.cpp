@@ -63,7 +63,7 @@ void Item::addToLegacyMappingImpl( const QString & mimeType, int spid, int mtid,
 
 static const std::pair<int,int> * lookupLegacyMapping( const QString & mimeType, PayloadBase * p ) {
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind( mimeType );
-    if ( hit == typeInfoToMetaTypeIdMap()->end() )
+    if ( hit == typeInfoToMetaTypeIdMap()->constEnd() )
         return 0;
     const boost::shared_ptr<PayloadBase> sp( p, nodelete() );
     const LegacyMap::mapped_type::const_iterator it = hit->find( sp );
