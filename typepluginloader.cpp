@@ -148,7 +148,7 @@ public:
     // 2. Otherwise, look through the already instantiated plugins,
     //    and return one of them (preferably not the legacy one):
     bool sawZero = false;
-    for ( QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.begin(), end = m_pluginsByMetaTypeId.end() ; it != end ; ++it )
+    for ( QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator it = m_pluginsByMetaTypeId.constBegin(), end = m_pluginsByMetaTypeId.constEnd() ; it != end ; ++it )
       if ( it.key() == 0 )
         sawZero = true;
       else
@@ -156,7 +156,7 @@ public:
           return it->operator->();
 
     // 3. Otherwise, look through the whole list (again, preferably not the legacy one):
-    for ( QHash<QByteArray,PluginEntry>::const_iterator it = m_plugins.begin(), end = m_plugins.end() ; it != end ; ++it )
+    for ( QHash<QByteArray,PluginEntry>::const_iterator it = m_plugins.constBegin(), end = m_plugins.constEnd() ; it != end ; ++it )
         if ( it.key() == LEGACY_NAME )
             sawZero = true;
         else
@@ -172,7 +172,7 @@ public:
     const QMap<int,QHash<QByteArray,PluginEntry>::const_iterator> & c_pluginsByMetaTypeId = m_pluginsByMetaTypeId;
     QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator it = c_pluginsByMetaTypeId.find( metaTypeId );
     if ( it == c_pluginsByMetaTypeId.end() )
-      it = m_pluginsByMetaTypeId.insert( metaTypeId, m_plugins.find( metaTypeId ? QMetaType::typeName( metaTypeId ) : LEGACY_NAME ) );
+      it = QMap<int,QHash<QByteArray,PluginEntry>::const_iterator>::const_iterator( m_pluginsByMetaTypeId.insert( metaTypeId, m_plugins.find( metaTypeId ? QMetaType::typeName( metaTypeId ) : LEGACY_NAME ) ) );
     return *it == m_plugins.end() ? 0 : it->operator->() ;
   }
 
