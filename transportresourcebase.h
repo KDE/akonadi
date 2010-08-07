@@ -35,13 +35,19 @@ class TransportResourceBasePrivate;
 /**
   * @short Resource implementing mail transport capability.
   *
-  * To implement a transport-enabled resource, inherit from both
-  * ResourceBase and TransportResourceBase, implement the virtual method
-  * sendItem(), and call emitTransportResult() when finished sending.
-  * The resource must also have the "MailTransport" capability flag.
+  * This class allows a resource to provide mail transport (i.e. sending
+  * mail). A resource than can provide mail transport inherits from both
+  * ResourceBase and TransportResourceBase, implements the virtual method
+  * sendItem(), and calls itemSent() when finished sending.
+  *
+  * The resource must also have the "MailTransport" capability flag. For example
+  * the desktop file may contain:
+    \code
+    X-Akonadi-Capabilities=Resource,MailTransport
+    \endcode
   *
   * For an example of a transport-enabled resource, see
-  * kdepim/akonadi/resources/mailtransport_dummy.
+  * kdepim/runtime/resources/mailtransport_dummy
   *
   * @author Constantin Berzan <exit3219@gmail.com>
   * @since 4.4
@@ -71,7 +77,7 @@ class AKONADI_EXPORT TransportResourceBase
     /**
      * This method is called when the given @p item shall be send.
      * When the sending is done or an error occurred during
-     * sending, call itemSent() with the according result flag.
+     * sending, call itemSent() with the appropriate result flag.
      *
      * @param item The message item to be send.
      * @see itemSent().
@@ -84,8 +90,8 @@ class AKONADI_EXPORT TransportResourceBase
      *
      * @param item The item that was sent.
      * @param result The result that indicates whether the sending
-     *               was successfully or not.
-     * @param message An optional textual explanation of the result.
+     *               was successful or not.
+     * @param message An optional text explanation of the result.
      * @see Transport.
      */
     void itemSent( const Akonadi::Item &item, TransportResult result,
