@@ -671,7 +671,7 @@ void EntityTreeModelPrivate::collectionSubscribed( const Akonadi::Collection& co
     return;
 
   // Otherwise, it's a valid subscription notice. Let's add it to the collection.
-    monitoredCollectionAdded( col, parent );
+  monitoredCollectionAdded( col, parent );
 }
 
 void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Collection& col )
@@ -685,7 +685,7 @@ void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Col
     return;
 
   // Otherwise, it's a valid unsubscription notice.
-    monitoredCollectionRemoved( col );
+  monitoredCollectionRemoved( col );
 }
 
 
