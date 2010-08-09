@@ -56,7 +56,7 @@ void AutoIncrementTest::initTestCase()
 
 Akonadi::ItemCreateJob* AutoIncrementTest::createItemCreateJob()
 {
-  QString payload( "Hello world" );
+  QByteArray payload( "Hello world" );
   Item item( -1 );
   item.setMimeType( "application/octet-stream" );
   item.setPayload( payload );
