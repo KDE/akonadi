@@ -61,7 +61,7 @@ namespace _detail {
         T & operator*() const { assert( get() != 0 ); return *get(); }
         T * get() const { return t; }
         T * release() { T * const r = t; t = 0; return r; }
-        void reset( T * other ) { delete t; t = other; }
+        void reset( T * other=0 ) { delete t; t = other; }
 
     private:
         struct _save_bool { void f() {}; };
