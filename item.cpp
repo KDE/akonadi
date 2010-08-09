@@ -252,11 +252,19 @@ Item Item::fromUrl( const KUrl &url )
   return Item( itemId );
 }
 
+namespace {
+    class Dummy {};
+}
+
 PayloadBase* Item::payloadBase() const
 {
   Q_D( const Item );
   d->tryEnsureLegacyPayload();
-  return d->mLegacyPayload.get();
+  if ( d->mLegacyPayload )
+      return d->mLegacyPayload.get();
+
+  static Payload<Dummy> dummy;
+  return &dummy;
 }
 
 void ItemPrivate::tryEnsureLegacyPayload() const
