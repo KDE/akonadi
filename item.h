@@ -422,28 +422,28 @@ class AKONADI_EXPORT Item : public Entity
 
     template <typename T>
     typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
-    setPayloadImpl( const T & );
+    setPayloadImpl( const T &, const int * /*disambiguate*/ = 0 );
     template <typename T>
     typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,void>::type
     setPayloadImpl( const T & );
 
     template <typename T>
     typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
-    payloadImpl() const;
+    payloadImpl( const int * /*disambiguate*/ = 0 ) const;
     template <typename T>
     typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
     payloadImpl() const;
 
     template <typename T>
     typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
-    hasPayloadImpl() const;
+    hasPayloadImpl( const int * /*disambiguate*/ = 0 ) const;
     template <typename T>
     typename boost::disable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
     hasPayloadImpl() const;
 
     template <typename T>
     typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
-    tryToClone( T * ) const;
+    tryToClone( T *, const int * /*disambiguate*/ = 0 ) const;
     template <typename T>
     typename boost::disable_if<Internal::is_shared_pointer<T>,bool>::type
     tryToClone( T * ) const;
@@ -491,7 +491,7 @@ T Item::payload() const
 
 template <typename T>
 typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,T>::type
-Item::payloadImpl() const
+Item::payloadImpl( const int * ) const
 {
   typedef Internal::PayloadTrait<T> PayloadType;
   BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
@@ -529,7 +529,7 @@ Item::payloadImpl() const
 
 template <typename T>
 typename boost::enable_if<Internal::is_shared_pointer<T>,bool>::type
-Item::tryToClone( T * ret ) const
+Item::tryToClone( T * ret, const int * ) const
 {
   typedef Internal::PayloadTrait<T> PayloadType;
   BOOST_STATIC_ASSERT(( !PayloadType::isPolymorphic ));
@@ -577,7 +577,7 @@ bool Item::hasPayload() const
 
 template <typename T>
 typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic,bool>::type
-Item::hasPayloadImpl() const
+Item::hasPayloadImpl( const int * ) const
 {
   typedef Internal::PayloadTrait<T> PayloadType;
   BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
@@ -624,7 +624,7 @@ void Item::setPayload( const T &p )
 
 template <typename T>
 typename boost::enable_if_c<Internal::PayloadTrait<T>::isPolymorphic>::type
-Item::setPayloadImpl( const T & p )
+Item::setPayloadImpl( const T & p, const int * )
 {
   typedef Internal::PayloadTrait<T> PayloadType;
   BOOST_STATIC_ASSERT(( PayloadType::isPolymorphic ));
