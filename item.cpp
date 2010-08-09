@@ -26,12 +26,14 @@
 #include <kdebug.h>
 
 #include <QtCore/QStringList>
+#include <QtCore/QReadWriteLock>
 
 #include <algorithm>
 #include <map>
 #include <utility>
 
 using namespace Akonadi;
+using namespace boost;
 
 namespace {
 
@@ -51,23 +53,55 @@ struct ByTypeId {
 
 typedef QHash< QString, std::map< boost::shared_ptr<PayloadBase>, std::pair<int,int>, ByTypeId > > LegacyMap;
 Q_GLOBAL_STATIC( LegacyMap, typeInfoToMetaTypeIdMap )
+Q_GLOBAL_STATIC_WITH_ARGS( QReadWriteLock, legacyMapLock, ( QReadWriteLock::Recursive ) )
 
 void Item::addToLegacyMappingImpl( const QString & mimeType, int spid, int mtid, std::auto_ptr<PayloadBase> p ) {
     if ( !p.get() )
         return;
     const boost::shared_ptr<PayloadBase> sp( p );
+    const QWriteLocker locker( legacyMapLock() );
     std::pair<int,int> & item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
     item.first = spid;
     item.second = mtid;
 }
 
-static const std::pair<int,int> * lookupLegacyMapping( const QString & mimeType, PayloadBase * p ) {
+namespace {
+    class MyReadLocker {
+    public:
+        explicit MyReadLocker( QReadWriteLock * rwl ) : rwl( rwl ), locked( false ) { if ( rwl ) rwl->lockForRead(); locked = true; }
+        ~MyReadLocker() { if ( rwl && locked ) rwl->unlock(); }
+
+        template <typename T>
+        shared_ptr<T> makeUnlockingPointer( T * t ) {
+            if ( t ) {
+                // the bind() doesn't throw, so if shared_ptr
+                // construction line below, or anything else after it,
+                // throws, we're unlocked. Mark us as such:
+                locked = false;
+                const shared_ptr<T> result( t, bind( &QReadWriteLock::unlock, rwl ) );
+                // from now on, the shared_ptr is responsible for unlocking
+                return result;
+            } else {
+                return shared_ptr<T>();
+            }
+        }
+    private:
+        QReadWriteLock * const rwl;
+        bool locked;
+    };
+}
+
+static shared_ptr<const std::pair<int,int> > lookupLegacyMapping( const QString & mimeType, PayloadBase * p ) {
+    MyReadLocker locker( legacyMapLock() );
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind( mimeType );
     if ( hit == typeInfoToMetaTypeIdMap()->constEnd() )
-        return 0;
+        return shared_ptr<const std::pair<int,int> >();
     const boost::shared_ptr<PayloadBase> sp( p, nodelete() );
     const LegacyMap::mapped_type::const_iterator it = hit->find( sp );
-    return it == hit->end() ? 0 : &it->second ;
+    if ( it == hit->end() )
+        return shared_ptr<const std::pair<int,int> >();
+    
+    return locker.makeUnlockingPointer( &it->second );
 }
 
 // Change to something != RFC822 as soon as the server supports it
@@ -256,15 +290,16 @@ namespace {
     class Dummy {};
 }
 
+Q_GLOBAL_STATIC( Payload<Dummy>, dummyPayload )
+
 PayloadBase* Item::payloadBase() const
 {
   Q_D( const Item );
   d->tryEnsureLegacyPayload();
   if ( d->mLegacyPayload )
-      return d->mLegacyPayload.get();
-
-  static Payload<Dummy> dummy;
-  return &dummy;
+    return d->mLegacyPayload.get();
+  else
+    return dummyPayload();
 }
 
 void ItemPrivate::tryEnsureLegacyPayload() const
@@ -368,7 +403,7 @@ void Item::setPayloadBase( PayloadBase* p )
 
 void ItemPrivate::setLegacyPayloadBaseImpl( std::auto_ptr<PayloadBase> p )
 {
-  if ( const std::pair<int,int> * pair = lookupLegacyMapping( mMimeType, p.get() ) ) {
+  if ( const shared_ptr<const std::pair<int,int> > pair = lookupLegacyMapping( mMimeType, p.get() ) ) {
     std::auto_ptr<PayloadBase> clone;
     if ( p.get() )
       clone.reset( p->clone() );
