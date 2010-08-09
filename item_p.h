@@ -263,6 +263,10 @@ class ItemPrivate : public EntityPrivate
 #endif
 
     void setPayloadBaseImpl( int spid, int mtid, std::auto_ptr<PayloadBase> p, bool add ) const /*sic!*/ {
+
+        if ( !add )
+            mLegacyPayload.reset();
+
         if ( !p.get() ) {
             if ( !add )
                 mPayloads.clear();
