@@ -106,7 +106,7 @@ void TransactionSequence::slotResult(KJob * job)
     else
       Job::removeSubjob( job );
 
-    if ( subjobs().isEmpty() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
+    if ( !hasSubjobs() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
       connect( job, SIGNAL( result( KJob* ) ), SLOT( commitResult( KJob* ) ) );
@@ -115,7 +115,14 @@ void TransactionSequence::slotResult(KJob * job)
     setError( job->error() );
     setErrorText( job->errorText() );
     removeSubjob( job );
+
+    // cancel all subjobs in case someone else is listening (such as ItemSync), but without notifying ourselves again
+    foreach ( KJob* job, subjobs() ) {
+      disconnect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
+      job->kill( EmitResult );
+    }
     clearSubjobs();
+
     if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
       d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
