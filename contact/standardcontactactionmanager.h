@@ -134,13 +134,6 @@ class AKONADI_CONTACT_EXPORT StandardContactActionManager : public QObject
      */
     void actionStateUpdated();
 
-    /**
-     * This signal is emitted whenever the user wants to edit a contact or contact group item.
-     *
-     * @param item The item that shall be edited.
-     */
-    void editItem( const Akonadi::Item &item );
-
   private:
     //@cond PRIVATE
     class Private;
