@@ -24,6 +24,9 @@
 
 #include <QtCore/QObject>
 
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+
 class KAction;
 class KActionCollection;
 class KLocalizedString;
@@ -83,6 +86,37 @@ class FavoriteCollectionsModel;
  *
  * If you only need a subset of the actions provided, you can call createAction()
  * instead of createAllActions() for the action types you want.
+ *
+ * If you want to use your own implementation of the actual action operation and
+ * not the default implementation, you can call interceptAction() on the action type
+ * you want to handle yourself and connect the slot with your own implementation
+ * to the triggered() signal of the action:
+ *
+ * @code
+ *
+ * using namespace Akonadi;
+ *
+ * StandardActionManager *manager = new StandardActionManager( actionCollection(), this );
+ * manager->setCollectionSelectionModel( collectionView->collectionSelectionModel() );
+ * manager->createAllActions();
+ *
+ * // disable default implementation
+ * manager->interceptAction( StandardActionManager::CopyCollections );
+ *
+ * // connect your own implementation
+ * connect( manager->action( StandardActionManager::CopyCollections ), SIGNAL( triggered( bool ) ),
+ *          this, SLOT( myCopyImplementation() ) );
+ * ...
+ *
+ * void MyClass::myCopyImplementation()
+ * {
+ *   const Collection::List collections = manager->selectedCollections();
+ *   foreach ( const Collection &collection, collections ) {
+ *     // copy the collection manually...
+ *   }
+ * }
+ *
+ * @endcode
  *
  * @todo collection deleting and sync do not support multi-selection yet
  *
@@ -192,6 +226,33 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @endcode
      */
     void setActionText( Type type, const KLocalizedString &text );
+
+    /**
+     * Sets whether the default implementation for the given action @p type
+     * shall be executed when the action is triggered.
+     *
+     * @param intercept If @c false, the default implementation will be executed,
+     *                  if @c true no action is taken.
+     *
+     * @since 4.6
+     */
+    void interceptAction( Type type, bool intercept = true );
+
+    /**
+     * Returns the list of collections that are currently selected.
+     * The list is empty if no collection is currently selected.
+     *
+     * @since 4.6
+     */
+    Akonadi::Collection::List selectedCollections() const;
+
+    /**
+     * Returns the list of items that are currently selected.
+     * The list is empty if no item is currently selected.
+     *
+     * @since 4.6
+     */
+    Akonadi::Item::List selectedItems() const;
 
   Q_SIGNALS:
     /**
