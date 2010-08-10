@@ -58,7 +58,6 @@ set( akonadikde_LIB_SRC
   collectioncopyjob.cpp
   collectioncreatejob.cpp
   collectiondeletejob.cpp
-  collectiondialog.cpp
   collectionfilterproxymodel.cpp
   collectiongeneralpropertiespage.cpp
   collectionfetchjob.cpp
@@ -156,6 +155,16 @@ set( akonadikde_LIB_SRC
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
 )
+
+if (KDEPIM_MOBILE_UI)
+  set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
+       collectiondialog_mobile.cpp
+  )
+else (KDEPIM_MOBILE_UI)
+  set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
+       collectiondialog_desktop.cpp
+  )
+endif (KDEPIM_MOBILE_UI)
 
 if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
