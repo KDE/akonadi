@@ -21,12 +21,16 @@
 
 #include "standardcontactactionmanager.h"
 
+#include "contacteditordialog.h"
+#include "contactgroupeditordialog.h"
+
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/mimetypechecker.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>
@@ -187,8 +191,59 @@ class StandardContactActionManager::Private
       emit mParent->actionStateUpdated();
     }
 
-    void editTriggered()
+    Collection selectedCollection() const
     {
+      if ( !mCollectionSelectionModel )
+        return Collection();
+
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
+        return Collection();
+
+      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
+      if ( !index.isValid() )
+        return Collection();
+
+      return index.data( EntityTreeModel::CollectionRole).value<Collection>();
+    }
+
+    AgentInstance selectedAgentInstance() const
+    {
+      const Collection collection = selectedCollection();
+      if ( !collection.isValid() )
+        return AgentInstance();
+
+      const QString identifier = collection.resource();
+
+      return AgentManager::self()->instance( identifier );
+    }
+
+    void slotCreateContact()
+    {
+      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContact ) )
+        return;
+
+      Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
+      dlg.setDefaultAddressBook( selectedCollection() );
+
+      dlg.exec();
+    }
+
+    void slotCreateContactGroup()
+    {
+      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContactGroup ) )
+        return;
+
+      Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
+      dlg.setDefaultAddressBook( selectedCollection() );
+
+      dlg.exec();
+    }
+
+    void slotEditItem()
+    {
+      if ( mInterceptedActions.contains( StandardContactActionManager::EditItem ) )
+        return;
+
       if ( !mItemSelectionModel )
         return;
 
@@ -203,11 +258,22 @@ class StandardContactActionManager::Private
       if ( !item.isValid() )
         return;
 
-      emit mParent->editItem( item );
+      if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
+        Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+        dlg.setContact( item );
+        dlg.exec();
+      } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
+        Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
+        dlg.setContactGroup( item );
+        dlg.exec();
+      }
     }
 
-    void addAddressBookTriggered()
+    void slotCreateAddressBook()
     {
+      if ( mInterceptedActions.contains( StandardContactActionManager::CreateAddressBook ) )
+        return;
+
       QPointer<AgentTypeDialog> dlg = new AgentTypeDialog( mParentWidget );
       dlg->setWindowTitle( i18n( "Add Address Book" ) );
       dlg->agentFilterProxyModel()->addMimeTypeFilter( KABC::Addressee::mimeType() );
@@ -236,29 +302,11 @@ class StandardContactActionManager::Private
       }
     }
 
-    AgentInstance selectedAgentInstance() const
+    void slotDeleteAddressBook()
     {
-      if ( !mCollectionSelectionModel )
-        return AgentInstance();
+      if ( mInterceptedActions.contains( StandardContactActionManager::DeleteAddressBook ) )
+        return;
 
-      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
-        return AgentInstance();
-
-      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return AgentInstance();
-
-      const Collection collection = index.data( EntityTreeModel::CollectionRole).value<Collection>();
-      if ( !collection.isValid() )
-        return AgentInstance();
-
-      const QString identifier = collection.resource();
-
-      return AgentManager::self()->instance( identifier );
-    }
-
-    void deleteAddressBookTriggered()
-    {
       const AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
@@ -273,8 +321,11 @@ class StandardContactActionManager::Private
       AgentManager::self()->removeInstance( instance );
     }
 
-    void configureAddressBookTriggered()
+    void slotConfigureAddressBook()
     {
+      if ( mInterceptedActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
+        return;
+
       AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
@@ -288,6 +339,7 @@ class StandardContactActionManager::Private
     QItemSelectionModel *mCollectionSelectionModel;
     QItemSelectionModel *mItemSelectionModel;
     QHash<StandardContactActionManager::Type, KAction*> mActions;
+    QSet<StandardContactActionManager::Type> mInterceptedActions;
     StandardContactActionManager *mParent;
 };
 
@@ -345,6 +397,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
       d->mActions.insert( CreateContact, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateContact() ) );
       break;
     case CreateContactGroup:
       action = new KAction( d->mParentWidget );
@@ -354,6 +407,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
       d->mActions.insert( CreateContactGroup, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_group_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateContactGroup() ) );
       break;
     case EditItem:
       action = new KAction( d->mParentWidget );
@@ -363,7 +417,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setEnabled( false );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( editTriggered() ) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditItem() ) );
       break;
     case CreateAddressBook:
       action = new KAction( d->mParentWidget );
@@ -372,7 +426,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Add a new address book<p>You will be presented with a dialog where you can select the type of the address book that shall be added.</p>" ) );
       d->mActions.insert( CreateAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( addAddressBookTriggered() ) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateAddressBook() ) );
       break;
     case DeleteAddressBook:
       action = new KAction( d->mParentWidget );
@@ -382,7 +436,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setEnabled( false );
       d->mActions.insert( DeleteAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( deleteAddressBookTriggered() ) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotDeleteAddressBook() ) );
       break;
     case ConfigureAddressBook:
       action = new KAction( d->mParentWidget );
@@ -392,7 +446,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setEnabled( false );
       d->mActions.insert( ConfigureAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_properties" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( configureAddressBookTriggered() ) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotConfigureAddressBook() ) );
       break;
     default:
       Q_ASSERT( false ); // should never happen
@@ -422,6 +476,31 @@ KAction* StandardContactActionManager::action( Type type ) const
     return d->mActions.value( type );
   else
     return 0;
+}
+
+void StandardContactActionManager::interceptAction( Type type, bool intercept )
+{
+  if ( type <= StandardActionManager::LastType ) {
+    d->mGenericManager->interceptAction( static_cast<StandardActionManager::Type>( type ), intercept );
+    return;
+  }
+
+  if ( type >= StandardContactActionManager::CreateContact && type <= StandardContactActionManager::LastType ) {
+    if ( intercept )
+      d->mInterceptedActions.insert( type );
+    else
+      d->mInterceptedActions.remove( type );
+  }
+}
+
+Akonadi::Collection::List StandardContactActionManager::selectedCollections() const
+{
+  return d->mGenericManager->selectedCollections();
+}
+
+Akonadi::Item::List StandardContactActionManager::selectedItems() const
+{
+  return d->mGenericManager->selectedItems();
 }
 
 #include "standardcontactactionmanager.moc"

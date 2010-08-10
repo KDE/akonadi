@@ -105,6 +105,27 @@ class AKONADI_CONTACT_EXPORT StandardContactActionManager : public QObject
      */
     KAction* action( Type type ) const;
 
+    /**
+     * Sets whether the default implementation for the given action @p type
+     * shall be executed when the action is triggered.
+     *
+     * @param intercept If @c false, the default implementation will be executed,
+     *                  if @c true no action is taken.
+     */
+    void interceptAction( Type type, bool intercept = true );
+
+    /**
+     * Returns the list of collections that are currently selected.
+     * The list is empty if no collection is currently selected.
+     */
+    Akonadi::Collection::List selectedCollections() const;
+
+    /**
+     * Returns the list of items that are currently selected.
+     * The list is empty if no item is currently selected.
+     */
+    Akonadi::Item::List selectedItems() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
@@ -126,11 +147,13 @@ class AKONADI_CONTACT_EXPORT StandardContactActionManager : public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void updateActions() )
-    Q_PRIVATE_SLOT( d, void editTriggered() )
-    Q_PRIVATE_SLOT( d, void addAddressBookTriggered() )
+    Q_PRIVATE_SLOT( d, void slotCreateContact() )
+    Q_PRIVATE_SLOT( d, void slotCreateContactGroup() )
+    Q_PRIVATE_SLOT( d, void slotEditItem() )
+    Q_PRIVATE_SLOT( d, void slotCreateAddressBook() )
+    Q_PRIVATE_SLOT( d, void slotDeleteAddressBook() )
+    Q_PRIVATE_SLOT( d, void slotConfigureAddressBook() )
     Q_PRIVATE_SLOT( d, void addAddressBookResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void deleteAddressBookTriggered() )
-    Q_PRIVATE_SLOT( d, void configureAddressBookTriggered() )
     //@endcond
 };
 
