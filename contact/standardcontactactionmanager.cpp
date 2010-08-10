@@ -236,22 +236,30 @@ class StandardContactActionManager::Private
       }
     }
 
-    void deleteAddressBookTriggered()
+    AgentInstance selectedAgentInstance() const
     {
       if ( !mCollectionSelectionModel )
-        return;
+        return AgentInstance();
 
       if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
-        return;
+        return AgentInstance();
 
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
       if ( !index.isValid() )
-        return;
+        return AgentInstance();
 
       const Collection collection = index.data( EntityTreeModel::CollectionRole).value<Collection>();
+      if ( !collection.isValid() )
+        return AgentInstance();
+
       const QString identifier = collection.resource();
 
-      const AgentInstance instance = AgentManager::self()->instance( identifier );
+      return AgentManager::self()->instance( identifier );
+    }
+
+    void deleteAddressBookTriggered()
+    {
+      const AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
 
@@ -267,23 +275,7 @@ class StandardContactActionManager::Private
 
     void configureAddressBookTriggered()
     {
-      if ( !mCollectionSelectionModel )
-        return;
-
-      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
-        return;
-
-      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return;
-
-      const Collection collection = index.data( EntityTreeModel::CollectionRole).value<Collection>();
-      if ( !collection.isValid() )
-        return;
-
-      const QString identifier = collection.resource();
-
-      AgentInstance instance = AgentManager::self()->instance( identifier );
+      AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
 
