@@ -80,7 +80,9 @@ static const struct {
   { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), true },
   { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), true },
   { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), false },
-  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false }
+  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false },
+  { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), false },
+  { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -212,6 +214,22 @@ class StandardActionManager::Private
       enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
+
+      bool enableResourceActions = false;
+      if ( collectionSelectionModel ) {
+        if ( collectionSelectionModel->selectedRows().count() == 1 ) {
+          const QModelIndex index = collectionSelectionModel->selectedRows().first();
+          if ( index.isValid() ) {
+            const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+            if ( collection.isValid() ) {
+              // actions are only enabled if the collection is a resource collection
+              enableResourceActions = (collection.parentCollection() == Collection::root());
+            }
+          }
+        }
+      }
+      enableAction( DeleteResource, enableResourceActions );
+      enableAction( ResourceProperties, enableResourceActions );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
@@ -585,6 +603,56 @@ class StandardActionManager::Private
         return;
 
       pasteTo( itemSelectionModel, action, Qt::MoveAction );
+    }
+
+    AgentInstance selectedAgentInstance() const
+    {
+      Q_ASSERT( collectionSelectionModel );
+      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return AgentInstance();
+
+      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      if ( !collection.isValid() )
+        return AgentInstance();
+
+      const QString identifier = collection.resource();
+
+      return AgentManager::self()->instance( identifier );
+    }
+
+    void slotDeleteResource()
+    {
+      if ( interceptedActions.contains( StandardActionManager::DeleteResource ) )
+        return;
+
+      const AgentInstance instance = selectedAgentInstance();
+      if ( !instance.isValid() )
+        return;
+
+      const QString text = i18n( "Do you really want to delete resource '%1'?", instance.name() );
+
+      if ( KMessageBox::questionYesNo( parentWidget, text,
+           i18n( "Delete Resource?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
+        return;
+
+      AgentManager::self()->removeInstance( instance );
+    }
+
+    void slotResourceProperties()
+    {
+      if ( interceptedActions.contains( StandardActionManager::ResourceProperties ) )
+        return;
+
+      AgentInstance instance = selectedAgentInstance();
+      if ( !instance.isValid() )
+        return;
+
+      instance.configure();
     }
 
     void pasteTo( QItemSelectionModel *selectionModel, QAction *action, Qt::DropAction dropAction )

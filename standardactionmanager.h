@@ -148,6 +148,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection @since 4.4
       CutItems,                  ///< Cuts the selected items @since 4.4
       CutCollections,            ///< Cuts the selected collections @since 4.4
+      DeleteResource,            ///< Provides the resource properties @since 4.6
+      ResourceProperties,        ///< Provides the resource properties @since 4.6
       LastType                   ///< Marks last action
     };
 
@@ -290,6 +292,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotMoveCollectionTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotCopyItemTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotMoveItemTo(QAction*) )
+    Q_PRIVATE_SLOT( d, void slotDeleteResource() )
+    Q_PRIVATE_SLOT( d, void slotResourceProperties() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )

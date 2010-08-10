@@ -73,6 +73,10 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected contacts from the address book." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Contact", "Cut %1 Contacts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected contacts from the address book." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setText( i18n( "&Delete Address Book" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Address Book Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
     }
 
     ~Private()
@@ -145,25 +149,6 @@ class StandardContactActionManager::Private
           }
         }
       }
-
-      bool enableAddressBookActions = false;
-      if ( mCollectionSelectionModel ) {
-        if ( mCollectionSelectionModel->selectedRows().count() == 1 ) {
-          const QModelIndex index = mCollectionSelectionModel->selectedRows().first();
-          if ( index.isValid() ) {
-            const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-            if ( collection.isValid() ) {
-              // actions are only enabled if the collection is a resource collection
-              enableAddressBookActions = (collection.parentCollection() == Collection::root());
-            }
-          }
-        }
-      }
-
-      if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
-        mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( enableAddressBookActions );
-      if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
-        mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( enableAddressBookActions );
 
       if ( mActions.contains( StandardContactActionManager::CreateContact ) )
         mActions[ StandardContactActionManager::CreateContact ]->setEnabled( hasWritableCollection( KABC::Addressee::mimeType() ) );
@@ -302,37 +287,6 @@ class StandardContactActionManager::Private
       }
     }
 
-    void slotDeleteAddressBook()
-    {
-      if ( mInterceptedActions.contains( StandardContactActionManager::DeleteAddressBook ) )
-        return;
-
-      const AgentInstance instance = selectedAgentInstance();
-      if ( !instance.isValid() )
-        return;
-
-      const QString text = i18n( "Do you really want to delete address book '%1'?", instance.name() );
-
-      if ( KMessageBox::questionYesNo( mParentWidget, text,
-           i18n( "Delete Address Book?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
-        return;
-
-      AgentManager::self()->removeInstance( instance );
-    }
-
-    void slotConfigureAddressBook()
-    {
-      if ( mInterceptedActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
-        return;
-
-      AgentInstance instance = selectedAgentInstance();
-      if ( !instance.isValid() )
-        return;
-
-      instance.configure();
-    }
-
     KActionCollection *mActionCollection;
     QWidget *mParentWidget;
     StandardActionManager *mGenericManager;
@@ -428,26 +382,6 @@ KAction* StandardContactActionManager::createAction( Type type )
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateAddressBook() ) );
       break;
-    case DeleteAddressBook:
-      action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "edit-delete" ) ) );
-      action->setText( i18n( "&Delete Address Book" ) );
-      action->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
-      action->setEnabled( false );
-      d->mActions.insert( DeleteAddressBook, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotDeleteAddressBook() ) );
-      break;
-    case ConfigureAddressBook:
-      action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "configure" ) ) );
-      action->setText( i18n( "Address Book Properties..." ) );
-      action->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
-      action->setEnabled( false );
-      d->mActions.insert( ConfigureAddressBook, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_properties" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotConfigureAddressBook() ) );
-      break;
     default:
       Q_ASSERT( false ); // should never happen
       break;
@@ -462,8 +396,6 @@ void StandardContactActionManager::createAllActions()
   createAction( CreateContactGroup );
   createAction( EditItem );
   createAction( CreateAddressBook );
-  createAction( DeleteAddressBook );
-  createAction( ConfigureAddressBook );
 
   d->mGenericManager->createAllActions();
 
