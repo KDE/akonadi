@@ -85,6 +85,7 @@ set(akonadicontact_LIB_SRC
   leafextensionproxymodel.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
+  standardcontactactionmanager.cpp
   standardcontactformatter.cpp
   standardcontactgroupformatter.cpp
   waitingoverlay.cpp
@@ -161,6 +162,7 @@ install( FILES
   emailaddressselectiondialog.h
   emailaddressselectionwidget.h
   recentcontactscollectionrequestjob.h
+  standardcontactactionmanager.h
   standardcontactformatter.h
   standardcontactgroupformatter.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
