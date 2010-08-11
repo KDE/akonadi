@@ -46,6 +46,8 @@ class Item;
 class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
 {
     Q_OBJECT
+
+  public:
     /**
      * Describes the supported actions.
      */
@@ -53,7 +55,6 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
         CreateEvent = StandardActionManager::LastType + 1, ///< Creates a new event
         LastType                                           ///< Marks last action
     };
-
 
     /**
      * Creates a new standard calendar action manager.
@@ -120,7 +121,7 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      */
     Akonadi::Item::List selectedItems() const;
 
-Q_SIGNALS:
+  Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
      * In case you have special needs for changing the state of some actions,
@@ -128,7 +129,7 @@ Q_SIGNALS:
      */
     void actionStateUpdated();
 
-private:
+  private:
     //@cond PRIVATE
     class Private;
     Private* const d;
@@ -136,6 +137,7 @@ private:
     Q_PRIVATE_SLOT( d, void slotCreateEvent() )
     //@endcond
 };
+
 }
 
 #endif // AKONADI_STANDARDCALENDARACTIONMANAGER_H
