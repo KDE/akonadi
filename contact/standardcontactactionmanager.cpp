@@ -77,6 +77,42 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Address Book Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
+
+      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
+                                       i18nc( "@title:window", "New Address Book Folder" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not create address book folder: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Address book folder creation failed" ) );
+
+      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
+                                       i18n( "Do you really want to delete address book folder '%1' and all its sub-folders?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText,
+                                       i18n( "Do you really want to delete the address book search folder '%1'?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
+                                       i18nc( "@title:window", "Delete address book folder?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not delete address book folder: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Address book folder deletion failed" ) );
+
+      mGenericManager->setContextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
+                                       i18nc( "@title:window", "Properties of Address Book Folder %1" ) );
+
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
+                                       i18n( "Do you really want to delete all selected contacts?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
+                                       i18nc( "@title:window", "Delete Contacts?" ) );
+
+      mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
+                                       i18n( "Do you really want to delete address book '%1'?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
+                                       i18nc( "@title:window", "Delete Address Book?" ) );
+
+      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not paste contact: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Paste failed" ) );
     }
 
     ~Private()
