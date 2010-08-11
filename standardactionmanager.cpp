@@ -124,6 +124,49 @@ class StandardActionManager::Private
       pluralLabels.insert( StandardActionManager::CutItems, ki18np( "&Cut Item", "&Cut %1 Items" ) );
       pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Folder", "&Cut %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
+
+      setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
+                      i18nc( "@title:window", "New Folder" ) );
+      setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogText,
+                      i18nc( "@label:textbox name of a thing", "Name" ) );
+      setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
+                      i18n( "Could not create folder: %1" ) );
+      setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
+                      i18n( "Folder creation failed" ) );
+
+      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
+                      i18n( "Do you really want to delete folder '%1' and all its sub-folders?" ) );
+      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText,
+                      i18n( "Do you really want to delete the search view '%1'?" ) );
+      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
+                      i18nc( "@title:window", "Delete folder?" ) );
+      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
+                      i18n( "Could not delete folder: %1" ) );
+      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
+                      i18n( "Folder deletion failed" ) );
+
+      setContextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
+                      i18nc( "@title:window", "Properties of Folder %1" ) );
+
+      setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
+                      i18n( "Do you really want to delete all selected items?" ) );
+      setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
+                      i18nc( "@title:window", "Delete?" ) );
+
+      setContextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle,
+                      i18nc( "@title:window", "Rename Favorite" ) );
+      setContextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText,
+                      i18nc( "@label:textbox name of the folder", "Name:" ) );
+
+      setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
+                      i18n( "Do you really want to delete resource '%1'?" ) );
+      setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
+                      i18nc( "@title:window", "Delete Resource?" ) );
+
+      setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
+                      i18n( "Could not paste data: %1" ) );
+      setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
+                      i18n( "Paste failed" ) );
     }
 
     void enableAction( StandardActionManager::Type type, bool enable )
@@ -343,8 +386,8 @@ class StandardActionManager::Private
       if ( !canCreateCollection( parentCollection ) )
         return;
 
-      const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
-                                                  i18nc( "@label:textbox name of a thing", "Name" ),
+      const QString name = KInputDialog::getText( contextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle ),
+                                                  contextText( StandardActionManager::CreateCollection, StandardActionManager::DialogText ),
                                                   QString(), 0, parentWidget );
       if ( name.isEmpty() )
         return;
@@ -377,12 +420,13 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      QString text = i18n( "Do you really want to delete folder '%1' and all its sub-folders?", index.data().toString() );
+      QString text = contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText ).arg( index.data().toString() );
       if ( CollectionUtils::isVirtual( collection ) )
-        text = i18n( "Do you really want to delete the search view '%1'?", index.data().toString() );
+        text = contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText ).arg( index.data().toString() );
 
       if ( KMessageBox::questionYesNo( parentWidget, text,
-           i18n( "Delete folder?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle ),
+           KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
@@ -418,7 +462,7 @@ class StandardActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, parentWidget );
-      dlg->setCaption( i18n( "Properties of Folder %1", collection.name() ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( collection.name() ) );
       dlg->show();
     }
 
@@ -452,8 +496,9 @@ class StandardActionManager::Private
     void slotDeleteItems()
     {
       if ( KMessageBox::questionYesNo( parentWidget,
-           i18n( "Do you really want to delete all selected items?" ),
-           i18n( "Delete?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText ),
+           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle ),
+           KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
@@ -522,8 +567,8 @@ class StandardActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       bool ok;
-      const QString label = KInputDialog::getText( i18n( "Rename Favorite" ),
-                                                   i18nc( "@label:textbox New name of the folder.", "Name:" ),
+      const QString label = KInputDialog::getText( contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),
+                                                   contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ),
                                                    favoritesModel->favoriteLabel( collection ), &ok, parentWidget );
       if ( !ok )
         return;
@@ -576,10 +621,10 @@ class StandardActionManager::Private
       if ( !instance.isValid() )
         return;
 
-      const QString text = i18n( "Do you really want to delete resource '%1'?", instance.name() );
-
-      if ( KMessageBox::questionYesNo( parentWidget, text,
-           i18n( "Delete Resource?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+      if ( KMessageBox::questionYesNo( parentWidget,
+           contextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText ).arg( instance.name() ),
+           contextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle ),
+           KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
@@ -616,24 +661,27 @@ class StandardActionManager::Private
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n( "Could not create folder: %1", job->errorString()),
-                            i18n( "Folder creation failed" ) );
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle ) );
       }
     }
 
     void collectionDeletionResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n( "Could not delete folder: %1", job->errorString()),
-                            i18n( "Folder deletion failed" ) );
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle ) );
       }
     }
 
     void pasteResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( parentWidget, i18n( "Could not paste data: %1", job->errorString()),
-                            i18n( "Paste failed" ) );
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle ) );
       }
     }
 
@@ -761,6 +809,16 @@ class StandardActionManager::Private
         return (data.at( 0 ) == '1'); // true if 1
     }
 
+    void setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &data )
+    {
+      contextTexts[ type ].insert( context, data );
+    }
+
+    QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context ) const
+    {
+      return contextTexts[ type ].value( context );
+    }
+
     StandardActionManager *q;
     KActionCollection *actionCollection;
     QWidget *parentWidget;
@@ -770,6 +828,9 @@ class StandardActionManager::Private
     QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
+
+    typedef QHash<StandardActionManager::TextContext, QString> ContextTexts;
+    QHash<StandardActionManager::Type, ContextTexts> contextTexts;
 };
 
 //@endcond
@@ -919,6 +980,11 @@ Item::List StandardActionManager::selectedItems() const
   }
 
   return items;
+}
+
+void StandardActionManager::setContextText( Type type, TextContext context, const QString &text )
+{
+  d->setContextText( type, context, text );
 }
 
 #include "standardactionmanager.moc"

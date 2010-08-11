@@ -154,6 +154,19 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     };
 
     /**
+     * Describes the text context that can be customized.
+     */
+    enum TextContext {
+      DialogTitle,                ///< The window title of a dialog
+      DialogText,                 ///< The text of a dialog
+      MessageBoxTitle,            ///< The window title of a message box
+      MessageBoxText,             ///< The text of a message box
+      MessageBoxAlternativeText,  ///< An alternative text of a message box
+      ErrorMessageTitle,          ///< The window title of an error message
+      ErrorMessageText            ///< The text of an error message
+    };
+
+    /**
      * Creates a new standard action manager.
      *
      * @param actionCollection The action collection to operate on.
@@ -255,6 +268,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @since 4.6
      */
     Akonadi::Item::List selectedItems() const;
+
+    /**
+     * Sets the @p text of the action @p type for the given @p context.
+     *
+     * @since 4.6
+     */
+    void setContextText( Type type, TextContext context, const QString &text );
 
   Q_SIGNALS:
     /**
