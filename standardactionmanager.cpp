@@ -331,9 +331,6 @@ class StandardActionManager::Private
 
     void slotCreateCollection()
     {
-      if ( interceptedActions.contains( StandardActionManager::CreateCollection ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
@@ -361,25 +358,16 @@ class StandardActionManager::Private
 
     void slotCopyCollections()
     {
-      if ( interceptedActions.contains( StandardActionManager::CopyCollections ) )
-        return;
-
       encodeToClipboard( collectionSelectionModel );
     }
 
     void slotCutCollections()
     {
-      if ( interceptedActions.contains( StandardActionManager::CutCollections ) )
-        return;
-
       encodeToClipboard( collectionSelectionModel, true );
     }
 
     void slotDeleteCollection()
     {
-      if ( interceptedActions.contains( StandardActionManager::DeleteCollections ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
@@ -408,9 +396,6 @@ class StandardActionManager::Private
 
     void slotSynchronizeCollection()
     {
-      if ( interceptedActions.contains( StandardActionManager::SynchronizeCollections ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
@@ -425,9 +410,6 @@ class StandardActionManager::Private
 
     void slotCollectionProperties()
     {
-      if ( interceptedActions.contains( StandardActionManager::CollectionProperties ) )
-        return;
-
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
@@ -442,25 +424,16 @@ class StandardActionManager::Private
 
     void slotCopyItems()
     {
-      if ( interceptedActions.contains( StandardActionManager::CopyItems ) )
-        return;
-
       encodeToClipboard( itemSelectionModel );
     }
 
     void slotCutItems()
     {
-      if ( interceptedActions.contains( StandardActionManager::CutItems ) )
-        return;
-
       encodeToClipboard( itemSelectionModel, true );
     }
 
     void slotPaste()
     {
-      if ( interceptedActions.contains( StandardActionManager::Paste ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
@@ -478,9 +451,6 @@ class StandardActionManager::Private
 
     void slotDeleteItems()
     {
-      if ( interceptedActions.contains( StandardActionManager::DeleteItems ) )
-        return;
-
       if ( KMessageBox::questionYesNo( parentWidget,
            i18n( "Do you really want to delete all selected items?" ),
            i18n( "Delete?" ), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
@@ -502,18 +472,12 @@ class StandardActionManager::Private
 
     void slotLocalSubscription()
     {
-      if ( interceptedActions.contains( StandardActionManager::ManageLocalSubscriptions ) )
-        return;
-
       SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
       dlg->show();
     }
 
     void slotAddToFavorites()
     {
-      if ( interceptedActions.contains( StandardActionManager::AddToFavoriteCollections ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
@@ -530,9 +494,6 @@ class StandardActionManager::Private
 
     void slotRemoveFromFavorites()
     {
-      if ( interceptedActions.contains( StandardActionManager::RemoveFromFavoriteCollections ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
@@ -550,9 +511,6 @@ class StandardActionManager::Private
 
     void slotRenameFavorite()
     {
-      if ( interceptedActions.contains( StandardActionManager::RenameFavoriteCollection ) )
-        return;
-
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
@@ -575,33 +533,21 @@ class StandardActionManager::Private
 
     void slotCopyCollectionTo( QAction *action )
     {
-      if ( interceptedActions.contains( StandardActionManager::CopyCollectionToMenu ) )
-        return;
-
       pasteTo( collectionSelectionModel, action, Qt::CopyAction );
     }
 
     void slotCopyItemTo( QAction *action )
     {
-      if ( interceptedActions.contains( StandardActionManager::CopyItemToMenu ) )
-        return;
-
       pasteTo( itemSelectionModel, action, Qt::CopyAction );
     }
 
     void slotMoveCollectionTo( QAction *action )
     {
-      if ( interceptedActions.contains( StandardActionManager::MoveCollectionToMenu ) )
-        return;
-
       pasteTo( collectionSelectionModel, action, Qt::MoveAction );
     }
 
     void slotMoveItemTo( QAction *action )
     {
-      if ( interceptedActions.contains( StandardActionManager::MoveItemToMenu ) )
-        return;
-
       pasteTo( itemSelectionModel, action, Qt::MoveAction );
     }
 
@@ -626,9 +572,6 @@ class StandardActionManager::Private
 
     void slotDeleteResource()
     {
-      if ( interceptedActions.contains( StandardActionManager::DeleteResource ) )
-        return;
-
       const AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
@@ -645,9 +588,6 @@ class StandardActionManager::Private
 
     void slotResourceProperties()
     {
-      if ( interceptedActions.contains( StandardActionManager::ResourceProperties ) )
-        return;
-
       AgentInstance instance = selectedAgentInstance();
       if ( !instance.isValid() )
         return;
@@ -830,7 +770,6 @@ class StandardActionManager::Private
     QItemSelectionModel *favoriteSelectionModel;
     QVector<KAction*> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
-    QSet<StandardActionManager::Type> interceptedActions;
 };
 
 //@endcond
@@ -937,10 +876,17 @@ void StandardActionManager::setActionText( Type type, const KLocalizedString & t
 
 void StandardActionManager::interceptAction( Type type, bool intercept )
 {
+  Q_ASSERT( type >= 0 && type < LastType );
+
+  const KAction *action = d->actions[type];
+
+  if ( !action )
+    return;
+
   if ( intercept )
-    d->interceptedActions.insert( type );
+    disconnect( action, SIGNAL( triggered() ), this, actionData[type].slot );
   else
-    d->interceptedActions.remove( type );
+    connect( action, SIGNAL( triggered() ), actionData[type].slot );
 }
 
 Collection::List StandardActionManager::selectedCollections() const
