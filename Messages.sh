@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cpp *.h kmime/*.cpp conflicthandling/*.cpp -o $podir/libakonadi.pot
+$XGETTEXT *.cpp *.h conflicthandling/*.cpp -o $podir/libakonadi.pot
