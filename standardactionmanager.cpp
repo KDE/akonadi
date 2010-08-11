@@ -22,6 +22,7 @@
 #include "agentmanager.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
+#include "collectiondialog.h"
 #include "collectionmodel.h"
 #include "collectionutils_p.h"
 #include "collectionpropertiesdialog.h"
@@ -75,10 +76,17 @@ static const struct {
   { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), false },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), false },
+#if KDEPIM_MOBILE_UI
+  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), false },
+  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), false },
+  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), false },
+  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), false },
+#else
   { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo( QAction* ) ), true },
   { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo( QAction* ) ), true },
   { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), true },
   { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), true },
+#endif
   { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), false },
   { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false },
   { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), false },
@@ -576,6 +584,26 @@ class StandardActionManager::Private
       favoritesModel->setFavoriteLabel( collection, label );
     }
 
+    void slotCopyCollectionTo()
+    {
+      pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
+    }
+
+    void slotCopyItemTo()
+    {
+      pasteTo( itemSelectionModel, CopyItemToMenu, Qt::CopyAction );
+    }
+
+    void slotMoveCollectionTo()
+    {
+      pasteTo( collectionSelectionModel, MoveCollectionToMenu, Qt::MoveAction );
+    }
+
+    void slotMoveItemTo()
+    {
+      pasteTo( itemSelectionModel, MoveItemToMenu, Qt::MoveAction );
+    }
+
     void slotCopyCollectionTo( QAction *action )
     {
       pasteTo( collectionSelectionModel, action, Qt::CopyAction );
@@ -640,6 +668,24 @@ class StandardActionManager::Private
       instance.configure();
     }
 
+    void pasteTo( QItemSelectionModel *selectionModel, StandardActionManager::Type type, Qt::DropAction dropAction )
+    {
+      const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
+
+      CollectionDialog dlg;
+      dlg.setMimeTypeFilter( mimeTypes.toList() );
+      if ( dlg.exec() ) {
+        const QModelIndex index = EntityTreeModel::modelIndexForCollection( collectionSelectionModel->model(), dlg.selectedCollection() );
+        if ( !index.isValid() )
+          return;
+
+        const QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
+
+        QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
+        model->dropMimeData( mimeData, dropAction, -1, -1, index );
+      }
+    }
+
     void pasteTo( QItemSelectionModel *selectionModel, QAction *action, Qt::DropAction dropAction )
     {
       Q_ASSERT( selectionModel );
@@ -685,11 +731,11 @@ class StandardActionManager::Private
       }
     }
 
-    void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
-                          const QAbstractItemModel *model, QModelIndex parentIndex )
+    /**
+     * Returns a set of mime types of the entities that are currently selected.
+     */
+    QSet<QString> mimeTypesOfSelection( StandardActionManager::Type type ) const
     {
-      const int rowCount = model->rowCount( parentIndex );
-
       QModelIndexList list;
       QSet<QString> mimeTypes;
 
@@ -712,36 +758,58 @@ class StandardActionManager::Private
         }
       }
 
+      return mimeTypes;
+    }
+
+    /**
+     * Returns whether items with the given @p mimeTypes can be written to the given @p collection.
+     */
+    bool isWritableTargetCollectionForMimeTypes( const Collection &collection, const QSet<QString> &mimeTypes, StandardActionManager::Type type ) const
+    {
+      if ( CollectionUtils::isVirtual( collection ) )
+        return false;
+
+      const bool isItemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
+      const bool isCollectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
+
+      const bool canContainRequiredMimeTypes = !collection.contentMimeTypes().toSet().intersect( mimeTypes ).isEmpty();
+      const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
+
+      const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
+      const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
+      const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet().contains( mimeTypes );
+
+      const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
+      const bool isReadOnlyForCollections = (isCollectionAction && (!canCreateNewCollections || !canContainCollections || !resourceAllowsRequiredMimeTypes));
+
+      return !(CollectionUtils::isStructural( collection ) || isReadOnlyForItems || isReadOnlyForCollections);
+    }
+
+    void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
+                          const QAbstractItemModel *model, QModelIndex parentIndex )
+    {
+      const int rowCount = model->rowCount( parentIndex );
+
+      const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
+
       for ( int row = 0; row < rowCount; ++row ) {
         const QModelIndex index = model->index( row, 0, parentIndex );
         const Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-        if ( CollectionUtils::isVirtual( collection ) ) {
+        if ( CollectionUtils::isVirtual( collection ) )
           continue;
-        }
+
+        const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );
 
         QString label = model->data( index ).toString();
         label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
 
         const QIcon icon = model->data( index, Qt::DecorationRole ).value<QIcon>();
 
-        const bool canContainRequiredMimeTypes = !collection.contentMimeTypes().toSet().intersect( mimeTypes ).isEmpty();
-        const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
-
-
-        const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
-        const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
-        const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet().contains( mimeTypes );
-
-        const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
-        const bool isReadOnlyForCollections = (isCollectionAction && (!canCreateNewCollections || !canContainCollections || !resourceAllowsRequiredMimeTypes));
-
-        const bool readOnly = CollectionUtils::isStructural( collection ) || isReadOnlyForItems || isReadOnlyForCollections;
-
         if ( model->rowCount( index ) > 0 ) {
           // new level
           QMenu* popup = new QMenu( menu );
-          const bool moveAction = ( type == MoveCollectionToMenu || type == MoveItemToMenu);
+          const bool moveAction = (type == MoveCollectionToMenu || type == MoveItemToMenu);
           popup->setObjectName( QString::fromUtf8( "subMenu" ) );
           popup->setTitle( label );
           popup->setIcon( icon );
