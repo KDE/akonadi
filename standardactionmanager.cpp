@@ -25,14 +25,16 @@
 #include "collectiondialog.h"
 #include "collectionmodel.h"
 #include "collectionutils_p.h"
-#include "collectionpropertiesdialog.h"
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
 #include "pastehelper_p.h"
-#include "subscriptiondialog_p.h"
 #include "specialcollectionattribute_p.h"
+#ifndef Q_OS_WINCE
+#include "collectionpropertiesdialog.h"
+#include "subscriptiondialog_p.h"
+#endif
 
 #include <KAction>
 #include <KActionCollection>
@@ -210,6 +212,7 @@ class StandardActionManager::Private
       if ( selectionModel->selectedRows().count() <= 0 )
         return;
 
+#ifndef QT_NO_CLIPBOARD
       QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
       markCutAction( mimeData, cut );
       QApplication::clipboard()->setMimeData( mimeData );
@@ -218,6 +221,7 @@ class StandardActionManager::Private
 
       foreach ( const QModelIndex &index, selectionModel->selectedRows() )
         model->setData( index, true, EntityTreeModel::PendingCutRole );
+#endif
     }
 
     void updateActions()
@@ -259,7 +263,11 @@ class StandardActionManager::Private
       enableAction( DeleteCollections, singleCollectionSelected && (collection.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( collection ) );
       enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
       enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
+#ifndef QT_NO_CLIPBOARD
       enableAction( Paste, singleCollectionSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) );
+#else
+      enableAction( Paste, false );
+#endif
       enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
       enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
@@ -320,11 +328,13 @@ class StandardActionManager::Private
       emit q->actionStateUpdated();
     }
 
+#ifndef QT_NO_CLIPBOARD
     void clipboardChanged( QClipboard::Mode mode )
     {
       if ( mode == QClipboard::Clipboard )
         updateActions();
     }
+#endif
 
     QItemSelection mapToEntityTreeModel( const QAbstractItemModel *model, const QItemSelection &selection ) const
     {
@@ -469,9 +479,11 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
+#ifndef Q_OS_WINCE
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, parentWidget );
       dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( collection.name() ) );
       dlg->show();
+#endif
     }
 
     void slotCopyItems()
@@ -493,12 +505,14 @@ class StandardActionManager::Private
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
 
+#ifndef QT_NO_CLIPBOARD
       // TODO: Copy or move? We can't seem to cut yet
       QAbstractItemModel *model = const_cast<QAbstractItemModel *>( collectionSelectionModel->model() );
       const QMimeData *mimeData = QApplication::clipboard()->mimeData();
       model->dropMimeData( mimeData, isCutAction( mimeData ) ? Qt::MoveAction : Qt::CopyAction, -1, -1, index );
       model->setData( QModelIndex(), false, EntityTreeModel::PendingCutRole );
       QApplication::clipboard()->clear();
+#endif
     }
 
     void slotDeleteItems()
@@ -525,8 +539,10 @@ class StandardActionManager::Private
 
     void slotLocalSubscription()
     {
+#ifndef Q_OS_WINCE
       SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
       dlg->show();
+#endif
     }
 
     void slotAddToFavorites()
@@ -910,7 +926,9 @@ StandardActionManager::StandardActionManager( KActionCollection * actionCollecti
 {
   d->parentWidget = parent;
   d->actionCollection = actionCollection;
+#ifndef QT_NO_CLIPBOARD
   connect( QApplication::clipboard(), SIGNAL( changed( QClipboard::Mode ) ), SLOT( clipboardChanged( QClipboard::Mode ) ) );
+#endif
 }
 
 StandardActionManager::~ StandardActionManager()

@@ -23,12 +23,15 @@
 #include "agenttype.h"
 #include "agentbase.h"
 #include "agentmanager.h"
+#ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
+#endif
 #include "session_p.h"
 #include "firstrun_p.h"
 
 #include <KDebug>
 #include <KGlobal>
+#include <KLocale>
 
 #include <QtDBus>
 #include <QTimer>
@@ -181,9 +184,11 @@ bool ServerManager::stop()
 
 void ServerManager::showSelfTestDialog( QWidget *parent )
 {
+#ifndef Q_OS_WINCE
   Akonadi::SelfTestDialog dlg( parent );
   dlg.hideIntroduction();
   dlg.exec();
+#endif
 }
 
 bool ServerManager::isRunning()

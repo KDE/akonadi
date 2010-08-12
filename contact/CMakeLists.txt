@@ -60,11 +60,7 @@ set(akonadicontact_LIB_SRC
   contactdefaultactions.cpp
   contacteditor.cpp
   contacteditordialog.cpp
-  contactgroupeditor.cpp
-  contactgroupeditordelegate.cpp
-  contactgroupeditordialog.cpp
   contactgroupexpandjob.cpp
-  contactgrouplineedit.cpp
   contactgroupmodel.cpp
   contactgroupsearchjob.cpp
   contactgroupviewer.cpp
@@ -79,9 +75,6 @@ set(akonadicontact_LIB_SRC
   customfields.cpp
   customfieldmanager.cpp
   emailaddressselection.cpp
-  emailaddressselectiondialog.cpp
-  emailaddressselectionproxymodel.cpp
-  emailaddressselectionwidget.cpp
   leafextensionproxymodel.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
@@ -95,6 +88,14 @@ set(akonadicontact_LIB_SRC
 if (NOT WINCE)
   set(akonadicontact_LIB_SRC ${akonadicontact_LIB_SRC}
     ../kdescendantsproxymodel.cpp
+  # All disabled due to no QTreeView/QTreeWidget
+  contactgroupeditor.cpp
+  contactgroupeditordelegate.cpp
+  contactgroupeditordialog.cpp
+  contactgrouplineedit.cpp
+  emailaddressselectiondialog.cpp
+  emailaddressselectionproxymodel.cpp
+  emailaddressselectionwidget.cpp
   )
 endif (NOT WINCE)
 

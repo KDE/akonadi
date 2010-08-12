@@ -45,7 +45,7 @@
 
 static const char LEGACY_NAME[] = "legacy";
 static const char DEFAULT_NAME[] = "default";
-static const char APPLICATION_OCTETSTREAM[] = "application/octet-stream";
+static const char _APPLICATION_OCTETSTREAM[] = "application/octet-stream";
 
 namespace Akonadi {
 
@@ -250,7 +250,7 @@ class PluginRegistry
           kDebug() << "ItemSerializerPluginLoader: "
                    << "name" << name << "doesn't look like mimetype@classtype" << endl;
         }
-      const QString APPLICATION_OCTETSTREAM( QLatin1String( ::APPLICATION_OCTETSTREAM ) );
+      const QString APPLICATION_OCTETSTREAM = QLatin1String( _APPLICATION_OCTETSTREAM );
       QMap<QString,MimeTypeEntry>::iterator it = map.find( APPLICATION_OCTETSTREAM );
       if ( it == map.end() )
           it = map.insert( APPLICATION_OCTETSTREAM, MimeTypeEntry( APPLICATION_OCTETSTREAM ) );

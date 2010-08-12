@@ -53,7 +53,6 @@ set( akonadikde_LIB_SRC
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
-  cachepolicypage.cpp
   changerecorder.cpp
   collection.cpp
   collectioncombobox.cpp
@@ -61,7 +60,6 @@ set( akonadikde_LIB_SRC
   collectioncreatejob.cpp
   collectiondeletejob.cpp
   collectionfilterproxymodel.cpp
-  collectiongeneralpropertiespage.cpp
   collectionfetchjob.cpp
   collectionfetchscope.cpp
   collectionmodel.cpp
@@ -69,34 +67,25 @@ set( akonadikde_LIB_SRC
   collectionmodifyjob.cpp
   collectionmovejob.cpp
   collectionpathresolver.cpp
-  collectionpropertiesdialog.cpp
-  collectionpropertiespage.cpp
   collectionquotaattribute.cpp
   collectionrequester.cpp
   collectionrightsattribute.cpp
   collectionselectjob.cpp
   collectionstatistics.cpp
-  collectionstatisticsdelegate.cpp
   collectionstatisticsjob.cpp
   collectionstatisticsmodel.cpp
   collectionsync.cpp
-  collectionview.cpp
   conflicthandling/conflicthandler.cpp
   conflicthandling/conflictresolvedialog.cpp
   control.cpp
-  dragdropmanager.cpp
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
-  entitylistview.cpp
   entitymimetypefiltermodel.cpp
   entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
-  entitytreeview.cpp
-  entitytreeviewstatesaver.cpp
   etmviewstatesaver.cpp
-  erroroverlay.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
@@ -115,8 +104,8 @@ set( akonadikde_LIB_SRC
   itemserializerplugin.cpp
   itemmodifyjob.cpp
   itemsync.cpp
-  itemview.cpp
   job.cpp
+  kdescendantsproxymodel.cpp
   kjobprivatebase.cpp
   linkjob.cpp
   mimetypechecker.cpp
@@ -136,7 +125,6 @@ set( akonadikde_LIB_SRC
   recursivecollectionfilterproxymodel.cpp
   searchcreatejob.cpp
   selectionproxymodel.cpp
-  selftestdialog.cpp
   session.cpp
   servermanager.cpp
   specialcollectionattribute.cpp
@@ -147,7 +135,6 @@ set( akonadikde_LIB_SRC
   statisticsproxymodel.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
-  subscriptiondialog.cpp
   subscriptionmodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
@@ -170,7 +157,23 @@ endif (KDEPIM_MOBILE_UI)
 
 if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
-    kdescendantsproxymodel.cpp
+  # pending: fix KIconButton (remove icon selection stuff) and then should be ok
+  cachepolicypage.cpp
+  collectiongeneralpropertiespage.cpp
+  collectionpropertiesdialog.cpp
+  collectionpropertiespage.cpp
+  collectionstatisticsdelegate.cpp
+  collectionview.cpp
+  dragdropmanager.cpp
+  # pending: remove xmlguiclient stuff (for context menu) and then should be ok
+  entitylistview.cpp
+  entitytreeview.cpp
+  entitytreeviewstatesaver.cpp
+  itemview.cpp
+  # pending: replace QTreeView with QListView and then should be ok
+  selftestdialog.cpp
+  erroroverlay.cpp
+  subscriptiondialog.cpp
   )
 endif (NOT WINCE)
 
@@ -201,7 +204,10 @@ kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
 macro_ensure_version( "4.2.0" ${KDE_VERSION} KDE_IS_AT_LEAST_42 )
 
-target_link_libraries( akonadi-kde ${KDE4_SOLID_LIBS} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES} )
+if (NOT WINCE)
+target_link_libraries( akonadi-kde ${KDE4_SOLID_LIBS} )
+endif(NOT WINCE)
+target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 if(KDE_IS_AT_LEAST_42)

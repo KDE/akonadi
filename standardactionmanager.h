@@ -290,7 +290,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void updateActions() )
+#ifndef QT_NO_CLIPBOARD
     Q_PRIVATE_SLOT( d, void clipboardChanged(QClipboard::Mode) )
+#endif
     Q_PRIVATE_SLOT( d, void collectionSelectionChanged() )
     Q_PRIVATE_SLOT( d, void favoriteSelectionChanged() )
 

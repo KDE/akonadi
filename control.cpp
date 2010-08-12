@@ -20,8 +20,10 @@
 #include "control.h"
 #include "servermanager.h"
 #include "ui_controlprogressindicator.h"
+#ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
 #include "erroroverlay_p.h"
+#endif
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -30,6 +32,7 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
+#include <QtCore/QPointer>
 #include <QtGui/QFrame>
 
 using namespace Akonadi;
@@ -99,9 +102,11 @@ class Control::Private
 
     void createErrorOverlays()
     {
+#ifndef Q_OS_WINCE
       foreach ( QWidget* widget, mPendingOverlays )
         if ( widget )
           new ErrorOverlay( widget );
+#endif
       mPendingOverlays.clear();
     }
 
@@ -136,6 +141,7 @@ bool Control::Private::exec()
 
   if ( !mSuccess ) {
     kWarning() << "Could not start/stop Akonadi!";
+#ifndef Q_OS_WINCE
     if ( mProgressIndicator && mStarting ) {
       QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
       dlg->exec();
@@ -143,6 +149,7 @@ bool Control::Private::exec()
       if ( !mParent )
         return false;
     }
+#endif
   }
 
   delete mProgressIndicator;

@@ -578,7 +578,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     Q_PRIVATE_SLOT( d_func(), void slotPercent( int ) )
     Q_PRIVATE_SLOT( d_func(), void slotWarning( const QString& ) )
     Q_PRIVATE_SLOT( d_func(), void slotError( const QString& ) )
+#ifndef Q_OS_WINCE
     Q_PRIVATE_SLOT( d_func(), void slotNetworkStatusChange( Solid::Networking::Status ) )
+#endif
 
     //@endcond
 };
