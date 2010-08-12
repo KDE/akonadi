@@ -20,6 +20,7 @@ add_subdirectory( kabc )
 add_subdirectory( kcal )
 add_subdirectory( kmime )
 add_subdirectory( contact )
+add_subdirectory( mail )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
