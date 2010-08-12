@@ -31,6 +31,8 @@
 #include <akonadi/agenttypedialog.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/mimetypechecker.h>
+#include <akonadi/collectionmodel.h>
+#include <akonadi/kmime/messagestatus.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -39,13 +41,7 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
-#include <Akonadi/CollectionModel>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/ItemModifyJob>
-#include <akonadi/kmime/messagestatus.h>
 
-#include <Akonadi/KMime/SpecialMailCollections>
 #include "movetotrashcommand.h"
 #include "markascommand.h"
 

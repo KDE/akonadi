@@ -21,8 +21,8 @@
 #include "movecommand.h"
 #include "util.h"
 
-#include <Akonadi/ItemMoveJob>
-#include <Akonadi/ItemDeleteJob>
+#include <akonadi/itemmovejob.h>
+#include <akonadi/itemdeletejob.h>
 
 MoveCommand::MoveCommand( const Akonadi::Collection& destFolder,
                           const QList<Akonadi::Item> &msgList,
