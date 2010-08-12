@@ -412,8 +412,8 @@ KAction* StandardMailActionManager::createAction(StandardMailActionManager::Type
 
 void StandardMailActionManager::createAllActions()
 {
-  createAction( MarkMailAs, "R" );
-  createAction( MarkAllMailAs, "R" );
+  createAction( MarkMailAs, QLatin1String("R") );
+  createAction( MarkAllMailAs, QLatin1String("R") );
   createAction( MoveToTrash );
   createAction( MoveAllToTrash );
   createAction( RemoveDuplicates );
