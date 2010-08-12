@@ -19,6 +19,7 @@
 
 #include "agentactionmanager.h"
 
+#include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"
 #include "agentinstancemodel.h"
 #include "agentmanager.h"
@@ -134,6 +135,13 @@ class AgentActionManager::Private
     {
       Akonadi::AgentTypeDialog dlg( mParentWidget );
       dlg.setCaption( contextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle ) );
+
+      foreach ( const QString &mimeType, mMimeTypeFilter )
+        dlg.agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+
+      foreach ( const QString &capability, mCapabilityFilter )
+        dlg.agentFilterProxyModel()->addCapabilityFilter( capability );
+
       if ( dlg.exec() ) {
         const AgentType agentType = dlg.agentType();
 
@@ -200,6 +208,8 @@ class AgentActionManager::Private
     QWidget *mParentWidget;
     QItemSelectionModel *mSelectionModel;
     QVector<KAction*> mActions;
+    QStringList mMimeTypeFilter;
+    QStringList mCapabilityFilter;
 
     typedef QHash<AgentActionManager::TextContext, QString> ContextTexts;
     QHash<AgentActionManager::Type, ContextTexts> mContextTexts;
@@ -225,6 +235,16 @@ void AgentActionManager::setSelectionModel( QItemSelectionModel *selectionModel 
   d->mSelectionModel = selectionModel;
   connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            SLOT( updateActions() ) );
+}
+
+void AgentActionManager::setMimeTypeFilter( const QStringList &mimeTypes )
+{
+  d->mMimeTypeFilter = mimeTypes;
+}
+
+void AgentActionManager::setCapabilityFilter( const QStringList &capabilities )
+{
+  d->mCapabilityFilter = capabilities;
 }
 
 KAction* AgentActionManager::createAction( Type type )

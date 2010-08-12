@@ -86,6 +86,16 @@ class AKONADI_EXPORT AgentActionManager : public QObject
     void setSelectionModel( QItemSelectionModel *model );
 
     /**
+     * Sets the mime type filter that will be used when creating new agent instances.
+     */
+    void setMimeTypeFilter( const QStringList &mimeTypes );
+
+    /**
+     * Sets the capability filter that will be used when creating new agent instances.
+     */
+    void setCapabilityFilter( const QStringList &capabilities );
+
+    /**
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
