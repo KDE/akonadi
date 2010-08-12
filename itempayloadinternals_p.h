@@ -36,6 +36,9 @@
 
 #include "exception.h"
 
+//@cond PRIVATE Doxygen 1.7.1 hangs processing this file. so skip it.
+//for more info, see https://bugzilla.gnome.org/show_bug.cgi?id=531637
+
 /* WARNING
  * The below is an implementation detail of the Item class. It is not to be
  * considered public API, and subject to change without notice
@@ -325,6 +328,7 @@ template <typename T> inline Payload<T>* payload_cast( PayloadBase* payloadBase 
 }
 
 }
+//@endcond
 
 #endif
 
