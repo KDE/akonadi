@@ -24,7 +24,7 @@
 #include <QtGui/QHBoxLayout>
 
 #include <kabc/addressee.h>
-#include <kcal/freebusyurlstore.h>
+#include <kcalcore/freebusyurlstore.h>
 #include <kurlrequester.h>
 
 FreeBusyEditWidget::FreeBusyEditWidget( QWidget *parent )
@@ -46,7 +46,7 @@ void FreeBusyEditWidget::loadContact( const KABC::Addressee &contact )
   if ( contact.preferredEmail().isEmpty() )
     return;
 
-  mURL->setUrl( KCal::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) );
+  mURL->setUrl( KCalCore::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) );
 }
 
 void FreeBusyEditWidget::storeContact( KABC::Addressee &contact ) const
@@ -54,8 +54,8 @@ void FreeBusyEditWidget::storeContact( KABC::Addressee &contact ) const
   if ( contact.preferredEmail().isEmpty() )
     return;
 
-  KCal::FreeBusyUrlStore::self()->writeUrl( contact.preferredEmail(), mURL->url().url() );
-  KCal::FreeBusyUrlStore::self()->sync();
+  KCalCore::FreeBusyUrlStore::self()->writeUrl( contact.preferredEmail(), mURL->url().url() );
+  KCalCore::FreeBusyUrlStore::self()->sync();
 }
 
 void FreeBusyEditWidget::setReadOnly( bool readOnly )

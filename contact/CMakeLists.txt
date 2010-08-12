@@ -114,7 +114,7 @@ kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
 
 target_link_libraries(akonadi-contact akonadi-kde
                                       kabc
-                                      kcal
+                                      kcalcore
                                       kmime
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
@@ -124,7 +124,7 @@ target_link_libraries(akonadi-contact akonadi-kde
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc
-                                      kcal
+                                      kcalcore
                                       kmime
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
