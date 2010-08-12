@@ -35,6 +35,7 @@ include_directories(
 
 set( akonadikde_LIB_SRC
   entity.cpp # keep it at top to not break enable-final
+  agentactionmanager.cpp
   agentbase.cpp
   agentfilterproxymodel.cpp
   agentinstance.cpp
@@ -216,6 +217,7 @@ install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_
 
 install( FILES
   akonadi_export.h
+  agentactionmanager.h
   agentbase.h
   agentfilterproxymodel.h
   agentinstance.h
