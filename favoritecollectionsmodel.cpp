@@ -48,7 +48,21 @@ class FavoriteCollectionsModel::Private
 
       const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
       Q_ASSERT( indexList.size() == 1 );
-      return indexList.at( 0 ).data().toString();
+
+      QString accountName;
+
+      const QString nameOfCollection = indexList.at( 0 ).data().toString();
+
+      QModelIndex idx = indexList.at( 0 ).parent();
+      while ( idx != QModelIndex() ) {
+        accountName = idx.data().toString();
+        idx = idx.parent();
+      }
+
+      if ( accountName.isEmpty() )
+        return nameOfCollection;
+      else
+        return nameOfCollection + QLatin1String( " (" ) + accountName + QLatin1Char( ')' );
     }
 
     void clearAndUpdateSelection()
