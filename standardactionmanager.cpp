@@ -274,7 +274,8 @@ class StandardActionManager::Private
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
 
-      bool enableResourceActions = false;
+      bool enableDeleteResourceAction = false;
+      bool enableConfigureResourceAction = false;
       if ( collectionSelectionModel ) {
         if ( collectionSelectionModel->selectedRows().count() == 1 ) {
           const QModelIndex index = collectionSelectionModel->selectedRows().first();
@@ -282,13 +283,19 @@ class StandardActionManager::Private
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
               // actions are only enabled if the collection is a resource collection
-              enableResourceActions = (collection.parentCollection() == Collection::root());
+              enableDeleteResourceAction = enableConfigureResourceAction = (collection.parentCollection() == Collection::root());
+
+              // check that the 'NoConfig' flag is not set for the resource
+              const Akonadi::AgentInstance instance = AgentManager::self()->instance( collection.resource() );
+
+              if ( instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) )
+                enableConfigureResourceAction = false;
             }
           }
         }
       }
-      enableAction( DeleteResource, enableResourceActions );
-      enableAction( ResourceProperties, enableResourceActions );
+      enableAction( DeleteResource, enableDeleteResourceAction );
+      enableAction( ResourceProperties, enableConfigureResourceAction );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
