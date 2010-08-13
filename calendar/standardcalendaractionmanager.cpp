@@ -539,20 +539,26 @@ void StandardCalendarActionManager::createAllActions()
 
 KAction* StandardCalendarActionManager::action( StandardCalendarActionManager::Type type ) const
 {
-  if ( d->mActions.contains( type ) )
-    return d->mActions.value( type );
-  else
-    return 0;
+  if ( (int)type <= (int)StandardActionManager::LastType ) {
+    return d->mGenericManager->action( static_cast<StandardActionManager::Type>( type ) );
+  }
+
+  if ( (int)type >= (int)StandardCalendarActionManager::CreateEvent && (int)type <= (int)StandardCalendarActionManager::LastType ) {
+    if ( d->mActions.contains( type ) )
+      return d->mActions.value( type );
+  }
+
+  return 0;
 }
 
 void StandardCalendarActionManager::interceptAction( StandardCalendarActionManager::Type type, bool intercept )
 {
-  if ( type <= StandardActionManager::LastType ) {
+  if ( (int)type <= (int)StandardActionManager::LastType ) {
       d->mGenericManager->interceptAction( static_cast<StandardActionManager::Type>( type ), intercept );
       return;
   }
 
-  if ( type >= StandardCalendarActionManager::CreateEvent && type <= StandardCalendarActionManager::LastType ) {
+  if ( (int)type >= (int)StandardCalendarActionManager::CreateEvent && (int)type <= (int)StandardCalendarActionManager::LastType ) {
     if ( intercept )
       d->mInterceptedActions.insert( type );
     else

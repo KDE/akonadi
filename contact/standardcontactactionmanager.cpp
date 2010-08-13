@@ -400,20 +400,26 @@ void StandardContactActionManager::createAllActions()
 
 KAction* StandardContactActionManager::action( Type type ) const
 {
-  if ( d->mActions.contains( type ) )
-    return d->mActions.value( type );
-  else
-    return 0;
+  if ( (int)type <= (int)StandardActionManager::LastType ) {
+    return d->mGenericManager->action( static_cast<StandardActionManager::Type>( type ) );
+  }
+
+  if ( (int)type >= (int)StandardContactActionManager::CreateContact && (int)type <= (int)StandardContactActionManager::LastType ) {
+    if ( d->mActions.contains( type ) )
+      return d->mActions.value( type );
+  }
+
+  return 0;
 }
 
 void StandardContactActionManager::interceptAction( Type type, bool intercept )
 {
-  if ( type <= StandardActionManager::LastType ) {
+  if ( (int)type <= (int)StandardActionManager::LastType ) {
     d->mGenericManager->interceptAction( static_cast<StandardActionManager::Type>( type ), intercept );
     return;
   }
 
-  if ( type >= StandardContactActionManager::CreateContact && type <= StandardContactActionManager::LastType ) {
+  if ( (int)type >= (int)StandardContactActionManager::CreateContact && (int)type <= (int)StandardContactActionManager::LastType ) {
     if ( intercept )
       d->mInterceptedActions.insert( type );
     else
