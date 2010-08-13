@@ -119,7 +119,6 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS}
                                       ${NEPOMUK_LIBRARIES})
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
@@ -129,8 +128,12 @@ target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS}
                                       ${NEPOMUK_LIBRARIES})
+
+if (NOT WINCE)
+target_link_libraries(akonadi-contact ${KDE4_PHONON_LIBS})
+target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES ${KDE4_PHONON_LIBS})
+endif (NOT WINCE)
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
