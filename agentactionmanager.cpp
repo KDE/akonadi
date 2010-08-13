@@ -159,10 +159,8 @@ class AgentActionManager::Private
       const AgentInstance::List instances = selectedAgentInstances();
       if ( !instances.isEmpty() ) {
         if ( KMessageBox::questionYesNo( mParentWidget,
-                                         i18np( "Do you really want to delete the selected agent instance?",
-                                                "Do you really want to delete these %1 agent instances?",
-                                                instances.size() ),
-                                         i18n( "Multiple Agent Deletion" ),
+                                         contextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText ),
+                                         contextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle ),
                                          KStandardGuiItem::del(),
                                          KStandardGuiItem::cancel(),
                                          QString(),

@@ -39,7 +39,7 @@ namespace Akonadi {
 class Item;
 
 /**
- * @short Manages contact specific actions for collection and item views.
+ * @short Manages emails specific actions for collection and item views.
  *
  * @author Andras Mantia <amantia@kde.org>
  * @since 4.6
