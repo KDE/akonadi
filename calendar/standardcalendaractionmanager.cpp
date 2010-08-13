@@ -355,7 +355,6 @@ void StandardCalendarActionManager::setItemSelectionModel( QItemSelectionModel* 
 
 KAction* StandardCalendarActionManager::createAction( StandardCalendarActionManager::Type type )
 {
-  Q_ASSERT( type >= CreateEvent && type < LastType );
   if ( d->mActions.contains( type ) )
     return d->mActions.value( type );
 
@@ -529,6 +528,11 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
   return action;
 }
 
+KAction* StandardCalendarActionManager::createAction( StandardActionManager::Type type )
+{
+  return d->mGenericManager->createAction( type );
+}
+
 void StandardCalendarActionManager::createAllActions()
 {
   createAction( CreateEvent );
@@ -539,31 +543,28 @@ void StandardCalendarActionManager::createAllActions()
 
 KAction* StandardCalendarActionManager::action( StandardCalendarActionManager::Type type ) const
 {
-  if ( (int)type <= (int)StandardActionManager::LastType ) {
-    return d->mGenericManager->action( static_cast<StandardActionManager::Type>( type ) );
-  }
-
-  if ( (int)type >= (int)StandardCalendarActionManager::CreateEvent && (int)type <= (int)StandardCalendarActionManager::LastType ) {
-    if ( d->mActions.contains( type ) )
-      return d->mActions.value( type );
-  }
+  if ( d->mActions.contains( type ) )
+    return d->mActions.value( type );
 
   return 0;
 }
 
+KAction* StandardCalendarActionManager::action( StandardActionManager::Type type ) const
+{
+  return d->mGenericManager->action( type );
+}
+
 void StandardCalendarActionManager::interceptAction( StandardCalendarActionManager::Type type, bool intercept )
 {
-  if ( (int)type <= (int)StandardActionManager::LastType ) {
-      d->mGenericManager->interceptAction( static_cast<StandardActionManager::Type>( type ), intercept );
-      return;
-  }
+  if ( intercept )
+    d->mInterceptedActions.insert( type );
+  else
+    d->mInterceptedActions.remove( type );
+}
 
-  if ( (int)type >= (int)StandardCalendarActionManager::CreateEvent && (int)type <= (int)StandardCalendarActionManager::LastType ) {
-    if ( intercept )
-      d->mInterceptedActions.insert( type );
-    else
-      d->mInterceptedActions.remove( type );
-  }
+void StandardCalendarActionManager::interceptAction( StandardActionManager::Type type, bool intercept )
+{
+  d->mGenericManager->interceptAction( type, intercept );
 }
 
 Akonadi::Collection::List StandardCalendarActionManager::selectedCollections() const

@@ -114,6 +114,13 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     KAction* createAction( Type type );
 
     /**
+     * Creates the action of the given type and adds it to the action collection
+     * specified in the constructor if it does not exist yet. The action is
+     * connected to its default implementation provided by this class.
+     */
+    KAction* createAction( StandardActionManager::Type type );
+
+    /**
      * Convenience method to create all standard actions.
      * @see createAction()
      */
@@ -125,6 +132,11 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     KAction* action( Type type ) const;
 
     /**
+     * Returns the action of the given type, 0 if it has not been created (yet).
+     */
+    KAction* action( StandardActionManager::Type type ) const;
+
+    /**
      * Sets whether the default implementation for the given action @p type
      * shall be executed when the action is triggered.
      *
@@ -132,6 +144,15 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      *                  if @c true no action is taken.
      */
     void interceptAction( Type type, bool intercept = true );
+
+    /**
+     * Sets whether the default implementation for the given action @p type
+     * shall be executed when the action is triggered.
+     *
+     * @param intercept If @c false, the default implementation will be executed,
+     *                  if @c true no action is taken.
+     */
+    void interceptAction( StandardActionManager::Type type, bool intercept = true );
 
     /**
      * Returns the list of collections that are currently selected.
