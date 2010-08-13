@@ -81,7 +81,7 @@ static const struct {
   { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), false },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), false },
   { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), false },
-#if KDEPIM_MOBILE_UI
+#ifdef KDEPIM_MOBILE_UI
   { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), false },
   { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), false },
   { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), false },
