@@ -23,6 +23,8 @@
 */
 
 #include "standardmailactionmanager.h"
+#include "movetotrashcommand_p.h"
+#include "markascommand_p.h"
 
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/agentinstance.h>
@@ -41,9 +43,6 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
-
-#include "movetotrashcommand.h"
-#include "markascommand.h"
 
 using namespace Akonadi;
 

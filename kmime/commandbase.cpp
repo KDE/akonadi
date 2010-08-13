@@ -17,37 +17,18 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef MARKASCOMMAND_H
-#define MARKASCOMMAND_H
 
-#include "commandbase.h"
+#include "commandbase_p.h"
 
-#include <akonadi/collection.h>
-#include <akonadi/item.h>
-#include <akonadi/kmime/messagestatus.h>
-
-#include <QList>
-
-class KJob;
-class MarkAsCommand : public CommandBase
+CommandBase::CommandBase( QObject* parent ) : QObject( parent ) 
 {
-  Q_OBJECT
-public:
-  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List & msgList, QObject* parent = 0 );
-  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Collection& sourceFolder, QObject* parent = 0 );
-  void execute();
 
-private Q_SLOTS:
-  void slotFetchDone( KJob* job );
-  void slotModifyItemDone( KJob * job );
+}
 
-private:
-  void markMessages();
- 
-  Akonadi::Collection mSourceFolder;
-  QList<Akonadi::Item> mMessages;
-  Akonadi::MessageStatus mTargetStatus;
-  int mMarkJobCount;
-};
+void CommandBase::emitResult( Result value )
+{
+  emit result( value );
+  deleteLater();
+}
 
-#endif // MARKASCOMMAND_H
+#include "commandbase_p.moc"

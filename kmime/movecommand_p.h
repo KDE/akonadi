@@ -21,7 +21,7 @@
 #ifndef MOVECOMMAND_H
 #define MOVECOMMAND_H
 
-#include "commandbase.h"
+#include "commandbase_p.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>

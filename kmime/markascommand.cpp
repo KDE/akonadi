@@ -18,8 +18,8 @@
 */
 
 
-#include "markascommand.h"
-#include "util.h"
+#include "markascommand_p.h"
+#include "util_p.h"
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
@@ -120,4 +120,4 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
 }
 
 
-#include "markascommand.moc"
+#include "markascommand_p.moc"

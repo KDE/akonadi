@@ -18,8 +18,8 @@
 */
 
 
-#include "movecommand.h"
-#include "util.h"
+#include "movecommand_p.h"
+#include "util_p.h"
 
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemdeletejob.h>
@@ -56,4 +56,4 @@ void MoveCommand::slotMoveResult(KJob* job)
     emitResult( OK );
 }
 
-#include "movecommand.moc"
+#include "movecommand_p.moc"

@@ -18,7 +18,7 @@
 */
 
 
-#include "util.h"
+#include "util_p.h"
 #include "imapsettings.h"
 
 #include <assert.h>

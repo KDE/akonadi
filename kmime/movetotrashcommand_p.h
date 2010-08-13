@@ -21,7 +21,7 @@
 #ifndef MOVETOTRASHCOMMAND_H
 #define MOVETOTRASHCOMMAND_H
 
-#include "commandbase.h"
+#include "commandbase_p.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>

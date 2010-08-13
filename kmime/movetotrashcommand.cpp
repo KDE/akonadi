@@ -18,9 +18,9 @@
 */
 
 
-#include "movetotrashcommand.h"
-#include "util.h"
-#include "movecommand.h"
+#include "movetotrashcommand_p.h"
+#include "util_p.h"
+#include "movecommand_p.h"
 #include "imapsettings.h"
 
 #include <akonadi/itemfetchjob.h>
@@ -133,4 +133,4 @@ Akonadi::Collection MoveToTrashCommand::findTrashFolder( const Akonadi::Collecti
 
 
 
-#include "movetotrashcommand.moc"
+#include "movetotrashcommand_p.moc"
