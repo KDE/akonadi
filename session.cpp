@@ -164,7 +164,6 @@ void SessionPrivate::socketDisconnected()
   if ( currentJob )
     currentJob->d_ptr->lostConnection();
   connected = false;
-  QTimer::singleShot( 30000, mParent, SLOT( reconnect() ) );
 }
 
 void SessionPrivate::dataReceived()
