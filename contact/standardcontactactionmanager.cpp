@@ -22,9 +22,7 @@
 #include "standardcontactactionmanager.h"
 
 #include "contacteditordialog.h"
-#ifndef Q_OS_WINCE
 #include "contactgroupeditordialog.h"
-#endif
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/mimetypechecker.h>
@@ -252,12 +250,10 @@ class StandardContactActionManager::Private
       if ( mInterceptedActions.contains( StandardContactActionManager::CreateContactGroup ) )
         return;
 
-#ifndef Q_OS_WINCE
       Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg.setDefaultAddressBook( selectedCollection() );
 
       dlg.exec();
-#endif
     }
 
     void slotEditItem()
@@ -284,13 +280,11 @@ class StandardContactActionManager::Private
         dlg.setContact( item );
         dlg.exec();
       }
-#ifndef Q_OS_WINCE
       else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
         Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
         dlg.setContactGroup( item );
         dlg.exec();
       }
-#endif
     }
 
     KActionCollection *mActionCollection;

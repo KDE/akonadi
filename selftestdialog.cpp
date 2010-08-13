@@ -652,7 +652,9 @@ void SelfTestDialog::saveReport()
 
 void SelfTestDialog::copyReport()
 {
+#ifndef QT_NO_CLIPBOARD
   QApplication::clipboard()->setText( createReport() );
+#endif
 }
 
 void SelfTestDialog::linkActivated(const QString & link)

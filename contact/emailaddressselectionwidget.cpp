@@ -89,7 +89,12 @@ class EmailAddressSelectionWidget::Private
     QAbstractItemModel *mModel;
     QLabel *mDescriptionLabel;
     SearchLineEdit *mSearchLine;
+    // FIXME: Temporary until EntityTreeView compiles
+#ifndef Q_OS_WINCE
     Akonadi::EntityTreeView *mView;
+#else
+    QTreeView* mView;
+#endif
     EmailAddressSelectionProxyModel *mSelectionModel;
 };
 
@@ -127,7 +132,12 @@ void EmailAddressSelectionWidget::Private::init()
   QHBoxLayout *searchLayout = new QHBoxLayout;
   layout->addLayout( searchLayout );
 
+    // FIXME: Temporary until EntityTreeView compiles
+#ifndef Q_OS_WINCE
   mView = new Akonadi::EntityTreeView;
+#else
+  mView = new QTreeView;
+#endif
 
   QLabel *label = new QLabel( i18nc( "@label Search in a list of contacts", "Search:" ) );
   mSearchLine = new SearchLineEdit( mView );
@@ -135,7 +145,9 @@ void EmailAddressSelectionWidget::Private::init()
   searchLayout->addWidget( label );
   searchLayout->addWidget( mSearchLine );
 
+#ifndef QT_NO_DRAGANDDROP
   mView->setDragDropMode( QAbstractItemView::NoDragDrop );
+#endif
   layout->addWidget( mView );
 
   Akonadi::ContactsFilterProxyModel *filter = new Akonadi::ContactsFilterProxyModel( q );

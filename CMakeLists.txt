@@ -85,6 +85,7 @@ set( akonadikde_LIB_SRC
   entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
+  erroroverlay.cpp
   etmviewstatesaver.cpp
   exception.cpp
   favoritecollectionsmodel.cpp
@@ -125,6 +126,7 @@ set( akonadikde_LIB_SRC
   recursivecollectionfilterproxymodel.cpp
   searchcreatejob.cpp
   selectionproxymodel.cpp
+  selftestdialog.cpp
   session.cpp
   servermanager.cpp
   specialcollectionattribute.cpp
@@ -133,6 +135,7 @@ set( akonadikde_LIB_SRC
   specialcollectionsrequestjob.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
+  subscriptiondialog.cpp
   subscriptionjob.cpp
   subscriptionchangeproxymodel.cpp
   subscriptionmodel.cpp
@@ -163,17 +166,13 @@ if (NOT WINCE)
   collectionpropertiesdialog.cpp
   collectionpropertiespage.cpp
   collectionstatisticsdelegate.cpp
-  collectionview.cpp
   dragdropmanager.cpp
   # pending: remove xmlguiclient stuff (for context menu) and then should be ok
+  collectionview.cpp
   entitylistview.cpp
   entitytreeview.cpp
   entitytreeviewstatesaver.cpp
   itemview.cpp
-  # pending: replace QTreeView with QListView and then should be ok
-  selftestdialog.cpp
-  erroroverlay.cpp
-  subscriptiondialog.cpp
   )
 endif (NOT WINCE)
 
