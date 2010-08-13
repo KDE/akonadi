@@ -19,7 +19,10 @@
 
 #include "standardactionmanager.h"
 
+#include "agentfilterproxymodel.h"
+#include "agentinstancecreatejob.h"
 #include "agentmanager.h"
+#include "agenttypedialog.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectiondialog.h"
@@ -91,6 +94,7 @@ static const struct {
 #endif
   { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), false },
   { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false },
+  { "akonadi_resource_create", I18N_NOOP( "Create Resource" ), "folder-new", 0, SLOT( slotCreateResource() ), false },
   { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), false },
   { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), false }
 };
@@ -167,6 +171,13 @@ class StandardActionManager::Private
                       i18nc( "@title:window", "Rename Favorite" ) );
       setContextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText,
                       i18nc( "@label:textbox name of the folder", "Name:" ) );
+
+      setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
+                      i18nc( "@title:window", "New Resource" ) );
+      setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
+                      i18n( "Could not create resource: %1" ) );
+      setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
+                      i18n( "Resource creation failed" ) );
 
       setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
                       i18n( "Do you really want to delete resource '%1'?" ) );
@@ -294,6 +305,7 @@ class StandardActionManager::Private
           }
         }
       }
+      enableAction( CreateResource, true );
       enableAction( DeleteResource, enableDeleteResourceAction );
       enableAction( ResourceProperties, enableConfigureResourceAction );
 
@@ -666,6 +678,29 @@ class StandardActionManager::Private
       return AgentManager::self()->instance( identifier );
     }
 
+    void slotCreateResource()
+    {
+      Akonadi::AgentTypeDialog dlg( parentWidget );
+      dlg.setCaption( contextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle ) );
+
+      foreach ( const QString &mimeType, mMimeTypeFilter )
+        dlg.agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+
+      foreach ( const QString &capability, mCapabilityFilter )
+        dlg.agentFilterProxyModel()->addCapabilityFilter( capability );
+
+      if ( dlg.exec() ) {
+        const AgentType agentType = dlg.agentType();
+
+        if ( agentType.isValid() ) {
+          AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, q );
+          q->connect( job, SIGNAL( result( KJob* ) ), SLOT( resourceCreationResult( KJob* ) ) );
+          job->configure( parentWidget );
+          job->start();
+        }
+      }
+    }
+
     void slotDeleteResource()
     {
       const AgentInstance instance = selectedAgentInstance();
@@ -742,6 +777,15 @@ class StandardActionManager::Private
         KMessageBox::error( parentWidget,
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle ) );
+      }
+    }
+
+    void resourceCreationResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle ) );
       }
     }
 
@@ -922,6 +966,9 @@ class StandardActionManager::Private
 
     typedef QHash<StandardActionManager::TextContext, QString> ContextTexts;
     QHash<StandardActionManager::Type, ContextTexts> contextTexts;
+
+    QStringList mMimeTypeFilter;
+    QStringList mCapabilityFilter;
 };
 
 //@endcond
@@ -1078,6 +1125,16 @@ Item::List StandardActionManager::selectedItems() const
 void StandardActionManager::setContextText( Type type, TextContext context, const QString &text )
 {
   d->setContextText( type, context, text );
+}
+
+void StandardActionManager::setMimeTypeFilter( const QStringList &mimeTypes )
+{
+  d->mMimeTypeFilter = mimeTypes;
+}
+
+void StandardActionManager::setCapabilityFilter( const QStringList &capabilities )
+{
+  d->mCapabilityFilter = capabilities;
 }
 
 #include "standardactionmanager.moc"

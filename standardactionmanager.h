@@ -148,7 +148,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection @since 4.4
       CutItems,                  ///< Cuts the selected items @since 4.4
       CutCollections,            ///< Cuts the selected collections @since 4.4
-      DeleteResource,            ///< Provides the resource properties @since 4.6
+      CreateResource,            ///< Creates a new resource @since 4.6
+      DeleteResource,            ///< Deletes the selected resource @since 4.6
       ResourceProperties,        ///< Provides the resource properties @since 4.6
       LastType                   ///< Marks last action
     };
@@ -276,6 +277,20 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     void setContextText( Type type, TextContext context, const QString &text );
 
+    /**
+     * Sets the mime type filter that will be used when creating new resources.
+     *
+     * @since 4.6
+     */
+    void setMimeTypeFilter( const QStringList &mimeTypes );
+
+    /**
+     * Sets the capability filter that will be used when creating new resources.
+     *
+     * @since 4.6
+     */
+    void setCapabilityFilter( const QStringList &capabilities );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
@@ -318,11 +333,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotMoveCollectionTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotCopyItemTo(QAction*) )
     Q_PRIVATE_SLOT( d, void slotMoveItemTo(QAction*) )
+    Q_PRIVATE_SLOT( d, void slotCreateResource() )
     Q_PRIVATE_SLOT( d, void slotDeleteResource() )
     Q_PRIVATE_SLOT( d, void slotResourceProperties() )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void resourceCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void pasteResult(KJob*) )
     //@endcond
 };
