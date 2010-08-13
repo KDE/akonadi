@@ -336,7 +336,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
       action->setText( i18n( "&Start Maintenance Mode" ) );
       //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-      action->setWhatsThis( i18n( "Opens a bulk actions dialg, that allows for mass move, copy, delete, and toggler reminders and alarms actions." ) );
+      action->setWhatsThis( i18n( "Opens a bulk actions dialog, that allows for mass move, copy, delete, and toggler reminders and alarms actions." ) );
       d->mActions.insert( StartMaintenanceMode, action );
       d->mActionCollection->addAction( QString::fromLatin1( "start_maintenance_mode" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotStartMaintenanceMode() ) );
