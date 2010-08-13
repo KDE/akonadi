@@ -4,7 +4,6 @@
     Copyright (c) 2009 - 2010 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com
     Copyright (c) 2010 Andras Mantia <andras@kdab.com>
-   
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -335,8 +334,6 @@ void StandardMailActionManager::setItemSelectionModel( QItemSelectionModel* sele
 
 KAction* StandardMailActionManager::createAction( Type type )
 {
-  Q_ASSERT( type >= MarkMailAs && type < LastType );
-
   if ( d->mActions.contains( type ) )
     return d->mActions.value( type );
 
@@ -401,18 +398,15 @@ KAction* StandardMailActionManager::createAction( Type type )
   return action;
 }
 
-KAction* StandardMailActionManager::createAction(StandardMailActionManager::Type type, const QVariant& argument)
+KAction* StandardMailActionManager::createAction( StandardActionManager::Type type )
 {
-  KAction *action = createAction( type );
-  action->setData( argument );
-  return action;
+  return d->mGenericManager->createAction( type );
 }
-
 
 void StandardMailActionManager::createAllActions()
 {
-  createAction( MarkMailAs, QLatin1String("R") );
-  createAction( MarkAllMailAs, QLatin1String("R") );
+  createAction( MarkMailAs )->setData( QLatin1String( "R" ) );
+  createAction( MarkAllMailAs )->setData( QLatin1String( "R" ) );
   createAction( MoveToTrash );
   createAction( MoveAllToTrash );
   createAction( RemoveDuplicates );
@@ -426,23 +420,26 @@ KAction* StandardMailActionManager::action( Type type ) const
 {
   if ( d->mActions.contains( type ) )
     return d->mActions.value( type );
-  else
-    return 0;
+
+  return 0;
+}
+
+KAction* StandardMailActionManager::action( StandardActionManager::Type type ) const
+{
+  return d->mGenericManager->action( type );
 }
 
 void StandardMailActionManager::interceptAction( Type type, bool intercept )
 {
-  if ( type <= StandardActionManager::LastType ) {
-    d->mGenericManager->interceptAction( static_cast<StandardActionManager::Type>( type ), intercept );
-    return;
-  }
+  if ( intercept )
+    d->mInterceptedActions.insert( type );
+  else
+    d->mInterceptedActions.remove( type );
+}
 
-  if ( type >= StandardMailActionManager::MarkMailAs && type <= StandardMailActionManager::LastType ) {
-    if ( intercept )
-      d->mInterceptedActions.insert( type );
-    else
-      d->mInterceptedActions.remove( type );
-  }
+void StandardMailActionManager::interceptAction( StandardActionManager::Type type, bool intercept )
+{
+  d->mGenericManager->interceptAction( type, intercept );
 }
 
 Akonadi::Collection::List StandardMailActionManager::selectedCollections() const
