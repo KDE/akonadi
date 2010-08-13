@@ -181,7 +181,7 @@ class AgentActionManager::Private
       if ( instances.isEmpty() )
         return;
 
-      instances.first().configure();
+      instances.first().configure( mParentWidget );
     }
 
     void slotAgentInstanceCreationResult( KJob *job )

@@ -723,7 +723,7 @@ class StandardActionManager::Private
       if ( !instance.isValid() )
         return;
 
-      instance.configure();
+      instance.configure( parentWidget );
     }
 
     void pasteTo( QItemSelectionModel *selectionModel, StandardActionManager::Type type, Qt::DropAction dropAction )
