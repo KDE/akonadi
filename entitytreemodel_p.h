@@ -62,6 +62,7 @@ class AKONADI_TESTS_EXPORT EntityTreeModelPrivate
 public:
 
   EntityTreeModelPrivate( EntityTreeModel *parent );
+  ~EntityTreeModelPrivate();
   EntityTreeModel *q_ptr;
 
   enum RetrieveDepth {

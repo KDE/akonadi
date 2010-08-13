@@ -71,6 +71,11 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
 {
 }
 
+EntityTreeModelPrivate::~EntityTreeModelPrivate()
+{
+  delete m_rootNode;
+}
+
 void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 {
   Q_Q( EntityTreeModel );
