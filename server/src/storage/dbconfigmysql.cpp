@@ -250,11 +250,10 @@ void DbConfigMysql::startInternalServer()
   // synthesize the mysqld command
   QStringList arguments;
   arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
+  arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
 #ifndef Q_WS_WIN
-  arguments << QString::fromLatin1( "--datadir" ) << QString::fromLatin1( "%1/" ).arg( dataDir );
   arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
 #else
-  arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
   arguments << QString::fromLatin1( "--shared-memory" );
 #endif
 
