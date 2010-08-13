@@ -61,6 +61,7 @@ using namespace Akonadi;
 
 EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
   : q_ptr( parent ),
+    m_rootNode( 0 ),
     m_collectionFetchStrategy( EntityTreeModel::FetchCollectionsRecursive ),
     m_itemPopulation( EntityTreeModel::ImmediatePopulation ),
     m_includeUnsubscribed( true ),
