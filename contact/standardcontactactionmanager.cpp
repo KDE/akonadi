@@ -26,11 +26,6 @@
 #include "contactgroupeditordialog.h"
 #endif
 
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttypedialog.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/mimetypechecker.h>
 #include <kabc/addressee.h>
@@ -75,6 +70,8 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected contacts from the address book." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Contact", "Cut %1 Contacts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected contacts from the address book." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText( i18n( "Add &Address Book..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis( i18n( "Add a new address book<p>You will be presented with a dialog where you can select the type of the address book that shall be added.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setText( i18n( "&Delete Address Book" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Address Book Properties..." ) );
@@ -106,6 +103,13 @@ class StandardContactActionManager::Private
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                                        i18nc( "@title:window", "Delete Contacts?" ) );
 
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
+                                       i18nc( "@title:window", "Add Address Book" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not create address book: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Address book creation failed" ) );
+
       mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
                                        i18n( "Do you really want to delete address book '%1'?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
@@ -115,6 +119,9 @@ class StandardContactActionManager::Private
                                        i18n( "Could not paste contact: %1" ) );
       mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                                        i18n( "Paste failed" ) );
+
+      mGenericManager->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
+      mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
     }
 
     ~Private()
@@ -229,17 +236,6 @@ class StandardContactActionManager::Private
       return index.data( EntityTreeModel::CollectionRole).value<Collection>();
     }
 
-    AgentInstance selectedAgentInstance() const
-    {
-      const Collection collection = selectedCollection();
-      if ( !collection.isValid() )
-        return AgentInstance();
-
-      const QString identifier = collection.resource();
-
-      return AgentManager::self()->instance( identifier );
-    }
-
     void slotCreateContact()
     {
       if ( mInterceptedActions.contains( StandardContactActionManager::CreateContact ) )
@@ -295,39 +291,6 @@ class StandardContactActionManager::Private
         dlg.exec();
       }
 #endif
-    }
-
-    void slotCreateAddressBook()
-    {
-      if ( mInterceptedActions.contains( StandardContactActionManager::CreateAddressBook ) )
-        return;
-
-      QPointer<AgentTypeDialog> dlg = new AgentTypeDialog( mParentWidget );
-      dlg->setWindowTitle( i18n( "Add Address Book" ) );
-      dlg->agentFilterProxyModel()->addMimeTypeFilter( KABC::Addressee::mimeType() );
-      dlg->agentFilterProxyModel()->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
-      dlg->agentFilterProxyModel()->addCapabilityFilter( QLatin1String( "Resource" ) ); // show only resources, no agents
-
-      if ( dlg->exec() && dlg ) {
-        const AgentType agentType = dlg->agentType();
-
-        if ( agentType.isValid() ) {
-          AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType );
-          job->configure( mParentWidget );
-          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( addAddressBookResult( KJob* ) ) );
-          job->start();
-        }
-      }
-
-      delete dlg;
-    }
-
-    void addAddressBookResult( KJob *job )
-    {
-      if ( job->error() ) {
-        KMessageBox::error( mParentWidget, i18n( "Could not add address book: %1", job->errorString() ),
-                            i18n( "Adding Address Book failed" ) );
-      }
     }
 
     KActionCollection *mActionCollection;
@@ -416,15 +379,6 @@ KAction* StandardContactActionManager::createAction( Type type )
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditItem() ) );
       break;
-    case CreateAddressBook:
-      action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "folder-new" ) ) );
-      action->setText( i18n( "Add &Address Book..." ) );
-      action->setWhatsThis( i18n( "Add a new address book<p>You will be presented with a dialog where you can select the type of the address book that shall be added.</p>" ) );
-      d->mActions.insert( CreateAddressBook, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateAddressBook() ) );
-      break;
     default:
       Q_ASSERT( false ); // should never happen
       break;
@@ -438,7 +392,6 @@ void StandardContactActionManager::createAllActions()
   createAction( CreateContact );
   createAction( CreateContactGroup );
   createAction( EditItem );
-  createAction( CreateAddressBook );
 
   d->mGenericManager->createAllActions();
 
