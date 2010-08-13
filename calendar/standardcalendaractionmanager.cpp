@@ -50,7 +50,23 @@ class StandardCalendarActionManager::Private
                         mParent, SIGNAL( actionStateUpdated() ) );
       mGenericManager->createAllActions();
 
-      //TODO set generic action strings
+//       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "??? Properties..." ) );
+//       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected ???" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Account Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected account book." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setText( i18n( "&Delete Account" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected account.<p>The currently selected account will be deleted, along with all the calendars and events it contains.</p>" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "&Copy to Calendar" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setWhatsThis( i18n( "Copy the selected event to a different calendar." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "&Move to Calendar" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu  )->setWhatsThis( i18n( "Move the selected event to a different calendar." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setText( i18n( "&Delete Events" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected events." ) );
+
     }
 
     ~Private()
@@ -125,6 +141,108 @@ class StandardCalendarActionManager::Private
 
     void slotCreateEvent()
     {
+      if( mInterceptedActions.contains( StandardCalendarActionManager::CreateEvent ) )
+        return;
+    }
+
+    void slotMakeDefault()
+    {
+      if ( mInterceptedActions.contains( StandardCalendarActionManager::DefaultMake ) )
+        return;
+
+      if( mItemSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
+      if ( !index.isValid() )
+        return;
+
+      const Collection calendar = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      if ( !calendar.isValid() )
+        return;
+
+      //TODO impl
+    }
+
+    void slotRemoveDefault()
+    {
+      if ( mInterceptedActions.contains( StandardCalendarActionManager::DefaultMake ) )
+        return;
+
+      if( mItemSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
+      if ( !index.isValid() )
+        return;
+
+      const Collection calendar = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      if ( !calendar.isValid() )
+        return;
+
+      //TODO impl
+    }
+
+    void slotStartMaintenanceMode()
+    {
+      //TODO impl
+    }
+
+    void slotAddFavorite()
+    {
+      //TODO impl
+    }
+
+    void slotRemoveFavorite()
+    {
+      //TODO impl
+    }
+
+    void slotRenameFavorite()
+    {
+      //TODO impl
+    }
+
+    void slotEditEvent()
+    {
+      //TODO impl
+    }
+
+    void slotPublishItemInformation()
+    {
+      //TODO impl
+    }
+    void slotSendInvitations()
+    {
+      //TODO impl
+    }
+
+    void slotSendStatusUpdate()
+    {
+      //TODO impl
+    }
+
+    void slotSendCancellation()
+    {
+      //TODO impl
+    }
+
+    void slotSendAsICal()
+    {
+      //TODO impl
+    }
+
+    void slotMailFreeBusy()
+    {
+      //TODO impl
+    }
+
+    void slotUploadFeeBusy()
+    {
+      //TODO impl
+    }
+    void slotSaveAllAttachments()
+    {
       //TODO impl
     }
 
@@ -139,7 +257,7 @@ class StandardCalendarActionManager::Private
 };
 
 Akonadi::StandardCalendarActionManager::StandardCalendarActionManager( KActionCollection* actionCollection, QWidget* parent )
-  : QObject( actionCollection, parent ),
+  : QObject( parent ),
     d( new Private( actionCollection, parent, this ) )
 {
 
@@ -187,11 +305,161 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
       action->setText( i18n( "New &Event..." ) );
-      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
       action->setWhatsThis( i18n( "Create a new event" ) );
       d->mActions.insert( CreateEvent, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_event_create" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateEvent() ) );
+      break;
+    case DefaultRemove:
+      action = new KAction( d->mParentWidget );
+//       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Remove Default" ) );
+//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Remove the selected calendar as the default calendar. There can only be one default calendar at a time." ) );
+      d->mActions.insert( DefaultRemove, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_remove_default_calendar" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveDefault()) );
+      break;
+    case DefaultMake:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Make Default" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Make the selected calendar the default calendar, which will be loaded when the application starts. There can only be one default calendar at a time." ) );
+      d->mActions.insert( DefaultMake, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_make_default_calendar" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMakeDefault() ) );
+      break;
+    case StartMaintenanceMode:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Start Maintenance Mode" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Opens a bulk actions dialg, that allows for mass move, copy, delete, and toggler reminders and alarms actions." ) );
+      d->mActions.insert( StartMaintenanceMode, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "start_maintenance_mode" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotStartMaintenanceMode() ) );
+      break;
+    case FavoriteAdd:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Add Calendar to Favorites" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Adds the calendar to your list of favorites." ) );
+      d->mActions.insert( FavoriteAdd, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "add_favorite" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotAddFavorite() ) );
+      break;
+    case FavoriteRemove:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Remove Calendar from Favorites" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Removes the calendar from your list of favorites." ) );
+      d->mActions.insert( FavoriteRemove, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "remove_favorite" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveFavorite() ) );
+      break;
+    case FavoriteRename:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Rename Favorite" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Allows you to change the name of the favorite." ) );
+      d->mActions.insert( FavoriteRename, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "rename_favorite" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRenameFavorite() ) );
+      break;
+    case EventEdit:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Edit Event" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "Edit the selected event." ) );
+      d->mActions.insert( EventEdit, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "event_edit" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditEvent() ) );
+      break;
+    case PublishItemInformation:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Publish Item Information" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Publishes the items information." ) );
+      d->mActions.insert( PublishItemInformation, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "publish_item_information" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotPublishItemInformation() ) );
+      break;
+    case SendInvitations:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "Send &Invitations" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Send Invitations" ) );
+      d->mActions.insert( SendInvitations, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "send_invitations" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendInvitations() ) );
+      break;
+    case SendStatusUpdate:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "Send Status &Update" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Status Update" ) );
+      d->mActions.insert( SendStatusUpdate, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "send_status_update" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendStatusUpdate() ) );
+      break;
+    case SendCancellation:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "Send &Cancellation" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Send Cancellation" ) );
+      d->mActions.insert( SendCancellation, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "send_cancellation" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendCancellation() ) );
+      break;
+    case SendAsICal:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "Send as I&Cal" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Send As ICal" ) );
+      d->mActions.insert( SendAsICal, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "send_as_ical" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendAsICal() ) );
+      break;
+    case MailFreeBusy:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Mail Free/Busy" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Email Free/Busy information" ) );
+      d->mActions.insert( MailFreeBusy, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "mail_free_busy" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMailFreeBusy() ) );
+      break;
+    case UploadFeeBusy:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Upload Free/Busy" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Upload Free/Busy information to the groupware server." ) );
+      d->mActions.insert( UploadFeeBusy, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "upload_free_busy" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotUploadFeeBusy() ) );
+      break;
+    case SaveAllAttachments:
+      action = new KAction( d->mParentWidget );
+      //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
+      action->setText( i18n( "&Save All Attachments" ) );
+      //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+      action->setWhatsThis( i18n( "FIXME Save all attachments." ) );
+      d->mActions.insert( SaveAllAttachments, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "save_all_attachments" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSaveAllAttachments() ) );
       break;
     default:
       Q_ASSERT( false ); // should never happen
@@ -228,16 +496,6 @@ void StandardCalendarActionManager::interceptAction( StandardCalendarActionManag
     else
       d->mInterceptedActions.remove( type );
   }
-}
-
-Akonadi::Collection::List StandardCalendarActionManager::selectedCollections() const
-{
-  return d->mGenericManager->selectedCollections();
-}
-
-Akonadi::Item::List StandardCalendarActionManager::selectedItems() const
-{
-  return d->mGenericManager->selectedItems();
 }
 
 Akonadi::Collection::List StandardCalendarActionManager::selectedCollections() const

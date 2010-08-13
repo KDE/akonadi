@@ -52,7 +52,31 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      * Describes the supported actions.
      */
     enum Type {
+        //Always Available
         CreateEvent = StandardActionManager::LastType + 1, ///< Creates a new event
+//         FindEvent,
+        //Home -> Favorites
+        DefaultMake,
+        DefaultRemove,
+        StartMaintenanceMode,
+//         FilterView,
+//         ViewOptions,
+        FavoriteAdd,
+        FavoriteRemove,
+        FavoriteRename,
+        //Event Viewer -> Schedule
+        EventEdit,
+        PublishItemInformation,
+        SendInvitations,
+        SendStatusUpdate,
+        SendCancellation,
+//         RequestUpdate,
+//         RequestChange,
+        SendAsICal,
+        MailFreeBusy,
+        UploadFeeBusy,
+        //Event Viewer -> Attachments
+        SaveAllAttachments,
         LastType                                           ///< Marks last action
     };
 
@@ -134,7 +158,23 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void slotCreateEvent() )
+    Q_PRIVATE_SLOT( d, void slotCreateEvent() );
+    Q_PRIVATE_SLOT( d, void slotMakeDefault() );
+    Q_PRIVATE_SLOT( d, void slotRemoveDefault() );
+    Q_PRIVATE_SLOT( d, void slotStartMaintenanceMode() );
+    Q_PRIVATE_SLOT( d, void slotAddFavorite() );
+    Q_PRIVATE_SLOT( d, void slotRemoveFavorite() );
+    Q_PRIVATE_SLOT( d, void slotRenameFavorite() );
+    Q_PRIVATE_SLOT( d, void slotEditEvent() );
+    Q_PRIVATE_SLOT( d, void slotPublishItemInformation() );
+    Q_PRIVATE_SLOT( d, void slotSendInvitations() );
+    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() );
+    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() );
+    Q_PRIVATE_SLOT( d, void slotSendCancellation() );
+    Q_PRIVATE_SLOT( d, void slotSendAsICal() );
+    Q_PRIVATE_SLOT( d, void slotMailFreeBusy() );
+    Q_PRIVATE_SLOT( d, void slotUploadFeeBusy() );
+    Q_PRIVATE_SLOT( d, void slotSaveAllAttachments() );
     //@endcond
 };
 

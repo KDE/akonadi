@@ -21,6 +21,7 @@ add_subdirectory( kcal )
 add_subdirectory( kmime )
 add_subdirectory( contact )
 add_subdirectory( mail )
+add_subdirectory( calendar )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
