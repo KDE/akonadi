@@ -108,6 +108,13 @@ class StandardCalendarActionManager::Private
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                                        i18nc( "@title:window", "Delete Events?" ) );
 
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
+                                       i18nc( "@title:window", "Add Calendar" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not create calendar: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Calendar creation failed" ) );
+
       mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
                                        i18n( "Do you really want to delete calendar '%1'?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
@@ -117,6 +124,9 @@ class StandardCalendarActionManager::Private
                                        i18n( "Could not paste event: %1" ) );
       mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                                        i18n( "Paste failed" ) );
+
+      mGenericManager->setMimeTypeFilter( QStringList() << QLatin1String( "text/calendar" ) );
+      mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
     }
 
     ~Private()
