@@ -21,8 +21,6 @@
 #include <QtCore/QSettings>
 #include <QtCore/QString>
 
-#include "traceradaptor.h"
-
 #include "dbustracer.h"
 #include "filetracer.h"
 #include "nulltracer.h"
@@ -38,10 +36,6 @@ Tracer* Tracer::mSelf = 0;
 Tracer::Tracer() : mTracerBackend( 0 )
 {
   activateTracer( currentTracer() );
-
-  new TracerAdaptor( this );
-
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/tracing"), this, QDBusConnection::ExportAdaptors );
 }
 
 Tracer::~Tracer()
