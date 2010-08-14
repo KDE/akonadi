@@ -23,6 +23,7 @@
 #include "agentmanager.h"
 #include "../../libs/xdgbasedirs_p.h"
 #include "processcontrol.h"
+#include "akdebug.h"
 
 AgentInstance::AgentInstance(AgentManager * manager) :
     QObject( manager ),
@@ -47,8 +48,7 @@ bool AgentInstance::start( const AgentType &agentInfo )
   mType = agentInfo.identifier;
   const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
   if ( executable.isEmpty() ) {
-    mManager->tracer()->error( QLatin1String( "AgentInstanceInfo::start" ),
-                               QString::fromLatin1( "Unable to find agent executable '%1'" ).arg( agentInfo.exec ) );
+    akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
     return false;
   }
   mController = new Akonadi::ProcessControl( this );
@@ -83,9 +83,8 @@ bool AgentInstance::obtainAgentInterface()
     new org::freedesktop::Akonadi::Agent::Control( "org.freedesktop.Akonadi.Agent." + mIdentifier,
                                                    "/", QDBusConnection::sessionBus(), this );
   if ( !agentControlIface || !agentControlIface->isValid() ) {
-    mManager->tracer()->error( QLatin1String( "AgentInstance::obtainAgentInterface" ),
-      QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-          .arg( mIdentifier, agentControlIface ? agentControlIface->lastError().message() : "" ) );
+    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+              << ", error message:" << (agentControlIface? agentControlIface->lastError().message() : "");
 
     if ( agentControlIface )
       delete agentControlIface;
@@ -98,9 +97,8 @@ bool AgentInstance::obtainAgentInterface()
     new org::freedesktop::Akonadi::Agent::Status( "org.freedesktop.Akonadi.Agent." + mIdentifier,
                                                   "/", QDBusConnection::sessionBus(), this );
   if ( !agentStatusIface || !agentStatusIface->isValid() ) {
-    mManager->tracer()->error( QLatin1String( "AgentInstance::obtainAgentInterface" ),
-      QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-          .arg( mIdentifier, agentStatusIface ? agentStatusIface->lastError().message() : "" ) );
+    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+              << ", error message:" << (agentStatusIface ? agentStatusIface->lastError().message() : "");
 
     if ( agentStatusIface )
       delete agentStatusIface;
@@ -136,9 +134,8 @@ bool AgentInstance::obtainResourceInterface()
                                               "/", QDBusConnection::sessionBus(), this );
 
   if ( !resInterface || !resInterface->isValid() ) {
-    mManager->tracer()->error( QLatin1String( "AgentInstance::obtainResourceInterface" ),
-      QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-          .arg( mIdentifier, resInterface ? resInterface->lastError().message() : "" ) );
+    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+              << ", error message:" << (resInterface ? resInterface->lastError().message() : "");
 
     if ( resInterface )
       delete resInterface;
@@ -174,11 +171,8 @@ bool AgentInstance::obtainPreprocessorInterface()
   {
     // The agent likely doesn't export the preprocessor interface
     // or there is some D-Bus quirk that prevents us from accessing it.
-    mManager->tracer()->error(
-        QLatin1String( "AgentInstance::obtainPreprocessorInterface" ),
-        QString( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
-          .arg( mIdentifier, preProcessorInterface ? preProcessorInterface->lastError().message() : "" )
-      );
+    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+              << ", error message:" << (preProcessorInterface ? preProcessorInterface->lastError().message() : "");
 
     if ( preProcessorInterface )
       delete preProcessorInterface;

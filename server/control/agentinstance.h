@@ -23,7 +23,6 @@
 #include "controlinterface.h"
 #include "statusinterface.h"
 #include "resourceinterface.h"
-#include "tracerinterface.h"
 #include "preprocessorinterface.h"
 #include "searchinterface.h"
 

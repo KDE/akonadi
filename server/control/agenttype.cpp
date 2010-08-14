@@ -19,9 +19,9 @@
 
 #include "agenttype.h"
 #include "agentmanager.h"
-#include "tracerinterface.h"
 #include "libs/xdgbasedirs_p.h"
 #include "libs/capabilities_p.h"
+#include "akdebug.h"
 
 #include <QSettings>
 
@@ -64,13 +64,11 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   file.endGroup();
 
   if ( identifier.isEmpty() ) {
-    manager->tracer()->error( QLatin1String( "AgentType::readInfo" ),
-                             QString( "Agent desktop file '%1' contains empty identifier" ).arg( fileName ) );
+    akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty identifier";
     return false;
   }
   if ( exec.isEmpty() ) {
-    manager->tracer()->error( QLatin1String( "AgentType::readInfo" ),
-                    QString( "Agent desktop file '%1' contains empty Exec entry" ).arg( fileName ) );
+    akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty Exec entry";
     return false;
   }
 

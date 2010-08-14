@@ -27,7 +27,6 @@
 
 #include "agenttype.h"
 #include "agentinstance.h"
-#include "tracerinterface.h"
 
 class QDir;
 class QFileSystemWatcher;
@@ -69,8 +68,6 @@ class AgentManager : public QObject, protected QDBusContext
      * Returns the path of the config file.
      */
     static QString configPath( bool writeable );
-
-    org::freedesktop::Akonadi::Tracer* tracer() const { return mTracer; }
 
   public Q_SLOTS:
     /**
@@ -359,8 +356,6 @@ class AgentManager : public QObject, protected QDBusContext
      * Key is the instance identifier.
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
-
-    org::freedesktop::Akonadi::Tracer *mTracer;
 
     Akonadi::ProcessControl *mStorageController;
     QFileSystemWatcher *mAgentWatcher;

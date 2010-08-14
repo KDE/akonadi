@@ -50,8 +50,6 @@ AgentManager::AgentManager( QObject *parent )
   new AgentManagerInternalAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
 
-  mTracer = new org::freedesktop::Akonadi::Tracer( "org.freedesktop.Akonadi", "/tracing", QDBusConnection::sessionBus(), this );
-
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
@@ -181,8 +179,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
     instance->setIdentifier( QString::fromLatin1( "%1_%2" ).arg( identifier, QString::number( agentInfo.instanceCounter ) ) );
 
   if ( mAgentInstances.contains( instance->identifier() ) ) {
-    mTracer->warning( QLatin1String("AgentManager::createAgentInstance"),
-                      QString::fromLatin1( "Cannot create another instance of agent '%1'." ).arg( identifier ) );
+    akError() << Q_FUNC_INFO << "Cannot create another instance of agent" << identifier;
     return QString();
   }
 
@@ -204,8 +201,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
 void AgentManager::removeAgentInstance( const QString &identifier )
 {
   if ( !mAgentInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::removeAgentInstance" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    akError() << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
     return;
   }
 
@@ -213,8 +209,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   if ( instance->hasAgentInterface() ) {
     instance->cleanup();
   } else {
-    mTracer->error( QLatin1String( "AgentManager::removeAgentInstance" ),
-                    QString( "Agent instance '%1' has no interface!" ).arg( identifier ) );
+    akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
   }
 
   mAgentInstances.remove( identifier );
@@ -240,8 +235,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 QString AgentManager::agentInstanceType( const QString &identifier )
 {
   if ( !mAgentInstances.contains( identifier ) ) {
-    mTracer->warning( QLatin1String( "AgentManager::agentInstanceType" ),
-                      QString( "Agent instance with identifier '%1' does not exist" ).arg( identifier ) );
+    akError() << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
     return QString();
   }
 
@@ -394,9 +388,7 @@ void AgentManager::readPluginInfos( const QDir& directory )
     AgentType agentInfo;
     if ( agentInfo.load( fileName, this ) ) {
       if ( mAgents.contains( agentInfo.identifier ) ) {
-        mTracer->error( QLatin1String( "AgentManager::updatePluginInfos" ),
-                        QString( "Duplicated agent identifier '%1' from file '%2'" )
-                            .arg( agentInfo.identifier, fileName ) );
+        akError() << Q_FUNC_INFO << "Duplicated agent identifier" << agentInfo.identifier << "from file" << fileName;
         continue;
       }
 
@@ -447,8 +439,7 @@ void AgentManager::load()
     const QString instanceIdentifier = entries[ i ];
 
     if ( mAgentInstances.contains( instanceIdentifier ) ) {
-      mTracer->warning( QLatin1String( "AgentManager::load" ),
-                        QString( "Duplicated instance identifier '%1' found in agentsrc" ).arg( instanceIdentifier ) );
+      akError() << Q_FUNC_INFO << "Duplicated instance identifier" << instanceIdentifier << "found in agentsrc";
       continue;
     }
 
@@ -456,8 +447,7 @@ void AgentManager::load()
 
     const QString agentType = file.value( "AgentType" ).toString();
     if ( !mAgents.contains( agentType ) ) {
-      mTracer->warning( QLatin1String( "AgentManager::load" ),
-                        QString( "Reference to unknown agent type '%1' in agentsrc" ).arg( agentType ) );
+      akError() << Q_FUNC_INFO << "Reference to unknown agent type" << agentType << "in agentsrc";
       file.endGroup();
       continue;
     }
@@ -574,11 +564,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
 
     if( !preProcessorManager.isValid() )
     {
-      mTracer->warning(
-          QLatin1String( "AgentManager::serviceOwnerChanged" ),
-          QString( "Could not connect to PreprocessorManager via D-Bus: %1" )
-            .arg( preProcessorManager.lastError().message() )
-        );
+      akError() << Q_FUNC_INFO <<"Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError();
     } else {
       if ( newOwner.isEmpty() )
       {

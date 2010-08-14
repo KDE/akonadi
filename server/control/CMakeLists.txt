@@ -27,7 +27,6 @@ qt4_add_dbus_adaptor( control_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesk
 qt4_add_dbus_adaptor( control_SRCS ${Akonadi_SOURCE_DIR}/server/interfaces/org.freedesktop.Akonadi.ControlManager.xml controlmanager.h ControlManager )
 qt4_add_dbus_adaptor( control_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManagerInternal.xml agentmanager.h AgentManager )
 qt4_add_dbus_interfaces( control_SRCS
-  ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Tracer.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Status.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Search.xml
