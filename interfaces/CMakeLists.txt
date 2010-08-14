@@ -5,7 +5,10 @@ SET(DBUS_INTERFACE_XMLS
   org.freedesktop.Akonadi.Agent.Control.xml
   org.freedesktop.Akonadi.Agent.Status.xml
   org.freedesktop.Akonadi.Resource.xml
-  )
+  org.freedesktop.Akonadi.ControlManager.xml
+  org.freedesktop.Akonadi.Server.xml
+  org.freedesktop.Akonadi.TracerNotification.xml
+)
 
 install( FILES ${DBUS_INTERFACE_XMLS}
 DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
