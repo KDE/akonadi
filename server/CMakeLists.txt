@@ -18,8 +18,6 @@ include_directories( ${SOPRANO_INCLUDE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_SOURCE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 
-set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
-
 add_subdirectory( akonadictl )
 add_subdirectory( control )
 add_subdirectory( src )
