@@ -13,18 +13,12 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/nepomuk )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/shared )
+include_directories( ${Akonadi_SOURCE_DIR}/shared )
 include_directories( ${SOPRANO_INCLUDE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_SOURCE_DIR} )
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 
 set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
-
-set( AKONADI_SHARED_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akapplication.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
-)
 
 add_subdirectory( akonadictl )
 add_subdirectory( control )
