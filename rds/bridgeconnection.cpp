@@ -108,7 +108,7 @@ void DBusBridgeConnection::connectLocal()
       (static_cast <QLocalSocket*>(m_localSocket))->connectToServer( dbusPath );
     }
   }
-#elif _WIN32_WCE
+#elif defined(_WIN32_WCE)
     (static_cast <QTcpSocket*>(m_localSocket))->connectToHost("127.0.0.1",12434);
 #endif
 }
