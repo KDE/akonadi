@@ -22,10 +22,16 @@
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
 #include <QBuffer>
+#include <QDir>
 
 #include "storage/dbupdater.h"
 
 QTEST_MAIN( DbUpdaterTest )
+
+void DbUpdaterTest::initTestCase()
+{
+  Q_INIT_RESOURCE( akonadidb );
+}
 
 void DbUpdaterTest::testMysqlUpdateStatements()
 {
@@ -112,6 +118,11 @@ void DbUpdaterTest::testPsqlUpdateStatements()
   QCOMPARE( updateSets.value( 14 ).statements.count(), 2 );
   QCOMPARE( updateSets.value( 16 ).statements.count(), 11 );
   QCOMPARE( updateSets.value( 17 ).statements.count(), 0 );
+}
+
+void DbUpdaterTest::cleanupTestCase()
+{
+  Q_CLEANUP_RESOURCE( akonadidb );
 }
 
 #include "dbupdatertest.moc"

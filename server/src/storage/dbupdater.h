@@ -24,8 +24,6 @@
 #include <QtCore/QStringList>
 #include <QtSql/QSqlDatabase>
 
-#include "../akonadiprivate_export.h"
-
 class QDomElement;
 
 /**
@@ -49,7 +47,7 @@ class UpdateSet
 /**
   Updates the database schema.
 */
-class AKONADIPRIVATE_EXPORT DbUpdater
+class DbUpdater
 {
   public:
     /**

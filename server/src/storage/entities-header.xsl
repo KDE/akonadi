@@ -33,7 +33,7 @@
   </xsl:if>
   This class is implicitly shared.
 */
-class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
+class <xsl:value-of select="$className"/> : private Entity
 {
   friend class DataStore;
 
@@ -255,7 +255,7 @@ class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/> : private Entity
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
 
 // debug stream operator
-AKONADIPRIVATE_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
+QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonadi::<xsl:value-of select="$className"/>&amp; entity );
 </xsl:template>
 
 
@@ -268,7 +268,7 @@ AKONADIPRIVATE_EXPORT QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const Akonad
   <xsl:value-of select="comment"/>
 */
 </xsl:if>
-class AKONADIPRIVATE_EXPORT <xsl:value-of select="$className"/>
+class <xsl:value-of select="$className"/>
 {
   public:
     // SQL table information

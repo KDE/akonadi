@@ -25,8 +25,6 @@
 
 #include <QtNetwork/QLocalServer>
 
-#include "akonadiprivate_export.h"
-
 class QProcess;
 class IntervalCheck;
 
@@ -37,7 +35,7 @@ class CacheCleaner;
 class SearchManager;
 class ItemRetrievalThread;
 
-class AKONADIPRIVATE_EXPORT AkonadiServer: public QLocalServer
+class AkonadiServer: public QLocalServer
 {
     Q_OBJECT
 

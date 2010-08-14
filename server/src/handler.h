@@ -24,7 +24,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-#include "akonadiprivate_export.h"
 #include "global.h"
 #include "exception.h"
 
@@ -46,7 +45,7 @@ AKONADI_EXCEPTION_MAKE_INSTANCE( HandlerException );
 
 /**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
-class AKONADIPRIVATE_EXPORT Handler : public QObject {
+class Handler : public QObject {
     Q_OBJECT
 public:
     Handler();

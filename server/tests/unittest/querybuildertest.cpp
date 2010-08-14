@@ -21,8 +21,6 @@
 #include "querybuildertest.moc"
 
 #define QUERYBUILDER_UNITTEST
-// need to disable the DLL stuff
-#define AKONADIPRIVATE_EXPORT
 
 #include "storage/query.cpp"
 #include "storage/querybuilder.cpp"

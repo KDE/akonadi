@@ -47,6 +47,7 @@ void shutdownHandler( int )
 
 int main( int argc, char ** argv )
 {
+    Q_INIT_RESOURCE( akonadidb );
     AkApplication app( argc, argv );
     app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
 
@@ -82,5 +83,6 @@ int main( int argc, char ** argv )
 
     Akonadi::AkonadiServer::instance()->quit();
 
+    Q_CLEANUP_RESOURCE( akonadidb );
     return result;
 }

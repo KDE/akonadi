@@ -48,7 +48,7 @@ namespace Akonadi {
   There is only the usual status response indicating success or failure of the
   COPY command
  */
-class AKONADIPRIVATE_EXPORT Copy : public Handler
+class Copy : public Handler
 {
   Q_OBJECT
   public:

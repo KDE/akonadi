@@ -53,7 +53,7 @@ namespace Akonadi {
   There is only the usual status response indicating success or failure of the
   COLCOPY command
  */
-class AKONADIPRIVATE_EXPORT ColCopy : public Copy
+class ColCopy : public Copy
 {
   Q_OBJECT
   public:

@@ -23,7 +23,6 @@
 #include <entities.h>
 #include <handler.h>
 #include <scope.h>
-#include "akonadiprivate_export.h"
 
 template <typename T> class QStack;
 
@@ -82,7 +81,7 @@ namespace Akonadi {
 
   The ancestors property is encoded as a list of UID/RID pairs.
 */
-class AKONADIPRIVATE_EXPORT List : public Handler
+class List : public Handler
 {
   Q_OBJECT
 

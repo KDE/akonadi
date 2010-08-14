@@ -166,7 +166,7 @@ qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.Query.
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 
 
-automoc4_add_library( akonadiprivate SHARED ${libakonadiprivate_SRCS} )
+automoc4_add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
 
 target_link_libraries( akonadiprivate
   ${QT_QTCORE_LIBRARY}
@@ -188,8 +188,6 @@ set_target_properties( akonadiprivate PROPERTIES
                         SOVERSION ${AKONADI_VERSION_MAJOR}
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
-
-install( TARGETS akonadiprivate ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set( akonadiserver_bin_SRCS src/main.cpp
   ${AKONADI_SHARED_SOURCES} )

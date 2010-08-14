@@ -28,8 +28,10 @@ class DbUpdaterTest : public QObject
   Q_OBJECT
 
   private Q_SLOTS:
+    void initTestCase();
     void testMysqlUpdateStatements();
     void testPsqlUpdateStatements();
+    void cleanupTestCase();
 };
 
 #endif

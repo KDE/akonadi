@@ -21,7 +21,6 @@
 #define AKONADI_QUERYBUILDER_H
 
 #include "query.h"
-#include "../akonadiprivate_export.h"
 
 #include <QtCore/QPair>
 #include <QtCore/QString>
@@ -39,7 +38,7 @@ namespace Akonadi {
 /**
   Helper class to construct arbitrary SQL queries.
 */
-class AKONADIPRIVATE_EXPORT QueryBuilder
+class QueryBuilder
 {
   public:
     enum QueryType {

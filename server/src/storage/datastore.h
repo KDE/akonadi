@@ -28,7 +28,6 @@
 
 class QSqlQuery;
 
-#include "akonadiprivate_export.h"
 #include "entities.h"
 #include "notificationcollector.h"
 
@@ -86,7 +85,7 @@ Name=/home/foo/.local/share/akonadi/akonadi.db
   - StartServer: Start the database locally just for Akonadi instead of using an existing one
   - ServerPath: Path to the server executable
 */
-class AKONADIPRIVATE_EXPORT DataStore : public QObject
+class DataStore : public QObject
 {
     Q_OBJECT
   public:

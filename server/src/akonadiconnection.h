@@ -23,7 +23,6 @@
 #include <QtCore/QThread>
 #include <QtNetwork/QLocalSocket>
 
-#include "akonadiprivate_export.h"
 #include "entities.h"
 #include "global.h"
 
@@ -37,7 +36,7 @@ namespace Akonadi {
 /**
     An AkonadiConnection represents one connection of a client to the server.
 */
-class AKONADIPRIVATE_EXPORT AkonadiConnection : public QThread
+class AkonadiConnection : public QThread
 {
     Q_OBJECT
 public:

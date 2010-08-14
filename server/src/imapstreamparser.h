@@ -21,8 +21,6 @@
 #ifndef AKONADI_IMAPSTREAMPARSER_P_H
 #define AKONADI_IMAPSTREAMPARSER_P_H
 
-#include "akonadiprivate_export.h"
-
 #include "imapset_p.h"
 
 #include <QtCore/QByteArray>
@@ -44,7 +42,7 @@ namespace Akonadi {
 /**
   Parser for IMAP messages that operates on a local socket stream.
 */
-class AKONADIPRIVATE_EXPORT ImapStreamParser
+class ImapStreamParser
 {
   friend class ::ImapStreamParserTest;
 

@@ -27,8 +27,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "../akonadiprivate_export.h"
-
 class QDomElement;
 
 class DebugInterface
@@ -43,7 +41,7 @@ class DebugInterface
  * the file name of a template file and initializes the database
  * according to the rules in the template file.
  */
-class AKONADIPRIVATE_EXPORT DbInitializer
+class DbInitializer
 {
   public:
    typedef boost::shared_ptr<DbInitializer> Ptr;
