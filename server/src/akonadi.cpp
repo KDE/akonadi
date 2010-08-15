@@ -376,8 +376,8 @@ void AkonadiServer::startMysqlDatabaseProcess()
   const QString fileDataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
   const QString mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_install_db" ), mysqldSearchPath );
   akDebug() << "Found mysql_install_db: " << mMysqlInstallDbPath;
-  const QString mMysqlUpgradeDBPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysql_upgrade" ), mysqldSearchPath );
-  akDebug() << "Found mysql_upgrade: " << mMysqlUpgradeDBPath;
+  const QString mMysqlCheckPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqlcheck" ), mysqldSearchPath );
+  akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
 
   // generate config file
@@ -454,7 +454,7 @@ void AkonadiServer::startMysqlDatabaseProcess()
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
     const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1").arg(confFile) <<  QString::fromLatin1( "--datadir=%1/" ).arg( dataDir ); 
     QProcess::execute( mMysqlInstallDbPath, arguments );
-  } 
+  }
 
   // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
   if ( confUpdate ) {
@@ -475,11 +475,6 @@ void AkonadiServer::startMysqlDatabaseProcess()
     akError() << "executable:" << mysqldPath;
     akError() << "arguments:" << arguments;
     akFatal() << "process error:" << mDatabaseProcess->errorString();
-  }
-
-  if ( !mMysqlUpgradeDBPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
-    QProcess::execute( mMysqlUpgradeDBPath, arguments );
   }
 
   const QLatin1String initCon( "initConnection" );
@@ -507,6 +502,16 @@ void AkonadiServer::startMysqlDatabaseProcess()
     }
 
     if ( opened ) {
+
+      if ( !mMysqlCheckPath.isEmpty() ) {
+        const QStringList arguments = QStringList() << QLatin1String( "--check-upgrade" )
+          << QLatin1String( "--all-databases" )
+          << QLatin1String( "--auto-repair" )
+          << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+        int result = QProcess::execute( mMysqlCheckPath, arguments );
+        akDebug() << mMysqlCheckPath << arguments << "finished with code" << result;
+      }
+
       {
         QSqlQuery query( db );
         if ( !query.exec( QString::fromLatin1( "USE %1" ).arg( DbConfig::databaseName() ) ) ) {
