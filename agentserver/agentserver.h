@@ -23,6 +23,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 
+class QPluginLoader;
+
 namespace Akonadi {
 
 class AgentThread;
@@ -35,12 +37,13 @@ class AgentServer : public QObject
     explicit AgentServer( QObject * parent = 0 );
 
   public slots:
-    Q_SCRIPTABLE void startAgent( const QString &fileName, const QString &identifier );
+    Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &fileName );
     Q_SCRIPTABLE void stopAgent( const QString &identifier );
     Q_SCRIPTABLE void quit();
 
   private:
     QHash<QString, AgentThread*> m_agents;
+    QHash<QString, QPluginLoader*> m_pluginLoaders;
 };
   
 }

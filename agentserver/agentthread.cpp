@@ -22,28 +22,27 @@
 #include <QDebug>
 #include <QtCore/qpluginloader.h>
 #include <shared/akdebug.h>
+#include <qmetaobject.h>
 
 using namespace Akonadi;
 
-AgentThread::AgentThread(const QString& identifier, const QString& fileName, QObject* parent):
+AgentThread::AgentThread(const QString& identifier, QObject *factory, QObject* parent):
   QThread(parent),
   m_identifier(identifier),
-  m_fileName(fileName),
+  m_factory( factory ),
   m_instance(0)
 {
 }
 
 void AgentThread::run()
 {
-  qDebug() << Q_FUNC_INFO << m_fileName;
-  QPluginLoader loader( m_fileName );
-  if ( !loader.load() ) {
-    akError() << Q_FUNC_INFO << "Failed to load agent: " << loader.errorString();
-    return;
-  }
-
-  m_instance = loader.instance();
-  qDebug() << Q_FUNC_INFO << "Loading agent instance succeeded: " << m_instance;
+  qDebug() << Q_FUNC_INFO << "Loading agent instance succeeded: " << m_factory;
+  for ( int i = 0; i < m_factory->metaObject()->methodCount(); ++i )
+    qDebug() << m_factory->metaObject()->method( i ).signature();
+  if ( QMetaObject::invokeMethod( m_factory, "createInstance", Qt::DirectConnection, Q_RETURN_ARG(QObject*, m_instance), Q_ARG(QString, m_identifier) ) )
+    qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
+  else
+    qDebug() << Q_FUNC_INFO << "agent instance creation failed";
   exec();
 }
 

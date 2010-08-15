@@ -27,14 +27,14 @@ namespace Akonadi {
 class AgentThread : public QThread {
   Q_OBJECT
   public:
-    AgentThread(const QString &identifier, const QString &fileName, QObject* parent = 0);
+    AgentThread(const QString &identifier, QObject* factory, QObject* parent = 0);
 
   protected:
     void run();
 
   private:
     QString m_identifier;
-    QString m_fileName;
+    QObject *m_factory;
     QObject *m_instance;
 };
 

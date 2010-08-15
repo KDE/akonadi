@@ -21,10 +21,12 @@
 #include "agentthread.h"
 
 #include "libs/protocol_p.h"
+#include "shared/akdebug.h"
 
 #include <QtCore/QDebug>
 #include <QtDBus/QDBusConnection>
 #include <QtCore/QCoreApplication>
+#include <QtCore/qpluginloader.h>
 
 using namespace Akonadi;
 
@@ -33,10 +35,23 @@ AgentServer::AgentServer(QObject* parent): QObject(parent)
   QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH, this, QDBusConnection::ExportScriptableSlots );
 }
 
-void AgentServer::startAgent(const QString& fileName, const QString& identifier)
+void AgentServer::startAgent(const QString& identifier, const QString& fileName)
 {
   qDebug() << Q_FUNC_INFO << fileName << identifier;
-  AgentThread* thread = new AgentThread( fileName, identifier, this );
+  QPluginLoader *loader = 0;
+  if ( m_pluginLoaders.contains( fileName ) ) {
+    loader = m_pluginLoaders.value( fileName );
+  } else {
+    loader = new QPluginLoader( fileName, this );
+    if ( !loader->load() ) {
+      akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
+      return;
+    }
+    m_pluginLoaders.insert( fileName, loader );
+  }
+  Q_ASSERT( loader->isLoaded() );
+
+  AgentThread* thread = new AgentThread( identifier, loader->instance(), this );
   m_agents.insert( identifier, thread );
   thread->start();
 }
