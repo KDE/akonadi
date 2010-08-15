@@ -38,6 +38,7 @@ set( akonadikde_LIB_SRC
   entity.cpp # keep it at top to not break enable-final
   agentactionmanager.cpp
   agentbase.cpp
+  agentfactory.cpp
   agentfilterproxymodel.cpp
   agentinstance.cpp
   agentinstancecreatejob.cpp
@@ -225,6 +226,7 @@ install( FILES
   akonadi_export.h
   agentactionmanager.h
   agentbase.h
+  agentfactory.h
   agentfilterproxymodel.h
   agentinstance.h
   agentinstancecreatejob.h

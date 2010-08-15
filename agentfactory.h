@@ -1,0 +1,103 @@
+/*
+    This file is part of akonadiresources.
+
+    Copyright (c) 2006 Till Adam <adam@kde.org>
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#ifndef AKONADI_AGENTFACTORY_H
+#define AKONADI_AGENTFACTORY_H
+
+#include "akonadi_export.h"
+#include "agentbase.h"
+
+#include <QtCore/QObject>
+
+namespace Akonadi {
+
+/**
+ * Factory base class for in-process agents.
+ * @see AKONADI_AGENT_FACTORY()
+ * @internal
+ */
+class AKONADI_EXPORT AgentFactoryBase : public QObject
+{
+  Q_OBJECT
+  public:
+    /**
+     * Creates a new agent factory.
+     * Executed in the main thread, performs KDE infrastructure setup.
+     * @param catalogName The translation catalog of this resource.
+     * @param parent The parent object.
+     */
+    explicit AgentFactoryBase(const char* catalogName, QObject* parent = 0);
+
+  public Q_SLOTS:
+    /**
+     * Creates a new agent instace with the given identifier.
+     */
+    virtual QObject* createInstance( const QString &identifier ) const = 0;
+};
+
+/**
+ * Factory for in-process agents.
+ * @see AKONADI_AGENT_FACTORY()
+ * @internal
+ */
+template <typename T>
+class AgentFactory : public AgentFactoryBase
+{
+  public:
+    /** reimplemented */
+    explicit AgentFactory(const char* catalogName, QObject* parent = 0) :
+      AgentFactoryBase( catalogName, parent )
+    {}
+
+    QObject* createInstance(const QString& identifier) const
+    {
+      T* instance = new T( identifier );
+
+      // check if T also inherits AgentBase::Observer and
+      // if it does, automatically register it on itself
+      Akonadi::AgentBase::Observer *observer = dynamic_cast<Akonadi::AgentBase::Observer*>( instance );
+      if ( observer != 0 )
+        instance->registerObserver( observer );
+
+      return instance;
+    }
+};
+  
+}
+
+#ifndef AKONADI_AGENT_FACTORY
+/**
+ * Macro to create an agent factory for in-process agents.
+ * @param agentClass class name of the agent type this factory should create.
+ * @param catalogName name of the translation catalog of this agent type.
+ */
+#define AKONADI_AGENT_FACTORY( agentClass, catalogName ) \
+class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
+{ \
+  public: \
+    explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {} \
+}; \
+Q_EXPORT_PLUGIN2( # catalogName, agentClass ## Factory )
+
+#endif
+
+#endif
