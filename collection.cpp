@@ -111,8 +111,10 @@ QStringList Collection::contentMimeTypes() const
 void Collection::setContentMimeTypes( const QStringList & types )
 {
   Q_D( Collection );
-  d->contentTypes = types;
-  d->contentTypesChanged = true;
+  if ( d->contentTypes != types ) {
+    d->contentTypes = types;
+    d->contentTypesChanged = true;
+  }
 }
 
 Collection::Id Collection::parent() const
