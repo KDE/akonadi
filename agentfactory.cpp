@@ -23,16 +23,36 @@
 #include "agentfactory.h"
 
 #include <klocale.h>
+#include <QThreadStorage>
+#include <QtCore/QThread>
+
+QThreadStorage<KComponentData*> s_agentComponentDatas;
 
 using namespace Akonadi;
 
-AgentFactoryBase::AgentFactoryBase(const char* catalogName, QObject* parent):
-  QObject( parent )
+class Akonadi::AgentFactoryBasePrivate
 {
+  public:
+    QString catalogName;
+};
+
+AgentFactoryBase::AgentFactoryBase(const char* catalogName, QObject* parent):
+  QObject( parent ), d( new AgentFactoryBasePrivate )
+{
+  d->catalogName = QString::fromLatin1( catalogName );
   if ( !KGlobal::hasMainComponent() )
     new KComponentData( "AkoanadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
 
-  KGlobal::locale()->insertCatalog( QLatin1String( catalogName ) );
+  KGlobal::locale()->insertCatalog( d->catalogName );
 }
+
+void AgentFactoryBase::createComponentData(const QString& identifier) const
+{
+  Q_ASSERT( !s_agentComponentDatas.hasLocalData() );
+  Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
+  s_agentComponentDatas.setLocalData( new KComponentData( identifier.toLatin1(), d->catalogName.toLatin1(),
+                                                          KComponentData::SkipMainComponentRegistration ) );
+}
+
 
 #include "agentfactory.moc"

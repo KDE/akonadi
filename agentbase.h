@@ -406,6 +406,16 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     QString agentName() const;
 
+    /**
+     * Returns the component data object for this agent instance.
+     * In case of stand-alone agents this is identical to KGlobal::mainComponent().
+     * In case of in-process agents there is one component data object
+     * per agent instance thread.
+     * This method provides valid results even when called in the agent ctor.
+     * @since 4.6
+     */
+    static KComponentData componentData();
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.

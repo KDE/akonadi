@@ -722,5 +722,15 @@ void AgentBase::reconfigure()
   emit reloadConfiguration();
 }
 
+extern QThreadStorage<KComponentData*> s_agentComponentDatas;
+
+KComponentData AgentBase::componentData()
+{
+  if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
+    return KGlobal::mainComponent();
+  Q_ASSERT( s_agentComponentDatas.hasLocalData() );
+  return *(s_agentComponentDatas.localData());
+}
+
 #include "agentbase.moc"
 #include "agentbase_p.moc"

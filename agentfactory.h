@@ -30,10 +30,13 @@
 
 namespace Akonadi {
 
+class AgentFactoryBasePrivate;
+ 
 /**
  * Factory base class for in-process agents.
  * @see AKONADI_AGENT_FACTORY()
  * @internal
+ * @since 4.6
  */
 class AKONADI_EXPORT AgentFactoryBase : public QObject
 {
@@ -52,12 +55,19 @@ class AKONADI_EXPORT AgentFactoryBase : public QObject
      * Creates a new agent instace with the given identifier.
      */
     virtual QObject* createInstance( const QString &identifier ) const = 0;
+
+  protected:
+    void createComponentData( const QString &identifier ) const;
+
+  private:
+    AgentFactoryBasePrivate * const d;
 };
 
 /**
  * Factory for in-process agents.
  * @see AKONADI_AGENT_FACTORY()
  * @internal
+ * @since 4.6
  */
 template <typename T>
 class AgentFactory : public AgentFactoryBase
@@ -70,6 +80,7 @@ class AgentFactory : public AgentFactoryBase
 
     QObject* createInstance(const QString& identifier) const
     {
+      createComponentData( identifier );
       T* instance = new T( identifier );
 
       // check if T also inherits AgentBase::Observer and
@@ -89,6 +100,7 @@ class AgentFactory : public AgentFactoryBase
  * Macro to create an agent factory for in-process agents.
  * @param agentClass class name of the agent type this factory should create.
  * @param catalogName name of the translation catalog of this agent type.
+ * @since 4.6
  */
 #define AKONADI_AGENT_FACTORY( agentClass, catalogName ) \
 class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
