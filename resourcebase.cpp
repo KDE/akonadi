@@ -72,8 +72,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     {
       Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
-
-      QDBusConnection::sessionBus().registerObject( QLatin1String( "/Debug" ), this, QDBusConnection::ExportScriptableSlots );
     }
 
     Q_DECLARE_PUBLIC( ResourceBase )
@@ -179,6 +177,8 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
+
+  QDBusConnection::sessionBus().registerObject( dbusPathPrefix() + QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
 }

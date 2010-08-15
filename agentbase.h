@@ -416,6 +416,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     static KComponentData componentData();
 
+    /**
+     * Returns the path prefix to use for registering objects of this agent on D-Bus.
+     * Do not register objects outside of this path to avoid clashes with other agents
+     * running in the same process.
+     * The path does not end with a trailing '/'.
+     * @since 4.6
+     */
+    QString dbusPathPrefix() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the agent has changed.

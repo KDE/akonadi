@@ -48,6 +48,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+//#define EXPERIMENTAL_INPROCESS_AGENTS 1
+
 using namespace Akonadi;
 
 static AgentBase *sAgentBase = 0;
@@ -179,7 +181,11 @@ void AgentBasePrivate::init()
 
   new Akonadi__ControlAdaptor( q );
   new Akonadi__StatusAdaptor( q );
-  if ( !QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
+#ifndef EXPERIMENTAL_INPROCESS_AGENTS
+  if ( !QDBusConnection::sessionBus().registerObject( q->dbusPathPrefix() + QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
+#else
+  if ( !QDBusConnection::sessionBus().registerObject( q->dbusPathPrefix(), q, QDBusConnection::ExportAdaptors ) )
+#endif
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
@@ -730,6 +736,16 @@ KComponentData AgentBase::componentData()
     return KGlobal::mainComponent();
   Q_ASSERT( s_agentComponentDatas.hasLocalData() );
   return *(s_agentComponentDatas.localData());
+}
+
+QString AgentBase::dbusPathPrefix() const
+{
+#ifndef EXPERIMENTAL_INPROCESS_AGENTS
+  return QString();
+#else
+  Q_D( const AgentBase );
+  return QString::fromLatin1( "/%1" ).arg( d->mId );
+#endif
 }
 
 #include "agentbase.moc"
