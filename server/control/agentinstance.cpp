@@ -78,9 +78,9 @@ bool AgentInstance::obtainAgentInterface()
   delete mAgentStatusInterface;
 
   mAgentControlInterface =
-    findInterface<org::freedesktop::Akonadi::Agent::Control>( "org.freedesktop.Akonadi.Agent", "/" );
+    findInterface<org::freedesktop::Akonadi::Agent::Control>( "org.freedesktop.Akonadi.Agent" );
   mAgentStatusInterface =
-    findInterface<org::freedesktop::Akonadi::Agent::Status>( "org.freedesktop.Akonadi.Agent", "/" );
+    findInterface<org::freedesktop::Akonadi::Agent::Status>( "org.freedesktop.Akonadi.Agent" );
 
   if ( !mAgentControlInterface || !mAgentStatusInterface )
     return false;
@@ -102,7 +102,7 @@ bool AgentInstance::obtainResourceInterface()
 {
   delete mResourceInterface;
   mResourceInterface =
-    findInterface<org::freedesktop::Akonadi::Resource>( "org.freedesktop.Akonadi.Resource", "/" );
+    findInterface<org::freedesktop::Akonadi::Resource>( "org.freedesktop.Akonadi.Resource" );
 
   if ( !mResourceInterface )
     return false;
@@ -116,7 +116,7 @@ bool AgentInstance::obtainPreprocessorInterface()
 {
   delete mPreprocessorInterface;
   mPreprocessorInterface =
-    findInterface<org::freedesktop::Akonadi::Preprocessor>( "org.freedesktop.Akonadi.Preprocessor", "/" );
+    findInterface<org::freedesktop::Akonadi::Preprocessor>( "org.freedesktop.Akonadi.Preprocessor" );
   return mPreprocessorInterface;
 }
 
@@ -222,16 +222,40 @@ void AgentInstance::restartWhenIdle()
 template <typename T>
 T* AgentInstance::findInterface(const char* service, const char* path)
 {
-  T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( service ).arg( mIdentifier ),
-                     QLatin1String( path ), QDBusConnection::sessionBus(), this );
+  const QString prefix = QLatin1String( "/" ) + mIdentifier;
+  QStringList paths;
+  if ( !path )
+    paths.append( prefix );
+  else
+    paths.append( prefix + QString::fromLatin1( path ) );
 
-  if ( !iface || !iface->isValid() ) {
-    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (iface ? iface->lastError().message() : "");
-    delete iface;
-    return 0;
+  // legacy search paths
+  if ( path )
+    paths.append( QString::fromLatin1( path ) );
+  paths.append( QLatin1String( "/" ) );
+
+  foreach ( const QString &p, paths ) {
+    // QDBusAbstractInterface is not clever enough to immediately detect if a path actually exists
+    QDBusInterface pathChecker( QString::fromLatin1( "%1.%2" ).arg( service ).arg( mIdentifier ),
+                                p, QLatin1String( "org.freedesktop.DBus.Introspectable" ),
+                                QDBusConnection::sessionBus() );
+    QDBusReply<QString> result = pathChecker.call( QDBus::BlockWithGui, "Introspect" );
+    if ( !result.isValid() )
+      continue;
+    
+    T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( service ).arg( mIdentifier ),
+                       p, QDBusConnection::sessionBus(), this );
+
+    if ( !iface->isValid() ) {
+      akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+        << "in path" << p << ", error message:" << iface->lastError().message();
+      delete iface;
+      continue;
+    }
+    return iface;
   }
-  return iface;
+  akError() << Q_FUNC_INFO << "Failed to obtain interface " << T::staticInterfaceName() << "for agent" << mIdentifier;
+  return 0;
 }
 
 
