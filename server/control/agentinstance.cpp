@@ -76,49 +76,23 @@ bool AgentInstance::obtainAgentInterface()
 {
   delete mAgentControlInterface;
   delete mAgentStatusInterface;
-  mAgentControlInterface = 0;
-  mAgentStatusInterface = 0;
 
-  org::freedesktop::Akonadi::Agent::Control *agentControlIface =
-    new org::freedesktop::Akonadi::Agent::Control( "org.freedesktop.Akonadi.Agent." + mIdentifier,
-                                                   "/", QDBusConnection::sessionBus(), this );
-  if ( !agentControlIface || !agentControlIface->isValid() ) {
-    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (agentControlIface? agentControlIface->lastError().message() : "");
+  mAgentControlInterface =
+    findInterface<org::freedesktop::Akonadi::Agent::Control>( "org.freedesktop.Akonadi.Agent", "/" );
+  mAgentStatusInterface =
+    findInterface<org::freedesktop::Akonadi::Agent::Status>( "org.freedesktop.Akonadi.Agent", "/" );
 
-    if ( agentControlIface )
-      delete agentControlIface;
-
+  if ( !mAgentControlInterface || !mAgentStatusInterface )
     return false;
-  }
-  mAgentControlInterface = agentControlIface;
 
-  org::freedesktop::Akonadi::Agent::Status *agentStatusIface =
-    new org::freedesktop::Akonadi::Agent::Status( "org.freedesktop.Akonadi.Agent." + mIdentifier,
-                                                  "/", QDBusConnection::sessionBus(), this );
-  if ( !agentStatusIface || !agentStatusIface->isValid() ) {
-    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (agentStatusIface ? agentStatusIface->lastError().message() : "");
+  mSearchInterface =
+    findInterface<org::freedesktop::Akonadi::Agent::Search>( "org.freedesktop.Akonadi.Agent", "/Search" );
 
-    if ( agentStatusIface )
-      delete agentStatusIface;
-
-    return false;
-  }
-  mAgentStatusInterface = agentStatusIface;
-
-  mSearchInterface = new org::freedesktop::Akonadi::Agent::Search( "org.freedesktop.Akonadi.Agent." + mIdentifier,
-                                                                   "/Search", QDBusConnection::sessionBus(), this );
-  if ( !mSearchInterface || !mSearchInterface->isValid() ) {
-    delete mSearchInterface;
-    mSearchInterface = 0;
-  }
-
-  connect( agentStatusIface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)) );
-  connect( agentStatusIface, SIGNAL(percent(int)), SLOT(percentChanged(int)) );
-  connect( agentStatusIface, SIGNAL(warning(QString)), SLOT(warning(QString)) );
-  connect( agentStatusIface, SIGNAL(error(QString)), SLOT(error(QString)) );
-  connect( agentStatusIface, SIGNAL(onlineChanged(bool)), SLOT(onlineChanged(bool)) );
+  connect( mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)) );
+  connect( mAgentStatusInterface, SIGNAL(percent(int)), SLOT(percentChanged(int)) );
+  connect( mAgentStatusInterface, SIGNAL(warning(QString)), SLOT(warning(QString)) );
+  connect( mAgentStatusInterface, SIGNAL(error(QString)), SLOT(error(QString)) );
+  connect( mAgentStatusInterface, SIGNAL(onlineChanged(bool)), SLOT(onlineChanged(bool)) );
 
   refreshAgentStatus();
   return true;
@@ -127,62 +101,23 @@ bool AgentInstance::obtainAgentInterface()
 bool AgentInstance::obtainResourceInterface()
 {
   delete mResourceInterface;
-  mResourceInterface = 0;
+  mResourceInterface =
+    findInterface<org::freedesktop::Akonadi::Resource>( "org.freedesktop.Akonadi.Resource", "/" );
 
-  org::freedesktop::Akonadi::Resource *resInterface =
-    new org::freedesktop::Akonadi::Resource( "org.freedesktop.Akonadi.Resource." + mIdentifier,
-                                              "/", QDBusConnection::sessionBus(), this );
-
-  if ( !resInterface || !resInterface->isValid() ) {
-    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (resInterface ? resInterface->lastError().message() : "");
-
-    if ( resInterface )
-      delete resInterface;
-
+  if ( !mResourceInterface )
     return false;
-  }
 
-  connect( resInterface, SIGNAL(nameChanged(QString)), SLOT(resourceNameChanged(QString)) );
-  mResourceInterface = resInterface;
-
+  connect( mResourceInterface, SIGNAL(nameChanged(QString)), SLOT(resourceNameChanged(QString)) );
   refreshResourceStatus();
   return true;
 }
 
 bool AgentInstance::obtainPreprocessorInterface()
 {
-  // Cleanup if it was already present
-  if( mPreprocessorInterface )
-  {
-    delete mPreprocessorInterface;
-    mPreprocessorInterface = 0;
-  }
-
-  org::freedesktop::Akonadi::Preprocessor * preProcessorInterface =
-    new org::freedesktop::Akonadi::Preprocessor(
-        "org.freedesktop.Akonadi.Preprocessor." + mIdentifier,
-        "/",
-        QDBusConnection::sessionBus(),
-        this
-      );
-
-  if ( !preProcessorInterface || !preProcessorInterface->isValid() )
-  {
-    // The agent likely doesn't export the preprocessor interface
-    // or there is some D-Bus quirk that prevents us from accessing it.
-    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (preProcessorInterface ? preProcessorInterface->lastError().message() : "");
-
-    if ( preProcessorInterface )
-      delete preProcessorInterface;
-
-    return false;
-  }
-
-  mPreprocessorInterface = preProcessorInterface;
-
-  return true;
+  delete mPreprocessorInterface;
+  mPreprocessorInterface =
+    findInterface<org::freedesktop::Akonadi::Preprocessor>( "org.freedesktop.Akonadi.Preprocessor", "/" );
+  return mPreprocessorInterface;
 }
 
 void AgentInstance::statusChanged(int status, const QString & statusMsg)
@@ -283,5 +218,21 @@ void AgentInstance::restartWhenIdle()
     quit();
   }
 }
+
+template <typename T>
+T* AgentInstance::findInterface(const char* service, const char* path)
+{
+  T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( service ).arg( mIdentifier ),
+                     QLatin1String( path ), QDBusConnection::sessionBus(), this );
+
+  if ( !iface || !iface->isValid() ) {
+    akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
+              << ", error message:" << (iface ? iface->lastError().message() : "");
+    delete iface;
+    return 0;
+  }
+  return iface;
+}
+
 
 #include "agentinstance.moc"

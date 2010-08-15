@@ -100,6 +100,9 @@ class AgentInstance : public QObject
     void errorHandler( const QDBusError &error );
 
   private:
+    template <typename T> T* findInterface( const char* service, const char* path );
+
+  private:
     QString mIdentifier;
     QString mType;
     AgentManager *mManager;
