@@ -493,6 +493,7 @@ class StandardActionManager::Private
 
     void slotCollectionProperties()
     {
+#ifndef Q_OS_WINCE	    
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
@@ -500,7 +501,6 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-#ifndef Q_OS_WINCE
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, parentWidget );
       dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( collection.name() ) );
       dlg->show();
