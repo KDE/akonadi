@@ -81,6 +81,8 @@ class StandardMailActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected account<p>The currently selected account will be deleted, along with all the emails it contains.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Account Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected account." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Update Account" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setWhatsThis( i18n( "Updates the content of all folders of the account." ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "New Folder" ) );

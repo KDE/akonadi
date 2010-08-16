@@ -74,6 +74,8 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Address Book Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Update Address Book" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setWhatsThis( i18n( "Updates the content of all folders of the address book." ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "New Address Book Folder" ) );

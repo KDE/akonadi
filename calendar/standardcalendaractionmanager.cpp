@@ -76,6 +76,8 @@ class StandardCalendarActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected calendar<p>The currently selected calendar will be deleted, along with all the events, todos and journals it contains.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Calendar Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected calendar." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Update Calendar" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setWhatsThis( i18n( "Updates the content of all folders of the calendar." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "&Copy to Calendar" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setWhatsThis( i18n( "Copy the selected event to a different calendar." ) );
       mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "&Move to Calendar" ) );
