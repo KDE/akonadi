@@ -1,5 +1,5 @@
 /*
-    This file is part of Akonadi Contact.
+    This file is part of Akonadi Mail.
 
     Copyright (c) 2009 - 2010 Tobias Koenig <tokoe@kde.org>
 
@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_STANDARDCONTACTACTIONMANAGER_H
-#define AKONADI_STANDARDCONTACTACTIONMANAGER_H
+#ifndef AKONADI_STANDARDMAILACTIONMANAGER_H
+#define AKONADI_STANDARDMAILACTIONMANAGER_H
 
 #include "akonadi-kmime_export.h"
 
@@ -62,7 +62,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
     };
 
     /**
-     * Creates a new standard contact action manager.
+     * Creates a new standard mail action manager.
      *
      * @param actionCollection The action collection to operate on.
      * @param parent The parent widget.
@@ -70,7 +70,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
     explicit StandardMailActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
 
     /**
-     * Destroys the standard contact action manager.
+     * Destroys the standard mail action manager.
      */
     ~StandardMailActionManager();
 
