@@ -26,7 +26,11 @@ template <typename Ex>
 class Exception : Ex {
 public:
     explicit Exception( const QString & msg )
+#ifdef Q_OS_WINCE
+        : Ex( std::string( qPrintable(msg) ) ) {}
+#else
         : Ex( msg.toStdString() ) {}
+#endif
     ~Exception() throw() {}
 };
 
