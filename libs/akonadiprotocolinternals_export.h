@@ -23,7 +23,10 @@
 #include <QtCore/QtGlobal>
 
 #ifndef AKONADIPROTOCOLINTERNALS_EXPORT
-# if defined(MAKE_AKONADIPROTOCOLINTERNALS_LIB)
+# if defined(AKONADI_STATIC_LIBS)
+   /* No export/import for static libraries */
+#  define AKONADIPROTOCOLINTERNALS_EXPORT
+# elif defined(MAKE_AKONADIPROTOCOLINTERNALS_LIB)
    /* We are building this library */
 #  define AKONADIPROTOCOLINTERNALS_EXPORT Q_DECL_EXPORT
 # else

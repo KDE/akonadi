@@ -84,6 +84,10 @@ include(${QT_USE_FILE})
 if(WINCE)
     SET(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
     SET(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
+    set(LIBRARY_TYPE STATIC)
+    add_definitions(-DAKONADI_STATIC_LIBS)
+else(WINCE)
+    set(LIBRARY_TYPE SHARED)
 endif(WINCE)
 
 #### Soprano ####
