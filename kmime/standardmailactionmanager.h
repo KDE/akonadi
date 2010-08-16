@@ -147,6 +147,23 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      */
     Akonadi::Item::List selectedItems() const;
 
+    /**
+     * Sets the favorite collections model based on which the collection
+     * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
+     * will be disabled.
+     *
+     */
+    void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
+
+    /**
+     * Sets the favorite collection selection model based on which the favorite
+     * collection related actions should operate. If none is set, all favorite modifications
+     * actions will be disabled.
+     *
+     */
+    void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
+
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
