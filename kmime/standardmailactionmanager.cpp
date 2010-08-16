@@ -25,6 +25,7 @@
 #include "movetotrashcommand_p.h"
 #include "markascommand_p.h"
 
+#include <akonadi/subscriptiondialog_p.h>
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -129,6 +130,8 @@ class StandardMailActionManager::Private
 
       mGenericManager->setMimeTypeFilter( QStringList() << QLatin1String( "message/rfc822" ) );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
+      mGenericManager->interceptAction( Akonadi::StandardActionManager::ManageLocalSubscriptions );
+      connect( mGenericManager->action( StandardActionManager::ManageLocalSubscriptions ), SIGNAL( triggered( bool ) ), mParent, SLOT( slotMailLocalSubscription() ) );
     }
 
     ~Private()
@@ -333,6 +336,15 @@ class StandardMailActionManager::Private
     {
       QAction *action = dynamic_cast<QAction*>( mParent->sender() );
       qDebug() << Q_FUNC_INFO << action->data();
+    }
+
+    void slotMailLocalSubscription()
+    {
+#ifndef Q_OS_WINCE
+      SubscriptionDialog* dlg = new SubscriptionDialog( QLatin1String( "message/rfc822" ), mParentWidget );
+      dlg->show();
+#endif
+
     }
 
     KActionCollection *mActionCollection;

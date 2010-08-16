@@ -27,6 +27,7 @@
 #include "control.h"
 
 #include <krecursivefilterproxymodel.h>
+#include <recursivecollectionfilterproxymodel.h>
 #include <kdebug.h>
 
 using namespace Akonadi;
@@ -92,11 +93,25 @@ class SubscriptionDialog::Private
     Ui::SubscriptionDialog ui;
     SubscriptionModel* model;
     KRecursiveFilterProxyModel *filterTreeViewModel;
+    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
+
 };
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
     KDialog( parent ),
     d( new Private( this ) )
+{
+  init();
+}
+
+SubscriptionDialog::SubscriptionDialog(const QString& mimetype, QWidget * parent) :
+    KDialog( parent ),
+    d( new Private( this ) )
+{
+  init( mimetype );
+}
+
+void SubscriptionDialog::init( const QString& mimetype )
 {
   enableButtonOk( false );
   d->ui.setupUi( mainWidget() );
@@ -114,7 +129,17 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
   d->filterTreeViewModel->setDynamicSortFilter( true );
   d->filterTreeViewModel->setSourceModel( d->model );
   d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
-  d->ui.collectionView->setModel( d->filterTreeViewModel );
+
+  d->filterRecursiveCollectionFilter = new Akonadi::RecursiveCollectionFilterProxyModel( this );
+  if ( !mimetype.isEmpty() )
+    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
+
+  d->filterRecursiveCollectionFilter->setSourceModel( d->filterTreeViewModel );
+
+
+  d->ui.collectionView->setModel( d->filterRecursiveCollectionFilter );
+
+
 
   d->setupChangeView( d->ui.subscribeView, true );
   d->setupChangeView( d->ui.unsubscribeView, false );
