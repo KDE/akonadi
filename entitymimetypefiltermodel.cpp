@@ -214,6 +214,13 @@ bool EntityMimeTypeFilterModel::hasChildren(const QModelIndex &parent) const
   if (!sourceModel())
     return false;
 
+  // QSortFilterProxyModel implementation is buggy in that it emits rowsAboutToBeInserted etc
+  // only after the source model has emitted rowsInserted, instead of emitting it when the
+  // source model emits rowsAboutToBeInserted. That means that the source and the proxy are out
+  // of sync around the time of insertions, so we can't use the optimization below.
+  return rowCount(parent) > 0;
+#if 0
+
   if ( !parent.isValid() )
     return sourceModel()->hasChildren(parent);
 
@@ -233,6 +240,7 @@ bool EntityMimeTypeFilterModel::hasChildren(const QModelIndex &parent) const
     }
   }
   return false;
+#endif
 }
 
 bool EntityMimeTypeFilterModel::canFetchMore( const QModelIndex &parent ) const
