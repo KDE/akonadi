@@ -96,7 +96,8 @@ static const struct {
   { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false },
   { "akonadi_resource_create", I18N_NOOP( "Create Resource" ), "folder-new", 0, SLOT( slotCreateResource() ), false },
   { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), false },
-  { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), false }
+  { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), false },
+  { "akonadi_resource_synchronize", I18N_NOOP( "Synchronize Resource" ), "view-refresh", 0, SLOT( slotSynchronizeResource() ), false }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -285,7 +286,7 @@ class StandardActionManager::Private
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
 
-      bool enableDeleteResourceAction = false;
+      bool enableResourceActions = false;
       bool enableConfigureResourceAction = false;
       if ( collectionSelectionModel ) {
         if ( collectionSelectionModel->selectedRows().count() == 1 ) {
@@ -294,7 +295,7 @@ class StandardActionManager::Private
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
               // actions are only enabled if the collection is a resource collection
-              enableDeleteResourceAction = enableConfigureResourceAction = (collection.parentCollection() == Collection::root());
+              enableResourceActions = enableConfigureResourceAction = (collection.parentCollection() == Collection::root());
 
               // check that the 'NoConfig' flag is not set for the resource
               const Akonadi::AgentInstance instance = AgentManager::self()->instance( collection.resource() );
@@ -306,8 +307,9 @@ class StandardActionManager::Private
         }
       }
       enableAction( CreateResource, true );
-      enableAction( DeleteResource, enableDeleteResourceAction );
+      enableAction( DeleteResource, enableResourceActions );
       enableAction( ResourceProperties, enableConfigureResourceAction );
+      enableAction( SynchronizeResource, enableResourceActions );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
@@ -715,6 +717,15 @@ class StandardActionManager::Private
         return;
 
       AgentManager::self()->removeInstance( instance );
+    }
+
+    void slotSynchronizeResource()
+    {
+      AgentInstance instance = selectedAgentInstance();
+      if ( !instance.isValid() )
+        return;
+
+      instance.synchronize();
     }
 
     void slotResourceProperties()
