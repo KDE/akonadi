@@ -40,6 +40,24 @@ class Session;
  * The Monitor emits signals if some of these objects are changed or
  * removed or new ones are added to the Akonadi storage.
  *
+ * There are various ways to filter these notifications. There are three types of filter
+ * evaluation:
+ * - (-) removal-only filter, ie. if the filter matches the notification is dropped,
+ *   if not filter evaluation continues with the next one
+ * - (+) pass-exit filter, ie. if the filter matches the notification is delivered,
+ *   if not evaluation is continued
+ * - (f) final filter, ie. evaluation ends here if the corresponding filter criteria is set,
+ *   the notification is delievered depending on the result, evaluation is only continued
+ *   if no filter criteria is defined
+ *
+ * The following filter are available, listed in evaluation order:
+ * (1) ignored sessions (-)
+ * (2) monitor everything (+)
+ * (3a) resource and mimetype filters (f) (items only)
+ * (3b) resource filters (f) (collections only)
+ * (4) item is monitored (+)
+ * (5) collection is monitored (+)
+ * 
  * Optionally, the changed objects can be fetched automatically from the server.
  * To enable this, see itemFetchScope() and collectionFetchScope().
  *

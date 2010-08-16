@@ -70,36 +70,6 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool fetchCollection;
     bool fetchCollectionStatistics;
 
-    bool isCollectionMonitored( Collection::Id collection, const QByteArray &resource ) const
-    {
-      if ( monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) )
-        return true;
-      return false;
-    }
-
-    bool isItemMonitored( Item::Id item, Collection::Id collection, Collection::Id collectionDest,
-                          const QString &mimetype, const QByteArray &resource ) const
-    {
-      if ( monitorAll || isCollectionMonitored( collection ) ||
-           isCollectionMonitored( collectionDest ) ||items.contains( item ) ||
-           resources.contains( resource ) || isMimeTypeMonitored( mimetype ) )
-        return true;
-      return false;
-    }
-
-    bool isSessionIgnored( const QByteArray &sessionId ) const
-    {
-      return sessions.contains( sessionId );
-    }
-
-    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
-    {
-      if ( msg.operation() != NotificationMessage::Move || msg.itemParts().isEmpty() )
-        return false;
-      const QByteArray res = *(msg.itemParts().begin());
-      return resources.contains( res );
-    }
-
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg );
@@ -224,6 +194,14 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       return false;
     }
 
+    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
+    {
+      if ( msg.operation() != NotificationMessage::Move || msg.itemParts().isEmpty() )
+        return false;
+      const QByteArray res = *(msg.itemParts().begin());
+      return resources.contains( res );
+    }
+
     void fetchStatistics( Collection::Id colId )
     {
       CollectionStatisticsJob *job = new CollectionStatisticsJob( Collection( colId ), session );
@@ -232,7 +210,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource )
     {
-      if ( collection > 0 && isCollectionMonitored( collection, resource ) ) {
+      if ( collection > 0 && (monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) ) ) {
         if (recentlyChangedCollections.empty() )
           QTimer::singleShot( 500, q_ptr, SLOT( slotFlushRecentlyChangedCollections() ) );
         recentlyChangedCollections.insert( collection );

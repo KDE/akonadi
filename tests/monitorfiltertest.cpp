@@ -301,14 +301,12 @@ class MonitorFilterTest : public QObject
 
         // filter out the resource does overwrite collection
         m.resources.insert( "bar" );
-        QEXPECT_FAIL( "", "not yet implemented", Continue );
         QVERIFY( !m.acceptNotification( msg ) );
         m.resources.clear();
 
-        // filter out the mimetype does overwrite collection
+        // filter out the mimetype does overwrite collection, for item operations (mimetype filter has no effect on collections)
         m.mimetypes.insert( "your/type" );
-        QEXPECT_FAIL( "", "not yet implemented", Continue );
-        QVERIFY( !m.acceptNotification( msg ) );
+        QCOMPARE( !m.acceptNotification( msg ), type == NotificationMessage::Item );
         m.mimetypes.clear();
 
         // filtering out the session overwrites the mimetype
