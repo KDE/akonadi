@@ -107,6 +107,8 @@ class MonitorFilterTest : public QObject
       QTest::newRow( "colChanged" ) << NotificationMessage::Modify << NotificationMessage::Collection << QByteArray( SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
       QTest::newRow( "colRemoved" ) << NotificationMessage::Remove << NotificationMessage::Collection << QByteArray( SIGNAL(collectionRemoved(Akonadi::Collection)) );
       QTest::newRow( "colMoved" ) << NotificationMessage::Move << NotificationMessage::Collection << QByteArray( SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Subscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Unsubscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
     }
 
     void filterResource()
@@ -175,9 +177,145 @@ class MonitorFilterTest : public QObject
       m.resources.insert( "bar" );
       QVERIFY( m.acceptNotification( msg ) );
 
+      // filtering out the mimetype does not overwrite resources
+      msg.setMimeType( "your/type" );
+      m.mimetypes.insert( "my/type" );
+      QVERIFY( m.acceptNotification( msg ) );
+
       // filtering out the session overwrites the resource
       m.sessions.append( "mysession" );
       QVERIFY( !m.acceptNotification( msg ) );
+    }
+
+    void filterMimeType_data()
+    {
+      QTest::addColumn<Akonadi::NotificationMessage::Operation>( "op" );
+      QTest::addColumn<Akonadi::NotificationMessage::Type>( "type" );
+      QTest::addColumn<QByteArray>( "signalName" );
+
+      QTest::newRow( "itemAdded" ) << NotificationMessage::Add << NotificationMessage::Item << QByteArray( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+      QTest::newRow( "itemChanged" ) << NotificationMessage::Modify << NotificationMessage::Item << QByteArray( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      QTest::newRow( "itemRemoved" ) << NotificationMessage::Remove << NotificationMessage::Item << QByteArray( SIGNAL(itemRemoved(Akonadi::Item)) );
+      QTest::newRow( "itemMoved" ) << NotificationMessage::Move << NotificationMessage::Item << QByteArray( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "itemLinked" ) << NotificationMessage::Link << NotificationMessage::Item << QByteArray( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+      QTest::newRow( "itemUnlinked" ) << NotificationMessage::Unlink << NotificationMessage::Item << QByteArray( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+
+      QTest::newRow( "colAdded" ) << NotificationMessage::Add << NotificationMessage::Collection << QByteArray( SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colChanged" ) << NotificationMessage::Modify << NotificationMessage::Collection << QByteArray( SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+      QTest::newRow( "colRemoved" ) << NotificationMessage::Remove << NotificationMessage::Collection << QByteArray( SIGNAL(collectionRemoved(Akonadi::Collection)) );
+      QTest::newRow( "colMoved" ) << NotificationMessage::Move << NotificationMessage::Collection << QByteArray( SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Subscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Unsubscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
+    }
+
+    void filterMimeType()
+    {
+      QFETCH( NotificationMessage::Operation, op );
+      QFETCH( NotificationMessage::Type, type );
+      QFETCH( QByteArray, signalName );
+
+      Monitor dummyMonitor;
+      MonitorPrivate m( &dummyMonitor );
+      QSignalSpy spy( &dummyMonitor, signalName );
+      QVERIFY( spy.isValid() );
+
+      NotificationMessage msg;
+      msg.setUid( 1 );
+      msg.setOperation( op );
+      msg.setParentCollection( 2 );
+      msg.setType( type );
+      msg.setResource( "foo" );
+      msg.setSessionId( "mysession" );
+      msg.setMimeType( "my/type" );
+
+      // using the right resource makes it pass
+      QVERIFY( !m.acceptNotification( msg ) );
+      m.mimetypes.insert( "your/type" );
+      QVERIFY( !m.acceptNotification( msg ) );
+      m.mimetypes.insert( "my/type" );
+      QCOMPARE( m.acceptNotification( msg ), type == NotificationMessage::Item );
+
+      // filter out the resource does not overwrite mimetype
+      m.resources.insert( "bar" );
+      QCOMPARE( m.acceptNotification( msg ), type == NotificationMessage::Item );
+
+      // filtering out the session overwrites the mimetype
+      m.sessions.append( "mysession" );
+      QVERIFY( !m.acceptNotification( msg ) );
+    }
+
+    void filterCollection_data()
+    {
+      QTest::addColumn<Akonadi::NotificationMessage::Operation>( "op" );
+      QTest::addColumn<Akonadi::NotificationMessage::Type>( "type" );
+      QTest::addColumn<QByteArray>( "signalName" );
+
+      QTest::newRow( "itemAdded" ) << NotificationMessage::Add << NotificationMessage::Item << QByteArray( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+      QTest::newRow( "itemChanged" ) << NotificationMessage::Modify << NotificationMessage::Item << QByteArray( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      QTest::newRow( "itemRemoved" ) << NotificationMessage::Remove << NotificationMessage::Item << QByteArray( SIGNAL(itemRemoved(Akonadi::Item)) );
+      QTest::newRow( "itemMoved" ) << NotificationMessage::Move << NotificationMessage::Item << QByteArray( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "itemLinked" ) << NotificationMessage::Link << NotificationMessage::Item << QByteArray( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+      QTest::newRow( "itemUnlinked" ) << NotificationMessage::Unlink << NotificationMessage::Item << QByteArray( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+
+      QTest::newRow( "colAdded" ) << NotificationMessage::Add << NotificationMessage::Collection << QByteArray( SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colChanged" ) << NotificationMessage::Modify << NotificationMessage::Collection << QByteArray( SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+      QTest::newRow( "colRemoved" ) << NotificationMessage::Remove << NotificationMessage::Collection << QByteArray( SIGNAL(collectionRemoved(Akonadi::Collection)) );
+      QTest::newRow( "colMoved" ) << NotificationMessage::Move << NotificationMessage::Collection << QByteArray( SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Subscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+      QTest::newRow( "colSubscribed" ) << NotificationMessage::Unsubscribe << NotificationMessage::Collection << QByteArray( SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
+    }
+
+    void filterCollection()
+    {
+      QFETCH( NotificationMessage::Operation, op );
+      QFETCH( NotificationMessage::Type, type );
+      QFETCH( QByteArray, signalName );
+
+      Monitor dummyMonitor;
+      MonitorPrivate m( &dummyMonitor );
+      QSignalSpy spy( &dummyMonitor, signalName );
+      QVERIFY( spy.isValid() );
+
+      NotificationMessage msg;
+      msg.setUid( 1 );
+      msg.setOperation( op );
+      msg.setParentCollection( 2 );
+      msg.setType( type );
+      msg.setResource( "foo" );
+      msg.setSessionId( "mysession" );
+      msg.setMimeType( "my/type" );
+
+      // using the right resource makes it pass
+      QVERIFY( !m.acceptNotification( msg ) );
+      m.collections.append( Collection( 3 ) );
+      QVERIFY( !m.acceptNotification( msg ) );
+
+      for ( int colId = 0; colId < 3; ++colId ) { // 0 == root, 1 == this, 2 == parent
+        if ( colId == 1 && type == NotificationMessage::Item )
+          continue;
+
+        m.collections.clear();
+        m.collections.append( Collection( colId ) );
+
+        QVERIFY( m.acceptNotification( msg ) );
+
+        // filter out the resource does overwrite collection
+        m.resources.insert( "bar" );
+        QEXPECT_FAIL( "", "not yet implemented", Continue );
+        QVERIFY( !m.acceptNotification( msg ) );
+        m.resources.clear();
+
+        // filter out the mimetype does overwrite collection
+        m.mimetypes.insert( "your/type" );
+        QEXPECT_FAIL( "", "not yet implemented", Continue );
+        QVERIFY( !m.acceptNotification( msg ) );
+        m.mimetypes.clear();
+
+        // filtering out the session overwrites the mimetype
+        m.sessions.append( "mysession" );
+        QVERIFY( !m.acceptNotification( msg ) );
+        m.sessions.clear();
+      }
     }
 };
 
