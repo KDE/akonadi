@@ -411,7 +411,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       break;
     case MoveToTrash:
       action = new KAction( d->mParentWidget );
-//       action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
+      action->setIcon( KIcon( QLatin1String( "user-trash" ) ) );
       action->setText( i18n( "Move to &Trash" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
 //       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
@@ -421,7 +421,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       break;
     case MoveAllToTrash:
       action = new KAction( d->mParentWidget );
-//       action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
+      action->setIcon( KIcon( QLatin1String( "user-trash" ) ) );
       action->setText( i18n( "Move All to &Trash" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
 //       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
