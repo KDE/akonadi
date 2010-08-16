@@ -501,4 +501,16 @@ Akonadi::Item::List StandardMailActionManager::selectedItems() const
   return d->mGenericManager->selectedItems();
 }
 
+void StandardMailActionManager::setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel )
+{
+  d->mGenericManager->setFavoriteCollectionsModel( favoritesModel );
+}
+
+void StandardMailActionManager::setFavoriteSelectionModel( QItemSelectionModel *selectionModel )
+{
+  d->mGenericManager->setFavoriteSelectionModel( selectionModel );
+}
+
+
+
 #include "standardmailactionmanager.moc"
