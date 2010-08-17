@@ -71,13 +71,17 @@ class NotificationManager : public QObject
     void slotNotify( const Akonadi::NotificationMessage::List &msgs );
 
   private:
+
     NotificationManager();
 
   private:
+
     static NotificationManager *mSelf;
     NotificationMessage::List mNotifications;
     QTimer mTimer;
-    QList<MessageSource*> mMessageSources;
+
+    //! One message source for each subscibed process
+    QHash<QString, MessageSource*> mMessageSources;
 
 };
 

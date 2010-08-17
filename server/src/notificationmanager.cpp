@@ -29,6 +29,7 @@
 #include <QDBusConnection>
 #include <QSettings>
 
+
 using namespace Akonadi;
 
 NotificationManager* NotificationManager::mSelf = 0;
@@ -97,14 +98,14 @@ void NotificationManager::emitPendingNotifications()
 
 QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 {
-  Q_FOREACH( MessageSource *src, mMessageSources ) {
-    if ( src->identifier() == identifier ) {
-      return src->dbusPath();
-    }
+  MessageSource *source = mMessageSources.value( identifier );
+  if ( source ) {
+    // :TODO: Should this really be a warning?
+    qDebug() << "Known subscriber" << identifier << "subscribes again";
+  } else {
+    source = new MessageSource( identifier, this );
+    mMessageSources.insert( identifier, source );
   }
-
-  MessageSource *source = new MessageSource( identifier, this );
-  mMessageSources << source;
   return source->dbusPath();
 }
 
@@ -112,12 +113,7 @@ QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 
 void NotificationManager::unsubscribe( const QString &identifier )
 {
-  Q_FOREACH( MessageSource *src, mMessageSources ) {
-    if ( src->identifier() == identifier ) {
-      mMessageSources.removeAll( src );
-      delete src;
-    }
-  }
+  delete mMessageSources.take( identifier );
 }
 
 
