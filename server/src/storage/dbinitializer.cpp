@@ -24,7 +24,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QList>
 #include <QtCore/QPair>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>

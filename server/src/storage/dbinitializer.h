@@ -22,6 +22,7 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QPair>
+#include <QtCore/QVector>
 #include <QtCore/QStringList>
 #include <QtSql/QSqlDatabase>
 
@@ -126,9 +127,9 @@ class DbInitializer
         TableDescription();
 
         QString name;
-        QList<ColumnDescription> columns;
-        QList<IndexDescription> indexes;
-        QList<DataDescription> data;
+        QVector<ColumnDescription> columns;
+        QVector<IndexDescription> indexes;
+        QVector<DataDescription> data;
     };
 
     /**

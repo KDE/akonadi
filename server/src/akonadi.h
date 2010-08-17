@@ -22,6 +22,7 @@
 #define AKONADISERVER_H
 
 #include <QtCore/QPointer>
+#include <QtCore/QVector>
 
 #include <QtNetwork/QLocalServer>
 
@@ -71,7 +72,7 @@ class AkonadiServer: public QLocalServer
     IntervalCheck *mIntervalChecker;
     ItemRetrievalThread *mItemRetrievalThread;
     QProcess *mDatabaseProcess;
-    QList< QPointer<AkonadiConnection> > mConnections;
+    QVector< QPointer<AkonadiConnection> > mConnections;
     SearchManager* mSearchManager;
     bool mAlreadyShutdown;
 };
