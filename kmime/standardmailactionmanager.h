@@ -53,8 +53,14 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Describes the supported actions.
      */
     enum Type {
-      MarkMailAs = StandardActionManager::LastType + 1, ///< Marks a mail with a status. The status should be set in the action's data as a string.
-      MarkAllMailAs,                                    ///< Marks all mails in a folder with a status. The status should be set in the action's data as a string.
+      MarkMailAsRead = StandardActionManager::LastType + 1, ///< Marks a mail as read
+      MarkMailAsUnread,                                 ///< Marks a mail as unread
+      MarkMailAsImportant,                              ///< Marks a mail as important
+      MarkMailAsActionItem,                             ///< Marks a mail as action item
+      MarkAllMailAsRead,                                ///< Marks all mails in a folder as read.
+      MarkAllMailAsUnread,                              ///< Marks all mails in a folder as unread.
+      MarkAllMailAsImportant,                           ///< Marks all mails in a folder as important
+      MarkAllMailAsActionItem,                          ///< Marks all mails in a folder as action item
       MoveToTrash,                                      ///< Move all selected messages and folders to trash.
       MoveAllToTrash,                                   ///< Move all messages of the current folder to trash.
       RemoveDuplicates,                                 ///< Removes all duplicated messages.

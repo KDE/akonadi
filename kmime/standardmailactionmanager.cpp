@@ -260,7 +260,19 @@ class StandardMailActionManager::Private
 
     void slotMarkAs()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::MarkAllMailAs ) )
+      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
+      QByteArray typeStr = action->data().toByteArray();
+      kDebug() << "Mark mail as: " << typeStr;
+
+      StandardMailActionManager::Type type = MarkMailAsRead;
+      if ( typeStr == "U" )
+        type = MarkMailAsUnread;
+      else if ( typeStr == "K" )
+        type = MarkMailAsActionItem;
+      else if ( typeStr == "G" )
+        type = MarkMailAsImportant;
+
+      if ( mInterceptedActions.contains( type ) )
         return;
 
       if ( mItemSelectionModel->selection().indexes().isEmpty() )
@@ -274,11 +286,9 @@ class StandardMailActionManager::Private
       if ( !item.isValid() )
         return;
 
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
-      kDebug() << "Mark mail as: " << action->data().toString();
 
       Akonadi::MessageStatus targetStatus;
-      targetStatus.setStatusFromStr( action->data().toString() );
+      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, Akonadi::Item::List() << item, mParent );
       command->execute();
@@ -286,16 +296,26 @@ class StandardMailActionManager::Private
 
     void slotMarkAllAs()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::MarkAllMailAs ) )
+      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
+      Q_ASSERT(action);
+
+      QByteArray typeStr = action->data().toByteArray();
+      kDebug() << "Mark all as: " << typeStr;
+
+      StandardMailActionManager::Type type = MarkAllMailAsRead;
+      if ( typeStr == "U" )
+        type = MarkAllMailAsUnread;
+      else if ( typeStr == "K" )
+        type = MarkAllMailAsActionItem;
+      else if ( typeStr == "G" )
+        type = MarkAllMailAsImportant;
+
+      if ( mInterceptedActions.contains( type ) )
         return;
 
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
-      Q_ASSERT(action);
-
-      qDebug() << "Mark all as: " << action->data().toString();
 
       const QModelIndex index = mCollectionSelectionModel->selection().indexes().at( 0 );
       Q_ASSERT( index.isValid() );
@@ -303,7 +323,7 @@ class StandardMailActionManager::Private
       Q_ASSERT( collection.isValid() );
 
       Akonadi::MessageStatus targetStatus;
-      targetStatus.setStatusFromStr( action->data().toString() );
+      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, collection, mParent );
       command->execute();
@@ -401,24 +421,74 @@ KAction* StandardMailActionManager::createAction( Type type )
   KAction *action = 0;
 
   switch ( type ) {
-    case MarkMailAs:
+    case MarkMailAsRead:
       action = new KAction( d->mParentWidget );
 //       action->setIcon( KIcon( QLatin1String( "contact-new" ) ) );
-      action->setText( i18n( "&Mark Mail As..." ) );
+      action->setText( i18n( "&Mark Mail as Read" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
 //       action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
-      d->mActions.insert( MarkMailAs, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as" ), action );
+      d->mActions.insert( MarkMailAsRead, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
+      action->setData( QByteArray("R") );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
       break;
-    case MarkAllMailAs:
+    case MarkMailAsUnread:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "&Mark Mail as Unread" ) );
+      d->mActions.insert( MarkMailAsUnread, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
+      action->setData( QByteArray("U") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      break;
+    case MarkMailAsImportant:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "&Mark Mail as Important" ) );
+      d->mActions.insert( MarkMailAsImportant, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_important" ), action );
+      action->setData( QByteArray("G") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      break;
+    case MarkMailAsActionItem:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "&Mark Mail as Action Item" ) );
+      d->mActions.insert( MarkMailAsActionItem, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_action_item" ), action );
+      action->setData( QByteArray("K") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      break;
+    case MarkAllMailAsRead:
       action = new KAction( d->mParentWidget );
 //       action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
-      action->setText( i18n( "Mark &All Mails As..." ) );
+      action->setText( i18n( "Mark &All Mails as Read" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
 //       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
-      d->mActions.insert( MarkAllMailAs, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as" ), action );
+      d->mActions.insert( MarkAllMailAsRead, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_read" ), action );
+      action->setData( QByteArray("R") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      break;
+    case MarkAllMailAsUnread:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "Mark &All Mails as Unread" ) );
+      d->mActions.insert( MarkAllMailAsUnread, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
+      action->setData( QByteArray("U") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      break;
+    case MarkAllMailAsImportant:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "Mark &All Mails as Important" ) );
+      d->mActions.insert( MarkAllMailAsImportant, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_important" ), action );
+      action->setData( QByteArray("G") );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      break;
+    case MarkAllMailAsActionItem:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "Mark &All Mails as Action Item" ) );
+      d->mActions.insert( MarkAllMailAsActionItem, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_action_item" ), action );
+      action->setData( QByteArray("K") );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
       break;
     case MoveToTrash:
@@ -466,8 +536,14 @@ KAction* StandardMailActionManager::createAction( StandardActionManager::Type ty
 
 void StandardMailActionManager::createAllActions()
 {
-  createAction( MarkMailAs )->setData( QLatin1String( "R" ) );
-  createAction( MarkAllMailAs )->setData( QLatin1String( "R" ) );
+  createAction( MarkMailAsRead );
+  createAction( MarkMailAsUnread );
+  createAction( MarkMailAsImportant );
+  createAction( MarkMailAsActionItem );
+  createAction( MarkAllMailAsRead );
+  createAction( MarkAllMailAsUnread );
+  createAction( MarkAllMailAsImportant );
+  createAction( MarkAllMailAsActionItem );
   createAction( MoveToTrash );
   createAction( MoveAllToTrash );
   createAction( RemoveDuplicates );
