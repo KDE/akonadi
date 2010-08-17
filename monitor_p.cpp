@@ -72,7 +72,7 @@ bool MonitorPrivate::connectToNotificationManager()
     return false;
   }
 
-  nm = new org::freedesktop::Akonadi::MessageSource(
+  nm = new org::freedesktop::Akonadi::NotificationSource(
               QLatin1String( "org.freedesktop.Akonadi" ),
               p.path(),
               QDBusConnection::sessionBus(), q_ptr );

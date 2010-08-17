@@ -29,7 +29,7 @@
 #include "itemfetchscope.h"
 #include "job.h"
 #include <akonadi/private/notificationmessage_p.h>
-#include "messagesourceinterface.h"
+#include "notificationsourceinterface.h"
 #include "entitycache_p.h"
 
 #include <kmimetype.h>
@@ -53,7 +53,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    org::freedesktop::Akonadi::MessageSource *nm;
+    org::freedesktop::Akonadi::NotificationSource *nm;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
