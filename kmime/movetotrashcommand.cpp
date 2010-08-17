@@ -99,6 +99,8 @@ Akonadi::Collection MoveToTrashCommand::trashCollectionFromResource( const Akona
   Akonadi::Collection trashCol;
   if ( col.isValid() ) {
     if ( col.resource().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      //TODO: we really need some standard interface to query for special collections,
+      //instead of relying on a resource's settings interface
       OrgKdeAkonadiImapSettingsInterface *iface = Util::createImapSettingsInterface( col.resource() );
       if ( iface->isValid() ) {
 
