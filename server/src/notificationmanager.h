@@ -29,6 +29,7 @@
 namespace Akonadi {
 
 class NotificationCollector;
+class MessageSource;
 
 /**
   Notification manager D-Bus interface.
@@ -48,8 +49,23 @@ class NotificationManager : public QObject
   public Q_SLOTS:
     Q_SCRIPTABLE void emitPendingNotifications();
 
-  Q_SIGNALS:
-    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
+    /**
+     * Subscribe to notifications emitted by this manager.
+     *
+     * @param identifier Identifier to use of our subscription.
+     * @return The path we got assigned. Contains identifier.
+     */
+    Q_SCRIPTABLE QDBusObjectPath subscribe( const QString &identifier );
+
+    /**
+     * Unsubscribe from this manager.
+     *
+     * This method is for your inconvenience only. It's advisable to use the unsubscribe method
+     * provided by the NotificationSource.
+     *
+     * @param identifier The identifier used for subscription.
+     */
+    Q_SCRIPTABLE void unsubscribe( const QString &identifier );
 
   private Q_SLOTS:
     void slotNotify( const Akonadi::NotificationMessage::List &msgs );
@@ -61,6 +77,8 @@ class NotificationManager : public QObject
     static NotificationManager *mSelf;
     NotificationMessage::List mNotifications;
     QTimer mTimer;
+    QList<MessageSource*> mMessageSources;
+
 };
 
 }

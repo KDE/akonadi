@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Michael Jansen <kde@michael-jansen>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,6 +20,7 @@
 
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
+#include "messagesource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "../../libs/xdgbasedirs_p.h"
@@ -83,8 +85,41 @@ void NotificationManager::emitPendingNotifications()
   foreach ( const NotificationMessage &msg, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
-  emit notify( mNotifications );
+
+  Q_FOREACH( MessageSource *src, mMessageSources ) {
+    src->emitNotification( mNotifications );
+  }
+
   mNotifications.clear();
 }
+
+
+
+QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
+{
+  Q_FOREACH( MessageSource *src, mMessageSources ) {
+    if ( src->identifier() == identifier ) {
+      return src->dbusPath();
+    }
+  }
+
+  MessageSource *source = new MessageSource( identifier, this );
+  mMessageSources << source;
+  return source->dbusPath();
+}
+
+
+
+void NotificationManager::unsubscribe( const QString &identifier )
+{
+  Q_FOREACH( MessageSource *src, mMessageSources ) {
+    if ( src->identifier() == identifier ) {
+      mMessageSources.removeAll( src );
+      delete src;
+    }
+  }
+}
+
+
 
 #include "notificationmanager.moc"
