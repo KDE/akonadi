@@ -173,6 +173,7 @@ class StandardCalendarActionManager::Private
     void updateActions()
     {
       //TODO impl
+      emit mParent->actionStateUpdated();
     }
 
     Collection selectedCollection() const
