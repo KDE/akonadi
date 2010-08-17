@@ -184,7 +184,7 @@ qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerint
 
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
-qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} messagesourceinterface )
+qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationsourceinterface )
 
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml )
