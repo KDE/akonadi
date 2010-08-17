@@ -113,7 +113,12 @@ QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 
 void NotificationManager::unsubscribe( const QString &identifier )
 {
-  delete mMessageSources.take( identifier );
+  MessageSource *source = mMessageSources.take( identifier );
+  if ( source ) {
+    source->deleteLater();
+  } else {
+    qDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
+  }
 }
 
 
