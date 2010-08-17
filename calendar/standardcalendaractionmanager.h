@@ -179,23 +179,24 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void slotCreateEvent() );
-    Q_PRIVATE_SLOT( d, void slotMakeDefault() );
-    Q_PRIVATE_SLOT( d, void slotRemoveDefault() );
-    Q_PRIVATE_SLOT( d, void slotStartMaintenanceMode() );
-    Q_PRIVATE_SLOT( d, void slotAddFavorite() );
-    Q_PRIVATE_SLOT( d, void slotRemoveFavorite() );
-    Q_PRIVATE_SLOT( d, void slotRenameFavorite() );
-    Q_PRIVATE_SLOT( d, void slotEditEvent() );
-    Q_PRIVATE_SLOT( d, void slotPublishItemInformation() );
-    Q_PRIVATE_SLOT( d, void slotSendInvitations() );
-    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() );
-    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() );
-    Q_PRIVATE_SLOT( d, void slotSendCancellation() );
-    Q_PRIVATE_SLOT( d, void slotSendAsICal() );
-    Q_PRIVATE_SLOT( d, void slotMailFreeBusy() );
-    Q_PRIVATE_SLOT( d, void slotUploadFeeBusy() );
-    Q_PRIVATE_SLOT( d, void slotSaveAllAttachments() );
+    Q_PRIVATE_SLOT( d, void slotCreateEvent() )
+    Q_PRIVATE_SLOT( d, void slotMakeDefault() )
+    Q_PRIVATE_SLOT( d, void slotRemoveDefault() )
+    Q_PRIVATE_SLOT( d, void slotStartMaintenanceMode() )
+    Q_PRIVATE_SLOT( d, void slotAddFavorite() )
+    Q_PRIVATE_SLOT( d, void slotRemoveFavorite() )
+    Q_PRIVATE_SLOT( d, void slotRenameFavorite() )
+    Q_PRIVATE_SLOT( d, void slotEditEvent() )
+    Q_PRIVATE_SLOT( d, void slotPublishItemInformation() )
+    Q_PRIVATE_SLOT( d, void slotSendInvitations() )
+    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() )
+    Q_PRIVATE_SLOT( d, void slotSendStatusUpdate() )
+    Q_PRIVATE_SLOT( d, void slotSendCancellation() )
+    Q_PRIVATE_SLOT( d, void slotSendAsICal() )
+    Q_PRIVATE_SLOT( d, void slotMailFreeBusy() )
+    Q_PRIVATE_SLOT( d, void slotUploadFeeBusy() )
+    Q_PRIVATE_SLOT( d, void slotSaveAllAttachments() )
+    Q_PRIVATE_SLOT( d, void updateActions() )
     //@endcond
 };
 
