@@ -21,6 +21,7 @@
 
 #include "akonadi-prefix.h" // for prefix defines
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -194,6 +195,13 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     const QString prefixExecutableDir = QLatin1String( AKONADIPREFIX "/bin" );
     if ( !executableDirs.contains( prefixExecutableDir ) ) {
       executableDirs << prefixExecutableDir;
+    }
+
+    if ( QCoreApplication::instance() != 0 ) {
+        const QString appExecutableDir = QCoreApplication::instance()->applicationDirPath();
+        if ( !executableDirs.contains( appExecutableDir ) ) {
+          executableDirs << appExecutableDir;
+        }
     }
 
     executableDirs += searchPath;
