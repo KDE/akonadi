@@ -20,7 +20,7 @@
 
 #include "notificationmanager.h"
 #include "notificationmanageradaptor.h"
-#include "messagesource.h"
+#include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "../../libs/xdgbasedirs_p.h"
@@ -87,7 +87,7 @@ void NotificationManager::emitPendingNotifications()
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
 
-  Q_FOREACH( MessageSource *src, mMessageSources ) {
+  Q_FOREACH( NotificationSource *src, mNotificationSources ) {
     src->emitNotification( mNotifications );
   }
 
@@ -98,13 +98,13 @@ void NotificationManager::emitPendingNotifications()
 
 QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 {
-  MessageSource *source = mMessageSources.value( identifier );
+  NotificationSource *source = mNotificationSources.value( identifier );
   if ( source ) {
     // :TODO: Should this really be a warning?
     qDebug() << "Known subscriber" << identifier << "subscribes again";
   } else {
-    source = new MessageSource( identifier, this );
-    mMessageSources.insert( identifier, source );
+    source = new NotificationSource( identifier, this );
+    mNotificationSources.insert( identifier, source );
   }
   return source->dbusPath();
 }
@@ -113,7 +113,7 @@ QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 
 void NotificationManager::unsubscribe( const QString &identifier )
 {
-  MessageSource *source = mMessageSources.take( identifier );
+  NotificationSource *source = mNotificationSources.take( identifier );
   if ( source ) {
     source->deleteLater();
   } else {

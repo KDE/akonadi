@@ -29,7 +29,7 @@
 namespace Akonadi {
 
 class NotificationCollector;
-class MessageSource;
+class NotificationSource;
 
 /**
   Notification manager D-Bus interface.
@@ -81,7 +81,7 @@ class NotificationManager : public QObject
     QTimer mTimer;
 
     //! One message source for each subscibed process
-    QHash<QString, MessageSource*> mMessageSources;
+    QHash<QString, NotificationSource*> mNotificationSources;
 
 };
 

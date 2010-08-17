@@ -16,8 +16,8 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-#ifndef AKONADI_MESSAGESOURCE_H
-#define AKONADI_MESSAGESOURCE_H
+#ifndef AKONADI_NOTIFICATIONSOURCE_H
+#define AKONADI_NOTIFICATIONSOURCE_H
 
 #include "../libs/notificationmessage_p.h"
 
@@ -34,24 +34,24 @@ class NotificationManager;
  *
  * @since :RELEASE_VERSION:
  */
-class MessageSource : public QObject
+class NotificationSource : public QObject
     {
     Q_OBJECT
-    Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.MessageSource" )
+    Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.NotificationSource" )
 
   public:
 
     /**
-     * Construct a MessageSource.
+     * Construct a NotificationSource.
      *
      * @param parent The parent object.
      */
-    MessageSource( const QString &identifier, Akonadi::NotificationManager *parent );
+    NotificationSource( const QString &identifier, Akonadi::NotificationManager *parent );
 
     /**
-     * Destroy the MessageSource.
+     * Destroy the NotificationSource.
      */
-    virtual ~MessageSource();
+    virtual ~NotificationSource();
 
     /**
      * Emit the given notifications
@@ -89,7 +89,7 @@ class MessageSource : public QObject
       QString mIdentifier;
       QString mDBusIdentifier;
 
-    }; // class MessageSource
+    }; // class NotificationSource
 
 
 
@@ -98,5 +98,5 @@ class MessageSource : public QObject
 
 
 
-#endif // #define AKONADI_MESSAGESOURCE_H
+#endif // #define AKONADI_NOTIFICATIONSOURCE_H
 

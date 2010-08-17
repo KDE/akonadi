@@ -17,22 +17,22 @@
     02110-1301, USA.
 */
 
-#include "messagesource.h"
+#include "notificationsource.h"
 
-#include "messagesourceadaptor.h"
+#include "notificationsourceadaptor.h"
 
 #include "notificationmanager.h"
 
 using namespace Akonadi;
 
 
-MessageSource::MessageSource( const QString &identifier, Akonadi::NotificationManager* parent )
+NotificationSource::NotificationSource( const QString &identifier, Akonadi::NotificationManager* parent )
   : QObject( parent ),
     mManager( parent ),
     mIdentifier( identifier ),
     mDBusIdentifier( identifier )
 {
-  new MessageSourceAdaptor( this );
+  new NotificationSourceAdaptor( this );
 
   // Clean up for dbus usage: any non-alphanumeric char should be turned into '_'
   const int len = mDBusIdentifier.length();
@@ -54,37 +54,37 @@ MessageSource::MessageSource( const QString &identifier, Akonadi::NotificationMa
 
 
 
-MessageSource::~MessageSource()
+NotificationSource::~NotificationSource()
 {}
 
 
 
-QDBusObjectPath MessageSource::dbusPath() const
+QDBusObjectPath NotificationSource::dbusPath() const
 {
-  return QDBusObjectPath( QLatin1String( "/messagesource/" ) + mDBusIdentifier );
+        return QDBusObjectPath( QLatin1String( "/subscriber/" ) + mDBusIdentifier );
 }
 
 
 
-void MessageSource::emitNotification( const NotificationMessage::List &notifications )
+void NotificationSource::emitNotification( const NotificationMessage::List &notifications )
 {
   Q_EMIT notify( notifications );
 }
 
 
 
-QString MessageSource::identifier() const
+QString NotificationSource::identifier() const
 {
   return mIdentifier;
 }
 
 
 
-void MessageSource::unsubscribe()
+void NotificationSource::unsubscribe()
 {
   mManager->unsubscribe( mIdentifier );
 }
 
 
 
-#include "messagesource.moc"
+#include "notificationsource.moc"
