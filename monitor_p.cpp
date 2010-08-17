@@ -25,9 +25,11 @@
 #include "collectionstatistics.h"
 #include "itemfetchjob.h"
 #include "notificationmessage_p.h"
+#include "notificationmanagerinterface.h"
 #include "session.h"
 
 #include <kdebug.h>
+#include <kcomponentdata.h>
 
 using namespace Akonadi;
 
@@ -56,21 +58,34 @@ bool MonitorPrivate::connectToNotificationManager()
 {
   NotificationMessage::registerDBusTypes();
 
-  if ( !nm )
-    nm = new org::freedesktop::Akonadi::NotificationManager( QLatin1String( "org.freedesktop.Akonadi" ),
-                                                     QLatin1String( "/notifications" ),
-                                                     QDBusConnection::sessionBus(), q_ptr );
-  else
+  if ( nm )
     return true;
 
-  if ( !nm ) {
-    kWarning() << "Unable to connect to notification manager";
-  } else {
-    QObject::connect( nm, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
-                      q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
-    return true;
+  org::freedesktop::Akonadi::NotificationManager manager(
+          QLatin1String( "org.freedesktop.Akonadi" ),
+          QLatin1String( "/notifications" ),
+          QDBusConnection::sessionBus() );
+
+  QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
+  if ( manager.lastError().isValid() ) {
+    // :TODO: What to do?
+    return false;
   }
-  return false;
+
+  nm = new org::freedesktop::Akonadi::MessageSource(
+              QLatin1String( "org.freedesktop.Akonadi" ),
+              p.path(),
+              QDBusConnection::sessionBus(), q_ptr );
+
+  if ( !nm ) {
+    // :TODO: error handling
+    return false;
+  }
+
+  QObject::connect( nm, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
+                    q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
+
+  return true;
 }
 
 int MonitorPrivate::pipelineSize() const
