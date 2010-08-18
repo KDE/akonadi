@@ -45,11 +45,6 @@ NotificationSource::NotificationSource( const QString &identifier, Akonadi::Noti
       dbusPath().path(),
       this,
       QDBusConnection::ExportAdaptors );
-
-  QDBusConnection::sessionBus().registerObject(
-      dbusPath().path() + QLatin1String( "/debug" ),
-      this,
-      QDBusConnection::ExportScriptableSlots );
 }
 
 
