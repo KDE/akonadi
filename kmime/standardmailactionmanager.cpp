@@ -423,10 +423,10 @@ KAction* StandardMailActionManager::createAction( Type type )
   switch ( type ) {
     case MarkMailAsRead:
       action = new KAction( d->mParentWidget );
-//       action->setIcon( KIcon( QLatin1String( "contact-new" ) ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "&Mark Mail as Read" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-//       action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
+      action->setWhatsThis( i18n( "Mark selected messages as read" ) );
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
       action->setData( QByteArray("R") );
@@ -435,6 +435,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkMailAsUnread:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "&Mark Mail as Unread" ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
       action->setData( QByteArray("U") );
@@ -442,6 +443,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       break;
     case MarkMailAsImportant:
       action = new KAction( d->mParentWidget );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-important" ) ) );
       action->setText( i18n( "&Mark Mail as Important" ) );
       d->mActions.insert( MarkMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_important" ), action );
@@ -451,6 +453,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkMailAsActionItem:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "&Mark Mail as Action Item" ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_action_item" ), action );
       action->setData( QByteArray("K") );
@@ -458,7 +461,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       break;
     case MarkAllMailAsRead:
       action = new KAction( d->mParentWidget );
-//       action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "Mark &All Mails as Read" ) );
 //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
 //       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
@@ -470,6 +473,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsUnread:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Unread" ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
       action->setData( QByteArray("U") );
@@ -478,6 +482,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsImportant:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Important" ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-important" ) ) );
       d->mActions.insert( MarkAllMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_important" ), action );
       action->setData( QByteArray("G") );
@@ -486,6 +491,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsActionItem:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Action Item" ) );
+      action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkAllMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_action_item" ), action );
       action->setData( QByteArray("K") );
