@@ -35,7 +35,7 @@ endmacro(add_resource_iface)
 
 ########### next target ###############
 
-set( kmimeakonadi_LIB_SRC
+set( kmimeakonadi_LIB_SRC 
   addressattribute.cpp
   specialmailcollections.cpp
   specialmailcollectionsrequestjob.cpp
@@ -52,6 +52,7 @@ set( kmimeakonadi_LIB_SRC
   markascommand.cpp
   movecommand.cpp
   movetotrashcommand.cpp
+  removeduplicatescommand.cpp
   standardmailactionmanager.cpp
 )
 

@@ -43,6 +43,7 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
+#include "removeduplicatescommand_p.h"
 
 using namespace Akonadi;
 
@@ -301,8 +302,19 @@ class StandardMailActionManager::Private
 
     void slotRemoveDuplicates()
     {
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
-      qDebug() << Q_FUNC_INFO << action->data();
+      if ( mInterceptedActions.contains( StandardMailActionManager::RemoveDuplicates ) )
+        return;
+
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const QModelIndex index = mCollectionSelectionModel->selection().indexes().at( 0 );
+      Q_ASSERT( index.isValid() );
+      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+      Q_ASSERT( collection.isValid() );
+
+      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collection, mParent );
+      command->execute();
     }
 
     void slotMailLocalSubscription()
