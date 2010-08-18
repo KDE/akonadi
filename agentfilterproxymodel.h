@@ -79,6 +79,12 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
      */
     void clearFilters();
 
+    /**
+     * Excludes agents with the given @p capability.
+     * @since 4.6
+     */
+    void excludeCapabilities( const QString &capability );
+
   protected:
     bool filterAcceptsRow( int row, const QModelIndex &parent ) const;
 

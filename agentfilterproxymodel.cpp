@@ -43,6 +43,7 @@ class AgentFilterProxyModel::Private
   public:
     QStringList mimeTypes;
     QStringList capabilities;
+    QStringList excludeCapabilities;
 };
 
 AgentFilterProxyModel::AgentFilterProxyModel(QObject * parent)
@@ -69,10 +70,18 @@ void AgentFilterProxyModel::addCapabilityFilter(const QString & capability)
   invalidateFilter();
 }
 
+
+void AgentFilterProxyModel::excludeCapabilities(const QString & capability)
+{
+  d->excludeCapabilities << capability;
+  invalidateFilter();
+}
+
 void AgentFilterProxyModel::clearFilters()
 {
   d->capabilities.clear();
   d->mimeTypes.clear();
+  d->excludeCapabilities.clear();
   invalidateFilter();
 }
 
@@ -114,7 +123,18 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
         break;
       }
     }
-    if ( !found ) return false;
+    if ( !found )
+      return false;
+
+    if ( found && !d->excludeCapabilities.isEmpty() ) {
+      foreach ( const QString &cap, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
+        if ( d->excludeCapabilities.contains( cap ) ) {
+          found = false;
+          break;
+        }
+      }
+      if ( !found ) return false;
+    }
   }
   return true;
 }
