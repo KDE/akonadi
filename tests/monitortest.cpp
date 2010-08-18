@@ -37,6 +37,7 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
 #include <akonadi/searchcreatejob.h>
+#include <akonadi/subscriptionjob_p.h>
 
 #include <QtCore/QVariant>
 #include <QtGui/QApplication>
@@ -90,6 +91,8 @@ void MonitorTest::testMonitor()
   QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
   QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
+  QSignalSpy cSubscribedSpy( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+  QSignalSpy cUnsubscribedSpy( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
   QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
   QSignalSpy imodspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)) );
   QSignalSpy imvspy( monitor, SIGNAL(itemMoved(const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection&)) );
@@ -100,6 +103,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmvspy.isValid() );
   QVERIFY( crmspy.isValid() );
   QVERIFY( cstatspy.isValid() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isValid() );
   QVERIFY( imodspy.isValid() );
   QVERIFY( imvspy.isValid() );
@@ -128,6 +133,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
@@ -181,6 +188,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
@@ -209,6 +218,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
@@ -240,6 +251,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( irmspy.isEmpty() );
@@ -265,10 +278,53 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
   imvspy.clear();
+
+
+  // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
+  Collection subCollection = Collection( collectionIdFromPath( "res2/foo2" ) );
+  subCollection.setName( "foo2" );
+  QVERIFY( subCollection.isValid() );
+
+  SubscriptionJob *subscribeJob = new SubscriptionJob( this );
+  subscribeJob->unsubscribe( Collection::List() << subCollection );
+  AKVERIFYEXEC( subscribeJob );
+  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000 ) );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QCOMPARE( cUnsubscribedSpy.size(), 1 );
+  arg = cUnsubscribedSpy.takeFirst();
+  col = arg.at( 0 ).value<Collection>();
+  QCOMPARE( col.id(), subCollection.id() );
+
+  subscribeJob = new SubscriptionJob( this );
+  subscribeJob->subscribe( Collection::List() << subCollection );
+  AKVERIFYEXEC( subscribeJob );
+  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000 ) );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
+  QCOMPARE( cSubscribedSpy.size(), 1 );
+  arg = cSubscribedSpy.takeFirst();
+  col = arg.at( 0 ).value<Collection>();
+  QCOMPARE( col.id(), subCollection.id() );
+  if ( fetchCol ) {
+    QVERIFY( !col.name().isEmpty() );
+    QCOMPARE( col.name(), subCollection.name() );
+  }
+
+  QVERIFY( caddspy.isEmpty() );
+  QVERIFY( cmodspy.isEmpty() );
+  QVERIFY( cmvspy.isEmpty() );
+  QVERIFY( crmspy.isEmpty() );
+  QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( iaddspy.isEmpty() );
+  QVERIFY( imodspy.isEmpty() );
+  QVERIFY( imvspy.isEmpty() );
+  QVERIFY( irmspy.isEmpty() );
+
 
   // modify a collection
   monitorCol.setName( "changed name" );
@@ -287,6 +343,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
@@ -315,6 +373,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( crmspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );
@@ -336,6 +396,8 @@ void MonitorTest::testMonitor()
   QVERIFY( cmodspy.isEmpty() );
   QVERIFY( cmvspy.isEmpty() );
   QVERIFY( cstatspy.isEmpty() );
+  QVERIFY( cSubscribedSpy.isEmpty() );
+  QVERIFY( cUnsubscribedSpy.isEmpty() );
   QVERIFY( iaddspy.isEmpty() );
   QVERIFY( imodspy.isEmpty() );
   QVERIFY( imvspy.isEmpty() );

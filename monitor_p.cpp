@@ -491,7 +491,10 @@ void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
   }
 
   // modify removes the cache entry, as we need to re-fetch
-  if ( msg.operation() == NotificationMessage::Modify || msg.operation() == NotificationMessage::Move ) {
+  // And subscription modify the visibility of the collection by the collectionFetchScope.
+  if ( msg.operation() == NotificationMessage::Modify
+        || msg.operation() == NotificationMessage::Move
+        || msg.operation() == NotificationMessage::Subscribe ) {
     if ( msg.type() == NotificationMessage::Collection ) {
       collectionCache.update( msg.uid(), mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessage::Item ) {
