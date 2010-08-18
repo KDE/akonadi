@@ -425,7 +425,6 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "&Mark Mail as Read" ) );
-//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
       action->setWhatsThis( i18n( "Mark selected messages as read" ) );
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
@@ -463,8 +462,6 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "Mark &All Mails as Read" ) );
-//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-//       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
       d->mActions.insert( MarkAllMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_read" ), action );
       action->setData( QByteArray("R") );
@@ -501,8 +498,8 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "user-trash" ) ) );
       action->setText( i18n( "Move to &Trash" ) );
-//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-//       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
+      action->setShortcut( QKeySequence( Qt::Key_Delete ) );
+      action->setWhatsThis( i18n( "Move message to trashcan" ) );
       d->mActions.insert( MoveToTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_move_to_trash" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveToTrash()) );
@@ -511,18 +508,14 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "user-trash" ) ) );
       action->setText( i18n( "Move All to &Trash" ) );
-//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-//       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
       d->mActions.insert( MoveAllToTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_move_all_to_trash" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveAllToTrash()) );
       break;
     case RemoveDuplicates:
       action = new KAction( d->mParentWidget );
-//       action->setIcon( KIcon( QLatin1String( "user-group-new" ) ) );
       action->setText( i18n( "Remove &Duplicate Mails" ) );
-//       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-//       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
+      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Asterisk ) );
       d->mActions.insert( RemoveDuplicates, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_remove_duplicates" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveDuplicates()) );
