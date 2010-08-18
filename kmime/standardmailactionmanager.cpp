@@ -175,60 +175,7 @@ class StandardMailActionManager::Private
 
     void updateActions()
     {
-      /*
-      int itemCount = 0;
-      if ( mItemSelectionModel ) {
-        itemCount = mItemSelectionModel->selectedRows().count();
-        if ( itemCount == 1 ) {
-          const QModelIndex index = mItemSelectionModel->selectedRows().first();
-          if ( index.isValid() ) {
-            const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
-            if ( mimeType == KABC::Addressee::mimeType() ) {
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
-                                              ki18np( "Copy Contact", "Copy %1 Contacts" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
-                                              ki18np( "Delete Contact", "Delete %1 Contacts" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
-                                              ki18np( "Cut Contact", "Cut %1 Contacts" ) );
-              if ( mActions.contains( StandardMailActionManager::EditItem ) )
-                mActions.value( StandardMailActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
-            } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
-                                              ki18np( "Copy Group", "Copy %1 Groups" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
-                                              ki18np( "Delete Group", "Delete %1 Groups" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
-                                              ki18np( "Cut Group", "Cut %1 Groups" ) );
-              if ( mActions.contains( StandardMailActionManager::EditItem ) )
-                mActions.value( StandardMailActionManager::EditItem )->setText( i18n( "Edit Group..." ) );
-            }
-          }
-        }
-      }
-
-      if ( mActions.contains( StandardMailActionManager::CreateContact ) )
-        mActions[ StandardMailActionManager::CreateContact ]->setEnabled( hasWritableCollection( KABC::Addressee::mimeType() ) );
-      if ( mActions.contains( StandardMailActionManager::CreateContactGroup ) )
-        mActions[ StandardMailActionManager::CreateContactGroup ]->setEnabled( hasWritableCollection( KABC::ContactGroup::mimeType() ) );
-
-      if ( mActions.contains( StandardMailActionManager::EditItem ) ) {
-        bool canEditItem = true;
-
-        // only one selected item can be edited
-        canEditItem = canEditItem && (itemCount == 1);
-
-        // check whether parent collection allows changing the item
-        const QModelIndexList rows = mItemSelectionModel->selectedRows();
-        if ( rows.count() == 1 ) {
-          const QModelIndex index = rows.first();
-          const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
-          if ( parentCollection.isValid() )
-            canEditItem = canEditItem && (parentCollection.rights() & Collection::CanChangeItem);
-        }
-
-        mActions.value( StandardMailActionManager::EditItem )->setEnabled( canEditItem );
-      }
-      */
+      //TODO
       emit mParent->actionStateUpdated();
     }
 
