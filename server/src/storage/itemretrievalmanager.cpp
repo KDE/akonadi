@@ -53,9 +53,6 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
   connect( mDBusConnection.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
-  connect( this, SIGNAL(syncCollection(QString,qint64)), this, SLOT(triggerCollectionSync(QString,qint64)), Qt::QueuedConnection );
-  connect( this, SIGNAL( syncCollectionTree( const QString& ) ),
-           this, SLOT( triggerCollectionTreeSync( const QString& ) ), Qt::QueuedConnection );
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
@@ -212,16 +209,6 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
   mWaitCondition->wakeAll();
   mLock->unlock();
   emit requestAdded(); // trigger processRequest() again, in case there is more in the queues
-}
-
-void ItemRetrievalManager::requestCollectionSync( const Collection& collection )
-{
-  // if the collection is a resource collection we trigger a synchronization
-  // of the collection hierarchy as well
-  if ( collection.parentId() == 0 )
-    emit syncCollectionTree( collection.resource().name() );
-
-  emit syncCollection( collection.resource().name(), collection.id() );
 }
 
 void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64 colId)

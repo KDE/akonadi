@@ -36,6 +36,7 @@
 #include "storage/parthelper.h"
 #include "storage/transaction.h"
 #include "utils.h"
+#include "intervalcheck.h"
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -369,7 +370,7 @@ void FetchHelper::triggerOnDemandFetch()
   if ( !collection.cachePolicySyncOnDemand() )
     return;
 
-  ItemRetrievalManager::instance()->requestCollectionSync( collection );
+  IntervalCheck::instance()->requestCollectionSync( collection );
 }
 
 void FetchHelper::parseCommandStream()

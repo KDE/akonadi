@@ -54,14 +54,10 @@ class ItemRetrievalManager : public QObject
      */
     void requestItemDelivery( ItemRetrievalRequest *request );
 
-    void requestCollectionSync( const Collection &collection );
-
     static ItemRetrievalManager* instance();
 
   signals:
     void requestAdded();
-    void syncCollection( const QString &resource, qint64 colId );
-    void syncCollectionTree( const QString &resource );
 
   private:
     OrgFreedesktopAkonadiResourceInterface* resourceInterface( const QString &id );
