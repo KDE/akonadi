@@ -67,6 +67,9 @@ class NotificationManager : public QObject
      */
     Q_SCRIPTABLE void unsubscribe( const QString &identifier );
 
+  Q_SIGNALS:
+    Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
+
   private Q_SLOTS:
     void slotNotify( const Akonadi::NotificationMessage::List &msgs );
 

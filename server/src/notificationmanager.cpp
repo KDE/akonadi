@@ -91,6 +91,9 @@ void NotificationManager::emitPendingNotifications()
     src->emitNotification( mNotifications );
   }
 
+  // backward compatibility with the old non-subcription interface
+  emit notify( mNotifications );
+
   mNotifications.clear();
 }
 
