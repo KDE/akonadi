@@ -277,6 +277,7 @@ install( FILES
   entityhiddenattribute.h
   entitylistview.h
   entitymimetypefiltermodel.h
+  entityrightsfiltermodel.h
   entityorderproxymodel.h
   entitytreemodel.h
   entitytreeview.h
