@@ -83,6 +83,7 @@ set( akonadikde_LIB_SRC
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
   entitymimetypefiltermodel.cpp
+  entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
