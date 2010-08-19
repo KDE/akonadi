@@ -367,6 +367,7 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     if ( !msg.itemParts().isEmpty() )
       colDest.setResource( QString::fromLatin1( *(msg.itemParts().begin()) ) );
   }
+
   Item it = item;
   if ( !it.isValid() || msg.operation() == NotificationMessage::Remove ) {
     it = Item( msg.uid() );
@@ -376,7 +377,12 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
     // recover RID, in case of inter-resource moves the source RID is only in the
     // notification but not in the item loaded from Akonadi
     it.setRemoteId( msg.remoteId() );
+  } else if ( msg.operation() == NotificationMessage::Move && col.resource() != colDest.resource() ) {
+    // recover RID in case of inter-resource moves (part 2), if the destination has already
+    // changed the RID we need to reset to the one belonging to the source resource
+    it.setRemoteId( msg.remoteId() );
   }
+
   if ( !it.parentCollection().isValid() ) {
     if ( msg.operation() == NotificationMessage::Move )
       it.setParentCollection( colDest );
@@ -422,19 +428,27 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
                                                    const Collection &par, const Collection &dest )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Collection );
-  Collection collection = col;
-  if ( !collection.isValid() || msg.operation() == NotificationMessage::Remove ) {
-    collection = Collection( msg.uid() );
-    collection.setResource( QString::fromUtf8( msg.resource() ) );
-    collection.setRemoteId( msg.remoteId() );
-  }
-
   Collection parent = par;
   if ( !parent.isValid() )
     parent = Collection( msg.parentCollection() );
   Collection destination = dest;
   if ( !destination.isValid() )
     destination = Collection( msg.parentDestCollection() );
+
+  Collection collection = col;
+  if ( !collection.isValid() || msg.operation() == NotificationMessage::Remove ) {
+    collection = Collection( msg.uid() );
+    collection.setResource( QString::fromUtf8( msg.resource() ) );
+    collection.setRemoteId( msg.remoteId() );
+  } else if ( collection.remoteId().isEmpty() && !msg.remoteId().isEmpty() ) {
+    // recover RID, in case of inter-resource moves the source RID is only in the
+    // notification but not in the item loaded from Akonadi
+    collection.setRemoteId( msg.remoteId() );
+  } else if ( msg.operation() == NotificationMessage::Move && parent.resource() != destination.resource() ) {
+    // recover RID in case of inter-resource moves (part 2), if the destination has already
+    // changed the RID we need to reset to the one belonging to the source resource
+    collection.setRemoteId( msg.remoteId() );
+  }
 
   if ( !collection.parentCollection().isValid() ) {
     if ( msg.operation() == NotificationMessage::Move )
