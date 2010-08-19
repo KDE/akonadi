@@ -89,4 +89,22 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(con
   invalidateFilter();
 }
 
+void RecursiveCollectionFilterProxyModel::clearFilters()
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->includedMimeTypes.clear();
+  invalidateFilter();
+}
 
+void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(const QStringList& mimeTypes)
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->includedMimeTypes = mimeTypes.toSet();
+  invalidateFilter();
+}
+
+QStringList RecursiveCollectionFilterProxyModel::contentMimeTypeInclusionFilters() const
+{
+  Q_D(const RecursiveCollectionFilterProxyModel);
+  return d->includedMimeTypes.toList();
+}

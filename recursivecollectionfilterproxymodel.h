@@ -51,6 +51,23 @@ public:
   */
   void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
 
+  /**
+   * Clears the current filters.
+   */
+  void clearFilters();
+
+  /**
+  * Replace the content mime types to be shown by the filter.
+  *
+  * @param mimeTypes A list of content mime types to be included.
+  */
+  void setContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+
+  /**
+   * Returns the currently included mimetypes in the filter.
+   */
+  QStringList contentMimeTypeInclusionFilters() const;
+
 protected:
   /* reimp */ bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
 
