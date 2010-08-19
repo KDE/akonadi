@@ -153,6 +153,7 @@
     <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
     <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
+    <index name="pimItemNameIndex" columns="name"/>
   </table>
 
   <table name="CollectionAttribute">
