@@ -36,6 +36,10 @@ add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 
 target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} ${SQLITE_LIBRARIES})
 
+if (WINCE)
+    target_link_libraries(qsqlite3 ${WCECOMPAT_LIBRARIES})
+endif(WINCE)
+
 INSTALL(TARGETS qsqlite3
   RUNTIME DESTINATION ${QSQLITE_INSTALL_PREFIX}
   LIBRARY DESTINATION ${QSQLITE_INSTALL_PREFIX}
