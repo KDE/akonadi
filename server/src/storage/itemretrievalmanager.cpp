@@ -86,9 +86,7 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
   if ( id.isEmpty() )
     return 0;
 
-  OrgFreedesktopAkonadiResourceInterface *iface = 0;
-  if ( mResourceInterfaces.contains( id ) )
-    iface = mResourceInterfaces.value( id );
+  OrgFreedesktopAkonadiResourceInterface *iface = mResourceInterfaces.value( id );
   if ( iface && iface->isValid() )
     return iface;
 
@@ -130,17 +128,19 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
 
   mLock->lockForRead();
   forever {
-    qDebug() << "checking if request for item" << req->id << "has been processed...";
+    //qDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
-      qDebug() << "request for item" << req->id << "processed, error:" << errorMsg;
       delete req;
-      if ( errorMsg.isEmpty() )
+      if ( errorMsg.isEmpty() ) {
+        qDebug() << "request for item" << req->id << "succeeded";
         return;
-      else
+      } else {
+        qDebug() << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
         throw ItemRetrieverException( errorMsg );
+      }
     } else {
       qDebug() << "request for item" << req->id << "still pending - waiting";
       mWaitCondition->wait( mLock );
