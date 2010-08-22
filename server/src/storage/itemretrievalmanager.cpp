@@ -30,6 +30,8 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
+#include <boost/scoped_ptr.hpp>
+
 using namespace Akonadi;
 
 ItemRetrievalManager* ItemRetrievalManager::sInstance = 0;
@@ -130,10 +132,10 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
   forever {
     //qDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
+      boost::scoped_ptr<ItemRetrievalRequest> reqDeleter( req );
       Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
-      delete req;
       if ( errorMsg.isEmpty() ) {
         qDebug() << "request for item" << req->id << "succeeded";
         return;
