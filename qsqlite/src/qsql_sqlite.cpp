@@ -323,7 +323,6 @@ bool QSQLiteResult::prepare(const QString &query)
 
     setSelect(false);
 
-    Q_ASSERT(SQLITE_VERSION_NUMBER == 3006023);
 #if (SQLITE_VERSION_NUMBER >= 3003011)
 //    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
 //                                   &d->stmt, 0);
