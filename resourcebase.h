@@ -440,6 +440,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
     friend class ResourceScheduler;
+    friend class ResourceState;
 
     /**
      * Describes the scheduling priority of a task that has been queued
