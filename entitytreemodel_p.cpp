@@ -188,10 +188,7 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   if (!((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
       || (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections)))
   {
-    QModelIndex collectionIndex = indexForCollection(parent);
-    // TODO: Add a signal to QAIM roleDataChanged(QModelIndex, QModelIndex, QSet<int> roles)
-    // Indicate to observers to re-query the FetchState.
-    emit const_cast<EntityTreeModel *>(q)->dataChanged(collectionIndex, collectionIndex);
+    QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
   }
 
   q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
@@ -199,6 +196,16 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
   ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
+}
+
+void EntityTreeModelPrivate::changeFetchState( const Collection &parent )
+{
+  Q_Q( EntityTreeModel );
+  const QModelIndex collectionIndex = indexForCollection(parent);
+  if (!collectionIndex.isValid())
+    // Because we are called delayed, it is possible that @p parent has been deleted.
+    return;
+  q->dataChanged(collectionIndex, collectionIndex);
 }
 
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )

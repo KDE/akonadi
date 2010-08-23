@@ -636,6 +636,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d_func(), void changeFetchState( const Akonadi::Collection & ) )
     //@endcond
 };
 
