@@ -65,7 +65,7 @@ DbConfig* DbConfig::configuredDatabase()
     // determine driver to use
 #ifdef _WIN32_WCE
     // On Windows CE QSQLITE3 is the default driver for Akonadi
-    const QString defaultDirver = QLatin1String( "QSQLITE3" );
+    const QString defaultDriver = QLatin1String( "QSQLITE3" );
 #else
     const QString defaultDriver = QLatin1String( "QMYSQL" );
 #endif
