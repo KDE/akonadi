@@ -60,29 +60,37 @@ AgentFilterProxyModel::~AgentFilterProxyModel()
 
 void AgentFilterProxyModel::addMimeTypeFilter(const QString & mimeType)
 {
+  layoutAboutToBeChanged();
   d->mimeTypes << mimeType;
   invalidateFilter();
+  layoutChanged();
 }
 
 void AgentFilterProxyModel::addCapabilityFilter(const QString & capability)
 {
+  layoutAboutToBeChanged();
   d->capabilities << capability;
   invalidateFilter();
+  layoutChanged();
 }
 
 
 void AgentFilterProxyModel::excludeCapabilities(const QString & capability)
 {
+  layoutAboutToBeChanged();
   d->excludeCapabilities << capability;
   invalidateFilter();
+  layoutChanged();
 }
 
 void AgentFilterProxyModel::clearFilters()
 {
+  layoutAboutToBeChanged();
   d->capabilities.clear();
   d->mimeTypes.clear();
   d->excludeCapabilities.clear();
   invalidateFilter();
+  layoutChanged();
 }
 
 bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const

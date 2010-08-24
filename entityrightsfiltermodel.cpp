@@ -81,8 +81,10 @@ EntityRightsFilterModel::~EntityRightsFilterModel()
 void EntityRightsFilterModel::setAccessRights( Collection::Rights rights )
 {
   Q_D(EntityRightsFilterModel);
+  layoutAboutToBeChanged();
   d->mAccessRights = rights;
   invalidateFilter();
+  layoutChanged();
 }
 
 Collection::Rights EntityRightsFilterModel::accessRights() const

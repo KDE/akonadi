@@ -72,29 +72,37 @@ EntityMimeTypeFilterModel::~EntityMimeTypeFilterModel()
 void EntityMimeTypeFilterModel::addMimeTypeInclusionFilters(const QStringList &typeList)
 {
   Q_D(EntityMimeTypeFilterModel);
+  layoutAboutToBeChanged();
   d->includedMimeTypes << typeList;
   invalidateFilter();
+  layoutChanged();
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeExclusionFilters(const QStringList &typeList)
 {
   Q_D(EntityMimeTypeFilterModel);
+  layoutAboutToBeChanged();
   d->excludedMimeTypes << typeList;
   invalidateFilter();
+  layoutChanged();
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeInclusionFilter(const QString &type)
 {
   Q_D(EntityMimeTypeFilterModel);
+  layoutAboutToBeChanged();
   d->includedMimeTypes << type;
   invalidateFilter();
+  layoutChanged();
 }
 
 void EntityMimeTypeFilterModel::addMimeTypeExclusionFilter(const QString &type)
 {
   Q_D(EntityMimeTypeFilterModel);
+  layoutAboutToBeChanged();
   d->excludedMimeTypes << type;
   invalidateFilter();
+  layoutChanged();
 }
 
 bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
@@ -128,9 +136,11 @@ QStringList EntityMimeTypeFilterModel::mimeTypeExclusionFilters() const
 void EntityMimeTypeFilterModel::clearFilters()
 {
   Q_D(EntityMimeTypeFilterModel);
+  layoutAboutToBeChanged();
   d->includedMimeTypes.clear();
   d->excludedMimeTypes.clear();
   invalidateFilter();
+  layoutChanged();
 }
 
 void EntityMimeTypeFilterModel::setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup)
