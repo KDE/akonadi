@@ -119,18 +119,18 @@ void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
   QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
 
-  layoutAboutToBeChanged();
+  emit layoutAboutToBeChanged();
   d->mimeChecker.setWantedMimeTypes( mimeTypes );
   invalidateFilter();
-  layoutChanged();
+  emit layoutChanged();
 }
 
 void CollectionFilterProxyModel::addMimeTypeFilter(const QString &type)
 {
-  layoutAboutToBeChanged();
+  emit layoutAboutToBeChanged();
   d->mimeChecker.addWantedMimeType( type );
   invalidateFilter();
-  layoutChanged();
+  emit layoutChanged();
 }
 
 bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
@@ -145,10 +145,10 @@ QStringList CollectionFilterProxyModel::mimeTypeFilters() const
 
 void CollectionFilterProxyModel::clearFilters()
 {
-  layoutAboutToBeChanged();
+  emit layoutAboutToBeChanged();
   d->mimeChecker = MimeTypeChecker();
   invalidateFilter();
-  layoutChanged();
+  emit layoutChanged();
 }
 
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const
