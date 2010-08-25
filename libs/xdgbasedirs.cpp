@@ -26,6 +26,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QProcess>
+#include <QtCore/QSettings>
 
 #include <cstdlib>
 
@@ -142,7 +143,25 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
 
       instance()->mDataDirs = dataDirs;
     }
+#ifdef Q_OS_WIN
+    QStringList dataDirs = instance()->mDataDirs;
+    // on Windows installation might be scattered across several directories
+    // so check if any installer providing agents has registered its base path
+	QSettings agentProviders( QSettings::SystemScope, QLatin1String( "Akonadi" ), QLatin1String( "Akonadi" ) );
+    agentProviders.beginGroup( QLatin1String( "AgentProviders" ) );
+    Q_FOREACH( const QString &agentProvider, agentProviders.childKeys() ) {
+      const QString basePath = agentProviders.value( agentProvider ).toString();
+      if ( !basePath.isEmpty() ) {
+        const QString path = basePath + QDir::separator() + QLatin1String( "share" );
+        if ( !dataDirs.contains( path ) )
+          dataDirs << path;
+      }
+    }
+
+    return dataDirs;
+#else
     return instance()->mDataDirs;
+#endif
   } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
     if ( instance()->mConfigDirs.isEmpty() ) {
       QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
@@ -214,8 +233,27 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     instance()->mExecutableDirs = executableDirs;
   }
 
+#ifdef Q_OS_WIN
+  QStringList executableDirs = instance()->mExecutableDirs;
+  // on Windows installation might be scattered across several directories
+  // so check if any installer providing agents has registered its base path
+  QSettings agentProviders( QSettings::SystemScope, QLatin1String( "Akonadi" ), QLatin1String( "Akonadi" ) );
+  agentProviders.beginGroup( QLatin1String( "AgentProviders" ) );
+  Q_FOREACH( const QString &agentProvider, agentProviders.childKeys() ) {
+    const QString basePath = agentProviders.value( agentProvider ).toString();
+    if ( !basePath.isEmpty() ) {
+      const QString path = basePath + QDir::separator() + QLatin1String( "bin" );
+      if ( !executableDirs.contains( path ) )
+        executableDirs << path;
+    }
+  }
+
+  QStringList::const_iterator pathIt    = executableDirs.constBegin();
+  QStringList::const_iterator pathEndIt = executableDirs.constEnd();
+#else
   QStringList::const_iterator pathIt    = instance()->mExecutableDirs.constBegin();
   QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.constEnd();
+#endif
   for ( ; pathIt != pathEndIt; ++pathIt ) {
     QStringList fullPathList = alternateExecPaths(*pathIt + QLatin1Char( '/' ) + relPath );
 
