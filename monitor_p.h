@@ -31,6 +31,7 @@
 #include <akonadi/private/notificationmessage_p.h>
 #include "notificationsourceinterface.h"
 #include "entitycache_p.h"
+#include "servermanager.h"
 
 #include <kmimetype.h>
 
@@ -105,6 +106,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
+
+    void serverStateChanged( Akonadi::ServerManager::State state );
 
 
     /**

@@ -52,14 +52,16 @@ void MonitorPrivate::init()
 {
   QObject::connect( &collectionCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
   QObject::connect( &itemCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
+  QObject::connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+                    q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   NotificationMessage::registerDBusTypes();
 }
 
 bool MonitorPrivate::connectToNotificationManager()
 {
-  if ( notificationSource )
-    return true;
+  delete notificationSource;
+  notificationSource = 0;
 
   org::freedesktop::Akonadi::NotificationManager manager(
           QLatin1String( "org.freedesktop.Akonadi" ),
@@ -86,6 +88,12 @@ bool MonitorPrivate::connectToNotificationManager()
                     q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
 
   return true;
+}
+
+void MonitorPrivate::serverStateChanged(ServerManager::State state)
+{
+  if ( state == ServerManager::Running )
+    connectToNotificationManager();
 }
 
 int MonitorPrivate::pipelineSize() const
