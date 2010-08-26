@@ -36,8 +36,6 @@
 
 using namespace Akonadi;
 
-#define d d_ptr
-
 Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
     d_ptr( new MonitorPrivate( this ) )
@@ -51,6 +49,8 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
     QObject( parent ),
     d_ptr( d )
 {
+  d_ptr->init();
+  d_ptr->connectToNotificationManager();
 }
 //@endcond
 
@@ -58,11 +58,12 @@ Monitor::~Monitor()
 {
   // :TODO: Unsubscribe from the notification manager. That means having some kind of reference
   // counting on the server side.
-  delete d;
+  delete d_ptr;
 }
 
 void Monitor::setCollectionMonitored( const Collection &collection, bool monitored )
 {
+  Q_D( Monitor );
   if ( monitored ) {
     d->collections << collection;
   } else {
@@ -74,6 +75,7 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
 
 void Monitor::setItemMonitored( const Item & item, bool monitored )
 {
+  Q_D( Monitor );
   if ( monitored ) {
     d->items.insert( item.id() );
   } else {
@@ -85,6 +87,7 @@ void Monitor::setItemMonitored( const Item & item, bool monitored )
 
 void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored )
 {
+  Q_D( Monitor );
   if ( monitored ) {
     d->resources.insert( resource );
   } else {
@@ -96,6 +99,7 @@ void Monitor::setResourceMonitored( const QByteArray & resource, bool monitored 
 
 void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 {
+  Q_D( Monitor );
   if ( monitored ) {
     d->mimetypes.insert( mimetype );
   } else {
@@ -108,6 +112,7 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
 
 void Akonadi::Monitor::setAllMonitored( bool monitored )
 {
+  Q_D( Monitor );
   d->monitorAll = monitored;
 
   if ( !monitored ) {
@@ -119,52 +124,62 @@ void Akonadi::Monitor::setAllMonitored( bool monitored )
 
 void Monitor::ignoreSession(Session * session)
 {
+  Q_D( Monitor );
   d->sessions << session->sessionId();
   connect( session, SIGNAL( destroyed( QObject* ) ), this, SLOT( slotSessionDestroyed( QObject* ) ) );
 }
 
 void Monitor::fetchCollection(bool enable)
 {
+  Q_D( Monitor );
   d->fetchCollection = enable;
 }
 
 void Monitor::fetchCollectionStatistics(bool enable)
 {
+  Q_D( Monitor );
   d->fetchCollectionStatistics = enable;
 }
 
 void Monitor::setItemFetchScope( const ItemFetchScope &fetchScope )
 {
+  Q_D( Monitor );
   d->mItemFetchScope = fetchScope;
 }
 
 ItemFetchScope &Monitor::itemFetchScope()
 {
+  Q_D( Monitor );
   return d->mItemFetchScope;
 }
 
 void Monitor::setCollectionFetchScope( const CollectionFetchScope &fetchScope )
 {
+  Q_D( Monitor );
   d->mCollectionFetchScope = fetchScope;
 }
 
 CollectionFetchScope& Monitor::collectionFetchScope()
 {
+  Q_D( Monitor );
   return d->mCollectionFetchScope;
 }
 
 Collection::List Monitor::collectionsMonitored() const
 {
+  Q_D( const Monitor );
   return d->collections;
 }
 
 QList<Item::Id> Monitor::itemsMonitored() const
 {
+  Q_D( const Monitor );
   return d->items.toList();
 }
 
 QVector<Item::Id> Monitor::itemsMonitoredEx() const
 {
+  Q_D( const Monitor );
   QVector<Item::Id> result;
   result.reserve( d->items.size() );
   qCopy( d->items.begin(), d->items.end(), std::back_inserter( result ) );
@@ -173,21 +188,25 @@ QVector<Item::Id> Monitor::itemsMonitoredEx() const
 
 QStringList Monitor::mimeTypesMonitored() const
 {
+  Q_D( const Monitor );
   return d->mimetypes.toList();
 }
 
 QList<QByteArray> Monitor::resourcesMonitored() const
 {
+  Q_D( const Monitor );
   return d->resources.toList();
 }
 
 bool Monitor::isAllMonitored() const
 {
+  Q_D( const Monitor );
   return d->monitorAll;
 }
 
 void Monitor::setSession( Akonadi::Session *session )
 {
+  Q_D( Monitor );
   if (session == d->session)
     return;
 
@@ -202,9 +221,8 @@ void Monitor::setSession( Akonadi::Session *session )
 
 Session* Monitor::session() const
 {
+  Q_D( const Monitor );
   return d->session;
 }
-
-#undef d
 
 #include "monitor.moc"

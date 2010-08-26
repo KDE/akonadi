@@ -28,17 +28,11 @@ using namespace Akonadi;
 ChangeRecorder::ChangeRecorder( QObject * parent ) :
     Monitor( new ChangeRecorderPrivate( this ), parent )
 {
-  Q_D( ChangeRecorder );
-  d->init();
-  d->connectToNotificationManager();
 }
 
 ChangeRecorder::ChangeRecorder( ChangeRecorderPrivate *privateclass, QObject * parent ) :
     Monitor( privateclass, parent )
 {
-  Q_D( ChangeRecorder );
-  d->init();
-  d->connectToNotificationManager();
 }
 
 ChangeRecorder::~ ChangeRecorder()

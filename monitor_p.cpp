@@ -37,7 +37,7 @@ static const int PipelineSize = 5;
 
 MonitorPrivate::MonitorPrivate(Monitor * parent) :
   q_ptr( parent ),
-  nm( 0 ),
+  notificationSource( 0 ),
   monitorAll( false ),
   session( Session::defaultSession() ),
   collectionCache( 3*PipelineSize, session ), // needs to be at least 3x pipeline size for the collection move case
@@ -52,13 +52,13 @@ void MonitorPrivate::init()
 {
   QObject::connect( &collectionCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
   QObject::connect( &itemCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
+
+  NotificationMessage::registerDBusTypes();
 }
 
 bool MonitorPrivate::connectToNotificationManager()
 {
-  NotificationMessage::registerDBusTypes();
-
-  if ( nm )
+  if ( notificationSource )
     return true;
 
   org::freedesktop::Akonadi::NotificationManager manager(
@@ -72,17 +72,17 @@ bool MonitorPrivate::connectToNotificationManager()
     return false;
   }
 
-  nm = new org::freedesktop::Akonadi::NotificationSource(
+  notificationSource = new org::freedesktop::Akonadi::NotificationSource(
               QLatin1String( "org.freedesktop.Akonadi" ),
               p.path(),
               QDBusConnection::sessionBus(), q_ptr );
 
-  if ( !nm ) {
+  if ( !notificationSource ) {
     // :TODO: error handling
     return false;
   }
 
-  QObject::connect( nm, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
+  QObject::connect( notificationSource, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
                     q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
 
   return true;

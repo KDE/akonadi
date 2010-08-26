@@ -53,7 +53,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    org::freedesktop::Akonadi::NotificationSource *nm;
+    org::freedesktop::Akonadi::NotificationSource *notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
