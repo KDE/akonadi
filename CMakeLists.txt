@@ -148,6 +148,7 @@ set( akonadikde_LIB_SRC
   unlinkjob.cpp
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
+  resourcesettings.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
@@ -196,6 +197,11 @@ qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.free
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml agentbase.h Akonadi::AgentBase controladaptor Akonadi__ControlAdaptor)
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Resource.Transport.xml transportresourcebase_p.h Akonadi::TransportResourceBasePrivate transportadaptor Akonadi__TransportAdaptor )
 qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Agent.Search.xml agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor )
+
+
+kde4_add_kcfg_files( akonadikde_LIB_SRC resourcebasesettings.kcfgc )
+install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
+
 
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
@@ -323,6 +329,8 @@ install( FILES
   transactionsequence.h
   transportresourcebase.h
   unlinkjob.h
+  resourcesettings.h
+  ${CMAKE_CURRENT_BINARY_DIR}/resourcebasesettings.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel
 )
 
