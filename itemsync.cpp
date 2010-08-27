@@ -337,6 +337,7 @@ void ItemSync::Private::processItems()
       remoteItem.setSize( localItem.size() );
       remoteItem.setRemoteId( localItem.remoteId() );  // in case someone clears remoteId by accident
       ItemModifyJob *mod = new ItemModifyJob( remoteItem, subjobParent() );
+      mod->disableRevisionCheck();
       q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
     } else {
       mProgress++;
