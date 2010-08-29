@@ -7,6 +7,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 ########### next target ###############
 
+if (NOT KDEPIM_NO_KCAL)
 set( kcalakonadi_LIB_SRC
   incidencemimetypevisitor.cpp
 )
@@ -24,3 +25,4 @@ install( FILES
   incidencemimetypevisitor.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kcal COMPONENT Devel
 )
+endif (NOT KDEPIM_NO_KCAL)
