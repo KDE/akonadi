@@ -44,6 +44,7 @@ class TextBrowser : public KTextBrowser
     }
 
   protected:
+#ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent *event )
     {
       QMenu *popup = createStandardContextMenu( event->pos() );
@@ -58,6 +59,7 @@ class TextBrowser : public KTextBrowser
       popup->exec( event->globalPos() );
       delete popup;
     }
+#endif
 };
 
 }
