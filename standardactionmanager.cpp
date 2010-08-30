@@ -193,7 +193,7 @@ class StandardActionManager::Private
 
     void enableAction( StandardActionManager::Type type, bool enable )
     {
-      Q_ASSERT( type >= 0 && type < StandardActionManager::LastType );
+      Q_ASSERT( type < StandardActionManager::LastType );
       if ( actions[type] )
         actions[type]->setEnabled( enable );
 
@@ -212,7 +212,7 @@ class StandardActionManager::Private
 
     void updatePluralLabel( StandardActionManager::Type type, int count )
     {
-      Q_ASSERT( type >= 0 && type < StandardActionManager::LastType );
+      Q_ASSERT( type < StandardActionManager::LastType );
       if ( actions[type] && pluralLabels.contains( type ) && !pluralLabels.value( type ).isEmpty() ) {
         actions[type]->setText( pluralLabels.value( type ).subs( qMax( count, 1 ) ).toString() );
       }
@@ -1033,7 +1033,7 @@ void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *sele
 
 KAction* StandardActionManager::createAction( Type type )
 {
-  Q_ASSERT( type >= 0 && type < LastType );
+  Q_ASSERT( type < LastType );
   Q_ASSERT( actionData[type].name );
   if ( d->actions[type] )
     return d->actions[type];
@@ -1069,26 +1069,26 @@ KAction* StandardActionManager::createAction( Type type )
 
 void StandardActionManager::createAllActions()
 {
-  for ( int i = 0; i < LastType; ++i )
+  for ( uint i = 0; i < LastType; ++i )
     createAction( (Type)i );
 }
 
 KAction * StandardActionManager::action( Type type ) const
 {
-  Q_ASSERT( type >= 0 && type < LastType );
+  Q_ASSERT( type < LastType );
   return d->actions[type];
 }
 
 void StandardActionManager::setActionText( Type type, const KLocalizedString & text )
 {
-  Q_ASSERT( type >= 0 && type < LastType );
+  Q_ASSERT( type < LastType );
   d->pluralLabels.insert( type, text );
   d->updateActions();
 }
 
 void StandardActionManager::interceptAction( Type type, bool intercept )
 {
-  Q_ASSERT( type >= 0 && type < LastType );
+  Q_ASSERT( type < LastType );
 
   const KAction *action = d->actions[type];
 
