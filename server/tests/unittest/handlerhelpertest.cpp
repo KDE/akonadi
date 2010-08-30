@@ -69,6 +69,13 @@ class HandlerHelperTest : public QObject
 
       QStack<Collection> ancestors;
       Collection c;
+
+      c.setId( 10 );
+      c.setRemoteId( "sl\\ash" );
+      ancestors.push ( c );
+      QTest::newRow( "slash" ) << 1 << ancestors << QByteArray( "ANCESTORS ((10 \"sl\\\\ash\"))" );
+
+      ancestors.clear();
       c.setId( 1 );
       c.setRemoteId( "r1" );
       ancestors.push( c );

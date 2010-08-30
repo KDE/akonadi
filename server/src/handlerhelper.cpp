@@ -247,9 +247,9 @@ QByteArray HandlerHelper::ancestorsToByteArray( int ancestorDepth, const QStack<
       }
       b += '(';
       const Collection c = ancestors.pop();
-      b += QByteArray::number( c.id() ) + " \"";
-      b += c.remoteId().toUtf8();
-      b += "\")";
+      b += QByteArray::number( c.id() ) + " ";
+      b += ImapParser::quote( c.remoteId().toUtf8() );
+      b += ")";
       if ( i != ancestorDepth - 1 )
         b += ' ';
     }
