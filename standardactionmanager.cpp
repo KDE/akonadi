@@ -493,7 +493,7 @@ class StandardActionManager::Private
 
     void slotCollectionProperties()
     {
-#ifndef Q_OS_WINCE	    
+#ifndef Q_OS_WINCE
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
       const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
