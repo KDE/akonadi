@@ -1464,6 +1464,10 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
     if ( Collection::root().id() == colId )
       return false;
 
+    // Collections which contain no items at all can't contain more
+    if ( m_collections[colId].statistics().count() == 0 )
+      return false;
+
     // Don't start the same job multiple times.
     if ( m_pendingCollectionRetrieveJobs.contains( colId ) )
       return false;
