@@ -22,6 +22,8 @@
 
 #include <QtCore/QtGlobal>
 
+#cmakedefine AKONADI_STATIC_LIBS
+
 #ifndef AKONADIPROTOCOLINTERNALS_EXPORT
 # if defined(AKONADI_STATIC_LIBS)
    /* No export/import for static libraries */
