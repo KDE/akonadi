@@ -110,12 +110,16 @@ class StatisticsProxyModel::Private
       }
 
       int iconSizes[] = { 32, 22 };
+      int icon_size_found = 32;
+
       QString iconPath;
 
       for ( int i = 0; i < 2; i++ ) {
         iconPath = KIconLoader::global()->iconPath( iconName, -iconSizes[ i ], true );
-        if ( !iconPath.isEmpty() )
+        if ( !iconPath.isEmpty() ) {
+	  icon_size_found = iconSizes[ i ];
           break;
+	}
       }
 
       if ( iconPath.isEmpty() ) {
@@ -126,11 +130,11 @@ class StatisticsProxyModel::Private
         "    </td>\n"
         "    <td align=\"right\" valign=\"top\">\n"
         "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
-        "      <img src=\"%1\">\n"
+        "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
         "      </td></tr></table>\n"
         "    </td>\n"
         "  </tr>\n"
-        ).arg( iconPath );
+        ).arg( iconPath ).arg( icon_size_found ) ;
 
       tip += QString::fromLatin1(
         "</table>"
