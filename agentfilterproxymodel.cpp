@@ -46,9 +46,9 @@ class AgentFilterProxyModel::Private
     QStringList excludeCapabilities;
 };
 
-AgentFilterProxyModel::AgentFilterProxyModel(QObject * parent)
+AgentFilterProxyModel::AgentFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
-  d( new Private )
+    d( new Private )
 {
   setDynamicSortFilter( true );
 }
@@ -58,7 +58,7 @@ AgentFilterProxyModel::~AgentFilterProxyModel()
   delete d;
 }
 
-void AgentFilterProxyModel::addMimeTypeFilter(const QString & mimeType)
+void AgentFilterProxyModel::addMimeTypeFilter( const QString &mimeType )
 {
   emit layoutAboutToBeChanged();
   d->mimeTypes << mimeType;
@@ -66,7 +66,7 @@ void AgentFilterProxyModel::addMimeTypeFilter(const QString & mimeType)
   emit layoutChanged();
 }
 
-void AgentFilterProxyModel::addCapabilityFilter(const QString & capability)
+void AgentFilterProxyModel::addCapabilityFilter( const QString &capability )
 {
   emit layoutAboutToBeChanged();
   d->capabilities << capability;
@@ -75,7 +75,7 @@ void AgentFilterProxyModel::addCapabilityFilter(const QString & capability)
 }
 
 
-void AgentFilterProxyModel::excludeCapabilities(const QString & capability)
+void AgentFilterProxyModel::excludeCapabilities( const QString &capability )
 {
   emit layoutAboutToBeChanged();
   d->excludeCapabilities << capability;
@@ -93,9 +93,9 @@ void AgentFilterProxyModel::clearFilters()
   emit layoutChanged();
 }
 
-bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
+bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) const
 {
-  QModelIndex index = sourceModel()->index( row, 0 );
+  const QModelIndex index = sourceModel()->index( row, 0 );
 
   // First see if the name matches a set regexp filter.
   if ( !filterRegExp().isEmpty() && !index.data().toString().contains( filterRegExp() ) )
@@ -103,47 +103,54 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex&) const
 
   if ( !d->mimeTypes.isEmpty() ) {
     bool found = false;
-    foreach ( const QString &mt, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
-      if ( d->mimeTypes.contains( mt ) ) {
+    foreach ( const QString &mimeType, index.data( AgentTypeModel::MimeTypesRole ).toStringList() ) {
+      if ( d->mimeTypes.contains( mimeType ) ) {
         found = true;
       } else {
-        KMimeType::Ptr mimeType = KMimeType::mimeType( mt, KMimeType::ResolveAliases );
-        if ( !mimeType.isNull() ) {
+        KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+        if ( !mimeTypePtr.isNull() ) {
           foreach ( const QString &type, d->mimeTypes ) {
-            if ( mimeType->is( type )) {
+            if ( mimeTypePtr->is( type )) {
               found = true;
               break;
             }
           }
         }
       }
+
       if ( found )
         break;
     }
-    if ( !found ) return false;
+
+    if ( !found )
+      return false;
   }
 
   if ( !d->capabilities.isEmpty() ) {
     bool found = false;
-    foreach ( const QString &cap, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
-      if ( d->capabilities.contains( cap ) ) {
+    foreach ( const QString &capability, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
+      if ( d->capabilities.contains( capability ) ) {
         found = true;
         break;
       }
     }
+
     if ( !found )
       return false;
 
     if ( found && !d->excludeCapabilities.isEmpty() ) {
-      foreach ( const QString &cap, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
-        if ( d->excludeCapabilities.contains( cap ) ) {
+      foreach ( const QString &capability, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
+        if ( d->excludeCapabilities.contains( capability ) ) {
           found = false;
           break;
         }
       }
-      if ( !found ) return false;
+
+      if ( !found )
+        return false;
     }
   }
+
   return true;
 }
 
