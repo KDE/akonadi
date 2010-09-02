@@ -212,9 +212,9 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
   if ( mode == CreateMode ) {
     KABC::ContactGroup dummyGroup;
     d->mGroupModel->loadContactGroup( dummyGroup );
-    d->mGui.groupName->setFocus();
 
     QTimer::singleShot( 0, this, SLOT( adaptHeaderSizes() ) );
+    QTimer::singleShot( 0, d->mGui.groupName, SLOT( setFocus() ) );
   }
 
   d->mGui.membersView->header()->setStretchLastSection( true );
