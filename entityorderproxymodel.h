@@ -32,33 +32,62 @@ namespace Akonadi
 {
 class EntityOrderProxyModelPrivate;
 
+/**
+ * @short A model that keeps the order of entities persistent.
+ *
+ * @author Stephen Kelly <stephen@kdab.com>
+ * @since 4.6
+ */
 class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
-public:
-  EntityOrderProxyModel(QObject* parent = 0);
-  
-  virtual ~EntityOrderProxyModel();
 
-  void setOrderConfig( KConfigGroup &configGroup );
+  public:
+    /**
+     * Creates a new entity order proxy model.
+     *
+     * @param parent The parent object.
+     */
+    EntityOrderProxyModel( QObject *parent = 0 );
 
-  void saveOrder();
+    /**
+     * Destroys the entity order proxy model.
+     */
+    virtual ~EntityOrderProxyModel();
 
-  void clearOrder( const QModelIndex &index );
-  void clearTreeOrder();
+    /**
+     * Sets the config @p group that will be used for storing the order.
+     */
+    void setOrderConfig( KConfigGroup &group );
 
-  virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
+    /**
+     * Saves the order.
+     */
+    void saveOrder();
 
-  virtual bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
+    void clearOrder( const QModelIndex &index );
+    void clearTreeOrder();
 
-protected:
-  EntityOrderProxyModelPrivate * const d_ptr;
+    /**
+     * @reimplemented
+     */
+    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
-  virtual QString parentConfigString( const QModelIndex &index ) const;
-  virtual QString configString( const QModelIndex &index ) const;
+    /**
+     * @reimplemented
+     */
+    virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
-private:
-  Q_DECLARE_PRIVATE( EntityOrderProxyModel )
+  protected:
+    EntityOrderProxyModelPrivate * const d_ptr;
+
+    virtual QString parentConfigString( const QModelIndex &index ) const;
+    virtual QString configString( const QModelIndex &index ) const;
+
+  private:
+    //@cond PRIVATE
+    Q_DECLARE_PRIVATE( EntityOrderProxyModel )
+    //@endcond
 };
 
 }
