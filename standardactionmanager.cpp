@@ -47,6 +47,7 @@
 #include <KLocale>
 #include <KMenu>
 #include <KMessageBox>
+#include <KToggleAction>
 
 #include <QtCore/QMimeData>
 #include <QtGui/QApplication>
@@ -61,43 +62,51 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
+enum ActionType
+{
+  NormalAction,
+  MenuAction,
+  ToggleAction
+};
+
 static const struct {
   const char *name;
   const char *label;
   const char *icon;
   int shortcut;
   const char* slot;
-  bool isActionMenu;
+  ActionType actionType;
 } actionData[] = {
-  { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT( slotCreateCollection() ), false },
-  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT( slotCopyCollections() ), false },
-  { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT( slotDeleteCollection() ), false },
-  { "akonadi_collection_sync", I18N_NOOP( "&Synchronize Folder" ), "view-refresh", Qt::Key_F5, SLOT( slotSynchronizeCollection() ), false },
-  { "akonadi_collection_properties", I18N_NOOP( "Folder &Properties" ), "configure", 0, SLOT( slotCollectionProperties() ), false },
-  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT( slotCopyItems() ), false },
-  { "akonadi_paste", I18N_NOOP( "&Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT( slotPaste() ), false },
-  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT( slotDeleteItems() ), false },
-  { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), 0, 0, SLOT( slotLocalSubscription() ), false },
-  { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), false },
-  { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), false },
-  { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), false },
+  { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT( slotCreateCollection() ), NormalAction },
+  { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT( slotCopyCollections() ), NormalAction },
+  { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT( slotDeleteCollection() ), NormalAction },
+  { "akonadi_collection_sync", I18N_NOOP( "&Synchronize Folder" ), "view-refresh", Qt::Key_F5, SLOT( slotSynchronizeCollection() ), NormalAction },
+  { "akonadi_collection_properties", I18N_NOOP( "Folder &Properties" ), "configure", 0, SLOT( slotCollectionProperties() ), NormalAction },
+  { "akonadi_item_copy", 0, "edit-copy", 0, SLOT( slotCopyItems() ), NormalAction },
+  { "akonadi_paste", I18N_NOOP( "&Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT( slotPaste() ), NormalAction },
+  { "akonadi_item_delete", 0, "edit-delete", Qt::Key_Delete, SLOT( slotDeleteItems() ), NormalAction },
+  { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), 0, 0, SLOT( slotLocalSubscription() ), NormalAction },
+  { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), NormalAction },
+  { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), NormalAction },
+  { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), NormalAction },
 #ifdef KDEPIM_MOBILE_UI
-  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), false },
-  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), false },
-  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), false },
-  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), false },
+  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), NormalAction },
+  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
+  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction },
+  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), NormalAction },
 #else
-  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo( QAction* ) ), true },
-  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo( QAction* ) ), true },
-  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), true },
-  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), true },
+  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo( QAction* ) ), MenuAction },
+  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo( QAction* ) ), MenuAction },
+  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), MenuAction },
+  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), MenuAction },
 #endif
-  { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), false },
-  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), false },
-  { "akonadi_resource_create", I18N_NOOP( "Create Resource" ), "folder-new", 0, SLOT( slotCreateResource() ), false },
-  { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), false },
-  { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), false },
-  { "akonadi_resource_synchronize", I18N_NOOP( "Synchronize Resource" ), "view-refresh", 0, SLOT( slotSynchronizeResource() ), false }
+  { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), NormalAction },
+  { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), NormalAction },
+  { "akonadi_resource_create", I18N_NOOP( "Create Resource" ), "folder-new", 0, SLOT( slotCreateResource() ), NormalAction },
+  { "akonadi_resource_delete", I18N_NOOP( "Delete Resource" ), "edit-delete", 0, SLOT( slotDeleteResource() ), NormalAction },
+  { "akonadi_resource_properties", I18N_NOOP( "&Resource Properties" ), "configure", 0, SLOT( slotResourceProperties() ), NormalAction },
+  { "akonadi_resource_synchronize", I18N_NOOP( "Synchronize Resource" ), "view-refresh", 0, SLOT( slotSynchronizeResource() ), NormalAction },
+  { "akonadi_work_offline", I18N_NOOP( "Work Offline" ), "user-offline", 0, SLOT( slotToggleWorkOffline(bool) ), ToggleAction }
 };
 static const int numActionData = sizeof actionData / sizeof *actionData;
 
@@ -117,6 +126,22 @@ static bool canCreateCollection( const Collection &collection )
 static inline bool isRootCollection( const Collection &collection )
 {
   return (collection == Collection::root());
+}
+
+static void setWorkOffline( bool offline )
+{
+  KConfig config( QLatin1String( "akonadikderc" ) );
+  KConfigGroup group( &config, QLatin1String( "Actions" ) );
+
+  group.writeEntry( "WorkOffline", offline );
+}
+
+static bool workOffline()
+{
+  KConfig config( QLatin1String( "akonadikderc" ) );
+  const KConfigGroup group( &config, QLatin1String( "Actions" ) );
+
+  return group.readEntry( "WorkOffline", false );
 }
 
 /**
@@ -737,6 +762,16 @@ class StandardActionManager::Private
       instance.configure( parentWidget );
     }
 
+    void slotToggleWorkOffline( bool offline )
+    {
+      setWorkOffline( offline );
+
+      AgentInstance::List instances = AgentManager::self()->instances();
+      foreach ( AgentInstance instance, instances ) {
+        instance.setIsOnline( !offline );
+      }
+    }
+
     void pasteTo( QItemSelectionModel *selectionModel, StandardActionManager::Type type, Qt::DropAction dropAction )
     {
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
@@ -1037,11 +1072,17 @@ KAction* StandardActionManager::createAction( Type type )
   Q_ASSERT( actionData[type].name );
   if ( d->actions[type] )
     return d->actions[type];
-  KAction *action;
-  if ( !actionData[type].isActionMenu ) {
-    action = new KAction( d->parentWidget );
-  } else {
-    action = new KActionMenu( d->parentWidget );
+  KAction *action = 0;
+  switch ( actionData[type].actionType ) {
+    case NormalAction:
+      action = new KAction( d->parentWidget );
+      break;
+    case MenuAction:
+      action = new KActionMenu( d->parentWidget );
+      break;
+    case ToggleAction:
+      action = new KToggleAction( d->parentWidget );
+      break;
   }
 
   if ( d->pluralLabels.contains( type ) && !d->pluralLabels.value( type ).isEmpty() )
@@ -1054,11 +1095,32 @@ KAction* StandardActionManager::createAction( Type type )
 
   action->setShortcut( actionData[type].shortcut );
 
-  if ( actionData[type].slot && !actionData[type].isActionMenu ) {
-    connect( action, SIGNAL( triggered() ), actionData[type].slot );
-  } else if ( actionData[type].slot ) {
-    KActionMenu *actionMenu = qobject_cast<KActionMenu*>( action );
-    connect( actionMenu->menu(), SIGNAL( triggered( QAction* ) ), actionData[type].slot );
+  if ( actionData[type].slot ) {
+    switch ( actionData[type].actionType ) {
+      case NormalAction:
+        connect( action, SIGNAL( triggered() ), actionData[type].slot );
+        break;
+      case MenuAction:
+        {
+          KActionMenu *actionMenu = qobject_cast<KActionMenu*>( action );
+          connect( actionMenu->menu(), SIGNAL( triggered( QAction* ) ), actionData[type].slot );
+        }
+        break;
+      case ToggleAction:
+        {
+          connect( action, SIGNAL( triggered( bool ) ), actionData[type].slot );
+        }
+        break;
+    }
+  }
+
+  if ( type == ToggleWorkOffline ) {
+    // inititalize the action state with information from config file
+    disconnect( action, SIGNAL( triggered( bool ) ), this, actionData[type].slot );
+    action->setChecked( workOffline() );
+    connect( action, SIGNAL( triggered( bool ) ), this, actionData[type].slot );
+
+    //TODO: find a way to check for updates to the config file
   }
 
   d->actionCollection->addAction( QString::fromLatin1(actionData[type].name), action );

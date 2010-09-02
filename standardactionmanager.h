@@ -152,6 +152,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       DeleteResource,            ///< Deletes the selected resource @since 4.6
       ResourceProperties,        ///< Provides the resource properties @since 4.6
       SynchronizeResource,       ///< Synchronizes the selected resource @since 4.6
+      ToggleWorkOffline,         ///< Toggles the work offline state of all resources @since 4.6
       LastType                   ///< Marks last action
     };
 
@@ -338,6 +339,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotDeleteResource() )
     Q_PRIVATE_SLOT( d, void slotResourceProperties() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeResource() )
+    Q_PRIVATE_SLOT( d, void slotToggleWorkOffline(bool) )
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
