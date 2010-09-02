@@ -50,18 +50,20 @@ class AgentInstanceModel::Private
 
 void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
 {
-  emit mParent->layoutAboutToBeChanged();
+  mParent->beginInsertRows( QModelIndex(), mInstances.count(), mInstances.count() + 1 );
   mInstances.append( instance );
-
-  emit mParent->layoutChanged();
+  mParent->endInsertRows();
 }
 
 void AgentInstanceModel::Private::instanceRemoved( const AgentInstance &instance )
 {
-  emit mParent->layoutAboutToBeChanged();
-  mInstances.removeAll( instance );
+  const int index = mInstances.indexOf( instance );
+  if ( index == -1 )
+    return;
 
-  emit mParent->layoutChanged();
+  mParent->beginRemoveRows( QModelIndex(), index, index );
+  mInstances.removeAll( instance );
+  mParent->endRemoveRows();
 }
 
 void AgentInstanceModel::Private::instanceChanged( const AgentInstance &instance )
