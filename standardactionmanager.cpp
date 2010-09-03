@@ -681,7 +681,7 @@ class StandardActionManager::Private
     {
       const AgentInstance::List instances = selectedAgentInstances();
 
-      if ( !instances.isEmpty() )
+      if ( instances.isEmpty() )
         return AgentInstance();
 
       return instances.first();
