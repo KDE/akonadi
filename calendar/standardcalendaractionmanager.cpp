@@ -106,6 +106,10 @@ class StandardCalendarActionManager::Private
                                        ki18np( "Do you really want to delete the selected event?", "Do you really want to delete %1 events?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Event?", "Delete Events?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not delete event: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Event deletion failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "Add Calendar" ) );

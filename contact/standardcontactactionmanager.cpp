@@ -101,6 +101,10 @@ class StandardContactActionManager::Private
                                        ki18np( "Do you really want to delete the selected contact?", "Do you really want to delete %1 contacts?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Contact?", "Delete Contacts?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not delete contact: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Contact deletion failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "Add Address Book" ) );

@@ -110,6 +110,10 @@ class StandardMailActionManager::Private
                                        ki18np( "Do you really want to delete the selected email?", "Do you really want to delete %1 emails?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Email?", "Delete Emails?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+                                       i18n( "Could not delete email: %1" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+                                       i18n( "Email deletion failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "Add Account" ) );

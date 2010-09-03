@@ -196,6 +196,10 @@ class StandardActionManager::Private
                       ki18np( "Do you really want to delete the selected item?", "Do you really want to delete %1 items?" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete item?", "Delete items?" ) );
+      setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+                      i18n( "Could not delete item: %1" ) );
+      setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+                      i18n( "Item deletion failed" ) );
 
       setContextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle,
                       i18nc( "@title:window", "Rename Favorite" ) );
@@ -541,8 +545,8 @@ class StandardActionManager::Private
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
-      // TODO: check errors (tokoe)
-      new ItemDeleteJob( items, q );
+      ItemDeleteJob *job = new ItemDeleteJob( items, q );
+      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( itemDeletionResult( KJob* ) ) );
     }
 
     void slotLocalSubscription()
@@ -800,6 +804,15 @@ class StandardActionManager::Private
         KMessageBox::error( parentWidget,
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle ) );
+      }
+    }
+
+    void itemDeletionResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle ) );
       }
     }
 
