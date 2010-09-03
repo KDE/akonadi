@@ -56,42 +56,48 @@ class ActionStateManagerTest : public QObject
     ActionStateManagerTest()
     {
       rootCollection = Collection::root();
+      const QString dummyMimeType( "text/dummy" );
 
       resourceCollectionOne.setId( 1 );
       resourceCollectionOne.setName( "resourceCollectionOne" );
       resourceCollectionOne.setRights( Collection::ReadOnly );
       resourceCollectionOne.setParentCollection( rootCollection );
-      resourceCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      resourceCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionOne.setId( 10 );
       folderCollectionOne.setName( "folderCollectionOne" );
       folderCollectionOne.setRights( Collection::ReadOnly );
       folderCollectionOne.setParentCollection( resourceCollectionOne );
-      folderCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      folderCollectionOne.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       resourceCollectionTwo.setId( 2 );
       resourceCollectionTwo.setName( "resourceCollectionTwo" );
       resourceCollectionTwo.setRights( Collection::AllRights );
       resourceCollectionTwo.setParentCollection( rootCollection );
-      resourceCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      resourceCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionTwo.setId( 20 );
       folderCollectionTwo.setName( "folderCollectionTwo" );
       folderCollectionTwo.setRights( Collection::AllRights );
       folderCollectionTwo.setParentCollection( resourceCollectionTwo );
-      folderCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      folderCollectionTwo.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       resourceCollectionThree.setId( 3 );
       resourceCollectionThree.setName( "resourceCollectionThree" );
       resourceCollectionThree.setRights( Collection::AllRights );
       resourceCollectionThree.setParentCollection( rootCollection );
-      resourceCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      resourceCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
 
       folderCollectionThree.setId( 30 );
       folderCollectionThree.setName( "folderCollectionThree" );
       folderCollectionThree.setRights( Collection::AllRights );
       folderCollectionThree.setParentCollection( resourceCollectionThree );
-      folderCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() );
+      folderCollectionThree.setContentMimeTypes( QStringList() << Collection::mimeType() << dummyMimeType );
+
+      folderCollectionThree.setId( 31 );
+      folderCollectionThree.setName( "folderCollectionThreeOne" );
+      folderCollectionThree.setRights( Collection::AllRights );
+      folderCollectionThree.setParentCollection( resourceCollectionThree );
 
       mCapabilityMap.insert( QLatin1String( "NoConfig" ), Collection::List() << resourceCollectionThree );
       mFavoriteCollectionMap.insert( folderCollectionThree.id() );
@@ -194,17 +200,17 @@ class ActionStateManagerTest : public QObject
 
         StateMap map;
         map.insert( StandardActionManager::CreateCollection, false );
-        map.insert( StandardActionManager::CopyCollections, false );
+        map.insert( StandardActionManager::CopyCollections, true );
         map.insert( StandardActionManager::DeleteCollections, false );
         map.insert( StandardActionManager::SynchronizeCollections, true );
         map.insert( StandardActionManager::CollectionProperties, true );
         map.insert( StandardActionManager::CopyItems, false );
         map.insert( StandardActionManager::Paste, false );
         map.insert( StandardActionManager::DeleteItems, false );
-        map.insert( StandardActionManager::AddToFavoriteCollections, false );
+        map.insert( StandardActionManager::AddToFavoriteCollections, true );
         map.insert( StandardActionManager::RemoveFromFavoriteCollections, false );
         map.insert( StandardActionManager::RenameFavoriteCollection, false );
-        map.insert( StandardActionManager::CopyCollectionToMenu, false );
+        map.insert( StandardActionManager::CopyCollectionToMenu, true );
         map.insert( StandardActionManager::CopyItemToMenu, false );
         map.insert( StandardActionManager::MoveItemToMenu, false );
         map.insert( StandardActionManager::MoveCollectionToMenu, false );
@@ -224,17 +230,17 @@ class ActionStateManagerTest : public QObject
 
         StateMap map;
         map.insert( StandardActionManager::CreateCollection, true );
-        map.insert( StandardActionManager::CopyCollections, false );
+        map.insert( StandardActionManager::CopyCollections, true );
         map.insert( StandardActionManager::DeleteCollections, false );
         map.insert( StandardActionManager::SynchronizeCollections, true );
         map.insert( StandardActionManager::CollectionProperties, true );
         map.insert( StandardActionManager::CopyItems, false );
         map.insert( StandardActionManager::Paste, false );
         map.insert( StandardActionManager::DeleteItems, false );
-        map.insert( StandardActionManager::AddToFavoriteCollections, false );
+        map.insert( StandardActionManager::AddToFavoriteCollections, true );
         map.insert( StandardActionManager::RemoveFromFavoriteCollections, false );
         map.insert( StandardActionManager::RenameFavoriteCollection, false );
-        map.insert( StandardActionManager::CopyCollectionToMenu, false );
+        map.insert( StandardActionManager::CopyCollectionToMenu, true );
         map.insert( StandardActionManager::CopyItemToMenu, false );
         map.insert( StandardActionManager::MoveItemToMenu, false );
         map.insert( StandardActionManager::MoveCollectionToMenu, false );
@@ -254,17 +260,17 @@ class ActionStateManagerTest : public QObject
 
         StateMap map;
         map.insert( StandardActionManager::CreateCollection, true );
-        map.insert( StandardActionManager::CopyCollections, false );
+        map.insert( StandardActionManager::CopyCollections, true );
         map.insert( StandardActionManager::DeleteCollections, false );
         map.insert( StandardActionManager::SynchronizeCollections, true );
         map.insert( StandardActionManager::CollectionProperties, true );
         map.insert( StandardActionManager::CopyItems, false );
         map.insert( StandardActionManager::Paste, false );
         map.insert( StandardActionManager::DeleteItems, false );
-        map.insert( StandardActionManager::AddToFavoriteCollections, false );
+        map.insert( StandardActionManager::AddToFavoriteCollections, true );
         map.insert( StandardActionManager::RemoveFromFavoriteCollections, false );
         map.insert( StandardActionManager::RenameFavoriteCollection, false );
-        map.insert( StandardActionManager::CopyCollectionToMenu, false );
+        map.insert( StandardActionManager::CopyCollectionToMenu, true );
         map.insert( StandardActionManager::CopyItemToMenu, false );
         map.insert( StandardActionManager::MoveItemToMenu, false );
         map.insert( StandardActionManager::MoveCollectionToMenu, false );
@@ -367,6 +373,36 @@ class ActionStateManagerTest : public QObject
 
         QTest::newRow( "favorite writable folder collection selected" ) << collectionList << map;
       }
+
+      {
+        Collection::List collectionList;
+        collectionList << folderCollectionThreeOne;
+
+        StateMap map;
+        map.insert( StandardActionManager::CreateCollection, false ); // content mimetype is missing
+        map.insert( StandardActionManager::CopyCollections, true );
+        map.insert( StandardActionManager::DeleteCollections, true );
+        map.insert( StandardActionManager::SynchronizeCollections, true );
+        map.insert( StandardActionManager::CollectionProperties, true );
+        map.insert( StandardActionManager::CopyItems, false );
+        map.insert( StandardActionManager::Paste, false );
+        map.insert( StandardActionManager::DeleteItems, false );
+        map.insert( StandardActionManager::AddToFavoriteCollections, false ); // content mimetype is missing
+        map.insert( StandardActionManager::RemoveFromFavoriteCollections, false );
+        map.insert( StandardActionManager::RenameFavoriteCollection, false );
+        map.insert( StandardActionManager::CopyCollectionToMenu, true );
+        map.insert( StandardActionManager::CopyItemToMenu, false );
+        map.insert( StandardActionManager::MoveItemToMenu, false );
+        map.insert( StandardActionManager::MoveCollectionToMenu, true );
+        map.insert( StandardActionManager::CutItems, false );
+        map.insert( StandardActionManager::CutCollections, true );
+        map.insert( StandardActionManager::CreateResource, true );
+        map.insert( StandardActionManager::DeleteResources, false );
+        map.insert( StandardActionManager::ResourceProperties, false );
+        map.insert( StandardActionManager::SynchronizeResources, false );
+
+        QTest::newRow( "structural folder collection selected" ) << collectionList << map;
+      }
     }
 
     void testCollectionSelected()
@@ -404,7 +440,9 @@ class ActionStateManagerTest : public QObject
      *  |
      *  `- resourceCollectionThree
      *      |
-     *      `folderCollectionThree
+     *      +-folderCollectionThree
+     *      |
+     *      `-folderCollectionThreeOne
      */
     Collection rootCollection;
     Collection resourceCollectionOne;
@@ -413,6 +451,7 @@ class ActionStateManagerTest : public QObject
     Collection folderCollectionOne;
     Collection folderCollectionTwo;
     Collection folderCollectionThree;
+    Collection folderCollectionThreeOne;
 
     StateMap mStateMap;
     QHash<QString, Collection::List> mCapabilityMap;

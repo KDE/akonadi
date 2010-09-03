@@ -41,6 +41,18 @@ static bool canCreateCollection( const Collection &collection )
   return true;
 }
 
+static inline bool canContainItems( const Collection &collection )
+{
+  if ( collection.contentMimeTypes().isEmpty() )
+    return false;
+
+  if ( (collection.contentMimeTypes().count() == 1) &&
+       (collection.contentMimeTypes().first() == Collection::mimeType()) )
+    return false;
+
+  return true;
+}
+
 ActionStateManager::ActionStateManager()
   : mReceiver( 0 )
 {
@@ -84,7 +96,6 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   enableAction( StandardActionManager::CopyCollections, atLeastOneCollectionSelected && // we need collections to work with
                                                         !isRootCollection( collection ) && // we can not copy the root collection
-                                                        !isResourceCollection( collection ) && // we can not copy any resource collection
                                                         isFolderCollection( collection ) ); // it must be a valid folder collection
 
   enableAction( StandardActionManager::CutCollections, canDeleteCollections && // we need collections to work with and the necessary rights (fixme: split)
@@ -95,7 +106,6 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   enableAction( StandardActionManager::CopyCollectionToMenu, atLeastOneCollectionSelected && // we need collections to work with
                                                              !isRootCollection( collection ) && // we can not copy the root collection
-                                                             !isResourceCollection( collection ) && // we can not copy any resource collection
                                                              isFolderCollection( collection ) ); // it must be a valid folder collection
 
   enableAction( StandardActionManager::MoveCollectionToMenu, canDeleteCollections && // we need collections to work with and the necessary rights (fixme: split)
@@ -121,7 +131,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::AddToFavoriteCollections, singleCollectionSelected && // we can add only one collection at a time
                                                                  !isFavoriteCollection( collection ) && // it must not be a favorite collection already
                                                                  !isRootCollection( collection ) && // we can not make the root collection a favorite
-                                                                 !isResourceCollection( collection ) && // we can not make any resource collection a favorite (why not?)
+                                                                 canContainItems( collection ) && // it must be able to contain items
                                                                  isFolderCollection( collection ) ); // it must be a valid folder collection
 
   enableAction( StandardActionManager::RemoveFromFavoriteCollections, singleCollectionSelected && // we can remove only one collection at a time
@@ -210,7 +220,9 @@ bool ActionStateManager::isResourceCollection( const Collection &collection ) co
 
 bool ActionStateManager::isFolderCollection( const Collection &collection ) const
 {
-  return CollectionUtils::isFolder( collection );
+  return (CollectionUtils::isFolder( collection ) ||
+          CollectionUtils::isResource( collection ) ||
+          CollectionUtils::isStructural( collection ));
 }
 
 bool ActionStateManager::isSpecialCollection( const Collection &collection ) const
