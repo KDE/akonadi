@@ -300,6 +300,7 @@ class StandardActionManager::Private
       enableAction( CollectionProperties, singleCollectionSelected && !isRootCollection( collection ) );
 
       enableAction( CreateCollection, singleCollectionSelected && canCreateCollection( collection ) );
+
       enableAction( DeleteCollections, singleCollectionSelected && (collection.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( collection ) );
       enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
       enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
@@ -315,20 +316,22 @@ class StandardActionManager::Private
       enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
 
       int resourceCollectionCount = 0;
-      bool enableResourceActions = false;
-      bool enableConfigureResourceAction = false;
+      bool enableResourceActions = true;
+      bool enableConfigureResourceAction = true;
       if ( collectionSelectionModel ) {
-        if ( collectionSelectionModel->selectedRows().count() == 1 ) {
-          const QModelIndex index = collectionSelectionModel->selectedRows().first();
+        foreach ( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
           if ( index.isValid() ) {
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
 
-              if ( collection.parentCollection() == Collection::root() )
+              const bool isResourceCollection = (collection.parentCollection() == Collection::root());
+
+              if ( isResourceCollection )
                 resourceCollectionCount++;
 
               // actions are only enabled if the collection is a resource collection
-              enableResourceActions = enableConfigureResourceAction = (collection.parentCollection() == Collection::root());
+              enableResourceActions = (enableResourceActions && isResourceCollection);
+              enableConfigureResourceAction = (enableConfigureResourceAction && isResourceCollection);
 
               // check that the 'NoConfig' flag is not set for the resource
               const Akonadi::AgentInstance instance = AgentManager::self()->instance( collection.resource() );
@@ -339,6 +342,12 @@ class StandardActionManager::Private
           }
         }
       }
+
+      if ( resourceCollectionCount == 0 ) {
+        enableResourceActions = false;
+        enableConfigureResourceAction = false;
+      }
+
       enableAction( CreateResource, true );
       enableAction( DeleteResources, enableResourceActions );
       enableAction( ResourceProperties, enableConfigureResourceAction );
