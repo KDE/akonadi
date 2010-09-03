@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-static bool canCreateCollection( const Collection &collection )
+static bool canCreateSubCollection( const Collection &collection )
 {
   if ( !( collection.rights() & Collection::CanCreateCollection ) )
     return false;
@@ -79,46 +79,81 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   const bool atLeastOneItemSelected = (singleItemSelected || multipleItemsSelected);
   const int itemCount = items.count();
 
-  bool canDeleteCollections = (collections.count() > 0); //TODO: fixme
+  bool canDeleteCollections = (collections.count() > 0);
   foreach ( const Collection &collection, collections ) {
-    canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
+    // do we have the necessary rights?
+    if ( !(collection.rights() & Collection::CanDeleteCollection) )
+      canDeleteCollections = false;
+
+    if ( isRootCollection( collection ) )
+      canDeleteCollections = false;
+
+    if ( isResourceCollection( collection ) )
+      canDeleteCollections = false;
+  }
+
+  bool canCutCollections = canDeleteCollections; // we must be able to delete for cutting
+  foreach ( const Collection &collection, collections ) {
+    if ( isSpecialCollection( collection ) )
+      canCutCollections = false;
+
+    if ( !isFolderCollection( collection ) )
+      canCutCollections = false;
+  }
+
+  const bool canMoveCollections = canCutCollections; // we must be able to cut for moving
+
+  bool canCopyCollections = (collections.count() > 0);
+  foreach ( const Collection &collection, collections ) {
+    if ( isRootCollection( collection ) )
+      canCopyCollections = false;
+
+    if ( !isFolderCollection( collection ) )
+      canCopyCollections = false;
+  }
+
+  bool canAddToFavoriteCollections = (collections.count() > 0);
+  foreach ( const Collection &collection, collections ) {
+    if ( isRootCollection( collection ) )
+      canAddToFavoriteCollections = false;
+
+    if ( isFavoriteCollection( collection ) )
+      canAddToFavoriteCollections = false;
+
+    if ( !isFolderCollection( collection ) )
+      canAddToFavoriteCollections = false;
+
+    if ( !canContainItems( collection ) )
+      canAddToFavoriteCollections = false;
+  }
+
+  bool canRemoveFromFavoriteCollections = (collections.count() > 0);
+  foreach ( const Collection &collection, collections ) {
+    if ( !isFavoriteCollection( collection ) )
+      canRemoveFromFavoriteCollections = false;
   }
 
   const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
   // collection specific actions
   enableAction( StandardActionManager::CreateCollection, singleCollectionSelected && // we can create only inside one collection
-                                                         canCreateCollection( collection ) ); // we need the necessary rights
+                                                         canCreateSubCollection( collection ) ); // we need the necessary rights
 
-  enableAction( StandardActionManager::DeleteCollections, singleCollectionSelected && // we can only delete one collection at a time (fixme)
-                                                          (collection.rights() & Collection::CanDeleteCollection) && // we need the necessary rights
-                                                          !isResourceCollection( collection ) ); // we are not allowed to remove resource collections
+  enableAction( StandardActionManager::DeleteCollections, canDeleteCollections );
 
-  enableAction( StandardActionManager::CopyCollections, atLeastOneCollectionSelected && // we need collections to work with
-                                                        !isRootCollection( collection ) && // we can not copy the root collection
-                                                        isFolderCollection( collection ) ); // it must be a valid folder collection
+  enableAction( StandardActionManager::CopyCollections, canCopyCollections );
 
-  enableAction( StandardActionManager::CutCollections, canDeleteCollections && // we need collections to work with and the necessary rights (fixme: split)
-                                                       !isRootCollection( collection ) && // we can not cut the root collection
-                                                       !isResourceCollection( collection ) && // we can not cut any resource collection
-                                                       isFolderCollection( collection ) && // it must be a valid folder collection
-                                                       !isSpecialCollection( collection ) ); // we can not cut a special collection
+  enableAction( StandardActionManager::CutCollections, canCutCollections );
 
-  enableAction( StandardActionManager::CopyCollectionToMenu, atLeastOneCollectionSelected && // we need collections to work with
-                                                             !isRootCollection( collection ) && // we can not copy the root collection
-                                                             isFolderCollection( collection ) ); // it must be a valid folder collection
+  enableAction( StandardActionManager::CopyCollectionToMenu, canCopyCollections );
 
-  enableAction( StandardActionManager::MoveCollectionToMenu, canDeleteCollections && // we need collections to work with and the necessary rights (fixme: split)
-                                                             !isRootCollection( collection ) && // we can not move the root collection
-                                                             !isResourceCollection( collection ) && // we can not move any resource collection
-                                                             isFolderCollection( collection ) && // it must be a valid folder collection
-                                                             !isSpecialCollection( collection ) ); // we can not move a special collection
+  enableAction( StandardActionManager::MoveCollectionToMenu, canMoveCollections );
 
   enableAction( StandardActionManager::CollectionProperties, singleCollectionSelected && // we can only configure one collection at a time
                                                              !isRootCollection( collection ) ); // we can not configure the root collection
 
   enableAction( StandardActionManager::SynchronizeCollections, singleCollectionSelected && // we can only synchronize one collection at a time (fixme)
-                                                               (isResourceCollection( collection ) || isFolderCollection( collection ) ) ); // it must be a resource or folder collection
+                                                               isFolderCollection( collection ) ); // it must be a valid folder collection
 
 #ifndef QT_NO_CLIPBOARD
   enableAction( StandardActionManager::Paste, singleCollectionSelected && // we can paste only into a single collection
@@ -128,14 +163,9 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 #endif
 
   // favorite collections specific actions
-  enableAction( StandardActionManager::AddToFavoriteCollections, singleCollectionSelected && // we can add only one collection at a time
-                                                                 !isFavoriteCollection( collection ) && // it must not be a favorite collection already
-                                                                 !isRootCollection( collection ) && // we can not make the root collection a favorite
-                                                                 canContainItems( collection ) && // it must be able to contain items
-                                                                 isFolderCollection( collection ) ); // it must be a valid folder collection
+  enableAction( StandardActionManager::AddToFavoriteCollections, canAddToFavoriteCollections );
 
-  enableAction( StandardActionManager::RemoveFromFavoriteCollections, singleCollectionSelected && // we can remove only one collection at a time
-                                                                      isFavoriteCollection( collection ) ); // it must be a favorite collection already
+  enableAction( StandardActionManager::RemoveFromFavoriteCollections, canRemoveFromFavoriteCollections );
 
   enableAction( StandardActionManager::RenameFavoriteCollection, singleCollectionSelected && // we can rename only one collection at a time
                                                                  isFavoriteCollection( collection ) ); // it must be a favorite collection already
