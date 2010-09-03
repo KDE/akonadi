@@ -143,6 +143,7 @@ add_akonadi_test(entitytreemodeltest.cpp)
 add_akonadi_test(collectionutilstest.cpp)
 add_akonadi_test(entitydisplayattributetest.cpp)
 add_akonadi_test(proxymodelstest.cpp)
+add_akonadi_test(actionstatemanagertest.cpp)
 
 # qtestlib tests that need non-exported stuff from akonadi-kde
 kde4_add_unit_test(resourceschedulertest TESTNAME akonadi-resourceschedulertest resourceschedulertest.cpp ../resourcescheduler.cpp)

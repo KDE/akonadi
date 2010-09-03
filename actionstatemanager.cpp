@@ -69,11 +69,6 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   bool canDeleteCollections = (collections.count() > 0); //TODO: fixme
   foreach ( const Collection &collection, collections ) {
-    if ( isRootCollection( collection ) ) {
-      // The root collection is selected. There are no valid actions to enable.
-      return;
-    }
-
     canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
   }
 
