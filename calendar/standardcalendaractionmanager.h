@@ -137,6 +137,20 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     KAction* action( StandardActionManager::Type type ) const;
 
     /**
+     * Sets the label of the action @p type to @p text, which is used during
+     * updating the action state and substituted according to the number of
+     * selected objects. This is mainly useful to customize the label of actions
+     * that can operate on multiple objects.
+     *
+     * Example:
+     * @code
+     * acctMgr->setActionText( Akonadi::StandardActionManager::CopyItems,
+     *                         ki18np( "Copy Item", "Copy %1 Items" ) );
+     * @endcode
+     */
+    void setActionText( StandardActionManager::Type type, const KLocalizedString &text );
+
+    /**
      * Sets whether the default implementation for the given action @p type
      * shall be executed when the action is triggered.
      *

@@ -63,10 +63,10 @@ class StandardMailActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis( i18n( "Add a new folder to the currently selected account." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Folder", "Copy %1 Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected folders to the clipboard." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Folder" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete Folder", "Delete %1 Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected folders from the account." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Update Folder" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis( i18n( "Update the content of the folder" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Update Folder", "Update Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis( i18n( "Update the content of the selected folders." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections, ki18np( "Cut Folder", "Cut %1 Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis( i18n( "Cut the selected folders from the account." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties..." ) );
@@ -79,12 +79,12 @@ class StandardMailActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected emails from the folder." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText( i18n( "Add &Account..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis( i18n( "Add a new account<p>You will be presented with a dialog where you can select the type of the account that shall be added.</p>" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setText( i18n( "&Delete Account" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteResource )->setWhatsThis( i18n( "Delete the selected account<p>The currently selected account will be deleted, along with all the emails it contains.</p>" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteResources, ki18np( "&Delete Account", "&Delete %1 Accounts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResources )->setWhatsThis( i18n( "Delete the selected accounts<p>The currently selected accounts will be deleted, along with all the emails they contain.</p>" ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Account Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected account." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setText( i18n( "Update Account" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResource )->setWhatsThis( i18n( "Updates the content of all folders of the account." ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Update Account", "Update %1 Accounts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis( i18n( "Updates the content of all folders of the selected accounts." ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "New Folder" ) );
@@ -94,11 +94,10 @@ class StandardMailActionManager::Private
                                        i18n( "Folder creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       i18n( "Do you really want to delete folder '%1' and all its sub-folders?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText,
-                                       i18n( "Do you really want to delete the search folder '%1'?" ) );
+                                       ki18np( "Do you really want to delete folder '%2' and all its sub-folders?",
+                                               "Do you really want to delete %1 folders and all their sub-folders?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
-                                       i18nc( "@title:window", "Delete folder?" ) );
+                                       ki18ncp( "@title:window", "Delete folder?", "Delete folders?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
                                        i18n( "Could not delete folder: %1" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
@@ -108,9 +107,9 @@ class StandardMailActionManager::Private
                                        i18nc( "@title:window", "Properties of Folder %1" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                                       i18n( "Do you really want to delete all selected emails?" ) );
+                                       ki18np( "Do you really want to delete the selected email?", "Do you really want to delete %1 emails?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
-                                       i18nc( "@title:window", "Delete Emails?" ) );
+                                       ki18ncp( "@title:window", "Delete Email?", "Delete Emails?" ) );
 
       mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
                                        i18nc( "@title:window", "Add Account" ) );
@@ -119,10 +118,10 @@ class StandardMailActionManager::Private
       mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
                                        i18n( "Account creation failed" ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
-                                       i18n( "Do you really want to delete account '%1'?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
-                                       i18nc( "@title:window", "Delete Account?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
+                                       ki18np( "Do you really want to delete account '%2'?", "Do you really want to delete %1 accounts?" ) );
+      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
+                                       ki18ncp( "@title:window", "Delete Account?", "Delete Accounts?" ) );
 
       mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
                                        i18n( "Could not paste email: %1" ) );
@@ -522,6 +521,11 @@ KAction* StandardMailActionManager::action( Type type ) const
 KAction* StandardMailActionManager::action( StandardActionManager::Type type ) const
 {
   return d->mGenericManager->action( type );
+}
+
+void StandardMailActionManager::setActionText( StandardActionManager::Type type, const KLocalizedString &text )
+{
+  d->mGenericManager->setActionText( type, text );
 }
 
 void StandardMailActionManager::interceptAction( Type type, bool intercept )

@@ -149,9 +149,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CutItems,                  ///< Cuts the selected items @since 4.4
       CutCollections,            ///< Cuts the selected collections @since 4.4
       CreateResource,            ///< Creates a new resource @since 4.6
-      DeleteResource,            ///< Deletes the selected resource @since 4.6
+      DeleteResources,           ///< Deletes the selected resources @since 4.6
       ResourceProperties,        ///< Provides the resource properties @since 4.6
-      SynchronizeResource,       ///< Synchronizes the selected resource @since 4.6
+      SynchronizeResources,      ///< Synchronizes the selected resources @since 4.6
       ToggleWorkOffline,         ///< Toggles the work offline state of all resources @since 4.6
       LastType                   ///< Marks last action
     };
@@ -278,6 +278,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @since 4.6
      */
     void setContextText( Type type, TextContext context, const QString &text );
+
+    /**
+     * Sets the @p text of the action @p type for the given @p context.
+     *
+     * @since 4.6
+     */
+    void setContextText( Type type, TextContext context, const KLocalizedString &text );
 
     /**
      * Sets the mime type filter that will be used when creating new resources.

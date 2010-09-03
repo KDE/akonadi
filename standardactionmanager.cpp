@@ -164,6 +164,10 @@ class StandardActionManager::Private
       pluralLabels.insert( StandardActionManager::CutItems, ki18np( "&Cut Item", "&Cut %1 Items" ) );
       pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Folder", "&Cut %1 Folders" ) );
       pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::DeleteCollections, ki18np( "&Delete Folder", "&Delete %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::SynchronizeCollections, ki18np( "&Synchronize Folder", "&Synchronize %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::DeleteResources, ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
+      pluralLabels.insert( StandardActionManager::SynchronizeResources, ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
 
       setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                       i18nc( "@title:window", "New Folder" ) );
@@ -175,11 +179,10 @@ class StandardActionManager::Private
                       i18n( "Folder creation failed" ) );
 
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                      i18n( "Do you really want to delete folder '%1' and all its sub-folders?" ) );
-      setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText,
-                      i18n( "Do you really want to delete the search view '%1'?" ) );
+                      ki18np( "Do you really want to delete folder '%2' and all its sub-folders?",
+                              "Do you really want to delete %1 folders and all their sub-folders?" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
-                      i18nc( "@title:window", "Delete folder?" ) );
+                      ki18ncp( "@title:window", "Delete folder?", "Delete folders?" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
                       i18n( "Could not delete folder: %1" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
@@ -189,9 +192,9 @@ class StandardActionManager::Private
                       i18nc( "@title:window", "Properties of Folder %1" ) );
 
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                      i18n( "Do you really want to delete all selected items?" ) );
+                      ki18np( "Do you really want to delete the selected item?", "Do you really want to delete %1 items?" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
-                      i18nc( "@title:window", "Delete?" ) );
+                      ki18ncp( "@title:window", "Delete item?", "Delete items?" ) );
 
       setContextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle,
                       i18nc( "@title:window", "Rename Favorite" ) );
@@ -205,10 +208,10 @@ class StandardActionManager::Private
       setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
                       i18n( "Resource creation failed" ) );
 
-      setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText,
-                      i18n( "Do you really want to delete resource '%1'?" ) );
-      setContextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle,
-                      i18nc( "@title:window", "Delete Resource?" ) );
+      setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
+                      ki18np( "Do you really want to delete resource '%2'?", "Do you really want to delete %1 resources?" ) );
+      setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
+                      ki18ncp( "@title:window", "Delete Resource?", "Delete Resources?" ) );
 
       setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
                       i18n( "Could not paste data: %1" ) );
@@ -311,6 +314,7 @@ class StandardActionManager::Private
       enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
       enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
 
+      int resourceCollectionCount = 0;
       bool enableResourceActions = false;
       bool enableConfigureResourceAction = false;
       if ( collectionSelectionModel ) {
@@ -319,6 +323,10 @@ class StandardActionManager::Private
           if ( index.isValid() ) {
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
+
+              if ( collection.parentCollection() == Collection::root() )
+                resourceCollectionCount++;
+
               // actions are only enabled if the collection is a resource collection
               enableResourceActions = enableConfigureResourceAction = (collection.parentCollection() == Collection::root());
 
@@ -332,9 +340,9 @@ class StandardActionManager::Private
         }
       }
       enableAction( CreateResource, true );
-      enableAction( DeleteResource, enableResourceActions );
+      enableAction( DeleteResources, enableResourceActions );
       enableAction( ResourceProperties, enableConfigureResourceAction );
-      enableAction( SynchronizeResource, enableResourceActions );
+      enableAction( SynchronizeResources, enableResourceActions );
 
       bool multipleItemsSelected = false;
       bool canDeleteItems = true;
@@ -369,7 +377,11 @@ class StandardActionManager::Private
       updatePluralLabel( CopyItems, itemCount );
       updatePluralLabel( DeleteItems, itemCount );
       updatePluralLabel( CutItems, itemCount );
-      updatePluralLabel( CutCollections, itemCount );
+      updatePluralLabel( CutCollections, collectionCount );
+      updatePluralLabel( DeleteCollections, collectionCount );
+      updatePluralLabel( SynchronizeCollections, collectionCount );
+      updatePluralLabel( DeleteResources, resourceCollectionCount );
+      updatePluralLabel( SynchronizeResources, resourceCollectionCount );
 
       emit q->actionStateUpdated();
     }
@@ -473,33 +485,43 @@ class StandardActionManager::Private
       encodeToClipboard( collectionSelectionModel, true );
     }
 
+    Collection::List selectedCollections() const
+    {
+      Collection::List collections;
+
+      Q_ASSERT( collectionSelectionModel );
+
+      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+        Q_ASSERT( collection.isValid() );
+
+        collections << collection;
+      }
+
+      return collections;
+    }
+
     void slotDeleteCollection()
     {
-      Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
-
-      QString text = contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText ).arg( index.data().toString() );
-      if ( CollectionUtils::isVirtual( collection ) )
-        text = contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxAlternativeText ).arg( index.data().toString() );
+      const QString collectionName = collections.first().name();
+      const QString text = contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
+                                        collections.count(), collectionName );
 
       if ( KMessageBox::questionYesNo( parentWidget, text,
-           contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle ),
+           contextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle, collections.count(), collectionName ),
            KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
-      const Collection::Id collectionId = index.data( CollectionModel::CollectionIdRole ).toLongLong();
-      if ( collectionId <= 0 )
-        return;
-
-      CollectionDeleteJob *job = new CollectionDeleteJob( Collection( collectionId ), q );
-      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionDeletionResult( KJob* ) ) );
+      foreach ( const Collection &collection, collections ) {
+        CollectionDeleteJob *job = new CollectionDeleteJob( collection, q );
+        q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionDeletionResult( KJob* ) ) );
+      }
     }
 
     void slotSynchronizeCollection()
@@ -563,13 +585,6 @@ class StandardActionManager::Private
 
     void slotDeleteItems()
     {
-      if ( KMessageBox::questionYesNo( parentWidget,
-           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText ),
-           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle ),
-           KStandardGuiItem::del(), KStandardGuiItem::cancel(),
-           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
-        return;
-
       Q_ASSERT( itemSelectionModel );
 
       Item::List items;
@@ -580,6 +595,17 @@ class StandardActionManager::Private
         items << Item( id );
       }
 
+      if ( items.isEmpty() )
+        return;
+
+      if ( KMessageBox::questionYesNo( parentWidget,
+           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText, items.count(), QString() ),
+           contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle, items.count(), QString() ),
+           KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
+        return;
+
+      // TODO: check errors (tokoe)
       new ItemDeleteJob( items, q );
     }
 
@@ -686,23 +712,36 @@ class StandardActionManager::Private
       pasteTo( itemSelectionModel, action, Qt::MoveAction );
     }
 
-    AgentInstance selectedAgentInstance() const
+    AgentInstance::List selectedAgentInstances() const
     {
+      AgentInstance::List instances;
+
       Q_ASSERT( collectionSelectionModel );
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
+        return instances;
+
+      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+        Q_ASSERT( collection.isValid() );
+
+        if ( collection.isValid() ) {
+          const QString identifier = collection.resource();
+          instances << AgentManager::self()->instance( identifier );
+        }
+      }
+
+      return instances;
+    }
+
+    AgentInstance selectedAgentInstance() const
+    {
+      const AgentInstance::List instances = selectedAgentInstances();
+
+      if ( !instances.isEmpty() )
         return AgentInstance();
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
-
-      if ( !collection.isValid() )
-        return AgentInstance();
-
-      const QString identifier = collection.resource();
-
-      return AgentManager::self()->instance( identifier );
+      return instances.first();
     }
 
     void slotCreateResource()
@@ -730,27 +769,29 @@ class StandardActionManager::Private
 
     void slotDeleteResource()
     {
-      const AgentInstance instance = selectedAgentInstance();
-      if ( !instance.isValid() )
+      const AgentInstance::List instances = selectedAgentInstances();
+      if ( instances.isEmpty() )
         return;
 
       if ( KMessageBox::questionYesNo( parentWidget,
-           contextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxText ).arg( instance.name() ),
-           contextText( StandardActionManager::DeleteResource, StandardActionManager::MessageBoxTitle ),
+           contextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText, instances.count(), instances.first().name() ),
+           contextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle, instances.count(), instances.first().name() ),
            KStandardGuiItem::del(), KStandardGuiItem::cancel(),
            QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
         return;
 
-      AgentManager::self()->removeInstance( instance );
+      foreach ( const AgentInstance &instance, instances )
+        AgentManager::self()->removeInstance( instance );
     }
 
     void slotSynchronizeResource()
     {
-      AgentInstance instance = selectedAgentInstance();
-      if ( !instance.isValid() )
+      const AgentInstance::List instances = selectedAgentInstances();
+      if ( instances.isEmpty() )
         return;
 
-      instance.synchronize();
+      foreach ( AgentInstance instance, instances )
+        instance.synchronize();
     }
 
     void slotResourceProperties()
@@ -992,12 +1033,31 @@ class StandardActionManager::Private
 
     void setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &data )
     {
-      contextTexts[ type ].insert( context, data );
+      ContextTextEntry entry;
+      entry.text = data;
+
+      contextTexts[ type ].insert( context, entry );
+    }
+
+    void setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const KLocalizedString &data )
+    {
+      ContextTextEntry entry;
+      entry.localizedText = data;
+
+      contextTexts[ type ].insert( context, entry );
     }
 
     QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context ) const
     {
-      return contextTexts[ type ].value( context );
+      return contextTexts[ type ].value( context ).text;
+    }
+
+    QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value ) const
+    {
+      if ( contextTexts[ type ].value( context ).localizedText.isEmpty() )
+        return contextTexts[ type ].value( context ).text;
+
+      return contextTexts[ type ].value( context ).localizedText.subs( count ).subs( value ).toString();
     }
 
     StandardActionManager *q;
@@ -1010,7 +1070,14 @@ class StandardActionManager::Private
     QVector<KAction*> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
 
-    typedef QHash<StandardActionManager::TextContext, QString> ContextTexts;
+    struct ContextTextEntry
+    {
+      QString text;
+      KLocalizedString localizedText;
+      bool isLocalized;
+    };
+
+    typedef QHash<StandardActionManager::TextContext, ContextTextEntry> ContextTexts;
     QHash<StandardActionManager::Type, ContextTexts> contextTexts;
 
     QStringList mMimeTypeFilter;
@@ -1196,6 +1263,11 @@ Item::List StandardActionManager::selectedItems() const
 }
 
 void StandardActionManager::setContextText( Type type, TextContext context, const QString &text )
+{
+  d->setContextText( type, context, text );
+}
+
+void StandardActionManager::setContextText( Type type, TextContext context, const KLocalizedString &text )
 {
   d->setContextText( type, context, text );
 }
