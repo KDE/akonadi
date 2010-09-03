@@ -403,6 +403,37 @@ class ActionStateManagerTest : public QObject
 
         QTest::newRow( "structural folder collection selected" ) << collectionList << map;
       }
+
+      // multiple collections
+      {
+        Collection::List collectionList;
+        collectionList << rootCollection << resourceCollectionTwo;
+
+        StateMap map;
+        map.insert( StandardActionManager::CreateCollection, false );
+        map.insert( StandardActionManager::CopyCollections, false );
+        map.insert( StandardActionManager::DeleteCollections, false );
+        map.insert( StandardActionManager::SynchronizeCollections, false );
+        map.insert( StandardActionManager::CollectionProperties, false );
+        map.insert( StandardActionManager::CopyItems, false );
+        map.insert( StandardActionManager::Paste, false );
+        map.insert( StandardActionManager::DeleteItems, false );
+        map.insert( StandardActionManager::AddToFavoriteCollections, false );
+        map.insert( StandardActionManager::RemoveFromFavoriteCollections, false );
+        map.insert( StandardActionManager::RenameFavoriteCollection, false );
+        map.insert( StandardActionManager::CopyCollectionToMenu, false );
+        map.insert( StandardActionManager::CopyItemToMenu, false );
+        map.insert( StandardActionManager::MoveItemToMenu, false );
+        map.insert( StandardActionManager::MoveCollectionToMenu, false );
+        map.insert( StandardActionManager::CutItems, false );
+        map.insert( StandardActionManager::CutCollections, false );
+        map.insert( StandardActionManager::CreateResource, true );
+        map.insert( StandardActionManager::DeleteResources, false );
+        map.insert( StandardActionManager::ResourceProperties, false );
+        map.insert( StandardActionManager::SynchronizeResources, false );
+
+        QTest::newRow( "root collection and writable resource collection selected" ) << collectionList << map;
+      }
     }
 
     void testCollectionSelected()
