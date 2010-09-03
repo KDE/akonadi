@@ -65,11 +65,13 @@ namespace CollectionUtils
 
   inline bool isFolder( const Collection &collection )
   {
-    return (collection.parentCollection() != Collection::root() &&
+    return (!isRoot( collection ) &&
+            !isResource( collection ) &&
+            !isStructural( collection ) &&
             collection.resource() != QLatin1String( "akonadi_search_resource" ) &&
-            collection.resource() != QLatin1String( "akonadi_nepomuktag_resource" ) &&
-            !collection.contentMimeTypes().isEmpty());
+            collection.resource() != QLatin1String( "akonadi_nepomuktag_resource" ));
   }
+
   inline QString defaultIconName( const Collection &col )
   {
     if ( CollectionUtils::isVirtualParent( col ) )
