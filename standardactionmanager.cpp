@@ -19,6 +19,7 @@
 
 #include "standardactionmanager.h"
 
+#include "actionstatemanager_p.h"
 #include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
@@ -219,6 +220,11 @@ class StandardActionManager::Private
                       i18n( "Paste failed" ) );
     }
 
+    void enableAction( int type, bool enable )
+    {
+      enableAction( static_cast<StandardActionManager::Type>( type ), enable );
+    }
+
     void enableAction( StandardActionManager::Type type, bool enable )
     {
       Q_ASSERT( type < StandardActionManager::LastType );
@@ -238,12 +244,25 @@ class StandardActionManager::Private
       }
     }
 
+    void updatePluralLabel( int type, int count )
+    {
+      updatePluralLabel( static_cast<StandardActionManager::Type>( type ), count );
+    }
+
     void updatePluralLabel( StandardActionManager::Type type, int count )
     {
       Q_ASSERT( type < StandardActionManager::LastType );
       if ( actions[type] && pluralLabels.contains( type ) && !pluralLabels.value( type ).isEmpty() ) {
         actions[type]->setText( pluralLabels.value( type ).subs( qMax( count, 1 ) ).toString() );
       }
+    }
+
+    bool isFavoriteCollection( const Akonadi::Collection &collection )
+    {
+      if ( !favoritesModel )
+        return false;
+
+      return favoritesModel->collections().contains( collection );
     }
 
     void encodeToClipboard( QItemSelectionModel* selectionModel, bool cut = false )
@@ -266,131 +285,39 @@ class StandardActionManager::Private
 
     void updateActions()
     {
-      bool singleCollectionSelected = false;
-      bool multipleCollectionsSelected = false;
-      bool canDeleteCollections = true;
-      int collectionCount = 0;
-      QModelIndex selectedIndex;
-      if ( !collectionSelectionModel ) {
-        canDeleteCollections = false;
-      } else {
-        collectionCount = collectionSelectionModel->selectedRows().count();
-        singleCollectionSelected = collectionCount == 1;
-        multipleCollectionsSelected = collectionCount > 1;
-        canDeleteCollections = collectionCount > 0;
-
-        if ( singleCollectionSelected )
-          selectedIndex = collectionSelectionModel->selectedRows().first();
-        if ( itemSelectionModel ) {
-          const QModelIndexList rows = itemSelectionModel->selectedRows();
-          foreach ( const QModelIndex &itemIndex, rows ) {
-            const Collection collection = itemIndex.data( EntityTreeModel::CollectionRole ).value<Collection>();
-            if ( !collection.isValid() )
-              continue;
-            if ( collection == collection.root() )
-              // The root collection is selected. There are no valid actions to enable.
-              return;
-            canDeleteCollections = canDeleteCollections && ( collection.rights() & Collection::CanDeleteCollection );
-          }
-        }
-      }
-      const Collection collection = selectedIndex.data( CollectionModel::CollectionRole ).value<Collection>();
-
-      enableAction( CopyCollections, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
-      enableAction( CollectionProperties, singleCollectionSelected && !isRootCollection( collection ) );
-
-      enableAction( CreateCollection, singleCollectionSelected && canCreateCollection( collection ) );
-
-      enableAction( DeleteCollections, singleCollectionSelected && (collection.rights() & Collection::CanDeleteCollection) && !CollectionUtils::isResource( collection ) );
-      enableAction( CutCollections, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
-      enableAction( SynchronizeCollections, singleCollectionSelected && (CollectionUtils::isResource( collection ) || CollectionUtils::isFolder( collection ) ) );
-#ifndef QT_NO_CLIPBOARD
-      enableAction( Paste, singleCollectionSelected && PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) );
-#else
-      enableAction( Paste, false );
-#endif
-      enableAction( AddToFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( !favoritesModel->collections().contains( collection ) ) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
-      enableAction( RemoveFromFavoriteCollections, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
-      enableAction( RenameFavoriteCollection, singleCollectionSelected && ( favoritesModel != 0 ) && ( favoritesModel->collections().contains( collection ) ) );
-      enableAction( CopyCollectionToMenu, (singleCollectionSelected || multipleCollectionsSelected) && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) );
-      enableAction( MoveCollectionToMenu, canDeleteCollections && !isRootCollection( collection ) && !CollectionUtils::isResource( collection ) && CollectionUtils::isFolder( collection ) && !collection.hasAttribute<SpecialCollectionAttribute>() );
-
-      int resourceCollectionCount = 0;
-      bool enableResourceActions = true;
-      bool enableConfigureResourceAction = true;
+      // collect all selected collections
+      Collection::List selectedCollections;
       if ( collectionSelectionModel ) {
-        foreach ( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
-          if ( index.isValid() ) {
-            const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-            if ( collection.isValid() ) {
-
-              const bool isResourceCollection = (collection.parentCollection() == Collection::root());
-
-              if ( isResourceCollection )
-                resourceCollectionCount++;
-
-              // actions are only enabled if the collection is a resource collection
-              enableResourceActions = (enableResourceActions && isResourceCollection);
-              enableConfigureResourceAction = (enableConfigureResourceAction && isResourceCollection);
-
-              // check that the 'NoConfig' flag is not set for the resource
-              const Akonadi::AgentInstance instance = AgentManager::self()->instance( collection.resource() );
-
-              if ( instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) )
-                enableConfigureResourceAction = false;
-            }
-          }
-        }
-      }
-
-      if ( resourceCollectionCount == 0 ) {
-        enableResourceActions = false;
-        enableConfigureResourceAction = false;
-      }
-
-      enableAction( CreateResource, true );
-      enableAction( DeleteResources, enableResourceActions );
-      enableAction( ResourceProperties, enableConfigureResourceAction );
-      enableAction( SynchronizeResources, enableResourceActions );
-
-      bool multipleItemsSelected = false;
-      bool canDeleteItems = true;
-      int itemCount = 0;
-      if ( !itemSelectionModel ) {
-        canDeleteItems = false;
-      } else {
-        const QModelIndexList rows = itemSelectionModel->selectedRows();
-
-        itemCount = rows.count();
-        multipleItemsSelected = itemCount > 0;
-        canDeleteItems = itemCount > 0;
-
-        foreach ( const QModelIndex &itemIndex, rows ) {
-          const Collection parentCollection = itemIndex.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
-          if ( !parentCollection.isValid() )
+        const QModelIndexList rows = collectionSelectionModel->selectedRows();
+        foreach ( const QModelIndex &index, rows ) {
+          Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+          if ( !collection.isValid() )
             continue;
 
-          canDeleteItems = canDeleteItems && (parentCollection.rights() & Collection::CanDeleteItem);
+          const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+          collection.setParentCollection( parentCollection );
+
+          selectedCollections << collection;
         }
       }
 
-      enableAction( CopyItems, multipleItemsSelected );
-      enableAction( CutItems, canDeleteItems );
+      // collect all selected items
+      Item::List selectedItems;
+      if ( itemSelectionModel ) {
+        const QModelIndexList rows = itemSelectionModel->selectedRows();
+        foreach ( const QModelIndex &index, rows ) {
+          Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+          if ( !item.isValid() )
+            continue;
 
-      enableAction( DeleteItems, multipleItemsSelected && canDeleteItems );
+          const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+          item.setParentCollection( parentCollection );
 
-      enableAction( CopyItemToMenu, multipleItemsSelected );
-      enableAction( MoveItemToMenu, multipleItemsSelected && canDeleteItems );
+          selectedItems << item;
+        }
+      }
 
-      updatePluralLabel( CopyCollections, collectionCount );
-      updatePluralLabel( CopyItems, itemCount );
-      updatePluralLabel( DeleteItems, itemCount );
-      updatePluralLabel( CutItems, itemCount );
-      updatePluralLabel( CutCollections, collectionCount );
-      updatePluralLabel( DeleteCollections, collectionCount );
-      updatePluralLabel( SynchronizeCollections, collectionCount );
-      updatePluralLabel( DeleteResources, resourceCollectionCount );
-      updatePluralLabel( SynchronizeResources, resourceCollectionCount );
+      mActionStateManager.updateState( selectedCollections, selectedItems );
 
       emit q->actionStateUpdated();
     }
@@ -1089,6 +1016,8 @@ class StandardActionManager::Private
     typedef QHash<StandardActionManager::TextContext, ContextTextEntry> ContextTexts;
     QHash<StandardActionManager::Type, ContextTexts> contextTexts;
 
+    ActionStateManager mActionStateManager;
+
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
 };
@@ -1102,6 +1031,7 @@ StandardActionManager::StandardActionManager( KActionCollection * actionCollecti
 {
   d->parentWidget = parent;
   d->actionCollection = actionCollection;
+  d->mActionStateManager.setReceiver( this );
 #ifndef QT_NO_CLIPBOARD
   connect( QApplication::clipboard(), SIGNAL( changed( QClipboard::Mode ) ), SLOT( clipboardChanged( QClipboard::Mode ) ) );
 #endif

@@ -36,6 +36,7 @@ include_directories(
 
 set( akonadikde_LIB_SRC
   entity.cpp # keep it at top to not break enable-final
+  actionstatemanager.cpp
   agentactionmanager.cpp
   agentbase.cpp
   agentfactory.cpp
