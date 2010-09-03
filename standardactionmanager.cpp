@@ -564,13 +564,15 @@ class StandardActionManager::Private
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+        Q_ASSERT( collection.isValid() );
 
-      favoritesModel->addCollection( collection );
-      enableAction( AddToFavoriteCollections, false );
+        favoritesModel->addCollection( collection );
+      }
+
+      updateActions();
     }
 
     void slotRemoveFromFavorites()
@@ -580,14 +582,15 @@ class StandardActionManager::Private
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
+        Q_ASSERT( collection.isValid() );
 
-      favoritesModel->removeCollection( collection );
-      if ( favoritesModel->collections().count() <= 1 )
-        enableAction( AddToFavoriteCollections, true );
+        favoritesModel->removeCollection( collection );
+      }
+
+      updateActions();
     }
 
     void slotRenameFavorite()
