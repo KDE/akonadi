@@ -48,6 +48,11 @@ namespace CollectionUtils
     return !(collection.rights() & Collection::CanCreateItem);
   }
 
+  inline bool isRoot( const Collection &collection )
+  {
+    return (collection == Collection::root());
+  }
+
   inline bool isResource( const Collection &collection )
   {
     return (collection.parentCollection() == Collection::root());
