@@ -67,6 +67,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       : AgentBasePrivate( parent ),
         scheduler( 0 ),
         mItemSyncer( 0 ),
+        mItemTransactionMode( ItemSync::SingleTransaction ),
         mCollectionSyncer( 0 ),
         mHierarchicalRid( false )
     {
@@ -133,6 +134,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     ResourceScheduler *scheduler;
     ItemSync *mItemSyncer;
+    ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
     bool mHierarchicalRid;
 };
@@ -645,6 +647,7 @@ void ResourceBase::setItemStreamingEnabled( bool enable )
               "Calling setItemStreamingEnabled() although no item retrieval is in progress" );
   if ( !d->mItemSyncer ) {
     d->mItemSyncer = new ItemSync( currentCollection() );
+    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
     connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
   }
@@ -659,6 +662,7 @@ void ResourceBase::itemsRetrieved( const Item::List &items )
               "Calling itemsRetrieved() although no item retrieval is in progress" );
   if ( !d->mItemSyncer ) {
     d->mItemSyncer = new ItemSync( currentCollection() );
+    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
     connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
   }
@@ -673,6 +677,7 @@ void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems, co
               "Calling itemsRetrievedIncremental() although no item retrieval is in progress" );
   if ( !d->mItemSyncer ) {
     d->mItemSyncer = new ItemSync( currentCollection() );
+    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
     connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
     connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
   }
@@ -713,6 +718,13 @@ void ResourceBase::taskDone()
   Q_D( ResourceBase );
   d->scheduler->taskDone();
 }
+
+void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)
+{
+  Q_D( ResourceBase );
+  d->mItemTransactionMode = mode;
+}
+
 
 #include "resourcebase.moc"
 #include "moc_resourcebase.cpp"

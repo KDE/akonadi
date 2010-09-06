@@ -28,6 +28,7 @@
 #include <akonadi/agentbase.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
+#include <akonadi/itemsync.h>
 
 class KJob;
 class Akonadi__ResourceAdaptor;
@@ -345,6 +346,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param enable @c true if items are delivered in chunks rather in one big block.
      */
     void setItemStreamingEnabled( bool enable );
+
+    /**
+     * Set transaction mode for item sync'ing.
+     * @see Akonadi::ItemSync::TransactionMode
+     * @since 4.6
+     */
+    void setItemTransactionMode( ItemSync::TransactionMode mode );
 
     /**
      * Call this method to supply incrementally retrieved items from the remote server.

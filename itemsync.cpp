@@ -43,7 +43,7 @@ class ItemSync::Private
   public:
     Private( ItemSync *parent ) :
       q( parent ),
-      mTransactionMode( Single ),
+      mTransactionMode( SingleTransaction ),
       mCurrentTransaction( 0 ),
       mTransactionJobs( 0 ),
       mPendingJobs( 0 ),
@@ -78,13 +78,7 @@ class ItemSync::Private
     QHash<QString, Akonadi::Item> mLocalItemsByRemoteId;
     QSet<Akonadi::Item> mUnprocessedLocalItems;
 
-    // transaction mode, TODO: make this public API?
-    enum TransactionMode {
-      Single,
-      Chunkwise,
-      None
-    };
-    TransactionMode mTransactionMode;
+    ItemSync::TransactionMode mTransactionMode;
     TransactionSequence *mCurrentTransaction;
     int mTransactionJobs;
 
@@ -274,7 +268,12 @@ void ItemSync::Private::execute()
   if ( !mLocalListDone )
     return;
 
-  if ( (mTransactionMode == Single && !mCurrentTransaction) || mTransactionMode == Chunkwise ) {
+  // early exit to avoid unecessary TransactionSequence creation in MultipleTransactions mode
+  // TODO: do the transaction handling in a nicer way instead, only creating TransactionSequences when really needed
+  if ( !mDeliveryDone && mRemoteItems.isEmpty() )
+    return;
+
+  if ( (mTransactionMode == SingleTransaction && !mCurrentTransaction) || mTransactionMode == MultipleTransactions) {
     ++mTransactionJobs;
     mCurrentTransaction = new TransactionSequence( q );
     mCurrentTransaction->setAutomaticCommittingEnabled( false );
@@ -283,7 +282,7 @@ void ItemSync::Private::execute()
 
   processItems();
   if ( !mDeliveryDone ) {
-    if ( mTransactionMode == Chunkwise && mCurrentTransaction ) {
+    if ( mTransactionMode == MultipleTransactions && mCurrentTransaction ) {
       mCurrentTransaction->commit();
       mCurrentTransaction = 0;
     }
@@ -419,7 +418,7 @@ void ItemSync::Private::slotTransactionResult( KJob *job )
 
 Job * ItemSync::Private::subjobParent() const
 {
-  if ( mCurrentTransaction && mTransactionMode != None )
+  if ( mCurrentTransaction && mTransactionMode != NoTransaction )
     return mCurrentTransaction;
   return q;
 }
@@ -458,6 +457,11 @@ void ItemSync::rollback()
     d->mCurrentTransaction->rollback();
   d->mDeliveryDone = true; // user wont deliver more data
   d->execute(); // end this in an ordered way, since we have an error set no real change will be done
+}
+
+void ItemSync::setTransactionMode(ItemSync::TransactionMode mode)
+{
+  d->mTransactionMode = mode;
 }
 
 
