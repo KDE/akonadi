@@ -35,10 +35,12 @@
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
 #include <QtCore/QTimer>
+#include <QtCore/QThread>
 #include <QSettings>
 
 #include <QtNetwork/QLocalSocket>
 #include <QtNetwork/QTcpSocket>
+#include <QtNetwork/QHostAddress>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
 // in order to work around exec() deadlocks. As a result of that Session knows to late about a finished job and still
@@ -121,6 +123,9 @@ void SessionPrivate::reconnect()
     serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
 #endif
   }
+#ifdef Q_OS_WINCE
+  useTcp = true;
+#endif
 
   // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
   // but that's probably not something we need to support anyway
@@ -138,11 +143,15 @@ void SessionPrivate::reconnect()
 
   // actually do connect
   kDebug() << "connectToServer" << serverAddress;
+#ifdef Q_OS_WINCE
+    tcpSocket->connectToHost( QHostAddress::LocalHost, 31414 );
+#else
   if ( !useTcp ) {
     localSocket->connectToServer( serverAddress );
   } else {
     tcpSocket->connectToHost( serverAddress, port );
   }
+#endif
 }
 
 void SessionPrivate::socketError( QLocalSocket::LocalSocketError )
