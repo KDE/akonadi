@@ -50,7 +50,7 @@ class AgentInstanceModel::Private
 
 void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
 {
-  mParent->beginInsertRows( QModelIndex(), mInstances.count(), mInstances.count() + 1 );
+  mParent->beginInsertRows( QModelIndex(), mInstances.count(), mInstances.count() );
   mInstances.append( instance );
   mParent->endInsertRows();
 }
