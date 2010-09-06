@@ -69,9 +69,9 @@ EntityOrderProxyModel::~EntityOrderProxyModel()
 void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
 {
   Q_D( EntityOrderProxyModel );
-  emit layoutAboutToBeChanged();
+  layoutAboutToBeChanged();
   d->m_orderConfig = configGroup;
-  emit layoutChanged();
+  layoutChanged();
 }
 
 bool EntityOrderProxyModel::lessThan( const QModelIndex& left, const QModelIndex& right ) const

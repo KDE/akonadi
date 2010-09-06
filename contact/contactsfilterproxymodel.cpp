@@ -53,10 +53,8 @@ ContactsFilterProxyModel::~ContactsFilterProxyModel()
 
 void ContactsFilterProxyModel::setFilterString( const QString &filter )
 {
-  layoutAboutToBeChanged();
   d->mFilter = filter;
   invalidateFilter();
-  layoutChanged();
 }
 
 bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const

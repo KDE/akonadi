@@ -30,18 +30,14 @@ CollectionFilterModel::CollectionFilterModel( QObject *parent )
 
 void CollectionFilterModel::addContentMimeTypeFilter( const QString &mimeType )
 {
-  layoutAboutToBeChanged();
   mContentMimeTypes.insert( mimeType );
   invalidateFilter();
-  layoutChanged();
 }
 
 void CollectionFilterModel::setRightsFilter( Akonadi::Collection::Rights rights )
 {
-  layoutAboutToBeChanged();
   mRights = rights;
   invalidateFilter();
-  layoutChanged();
 }
 
 bool CollectionFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) const

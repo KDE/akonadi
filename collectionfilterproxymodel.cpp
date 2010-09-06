@@ -68,12 +68,9 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
       if ( resource != index && !acceptedResources.contains( resource ) ) {
         kDebug() << "We got a new collection:" << mParent->sourceModel()->data( index ).toString()
                  << "but the resource is not visible:" << mParent->sourceModel()->data( resource ).toString();
-
-        mParent->layoutAboutToBeChanged();
         acceptedResources.clear();
         // defer reset, the model might still be supplying new items at this point which crashs
         mParent->invalidateFilter();
-        mParent->layoutChanged();
         return true;
       }
     }
@@ -118,19 +115,14 @@ CollectionFilterProxyModel::~CollectionFilterProxyModel()
 void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
   QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
-
-  emit layoutAboutToBeChanged();
   d->mimeChecker.setWantedMimeTypes( mimeTypes );
   invalidateFilter();
-  emit layoutChanged();
 }
 
 void CollectionFilterProxyModel::addMimeTypeFilter(const QString &type)
 {
-  emit layoutAboutToBeChanged();
   d->mimeChecker.addWantedMimeType( type );
   invalidateFilter();
-  emit layoutChanged();
 }
 
 bool CollectionFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
@@ -145,10 +137,8 @@ QStringList CollectionFilterProxyModel::mimeTypeFilters() const
 
 void CollectionFilterProxyModel::clearFilters()
 {
-  emit layoutAboutToBeChanged();
   d->mimeChecker = MimeTypeChecker();
   invalidateFilter();
-  emit layoutChanged();
 }
 
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const

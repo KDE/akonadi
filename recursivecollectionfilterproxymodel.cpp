@@ -78,37 +78,29 @@ bool RecursiveCollectionFilterProxyModel::acceptRow(int sourceRow, const QModelI
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
 {
   Q_D(RecursiveCollectionFilterProxyModel);
-  emit layoutAboutToBeChanged();
   d->includedMimeTypes << mimeType;
   invalidateFilter();
-  emit layoutChanged();
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(const QStringList& mimeTypes)
 {
   Q_D(RecursiveCollectionFilterProxyModel);
-  emit layoutAboutToBeChanged();
   d->includedMimeTypes.unite(mimeTypes.toSet());
   invalidateFilter();
-  emit layoutChanged();
 }
 
 void RecursiveCollectionFilterProxyModel::clearFilters()
 {
   Q_D(RecursiveCollectionFilterProxyModel);
-  emit layoutAboutToBeChanged();
   d->includedMimeTypes.clear();
   invalidateFilter();
-  emit layoutChanged();
 }
 
 void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(const QStringList& mimeTypes)
 {
   Q_D(RecursiveCollectionFilterProxyModel);
-  emit layoutAboutToBeChanged();
   d->includedMimeTypes = mimeTypes.toSet();
   invalidateFilter();
-  emit layoutChanged();
 }
 
 QStringList RecursiveCollectionFilterProxyModel::contentMimeTypeInclusionFilters() const
