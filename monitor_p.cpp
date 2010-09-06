@@ -181,8 +181,14 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
 
     case NotificationMessage::Collection:
       // we have a resource filter
-      if ( !resources.isEmpty() )
-        return resources.contains( msg.resource() ) || isMoveDestinationResourceMonitored( msg );
+      if ( !resources.isEmpty() ) {
+        const bool resourceMatches = resources.contains( msg.resource() ) || isMoveDestinationResourceMonitored( msg );
+        // a bit hacky, but match the behaviour from the item case,
+        // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
+        if ( mimetypes.isEmpty() || resourceMatches )
+          return resourceMatches;
+        // else continue
+      }
 
       // we explicitly monitor that colleciton, or all of them
       return isCollectionMonitored( msg.uid() )

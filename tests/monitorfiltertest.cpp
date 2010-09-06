@@ -28,11 +28,19 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage::Operation )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage::Type )
+Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 class MonitorFilterTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
+    void initTestCase()
+    {
+      qRegisterMetaType<Akonadi::Item>();
+      qRegisterMetaType<Akonadi::Collection>();
+      qRegisterMetaType<QSet<QByteArray> >();
+    }
+
     void filterConnected_data()
     {
       QTest::addColumn<Akonadi::NotificationMessage::Operation>( "op" );
@@ -313,6 +321,13 @@ class MonitorFilterTest : public QObject
         m.sessions.append( "mysession" );
         QVERIFY( !m.acceptNotification( msg ) );
         m.sessions.clear();
+
+        // filter non-matching resource and matching mimetype make it pass
+        m.resources.insert( "bar" );
+        m.mimetypes.insert( "my/type" );
+        QVERIFY( m.acceptNotification( msg ) );
+        m.resources.clear();
+        m.mimetypes.clear();
       }
     }
 };
