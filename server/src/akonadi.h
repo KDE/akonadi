@@ -24,7 +24,11 @@
 #include <QtCore/QPointer>
 #include <QtCore/QVector>
 
+#ifdef Q_OS_WINCE
+#include <QtNetwork/QTcpServer>
+#else
 #include <QtNetwork/QLocalServer>
+#endif
 
 class QProcess;
 class IntervalCheck;
@@ -36,7 +40,11 @@ class CacheCleaner;
 class SearchManager;
 class ItemRetrievalThread;
 
+#ifdef Q_OS_WINCE
+class AkonadiServer: public QTcpServer
+#else
 class AkonadiServer: public QLocalServer
+#endif
 {
     Q_OBJECT
 
@@ -58,7 +66,11 @@ class AkonadiServer: public QLocalServer
 
   protected:
     /** reimpl */
+#ifdef Q_OS_WINCE
+    void incomingConnection( int socketDescriptor );
+#else
     void incomingConnection( quintptr socketDescriptor );
+#endif
 
   private:
     void startDatabaseProcess();

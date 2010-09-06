@@ -21,7 +21,11 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QThread>
+#ifdef Q_OS_WINCE
+#include <QtNetwork/QTcpSocket>
+#else
 #include <QtNetwork/QLocalSocket>
+#endif
 
 #include "entities.h"
 #include "global.h"
@@ -40,7 +44,11 @@ class AkonadiConnection : public QThread
 {
     Q_OBJECT
 public:
+#ifdef Q_OS_WINCE
+    AkonadiConnection( int socketDescriptor, QObject *parent );
+#else
     AkonadiConnection( quintptr socketDescriptor, QObject *parent );
+#endif
     virtual ~AkonadiConnection();
     void run();
 
@@ -80,8 +88,13 @@ protected:
 
 
 private:
+#ifdef Q_OS_WINCE
+    int m_socketDescriptor;
+    QTcpSocket *m_socket;
+#else
     quintptr m_socketDescriptor;
     QLocalSocket *m_socket;
+#endif
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
     mutable DataStore *m_backend;

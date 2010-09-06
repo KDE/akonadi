@@ -58,15 +58,23 @@ void BridgeConnection::slotDataAvailable()
 AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObject *parent ) :
       BridgeConnection( remoteSocket, parent )
 {
+#ifdef Q_OS_WINCE
+    m_localSocket = new QTcpSocket( this );
+#else
     m_localSocket = new QLocalSocket( this );
+#endif
 }
 
 void AkonadiBridgeConnection::connectLocal()
 {
   const QSettings connectionSettings( Akonadi::XdgBaseDirs::akonadiConnectionConfigFile(), QSettings::IniFormat );
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
+#ifdef Q_OS_WINCE
+    (static_cast <QTcpSocket*>(m_localSocket))->connectToHost("127.0.0.1",31414);
+#else
     const QString namedPipe = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
     (static_cast <QLocalSocket*>(m_localSocket))->connectToServer( namedPipe );
+#endif
 #else
     const QString defaultSocketDir = Akonadi::XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
     const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
