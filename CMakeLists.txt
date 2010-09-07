@@ -152,7 +152,7 @@ set(SQLITE_MIN_VERSION 3.6.23)
 find_package(Sqlite)
 macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" FALSE "${SQLITE_MIN_VERSION}" "")
 
-############### Compilers flags 
+############### Compilers flags ###############
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
@@ -220,16 +220,16 @@ endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 
 macro(SET_DEFAULT_DB_BACKEND)
-    set ( backend ${ARGV0} )
-    if ( NOT DEFINED backend )
-        set(AKONADI_DATABASE_BACKEND QMYSQL)
-    else ( NOT DEFINED backend )
-        if ( ${backend} STREQUAL "SQLITE" )
-            set(AKONADI_DATABASE_BACKEND QSQLITE3)
-        else ( ${backend} STREQUAL "SQLITE" )
-            set(AKONADI_DATABASE_BACKEND QMYSQL)
-        endif ( ${backend} STREQUAL "SQLITE" )
-    endif ( NOT DEFINED backend )
+    set ( _backend ${ARGV0} )
+      if ( "${_backend}" STREQUAL "SQLITE" )
+        set(AKONADI_DATABASE_BACKEND QSQLITE3)
+      else()
+        if ( "${_backend}" STREQUAL "POSTGRES" )
+          set(AKONADI_DATABASE_BACKEND QPSQL)
+        else()
+          set(AKONADI_DATABASE_BACKEND QMYSQL)
+        endif ()
+    endif()
 
     message( STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}" )
 
