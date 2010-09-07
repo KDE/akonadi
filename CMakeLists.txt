@@ -152,7 +152,7 @@ set(SQLITE_MIN_VERSION 3.6.23)
 find_package(Sqlite)
 macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" FALSE "${SQLITE_MIN_VERSION}" "")
 
-############### Compilers flags ###############
+############### Compilers flags 
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
 if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
@@ -219,6 +219,25 @@ macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 
+macro(SET_DEFAULT_DB_BACKEND)
+    set ( backend ${ARGV0} )
+    if ( NOT DEFINED backend )
+        set(AKONADI_DATABASE_BACKEND QMYSQL)
+    else ( NOT DEFINED backend )
+        if ( ${backend} STREQUAL "SQLITE" )
+            set(AKONADI_DATABASE_BACKEND QSQLITE3)
+        else ( ${backend} STREQUAL "SQLITE" )
+            set(AKONADI_DATABASE_BACKEND QMYSQL)
+        endif ( ${backend} STREQUAL "SQLITE" )
+    endif ( NOT DEFINED backend )
+
+    message( STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}" )
+
+endmacro(SET_DEFAULT_DB_BACKEND)
+
+#### DB BACKEND DEFAULT ####
+set_default_db_backend( ${DATABASE_BACKEND} )
+
 ############### Prepare AkonadiConfig.cmake ###############
 
 # all the following variables are put into AkonadiConfig.cmake, so
@@ -269,6 +288,7 @@ endif (XSLTPROC_EXECUTABLE)
 
 add_subdirectory(rds)
 if (SQLITE_FOUND)
+  option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
   add_subdirectory(qsqlite)
 endif (SQLITE_FOUND)
 if (AKONADI_AGENT_SERVER)

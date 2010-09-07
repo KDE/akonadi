@@ -27,6 +27,7 @@
 
 #include <akdebug.h>
 #include <libs/xdgbasedirs_p.h>
+#include <config-akonadi.h>
 
 using namespace Akonadi;
 
@@ -67,7 +68,7 @@ DbConfig* DbConfig::configuredDatabase()
     // On Windows CE QSQLITE3 is the default driver for Akonadi
     const QString defaultDriver = QLatin1String( "QSQLITE3" );
 #else
-    const QString defaultDriver = QLatin1String( "QMYSQL" );
+    const QString defaultDriver = QLatin1String( AKONADI_DATABASE_BACKEND );
 #endif
     QString driverName = settings.value( QLatin1String( "General/Driver" ), defaultDriver ).toString();
     if ( driverName.isEmpty() )
