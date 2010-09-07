@@ -87,8 +87,6 @@ if(WINCE)
     SET(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
     set(LIBRARY_TYPE STATIC)
     set(AKONADI_STATIC_LIBS ON)
-    # still needed ?
-    add_definitions(-DSQLITE3_STATIC_LIBS)
 else(WINCE)
     set(LIBRARY_TYPE SHARED)
 endif(WINCE)
