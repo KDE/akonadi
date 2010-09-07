@@ -9,7 +9,6 @@ SET(QSqlite_MOC_HDRS
   src/qsql_sqlite.h
 )
 
-message(STATUS SQlite ${SQLITE_LIBRARIES})
 message(STATUS "Building QSQLITE3 driver")
 
 if (INSTALL_QSQLITE_IN_QT_PREFIX)
@@ -34,7 +33,15 @@ include_directories(
 
 add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
 
-target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} ${SQLITE_LIBRARIES})
+target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} )
+
+if ( SQLITE_LINK_STATIC )
+  message(STATUS "SQlite ${SQLITE_STATIC_LIBRARIES}")
+  target_link_libraries(qsqlite3 ${SQLITE_STATIC_LIBRARIES})
+else ( SQLITE_LINK_STATIC )
+  message(STATUS "SQlite ${SQLITE_LIBRARIES}")
+  target_link_libraries(qsqlite3 ${SQLITE_LIBRARIES})
+endif ( SQLITE_LINK_STATIC )
 
 if (WINCE)
     target_link_libraries(qsqlite3 ${WCECOMPAT_LIBRARIES})

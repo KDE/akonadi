@@ -24,6 +24,16 @@ if ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
    SET(Sqlite_FIND_QUIETLY TRUE)
 endif ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
 
+# use pkg-config to get the directories and then use these values
+# in the FIND_PATH() and FIND_LIBRARY() calls
+if( NOT WIN32 )
+  find_package(PkgConfig)
+
+  pkg_check_modules(PC_SQLITE sqlite3)
+
+  set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
+endif( NOT WIN32 )
+
 find_path(SQLITE_INCLUDE_DIR
           NAMES sqlite3.h
          )
@@ -31,6 +41,17 @@ find_path(SQLITE_INCLUDE_DIR
 find_library(SQLITE_LIBRARIES
              NAMES sqlite3
             )
+
+if( UNIX )
+  find_file(SQLITE_STATIC_LIBRARIES
+            libsqlite3.a
+            ${PC_SQLITE_LIBDIR}
+           )
+else( UNIX )
+  # todo find static libs for other systems
+  # fallback to standard libs
+  set( SQLITE_STATIC_LIBRARIES ${SQLITE_LIBRARIES} )
+endif( UNIX )
 
 if(SQLITE_INCLUDE_DIR)
   file(READ ${SQLITE_INCLUDE_DIR}/sqlite3.h SQLITE3_H_CONTENT)
