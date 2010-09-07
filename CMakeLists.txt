@@ -63,6 +63,37 @@ if (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
 endif (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
 
 
+############### Macros ###############
+
+macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+   if (IS_ABSOLUTE "${in}")
+      set(${out} "${in}")
+   else (IS_ABSOLUTE "${in}")
+      set(${out} "\${AKONADI_INSTALL_DIR}/${in}")
+   endif (IS_ABSOLUTE "${in}")
+endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+
+
+macro(SET_DEFAULT_DB_BACKEND)
+    set ( _backend ${ARGV0} )
+      if ( "${_backend}" STREQUAL "SQLITE" )
+        set(AKONADI_DATABASE_BACKEND QSQLITE3)
+      else()
+        if ( "${_backend}" STREQUAL "POSTGRES" )
+          set(AKONADI_DATABASE_BACKEND QPSQL)
+        else()
+          set(AKONADI_DATABASE_BACKEND QMYSQL)
+        endif ()
+    endif()
+
+    message( STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}" )
+
+endmacro(SET_DEFAULT_DB_BACKEND)
+
+#### DB BACKEND DEFAULT ####
+set_default_db_backend( ${DATABASE_BACKEND} )
+
+
 ############### Find what we need ###############
 
 #### Qt4 ####
@@ -207,36 +238,6 @@ if(APPLE)
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
 endif(APPLE)
 
-
-############### Macros ###############
-
-macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-   if (IS_ABSOLUTE "${in}")
-      set(${out} "${in}")
-   else (IS_ABSOLUTE "${in}")
-      set(${out} "\${AKONADI_INSTALL_DIR}/${in}")
-   endif (IS_ABSOLUTE "${in}")
-endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-
-
-macro(SET_DEFAULT_DB_BACKEND)
-    set ( _backend ${ARGV0} )
-      if ( "${_backend}" STREQUAL "SQLITE" )
-        set(AKONADI_DATABASE_BACKEND QSQLITE3)
-      else()
-        if ( "${_backend}" STREQUAL "POSTGRES" )
-          set(AKONADI_DATABASE_BACKEND QPSQL)
-        else()
-          set(AKONADI_DATABASE_BACKEND QMYSQL)
-        endif ()
-    endif()
-
-    message( STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}" )
-
-endmacro(SET_DEFAULT_DB_BACKEND)
-
-#### DB BACKEND DEFAULT ####
-set_default_db_backend( ${DATABASE_BACKEND} )
 
 ############### Prepare AkonadiConfig.cmake ###############
 
