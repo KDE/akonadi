@@ -93,7 +93,7 @@ class ConflictHandler : public QObject
     void conflictResolved();
 
     /**
-     * This signal is emitted whenever an error occured during the conflict
+     * This signal is emitted whenever an error occurred during the conflict
      * handling.
      *
      * @param message A user visible string that describes the error.

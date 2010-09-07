@@ -268,7 +268,7 @@ void ItemSync::Private::execute()
   if ( !mLocalListDone )
     return;
 
-  // early exit to avoid unecessary TransactionSequence creation in MultipleTransactions mode
+  // early exit to avoid unnecessary TransactionSequence creation in MultipleTransactions mode
   // TODO: do the transaction handling in a nicer way instead, only creating TransactionSequences when really needed
   if ( !mDeliveryDone && mRemoteItems.isEmpty() )
     return;

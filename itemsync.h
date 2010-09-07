@@ -145,7 +145,7 @@ class AKONADI_EXPORT ItemSync : public Job
 
     /**
      * Aborts the sync process and rolls back all not yet committed transactions.
-     * Use this if an external error occured during the sync process (such as the
+     * Use this if an external error occurred during the sync process (such as the
      * user canceling it).
      * @since 4.5
      */
@@ -158,7 +158,7 @@ class AKONADI_EXPORT ItemSync : public Job
     enum TransactionMode {
       SingleTransaction, ///< Use a single transaction for the entire sync process (default), provides maximum consistency ("all or nothing") and best performance
       MultipleTransactions, ///< Use one transaction per chunk of delivered items, good compromise between the other two when using streaming
-      NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guarenteed (can fail anywhere in the sync process)
+      NoTransaction ///< Use no transaction at all, provides highest responsiveness (might therefore feel faster even when actually taking slightly longer), no consistency guaranteed (can fail anywhere in the sync process)
     };
 
     /**
