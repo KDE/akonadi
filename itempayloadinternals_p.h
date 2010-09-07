@@ -70,7 +70,7 @@ struct clone_traits_helper {
 
 template <typename T>
 struct clone_traits_helper<T,true> {
-    static T * clone( const T * t ) { return t ? t->clone() : 0 ; }
+    static T * clone( T * t ) { return t ? t->clone() : 0 ; }
 };
 
 template <typename T>
