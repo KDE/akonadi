@@ -179,9 +179,16 @@ if(NOT Boost_USE_STATIC_LIBS)
 endif(NOT Boost_USE_STATIC_LIBS)
 
 #### Sqlite ####
+# If Sqlite is the default backend, it cannot be optional.
+if ("${DATABASE_BACKEND}" STREQUAL "SQLITE")
+  set (SQLITE_REQUIRED "TRUE")
+else()
+  set (SQLITE_REQUIRED "FALSE")
+endif()
+
 set(SQLITE_MIN_VERSION 3.6.23)
 find_package(Sqlite)
-macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" FALSE "${SQLITE_MIN_VERSION}" "")
+macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" ${SQLITE_REQUIRED} "${SQLITE_MIN_VERSION}" "")
 
 ############### Compilers flags ###############
 
