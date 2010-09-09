@@ -76,9 +76,9 @@ endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
 
 macro(SET_DEFAULT_DB_BACKEND)
     set ( _backend ${ARGV0} )
-      if ( "${_backend}" STREQUAL "SQLITE" )
+    if ( "${_backend}" STREQUAL "SQLITE" )
         set(AKONADI_DATABASE_BACKEND QSQLITE3)
-      else()
+    else()
         if ( "${_backend}" STREQUAL "POSTGRES" )
           set(AKONADI_DATABASE_BACKEND QPSQL)
         else()
@@ -241,10 +241,14 @@ if("${_isSystemLibDir}" STREQUAL "-1")
   set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 endif("${_isSystemLibDir}" STREQUAL "-1")
 
+if (NOT DEFINED AKONADI_BUNDLE_PATH)
+  set(AKONADI_BUNDLE_PATH "/Applications/KDE4")
+endif (NOT DEFINED AKONADI_BUNDLE_PATH)
+
 if(APPLE)
+   message(STATUS "MacOS Bundle Path: ${AKONADI_BUNDLE_PATH}")
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
 endif(APPLE)
-
 
 ############### Prepare AkonadiConfig.cmake ###############
 
