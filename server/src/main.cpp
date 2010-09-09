@@ -32,6 +32,12 @@
 
 #include <cstdlib>
 
+#ifdef QT_STATICPLUGIN
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(qsqlite3)
+#endif
+
 #ifndef _WIN32_WCE
 namespace po = boost::program_options;
 #endif

@@ -188,10 +188,16 @@ set_target_properties( akonadiprivate PROPERTIES
 set( akonadiserver_bin_SRCS src/main.cpp
   ${AKONADI_SHARED_SOURCES} )
 
+if (AKONADI_STATIC_SQLITE)
+add_definitions(-DQT_STATICPLUGIN)
+endif (AKONADI_STATIC_SQLITE)
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
 target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} )
+if (AKONADI_STATIC_SQLITE)
+target_link_libraries( akonadiserver_bin qsqlite3 )
+endif (AKONADI_STATIC_SQLITE)
 
 install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
 install( FILES 

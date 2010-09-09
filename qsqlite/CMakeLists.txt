@@ -31,7 +31,12 @@ include_directories(
   ${SQLITE_INCLUDE_DIR}
 )
 
+if (AKONADI_STATIC_SQLITE)
+add_definitions(-DQT_STATICPLUGIN)
+add_library(qsqlite3 STATIC ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
+else(AKONADI_STATIC_SQLITE)
 add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
+endif (AKONADI_STATIC_SQLITE)
 
 target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} )
 
