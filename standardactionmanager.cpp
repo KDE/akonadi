@@ -90,17 +90,14 @@ static const struct {
   { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), NormalAction },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), NormalAction },
   { "akonadi_collection_rename_favorite", I18N_NOOP( "Rename Favorite..." ), "edit-rename", 0, SLOT( slotRenameFavorite() ), NormalAction },
-#ifdef KDEPIM_MOBILE_UI
-  { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), NormalAction },
-  { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
-  { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction },
-  { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), NormalAction },
-#else
   { "akonadi_collection_copy_to_menu", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo( QAction* ) ), MenuAction },
+  { "akonadi_collection_copy_to_dialog", I18N_NOOP( "Copy Folder To..." ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), NormalAction },
   { "akonadi_item_copy_to_menu", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo( QAction* ) ), MenuAction },
+  { "akonadi_item_copy_to_dialog", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
   { "akonadi_item_move_to_menu", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo( QAction* ) ), MenuAction },
+  { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction },
   { "akonadi_collection_move_to_menu", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo( QAction* ) ), MenuAction },
-#endif
+  { "akonadi_collection_move_to_dialog", I18N_NOOP( "Move Folder To..." ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), NormalAction },
   { "akonadi_item_cut", I18N_NOOP( "&Cut Item" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutItems() ), NormalAction },
   { "akonadi_collection_cut", I18N_NOOP( "&Cut Folder" ), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT( slotCutCollections() ), NormalAction },
   { "akonadi_resource_create", I18N_NOOP( "Create Resource" ), "folder-new", 0, SLOT( slotCreateResource() ), NormalAction },
@@ -615,10 +612,10 @@ class StandardActionManager::Private
       favoritesModel->setFavoriteLabel( collection, label );
     }
 
-    void slotCopyCollectionTo()
-    {
-      pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
-    }
+     void slotCopyCollectionTo()
+     {
+       pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
+     }
 
     void slotCopyItemTo()
     {

@@ -143,9 +143,13 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model @since 4.4
       RenameFavoriteCollection,  ///< Rename the collection of the favorite collections model @since 4.4
       CopyCollectionToMenu,      ///< Menu allowing to quickly copy a collection into another collection @since 4.4
+      CopyCollectionToDialog,    ///< Copy a collection into another collection, select the target in a dialog @since 4.6
       CopyItemToMenu,            ///< Menu allowing to quickly copy an item into a collection @since 4.4
+      CopyItemToDialog,          ///< Copy an item into a collection, select the target in a dialog @since 4.6
       MoveItemToMenu,            ///< Menu allowing to move item into a collection @since 4.4
+      MoveItemToDialog,          ///< Move an item into a collection, select the target in a dialog @since 4.6
       MoveCollectionToMenu,      ///< Menu allowing to move a collection into another collection @since 4.4
+      MoveCollectionToDialog,    ///< Move a collection into another collection, select the target in a dialog @since 4.6
       CutItems,                  ///< Cuts the selected items @since 4.4
       CutCollections,            ///< Cuts the selected collections @since 4.4
       CreateResource,            ///< Creates a new resource @since 4.6
