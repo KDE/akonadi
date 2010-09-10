@@ -64,11 +64,13 @@ DbConfig* DbConfig::configuredDatabase()
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
     // determine driver to use
-    const QString defaultDriver = QLatin1String( AKONADI_DATABASE_BACKEND );
-
-    QString driverName = settings.value( QLatin1String( "General/Driver" ), defaultDriver ).toString();
-    if ( driverName.isEmpty() )
-      driverName = defaultDriver;
+    QString driverName = settings.value( QLatin1String( "General/Driver" ) ).toString();
+    if ( driverName.isEmpty() ) {
+      driverName = QLatin1String( AKONADI_DATABASE_BACKEND );
+      // when using the default, write it explicitly, in case the default changes later
+      settings.setValue( QLatin1String("General/Driver"), driverName );
+      settings.sync();
+    }
 
     if ( driverName == QLatin1String( "QMYSQL" ) )
       s_DbConfigInstance = new DbConfigMysql;
