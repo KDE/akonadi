@@ -1006,7 +1006,15 @@ class StandardActionManager::Private
       if ( contextTexts[ type ].value( context ).localizedText.isEmpty() )
         return contextTexts[ type ].value( context ).text;
 
-      return contextTexts[ type ].value( context ).localizedText.subs( count ).subs( value ).toString();
+      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
+      QString str = text.subs(count).toString();
+      int argCount = str.count( QRegExp( QLatin1String("%[0-9]") ) );
+      if ( argCount > 0 ) {
+          return text.subs( count ).subs( value ).toString();
+      } else {
+        return text.subs( count ).toString();
+      } 
+
     }
 
     StandardActionManager *q;
