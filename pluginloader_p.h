@@ -33,11 +33,12 @@ class AKONADI_TESTS_EXPORT PluginMetaData
 {
   public:
     PluginMetaData();
-    PluginMetaData( const QString & lib, const QString & name, const QString & comment );
+    PluginMetaData( const QString & lib, const QString & name, const QString & comment, const QString & cname );
 
     QString library;
     QString nameLabel;
     QString descriptionLabel;
+    QString className;
     bool loaded;
 };
 

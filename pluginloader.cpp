@@ -35,9 +35,10 @@ PluginMetaData::PluginMetaData()
 {
 }
 
-PluginMetaData::PluginMetaData( const QString & lib, const QString & name, const QString & comment )
+PluginMetaData::PluginMetaData( const QString & lib, const QString & name, const QString & comment, const QString & cname )
   : library( lib ), nameLabel( name ),
-    descriptionLabel( comment ), loaded( false )
+    descriptionLabel( comment ),
+    className(cname), loaded( false )
 {
 }
 
@@ -76,6 +77,15 @@ QObject* PluginLoader::createForName( const QString & name )
   }
 
   PluginMetaData &info = mPluginInfos[ name ];
+
+  //First try to load it staticly
+  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    if(QLatin1String(plugin->metaObject()->className()) == info.className) {
+      return plugin;
+      break;
+    }
+  }
+
   if ( !info.loaded ) {
     const QString path = KLibLoader::findLibrary( info.library );
     if ( path.isEmpty() ) {
@@ -92,6 +102,7 @@ QObject* PluginLoader::createForName( const QString & name )
   QObject *object = loader->instance();
   if ( !object ) {
     kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
+    kWarning( 5300 ) << "Error was:\"" << loader->errorString() << "\"." << endl;
     return 0;
   }
 
@@ -151,13 +162,18 @@ void PluginLoader::scan()
         kWarning( 5300 ) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
         comment = i18n( "No description available" );
       }
+      
+      QString cname      = group.readEntry( "Class-Name" );
+      if ( cname.isEmpty() ) {
+        kWarning( 5300 ) << "missing or empty Class-Name value in \"" << entry << "\"" << endl;
+      }
 
       const QStringList mimeTypes = type.split( QLatin1Char( ',' ), QString::SkipEmptyParts );
 
       kDebug( 5300 ) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
       Q_FOREACH( const QString & mimeType, mimeTypes )
         Q_FOREACH( const QString & classType, classes )
-          mPluginInfos.insert( mimeType + QLatin1Char('@') + classType, PluginMetaData( library, name, comment ) );
+          mPluginInfos.insert( mimeType + QLatin1Char('@') + classType, PluginMetaData( library, name, comment, cname ) );
 
     } else {
       kWarning( 5300 ) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
