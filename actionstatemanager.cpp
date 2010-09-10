@@ -149,6 +149,10 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   enableAction( StandardActionManager::MoveCollectionToMenu, canMoveCollections );
 
+  enableAction( StandardActionManager::CopyCollectionToDialog, canCopyCollections );
+
+  enableAction( StandardActionManager::MoveCollectionToDialog, canMoveCollections );
+
   enableAction( StandardActionManager::CollectionProperties, singleCollectionSelected && // we can only configure one collection at a time
                                                              !isRootCollection( collection ) ); // we can not configure the root collection
 
@@ -224,6 +228,11 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::CopyItemToMenu, atLeastOneItemSelected ); // we need items to work with
 
   enableAction( StandardActionManager::MoveItemToMenu, atLeastOneItemSelected && // we need items to work with
+                                                       canDeleteItems ); // we need the necessary rights
+
+  enableAction( StandardActionManager::CopyItemToDialog, atLeastOneItemSelected ); // we need items to work with
+
+  enableAction( StandardActionManager::MoveItemToDialog, atLeastOneItemSelected && // we need items to work with
                                                        canDeleteItems ); // we need the necessary rights
 
   // update the texts of the actions
