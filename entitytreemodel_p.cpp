@@ -218,7 +218,7 @@ void EntityTreeModelPrivate::fetchItems( const Collection &parent )
   runItemFetchJob( itemJob, parent );
 }
 
-void EntityTreeModelPrivate::fetchCollections( const Collection &collection, CollectionFetchJob::Type type )
+void EntityTreeModelPrivate::fetchCollections( const Collection &collection, CollectionFetchJob::Type type, const ListingOrder listing )
 {
   Q_Q( EntityTreeModel );
   CollectionFetchJob *job = new CollectionFetchJob( collection, type, m_session );
@@ -235,8 +235,12 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   } else {
     job->fetchScope().setIncludeStatistics( m_includeStatistics );
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
+    if ( listing != FirstListing )
+      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                  q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
+    else
+      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
+                  q, SLOT( firstCollectionsFetched( const Akonadi::Collection::List& ) ) );
   }
   q->connect( job, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
@@ -1141,7 +1145,7 @@ void EntityTreeModelPrivate::startFirstListJob()
 
   if ( ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
     || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ) ) && generalPopulation )
-    fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
+    fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel, FirstListing );
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
 
@@ -1155,6 +1159,14 @@ void EntityTreeModelPrivate::startFirstListJob()
   // This fetches virtual collections into the tree.
   if ( !m_monitor->resourcesMonitored().isEmpty() )
     fetchTopLevelCollections();
+}
+
+void EntityTreeModelPrivate::firstCollectionsFetched( const Akonadi::Collection::List& collections )
+{
+  collectionsFetched( collections );
+  // It is quicker to recursively list from the root again than to do
+  // individual listings for each top level item from the first fetch.
+  fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
 }
 
 void EntityTreeModelPrivate::fetchTopLevelCollections() const

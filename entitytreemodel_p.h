@@ -70,11 +70,18 @@ public:
     Recursive
   };
 
+  enum ListingOrder
+  {
+    NotFirstListing,
+    FirstListing
+  };
+
   void init( ChangeRecorder *monitor );
 
-  void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
+  void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing );
   void fetchItems( const Collection &collection );
   void collectionsFetched( const Akonadi::Collection::List& );
+  void firstCollectionsFetched( const Akonadi::Collection::List& );
   void collectionListFetched( const Akonadi::Collection::List& );
   void itemsFetched( const Akonadi::Item::List& );
 

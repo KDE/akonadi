@@ -613,6 +613,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List ) )
     Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List ) )
+    Q_PRIVATE_SLOT( d_func(), void firstCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void collectionListFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void topLevelCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void ancestorsFetched( Akonadi::Collection::List ) )
