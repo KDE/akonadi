@@ -67,12 +67,18 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       : AgentBasePrivate( parent ),
         scheduler( 0 ),
         mItemSyncer( 0 ),
+        mItemSyncFetchScope( 0 ),
         mItemTransactionMode( ItemSync::SingleTransaction ),
         mCollectionSyncer( 0 ),
         mHierarchicalRid( false )
     {
       Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
+    }
+
+    ~ResourceBasePrivate()
+    {
+      delete mItemSyncFetchScope;
     }
 
     Q_DECLARE_PUBLIC( ResourceBase )
@@ -117,6 +123,22 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void changeCommittedResult( KJob* job );
 
+    void createItemSyncInstanceIfMissing()
+    {
+      Q_Q( ResourceBase );
+      Q_ASSERT_X( scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+                  "createItemSyncInstance", "Calling items retrieval methods although no item retrieval is in progress" );
+      if ( !mItemSyncer ) {
+        mItemSyncer = new ItemSync( q->currentCollection() );
+        mItemSyncer->setTransactionMode( mItemTransactionMode );
+        if ( mItemSyncFetchScope )
+          mItemSyncer->setFetchScope( *mItemSyncFetchScope );
+        connect( mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), q, SLOT( slotPercent( KJob*, unsigned long ) ) );
+        connect( mItemSyncer, SIGNAL( result( KJob* ) ), q, SLOT( slotItemSyncDone( KJob* ) ) );
+      }
+      Q_ASSERT( mItemSyncer );
+    }
+
   public Q_SLOTS:
     Q_SCRIPTABLE void dump()
     {
@@ -134,6 +156,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     ResourceScheduler *scheduler;
     ItemSync *mItemSyncer;
+    ItemFetchScope *mItemSyncFetchScope;
     ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
     bool mHierarchicalRid;
@@ -642,45 +665,21 @@ void ResourceBase::setTotalItems( int amount )
 void ResourceBase::setItemStreamingEnabled( bool enable )
 {
   Q_D( ResourceBase );
-  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-              "ResourceBase::setItemStreamingEnabled()",
-              "Calling setItemStreamingEnabled() although no item retrieval is in progress" );
-  if ( !d->mItemSyncer ) {
-    d->mItemSyncer = new ItemSync( currentCollection() );
-    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
-    connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
-    connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
-  }
+  d->createItemSyncInstanceIfMissing();
   d->mItemSyncer->setStreamingEnabled( enable );
 }
 
 void ResourceBase::itemsRetrieved( const Item::List &items )
 {
   Q_D( ResourceBase );
-  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-              "ResourceBase::itemsRetrieved()",
-              "Calling itemsRetrieved() although no item retrieval is in progress" );
-  if ( !d->mItemSyncer ) {
-    d->mItemSyncer = new ItemSync( currentCollection() );
-    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
-    connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
-    connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
-  }
+  d->createItemSyncInstanceIfMissing();
   d->mItemSyncer->setFullSyncItems( items );
 }
 
 void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems, const Item::List &removedItems )
 {
   Q_D( ResourceBase );
-  Q_ASSERT_X( d->scheduler->currentTask().type == ResourceScheduler::SyncCollection,
-              "ResourceBase::itemsRetrievedIncremental()",
-              "Calling itemsRetrievedIncremental() although no item retrieval is in progress" );
-  if ( !d->mItemSyncer ) {
-    d->mItemSyncer = new ItemSync( currentCollection() );
-    d->mItemSyncer->setTransactionMode( d->mItemTransactionMode );
-    connect( d->mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), SLOT( slotPercent( KJob*, unsigned long ) ) );
-    connect( d->mItemSyncer, SIGNAL( result( KJob* ) ), SLOT( slotItemSyncDone( KJob* ) ) );
-  }
+  d->createItemSyncInstanceIfMissing();
   d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
 }
 
@@ -725,6 +724,13 @@ void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)
   d->mItemTransactionMode = mode;
 }
 
+void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope& fetchScope)
+{
+  Q_D( ResourceBase );
+  if ( !d->mItemSyncFetchScope )
+    d->mItemSyncFetchScope = new ItemFetchScope;
+  *(d->mItemSyncFetchScope) = fetchScope;
+}
 
 #include "resourcebase.moc"
 #include "moc_resourcebase.cpp"
