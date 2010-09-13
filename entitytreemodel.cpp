@@ -180,7 +180,9 @@ QVariant EntityTreeModel::entityData( const Collection &collection, int column, 
              !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
           return collection.attribute<EntityDisplayAttribute>()->displayName();
         }
-        return collection.name();
+        if ( !collection.name().isEmpty() )
+          return collection.name();
+        return QString::fromLatin1( "Loading <" ) + QString::number( collection.id() ) + QLatin1String(">");
       }
       break;
     case Qt::DecorationRole:
