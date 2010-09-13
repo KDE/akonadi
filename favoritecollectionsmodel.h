@@ -84,8 +84,33 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
 
     /**
      * Returns the list of favorite collections.
+     * @deprecated Use collectionIds instead.
      */
     Collection::List collections() const;
+
+    /**
+     * Returns the list of ids of favorite collections set on the FavoriteCollectionsModel.
+     *
+     * Note that if you want Collections with actual data
+     * you should use something like this instead:
+     *
+     * @code
+     *   FavoriteCollectionsModel* favs = getFavsModel();
+     *   Collection::List cols;
+     *   const int rowCount = favs->rowCount();
+     *   for (int row = 0; row < rowcount; ++row) {
+     *     static const int column = 0;
+     *     const QModelIndex index = favs->index(row, column);
+     *     const Collection col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+     *     cols << col;
+     *   }
+     * @endcode
+     *
+     * Note that due to the asynchronous nature of the model, this method returns collection ids
+     * of collections which may not be in the model yet. If you want the ids of the collections
+     * that are actually in the model, use a loop similar to above with the CollectionIdRole.
+     */
+    QList<Collection::Id> collectionIds() const;
 
     /**
      * Return associate label for collection

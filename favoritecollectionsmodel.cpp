@@ -40,13 +40,13 @@ class FavoriteCollectionsModel::Private
     {
     }
 
-    QString labelForCollection( const Collection &collection )
+    QString labelForCollection( const Collection::Id &collectionId )
     {
-      if ( labelMap.contains( collection.id() ) ) {
-        return labelMap[ collection.id() ];
+      if ( labelMap.contains( collectionId ) ) {
+        return labelMap[ collectionId ];
       }
 
-      const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
+      const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collectionId );
       Q_ASSERT( indexList.size() == 1 );
 
       QString accountName;
@@ -73,8 +73,8 @@ class FavoriteCollectionsModel::Private
 
     void updateSelection()
     {
-      foreach ( const Collection &collection, collections ) {
-        const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
+      foreach ( const Collection::Id &collectionId, collectionIds ) {
+        const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collectionId );
         if ( indexList.isEmpty() )
           continue;
 
@@ -86,35 +86,32 @@ class FavoriteCollectionsModel::Private
 
     void loadConfig()
     {
-      const QList<qint64> ids = configGroup.readEntry( "FavoriteCollectionIds", QList<qint64>() );
+      collectionIds = configGroup.readEntry( "FavoriteCollectionIds", QList<qint64>() );
       const QStringList labels = configGroup.readEntry( "FavoriteCollectionLabels", QStringList() );
 
-      for ( int i = 0; i < ids.size(); ++i ) {
-        collections << Collection( ids[i] );
+      for ( int i = 0; i < collectionIds.size(); ++i ) {
         if ( i<labels.size() ) {
-          labelMap[ ids[i] ] = labels[i];
+          labelMap[ collectionIds[i] ] = labels[i];
         }
       }
     }
 
     void saveConfig()
     {
-      QList<qint64> ids;
       QStringList labels;
 
-      foreach ( const Collection &collection, collections ) {
-        ids << collection.id();
-        labels << labelForCollection( collection );
+      foreach ( const Collection::Id &collectionId, collectionIds ) {
+        labels << labelForCollection( collectionId );
       }
 
-      configGroup.writeEntry( "FavoriteCollectionIds", ids );
+      configGroup.writeEntry( "FavoriteCollectionIds", collectionIds );
       configGroup.writeEntry( "FavoriteCollectionLabels", labels );
       configGroup.config()->sync();
     }
 
     FavoriteCollectionsModel * const q;
 
-    Collection::List collections;
+    QList<Collection::Id> collectionIds;
     QHash<qint64, QString> labelMap;
     KConfigGroup configGroup;
 };
@@ -141,7 +138,10 @@ FavoriteCollectionsModel::~FavoriteCollectionsModel()
 
 void FavoriteCollectionsModel::setCollections( const Collection::List &collections )
 {
-  d->collections = collections;
+  d->collectionIds.clear();
+  foreach(const Collection &col, collections) {
+    d->collectionIds << col.id();
+  }
   d->labelMap.clear();
   d->clearAndUpdateSelection();
   d->saveConfig();
@@ -149,14 +149,14 @@ void FavoriteCollectionsModel::setCollections( const Collection::List &collectio
 
 void FavoriteCollectionsModel::addCollection( const Collection &collection )
 {
-  d->collections << collection;
+  d->collectionIds << collection.id();
   d->updateSelection();
   d->saveConfig();
 }
 
 void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 {
-  d->collections.removeAll( collection );
+  d->collectionIds.removeAll( collection.id() );
   d->labelMap.remove( collection.id() );
 
   const QModelIndexList indexList = sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
@@ -173,12 +173,20 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 
 Collection::List FavoriteCollectionsModel::collections() const
 {
-  return d->collections;
+  Collection::List cols;
+  foreach (const Collection::Id &colId, d->collectionIds)
+    cols << Collection(colId);
+  return cols;
+}
+
+QList<Collection::Id> FavoriteCollectionsModel::collectionIds() const
+{
+  return d->collectionIds;
 }
 
 void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &collection, const QString &label )
 {
-  Q_ASSERT( d->collections.contains( collection ) );
+  Q_ASSERT( d->collectionIds.contains( collection.id() ) );
   d->labelMap[ collection.id() ] = label;
   d->saveConfig();
 
@@ -196,9 +204,9 @@ QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int 
 {
   if ( index.column() == 0 && role == Qt::DisplayRole ) {
     const QModelIndex sourceIndex = mapToSource( index );
-    const Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
+    const Collection::Id collectionId = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionIdRole ).toLongLong();
 
-    return d->labelForCollection( collection );
+    return d->labelForCollection( collectionId );
   } else {
     return KSelectionProxyModel::data( index, role );
   }
@@ -208,7 +216,7 @@ QString Akonadi::FavoriteCollectionsModel::favoriteLabel( const Akonadi::Collect
 {
   if ( !collection.isValid() )
     return QString();
-  return d->labelForCollection( collection );
+  return d->labelForCollection( collection.id() );
 }
 
 QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orientation, int role ) const
