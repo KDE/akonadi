@@ -53,7 +53,7 @@ else( UNIX )
   set( SQLITE_STATIC_LIBRARIES ${SQLITE_LIBRARIES} )
 endif( UNIX )
 
-if(SQLITE_INCLUDE_DIR)
+if(EXISTS ${SQLITE_INCLUDE_DIR}/sqlite3.h)
   file(READ ${SQLITE_INCLUDE_DIR}/sqlite3.h SQLITE3_H_CONTENT)
   string(REGEX MATCH "SQLITE_VERSION[ ]*\"[0-9.]*\"\n" SQLITE_VERSION_MATCH "${SQLITE3_H_CONTENT}")
 
@@ -69,7 +69,7 @@ if(SQLITE_INCLUDE_DIR)
 
   endif(SQLITE_VERSION_MATCH)
 
-endif(SQLITE_INCLUDE_DIR)
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args( Sqlite DEFAULT_MSG
