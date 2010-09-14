@@ -163,9 +163,9 @@ void PluginLoader::scan()
         comment = i18n( "No description available" );
       }
       
-      QString cname      = group.readEntry( "Class-Name" );
+      QString cname      = group.readEntry( "X-KDE-ClassName" );
       if ( cname.isEmpty() ) {
-        kWarning( 5300 ) << "missing or empty Class-Name value in \"" << entry << "\"" << endl;
+        kWarning( 5300 ) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
       }
 
       const QStringList mimeTypes = type.split( QLatin1Char( ',' ), QString::SkipEmptyParts );
