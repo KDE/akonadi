@@ -40,7 +40,7 @@ class FavoriteCollectionsModel::Private
     {
     }
 
-    QString labelForCollection( const Collection::Id &collectionId )
+    QString labelForCollection( Collection::Id collectionId )
     {
       if ( labelMap.contains( collectionId ) ) {
         return labelMap[ collectionId ];
