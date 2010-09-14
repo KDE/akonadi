@@ -214,6 +214,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Emitted when a collection attributes synchronization has been completed.
      *
      * @param collectionId The identifier of the collection whose attributes got synchronized.
+     * @since 4.6
      */
     void attributesSynchronized( qlonglong collectionId );
 
@@ -233,6 +234,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * @param collection The collection whose attributes should be retrieved.
      * @see collectionAttributesRetrieved()
+     * @since 4.6
      */
     // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
     //       in order to simulate polymorphism
@@ -288,6 +290,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Call this method from retrieveCollectionAttributes() once the result is available.
      *
      * @param item The collection whose attributes got retrieved.
+     * @since 4.6
      */
     void collectionAttributesRetrieved( const Collection &collection );
 
@@ -449,6 +452,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * This method is called whenever the collection with the given @p id
      * shall have its attributes synchronized.
+     *
+     * @param id The id of the collection to synchronize
+     * @since 4.6
      */
     void synchronizeCollectionAttributes( qint64 id );
 
