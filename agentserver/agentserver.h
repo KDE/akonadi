@@ -37,6 +37,7 @@ class AgentServer : public QObject
     explicit AgentServer( QObject * parent = 0 );
 
   public slots:
+    Q_SCRIPTABLE bool started( const QString &identifier ) const;
     Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &fileName );
     Q_SCRIPTABLE void stopAgent( const QString &identifier );
     Q_SCRIPTABLE void quit();

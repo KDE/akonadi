@@ -35,6 +35,11 @@ AgentServer::AgentServer(QObject* parent): QObject(parent)
   QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH, this, QDBusConnection::ExportScriptableSlots );
 }
 
+bool AgentServer::started(const QString& identifier) const
+{
+  return m_agents.contains( identifier );
+}
+
 void AgentServer::startAgent(const QString& identifier, const QString& fileName)
 {
   qDebug() << Q_FUNC_INFO << fileName << identifier;
