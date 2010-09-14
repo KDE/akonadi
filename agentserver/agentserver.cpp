@@ -30,17 +30,19 @@
 
 using namespace Akonadi;
 
-AgentServer::AgentServer(QObject* parent): QObject(parent)
+AgentServer::AgentServer( QObject* parent )
+  : QObject( parent )
 {
-  QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH, this, QDBusConnection::ExportScriptableSlots );
+  QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH,
+                                                this, QDBusConnection::ExportScriptableSlots );
 }
 
-bool AgentServer::started(const QString& identifier) const
+bool AgentServer::started( const QString& identifier ) const
 {
   return m_agents.contains( identifier );
 }
 
-void AgentServer::startAgent(const QString& identifier, const QString& fileName)
+void AgentServer::startAgent( const QString& identifier, const QString& fileName )
 {
   qDebug() << Q_FUNC_INFO << fileName << identifier;
   QPluginLoader *loader = 0;
@@ -61,7 +63,7 @@ void AgentServer::startAgent(const QString& identifier, const QString& fileName)
   thread->start();
 }
 
-void AgentServer::stopAgent(const QString& identifier)
+void AgentServer::stopAgent( const QString& identifier )
 {
   qDebug() << Q_FUNC_INFO << identifier;
 }
