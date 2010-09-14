@@ -30,6 +30,7 @@ qt4_add_dbus_interfaces( control_SRCS
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Status.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Search.xml
+  ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentServer.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml
   ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Server.xml
