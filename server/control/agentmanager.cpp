@@ -80,7 +80,7 @@ void AgentManager::continueStartup()
   foreach ( const AgentType &info, mAgents )
     emit agentTypeAdded( info.identifier );
 
-  QStringList pathList = pluginInfoPathList();
+  const QStringList pathList = pluginInfoPathList();
 
   foreach ( const QString &path, pathList ) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
