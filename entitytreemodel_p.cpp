@@ -302,7 +302,14 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   while ( it.hasNext() ) {
     const Collection collection = it.next();
 
-    if ( isHidden( collection ) )
+    // If a collection is hidden, we still need to put it in the model if it has a
+    // non-hidden child. We rely on the fact that children will be returned
+    // first and will be in collectionsToInsert (if returned in this batch)
+    // or will already be in the model as a dummy node in m_collections
+    // if returned and processed in an earlier batch.
+    if ( isHidden( collection )
+      && !collectionsToInsert.contains( collection.id() )
+      && !m_collections.contains( collection.id() ) )
       continue;
 
     if ( m_collections.contains( collection.id() ) ) {
