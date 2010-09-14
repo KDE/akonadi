@@ -460,17 +460,25 @@ void AgentManager::load()
 
     file.beginGroup( entries[ i ] );
 
-    const QString agentType = file.value( "AgentType" ).toString();
-    if ( !mAgents.contains( agentType ) ) {
-      akError() << Q_FUNC_INFO << "Reference to unknown agent type" << agentType << "in agentsrc";
+    const QString agentTypeStr = file.value( "AgentType" ).toString();
+    if ( !mAgents.contains( agentTypeStr ) ) {
+      akError() << Q_FUNC_INFO << "Reference to unknown agent type" << agentTypeStr << "in agentsrc";
       file.endGroup();
       continue;
     }
 
-    AgentInstance::Ptr instance( new AgentInstance( this ) );
-    instance->setIdentifier( instanceIdentifier );
-    if ( instance->start( mAgents.value( agentType ) ) )
-      mAgentInstances.insert( instanceIdentifier, instance );
+    AgentType agentType = mAgents.value( agentTypeStr );
+    if ( agentType.runInAgentServer ) {
+      org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                          "/AgentServer", QDBusConnection::sessionBus() );
+      agentServer.startAgent( instanceIdentifier, agentType.exec );
+    } else {
+      AgentInstance::Ptr instance( new AgentInstance( this ) );
+      instance->setIdentifier( instanceIdentifier );
+      if ( instance->start( mAgents.value( agentTypeStr ) ) )
+        mAgentInstances.insert( instanceIdentifier, instance );
+    }
+    
     file.endGroup();
   }
 
@@ -659,14 +667,23 @@ void AgentManager::ensureAutoStart(const AgentType & info)
 {
   if ( !info.capabilities.contains( AgentType::CapabilityAutostart ) )
     return; // no an autostart agent
-  if ( mAgentInstances.contains( info.identifier ) )
+
+  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                      "/AgentServer", QDBusConnection::sessionBus(), this );
+    
+  if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
     return; // already running
-  AgentInstance::Ptr instance( new AgentInstance( this ) );
-  instance->setIdentifier( info.identifier );
-  if ( instance->start( info ) ) {
-    mAgentInstances.insert( instance->identifier(), instance );
-    registerAgentAtServer( instance, info );
-    save();
+
+  if ( info.runInAgentServer ) {
+    agentServer.startAgent( info.identifier, info.exec );
+  } else {
+    AgentInstance::Ptr instance( new AgentInstance( this ) );
+    instance->setIdentifier( info.identifier );
+    if ( instance->start( info ) ) {
+      mAgentInstances.insert( instance->identifier(), instance );
+      registerAgentAtServer( instance, info );
+      save();
+    }
   }
 }
 
