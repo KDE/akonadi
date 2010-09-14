@@ -61,6 +61,13 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   capabilities = file.value( "X-Akonadi-Capabilities" ).toStringList();
   exec = file.value( "Exec" ).toString();
   identifier = file.value( "X-Akonadi-Identifier" ).toString();
+
+  if ( file.contains( "X-Akonadi-RunInAgentServer" ) ) {
+    runInAgentServer = file.value( "X-Akonadi-RunInAgentServer" ).toBool();
+  } else {
+    runInAgentServer = false;
+  }
+  
   file.endGroup();
 
   if ( identifier.isEmpty() ) {

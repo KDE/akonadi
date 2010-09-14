@@ -46,6 +46,7 @@ class AgentType
     QStringList capabilities;
     QString exec;
     uint instanceCounter;
+    bool runInAgentServer;
 
     static QLatin1String CapabilityUnique;
     static QLatin1String CapabilityResource;
