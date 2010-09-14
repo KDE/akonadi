@@ -11,7 +11,7 @@ include(CTest)
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
-option(AKONADI_AGENT_SERVER "Build the experimental agent server" FALSE)
+option(AKONADI_AGENT_SERVER "Build the experimental agent server" TRUE)
 
 if (AKONADI_BUILD_TESTS)
   enable_testing()
