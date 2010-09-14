@@ -78,7 +78,7 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   scheduler.taskDone();
   QTest::qWait( 1 );
   QCOMPARE( changeReplaySpy.count(), 1 );
-  
+
   // Schedule two change replays. The duplicate one should not be executed.
   changeReplaySpy.clear();
   scheduler.scheduleChangeReplay();
@@ -266,7 +266,7 @@ void ResourceSchedulerTest::testSyncCompletion()
   scheduler.taskDone();
   QTest::qWait( 1 );
   QCOMPARE( completionSpy.count(), 3 );
-  scheduler.taskDone(); 
+  scheduler.taskDone();
   QVERIFY( scheduler.isEmpty() );
 }
 
@@ -281,16 +281,19 @@ void ResourceSchedulerTest::testPriorities()
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
   QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection) ) );
   QSignalSpy fetchSpy( &scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)) );
+  QSignalSpy attributesSyncSpy( &scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)) );
   QVERIFY( changeReplaySpy.isValid() );
   QVERIFY( fullSyncSpy.isValid() );
   QVERIFY( collectionTreeSyncSpy.isValid() );
   QVERIFY( syncSpy.isValid() );
   QVERIFY( fetchSpy.isValid() );
+  QVERIFY( attributesSyncSpy.isValid() );
 
   scheduler.scheduleCollectionTreeSync();
   scheduler.scheduleChangeReplay();
   scheduler.scheduleSync( Akonadi::Collection( 42 ) );
   scheduler.scheduleItemFetch( Akonadi::Item( 42 ), QSet<QByteArray>(), QDBusMessage() );
+  scheduler.scheduleAttributesSync( Akonadi::Collection( 42 ) );
   scheduler.scheduleFullSync();
 
   QTest::qWait( 1 );
@@ -299,6 +302,7 @@ void ResourceSchedulerTest::testPriorities()
   QCOMPARE( syncSpy.count(), 0 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 0 );
+  QCOMPARE( attributesSyncSpy.count(), 0 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );
@@ -307,6 +311,7 @@ void ResourceSchedulerTest::testPriorities()
   QCOMPARE( syncSpy.count(), 0 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 1 );
+  QCOMPARE( attributesSyncSpy.count(), 0 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );
@@ -315,6 +320,7 @@ void ResourceSchedulerTest::testPriorities()
   QCOMPARE( syncSpy.count(), 0 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 1 );
+  QCOMPARE( attributesSyncSpy.count(), 0 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );
@@ -323,6 +329,16 @@ void ResourceSchedulerTest::testPriorities()
   QCOMPARE( syncSpy.count(), 1 );
   QCOMPARE( fullSyncSpy.count(), 0 );
   QCOMPARE( fetchSpy.count(), 1 );
+  QCOMPARE( attributesSyncSpy.count(), 0 );
+  scheduler.taskDone();
+
+  QTest::qWait( 1 );
+  QCOMPARE( collectionTreeSyncSpy.count(), 1 );
+  QCOMPARE( changeReplaySpy.count(), 1 );
+  QCOMPARE( syncSpy.count(), 1 );
+  QCOMPARE( fullSyncSpy.count(), 0 );
+  QCOMPARE( fetchSpy.count(), 1 );
+  QCOMPARE( attributesSyncSpy.count(), 1 );
   scheduler.taskDone();
 
   QTest::qWait( 1 );
@@ -331,6 +347,7 @@ void ResourceSchedulerTest::testPriorities()
   QCOMPARE( syncSpy.count(), 1 );
   QCOMPARE( fullSyncSpy.count(), 1 );
   QCOMPARE( fetchSpy.count(), 1 );
+  QCOMPARE( attributesSyncSpy.count(), 1 );
   scheduler.taskDone();
 
   QVERIFY( scheduler.isEmpty() );

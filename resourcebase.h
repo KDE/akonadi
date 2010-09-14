@@ -210,6 +210,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void synchronized();
 
+    /**
+     * Emitted when a collection attributes synchronization has been completed.
+     *
+     * @param collectionId The identifier of the collection whose attributes got synchronized.
+     */
+    void attributesSynchronized( qlonglong collectionId );
+
   protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via
@@ -217,6 +224,19 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @see collectionsRetrieved(), collectionsRetrievedIncremental()
      */
     virtual void retrieveCollections() = 0;
+
+    /**
+     * Retrieve the attributes of a single collection from the backend. The
+     * collection to retrieve attributes for is provided as @p collection.
+     * Add the attributes parts and call collectionAttributesRetrieved()
+     * when done.
+     *
+     * @param collection The collection whose attributes should be retrieved.
+     * @see collectionAttributesRetrieved()
+     */
+    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
+    //       in order to simulate polymorphism
+    void retrieveCollectionAttributes( const Akonadi::Collection &collection );
 
     /**
      * Retrieve all (new/changed) items in collection @p collection.
@@ -263,6 +283,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @param item The retrieved item.
      */
     void itemRetrieved( const Item &item );
+
+    /**
+     * Call this method from retrieveCollectionAttributes() once the result is available.
+     *
+     * @param item The collection whose attributes got retrieved.
+     */
+    void collectionAttributesRetrieved( const Collection &collection );
 
     /**
      * Resets the dirty flag of the given item and updates the remote id.
@@ -420,6 +447,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void synchronizeCollection( qint64 id );
 
     /**
+     * This method is called whenever the collection with the given @p id
+     * shall have its attributes synchronized.
+     */
+    void synchronizeCollectionAttributes( qint64 id );
+
+    /**
      * Refetches the Collections.
      */
     void synchronizeCollectionTree();
@@ -521,6 +554,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollectionAttributes( const Akonadi::Collection& ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionListForAttributesDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotCollectionAttributesSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotItemSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotPercent( KJob*, unsigned long ) )
     Q_PRIVATE_SLOT( d_func(), void slotPrepareItemRetrieval( const Akonadi::Item& item ) )

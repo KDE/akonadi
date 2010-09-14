@@ -77,6 +77,20 @@ void ResourceScheduler::scheduleSync(const Collection & col)
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleAttributesSync( const Collection &collection )
+{
+  Task t;
+  t.type = SyncCollectionAttributes;
+  t.collection = collection;
+
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+  queue << t;
+  signalTaskToTracker( t, "SyncCollectionAttributes" );
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleItemFetch(const Item & item, const QSet<QByteArray> &parts, const QDBusMessage & msg)
 {
   Task t;
@@ -245,6 +259,9 @@ void ResourceScheduler::executeNext()
       break;
     case SyncCollection:
       emit executeCollectionSync( mCurrentTask.collection );
+      break;
+    case SyncCollectionAttributes:
+      emit executeCollectionAttributesSync( mCurrentTask.collection );
       break;
     case FetchItem:
       emit executeItemFetch( mCurrentTask.item, mCurrentTask.itemParts );

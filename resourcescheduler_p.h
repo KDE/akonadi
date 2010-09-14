@@ -50,6 +50,7 @@ class ResourceScheduler : public QObject
       SyncAll,
       SyncCollectionTree,
       SyncCollection,
+      SyncCollectionAttributes,
       FetchItem,
       ChangeReplay,
       DeleteResourceCollection,
@@ -103,6 +104,12 @@ class ResourceScheduler : public QObject
       @param col The collection to synchronize.
     */
     void scheduleSync( const Collection &col );
+
+    /**
+      Schedules synchronizing the attributes of a single collection.
+      @param collection The collection to synchronize attributes from.
+    */
+    void scheduleAttributesSync( const Collection &collection );
 
     /**
       Schedules fetching of a single PIM item.
@@ -179,6 +186,7 @@ class ResourceScheduler : public QObject
 
   Q_SIGNALS:
     void executeFullSync();
+    void executeCollectionAttributesSync( const Akonadi::Collection &col );
     void executeCollectionSync( const Akonadi::Collection &col );
     void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );

@@ -110,6 +110,9 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotLocalListDone( KJob *job );
     void slotSynchronizeCollection( const Collection &col );
     void slotCollectionListDone( KJob *job );
+    void slotSynchronizeCollectionAttributes( const Collection &col );
+    void slotCollectionListForAttributesDone( KJob *job );
+    void slotCollectionAttributesSyncDone( KJob *job );
 
     void slotItemSyncDone( KJob *job );
 
@@ -183,6 +186,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT( retrieveCollections() ) );
   connect( d->scheduler, SIGNAL( executeCollectionSync( const Akonadi::Collection& ) ),
            SLOT( slotSynchronizeCollection( const Akonadi::Collection& ) ) );
+  connect( d->scheduler, SIGNAL( executeCollectionAttributesSync( const Akonadi::Collection& ) ),
+           SLOT( slotSynchronizeCollectionAttributes(Akonadi::Collection)) );
   connect( d->scheduler, SIGNAL( executeItemFetch( const Akonadi::Item&, const QSet<QByteArray>& ) ),
            SLOT( slotPrepareItemRetrieval(Akonadi::Item)) );
   connect( d->scheduler, SIGNAL( executeResourceCollectionDeletion() ),
@@ -304,6 +309,31 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
     emit q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
   }
   scheduler->currentTask().sendDBusReplies( !job->error() );
+  scheduler->taskDone();
+}
+
+void ResourceBase::collectionAttributesRetrieved( const Collection &collection )
+{
+  Q_D( ResourceBase );
+  Q_ASSERT( d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes );
+  if ( !collection.isValid() ) {
+    emit attributesSynchronized( d->scheduler->currentTask().collection.id() );
+    d->scheduler->taskDone();
+    return;
+  }
+
+  CollectionModifyJob *job = new CollectionModifyJob( collection );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionAttributesSyncDone( KJob* ) ) );
+}
+
+void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob * job)
+{
+  Q_Q( ResourceBase );
+  Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes );
+  if ( job->error() ) {
+    emit q->error( QLatin1String( "Error while updating collection: " ) + job->errorString() );
+  }
+  emit q->attributesSynchronized( scheduler->currentTask().collection.id() );
   scheduler->taskDone();
 }
 
@@ -510,6 +540,12 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   scheduler->taskDone();
 }
 
+void ResourceBasePrivate::slotSynchronizeCollectionAttributes( const Collection &col )
+{
+  Q_Q( ResourceBase );
+  QMetaObject::invokeMethod( q, "retrieveCollectionAttributes", Q_ARG( Akonadi::Collection, col ) );
+}
+
 void ResourceBasePrivate::slotPrepareItemRetrieval( const Akonadi::Item &item )
 {
   Q_Q( ResourceBase );
@@ -654,6 +690,26 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
   // TODO: error handling
 }
 
+void ResourceBase::synchronizeCollectionAttributes( qint64 collectionId )
+{
+  CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
+  job->setFetchScope( changeRecorder()->collectionFetchScope() );
+  job->fetchScope().setResource( identifier() );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionListForAttributesDone( KJob* ) ) );
+}
+
+void ResourceBasePrivate::slotCollectionListForAttributesDone( KJob *job )
+{
+  if ( !job->error() ) {
+    Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
+    if ( !list.isEmpty() ) {
+      Collection col = list.first();
+      scheduler->scheduleAttributesSync( col );
+    }
+  }
+  // TODO: error handling
+}
+
 void ResourceBase::setTotalItems( int amount )
 {
   kDebug() << amount;
@@ -716,6 +772,11 @@ void ResourceBase::taskDone()
 {
   Q_D( ResourceBase );
   d->scheduler->taskDone();
+}
+
+void ResourceBase::retrieveCollectionAttributes( const Collection &collection )
+{
+  collectionAttributesRetrieved( collection );
 }
 
 void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)

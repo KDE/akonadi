@@ -57,6 +57,7 @@ set( akonadikde_LIB_SRC
   cachepolicy.cpp
   changerecorder.cpp
   collection.cpp
+  collectionattributessynchronizationjob.cpp
   collectioncombobox.cpp
   collectioncopyjob.cpp
   collectioncreatejob.cpp
@@ -256,6 +257,7 @@ install( FILES
   cachepolicy.h
   changerecorder.h
   collection.h
+  collectionattributessynchronizationjob.h
   collectioncombobox.h
   collectioncopyjob.h
   collectioncreatejob.h
