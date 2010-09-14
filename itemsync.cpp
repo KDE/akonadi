@@ -360,8 +360,8 @@ void ItemSync::Private::deleteItems( const Item::List &items )
 
     if ( !delItem.isValid() ) {
 #ifndef NDEBUG
-      kWarning() << "Delete item (remoteeId=" << delItem.remoteId()
-                 << "mimeType=" << delItem.mimeType()
+      kWarning() << "Delete item (remoteeId=" << item.remoteId()
+                 << "mimeType=" << item.mimeType()
                  << ") does not have a valid UID and no item with that remote ID exists either";
 #endif
       continue;
