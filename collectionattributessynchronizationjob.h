@@ -28,24 +28,20 @@ class Collection;
 class CollectionAttributesSynchronizationJobPrivate;
 
 /**
- * @short Job that synchronizes a resource.
+ * @short Job that synchronizes the attributes of a collection.
  *
- * This job will trigger a resource to synchronize the backend it is
- * responsible for (e.g. a local file or a groupware server) with the
+ * This job will trigger a resource to synchronize the attributes of
+ * a collection based on what the backend is reporting to store them in the
  * Akonadi storage.
- *
- * If you only want to trigger the synchronization without being
- * interested in the result, using Akonadi::AgentInstance::synchronize() is enough.
- * If you want to wait until it's finished, use this class.
  *
  * Example:
  *
  * @code
  * using namespace Akonadi;
  *
- * const AgentInstance resource = AgentManager::self()->instance( "myresourceidentifier" );
+ * const Collection collection = ...;
  *
- * CollectionAttributesSynchronizationJob *job = new CollectionAttributesSynchronizationJob( resource );
+ * CollectionAttributesSynchronizationJob *job = new CollectionAttributesSynchronizationJob( collection );
  * connect( job, SIGNAL( result( KJob* ) ), SLOT( synchronizationFinished( KJob* ) ) );
  *
  * @endcode
@@ -53,7 +49,7 @@ class CollectionAttributesSynchronizationJobPrivate;
  * @note This is a KJob not an Akonadi::Job, so it wont auto-start!
  *
  * @author Volker Krause <vkrause@kde.org>
- * @since 4.4
+ * @since 4.6
  */
 class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
 {
@@ -61,9 +57,9 @@ class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
 
   public:
     /**
-     * Creates a new synchronization job for the given resource.
+     * Creates a new synchronization job for the given collection.
      *
-     * @param instance The resource instance to synchronize.
+     * @param collection The collection to synchronize.
      */
     explicit CollectionAttributesSynchronizationJob( const Collection &collection, QObject *parent = 0 );
 
@@ -71,11 +67,6 @@ class AKONADI_EXPORT CollectionAttributesSynchronizationJob : public KJob
      * Destroys the synchronization job.
      */
     ~CollectionAttributesSynchronizationJob();
-
-    /**
-     * Returns the resource that has been synchronized.
-     */
-    Collection collection() const;
 
     /* reimpl */
     void start();

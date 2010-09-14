@@ -143,11 +143,6 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
   }
 }
 
-Collection CollectionAttributesSynchronizationJob::collection() const
-{
-  return d->collection;
-}
-
 }
 
 #include "collectionattributessynchronizationjob.moc"
