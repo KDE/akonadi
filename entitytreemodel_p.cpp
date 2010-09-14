@@ -302,24 +302,26 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   while ( it.hasNext() ) {
     const Collection collection = it.next();
 
+    const Collection::Id collectionId = collection.id();
+
     // If a collection is hidden, we still need to put it in the model if it has a
     // non-hidden child. We rely on the fact that children will be returned
     // first and will be in collectionsToInsert (if returned in this batch)
     // or will already be in the model as a dummy node in m_collections
     // if returned and processed in an earlier batch.
     if ( isHidden( collection )
-      && !collectionsToInsert.contains( collection.id() )
-      && !m_collections.contains( collection.id() ) )
+      && !collectionsToInsert.contains( collectionId )
+      && !m_collections.contains( collectionId ) )
       continue;
 
-    if ( m_collections.contains( collection.id() ) ) {
+    if ( m_collections.contains( collectionId ) ) {
       // This is probably the result of a parent of a previous collection already being in the model.
       // Replace the dummy collection with the real one and move on.
 
       // This could also be the result of a monitor signal having already inserted the collection
       // into this model. There's no way to tell, so we just emit dataChanged.
 
-      m_collections[ collection.id() ] = collection;
+      m_collections[ collectionId ] = collection;
 
       const QModelIndex collectionIndex = indexForCollection( collection );
       dataChanged( collectionIndex, collectionIndex );
@@ -344,10 +346,10 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       parent = tmp;
     }
 
-    if ( !subTreesToInsert[ parent.id() ].contains( collection.id() ) )
-      subTreesToInsert[ parent.id() ].append( collection.id() );
+    if ( !subTreesToInsert[ parent.id() ].contains( collectionId ) )
+      subTreesToInsert[ parent.id() ].append( collectionId );
 
-    collectionsToInsert.insert( collection.id(), collection );
+    collectionsToInsert.insert( collectionId, collection );
     if ( !parents.contains( parent.id() ) )
       parents.insert( parent.id(), parent.parentCollection() );
   }
