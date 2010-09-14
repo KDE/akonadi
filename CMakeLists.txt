@@ -11,7 +11,6 @@ include(CTest)
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
-option(AKONADI_AGENT_SERVER "Build the experimental agent server" TRUE)
 
 if (AKONADI_BUILD_TESTS)
   enable_testing()
@@ -294,6 +293,8 @@ add_subdirectory(interfaces)
 add_subdirectory(libs)
 set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
 
+add_subdirectory(agentserver)
+
 if (XSLTPROC_EXECUTABLE)
    add_subdirectory(server)
 endif (XSLTPROC_EXECUTABLE)
@@ -303,9 +304,6 @@ if (SQLITE_FOUND)
   option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
   add_subdirectory(qsqlite)
 endif (SQLITE_FOUND)
-if (AKONADI_AGENT_SERVER)
-  add_subdirectory(agentserver)
-endif (AKONADI_AGENT_SERVER)
 
 ############### install stuff ###############
 
