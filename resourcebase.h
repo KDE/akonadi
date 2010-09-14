@@ -510,9 +510,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @since 4.4
      */
     enum SchedulePriority {
-      Prepend,            ///> The task will be executed as soon as the current task has finished.
-      AfterChangeReplay,  ///> The task is scheduled after the last ChangeReplay task in the queue
-      Append              ///> The task will be executed after all tasks currently in the queue are finished
+      Prepend,            ///< The task will be executed as soon as the current task has finished.
+      AfterChangeReplay,  ///< The task is scheduled after the last ChangeReplay task in the queue
+      Append              ///< The task will be executed after all tasks currently in the queue are finished
     };
 
     /**
