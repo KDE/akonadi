@@ -22,6 +22,7 @@
 
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
+#include "agentserverinterface.h"
 #include "processcontrol.h"
 #include "serverinterface.h"
 #include "libs/xdgbasedirs_p.h"
@@ -43,8 +44,8 @@
 using Akonadi::ProcessControl;
 
 AgentManager::AgentManager( QObject *parent )
-  : QObject( parent ),
-  mAgentWatcher( new QFileSystemWatcher( this ) )
+  : QObject( parent )
+  , mAgentWatcher( new QFileSystemWatcher( this ) )
 {
   new AgentManagerAdaptor( this );
   new AgentManagerInternalAdaptor( this );
@@ -60,6 +61,10 @@ AgentManager::AgentManager( QObject *parent )
   connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 
+  mAgentServer = new Akonadi::ProcessControl;
+  connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
+  mAgentServer->start( "akonadi_agent_server", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+  
   connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
 }
 
@@ -115,8 +120,18 @@ void AgentManager::cleanup()
                                            QDBusConnection::sessionBus(), this );
   serverIface->quit();
 
+  mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
+  org::freedesktop::Akonadi::AgentServer *agentServerIface =
+    new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                "/AgentServer",
+                                                QDBusConnection::sessionBus(), this );
+  agentServerIface->quit();
+
   delete mStorageController;
   mStorageController = 0;
+
+  delete mAgentServer;
+  mAgentServer = 0;
 }
 
 QStringList AgentManager::agentTypes() const
@@ -699,6 +714,13 @@ void AgentManager::removeSearch(quint64 resultCollectionId)
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
       instance->searchInterface()->removeSearch( resultCollectionId );
   }
+}
+
+void AgentManager::agentServerFailure()
+{
+  qDebug() << "Failed to start AgentServer!";
+  // if ( requiresAgentServer )
+  //   QCoreApplication::instance()->exit( 255 );
 }
 
 void AgentManager::serverFailure()

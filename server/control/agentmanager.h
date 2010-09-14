@@ -302,6 +302,7 @@ class AgentManager : public QObject, protected QDBusContext
     void updatePluginInfos();
     void serviceOwnerChanged( const QString&, const QString&, const QString& );
     void agentExeChanged( const QString &fileName );
+    void agentServerFailure();
     void serverFailure();
 
   private:
@@ -357,6 +358,7 @@ class AgentManager : public QObject, protected QDBusContext
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
+    Akonadi::ProcessControl *mAgentServer;
     Akonadi::ProcessControl *mStorageController;
     QFileSystemWatcher *mAgentWatcher;
 
