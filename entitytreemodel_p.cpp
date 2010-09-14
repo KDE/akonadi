@@ -329,7 +329,6 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     }
 
     Collection parent = collection;
-    Collection tmp;
 
     while ( !m_collections.contains( parent.parentCollection().id() ) ) {
       if ( !subTreesToInsert[ parent.parentCollection().id() ].contains( parent.parentCollection().id() ) ) {
@@ -342,8 +341,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
           subTreesToInsert[ parent.parentCollection().id() ].append( collectionId );
       }
 
-      tmp = parent.parentCollection();
-      parent = tmp;
+      parent = parent.parentCollection();
     }
 
     if ( !subTreesToInsert[ parent.id() ].contains( collectionId ) )
