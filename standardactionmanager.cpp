@@ -219,6 +219,8 @@ class StandardActionManager::Private
                       i18n( "Could not paste data: %1" ) );
       setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                       i18n( "Paste failed" ) );
+
+      qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
     }
 
     void enableAction( int type, bool enable )
@@ -534,6 +536,15 @@ class StandardActionManager::Private
 
       if ( items.isEmpty() )
         return;
+
+      QMetaObject::invokeMethod(q, "slotDeleteItemsDeffered",
+                                Qt::QueuedConnection,
+                                Q_ARG(Akonadi::Item::List, items));
+    }
+
+    void slotDeleteItemsDeffered(const Akonadi::Item::List &items)
+    {
+      Q_ASSERT( itemSelectionModel );
 
       if ( KMessageBox::questionYesNo( parentWidget,
            contextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText, items.count(), QString() ),
