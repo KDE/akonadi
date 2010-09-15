@@ -212,7 +212,7 @@ ResourceBase::ResourceBase( const QString & id )
   if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
 
-  sessionBus().registerObject( dbusPathPrefix() + QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
+  sessionBus().registerObject( QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
 }
