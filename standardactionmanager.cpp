@@ -537,12 +537,12 @@ class StandardActionManager::Private
       if ( items.isEmpty() )
         return;
 
-      QMetaObject::invokeMethod(q, "slotDeleteItemsDeffered",
+      QMetaObject::invokeMethod(q, "slotDeleteItemsDeferred",
                                 Qt::QueuedConnection,
                                 Q_ARG(Akonadi::Item::List, items));
     }
 
-    void slotDeleteItemsDeffered(const Akonadi::Item::List &items)
+    void slotDeleteItemsDeferred(const Akonadi::Item::List &items)
     {
       Q_ASSERT( itemSelectionModel );
 

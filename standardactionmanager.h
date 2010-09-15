@@ -334,7 +334,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCutItems() )
     Q_PRIVATE_SLOT( d, void slotPaste() )
     Q_PRIVATE_SLOT( d, void slotDeleteItems() )
-    Q_PRIVATE_SLOT( d, void slotDeleteItemsDeffered(const Akonadi::Item::List &) )
+    Q_PRIVATE_SLOT( d, void slotDeleteItemsDeferred(const Akonadi::Item::List &) )
     Q_PRIVATE_SLOT( d, void slotLocalSubscription() )
     Q_PRIVATE_SLOT( d, void slotAddToFavorites() )
     Q_PRIVATE_SLOT( d, void slotRemoveFromFavorites() )
