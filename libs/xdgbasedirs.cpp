@@ -78,6 +78,7 @@ public:
     QStringList mConfigDirs;
     QStringList mDataDirs;
     QStringList mExecutableDirs;
+    QStringList mPluginDirs;
 };
 
 Q_GLOBAL_STATIC(XdgBaseDirsSingleton, instance)
@@ -270,6 +271,48 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
       if ( canonicalFileInfo.exists() && canonicalFileInfo.isFile() && canonicalFileInfo.isExecutable() ) {
         return *it;
       }
+    }
+  }
+
+  return QString();
+}
+
+QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &searchPath )
+{
+  if ( instance()->mPluginDirs.isEmpty() ) {
+    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", "/usr/lib/qt4/plugins/" );
+
+    if ( QCoreApplication::instance() != 0 ) {
+      foreach ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
+        if ( !pluginDirs.contains( libraryPath ) ) {
+          pluginDirs << libraryPath;
+        }
+      }
+    }
+
+    pluginDirs += searchPath;
+    qWarning( ) << "search paths: " << pluginDirs;
+    instance()->mPluginDirs = pluginDirs;
+  }
+
+#if defined(Q_OS_WIN) //krazy:exclude=cpp
+  const QString pluginName = relPath + QLatin1String( ".dll" );
+#else
+  const QString pluginName = relPath + QLatin1String( ".so" );
+#endif
+
+  QStringList::const_iterator pathIt    = instance()->mPluginDirs.constBegin();
+  QStringList::const_iterator pathEndIt = instance()->mPluginDirs.constEnd();
+  for ( ; pathIt != pathEndIt; ++pathIt ) {
+    const QFileInfo fileInfo( *pathIt + QDir::separator() + pluginName );
+
+    // resolve symlinks, happens eg. with Maemo optify
+    if ( fileInfo.canonicalFilePath().isEmpty() )
+      continue;
+
+    const QFileInfo canonicalFileInfo( fileInfo.canonicalFilePath() );
+    if ( canonicalFileInfo.exists() && canonicalFileInfo.isFile() ) {
+      return canonicalFileInfo.absoluteFilePath();
     }
   }
 

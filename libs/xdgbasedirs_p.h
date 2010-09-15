@@ -165,6 +165,27 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     static QString findExecutableFile( const QString &relPath, const QStringList &searchPath = QStringList() );
 
     /**
+     @brief Searches the plugin specific directories for a given file
+
+     Convenience method for finding a given plugin (with optional relative path)
+     in any of the configured directories for a this special type.
+
+     @note This is not based on the XDG base dir spec, since it does not cover
+           plugins
+
+     @param relPath relative path of a file to look for,
+            e.g."akonadi_knut_resource"
+     @param searchPath additional paths to search for the plugin,
+            only used if the file was not found in QT_PLUGIN_PATH and the install prefix
+
+     @returns the file path of the first match, or @c QString() if no such
+              relative path exists in any of the base directories
+
+     @see findResourceFile()
+     */
+    static QString findPluginFile( const QString &relPath, const QStringList &searchPath = QStringList() );
+
+    /**
      @brief Searches the resource specific directories for a given subdirectory
 
      Convenience method for finding a given relative subdirectory in any of
