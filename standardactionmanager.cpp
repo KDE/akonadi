@@ -1013,7 +1013,7 @@ class StandardActionManager::Private
           return text.subs( count ).subs( value ).toString();
       } else {
         return text.subs( count ).toString();
-      } 
+      }
 
     }
 
