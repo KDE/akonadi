@@ -1,0 +1,3 @@
+* When the AgentServer process crashes and is restarted by ProcessControl,
+  somehow the agents/resources that where running must be restarted as
+  well.
