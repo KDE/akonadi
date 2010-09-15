@@ -20,6 +20,7 @@
 #include "agentserver.h"
 #include "agentthread.h"
 
+#include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
 #include "shared/akdebug.h"
 
@@ -44,17 +45,23 @@ bool AgentServer::started( const QString& identifier ) const
 
 void AgentServer::startAgent( const QString& identifier, const QString& fileName )
 {
-  qDebug() << Q_FUNC_INFO << fileName << identifier;
+  const QString pluginFile = XdgBaseDirs::findPluginFile( fileName );
+  qDebug() << "================" << identifier << pluginFile;
+  if ( pluginFile.isEmpty() ) {
+    qDebug() << Q_FUNC_INFO << "plugin file not found!";
+    return;
+  }
+ 
   QPluginLoader *loader = 0;
-  if ( m_pluginLoaders.contains( fileName ) ) {
-    loader = m_pluginLoaders.value( fileName );
+  if ( m_pluginLoaders.contains( pluginFile ) ) {
+    loader = m_pluginLoaders.value( pluginFile );
   } else {
-    loader = new QPluginLoader( fileName, this );
+    loader = new QPluginLoader( pluginFile, this );
     if ( !loader->load() ) {
       akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
       return;
     }
-    m_pluginLoaders.insert( fileName, loader );
+    m_pluginLoaders.insert( pluginFile, loader );
   }
   Q_ASSERT( loader->isLoaded() );
 
