@@ -41,12 +41,20 @@ class ItemFetchScope;
  * automatically trigger an update to the Akonadi database whenever they occur
  * (unless the resource is offline).
  *
+ * Note that items can not be created in the root collection (Collection::root())
+ * and therefore can not be fetched from there either. That is - an item fetch in
+ * the root collection will yield an empty list.
+ *
+ *
  * Example:
  *
  * @code
  *
- * // Fetch all items with full payload from the root collection
- * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Collection::root() );
+ * // Fetch all items with full payload from a collection
+ *
+ * const Collection collection = getCollection();
+ *
+ * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
  * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
  * job->fetchScope().fetchFullPayload();
  *

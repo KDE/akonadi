@@ -34,6 +34,10 @@ class ItemCreateJobPrivate;
  * This job creates a new item with all the set properties in the
  * given target collection.
  *
+ * Note that items can not be created in the root collection (Collection::root())
+ * and the collection must have Collection::contentMimeTypes() that match the mimetype
+ * of the item being created.
+ *
  * Example:
  *
  * @code
@@ -47,7 +51,7 @@ class ItemCreateJobPrivate;
  * item.setMimeType( "text/directory" );
  * item.setPayload<KABC::Addressee>( addr );
  *
- * Akonadi::Collection collection = Akonadi::Collection::root();
+ * Akonadi::Collection collection = getCollection();
  *
  * Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
  * connect( job, SIGNAL( result( KJob* ) ), SLOT( jobFinished( KJob* ) ) );
