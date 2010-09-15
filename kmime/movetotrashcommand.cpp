@@ -28,7 +28,6 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/entitytreemodel.h>
 
-#define IMAP_RESOURCE_IDENTIFIER QString::fromLatin1("akonadi_imap_resource")
 MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const Akonadi::Collection& sourceFolder, QObject* parent): CommandBase( parent )
 {
   the_trashCollectionFolder = -1;

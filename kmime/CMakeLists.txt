@@ -49,6 +49,7 @@ set( kmimeakonadi_LIB_SRC
 
   commandbase.cpp
   util.cpp
+  emptytrashcommand.cpp
   markascommand.cpp
   movecommand.cpp
   movetotrashcommand.cpp

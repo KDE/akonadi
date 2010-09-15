@@ -18,20 +18,36 @@
 */
 
 
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef EMPTYTRASHCOMMAND_P_H
+#define EMPTYTRASHCOMMAND_P_H
 
-class OrgKdeAkonadiImapSettingsInterface;
+#include <commandbase_p.h>
+
+#include "akonadi/agentinstance.h"
+#include "akonadi/collection.h"
+
+class QAbstractItemModel;
 class KJob;
-class QString;
-#define IMAP_RESOURCE_IDENTIFIER QString::fromLatin1("akonadi_imap_resource")
 
-namespace Util
+class EmptyTrashCommand : public CommandBase
 {
-  /// Helper to sanely show an error message for a job
-  void showJobError( KJob* job );
+  Q_OBJECT
 
-  OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
+public:
+    EmptyTrashCommand(QAbstractItemModel* model, QObject* parent);
+    /*reimp*/ void execute();
+     
+private slots:
+  void slotExpungeJob( KJob *job );
+  void slotDeleteJob( KJob *job );
+private:      
+  void expunge( const Akonadi::Collection& );
+  Akonadi::AgentInstance::List agentInstances();
+  Akonadi::Collection trashCollectionFolder();
+  Akonadi::Collection collectionFromId(const Akonadi::Collection::Id& id) const;
+
+  QAbstractItemModel* mModel;
+  Akonadi::Collection::Id the_trashCollectionFolder;
 };
 
-#endif // UTIL_H
+#endif // EMPTYTRASHCOMMAND_P_H

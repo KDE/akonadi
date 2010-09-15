@@ -24,6 +24,8 @@
 #include "standardmailactionmanager.h"
 #include "movetotrashcommand_p.h"
 #include "markascommand_p.h"
+#include "emptytrashcommand_p.h"
+#include "removeduplicatescommand_p.h"
 
 #include <akonadi/subscriptiondialog_p.h>
 #include <akonadi/agentfilterproxymodel.h>
@@ -43,7 +45,6 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
-#include "removeduplicatescommand_p.h"
 
 using namespace Akonadi;
 
@@ -320,6 +321,15 @@ class StandardMailActionManager::Private
       command->execute();
     }
 
+    void slotEmptyAllTrash()
+    {
+      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyAllTrash ) )
+        return;
+
+      EmptyTrashCommand *command = new EmptyTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), mParent );
+      command->execute();
+    }
+
     void slotMailLocalSubscription()
     {
 #ifndef Q_OS_WINCE
@@ -391,7 +401,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
       action->setData( QByteArray("R") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsUnread:
       action = new KAction( d->mParentWidget );
@@ -400,7 +410,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
       action->setData( QByteArray("U") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsImportant:
       action = new KAction( d->mParentWidget );
@@ -409,7 +419,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_important" ), action );
       action->setData( QByteArray("G") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsActionItem:
       action = new KAction( d->mParentWidget );
@@ -418,7 +428,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_action_item" ), action );
       action->setData( QByteArray("K") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkAllMailAsRead:
       action = new KAction( d->mParentWidget );
@@ -427,7 +437,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkAllMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_read" ), action );
       action->setData( QByteArray("R") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsUnread:
       action = new KAction( d->mParentWidget );
@@ -436,7 +446,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
       action->setData( QByteArray("U") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsImportant:
       action = new KAction( d->mParentWidget );
@@ -445,7 +455,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkAllMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_important" ), action );
       action->setData( QByteArray("G") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsActionItem:
       action = new KAction( d->mParentWidget );
@@ -454,7 +464,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkAllMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_action_item" ), action );
       action->setData( QByteArray("K") );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MoveToTrash:
       action = new KAction( d->mParentWidget );
@@ -464,7 +474,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Move message to trashcan" ) );
       d->mActions.insert( MoveToTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_move_to_trash" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveToTrash()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveToTrash() ) );
       break;
     case MoveAllToTrash:
       action = new KAction( d->mParentWidget );
@@ -472,7 +482,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setText( i18n( "Move All to &Trash" ) );
       d->mActions.insert( MoveAllToTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_move_all_to_trash" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveAllToTrash()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMoveAllToTrash() ) );
       break;
     case RemoveDuplicates:
       action = new KAction( d->mParentWidget );
@@ -480,7 +490,14 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Asterisk ) );
       d->mActions.insert( RemoveDuplicates, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_remove_duplicates" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveDuplicates()) );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveDuplicates() ) );
+      break;
+    case EmptyAllTrash:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "Empty All &Trash Folders" ) );
+      d->mActions.insert( EmptyAllTrash, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_empty_all_trash" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEmptyAllTrash() ) );
       break;
     default:
       Q_ASSERT( false ); // should never happen
@@ -508,6 +525,7 @@ void StandardMailActionManager::createAllActions()
   createAction( MoveToTrash );
   createAction( MoveAllToTrash );
   createAction( RemoveDuplicates );
+  createAction( EmptyAllTrash );
 
   d->mGenericManager->createAllActions();
 

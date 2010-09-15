@@ -64,6 +64,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
       MoveToTrash,                                      ///< Move all selected messages and folders to trash.
       MoveAllToTrash,                                   ///< Move all messages of the current folder to trash.
       RemoveDuplicates,                                 ///< Removes all duplicated messages.
+      EmptyAllTrash,                                    ///< Empties trash folders on all accounts
       LastType                                          ///< Marks last action.
     };
 
@@ -203,6 +204,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotMoveToTrash() )
     Q_PRIVATE_SLOT( d, void slotMoveAllToTrash() )
     Q_PRIVATE_SLOT( d, void slotRemoveDuplicates() )
+    Q_PRIVATE_SLOT( d, void slotEmptyAllTrash() )
     Q_PRIVATE_SLOT( d, void slotMailLocalSubscription() )
     //@endcond
 };
