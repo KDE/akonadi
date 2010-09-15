@@ -207,7 +207,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
     return QString();
 
   mAgentInstances.insert( instance->identifier(), instance );
-  registerAgentAtServer( instance, agentInfo );
+  registerAgentAtServer( instance->identifier(), agentInfo );
   save();
 
   return instance->identifier();
@@ -676,12 +676,14 @@ void AgentManager::ensureAutoStart(const AgentType & info)
 
   if ( info.runInAgentServer ) {
     agentServer.startAgent( info.identifier, info.exec );
+    registerAgentAtServer( info.identifier, info );
+    save();
   } else {
     AgentInstance::Ptr instance( new AgentInstance( this ) );
     instance->setIdentifier( info.identifier );
     if ( instance->start( info ) ) {
       mAgentInstances.insert( instance->identifier(), instance );
-      registerAgentAtServer( instance, info );
+      registerAgentAtServer( instance->identifier(), info );
       save();
     }
   }
@@ -701,14 +703,14 @@ void AgentManager::agentExeChanged(const QString & fileName)
   }
 }
 
-void AgentManager::registerAgentAtServer( const AgentInstance::Ptr &instance, const AgentType &type )
+void AgentManager::registerAgentAtServer( const QString &agentIdentifier, const AgentType &type )
 {
   if ( type.capabilities.contains( AgentType::CapabilityResource ) ) {
     boost::scoped_ptr<org::freedesktop::Akonadi::ResourceManager> resmanager(
       new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"),
                                                       QLatin1String("/ResourceManager"),
                                                       QDBusConnection::sessionBus(), this ) );
-    resmanager->addResourceInstance( instance->identifier(), type.capabilities );
+    resmanager->addResourceInstance( agentIdentifier, type.capabilities );
   }
 }
 

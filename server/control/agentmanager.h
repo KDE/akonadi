@@ -340,7 +340,7 @@ class AgentManager : public QObject, protected QDBusContext
     bool checkAgentExists( const QString &identifier ) const;
     void ensureAutoStart( const AgentType &info );
     void continueStartup();
-    void registerAgentAtServer( const AgentInstance::Ptr& instance, const AgentType& type );
+    void registerAgentAtServer( const QString &agentIdentifier, const AgentType& type );
 
   private:
     /**
