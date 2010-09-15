@@ -551,6 +551,15 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     bool isOnline() const;
 
+
+    /**
+     * Returns the QDBusConnection that should be used by subclasses to register
+     * objects.
+     *
+     * @since 4.6
+     */
+    QDBusConnection sessionBus() const;
+    
     /**
      * Sets whether the agent needs network or not.
      *

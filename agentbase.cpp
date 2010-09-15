@@ -151,6 +151,7 @@ void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collec
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
   : q_ptr( parent ),
+    mDBusConnection( QString() ),
     mStatusCode( AgentBase::Idle ),
     mProgress( 0 ),
     mNeedsNetwork( false ),
@@ -176,18 +177,23 @@ void AgentBasePrivate::init()
    */
   SessionPrivate::createDefaultSession( mId.toLatin1() );
 
+  if ( QThread::currentThread() != QCoreApplication::instance()->thread() ) {
+    mDBusConnection = QDBusConnection::connectToBus( QDBusConnection::SessionBus, q->identifier() );
+    Q_ASSERT( mDBusConnection.isConnected() );
+  }
+  
   mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
   new Akonadi__ControlAdaptor( q );
   new Akonadi__StatusAdaptor( q );
 #ifndef EXPERIMENTAL_INPROCESS_AGENTS
-  if ( !QDBusConnection::sessionBus().registerObject( q->dbusPathPrefix() + QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
+  if ( !q->sessionBus().registerObject( q->dbusPathPrefix() + QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
 #else
-  if ( !QDBusConnection::sessionBus().registerObject( q->dbusPathPrefix(), q, QDBusConnection::ExportAdaptors ) )
+  if ( !q->sessionBus().registerObject( q->dbusPathPrefix(), q, QDBusConnection::ExportAdaptors ) )
 #endif
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
-
+    
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
   mChangeRecorder = new ChangeRecorder( q );
@@ -254,8 +260,8 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
-    kFatal() << "Unable to register service at dbus:" << QDBusConnection::sessionBus().lastError().message();
+  if ( !q->sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
+    kFatal() << "Unable to register service at dbus:" << q->sessionBus().lastError().message();
   q->setOnline( mOnline );
 }
 
@@ -547,6 +553,15 @@ bool AgentBase::isOnline() const
   Q_D( const AgentBase );
 
   return d->mOnline;
+}
+
+QDBusConnection AgentBase::sessionBus() const
+{
+  Q_D( const AgentBase );
+  if ( QThread::currentThread() != QCoreApplication::instance()->thread() )
+    return QDBusConnection( d->mDBusConnection );
+  else
+    return QDBusConnection::sessionBus();
 }
 
 void AgentBase::setNeedsNetwork( bool needsNetwork )

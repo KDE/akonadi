@@ -79,6 +79,9 @@ class AgentBasePrivate : public QObject
     QString mId;
     QString mName;
 
+    /// Use sessionBus() to acces the connection.
+    QDBusConnection mDBusConnection;
+    
     int mStatusCode;
     QString mStatusMessage;
 

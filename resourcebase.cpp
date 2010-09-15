@@ -85,13 +85,17 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
-        QString reason = QDBusConnection::sessionBus().lastError().message();
+      Q_Q( ResourceBase );
+      if ( !q->sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
+        QString reason = q->sessionBus().lastError().message();
         if ( reason.isEmpty() ) {
           reason = QString::fromLatin1( "this service is probably running already." );
         }
         kError() << "Unable to register service at D-Bus: " << reason;
-        QCoreApplication::instance()->exit(1);
+
+        if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
+          QCoreApplication::instance()->exit(1);
+
       } else {
         AgentBasePrivate::delayedInit();
       }
@@ -208,7 +212,7 @@ ResourceBase::ResourceBase( const QString & id )
   if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
 
-  QDBusConnection::sessionBus().registerObject( dbusPathPrefix() + QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
+  sessionBus().registerObject( dbusPathPrefix() + QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
 }
