@@ -20,6 +20,7 @@
 
 #include "agentmanager.h"
 
+#include "agentprocessinstance.h"
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
 #include "agentserverinterface.h"
@@ -190,6 +191,14 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
   return mAgents.value( identifier ).capabilities;
 }
 
+AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
+{
+  if ( info.runInAgentServer )
+    return AgentInstance::Ptr(); // TODO: Replace when we have an AgentThreadInstance implemented.
+  else
+    return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
+}
+
 QString AgentManager::createAgentInstance( const QString &identifier )
 {
   if ( !checkAgentExists( identifier ) )
@@ -197,8 +206,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   AgentType agentInfo = mAgents.value( identifier );
   mAgents[ identifier ].instanceCounter++;
 
-
-  AgentInstance::Ptr instance( new AgentInstance( this ) );
+  AgentInstance::Ptr instance = createAgentInstance( agentInfo );
   if ( agentInfo.capabilities.contains( AgentType::CapabilityUnique ) )
     instance->setIdentifier( identifier );
   else
@@ -488,7 +496,7 @@ void AgentManager::load()
                                                           "/AgentServer", QDBusConnection::sessionBus() );
       agentServer.startAgent( instanceIdentifier, agentType.exec );
     } else {
-      AgentInstance::Ptr instance( new AgentInstance( this ) );
+      AgentInstance::Ptr instance = createAgentInstance( agentType );
       instance->setIdentifier( instanceIdentifier );
       if ( instance->start( mAgents.value( agentTypeStr ) ) )
         mAgentInstances.insert( instanceIdentifier, instance );
@@ -694,7 +702,7 @@ void AgentManager::ensureAutoStart(const AgentType & info)
     registerAgentAtServer( info.identifier, info );
     save();
   } else {
-    AgentInstance::Ptr instance( new AgentInstance( this ) );
+    AgentInstance::Ptr instance = createAgentInstance( info );
     instance->setIdentifier( info.identifier );
     if ( instance->start( info ) ) {
       mAgentInstances.insert( instance->identifier(), instance );

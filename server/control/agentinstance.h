@@ -32,10 +32,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-namespace Akonadi {
-  class ProcessControl;
-}
-
 class AgentManager;
 class AgentType;
 
@@ -54,7 +50,9 @@ class AgentInstance : public QObject
     typedef boost::shared_ptr<AgentInstance> Ptr;
 
     explicit AgentInstance( AgentManager *manager );
+    virtual ~AgentInstance() {}
 
+    /** Set/get the unique identifier of this AgentInstance */
     QString identifier() const { return mIdentifier; }
     void setIdentifier( const QString &identifier ) { mIdentifier = identifier; }
 
@@ -65,10 +63,10 @@ class AgentInstance : public QObject
     bool isOnline() const { return mOnline; }
     QString resourceName() const { return mResourceName; }
 
-    bool start( const AgentType &agentInfo );
-    void quit();
-    void cleanup();
-    void restartWhenIdle();
+    virtual bool start( const AgentType &agentInfo ) = 0;
+    virtual void quit();
+    virtual void cleanup();
+    virtual void restartWhenIdle() = 0;
 
     bool hasResourceInterface() const { return mResourceInterface; }
     bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }
@@ -102,11 +100,13 @@ class AgentInstance : public QObject
   private:
     template <typename T> T* findInterface( const char* service, const char* path = 0 );
 
+  protected:
+    void setAgentType( const QString &agentType ) { mType = agentType; }
+
   private:
     QString mIdentifier;
     QString mType;
     AgentManager *mManager;
-    Akonadi::ProcessControl *mController;
     org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface;
     org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface;
     org::freedesktop::Akonadi::Agent::Search* mSearchInterface;

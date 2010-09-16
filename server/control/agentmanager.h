@@ -336,6 +336,7 @@ class AgentManager : public QObject, protected QDBusContext
      */
     void readPluginInfos( const QDir &directory );
 
+    AgentInstance::Ptr createAgentInstance( const AgentType &type );
     bool checkAgentInterfaces( const QString &identifier, const QString &method ) const;
     bool checkInstance( const QString &identifier ) const;
     bool checkResourceInterface( const QString &identifier, const QString &method ) const;

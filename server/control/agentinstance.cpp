@@ -22,13 +22,11 @@
 #include "agenttype.h"
 #include "agentmanager.h"
 #include "../../libs/xdgbasedirs_p.h"
-#include "processcontrol.h"
 #include "akdebug.h"
 
 AgentInstance::AgentInstance(AgentManager * manager) :
     QObject( manager ),
     mManager( manager ),
-    mController( 0 ),
     mAgentControlInterface( 0 ),
     mAgentStatusInterface( 0 ),
     mSearchInterface( 0 ),
@@ -40,34 +38,14 @@ AgentInstance::AgentInstance(AgentManager * manager) :
 {
 }
 
-bool AgentInstance::start( const AgentType &agentInfo )
-{
-  Q_ASSERT( !mIdentifier.isEmpty() );
-  if ( mIdentifier.isEmpty() )
-    return false;
-  mType = agentInfo.identifier;
-  const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
-  if ( executable.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
-    return false;
-  }
-  mController = new Akonadi::ProcessControl( this );
-  QStringList arguments;
-  arguments << "--identifier" << mIdentifier;
-  mController->start( executable, arguments );
-  return true;
-}
-
 void AgentInstance::quit()
 {
-  mController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
   if ( mAgentControlInterface && mAgentControlInterface->isValid() )
     mAgentControlInterface->quit();
 }
 
 void AgentInstance::cleanup()
 {
-  mController->setCrashPolicy( Akonadi::ProcessControl::StopOnCrash );
   if ( mAgentControlInterface && mAgentControlInterface->isValid() )
     mAgentControlInterface->cleanup();
 }
@@ -209,14 +187,6 @@ void AgentInstance::errorHandler(const QDBusError & error)
   //avoid using the server tracer, can result in D-BUS lockups
   qDebug() <<  QString( "D-Bus communication error '%1': '%2'" ).arg( error.name(), error.message() ) ;
   // TODO try again after some time, esp. on timeout errors
-}
-
-void AgentInstance::restartWhenIdle()
-{
-  if ( mStatus == 0 ) {
-    mController->restartOnceWhenFinished();
-    quit();
-  }
 }
 
 template <typename T>

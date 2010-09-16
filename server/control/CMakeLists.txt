@@ -17,6 +17,7 @@ set( control_SRCS
   ${AKONADI_SHARED_SOURCES}
   agenttype.cpp
   agentinstance.cpp
+  agentprocessinstance.cpp
   agentmanager.cpp
   controlmanager.cpp
   main.cpp
