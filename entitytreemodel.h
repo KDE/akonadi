@@ -46,7 +46,7 @@ class EntityTreeModelPrivate;
  * Akonadi models and views provide a high level way to interact with the akonadi server.
  * Most applications will use these classes.
  *
- * Models provide an interface for viewing, deleting and moving Items and Collections.
+ * Models provide an interface for viewing, updating, deleting and moving Items and Collections.
  * Additionally, the models are updated automatically if another application changes the
  * data or inserts of deletes items etc.
  *
@@ -167,6 +167,15 @@ class EntityTreeModelPrivate;
  * @endcode
  *
  * This feature is used in KAddressBook.
+ *
+ * If items are to be fetched by the model, it is necessary to specify which parts of the items
+ * are to be fetched, using the ItemFetchScope class. By default, only the basic metadata is
+ * fetched. To fetch all item data, including all attributes:
+ *
+ * @code
+ * changeRecorder->itemFetchScope().fetchFullPayload();
+ * changeRecorder->itemFetchScope().fetchAllAttributes();
+ * @endcode
  *
  * <h2>Using EntityTreeModel with Proxy models</h2>
  *
