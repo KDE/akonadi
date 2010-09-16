@@ -72,7 +72,11 @@ void AgentServer::startAgent( const QString& identifier, const QString& fileName
 
 void AgentServer::stopAgent( const QString& identifier )
 {
-  qDebug() << Q_FUNC_INFO << identifier;
+  if ( !m_agents.contains( identifier ) )
+    return;
+
+  AgentThread* thread = m_agents.take( identifier );
+  thread->quit();
 }
 
 void AgentServer::quit()
