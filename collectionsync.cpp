@@ -444,6 +444,7 @@ class CollectionSync::Private
     */
     void execute()
     {
+      kDebug() << Q_FUNC_INFO << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
       if ( !localListDone )
         return;
 
@@ -503,6 +504,7 @@ class CollectionSync::Private
         return;
       }
 
+      kDebug() << Q_FUNC_INFO << "q->commit()";
       q->commit();
     }
 

@@ -469,12 +469,14 @@ class StandardActionManager::Private
       if ( collectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
 
-      AgentManager::self()->synchronizeCollection( collection );
+      foreach( Collection collection, collections ) {
+        AgentManager::self()->synchronizeCollection( collection );
+      }
     }
 
     void slotCollectionProperties()

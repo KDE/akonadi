@@ -133,6 +133,15 @@ void ActionStateManager::updateState( const Collection::List &collections, const
       canRemoveFromFavoriteCollections = false;
   }
 
+  bool collectionsAreFolders = (!collections.isEmpty() ? true : false);
+
+  foreach ( Collection collection, collections ) {
+    if ( !isFolderCollection( collection ) ) {
+      collectionsAreFolders = false;
+      break;
+    }
+  }
+
   const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
   // collection specific actions
@@ -156,8 +165,8 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::CollectionProperties, singleCollectionSelected && // we can only configure one collection at a time
                                                              !isRootCollection( collection ) ); // we can not configure the root collection
 
-  enableAction( StandardActionManager::SynchronizeCollections, singleCollectionSelected && // we can only synchronize one collection at a time (fixme)
-                                                               isFolderCollection( collection ) ); // it must be a valid folder collection
+  enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionSelected && 
+                                                               collectionsAreFolders ); // it must be a valid folder collection
 
 #ifndef QT_NO_CLIPBOARD
   enableAction( StandardActionManager::Paste, singleCollectionSelected && // we can paste only into a single collection
