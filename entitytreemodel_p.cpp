@@ -69,6 +69,8 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
     m_showRootCollection( false ),
     m_showSystemEntities( false )
 {
+    // using collection as a parameter of a queued call in runItemFetchJob()
+    qRegisterMetaType<Collection>();
 }
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
