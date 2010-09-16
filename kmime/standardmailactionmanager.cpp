@@ -230,19 +230,20 @@ class StandardMailActionManager::Private
       if ( mItemSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return;
-
-      const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-      if ( !item.isValid() )
+      Akonadi::Item::List items;
+      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedIndexes() ) {
+        Q_ASSERT( index.isValid() );
+        const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+        items << item;
+      }
+      if ( items.isEmpty() )
         return;
 
 
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
-      MarkAsCommand *command = new MarkAsCommand( targetStatus, Akonadi::Item::List() << item, mParent );
+      MarkAsCommand *command = new MarkAsCommand( targetStatus, items, mParent );
       command->execute();
     }
 
