@@ -18,6 +18,7 @@ set( control_SRCS
   agenttype.cpp
   agentinstance.cpp
   agentprocessinstance.cpp
+  agentthreadinstance.cpp
   agentmanager.cpp
   controlmanager.cpp
   main.cpp

@@ -21,6 +21,7 @@
 #include "agentmanager.h"
 
 #include "agentprocessinstance.h"
+#include "agentthreadinstance.h"
 #include "agentmanageradaptor.h"
 #include "agentmanagerinternaladaptor.h"
 #include "agentserverinterface.h"
@@ -45,12 +46,6 @@
 #include <boost/scoped_ptr.hpp>
 
 using Akonadi::ProcessControl;
-
-org::freedesktop::Akonadi::AgentServer *agentServerIface( QObject *parent )
-{
-  return new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                     "/AgentServer", QDBusConnection::sessionBus(), parent );
-}
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
@@ -136,7 +131,9 @@ void AgentManager::cleanup()
   serverIface->quit();
 
   mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
-  org::freedesktop::Akonadi::AgentServer *agentServerIface = ::agentServerIface( this );
+  org::freedesktop::Akonadi::AgentServer *agentServerIface =
+      new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                  "/AgentServer", QDBusConnection::sessionBus(), this );
   agentServerIface->quit();
 
   delete mStorageController;
@@ -194,7 +191,7 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
   if ( info.runInAgentServer )
-    return AgentInstance::Ptr(); // TODO: Replace when we have an AgentThreadInstance implemented.
+    return AgentInstance::Ptr( new Akonadi::AgentThreadInstance( this ) );
   else
     return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
 }
@@ -490,17 +487,10 @@ void AgentManager::load()
       continue;
     }
 
-    AgentType agentType = mAgents.value( agentTypeStr );
-    if ( agentType.runInAgentServer ) {
-      org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                          "/AgentServer", QDBusConnection::sessionBus() );
-      agentServer.startAgent( instanceIdentifier, agentType.exec );
-    } else {
-      AgentInstance::Ptr instance = createAgentInstance( agentType );
-      instance->setIdentifier( instanceIdentifier );
-      if ( instance->start( mAgents.value( agentTypeStr ) ) )
-        mAgentInstances.insert( instanceIdentifier, instance );
-    }
+    AgentInstance::Ptr instance = createAgentInstance( mAgents.value( agentTypeStr ) );
+    instance->setIdentifier( instanceIdentifier );
+    if ( instance->start( mAgents.value( agentTypeStr ) ) )
+      mAgentInstances.insert( instanceIdentifier, instance );
     
     file.endGroup();
   }
