@@ -36,9 +36,6 @@ AgentThread::AgentThread(const QString& identifier, QObject *factory, QObject* p
 
 void AgentThread::run()
 {
-  qDebug() << Q_FUNC_INFO << "Loading agent instance succeeded: " << m_factory;
-  for ( int i = 0; i < m_factory->metaObject()->methodCount(); ++i )
-    qDebug() << m_factory->metaObject()->method( i ).signature();
   if ( QMetaObject::invokeMethod( m_factory, "createInstance", Qt::DirectConnection, Q_RETURN_ARG(QObject*, m_instance), Q_ARG(QString, m_identifier) ) )
     qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
   else
