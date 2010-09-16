@@ -45,6 +45,12 @@
 
 using Akonadi::ProcessControl;
 
+org::freedesktop::Akonadi::AgentServer *agentServerIface( QObject *parent )
+{
+  return new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                     "/AgentServer", QDBusConnection::sessionBus(), parent );
+}
+
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
 #ifndef QT_NO_DEBUG
@@ -129,10 +135,7 @@ void AgentManager::cleanup()
   serverIface->quit();
 
   mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
-  org::freedesktop::Akonadi::AgentServer *agentServerIface =
-    new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                "/AgentServer",
-                                                QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::AgentServer *agentServerIface = ::agentServerIface( this );
   agentServerIface->quit();
 
   delete mStorageController;
