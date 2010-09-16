@@ -28,11 +28,12 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/entitytreemodel.h>
 
-MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const Akonadi::Collection& sourceFolder, QObject* parent): CommandBase( parent )
+MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent): CommandBase( parent )
 {
   the_trashCollectionFolder = -1;
-  mSourceFolder = sourceFolder;
+  mFolders = folders;
   mModel = model;
+  mFolderListJobCount = mFolders.size();
 }
 
 MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent): CommandBase( parent )
@@ -40,11 +41,14 @@ MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const QList< A
   the_trashCollectionFolder = -1;
   mMessages = msgList;
   mModel = model;
+  mFolderListJobCount = 0;
 }
 
 
 void MoveToTrashCommand::slotFetchDone(KJob* job)
 {
+  mFolderListJobCount--;
+
   if ( job->error() ) {
     // handle errors
     Util::showJobError(job);
@@ -57,17 +61,23 @@ void MoveToTrashCommand::slotFetchDone(KJob* job)
 
   mMessages =  fjob->items();
   moveMessages();
+
+  if ( mFolderListJobCount > 0 ) {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+  }
 }
 
 
 void MoveToTrashCommand::execute()
 {
-  if ( mSourceFolder.isValid() ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSourceFolder, parent() );
+  if ( !mFolders.isEmpty() ) {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(  mFolders[mFolderListJobCount - 1], parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
   } else if ( !mMessages.isEmpty() ) {
-    mSourceFolder = mMessages.first().parentCollection();
+    mFolders << mMessages.first().parentCollection();
     moveMessages();
   } else {
     emitResult( OK );
@@ -76,12 +86,24 @@ void MoveToTrashCommand::execute()
 
 void MoveToTrashCommand::moveMessages()
 {
-  if ( mSourceFolder.isValid() ) {
-    MoveCommand *moveCommand = new MoveCommand( findTrashFolder( mSourceFolder ), mMessages, this );
-    connect( moveCommand, SIGNAL( result( Result ) ), this, SLOT( emitResult( Result ) ) );
+  Akonadi::Collection folder = mFolders[mFolderListJobCount];
+  if ( folder.isValid() ) {
+    MoveCommand *moveCommand = new MoveCommand( findTrashFolder( folder ), mMessages, this );
+    connect( moveCommand, SIGNAL( result( Result ) ), this, SLOT( slotMoveDone( Result ) ) );
     moveCommand->execute();
-  } else
+  } else {
     emitResult( Failed );
+  }
+}
+
+void MoveToTrashCommand::slotMoveDone( const Result& result )
+{
+  if (result == Failed )
+    emitResult( Failed );
+  if ( mFolderListJobCount == 0 && result == OK) {
+    qDebug() << "MOVETOTRASH ALL AS DONE";
+    emitResult( OK );
+  }
 }
 
 Akonadi::Collection MoveToTrashCommand::collectionFromId(const Akonadi::Collection::Id& id) const

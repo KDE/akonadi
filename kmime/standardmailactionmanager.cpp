@@ -199,6 +199,23 @@ class StandardMailActionManager::Private
       return index.data( EntityTreeModel::CollectionRole).value<Collection>();
     }
 
+    Collection::List selectedCollections() const
+    {
+      Collection::List collections;
+
+      if ( !mCollectionSelectionModel )
+        return collections;
+
+      foreach ( const QModelIndex &index, mCollectionSelectionModel->selectedRows() ) {
+        const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+        if ( collection.isValid() )
+          collections << collection;
+      }
+
+      return collections;
+    }
+
+
     AgentInstance selectedAgentInstance() const
     {
       const Collection collection = selectedCollection();
@@ -270,15 +287,14 @@ class StandardMailActionManager::Private
         return;
 
 
-      const QModelIndex index = mCollectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
 
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
-      MarkAsCommand *command = new MarkAsCommand( targetStatus, collection, mParent );
+      MarkAsCommand *command = new MarkAsCommand( targetStatus, collections, mParent );
       command->execute();
     }
 
@@ -296,12 +312,12 @@ class StandardMailActionManager::Private
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = mCollectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      Collection::List collections = selectedCollections();
 
-      MoveToTrashCommand *command = new MoveToTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collection, mParent );
+      if ( collections.isEmpty() )
+        return;
+
+      MoveToTrashCommand *command = new MoveToTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collections, mParent );
       command->execute();
     }
 

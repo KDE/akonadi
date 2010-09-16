@@ -35,12 +35,13 @@ class MoveToTrashCommand : public CommandBase
   Q_OBJECT
 public:
   MoveToTrashCommand( QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent = 0 );
-  MoveToTrashCommand( QAbstractItemModel* model, const Akonadi::Collection& sourceFolder, QObject* parent = 0 );
+  MoveToTrashCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0 );
     
   /*reimp*/ void execute();
 
 private Q_SLOTS:
   void slotFetchDone( KJob* job );
+  void slotMoveDone( const Result &result);
   
 private:
   void moveMessages();
@@ -49,10 +50,11 @@ private:
   Akonadi::Collection findTrashFolder( const Akonadi::Collection& folder );
   Akonadi::Collection collectionFromId(const Akonadi::Collection::Id& id) const;
 
-  Akonadi::Collection mSourceFolder;
+  Akonadi::Collection::List mFolders;
   QList<Akonadi::Item> mMessages;
   Akonadi::Collection::Id the_trashCollectionFolder;
   QAbstractItemModel* mModel;
+  int mFolderListJobCount;
 };
 
 #endif // MOVETOTRASHCOMMAND_H

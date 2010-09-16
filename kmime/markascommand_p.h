@@ -34,7 +34,7 @@ class MarkAsCommand : public CommandBase
   Q_OBJECT
 public:
   MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List & msgList, QObject* parent = 0 );
-  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Collection& sourceFolder, QObject* parent = 0 );
+  MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Collection::List& folders, QObject* parent = 0 );
   void execute();
 
 private Q_SLOTS:
@@ -44,10 +44,11 @@ private Q_SLOTS:
 private:
   void markMessages();
  
-  Akonadi::Collection mSourceFolder;
+  Akonadi::Collection::List mFolders;
   QList<Akonadi::Item> mMessages;
   Akonadi::MessageStatus mTargetStatus;
   int mMarkJobCount;
+  int mFolderListJobCount;
 };
 
 #endif // MARKASCOMMAND_H

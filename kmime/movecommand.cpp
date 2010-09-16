@@ -35,6 +35,8 @@ MoveCommand::MoveCommand( const Akonadi::Collection& destFolder,
 
 void MoveCommand::execute()
 {
+  if ( mMessages.isEmpty() )
+    emitResult( OK );
   if ( mDestFolder.isValid() ) {
     Akonadi::ItemMoveJob *job = new Akonadi::ItemMoveJob( mMessages, mDestFolder, this );
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );

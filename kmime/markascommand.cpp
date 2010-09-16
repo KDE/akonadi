@@ -28,16 +28,20 @@ MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const 
 {
   mMessages = msgList;
   mTargetStatus = targetStatus;
+  mFolderListJobCount = 0;
 }
 
-MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection& sourceFolder, QObject* parent): CommandBase( parent )
+MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, QObject* parent): CommandBase( parent )
 {
-  mSourceFolder = sourceFolder;
+  mFolders = folders;
   mTargetStatus = targetStatus;
+  mFolderListJobCount = mFolders.size();  
 }
 
 void MarkAsCommand::slotFetchDone(KJob* job)
 {
+  mFolderListJobCount--;
+
   if ( job->error() ) {
     // handle errors
     Util::showJobError(job);
@@ -62,17 +66,24 @@ void MarkAsCommand::slotFetchDone(KJob* job)
   }
 
   markMessages();
+
+  if ( mFolderListJobCount > 0 ) {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+  }
 }
 
 
 void MarkAsCommand::execute()
 {
-  if ( mSourceFolder.isValid() ) {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mSourceFolder, parent() );
+  if ( !mFolders.isEmpty() ) {
+    //yes, we go backwards, shouldn't matter
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
   } else if ( !mMessages.isEmpty() ) {
-    mSourceFolder = mMessages.first().parentCollection();
+    mFolders << mMessages.first().parentCollection();
     markMessages();
   } else {
     emitResult( OK );
@@ -114,7 +125,8 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
     kDebug()<<" Error trying to set item status:" << job->errorText();
     emitResult( Failed );
   }
-  if ( mMarkJobCount == 0 ) {
+  if ( mMarkJobCount == 0 && mFolderListJobCount == 0 ) {
+    qDebug() << "MARK ALL AS DONE";
     emitResult( OK );
   }
 }
