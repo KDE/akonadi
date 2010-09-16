@@ -75,6 +75,22 @@ class ItemModifyJobPrivate;
  *
  * @endcode
  *
+ * @par Conflict Resolution
+ * When the job is executed, a check is made to ensure that the Item contained
+ * in the job is not older than the version of the Item already held in the
+ * Akonadi database. If it is older, a conflict resolution dialog is displayed
+ * for the user to choose which version of the Item to use, unless
+ * disableAutomaticConflictHandling() has been called to disable the dialog, or
+ * disableRevisionCheck() has been called to disable version checking
+ * altogether.
+ *
+ * The item version is checked by comparing the Item::revision() values in the
+ * job and in the database. To ensure that two successive ItemModifyJobs for
+ * the same Item work correctly, the revision number of the Item supplied to
+ * the second ItemModifyJob should be set equal to the Item's revision number
+ * on completion of the first ItemModifyJob. This can be obtained by, for
+ * example, calling item().revision() in the job's result slot.
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT ItemModifyJob : public Job
