@@ -145,6 +145,14 @@ class StatisticsProxyModel::Private
 
     void proxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
+    void sourceLayoutAboutToBeChanged();
+    void sourceLayoutChanged();
+
+    QVector<QModelIndex> m_nonPersistent;
+    QVector<QModelIndex> m_nonPersistentFirstColumn;
+    QVector<QPersistentModelIndex> m_persistent;
+    QVector<QPersistentModelIndex> m_persistentFirstColumn;
+
     StatisticsProxyModel *mParent;
 
     bool mToolTipEnabled;
@@ -176,6 +184,64 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
     mParent->connect( mParent, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
                       SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
   }
+}
+
+void StatisticsProxyModel::Private::sourceLayoutAboutToBeChanged()
+{
+  QModelIndexList persistent = mParent->persistentIndexList();
+  const int columnCount = mParent->sourceModel()->columnCount();
+  foreach( const QModelIndex &idx, persistent ) {
+    if ( idx.column() >= columnCount ) {
+      m_nonPersistent.push_back( idx );
+      m_persistent.push_back( idx );
+      const QModelIndex firstColumn = idx.sibling( 0, idx.column() );
+      m_nonPersistentFirstColumn.push_back( firstColumn );
+      m_persistentFirstColumn.push_back( firstColumn );
+    }
+  }
+}
+
+void StatisticsProxyModel::Private::sourceLayoutChanged()
+{
+  QModelIndexList oldList;
+  QModelIndexList newList;
+
+  const int columnCount = mParent->sourceModel()->columnCount();
+
+  for( int i = 0; i < m_persistent.size(); ++i ) {
+    const QModelIndex persistentIdx = m_persistent.at( i );
+    const QModelIndex nonPersistentIdx = m_nonPersistent.at( i );
+    if ( m_persistentFirstColumn.at( i ) != m_nonPersistentFirstColumn.at( i ) && persistentIdx.column() >= columnCount ) {
+      oldList.append( nonPersistentIdx );
+      newList.append( persistentIdx );
+    }
+  }
+  mParent->changePersistentIndexList( oldList, newList );
+}
+
+void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+{
+  // Order is important here. sourceLayoutChanged must be called *before* any downstreams react
+  // to the layoutChanged so that it can have the QPersistentModelIndexes uptodate in time.
+  disconnect(this, SIGNAL(layoutChanged()), this, SLOT(sourceLayoutChanged()));
+  connect(this, SIGNAL(layoutChanged()), SLOT(sourceLayoutChanged()));
+  QSortFilterProxyModel::setSourceModel(sourceModel);
+  // This one should come *after* any downstream handlers of layoutAboutToBeChanged.
+  // The connectNotify stuff below ensures that it remains the last one.
+  disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
+  connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
+}
+
+void StatisticsProxyModel::connectNotify(const char *signal)
+{
+  static bool ignore = false;
+  if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
+    return QSortFilterProxyModel::connectNotify(signal);
+  ignore = true;
+  disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
+  connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
+  ignore = false;
+  QSortFilterProxyModel::connectNotify(signal);
 }
 
 

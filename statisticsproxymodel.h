@@ -94,12 +94,17 @@ class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
                                    Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
 
+    virtual void setSourceModel(QAbstractItemModel* sourceModel);
+    virtual void connectNotify(const char* signal);
+
   private:
     //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void proxyDataChanged( QModelIndex, QModelIndex ) )
+    Q_PRIVATE_SLOT( d, void sourceLayoutAboutToBeChanged() )
+    Q_PRIVATE_SLOT( d, void sourceLayoutChanged() )
     //@endcond
 };
 
