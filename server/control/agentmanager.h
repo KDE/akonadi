@@ -29,7 +29,9 @@
 #include "agentinstance.h"
 
 class QDir;
+#ifndef QT_NO_DEBUG
 class QFileSystemWatcher;
+#endif
 
 namespace Akonadi {
   class ProcessControl;
@@ -360,7 +362,9 @@ class AgentManager : public QObject, protected QDBusContext
 
     Akonadi::ProcessControl *mAgentServer;
     Akonadi::ProcessControl *mStorageController;
+#ifndef QT_NO_DEBUG
     QFileSystemWatcher *mAgentWatcher;
+#endif
 
     friend class AgentInstance;
 };

@@ -33,7 +33,9 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#ifndef QT_NO_DEBUG
 #include <QtCore/QFileSystemWatcher>
+#endif
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
@@ -45,7 +47,9 @@ using Akonadi::ProcessControl;
 
 AgentManager::AgentManager( QObject *parent )
   : QObject( parent )
+#ifndef QT_NO_DEBUG
   , mAgentWatcher( new QFileSystemWatcher( this ) )
+#endif
 {
   new AgentManagerAdaptor( this );
   new AgentManagerInternalAdaptor( this );
@@ -64,8 +68,10 @@ AgentManager::AgentManager( QObject *parent )
   mAgentServer = new Akonadi::ProcessControl;
   connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
   mAgentServer->start( "akonadi_agent_server", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
-  
+
+#ifndef QT_NO_DEBUG
   connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
+#endif
 }
 
 void AgentManager::continueStartup()
@@ -82,6 +88,7 @@ void AgentManager::continueStartup()
 
   const QStringList pathList = pluginInfoPathList();
 
+#ifndef QT_NO_DEBUG
   foreach ( const QString &path, pathList ) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
     watcher->addPath( path );
@@ -89,6 +96,7 @@ void AgentManager::continueStartup()
     connect( watcher, SIGNAL( directoryChanged( const QString& ) ),
              this, SLOT( updatePluginInfos() ) );
   }
+#endif
 
   load();
   foreach ( const AgentType &info, mAgents )
@@ -380,8 +388,10 @@ void AgentManager::updatePluginInfos()
 
 void AgentManager::readPluginInfos()
 {
+#ifndef QT_NO_DEBUG
   if ( !mAgentWatcher->files().isEmpty() )
     mAgentWatcher->removePaths( mAgentWatcher->files() );
+#endif
   mAgents.clear();
 
   QStringList pathList = pluginInfoPathList();
@@ -421,8 +431,10 @@ void AgentManager::readPluginInfos( const QDir& directory )
 
       qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
+#ifndef QT_NO_DEBUG
       if ( !mAgentWatcher->files().contains( executable) )
-	mAgentWatcher->addPath( executable );
+        mAgentWatcher->addPath( executable );
+#endif
     }
   }
 }
