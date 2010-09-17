@@ -20,12 +20,17 @@
 
 #include "agentserverinterface.h"
 #include "agenttype.h"
+#include "shared/akdebug.h"
 
 using namespace Akonadi;
 
 AgentThreadInstance::AgentThreadInstance( AgentManager *manager )
   : AgentInstance( manager )
-{ }
+{
+  connect( QDBusConnection::sessionBus().interface(),
+           SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
+           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+}
 
 bool AgentThreadInstance::start( const AgentType &agentInfo )
 {
@@ -34,10 +39,15 @@ bool AgentThreadInstance::start( const AgentType &agentInfo )
     return false;
 
   setAgentType( agentInfo.identifier );
-  mPlugin = agentInfo.exec;
+  mAgentType = agentInfo;
 
   org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                       "/AgentServer", QDBusConnection::sessionBus() );
+  if ( !agentServer.isValid() ) {
+    akDebug() << "AgentServer not up (yet?)";
+    return false;
+  }
+
   // TODO: let startAgent return a bool.
   agentServer.startAgent( identifier(), agentInfo.exec );
   return true;
@@ -45,10 +55,25 @@ bool AgentThreadInstance::start( const AgentType &agentInfo )
 
 void AgentThreadInstance::restartWhenIdle()
 {
-  if ( status() == 0 ) {
+  if ( status() == 0 && !identifier().isEmpty() ) {
     org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                         "/AgentServer", QDBusConnection::sessionBus() );
     agentServer.stopAgent( identifier() );
-    agentServer.startAgent( identifier(), mPlugin );
+    agentServer.startAgent( identifier(), mAgentType.exec );
+  }
+}
+
+void AgentThreadInstance::serviceOwnerChanged( const QString &name, const QString &, const QString &newOwner )
+{
+  if ( name == ( QLatin1String( "org.freedesktop.Akonadi.AgentServer" ) ) ) {
+    // The AgentServer service went up or down
+
+    if ( newOwner.isEmpty() ) {
+      return;
+    }
+
+    // The AgentServer service came up (again)
+    qDebug() << "========= (Re)starting" << resourceName();
+    start( mAgentType );
   }
 }

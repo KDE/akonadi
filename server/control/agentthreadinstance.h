@@ -20,20 +20,25 @@
 #define AGENTTHREADINSTANCE_H
 
 #include "agentinstance.h"
+#include "agenttype.h"
 
 namespace Akonadi {
 
 class AgentThreadInstance : public AgentInstance
 {
+  Q_OBJECT
   public:
     AgentThreadInstance( AgentManager *manager );
 
     virtual bool start( const AgentType &agentInfo );
     virtual void restartWhenIdle();
 
+  private Q_SLOTS:
+    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+
   private:
-    QString mPlugin;
-};
+    AgentType mAgentType;
+  };
 
 }
 
