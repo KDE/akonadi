@@ -46,7 +46,6 @@ bool AgentServer::started( const QString& identifier ) const
 void AgentServer::startAgent( const QString& identifier, const QString& fileName )
 {
   const QString pluginFile = XdgBaseDirs::findPluginFile( fileName );
-  qDebug() << "================" << identifier << pluginFile;
   if ( pluginFile.isEmpty() ) {
     qDebug() << Q_FUNC_INFO << "plugin file not found!";
     return;
