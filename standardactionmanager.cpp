@@ -241,14 +241,28 @@ class StandardActionManager::Private
         KMenu *menu = actionMenu->menu();
         delete menu;
         menu = new KMenu();
+
+        menu->setProperty( "actionType", static_cast<int>( type ) );
+        q->connect( menu, SIGNAL( aboutToShow() ), SLOT( aboutToShowMenu() ) );
         actionMenu->setMenu( menu );
-        if ( enable ) {
-          fillFoldersMenu( type,
-                           actionMenu->menu(),
-                           collectionSelectionModel->model(),
-                           QModelIndex() );
-        }
       }
+    }
+
+    void aboutToShowMenu()
+    {
+      QMenu *menu = qobject_cast<QMenu*>( q->sender() );
+      if ( !menu )
+        return;
+
+      if ( !menu->isEmpty() )
+        return;
+
+      const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
+
+      fillFoldersMenu( type,
+                       menu,
+                       collectionSelectionModel->model(),
+                       QModelIndex() );
     }
 
     void updatePluralLabel( int type, int count )

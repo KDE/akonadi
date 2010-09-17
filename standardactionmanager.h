@@ -362,6 +362,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void enableAction(int, bool) )
     Q_PRIVATE_SLOT( d, void updatePluralLabel(int, int) )
     Q_PRIVATE_SLOT( d, bool isFavoriteCollection(const Akonadi::Collection&) )
+
+    Q_PRIVATE_SLOT( d, void aboutToShowMenu() )
     //@endcond
 };
 
