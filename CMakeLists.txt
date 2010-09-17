@@ -81,6 +81,7 @@ set( akonadikde_LIB_SRC
   conflicthandling/conflicthandler.cpp
   conflicthandling/conflictresolvedialog.cpp
   control.cpp
+  dbusconnectionpool.cpp
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
