@@ -29,10 +29,6 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
 
-#ifndef _WIN32_WCE
-namespace po = boost::program_options;
-#endif
-
 int main( int argc, char ** argv )
 {
   QApplication app( argc, argv );
