@@ -11,7 +11,7 @@ set( akonadi_agent_server_srcs
 automoc4_add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
 
 target_link_libraries(akonadi_agent_server
-  ${QT_QTCORE_LIBRARY}
+  ${QT_QTGUI_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${AKONADI_SYSTEM_LIBS}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}

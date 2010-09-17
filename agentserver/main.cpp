@@ -24,7 +24,7 @@
 
 #include "libs/protocol_p.h"
 
-#include <QtCore/QCoreApplication>
+#include <QtGui/QApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
@@ -35,7 +35,9 @@ namespace po = boost::program_options;
 
 int main( int argc, char ** argv )
 {
-    AkApplication app( argc, argv );
+    QApplication app( argc, argv );
+
+/*
     app.setDescription( QLatin1String( "Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
 
 #if !defined(NDEBUG) && !defined(_WIN32_WCE)
@@ -47,20 +49,21 @@ int main( int argc, char ** argv )
 
     app.parseCommandLine();
 
+*/
     //Needed for wince build
     #undef interface
 
-#ifndef _WIN32_WCE
-   if ( !app.commandLineArguments().count( "start-without-control" ) &&
-#else
+//#ifndef _WIN32_WCE
+//   if ( !app.commandLineArguments().count( "start-without-control" ) &&
+//#else
    if (
-#endif
+//#endif
         !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
      akError() << "Akonadi control process not found - aborting.";
      akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
    }
 
-    new Akonadi::AgentServer;
+  new Akonadi::AgentServer;
 
     if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) )
       akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
