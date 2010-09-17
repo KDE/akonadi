@@ -25,6 +25,7 @@
 #include <kdeversion.h>
 
 #include <kfilterproxysearchline.h>
+#include <klineedit.h>
 
 using namespace Akonadi;
 
@@ -55,6 +56,8 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
   connect( this, SIGNAL( okClicked() ), this, SLOT( accept() ) );
 
   resize( 460, 320 );
+
+  searchLine->lineEdit()->setFocus();
 }
 
 AgentTypeDialog::~AgentTypeDialog()
