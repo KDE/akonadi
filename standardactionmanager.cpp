@@ -237,7 +237,11 @@ class StandardActionManager::Private
       // Update the action menu
       KActionMenu *actionMenu = qobject_cast<KActionMenu*>( actions[type] );
       if ( actionMenu ) {
-        actionMenu->menu()->clear();
+        //get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
+        KMenu *menu = actionMenu->menu();
+        delete menu;
+        menu = new KMenu();
+        actionMenu->setMenu( menu );
         if ( enable ) {
           fillFoldersMenu( type,
                            actionMenu->menu(),
