@@ -602,11 +602,6 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   // in all the monitored slots.
   // Stephen Kelly, 28, July 2009
 
-  if ( !m_collections.contains( parent.id() ) )
-  {
-    return;
-  }
-
   // If a fetch job is started and a collection is added to akonadi after the fetch job is started, the
   // new collection will be added to the fetch job results. It will also be notified through the monitor.
   // We return early here in that case.
