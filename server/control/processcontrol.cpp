@@ -99,6 +99,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
       if ( !mFailedToStart && --mCrashCount >= 0 ) {
         qDebug( "Application '%s' crashed! %d restarts left.", qPrintable( mApplication ), mCrashCount );
         start();
+        emit restarted();
       } else {
         if ( mFailedToStart ) {
           qDebug( "Application '%s' failed to start!", qPrintable( mApplication ) );
@@ -144,8 +145,10 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
         }
         ++mCrashCount;
         QTimer::singleShot( 60000, this, SLOT(resetCrashCount()) );
-        if ( !mFailedToStart ) // don't try to start an unstartable application
+        if ( !mFailedToStart ) { // don't try to start an unstartable application
           start();
+          emit restarted();
+        }
       }
     } else {
       if ( mRestartOnceOnExit ) {

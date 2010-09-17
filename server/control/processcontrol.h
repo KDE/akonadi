@@ -91,6 +91,11 @@ class ProcessControl : public QObject
     void processErrorMessages( const QString &errorMsg );
 
     /**
+     * This signal is emitted when the server is restarted after a crash.
+     */
+    void restarted();
+
+    /**
      * Emitted if the process could not be started since it terminated
      * too often.
      */
