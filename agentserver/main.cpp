@@ -35,39 +35,21 @@ namespace po = boost::program_options;
 
 int main( int argc, char ** argv )
 {
-    QApplication app( argc, argv );
+  QApplication app( argc, argv );
 
-/*
-    app.setDescription( QLatin1String( "Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
+  //Needed for wince build
+  #undef interface
 
-#if !defined(NDEBUG) && !defined(_WIN32_WCE)
-    po::options_description debugOptions( "Debug options (use with care)" );
-    debugOptions.add_options()
-        ( "start-without-control", "Allow to start the Akonadi server even without the Akonadi control process being available" );
-    app.addCommandLineOptions( debugOptions );
-#endif
-
-    app.parseCommandLine();
-
-*/
-    //Needed for wince build
-    #undef interface
-
-//#ifndef _WIN32_WCE
-//   if ( !app.commandLineArguments().count( "start-without-control" ) &&
-//#else
-   if (
-//#endif
-        !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
-     akError() << "Akonadi control process not found - aborting.";
-     akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
-   }
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
+    akError() << "Akonadi control process not found - aborting.";
+    akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
+  }
 
   new Akonadi::AgentServer;
 
-    if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) )
-      akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) )
+    akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
 
-    const int result = app.exec();
-    return result;
+  const int result = app.exec();
+  return result;
 }
