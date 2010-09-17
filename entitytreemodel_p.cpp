@@ -602,12 +602,10 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   // in all the monitored slots.
   // Stephen Kelly, 28, July 2009
 
-  // This is currently temporarily blocked by a uninitialized value bug in the server.
-//   if ( !m_collections.contains( parent.id() ) )
-//   {
-//     kWarning() << "Got a stale notification for a collection whose parent was already removed." << collection.id() << collection.remoteId();
-//     return;
-//   }
+  if ( !m_collections.contains( parent.id() ) )
+  {
+    return;
+  }
 
   // If a fetch job is started and a collection is added to akonadi after the fetch job is started, the
   // new collection will be added to the fetch job results. It will also be notified through the monitor.
@@ -659,7 +657,6 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   // This may be a signal for a collection we've already removed by removing its ancestor.
   if ( !m_collections.contains( collection.id() ) ) {
-    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
     return;
   }
 
@@ -755,7 +752,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   }
 
   if ( !m_collections.contains( collection.id() ) ) {
-    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
     return;
   }
 
@@ -789,7 +785,10 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
     return;
 
   if ( !m_collections.contains( collection.id() ) ) {
-    kWarning() << "Got a stale notification for a collection which was already removed." << collection.id() << collection.remoteId();
+    // This can happen if
+    // * we get a change notification after removing the collection.
+    // * a collection of a non-monitored mimetype is changed elsewhere. Monitor does not
+    //    filter by content mimetype of Collections so we get notifications for all of them.
     return;
   }
 
@@ -809,18 +808,18 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
                                                                    const Akonadi::CollectionStatistics &statistics )
 {
   if ( !m_collections.contains( id ) ) {
-    kWarning() << "Got statistics response for non-existing collection:" << id;
-  } else {
-    m_collections[ id ].setStatistics( statistics );
-
-    if ( id == m_rootCollection.id() )
-      // If the root of the model is not Collection::root it might be modified.
-      // But it doesn't exist in the accessible model structure, so we need to early return
-      return;
-
-    const QModelIndex index = indexForCollection( m_collections[ id ] );
-    dataChanged( index, index );
+    return;
   }
+
+  m_collections[ id ].setStatistics( statistics );
+
+  if ( id == m_rootCollection.id() )
+    // If the root of the model is not Collection::root it might be modified.
+    // But it doesn't exist in the accessible model structure, so we need to early return
+    return;
+
+  const QModelIndex index = indexForCollection( m_collections[ id ] );
+  dataChanged( index, index );
 }
 
 void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, const Akonadi::Collection& collection )
