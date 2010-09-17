@@ -19,23 +19,28 @@
 
 
 #include "removeduplicatescommand_p.h"
+#include "movetotrashcommand_p.h"
 #include "util_p.h"
 
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-#include <kmime/kmime_message.h>
-#include "movetotrashcommand_p.h"
+#include "akonadi/itemfetchjob.h"
+#include "akonadi/itemfetchscope.h"
+#include "kmime/kmime_message.h"
 
-RemoveDuplicatesCommand::RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection& folder, QObject* parent ) :
+RemoveDuplicatesCommand::RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent ) :
   CommandBase( parent )
 {
   mModel = model;
-  mFolder = folder;
+  mFolders = folders;
+  mJobCount = mFolders.size();
 }
 
 void RemoveDuplicatesCommand::execute()
 {
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolder, parent() );
+    if ( mJobCount <= 0 ) {
+      emitResult( OK );
+      return;
+    }
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[ mJobCount - 1] , parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().fetchFullPayload();
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
@@ -43,6 +48,7 @@ void RemoveDuplicatesCommand::execute()
 
 void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
 {
+  mJobCount--;
   if ( job->error() ) {
     // handle errors
     Util::showJobError(job);
@@ -83,15 +89,21 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
     }
   }
 
-  Akonadi::Item::List duplicateItems;
   for(  QMap<uint, QList<uint> >::iterator it = duplicates.begin(); it != duplicates.end(); ++it ) {    
     for (QList<uint>::iterator dupIt = it.value().begin(); dupIt != it.value().end(); ++dupIt ) {
-      duplicateItems.append( items[*dupIt] );
+      mDuplicateItems.append( items[*dupIt] );
     }
   }
 
-  MoveToTrashCommand *trashCmd = new MoveToTrashCommand( mModel, duplicateItems, parent() );
-  connect( trashCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );
-  trashCmd->execute();
+  if ( mJobCount > 0 ) {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[ mJobCount - 1 ] , parent() );
+    job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+    job->fetchScope().fetchFullPayload();
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );    
+  } else {
+    MoveToTrashCommand *trashCmd = new MoveToTrashCommand( mModel, mDuplicateItems, parent() );
+    connect( trashCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );
+    trashCmd->execute();
+  }
 }
 

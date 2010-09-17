@@ -23,7 +23,8 @@
 
 #include <commandbase_p.h>
 
-#include <akonadi/collection.h>
+#include "akonadi/collection.h"
+#include "akonadi/item.h"
 
 class QAbstractItemModel;
 class KJob;
@@ -32,13 +33,15 @@ class RemoveDuplicatesCommand : public CommandBase
 {
   Q_OBJECT
 public:
-    RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection& folder, QObject* parent = 0);
+    RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0);
     virtual void execute();
 
 private Q_SLOTS:
     void slotFetchDone( KJob* job );
 private:
-    Akonadi::Collection mFolder;
+    Akonadi::Collection::List mFolders;
+    Akonadi::Item::List mDuplicateItems;
+    int mJobCount;
     QAbstractItemModel* mModel; //just pass to the internal trash command
 };
 

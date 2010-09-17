@@ -329,12 +329,12 @@ class StandardMailActionManager::Private
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const QModelIndex index = mCollectionSelectionModel->selection().indexes().at( 0 );
-      Q_ASSERT( index.isValid() );
-      const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
-      Q_ASSERT( collection.isValid() );
+      Collection::List collections = selectedCollections();
 
-      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collection, mParent );
+      if ( collections.isEmpty() )
+        return;
+
+      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collections, mParent );
       command->execute();
     }
 
