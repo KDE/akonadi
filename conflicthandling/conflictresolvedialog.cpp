@@ -24,7 +24,8 @@
 #include "differencesalgorithminterface.h"
 #include "typepluginloader_p.h"
 
-#include <QtGui/QHBoxLayout>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QLabel>
 
 #include <kcolorscheme.h>
 #include <klocale.h>
@@ -184,6 +185,7 @@ static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::
 ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
   : KDialog( parent ), mResolveStrategy( ConflictHandler::UseBothItems )
 {
+  setCaption( i18nc( "@title:window", "Conflict Resolution" ) );
   setButtons( User1 | User2 | User3 );
   setDefaultButton( User3 );
 
@@ -196,7 +198,10 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
   connect( this, SIGNAL( user3Clicked() ), SLOT( slotUseLocalItemChoosen() ) );
 
   QWidget *mainWidget = new QWidget;
-  QHBoxLayout *layout = new QHBoxLayout( mainWidget );
+  QVBoxLayout *layout = new QVBoxLayout( mainWidget );
+
+  QLabel* label = new QLabel( i18nc( "@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply." ), mainWidget );
+  layout->addWidget( label );
 
   mView = new KTextBrowser;
 
