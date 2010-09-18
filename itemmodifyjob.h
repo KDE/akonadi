@@ -75,7 +75,8 @@ class ItemModifyJobPrivate;
  *
  * @endcode
  *
- * @par Conflict Resolution
+ * <h3>Conflict Resolution</h3>
+
  * When the job is executed, a check is made to ensure that the Item contained
  * in the job is not older than the version of the Item already held in the
  * Akonadi database. If it is older, a conflict resolution dialog is displayed
