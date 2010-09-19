@@ -17,6 +17,10 @@
   02110-1301, USA.
 */
 
+// No point on having warnings. This class won't be ported to KCalCore
+// and will be deleted in KDE5.
+#define WANT_DEPRECATED_KCAL_API
+
 #include "incidencemimetypevisitor.h"
 
 static QLatin1String sEventType( "application/x-vnd.akonadi.calendar.event" );
