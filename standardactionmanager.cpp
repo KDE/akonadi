@@ -448,7 +448,7 @@ class StandardActionManager::Private
 
       Q_ASSERT( collectionSelectionModel );
 
-      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+      foreach ( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
         Q_ASSERT( index.isValid() );
         const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
