@@ -180,9 +180,62 @@ class StandardMailActionManager::Private
 
     void updateActions()
     {
-      //TODO
+      if ( !mItemSelectionModel ||  mItemSelectionModel->selectedIndexes().isEmpty() )
+        return;
+
+      bool allMarkedAsImportant = true;
+      bool allMarkedAsRead = true;
+      bool allMarkedAsActionItem = true;
+
+      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
+        const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+        Akonadi::MessageStatus status;
+        status.setStatusFromFlags( item.flags() );
+        if ( !status.isImportant() )
+          allMarkedAsImportant = false;
+        if ( !status.isRead() )
+          allMarkedAsRead= false;
+        if ( !status.isToAct() )
+          allMarkedAsActionItem = false;
+    }
+
+      QAction *action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsRead );
+      updateMarkAction( action, allMarkedAsRead);
+      if ( allMarkedAsRead )
+         action->setText( i18n("&Mark Mail as Unread") );
+      else
+        action->setText( i18n("&Mark Mail as Read") );
+
+      action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsImportant );
+      updateMarkAction( action, allMarkedAsImportant );
+      if ( allMarkedAsImportant )
+        action->setText( i18n("Remove Important Mark") );
+      else
+        action->setText( i18n("&Mark Mail as Important") );
+
+      action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
+      updateMarkAction( action, allMarkedAsActionItem );
+      if ( allMarkedAsActionItem )
+        action->setText( i18n("Remove Action Item Mark") );
+      else
+        action->setText( i18n("&Mark Mail as Action Item") );
+   
       emit mParent->actionStateUpdated();
     }
+
+    void updateMarkAction( QAction* action, bool allMarked )
+    {
+      QByteArray data = action->data().toByteArray();
+      if ( allMarked ) {
+        if ( !data.startsWith( '!' ) )
+          data.prepend( '!' );
+      } else {
+        if ( data.startsWith( '!' ) )
+          data = data.mid( 1 );
+      }
+      action->setData( data );
+    }
+
 
     Collection selectedCollection() const
     {
@@ -233,6 +286,11 @@ class StandardMailActionManager::Private
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark mail as: " << typeStr;
 
+      bool invert = false;
+      if ( typeStr.startsWith( '!' ) ) {
+        invert = true;
+        typeStr = typeStr.mid(1);
+      }
       StandardMailActionManager::Type type = MarkMailAsRead;
       if ( typeStr == "U" )
         type = MarkMailAsUnread;
@@ -260,7 +318,7 @@ class StandardMailActionManager::Private
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
-      MarkAsCommand *command = new MarkAsCommand( targetStatus, items, mParent );
+      MarkAsCommand *command = new MarkAsCommand( targetStatus, items, invert, mParent );
       command->execute();
     }
 
@@ -398,6 +456,11 @@ void StandardMailActionManager::setItemSelectionModel( QItemSelectionModel* sele
 
   connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            SLOT( updateActions() ) );
+
+  //to catch item modifications, listen to the model's dataChanged signal as well
+  connect( selectionModel->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           SLOT( updateActions() ) );
+
 
   d->updateActions();
 }

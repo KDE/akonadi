@@ -24,15 +24,17 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 
-MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List& msgList, QObject* parent): CommandBase( parent )
+MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List& msgList, bool invert, QObject* parent): CommandBase( parent )
 {
+  mInvertMark = invert;
   mMessages = msgList;
   mTargetStatus = targetStatus;
   mFolderListJobCount = 0;
 }
 
-MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, QObject* parent): CommandBase( parent )
+MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, bool invert, QObject* parent): CommandBase( parent )
 {
+  mInvertMark = invert;
   mFolders = folders;
   mTargetStatus = targetStatus;
   mFolderListJobCount = mFolders.size();  
@@ -55,10 +57,15 @@ void MarkAsCommand::slotFetchDone(KJob* job)
   foreach( const Akonadi::Item &item, fjob->items() ) {
     Akonadi::MessageStatus status;
     status.setStatusFromFlags( item.flags() );
-    if (! (status & mTargetStatus) )
-    {
-      mMessages.append( item );
-    }
+    if ( mInvertMark ) {
+      if ( status & mTargetStatus ) {
+        mMessages.append( item );
+      }      
+    } else 
+      if (! (status & mTargetStatus) )
+      {
+        mMessages.append( item );
+      }
   }
   if ( mMessages.empty() ) {
     emitResult( OK );
@@ -106,7 +113,17 @@ void MarkAsCommand::markMessages()
     Akonadi::MessageStatus itemStatus;
     itemStatus.setStatusFromFlags( it.flags() );
 
-    itemStatus.set( mTargetStatus );
+    if ( mInvertMark ) {
+      
+      if ( mTargetStatus & Akonadi::MessageStatus::statusRead() ) {
+        itemStatus.setUnread();
+      } else if ( mTargetStatus & Akonadi::MessageStatus::statusUnread() ) {
+        itemStatus.setRead();
+      } else
+        itemStatus.toggle( mTargetStatus );
+    } else {
+      itemStatus.set( mTargetStatus );
+    }
       /*if ( itemStatus != oldStatus )*/ {
       item.setFlags( itemStatus.statusFlags() );
       // Store back modified item
@@ -126,7 +143,6 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
     emitResult( Failed );
   }
   if ( mMarkJobCount == 0 && mFolderListJobCount == 0 ) {
-    qDebug() << "MARK ALL AS DONE";
     emitResult( OK );
   }
 }
