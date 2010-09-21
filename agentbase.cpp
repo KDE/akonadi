@@ -181,7 +181,7 @@ void AgentBasePrivate::init()
     mDBusConnection = QDBusConnection::connectToBus( QDBusConnection::SessionBus, q->identifier() );
     Q_ASSERT( mDBusConnection.isConnected() );
   }
-  
+
   mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/tracing" ),
                                            QDBusConnection::sessionBus(), q );
 
@@ -189,7 +189,7 @@ void AgentBasePrivate::init()
   new Akonadi__StatusAdaptor( q );
   if ( !q->sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
-    
+
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
   mChangeRecorder = new ChangeRecorder( q );
@@ -233,6 +233,10 @@ void AgentBasePrivate::init()
            SLOT( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
   connect( mChangeRecorder, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
+  connect( mChangeRecorder, SIGNAL( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ),
+           SLOT( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  connect( mChangeRecorder, SIGNAL( collectionUnsubscribed( const Akonadi::Collection& ) ),
+           SLOT( collectionUnsubscribed( const Akonadi::Collection& ) ) );
 
   connect( q, SIGNAL( status( int, const QString& ) ), q, SLOT( slotStatus( int, const QString& ) ) );
   connect( q, SIGNAL( percent( int ) ), q, SLOT( slotPercent( int ) ) );
@@ -386,6 +390,19 @@ void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection 
 {
   if ( mObserver != 0 )
     mObserver->collectionRemoved( collection );
+}
+
+void AgentBasePrivate::collectionSubscribed( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
+{
+  Q_UNUSED( collection );
+  Q_UNUSED( parent );
+  changeProcessed();
+}
+
+void AgentBasePrivate::collectionUnsubscribed( const Akonadi::Collection &collection )
+{
+  Q_UNUSED( collection );
+  changeProcessed();
 }
 
 void AgentBasePrivate::changeProcessed()
