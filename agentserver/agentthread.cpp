@@ -19,8 +19,12 @@
 
 #include "agentthread.h"
 
-#include <QDebug>
-#include <QtCore/qpluginloader.h>
+#include "uirunnable.h"
+
+#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
+#include <QtCore/QPluginLoader>
+
 #include <shared/akdebug.h>
 #include <qmetaobject.h>
 
@@ -36,11 +40,27 @@ AgentThread::AgentThread(const QString& identifier, QObject *factory, QObject* p
 
 void AgentThread::run()
 {
-  if ( QMetaObject::invokeMethod( m_factory, "createInstance", Qt::DirectConnection, Q_RETURN_ARG(QObject*, m_instance), Q_ARG(QString, m_identifier) ) )
+  const bool invokeSucceeded = QMetaObject::invokeMethod( m_factory,
+                                                          "createInstance",
+                                                          Qt::DirectConnection,
+                                                          Q_RETURN_ARG( QObject*, m_instance ),
+                                                          Q_ARG(QString, m_identifier) );
+  if ( invokeSucceeded ) {
     qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
-  else
+    // TODO: We might somehow require that the signal is actually there to avoid
+    //       unexpected behavior.
+    connect( m_instance, SIGNAL( runRequest( Akonadi::UiRunnable * ) ),
+             SLOT( run( Akonadi::UiRunnable * ) ), Qt::BlockingQueuedConnection );
+  } else {
     qDebug() << Q_FUNC_INFO << "agent instance creation failed";
+  }
   exec();
+}
+
+void AgentThread::run( UiRunnable *runnable )
+{
+  qDebug() << "!!!!!!!!!!" << ( QCoreApplication::instance()->thread() == currentThread() );
+  //runnable->run();
 }
 
 #include "agentthread.moc"

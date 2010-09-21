@@ -24,6 +24,8 @@
 
 namespace Akonadi {
 
+class UiRunnable;
+
 class AgentThread : public QThread {
   Q_OBJECT
   public:
@@ -31,6 +33,9 @@ class AgentThread : public QThread {
 
   protected:
     void run();
+
+  private Q_SLOTS:
+    void run( Akonadi::UiRunnable *runnable );
 
   private:
     QString m_identifier;
