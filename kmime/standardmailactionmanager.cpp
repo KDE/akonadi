@@ -27,16 +27,17 @@
 #include "emptytrashcommand_p.h"
 #include "removeduplicatescommand_p.h"
 
-#include <akonadi/subscriptiondialog_p.h>
-#include <akonadi/agentfilterproxymodel.h>
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttypedialog.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/mimetypechecker.h>
-#include <akonadi/collectionmodel.h>
-#include <akonadi/kmime/messagestatus.h>
+#include "akonadi/subscriptiondialog_p.h"
+#include "akonadi/agentfilterproxymodel.h"
+#include "akonadi/agentinstance.h"
+#include "akonadi/agentinstancecreatejob.h"
+#include "akonadi/agentmanager.h"
+#include "akonadi/agenttypedialog.h"
+#include "akonadi/entitytreemodel.h"
+#include "akonadi/mimetypechecker.h"
+#include "akonadi/collectionmodel.h"
+#include "akonadi/kmime/messagestatus.h"
+#include "akonadi/collectionstatistics.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -45,7 +46,6 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
-#include <akonadi/collectionstatistics.h>
 
 using namespace Akonadi;
 
