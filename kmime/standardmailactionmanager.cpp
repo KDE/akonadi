@@ -45,6 +45,7 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
+#include <Akonadi/CollectionStatistics>
 
 using namespace Akonadi;
 
@@ -180,46 +181,79 @@ class StandardMailActionManager::Private
 
     void updateActions()
     {
-      if ( !mItemSelectionModel ||  mItemSelectionModel->selectedIndexes().isEmpty() )
-        return;
+      bool itemIsSelected = mItemSelectionModel && !mItemSelectionModel->selectedIndexes().isEmpty();
+      bool collectionIsSelected = mCollectionSelectionModel && !mCollectionSelectionModel->selectedIndexes().isEmpty();
+      
+      if ( itemIsSelected ) {
+        bool allMarkedAsImportant = true;
+        bool allMarkedAsRead = true;
+        bool allMarkedAsActionItem = true;
 
-      bool allMarkedAsImportant = true;
-      bool allMarkedAsRead = true;
-      bool allMarkedAsActionItem = true;
+        Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
+          const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+          Akonadi::MessageStatus status;
+          status.setStatusFromFlags( item.flags() );
+          if ( !status.isImportant() )
+            allMarkedAsImportant = false;
+          if ( !status.isRead() )
+            allMarkedAsRead= false;
+          if ( !status.isToAct() )
+            allMarkedAsActionItem = false;
+      }
 
-      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
-        const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-        Akonadi::MessageStatus status;
-        status.setStatusFromFlags( item.flags() );
-        if ( !status.isImportant() )
-          allMarkedAsImportant = false;
-        if ( !status.isRead() )
-          allMarkedAsRead= false;
-        if ( !status.isToAct() )
-          allMarkedAsActionItem = false;
-    }
+        QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
+        if ( action ) {
+          updateMarkAction( action, allMarkedAsRead);
+          if ( allMarkedAsRead )
+            action->setText( i18n("&Mark Mail as Unread") );
+          else
+            action->setText( i18n("&Mark Mail as Read") );
+          action->setEnabled( true );
+        }
 
-      QAction *action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsRead );
-      updateMarkAction( action, allMarkedAsRead);
-      if ( allMarkedAsRead )
-         action->setText( i18n("&Mark Mail as Unread") );
-      else
-        action->setText( i18n("&Mark Mail as Read") );
+        action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
+        if ( action ) {
+          updateMarkAction( action, allMarkedAsImportant );
+          if ( allMarkedAsImportant )
+            action->setText( i18n("Remove Important Mark") );
+          else
+            action->setText( i18n("&Mark Mail as Important") );
+          action->setEnabled( true );
+        }
 
-      action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsImportant );
-      updateMarkAction( action, allMarkedAsImportant );
-      if ( allMarkedAsImportant )
-        action->setText( i18n("Remove Important Mark") );
-      else
-        action->setText( i18n("&Mark Mail as Important") );
+        action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
+        if ( action ) {
+          updateMarkAction( action, allMarkedAsActionItem );
+          if ( allMarkedAsActionItem )
+            action->setText( i18n("Remove Action Item Mark") );
+          else
+            action->setText( i18n("&Mark Mail as Action Item") );
+          action->setEnabled( true );
+        }
+     } else {
+        QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
+        if ( action ) action->setEnabled( false );
+        action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
+        if ( action ) action->setEnabled( false );
+        action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
+        if ( action ) action->setEnabled( false );
+     }
 
-      action = mParent->action( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
-      updateMarkAction( action, allMarkedAsActionItem );
-      if ( allMarkedAsActionItem )
-        action->setText( i18n("Remove Action Item Mark") );
-      else
-        action->setText( i18n("&Mark Mail as Action Item") );
-   
+      bool enableMarkAllAsRead = false;
+      bool enableMarkAllAsUnread = false;
+      if ( collectionIsSelected ) {
+        Collection collection = selectedCollection();
+        if ( collection.isValid() ) {
+          Akonadi::CollectionStatistics stats = collection.statistics();
+          enableMarkAllAsRead = ( stats.unreadCount() > 0 );
+          enableMarkAllAsUnread = ( stats.count() != stats.unreadCount() );
+        }
+      }
+      QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
+      if ( action ) action->setEnabled( enableMarkAllAsRead );
+      action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsUnread);
+      if ( action ) action->setEnabled( enableMarkAllAsUnread );
+                                                     
       emit mParent->actionStateUpdated();
     }
 
