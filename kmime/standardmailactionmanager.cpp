@@ -45,7 +45,7 @@
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
-#include <Akonadi/CollectionStatistics>
+#include <akonadi/collectionstatistics.h>
 
 using namespace Akonadi;
 
