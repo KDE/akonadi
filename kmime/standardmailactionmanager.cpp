@@ -330,6 +330,11 @@ class StandardMailActionManager::Private
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark all as: " << typeStr;
 
+      bool invert = false;
+      if ( typeStr.startsWith( '!' ) ) {
+        invert = true;
+        typeStr = typeStr.mid(1);
+      }
       StandardMailActionManager::Type type = MarkAllMailAsRead;
       if ( typeStr == "U" )
         type = MarkAllMailAsUnread;
@@ -352,7 +357,7 @@ class StandardMailActionManager::Private
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
-      MarkAsCommand *command = new MarkAsCommand( targetStatus, collections, mParent );
+      MarkAsCommand *command = new MarkAsCommand( targetStatus, collections, invert, mParent );
       command->execute();
     }
 
