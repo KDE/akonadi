@@ -35,6 +35,7 @@ class AgentServer : public QObject
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentServer" )
   public:
     explicit AgentServer( QObject * parent = 0 );
+    ~AgentServer();
 
   public slots:
     Q_SCRIPTABLE bool started( const QString &identifier ) const;

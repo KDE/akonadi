@@ -38,6 +38,18 @@ AgentServer::AgentServer( QObject* parent )
                                                 this, QDBusConnection::ExportScriptableSlots );
 }
 
+AgentServer::~AgentServer()
+{
+  qDebug() << Q_FUNC_INFO;
+  quit();
+
+  QHash<QString, QPluginLoader*>::iterator it = m_pluginLoaders.begin();
+  while ( it != m_pluginLoaders.end() ) {
+    it.value()->unload();
+    ++it;
+  }
+}
+
 bool AgentServer::started( const QString& identifier ) const
 {
   return m_agents.contains( identifier );
@@ -81,8 +93,12 @@ void AgentServer::stopAgent( const QString& identifier )
 void AgentServer::quit()
 {
   qDebug() << Q_FUNC_INFO;
-  for ( QHash<QString, AgentThread*>::const_iterator it = m_agents.constBegin(); it != m_agents.constEnd(); ++it )
+  QMutableHashIterator<QString, AgentThread*> it( m_agents );
+  while ( it.hasNext() ) {
+    it.next();
     stopAgent( it.key() );
+  }
+
   QCoreApplication::instance()->quit();
 }
 
