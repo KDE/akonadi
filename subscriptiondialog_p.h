@@ -68,8 +68,6 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
 
     Q_PRIVATE_SLOT( d, void done() )
     Q_PRIVATE_SLOT( d, void subscriptionResult( KJob* job ) )
-    Q_PRIVATE_SLOT( d, void subscribeClicked() )
-    Q_PRIVATE_SLOT( d, void unsubscribeClicked() )
     Q_PRIVATE_SLOT( d, void modelLoaded() )
 };
 

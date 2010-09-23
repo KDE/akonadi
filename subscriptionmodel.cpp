@@ -25,6 +25,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QStringList>
+#include <QtGui/QFont>
 
 using namespace Akonadi;
 
@@ -109,6 +110,15 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
       if ( d->changes.contains( col ) )
         return true;
       return false;
+    }
+    case Qt::FontRole:
+    {
+      const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
+
+      QFont font = CollectionModel::data( index, role ).value<QFont>();
+      font.setBold( d->changes.contains( col ) );
+
+      return font;
     }
   }
   return CollectionModel::data( index, role );

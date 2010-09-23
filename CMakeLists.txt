@@ -142,7 +142,6 @@ set( akonadikde_LIB_SRC
   statisticsproxymodel.cpp
   subscriptiondialog.cpp
   subscriptionjob.cpp
-  subscriptionchangeproxymodel.cpp
   subscriptionmodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
@@ -209,7 +208,6 @@ install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
   collectiongeneralpropertiespage.ui
-  subscriptiondialog.ui
   controlprogressindicator.ui
   selftestdialog.ui
   erroroverlay.ui

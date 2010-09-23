@@ -19,16 +19,41 @@
 
 #include "subscriptiondialog_p.h"
 
-#include "ui_subscriptiondialog.h"
 #include "subscriptionmodel_p.h"
 #include "subscriptionjob_p.h"
-#include "subscriptionchangeproxymodel_p.h"
-#include "flatcollectionproxymodel_p.h"
 #include "control.h"
 
+#include <kdebug.h>
+
+#include <QtGui/QBoxLayout>
+
+#ifndef KDEPIM_MOBILE_UI
 #include <krecursivefilterproxymodel.h>
 #include <recursivecollectionfilterproxymodel.h>
-#include <kdebug.h>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QTreeView>
+#include <klineedit.h>
+#include <klocale.h>
+#else
+#include <QtGui/QListView>
+#include <QtGui/QSortFilterProxyModel>
+#include "kdescendantsproxymodel_p.h"
+
+class CheckableFilterProxyModel : public QSortFilterProxyModel
+{
+public:
+  CheckableFilterProxyModel( QObject *parent = 0 )
+    : QSortFilterProxyModel( parent ) { }
+
+protected:
+  /*reimp*/ bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const
+  {
+    QModelIndex sourceIndex = sourceModel()->index( sourceRow, 0, sourceParent );
+    return sourceModel()->flags( sourceIndex ) & Qt::ItemIsUserCheckable;
+  }
+};
+#endif
 
 using namespace Akonadi;
 
@@ -39,15 +64,6 @@ class SubscriptionDialog::Private
 {
   public:
     Private( SubscriptionDialog *parent ) : q( parent ) {}
-
-    void setupChangeView( QTreeView *view, bool subscribe )
-    {
-      FlatCollectionProxyModel *flatProxy = new FlatCollectionProxyModel( q );
-      flatProxy->setSourceModel( model );
-      SubscriptionChangeProxyModel *subProxy = new SubscriptionChangeProxyModel( subscribe, q );
-      subProxy->setSourceModel( flatProxy );
-      view->setModel( subProxy );
-    }
 
     void done()
     {
@@ -66,35 +82,22 @@ class SubscriptionDialog::Private
       q->deleteLater();
     }
 
-    void subscribeClicked()
-    {
-      foreach ( const QModelIndex &index, ui.collectionView->selectionModel()->selectedIndexes() )
-        model->setData( index, Qt::Checked, Qt::CheckStateRole );
-    }
-
-    void unsubscribeClicked()
-    {
-      foreach ( const QModelIndex &index, ui.collectionView->selectionModel()->selectedIndexes() )
-        model->setData( index, Qt::Unchecked, Qt::CheckStateRole );
-    }
-
     void modelLoaded()
     {
-      ui.collectionView->setEnabled( true );
-      ui.subscribeButton->setEnabled( true );
-      ui.unsubscribeButton->setEnabled( true );
-      ui.subscribeView->setEnabled( true );
-      ui.unsubscribeView->setEnabled( true );
-      ui.collectionView->expandAll();
+      collectionView->setEnabled( true );
+#ifndef KDEPIM_MOBILE_UI
+      collectionView->expandAll();
+#endif
       q->enableButtonOk( true );
     }
 
     SubscriptionDialog* q;
-    Ui::SubscriptionDialog ui;
+#ifndef KDEPIM_MOBILE_UI
+    QTreeView *collectionView;
+#else
+    QListView *collectionView;
+#endif
     SubscriptionModel* model;
-    KRecursiveFilterProxyModel *filterTreeViewModel;
-    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
-
 };
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
@@ -114,44 +117,60 @@ SubscriptionDialog::SubscriptionDialog(const QString& mimetype, QWidget * parent
 void SubscriptionDialog::init( const QString& mimetype )
 {
   enableButtonOk( false );
-  d->ui.setupUi( mainWidget() );
-  KIcon icon;
-  if ( QApplication::isLeftToRight() )
-    icon = KIcon( QLatin1String( "go-next" ) );
-  else
-    icon = KIcon( QLatin1String( "go-previous" ) );
-  d->ui.subscribeButton->setIcon( icon );
-  d->ui.unsubscribeButton->setIcon( icon );
+
+  QWidget *mainWidget = new QWidget( this );
+  QVBoxLayout *mainLayout = new QVBoxLayout;
+  mainWidget->setLayout( mainLayout );
+  setMainWidget( mainWidget );
 
   d->model = new SubscriptionModel( this );
 
-  d->filterTreeViewModel = new KRecursiveFilterProxyModel( this );
-  d->filterTreeViewModel->setDynamicSortFilter( true );
-  d->filterTreeViewModel->setSourceModel( d->model );
-  d->filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+#ifndef KDEPIM_MOBILE_UI
+  KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
+  filterTreeViewModel->setDynamicSortFilter( true );
+  filterTreeViewModel->setSourceModel( d->model );
+  filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
 
-  d->filterRecursiveCollectionFilter = new Akonadi::RecursiveCollectionFilterProxyModel( this );
+  RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
+      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
   if ( !mimetype.isEmpty() )
-    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
+    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
 
-  d->filterRecursiveCollectionFilter->setSourceModel( d->filterTreeViewModel );
+  filterRecursiveCollectionFilter->setSourceModel( filterTreeViewModel );
 
+  QHBoxLayout *filterBarLayout = new QHBoxLayout;
 
-  d->ui.collectionView->setModel( d->filterRecursiveCollectionFilter );
+  filterBarLayout->addWidget( new QLabel( i18n( "Search:" ) ) );
 
+  KLineEdit *lineEdit = new KLineEdit( mainWidget );
+  connect( lineEdit, SIGNAL( textChanged( const QString& ) ),
+           filterTreeViewModel, SLOT( setFilterFixedString( const QString& ) ) );
+  filterBarLayout->addWidget( lineEdit );
+  mainLayout->addLayout( filterBarLayout );
 
+  d->collectionView = new QTreeView( mainWidget );
+  d->collectionView->header()->hide();
+  d->collectionView->setModel( filterRecursiveCollectionFilter );
+  mainLayout->addWidget( d->collectionView );
+#else
+  KDescendantsProxyModel *flatModel = new KDescendantsProxyModel( this );
+  flatModel->setDisplayAncestorData( true );
+  flatModel->setAncestorSeparator( QLatin1String( "/" ) );
+  flatModel->setSourceModel( d->model );
 
-  d->setupChangeView( d->ui.subscribeView, true );
-  d->setupChangeView( d->ui.unsubscribeView, false );
+  CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel( this );
+  checkableModel->setSourceModel( flatModel );
+
+  d->collectionView = new QListView( mainWidget );
+
+  d->collectionView->setModel( checkableModel );
+  mainLayout->addWidget( d->collectionView );
+#endif
 
   connect( d->model, SIGNAL( loaded() ), SLOT( modelLoaded() ) );
-  connect( d->ui.subscribeButton, SIGNAL( clicked() ), SLOT( subscribeClicked() ) );
-  connect( d->ui.unsubscribeButton, SIGNAL( clicked() ), SLOT( unsubscribeClicked() ) );
   connect( this, SIGNAL( okClicked() ), SLOT( done() ) );
   connect( this, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
-  connect( d->ui.klineedit, SIGNAL( textChanged( const QString& ) ),
-           d->filterTreeViewModel, SLOT( setFilterFixedString( const QString& ) ) );
-  Control::widgetNeedsAkonadi( mainWidget() );
+  Control::widgetNeedsAkonadi( mainWidget );
 }
 
 SubscriptionDialog::~ SubscriptionDialog()
