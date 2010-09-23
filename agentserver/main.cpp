@@ -32,6 +32,7 @@
 int main( int argc, char ** argv )
 {
   QApplication app( argc, argv );
+  app.setQuitOnLastWindowClosed( false );
 
   //Needed for wince build
   #undef interface
@@ -41,7 +42,7 @@ int main( int argc, char ** argv )
     akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
   }
 
-  new Akonadi::AgentServer;
+  new Akonadi::AgentServer( &app );
 
   if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) )
     akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
