@@ -59,7 +59,6 @@ void AgentThread::run()
 
 void AgentThread::run( UiRunnable *runnable )
 {
-  qDebug() << "!!!!!!!!!!" << ( QCoreApplication::instance()->thread() == currentThread() );
   runnable->run();
 }
 
