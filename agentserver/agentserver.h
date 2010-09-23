@@ -46,6 +46,7 @@ class AgentServer : public QObject
   private:
     QHash<QString, AgentThread*> m_agents;
     QHash<QString, QPluginLoader*> m_pluginLoaders;
+    bool m_quiting;
 };
   
 }

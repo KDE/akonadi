@@ -33,6 +33,7 @@ using namespace Akonadi;
 
 AgentServer::AgentServer( QObject* parent )
   : QObject( parent )
+  , m_quiting( false )
 {
   QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH,
                                                 this, QDBusConnection::ExportScriptableSlots );
@@ -41,7 +42,8 @@ AgentServer::AgentServer( QObject* parent )
 AgentServer::~AgentServer()
 {
   qDebug() << Q_FUNC_INFO;
-  quit();
+  if ( !m_quiting )
+    quit();
 
   QHash<QString, QPluginLoader*>::iterator it = m_pluginLoaders.begin();
   while ( it != m_pluginLoaders.end() ) {
@@ -92,7 +94,9 @@ void AgentServer::stopAgent( const QString& identifier )
 
 void AgentServer::quit()
 {
-  qDebug() << Q_FUNC_INFO;
+  Q_ASSERT( !m_quiting );
+  m_quiting = true;
+
   QMutableHashIterator<QString, AgentThread*> it( m_agents );
   while ( it.hasNext() ) {
     it.next();
