@@ -27,6 +27,8 @@
 
 #include <QtGui/QBoxLayout>
 
+#include <klocale.h>
+
 #ifndef KDEPIM_MOBILE_UI
 #include <krecursivefilterproxymodel.h>
 #include <recursivecollectionfilterproxymodel.h>
@@ -34,7 +36,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #include <klineedit.h>
-#include <klocale.h>
 #else
 #include <QtGui/QListView>
 #include <QtGui/QSortFilterProxyModel>
