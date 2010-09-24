@@ -117,7 +117,14 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
 {
   if ( qstrncmp( "data", resource, 4 ) == 0 ) {
     if ( instance()->mDataDirs.isEmpty() ) {
+#ifdef Q_OS_WIN
+      QDir dir( QCoreApplication::applicationDirPath() );
+	  dir.cdUp();
+	  const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "share" ) );
+      QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData() );
+#else
       QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
+#endif
 
 #ifdef Q_OS_WIN
       const QString prefixDataDir = QLatin1String( AKONADIPREFIX "/" AKONADIDATA );
@@ -165,7 +172,14 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
 #endif
   } else if ( qstrncmp( "config", resource, 6 ) == 0 ) {
     if ( instance()->mConfigDirs.isEmpty() ) {
+#ifdef Q_OS_WIN
+      QDir dir( QCoreApplication::applicationDirPath() );
+	  dir.cdUp();
+	  const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "etc" ) ) + QLatin1Char( ';' ) + dir.absoluteFilePath( QLatin1String( "share/config" ) );
+      QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData() );
+#else
       QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
+#endif
 
 #ifdef Q_OS_WIN
       const QString prefixConfigDir = QLatin1String( AKONADIPREFIX "/" AKONADICONFIG );
