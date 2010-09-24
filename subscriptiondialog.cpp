@@ -117,7 +117,7 @@ SubscriptionDialog::SubscriptionDialog(const QString& mimetype, QWidget * parent
 void SubscriptionDialog::init( const QString& mimetype )
 {
   enableButtonOk( false );
-
+  setCaption( i18n( "Local Subscriptions" ) );
   QWidget *mainWidget = new QWidget( this );
   QVBoxLayout *mainLayout = new QVBoxLayout;
   mainWidget->setLayout( mainLayout );
