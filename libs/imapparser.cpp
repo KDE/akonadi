@@ -310,24 +310,43 @@ int ImapParser::parseNumber(const QByteArray & data, qint64 & result, bool * ok,
 
 QByteArray ImapParser::quote(const QByteArray & data)
 {
-  QByteArray result( "\"" );
-  result.reserve( data.length() + 2 );
-  for ( int i = 0; i < data.length(); ++i ) {
-    const char ch = data.at( i );
-    if ( ch == '\n' ) {
-      result += "\\n";
-      continue;
-    }
+  if ( data.isEmpty() )
+    return QByteArray( "\"\"" );
 
-    if ( ch == '\r' ) {
-      result += "\\r";
-      continue;
-    }
- 
-    if ( ch == '"' || ch == '\\' )
-      result += '\\';
-    result += ch;
+  const int inputLength = data.length();
+  int stuffToQuote = 0;
+  for ( int i = 0; i < inputLength; ++i ) {
+    const char ch = data.at( i );
+    if ( ch == '"' || ch == '\\' || ch == '\n' || ch == '\r' )
+      ++stuffToQuote;
   }
+
+  QByteArray result;
+  result.reserve( inputLength + stuffToQuote + 2 );
+  result += '"';
+
+  // shortcut for the case that we don't need to quote anything at all
+  if ( stuffToQuote == 0 ) {
+    result += data;
+  } else {
+    for ( int i = 0; i < inputLength; ++i ) {
+      const char ch = data.at( i );
+      if ( ch == '\n' ) {
+        result += "\\n";
+        continue;
+      }
+
+      if ( ch == '\r' ) {
+        result += "\\r";
+        continue;
+      }
+
+      if ( ch == '"' || ch == '\\' )
+        result += '\\';
+      result += ch;
+    }
+  }
+
   result += '"';
   return result;
 }
