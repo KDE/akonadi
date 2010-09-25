@@ -22,6 +22,8 @@
 
 using namespace Akonadi;
 
+Q_DECLARE_METATYPE( QList<QByteArray> )
+
 class ImapParserBenchmark : public QObject
 {
   Q_OBJECT
@@ -41,6 +43,27 @@ class ImapParserBenchmark : public QObject
       QFETCH( QByteArray, input );
       QBENCHMARK {
         ImapParser::quote( input );
+      }
+    }
+
+    void join_data()
+    {
+      QTest::addColumn<QList<QByteArray> >( "list" );
+      QTest::newRow( "empty" ) << QList<QByteArray>();
+      QTest::newRow( "single" ) << (QList<QByteArray>() << "ababab");
+      QTest::newRow( "two" ) << (QList<QByteArray>() << "ababab" << "ababab");
+      QTest::newRow( "five" ) << (QList<QByteArray>() << "ababab" << "ababab" << "ababab" << "ababab" << "ababab");
+      QList<QByteArray> list;
+      for ( int i = 0; i < 50; ++i )
+        list << "ababab";
+      QTest::newRow( "a lot" ) << list;
+    }
+
+    void join()
+    {
+      QFETCH( QList<QByteArray>, list );
+      QBENCHMARK {
+        ImapParser::join( list, " " );
       }
     }
 };

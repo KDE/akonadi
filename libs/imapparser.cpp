@@ -264,14 +264,28 @@ int ImapParser::parenthesesBalance( const QByteArray & data, int start )
 
 QByteArray ImapParser::join(const QList< QByteArray > & list, const QByteArray & separator)
 {
+  // shortcuts for the easy cases
   if ( list.isEmpty() )
     return QByteArray();
+  if ( list.size() == 1 )
+    return list.first();
 
-  QByteArray result = list.first();
-  QList<QByteArray>::ConstIterator it = list.constBegin();
+  // avoid expensive realloc's by determining the size beforehand
+  QList<QByteArray>::const_iterator it = list.constBegin();
+  const QList<QByteArray>::const_iterator endIt = list.constEnd();
+  int resultSize = (list.size() - 1) * separator.size();
+  for ( ; it != endIt; ++it )
+    resultSize += (*it).size();
+
+  QByteArray result;
+  result.reserve( resultSize );
+  it = list.constBegin();
+  result += (*it);
   ++it;
-  for ( ; it != list.constEnd(); ++it )
-    result += separator + (*it);
+  for ( ; it != endIt; ++it ) {
+    result += separator;
+    result += (*it);
+  }
 
   return result;
 }
