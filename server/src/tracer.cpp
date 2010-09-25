@@ -135,8 +135,9 @@ void Tracer::activateTracer(const QString & type)
   settings.sync();
 
   if ( type == QLatin1String("file") ) {
-    qFatal( "Implement me!" );
-//     mTracerBackend = new FileTracer();
+    const QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
+    const QString file = settings.value( QLatin1String( "Debug/File" ), QLatin1String("/dev/null") ).toString();
+    mTracerBackend = new FileTracer( file );
   } else if ( type == QLatin1String("null") ) {
     mTracerBackend = new NullTracer();
   } else {
