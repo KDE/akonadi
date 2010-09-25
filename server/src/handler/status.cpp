@@ -48,15 +48,11 @@ bool Status::parseStream()
 
     // Syntax:
     // status     = "STATUS" SP mailbox SP "(" status-att *(SP status-att) ")"
-    // status-att = "MESSAGES" / "RECENT" / "UIDNEXT" / "UIDVALIDITY" / "UNSEEN" / "SIZE"
+    // status-att = "MESSAGES" / "RECENT" / "UNSEEN" / "SIZE"
 
-  QByteArray mailbox = m_streamParser->readString();
+  const QByteArray mailbox = m_streamParser->readString();
   QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
-
-  Response response;
-
-  DataStore *db = connection()->storageBackend();
-  Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
+  const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
 
   if ( !col.isValid() )
     return failureResponse( "No status for this folder" );
@@ -85,21 +81,7 @@ bool Status::parseStream()
       return failureResponse( "Could not determine recent item count" );
     statusResponse += QByteArray::number( count );
   }
-    // UIDNEXT - The next unique identifier value of the mailbox
-  if ( attributeList.contains( "UIDNEXT" ) ) {
-    if ( !statusResponse.isEmpty() )
-      statusResponse += " UIDNEXT ";
-    else
-      statusResponse += "UIDNEXT ";
-    statusResponse += QByteArray::number( db->uidNext() );
-  }
-    // UIDVALIDITY - The unique identifier validity value of the mailbox
-  if ( attributeList.contains( "UIDVALIDITY" ) ) {
-    if ( !statusResponse.isEmpty() )
-      statusResponse += " UIDVALIDITY 1";
-    else
-      statusResponse += "UIDVALIDITY 1";
-  }
+
   if ( attributeList.contains( "UNSEEN" ) ) {
     if ( !statusResponse.isEmpty() )
       statusResponse += " UNSEEN ";
@@ -123,6 +105,7 @@ bool Status::parseStream()
     statusResponse += QByteArray::number( size );
   }
 
+  Response response;
   response.setUntagged();
   response.setString( "STATUS \"" + HandlerHelper::pathForCollection( col ).toUtf8() + "\" (" + statusResponse + ')' );
   emit responseAvailable( response );

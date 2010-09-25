@@ -516,28 +516,6 @@ bool DataStore::cleanupPimItems( const Collection &collection )
   return ok;
 }
 
-qint64 DataStore::highestPimItemId() const
-{
-  if ( !m_dbOpened )
-    return -1;
-
-  QSqlQuery query( m_database );
-  const QString statement = QString::fromLatin1( "SELECT MAX(%1) FROM %2" ).arg( PimItem::idColumn(), PimItem::tableName() );
-
-  if ( !query.exec( statement ) ) {
-    debugLastQueryError( query, "DataStore::highestPimItemId" );
-    return -1;
-  }
-
-  if ( !query.next() ) {
-    debugLastQueryError( query, "DataStore::highestPimItemId" );
-    return -1;
-  }
-
-  return query.value( 0 ).toLongLong();
-}
-
-
 bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<CollectionAttribute> qb;
@@ -608,15 +586,6 @@ void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionD
                             .arg( query.lastError().text() )
                        );
 }
-
-qint64 DataStore::uidNext() const
-{
-    // FIXME We can't use max(id) FROM PimItems because this is wrong if the
-    //       entry with the highest id is deleted. Instead we should probably
-    //       keep record of the largest id that any PimItem ever had.
-    return highestPimItemId() + 1;
-}
-
 
 // static
 QString DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )

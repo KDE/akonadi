@@ -186,17 +186,11 @@ class DataStore : public QObject
      */
     bool unhideAllPimItems();
 
-    qint64 highestPimItemId() const;
-
     /* --- Collection attributes ------------------------------------------ */
     bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
     bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
 
     /* --- Helper functions ---------------------------------------------- */
-    /** Returns the id of the next PIM item that is added to the db.
-        @return possible id of the next PIM item that is added to the database
-     */
-    qint64 uidNext() const;
 
     /**
       Begins a transaction. No changes will be written to the database and
