@@ -770,7 +770,7 @@ void ImapStreamParser::sendContinuationResponse( qint64 size )
   m_socket->write(block);
   m_socket->waitForBytesWritten(30000);
 
-  Tracer::self()->connectionOutput( m_tracerId, QString::fromUtf8( block ) );
+  Tracer::self()->connectionOutput( m_tracerId, block );
 }
 
 void ImapStreamParser::insertData( const QByteArray& data)

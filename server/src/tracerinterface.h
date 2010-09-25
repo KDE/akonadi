@@ -20,6 +20,7 @@
 #ifndef AKONADI_TRACERINTERFACE_H
 #define AKONADI_TRACERINTERFACE_H
 
+class QByteArray;
 class QString;
 
 namespace Akonadi {
@@ -66,7 +67,7 @@ class TracerInterface
      *                   is retrieved.
      * @param msg A message specific string.
      */
-    virtual void connectionInput( const QString &identifier, const QString &msg ) = 0;
+    virtual void connectionInput( const QString &identifier, const QByteArray &msg ) = 0;
 
     /**
      * This method is called whenever the akonadi server sends some data out to a client.
@@ -75,7 +76,7 @@ class TracerInterface
      *                   data is send.
      * @param msg A message specific string.
      */
-    virtual void connectionOutput( const QString &identifier, const QString &msg ) = 0;
+    virtual void connectionOutput( const QString &identifier, const QByteArray &msg ) = 0;
 
     /**
      * This method is called whenever a dbus signal is emitted on the bus.

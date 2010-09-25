@@ -44,14 +44,14 @@ void FileTracer::endConnection( const QString &identifier, const QString &msg )
   output( identifier, QString::fromLatin1( "end_connection: %1" ).arg( msg ) );
 }
 
-void FileTracer::connectionInput( const QString &identifier, const QString &msg )
+void FileTracer::connectionInput( const QString &identifier, const QByteArray &msg )
 {
-  output( identifier, QString::fromLatin1( "input: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "input: %1" ).arg( QString::fromUtf8( msg ) ) );
 }
 
-void FileTracer::connectionOutput( const QString &identifier, const QString &msg )
+void FileTracer::connectionOutput( const QString &identifier, const QByteArray &msg )
 {
-  output( identifier, QString::fromLatin1( "output: %1" ).arg( msg ) );
+  output( identifier, QString::fromLatin1( "output: %1" ).arg( QString::fromUtf8( msg ) ) );
 }
 
 void FileTracer::signal( const QString &signalName, const QString &msg )

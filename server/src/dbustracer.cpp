@@ -44,14 +44,14 @@ void DBusTracer::endConnection( const QString &identifier, const QString &msg )
   emit connectionEnded( identifier, msg );
 }
 
-void DBusTracer::connectionInput( const QString &identifier, const QString &msg )
+void DBusTracer::connectionInput( const QString &identifier, const QByteArray &msg )
 {
-  emit connectionDataInput( identifier, msg );
+  emit connectionDataInput( identifier, QString::fromUtf8( msg ) );
 }
 
-void DBusTracer::connectionOutput( const QString &identifier, const QString &msg )
+void DBusTracer::connectionOutput( const QString &identifier, const QByteArray &msg )
 {
-  emit connectionDataOutput( identifier, msg );
+  emit connectionDataOutput( identifier, QString::fromUtf8( msg ) );
 }
 
 void DBusTracer::signal( const QString &signalName, const QString &msg )

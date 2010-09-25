@@ -38,10 +38,10 @@ class NullTracer : public TracerInterface
     virtual void endConnection( const QString &identifier, const QString &msg )
     { Q_UNUSED( identifier ); Q_UNUSED( msg ); }
 
-    virtual void connectionInput( const QString &identifier, const QString &msg )
+    virtual void connectionInput( const QString &identifier, const QByteArray &msg )
     { Q_UNUSED( identifier ); Q_UNUSED( msg ); }
 
-    virtual void connectionOutput( const QString &identifier, const QString &msg )
+    virtual void connectionOutput( const QString &identifier, const QByteArray &msg )
     { Q_UNUSED( identifier ); Q_UNUSED( msg ); }
 
     virtual void signal( const QString &signalName, const QString &msg )

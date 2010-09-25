@@ -72,14 +72,14 @@ void Tracer::endConnection( const QString &identifier, const QString &msg )
   mMutex.unlock();
 }
 
-void Tracer::connectionInput( const QString &identifier, const QString &msg )
+void Tracer::connectionInput( const QString &identifier, const QByteArray &msg )
 {
   mMutex.lock();
   mTracerBackend->connectionInput( identifier, msg );
   mMutex.unlock();
 }
 
-void Tracer::connectionOutput( const QString &identifier, const QString &msg )
+void Tracer::connectionOutput( const QString &identifier, const QByteArray &msg )
 {
   mMutex.lock();
   mTracerBackend->connectionOutput( identifier, msg );
