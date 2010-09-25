@@ -478,6 +478,12 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Stops the execution of the current task and continues with the next one.
      * The current task will be tried again later.
      *
+     * This can be used to delay the task processing until the resource has reached a safe
+     * state, e.g. login to a server succeeded.
+     *
+     * @note This does not change the order of tasks so if there is no task with higher priority
+     *       e.g. a custom task added with #Prepend the deferred task will be processed again.
+     *
      * @since 4.3
      */
     void deferTask();

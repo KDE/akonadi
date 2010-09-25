@@ -36,6 +36,7 @@ static QDBusAbstractInterface *s_resourcetracker = 0;
 
 ResourceScheduler::ResourceScheduler( QObject *parent ) :
     QObject( parent ),
+    mCurrentTasksQueue( -1 ),
     mOnline( false )
 {
 }
@@ -165,6 +166,8 @@ void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const ch
   QueueType queueType = GenericTaskQueue;
   if ( priority == ResourceBase::AfterChangeReplay )
     queueType = AfterChangeReplayQueue;
+  else if ( priority == ResourceBase::Prepend )
+    queueType = PrependTaskQueue;
   TaskList& queue = mTaskList[ queueType ];
 
   if ( queue.contains( t ) )
@@ -196,11 +199,15 @@ void ResourceScheduler::taskDone()
   }
 
   mCurrentTask = Task();
+  mCurrentTasksQueue = -1;
   scheduleNext();
 }
 
 void ResourceScheduler::deferTask()
 {
+  if ( mCurrentTask.type == Invalid )
+      return;
+
   if ( s_resourcetracker ) {
     QList<QVariant> argumentList;
     argumentList << QString::number( mCurrentTask.serial )
@@ -210,7 +217,11 @@ void ResourceScheduler::deferTask()
 
   Task t = mCurrentTask;
   mCurrentTask = Task();
-  mTaskList[GenericTaskQueue] << t;
+
+  Q_ASSERT( mCurrentTasksQueue >= 0 && mCurrentTasksQueue < NQueueCount );
+  mTaskList[mCurrentTasksQueue].prepend( t );
+  mCurrentTasksQueue = -1;
+
   signalTaskToTracker( t, "DeferedTask" );
 
   scheduleNext();
@@ -240,6 +251,7 @@ void ResourceScheduler::executeNext()
   for ( int i = 0; i < NQueueCount; ++i ) {
     if ( !mTaskList[ i ].isEmpty() ) {
       mCurrentTask = mTaskList[ i ].takeFirst();
+      mCurrentTasksQueue = i;
       break;
     }
   }
@@ -310,6 +322,7 @@ void ResourceScheduler::setOnline(bool state)
       // abort running task
       queueForTaskType( mCurrentTask.type ).prepend( mCurrentTask );
       mCurrentTask = Task();
+      mCurrentTasksQueue = -1;
     }
     // abort pending synchronous tasks, might take longer until the resource goes online again
     TaskList& itemFetchQueue = queueForTaskType( FetchItem );
@@ -412,6 +425,7 @@ void ResourceScheduler::clear()
     queue.clear();
   }
   mCurrentTask = Task();
+  mCurrentTasksQueue = -1;
 }
 
 static const char s_taskTypes[][25] = {
