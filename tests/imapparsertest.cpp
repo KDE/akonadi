@@ -554,4 +554,21 @@ void ImapParserTest::testBulkParser()
   delete parser;
 }
 
+void ImapParserTest::testJoin_data()
+{
+  QTest::addColumn<QList<QByteArray> >( "list" );
+  QTest::addColumn<QByteArray>( "joined" );
+  QTest::newRow( "empty" ) << QList<QByteArray>() << QByteArray();
+  QTest::newRow( "one" ) << (QList<QByteArray>() << "abab") << QByteArray( "abab" );
+  QTest::newRow( "two" ) << (QList<QByteArray>() << "abab" << "cdcd") << QByteArray( "abab cdcd" );
+  QTest::newRow( "three" ) << (QList<QByteArray>() << "abab" << "cdcd" << "efef") << QByteArray( "abab cdcd efef" );
+}
+
+void ImapParserTest::testJoin()
+{
+  QFETCH( QList<QByteArray>, list );
+  QFETCH( QByteArray, joined );
+  QCOMPARE( ImapParser::join( list, " " ), joined );
+}
+
 #include "imapparsertest.moc"
