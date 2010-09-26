@@ -580,12 +580,9 @@ void CollectionJobTest::testSelect()
 
   CollectionSelectJob *job = new CollectionSelectJob( col, this );
   QVERIFY( job->exec() );
-  QCOMPARE( job->unseen(), -1 );
 
   job = new CollectionSelectJob( col, this );
-  job->setRetrieveStatus( true );
   QVERIFY( job->exec() );
-  QVERIFY( job->unseen() > -1 );
 
   job = new CollectionSelectJob( Collection::root(), this );
   QVERIFY( job->exec() );

@@ -21,6 +21,7 @@
 
 #include "job_p.h"
 #include "protocol_p.h"
+#include <akonadi/private/imapparser_p.h>
 
 #include <QtCore/QDebug>
 #include <KLocale>
@@ -30,15 +31,11 @@ class Akonadi::CollectionSelectJobPrivate : public JobPrivate
 {
   public:
     CollectionSelectJobPrivate( CollectionSelectJob *parent )
-      : JobPrivate( parent ),
-        mUnseen( -1 ),
-        mSilent( true )
+      : JobPrivate( parent )
     {
     }
 
     Collection mCollection;
-    int mUnseen;
-    bool mSilent;
 };
 
 CollectionSelectJob::CollectionSelectJob( const Collection &collection, QObject *parent )
@@ -58,51 +55,16 @@ void CollectionSelectJob::doStart( )
   Q_D( CollectionSelectJob );
 
   if ( d->mCollection.isValid() ) {
-    QByteArray command( d->newTag() + " SELECT " );
-    if ( d->mSilent )
-      command += "SILENT ";
+    QByteArray command( d->newTag() + " SELECT SILENT " );
     d->writeData( command + QByteArray::number( d->mCollection.id() ) + '\n' );
   } else if ( !d->mCollection.remoteId().isEmpty() ) {
-    QByteArray command( d->newTag() + " " AKONADI_CMD_RID " SELECT " );
-    if ( d->mSilent )
-      command += "SILENT ";
-    // FIXME: Should this be quoted??
-    d->writeData( command + d->mCollection.remoteId().toUtf8() + '\n' );
+    QByteArray command( d->newTag() + " " AKONADI_CMD_RID " SELECT SILENT " );
+    d->writeData( command + ImapParser::quote( d->mCollection.remoteId().toUtf8() ) + '\n' );
   } else {
     setError( Unknown );
     setErrorText( i18n( "Invalid collection specified" ) );
     emitResult();
   }
 }
-
-void CollectionSelectJob::doHandleResponse( const QByteArray & tag, const QByteArray & data )
-{
-  Q_D( CollectionSelectJob );
-
-  if ( tag == "*" ) {
-    if ( data.startsWith( "OK [UNSEEN" ) ) { //krazy:exclude=strings
-      int begin = data.indexOf( ' ', 4 );
-      int end = data.indexOf( ']' );
-      QByteArray number = data.mid( begin + 1, end - begin - 1 );
-      d->mUnseen = number.toInt();
-      return;
-    }
-  }
-}
-
-int CollectionSelectJob::unseen( ) const
-{
-  Q_D( const CollectionSelectJob );
-
-  return d->mUnseen;
-}
-
-void CollectionSelectJob::setRetrieveStatus(bool status)
-{
-  Q_D( CollectionSelectJob );
-
-  d->mSilent = !status;
-}
-
 
 #include "collectionselectjob_p.moc"
