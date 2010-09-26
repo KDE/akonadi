@@ -59,6 +59,15 @@ class HandlerHelper
     static int itemCount( const Collection &col );
 
     /**
+     * Queries for collection statistics.
+     * @param col The collection to query.
+     * @param count The total amount of items in this collection.
+     * @param size The size of all items in this collection.
+     * @return @c false on a query error, @c true otherwise
+     */
+    static bool itemStatistics( const Collection &col, qint64 &count, qint64 &size );
+
+    /**
       Returns the amount of existing items in the given collection
       which have a given flag set.
       @return -1 on error.
@@ -71,12 +80,6 @@ class HandlerHelper
       @return -1 on error
     */
     static int itemWithoutFlagCount( const Collection &col, const QString &flag );
-
-    /**
-      Returns the total size of all the items in the given collection.
-      @return -1 on error
-     */
-    static qint64 itemsTotalSize( const Collection &col );
 
     /**
       Parse cache policy and update the given Collection object accoordingly.

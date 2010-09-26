@@ -60,15 +60,16 @@ bool Status::parseStream()
     // Responses:
     // REQUIRED untagged responses: STATUS
 
+  qint64 itemCount, itemSize;
+  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) )
+    return failureResponse( "Failed to query statistics." );
+
     // build STATUS response
   QByteArray statusResponse;
     // MESSAGES - The number of messages in the mailbox
   if ( attributeList.contains( "MESSAGES" ) ) {
     statusResponse += "MESSAGES ";
-    const int count = HandlerHelper::itemCount( col );
-    if ( count < 0 )
-      return failureResponse( "Could not determine message count." );
-    statusResponse += QByteArray::number( count );
+    statusResponse += QByteArray::number( itemCount );
   }
     // RECENT - The number of messages with the \Recent flag set
   if ( attributeList.contains( "RECENT" ) ) {
@@ -88,21 +89,18 @@ bool Status::parseStream()
     else
       statusResponse += "UNSEEN ";
 
-    const int count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) );
+    // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
+    const int count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\SEEN" ) );
     if ( count < 0 )
       return failureResponse( "Unable to retrieve unread count" );
-    statusResponse += QByteArray::number( count );
+    statusResponse += QByteArray::number( itemCount - count );
   }
   if ( attributeList.contains( "SIZE" ) ) {
     if ( !statusResponse.isEmpty() )
       statusResponse += " SIZE ";
     else
       statusResponse += "SIZE ";
-
-    const qint64 size = HandlerHelper::itemsTotalSize( col );
-    if ( size < 0 )
-      return failureResponse( "Unable to retrieve collection total size" );
-    statusResponse += QByteArray::number( size );
+    statusResponse += QByteArray::number( itemSize );
   }
 
   Response response;

@@ -81,13 +81,21 @@ QString HandlerHelper::pathForCollection(const Collection & col)
   return parts.join( QLatin1String("/") );
 }
 
-int HandlerHelper::itemCount(const Collection & col)
+bool HandlerHelper::itemStatistics(const Akonadi::Collection& col, qint64& count, qint64& size)
 {
-  CountQueryBuilder qb( PimItem::tableName() );
+  QueryBuilder qb( PimItem::tableName() );
+  qb.addAggregation( PimItem::idColumn(), QLatin1String("count") );
+  qb.addAggregation( PimItem::sizeColumn(), QLatin1String("sum") );
   qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
   if ( !qb.exec() )
-    return -1;
-  return qb.result();
+    return false;
+  if ( !qb.query().next() ) {
+    qDebug() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
+    return false;
+  }
+  count = qb.query().value( 0 ).toLongLong();
+  size = qb.query().value( 1 ).toLongLong();
+  return true;
 }
 
 int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & flag)
@@ -104,6 +112,15 @@ int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & fla
   return qb.result();
 }
 
+int HandlerHelper::itemCount(const Collection& col)
+{
+  CountQueryBuilder qb( PimItem::tableName() );
+  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+  if ( !qb.exec() )
+    return -1;
+  return qb.result();
+}
+
 int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & flag)
 {
   // FIXME optimize me: use only one query or reuse previously done count
@@ -112,21 +129,6 @@ int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & 
   if ( totalCount < 0 || flagCount < 0 )
     return -1;
   return totalCount - flagCount;
-}
-
-qint64 HandlerHelper::itemsTotalSize(const Collection & col)
-{
-  QueryBuilder qb( PimItem::tableName() );
-  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
-  qb.addAggregation( PimItem::sizeColumn(), QLatin1String("sum") );
-
-  if ( !qb.exec() )
-    return -1;
-  if ( !qb.query().next() ) {
-      qDebug() << "Error during retrieving result of query:" << qb.query().lastError().text();
-      return -1;
-  }
-  return qb.query().value( 0 ).toLongLong();
 }
 
 int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start, bool *changed )
@@ -202,9 +204,13 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
   b += " RESOURCE " + ImapParser::quote( col.resource().name().toUtf8() ) + ' ';
 
   if ( includeStatistics ) {
-      b += "MESSAGES " + QByteArray::number( HandlerHelper::itemCount( col ) ) + ' ';
-      b += "UNSEEN " + QByteArray::number( HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) ) ) + ' ';
-      b += "SIZE " + QByteArray::number( HandlerHelper::itemsTotalSize( col ) ) + ' ';
+    qint64 itemCount, itemSize;
+    if ( itemStatistics( col, itemCount, itemSize ) ) {
+      b += "MESSAGES " + QByteArray::number( itemCount ) + ' ';
+      // itemWithFlagCount is twice as fast as itemWithoutFlagCount, so emulated that...
+      b += "UNSEEN " + QByteArray::number( itemCount - itemWithFlagCount( col, QLatin1String( "\\SEEN" ) ) ) + ' ';
+      b += "SIZE " + QByteArray::number( itemSize ) + ' ';
+    }
   }
 
   if ( !col.queryLanguage().isEmpty() ) {
