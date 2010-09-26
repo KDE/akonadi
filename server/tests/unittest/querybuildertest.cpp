@@ -69,6 +69,11 @@ void QueryBuilderTest::testQueryBuilder_data()
   QTest::newRow( "hierarchical where" ) << mBuilders.count() << QString( "SELECT col1, col2 FROM table WHERE ( col1 = :0 OR col1 <= col2 OR ( col1 > col2 AND col1 <> NULL ) )" ) << bindVals;
 
   qb = QueryBuilder( "table" );
+  qb.addAggregation( "col1", "count" );
+  mBuilders << qb;
+  QTest::newRow( "single aggregation" ) << mBuilders.count() << QString( "SELECT count(col1) FROM table" ) << QList<QVariant>();
+
+  qb = QueryBuilder( "table" );
   qb.addColumn( "col1" );
   qb.addSortColumn( "col1" );
   mBuilders << qb;

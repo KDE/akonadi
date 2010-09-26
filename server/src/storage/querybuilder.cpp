@@ -301,6 +301,15 @@ void QueryBuilder::addColumn(const QString & col)
   mColumns << col;
 }
 
+void QueryBuilder::addAggregation(const QString& col, const QString& aggregate)
+{
+  QString s( aggregate );
+  s += QLatin1Char('(');
+  s += col;
+  s += QLatin1Char(')');
+  mColumns.append( s );
+}
+
 QString QueryBuilder::bindValue(const QVariant & value)
 {
   mBindValues << value;

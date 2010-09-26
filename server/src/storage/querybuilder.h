@@ -127,6 +127,13 @@ class QueryBuilder
     void addColumn( const QString &col );
 
     /**
+     * Adds an aggregation statement.
+     * @param col The column to aggregate on
+     * @param aggregate The aggregation function.
+     */
+    void addAggregation( const QString &col, const QString &aggregate );
+
+    /**
       Add a WHERE or HAVING condition which compares a column with a given value.
       @param column The column that should be compared.
       @param op The operator used for comparison

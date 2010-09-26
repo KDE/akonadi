@@ -118,7 +118,7 @@ qint64 HandlerHelper::itemsTotalSize(const Collection & col)
 {
   QueryBuilder qb( PimItem::tableName() );
   qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
-  qb.addColumn( QLatin1String("sum(size)") );
+  qb.addAggregation( PimItem::sizeColumn(), QLatin1String("sum") );
 
   if ( !qb.exec() )
     return -1;
