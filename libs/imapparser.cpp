@@ -264,14 +264,28 @@ int ImapParser::parenthesesBalance( const QByteArray & data, int start )
 
 QByteArray ImapParser::join(const QList< QByteArray > & list, const QByteArray & separator)
 {
+  // shortcuts for the easy cases
   if ( list.isEmpty() )
     return QByteArray();
+  if ( list.size() == 1 )
+    return list.first();
 
-  QByteArray result = list.first();
-  QList<QByteArray>::ConstIterator it = list.constBegin();
+  // avoid expensive realloc's by determining the size beforehand
+  QList<QByteArray>::const_iterator it = list.constBegin();
+  const QList<QByteArray>::const_iterator endIt = list.constEnd();
+  int resultSize = (list.size() - 1) * separator.size();
+  for ( ; it != endIt; ++it )
+    resultSize += (*it).size();
+
+  QByteArray result;
+  result.reserve( resultSize );
+  it = list.constBegin();
+  result += (*it);
   ++it;
-  for ( ; it != list.constEnd(); ++it )
-    result += separator + (*it);
+  for ( ; it != endIt; ++it ) {
+    result += separator;
+    result += (*it);
+  }
 
   return result;
 }
@@ -310,24 +324,43 @@ int ImapParser::parseNumber(const QByteArray & data, qint64 & result, bool * ok,
 
 QByteArray ImapParser::quote(const QByteArray & data)
 {
-  QByteArray result( "\"" );
-  result.reserve( data.length() + 2 );
-  for ( int i = 0; i < data.length(); ++i ) {
-    const char ch = data.at( i );
-    if ( ch == '\n' ) {
-      result += "\\n";
-      continue;
-    }
+  if ( data.isEmpty() )
+    return QByteArray( "\"\"" );
 
-    if ( ch == '\r' ) {
-      result += "\\r";
-      continue;
-    }
- 
-    if ( ch == '"' || ch == '\\' )
-      result += '\\';
-    result += ch;
+  const int inputLength = data.length();
+  int stuffToQuote = 0;
+  for ( int i = 0; i < inputLength; ++i ) {
+    const char ch = data.at( i );
+    if ( ch == '"' || ch == '\\' || ch == '\n' || ch == '\r' )
+      ++stuffToQuote;
   }
+
+  QByteArray result;
+  result.reserve( inputLength + stuffToQuote + 2 );
+  result += '"';
+
+  // shortcut for the case that we don't need to quote anything at all
+  if ( stuffToQuote == 0 ) {
+    result += data;
+  } else {
+    for ( int i = 0; i < inputLength; ++i ) {
+      const char ch = data.at( i );
+      if ( ch == '\n' ) {
+        result += "\\n";
+        continue;
+      }
+
+      if ( ch == '\r' ) {
+        result += "\\r";
+        continue;
+      }
+
+      if ( ch == '"' || ch == '\\' )
+        result += '\\';
+      result += ch;
+    }
+  }
+
   result += '"';
   return result;
 }

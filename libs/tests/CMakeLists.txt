@@ -10,3 +10,4 @@ macro(add_unit_test _source)
 endmacro(add_unit_test)
 
 add_unit_test( notificationmessagetest.cpp )
+add_unit_test( imapparserbenchmark.cpp )
