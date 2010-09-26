@@ -209,6 +209,23 @@ class AKONADI_EXPORT ItemFetchScope
     AncestorRetrieval ancestorRetrieval() const;
 
     /**
+     * Enables retrieval of the item modification time.
+     * This is enabled by default for backward compatibility reasons.
+     *
+     * @param retrieveMtime @c true to retrieve the modification time, @c false otherwise
+     * @since 4.6
+     */
+    void setFetchModificationTime( bool retrieveMtime );
+
+    /**
+     * Returns whether item modification time should be retrieved.
+     *
+     * @see setFetchModificationTime()
+     * @since 4.6
+     */
+    bool fetchModificationTime() const;
+
+    /**
      * Returns @c true if there is nothing to fetch.
      */
     bool isEmpty() const;

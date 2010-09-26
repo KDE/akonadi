@@ -36,7 +36,8 @@ class ItemFetchScopePrivate : public QSharedData
         mAncestorDepth( ItemFetchScope::None ),
         mFullPayload( false ),
         mAllAttributes( false ),
-        mCacheOnly( false )
+        mCacheOnly( false ),
+        mFetchMtime( true )
     {
     }
 
@@ -49,6 +50,7 @@ class ItemFetchScopePrivate : public QSharedData
       mFullPayload = other.mFullPayload;
       mAllAttributes = other.mAllAttributes;
       mCacheOnly = other.mCacheOnly;
+      mFetchMtime = other.mFetchMtime;
     }
 
   public:
@@ -58,6 +60,7 @@ class ItemFetchScopePrivate : public QSharedData
     bool mFullPayload;
     bool mAllAttributes;
     bool mCacheOnly;
+    bool mFetchMtime;
 };
 
 }

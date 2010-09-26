@@ -260,7 +260,9 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
-  command += " (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME";
+  command += " (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE";
+  if ( fetchScope.fetchModificationTime() )
+    command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, part );
   foreach ( const QByteArray &part, fetchScope.attributes() )

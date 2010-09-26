@@ -117,3 +117,14 @@ void ItemFetchScope::setAncestorRetrieval( AncestorRetrieval depth )
 {
   d->mAncestorDepth = depth;
 }
+
+void ItemFetchScope::setFetchModificationTime( bool retrieveMtime )
+{
+  d->mFetchMtime = retrieveMtime;
+}
+
+bool ItemFetchScope::fetchModificationTime() const
+{
+  return d->mFetchMtime;
+}
+
