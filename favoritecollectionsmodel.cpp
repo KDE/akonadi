@@ -123,7 +123,6 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, 
   setFilterBehavior( ExactSelection );
 
   connect( source, SIGNAL( modelReset() ), this, SLOT( clearAndUpdateSelection() ) );
-  connect( source, SIGNAL( layoutChanged() ), this, SLOT( clearAndUpdateSelection() ) );
   connect( source, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ), this, SLOT( updateSelection() ) );
 
   d->loadConfig();
