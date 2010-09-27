@@ -31,7 +31,6 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kio/job.h>
 
 #include <QtCore/QDebug>
 
