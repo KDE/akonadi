@@ -94,6 +94,13 @@ CollectionStatisticsDelegate::CollectionStatisticsDelegate( QAbstractItemView *p
 
 }
 
+CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
+  : QStyledItemDelegate( parent ),
+    d_ptr( new CollectionStatisticsDelegatePrivate( parent ) )
+{
+
+}
+
 CollectionStatisticsDelegate::~CollectionStatisticsDelegate()
 {
   delete d_ptr;
