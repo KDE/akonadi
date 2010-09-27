@@ -484,10 +484,10 @@ class StandardActionManager::Private
     void slotSynchronizeCollection()
     {
       Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
 
-      
       const Collection::List collections = selectedCollections();
       if ( collections.isEmpty() )
         return;
@@ -500,9 +500,10 @@ class StandardActionManager::Private
     void slotCollectionProperties()
     {
 #ifndef Q_OS_WINCE
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      const QModelIndex index = list.first();
       Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
@@ -526,10 +527,12 @@ class StandardActionManager::Private
     void slotPaste()
     {
       Q_ASSERT( collectionSelectionModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      const QModelIndex index = list.first();
       Q_ASSERT( index.isValid() );
 
 #ifndef QT_NO_CLIPBOARD
@@ -589,10 +592,11 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
 
-      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+      foreach ( const QModelIndex &index, list ) {
         Q_ASSERT( index.isValid() );
         const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
@@ -607,10 +611,11 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
 
-      foreach ( const QModelIndex &index, collectionSelectionModel->selection().indexes() ) {
+      foreach ( const QModelIndex &index, list ) {
         Q_ASSERT( index.isValid() );
         const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
@@ -625,10 +630,11 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      if ( collectionSelectionModel->selection().indexes().isEmpty() )
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
         return;
 
-      const QModelIndex index = collectionSelectionModel->selection().indexes().at( 0 );
+      const QModelIndex index = list.first();
       Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
