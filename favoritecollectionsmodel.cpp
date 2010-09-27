@@ -46,14 +46,13 @@ class FavoriteCollectionsModel::Private
         return labelMap[ collectionId ];
       }
 
-      const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collectionId );
-      Q_ASSERT( indexList.size() == 1 );
+      const QModelIndex collectionIdx = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
 
       QString accountName;
 
-      const QString nameOfCollection = indexList.at( 0 ).data().toString();
+      const QString nameOfCollection = collectionIdx.data().toString();
 
-      QModelIndex idx = indexList.at( 0 ).parent();
+      QModelIndex idx = collectionIdx.parent();
       while ( idx != QModelIndex() ) {
         accountName = idx.data().toString();
         idx = idx.parent();
@@ -73,13 +72,13 @@ class FavoriteCollectionsModel::Private
 
     void updateSelection()
     {
-      foreach ( const Collection::Id &collectionId, collectionIds ) {
-        const QModelIndexList indexList = q->sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collectionId );
-        if ( indexList.isEmpty() )
-          continue;
+        foreach ( const Collection::Id &collectionId, collectionIds ) {
+          const QModelIndex idx = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
 
-        Q_ASSERT( indexList.size() == 1 );
-        q->selectionModel()->select( indexList.at( 0 ),
+        if ( !idx.isValid() )
+          return;
+
+        q->selectionModel()->select( idx,
                                      QItemSelectionModel::Select );
       }
     }
@@ -159,12 +158,12 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
   d->collectionIds.removeAll( collection.id() );
   d->labelMap.remove( collection.id() );
 
-  const QModelIndexList indexList = sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
-  if ( indexList.isEmpty() )
+  const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), collection );
+
+  if ( !idx.isValid() )
     return;
 
-  Q_ASSERT( indexList.size() == 1 );
-  selectionModel()->select( indexList.at( 0 ),
+  selectionModel()->select( idx,
                             QItemSelectionModel::Deselect );
 
   d->updateSelection();
@@ -190,13 +189,12 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &coll
   d->labelMap[ collection.id() ] = label;
   d->saveConfig();
 
-  const QModelIndexList indexList = sourceModel()->match( QModelIndex(), EntityTreeModel::CollectionIdRole, collection.id() );
-  if ( indexList.isEmpty() )
+  const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), collection );
+
+  if ( !idx.isValid() )
     return;
 
-  Q_ASSERT( indexList.size() == 1 );
-
-  const QModelIndex index = mapFromSource( indexList.at( 0 ) );
+  const QModelIndex index = mapFromSource( idx );
   emit dataChanged( index, index );
 }
 
