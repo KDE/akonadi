@@ -78,6 +78,12 @@ class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
      */
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
+    /**
+     * @reimplemented
+     */
+    virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
+                                   Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
+
   protected:
     EntityOrderProxyModelPrivate * const d_ptr;
 
