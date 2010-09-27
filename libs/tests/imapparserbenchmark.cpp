@@ -70,4 +70,4 @@ class ImapParserBenchmark : public QObject
 
 #include "imapparserbenchmark.moc"
 
-QTEST_MAIN( ImapParserBenchmark )
+QTEST_APPLESS_MAIN( ImapParserBenchmark )
