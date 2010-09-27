@@ -27,6 +27,7 @@
 #include <QtGui/QStyle>
 #include <QtGui/QStyleOption>
 #include <QtGui/QStyleOptionViewItemV4>
+#include <QtGui/QAbstractItemView>
 #include <QtGui/QTreeView>
 
 #include "entitytreemodel.h"
@@ -47,13 +48,13 @@ enum CountType
 class CollectionStatisticsDelegatePrivate
 {
   public:
-    QTreeView *parent;
+    QAbstractItemView *parent;
     bool drawUnreadAfterFolder;
     DelegateAnimator *animator;
     QColor mSelectedUnreadColor;
     QColor mDeselectedUnreadColor;
 
-    CollectionStatisticsDelegatePrivate( QTreeView *treeView )
+    CollectionStatisticsDelegatePrivate( QAbstractItemView *treeView )
         : parent( treeView ),
           drawUnreadAfterFolder( false ),
           animator( 0 )
@@ -86,7 +87,7 @@ class CollectionStatisticsDelegatePrivate
 
 }
 
-CollectionStatisticsDelegate::CollectionStatisticsDelegate( QTreeView *parent )
+CollectionStatisticsDelegate::CollectionStatisticsDelegate( QAbstractItemView *parent )
   : QStyledItemDelegate( parent ),
     d_ptr( new CollectionStatisticsDelegatePrivate( parent ) )
 {
@@ -208,7 +209,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
    // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
   QModelIndex firstColumn = index.model()->index( index.row(), 0, index.parent() );
-  bool expanded = d->parent->isExpanded( firstColumn );
+  QTreeView* treeView = qobject_cast<QTreeView*>( d->parent );
+  bool expanded = treeView && treeView->isExpanded( firstColumn );
 
   if ( option.state & QStyle::State_Selected ) {
     painter->setPen( option.palette.highlightedText().color() );

@@ -23,7 +23,7 @@
 
 #include <QtGui/QStyledItemDelegate>
 
-class QTreeView;
+class QAbstractItemView;
 
 namespace Akonadi {
 
@@ -71,7 +71,7 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      *
      * @param parent The parent tree view, which will also take ownership.
      */
-    explicit CollectionStatisticsDelegate( QTreeView *parent );
+    explicit CollectionStatisticsDelegate( QAbstractItemView *parent );
 
     /**
      * Destroys the collection statistics delegate.
