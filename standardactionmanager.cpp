@@ -981,6 +981,12 @@ class StandardActionManager::Private
         return;
       }
 
+      // find the base ETM of the favourites view
+      const QAbstractItemModel *favModel = favoritesModel;
+      while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( favModel ) ) {
+        favModel = proxy->sourceModel();
+      }
+
       // Check that the collection selection model maps to the same
       // EntityTreeModel than favoritesModel
       if ( collectionSelectionModel != 0 ) {
@@ -988,7 +994,8 @@ class StandardActionManager::Private
         while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
           model = proxy->sourceModel();
         }
-        Q_ASSERT( model == favoritesModel->sourceModel() );
+
+        Q_ASSERT( model == favModel );
       }
 
       // Check that the favorite selection model maps to favoritesModel
@@ -996,7 +1003,7 @@ class StandardActionManager::Private
       while ( const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>( model ) ) {
         model = proxy->sourceModel();
       }
-      Q_ASSERT( model == favoritesModel->sourceModel() );
+      Q_ASSERT( model == favModel );
     }
 
     void markCutAction( QMimeData *mimeData, bool cut ) const
