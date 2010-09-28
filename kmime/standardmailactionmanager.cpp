@@ -454,6 +454,23 @@ class StandardMailActionManager::Private
       command->execute();
     }
 
+    void slotEmptyTrash()
+    {
+      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyTrash ) )
+        return;
+
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      Collection::List collections = selectedCollections();
+
+      if ( collections.count() != 1 )
+        return;
+
+      EmptyTrashCommand *command = new EmptyTrashCommand( collections.first(), mParent );
+      command->execute();
+    }
+
     void slotMailLocalSubscription()
     {
 #ifndef Q_OS_WINCE
@@ -628,6 +645,13 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_empty_all_trash" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEmptyAllTrash() ) );
       break;
+    case EmptyTrash:
+      action = new KAction( d->mParentWidget );
+      action->setText( i18n( "E&mpty Trash" ) );
+      d->mActions.insert( EmptyTrash, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_empty_trash" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEmptyTrash() ) );
+      break;
     default:
       Q_ASSERT( false ); // should never happen
       break;
@@ -655,6 +679,7 @@ void StandardMailActionManager::createAllActions()
   createAction( MoveAllToTrash );
   createAction( RemoveDuplicates );
   createAction( EmptyAllTrash );
+  createAction( EmptyTrash );
 
   d->mGenericManager->createAllActions();
 

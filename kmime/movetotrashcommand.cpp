@@ -101,7 +101,6 @@ void MoveToTrashCommand::slotMoveDone( const Result& result )
   if (result == Failed )
     emitResult( Failed );
   if ( mFolderListJobCount == 0 && result == OK) {
-    qDebug() << "MOVETOTRASH ALL AS DONE";
     emitResult( OK );
   }
 }

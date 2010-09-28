@@ -39,34 +39,56 @@ EmptyTrashCommand::EmptyTrashCommand(QAbstractItemModel* model, QObject* parent)
   mModel = model;
 }
 
+EmptyTrashCommand::EmptyTrashCommand(Akonadi::Collection folder, QObject* parent) : CommandBase( parent )
+{
+  mFolder = folder;
+  mModel = 0;
+}
+
+
 void EmptyTrashCommand::execute()
 {
-  QString title = i18n("Empty Trash");
-  QString text = i18n("Are you sure you want to empty the trash folders of all accounts?");
-  if (KMessageBox::warningContinueCancel(0, text, title,
-                                         KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
-                                         QLatin1String( "confirm_empty_trash" ) )
-      != KMessageBox::Continue)
-  {
+  if ( !mFolder.isValid() && !mModel ) {
+    emitResult( Failed );
     return;
   }
-  Akonadi::Collection trash = trashCollectionFolder();
-  expunge( trash );
 
-  const Akonadi::AgentInstance::List lst = agentInstances();
-  foreach ( const Akonadi::AgentInstance& type, lst ) {
-    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
-      if ( type.status() == Akonadi::AgentInstance::Broken )
-        continue;
-      OrgKdeAkonadiImapSettingsInterface *iface = Util::createImapSettingsInterface( type.identifier() );
-      if ( iface->isValid() ) {
-        int trashImap = iface->trashCollection();
-        if ( trashImap != trash.id() ) {
-          expunge( Akonadi::Collection( trashImap ) );
-        }
-      }
-      delete iface;
+  if ( !mFolder.isValid() ) { //expunge all
+    
+    QString title = i18n("Empty Trash");
+    QString text = i18n("Are you sure you want to empty the trash folders of all accounts?");
+    if (KMessageBox::warningContinueCancel(0, text, title,
+                                          KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+                                          QLatin1String( "confirm_empty_trash" ) )
+        != KMessageBox::Continue)
+    {
+      return;
     }
+    Akonadi::Collection trash = trashCollectionFolder();
+    expunge( trash );
+
+    const Akonadi::AgentInstance::List lst = agentInstances();
+    foreach ( const Akonadi::AgentInstance& type, lst ) {
+      if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+        if ( type.status() == Akonadi::AgentInstance::Broken )
+          continue;
+        OrgKdeAkonadiImapSettingsInterface *iface = Util::createImapSettingsInterface( type.identifier() );
+        if ( iface->isValid() ) {
+          int trashImap = iface->trashCollection();
+          if ( trashImap != trash.id() ) {
+            expunge( Akonadi::Collection( trashImap ) );
+          }
+        }
+        delete iface;
+      }
+    }
+  } else {
+    if ( folderIsTrash( mFolder ) ) {
+      expunge( mFolder );
+    } else {
+      emitResult( OK ); 
+    }
+    
   }
 }
 
@@ -97,7 +119,7 @@ void EmptyTrashCommand::slotExpungeJob( KJob *job )
     emitResult( OK );
     return;
   }
-  Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob(lstItem,this );
+  Akonadi::ItemDeleteJob *jobDelete = new Akonadi::ItemDeleteJob( lstItem, this );
   connect( jobDelete, SIGNAL( result( KJob* ) ), this, SLOT( slotDeleteJob( KJob* ) ) );
 
 }
@@ -137,4 +159,26 @@ Akonadi::Collection EmptyTrashCommand::trashCollectionFolder()
   if ( the_trashCollectionFolder < 0 )
     the_trashCollectionFolder = Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ).id();
   return collectionFromId( the_trashCollectionFolder );
+}
+
+bool EmptyTrashCommand::folderIsTrash( const Akonadi::Collection & col )
+{
+  if ( col == Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash ) )
+    return true;
+  const Akonadi::AgentInstance::List lst = agentInstances();
+  foreach ( const Akonadi::AgentInstance& type, lst ) {
+    if ( type.status() == Akonadi::AgentInstance::Broken )
+      continue;
+    if ( type.identifier().contains( IMAP_RESOURCE_IDENTIFIER ) ) {
+      OrgKdeAkonadiImapSettingsInterface *iface = Util::createImapSettingsInterface( type.identifier() );
+      if ( iface->isValid() ) {
+        if ( iface->trashCollection() == col.id() ) {
+          delete iface;
+          return true;
+        }
+      }
+      delete iface;
+    }
+  }
+  return false;
 }
