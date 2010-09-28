@@ -397,8 +397,18 @@ class StandardMailActionManager::Private
 
     void slotMoveToTrash()
     {
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
-      qDebug() << Q_FUNC_INFO << action->data();
+      if ( mInterceptedActions.contains( StandardMailActionManager::MoveToTrash ) )
+        return;
+
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+        return;
+
+      const Item::List items = mParent->selectedItems();
+      if ( items.isEmpty() )
+        return;
+
+      MoveToTrashCommand *command = new MoveToTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), items, mParent );
+      command->execute();
     }
 
     void slotMoveAllToTrash()
