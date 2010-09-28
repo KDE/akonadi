@@ -77,6 +77,7 @@ set( akonadikde_LIB_SRC
   collectionstatistics.cpp
   collectionstatisticsjob.cpp
   collectionstatisticsmodel.cpp
+  collectionstatisticsdelegate.cpp
   collectionsync.cpp
   conflicthandling/conflicthandler.cpp
   conflicthandling/conflictresolvedialog.cpp
@@ -90,6 +91,7 @@ set( akonadikde_LIB_SRC
   entityrightsfiltermodel.cpp
   entitytreemodel.cpp
   entitytreemodel_p.cpp
+  entitytreeview.cpp
   erroroverlay.cpp
   etmviewstatesaver.cpp
   exception.cpp
@@ -171,12 +173,10 @@ if (NOT WINCE)
   collectiongeneralpropertiespage.cpp
   collectionpropertiesdialog.cpp
   collectionpropertiespage.cpp
-  collectionstatisticsdelegate.cpp
   dragdropmanager.cpp
   # pending: remove xmlguiclient stuff (for context menu) and then should be ok
   collectionview.cpp
   entitylistview.cpp
-  entitytreeview.cpp
   entitytreeviewstatesaver.cpp
   itemview.cpp
   )

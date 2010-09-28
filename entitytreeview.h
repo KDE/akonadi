@@ -175,11 +175,16 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 
   protected:
     using QTreeView::currentChanged;
-    virtual void dragMoveEvent( QDragMoveEvent *event );
-    virtual void timerEvent( QTimerEvent *event );
-    virtual void dropEvent( QDropEvent *event );
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+#ifndef QT_NO_DRAGANDDROP
     virtual void startDrag( Qt::DropActions supportedActions );
+    virtual void dragMoveEvent( QDragMoveEvent *event );
+    virtual void dropEvent( QDropEvent *event );
+#endif
+    virtual void timerEvent( QTimerEvent *event );
+#ifndef QT_NO_CONTEXTMENU
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+#endif
+    
 
   private:
     //@cond PRIVATE

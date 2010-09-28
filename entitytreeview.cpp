@@ -54,7 +54,11 @@ class EntityTreeView::Private
 {
 public:
   Private( EntityTreeView *parent )
-      : mParent( parent ), mDragDropManager( new DragDropManager( mParent ) ), mXmlGuiClient( 0 )
+      : mParent( parent )
+#ifndef QT_NO_DRAGANDDROP
+      , mDragDropManager( new DragDropManager( mParent ) )
+#endif
+      , mXmlGuiClient( 0 )
   {
   }
 
@@ -91,9 +95,11 @@ void EntityTreeView::Private::init()
   mParent->sortByColumn( 0, Qt::AscendingOrder );
   mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
   mParent->setAcceptDrops( true );
+#ifndef QT_NO_DRAGANDDROP
   mParent->setDropIndicatorShown( true );
   mParent->setDragDropMode( DragDrop );
   mParent->setDragEnabled( true );
+#endif
 
   mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
@@ -220,6 +226,7 @@ void EntityTreeView::timerEvent( QTimerEvent *event )
   QTreeView::timerEvent( event );
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::dragMoveEvent( QDragMoveEvent * event )
 {
   d->mDragExpandTimer.start( QApplication::startDragTime() , this );
@@ -241,7 +248,9 @@ void EntityTreeView::dropEvent( QDropEvent * event )
 
   d->mDragExpandTimer.stop();
 }
+#endif
 
+#ifndef QT_NO_CONTEXTMENU
 void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
 {
   if ( !d->mXmlGuiClient || !model())
@@ -262,26 +271,35 @@ void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
   if ( popup )
     popup->exec( event->globalPos() );
 }
+#endif
 
 void EntityTreeView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::startDrag( Qt::DropActions supportedActions )
 {
   d->mDragDropManager->startDrag( supportedActions );
 }
+#endif
 
 
 void EntityTreeView::setDropActionMenuEnabled( bool enabled )
 {
+#ifndef QT_NO_DRAGANDDROP
   d->mDragDropManager->setShowDropActionMenu( enabled );
+#endif
 }
 
 bool EntityTreeView::isDropActionMenuEnabled() const
 {
+#ifndef QT_NO_DRAGANDDROP
   return d->mDragDropManager->showDropActionMenu();
+#else
+  return false;
+#endif
 }
 
 #include "entitytreeview.moc"
