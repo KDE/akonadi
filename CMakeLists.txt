@@ -124,11 +124,12 @@ set( akonadikde_LIB_SRC
   preprocessorbase_p.cpp
   protocolhelper.cpp
   progressspinnerdelegate.cpp
+  recursivecollectionfilterproxymodel.cpp
+  recursiveitemfetchjob.cpp
   resourcebase.cpp
   resourcescheduler.cpp
   resourceselectjob.cpp
   resourcesynchronizationjob.cpp
-  recursivecollectionfilterproxymodel.cpp
   searchcreatejob.cpp
   selectionproxymodel.cpp
   selftestdialog.cpp
@@ -319,6 +320,7 @@ install( FILES
   resourcebase.h
   resourcesynchronizationjob.h
   recursivecollectionfilterproxymodel.h
+  recursiveitemfetchjob.h
   searchcreatejob.h
   selectionproxymodel.h
   session.h
