@@ -22,7 +22,6 @@
 
 #include "monitor_p.h" // For friend ref/deref
 
-#include <KDE/KIconLoader>
 #include <KDE/KLocale>
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
