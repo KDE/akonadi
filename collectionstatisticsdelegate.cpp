@@ -286,8 +286,6 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     PainterStateSaver stateSaver( painter );
 
-    QStyleOptionViewItem opt = option;
-
     QString sumText;
     if ( index.column() == 1 && ( ( !expanded && unreadRecursiveCount > 0 ) || ( expanded && unreadCount > 0 ) ) ) {
       QFont font = painter->font();
