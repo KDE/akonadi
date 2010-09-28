@@ -147,7 +147,9 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
   QStyleOptionViewItemV4 *noTextOption =
       qstyleoption_cast<QStyleOptionViewItemV4 *>( option );
   QStyledItemDelegate::initStyleOption( noTextOption, index );
-  noTextOption->text.clear();
+  if ( option->decorationPosition != QStyleOptionViewItem::Top ) {
+    noTextOption->text.clear();
+  }
 
   if ( d->animator ) {
 
@@ -211,7 +213,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   // Now calculate the rectangle for the text
   QStyle *s = d->parent->style();
   const QWidget *widget = option4.widget;
-  QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
+  const QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
+  const QRect iconRect = s->subElementRect( QStyle::SE_ItemViewItemDecoration, &option4, widget );
 
    // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
@@ -255,28 +258,36 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       painter->setFont( font );
     }
 
-    // Squeeze the folder text if it is to big and calculate the rectangles
-    // where the folder text and the unread count will be drawn to
-    QString folderName = text;
-    QFontMetrics fm( painter->fontMetrics() );
-    int unreadWidth = fm.width( unread );
-    if ( fm.width( folderName ) + unreadWidth > textRect.width() ) {
-      folderName = fm.elidedText( folderName, Qt::ElideRight,
-                                  textRect.width() - unreadWidth );
-    }
-    int folderWidth = fm.width( folderName );
-    QRect folderRect = textRect;
-    QRect unreadRect = textRect;
-    folderRect.setRight( textRect.left() + folderWidth );
-    unreadRect.setLeft( folderRect.right() );
-
-    // Draw folder name and unread count
-    painter->drawText( folderRect, Qt::AlignLeft, folderName );
-
     const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
-    painter->setPen( unreadColor );
-    painter->drawText( unreadRect, Qt::AlignLeft, unread );
 
+    if ( option.decorationPosition == QStyleOptionViewItem::Left
+         || option.decorationPosition == QStyleOptionViewItem::Right ) {
+      // Squeeze the folder text if it is to big and calculate the rectangles
+      // where the folder text and the unread count will be drawn to
+      QString folderName = text;
+      QFontMetrics fm( painter->fontMetrics() );
+      int unreadWidth = fm.width( unread );
+      if ( fm.width( folderName ) + unreadWidth > textRect.width() ) {
+        folderName = fm.elidedText( folderName, Qt::ElideRight,
+                                   textRect.width() - unreadWidth );
+      }
+      int folderWidth = fm.width( folderName );
+      QRect folderRect = textRect;
+      QRect unreadRect = textRect;
+      folderRect.setRight( textRect.left() + folderWidth );
+      unreadRect.setLeft( folderRect.right() );
+
+      // Draw folder name and unread count
+      painter->drawText( folderRect, Qt::AlignLeft, folderName );
+      painter->setPen( unreadColor );
+      painter->drawText( unreadRect, Qt::AlignLeft, unread );
+    } else if ( option.decorationPosition == QStyleOptionViewItem::Top ) {
+      // draw over the icon
+      painter->setPen( unreadColor );
+      if ( unreadCount > 0 ) {
+        painter->drawText( iconRect, Qt::AlignCenter, QString::number( unreadCount ) );
+      }
+    }
     return;
   }
 
