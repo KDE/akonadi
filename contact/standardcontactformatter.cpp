@@ -79,7 +79,13 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   // Phone Numbers
   int counter = 0;
   foreach ( const KABC::PhoneNumber &number, rawContact.phoneNumbers() ) {
-      const QString url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
+
+      QString url;
+      if ( number.type() & KABC::PhoneNumber::Cell )
+        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a> (<a href=\"sms:?index=%1\">SMS</a>)" ).arg( counter ).arg( number.number() );
+      else
+        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
+
       counter++;
 
       dynamicPart += rowFmtStr

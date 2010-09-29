@@ -1,7 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Felix Mauch (felix_mauch@web.de)
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +17,19 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
-*/
+*/ 
 
-#ifndef QSKYPEDIALER_H
-#define QSKYPEDIALER_H
+#ifndef SENDSMSACTION_H
+#define SENDSMSACTION_H
 
-#include <QtCore/QString>
+namespace KABC {
+class PhoneNumber;
+}
 
-class QDBusInterface;
-
-class QSkypeDialer
+class SendSmsAction
 {
   public:
-    QSkypeDialer( const QString &applicationName );
-    ~QSkypeDialer();
-
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
-
-    QString errorMessage() const;
-
-  private:
-    bool initializeSkype();
-
-    QDBusInterface* mInterface;
-
-    QString mApplicationName;
-    QString mErrorMessage;
+    void sendSms( const KABC::PhoneNumber &number );
 };
 
 #endif

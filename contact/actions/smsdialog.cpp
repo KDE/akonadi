@@ -1,0 +1,93 @@
+/*
+    This file is part of Akonadi Contact.
+
+    Copyright (c) 2010 Felix Mauch (felix_mauch@web.de)
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/ 
+
+#include "smsdialog.h"
+
+#include <kabc/phonenumber.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <ktextedit.h>
+
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
+
+static const unsigned int s_messageSize = 160;
+
+SmsDialog::SmsDialog( const KABC::PhoneNumber &number )
+  : mNumber( number.number() )
+{
+  initUI();
+}
+
+SmsDialog::~SmsDialog()
+{
+}
+
+QString SmsDialog::message() const
+{
+  return mText;
+}
+
+void SmsDialog::initUI()
+{
+  setCaption( i18n( "SMS text" ) );
+  setButtons( Ok | Cancel );
+  setDefaultButton( Ok );
+  showButtonSeparator( true );
+
+  QWidget *page = new QWidget( this );
+  setMainWidget( page );
+  page->setFixedWidth( 300 );
+
+  QVBoxLayout *topLayout = new QVBoxLayout( page );
+  topLayout->setSpacing( spacingHint() );
+  topLayout->setMargin( 0 );
+
+
+  QLabel *label = new QLabel( i18n( "Please insert SMS text for a SMS to the following number: %1", mNumber ), page );
+  topLayout->addWidget( label );
+  label->setWordWrap( true );
+
+  mSmsTextEdit = new KTextEdit( page );
+  mSmsTextEdit->setAcceptRichText( false );
+  label->setBuddy( mSmsTextEdit );
+  topLayout->addWidget( mSmsTextEdit );
+
+  connect( mSmsTextEdit, SIGNAL( textChanged() ), SLOT( updateCounter() ) );
+
+  mLengthLabel = new QLabel( QLatin1String("-") , page );
+  topLayout->addWidget( mLengthLabel );
+
+  mSmsTextEdit->setFocus();
+  updateCounter();
+}
+
+void SmsDialog::updateCounter()
+{
+  mText = mSmsTextEdit->toPlainText();
+
+  int size = mText.size();
+  int numberSms = ( size - ( size % s_messageSize ) ) / s_messageSize + 1;
+  int numberChars = s_messageSize * numberSms;
+
+  mLengthLabel->setText( i18n( "%1/%2 (%3 SMS)", size, numberChars, numberSms ) );
+}

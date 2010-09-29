@@ -22,6 +22,7 @@
 #include "contactdefaultactions.h"
 
 #include "actions/dialphonenumberaction.h"
+#include "actions/sendsmsaction.h"
 #include "actions/showaddressaction.h"
 
 #include <kabc/address.h>
@@ -58,6 +59,10 @@ void ContactDefaultActions::connectToView( QObject *view )
     connect( view, SIGNAL( phoneNumberClicked( const KABC::PhoneNumber& ) ),
              this, SLOT( dialPhoneNumber( const KABC::PhoneNumber& ) ) );
 
+  if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "smsClicked( const KABC::PhoneNumber& )" ) ) != -1 )
+    connect( view, SIGNAL( smsClicked( const KABC::PhoneNumber& ) ),
+             this, SLOT( sendSms( const KABC::PhoneNumber& ) ) );
+
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "addressClicked( const KABC::Address& )" ) ) != -1 )
     connect( view, SIGNAL( addressClicked( const KABC::Address& ) ),
              this, SLOT( showAddress( const KABC::Address& ) ) );
@@ -83,6 +88,12 @@ void ContactDefaultActions::dialPhoneNumber( const KABC::PhoneNumber &number )
 {
   DialPhoneNumberAction action;
   action.dialNumber( number );
+}
+
+void ContactDefaultActions::sendSms( const KABC::PhoneNumber &number )
+{
+  SendSmsAction action;
+  action.sendSms( number );
 }
 
 void ContactDefaultActions::showAddress( const KABC::Address &address )

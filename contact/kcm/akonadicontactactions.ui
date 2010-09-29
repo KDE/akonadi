@@ -6,11 +6,11 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>392</width>
-    <height>288</height>
+    <width>222</width>
+    <height>408</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_4">
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -141,6 +141,64 @@
     </widget>
    </item>
    <item>
+    <widget class="QGroupBox" name="groupBox_3">
+     <property name="title">
+      <string>Send SMS</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="KComboBox" name="kcfg_SendSmsAction">
+        <item>
+         <property name="text">
+          <string>Skype</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>External Application</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QStackedWidget" name="stackedWidget_3">
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="page_5"/>
+        <widget class="QWidget" name="page_6">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Command:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="KLineEdit" name="kcfg_SmsCommand"/>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>18</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
     <spacer name="verticalSpacer_3">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -176,8 +234,8 @@
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>62</y>
+     <x>185</x>
+     <y>51</y>
     </hint>
     <hint type="destinationlabel">
      <x>161</x>
@@ -192,12 +250,28 @@
    <slot>setCurrentIndex(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>86</x>
-     <y>200</y>
+     <x>100</x>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
      <x>99</x>
-     <y>243</y>
+     <y>199</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_SendSmsAction</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>stackedWidget_3</receiver>
+   <slot>setCurrentIndex(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>142</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>30</x>
+     <y>294</y>
     </hint>
    </hints>
   </connection>

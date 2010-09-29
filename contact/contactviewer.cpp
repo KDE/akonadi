@@ -123,6 +123,13 @@ class ContactViewer::Private
         if ( pos < numbers.count() ) {
           emit mParent->phoneNumberClicked( numbers.at( pos ) );
         }
+      } else if ( url.scheme() == QLatin1String( "sms" ) ) {
+        const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
+
+        const KABC::PhoneNumber::List numbers = mCurrentContact.phoneNumbers();
+        if ( pos < numbers.count() ) {
+          emit mParent->smsClicked( numbers.at( pos ) );
+        }
       } else if ( url.scheme() == QLatin1String( "address" ) ) {
         const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
 

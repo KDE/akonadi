@@ -155,6 +155,14 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
     void phoneNumberClicked( const KABC::PhoneNumber &number );
 
     /**
+     * This signal is emitted whenever the user has clicked on a SMS link of a
+     * phone number in the viewer.
+     *
+     * @param number The corresponding phone number.
+     */
+    void smsClicked( const KABC::PhoneNumber &number );
+
+    /**
      * This signal is emitted whenever the user has clicked on an
      * address in the viewer.
      *

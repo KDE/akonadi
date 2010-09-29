@@ -19,6 +19,8 @@ set(akonadicontact_actions_SRCS
   actions/dialphonenumberaction.cpp
   actions/showaddressaction.cpp
   actions/qskypedialer.cpp
+  actions/sendsmsaction.cpp
+  actions/smsdialog.cpp
 )
 kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
 

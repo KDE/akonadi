@@ -1,7 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2010 Felix Mauch (felix_mauch@web.de)
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +17,45 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
-*/
+*/ 
 
-#ifndef QSKYPEDIALER_H
-#define QSKYPEDIALER_H
+#ifndef SMSDIALOG_H
+#define SMSDIALOG_H
 
-#include <QtCore/QString>
+#include <kdialog.h>
 
-class QDBusInterface;
+class QLabel;
 
-class QSkypeDialer
+class KTextEdit;
+
+namespace KABC {
+class PhoneNumber;
+}
+
+class SmsDialog : public KDialog
 {
+  Q_OBJECT
+
   public:
-    QSkypeDialer( const QString &applicationName );
-    ~QSkypeDialer();
+    SmsDialog( const KABC::PhoneNumber &number );
+    ~SmsDialog();
 
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
+    QString message() const;
 
-    QString errorMessage() const;
+  private Q_SLOTS:
+    /**
+     * Calculates the needed amount of sms and the number of characters left in the current sms.
+     * Shows the result in the QLabel mLengthLabel.
+     */
+    void updateCounter();
 
   private:
-    bool initializeSkype();
+    void initUI();
 
-    QDBusInterface* mInterface;
-
-    QString mApplicationName;
-    QString mErrorMessage;
+    QString mNumber;
+    KTextEdit *mSmsTextEdit;
+    QLabel *mLengthLabel;
+    QString mText;
 };
 
-#endif
+#endif 

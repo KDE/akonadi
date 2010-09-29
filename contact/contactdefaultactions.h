@@ -126,6 +126,12 @@ class AKONADI_CONTACT_EXPORT ContactDefaultActions : public QObject
     void dialPhoneNumber( const KABC::PhoneNumber &number );
 
     /**
+     * Sends a sms to @p number with the application as
+     * configured by the user in the general settings dialog.
+     */
+    void sendSms( const KABC::PhoneNumber &number );
+
+    /**
      * Shows the @p address of a contact in a webbrowser or application
      * as configured by the user in the general settings dialog.
      */
