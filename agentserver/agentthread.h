@@ -24,18 +24,15 @@
 
 namespace Akonadi {
 
-class UiRunnable;
-
 class AgentThread : public QThread {
   Q_OBJECT
   public:
     AgentThread(const QString &identifier, QObject* factory, QObject* parent = 0);
 
+    void configure( qlonglong windowId );
+
   protected:
     void run();
-
-  private Q_SLOTS:
-    void run( Akonadi::UiRunnable *runnable );
 
   private:
     QString m_identifier;

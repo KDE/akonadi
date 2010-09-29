@@ -25,14 +25,16 @@
 #include "shared/akdebug.h"
 
 #include <QtCore/QDebug>
-#include <QtDBus/QDBusConnection>
 #include <QtCore/QCoreApplication>
-#include <QtCore/qpluginloader.h>
+#include <QtCore/QPluginLoader>
+#include <QtCore/QTimer>
+#include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
 
 AgentServer::AgentServer( QObject* parent )
   : QObject( parent )
+  , m_processingConfigureRequests( false )
   , m_quiting( false )
 {
   QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH,
@@ -49,6 +51,14 @@ AgentServer::~AgentServer()
   while ( it != m_pluginLoaders.end() ) {
     it.value()->unload();
     ++it;
+  }
+}
+
+void AgentServer::agentInstanceConfigure( const QString &identifier, qlonglong windowId )
+{
+  m_configureQueue.enqueue( ConfigureInfo( identifier, windowId ) );
+  if ( !m_processingConfigureRequests ) { // Start processing the requests if needed.
+    QTimer::singleShot( 0, this, SLOT( processConfigureRequest() ) );
   }
 }
 
@@ -105,5 +115,24 @@ void AgentServer::quit()
 
   QCoreApplication::instance()->quit();
 }
+
+void AgentServer::processConfigureRequest()
+{
+  if ( m_processingConfigureRequests )
+    return; // Protect against reentrancy
+
+  m_processingConfigureRequests = true;
+
+  while ( !m_configureQueue.empty() ) {
+    const ConfigureInfo info = m_configureQueue.dequeue();
+    // call configure on the agent with id info.first for windowId info.second.
+    Q_ASSERT( m_agents.contains( info.first ) );
+    AgentThread *thread = m_agents.value( info.first );
+    thread->configure( info.second );
+  }
+
+  m_processingConfigureRequests = false;
+}
+
 
 #include "agentserver.moc"

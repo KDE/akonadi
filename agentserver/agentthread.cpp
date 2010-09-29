@@ -19,11 +19,10 @@
 
 #include "agentthread.h"
 
-#include "uirunnable.h"
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QPluginLoader>
+#include <QtGui/QWidget> // Needed for WId
 
 #include <shared/akdebug.h>
 #include <qmetaobject.h>
@@ -47,19 +46,18 @@ void AgentThread::run()
                                                           Q_ARG(QString, m_identifier) );
   if ( invokeSucceeded ) {
     qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
-    // TODO: We might somehow require that the signal is actually there to avoid
-    //       unexpected behavior.
-    connect( m_instance, SIGNAL( runRequest( Akonadi::UiRunnable * ) ),
-             SLOT( run( Akonadi::UiRunnable * ) ), Qt::BlockingQueuedConnection );
   } else {
     qDebug() << Q_FUNC_INFO << "agent instance creation failed";
   }
   exec();
 }
 
-void AgentThread::run( UiRunnable *runnable )
+void AgentThread::configure( qlonglong windowId )
 {
-  runnable->run();
+  QMetaObject::invokeMethod( m_instance,
+                             "configure",
+                             Qt::DirectConnection,
+                             Q_ARG( WId, windowId ) );
 }
 
 #include "agentthread.moc"

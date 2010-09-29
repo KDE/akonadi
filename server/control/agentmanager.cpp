@@ -310,7 +310,15 @@ void AgentManager::agentInstanceConfigure( const QString &identifier, qlonglong 
 {
   if ( !checkAgentInterfaces( identifier, "agentInstanceConfigure" ) )
     return;
-  mAgentInstances.value( identifier )->controlInterface()->configure( windowId );
+
+  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                      "/AgentServer", QDBusConnection::sessionBus(), this );
+
+  if ( agentServer.started( identifier ) ) {
+    agentServer.agentInstanceConfigure( identifier, windowId );
+  } else {
+    mAgentInstances.value( identifier )->controlInterface()->configure( windowId );
+  }
 }
 
 bool AgentManager::agentInstanceOnline(const QString & identifier)

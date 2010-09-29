@@ -22,4 +22,3 @@ if(NOT WINCE)
 endif(NOT WINCE)
 
 install(TARGETS akonadi_agent_server DESTINATION ${BIN_INSTALL_DIR})
-install(FILES uirunnable.h DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi COMPONENT Devel)

@@ -20,8 +20,9 @@
 #ifndef AKONADI_AGENTSERVER_H
 #define AKONADI_AGENTSERVER_H
 
-#include <QtCore/QObject>
 #include <QtCore/QHash>
+#include <QtCore/QObject>
+#include <QtCore/QQueue>
 
 class QPluginLoader;
 
@@ -33,19 +34,28 @@ class AgentServer : public QObject
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.AgentServer" )
+
+  typedef QPair<QString, qlonglong> ConfigureInfo;
+
   public:
     explicit AgentServer( QObject * parent = 0 );
     ~AgentServer();
 
   public slots:
+    Q_SCRIPTABLE void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
     Q_SCRIPTABLE bool started( const QString &identifier ) const;
     Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &fileName );
     Q_SCRIPTABLE void stopAgent( const QString &identifier );
     Q_SCRIPTABLE void quit();
 
+  private slots:
+    void processConfigureRequest();
+
   private:
     QHash<QString, AgentThread*> m_agents;
+    QQueue<ConfigureInfo> m_configureQueue;
     QHash<QString, QPluginLoader*> m_pluginLoaders;
+    bool m_processingConfigureRequests;
     bool m_quiting;
 };
   
