@@ -183,7 +183,7 @@ class StandardMailActionManager::Private
     {
       bool itemIsSelected = mItemSelectionModel && !mItemSelectionModel->selectedIndexes().isEmpty();
       bool collectionIsSelected = mCollectionSelectionModel && !mCollectionSelectionModel->selectedIndexes().isEmpty();
-      
+
       if ( itemIsSelected ) {
         bool allMarkedAsImportant = true;
         bool allMarkedAsRead = true;
@@ -253,7 +253,7 @@ class StandardMailActionManager::Private
       if ( action ) action->setEnabled( enableMarkAllAsRead );
       action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsUnread);
       if ( action ) action->setEnabled( enableMarkAllAsUnread );
-                                                     
+
       emit mParent->actionStateUpdated();
     }
 
@@ -591,6 +591,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
+      action->setShortcut( Qt::CTRL+Qt::Key_U );
       action->setData( QByteArray("U") );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
