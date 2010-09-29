@@ -20,11 +20,11 @@
 #ifndef AKONADI_AGENTSERVER_H
 #define AKONADI_AGENTSERVER_H
 
+#include "agentpluginloader.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QQueue>
-
-class QPluginLoader;
 
 namespace Akonadi {
 
@@ -54,7 +54,7 @@ class AgentServer : public QObject
   private:
     QHash<QString, AgentThread*> m_agents;
     QQueue<ConfigureInfo> m_configureQueue;
-    QHash<QString, QPluginLoader*> m_pluginLoaders;
+    AgentPluginLoader m_agentLoader;
     bool m_processingConfigureRequests;
     bool m_quiting;
 };

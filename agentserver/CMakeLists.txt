@@ -3,6 +3,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Akonadi_SOURCE_DIR})
 
 set( akonadi_agent_server_srcs
   ${AKONADI_SHARED_SOURCES}
+  agentpluginloader.cpp
   agentserver.cpp
   agentthread.cpp
   main.cpp

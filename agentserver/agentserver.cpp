@@ -46,12 +46,6 @@ AgentServer::~AgentServer()
   qDebug() << Q_FUNC_INFO;
   if ( !m_quiting )
     quit();
-
-  QHash<QString, QPluginLoader*>::iterator it = m_pluginLoaders.begin();
-  while ( it != m_pluginLoaders.end() ) {
-    it.value()->unload();
-    ++it;
-  }
 }
 
 void AgentServer::agentInstanceConfigure( const QString &identifier, qlonglong windowId )
@@ -69,23 +63,10 @@ bool AgentServer::started( const QString& identifier ) const
 
 void AgentServer::startAgent( const QString& identifier, const QString& fileName )
 {
-  const QString pluginFile = XdgBaseDirs::findPluginFile( fileName );
-  if ( pluginFile.isEmpty() ) {
-    qDebug() << Q_FUNC_INFO << "plugin file not found!";
-    return;
-  }
- 
-  QPluginLoader *loader = 0;
-  if ( m_pluginLoaders.contains( pluginFile ) ) {
-    loader = m_pluginLoaders.value( pluginFile );
-  } else {
-    loader = new QPluginLoader( pluginFile, this );
-    if ( !loader->load() ) {
-      akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
-      return;
-    }
-    m_pluginLoaders.insert( pluginFile, loader );
-  }
+  QPluginLoader *loader = m_agentLoader.load( fileName );
+  if ( loader == 0 )
+    return; // No plugin found, debug output in AgentLoader.
+
   Q_ASSERT( loader->isLoaded() );
 
   AgentThread* thread = new AgentThread( identifier, loader->instance(), this );
