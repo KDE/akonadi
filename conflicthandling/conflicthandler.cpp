@@ -65,7 +65,7 @@ void ConflictHandler::slotOtherItemFetched( KJob *job )
 
   ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( fetchJob->items().isEmpty() ) {
-    emit error( i18n( "Did not found other item for conflict handling" ) );
+    emit error( i18n( "Did not find other item for conflict handling" ) );
     return;
   }
 

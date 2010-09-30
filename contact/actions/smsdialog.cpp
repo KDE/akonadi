@@ -63,7 +63,7 @@ void SmsDialog::initUI()
   topLayout->setMargin( 0 );
 
 
-  QLabel *label = new QLabel( i18n( "Please insert SMS text for a SMS to the following number: %1", mNumber ), page );
+  QLabel *label = new QLabel( i18n( "Please insert SMS text for an SMS to the following number: %1", mNumber ), page );
   topLayout->addWidget( label );
   label->setWordWrap( true );
 
