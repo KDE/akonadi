@@ -163,6 +163,13 @@ class ResourceScheduler : public QObject
     */
     void clear();
 
+    /**
+       Cancel everything the scheduler has still in queue. Keep the current task running though.
+       It can be seen as a less aggressive clear() used when the user requested the resource to
+       abort its activities. It properly cancel all the tasks in there.
+    */
+    void cancelQueues();
+
   public Q_SLOTS:
     /**
       Schedules replaying changes.

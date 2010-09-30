@@ -428,6 +428,21 @@ void ResourceScheduler::clear()
   mCurrentTasksQueue = -1;
 }
 
+void Akonadi::ResourceScheduler::cancelQueues()
+{
+  for ( int i = 0; i < NQueueCount; ++i ) {
+    TaskList& queue = mTaskList[i];
+    if ( s_resourcetracker ) {
+      foreach ( const Task &t, queue ) {
+        QList<QVariant> argumentList;
+        argumentList << QString::number( t.serial ) << QString();
+        s_resourcetracker->asyncCallWithArgumentList(QLatin1String( "jobEnded" ), argumentList);
+      }
+    }
+    queue.clear();
+  }
+}
+
 static const char s_taskTypes[][25] = {
       "Invalid",
       "SyncAll",

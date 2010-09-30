@@ -109,6 +109,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       scheduler->taskDone();
     }
 
+    void slotAbortRequested();
+
     void slotDeliveryDone( KJob* job );
     void slotCollectionSyncDone( KJob *job );
     void slotLocalListDone( KJob *job );
@@ -204,6 +206,7 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->mChangeRecorder, SIGNAL( nothingToReplay() ), d->scheduler, SLOT( taskDone() ) );
   connect( d->mChangeRecorder, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
            d->scheduler, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
+  connect( this, SIGNAL( abortRequested() ), this, SLOT( slotAbortRequested() ) );
   connect( this, SIGNAL( synchronized() ), d->scheduler, SLOT( taskDone() ) );
   connect( this, SIGNAL( agentNameChanged( const QString& ) ),
            this, SIGNAL( nameChanged( const QString& ) ) );
@@ -279,6 +282,14 @@ int ResourceBase::init( ResourceBase *r )
   int rv = kapp->exec();
   delete r;
   return rv;
+}
+
+void ResourceBasePrivate::slotAbortRequested()
+{
+  Q_Q( ResourceBase );
+
+  scheduler->cancelQueues();
+  QMetaObject::invokeMethod( q, "abortActivity" );
 }
 
 void ResourceBase::itemRetrieved( const Item &item )
@@ -781,6 +792,11 @@ void ResourceBase::taskDone()
 void ResourceBase::retrieveCollectionAttributes( const Collection &collection )
 {
   collectionAttributesRetrieved( collection );
+}
+
+void Akonadi::ResourceBase::abortActivity()
+{
+
 }
 
 void ResourceBase::setItemTransactionMode(ItemSync::TransactionMode mode)

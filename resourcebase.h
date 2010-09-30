@@ -266,6 +266,15 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     virtual bool retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts ) = 0;
 
+    /**
+     * Abort any activity in progress in the backend. By default this method does nothing.
+     *
+     * @since 4.6
+     */
+    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
+    //       in order to simulate polymorphism
+    void abortActivity();
+
   protected:
     /**
      * Creates a base resource.
@@ -558,6 +567,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
   private:
     Q_DECLARE_PRIVATE( ResourceBase )
 
+    Q_PRIVATE_SLOT( d_func(), void slotAbortRequested() )
     Q_PRIVATE_SLOT( d_func(), void slotDeliveryDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionSyncDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollection() )
