@@ -38,7 +38,7 @@ QPluginLoader *AgentPluginLoader::load( const QString &pluginName )
 {
   const QString pluginFile = XdgBaseDirs::findPluginFile( pluginName );
   if ( pluginFile.isEmpty() ) {
-    akError() << Q_FUNC_INFO << "plugin file not found!";
+    akError() << Q_FUNC_INFO << "plugin file:" << pluginName << "not found!";
     return 0;
   }
 
