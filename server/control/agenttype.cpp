@@ -63,12 +63,12 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   identifier = file.value( "X-Akonadi-Identifier" ).toString();
   launchMethod = Process; // Save default
 
-  const QString method = file.value( "X-Akonadi-ExecMethod" ).toString();
-  if ( method.compare( QLatin1String( "AgentProcess" ), Qt::CaseInsensitive ) ) {
+  const QString method = file.value( "X-Akonadi-LaunchMethod" ).toString();
+  if ( method.compare( QLatin1String( "AgentProcess" ), Qt::CaseInsensitive ) == 0 ) {
     launchMethod = Process;
-  } else if ( method.compare( QLatin1String( "AgentManager" ), Qt::CaseInsensitive ) ) {
+  } else if ( method.compare( QLatin1String( "AgentServer" ), Qt::CaseInsensitive ) == 0 ) {
     launchMethod = Server;
-  } else if ( method.compare( QLatin1String( "AgentLauncher" ), Qt::CaseInsensitive ) ) {
+  } else if ( method.compare( QLatin1String( "AgentLauncher" ), Qt::CaseInsensitive ) == 0 ) {
     launchMethod = Launcher;
   } else if ( !method.isEmpty() ) {
     akError() << Q_FUNC_INFO << "Invalid exec method:" << method << "falling back to AgentProcess";
