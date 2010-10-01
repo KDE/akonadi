@@ -191,15 +191,11 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
   switch ( info.launchMethod ) {
-  case AgentType::Process:
-    return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
-    break;
   case AgentType::Server:
     return AgentInstance::Ptr( new Akonadi::AgentThreadInstance( this ) );
-    break;
-  case AgentType::Launcher:
-    Q_ASSERT_X( false, "AgentManager::createAgentInstance", "NOT IMPLEMENTED" );
-    break;
+  case AgentType::Launcher: // Fall through
+  case AgentType::Process:
+    return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
   default:
     Q_ASSERT_X( false, "AgentManger::createAgentInstance", "Unhandled AgentType::ExecMethod case" );
   }
