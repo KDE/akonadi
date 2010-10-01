@@ -34,6 +34,13 @@ class QSettings;
 class AgentType
 {
   public:
+    enum LaunchMethod {
+      Process, /// Standalone executable
+      Server,  /// Agent plugin launched in AgentManager
+      Launcher /// Agent plugin launched in own process
+    };
+
+  public:
     AgentType();
     bool load( const QString &fileName, AgentManager *manager );
     void save( QSettings *config ) const;
@@ -46,7 +53,7 @@ class AgentType
     QStringList capabilities;
     QString exec;
     uint instanceCounter;
-    bool runInAgentServer;
+    LaunchMethod execMethod;
 
     static QLatin1String CapabilityUnique;
     static QLatin1String CapabilityResource;
