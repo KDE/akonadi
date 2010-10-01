@@ -96,7 +96,7 @@ class StandardMailActionManager::Private
                                        i18n( "Folder creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete folder '%2' and all its sub-folders?",
+                                       ki18np( "Do you really want to delete %1 folder, '%2', and all its sub-folders?",
                                                "Do you really want to delete %1 folders and all their sub-folders?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete folder?", "Delete folders?" ) );
@@ -125,7 +125,7 @@ class StandardMailActionManager::Private
                                        i18n( "Account creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete account '%2'?", "Do you really want to delete %1 accounts?" ) );
+                                       ki18np( "Do you really want to delete %1 account, '%2'?", "Do you really want to delete %1 accounts?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Account?", "Delete Accounts?" ) );
 

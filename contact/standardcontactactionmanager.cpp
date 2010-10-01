@@ -85,7 +85,7 @@ class StandardContactActionManager::Private
                                        i18n( "Address book folder creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete address book folder '%2' and all its sub-folders?",
+                                       ki18np( "Do you really want to delete %1 address book folder, '%2', and all its sub-folders?",
                                                "Do you really want to delete %1 address book folders and all their sub-folders?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete address book folder?", "Delete address book folders?" ) );
@@ -114,7 +114,7 @@ class StandardContactActionManager::Private
                                        i18n( "Address book creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete address book '%2'?", "Do you really want to delete %1 address books?" ) );
+                                       ki18np( "Do you really want to delete %1 address book, '%2'?", "Do you really want to delete %1 address books?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Address Book?", "Delete Address Books?" ) );
 

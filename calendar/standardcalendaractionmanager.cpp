@@ -90,7 +90,7 @@ class StandardCalendarActionManager::Private
                                        i18n( "Calendar folder creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete calendar folder '%2' and all its sub-folders?",
+                                       ki18np( "Do you really want to delete %1 calendar folder, '%2', and all its sub-folders?",
                                                "Do you really want to delete %1 calendar folders and all their sub-folders?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete calendar folder?", "Delete calendar folders?" ) );
@@ -119,7 +119,7 @@ class StandardCalendarActionManager::Private
                                        i18n( "Calendar creation failed" ) );
 
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete calendar '%2'?", "Do you really want to delete %1 calendars?" ) );
+                                       ki18np( "Do you really want to delete %1 calendar, '%2'?", "Do you really want to delete %1 calendars?" ) );
       mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
                                        ki18ncp( "@title:window", "Delete Calendar?", "Delete Calendars?" ) );
 
@@ -399,7 +399,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       //       action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
       action->setText( i18n( "&Start Maintenance Mode" ) );
       //       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-      action->setWhatsThis( i18n( "Opens a bulk actions dialog, that allows for mass move, copy, delete, and toggler reminders and alarms actions." ) );
+      action->setWhatsThis( i18n( "Opens a bulk actions dialog, that allows mass move, copy and delete; and to toggle reminders' and alarms' actions." ) );
       d->mActions.insert( StartMaintenanceMode, action );
       d->mActionCollection->addAction( QString::fromLatin1( "start_maintenance_mode" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotStartMaintenanceMode() ) );
