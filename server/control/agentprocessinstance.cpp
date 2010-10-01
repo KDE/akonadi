@@ -47,9 +47,19 @@ bool AgentProcessInstance::start( const AgentType &agentInfo )
   }
 
   mController = new Akonadi::ProcessControl( this );
-  QStringList arguments;
-  arguments << "--identifier" << identifier();
-  mController->start( executable, arguments );
+  Q_ASSERT( agentInfo.launchMethod == AgentType::Process ||
+            agentInfo.launchMethod == AgentType::Launcher );
+
+  if ( agentInfo.launchMethod == AgentType::Process ) {
+    QStringList arguments;
+    arguments << "--identifier" << identifier();
+    mController->start( executable, arguments );
+  } else {
+    Q_ASSERT( agentInfo.launchMethod == AgentType::Launcher );
+    QStringList arguments;
+    arguments << executable << identifier();
+    mController->start( QLatin1String( "akonadi_agent_launcher" ), arguments );
+  }
   return true;
 }
 
