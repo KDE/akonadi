@@ -40,15 +40,18 @@ bool AgentProcessInstance::start( const AgentType &agentInfo )
 
   setAgentType( agentInfo.identifier );
 
-  const QString executable = XdgBaseDirs::findExecutableFile( agentInfo.exec );
+  Q_ASSERT( agentInfo.launchMethod == AgentType::Process ||
+            agentInfo.launchMethod == AgentType::Launcher );
+
+  const QString executable = ( agentInfo.launchMethod == AgentType::Process)
+    ? XdgBaseDirs::findExecutableFile( agentInfo.exec ) : agentInfo.exec;
+
   if ( executable.isEmpty() ) {
     akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
     return false;
   }
 
   mController = new Akonadi::ProcessControl( this );
-  Q_ASSERT( agentInfo.launchMethod == AgentType::Process ||
-            agentInfo.launchMethod == AgentType::Launcher );
 
   if ( agentInfo.launchMethod == AgentType::Process ) {
     QStringList arguments;
