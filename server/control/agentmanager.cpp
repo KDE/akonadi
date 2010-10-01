@@ -197,7 +197,7 @@ AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
   case AgentType::Process:
     return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
   default:
-    Q_ASSERT_X( false, "AgentManger::createAgentInstance", "Unhandled AgentType::ExecMethod case" );
+    Q_ASSERT_X( false, "AgentManger::createAgentInstance", "Unhandled AgentType::LaunchMethod case" );
   }
 
   return AgentInstance::Ptr();
@@ -721,7 +721,7 @@ void AgentManager::ensureAutoStart(const AgentType & info)
     break;
   }
   default:
-    Q_ASSERT_X( false, "AgentManager::ensureAutoStart", "unhandled AgentType::ExecMethod case" );
+    Q_ASSERT_X( false, "AgentManager::ensureAutoStart", "unhandled AgentType::LaunchMethod case" );
   }
 }
 
