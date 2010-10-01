@@ -190,7 +190,7 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
-  switch ( info.execMethod ) {
+  switch ( info.launchMethod ) {
   case AgentType::Process:
     return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
     break;
@@ -706,7 +706,7 @@ void AgentManager::ensureAutoStart(const AgentType & info)
   if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
     return; // already running
 
-  switch ( info.execMethod ) {
+  switch ( info.launchMethod ) {
   case AgentType::Server:
     agentServer.startAgent( info.identifier, info.exec );
     registerAgentAtServer( info.identifier, info );

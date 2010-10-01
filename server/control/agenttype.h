@@ -53,7 +53,7 @@ class AgentType
     QStringList capabilities;
     QString exec;
     uint instanceCounter;
-    LaunchMethod execMethod;
+    LaunchMethod launchMethod;
 
     static QLatin1String CapabilityUnique;
     static QLatin1String CapabilityResource;
