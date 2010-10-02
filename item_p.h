@@ -296,9 +296,9 @@ class ItemPrivate : public EntityPrivate
     QString mMimeType;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
-    bool mFlagsOverwritten;
-    bool mSizeChanged;
-    bool mClearPayload;
+    bool mFlagsOverwritten : 1;
+    bool mSizeChanged : 1;
+    bool mClearPayload : 1;
 };
 
 }

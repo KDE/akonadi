@@ -25,6 +25,7 @@
 #include <akonadi/collectionutils_p.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/sharedvaluepool_p.h>
 
 #include <akonadi/private/imapparser_p.h>
 #include <akonadi/private/protocol_p.h>
@@ -34,6 +35,15 @@
 
 namespace Akonadi {
 
+struct ProtocolHelperValuePool
+{
+  typedef Internal::SharedValuePool<QByteArray, QVector> FlagPool;
+  typedef Internal::SharedValuePool<QString, QVector> MimeTypePool;
+
+  FlagPool flagPool;
+  MimeTypePool mimeTypePool;
+};
+  
 /**
   @internal
   Helper methods for converting between libakonadi objects and their protocol
@@ -195,7 +205,7 @@ class ProtocolHelper
     /**
       Parses a single line from an item fetch job result into an Item object.
      */
-    static void parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item );
+    static void parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool = 0 );
 };
 
 }

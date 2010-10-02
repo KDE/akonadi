@@ -40,9 +40,15 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
   public:
     ItemFetchJobPrivate( ItemFetchJob *parent )
-      : JobPrivate( parent )
+      : JobPrivate( parent ),
+	mValuePool( 0 )
     {
       mCollection = Collection::root();
+    }
+
+    ~ItemFetchJobPrivate()
+    {
+      delete mValuePool;
     }
 
     void init()
@@ -78,6 +84,7 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
     QTimer* mEmitTimer;
+    ProtocolHelperValuePool *mValuePool;
 };
 
 void ItemFetchJobPrivate::startFetchJob()
@@ -116,6 +123,7 @@ ItemFetchJob::ItemFetchJob( const Collection &collection, QObject * parent )
 
   d->init();
   d->mCollection = collection;
+  d->mValuePool = new ProtocolHelperValuePool; // only worth it for lots of results
 }
 
 ItemFetchJob::ItemFetchJob( const Item & item, QObject * parent)
@@ -171,7 +179,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       ImapParser::parseParenthesizedList( data, fetchResponse, begin + 6 );
 
       Item item;
-      ProtocolHelper::parseItemFetchResult( fetchResponse, item );
+      ProtocolHelper::parseItemFetchResult( fetchResponse, item, d->mValuePool );
       if ( !item.isValid() )
         return;
 

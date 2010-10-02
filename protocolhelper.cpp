@@ -272,7 +272,7 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   return command;
 }
 
-void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item )
+void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, Item &item, ProtocolHelperValuePool *valuePool )
 {
   // create a new item object
   Item::Id uid = -1;
@@ -300,7 +300,10 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
     } else if ( key == "COLLECTIONID" ) {
       cid = value.toInt();
     } else if ( key == "MIMETYPE" ) {
-      mimeType = QString::fromLatin1( value );
+      if ( valuePool )
+        mimeType = valuePool->mimeTypePool.sharedValue( QString::fromLatin1( value ) );
+      else
+        mimeType = QString::fromLatin1( value );
     }
   }
 
@@ -329,8 +332,16 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
     if ( key == "FLAGS" ) {
       QList<QByteArray> flags;
       ImapParser::parseParenthesizedList( lineTokens[i + 1], flags );
-      foreach ( const QByteArray &flag, flags ) {
-        item.setFlag( flag );
+      if ( !flags.isEmpty() ) {
+        Item::Flags convertedFlags;
+        convertedFlags.reserve( flags.size() );
+        foreach ( const QByteArray &flag, flags ) {
+          if ( valuePool )
+            convertedFlags.insert( valuePool->flagPool.sharedValue( flag ) );
+          else
+            convertedFlags.insert( flag );
+        }
+        item.setFlags( convertedFlags );
       }
     } else if ( key == "SIZE" ) {
       const quint64 size = lineTokens[i + 1].toLongLong();
