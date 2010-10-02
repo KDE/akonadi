@@ -169,7 +169,7 @@ endif(MSVC)
 
 if(NOT WINCE)
     find_package(Boost COMPONENTS program_options)
-    macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries.")
+    macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries (program_options).")
 endif(NOT WINCE)
 
 # should be handled by FindBoost.cmake -> cmake bug #8335
