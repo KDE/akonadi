@@ -267,7 +267,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
-      attributes.append( "REMOTEREVISION " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryRemoteRevisionColumn ) ) ) );
+      const QByteArray rrev = Utils::variantToByteArray( itemQuery.value( ItemQueryRemoteRevisionColumn ) );
+      if ( !rrev.isEmpty() )
+        attributes.append( "REMOTEREVISION " + ImapParser::quote( rrev ) );
     }
 
     if ( mRequestedParts.contains( "FLAGS" ) ) {
