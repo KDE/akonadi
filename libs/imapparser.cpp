@@ -77,13 +77,14 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
   int sublistbegin = start;
   bool insideQuote = false;
   for ( int i = begin + 1; i < data.length(); ++i ) {
-    if ( data[i] == '(' && !insideQuote ) {
+    const char currentChar = data[i];
+    if ( currentChar == '(' && !insideQuote ) {
       ++count;
       if ( count == 1 )
         sublistbegin = i;
       continue;
     }
-    if ( data[i] == ')' && !insideQuote ) {
+    if ( currentChar == ')' && !insideQuote ) {
       if ( count <= 0 )
         return i + 1;
       if ( count == 1 )
@@ -91,7 +92,7 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
       --count;
       continue;
     }
-    if ( data[i] == ' ' || data[i] == '\n' || data[i] == '\r' )
+    if ( currentChar == ' ' || currentChar == '\n' || currentChar == '\r' )
        continue;
     if ( count == 0 ) {
       QByteArray ba;
@@ -99,9 +100,9 @@ int parseParenthesizedListHelper( const QByteArray & data, T& result, int start 
       i = consumed - 1; // compensate for the for loop increment
       result.append( ba );
     } else if ( count > 0 ) {
-      if ( data[i] == '"' ) {
+      if ( currentChar == '"' ) {
         insideQuote = !insideQuote;
-      } else if ( data[i] == '\\' && insideQuote ) {
+      } else if ( currentChar == '\\' && insideQuote ) {
         ++i;
         continue;
       }
@@ -200,12 +201,13 @@ int ImapParser::parseQuotedString( const QByteArray & data, QByteArray &result, 
   else {
     bool reachedInputEnd = true;
     for ( int i = begin; i < data.length(); ++i ) {
-      if ( data[i] == ' ' || data[i] == '(' || data[i] == ')' || data[i] == '\n' || data[i] == '\r' ) {
+      const char ch = data.at( i );
+      if ( ch == ' ' || ch == '(' || ch == ')' || ch == '\n' || ch == '\r' ) {
         end = i;
         reachedInputEnd = false;
         break;
       }
-      if (data[i] == '\\') 
+      if ( ch == '\\' )
         foundSlash = true;
     }
     if ( reachedInputEnd )
@@ -242,19 +244,20 @@ int ImapParser::parenthesesBalance( const QByteArray & data, int start )
   int count = 0;
   bool insideQuote = false;
   for ( int i = start; i < data.length(); ++i ) {
-    if ( data[i] == '"' ) {
+    const char ch = data[i];
+    if ( ch == '"' ) {
       insideQuote = !insideQuote;
       continue;
     }
-    if ( data[i] == '\\' && insideQuote ) {
+    if ( ch == '\\' && insideQuote ) {
       ++i;
       continue;
     }
-    if ( data[i] == '(' && !insideQuote ) {
+    if ( ch == '(' && !insideQuote ) {
       ++count;
       continue;
     }
-    if ( data[i] == ')' && !insideQuote ) {
+    if ( ch == ')' && !insideQuote ) {
       --count;
       continue;
     }
