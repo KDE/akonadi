@@ -57,7 +57,7 @@ class SharedValuePoolTest : public QObject
       }
     }
 
-    void testQSet_data()
+    /*void testQSet_data()
     {
       QTest::addColumn<int>( "size" );
       QTest::newRow( "10" ) << 10;
@@ -81,7 +81,7 @@ class SharedValuePoolTest : public QObject
         foreach ( const QByteArray &b, data )
           pool.sharedValue( b );
       }
-    }
+    }*/
 };
 
 QTEST_KDEMAIN( SharedValuePoolTest, NoGUI )

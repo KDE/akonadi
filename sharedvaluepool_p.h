@@ -26,7 +26,7 @@
 namespace Akonadi {
 namespace Internal {
 
-template <typename T> class container_traits
+/*template <typename T> class container_traits
 {
   private:
     typedef char sizeOne;
@@ -35,7 +35,7 @@ template <typename T> class container_traits
     template <typename C> static sizeTwo testForKeyType( ... );
   public:
     enum { isAssociative = sizeof( container_traits<T>::testForKeyType<T>( 0 ) ) == 1 };
-};
+};*/
 
 /**
  * Pool of implicitly shared values, use for optimizing memory use
@@ -46,7 +46,7 @@ class SharedValuePool
 {
   public:
     /** Returns the shared value equal to @p value .*/
-    template <typename C> 
+    /*template <typename C> 
     typename boost::enable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value, const int* = 0 )
     {
       typename Container<T>::const_iterator it = m_pool.constFind( value );
@@ -57,7 +57,8 @@ class SharedValuePool
     }
 
     template <typename C>
-    typename boost::disable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value )
+    typename boost::disable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value )*/
+    T sharedValue( const T &value )
     {
       // for small pool sizes this is actually faster than using lower_bound and a sorted vector
       typename Container<T>::const_iterator it = std::find( m_pool.constBegin(), m_pool.constEnd(), value );
