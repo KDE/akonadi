@@ -48,16 +48,18 @@ class TextBrowser : public KTextBrowser
     virtual void contextMenuEvent( QContextMenuEvent *event )
     {
       QMenu *popup = createStandardContextMenu( event->pos() );
-      QList<QAction*> actions = popup->actions();
+      if ( popup ) { // can be 0 on touch-only platforms
+        QList<QAction*> actions = popup->actions();
 
-      // inherited from KTextBrowser
-      KIconTheme::assignIconsToContextMenu( KIconTheme::ReadOnlyText, actions );
+        // inherited from KTextBrowser
+        KIconTheme::assignIconsToContextMenu( KIconTheme::ReadOnlyText, actions );
 
-      // hide the 'Copy Link Location' action
-      actions[ 1 ]->setVisible( false );
+        // hide the 'Copy Link Location' action
+        actions[ 1 ]->setVisible( false );
 
-      popup->exec( event->globalPos() );
-      delete popup;
+        popup->exec( event->globalPos() );
+        delete popup;
+      }
     }
 #endif
 };
