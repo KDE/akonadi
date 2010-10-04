@@ -146,4 +146,18 @@ bool MimeTypeChecker::isWantedCollection( const Collection &collection, const QS
   return false;
 }
 
+bool MimeTypeChecker::isWantedMimeType(const QString& mimeType) const
+{
+  return d->isWantedMimeType( mimeType );
+}
+
+bool MimeTypeChecker::containsWantedMimeType(const QStringList& mimeTypes) const
+{
+  foreach ( const QString &mt, mimeTypes ) {
+    if ( d->isWantedMimeType( mt ) )
+      return true;
+  }
+  return false;
+}
+
 // kate: space-indent on; indent-width 2; replace-tabs on;

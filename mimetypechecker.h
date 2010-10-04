@@ -193,6 +193,30 @@ class AKONADI_EXPORT MimeTypeChecker
     bool isWantedCollection( const Collection &collection ) const;
 
     /**
+     * Checks whether a given mime type is covered by one of the wanted MIME types.
+     *
+     * @param mimeType The mime type to check.
+     *
+     * @return @c true if the mime type @p mimeType is coverd by one of the
+     *         wanted MIME types, @c false otherwise.
+     *
+     * @since 4.6
+     */
+    bool isWantedMimeType( const QString& mimeType ) const;
+
+    /**
+     * Checks whether any of the given MIME types is covered by one of the wanted MIME types.
+     *
+     * @param mimeTypes The MIME types to check.
+     *
+     * @return @c true if any of the MIME types in @p mimeTypes is coverd by one of the
+     *         wanted MIME types, @c false otherwise.
+     *
+     * @since 4.6
+     */
+    bool containsWantedMimeType( const QStringList &mimeTypes ) const;
+
+    /**
      * Checks whether a given @p item has the given wanted MIME type
      *
      * @param item The item to check the MIME type of.
