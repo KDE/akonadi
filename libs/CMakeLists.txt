@@ -12,7 +12,13 @@ set( akonadiprotocolinternals_srcs
 
 add_library( akonadiprotocolinternals ${LIBRARY_TYPE} ${akonadiprotocolinternals_srcs} )
 
-target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
+if(WINCE)
+    target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY}
+                           note_prj )
+else(WINCE)
+    target_link_libraries( akonadiprotocolinternals ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
+endif(WINCE)
+
 set_target_properties( akonadiprotocolinternals PROPERTIES
                         VERSION ${AKONADI_VERSION}
                         SOVERSION ${AKONADI_VERSION_MAJOR}
