@@ -55,6 +55,8 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultServerPath;
   QString defaultCleanShutdownCommand;
 
+  const QString socketDirectory = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+
   defaultDbName = QLatin1String( "akonadi" );
   const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
@@ -77,7 +79,7 @@ bool DbConfigMysql::init( QSettings &settings )
 #ifndef Q_OS_WIN
     defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --socket=%2/mysql.socket" )
                                       .arg( mysqladminPath )
-                                      .arg( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+                                      .arg( socketDirectory );
 #else
     defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --shared-memory" ).arg( mysqladminPath );
 #endif
@@ -91,9 +93,8 @@ bool DbConfigMysql::init( QSettings &settings )
 
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
   if ( mInternalServer ) {
-    const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
 #if !(defined Q_WS_WIN)
-    defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir );
+    defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( socketDirectory );
 #endif
   }
 
@@ -163,7 +164,7 @@ void DbConfigMysql::startInternalServer()
 
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  const QString miscDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) );
+  const QString socketDirectory = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
@@ -212,12 +213,12 @@ void DbConfigMysql::startInternalServer()
   if ( akDir.isEmpty() )
     akFatal() << "Akonadi server was not able to create database log directory";
 
-  if ( miscDir.isEmpty() )
+  if ( socketDirectory.isEmpty() )
     akFatal() << "Akonadi server was not able to create database misc directory";
 
   // the socket path must not exceed 103 characters, so check for max dir length right away
-  if ( miscDir.length() >= 90 )
-      akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << miscDir;
+  if ( socketDirectory.length() >= 90 )
+      akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
 
   // move mysql error log file out of the way
   const QFileInfo errorLog( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err" ) );
@@ -252,7 +253,7 @@ void DbConfigMysql::startInternalServer()
   arguments << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir );
   arguments << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
 #ifndef Q_WS_WIN
-  arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+  arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory );
 #else
   arguments << QString::fromLatin1( "--shared-memory" );
 #endif
@@ -297,7 +298,7 @@ void DbConfigMysql::startInternalServer()
         const QStringList arguments = QStringList() << QLatin1String( "--check-upgrade" )
                                                     << QLatin1String( "--all-databases" )
                                                     << QLatin1String( "--auto-repair" )
-                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
+                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory );
         QProcess::execute( mMysqlCheckPath, arguments );
       }
 
