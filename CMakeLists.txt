@@ -11,6 +11,7 @@ include(CTest)
 include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
+option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 
 if (AKONADI_BUILD_TESTS)
   enable_testing()
@@ -115,11 +116,16 @@ if(WINCE)
     find_package(Wcecompat REQUIRED)
     SET(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
     SET(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
-    set(LIBRARY_TYPE STATIC)
-    set(AKONADI_STATIC_LIBS ON)
-else(WINCE)
-    set(LIBRARY_TYPE SHARED)
+    set(STATIC_LIBRARY ON)
 endif(WINCE)
+
+if(STATIC_LIBRARY)
+  set(LIBRARY_TYPE STATIC)
+  set(AKONADI_STATIC_LIBS ON)
+  message(STATUS "Building Akonadi as a static library")
+else(STATIC_LIBRARY)
+  set(LIBRARY_TYPE SHARED)
+endif(STATIC_LIBRARY)
 
 #### Soprano ####
 
