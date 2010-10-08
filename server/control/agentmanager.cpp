@@ -190,17 +190,10 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
-  switch ( info.launchMethod ) {
-  case AgentType::Server:
+  if ( info.runInAgentServer )
     return AgentInstance::Ptr( new Akonadi::AgentThreadInstance( this ) );
-  case AgentType::Launcher: // Fall through
-  case AgentType::Process:
+  else
     return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
-  default:
-    Q_ASSERT_X( false, "AgentManger::createAgentInstance", "Unhandled AgentType::LaunchMethod case" );
-  }
-
-  return AgentInstance::Ptr();
 }
 
 QString AgentManager::createAgentInstance( const QString &identifier )
@@ -317,10 +310,10 @@ void AgentManager::agentInstanceConfigure( const QString &identifier, qlonglong 
 {
   if ( !checkAgentInterfaces( identifier, "agentInstanceConfigure" ) )
     return;
-
+  
   org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                       "/AgentServer", QDBusConnection::sessionBus(), this );
-
+						      
   if ( agentServer.started( identifier ) ) {
     agentServer.agentInstanceConfigure( identifier, windowId );
   } else {
@@ -702,15 +695,11 @@ void AgentManager::ensureAutoStart(const AgentType & info)
   if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
     return; // already running
 
-  switch ( info.launchMethod ) {
-  case AgentType::Server:
+  if ( info.runInAgentServer ) {
     agentServer.startAgent( info.identifier, info.exec );
     registerAgentAtServer( info.identifier, info );
     save();
-    break;
-  case AgentType::Process:  // Fall through
-  case AgentType::Launcher:
-  {
+  } else {
     AgentInstance::Ptr instance = createAgentInstance( info );
     instance->setIdentifier( info.identifier );
     if ( instance->start( info ) ) {
@@ -718,10 +707,6 @@ void AgentManager::ensureAutoStart(const AgentType & info)
       registerAgentAtServer( instance->identifier(), info );
       save();
     }
-    break;
-  }
-  default:
-    Q_ASSERT_X( false, "AgentManager::ensureAutoStart", "unhandled AgentType::LaunchMethod case" );
   }
 }
 
