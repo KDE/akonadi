@@ -190,10 +190,17 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
 
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
-  if ( info.runInAgentServer )
+  switch ( info.launchMethod ) {
+  case AgentType::Server:
     return AgentInstance::Ptr( new Akonadi::AgentThreadInstance( this ) );
-  else
+  case AgentType::Launcher: // Fall through
+  case AgentType::Process:
     return AgentInstance::Ptr( new Akonadi::AgentProcessInstance( this ) );
+  default:
+    Q_ASSERT_X( false, "AgentManger::createAgentInstance", "Unhandled AgentType::LaunchMethod case" );
+  }
+
+  return AgentInstance::Ptr();
 }
 
 QString AgentManager::createAgentInstance( const QString &identifier )
@@ -695,11 +702,15 @@ void AgentManager::ensureAutoStart(const AgentType & info)
   if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
     return; // already running
 
-  if ( info.runInAgentServer ) {
+  switch ( info.launchMethod ) {
+  case AgentType::Server:
     agentServer.startAgent( info.identifier, info.exec );
     registerAgentAtServer( info.identifier, info );
     save();
-  } else {
+    break;
+  case AgentType::Process:  // Fall through
+  case AgentType::Launcher:
+  {
     AgentInstance::Ptr instance = createAgentInstance( info );
     instance->setIdentifier( info.identifier );
     if ( instance->start( info ) ) {
@@ -707,6 +718,10 @@ void AgentManager::ensureAutoStart(const AgentType & info)
       registerAgentAtServer( instance->identifier(), info );
       save();
     }
+    break;
+  }
+  default:
+    Q_ASSERT_X( false, "AgentManager::ensureAutoStart", "unhandled AgentType::LaunchMethod case" );
   }
 }
 
