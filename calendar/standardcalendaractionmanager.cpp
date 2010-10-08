@@ -50,83 +50,164 @@ class StandardCalendarActionManager::Private
                         mParent, SIGNAL( actionStateUpdated() ) );
       mGenericManager->createAllActions();
 
-      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Calendar Folder..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis( i18n( "Add a new calendar folder to the currently selected calendar folder." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Calendar Folder", "Copy %1 Calendar Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected calendar folders to the clipboard." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete Calendar Folder", "Delete %1 Calendar Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected calendar folders from the calendar." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Update Calendar Folder", "Update %1 Calendar Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis( i18n( "Update the content of the selected calendar folders." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections, ki18np( "Cut Calendar Folder", "Cut %1 Calendar Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis( i18n( "Cut the selected calendar folders from the calendar." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected calendar folder." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Event", "Copy %1 Events" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis( i18n( "Copy the selected events to the clipboard." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Event", "Delete %1 Events" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected events from the calendar." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Event", "Cut %1 Events" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected events from the calendar." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText( i18n( "Add &Calendar..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis( i18n( "Add a new calendar<p>You will be presented with a dialog where you can select the type of the calendar that shall be added.</p>" ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteResources, ki18np( "&Delete Calendar", "&Delete %1 Calendars" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteResources )->setWhatsThis( i18n( "Delete the selected calendars<p>The currently selected calendars will be deleted, along with all the events, todos and journals they contain.</p>" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Calendar Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected calendar." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Update Calendar", "Update %1 Calendars" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis( i18n( "Updates the content of all folders of the selected calendars." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "&Copy to Calendar" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setWhatsThis( i18n( "Copy the selected event to a different calendar." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "&Move to Calendar" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu  )->setWhatsThis( i18n( "Move the selected event to a different calendar." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
+        i18n( "Add Calendar Folder..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis(
+        i18n( "Add a new calendar folder to the currently selected calendar folder." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections,
+                                      ki18np( "Copy Calendar Folder", "Copy %1 Calendar Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis(
+        i18n( "Copy the selected calendar folders to the clipboard." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteCollections,
+                                      ki18np( "Delete Calendar Folder", "Delete %1 Calendar Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis(
+        i18n( "Delete the selected calendar folders from the calendar." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections,
+                                      ki18np( "Update Calendar Folder", "Update %1 Calendar Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
+        i18n( "Update the content of the selected calendar folders." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections,
+                                      ki18np( "Cut Calendar Folder", "Cut %1 Calendar Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis(
+        i18n( "Cut the selected calendar folders from the calendar." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText(
+        i18n( "Folder Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
+        i18n( "Open a dialog to edit the properties of the selected calendar folder." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                      ki18np( "Copy Event", "Copy %1 Events" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis(
+        i18n( "Copy the selected events to the clipboard." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                      ki18np( "Delete Event", "Delete %1 Events" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis(
+        i18n( "Delete the selected events from the calendar." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np(
+                                        "Cut Event", "Cut %1 Events" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis(
+        i18n( "Cut the selected events from the calendar." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText(
+        i18n( "Add &Calendar..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis(
+        i18n( "Add a new calendar<p>"
+              "You will be presented with a dialog where you can select "
+              "the type of the calendar that shall be added.</p>" ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteResources,
+                                      ki18np( "&Delete Calendar", "&Delete %1 Calendars" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResources )->setWhatsThis(
+        i18n( "Delete the selected calendars<p>"
+              "The currently selected calendars will be deleted, "
+              "along with all the events, todos and journals they contain.</p>" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText(
+        i18n( "Calendar Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis(
+        i18n( "Open a dialog to edit properties of the selected calendar." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources,
+                                      ki18np( "Update Calendar", "Update %1 Calendars" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis(
+        i18n( "Updates the content of all folders of the selected calendars." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText(
+        i18n( "&Copy to Calendar" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setWhatsThis(
+        i18n( "Copy the selected event to a different calendar." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText(
+        i18n( "&Move to Calendar" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu  )->setWhatsThis(
+        i18n( "Move the selected event to a different calendar." ) );
 
 
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "New Calendar Folder" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not create calendar folder: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Calendar folder creation failed" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "New Calendar Folder" ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete %1 calendar folder, '%2', and all its sub-folders?",
-                                               "Do you really want to delete %1 calendar folders and all their sub-folders?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete calendar folder?", "Delete calendar folders?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not delete calendar folder: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Calendar folder deletion failed" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
+        i18n( "Could not create calendar folder: %1" ) );
 
-      mGenericManager->setContextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "Properties of Calendar Folder %1" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
+        i18n( "Calendar folder creation failed" ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete the selected event?", "Do you really want to delete %1 events?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete Event?", "Delete Events?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not delete event: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Event deletion failed" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete this calendar folder and all its sub-folders?",
+                "Do you really want to delete %1 calendar folders and all their sub-folders?" ) );
 
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "Add Calendar" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not create calendar: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Calendar creation failed" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete calendar folder?", "Delete calendar folders?" ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete %1 calendar, '%2'?", "Do you really want to delete %1 calendars?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete Calendar?", "Delete Calendars?" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
+        i18n( "Could not delete calendar folder: %1" ) );
 
-      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not paste event: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Paste failed" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
+        i18n( "Calendar folder deletion failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "Properties of Calendar Folder %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete the selected event?",
+                "Do you really want to delete %1 events?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete Event?", "Delete Events?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+        i18n( "Could not delete event: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+        i18n( "Event deletion failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "Add Calendar" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
+        i18n( "Could not create calendar: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
+        i18n( "Calendar creation failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete this calendar?",
+                "Do you really want to delete %1 calendars?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete Calendar?", "Delete Calendars?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
+        i18n( "Could not paste event: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
+        i18n( "Paste failed" ) );
 
       mGenericManager->setMimeTypeFilter( QStringList() << QLatin1String( "text/calendar" ) );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
@@ -139,10 +220,13 @@ class StandardCalendarActionManager::Private
 
     static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
     {
-      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      const Akonadi::Collection collection =
+        index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
       if ( collection.isValid() ) {
-        if ( collection.contentMimeTypes().contains( mimeType ) && ( collection.rights() & Akonadi::Collection::CanCreateItem ) )
+        if ( collection.contentMimeTypes().contains( mimeType ) &&
+             ( collection.rights() & Akonadi::Collection::CanCreateItem ) ) {
           return true;
+        }
       }
 
       const QAbstractItemModel *model = index.model();

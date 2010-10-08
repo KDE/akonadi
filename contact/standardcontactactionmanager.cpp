@@ -50,80 +50,163 @@ class StandardContactActionManager::Private
                         mParent, SIGNAL( actionStateUpdated() ) );
       mGenericManager->createAllActions();
 
-      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book Folder..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis( i18n( "Add a new address book folder to the currently selected address book folder." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book Folder", "Copy %1 Address Book Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected address book folders to the clipboard." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete Address Book Folder", "Delete %1 Address Book Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected address book folders from the address book." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections, ki18np( "Update Address Book Folder", "Update %1 Address Book Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis( i18n( "Update the content of the selected address book folders." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections, ki18np( "Cut Address Book Folder", "Cut %1 Address Book Folders" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis( i18n( "Cut the selected address book folders from the address book." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis( i18n( "Copy the selected contacts to the clipboard." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected contacts from the address book." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Contact", "Cut %1 Contacts" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected contacts from the address book." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText( i18n( "Add &Address Book..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis( i18n( "Add a new address book<p>You will be presented with a dialog where you can select the type of the address book that shall be added.</p>" ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteResources, ki18np( "&Delete Address Book", "&Delete %1 Address Books" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteResources )->setWhatsThis( i18n( "Delete the selected address books<p>The currently selected address books will be deleted, along with all the contacts and contact groups they contain.</p>" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText( i18n( "Address Book Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources, ki18np( "Update Address Book", "Update %1 Address Books" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis( i18n( "Updates the content of all folders of the selected address books." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
+        i18n( "Add Address Book Folder..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis(
+        i18n( "Add a new address book folder to the currently selected address book folder." ) );
 
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "New Address Book Folder" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not create address book folder: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Address book folder creation failed" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections,
+                                      ki18np( "Copy Address Book Folder",
+                                              "Copy %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis(
+        i18n( "Copy the selected address book folders to the clipboard." ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete %1 address book folder, '%2', and all its sub-folders?",
-                                               "Do you really want to delete %1 address book folders and all their sub-folders?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete address book folder?", "Delete address book folders?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not delete address book folder: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Address book folder deletion failed" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteCollections,
+                                      ki18np( "Delete Address Book Folder",
+                                              "Delete %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis(
+        i18n( "Delete the selected address book folders from the address book." ) );
 
-      mGenericManager->setContextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "Properties of Address Book Folder %1" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections,
+                                      ki18np( "Update Address Book Folder",
+                                              "Update %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
+        i18n( "Update the content of the selected address book folders." ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete the selected contact?", "Do you really want to delete %1 contacts?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete Contact?", "Delete Contacts?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not delete contact: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Contact deletion failed" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections,
+                                      ki18np( "Cut Address Book Folder",
+                                              "Cut %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis(
+        i18n( "Cut the selected address book folders from the address book." ) );
 
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
-                                       i18nc( "@title:window", "Add Address Book" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not create address book: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Address book creation failed" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText(
+        i18n( "Folder Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
+        i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
 
-      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                                       ki18np( "Do you really want to delete %1 address book, '%2'?", "Do you really want to delete %1 address books?" ) );
-      mGenericManager->setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
-                                       ki18ncp( "@title:window", "Delete Address Book?", "Delete Address Books?" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                      ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis(
+        i18n( "Copy the selected contacts to the clipboard." ) );
 
-      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-                                       i18n( "Could not paste contact: %1" ) );
-      mGenericManager->setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
-                                       i18n( "Paste failed" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                      ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis(
+        i18n( "Delete the selected contacts from the address book." ) );
 
-      mGenericManager->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                      ki18np( "Cut Contact", "Cut %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis(
+        i18n( "Cut the selected contacts from the address book." ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setText(
+        i18n( "Add &Address Book..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateResource )->setWhatsThis(
+        i18n( "Add a new address book<p>"
+              "You will be presented with a dialog where you can select "
+              "the type of the address book that shall be added.</p>" ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteResources,
+                                      ki18np( "&Delete Address Book",
+                                              "&Delete %1 Address Books" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteResources )->setWhatsThis(
+        i18n( "Delete the selected address books<p>"
+              "The currently selected address books will be deleted, "
+              "along with all the contacts and contact groups they contain.</p>" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setText(
+        i18n( "Address Book Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::ResourceProperties )->setWhatsThis(
+        i18n( "Open a dialog to edit properties of the selected address book." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeResources,
+                                      ki18np( "Update Address Book",
+                                              "Update %1 Address Books" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis
+        ( i18n( "Updates the content of all folders of the selected address books." ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "New Address Book Folder" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
+        i18n( "Could not create address book folder: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
+        i18n( "Address book folder creation failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete this address book folder and all its sub-folders?",
+                "Do you really want to delete %1 address book folders and all their sub-folders?" ) );
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete address book folder?", "Delete address book folders?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
+        i18n( "Could not delete address book folder: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
+        i18n( "Address book folder deletion failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "Properties of Address Book Folder %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete the selected contact?",
+                "Do you really want to delete %1 contacts?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete Contact?", "Delete Contacts?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
+        i18n( "Could not delete contact: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
+        i18n( "Contact deletion failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
+        i18nc( "@title:window", "Add Address Book" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
+        i18n( "Could not create address book: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
+        i18n( "Address book creation failed" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
+        ki18np( "Do you really want to delete this address book?",
+                "Do you really want to delete %1 address books?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
+        ki18ncp( "@title:window", "Delete Address Book?", "Delete Address Books?" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
+        i18n( "Could not paste contact: %1" ) );
+
+      mGenericManager->setContextText(
+        StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
+        i18n( "Paste failed" ) );
+
+      mGenericManager->setMimeTypeFilter(
+        QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
+
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
     }
 
@@ -134,10 +217,13 @@ class StandardContactActionManager::Private
 
     static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
     {
-      const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      const Akonadi::Collection collection =
+        index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
       if ( collection.isValid() ) {
-        if ( collection.contentMimeTypes().contains( mimeType ) && (collection.rights() & Akonadi::Collection::CanCreateItem) )
+        if ( collection.contentMimeTypes().contains( mimeType ) &&
+             ( collection.rights() & Akonadi::Collection::CanCreateItem ) ) {
           return true;
+        }
       }
 
       const QAbstractItemModel *model = index.model();

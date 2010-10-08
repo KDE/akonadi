@@ -157,15 +157,24 @@ class StandardActionManager::Private
     {
       actions.fill( 0, StandardActionManager::LastType );
 
-      pluralLabels.insert( StandardActionManager::CopyCollections, ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
-      pluralLabels.insert( StandardActionManager::CopyItems, ki18np( "&Copy Item", "&Copy %1 Items" ) );
-      pluralLabels.insert( StandardActionManager::CutItems, ki18np( "&Cut Item", "&Cut %1 Items" ) );
-      pluralLabels.insert( StandardActionManager::CutCollections, ki18np( "&Cut Folder", "&Cut %1 Folders" ) );
-      pluralLabels.insert( StandardActionManager::DeleteItems, ki18np( "&Delete Item", "&Delete %1 Items" ) );
-      pluralLabels.insert( StandardActionManager::DeleteCollections, ki18np( "&Delete Folder", "&Delete %1 Folders" ) );
-      pluralLabels.insert( StandardActionManager::SynchronizeCollections, ki18np( "&Synchronize Folder", "&Synchronize %1 Folders" ) );
-      pluralLabels.insert( StandardActionManager::DeleteResources, ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
-      pluralLabels.insert( StandardActionManager::SynchronizeResources, ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
+      pluralLabels.insert( StandardActionManager::CopyCollections,
+                           ki18np( "&Copy Folder", "&Copy %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::CopyItems,
+                           ki18np( "&Copy Item", "&Copy %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::CutItems,
+                           ki18np( "&Cut Item", "&Cut %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::CutCollections,
+                           ki18np( "&Cut Folder", "&Cut %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::DeleteItems,
+                           ki18np( "&Delete Item", "&Delete %1 Items" ) );
+      pluralLabels.insert( StandardActionManager::DeleteCollections,
+                           ki18np( "&Delete Folder", "&Delete %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::SynchronizeCollections,
+                           ki18np( "&Synchronize Folder", "&Synchronize %1 Folders" ) );
+      pluralLabels.insert( StandardActionManager::DeleteResources,
+                           ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
+      pluralLabels.insert( StandardActionManager::SynchronizeResources,
+                           ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
 
       setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
                       i18nc( "@title:window", "New Folder" ) );
@@ -177,7 +186,7 @@ class StandardActionManager::Private
                       i18n( "Folder creation failed" ) );
 
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxText,
-                      ki18np( "Do you really want to delete %1 folder, '%2', and all its sub-folders?",
+                      ki18np( "Do you really want to delete this folder and all its sub-folders?",
                               "Do you really want to delete %1 folders and all their sub-folders?" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete folder?", "Delete folders?" ) );
@@ -190,7 +199,8 @@ class StandardActionManager::Private
                       i18nc( "@title:window", "Properties of Folder %1" ) );
 
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
-                      ki18np( "Do you really want to delete the selected item?", "Do you really want to delete %1 items?" ) );
+                      ki18np( "Do you really want to delete the selected item?",
+                              "Do you really want to delete %1 items?" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete item?", "Delete items?" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
@@ -211,7 +221,8 @@ class StandardActionManager::Private
                       i18n( "Resource creation failed" ) );
 
       setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxText,
-                      ki18np( "Do you really want to delete %1 resource, '%2'?", "Do you really want to delete %1 resources?" ) );
+                      ki18np( "Do you really want to delete this resource?",
+                              "Do you really want to delete %1 resources?" ) );
       setContextText( StandardActionManager::DeleteResources, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete Resource?", "Delete Resources?" ) );
 
