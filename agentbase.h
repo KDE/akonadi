@@ -28,6 +28,7 @@
 
 #include <KDE/KApplication>
 
+#include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusContext>
 
 class Akonadi__ControlAdaptor;
