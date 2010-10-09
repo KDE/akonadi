@@ -39,7 +39,7 @@ and Akonadi agents.
 \li The Akonadi agent launcher (\c akonadi_agent_launcher). A helper process for running Akonadi agents.
 \li The Akonadi control tool (\c akonadictl). A tool to start/stop/restart the Akonadi server system and query its status.
     This is the only program of these listed here you should ever run manually.
-\li The Akonadi protocol library (\c libakonadiprotocolinternals), Contains protcol definitions and protocol parsing methods
+\li The Akonadi protocol library (\c libakonadiprotocolinternals), Contains protocol definitions and protocol parsing methods
     useful for client implementations.
 
 \subsection akonadi_server_protocols Communication Protocols
