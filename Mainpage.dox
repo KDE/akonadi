@@ -1,5 +1,5 @@
 /**
-\mainpage Akonadi storage and control server
+\mainpage Akonadi Server
 
 <p><b>
 Overview |
@@ -17,7 +17,54 @@ from within KDE, you almost certainly want the
 This API reference is more useful to people implementing client libraries or
 working on the Akonadi server itself.
 
-For more information, see the <a href="http://pim.kde.org/akonadi/">Akonadi website</a>.
+For additional information, see the <a href="http://www.akonadi-project.org/">Akonadi website</a>.
+
+\section akonadi_server_architecture Architecture
+
+<img src="http://pim.kde.org/akonadi/architecture.png"/>
+
+The Akonadi framework uses a client/server architecture. The Akonadi server has the following primary tasks:
+\li Abstract access to data from arbitrary sources, using toolkit-agnostic protocols and data formats
+\li Provide a data cache shared among several clients
+\li Provide change notifications and conflict detection
+\li Support offline change recording and change replay for remote data
+
+\subsection akonadi_server_components Components
+
+The Akonadi server itself consists of a number of components:
+\li The Akonadi control process (\c akonadi_control). It is responsible for managing all other server components
+and Akonadi agents.
+\li The Akonadi server process (\c akonadiserver). The actual data access and caching server.
+\li The Akonadi agent server (\c akonadi_agent_server). Allows running of multiple Akonadi agents in one process.
+\li The Akonadi agent launcher (\c akonadi_agent_launcher). A helper process for running Akonadi agents.
+\li The Akonadi control tool (\c akonadictl). A tool to start/stop/restart the Akonadi server system and query its status.
+    This is the only program of these listed here you should ever run manually.
+\li The Akonadi protocol library (\c libakonadiprotocolinternals), Contains protcol definitions and protocol parsing methods
+    useful for client implementations.
+
+\subsection akonadi_server_protocols Communication Protocols
+
+For communication within the Akonadi server infrastructure and for communication with Akonadi clients, two communication technologies are used:
+\li \em D-Bus Used for management tasks and change notifications.
+\li \em ASAP (Akonadi Server Access Protocol), used for high-throughput data transfer
+
+\todo add protocol documentation
+
+\subsection akonadi_server_storage Data and Metadata Storage
+
+The Akonadi server uses two mechanisms for data storage:
+\li A SQL databases for metadata and small payload data
+\li Plain files for large payload data
+
+More details on the SQL database layout can be found here: \ref akonadi_server_database.
+
+The following SQL databases are supported by the Akonadi server:
+\li \em MySQL using the default QtSQL driver shipped with Qt
+\li \em Sqlite using the improved QtSQL driver shipped with the Akonadi server
+\li [Experimental] \em PostgreSQL using the default QtSQL driver shipped with Qt
+
+For details on how to configure the various backends, see Akonadi::DataStore.
+
 
 
 
@@ -82,6 +129,6 @@ The different parts are layed out as follows:
 
 // DOXYGEN_EXCLUDE = sqlplugin server/control server/akonadictl server/tests
 // DOXYGEN_PROJECTNAME=Akonadi
-// DOXYGEN_PROJECTVERSION=1.1.80
+// DOXYGEN_PROJECTVERSION=1.4.52
 
 // vim:ts=4:sw=4:expandtab:filetype=doxygen
