@@ -16,8 +16,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
-#ifndef __AKONADI_RDS_EXCEPTION_H__
-#define __AKONADI_RDS_EXCEPTION_H__
+#ifndef AKONADI_RDS_EXCEPTION_H
+#define AKONADI_RDS_EXCEPTION_H
 
 #include <QString>
 #include <stdexcept>

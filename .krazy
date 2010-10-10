@@ -1,0 +1,1 @@
+EXCLUDE i18ncheckarg,syscalls,qclasses,qmethods,crashy,strings,cpp

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_XESAMENGINE_H
-#define AKONADI_XESAMENGINE_H
+#ifndef AKONADI_XESAMSEARCHENGINE_H
+#define AKONADI_XESAMSEARCHENGINE_H
 
 #include "abstractsearchengine.h"
 

@@ -47,10 +47,10 @@ int main( int argc, char *argv[] )
                                                           Q_RETURN_ARG( QObject*, instance ),
                                                           Q_ARG( QString, agentIdentifier ) );
   if ( invokeSucceeded ) {
-    qDebug() << "Agent instance created in seperate process.";
+    qDebug() << "Agent instance created in separate process.";
     instance->setParent( &app );
   } else {
-    qDebug() << "Agent instance creation in seperate process failed";
+    qDebug() << "Agent instance creation in separate process failed";
     return 2;
   }
 

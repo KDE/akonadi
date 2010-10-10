@@ -41,7 +41,7 @@ class SearchManager : public QObject
   Q_OBJECT
   public:
     /** Create a new search manager with the given @p searchEngines. */
-    SearchManager( const QStringList &searchEngines, QObject* parent = 0 );
+    explicit SearchManager( const QStringList &searchEngines, QObject* parent = 0 );
     ~SearchManager();
 
     /**

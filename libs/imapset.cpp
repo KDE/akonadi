@@ -209,7 +209,7 @@ void ImapSet::add(const ImapInterval & interval)
 QByteArray ImapSet::toImapSequenceSet() const
 {
   QList<QByteArray> rv;
-  foreach ( const ImapInterval interval, d->intervals )
+  foreach ( const ImapInterval &interval, d->intervals )
     rv << interval.toImapSequence();
   return ImapParser::join( rv, "," );
 }
