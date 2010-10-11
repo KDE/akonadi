@@ -29,6 +29,7 @@
 #include "notificationmanager.h"
 #include "resourcemanager.h"
 #include "tracer.h"
+#include "utils.h"
 #include "debuginterface.h"
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
@@ -95,13 +96,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
     connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), namedPipe );
 #else
-    const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-    QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
-    if ( socketDir[0] != QLatin1Char( '/' ) ) {
-      QDir::home().mkdir( socketDir );
-      socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
-    }
-
+    const QString socketDir = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) );
     const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
     unlink( socketFile.toUtf8().constData() );
     if ( !listen( socketFile ) )
@@ -216,8 +211,7 @@ void AkonadiServer::quit()
 
 #ifndef Q_OS_WIN
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
-    const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-    const QString socketDir = settings.value( QLatin1String( "Connection/SocketDirectory" ), defaultSocketDir ).toString();
+    const QString socketDir = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) );
 
     if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
         akError() << "Failed to remove Unix socket";

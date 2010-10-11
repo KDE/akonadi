@@ -21,6 +21,7 @@
 
 #include "../../libs/xdgbasedirs_p.h"
 #include "akdebug.h"
+#include "utils.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
@@ -71,7 +72,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
 
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
-    defaultHostName = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+    defaultHostName = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
     defaultCleanShutdownCommand = QString::fromLatin1( "%1 stop -D%2" )
                                       .arg( defaultServerPath )
                                       .arg( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) ) );
@@ -130,7 +131,7 @@ bool DbConfigPostgresql::useInternalServer() const
 void DbConfigPostgresql::startInternalServer()
 {
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  const QString socketDir = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+  const QString socketDir = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
 
   if ( !QFile::exists( QString::fromLatin1( "%1/PG_VERSION" ).arg( dataDir ) ) ) {
     // postgres data directory not initialized yet, so call initdb on it

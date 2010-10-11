@@ -115,21 +115,3 @@ bool DbConfig::useExternalPayloadFile() const
 {
   return mUseExternalPayloadFile;
 }
-
-QString DbConfig::preferredSocketDirectory( const QString &defaultDirectory ) const
-{
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
-  QSettings serverSettings( serverConfigFile, QSettings::IniFormat );
-
-  QString socketDir = serverSettings.value( QLatin1String( "Connection/SocketDirectory" ), defaultDirectory ).toString();
-  if ( socketDir[0] != QLatin1Char( '/' ) ) {
-    QDir::home().mkdir( socketDir );
-    socketDir = QDir::homePath() + QLatin1Char( '/' ) + socketDir;
-  }
-
-  QFileInfo dirInfo( socketDir );
-  if ( !dirInfo.exists() )
-    QDir::home().mkpath( dirInfo.absoluteFilePath() );
-
-  return socketDir;
-}

@@ -57,6 +57,12 @@ static inline QByteArray variantToByteArray( const QVariant &variant )
   }
 }
 
+/**
+ * Returns the socket @p directory that is passed to this method or the one
+ * the user has overwritten via the config file.
+ */
+QString preferredSocketDirectory( const QString &directory );
+
 }
 
 #endif
