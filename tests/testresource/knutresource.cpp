@@ -24,8 +24,10 @@
 #include "xml/xmlwriter.h"
 #include "xml/xmlreader.h"
 
+#include <akonadi/agentfactory.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/collection.h>
+#include <akonadi/dbusconnectionpool.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
 
@@ -42,14 +44,15 @@ using namespace Akonadi;
 
 KnutResource::KnutResource( const QString &id )
   : ResourceBase( id ),
-  mWatcher( new QFileSystemWatcher( this ) )
+  mWatcher( new QFileSystemWatcher( this ) ),
+  mSettings( new KnutSettings( componentData().config() ) )
 {
   changeRecorder()->itemFetchScope().fetchFullPayload();
   changeRecorder()->fetchCollection( true );
 
-  new SettingsAdaptor( Settings::self() );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
-                            Settings::self(), QDBusConnection::ExportAdaptors );
+  new SettingsAdaptor( mSettings );
+  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Settings" ),
+                               mSettings, QDBusConnection::ExportAdaptors );
   connect( this, SIGNAL(reloadConfiguration()), SLOT(load()) );
   connect( mWatcher, SIGNAL(fileChanged(QString)), SLOT(load()) );
   load();
@@ -65,7 +68,7 @@ void KnutResource::load()
     mWatcher->removePaths( mWatcher->files() );
 
   // file loading
-  QString fileName = Settings::self()->dataFile();
+  QString fileName = mSettings->dataFile();
   if ( fileName.isEmpty() ) {
     emit status( Broken, i18n( "No data file selected." ) );
     return;
@@ -79,7 +82,7 @@ void KnutResource::load()
     return;
   }
 
-  if ( Settings::self()->fileWatchingEnabled() )
+  if ( mSettings->fileWatchingEnabled() )
     mWatcher->addPath( fileName );
 
   emit status( Idle, i18n( "File '%1' loaded successfully.", fileName ) );
@@ -88,9 +91,9 @@ void KnutResource::load()
 
 void KnutResource::save()
 {
-  if ( Settings::self()->readOnly() )
+  if ( mSettings->readOnly() )
     return;
-  const QString fileName = Settings::self()->dataFile();
+  const QString fileName = mSettings->dataFile();
   if  ( !mDocument.writeToFile( fileName ) ) {
     emit error( mDocument.lastError() );
     return;
@@ -100,22 +103,23 @@ void KnutResource::save()
 
 void KnutResource::configure( WId windowId )
 {
-  QString newFile;
-
-  const QString oldFile = Settings::self()->dataFile();
+  const QString oldFile = mSettings->dataFile();
   KUrl url;
   if ( !oldFile.isEmpty() )
     url = KUrl::fromPath( oldFile );
   else
     url = KUrl::fromPath( QDir::homePath() );
 
-  newFile = KFileDialog::getSaveFileNameWId( url, "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ), windowId, i18n( "Select Data File" ) );
+  const QString newFile =
+      KFileDialog::getSaveFileNameWId( url,
+                                       "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ),
+                                       windowId, i18n( "Select Data File" ) );
 
   if ( newFile.isEmpty() || oldFile == newFile )
     return;
 
-  Settings::self()->setDataFile( newFile );
-  Settings::self()->writeConfig();
+  mSettings->setDataFile( newFile );
+  mSettings->writeConfig();
   load();
 
   emit configurationDialogAccepted();
@@ -271,6 +275,6 @@ void KnutResource::itemRemoved( const Akonadi::Item &item )
   changeProcessed();
 }
 
-AKONADI_RESOURCE_MAIN( KnutResource )
+AKONADI_AGENT_FACTORY( KnutResource, akonadi_knut_resource )
 
 #include "knutresource.moc"

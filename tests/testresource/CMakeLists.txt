@@ -10,10 +10,10 @@ kde4_add_kcfg_files(knutresource_SRCS settings.kcfgc)
 kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/knutresource.kcfg org.kde.Akonadi.Knut.Settings)
 
 qt4_add_dbus_adaptor(knutresource_SRCS
-  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h Settings
+  ${CMAKE_CURRENT_BINARY_DIR}/org.kde.Akonadi.Knut.Settings.xml settings.h KnutSettings
 )
 
-kde4_add_executable(akonadi_knut_resource ${knutresource_SRCS})
+kde4_add_plugin(akonadi_knut_resource ${knutresource_SRCS})
 
 if (Q_WS_MAC)
   set_target_properties(akonadi_knut_resource PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
@@ -28,7 +28,7 @@ target_link_libraries(akonadi_knut_resource
   ${QT_QTXML_LIBRARY}
 )
 
-install( TARGETS akonadi_knut_resource ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS akonadi_knut_resource DESTINATION ${PLUGIN_INSTALL_DIR}/ )
 install( FILES knutresource.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents" )
 install( FILES knut-template.xml DESTINATION ${DATA_INSTALL_DIR}/akonadi_knut_resource/ )
 

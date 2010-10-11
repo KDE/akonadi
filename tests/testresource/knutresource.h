@@ -29,6 +29,8 @@
 
 #include <xml/xmldocument.h>
 
+#include "settings.h"
+
 class QFileSystemWatcher;
 
 class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
@@ -66,6 +68,7 @@ class KnutResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Ob
   private:
     Akonadi::XmlDocument mDocument;
     QFileSystemWatcher *mWatcher;
+    KnutSettings *mSettings;
 };
 
 #endif
