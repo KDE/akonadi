@@ -48,6 +48,7 @@ set(AKONADI_VERSION_MAJOR "1")
 set(AKONADI_VERSION_MINOR "4")
 set(AKONADI_VERSION_PATCH "52")
 set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
+set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
 
 # If Git is installed and a '.git' directory is found,
 # we append the Git revision to AKONADI_VERSION_STRING
@@ -65,7 +66,6 @@ endif()
 # FIXME: delete when it's not necessary anymore.
 # If Subversion is installed, and a '.svn' directory is found,
 # we append the SVN revision to AKONADI_VERSION_STRING.
-set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
 if (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
   if (NOT Subversion_FOUND)
     find_package( Subversion)
