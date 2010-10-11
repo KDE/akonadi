@@ -21,6 +21,7 @@
 
 #include "../../libs/xdgbasedirs_p.h"
 #include "akdebug.h"
+#include "utils.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
@@ -55,7 +56,7 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultServerPath;
   QString defaultCleanShutdownCommand;
 
-  const QString socketDirectory = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+  const QString socketDirectory = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
 
   defaultDbName = QLatin1String( "akonadi" );
   const bool defaultInternalServer = true;
@@ -164,7 +165,7 @@ void DbConfigMysql::startInternalServer()
 
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  const QString socketDirectory = preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+  const QString socketDirectory = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );

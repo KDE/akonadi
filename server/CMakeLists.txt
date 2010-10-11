@@ -125,6 +125,7 @@ set(libakonadiprivate_SRCS
   src/storage/transaction.cpp
   src/storage/parthelper.cpp
   src/tracer.cpp
+  src/utils.cpp
   src/dbustracer.cpp
   src/filetracer.cpp
   src/notificationmanager.cpp
