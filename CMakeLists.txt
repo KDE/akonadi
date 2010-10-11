@@ -49,6 +49,20 @@ set(AKONADI_VERSION_MINOR "4")
 set(AKONADI_VERSION_PATCH "52")
 set(AKONADI_VERSION "${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
 
+# If Git is installed and a '.git' directory is found,
+# we append the Git revision to AKONADI_VERSION_STRING
+if(EXISTS "${Akonadi_SOURCE_DIR}/.git")
+  find_package(Git)
+  if(GIT_FOUND)
+    execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
+                    WORKING_DIRECTORY ${Akonadi_SOURCE_DIR}
+                    OUTPUT_VARIABLE akonadi_git_revision)
+    string(REGEX REPLACE "\n" "" akonadi_git_revision "${akonadi_git_revision}")
+    set(AKONADI_VERSION_STRING "${AKONADI_VERSION_STRING} (revision: ${akonadi_git_revision})")
+  endif()
+endif()
+
+# FIXME: delete when it's not necessary anymore.
 # If Subversion is installed, and a '.svn' directory is found,
 # we append the SVN revision to AKONADI_VERSION_STRING.
 set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
