@@ -281,6 +281,7 @@ install( FILES
   conflicthandling/abstractdifferencesreporter.h
   conflicthandling/differencesalgorithminterface.h
   control.h
+  dbusconnectionpool.h
   entity.h
   entitydisplayattribute.h
   entityhiddenattribute.h

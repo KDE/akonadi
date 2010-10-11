@@ -24,6 +24,7 @@
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
+#include "dbusconnectionpool.h"
 #include "itemsync.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
@@ -85,9 +86,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      Q_Q( ResourceBase );
-      if ( !q->sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
-        QString reason = q->sessionBus().lastError().message();
+      if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
+        QString reason = DBusConnectionPool::threadConnection().lastError().message();
         if ( reason.isEmpty() ) {
           reason = QString::fromLatin1( "this service is probably running already." );
         }
@@ -215,7 +215,7 @@ ResourceBase::ResourceBase( const QString & id )
   if ( !d->mChangeRecorder->isEmpty() )
     d->scheduler->scheduleChangeReplay();
 
-  sessionBus().registerObject( QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
+  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
 }

@@ -20,6 +20,7 @@
 #include "agentsearchinterface.h"
 #include "agentsearchinterface_p.h"
 #include "collection.h"
+#include "dbusconnectionpool.h"
 #include "searchadaptor.h"
 
 using namespace Akonadi;
@@ -28,8 +29,8 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate( AgentSearchInterface* 
  q( qq )
 {
   new Akonadi__SearchAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/Search" ),
-                                                this, QDBusConnection::ExportAdaptors );
+  DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Search" ),
+                                                         this, QDBusConnection::ExportAdaptors );
 }
 
 void AgentSearchInterfacePrivate::addSearch( const QString &query, const QString &queryLanguage, quint64 resultCollectionId )

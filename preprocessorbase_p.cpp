@@ -18,9 +18,9 @@
 */
 
 #include "preprocessorbase_p.h"
-
 #include "preprocessorbase.h"
 
+#include "dbusconnectionpool.h"
 #include "preprocessoradaptor.h"
 
 #include <akonadi/itemfetchjob.h>
@@ -37,8 +37,8 @@ PreprocessorBasePrivate::PreprocessorBasePrivate( PreprocessorBase *parent )
 
 void PreprocessorBasePrivate::delayedInit()
 {
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId ) )
-    kFatal() << "Unable to register service at D-Bus: " << QDBusConnection::sessionBus().lastError().message();
+  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId ) )
+    kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
   AgentBasePrivate::delayedInit();
 }
 

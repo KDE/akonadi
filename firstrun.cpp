@@ -18,6 +18,7 @@
 */
 
 #include "firstrun_p.h"
+#include "dbusconnectionpool.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -49,7 +50,7 @@ Firstrun::Firstrun( QObject *parent )
     mProcess( 0 )
 {
   kDebug();
-  if ( QDBusConnection::sessionBus().registerService( QLatin1String( FIRSTRUN_DBUSLOCK ) ) ) {
+  if ( DBusConnectionPool::threadConnection().registerService( QLatin1String( FIRSTRUN_DBUSLOCK ) ) ) {
     findPendingDefaults();
     kDebug() << mPendingDefaults;
     setupNext();
@@ -61,7 +62,7 @@ Firstrun::Firstrun( QObject *parent )
 
 Firstrun::~Firstrun()
 {
-  QDBusConnection::sessionBus().unregisterService( QLatin1String( FIRSTRUN_DBUSLOCK ) );
+  DBusConnectionPool::threadConnection().unregisterService( QLatin1String( FIRSTRUN_DBUSLOCK ) );
   delete mConfig;
   kDebug() << "done";
 }
@@ -222,7 +223,8 @@ void Firstrun::instanceCreated( KJob *job )
   const KConfigGroup settings = KConfigGroup( mCurrentDefault, "Settings" );
 
   QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( instance.identifier() ),
-                                              QLatin1String( "/Settings" ), QString(), QDBusConnection::sessionBus(), this );
+                                              QLatin1String( "/Settings" ), QString(),
+                                              DBusConnectionPool::threadConnection(), this );
   if ( !iface->isValid() ) {
     kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
     setupNext();

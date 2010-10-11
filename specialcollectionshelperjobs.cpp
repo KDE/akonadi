@@ -19,6 +19,7 @@
 
 #include "specialcollectionshelperjobs_p.h"
 
+#include "dbusconnectionpool.h"
 #include "specialcollectionattribute_p.h"
 #include "specialcollections.h"
 
@@ -566,7 +567,7 @@ void GetLockJob::Private::doStart()
   // Just doing registerService() and checking its return value is not sufficient,
   // since we may *already* own the name, and then registerService() returns true.
 
-  QDBusConnection bus = QDBusConnection::sessionBus();
+  QDBusConnection bus = DBusConnectionPool::threadConnection();
   const bool alreadyLocked = bus.interface()->isServiceRegistered( DBUS_SERVICE_NAME );
   const bool gotIt = bus.registerService( DBUS_SERVICE_NAME );
 
@@ -574,7 +575,7 @@ void GetLockJob::Private::doStart()
     //kDebug() << "Got lock immediately.";
     q->emitResult();
   } else {
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, QDBusConnection::sessionBus(),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, DBusConnectionPool::threadConnection(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, q );
     //kDebug() << "Waiting for lock.";
     connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
@@ -591,7 +592,7 @@ void GetLockJob::Private::doStart()
 void GetLockJob::Private::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
   if ( newOwner.isEmpty() ) {
-    const bool gotIt = QDBusConnection::sessionBus().registerService( DBUS_SERVICE_NAME );
+    const bool gotIt = DBusConnectionPool::threadConnection().registerService( DBUS_SERVICE_NAME );
     if ( gotIt ) {
       mSafetyTimer->stop();
       q->emitResult();
@@ -644,7 +645,7 @@ void Akonadi::setCollectionAttributes( Akonadi::Collection &collection, const QB
 
 bool Akonadi::releaseLock()
 {
-  return QDBusConnection::sessionBus().unregisterService( DBUS_SERVICE_NAME );
+  return DBusConnectionPool::threadConnection().unregisterService( DBUS_SERVICE_NAME );
 }
 
 #include "specialcollectionshelperjobs_p.moc"

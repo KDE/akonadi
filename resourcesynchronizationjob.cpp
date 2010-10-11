@@ -16,6 +16,7 @@
  */
 
 #include "resourcesynchronizationjob.h"
+#include "dbusconnectionpool.h"
 #include "kjobprivatebase_p.h"
 
 #include <akonadi/agentinstance.h>
@@ -88,7 +89,8 @@ void ResourceSynchronizationJobPrivate::doStart()
 
   interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
                                   QString::fromLatin1( "/" ),
-                                  QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ), QDBusConnection::sessionBus(), this );
+                                  QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
+                                  DBusConnectionPool::threadConnection(), this );
   connect( interface, SIGNAL( synchronized() ), q, SLOT( slotSynchronized() ) );
 
   if ( interface->isValid() ) {

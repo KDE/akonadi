@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "../dbusconnectionpool.h"
+
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/servermanager.h>
 
@@ -44,7 +46,7 @@ class TestEnvironmentTest : public QObject
 
     void testDBus()
     {
-      QVERIFY( QDBusConnection::sessionBus().isConnected() );
+      QVERIFY( DBusConnectionPool::threadConnection().isConnected() );
     }
 
     void testAkonadiServer()
@@ -54,11 +56,11 @@ class TestEnvironmentTest : public QObject
 
     void testResources()
     {
-      QVERIFY( QDBusConnection::sessionBus().interface()->isServiceRegistered(
+      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_0" ) );
-      QVERIFY( QDBusConnection::sessionBus().interface()->isServiceRegistered(
+      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_1" ) );
-      QVERIFY( QDBusConnection::sessionBus().interface()->isServiceRegistered(
+      QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
         "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_2" ) );
     }
 };

@@ -20,6 +20,8 @@
 
 #include "test.h"
 
+#include "../dbusconnectionpool.h"
+
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectionfetchjob.h>
@@ -60,7 +62,7 @@ void MakeTest::createAgent(const QString &name)
 void MakeTest::configureDBusIface(const QString &name,const QString &dir)
 {
   QDBusInterface *configIface = new QDBusInterface( "org.freedesktop.Akonadi.Resource." + currentInstance.identifier(),
-      "/Settings", "org.kde.Akonadi." + name + ".Settings", QDBusConnection::sessionBus(), this );
+      "/Settings", "org.kde.Akonadi." + name + ".Settings", DBusConnectionPool::threadConnection(), this );
 
   configIface->call( "setPath", dir );
   configIface->call( "setReadOnly", true );

@@ -54,6 +54,26 @@ class Session;
  * - configuration interface
  * - problem reporting
  *
+ * Akonadi Server supports serveral ways to launch agents and resources:
+ * - As a seperate application (@see AKONADI_AGENT_MAIN)
+ * - As a thread in the AgentServer
+ * - As a seperate process, using the akonadi_agent_launcher
+ *
+ * The idea is this, the agent or resource is written as a plugin in stead of a
+ * executable (@see AgentFactory). In the AgentServer case, the AgentServer
+ * looks up the plugin and launches the agent in a seperate thread. In the
+ * launcher case, a new akonadi_agent_launcher process is started for each
+ * agent or resource instance.
+ *
+ * When making an Agent or Resource suitable for running in the AgentServer some
+ * extra caution is needed. Because multiple instances of several kinds of agents
+ * run in the same process, one cannot blindly use global objects like KGlobal.
+ * For this reasons several methods where added to avoid problems in this context,
+ * most notably AgentBase::config() and AgentBase::componentData(). Additionally,
+ * one cannot use QDBusConnection::sessionBus() with dbus < 1.4, because of a
+ * multithreading bug in libdbus. In stead one should use
+ * DBusConnectionPool::threadConnection() which works around this problem.
+ *
  * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
@@ -344,6 +364,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     virtual QString progressMessage() const;
 
+  public Q_SLOTS:
     /**
      * This method is called whenever the agent shall show its configuration dialog
      * to the user. It will be automatically called when the agent is started for
@@ -356,6 +377,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     virtual void configure( WId windowId );
 
+  public:
     /**
      * This method returns the windows id, which should be used for dialogs.
      */
@@ -530,6 +552,11 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     ChangeRecorder* changeRecorder() const;
 
     /**
+     * Returns the config object for this Agent.
+     */
+    KSharedConfigPtr config();
+
+    /**
      * Marks the current change as processes and replays the next change if change
      * recording is enabled (noop otherwise). This method is called
      * from the default implementation of the change notification slots. While not
@@ -543,15 +570,6 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      */
     bool isOnline() const;
 
-
-    /**
-     * Returns the QDBusConnection that should be used by subclasses to register
-     * objects.
-     *
-     * @since 4.6
-     */
-    QDBusConnection sessionBus() const;
-    
     /**
      * Sets whether the agent needs network or not.
      *

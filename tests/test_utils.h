@@ -21,6 +21,7 @@
 #define AKONADI_TEST_UTILS_H
 
 #include "collectionpathresolver_p.h"
+#include "dbusconnectionpool.h"
 #include "servermanager.h"
 #include "qtest_akonadi.h"
 
@@ -44,7 +45,7 @@ bool restartAkonadiServer()
     QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     QLatin1String( "/" ),
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
-                                    QDBusConnection::sessionBus() );
+                                    Akonadi::DBusConnectionPool::threadConnection() );
     if ( !testrunnerIface.isValid() )
         kWarning() << "Unable to get a dbus interface to the testrunner!";
 
@@ -65,7 +66,7 @@ bool trackAkonadiProcess( bool track )
     QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),
                                     QLatin1String( "/" ),
                                     QLatin1String( "org.kde.Akonadi.Testrunner" ),
-                                    QDBusConnection::sessionBus() );
+                                    Akonadi::DBusConnectionPool::threadConnection() );
     if ( !testrunnerIface.isValid() )
         kWarning() << "Unable to get a dbus interface to the testrunner!";
 

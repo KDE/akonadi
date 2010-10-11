@@ -49,7 +49,7 @@ private:
 
 QThreadStorage<DBusConnectionPoolPrivate *> s_perThreadConnection;
 
-QDBusConnection DBusConnectionPool::threadConnection()
+QDBusConnection Akonadi::DBusConnectionPool::threadConnection()
 {
     if (!s_perThreadConnection.hasLocalData()) {
         s_perThreadConnection.setLocalData(new DBusConnectionPoolPrivate);

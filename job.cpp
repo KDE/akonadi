@@ -21,6 +21,7 @@
 
 #include "job.h"
 #include "job_p.h"
+#include "dbusconnectionpool.h"
 #include <QTime>
 #include "imapparser_p.h"
 #include "session.h"
@@ -106,11 +107,11 @@ void JobPrivate::init( QObject *parent )
     if ( s_lastTime.isNull() || s_lastTime.elapsed() > 3000 ) {
       if ( s_lastTime.isNull() )
         s_lastTime.start();
-      if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
+      if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
         s_jobtracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
                                            QLatin1String( "/jobtracker" ),
                                            QLatin1String( "org.freedesktop.Akonadi.JobTracker" ),
-                                           QDBusConnection::sessionBus(), 0 );
+                                           DBusConnectionPool::threadConnection(), 0 );
       } else {
         s_lastTime.restart();
       }

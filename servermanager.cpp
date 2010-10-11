@@ -23,6 +23,7 @@
 #include "agenttype.h"
 #include "agentbase.h"
 #include "agentmanager.h"
+#include "dbusconnectionpool.h"
 #ifndef Q_OS_WINCE
 #include "selftestdialog_p.h"
 #endif
@@ -121,7 +122,7 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
     d( dd )
 {
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AKONADI_SERVER_SERVICE,
-                                                          QDBusConnection::sessionBus(),
+                                                          DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
 
@@ -142,13 +143,13 @@ ServerManager * Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
-  const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
   if (  controlRegistered && serverRegistered )
     return true;
 
   // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     sInstance->setState( Starting );
@@ -159,7 +160,7 @@ bool ServerManager::start()
   const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-    QDBusReply<void> reply = QDBusConnection::sessionBus().interface()->startService( AKONADI_CONTROL_SERVICE );
+    QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( AKONADI_CONTROL_SERVICE );
     if ( !reply.isValid() ) {
       kDebug() << "Akonadi server could not be started via D-Bus either: "
                << reply.error().message();
@@ -202,8 +203,8 @@ ServerManager::State ServerManager::state()
   if ( sInstance.exists() ) // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
     previousState = sInstance->mState;
 
-  const bool controlRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
   if (  controlRegistered && serverRegistered ) {
     // check if the server protocol is recent enough
     if ( sInstance.exists() ) {
@@ -227,7 +228,7 @@ ServerManager::State ServerManager::state()
   }
 
   // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     if ( previousState == Running )

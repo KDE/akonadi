@@ -20,6 +20,7 @@
 #include "localfolderstest.h"
 
 #include "../../collectionpathresolver_p.h"
+#include "../../dbusconnectionpool.h"
 #include "../specialmailcollectionssettings.h"
 
 #include <QDBusConnectionInterface>
@@ -89,13 +90,13 @@ void LocalFoldersTest::testLock()
   const QString dbusName = QString::fromLatin1( "org.kde.pim.SpecialCollections" );
 
   // Initially not locked.
-  QVERIFY( !QDBusConnection::sessionBus().interface()->isServiceRegistered( dbusName ) );
+  QVERIFY( !DBusConnectionPool::threadConnection().interface()->isServiceRegistered( dbusName ) );
 
   // Get the lock.
   {
     GetLockJob *ljob = new GetLockJob( this );
     AKVERIFYEXEC( ljob );
-    QVERIFY( QDBusConnection::sessionBus().interface()->isServiceRegistered( dbusName ) );
+    QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( dbusName ) );
   }
 
   // Getting the lock again should fail.
@@ -105,9 +106,9 @@ void LocalFoldersTest::testLock()
   }
 
   // Release the lock.
-  QVERIFY( QDBusConnection::sessionBus().interface()->isServiceRegistered( dbusName ) );
+  QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( dbusName ) );
   releaseLock();
-  QVERIFY( !QDBusConnection::sessionBus().interface()->isServiceRegistered( dbusName ) );
+  QVERIFY( !DBusConnectionPool::threadConnection().interface()->isServiceRegistered( dbusName ) );
 }
 
 void LocalFoldersTest::testInitialState()

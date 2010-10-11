@@ -23,6 +23,7 @@
 
 #include "collectionfetchjob.h"
 #include "collectionstatistics.h"
+#include "dbusconnectionpool.h"
 #include "itemfetchjob.h"
 #include "notificationmessage_p.h"
 #include "notificationmanagerinterface.h"
@@ -66,7 +67,7 @@ bool MonitorPrivate::connectToNotificationManager()
   org::freedesktop::Akonadi::NotificationManager manager(
           QLatin1String( "org.freedesktop.Akonadi" ),
           QLatin1String( "/notifications" ),
-          QDBusConnection::sessionBus() );
+          DBusConnectionPool::threadConnection() );
 
   QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
   if ( manager.lastError().isValid() ) {
@@ -77,7 +78,7 @@ bool MonitorPrivate::connectToNotificationManager()
   notificationSource = new org::freedesktop::Akonadi::NotificationSource(
               QLatin1String( "org.freedesktop.Akonadi" ),
               p.path(),
-              QDBusConnection::sessionBus(), q_ptr );
+              DBusConnectionPool::threadConnection(), q_ptr );
 
   if ( !notificationSource ) {
     // :TODO: error handling

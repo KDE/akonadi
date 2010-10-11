@@ -19,6 +19,8 @@
 
 #include "resourcescheduler_p.h"
 
+#include "dbusconnectionpool.h"
+
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -346,11 +348,11 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker( const Task &task, const QByteArray &taskType )
 {
   // if there's a job tracer running, tell it about the new job
-  if ( !s_resourcetracker && QDBusConnection::sessionBus().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
+  if ( !s_resourcetracker && DBusConnectionPool::threadConnection().interface()->isServiceRegistered(QLatin1String( "org.kde.akonadiconsole" ) ) ) {
     s_resourcetracker = new QDBusInterface( QLatin1String( "org.kde.akonadiconsole" ),
                                        QLatin1String( "/resourcesJobtracker" ),
                                        QLatin1String( "org.freedesktop.Akonadi.JobTracker" ),
-                                       QDBusConnection::sessionBus(), 0 );
+                                       DBusConnectionPool::threadConnection(), 0 );
   }
 
   if ( s_resourcetracker ) {
@@ -382,7 +384,7 @@ void ResourceScheduler::Task::sendDBusReplies( bool success )
   Q_FOREACH( const QDBusMessage &msg, dbusMsgs ) {
     QDBusMessage reply( msg );
     reply << success;
-    QDBusConnection::sessionBus().send( reply );
+    DBusConnectionPool::threadConnection().send( reply );
   }
 }
 

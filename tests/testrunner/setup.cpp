@@ -17,6 +17,7 @@
 
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
+#include "dbusconnectionpool.h"
 #include "symbols.h"
 
 #include <kapplication.h>
@@ -380,7 +381,7 @@ void SetupTest::cleanTempEnvironment()
 
 SetupTest::SetupTest() :
   mAkonadiDaemonProcess( 0 ),
-  mInternalBus( QDBusConnection::sessionBus() ),
+  mInternalBus( Akonadi::DBusConnectionPool::threadConnection() ),
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false ),

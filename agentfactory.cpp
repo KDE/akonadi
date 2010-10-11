@@ -46,12 +46,16 @@ AgentFactoryBase::AgentFactoryBase(const char* catalogName, QObject* parent):
   KGlobal::locale()->insertCatalog( d->catalogName );
 }
 
-void AgentFactoryBase::createComponentData(const QString& identifier) const
+void AgentFactoryBase::createComponentData( const QString& identifier ) const
 {
   Q_ASSERT( !s_agentComponentDatas.hasLocalData() );
-  Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
-  s_agentComponentDatas.setLocalData( new KComponentData( identifier.toLatin1(), d->catalogName.toLatin1(),
-                                                          KComponentData::SkipMainComponentRegistration ) );
+
+  if ( QThread::currentThread() != QCoreApplication::instance()->thread() ) {
+    s_agentComponentDatas.setLocalData( new KComponentData( identifier.toLatin1(), d->catalogName.toLatin1(),
+                                                            KComponentData::SkipMainComponentRegistration ) );
+  } else {
+    s_agentComponentDatas.setLocalData( new KComponentData( identifier.toLatin1(), d->catalogName.toLatin1() ) );
+  }
 }
 
 

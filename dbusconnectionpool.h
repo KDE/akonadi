@@ -20,19 +20,32 @@
 #ifndef _DBUS_CONNECTION_POOL_H_
 #define _DBUS_CONNECTION_POOL_H_
 
+#include "akonadi_export.h"
+
 #include <QtDBus/QDBusConnection>
 
-namespace DBusConnectionPool
-{
 /**
- * The DBusConnectionPool works around the problem
- * of QDBusConnection not being thread-safe. As soon as that
- * has been fixed (either directly in libdbus or with a work-
- * around in Qt) this method can be dropped in favor of
- * QDBusConnection::sessionBus().
- */
-QDBusConnection threadConnection();
-}
+  NOTE: This method is for use in libakonadi-kde and targets *under*
+        kdepimlibs/akonadi. In kdelibs 4.6 there will be a slightly more generic
+        variant available. We need this method as long as we depend on kdelibs
+        4.5 which doesn't have this method.
+
+*/
+
+namespace Akonadi {
+
+namespace DBusConnectionPool {
+  /**
+   * The DBusConnectionPool works around the problem
+   * of QDBusConnection not being thread-safe. As soon as that
+   * has been fixed (either directly in libdbus or with a work-
+   * around in Qt) this method can be dropped in favor of
+   * QDBusConnection::sessionBus().
+   */
+  AKONADI_EXPORT QDBusConnection threadConnection();
+} // DBusConnectionPool
+
+} // Akonadi
 
 #endif
 

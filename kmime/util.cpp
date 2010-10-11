@@ -19,6 +19,7 @@
 
 
 #include "util_p.h"
+#include "../dbusconnectionpool.h"
 #include "imapsettings.h"
 
 #include <assert.h>
@@ -44,7 +45,9 @@ void showJobError( KJob* job )
 OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident )
 {
   //NOTE(Andras): from kmail/util.cpp
-  return new OrgKdeAkonadiImapSettingsInterface(QString::fromLatin1("org.freedesktop.Akonadi.Resource.") + ident, QString::fromLatin1("/Settings"), QDBusConnection::sessionBus() );
+  return new OrgKdeAkonadiImapSettingsInterface( QString::fromLatin1("org.freedesktop.Akonadi.Resource.") + ident,
+                                                 QString::fromLatin1("/Settings"),
+                                                 Akonadi::DBusConnectionPool::threadConnection() );
 }
 
 };

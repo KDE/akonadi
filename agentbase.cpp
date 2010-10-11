@@ -25,6 +25,7 @@
 
 #include "changerecorder.h"
 #include "controladaptor.h"
+#include "dbusconnectionpool.h"
 #include "itemfetchjob.h"
 #include "monitor_p.h"
 #include "servermanager_p.h"
@@ -182,13 +183,14 @@ void AgentBasePrivate::init()
     Q_ASSERT( mDBusConnection.isConnected() );
   }
 
-  mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/tracing" ),
-                                           QDBusConnection::sessionBus(), q );
+  mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ),
+                                                   QLatin1String( "/tracing" ),
+                                                   DBusConnectionPool::threadConnection(), q );
 
   new Akonadi__ControlAdaptor( q );
   new Akonadi__StatusAdaptor( q );
-  if ( !q->sessionBus().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
-    q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( QDBusConnection::sessionBus().lastError().message() ) );
+  if ( !DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
+    q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( DBusConnectionPool::threadConnection().lastError().message() ) );
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
 
@@ -260,8 +262,8 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !q->sessionBus().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
-    kFatal() << "Unable to register service at dbus:" << q->sessionBus().lastError().message();
+  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
+    kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
 }
 
@@ -568,15 +570,6 @@ bool AgentBase::isOnline() const
   return d->mOnline;
 }
 
-QDBusConnection AgentBase::sessionBus() const
-{
-  Q_D( const AgentBase );
-  if ( QThread::currentThread() != QCoreApplication::instance()->thread() )
-    return QDBusConnection( d->mDBusConnection );
-  else
-    return QDBusConnection::sessionBus();
-}
-
 void AgentBase::setNeedsNetwork( bool needsNetwork )
 {
   Q_D( AgentBase );
@@ -626,7 +619,7 @@ void AgentBase::configure( qlonglong windowId )
 
 WId AgentBase::winIdForDialogs() const
 {
-  const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( "org.freedesktop.akonaditray" ) );
+  const bool registered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( QLatin1String( "org.freedesktop.akonaditray" ) );
   if ( !registered )
     return 0;
 
@@ -690,7 +683,7 @@ void AgentBase::cleanup()
   /*
    * ... and also remove the agent configuration file if there is one.
    */
-  QString configFile = KStandardDirs::locateLocal( "config", KGlobal::config()->name() );
+  QString configFile = KStandardDirs::locateLocal( "config", config()->name() );
   QFile::remove( configFile );
 
   KGlobal::deref();
@@ -746,6 +739,14 @@ ChangeRecorder * AgentBase::changeRecorder() const
   return d_ptr->mChangeRecorder;
 }
 
+KSharedConfigPtr AgentBase::config()
+{
+  if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
+    return KGlobal::config();
+  else
+    return KSharedConfig::openConfig( identifier() );
+}
+
 void AgentBase::abort()
 {
   emit abortRequested();
@@ -760,8 +761,13 @@ extern QThreadStorage<KComponentData*> s_agentComponentDatas;
 
 KComponentData AgentBase::componentData()
 {
-  if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
-    return KGlobal::mainComponent();
+  if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
+    if ( s_agentComponentDatas.hasLocalData() )
+      return *(s_agentComponentDatas.localData());
+    else
+      return KGlobal::mainComponent();
+  }
+
   Q_ASSERT( s_agentComponentDatas.hasLocalData() );
   return *(s_agentComponentDatas.localData());
 }

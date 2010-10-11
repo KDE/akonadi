@@ -19,6 +19,7 @@
 
 #include "selftestdialog_p.h"
 #include "agentmanager.h"
+#include "dbusconnectionpool.h"
 #include "session_p.h"
 #include "servermanager_p.h"
 
@@ -402,7 +403,7 @@ void SelfTestDialog::testAkonadiCtl()
 
 void SelfTestDialog::testServerStatus()
 {
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
+  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
     report( Success, ki18n( "Akonadi control process registered at D-Bus." ),
                    ki18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
@@ -411,7 +412,7 @@ void SelfTestDialog::testServerStatus()
                        "or encountered a fatal error during startup."  ) );
   }
 
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
+  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
     report( Success, ki18n( "Akonadi server process registered at D-Bus." ),
                    ki18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
@@ -424,7 +425,7 @@ void SelfTestDialog::testServerStatus()
 void SelfTestDialog::testSearchStatus()
 {
   bool searchAvailable = false;
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_SEARCH_SERVICE ) ) {
+  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SEARCH_SERVICE ) ) {
     searchAvailable = true;
     report( Success, ki18n( "Nepomuk search service registered at D-Bus." ),
                    ki18n( "The Nepomuk search service is registered at D-Bus which typically indicates it is operational." ) );
