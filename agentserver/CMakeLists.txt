@@ -35,6 +35,7 @@ set( akonadi_agent_launcher_SRCS
 automoc4_add_executable(akonadi_agent_launcher ${akonadi_agent_launcher_SRCS})
 target_link_libraries(akonadi_agent_launcher
   ${QT_QTGUI_LIBRARY}
+  ${AKONADI_SYSTEM_LIBS}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
 )
 
