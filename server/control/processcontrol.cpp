@@ -206,7 +206,7 @@ void ProcessControl::start()
       qDebug();
       qDebug() << "============================================================";
       qDebug() << "ProcessControl: Suspending process" << mApplication;
-      qDebug() << "'gdb" << pid << "' to debug";
+      qDebug() << "'gdb --pid" << pid << "' to debug";
       qDebug() << "'kill -SIGCONT" << pid << "' to continue";
       qDebug() << "============================================================";
       qDebug();
