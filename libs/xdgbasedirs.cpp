@@ -294,7 +294,7 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
 QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &searchPath )
 {
   if ( instance()->mPluginDirs.isEmpty() ) {
-    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", "/usr/lib/qt4/plugins/" );
+    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
 
     if ( QCoreApplication::instance() != 0 ) {
       foreach ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
@@ -305,12 +305,28 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     }
 
     pluginDirs += searchPath;
+
+    // fallback for users with KDE in a different prefix and not correctly set up XDG_DATA_DIRS, hi David ;-)
+    QProcess proc;
+    // ### should probably rather be --path xdg-something
+    const QStringList args = QStringList() << QLatin1String( "--path" ) << QLatin1String( "module" );
+    proc.start( QLatin1String( "kde4-config" ), args );
+    if ( proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0 ) {
+      proc.setReadChannel( QProcess::StandardOutput );
+      foreach ( const QString &path, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
+        if ( !pluginDirs.contains( path ) )
+          pluginDirs.append( path );
+      }
+    }
+
     qWarning( ) << "search paths: " << pluginDirs;
     instance()->mPluginDirs = pluginDirs;
   }
 
 #if defined(Q_OS_WIN) //krazy:exclude=cpp
   const QString pluginName = relPath + QLatin1String( ".dll" );
+#elif defined(Q_OS_MAC)
+  const QString pluginName = relPath + QLatin1String( ".dylib" );
 #else
   const QString pluginName = relPath + QLatin1String( ".so" );
 #endif
