@@ -19,6 +19,8 @@
  */
 
 #include "dbusconnectionpool.h"
+#include <QCoreApplication>
+#include <QThread>
 #include <QThreadStorage>
 
 namespace {
@@ -51,6 +53,8 @@ QThreadStorage<DBusConnectionPoolPrivate *> s_perThreadConnection;
 
 QDBusConnection Akonadi::DBusConnectionPool::threadConnection()
 {
+    if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
+        return QDBusConnection::sessionBus(); // main thread, use the default session bus, breaks unported resources otherwise
     if (!s_perThreadConnection.hasLocalData()) {
         s_perThreadConnection.setLocalData(new DBusConnectionPoolPrivate);
     }
