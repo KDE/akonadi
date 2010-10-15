@@ -61,24 +61,25 @@ class StatisticsProxyModel::Private
       QString tip = QString::fromLatin1(
         "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
         );
-
+      const QString textDirection =  ( QApplication::layoutDirection() == Qt::LeftToRight ) ? QLatin1String( "left" ) : QLatin1String( "right" );
       tip += QString::fromLatin1(
         "  <tr>\n"
-        "    <td bgcolor=\"%1\" colspan=\"2\" align=\"left\" valign=\"middle\">\n"
+        "    <td bgcolor=\"%1\" colspan=\"2\" align=\"%4\" valign=\"middle\">\n"
         "      <div style=\"color: %2; font-weight: bold;\">\n"
         "      %3\n"
         "      </div>\n"
         "    </td>\n"
         "  </tr>\n"
-        ).arg( txtColor ).arg( bckColor ).arg( index.data( Qt::DisplayRole ).toString() );
+        ).arg( txtColor ).arg( bckColor ).arg( index.data( Qt::DisplayRole ).toString() ).arg( textDirection );
 
 
       tip += QString::fromLatin1(
         "  <tr>\n"
-        "    <td align=\"left\" valign=\"top\">\n"
-        );
+        "    <td align=\"%1\" valign=\"top\">\n"
+        ).arg( textDirection );
 
-      tip += QString::fromLatin1(
+      QString tipInfo;
+      tipInfo += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"
         "      <strong>%3</strong>: %4<br><br>\n"
         ).arg( i18n( "Total Messages" ) ).arg( collection.statistics().count() )
@@ -91,14 +92,14 @@ class StatisticsProxyModel::Private
 
           if ( qAbs( percentage ) >= 0.01 ) {
             QString percentStr = QString::number( percentage, 'f', 2 );
-            tip += QString::fromLatin1(
+            tipInfo += QString::fromLatin1(
               "      <strong>%1</strong>: %2%<br>\n"
               ).arg( i18n( "Quota" ) ).arg( percentStr );
           }
         }
       }
 
-      tip += QString::fromLatin1(
+      tipInfo += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"
         ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
 
@@ -126,17 +127,25 @@ class StatisticsProxyModel::Private
         iconPath = KIconLoader::global()->iconPath( QLatin1String( "folder" ), -32, false );
       }
 
-      tip += QString::fromLatin1(
-        "    </td>\n"
-        "    <td align=\"right\" valign=\"top\">\n"
+      QString tipIcon = QString::fromLatin1(
         "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
         "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
         "      </td></tr></table>\n"
         "    </td>\n"
-        "  </tr>\n"
         ).arg( iconPath ).arg( icon_size_found ) ;
 
+      if ( QApplication::layoutDirection() == Qt::LeftToRight )
+      {
+        tip += tipInfo + QString::fromLatin1( "</td><td align=\"%3\" valign=\"top\">" ).arg( textDirection ) + tipIcon;
+      }
+      else
+      {
+        tip += tipIcon + QString::fromLatin1( "</td><td align=\"%3\" valign=\"top\">" ).arg( textDirection ) + tipInfo;
+      }
+
+
       tip += QString::fromLatin1(
+        "  </tr>" \
         "</table>"
         );
 
