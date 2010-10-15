@@ -458,15 +458,11 @@ void AgentBasePrivate::slotError( const QString& message )
   mTracer->error( QString::fromLatin1( "AgentBase(%1)" ).arg( mId ), message );
 }
 
-// No Solid on WinCE
-#ifndef Q_OS_WINCE
 void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
 {
   Q_Q( AgentBase );
   q->setOnline( stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected );
 }
-#endif
-
 
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
@@ -575,7 +571,6 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
   Q_D( AgentBase );
   d->mNeedsNetwork = needsNetwork;
 
-#ifndef Q_OS_WINCE
   if ( d->mNeedsNetwork ) {
     connect( Solid::Networking::notifier()
            , SIGNAL( statusChanged( Solid::Networking::Status ) )
@@ -584,10 +579,6 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
     disconnect( Solid::Networking::notifier(), 0, 0, 0 );
     setOnline( true );
   }
-#else
-    // TODO handle the online/offline state ?
-    setOnline( true );
-#endif
 }
 
 void AgentBase::setOnline( bool state )

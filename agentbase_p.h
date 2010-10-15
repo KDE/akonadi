@@ -26,9 +26,7 @@
 
 #include <klocale.h>
 
-#ifndef Q_OS_WINCE
 #include <solid/networking.h>
-#endif
 
 class QSettings;
 
@@ -50,9 +48,7 @@ class AgentBasePrivate : public QObject
     void slotPercent( int progress );
     void slotWarning( const QString& message );
     void slotError( const QString& message );
-#ifndef Q_OS_WINCE
     void slotNetworkStatusChange( Solid::Networking::Status );
-#endif
 
     virtual void changeProcessed();
 
