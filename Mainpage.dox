@@ -1,5 +1,5 @@
 /**
-\mainpage Akonadi Server
+\mainpage %Akonadi Server
 
 <p><b>
 Overview |
@@ -42,7 +42,117 @@ and Akonadi agents.
 \li The Akonadi protocol library (\c libakonadiprotocolinternals), Contains protocol definitions and protocol parsing methods
     useful for client implementations.
 
-\subsection akonadi_server_protocols Communication Protocols
+\section akonadi_server_objects Objects and Data Types
+
+The %Akonadi server operates on two basic object types, calles items and collections. They are comparable to files and directories
+and are described in more detail in this section.
+
+\subsection akonadi_server_objects_items %Akonadi Items
+
+An item is a generic container for whatever you want to store in Akonadi (eg. mails,
+events, contacts, etc.). An item consists of some generic information (such as identifier,
+mimetype, change date, flags, etc.) and a set of data fields, the item parts. Items
+are independent of the type of stored data, the semantics of the actual content is only
+known on the client side.
+
+\subsubsection akonadi_server_objects_items_parts Item Parts
+
+%Akonadi items can have one or more parts, e.g. an email message consists of the
+envelope, the body and possible one or more attachments. Item parts are identified
+by an identifier string. There are a few special pre-defined part identifiers (ALL,
+ENVELOPE, etc.), but in general the part identifiers are definied by the type specific
+extensions (ie. resource, serializer plugin, type specific client library).
+
+\subsubsection akonadi_server_objects_items_serializer Payload Data Serialization
+
+Item payload data is typically serialized in a standard format to ensure interoperability between different
+client library implementations. However, the %Akonadi server does not enforce any format,
+payload data is handled as an opaque binary blob.
+
+\subsection akonadi_server_objects_collections Collections
+
+Collections are sets of items. Every item is stored in exactly one
+collection, this is sometimes also referred to as the "physical" storage location of the item.
+An item might also be visible in several other collections - so called "virtual collections" -
+which are defined as the result set of a search query.
+
+Collections are organized hierarchically, i.e. a collection can have child
+collections, thus defining a collection tree.
+
+Collections are uniquely identified by their identifier in
+contrast to their path, which is more robust wrt. to renaming and moving.
+
+\subsubsection akonadi_server_objects_collections_akonadi Collection Properties
+
+Every collection has a set of supported content types.
+These are the mimetypes of items the collection can contain.
+Example: A collection of a folder-less iCal file resource would only support
+"text/calendar" items, a folder on an IMAP server "message/rfc822" but also
+"inode/directory" if it can contain sub-folders.
+
+There is a cache policy associated with every collection which defines how much
+of its content should be kept in the local cache and for how long.
+
+Additionally, collections can contain an arbitrary set of attributes to represent
+various other collection properties such as ACLs, quotas or backend-specific data
+used for incremental synchronization. Evaluation of such attributes is the responsibility
+of client implementations, the %Akonadi server does not interpret properties
+other than content types and cache policies.
+
+\subsubsection akonadi_server_objects_collections_tree Collection Tree
+
+There is a single collection tree in Akonadi, consisting of several parts:
+
+- A root node, id 0
+- One or more top-level collections for each resource. Think of these as mount-points
+  for the resource. The resources must put their items and sub-collections into their
+  corresponding top-level collection.
+- Resource-dependent sub-collections below the resource top-level collections.
+  If the resource represents data that is organized in folders (e.g. an IMAP
+  resource), it can create additional collections below its top-level
+  collection. These have to be synched with the corresponding backend by the
+  resource.
+  Resources which represent folder-less data (e.g. an iCal file) don't need
+  any sub-collections and put their items directly into the top-level collection.
+- A top-level collection containing virtual collections.
+
+Example:
+
+\verbatim
++-+ resource-folder1
+| +- sub-folder1
+| +- sub-folder2
+|  ...
++-+ resource-folder2
+| ...
+|
++-+ Searches
+  +- search-folder1
+  +- search-folder2
+  ...
+\endverbatim
+
+
+\subsection akonadi_server_objects_identification Object Identification
+
+\subsubsection akonadi_server_objects_identification_uid Unique Identifier
+
+Every object stored in %Akonadi (collections and items) has a unique
+identifier in the form of an integer value. This identifier cannot be changed in
+any way and will stay the same, regardless of any modifications to the referred
+object. A unique identifier will never be used twice and is globally unique,
+therefore it is possible to retrieve an item without knowing the collection it belongs to.
+
+\subsubsection akonadi_server_objects_identification_rid Remote Identifier
+
+Every object can also have an optional so-called remote identifier. This is an
+identifier used by the corresponding resource to identify the object on its
+backend (e.g., a groupware server).
+
+The remote identifier can be changed by the owning resource agent only.
+
+
+\section akonadi_server_protocols Communication Protocols
 
 For communication within the Akonadi server infrastructure and for communication with Akonadi clients, two communication technologies are used:
 \li \em D-Bus Used for management tasks and change notifications.
@@ -50,7 +160,7 @@ For communication within the Akonadi server infrastructure and for communication
 
 \todo add protocol documentation
 
-\subsection akonadi_server_storage Data and Metadata Storage
+\section akonadi_server_storage Data and Metadata Storage
 
 The Akonadi server uses two mechanisms for data storage:
 \li A SQL databases for metadata and small payload data
