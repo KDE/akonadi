@@ -42,6 +42,7 @@ struct ProtocolHelperValuePool
 
   FlagPool flagPool;
   MimeTypePool mimeTypePool;
+  QHash<Collection::Id, Collection> ancestorCollections;
 };
   
 /**
@@ -80,6 +81,14 @@ class ProtocolHelper
       Convert a ancestor chain from its protocol representation into an Entity object.
     */
     static void parseAncestors( const QByteArray &data, Entity *entity, int start = 0 );
+
+    /**
+      Convert a ancestor chain from its protocol representation into an Entity object.
+
+      This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
+      same @p parentCollection don't have to be parsed twice.
+    */
+    static void parseAncestorsCached( const QByteArray &data, Entity *entity, Collection::Id parentCollection, ProtocolHelperValuePool *valuePool = 0, int start = 0 );
 
     /**
       Parse a collection description.

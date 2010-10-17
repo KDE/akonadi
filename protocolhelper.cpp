@@ -79,6 +79,25 @@ QByteArray ProtocolHelper::cachePolicyToByteArray(const CachePolicy & policy)
   return rv;
 }
 
+void ProtocolHelper::parseAncestorsCached( const QByteArray &data, Entity *entity, Collection::Id parentCollection,
+                                           ProtocolHelperValuePool *pool, int start )
+{
+  if ( !pool || parentCollection == -1 ) {
+    // if no pool or parent collection id is provided we can't cache anything, so continue as usual
+    parseAncestors( data, entity, start );
+    return;
+  }
+
+  if ( pool->ancestorCollections.contains( parentCollection ) ) {
+    // ancestor chain is cached already, so use the cached value
+    entity->setParentCollection( pool->ancestorCollections.value( parentCollection ) );
+  } else {
+    // not cached yet, parse the chain
+    parseAncestors( data, entity, start );
+    pool->ancestorCollections.insert( parentCollection, entity->parentCollection() );
+  }
+}
+
 void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int start )
 {
   Q_UNUSED( start );
@@ -355,7 +374,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
       ImapParser::parseDateTime( lineTokens[i + 1], datetime );
       item.setModificationTime( datetime );
     } else if ( key == "ANCESTORS" ) {
-      ProtocolHelper::parseAncestors( lineTokens[i + 1], &item );
+      ProtocolHelper::parseAncestorsCached( lineTokens[i + 1], &item, cid, valuePool );
     } else {
       int version = 0;
       QByteArray plainKey( key );
