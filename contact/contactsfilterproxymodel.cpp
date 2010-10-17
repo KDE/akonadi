@@ -155,6 +155,13 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
       return true;
   }
 
+  const QStringList categories = contact.categories();
+  count = categories.count();
+  for ( int i = 0; i < count; ++i ) {
+    if ( categories.at( i ).contains( filterString, Qt::CaseInsensitive ) )
+      return true;
+  }
+
   if ( contact.mailer().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
