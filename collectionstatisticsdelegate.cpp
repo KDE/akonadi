@@ -75,7 +75,8 @@ class CollectionStatisticsDelegatePrivate
 
       if ( index.model()->hasChildren( index ) )
       {
-        for ( int row = 0; row < index.model()->rowCount( index ); row++ )
+        const int rowCount = index.model()->rowCount( index );
+        for ( int row = 0; row < rowCount; row++ )
         {
           static const int column = 0;
           count += getCountRecursive<countType>( index.model()->index( row, column, index ) );
@@ -305,7 +306,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       sumText = QString::number( expanded ? unreadCount : unreadRecursiveCount );
     } else {
 
-      qint64 totalCount = statistics.unreadCount();
+      qint64 totalCount = statistics.count();
       qint64 totalRecursiveCount = d->getCountRecursive<TotalCount>( index.sibling( index.row(), 0 ) );
       if (index.column() == 2 && ( ( !expanded && totalRecursiveCount > 0 ) || ( expanded && totalCount > 0 ) ) ) {
         sumText = QString::number( expanded ? totalCount : totalRecursiveCount );
