@@ -83,22 +83,26 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
 {
   Q_UNUSED( start );
 
-  QList<QByteArray> ancestors;
+  const Collection::Id rootCollectionId = Collection::root().id();
+  QVarLengthArray<QByteArray, 16> ancestors;
+  QVarLengthArray<QByteArray, 16> parentIds;
+
   ImapParser::parseParenthesizedList( data, ancestors );
   Entity* current = entity;
-  foreach ( const QByteArray &uidRidPair, ancestors ) {
-    QList<QByteArray> parentIds;
-    ImapParser::parseParenthesizedList( uidRidPair, parentIds );
+  for ( int i = 0; i < ancestors.count(); ++i ) {
+    parentIds.clear();
+    ImapParser::parseParenthesizedList( ancestors[ i ], parentIds );
     if ( parentIds.size() != 2 )
       break;
+
     const Collection::Id uid = parentIds.at( 0 ).toLongLong();
-    const QString rid = QString::fromUtf8( parentIds.at( 1 ) );
-    if ( uid == Collection::root().id() ) {
+    if ( uid == rootCollectionId ) {
       current->setParentCollection( Collection::root() );
       break;
     }
+
     current->parentCollection().setId( uid );
-    current->parentCollection().setRemoteId( rid );
+    current->parentCollection().setRemoteId( QString::fromUtf8( parentIds.at( 1 ) ) );
     current = &current->parentCollection();
   }
 }
