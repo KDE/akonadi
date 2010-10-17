@@ -83,7 +83,7 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
 {
   Q_UNUSED( start );
 
-  const Collection::Id rootCollectionId = Collection::root().id();
+  static const Collection::Id rootCollectionId = Collection::root().id();
   QVarLengthArray<QByteArray, 16> ancestors;
   QVarLengthArray<QByteArray, 16> parentIds;
 
