@@ -294,7 +294,7 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
 QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &searchPath )
 {
   if ( instance()->mPluginDirs.isEmpty() ) {
-    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
+    QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
 
     if ( QCoreApplication::instance() != 0 ) {
       foreach ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
@@ -325,8 +325,6 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
 
 #if defined(Q_OS_WIN) //krazy:exclude=cpp
   const QString pluginName = relPath + QLatin1String( ".dll" );
-#elif defined(Q_OS_MAC)
-  const QString pluginName = relPath + QLatin1String( ".dylib" );
 #else
   const QString pluginName = relPath + QLatin1String( ".so" );
 #endif
