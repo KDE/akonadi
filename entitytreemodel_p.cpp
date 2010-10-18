@@ -1408,8 +1408,11 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
 
   foreach ( const Collection &collection, collections ) {
     const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
-
-    Node *node = m_childEntities.value( collection.id() ).at( row );
+    Q_ASSERT(row >= 0);
+    Q_ASSERT(m_childEntities.contains(collection.id()));
+    QList<Node*> nodeList = m_childEntities.value( collection.id() );
+    Q_ASSERT(row < nodeList.size());
+    Node *node = nodeList.at( row );
 
     indexes << q->createIndex( row, 0, reinterpret_cast<void*>( node ) );
   }
