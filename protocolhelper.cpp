@@ -114,14 +114,14 @@ void ProtocolHelper::parseAncestors( const QByteArray &data, Entity *entity, int
     if ( parentIds.size() != 2 )
       break;
 
-    const Collection::Id uid = parentIds.at( 0 ).toLongLong();
+    const Collection::Id uid = parentIds[ 0 ].toLongLong();
     if ( uid == rootCollectionId ) {
       current->setParentCollection( Collection::root() );
       break;
     }
 
     current->parentCollection().setId( uid );
-    current->parentCollection().setRemoteId( QString::fromUtf8( parentIds.at( 1 ) ) );
+    current->parentCollection().setRemoteId( QString::fromUtf8( parentIds[ 1 ] ) );
     current = &current->parentCollection();
   }
 }
