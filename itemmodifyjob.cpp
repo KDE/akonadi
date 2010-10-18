@@ -166,7 +166,7 @@ void ItemModifyJob::doStart()
   d->mTag = d->newTag();
   QByteArray command = d->mTag;
   command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
-  if ( !d->mRevCheck ) {
+  if ( !d->mRevCheck || d->mItem.revision() < 0 ) {
     command += "NOREV ";
   } else {
     command += "REV " + QByteArray::number( d->mItem.revision() ) + ' ';
