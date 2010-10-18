@@ -572,7 +572,9 @@ QByteArray ImapStreamParser::parseQuotedString()
         m_position = i;
         throw ImapParserException("Unable to read more data");
       }
-      if ( m_data[i] == ' ' || m_data[i] == '(' || m_data[i] == ')' || m_data[i] == '[' || m_data[i] == ']' || m_data[i] == '\n' || m_data[i] == '\r' || m_data[i] == '"') {
+      // unlike in the copy in KIMAP we do not want to consider [] brackets as separators, breaks payload version parsing
+      // if that ever gets fixed we can re-add them here, see svn revision 937879
+      if ( m_data[i] == ' ' || m_data[i] == '(' || m_data[i] == ')' || m_data[i] == '\n' || m_data[i] == '\r' || m_data[i] == '"') {
         end = i;
         reachedInputEnd = false;
         break;
