@@ -59,9 +59,9 @@ bool AgentProcessInstance::start( const AgentType &agentInfo )
     mController->start( executable, arguments );
   } else {
     Q_ASSERT( agentInfo.launchMethod == AgentType::Launcher );
-    QStringList arguments;
-    arguments << executable << identifier();
-    mController->start( QLatin1String( "akonadi_agent_launcher" ), arguments );
+    const QStringList arguments = QStringList() << executable << identifier();
+    const QString agentLauncherExec = XdgBaseDirs::findExecutableFile( QLatin1String( "akonadi_agent_launcher" ) );
+    mController->start( agentLauncherExec, arguments );
   }
   return true;
 }
