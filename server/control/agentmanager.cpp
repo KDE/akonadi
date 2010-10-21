@@ -253,7 +253,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   mAgentInstances.remove( identifier );
 
   save();
-  
+
   org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/ResourceManager"), QDBusConnection::sessionBus(), this );
   resmanager->removeResourceInstance(instance->identifier());
 
@@ -317,10 +317,10 @@ void AgentManager::agentInstanceConfigure( const QString &identifier, qlonglong 
 {
   if ( !checkAgentInterfaces( identifier, "agentInstanceConfigure" ) )
     return;
-  
+
   org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                       "/AgentServer", QDBusConnection::sessionBus(), this );
-						      
+
   if ( agentServer.started( identifier ) ) {
     agentServer.agentInstanceConfigure( identifier, windowId );
   } else {
@@ -508,7 +508,7 @@ void AgentManager::load()
     instance->setIdentifier( instanceIdentifier );
     if ( instance->start( mAgents.value( agentTypeStr ) ) )
       mAgentInstances.insert( instanceIdentifier, instance );
-    
+
     file.endGroup();
   }
 
