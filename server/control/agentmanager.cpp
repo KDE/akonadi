@@ -452,14 +452,14 @@ void AgentManager::readPluginInfos( const QDir& directory )
           akError() << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
           continue;
         }
+#ifndef QT_NO_DEBUG
+        if ( !mAgentWatcher->files().contains( executable ) )
+          mAgentWatcher->addPath( executable );
+#endif
       }
 
       qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
-#ifndef QT_NO_DEBUG
-      if ( !mAgentWatcher->files().contains( executable) )
-        mAgentWatcher->addPath( executable );
-#endif
     }
   }
 }
