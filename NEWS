@@ -1,3 +1,15 @@
+1.4.1                         22-October-2010
+---------------------------------------------
+- Improve range query performance.
+- Fix MySQL database upgrade happening too early.
+- Fix MySQL database upgrade setting wrong priviledges.
+- Fix non-index access slowing down server startup.
+- ASAP parser performance optimizations
+- Respect SocketDirectory setting also for database sockets.
+- Allow $USER placeholder in SocketDirectory setting.
+- Fix ASAP parser failing on non-zero serialization format versions.
+
+
 1.4.0                            31-July-2010
 ---------------------------------------------
 - Add change notification for collection subscription state changes.

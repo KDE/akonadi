@@ -1,3 +1,82 @@
+2010-10-18 08:44 +0000 [r1187073]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/imapstreamparser.cpp: Backport
+	  bugfix (r1186987)
+
+2010-10-11 07:48 +0000 [r1184650]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/CMakeLists.txt,
+	  branches/akonadi/1.4/server/src/storage/dbconfigmysql.cpp,
+	  branches/akonadi/1.4/server/src/utils.h,
+	  branches/akonadi/1.4/server/src/akonadi.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfig.cpp,
+	  branches/akonadi/1.4/server/src/utils.cpp (added),
+	  branches/akonadi/1.4/server/src/storage/dbconfigpostgresql.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfig.h: Allow to use
+	  the place holder '$USER' inside the custom socket directory
+
+2010-10-08 14:10 +0000 [r1183854]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/libs/imapparser.cpp: Backport performance
+	  improvments from commit r1182169
+
+2010-10-08 12:28 +0000 [r1183789]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/dbconfigmysql.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfig.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfigpostgresql.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfig.h: Fixed the
+	  handling of custom Connection/SocketDirectory entry in
+	  akonadiserverrc. The databases (MySQL and PostgreSQL) respect
+	  this setting now as well and the directory is created
+	  automatically if non-existing.
+
+2010-09-26 14:11 +0000 [r1179920]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/libs/tests/CMakeLists.txt,
+	  branches/akonadi/1.4/libs/tests/imapparserbenchmark.cpp (added),
+	  branches/akonadi/1.4/libs/imapparser.cpp: Backport imapparser
+	  performance improvements (r1179519, r1179534)
+
+2010-08-19 07:43 +0000 [r1165384]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/akonadidb.xml,
+	  branches/akonadi/1.4: Merged revisions 1165376 via svnmerge from
+	  svn+ssh://vkrause@svn.kde.org/home/kde/trunk/kdesupport/akonadi
+	  ........ r1165376 | vkrause | 2010-08-19 09:31:45 +0200 (Thu, 19
+	  Aug 2010) | 4 lines Add index on part name, speeds up server
+	  startup on big databases considerably (due to
+	  unhideAllPimitems()). Actually found by David during Akademy, but
+	  somehow didn't get committed yet. ........
+
+2010-08-05 09:02 +0000 [r1159382]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/dbconfigmysql.cpp,
+	  branches/akonadi/1.4/server/src/storage/dbconfigmysql.h: Do not
+	  use 'mysql_upgrade', it will call 'mysql_fix_privilege_tables'
+	  internally which prevents us from further logins. Only call
+	  'mysqlcheck' instead, which does the checks we want to have.
+
+2010-08-03 15:24 +0000 [r1158741]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/dbconfigmysql.cpp: Move
+	  the mysql_upgrade call to a place where we have made sure that
+	  mysqld is up and running and accepts connections. This will avoid
+	  mysql_upgrade to fail with the FATAL ERROR message. BUG: 241977
+
+2010-08-02 08:59 +0000 [r1158192]  Tobias Koenig tokoe@kde.org
+
+	* branches/akonadi/1.4/server/src/storage/queryhelper.cpp: Do not
+	  add '>= 1' condition to query, because this will always be true
+	  for item id sets. Avoiding a range check does improve the
+	  performance of the query.
+
+2010-07-31 09:50 +0000 [r1157502]  Volker Krause vkrause@kde.org
+
+	* branches/akonadi/1.4/ChangeLog, branches/akonadi/1.4/NEWS,
+	  branches/akonadi/1.4/CMakeLists.txt: prepare Akonadi 1.4.0
+	  release
+
 2010-07-31 09:45 +0000 [r1157499-1157500]  Volker Krause vkrause@kde.org
 
 	* branches/akonadi/1.4/server/src/storage/notificationcollector.h,
@@ -706,12 +785,12 @@
 	  modify job, but that requires intrusive server changes and this
 	  makes the search in kmail work. Ok'd by Volker.
 
-2010-04-09 13:52 +0000 [r1112925]  Nicolas Lécureuil nlecureuil@mandriva.com
+2010-04-09 13:52 +0000 [r1112925]  Nicolas Lécureuil neoclust.kde@free.fr
 
 	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
 	  Forward port commit 1112923 CCBUG:185395
 
-2010-04-07 12:42 +0000 [r1112128]  Nicolas Lécureuil nlecureuil@mandriva.com
+2010-04-07 12:42 +0000 [r1112128]  Nicolas Lécureuil neoclust.kde@free.fr
 
 	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
 	  Use mysqk_upgrade after the creation of the socket
@@ -730,7 +809,7 @@
 	  from restarting). Instead, we now get the postmaster pid and
 	  force it to quit.
 
-2010-04-06 08:56 +0000 [r1111611]  Nicolas Lécureuil nlecureuil@mandriva.com
+2010-04-06 08:56 +0000 [r1111611]  Nicolas Lécureuil neoclust.kde@free.fr
 
 	* trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.h,
 	  trunk/kdesupport/akonadi/server/src/storage/dbconfigmysql.cpp:
@@ -1769,18 +1848,18 @@
 	  1044743, 1044749 and fix only what needs fixing. (and don't break
 	  4.3 compilation against akonadi trunk)
 
-2009-11-04 15:13 +0000 [r1044749]  Helio Chissini de Castro helio@kde.org
+2009-11-04 15:13 +0000 [r1044749]  Helio Castro helio@kde.org
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: All kdepimlibs expect
 	  that we have akonadi headers installed in <includedir>/akonadi.
 	  This now fix the issue
 
-2009-11-04 15:02 +0000 [r1044743]  Helio Chissini de Castro helio@kde.org
+2009-11-04 15:02 +0000 [r1044743]  Helio Castro helio@kde.org
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: - Revert this part since
 	  was pointed as not necessary by krop.
 
-2009-11-04 14:57 +0000 [r1044736]  Helio Chissini de Castro helio@kde.org
+2009-11-04 14:57 +0000 [r1044736]  Helio Castro helio@kde.org
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: - Make install
@@ -3580,7 +3659,7 @@
 	  the KDE Support API docs main pages, but not into the kdelibs API
 	  docs main pages?
 
-2009-03-08 16:22 +0000 [r936905]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2009-03-08 16:22 +0000 [r936905]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/tests/unittest/CMakeLists.txt:
 	  the private/public hack does not work on windows -> disabled
@@ -4151,7 +4230,7 @@
 	  Restart agents when their executable changed, much easier to test
 	  changes this way :)
 
-2008-12-30 17:49 +0000 [r903502]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-12-30 17:49 +0000 [r903502]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/src/tests/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/CMakeLists.txt,
@@ -4718,12 +4797,12 @@
 	  trunk/kdesupport/akonadi/server/src/handler/copy.cpp: Add
 	  serverside timestamp support for items.
 
-2008-07-20 08:55 +0000 [r835215]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-07-20 08:55 +0000 [r835215]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp: better fix for
 	  windows
 
-2008-07-19 13:19 +0000 [r834689]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-07-19 13:19 +0000 [r834689]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/libs/xdgbasedirs.cpp,
 	  trunk/kdesupport/akonadi/server/src/akonadi.cpp: make msvc and
@@ -4885,7 +4964,7 @@
 	* trunk/kdesupport/akonadi/server/control/agentmanager.cpp:
 	  dynamic_cast provides a runtime check, static_cast doesn't
 
-2008-05-05 17:48 +0000 [r804324-804326]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-05-05 17:48 +0000 [r804324-804326]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/interfaces/org.kde.Akonadi.Agent.Control.xml
 	  (removed): two seconds to late...
@@ -5077,7 +5156,7 @@
 	* trunk/kdesupport/akonadi/cmake/modules/FindAutomoc4.cmake
 	  (added): -add FindAutomoc4.cmake, forgot that last night Alex
 
-2008-04-26 08:06 +0000 [r801261]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-04-26 08:06 +0000 [r801261]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/control/kcrash.cpp: mingw doesn't
 	  have _exit(), only _Exit() or better - it has _exit() but not
@@ -5150,12 +5229,12 @@
 	  trunk/kdesupport/akonadi/INSTALL (added): Add INSTALL and README
 	  file
 
-2008-04-25 15:12 +0000 [r801052]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-04-25 15:12 +0000 [r801052]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/CMakeLists.txt: no need to link
 	  against kdewin32 lib here
 
-2008-04-25 14:25 +0000 [r801042]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-04-25 14:25 +0000 [r801042]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/control/kcrash.cpp: _exit() ->
 	  exit() because _exit() is not available when compiling on
@@ -5167,7 +5246,7 @@
 	  flags for -Wno-long-long and more warnings - add the cmake
 	  directory after that flags are set
 
-2008-04-25 05:09 +0000 [r800884]  Christian Ehrlicher Ch.Ehrlicher@gmx.de
+2008-04-25 05:09 +0000 [r800884]  Christian Ehrlicher ch.ehrlicher@gmx.de
 
 	* trunk/kdesupport/akonadi/server/CMakeLists.txt,
 	  trunk/kdesupport/akonadi/libs/CMakeLists.txt: win32 compile++
@@ -5188,7 +5267,7 @@
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: Check that Qt has DBus
 
-2008-04-24 10:23 +0000 [r800462]  Nicolas Lécureuil nlecureuil@mandriva.com
+2008-04-24 10:23 +0000 [r800462]  Nicolas Lécureuil neoclust.kde@free.fr
 
 	* trunk/kdesupport/akonadi/CMakeLists.txt: Require Qt 4.4 minimum
 
