@@ -67,6 +67,7 @@ bool AgentInstance::obtainAgentInterface()
     findInterface<org::freedesktop::Akonadi::Agent::Search>( "org.freedesktop.Akonadi.Agent", "/Search" );
 
   connect( mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)) );
+  connect( mAgentStatusInterface, SIGNAL(advancedStatus(QVariantMap)), SLOT(advancedStatusChanged(QVariantMap)) );
   connect( mAgentStatusInterface, SIGNAL(percent(int)), SLOT(percentChanged(int)) );
   connect( mAgentStatusInterface, SIGNAL(warning(QString)), SLOT(warning(QString)) );
   connect( mAgentStatusInterface, SIGNAL(error(QString)), SLOT(error(QString)) );
@@ -105,6 +106,11 @@ void AgentInstance::statusChanged(int status, const QString & statusMsg)
   mStatus = status;
   mStatusMessage = statusMsg;
   emit mManager->agentInstanceStatusChanged( mIdentifier, mStatus, mStatusMessage );
+}
+
+void AgentInstance::advancedStatusChanged( const QVariantMap &status )
+{
+  emit mManager->agentInstanceAdvancedStatusChanged( mIdentifier, status );
 }
 
 void AgentInstance::statusStateChanged(int status)

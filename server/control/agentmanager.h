@@ -262,6 +262,15 @@ class AgentManager : public QObject, protected QDBusContext
     void agentInstanceStatusChanged( const QString &agentIdentifier, int status, const QString &message );
 
     /**
+     * This signal is emitted whenever the status of an agent instance has
+     * changed.
+     *
+     * @param agentIdentifier The identifier of the agent that has changed.
+     * @param status The object that describes the status change.
+     */
+    void agentInstanceAdvancedStatusChanged( const QString &agentIdentifier, const QVariantMap &status );
+
+    /**
      * This signal is emitted whenever the progress of an agent instance has
      * changed.
      *

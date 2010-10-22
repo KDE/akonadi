@@ -84,6 +84,7 @@ class AgentInstance : public QObject
 
   private slots:
     void statusChanged( int status, const QString &statusMsg );
+    void advancedStatusChanged( const QVariantMap &status );
     void statusStateChanged( int status );
     void statusMessageChanged( const QString &msg );
     void percentChanged( int percent );
