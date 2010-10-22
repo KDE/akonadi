@@ -123,6 +123,7 @@ public:
   ItemFetchJob* getItemFetchJob( const Item &item, const ItemFetchScope &scope ) const;
   void runItemFetchJob( ItemFetchJob* itemFetchJob, const Collection &parent ) const;
   void changeFetchState( const Collection &parent );
+  void agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& );
 
   QHash<Collection::Id, Collection> m_collections;
   QHash<Entity::Id, Item> m_items;
@@ -144,6 +145,7 @@ public:
   bool m_includeUnsubscribed;
   bool m_includeStatistics;
   bool m_showRootCollection;
+  QHash<Collection::Id, uint> m_collectionSyncProgress;
 
   void rootCollectionFetched( const Collection::List &list );
   void startFirstListJob();

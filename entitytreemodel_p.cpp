@@ -20,6 +20,8 @@
 #include "entitytreemodel_p.h"
 #include "entitytreemodel.h"
 
+#include "agentmanagerinterface.h"
+#include "dbusconnectionpool.h"
 #include "monitor_p.h" // For friend ref/deref
 
 #include <KDE/KLocale>
@@ -41,6 +43,7 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemmovejob.h>
 #include <akonadi/linkjob.h>
+#include <akonadi/private/protocol_p.h>
 #include <akonadi/session.h>
 #include <akonadi/servermanager.h>
 
@@ -68,8 +71,16 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
     m_showRootCollection( false ),
     m_showSystemEntities( false )
 {
-    // using collection as a parameter of a queued call in runItemFetchJob()
-    qRegisterMetaType<Collection>();
+  // using collection as a parameter of a queued call in runItemFetchJob()
+  qRegisterMetaType<Collection>();
+
+  org::freedesktop::Akonadi::AgentManager *manager =
+           new org::freedesktop::Akonadi::AgentManager( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+                                                        QLatin1String( "/AgentManager" ),
+                                                        DBusConnectionPool::threadConnection(), q_ptr );
+
+  QObject::connect( manager, SIGNAL( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ),
+                    q_ptr, SLOT( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ) );
 }
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
@@ -145,8 +156,9 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
   names.insert( EntityTreeModel::UnreadCountRole, "unreadCount" );
   names.insert( EntityTreeModel::FetchStateRole, "fetchState" );
+  names.insert( EntityTreeModel::CollectionSyncProgressRole, "collectionSyncProgress" );
 
-  q->setRoleNames(names);
+  q->setRoleNames( names );
 
   fillModel();
 }
@@ -207,6 +219,24 @@ void EntityTreeModelPrivate::changeFetchState( const Collection &parent )
     // Because we are called delayed, it is possible that @p parent has been deleted.
     return;
   q->dataChanged(collectionIndex, collectionIndex);
+}
+
+void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap &status )
+{
+  const QString key = status.value( QLatin1String( "key" ) ).toString();
+  if ( key != QLatin1String( "collectionSyncProgress" ) )
+    return;
+
+  const Collection::Id collectionId = status.value( QLatin1String( "collectionId" ) ).toLongLong();
+  const uint percent = status.value( QLatin1String( "percent" ) ).toUInt();
+  m_collectionSyncProgress.insert( collectionId, percent );
+
+  const QModelIndex collectionIndex = indexForCollection( Collection( collectionId ) );
+  if ( !collectionIndex.isValid() )
+    return;
+
+  Q_Q( EntityTreeModel );
+  q->dataChanged( collectionIndex, collectionIndex );
 }
 
 void EntityTreeModelPrivate::fetchItems( const Collection &parent )

@@ -348,6 +348,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
       UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
       FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
+      CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a perticular collection. @since 4.6
       UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
       TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
       EndRole = 65535
@@ -647,6 +648,8 @@ private:
     Q_PRIVATE_SLOT( d_func(), void monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void changeFetchState( const Akonadi::Collection & ) )
+
+    Q_PRIVATE_SLOT( d_func(), void agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) )
     //@endcond
 };
 

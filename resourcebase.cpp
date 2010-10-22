@@ -142,6 +142,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         mItemSyncer->setTransactionMode( mItemTransactionMode );
         if ( mItemSyncFetchScope )
           mItemSyncer->setFetchScope( *mItemSyncFetchScope );
+        mItemSyncer->setProperty( "collection", QVariant::fromValue( q->currentCollection() ) );
         connect( mItemSyncer, SIGNAL( percent( KJob*, unsigned long ) ), q, SLOT( slotPercent( KJob*, unsigned long ) ) );
         connect( mItemSyncer, SIGNAL( result( KJob* ) ), q, SLOT( slotItemSyncDone( KJob* ) ) );
       }
@@ -767,8 +768,17 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
 {
   Q_Q( ResourceBase );
-  Q_UNUSED( job );
   emit q->percent( percent );
+
+  const Collection collection = job->property( "collection" ).value<Collection>();
+  if ( collection.isValid() ) {
+    QVariantMap statusMap;
+    statusMap.insert( QLatin1String( "key" ), QString::fromLatin1( "collectionSyncProgress" ) );
+    statusMap.insert( QLatin1String( "collectionId" ), collection.id() );
+    statusMap.insert( QLatin1String( "percent" ), static_cast<unsigned int>( percent ) );
+
+    emit q->advancedStatus( statusMap );
+  }
 }
 
 void ResourceBase::setHierarchicalRemoteIdentifiersEnabled( bool enable )

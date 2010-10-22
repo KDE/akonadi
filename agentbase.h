@@ -479,6 +479,14 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     void error( const QString& message );
 
     /**
+     * This signal should be emitted whenever the status of the agent has been changed.
+     * @param status The object that describes the status change.
+     *
+     * @since 4.6
+     */
+    void advancedStatus( const QVariantMap &status );
+
+    /**
      * Emitted when another application has remotely asked the agent to abort
      * its current operation.
      * Connect to this signal if your agent supports abortion. After aborting
