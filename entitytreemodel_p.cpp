@@ -266,15 +266,18 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   } else {
     job->fetchScope().setIncludeStatistics( m_includeStatistics );
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-    if ( listing != FirstListing )
+    if ( listing != FirstListing ) {
       q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                   q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
-    else
+      q->connect( job, SIGNAL( result( KJob* ) ),
+                  q, SLOT( fetchJobDone( KJob* ) ) );
+    } else {
       q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                   q, SLOT( firstCollectionsFetched( const Akonadi::Collection::List& ) ) );
+      q->connect( job, SIGNAL( result( KJob* ) ),
+                  q, SLOT( firstFetchJobDone( KJob* ) ) );
+    }
   }
-  q->connect( job, SIGNAL( result( KJob* ) ),
-              q, SLOT( fetchJobDone( KJob* ) ) );
   ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
@@ -1196,6 +1199,12 @@ void EntityTreeModelPrivate::startFirstListJob()
 void EntityTreeModelPrivate::firstCollectionsFetched( const Akonadi::Collection::List& collections )
 {
   collectionsFetched( collections );
+}
+
+void EntityTreeModelPrivate::firstFetchJobDone( KJob *job )
+{
+  if ( job->error() )
+    kWarning() << job->errorString();
   // It is quicker to recursively list from the root again than to do
   // individual listings for each top level item from the first fetch.
   fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );

@@ -152,6 +152,7 @@ public:
 
   void serverStarted();
 
+  void firstFetchJobDone( KJob *job );
   void fetchJobDone( KJob *job );
   void updateJobDone( KJob *job );
   void pasteJobDone( KJob *job );
