@@ -26,6 +26,7 @@
 int main( int argc, char *argv[] )
 {
   QApplication app( argc, argv );
+  app.setQuitOnLastWindowClosed( false );
 
   if ( app.arguments().size() != 3 ) { // Expected usage: ./agent_launcher ${plugin_name} ${identifier}
     qDebug() << "Invalid usage: expected: ./agent_launcher pluginName agentIdentifier";
