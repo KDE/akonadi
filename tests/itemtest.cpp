@@ -58,9 +58,12 @@ void ItemTest::testInheritance()
   Item a;
 
   a.setRemoteId( "Hello World" );
+  a.setSize( 10 );
 
   Item b( a );
   b.setFlag( "\\send" );
+  QCOMPARE( b.remoteId(), QString( "Hello World" ) );
+  QCOMPARE( b.size(), (qint64)10 );
 }
 
 void ItemTest::testParentCollection ()
