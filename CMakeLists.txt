@@ -63,19 +63,6 @@ if(EXISTS "${Akonadi_SOURCE_DIR}/.git")
   endif()
 endif()
 
-# FIXME: delete when it's not necessary anymore.
-# If Subversion is installed, and a '.svn' directory is found,
-# we append the SVN revision to AKONADI_VERSION_STRING.
-if (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
-  if (NOT Subversion_FOUND)
-    find_package( Subversion)
-  endif (NOT Subversion_FOUND)
-  if (Subversion_FOUND)
-    Subversion_WC_INFO( ${PROJECT_SOURCE_DIR} Akonadi)
-    set(AKONADI_VERSION_STRING "${AKONADI_VERSION_STRING} (revision ${Akonadi_WC_LAST_CHANGED_REV})")
-  endif (Subversion_FOUND)
-endif (EXISTS "${Akonadi_SOURCE_DIR}/.svn")
-
 
 ############### Macros ###############
 
