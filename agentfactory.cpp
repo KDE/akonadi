@@ -41,7 +41,7 @@ AgentFactoryBase::AgentFactoryBase(const char* catalogName, QObject* parent):
 {
   d->catalogName = QString::fromLatin1( catalogName );
   if ( !KGlobal::hasMainComponent() )
-    new KComponentData( "AkoanadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
+    new KComponentData( "AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
 
   KGlobal::locale()->insertCatalog( d->catalogName );
 }
