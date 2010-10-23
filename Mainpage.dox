@@ -29,6 +29,31 @@ The Akonadi framework uses a client/server architecture. The Akonadi server has 
 \li Provide change notifications and conflict detection
 \li Support offline change recording and change replay for remote data
 
+\subsection akonadi_server_design_principles Design Principles
+
+The Akonadi architecture is based on the following four design principles:
+
+\li <em>Functionality is spread over different processes.</em><br>
+        This separation has the big advantage that if one process crashes because of
+        a programming error it doesn't affect the other components. That results in
+        robustness of the whole system. A disadvantage might be that there is an additional
+        overhead due to inter-process communication.
+\li <em>Communication protocol is split into data and control channel.</em><br>
+        When doing communication between processes you have to differentiate between the type of data
+        that is being transferred. For a large amount of data a high-performance
+        protocol should be used and for control data a low-latency protocol.
+        Matching both requirements in one protocol is mostly impossible and hard to
+        achieve with currently available software.
+\li <em>Separate logic from storage.</em><br>
+        By separating the logic from the storage, the storage can be used to store data
+        of any type. In this case, the storage is a kind of service, which is available for
+        other components of the system. The logic is located in separated components and so
+        3rd-party developers can extend the system by providing their own components.
+\li <em>Keep communication asynchronous.</em><br>
+        To allow a non-blocking GUI, all the communication with the back-end and within the
+        back-end itself must be asynchronous. You can easily provide a synchronous convenience
+        for the application developer; the back-end, however, must communicate asynchronously.
+
 \subsection akonadi_server_components Components
 
 The Akonadi server itself consists of a number of components:
@@ -42,12 +67,31 @@ and Akonadi agents.
 \li The Akonadi protocol library (\c libakonadiprotocolinternals), Contains protocol definitions and protocol parsing methods
     useful for client implementations.
 
+\subsubsection akonadi_server_components_server The Akonadi server process
+
+The %Akonadi server process (\c akonadiserver) has the following tasks:
+\li Provide a transaction-safe data store.
+\li Provide operations to add/modify/delete items and collections in the local store, implementing the server side of the ASAP protcol.
+\li Cache management of cached remote contents.
+\li Manage virtual collections representing search results.
+\li Provide change notifications for all known Akonadi objects over D-Bus.
+
+\subsubsection akonadi_server_components_control The Akonadi server control process
+
+The %Akondi control process (\c akonadi_control) has the following tasks:
+\li Manage and monitor the other server processes.
+\li Lifecycle management of agent instances using the various supported agent launch methods.
+\li Monitor agent instances and provide crash recovery.
+\li Provide D-Bus API to manage agents.
+\li Provide change notifications on agent types and agent instances.
+
+
 \section akonadi_server_objects Objects and Data Types
 
 The %Akonadi server operates on two basic object types, calles items and collections. They are comparable to files and directories
 and are described in more detail in this section.
 
-\subsection akonadi_server_objects_items %Akonadi Items
+\subsection akonadi_server_objects_items Akonadi Items
 
 An item is a generic container for whatever you want to store in Akonadi (eg. mails,
 events, contacts, etc.). An item consists of some generic information (such as identifier,
@@ -156,11 +200,43 @@ The remote identifier can be changed by the owning resource agent only.
 
 For communication within the Akonadi server infrastructure and for communication with Akonadi clients, two communication technologies are used:
 \li \em D-Bus Used for management tasks and change notifications.
-\li \em ASAP (Akonadi Server Access Protocol), used for high-throughput data transfer
+\li \em ASAP (Akonadi Server Access Protocol), used for high-throughput data transfer. ASAP is based on the well-known IMAP protocol (RFC 3501)
+  which has been proven it's ability to handle large quantities of data in practice already.
 
 \todo add protocol documentation
 
-\section akonadi_server_storage Data and Metadata Storage
+
+\section akonadi_server_interaction Interacting with Akonadi
+
+There are various possbilities to interact with %Akonadi.
+
+\section akonadi_server_interaction_client_libraray Akoandi Client Libraries
+
+Accessing the %Akonadi server using the ASAP and D-Bus interfaces directly is cumbersome.
+Therefore you'd usually use a client library implementing the low-level protocol handling
+and providing convenient high-level APIs for %Akonadi operations.
+
+Currently, the most complete implementation is the
+<a href="http://api.kde.org/4.x-api/kdepimlibs-apidocs/akonadi/html/index.html">KDE %Akonadi client library</a>.
+
+\todo add links to the other ones
+
+\subsection akonadi_server_interaction_agents Akonadi Agents
+
+%Akonadi agents are processes which are controlled by the Akonadi server itself. Agents typically
+operate autonomously (ie. without much user interaction) on the objects handled by Akonadi, mostly
+by reacting to change notifications sent by the %Akonadi server.
+
+Additionally, there are specialized interfaces agents can implement to provide additional functionality.
+The most important ones are the so-called resource agents. 
+
+Resource agnets are connectors that provide access to data from an external source, and replay local changes
+back to their corresponding backend.
+
+
+\section akonadi_server_implementation Implementation Details
+
+\subsection akonadi_server_implementation_storage Data and Metadata Storage
 
 The Akonadi server uses two mechanisms for data storage:
 \li A SQL databases for metadata and small payload data
@@ -194,9 +270,9 @@ definitions.
 \li <em>Data references</em><br>
     The persistent identifier is an unsigned integer and the external URL is
     a Unicode string (QString).
-\li <em>Transferred data over IMAP</em><br/>
-    The data transferred over IMAP are byte arrays (QByteArray). If Unicode strings are
-    transferred over IMAP, UTF-8 encoding is applied.
+\li <em>Transferred data over ASAP</em><br/>
+    The data transferred over ASAP are byte arrays (QByteArray). If Unicode strings are
+    transferred over ASAP, UTF-8 encoding is applied.
 \li <em>Error and status messages</em><br>
     Error and status messages are visible to the user, so they have to be
     Unicode strings (QString).
@@ -223,7 +299,7 @@ The different parts are layed out as follows:
 <li> \e src <br>
     Contains the source code of the \ref akonadi_design_storage "storage" component.
 <li> \e src/handler <br>
-    Contains the source code for the handlers of the single IMAP commands.
+    Contains the source code for the handlers of the single ASAP commands.
     See <a href="group__akonadi__server__handler.html">command handlers module</a>
 <li> \e src/storage <br>
     Contains the source code for accessing the storage back-end.<br>
