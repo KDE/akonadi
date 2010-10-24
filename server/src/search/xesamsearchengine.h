@@ -33,19 +33,20 @@ namespace Akonadi {
 class XesamSearchEngine : public QObject, public AbstractSearchEngine
 {
   Q_OBJECT
+
   public:
-    XesamSearchEngine( QObject* parent = 0 );
+    XesamSearchEngine( QObject *parent = 0 );
     ~XesamSearchEngine();
 
     void addSearch( const Collection &collection );
-    void removeSearch( qint64 collection );
+    void removeSearch( qint64 collectionId );
 
   private:
     void reloadSearches();
     void stopSearches();
-    qint64 uriToItemId( const QString &uri );
+    qint64 uriToItemId( const QString &uri ) const;
 
-  private slots:
+  private Q_SLOTS:
     void slotHitsAdded( const QString &search, int count );
     void slotHitsRemoved( const QString &search, const QList<int> &hits );
     void slotHitsModified( const QString &search, const QList<int> &hits );
@@ -53,8 +54,8 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
   private:
     OrgFreedesktopXesamSearchInterface *mInterface;
     QString mSession;
-    QHash<QString,int> mSearchMap;
-    QHash<int,QString> mInvSearchMap;
+    QHash<QString, int> mSearchMap;
+    QHash<int, QString> mInvSearchMap;
     QMutex mMutex;
     bool mValid;
 };
