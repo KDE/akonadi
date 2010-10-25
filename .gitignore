@@ -1,0 +1,6 @@
+# Ignore the following files
+*~
+*.[oa]
+*.kdev4
+.swp.*
+.*.swp
