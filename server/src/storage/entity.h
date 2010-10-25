@@ -120,7 +120,7 @@ class Entity
 
   protected:
     Entity();
-    Entity( qint64 id );
+    explicit Entity( qint64 id );
     ~Entity();
 
   private:
