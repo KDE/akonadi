@@ -39,8 +39,20 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
 
   // by default search for all contacts
   ItemSearchJob::setQuery( QLatin1String( ""
+#ifdef AKONADI_USE_STRIGI_SEARCH
+                                          "<request>"
+                                          "  <query>"
+                                          "    <equals>"
+                                          "      <field name=\"type\"/>"
+                                          "      <string>PersonContact</string>"
+                                          "    </equals>"
+                                          "  </query>"
+                                          "</request>"
+#else
                                           "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                          "SELECT ?r WHERE { ?r a nco:PersonContact }" ) );
+                                          "SELECT ?r WHERE { ?r a nco:PersonContact }"
+#endif
+                                        ) );
 }
 
 ContactSearchJob::~ContactSearchJob()
@@ -58,12 +70,31 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
   if ( match == StartsWithMatch && value.size() < 4 )
     match = ExactMatch;
 
-  QString query = QString::fromLatin1(
-            "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
+  QString query;
+
+#ifndef AKONADI_USE_STRIGI_SEARCH
+  query = QString::fromLatin1( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
+#endif
 
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <equals>"
+          "        <field name=\"fullname\"/>"
+          "        <string>%1</string>"
+          "      </equals>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -71,9 +102,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r a nco:PersonContact . "
           "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
           "  } "
-          "} " );
+          "} "
+#endif
+      );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <equals>"
+          "        <field name=\"emailAddress\"/>"
+          "        <string>%1</string>"
+          "      </equals>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?person "
           "WHERE { "
           "  graph ?g { "
@@ -82,9 +131,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <equals>"
+          "        <field name=\"nickname\"/>"
+          "        <string>%1</string>"
+          "      </equals>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -92,9 +159,41 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r a nco:PersonContact . "
           "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <or>"
+          "        <equals>"
+          "          <field name=\"fullname\"/>"
+          "          <string>%1</string>"
+          "        </equals>"
+          "        <equals>"
+          "          <field name=\"nameGiven\"/>"
+          "          <string>%1</string>"
+          "        </equals>"
+          "        <equals>"
+          "          <field name=\"nameFamily\"/>"
+          "          <string>%1</string>"
+          "        </equals>"
+          "        <equals>"
+          "          <field name=\"emailAddress\"/>"
+          "          <string>%1</string>"
+          "        </equals>"
+          "      </or>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -109,9 +208,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <equals>"
+          "        <field name=\"contactUID\"/>"
+          "        <string>%1</string>"
+          "      </equals>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -119,11 +236,29 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r a nco:PersonContact . "
           "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     }
   } else if ( match == StartsWithMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <startsWith>"
+          "        <field name=\"fullname\"/>"
+          "        <string>%1</string>"
+          "      </startsWith>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -132,9 +267,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:fullname ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           "  } "
-          "} " );
+          "} "
+#endif
+      );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <startsWith>"
+          "        <field name=\"emailAddress\"/>"
+          "        <string>%1</string>"
+          "      </startsWith>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?person "
           "WHERE { "
           "  graph ?g { "
@@ -144,9 +297,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?email nco:emailAddress ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <startsWith>"
+          "        <field name=\"nickname\"/>"
+          "        <string>%1</string>"
+          "      </startsWith>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -155,9 +326,41 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:nickname ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <or>"
+          "        <startsWith>"
+          "          <field name=\"fullname\"/>"
+          "          <string>%1</string>"
+          "        </startsWith>"
+          "        <startsWith>"
+          "          <field name=\"nameGiven\"/>"
+          "          <string>%1</string>"
+          "        </startsWith>"
+          "        <startsWith>"
+          "          <field name=\"nameFamily\"/>"
+          "          <string>%1</string>"
+          "        </startsWith>"
+          "        <startsWith>"
+          "          <field name=\"emailAddress\"/>"
+          "          <string>%1</string>"
+          "        </startsWith>"
+          "      </or>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -176,9 +379,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress ?v . "
           "      ?v bif:contains \"'%1*'\" . } "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <startsWith>"
+          "        <field name=\"contactUID\"/>"
+          "        <string>%1</string>"
+          "      </startsWith>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -187,11 +408,29 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1*'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } 
   } else if ( match == ContainsMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <contains>"
+          "        <field name=\"fullname\"/>"
+          "        <string>%1</string>"
+          "      </contains>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -200,9 +439,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:fullname ?v . "
           "    ?v bif:contains \"'%1'\" . "
           "  } "
-          "} " );
+          "} "
+#endif
+      );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <contains>"
+          "        <field name=\"emailAddress\"/>"
+          "        <string>%1</string>"
+          "      </contains>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?person "
           "WHERE { "
           "  graph ?g { "
@@ -212,9 +469,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?email nco:emailAddress ?v . "
           "    ?v bif:contains \"'%1'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <contains>"
+          "        <field name=\"nickname\"/>"
+          "        <string>%1</string>"
+          "      </contains>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -223,9 +498,41 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:nickname ?v . "
           "    ?v bif:contains \"'%1'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <or>"
+          "        <contains>"
+          "          <field name=\"fullname\"/>"
+          "          <string>%1</string>"
+          "        </contains>"
+          "        <contains>"
+          "          <field name=\"nameGiven\"/>"
+          "          <string>%1</string>"
+          "        </contains>"
+          "        <contains>"
+          "          <field name=\"nameFamily\"/>"
+          "          <string>%1</string>"
+          "        </contains>"
+          "        <contains>"
+          "          <field name=\"emailAddress\"/>"
+          "          <string>%1</string>"
+          "        </contains>"
+          "      </or>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -244,9 +551,27 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "      ?email nco:emailAddress ?v . "
           "      ?v bif:contains \"'%1'\" . } "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+          "<request>"
+          "  <query>"
+          "    <and>"
+          "      <equals>"
+          "        <field name=\"type\"/>"
+          "        <string>PersonContact</string>"
+          "      </equals>"
+          "      <contains>"
+          "        <field name=\"contactUID\"/>"
+          "        <string>%1</string>"
+          "      </contains>"
+          "    </and>"
+          "  </query>"
+          "</request>"
+#else
           "SELECT DISTINCT ?r "
           "WHERE { "
           "  graph ?g { "
@@ -255,12 +580,16 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1'\" . "
           "  } "
-          "}" );
+          "}"
+#endif
+      );
     }
   }
 
   if ( d->mLimit != -1 ) {
+#ifndef AKONADI_USE_STRIGI_SEARCH
     query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
+#endif
   }
   query = query.arg( value );
 

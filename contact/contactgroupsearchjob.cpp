@@ -39,8 +39,20 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
 
   // by default search for all contact groups
   ItemSearchJob::setQuery( QLatin1String( ""
+#ifdef AKONADI_USE_STRIGI_SEARCH
+                                          "<request>"
+                                          "  <query>"
+                                          "    <equals>"
+                                          "      <field name=\"type\"/>"
+                                          "      <string>ContactGroup</string>"
+                                          "    </equals>"
+                                          "  </query>"
+                                          "</request>"
+#else
                                           "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                          "SELECT ?r WHERE { ?r a nco:ContactGroup }" ) );
+                                          "SELECT ?r WHERE { ?r a nco:ContactGroup }"
+#endif
+                                        ) );
 }
 
 ContactGroupSearchJob::~ContactGroupSearchJob()
@@ -57,41 +69,108 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value 
 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
-  QString query = QString::fromLatin1(
-            "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
+  QString query;
 
-  QString matchString;
-  switch ( match ) {
-    case ExactMatch:
-      matchString = QString::fromLatin1(
-                     " ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>." );
-      break;
-    case ContainsMatch:
-      matchString = QString::fromLatin1(
-                     " ?group nco:contactGroupName ?v . "
-                     " ?v bif:contains \"'%1'\"" );
-      break;
-    case StartsWithMatch:
-      matchString = QString::fromLatin1(
-                     " ?group nco:contactGroupName ?v . "
-                     " ?v bif:contains \"'%1*'\"" );
-      break;
-  }
+#ifndef AKONADI_USE_STRIGI_SEARCH
+  query = QString::fromLatin1( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
+#endif
 
-  if ( criterion == Name ) {
-    query += QString::fromLatin1(
+  if ( match == ExactMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+        "<request>"
+        "  <query>"
+        "    <and>"
+        "      <equals>"
+        "        <field name=\"type\"/>"
+        "        <string>ContactGroup</string>"
+        "      </equals>"
+        "      <equals>"
+        "        <field name=\"contactGroupName\"/>"
+        "        <string>%1</string>"
+        "      </equals>"
+        "    </and>"
+        "  </query>"
+        "</request>"
+#else
         "SELECT DISTINCT ?group "
         "WHERE { "
         "  graph ?g { "
-        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . " );
-    query += matchString;
-    query += QString::fromLatin1(
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group nco:contactGroupName \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>."
         "  } "
-        "}" );
+        "}"
+#endif
+      );
+    }
+  } else if ( match == ContainsMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+        "<request>"
+        "  <query>"
+        "    <and>"
+        "      <equals>"
+        "        <field name=\"type\"/>"
+        "        <string>ContactGroup</string>"
+        "      </equals>"
+        "      <contains>"
+        "        <field name=\"contactGroupName\"/>"
+        "        <string>%1</string>"
+        "      </contains>"
+        "    </and>"
+        "  </query>"
+        "</request>"
+#else
+        "SELECT DISTINCT ?group "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group nco:contactGroupName ?v . "
+        "    ?v bif:contains \"'%1'\""
+        "  } "
+        "}"
+#endif
+      );
+    }
+  } else if ( match == StartsWithMatch ) {
+    if ( criterion == Name ) {
+      query += QString::fromLatin1(
+#ifdef AKONADI_USE_STRIGI_SEARCH
+        "<request>"
+        "  <query>"
+        "    <and>"
+        "      <equals>"
+        "        <field name=\"type\"/>"
+        "        <string>ContactGroup</string>"
+        "      </equals>"
+        "      <startsWith>"
+        "        <field name=\"contactGroupName\"/>"
+        "        <string>%1</string>"
+        "      </startsWith>"
+        "    </and>"
+        "  </query>"
+        "</request>"
+#else
+        "SELECT DISTINCT ?group "
+        "WHERE { "
+        "  graph ?g { "
+        "    ?group <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+        "    ?group nco:contactGroupName ?v . "
+        "    ?v bif:contains \"'%1*'\""
+        "  } "
+        "}"
+#endif
+      );
+    }
   }
 
-  if ( d->mLimit != -1 )
+  if ( d->mLimit != -1 ) {
+#ifndef AKONADI_USE_STRIGI_SEARCH
     query += QString::fromLatin1( " LIMIT %1" ).arg( d->mLimit );
+#endif
+  }
 
   query = query.arg( value );
 
