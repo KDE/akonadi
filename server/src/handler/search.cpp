@@ -26,6 +26,7 @@
 #include "imapstreamparser.h"
 #include "nepomuksearch.h"
 #include "response.h"
+#include "xesamsearch.h"
 
 #include <QtCore/QStringList>
 
@@ -46,9 +47,15 @@ bool Search::parseStream()
   if ( queryString.isEmpty() )
     return failureResponse( "No query specified" );
 
+#ifdef AKONADI_USE_STRIGI_SEARCH
+  XesamSearch *service = new XesamSearch;
+  const QStringList uids = service->search( QString::fromUtf8( queryString ) );
+  delete service;
+#else
   NepomukSearch *service = new NepomukSearch;
   const QStringList uids = service->search( QString::fromUtf8( queryString ) );
   delete service;
+#endif
 
   if ( uids.isEmpty() ) {
     m_streamParser->readUntilCommandEnd(); // skip the fetch scope

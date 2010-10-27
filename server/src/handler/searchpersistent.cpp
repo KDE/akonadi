@@ -62,7 +62,11 @@ bool SearchPersistent::parseStream()
 
   Collection col;
   col.setQueryString( queryString );
+#ifdef AKONADI_USE_STRIGI_SEARCH
+  col.setQueryLanguage( QLatin1String( "XESAM" ) ); // TODO receive from client
+#else
   col.setQueryLanguage( QLatin1String( "SPARQL" ) ); // TODO receive from client
+#endif
   col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource

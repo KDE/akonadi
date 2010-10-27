@@ -1,16 +1,26 @@
 <node name='/org/freedesktop/xesam/searcher/main'>
+  <interface name='org.freedesktop.DBus.Introspectable'>
+    <method name='Introspect'>
+      <arg name='xml_data' type='s' direction='out'/>
+    </method>
+  </interface>
   <interface name='org.freedesktop.xesam.Search'>
     <method name='GetState'>
-      <arg name='out' type='as' direction='out'/>
+      <arg name='state_info' type='as' direction='out'/>
     </method>
     <method name='StartSearch'>
       <arg name='search' type='s' direction='in'/>
     </method>
     <method name='GetHits'>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0"
+                  value="QVector&lt;QList&lt;QVariant> >"/>
       <arg name='search' type='s' direction='in'/>
-      <arg name='num' type='i' direction='in'/>
-      <arg name='out' type='aav' direction='out'/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;QList&lt;QVariant&gt; &gt;"/>
+      <arg name='num' type='u' direction='in'/>
+      <arg name='hits' type='aav' direction='out'/>
+    </method>
+    <method name='GetHitCount'>
+      <arg name='search' type='s' direction='in'/>
+      <arg name='count' type='u' direction='out'/>
     </method>
     <method name='NewSession'>
       <arg name='out' type='s' direction='out'/>
@@ -19,23 +29,25 @@
       <arg name='session' type='s' direction='in'/>
     </method>
     <method name='GetHitData'>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+                  value="QList&lt;uint>"/>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0"
+                  value="QVector&lt;QList&lt;QVariant> >"/>
       <arg name='search' type='s' direction='in'/>
-      <arg name='hit_ids' type='ai' direction='in'/>
-      <arg name='properties' type='as' direction='in'/>
-      <arg name='out' type='aav' direction='out'/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QList&lt;int&gt;"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0" value="QList&lt;QList&lt;QVariant&gt; &gt;"/>
+      <arg name='hit_ids' type='au' direction='in'/>
+      <arg name='fields' type='as' direction='in'/>
+      <arg name='hit_data' type='aav' direction='out'/>
     </method>
     <method name='SetProperty'>
       <arg name='session' type='s' direction='in'/>
       <arg name='prop' type='s' direction='in'/>
-      <arg name='v' type='v' direction='in'/>
-      <arg name='out' type='v' direction='out'/>
+      <arg name='val' type='v' direction='in'/>
+      <arg name='new_val' type='v' direction='out'/>
     </method>
     <method name='NewSearch'>
       <arg name='session' type='s' direction='in'/>
       <arg name='query_xml' type='s' direction='in'/>
-      <arg name='out' type='s' direction='out'/>
+      <arg name='search' type='s' direction='out'/>
     </method>
     <method name='CountHits'>
       <arg name='search' type='s' direction='in'/>
@@ -44,25 +56,33 @@
     <method name='GetProperty'>
       <arg name='session' type='s' direction='in'/>
       <arg name='prop' type='s' direction='in'/>
-      <arg name='out' type='v' direction='out'/>
+      <arg name='value' type='v' direction='out'/>
     </method>
     <method name='CloseSearch'>
       <arg name='search' type='s' direction='in'/>
     </method>
-    <signal name='HitsModified'>
-      <arg name='search' type='s'/>
-      <arg name='hit_ids' type='ai'/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QList&lt;int&gt;"/>
-    </signal>
-    <signal name='HitsRemoved'>
-      <arg name='search' type='s'/>
-      <arg name='hit_ids' type='ai'/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QList&lt;int&gt;"/>
-    </signal>
     <signal name='HitsAdded'>
       <arg name='search' type='s'/>
-      <arg name='count' type='i'/>
+      <arg name='count' type='u'/>
+    </signal>
+    <signal name='HitsRemoved'>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+                  value="QList&lt;uint>"/>
+      <arg name='search' type='s'/>
+      <arg name='hit_ids' type='au'/>
+    </signal>
+    <signal name='HitsModified'>
+      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+                  value="QList&lt;uint>"/>
+      <arg name='search' type='s'/>
+      <arg name='hit_ids' type='au'/>
+    </signal>
+    <signal name='SearchDone'>
+      <arg name='search' type='s'/>
+    </signal>
+    <signal name='StateChanged'>
+      <arg name='state_info' type='as'/>
     </signal>
   </interface>
 </node>
-
+"

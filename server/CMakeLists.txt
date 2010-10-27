@@ -126,6 +126,7 @@ set(libakonadiprivate_SRCS
   src/resourcemanager.cpp
   src/cachecleaner.cpp
   src/nepomuksearch.cpp
+  src/xesamsearch.cpp
   src/debuginterface.cpp
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp

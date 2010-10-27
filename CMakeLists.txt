@@ -12,10 +12,15 @@ include(CTestConfig.cmake)
 option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
+option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
 
 if (AKONADI_BUILD_TESTS)
   enable_testing()
 endif (AKONADI_BUILD_TESTS)
+
+if (AKONADI_USE_STRIGI_SEARCH)
+  add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
+endif (AKONADI_USE_STRIGI_SEARCH)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
   option(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead of lib/<package>/cmake" TRUE)

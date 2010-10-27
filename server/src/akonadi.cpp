@@ -34,6 +34,7 @@
 #include "storage/itemretrievalthread.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
+#include "xesamtypes.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -137,7 +138,12 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mItemRetrievalThread->start( QThread::HighPriority );
 
     const QStringList searchManagers = settings.value( QLatin1String( "Search/Manager" ),
-                                                       QStringList() << QLatin1String( "Nepomuk" )
+                                                       QStringList()
+#ifdef AKONADI_USE_STRIGI_SEARCH
+                                                                     << QLatin1String( "Xesam" )
+#else
+                                                                     << QLatin1String( "Nepomuk" )
+#endif
                                                                      << QLatin1String( "Agent" ) ).toStringList();
     mSearchManager = new SearchManager( searchManagers, this );
 
@@ -162,6 +168,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     // for the items as we don't actually know at which stage the
     // operation was interrupted...
     db->unhideAllPimItems();
+
+    qDBusRegisterMetaType<XesamVariantListVector>();
 }
 
 AkonadiServer::~AkonadiServer()

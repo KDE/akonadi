@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,15 +17,36 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_XESAMTYPES_H
-#define AKONADI_XESAMTYPES_H
+#ifndef AKONADI_XESAMSEARCH_H
+#define AKONADI_XESAMSEARCH_H
 
-#include <QList>
-#include <QMetaType>
-#include <QVariant>
+#include <QtCore/QObject>
+#include <QtCore/QSet>
+#include <QtCore/QString>
 
-typedef QVector<QList<QVariant> > XesamVariantListVector;
-Q_DECLARE_METATYPE(QList<uint>)
-Q_DECLARE_METATYPE(QVector<QList<QVariant> >)
+class OrgFreedesktopXesamSearchInterface;
+
+namespace Akonadi {
+
+class XesamSearch : public QObject
+{
+  Q_OBJECT
+
+  public:
+    XesamSearch( QObject* parent = 0 );
+    ~XesamSearch();
+
+    QStringList search( const QString &query );
+
+  private Q_SLOTS:
+    void hitsAdded( const QString &search, uint count );
+
+  private:
+    QSet<QString> mMatchingUIDs;
+    OrgFreedesktopXesamSearchInterface *mInterface;
+    QString mSession;
+};
+
+}
 
 #endif

@@ -19,42 +19,44 @@
 
 #include "xesamsearchengine.h"
 
-#include "storage/datastore.h"
 #include "entities.h"
-
+#include "notificationmanager.h"
+#include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
 #include "xesaminterface.h"
 #include "xesamtypes.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 using namespace Akonadi;
 
+static qint64 uriToItemId( const QString &urlString )
+{
+  const QUrl url( urlString );
+  bool ok = false;
+
+  const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
+
+  if ( !ok )
+    return -1;
+  else
+    return id;
+}
+
 XesamSearchEngine::XesamSearchEngine( QObject *parent )
   : QObject( parent ),
-    mValid( true )
+    mValid( true ),
+    mCollector( new NotificationCollector( this ) )
 {
-  mInterface = new OrgFreedesktopXesamSearchInterface(
-      QLatin1String( "org.freedesktop.xesam.searcher" ),
-      QLatin1String( "/org/freedesktop/xesam/searcher/main" ),
-      QDBusConnection::sessionBus(), this );
+  NotificationManager::self()->connectNotificationCollector( mCollector );
 
-  if ( mInterface->isValid() ) {
-    mSession = mInterface->NewSession();
-    QDBusVariant result = mInterface->SetProperty( mSession, QLatin1String( "search.live" ), QDBusVariant( true ) );
-    mValid = mValid && result.variant().toBool();
-    result = mInterface->SetProperty( mSession, QLatin1String( "search.blocking" ), QDBusVariant( false ) );
-    mValid = mValid && !result.variant().toBool();
-    qDebug() << "XESAM session:" << mSession;
+  QDBusServiceWatcher *watcher =
+    new QDBusServiceWatcher( QLatin1String( "org.freedesktop.xesam.searcher" ),
+                             QDBusConnection::sessionBus(),
+                             QDBusServiceWatcher::WatchForRegistration, this );
+  connect( watcher, SIGNAL( serviceRegistered( QString ) ), SLOT( initializeSearchInterface() ) );
 
-    connect( mInterface, SIGNAL( HitsAdded( QString, int ) ), SLOT( slotHitsAdded( QString, int ) ) );
-    connect( mInterface, SIGNAL( HitsRemoved( QString, QList<int> ) ), SLOT( slotHitsRemoved( QString, QList<int> ) ) );
-    connect( mInterface, SIGNAL( HitsModified( QString, QList<int> ) ), SLOT( slotHitsModified( QString, QList<int> ) ) );
-
-    reloadSearches();
-  } else {
-    qWarning() << "XESAM interface not found!";
-    mValid = false;
-  }
+  initializeSearchInterface();
 
   if ( !mValid )
     qWarning() << "No valid XESAM interface found!";
@@ -67,64 +69,115 @@ XesamSearchEngine::~XesamSearchEngine()
     mInterface->CloseSession( mSession );
 }
 
-void XesamSearchEngine::slotHitsAdded( const QString &search, int count )
+void XesamSearchEngine::initializeSearchInterface()
+{
+  mInterface = new OrgFreedesktopXesamSearchInterface(
+      QLatin1String( "org.freedesktop.xesam.searcher" ),
+      QLatin1String( "/org/freedesktop/xesam/searcher/main" ),
+      QDBusConnection::sessionBus(), this );
+
+  if ( mInterface->isValid() ) {
+    mSession = mInterface->NewSession();
+    QDBusVariant result = mInterface->SetProperty( mSession, QLatin1String( "search.live" ), QDBusVariant( true ) );
+    mValid = mValid && result.variant().toBool();
+    qDebug() << "XESAM session:" << mSession;
+
+    connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( slotHitsAdded( QString, uint ) ) );
+    connect( mInterface, SIGNAL( HitsRemoved( QString, QList<uint> ) ), SLOT( slotHitsRemoved( QString, QList<uint> ) ) );
+    connect( mInterface, SIGNAL( HitsModified( QString, QList<uint> ) ), SLOT( slotHitsModified( QString, QList<uint> ) ) );
+
+    reloadSearches();
+  } else {
+    mValid = false;
+  }
+}
+
+void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 {
   qDebug() << "hits added: " << search << count;
   mMutex.lock();
-  const qint64 colId = mSearchMap.value( search );
+  const qint64 collectionId = mSearchMap.value( search );
   mMutex.unlock();
 
-  if ( colId <= 0 || count <= 0 )
+  if ( collectionId <= 0 || count <= 0 )
     return;
+
+  const Collection collection = Collection::retrieveById( collectionId );
+
   qDebug() << "calling GetHits";
 
-  const QList<QList<QVariant> > results = mInterface->GetHits( search, count );
+  const QVector<QList<QVariant> > results = mInterface->GetHits( search, count );
   qDebug() << "GetHits returned:" << results.count();
+
   typedef QList<QVariant> VariantList;
   foreach ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
 
     const qint64 itemId = uriToItemId( list.first().toString() );
-    Entity::addToRelation<CollectionPimItemRelation>( colId, itemId );
+    if ( itemId == -1 )
+      continue;
+
+    Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
+    mCollector->itemLinked( PimItem::retrieveById( itemId ), collection );
   }
+
+  mCollector->dispatchNotifications();
 }
 
-void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<int> &hits )
+void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint> &hits )
 {
   qDebug() << "hits removed: " << search << hits;
   mMutex.lock();
-  const qint64 colId = mSearchMap.value( search );
+  const qint64 collectionId = mSearchMap.value( search );
   mMutex.unlock();
 
-  if ( colId <= 0 )
+  if ( collectionId <= 0 )
     return;
 
-  const QList<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String( "uri" ) ) );
+  const Collection collection = Collection::retrieveById( collectionId );
+
+  const QVector<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String( "uri" ) ) );
   typedef QList<QVariant> VariantList;
   foreach ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
 
     const qint64 itemId = uriToItemId( list.first().toString() );
-    Entity::removeFromRelation<CollectionPimItemRelation>( colId, itemId );
+    if ( itemId == -1 )
+      continue;
+
+    Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
+    mCollector->itemUnlinked( PimItem::retrieveById( itemId ), collection );
   }
+
+  mCollector->dispatchNotifications();
 }
 
-void XesamSearchEngine::slotHitsModified( const QString &search, const QList<int> &hits )
+void XesamSearchEngine::slotHitsModified( const QString &search, const QList<uint> &hits )
 {
   qDebug() << "hits modified: " << search << hits;
 }
 
 void XesamSearchEngine::reloadSearches()
 {
-  const Resource resource = Resource::retrieveByName( QLatin1String( "akonadi_search_resource" ) );
-  if ( !resource.isValid() ) {
-    qWarning() << "No valid search resource found!";
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "XESAM" ) );
+  if ( !qb.exec() ) {
+    qWarning() << "Unable to execute query!";
     return;
   }
 
-  foreach ( const Collection &collection, resource.collections() ) {
+  Q_FOREACH ( const Collection &collection, qb.result() ) {
+    mMutex.lock();
+    if ( mInvSearchMap.contains( collection.id() ) ) {
+      mMutex.unlock();
+      qDebug() << "updating search" << collection.name();
+      removeSearch( collection.id() );
+    } else  {
+      mMutex.unlock();
+      qDebug() << "adding search" << collection.name();
+    }
     addSearch( collection );
   }
 }
@@ -134,52 +187,49 @@ void XesamSearchEngine::addSearch( const Collection &collection )
   if ( !mInterface->isValid() || !mValid || collection.queryLanguage() != QLatin1String( "XESAM" ) )
     return;
 
-  QMutexLocker lock( &mMutex );
   if ( collection.remoteId().isEmpty() )
     return;
 
   const QString searchId = mInterface->NewSearch( mSession, collection.remoteId() );
   qDebug() << "XesamSearchEngine::addSeach" << collection << searchId;
-  mSearchMap[ searchId ] = collection.id();
-  mInvSearchMap[ collection.id() ] = searchId;
-  mInterface->StartSearch( searchId );
 
-#if 0
-  // ### workaround until HitAdded is emitted by strigi
-  lock.unlock();
-  int count = mInterface->CountHits( searchId );
-  slotHitsAdded( searchId, count );
-#endif
+  mMutex.lock();
+  mSearchMap.insert( searchId, collection.id() );
+  mInvSearchMap.insert( collection.id(), searchId );
+  mMutex.unlock();
+  mInterface->StartSearch( searchId );
 }
 
 void XesamSearchEngine::removeSearch( qint64 collectionId )
 {
-  QMutexLocker lock( &mMutex );
-  if ( !mInvSearchMap.contains( collectionId ) )
+  mMutex.lock();
+  const QString searchId = mInvSearchMap.value( collectionId );
+  mMutex.unlock();
+
+  if ( searchId.isEmpty() )
     return;
 
-  const QString searchId = mInvSearchMap.value( collectionId );
+  mInterface->CloseSearch( searchId );
+
+  mMutex.lock();
   mInvSearchMap.remove( collectionId );
   mSearchMap.remove( searchId );
+  mMutex.unlock();
 }
 
 void XesamSearchEngine::stopSearches()
 {
-  const Resource resource = Resource::retrieveByName( QLatin1String( "akonadi_search_resource" ) );
-  if ( !resource.isValid() ) {
-    qWarning() << "No valid search resource found!";
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "XESAM" ) );
+  if ( !qb.exec() ) {
+    qWarning() << "Unable to execute query!";
     return;
   }
 
-  foreach ( const Collection &collection, resource.collections() ) {
+  Q_FOREACH ( const Collection &collection, qb.result() ) {
+    qDebug() << "removing search" << collection.name();
     removeSearch( collection.id() );
   }
-}
-
-qint64 XesamSearchEngine::uriToItemId( const QString &uri ) const
-{
-  // TODO implement me!
-  return uri.toLongLong();
 }
 
 #include "xesamsearchengine.moc"

@@ -30,6 +30,8 @@ class OrgFreedesktopXesamSearchInterface;
 
 namespace Akonadi {
 
+class NotificationCollector;
+
 class XesamSearchEngine : public QObject, public AbstractSearchEngine
 {
   Q_OBJECT
@@ -44,12 +46,13 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
   private:
     void reloadSearches();
     void stopSearches();
-    qint64 uriToItemId( const QString &uri ) const;
 
   private Q_SLOTS:
-    void slotHitsAdded( const QString &search, int count );
-    void slotHitsRemoved( const QString &search, const QList<int> &hits );
-    void slotHitsModified( const QString &search, const QList<int> &hits );
+    void initializeSearchInterface();
+
+    void slotHitsAdded( const QString &search, uint count );
+    void slotHitsRemoved( const QString &search, const QList<uint> &hits );
+    void slotHitsModified( const QString &search, const QList<uint> &hits );
 
   private:
     OrgFreedesktopXesamSearchInterface *mInterface;
@@ -58,6 +61,7 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
     QHash<int, QString> mInvSearchMap;
     QMutex mMutex;
     bool mValid;
+    NotificationCollector* mCollector;
 };
 
 }
