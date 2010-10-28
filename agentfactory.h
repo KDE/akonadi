@@ -106,9 +106,11 @@ class AgentFactory : public AgentFactoryBase
 class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
 { \
   public: \
-    explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {} \
+    explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {\
+      setObjectName(# catalogName );\
+    } \
 }; \
-Q_EXPORT_PLUGIN2( # catalogName, agentClass ## Factory )
+Q_EXPORT_PLUGIN2( catalogName, agentClass ## Factory )
 
 #endif
 
