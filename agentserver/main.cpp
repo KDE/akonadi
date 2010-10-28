@@ -29,7 +29,11 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
 
+#ifndef _WIN32_WCE
 int main( int argc, char ** argv )
+#else
+int cemain( int argc, char ** argv )
+#endif
 {
   QApplication app( argc, argv );
   app.setQuitOnLastWindowClosed( false );

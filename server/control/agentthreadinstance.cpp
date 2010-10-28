@@ -49,7 +49,7 @@ bool AgentThreadInstance::start( const AgentType &agentInfo )
   }
 
   // TODO: let startAgent return a bool.
-  agentServer.startAgent( identifier(), agentInfo.exec );
+  agentServer.startAgent( identifier(), agentInfo.identifier, agentInfo.exec );
   return true;
 }
 
@@ -59,7 +59,7 @@ void AgentThreadInstance::restartWhenIdle()
     org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                         "/AgentServer", QDBusConnection::sessionBus() );
     agentServer.stopAgent( identifier() );
-    agentServer.startAgent( identifier(), mAgentType.exec );
+    agentServer.startAgent( identifier(), agentType(), mAgentType.exec );
   }
 }
 

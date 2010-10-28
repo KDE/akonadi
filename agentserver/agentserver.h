@@ -44,7 +44,7 @@ class AgentServer : public QObject
   public slots:
     Q_SCRIPTABLE void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
     Q_SCRIPTABLE bool started( const QString &identifier ) const;
-    Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &fileName );
+    Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &typeIdentifier, const QString &fileName );
     Q_SCRIPTABLE void stopAgent( const QString &identifier );
     Q_SCRIPTABLE void quit();
 

@@ -61,8 +61,18 @@ bool AgentServer::started( const QString& identifier ) const
   return m_agents.contains( identifier );
 }
 
-void AgentServer::startAgent( const QString& identifier, const QString& fileName )
+void AgentServer::startAgent( const QString& identifier, const QString &typeIdentifier, const QString& fileName )
 {
+  //First try to load it staticly
+  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    if(plugin->objectName() == typeIdentifier) {
+      AgentThread* thread = new AgentThread( identifier, plugin, this );
+      m_agents.insert( identifier, thread );
+      thread->start();
+      return;
+    }
+  }
+  
   QPluginLoader *loader = m_agentLoader.load( fileName );
   if ( loader == 0 )
     return; // No plugin found, debug output in AgentLoader.

@@ -11,6 +11,7 @@
     </method>
     <method name="startAgent">
       <arg name="identifier" type="s" direction="in"/>
+      <arg name="typeIdentifier" type="s" direction="in"/>
       <arg name="fileName" type="s" direction="in"/>
     </method>
     <method name="stopAgent">

@@ -706,7 +706,7 @@ void AgentManager::ensureAutoStart(const AgentType & info)
 
   switch ( info.launchMethod ) {
   case AgentType::Server:
-    agentServer.startAgent( info.identifier, info.exec );
+    agentServer.startAgent( info.identifier, info.identifier, info.exec );
     registerAgentAtServer( info.identifier, info );
     save();
     break;
