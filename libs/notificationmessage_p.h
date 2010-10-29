@@ -74,16 +74,16 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     void setType( Type type );
 
     Operation operation() const;
-    void setOperation( Operation op );
+    void setOperation( Operation operation );
 
     Id uid() const;
     void setUid( Id uid );
 
     QString remoteId() const;
-    void setRemoteId( const QString &rid );
+    void setRemoteId( const QString &remoteId );
 
     QByteArray resource() const;
-    void setResource( const QByteArray &res );
+    void setResource( const QByteArray &resource );
 
     Id parentCollection() const;
     void setParentCollection( Id parent );

@@ -24,10 +24,10 @@
 
 #include "libs/protocol_p.h"
 
-#include <QtGui/QApplication>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
+#include <QtGui/QApplication>
 
 #ifndef _WIN32_WCE
 int main( int argc, char ** argv )
@@ -41,16 +41,15 @@ int cemain( int argc, char ** argv )
   //Needed for wince build
   #undef interface
 
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE_LOCK ) ) ) {
     akError() << "Akonadi control process not found - aborting.";
     akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
   }
 
   new Akonadi::AgentServer( &app );
 
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) )
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( AKONADI_DBUS_AGENTSERVER_SERVICE ) ) )
     akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
 
-  const int result = app.exec();
-  return result;
+  return app.exec();
 }

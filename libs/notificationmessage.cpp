@@ -19,25 +19,29 @@
 
 #include "notificationmessage_p.h"
 
-#include <QDBusMetaType>
-#include <QDebug>
-#include <QHash>
 #include "imapparser_p.h"
+
+#include <QtCore/QDebug>
+#include <QtCore/QHash>
+#include <QtDBus/QDBusMetaType>
 
 using namespace Akonadi;
 
 class NotificationMessage::Private : public QSharedData
 {
   public:
-    Private() : QSharedData(),
-      type( NotificationMessage::InvalidType ),
-      operation( NotificationMessage::InvalidOp ),
-      uid( -1 ),
-      parentCollection( -1 ),
-      parentDestCollection( -1 )
-    {}
+    Private()
+      : QSharedData(),
+        type( NotificationMessage::InvalidType ),
+        operation( NotificationMessage::InvalidOp ),
+        uid( -1 ),
+        parentCollection( -1 ),
+        parentDestCollection( -1 )
+    {
+    }
 
-    Private( const Private &other ) : QSharedData( other )
+    Private( const Private &other )
+      : QSharedData( other )
     {
       sessionId = other.sessionId;
       type = other.type;
@@ -63,9 +67,9 @@ class NotificationMessage::Private : public QSharedData
           && mimeType == other.mimeType;
     }
 
-    bool operator==(const Private &other ) const
+    bool operator==( const Private &other ) const
     {
-      return operation == other.operation &&  parts == other.parts && compareWithoutOpAndParts( other );
+      return operation == other.operation && parts == other.parts && compareWithoutOpAndParts( other );
     }
 
     QByteArray sessionId;
@@ -80,28 +84,29 @@ class NotificationMessage::Private : public QSharedData
     QSet<QByteArray> parts;
 };
 
-NotificationMessage::NotificationMessage() :
-    d( new Private )
+NotificationMessage::NotificationMessage()
+  : d( new Private )
 {
 }
 
-NotificationMessage::NotificationMessage(const NotificationMessage & other) :
-    d( other.d )
+NotificationMessage::NotificationMessage( const NotificationMessage &other )
+  : d( other.d )
 {
 }
 
-NotificationMessage::~ NotificationMessage()
+NotificationMessage::~NotificationMessage()
 {
 }
 
-NotificationMessage & NotificationMessage::operator =(const NotificationMessage & other)
+NotificationMessage& NotificationMessage::operator=( const NotificationMessage &other )
 {
   if ( this != &other )
     d = other.d;
+
   return *this;
 }
 
-bool NotificationMessage::operator ==(const NotificationMessage & other) const
+bool NotificationMessage::operator==( const NotificationMessage &other ) const
 {
   return d == other.d;
 }
@@ -127,7 +132,7 @@ NotificationMessage::Type NotificationMessage::type() const
   return d->type;
 }
 
-void NotificationMessage::setType(Type type)
+void NotificationMessage::setType( Type type )
 {
   d->type = type;
 }
@@ -137,9 +142,9 @@ NotificationMessage::Operation NotificationMessage::operation() const
   return d->operation;
 }
 
-void NotificationMessage::setOperation(Operation op)
+void NotificationMessage::setOperation( Operation operation )
 {
-  d->operation = op;
+  d->operation = operation;
 }
 
 NotificationMessage::Id NotificationMessage::uid() const
@@ -147,7 +152,7 @@ NotificationMessage::Id NotificationMessage::uid() const
   return d->uid;
 }
 
-void NotificationMessage::setUid(Id uid)
+void NotificationMessage::setUid( Id uid )
 {
   d->uid = uid;
 }
@@ -157,9 +162,9 @@ QString NotificationMessage::remoteId() const
   return d->remoteId;
 }
 
-void NotificationMessage::setRemoteId(const QString & rid)
+void NotificationMessage::setRemoteId( const QString &remoteId )
 {
-  d->remoteId = rid;
+  d->remoteId = remoteId;
 }
 
 QByteArray NotificationMessage::resource() const
@@ -167,9 +172,9 @@ QByteArray NotificationMessage::resource() const
   return d->resource;
 }
 
-void NotificationMessage::setResource(const QByteArray & res)
+void NotificationMessage::setResource( const QByteArray &resource )
 {
-  d->resource = res;
+  d->resource = resource;
 }
 
 NotificationMessage::Id NotificationMessage::parentCollection() const
@@ -182,7 +187,7 @@ NotificationMessage::Id NotificationMessage::parentDestCollection() const
   return d->parentDestCollection;
 }
 
-void NotificationMessage::setParentCollection(Id parent)
+void NotificationMessage::setParentCollection( Id parent )
 {
   d->parentCollection = parent;
 }
@@ -197,7 +202,7 @@ QString NotificationMessage::mimeType() const
   return d->mimeType;
 }
 
-void NotificationMessage::setMimeType(const QString & mimeType)
+void NotificationMessage::setMimeType( const QString &mimeType )
 {
   d->mimeType = mimeType;
 }
@@ -207,7 +212,7 @@ QSet<QByteArray> NotificationMessage::itemParts() const
   return d->parts;
 }
 
-void NotificationMessage::setItemParts(const QSet<QByteArray> & parts)
+void NotificationMessage::setItemParts( const QSet<QByteArray> &parts )
 {
   d->parts = parts;
 }
@@ -225,13 +230,16 @@ QString NotificationMessage::toString() const
     case InvalidType: // TODO: an error?
       break;
   }
+
   rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
   if ( parentDestCollection() >= 0 )
     rv += QString::fromLatin1( "from " );
   else
     rv += QString::fromLatin1( "in " );
+
   if ( parentCollection() >= 0 )
     rv += QString::fromLatin1( "collection %1 " ).arg( parentCollection() );
+
   switch ( operation() ) {
     case Add:
       rv += QLatin1String( "added" );
@@ -262,12 +270,14 @@ QString NotificationMessage::toString() const
     case InvalidOp: // TODO: an error?
       break;
   }
+
   if ( parentDestCollection() >= 0 )
     rv += QString::fromLatin1( "to collection %1" ).arg( parentDestCollection() );
+
   return rv;
 }
 
-void NotificationMessage::appendAndCompress(NotificationMessage::List & list, const NotificationMessage & msg)
+void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg )
 {
   NotificationMessage::List::Iterator end = list.end();
   for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
@@ -297,7 +307,7 @@ void NotificationMessage::appendAndCompress(NotificationMessage::List & list, co
   list << msg;
 }
 
-QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg)
+QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
 {
   arg.beginStructure();
   arg << msg.sessionId();
@@ -311,7 +321,7 @@ QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg
   arg << msg.mimeType();
 
   QStringList itemParts;
-  foreach( const QByteArray &itemPart, msg.itemParts() )
+  foreach ( const QByteArray &itemPart, msg.itemParts() )
     itemParts.append( QString::fromLatin1( itemPart ) );
 
   arg << itemParts;
@@ -319,7 +329,7 @@ QDBusArgument & operator <<(QDBusArgument & arg, const NotificationMessage & msg
   return arg;
 }
 
-const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage & msg)
+const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &msg )
 {
   arg.beginStructure();
   QByteArray b;
@@ -348,7 +358,7 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   arg >> l;
 
   QSet<QByteArray> itemParts;
-  foreach( const QString &itemPart, l )
+  foreach ( const QString &itemPart, l )
     itemParts.insert( itemPart.toLatin1() );
 
   msg.setItemParts( itemParts );
@@ -356,7 +366,7 @@ const QDBusArgument & operator >>(const QDBusArgument & arg, NotificationMessage
   return arg;
 }
 
-uint qHash(const Akonadi::NotificationMessage & msg)
+uint qHash( const Akonadi::NotificationMessage &msg )
 {
   return qHash( msg.uid() + (msg.type() << 31) + (msg.operation() << 28) );
 }

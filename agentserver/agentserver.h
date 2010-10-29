@@ -41,14 +41,14 @@ class AgentServer : public QObject
     explicit AgentServer( QObject * parent = 0 );
     ~AgentServer();
 
-  public slots:
+  public Q_SLOTS:
     Q_SCRIPTABLE void agentInstanceConfigure( const QString &identifier, qlonglong windowId );
     Q_SCRIPTABLE bool started( const QString &identifier ) const;
     Q_SCRIPTABLE void startAgent( const QString &identifier, const QString &typeIdentifier, const QString &fileName );
     Q_SCRIPTABLE void stopAgent( const QString &identifier );
     Q_SCRIPTABLE void quit();
 
-  private slots:
+  private Q_SLOTS:
     void processConfigureRequest();
 
   private:

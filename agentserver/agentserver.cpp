@@ -18,14 +18,14 @@
 */
 
 #include "agentserver.h"
-#include "agentthread.h"
 
+#include "agentthread.h"
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
 #include "shared/akdebug.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
@@ -56,16 +56,16 @@ void AgentServer::agentInstanceConfigure( const QString &identifier, qlonglong w
   }
 }
 
-bool AgentServer::started( const QString& identifier ) const
+bool AgentServer::started( const QString &identifier ) const
 {
   return m_agents.contains( identifier );
 }
 
-void AgentServer::startAgent( const QString& identifier, const QString &typeIdentifier, const QString& fileName )
+void AgentServer::startAgent( const QString &identifier, const QString &typeIdentifier, const QString &fileName )
 {
   //First try to load it staticly
-  foreach (QObject *plugin, QPluginLoader::staticInstances()) {
-    if(plugin->objectName() == typeIdentifier) {
+  foreach ( QObject *plugin, QPluginLoader::staticInstances() ) {
+    if ( plugin->objectName() == typeIdentifier ) {
       AgentThread* thread = new AgentThread( identifier, plugin, this );
       m_agents.insert( identifier, thread );
       thread->start();
@@ -84,7 +84,7 @@ void AgentServer::startAgent( const QString& identifier, const QString &typeIden
   thread->start();
 }
 
-void AgentServer::stopAgent( const QString& identifier )
+void AgentServer::stopAgent( const QString &identifier )
 {
   if ( !m_agents.contains( identifier ) )
     return;
@@ -124,6 +124,5 @@ void AgentServer::processConfigureRequest()
 
   m_processingConfigureRequests = false;
 }
-
 
 #include "agentserver.moc"

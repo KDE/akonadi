@@ -29,11 +29,11 @@
 
 using namespace Akonadi;
 
-AgentThread::AgentThread(const QString& identifier, QObject *factory, QObject* parent):
-  QThread(parent),
-  m_identifier(identifier),
-  m_factory( factory ),
-  m_instance(0)
+AgentThread::AgentThread( const QString &identifier, QObject *factory, QObject *parent )
+  : QThread( parent ),
+    m_identifier(identifier),
+    m_factory( factory ),
+    m_instance( 0 )
 {
 }
 
@@ -43,12 +43,13 @@ void AgentThread::run()
                                                           "createInstance",
                                                           Qt::DirectConnection,
                                                           Q_RETURN_ARG( QObject*, m_instance ),
-                                                          Q_ARG(QString, m_identifier) );
+                                                          Q_ARG( QString, m_identifier ) );
   if ( invokeSucceeded ) {
     qDebug() << Q_FUNC_INFO << "agent instance created: " << m_instance;
   } else {
     qDebug() << Q_FUNC_INFO << "agent instance creation failed";
   }
+
   exec();
 }
 
@@ -58,10 +59,11 @@ void AgentThread::configure( qlonglong windowId )
                              "configure",
                              Qt::DirectConnection,
 #ifdef Q_OS_WIN
-                             Q_ARG( qlonglong, windowId ) );
+                             Q_ARG( qlonglong, windowId )
 #else
-                             Q_ARG( WId, windowId ) );
+                             Q_ARG( WId, windowId )
 #endif
+                           );
 }
 
 #include "agentthread.moc"

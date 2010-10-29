@@ -59,14 +59,18 @@ namespace Akonadi {
 class XdgBaseDirsPrivate
 {
   public:
-    XdgBaseDirsPrivate() {}
+    XdgBaseDirsPrivate()
+    {
+    }
 
-    ~XdgBaseDirsPrivate() {}
+    ~XdgBaseDirsPrivate()
+    {
+    }
 };
 
 class XdgBaseDirsSingleton
 {
-public:
+  public:
     QString homePath( const char *variable, const char *defaultSubDir );
 
     QStringList systemPathList( const char *variable, const char *defaultDirList );
@@ -81,13 +85,14 @@ public:
     QStringList mPluginDirs;
 };
 
-Q_GLOBAL_STATIC(XdgBaseDirsSingleton, instance)
+Q_GLOBAL_STATIC( XdgBaseDirsSingleton, instance )
 
 }
 
 using namespace Akonadi;
 
-XdgBaseDirs::XdgBaseDirs() : d( new XdgBaseDirsPrivate() )
+XdgBaseDirs::XdgBaseDirs()
+  : d( new XdgBaseDirsPrivate() )
 {
 }
 
@@ -119,8 +124,8 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
     if ( instance()->mDataDirs.isEmpty() ) {
 #ifdef Q_OS_WIN
       QDir dir( QCoreApplication::applicationDirPath() );
-	  dir.cdUp();
-	  const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "share" ) );
+      dir.cdUp();
+      const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "share" ) );
       QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData() );
 #else
       QStringList dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", "/usr/local/share:/usr/share" );
@@ -155,9 +160,9 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
     QStringList dataDirs = instance()->mDataDirs;
     // on Windows installation might be scattered across several directories
     // so check if any installer providing agents has registered its base path
-	QSettings agentProviders( QSettings::SystemScope, QLatin1String( "Akonadi" ), QLatin1String( "Akonadi" ) );
+    QSettings agentProviders( QSettings::SystemScope, QLatin1String( "Akonadi" ), QLatin1String( "Akonadi" ) );
     agentProviders.beginGroup( QLatin1String( "AgentProviders" ) );
-    Q_FOREACH( const QString &agentProvider, agentProviders.childKeys() ) {
+    Q_FOREACH ( const QString &agentProvider, agentProviders.childKeys() ) {
       const QString basePath = agentProviders.value( agentProvider ).toString();
       if ( !basePath.isEmpty() ) {
         const QString path = basePath + QDir::separator() + QLatin1String( "share" );
@@ -174,8 +179,8 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
     if ( instance()->mConfigDirs.isEmpty() ) {
 #ifdef Q_OS_WIN
       QDir dir( QCoreApplication::applicationDirPath() );
-	  dir.cdUp();
-	  const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "etc" ) ) + QLatin1Char( ';' ) + dir.absoluteFilePath( QLatin1String( "share/config" ) );
+      dir.cdUp();
+      const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "etc" ) ) + QLatin1Char( ';' ) + dir.absoluteFilePath( QLatin1String( "share/config" ) );
       QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData() );
 #else
       QStringList configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", "/etc/xdg" );
@@ -200,19 +205,17 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
 
 QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relPath )
 {
-  QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
+  const QString fullPath = homePath( resource ) + QLatin1Char( '/' ) + relPath;
 
   QFileInfo fileInfo( fullPath );
   if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable() ) {
     return fullPath;
   }
 
-  QStringList pathList = systemPathList( resource );
+  const QStringList pathList = systemPathList( resource );
 
-  QStringList::const_iterator it    = pathList.constBegin();
-  QStringList::const_iterator endIt = pathList.constEnd();
-  for ( ; it != endIt; ++it ) {
-    fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
+  foreach ( const QString &path, pathList ) {
+    fileInfo = QFileInfo( path + QLatin1Char('/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable() ) {
       return fileInfo.absoluteFilePath();
     }
@@ -232,16 +235,16 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     }
 
     if ( QCoreApplication::instance() != 0 ) {
-        const QString appExecutableDir = QCoreApplication::instance()->applicationDirPath();
-        if ( !executableDirs.contains( appExecutableDir ) ) {
-          executableDirs << appExecutableDir;
-        }
+      const QString appExecutableDir = QCoreApplication::instance()->applicationDirPath();
+      if ( !executableDirs.contains( appExecutableDir ) ) {
+        executableDirs << appExecutableDir;
+      }
     }
 
     executableDirs += searchPath;
 
 #if defined(Q_OS_MAC) //krazy:exclude=cpp
-    executableDirs += QLatin1String(AKONADIBUNDLEPATH);
+    executableDirs += QLatin1String( AKONADIBUNDLEPATH );
 #endif
     qWarning( ) << "search paths: " << executableDirs;
 
@@ -263,23 +266,24 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
     }
   }
 
-  QStringList::const_iterator pathIt    = executableDirs.constBegin();
-  QStringList::const_iterator pathEndIt = executableDirs.constEnd();
+  QStringList::const_iterator pathIt = executableDirs.constBegin();
+  const QStringList::const_iterator pathEndIt = executableDirs.constEnd();
 #else
-  QStringList::const_iterator pathIt    = instance()->mExecutableDirs.constBegin();
-  QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.constEnd();
+  QStringList::const_iterator pathIt = instance()->mExecutableDirs.constBegin();
+  const QStringList::const_iterator pathEndIt = instance()->mExecutableDirs.constEnd();
 #endif
   for ( ; pathIt != pathEndIt; ++pathIt ) {
-    QStringList fullPathList = alternateExecPaths(*pathIt + QLatin1Char( '/' ) + relPath );
+    const QStringList fullPathList = alternateExecPaths( *pathIt + QLatin1Char( '/' ) + relPath );
 
-    QStringList::const_iterator it    = fullPathList.constBegin();
-    QStringList::const_iterator endIt = fullPathList.constEnd();
+    QStringList::const_iterator it = fullPathList.constBegin();
+    const QStringList::const_iterator endIt = fullPathList.constEnd();
     for ( ; it != endIt; ++it ) {
       const QFileInfo fileInfo( *it );
 
       // resolve symlinks, happens eg. with Maemo optify
       if ( fileInfo.canonicalFilePath().isEmpty() )
         continue;
+
       const QFileInfo canonicalFileInfo( fileInfo.canonicalFilePath() );
 
       if ( canonicalFileInfo.exists() && canonicalFileInfo.isFile() && canonicalFileInfo.isExecutable() ) {
@@ -329,10 +333,8 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
   const QString pluginName = relPath + QLatin1String( ".so" );
 #endif
 
-  QStringList::const_iterator pathIt    = instance()->mPluginDirs.constBegin();
-  QStringList::const_iterator pathEndIt = instance()->mPluginDirs.constEnd();
-  for ( ; pathIt != pathEndIt; ++pathIt ) {
-    const QFileInfo fileInfo( *pathIt + QDir::separator() + pluginName );
+  foreach ( const QString &path, instance()->mPluginDirs ) {
+    const QFileInfo fileInfo( path + QDir::separator() + pluginName );
 
     // resolve symlinks, happens eg. with Maemo optify
     if ( fileInfo.canonicalFilePath().isEmpty() )
@@ -356,12 +358,8 @@ QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPa
     return fullPath;
   }
 
-  QStringList pathList = systemPathList( resource );
-
-  QStringList::const_iterator it    = pathList.constBegin();
-  QStringList::const_iterator endIt = pathList.constEnd();
-  for ( ; it != endIt; ++it ) {
-    fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
+  foreach ( const QString &path, systemPathList( resource ) ) {
+    fileInfo = QFileInfo( path + QLatin1Char( '/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
       return fileInfo.absoluteFilePath();
     }
@@ -374,19 +372,15 @@ QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QStrin
 {
   QStringList resultList;
 
-  QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
+  const QString fullPath = homePath( resource ) + QLatin1Char( '/' ) + relPath;
 
   QFileInfo fileInfo( fullPath );
   if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
     resultList << fileInfo.absoluteFilePath();
   }
 
-  QStringList pathList = systemPathList( resource );
-
-  QStringList::const_iterator it    = pathList.constBegin();
-  QStringList::const_iterator endIt = pathList.constEnd();
-  for ( ; it != endIt; ++it ) {
-    fileInfo = QFileInfo( *it + QLatin1Char('/' ) + relPath );
+  foreach ( const QString &path, systemPathList( resource ) ) {
+    fileInfo = QFileInfo( path + QLatin1Char( '/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
       resultList << fileInfo.absoluteFilePath();
     }
@@ -397,7 +391,7 @@ QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QStrin
 
 QString XdgBaseDirs::saveDir( const char *resource, const QString &relPath )
 {
-  QString fullPath = homePath( resource ) + QLatin1Char('/' ) + relPath;
+  const QString fullPath = homePath( resource ) + QLatin1Char( '/' ) + relPath;
 
   QFileInfo fileInfo( fullPath );
   if ( fileInfo.exists() ) {
@@ -433,11 +427,12 @@ QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode open
 {
   const QString akonadiDir = QLatin1String( "akonadi" );
 
-  QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
+  const QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
 
-  if ( openMode == WriteOnly ) return savePath;
+  if ( openMode == WriteOnly )
+    return savePath;
 
-  QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
+  const QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
 
   if ( path.isEmpty() ) {
     return savePath;

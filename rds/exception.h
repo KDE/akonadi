@@ -19,20 +19,25 @@
 #ifndef AKONADI_RDS_EXCEPTION_H
 #define AKONADI_RDS_EXCEPTION_H
 
-#include <QString>
+#include <QtCore/QString>
 #include <stdexcept>
 
 template <typename Ex>
-class Exception : Ex {
-public:
-    explicit Exception( const QString & msg )
+class Exception : Ex
+{
+  public:
+    explicit Exception( const QString &message )
 #ifdef QT_NO_STL
-        : Ex( std::string( qPrintable(msg) ) ) {}
+      : Ex( std::string( qPrintable( message ) ) )
 #else
-        : Ex( msg.toStdString() ) {}
+      : Ex( message.toStdString() )
 #endif
-    ~Exception() throw() {}
-};
+    {
+    }
 
+    ~Exception() throw()
+    {
+    }
+};
 
 #endif

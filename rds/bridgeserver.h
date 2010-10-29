@@ -20,16 +20,17 @@
 #ifndef BRIDGESERVER_H
 #define BRIDGESERVER_H
 
-#include <QObject>
-#include <QTcpServer>
+#include <QtCore/QObject>
+#include <QtNetwork/QTcpServer>
 
 class BridgeServerBase : public QObject
 {
   Q_OBJECT
-  public:
-    explicit BridgeServerBase( quint16 port, QObject *parent = 0);
 
-  protected slots:
+  public:
+    explicit BridgeServerBase( quint16 port, QObject *parent = 0 );
+
+  protected Q_SLOTS:
     virtual void slotNewConnection() = 0;
 
   protected:
@@ -40,7 +41,10 @@ template <typename ConnectionType>
 class BridgeServer : public BridgeServerBase
 {
   public:
-    explicit BridgeServer( quint16 port, QObject* parent = 0 ) : BridgeServerBase( port, parent ) {}
+    explicit BridgeServer( quint16 port, QObject* parent = 0 )
+      : BridgeServerBase( port, parent )
+    {
+    }
 
   protected:
     void slotNewConnection()
