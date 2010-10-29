@@ -59,6 +59,7 @@ class ImapSet::Private : public QSharedData
     Private( const Private &other )
       : QSharedData( other )
     {
+      intervals = other.intervals;
     }
 
     ImapInterval::List intervals;
