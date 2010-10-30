@@ -24,7 +24,7 @@
 
 namespace Akonadi {
 
-class Location;
+class Collection;
 
 /**
   @ingroup akonadi_server_handler
@@ -33,17 +33,18 @@ class Location;
  */
 class AKONADIPRIVATE_EXPORT List : public Handler
 {
+  Q_OBJECT
 public:
     List();
 
     ~List();
 
-    bool handleLine(const QByteArray& line);
+    bool parseStream();
 
 private:
     virtual bool listCollections( const QString& prefix,
                                             const QString& mailboxPattern,
-                                            QList<Location> &result );
+                                            QList<Collection> &result );
 
 };
 

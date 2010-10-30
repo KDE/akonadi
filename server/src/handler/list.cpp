@@ -24,8 +24,8 @@
 #include "akonadiconnection.h"
 #include "storage/datastore.h"
 #include "storage/entity.h"
-#include "../../libs/imapparser_p.h"
 #include "handlerhelper.h"
+#include "imapstreamparser.h"
 
 #include "response.h"
 
@@ -41,78 +41,9 @@ List::~List()
 }
 
 
-bool List::handleLine(const QByteArray& line )
-{
-    // parse out the reference name and mailbox name
-    int pos = line.indexOf( ' ' ) + 1; // skip tag
-    pos = line.indexOf( ' ', pos ) + 1; // skip command
-    QString reference;
-    pos = ImapParser::parseString( line, reference, pos );
-    QString mailbox;
-    ImapParser::parseString( line, mailbox, pos );
-
-//     qDebug() << "reference:" << reference << "mailbox:" << mailbox << "::" << endl;
-
-    Response response;
-    response.setUntagged();
-
-    if ( mailbox.isEmpty() ) { // special case of asking for the delimiter
-        response.setString( "LIST (\\Noselect) \"/\" \"\"" );
-        emit responseAvailable( response );
-    } else {
-        QList<Location> collections;
-        if ( !listCollections( reference, mailbox, collections ) ) {
-          return failureResponse( "Unable to find collection" );
-        }
-
-        foreach ( Location loc, collections ) {
-            QByteArray list( "LIST ");
-            list += '(';
-            bool first = true;
-            QList<MimeType> supportedMimeTypes = loc.mimeTypes();
-            if ( supportedMimeTypes.isEmpty() ) {
-                list += "\\Noinferiors";
-                first = false;
-            }
-            bool canContainFolders = false;
-            foreach ( MimeType mt, supportedMimeTypes ) {
-              if ( mt.name() == QLatin1String("inode/directory") ) {
-                canContainFolders = true;
-                break;
-              }
-            }
-            if ( canContainFolders ) {
-                if ( !first ) list += ' ';
-                list += "\\Noselect";
-                first = false;
-            }
-            if ( !supportedMimeTypes.isEmpty() ) {
-                if ( !first ) list += ' ';
-                list += "\\MimeTypes[" + MimeType::joinByName( supportedMimeTypes, QLatin1String(",") ).toLatin1() + ']';
-            }
-            list += ") ";
-            list += "\"/\" \""; // FIXME delimiter
-            if ( loc.isValid() )
-              list += HandlerHelper::pathForCollection( loc ).toUtf8();
-            else
-              list += loc.name(); // search folder
-            list += "\"";
-            response.setString( list );
-            emit responseAvailable( response );
-        }
-    }
-
-    response.setSuccess();
-    response.setTag( tag() );
-    response.setString( "List completed" );
-    emit responseAvailable( response );
-    deleteLater();
-    return true;
-}
-
 bool List::listCollections( const QString & prefix,
                                       const QString & mailboxPattern,
-                                      QList<Location> &result )
+                                      QList<Collection> &result )
 {
   bool rv = true;
   result.clear();
@@ -121,18 +52,18 @@ bool List::listCollections( const QString & prefix,
     return true;
 
   DataStore *db = connection()->storageBackend();
-  const QString locationDelimiter = db->locationDelimiter();
+  const QString collectionDelimiter = db->collectionDelimiter();
 
   // normalize path and pattern
   QString sanitizedPattern( mailboxPattern );
   QString fullPrefix( prefix );
   const bool hasPercent = mailboxPattern.contains( QLatin1Char('%') );
   const bool hasStar = mailboxPattern.contains( QLatin1Char('*') );
-  const int endOfPath = mailboxPattern.lastIndexOf( locationDelimiter ) + 1;
+  const int endOfPath = mailboxPattern.lastIndexOf( collectionDelimiter ) + 1;
 
   Resource resource;
   if ( fullPrefix.startsWith( QLatin1Char('#') ) ) {
-    int endOfRes = fullPrefix.indexOf( locationDelimiter );
+    int endOfRes = fullPrefix.indexOf( collectionDelimiter );
     QString resourceName;
     if ( endOfRes < 0 ) {
       resourceName = fullPrefix.mid( 1 );
@@ -150,8 +81,8 @@ bool List::listCollections( const QString & prefix,
     }
   }
 
-  if ( !mailboxPattern.startsWith( locationDelimiter ) && fullPrefix != locationDelimiter )
-    fullPrefix += locationDelimiter;
+  if ( !mailboxPattern.startsWith( collectionDelimiter ) && fullPrefix != collectionDelimiter )
+    fullPrefix += collectionDelimiter;
   fullPrefix += mailboxPattern.left( endOfPath );
 
   if ( hasPercent )
@@ -167,30 +98,96 @@ bool List::listCollections( const QString & prefix,
     rv = false;
   }
 
-  QList<Location> locations;
+  QList<Collection> collections;
   if ( resource.isValid() )
-    locations = Location::retrieveFiltered( Location::resourceIdColumn(), resource.id() );
+    collections = Collection::retrieveFiltered( Collection::resourceIdColumn(), resource.id() );
   else
-    locations = Location::retrieveAll();
+    collections = Collection::retrieveAll();
 
-  foreach( Location l, locations ) {
-    const QString location = locationDelimiter + HandlerHelper::pathForCollection( l );
+  foreach( const Collection &col, collections ) {
+    const QString collection = collectionDelimiter + HandlerHelper::pathForCollection( col );
 #if 0
-    qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
+    qDebug() << "Collection: " << collection << " col: " << col << " prefix: " << fullPrefix;
 #endif
     const bool atFirstLevel =
-      location.lastIndexOf( locationDelimiter ) == fullPrefix.lastIndexOf( locationDelimiter );
-    if ( location.startsWith( fullPrefix ) ) {
+      collection.lastIndexOf( collectionDelimiter ) == fullPrefix.lastIndexOf( collectionDelimiter );
+    if ( collection.startsWith( fullPrefix ) ) {
       if ( hasStar || ( hasPercent && atFirstLevel ) ||
-           location == fullPrefix + sanitizedPattern ) {
-        result.append( l );
+           collection == fullPrefix + sanitizedPattern ) {
+        result.append( col );
       }
     }
     // Check, if requested folder has been found to distinguish between
     // non-existant folder and empty folder.
-    if ( location + locationDelimiter == fullPrefix || fullPrefix == locationDelimiter )
+    if ( collection + collectionDelimiter == fullPrefix || fullPrefix == collectionDelimiter )
       rv = true;
   }
 
   return rv;
 }
+
+bool List::parseStream()
+{
+  QString reference = m_streamParser->readUtf8String();
+  QString mailbox = m_streamParser->readUtf8String();
+
+//     qDebug() << "reference:" << reference << "mailbox:" << mailbox << "::" << endl;
+
+  Response response;
+  response.setUntagged();
+
+  if ( mailbox.isEmpty() ) { // special case of asking for the delimiter
+    response.setString( "LIST (\\Noselect) \"/\" \"\"" );
+    emit responseAvailable( response );
+  } else {
+    QList<Collection> collections;
+    if ( !listCollections( reference, mailbox, collections ) ) {
+      return failureResponse( "Unable to find collection" );
+    }
+
+    foreach ( const Collection &col, collections ) {
+      QByteArray list( "LIST ");
+      list += '(';
+      bool first = true;
+      QList<MimeType> supportedMimeTypes = col.mimeTypes();
+      if ( supportedMimeTypes.isEmpty() ) {
+        list += "\\Noinferiors";
+        first = false;
+      }
+      bool canContainFolders = false;
+      foreach ( const MimeType &mt, supportedMimeTypes ) {
+        if ( mt.name() == QLatin1String("inode/directory") ) {
+          canContainFolders = true;
+          break;
+        }
+      }
+      if ( canContainFolders ) {
+        if ( !first ) list += ' ';
+        list += "\\Noselect";
+        first = false;
+      }
+      if ( !supportedMimeTypes.isEmpty() ) {
+        if ( !first ) list += ' ';
+        list += "\\MimeTypes[" + MimeType::joinByName( supportedMimeTypes, QLatin1String(",") ).toLatin1() + ']';
+      }
+      list += ") ";
+      list += "\"/\" \""; // FIXME delimiter
+      if ( col.isValid() )
+        list += HandlerHelper::pathForCollection( col ).toUtf8();
+      else
+        list += col.name(); // search folder
+      list += "\"";
+      response.setString( list );
+      emit responseAvailable( response );
+    }
+  }
+
+  response.setSuccess();
+  response.setTag( tag() );
+  response.setString( "List completed" );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
+}
+
+#include "list.moc"
