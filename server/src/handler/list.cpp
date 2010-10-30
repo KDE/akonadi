@@ -65,7 +65,7 @@ bool List::handleLine(const QByteArray& line )
           return failureResponse( "Unable to find collection" );
         }
 
-        foreach ( Location loc, collections ) {
+        foreach ( const Location &loc, collections ) {
             QByteArray list( "LIST ");
             list += '(';
             bool first = true;
@@ -75,7 +75,7 @@ bool List::handleLine(const QByteArray& line )
                 first = false;
             }
             bool canContainFolders = false;
-            foreach ( MimeType mt, supportedMimeTypes ) {
+            foreach ( const MimeType &mt, supportedMimeTypes ) {
               if ( mt.name() == QLatin1String("inode/directory") ) {
                 canContainFolders = true;
                 break;
@@ -173,7 +173,7 @@ bool List::listCollections( const QString & prefix,
   else
     locations = Location::retrieveAll();
 
-  foreach( Location l, locations ) {
+  foreach( const Location &l, locations ) {
     const QString location = locationDelimiter + HandlerHelper::pathForCollection( l );
 #if 0
     qDebug() << "Location: " << location << " l: " << l << " prefix: " << fullPrefix;
