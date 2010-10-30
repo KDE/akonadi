@@ -1,3 +1,0 @@
-This is a sliglty adjusted version of the QSQLITE driver. Install this driver
-somewhere in the QT_PLUGIN_PATH and use it in akonadi by setting the driver
-to QSQLITE3.

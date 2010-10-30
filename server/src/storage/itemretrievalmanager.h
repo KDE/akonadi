@@ -40,7 +40,6 @@ class Collection;
 class ItemRetrievalManager : public QObject
 {
   Q_OBJECT
-
   public:
     ItemRetrievalManager( QObject *parent = 0 );
     ~ItemRetrievalManager();
@@ -66,7 +65,7 @@ class ItemRetrievalManager : public QObject
 
   private:
     static ItemRetrievalManager *sInstance;
-    /// Protects mPendingRequests and every ItemRetrievalRequest object posted to it
+    /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock *mLock;
     /// Used to let requesting threads wait until the request has been processed
     QWaitCondition *mWaitCondition;
