@@ -86,7 +86,15 @@ bool HandlerHelper::itemStatistics(const Akonadi::Collection& col, qint64& count
   QueryBuilder qb( PimItem::tableName() );
   qb.addAggregation( PimItem::idColumn(), QLatin1String("count") );
   qb.addAggregation( PimItem::sizeColumn(), QLatin1String("sum") );
-  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+
+  if ( col.resource().isVirtual() ) {
+    qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+                CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
+    qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
+  } else {
+    qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, col.id() );
+  }
+
   if ( !qb.exec() )
     return false;
   if ( !qb.query().next() ) {
