@@ -219,7 +219,7 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
   QModelIndexList indexes;
   bool sourceDeletable = true;
   foreach ( const QModelIndex &index, m_view->selectionModel()->selectedRows() ) {
-    if ( m_view->model()->flags( index ).testFlag( Qt::ItemIsDragEnabled ) )
+    if ( !m_view->model()->flags( index ).testFlag( Qt::ItemIsDragEnabled ) )
       continue;
 
     if ( sourceDeletable ) {
