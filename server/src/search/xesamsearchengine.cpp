@@ -80,12 +80,12 @@ void XesamSearchEngine::initializeSearchInterface()
     mSession = mInterface->NewSession();
     QDBusVariant result = mInterface->SetProperty( mSession, QLatin1String( "search.live" ), QDBusVariant( true ) );
     mValid = mValid && result.variant().toBool();
-    qDebug() << "XESAM session:" << mSession;
 
     connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( slotHitsAdded( QString, uint ) ) );
     connect( mInterface, SIGNAL( HitsRemoved( QString, QList<uint> ) ), SLOT( slotHitsRemoved( QString, QList<uint> ) ) );
     connect( mInterface, SIGNAL( HitsModified( QString, QList<uint> ) ), SLOT( slotHitsModified( QString, QList<uint> ) ) );
 
+    mValid = true;
     reloadSearches();
   } else {
     mValid = false;
@@ -191,12 +191,13 @@ void XesamSearchEngine::addSearch( const Collection &collection )
     return;
 
   const QString searchId = mInterface->NewSearch( mSession, collection.remoteId() );
-  qDebug() << "XesamSearchEngine::addSeach" << collection << searchId;
+  qDebug() << "XesamSearchEngine::addSeach" << collection.name() << searchId;
 
   mMutex.lock();
   mSearchMap.insert( searchId, collection.id() );
   mInvSearchMap.insert( collection.id(), searchId );
   mMutex.unlock();
+
   mInterface->StartSearch( searchId );
 }
 
