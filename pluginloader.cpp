@@ -22,7 +22,6 @@
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kglobal.h>
-#include <klibloader.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 
@@ -30,6 +29,8 @@
 #include <QtCore/QPluginLoader>
 
 using namespace Akonadi;
+
+extern QString findLibrary( const QString &name, const KComponentData &cData );
 
 PluginMetaData::PluginMetaData()
 {
@@ -87,7 +88,7 @@ QObject* PluginLoader::createForName( const QString & name )
   }
 
   if ( !info.loaded ) {
-    const QString path = KLibLoader::findLibrary( info.library );
+    const QString path = ::findLibrary( info.library, KGlobal::mainComponent() );
     if ( path.isEmpty() ) {
       kWarning( 5300 ) << "unable to find library for plugin name \"" << name << "\"." << endl;
       return 0;
