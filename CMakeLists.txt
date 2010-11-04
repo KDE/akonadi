@@ -218,7 +218,7 @@ kde4_add_ui_files( akonadikde_LIB_SRC
 )
 else(KDE_IS_AT_LEAST_4_5_74)
 kde4_add_ui_files( akonadikde_LIB_SRC
-  cachepolicypage-4.5.ui
+  cachepolicypage-45.ui
 )
 endif(KDE_IS_AT_LEAST_4_5_74)
 

@@ -26,7 +26,7 @@
 #if KDE_IS_VERSION(4,5,74)
 #include "ui_cachepolicypage.h"
 #else
-#include "ui_cachepolicypage-4.5.h"
+#include "ui_cachepolicypage-45.h"
 #endif
 
 namespace Akonadi {
