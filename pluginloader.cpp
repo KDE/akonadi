@@ -30,7 +30,13 @@
 
 using namespace Akonadi;
 
+#include <kdeversion.h>
+
+#if KDE_IS_VERSION( 4,5,74 )
 extern QString findLibrary( const QString &name, const KComponentData &cData );
+#else
+#include <klibloader.h>
+#endif
 
 PluginMetaData::PluginMetaData()
 {
@@ -88,7 +94,11 @@ QObject* PluginLoader::createForName( const QString & name )
   }
 
   if ( !info.loaded ) {
+#if KDE_IS_VERSION( 4,5,74 )
     const QString path = ::findLibrary( info.library, KGlobal::mainComponent() );
+#else
+    const QString path = KLibLoader::findLibrary( info.library );
+#endif
     if ( path.isEmpty() ) {
       kWarning( 5300 ) << "unable to find library for plugin name \"" << name << "\"." << endl;
       return 0;
