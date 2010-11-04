@@ -1,19 +1,21 @@
 /*
-   Copyright (c) 2008 Sebastian Trueg <trueg@kde.org>
+   Copyright (c) 2008-2009 Sebastian Trueg <trueg@kde.org>
 
    This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License version 2 as published by the Free Software Foundation.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) version 3, or any
+   later version accepted by the membership of KDE e.V. (or its
+   successor approved by the membership of KDE e.V.), which shall
+   act as a proxy defined in Section 6 of version 3 of the license.
 
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "dbusoperators.h"
@@ -23,34 +25,33 @@
 
 #include <QtDBus/QDBusMetaType>
 
-
-Q_DECLARE_METATYPE(Nepomuk::Search::Result)
+Q_DECLARE_METATYPE(Nepomuk::Query::Result)
 Q_DECLARE_METATYPE(Soprano::Node)
 Q_DECLARE_METATYPE(QList<int>)
-Q_DECLARE_METATYPE(QList<Nepomuk::Search::Result>)
+Q_DECLARE_METATYPE(QList<Nepomuk::Query::Result>)
 
-
-void Nepomuk::Search::registerDBusTypes()
+void Nepomuk::Query::registerDBusTypes()
 {
-    qDBusRegisterMetaType<Nepomuk::Search::Result>();
-    qDBusRegisterMetaType<QList<Nepomuk::Search::Result> >();
+    qDBusRegisterMetaType<Nepomuk::Query::Result>();
+    qDBusRegisterMetaType<QList<Nepomuk::Query::Result> >();
     qDBusRegisterMetaType<Soprano::Node>();
     qDBusRegisterMetaType<RequestPropertyMapDBus>();
 }
 
-
-QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Result& result )
+QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& result )
 {
     //
-    // Signature: (sda{s(isss)})
+    // Signature: (sda{s(isss)}s)
     //
 
     arg.beginStructure();
 
+    // resource URI and score
     arg << QString::fromAscii( result.resourceUri().toEncoded() ) << result.score();
 
     arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
 
+    // request properties
     QHash<QUrl, Soprano::Node> rp = result.requestProperties();
     for ( QHash<QUrl, Soprano::Node>::const_iterator it = rp.constBegin(); it != rp.constEnd(); ++it ) {
         arg.beginMapEntry();
@@ -60,13 +61,15 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Result& re
 
     arg.endMap();
 
+    arg << QString(); // excerpt
+
     arg.endStructure();
 
     return arg;
 }
 
 
-const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Result& result )
+const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Result& result )
 {
     //
     // Signature: (sda{s(isss)})
@@ -77,7 +80,7 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Resu
     double score = 0.0;
 
     arg >> uri >> score;
-    result = Nepomuk::Search::Result( QUrl::fromEncoded( uri.toAscii() ), score );
+    result = Nepomuk::Query::Result( QUrl::fromEncoded( uri.toAscii() ), score );
 
     arg.beginMap();
     while ( !arg.atEnd() ) {
@@ -86,9 +89,13 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Resu
         arg.beginMapEntry();
         arg >> rs >> node;
         arg.endMapEntry();
-        result.addRequestProperty( QUrl::fromEncoded( rs.toAscii() ), node );
+        if( !rs.startsWith(QLatin1String("|")) )
+            result.addRequestProperty( QUrl::fromEncoded( rs.toAscii() ), node );
     }
     arg.endMap();
+
+    QString excerpt;
+    arg >> excerpt;
 
     arg.endStructure();
 

@@ -39,11 +39,11 @@ class NepomukSearch : public QObject
     QStringList search( const QString &query );
 
   private Q_SLOTS:
-    void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
+    void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
 
   private:
     QSet<QString> mMatchingUIDs;
-    Nepomuk::Search::QueryServiceClient* mSearchService;
+    Nepomuk::Query::QueryServiceClient* mSearchService;
 };
 
 }

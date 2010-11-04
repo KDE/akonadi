@@ -24,7 +24,7 @@
 class QUrl;
 
 namespace Nepomuk {
-    namespace Search {
+    namespace Query {
 
         class Result;
 
@@ -111,7 +111,7 @@ namespace Nepomuk {
              * Emitted for new search results. This signal is emitted both
              * for the initial listing and for changes to the search.
              */
-            void newEntries( const QList<Nepomuk::Search::Result>& entries );
+            void newEntries( const QList<Nepomuk::Query::Result>& entries );
 
             /**
              * Emitted if the search results changed when monitoring a query.

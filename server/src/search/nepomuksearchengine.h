@@ -49,15 +49,15 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
 
   private Q_SLOTS:
     void reloadSearches();
-    void hitsAdded( const QList<Nepomuk::Search::Result>& entries );
+    void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
     void hitsRemoved( const QList<QUrl> &entries );
 
   private:
     QMutex mMutex;
     NotificationCollector* mCollector;
 
-    QHash<Nepomuk::Search::QueryServiceClient*, qint64> mQueryMap;
-    QHash<qint64, Nepomuk::Search::QueryServiceClient*> mQueryInvMap;
+    QHash<Nepomuk::Query::QueryServiceClient*, qint64> mQueryMap;
+    QHash<qint64, Nepomuk::Query::QueryServiceClient*> mQueryInvMap;
 };
 
 }

@@ -28,7 +28,7 @@
 #include "soprano/statement.h"
 
 namespace Nepomuk {
-    namespace Search {
+    namespace Query {
         /**
          * \brief A single search result.
          *
@@ -67,6 +67,6 @@ namespace Nepomuk {
     }
 }
 
-Q_DECLARE_TYPEINFO( Nepomuk::Search::Result, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO( Nepomuk::Query::Result, Q_MOVABLE_TYPE );
 
 #endif

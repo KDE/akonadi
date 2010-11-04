@@ -59,7 +59,7 @@ NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
                              QDBusServiceWatcher::WatchForRegistration, this );
   connect( watcher, SIGNAL(serviceRegistered(QString)), SLOT(reloadSearches()) );
 
-  if ( Nepomuk::Search::QueryServiceClient::serviceAvailable() ) {
+  if ( Nepomuk::Query::QueryServiceClient::serviceAvailable() ) {
     reloadSearches();
   } else {
     // FIXME: try to start the nepomuk server
@@ -77,10 +77,10 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
   if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) )
     return;
 
-  Nepomuk::Search::QueryServiceClient *query = new Nepomuk::Search::QueryServiceClient( this );
+  Nepomuk::Query::QueryServiceClient *query = new Nepomuk::Query::QueryServiceClient( this );
 
-  connect( query, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
-           this, SLOT( hitsAdded( const QList<Nepomuk::Search::Result>& ) ) );
+  connect( query, SIGNAL( newEntries( const QList<Nepomuk::Query::Result>& ) ),
+           this, SLOT( hitsAdded( const QList<Nepomuk::Query::Result>& ) ) );
   connect( query, SIGNAL( entriesRemoved( const QList<QUrl>& ) ),
            this, SLOT( hitsRemoved( const QList<QUrl>& ) ) );
 
@@ -95,7 +95,7 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
 
 void NepomukSearchEngine::removeSearch( qint64 collectionId )
 {
-  Nepomuk::Search::QueryServiceClient *query = mQueryInvMap.value( collectionId );
+  Nepomuk::Query::QueryServiceClient *query = mQueryInvMap.value( collectionId );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Query could not be removed!";
     return;
@@ -151,9 +151,9 @@ void NepomukSearchEngine::stopSearches()
   }
 }
 
-void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
+void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
 {
-  Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;
@@ -164,7 +164,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Search::Result>& entri
   mMutex.unlock();
   const Collection collection = Collection::retrieveById( collectionId );
 
-  Q_FOREACH( const Nepomuk::Search::Result &result, entries ) {
+  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = uriToItemId( result.resourceUri() );
 
     if ( itemId == -1 )
@@ -179,7 +179,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Search::Result>& entri
 
 void NepomukSearchEngine::hitsRemoved( const QList<QUrl> &entries )
 {
-  Nepomuk::Search::QueryServiceClient *query = qobject_cast<Nepomuk::Search::QueryServiceClient*>( sender() );
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
   if ( !query ) {
     qWarning() << "Nepomuk QueryServer: Got signal from non-existing search query!";
     return;

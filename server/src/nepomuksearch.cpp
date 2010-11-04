@@ -42,9 +42,9 @@ static qint64 uriToItemId( const QUrl &url )
 NepomukSearch::NepomukSearch( QObject* parent )
   : QObject( parent ), mSearchService( 0 )
 {
-  mSearchService = new Nepomuk::Search::QueryServiceClient( this );
-  connect( mSearchService, SIGNAL( newEntries( const QList<Nepomuk::Search::Result>& ) ),
-           this, SLOT( hitsAdded( const QList<Nepomuk::Search::Result>& ) ) );
+  mSearchService = new Nepomuk::Query::QueryServiceClient( this );
+  connect( mSearchService, SIGNAL( newEntries( const QList<Nepomuk::Query::Result>& ) ),
+           this, SLOT( hitsAdded( const QList<Nepomuk::Query::Result>& ) ) );
 }
 
 NepomukSearch::~NepomukSearch()
@@ -70,14 +70,14 @@ QStringList NepomukSearch::search( const QString &query )
   return mMatchingUIDs.toList();
 }
 
-void NepomukSearch::hitsAdded( const QList<Nepomuk::Search::Result>& entries )
+void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
 {
   if ( !mSearchService ) {
     qWarning() << "Nepomuk search service not available!";
     return;
   }
 
-  Q_FOREACH( const Nepomuk::Search::Result &result, entries ) {
+  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = uriToItemId( result.resourceUri() );
 
     if ( itemId == -1 )

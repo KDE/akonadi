@@ -24,7 +24,7 @@
 #include "result.h"
 
 namespace Nepomuk {
-    namespace Search {
+    namespace Query {
         void registerDBusTypes();
     }
 }
@@ -32,7 +32,7 @@ namespace Nepomuk {
 QDBusArgument& operator<<( QDBusArgument& arg, const Soprano::Node& );
 const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& );
 
-QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Search::Result& );
-const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Search::Result& );
+QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& );
+const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Result& );
 
 #endif
