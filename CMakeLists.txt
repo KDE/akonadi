@@ -210,9 +210,19 @@ qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Agen
 kde4_add_kcfg_files( akonadikde_LIB_SRC resourcebasesettings.kcfgc )
 install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
+macro_ensure_version( "4.5.74" ${KDE_VERSION} KDE_IS_AT_LEAST_4_5_74 )
 
+if(KDE_IS_AT_LEAST_4_5_74)
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
+)
+else(KDE_IS_AT_LEAST_4_5_74)
+kde4_add_ui_files( akonadikde_LIB_SRC
+  cachepolicypage-4.5.ui
+)
+endif(KDE_IS_AT_LEAST_4_5_74)
+
+kde4_add_ui_files( akonadikde_LIB_SRC
   collectiongeneralpropertiespage.ui
   controlprogressindicator.ui
   selftestdialog.ui
