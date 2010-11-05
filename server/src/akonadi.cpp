@@ -80,6 +80,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     else
       createDatabase();
 
+    DbConfig::configuredDatabase()->setup();
+
     s_instance = this;
 
     const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );

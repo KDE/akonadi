@@ -92,6 +92,11 @@ class DbConfig
      */
     virtual bool useExternalPayloadFile() const;
 
+    /**
+     * This method is called to setup initial database settings after a connection is established.
+     */
+    virtual void setup();
+
   protected:
     DbConfig();
 

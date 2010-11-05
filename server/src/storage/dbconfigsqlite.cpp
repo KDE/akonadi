@@ -24,6 +24,8 @@
 
 #include <QtCore/QDir>
 #include <QtSql/QSqlDriver>
+#include <QtSql/QSqlError>
+#include <QtSql/QSqlQuery>
 
 using namespace Akonadi;
 
@@ -117,4 +119,100 @@ void DbConfigSqlite::apply( QSqlDatabase &database )
 bool DbConfigSqlite::useInternalServer() const
 {
   return false;
+}
+
+void DbConfigSqlite::setup()
+{
+    const QLatin1String initcon( "initConnection" );
+    {
+        QString drivername = driverName();
+        QSqlDatabase db = QSqlDatabase::addDatabase(drivername, initcon);
+
+        if ( !db.isValid() ) {
+            akDebug() << "Invalid database for "
+                << mDatabaseName
+                << " with driver "
+                << drivername;
+            return;
+        }
+
+        db.setDatabaseName( mDatabaseName );
+        if ( !db.open() ) {
+            akDebug() << "Could not open sqlite database "
+                << mDatabaseName
+                << " with driver "
+                << drivername
+                << " for initalization";
+            db.close();
+            return;
+        }
+
+        apply(db);
+
+        QSqlQuery query(db);
+        if ( !query.exec( QString::fromLatin1("SELECT sqlite_version()") ) ) {
+            akDebug() << "Could not query sqlite version";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        if ( !query.next() ) { // should never occur
+            akDebug() << "Could not query sqlite version";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        QString sqliteversion = query.value(0).toString();
+        akDebug() << "sqlite version is " << sqliteversion;
+        QStringList list;
+        list = sqliteversion.split(QString::fromLatin1("."));
+        int sqliteversionmajor = list[0].toInt();
+        int sqliteversionminor = list[1].toInt();
+
+        // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
+        if ( !query.exec( QString::fromLatin1("PRAGMA synchronous = 1") ) ) {
+            akDebug() << "Could not set sqlite synchronous mode to NORMAL";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        if ( sqliteversionmajor < 3 && sqliteversionminor < 7 ) {
+            // wal mode is only supported with >= sqlite 3.7.0
+            db.close();
+            return;
+        }
+
+        // set write-ahead-log mode; see http://www.sqlite.org/wal.html
+        if ( !query.exec( QString::fromLatin1("PRAGMA journal_mode=wal") ) ) {
+            akDebug() << "Could not set sqlite write-ahead-log journal mode";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+        if ( !query.next() ) { // should never occur
+            akDebug() << "Could not query sqlite journal mode";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        QString journalmode = query.value(0).toString();
+        akDebug() << "sqlite journal mode is " << journalmode;
+
+        db.close();
+    }
+    QSqlDatabase::removeDatabase( initcon );
 }

@@ -106,6 +106,11 @@ void DbConfig::stopInternalServer()
   // do nothing
 }
 
+void DbConfig::setup()
+{
+  // do nothing
+}
+
 qint64 DbConfig::sizeThreshold() const
 {
   return mSizeThreshold;

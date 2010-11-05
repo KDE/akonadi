@@ -65,6 +65,10 @@ class DbConfigSqlite : public DbConfig
      */
     virtual bool useInternalServer() const;
 
+    /**
+     * Sets sqlite journal mode to WAL and synchronous mode to NORMAL
+     */
+    virtual void setup();
   private:
     Version mDriverVersion;
     QString mDatabaseName;
