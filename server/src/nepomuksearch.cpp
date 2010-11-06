@@ -33,6 +33,9 @@ static qint64 uriToItemId( const QUrl &url )
 
   const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
 
+  // We don't want attachments
+  ok = ok && !url.hasFragment();
+
   if ( !ok )
     return -1;
   else
