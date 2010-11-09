@@ -47,8 +47,11 @@ enum Status {
     StatusToAct =             0x00001000,
     StatusSpam =              0x00002000,
     StatusHam =               0x00004000,
-    StatusHasAttach =         0x00008000,
-    StatusHasInvitation =     0x00010000
+    StatusHasAttachment =     0x00008000,
+    StatusHasInvitation =     0x00010000,
+    StatusSigned =            0x00020000,
+    StatusEncrypted =         0x00040000,
+    StatusHasError =          0x00080000
 };
 
 Akonadi::MessageStatus::MessageStatus()
@@ -130,8 +133,17 @@ void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
   if ( other.hasAttachment() ) {
     setHasAttachment();
   }
-  if( other.hasInvitation() ) {
+  if ( other.hasInvitation() ) {
     setHasInvitation();
+  }
+  if ( other.isSigned() ) {
+    setSigned();
+  }
+  if ( other.isEncrypted() ) {
+    setEncrypted();
+  }
+  if ( other.hasError() ) {
+    setHasError();
   }
 }
 
@@ -172,10 +184,19 @@ void Akonadi::MessageStatus::toggle( const Akonadi::MessageStatus &other )
     setHam( !( mStatus & StatusHam ) );
   }
   if ( other.hasAttachment() ) {
-    setHasAttachment( !( mStatus & StatusHasAttach ) );
+    setHasAttachment( !( mStatus & StatusHasAttachment ) );
   }
-  if( other.hasInvitation() ) {
+  if ( other.hasInvitation() ) {
     setHasInvitation( !( mStatus & StatusHasInvitation ) );
+  }
+  if ( other.isSigned() ) {
+    setSigned( !( mStatus & StatusSigned ) );
+  }
+  if ( other.isEncrypted() ) {
+    setEncrypted( !( mStatus & StatusEncrypted ) );
+  }
+  if ( other.hasError() ) {
+    setHasError( !( mStatus & StatusHasError ) );
   }
 }
 
@@ -251,12 +272,27 @@ bool Akonadi::MessageStatus::isHam() const
 
 bool Akonadi::MessageStatus::hasAttachment() const
 {
-  return ( mStatus & StatusHasAttach );
+  return ( mStatus & StatusHasAttachment );
 }
 
 bool Akonadi::MessageStatus::hasInvitation() const
 {
   return ( mStatus & StatusHasInvitation );
+}
+
+bool Akonadi::MessageStatus::isSigned() const
+{
+  return ( mStatus & StatusSigned );
+}
+
+bool Akonadi::MessageStatus::isEncrypted() const
+{
+  return ( mStatus & StatusEncrypted );
+}
+
+bool Akonadi::MessageStatus::hasError() const
+{
+  return ( mStatus & StatusHasError );
 }
 
 
@@ -385,9 +421,9 @@ void Akonadi::MessageStatus::setHam( bool ham )
 void Akonadi::MessageStatus::setHasAttachment( bool withAttachment )
 {
   if ( withAttachment ) {
-    mStatus |= StatusHasAttach;
+    mStatus |= StatusHasAttachment;
   } else {
-    mStatus &= ~StatusHasAttach;
+    mStatus &= ~StatusHasAttachment;
   }
 }
 
@@ -397,6 +433,33 @@ void Akonadi::MessageStatus::setHasInvitation( bool withInvitation )
     mStatus |= StatusHasInvitation;
   } else {
     mStatus &= ~StatusHasInvitation;
+  }
+}
+
+void Akonadi::MessageStatus::setSigned( bool value )
+{
+  if ( value ) {
+    mStatus |= StatusSigned;
+  } else {
+    mStatus &= ~StatusSigned;
+  }
+}
+
+void Akonadi::MessageStatus::setEncrypted( bool value )
+{
+  if ( value ) {
+    mStatus |= StatusEncrypted;
+  } else {
+    mStatus &= ~StatusEncrypted;
+  }
+}
+
+void Akonadi::MessageStatus::setHasError( bool hasError )
+{
+  if ( hasError ) {
+    mStatus |= StatusHasError;
+  } else {
+    mStatus &= ~StatusHasError;
   }
 }
 
@@ -453,7 +516,7 @@ QString Akonadi::MessageStatus::statusStr() const
   if ( mStatus & StatusHam ) {
     sstr += 'H';
   }
-  if ( mStatus & StatusHasAttach ) {
+  if ( mStatus & StatusHasAttachment ) {
     sstr += 'T';
   }
 
@@ -515,33 +578,45 @@ QSet<QByteArray> Akonadi::MessageStatus::statusFlags() const
 {
   QSet<QByteArray> flags;
 
-  // Non handled status:
-  // * StatusQueued
-  // * StatusSent
-  // * StatusSpam
-  // * StatusHam
-  // * StatusHasAttach
-
   if ( mStatus & StatusDeleted ) {
-    flags+= Akonadi::MessageFlags::Deleted;
+    flags += Akonadi::MessageFlags::Deleted;
   } else {
     if ( mStatus &  StatusRead )
-      flags+= Akonadi::MessageFlags::Seen;
+      flags += Akonadi::MessageFlags::Seen;
     if ( mStatus & StatusReplied )
-      flags+= Akonadi::MessageFlags::Answered;
+      flags += Akonadi::MessageFlags::Answered;
     if ( mStatus & StatusFlag )
-      flags+= Akonadi::MessageFlags::Flagged;
+      flags += Akonadi::MessageFlags::Flagged;
+
     // non standard flags
+    if ( mStatus & StatusSent )
+      flags += Akonadi::MessageFlags::Sent;
+    if ( mStatus & StatusQueued )
+      flags += Akonadi::MessageFlags::Queued;
+    if ( mStatus & StatusReplied )
+      flags += Akonadi::MessageFlags::Replied;
     if ( mStatus & StatusForwarded )
-      flags+= "$FORWARDED";
+      flags += Akonadi::MessageFlags::Forwarded;
     if ( mStatus & StatusToAct )
-      flags+= "$TODO";
+      flags += Akonadi::MessageFlags::ToAct;
     if ( mStatus & StatusWatched )
-      flags+= "$WATCHED";
+      flags += Akonadi::MessageFlags::Watched;
     if ( mStatus & StatusIgnored )
-      flags+= "$IGNORED";
-    if ( mStatus & StatusHasAttach )
-      flags+= Akonadi::MessageFlags::Attachment;
+      flags += Akonadi::MessageFlags::Ignored;
+    if ( mStatus & StatusHasAttachment )
+      flags += Akonadi::MessageFlags::HasAttachment;
+    if ( mStatus & StatusHasInvitation )
+      flags += Akonadi::MessageFlags::HasInvitation;
+    if ( mStatus & StatusSigned )
+      flags += Akonadi::MessageFlags::Signed;
+    if ( mStatus & StatusEncrypted )
+      flags += Akonadi::MessageFlags::Encrypted;
+    if ( mStatus & StatusSpam )
+      flags += Akonadi::MessageFlags::Spam;
+    if ( mStatus & StatusHam )
+      flags += Akonadi::MessageFlags::Ham;
+    if ( mStatus & StatusHasError )
+      flags += Akonadi::MessageFlags::HasError;
   }
 
   return flags;
@@ -551,39 +626,47 @@ void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 {
   mStatus = StatusUnknown;
   setUnread();
-  // Non handled status:
-  // * StatusQueued
-  // * StatusSent
-  // * StatusSpam
-  // * StatusHam
-  // * StatusHasAttach
 
   foreach ( const QByteArray &flag, flags ) {
     const QByteArray &upperedFlag = flag.toUpper();
     if ( upperedFlag ==  Akonadi::MessageFlags::Deleted ) {
       setDeleted();
-    } else if ( upperedFlag ==  Akonadi::MessageFlags::Seen ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Seen ) {
       setRead();
-    } else if ( upperedFlag ==  Akonadi::MessageFlags::Answered ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Answered ) {
       setReplied();
-    } else if ( upperedFlag ==  Akonadi::MessageFlags::Flagged ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Flagged ) {
       setImportant();
 
     // non standard flags
-    } else if ( upperedFlag ==  "$FORWARDED" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Sent ) {
+      setSent();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Queued ) {
+      setQueued();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Replied ) {
+      setReplied();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Forwarded ) {
       setForwarded();
-    } else if ( upperedFlag ==  "$TODO" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::ToAct ) {
       setToAct();
-    } else if ( upperedFlag ==  "$WATCHED" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Watched ) {
       setWatched();
-    } else if ( upperedFlag ==  "$IGNORED" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Ignored ) {
       setIgnored();
-    } else if ( upperedFlag ==  "$JUNK" ) {
+    } else if ( upperedFlag ==  Akonadi::MessageFlags::HasAttachment ) {
+      setHasAttachment();
+    } else if ( upperedFlag ==  Akonadi::MessageFlags::HasInvitation ) {
+      setHasInvitation();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Signed ) {
+      setSigned();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Encrypted ) {
+      setEncrypted();
+    } else if ( upperedFlag == Akonadi::MessageFlags::Spam ) {
       setSpam();
-    } else if ( upperedFlag ==  "$NOTJUNK" ) {
+    } else if ( upperedFlag == Akonadi::MessageFlags::Ham ) {
       setHam();
-    } else if ( upperedFlag ==  Akonadi::MessageFlags::Attachment ) {
-      setHasAttachment( true );
+    } else if ( upperedFlag == Akonadi::MessageFlags::HasError ) {
+      setHasError();
     } else {
       kWarning() << "Unknown flag:" << flag;
     }
@@ -695,3 +778,23 @@ Akonadi::MessageStatus Akonadi::MessageStatus::statusHasInvitation()
   return st;
 }
 
+Akonadi::MessageStatus Akonadi::MessageStatus::statusSigned()
+{
+  MessageStatus st;
+  st.setSigned();
+  return st;
+}
+
+Akonadi::MessageStatus Akonadi::MessageStatus::statusEncrypted()
+{
+  MessageStatus st;
+  st.setEncrypted();
+  return st;
+}
+
+Akonadi::MessageStatus Akonadi::MessageStatus::statusHasError()
+{
+  MessageStatus st;
+  st.setHasError();
+  return st;
+}

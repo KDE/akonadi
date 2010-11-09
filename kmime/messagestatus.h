@@ -180,6 +180,21 @@ class AKONADI_KMIME_EXPORT MessageStatus
     */
     bool hasInvitation() const;
 
+    /** Check for Signed status.
+        @return true if status is signed.
+    */
+    bool isSigned() const;
+
+    /** Check for Encrypted status.
+        @return true if status is encrypted.
+    */
+    bool isEncrypted() const;
+
+    /** Check for error status.
+        @return true if status indicates an error.
+    */
+    bool hasError() const;
+
     /* ----- setters ----------------------------------------------------- */
 
     /** Set the status to unread. */
@@ -253,6 +268,21 @@ class AKONADI_KMIME_EXPORT MessageStatus
     */
     void setHasInvitation( bool hasInvitation = true );
 
+    /** Set the status to signed.
+        @param value Set (true) or unset (false) this status flag.
+    */
+    void setSigned( bool value = true );
+
+    /** Set the status to encrypted.
+        @param value Set (true) or unset (false) this status flag.
+    */
+    void setEncrypted( bool value = true );
+
+    /** Set the status to error.
+        @param value Set (true) or unset (false) this status flag.
+    */
+    void setHasError( bool value = true );
+
     /* ----- state representation  --------------------------------------- */
     
     /** Get the status as a whole e.g. for storage in an index.
@@ -272,6 +302,8 @@ class AKONADI_KMIME_EXPORT MessageStatus
     /** Convert the status to a string representation.
         @return A string containing coded uppercase letters
                 which describe the status.
+
+        @note This code is legacy for the KMail1 indexes
     */
     QString statusStr() const;
 
@@ -279,6 +311,8 @@ class AKONADI_KMIME_EXPORT MessageStatus
         @param aStr The status string to be analyzed.
                     Normally it is a string obtained using
                     getStatusStr().
+
+        @note This code is legacy for the KMail1 indexes
     */
     void setStatusFromStr( const QString &aStr );
 
@@ -383,6 +417,24 @@ class AKONADI_KMIME_EXPORT MessageStatus
         @return A reference to a status instance initialized as Invitation.
     */
     static MessageStatus statusHasInvitation();
+
+    /** Return a predefined status initialized as Signed as is useful
+        e.g. when providing a state for comparison.
+        @return A reference to a status instance initialized as Signed.
+    */
+    static MessageStatus statusSigned();
+
+    /** Return a predefined status initialized as Encrypted as is useful
+        e.g. when providing a state for comparison.
+        @return A reference to a status instance initialized as Encrypted.
+    */
+    static MessageStatus statusEncrypted();
+
+    /** Return a predefined status initialized as Error as is useful
+        e.g. when providing a state for comparison.
+        @return A reference to a status instance initialized as Error.
+    */
+    static MessageStatus statusHasError();
 
   private:
     quint32 mStatus;
