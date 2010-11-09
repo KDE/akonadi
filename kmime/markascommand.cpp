@@ -100,15 +100,10 @@ void MarkAsCommand::execute()
 void MarkAsCommand::markMessages()
 {
   mMarkJobCount = 0;
-  //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
+
   foreach( const Akonadi::Item &it, mMessages ) {
-    // HACK here we create a new item with an empty payload---
-    //  just the Id, revision, and new flags, because otherwise
-    //  non-symmetric assemble/parser in KMime might make the payload
-    //  different than the original mail, and cause extra copies to be
-    //  created on the server.
-    Akonadi::Item item( it.id() );
-    item.setRevision( it.revision() );
+    Akonadi::Item item( it );
+
     // Set a custom flag
     Akonadi::MessageStatus itemStatus;
     itemStatus.setStatusFromFlags( it.flags() );
@@ -124,13 +119,13 @@ void MarkAsCommand::markMessages()
     } else {
       itemStatus.set( mTargetStatus );
     }
-      /*if ( itemStatus != oldStatus )*/ {
-      item.setFlags( itemStatus.statusFlags() );
-      // Store back modified item
-      Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
-      mMarkJobCount++;
-      connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
-    }
+
+    item.setFlags( itemStatus.statusFlags() );
+    // Store back modified item
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
+    modifyJob->ignorePayload();
+    mMarkJobCount++;
+    connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
   }
 }
 
