@@ -175,6 +175,9 @@ class AKONADI_KMIME_EXPORT MessageStatus
     */
     bool hasAttachment() const;
 
+    /** Check for Invitation status.
+        @return true if status indicates an invitation.
+    */
     bool hasInvitation() const;
 
     /* ----- setters ----------------------------------------------------- */
@@ -241,10 +244,13 @@ class AKONADI_KMIME_EXPORT MessageStatus
     void setHam( bool ham = true );
 
     /** Set the status for an attachment.
-        @param withAttechment Set (true) or unset (false) this status flag.
+        @param hasAttachment Set (true) or unset (false) this status flag.
     */
-    void setHasAttachment( bool withAttachment = true );
+    void setHasAttachment( bool hasAttachment = true );
     
+    /** Set the status for an invitation.
+        @param hasInvitation Set (true) or unset (false) this status flag.
+    */
     void setHasInvitation( bool hasInvitation = true );
 
     /* ----- state representation  --------------------------------------- */
@@ -372,6 +378,10 @@ class AKONADI_KMIME_EXPORT MessageStatus
     */
     static MessageStatus statusHasAttachment();
 
+    /** Return a predefined status initialized as Invitation as is useful
+        e.g. when providing a state for comparison.
+        @return A reference to a status instance initialized as Invitation.
+    */
     static MessageStatus statusHasInvitation();
 
   private:
