@@ -29,8 +29,7 @@
 #include <kaboutdata.h>
 #include <kcomponentdata.h>
 #include <kconfigdialogmanager.h>
-#include <kdemacros.h>
-#include <kgenericfactory.h>
+#include <kpluginfactory.h>
 #include <klocale.h>
 
 K_PLUGIN_FACTORY( KCMAkonadiContactActionsFactory, registerPlugin<KCMAkonadiContactActions>(); )
