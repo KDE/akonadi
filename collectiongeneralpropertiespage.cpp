@@ -35,6 +35,10 @@ CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * paren
 {
   setPageTitle( i18nc( "@title:tab general properties page", "General" ) );
   ui.setupUi( this );
+#ifndef KDEPIM_MOBILE_UI
+  ui.customIcon->hide();
+  ui.customIconCheckbox->hide();
+#endif
 }
 
 void CollectionGeneralPropertiesPage::load(const Collection & collection)
