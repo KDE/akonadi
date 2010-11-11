@@ -41,6 +41,17 @@ class CollectionDeleteJobPrivate;
  *
  * @endcode
  *
+ * @note This job deletes the data from the backend storage. To delete the collection
+ * from the Akonadi storage only, leaving the backend storage unchanged, delete
+ * the Agent instead:  @code
+ *
+ *       const Akonadi::AgentInstance instance =
+ *                   Akonadi::AgentManager::self()->instance( collection.resource() );
+ *       if ( instance.isValid() ) {
+ *           Akonadi::AgentManager::self()->removeInstance( instance );
+ *       }
+ *       @endcode
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT CollectionDeleteJob : public Job
