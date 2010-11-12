@@ -21,6 +21,7 @@
 
 #include "xesaminterface.h"
 #include "xesamtypes.h"
+#include <akdebug.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
@@ -67,7 +68,13 @@ QStringList XesamSearch::search( const QString &query )
     return QStringList();
   }
 
-  const QString searchId = mInterface->NewSearch( mSession, query );
+  QDBusPendingReply<QString> reply = mInterface->NewSearch( mSession, query );
+  reply.waitForFinished();
+  if ( !reply.isValid() ) {
+    akError() << "Xesam search failed: " << reply.error().message();
+    return QStringList();
+  }
+  const QString searchId = reply.value();
 
   QEventLoop loop;
   connect( mInterface, SIGNAL( SearchDone( QString ) ), &loop, SLOT( quit() ) );
