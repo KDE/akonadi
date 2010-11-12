@@ -108,6 +108,7 @@ class AKONADI_EXPORT SelectionProxyModel : public KSelectionProxyModel
      * @param parent The parent object.
      */
     explicit SelectionProxyModel( QItemSelectionModel *selectionModel, QObject *parent = 0 );
+    ~SelectionProxyModel();
 
   private:
     //@cond PRIVATE

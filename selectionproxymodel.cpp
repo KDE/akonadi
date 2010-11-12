@@ -72,6 +72,11 @@ SelectionProxyModel::SelectionProxyModel( QItemSelectionModel *selectionModel, Q
   connect( this, SIGNAL( rootIndexAboutToBeRemoved( const QModelIndex& ) ), SLOT( rootIndexAboutToBeRemoved( const QModelIndex& ) ) );
 }
 
+SelectionProxyModel::~SelectionProxyModel()
+{
+  delete d_ptr;
+}
+
 #include "selectionproxymodel.moc"
 
 
