@@ -232,7 +232,7 @@ A typical use of these would be to create a model and use proxy models to make t
   itemView->setModel(itemList);
 @endcode
 
-\image html mailmodelapp.png "An email application using MailModel"
+\image html dox/mailmodelapp.png "An email application using MailModel"
 
 The content of the model is determined by the configuration of the Monitor passed into it. The examples below show a use of the EntityTreeModel and some proxy models for a simple heirarchical note collection. As the model is generic, the configuration and proxy models will also work with any other mimetype.
 
@@ -251,7 +251,7 @@ monitor->setSession(session);
 EntityTreeModel *entityTree = new Akonadi::EntityTreeModel(monitor, this);
 @endcode
 
-\image html entitytreemodel.png "A plain EntityTreeModel in a view"
+\image html dox/entitytreemodel.png "A plain EntityTreeModel in a view"
 
 The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
 
@@ -262,7 +262,7 @@ entityTree->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
 @endcode
 
 
-\image html entitytreemodel-collections.png "A plain EntityTreeModel which does not fetch items."
+\image html dox/entitytreemodel-collections.png "A plain EntityTreeModel which does not fetch items."
 
 Or, create a model of only items and not child collections. This is just like ItemModel:
 
@@ -288,7 +288,7 @@ descProxy->setSourceModel(entityTree);
 view->setModel(descProxy);
 @endcode
 
-\image html descendantentitiesproxymodel.png "A KDescendantsProxyModel wrapping an EntityTreeModel"
+\image html dox/descendantentitiesproxymodel.png "A KDescendantsProxyModel wrapping an EntityTreeModel"
 
 KDescendantsProxyModel can also display ancestors of each Entity in the list.
 
@@ -304,7 +304,7 @@ view->setModel(descProxy);
 
 @endcode
 
-\image html descendantentitiesproxymodel-withansecnames.png "A DescendantEntitiesProxyModel with ancestor names."
+\image html dox/descendantentitiesproxymodel-withansecnames.png "A DescendantEntitiesProxyModel with ancestor names."
 
 This proxy can be combined with a filter to for example remove collections.
 
@@ -321,7 +321,7 @@ filterModel->setExclusionFilter(QStringList() << Collection::mimeType());
 view->setModel(filterModel);
 @endcode
 
-\image html descendantentitiesproxymodel-colfilter.png "An EntityMimeTypeFilterModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel"
+\image html dox/descendantentitiesproxymodel-colfilter.png "An EntityMimeTypeFilterModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel"
 
 It is also possible to show the root item as part of the selectable model:
 
@@ -331,7 +331,7 @@ entityTree->setIncludeRootCollection(true);
 
 @endcode
 
-\image html entitytreemodel-showroot.png "An EntityTreeModel showing Collection::root"
+\image html dox/entitytreemodel-showroot.png "An EntityTreeModel showing Collection::root"
 
 By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
 
@@ -340,7 +340,7 @@ entityTree->setIncludeRootCollection(true);
 entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all collections in the application", "[All]"))
 @endcode
 
-\image html entitytreemodel-showrootwithname.png "An EntityTreeModel showing Collection::root with an application specific name."
+\image html dox/entitytreemodel-showrootwithname.png "An EntityTreeModel showing Collection::root with an application specific name."
 
 These can of course be combined to create an application which uses one EntityTreeModel along with several proxies and views.
 
@@ -362,7 +362,7 @@ listView->setModel(itemList);
 @endcode
 
 
-\image html treeandlistapp.png "A single EntityTreeModel with several views and proxies."
+\image html dox/treeandlistapp.png "A single EntityTreeModel with several views and proxies."
 
 Or to also show items of child collections in the list:
 
@@ -389,7 +389,7 @@ Or to also show items of child collections in the list:
   listView->setModel(itemList);
 @endcode
 
-\image html treeandlistappwithdesclist.png "Showing descendants of all Collections in the list"
+\image html dox/treeandlistappwithdesclist.png "Showing descendants of all Collections in the list"
 
 Note that it is important in this case to use the DescendantEntitesProxyModel before the EntityMimeTypeFilterModel. Otherwise, by filtering out the collections first, you would also be filtering out their child items.
 
@@ -415,15 +415,15 @@ A SelectionProxyModel can be used to simplify managing selection in one view thr
   selView->setModel(selProxy);
 @endcode
 
-\image html selectionproxymodelsimpleselection.png "A Selection in one view creating a model for use with another view."
+\image html dox/selectionproxymodelsimpleselection.png "A Selection in one view creating a model for use with another view."
 
 The SelectionProxyModel can handle complex selections.
 
-\image html selectionproxymodelmultipleselection.png "Non-contiguous selection creating a new simple model in a second view."
+\image html dox/selectionproxymodelmultipleselection.png "Non-contiguous selection creating a new simple model in a second view."
 
 If an index and one or more of its descendants are selected, only the top-most selected index (including all of its descendants) are included in the proxy model. (Though this is configurable. See below)
 
-\image html selectionproxymodelmultipleselection-withdescendant.png "Selecting an item and its descendant."
+\image html dox/selectionproxymodelmultipleselection-withdescendant.png "Selecting an item and its descendant."
 
 SelectionProxyModel allows configuration using the methods setStartWithChildTrees, setOmitDescendants, setIncludeAllSelected. See testapp/proxymodeltestapp to try out the 5 valid configurations.
 
@@ -431,7 +431,7 @@ Obviously, the SelectionProxyModel may be used in a view, or further processed w
 
 The SelectionProxyModel orders its items in the same top-to-bottom order as they appear in the source model. Note that this order may be different to the order in the selection model if there is a QSortFilterProxyModel between the selection and the source model.
 
-\image html selectionproxymodel-ordered.png "Ordered items in the SelectionProxyModel"
+\image html dox/selectionproxymodel-ordered.png "Ordered items in the SelectionProxyModel"
 
 
 <h2>Jobs and Monitors</h2>
@@ -716,15 +716,15 @@ To solve this, we use the the KSelectionProxyModel, which already has a lot of c
 
 In the screenshots below I removed the filtering out of Items in the tree so that the fetching/purging can be seen. In real applications, the Items in the tree on the left would not be visible.
 
-\image html bufferedcaching1.png "When a Collection is clicked, its Items are put into the model. The rest of the Collections have no items."
+@image html dox/bufferedcaching1.png "When a Collection is clicked, its Items are put into the model. The rest of the Collections have no items."
 
-\image html bufferedcaching2.png "The Inbox Collection is selected, so its items are fetched. Personal Contacts is no longer selected, so it is put into a queue to be purged."
+@image html dox/bufferedcaching2.png "The Inbox Collection is selected, so its items are fetched. Personal Contacts is no longer selected, so it is put into a queue to be purged."
 
-\image html bufferedcaching3.png "Select another Collection and its items are fetched too."
+@image html dox/bufferedcaching3.png "Select another Collection and its items are fetched too."
 
-\image html bufferedcaching4.png "Another Collection is selected, pushing the Personal contacts out of the queue and purging them"
+@image html dox/bufferedcaching4.png "Another Collection is selected, pushing the Personal contacts out of the queue and purging them"
 
-\image html bufferedcaching6.png "If the Collection is selected again, its Items are refetched"
+@image html dox/bufferedcaching6.png "If the Collection is selected again, its Items are refetched"
 
 For this example, I used a queue length of just two Collections, so that if a Collection was deselected two clicks ago, it will be purged. In real applications, a longer queue length will be used, but it’s harder to illustrate in screenshots. Another unrealistic part of this demo is that this feature will like be used in applications like KMail where Collections can contain tens of thousands of Items and fetching them is an expensive operation.
 
@@ -790,3 +790,5 @@ The main aim of Akonadi is to solve these issues and make use of the goodies whi
 */
 
 // DOXYGEN_REFERENCES = kdecore kdeui
+// DOXYGEN_SET_RECURSIVE = YES
+// vim:ts=4:sw=4:expandtab:filetype=doxygen
