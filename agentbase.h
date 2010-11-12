@@ -59,7 +59,7 @@ class Session;
  * - As a thread in the AgentServer
  * - As a seperate process, using the akonadi_agent_launcher
  *
- * The idea is this, the agent or resource is written as a plugin in stead of a
+ * The idea is this, the agent or resource is written as a plugin instead of an
  * executable (@see AgentFactory). In the AgentServer case, the AgentServer
  * looks up the plugin and launches the agent in a seperate thread. In the
  * launcher case, a new akonadi_agent_launcher process is started for each
@@ -71,7 +71,7 @@ class Session;
  * For this reasons several methods where added to avoid problems in this context,
  * most notably AgentBase::config() and AgentBase::componentData(). Additionally,
  * one cannot use QDBusConnection::sessionBus() with dbus < 1.4, because of a
- * multithreading bug in libdbus. In stead one should use
+ * multithreading bug in libdbus. Instead one should use
  * DBusConnectionPool::threadConnection() which works around this problem.
  *
  * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
