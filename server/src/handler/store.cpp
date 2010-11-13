@@ -141,6 +141,7 @@ bool Store::parseStream()
   QSet<QByteArray> changes;
   qint64 partSizes = 0;
   bool invalidateCache = false;
+  bool silent = false;
 
   // apply modifications
   m_streamParser->beginList();
@@ -150,7 +151,6 @@ bool Store::parseStream()
     if ( command.isEmpty() )
       throw HandlerException( "Syntax error" );
     Operation op = Replace;
-    bool silent = false;
     if ( command.startsWith( '+' ) ) {
       op = Add;
       command = command.mid( 1 );
@@ -179,10 +179,6 @@ bool Store::parseStream()
         } else if ( op == Delete ) {
           if ( !deleteFlags( pimItems[ i ], flags ) )
             return failureResponse( "Unable to remove item flags." );
-        }
-        // TODO what is this about?
-        if ( !silent ) {
-          sendPimItemResponse( pimItems[i] );
         }
       }
 
@@ -358,6 +354,8 @@ bool Store::parseStream()
       }
 
       store->notificationCollector()->itemChanged( item, changes );
+      if ( !silent )
+        sendPimItemResponse( item );
     }
 
     if ( !transaction.commit() )
@@ -399,15 +397,19 @@ void Store::parseCommand()
 
 void Store::sendPimItemResponse( const PimItem &pimItem )
 {
-  const QVector<Flag> flags = pimItem.flags();
-  QStringList flagList;
-  for ( int j = 0; j < flags.count(); ++j )
-    flagList.append( flags[ j ].name() );
+  QList<QByteArray> attrs;
+  attrs.push_back( "REV" );
+  attrs.push_back( QByteArray::number( pimItem.rev() ) );
+
+  QByteArray result;
+  result += QByteArray::number( pimItem.id() );
+  result += " FETCH (";
+  result += ImapParser::join( attrs, " " );
+  result += ')';
 
   Response response;
   response.setUntagged();
-        // IMAP protocol violation: should actually be the sequence number
-  response.setString( QByteArray::number( pimItem.id() ) + " FETCH (FLAGS (" + flagList.join( QLatin1String(" ") ).toUtf8() + "))" );
+  response.setString( result );
   emit responseAvailable( response );
 }
 
