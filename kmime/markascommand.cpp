@@ -123,7 +123,7 @@ void MarkAsCommand::markMessages()
     item.setFlags( itemStatus.statusFlags() );
     // Store back modified item
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
-    modifyJob->ignorePayload();
+    modifyJob->setIgnorePayload( true );
     mMarkJobCount++;
     connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
   }

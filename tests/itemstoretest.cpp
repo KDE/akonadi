@@ -190,7 +190,7 @@ void ItemStoreTest::testRemoteId()
   item.setRemoteId( rid );
   ItemModifyJob *store = new ItemModifyJob( item, this );
   store->disableRevisionCheck();
-  store->ignorePayload(); // we only want to update the remote id
+  store->setIgnorePayload( true ); // we only want to update the remote id
   AKVERIFYEXEC( store );
 
   ItemFetchJob *fetch = new ItemFetchJob( item, this );
