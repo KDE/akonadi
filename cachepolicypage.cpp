@@ -19,6 +19,12 @@
 
 #include "cachepolicypage.h"
 
+#if KDE_IS_VERSION(4,5,74)
+#include "ui_cachepolicypage.h"
+#else
+#include "ui_cachepolicypage-45.h"
+#endif
+
 #include "cachepolicy.h"
 #include "collection.h"
 #include "collectionutils_p.h"
@@ -26,14 +32,19 @@
 using namespace Akonadi;
 
 CachePolicyPage::CachePolicyPage(QWidget * parent) :
-    CollectionPropertiesPage( parent )
+    CollectionPropertiesPage( parent ), ui( new Ui::CachePolicyPage )
 {
   setPageTitle( i18n( "Cache" ) );
-  ui.setupUi( this );
-  connect( ui.checkInterval, SIGNAL( valueChanged( int ) ),
+  ui->setupUi( this );
+  connect( ui->checkInterval, SIGNAL( valueChanged( int ) ),
            SLOT( slotIntervalValueChanged( int ) ) );
-  connect( ui.localCacheTimeout, SIGNAL( valueChanged( int ) ),
+  connect( ui->localCacheTimeout, SIGNAL( valueChanged( int ) ),
            SLOT( slotCacheValueChanged( int ) ) );
+}
+
+CachePolicyPage::~CachePolicyPage()
+{
+  delete ui;
 }
 
 bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
@@ -53,40 +64,40 @@ void CachePolicyPage::load(const Collection & collection)
   if (cache == -1)
     cache = 0;
 
-  ui.inherit->setChecked( policy.inheritFromParent() );
-  ui.checkInterval->setValue( interval );
-  ui.localCacheTimeout->setValue( cache );
-  ui.syncOnDemand->setChecked( policy.syncOnDemand() );
-  ui.localParts->setItems( policy.localParts() );
+  ui->inherit->setChecked( policy.inheritFromParent() );
+  ui->checkInterval->setValue( interval );
+  ui->localCacheTimeout->setValue( cache );
+  ui->syncOnDemand->setChecked( policy.syncOnDemand() );
+  ui->localParts->setItems( policy.localParts() );
 }
 
 void CachePolicyPage::save(Collection & collection)
 {
-  int interval = ui.checkInterval->value();
+  int interval = ui->checkInterval->value();
   if (interval == 0)
     interval = -1;
 
-  int cache = ui.localCacheTimeout->value();
+  int cache = ui->localCacheTimeout->value();
   if (cache == 0)
     cache = -1;
 
   CachePolicy policy = collection.cachePolicy();
-  policy.setInheritFromParent( ui.inherit->isChecked() );
+  policy.setInheritFromParent( ui->inherit->isChecked() );
   policy.setIntervalCheckTime( interval );
   policy.setCacheTimeout( cache );
-  policy.setSyncOnDemand( ui.syncOnDemand->isChecked() );
-  policy.setLocalParts( ui.localParts->items() );
+  policy.setSyncOnDemand( ui->syncOnDemand->isChecked() );
+  policy.setLocalParts( ui->localParts->items() );
   collection.setCachePolicy( policy );
 }
 
 void CachePolicyPage::slotIntervalValueChanged( int i )
 {
-    ui.checkInterval->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
+    ui->checkInterval->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
 void CachePolicyPage::slotCacheValueChanged( int i )
 {
-    ui.localCacheTimeout->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
+    ui->localCacheTimeout->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
 #include "cachepolicypage.moc"

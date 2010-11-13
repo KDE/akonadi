@@ -17,25 +17,20 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_CACHEPOLICYPAGE_P_H
-#define AKONADI_CACHEPOLICYPAGE_P_H
+#ifndef AKONADI_CACHEPOLICYPAGE_H
+#define AKONADI_CACHEPOLICYPAGE_H
 
 #include <akonadi/collectionpropertiespage.h>
 
 #include <kdeversion.h>
-#if KDE_IS_VERSION(4,5,74)
-#include "ui_cachepolicypage.h"
-#else
-#include "ui_cachepolicypage-45.h"
-#endif
+
+namespace Ui {
+  class CachePolicyPage;
+}
 
 namespace Akonadi {
 
-//@cond PRIVATE
-
 /**
-  @internal
-
   Cache policy configuration page.
 */
 class CachePolicyPage : public CollectionPropertiesPage
@@ -43,13 +38,13 @@ class CachePolicyPage : public CollectionPropertiesPage
   Q_OBJECT
   public:
     explicit CachePolicyPage( QWidget * parent );
-
+    ~CachePolicyPage();
     bool canHandle( const Collection &collection ) const;
     void load( const Collection &collection );
     void save( Collection &collection );
 
-  private:
-    Ui::CachePolicyPage ui;
+private:
+    Ui::CachePolicyPage* ui;
 
   private slots:
     void slotIntervalValueChanged( int );
@@ -57,8 +52,6 @@ class CachePolicyPage : public CollectionPropertiesPage
 };
 
 AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPage)
-
-//@endcond
 
 }
 
