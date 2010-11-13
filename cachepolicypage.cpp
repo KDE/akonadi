@@ -31,15 +31,19 @@
 
 using namespace Akonadi;
 
-CachePolicyPage::CachePolicyPage(QWidget * parent) :
-    CollectionPropertiesPage( parent ), ui( new Ui::CachePolicyPage )
+CachePolicyPage::CachePolicyPage(QWidget * parent, bool rawMode ) :
+    CollectionPropertiesPage( parent )
+    ,ui( new Ui::CachePolicyPage )
 {
-  setPageTitle( i18n( "Cache" ) );
+  setPageTitle( i18n( "Retrieval" ) );
   ui->setupUi( this );
   connect( ui->checkInterval, SIGNAL( valueChanged( int ) ),
            SLOT( slotIntervalValueChanged( int ) ) );
   connect( ui->localCacheTimeout, SIGNAL( valueChanged( int ) ),
            SLOT( slotCacheValueChanged( int ) ) );
+  if ( rawMode ) {
+    ui->stackedWidget->setCurrentWidget( ui->rawPage );
+  }
 }
 
 CachePolicyPage::~CachePolicyPage()
@@ -69,6 +73,10 @@ void CachePolicyPage::load(const Collection & collection)
   ui->localCacheTimeout->setValue( cache );
   ui->syncOnDemand->setChecked( policy.syncOnDemand() );
   ui->localParts->setItems( policy.localParts() );
+  const bool fetchBodies = policy.localParts().contains( QLatin1String("RFC822") );
+  ui->retrieveFullMessages->setChecked( fetchBodies );
+  //done explicitely to disable/enabled widgets
+  ui->retrieveOnlyHeaders->setChecked( !fetchBodies );
 }
 
 void CachePolicyPage::save(Collection & collection)
@@ -86,7 +94,22 @@ void CachePolicyPage::save(Collection & collection)
   policy.setIntervalCheckTime( interval );
   policy.setCacheTimeout( cache );
   policy.setSyncOnDemand( ui->syncOnDemand->isChecked() );
-  policy.setLocalParts( ui->localParts->items() );
+  QStringList localParts = ui->localParts->items();
+
+  // Unless we are in "raw" mode, add "bodies" to the list of message
+  // parts to keep around locally, if the user selected that, or remove
+  // it otherwise. In "raw" mode we simple use the values from the list
+  // view.
+  if ( ui->stackedWidget->currentWidget() != ui->rawPage ) {
+    if ( ui->retrieveFullMessages->isChecked()
+         && !localParts.contains( QLatin1String("RFC822") ) ) {
+        localParts.append( QLatin1String("RFC822") );
+    } else if ( !ui->retrieveFullMessages->isChecked()
+         && localParts.contains( QLatin1String("RFC822") ) ) {
+      localParts.removeAll( QLatin1String("RFC822")  );
+    }
+  }
+  policy.setLocalParts( localParts );
   collection.setCachePolicy( policy );
 }
 

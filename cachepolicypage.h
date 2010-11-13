@@ -20,6 +20,8 @@
 #ifndef AKONADI_CACHEPOLICYPAGE_H
 #define AKONADI_CACHEPOLICYPAGE_H
 
+#include "akonadi_export.h"
+
 #include <akonadi/collectionpropertiespage.h>
 
 #include <kdeversion.h>
@@ -33,11 +35,11 @@ namespace Akonadi {
 /**
   Cache policy configuration page.
 */
-class CachePolicyPage : public CollectionPropertiesPage
+class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
 {
   Q_OBJECT
   public:
-    explicit CachePolicyPage( QWidget * parent );
+    explicit CachePolicyPage( QWidget * parent, bool rawMode = false );
     ~CachePolicyPage();
     bool canHandle( const Collection &collection ) const;
     void load( const Collection &collection );
