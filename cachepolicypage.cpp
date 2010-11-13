@@ -17,13 +17,11 @@
     02110-1301, USA.
 */
 
-#include "cachepolicypage_p.h"
+#include "cachepolicypage.h"
 
 #include "cachepolicy.h"
 #include "collection.h"
 #include "collectionutils_p.h"
-
-//@cond PRIVATE
 
 using namespace Akonadi;
 
@@ -91,6 +89,4 @@ void CachePolicyPage::slotCacheValueChanged( int i )
     ui.localCacheTimeout->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
-//@endcond
-
-#include "cachepolicypage_p.moc"
+#include "cachepolicypage.moc"

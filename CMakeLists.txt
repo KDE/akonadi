@@ -268,6 +268,7 @@ install( FILES
   attribute.h
   attributefactory.h
   cachepolicy.h
+  cachepolicypage.h
   changerecorder.h
   collection.h
   collectionattributessynchronizationjob.h
