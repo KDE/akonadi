@@ -421,7 +421,7 @@ class StandardMailActionManager::Private
         return;
 
       Akonadi::Item::List items;
-      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedIndexes() ) {
+      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
         Q_ASSERT( index.isValid() );
         const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
         items << item;
