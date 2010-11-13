@@ -103,6 +103,7 @@ set( akonadikde_LIB_SRC
   favoritecollectionsmodel.cpp
   firstrun.cpp
   flatcollectionproxymodel.cpp
+  indexpolicyattribute.cpp
   item.cpp
   itemcreatejob.cpp
   itemcopyjob.cpp
@@ -307,6 +308,7 @@ install( FILES
   etmviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
+  indexpolicyattribute.h
   item.h
   itemcreatejob.h
   itemcopyjob.h
