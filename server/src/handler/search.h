@@ -44,9 +44,6 @@ class Search : public Handler
     ~Search();
 
     bool parseStream();
-
-  private Q_SLOTS:
-    void slotFailureResponse( const QString& );
 };
 
 }

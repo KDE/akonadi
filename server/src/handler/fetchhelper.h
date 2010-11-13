@@ -47,7 +47,6 @@ class FetchHelper : public QObject
 
   Q_SIGNALS:
     void responseAvailable( const Response& );
-    void failureResponse( const QString& );
 
   private:
     void init();

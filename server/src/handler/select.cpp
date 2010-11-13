@@ -92,7 +92,7 @@ bool Select::parseStream()
   Response response;
   if ( !silent ) {
     response.setUntagged();
-    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ) );
+    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() );
     emit responseAvailable( response );
 
     int count = HandlerHelper::itemCount( col );

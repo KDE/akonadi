@@ -181,24 +181,19 @@ AkonadiConnection* Akonadi::Handler::connection() const
 
 
 
-bool Akonadi::Handler::failureResponse( const QString& failureMessage )
-{
-    Response response;
-    response.setTag( tag() );
-    response.setFailure();
-    response.setString( failureMessage );
-    emit responseAvailable( response );
-    return false;
-}
-
 bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
 {
-  return failureResponse( QString::fromLatin1( failureMessage ) );
+  Response response;
+  response.setTag( tag() );
+  response.setFailure();
+  response.setString( failureMessage );
+  emit responseAvailable( response );
+  return false;
 }
 
 bool Akonadi::Handler::failureResponse(const char * failureMessage)
 {
-  return failureResponse( QLatin1String( failureMessage ) );
+  return failureResponse( QByteArray( failureMessage ) );
 }
 
 bool Handler::successResponse(const char * successMessage)
@@ -206,7 +201,7 @@ bool Handler::successResponse(const char * successMessage)
   Response response;
   response.setTag( tag() );
   response.setSuccess();
-  response.setString( QString::fromLatin1(successMessage) );
+  response.setString( successMessage );
   emit responseAvailable( response );
   return true;
 }

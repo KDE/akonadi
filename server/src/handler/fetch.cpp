@@ -40,8 +40,6 @@ bool Fetch::parseStream()
   fetchHelper.setStreamParser( m_streamParser );
   connect( &fetchHelper, SIGNAL( responseAvailable( const Response& ) ),
            this, SIGNAL( responseAvailable( const Response& ) ) );
-  connect( &fetchHelper, SIGNAL( failureResponse( const QString& ) ),
-           this, SLOT( slotFailureResponse( const QString& ) ) );
 
   if ( !fetchHelper.parseStream( "FETCH" ) )
     return false;
@@ -54,9 +52,4 @@ bool Fetch::parseStream()
     successResponse( "FETCH completed" );
 
   return true;
-}
-
-void Fetch::slotFailureResponse( const QString &msg )
-{
-  failureResponse( msg );
 }

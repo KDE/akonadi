@@ -54,9 +54,6 @@ class Fetch : public Handler
 
     bool parseStream();
 
-  private Q_SLOTS:
-    void slotFailureResponse( const QString& );
-
   private:
     Scope mScope;
 };

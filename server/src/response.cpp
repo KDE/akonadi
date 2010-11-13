@@ -84,12 +84,6 @@ void Response::setString( const QByteArray & string )
     m_responseString = string;
 }
 
-void Akonadi::Response::setString( const QString & string )
-{
-    m_responseString = string.toLatin1();
-}
-
-
 void Akonadi::Response::setString( const char *string )
 {
     m_responseString = QByteArray( string );

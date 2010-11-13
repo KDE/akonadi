@@ -89,11 +89,6 @@ public:
     AkonadiConnection* connection() const;
 
     /** Send a failure response with the given message. */
-    bool failureResponse( const QString& failureMessage );
-    /**
-      Convenience method to compile with QT_NO_CAST_FROM_ASCII without
-      typing too much ;-)
-    */
     bool failureResponse( const QByteArray &failureMessage );
     /**
       Convenience method to compile with QT_NO_CAST_FROM_ASCII without

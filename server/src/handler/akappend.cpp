@@ -83,7 +83,7 @@ bool Akonadi::AkAppend::commit()
     if ( !mimeType.isValid() ) {
       MimeType m( QString::fromLatin1( mt ) );
       if ( !m.insert() )
-        return failureResponse( QString::fromLatin1( "Unable to create mimetype '%1'.").arg( QString::fromLatin1( mt ) ) );
+        return failureResponse( QByteArray( "Unable to create mimetype '") + mt + QByteArray( "'." ) );
       mimeType = m;
     }
 
