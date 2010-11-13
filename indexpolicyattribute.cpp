@@ -47,7 +47,7 @@ bool IndexPolicyAttribute::indexingEnabled() const
   return d->enable;
 }
 
-void IndexPolicyAttribute::setIndexingEnabled(bool enable) const
+void IndexPolicyAttribute::setIndexingEnabled(bool enable)
 {
   d->enable = enable;
 }

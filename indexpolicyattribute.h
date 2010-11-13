@@ -54,7 +54,7 @@ class AKONADI_EXPORT IndexPolicyAttribute : public Akonadi::Attribute
      * Sets whether this collection should be indexed at all.
      * @param enable @c true to enable indexing, @c false to exclude this collection from indexing
      */
-    void setIndexingEnabled( bool enable ) const;
+    void setIndexingEnabled( bool enable );
 
     //@cond PRIVATE
     virtual QByteArray type() const;
