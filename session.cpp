@@ -333,6 +333,14 @@ void SessionPrivate::serverStateChanged( ServerManager::State state )
     reconnect();
 }
 
+void SessionPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
+{
+  // only deal with the queue, for the guys in the pipeline it's too late already anyway
+  // and they shouldn't have gotten there if they depend on a preceeding job anyway.
+  foreach ( Job *job, queue )
+    job->d_ptr->updateItemRevision( itemId, oldRevision, newRevision );
+}
+
 //@endcond
 
 

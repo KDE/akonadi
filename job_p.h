@@ -21,6 +21,7 @@
 #define AKONADI_JOB_P_H
 
 #include "session.h"
+#include "item.h"
 
 namespace Akonadi {
 
@@ -65,6 +66,23 @@ class JobPrivate
       Sends raw data to the backend.
     */
     void writeData( const QByteArray &data );
+
+    /**
+     * Notify following jobs about item revision changes.
+     * This is used to avoid phantom conflicts between pipelined modify jobs on the same item.
+     */
+    void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
+
+    /**
+     * Propagate item revision changes to this job and its sub-jobs.
+     */
+    void updateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
+
+    /**
+     * Overwrite this if your job does operations with conflict detection and update
+     * the item revisions if your items are affected. The default implementation does nothing.
+     */
+    virtual void doUpdateItemRevision( Akonadi::Item::Id, int oldRevision, int newRevision );
 
     Job *q_ptr;
     Q_DECLARE_PUBLIC( Job )

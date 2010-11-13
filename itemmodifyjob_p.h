@@ -45,6 +45,8 @@ class ItemModifyJobPrivate : public JobPrivate
     void conflictResolved();
     void conflictResolveError( const QString& );
 
+    void doUpdateItemRevision(Entity::Id , int oldRevision, int newRevision);
+
     Q_DECLARE_PUBLIC( ItemModifyJob )
 
     QSet<int> mOperations;

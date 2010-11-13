@@ -93,6 +93,13 @@ void ItemModifyJobPrivate::conflictResolveError( const QString &message )
   q->emitResult();
 }
 
+void ItemModifyJobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
+{
+  if ( mItem.id() == itemId && mItem.revision() == oldRevision )
+    mItem.setRevision( newRevision );
+}
+
+
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   : Job( new ItemModifyJobPrivate( this, item ), parent )
 {
@@ -207,7 +214,11 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       if ( d->mItem.modificationTime() != modificationDateTime )
       {
         // increase item revision of own copy of item
-        d->mItem.setRevision( d->mItem.revision() + 1 );
+        const int oldRevision = d->mItem.revision();
+        if ( oldRevision >= 0 ) {
+          d->itemRevisionChanged( d->mItem.id(), oldRevision, oldRevision + 1 );
+          d->mItem.setRevision( oldRevision + 1 );
+        }
         d->mItem.setModificationTime( modificationDateTime );
       } else {
         kDebug() << "No changes on item" << d->mItem.id();

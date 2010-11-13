@@ -209,6 +209,29 @@ void JobPrivate::writeData( const QByteArray & data )
   Q_ASSERT_X( !mWriteFinished, "Job::writeData()", "Calling writeData() after emitting writeFinished()" );
   mSession->d->writeData( data );
 }
+
+void JobPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
+{
+  mSession->d->itemRevisionChanged( itemId, oldRevision, newRevision );
+}
+
+void JobPrivate::updateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
+{
+  Q_Q( Job );
+  foreach ( KJob *j, q->subjobs() ) {
+    Akonadi::Job *job = qobject_cast<Akonadi::Job*>( j );
+    if ( job )
+      job->d_ptr->updateItemRevision( itemId, oldRevision, newRevision );
+  }
+  doUpdateItemRevision( itemId, oldRevision, newRevision );
+}
+
+void JobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
+{
+  Q_UNUSED( itemId );
+  Q_UNUSED( oldRevision );
+  Q_UNUSED( newRevision );
+}
 //@endcond
 
 

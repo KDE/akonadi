@@ -20,9 +20,10 @@
 #ifndef AKONADI_SESSION_P_H
 #define AKONADI_SESSION_P_H
 
+#include "akonadiprivate_export.h"
 #include "session.h"
 #include "imapparser_p.h"
-#include "akonadiprivate_export.h"
+#include "item.h"
 #include "servermanager.h"
 
 #include <QtNetwork/QLocalSocket>
@@ -95,6 +96,11 @@ class AKONADI_TESTS_EXPORT SessionPrivate
       Sends the given raw data.
     */
     void writeData( const QByteArray &data );
+
+    /**
+     * Propagate item revision changes to following jobs.
+     */
+    void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision);
 
     static int minimumProtocolVersion() { return 26; }
 
