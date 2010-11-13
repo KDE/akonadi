@@ -22,6 +22,8 @@
 #include "collectionutils_p.h"
 #include "specialcollectionattribute_p.h"
 
+#include "entityhiddenattribute.h"
+
 #include <kdebug.h>
 
 #include <QtCore/QStringList>
@@ -121,7 +123,14 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
       return font;
     }
   }
-  return CollectionModel::data( index, role );
+
+  if ( role == CollectionIdRole ) {
+    return CollectionModel::data( index, CollectionIdRole );
+  } else {
+    const Collection::Id collectionId = index.data( CollectionIdRole ).toLongLong();
+    const Collection collection = collectionForId( collectionId );
+    return collection.hasAttribute<EntityHiddenAttribute>() ? QVariant() : CollectionModel::data( index, role );
+  }
 }
 
 Qt::ItemFlags SubscriptionModel::flags(const QModelIndex & index) const
