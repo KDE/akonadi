@@ -22,14 +22,18 @@
 #include "agenttype.h"
 #include "shared/akdebug.h"
 
+#include <QtDBus/QDBusServiceWatcher>
+
 using namespace Akonadi;
 
 AgentThreadInstance::AgentThreadInstance( AgentManager *manager )
   : AgentInstance( manager )
 {
-  connect( QDBusConnection::sessionBus().interface(),
-           SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( "org.freedesktop.Akonadi.AgentServer" ),
+                                                          QDBusConnection::sessionBus(),
+                                                          QDBusServiceWatcher::WatchForRegistration, this );
+  connect( watcher, SIGNAL( serviceRegistered( const QString& ) ),
+           this, SLOT( agentServerRegistered() ) );
 }
 
 bool AgentThreadInstance::start( const AgentType &agentInfo )
@@ -63,17 +67,7 @@ void AgentThreadInstance::restartWhenIdle()
   }
 }
 
-void AgentThreadInstance::serviceOwnerChanged( const QString &name, const QString &, const QString &newOwner )
+void AgentThreadInstance::agentServerRegistered()
 {
-  if ( name == ( QLatin1String( "org.freedesktop.Akonadi.AgentServer" ) ) ) {
-    // The AgentServer service went up or down
-
-    if ( newOwner.isEmpty() ) {
-      return;
-    }
-
-    // The AgentServer service came up (again)
-    qDebug() << "========= (Re)starting" << resourceName();
-    start( mAgentType );
-  }
+  start( mAgentType );
 }

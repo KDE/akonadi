@@ -34,7 +34,7 @@ class AgentThreadInstance : public AgentInstance
     virtual void restartWhenIdle();
 
   private Q_SLOTS:
-    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+    void agentServerRegistered();
 
   private:
     AgentType mAgentType;
