@@ -60,7 +60,6 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
     int version = 0;
     ItemSerializer::serialize( mItem, label, mPendingData, version );
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
-    command += ".SILENT";
     if ( mPendingData.size() > 0 ) {
       command += " {" + QByteArray::number( mPendingData.size() ) + "}\n";
     } else {
@@ -122,42 +121,42 @@ void ItemModifyJob::doStart()
     switch ( op ) {
       case ItemModifyJobPrivate::RemoteId:
         if ( !d->mItem.remoteId().isNull() ) {
-          changes << "REMOTEID.SILENT";
+          changes << "REMOTEID";
           changes << ImapParser::quote( d->mItem.remoteId().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::RemoteRevision:
         if ( !d->mItem.remoteRevision().isNull() ) {
-          changes << "REMOTEREVISION.SILENT";
+          changes << "REMOTEREVISION";
           changes << ImapParser::quote( d->mItem.remoteRevision().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::Dirty:
-        changes << "DIRTY.SILENT";
+        changes << "DIRTY";
         changes << "false";
         break;
     }
   }
 
   if ( d->mItem.d_func()->mClearPayload )
-    changes << "INVALIDATECACHE.SILENT";
+    changes << "INVALIDATECACHE";
 
   if ( d->mItem.d_func()->mFlagsOverwritten ) {
-    changes << "FLAGS.SILENT";
+    changes << "FLAGS";
     changes << '(' + ImapParser::join( d->mItem.flags(), " " ) + ')';
   } else {
     if ( !d->mItem.d_func()->mAddedFlags.isEmpty() ) {
-      changes << "+FLAGS.SILENT";
+      changes << "+FLAGS";
       changes << '(' + ImapParser::join( d->mItem.d_func()->mAddedFlags, " " ) + ')';
     }
     if ( !d->mItem.d_func()->mDeletedFlags.isEmpty() ) {
-      changes << "-FLAGS.SILENT";
+      changes << "-FLAGS";
       changes << '(' + ImapParser::join( d->mItem.d_func()->mDeletedFlags, " " ) + ')';
     }
   }
 
   if ( !d->mItem.d_func()->mDeletedAttributes.isEmpty() ) {
-    changes << "-PARTS.SILENT";
+    changes << "-PARTS";
     QList<QByteArray> attrs;
     foreach ( const QByteArray &attr, d->mItem.d_func()->mDeletedAttributes )
       attrs << ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, attr );
@@ -200,6 +199,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     d->writeData( d->nextPartHeader() );
     return;
   }
+
   if ( _tag == d->mTag ) {
     if ( data.startsWith( "OK" ) ) { //krazy:exclude=strings
       QDateTime modificationDateTime;
@@ -213,12 +213,6 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
 
       if ( d->mItem.modificationTime() != modificationDateTime )
       {
-        // increase item revision of own copy of item
-        const int oldRevision = d->mItem.revision();
-        if ( oldRevision >= 0 ) {
-          d->itemRevisionChanged( d->mItem.id(), oldRevision, oldRevision + 1 );
-          d->mItem.setRevision( oldRevision + 1 );
-        }
         d->mItem.setModificationTime( modificationDateTime );
       } else {
         kDebug() << "No changes on item" << d->mItem.id();
@@ -243,6 +237,35 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     emitResult();
     return;
   }
+
+  if ( _tag == "*" ) {
+    Akonadi::Item::Id id;
+    ImapParser::parseNumber( data, id );
+    int pos = data.indexOf( '(' );
+    if ( pos <= 0 || id <= 0 ) {
+      kDebug() << "Ignoring strange response: " << _tag << data;
+      return;
+    }
+    if ( d->mItem.id() != id ) {
+      kDebug() << "Received STORE response for an item we did not modify: " << _tag << data;
+      return;
+    }
+    QList<QByteArray> attrs;
+    ImapParser::parseParenthesizedList( data, attrs, pos );
+    for ( int i = 0; i < attrs.size() - 1; i += 2 ) {
+      const QByteArray key = attrs.at( i );
+      if ( key == "REV" ) {
+        const int newRev = attrs.at( i + 1 ).toInt();
+        const int oldRev = d->mItem.revision();
+        if ( newRev < oldRev || newRev < 0 )
+          continue;
+        d->itemRevisionChanged( d->mItem.id(), oldRev, newRev );
+        d->mItem.setRevision( newRev );
+      }
+    }
+    return;
+  }
+
   kDebug() << "Unhandled response: " << _tag << data;
 }
 

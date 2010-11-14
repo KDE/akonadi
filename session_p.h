@@ -102,7 +102,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      */
     void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
 
-    static int minimumProtocolVersion() { return 26; }
+    static int minimumProtocolVersion() { return 27; }
 
     Session *mParent;
     QByteArray sessionId;
