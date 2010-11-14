@@ -248,7 +248,8 @@ void AgentBasePrivate::init()
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.
   KGlobal::ref();
-  KGlobal::setAllowQuit( true );
+  if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
+    KGlobal::setAllowQuit( true );
 
 #ifndef Q_OS_WINCE
   // disable session management
