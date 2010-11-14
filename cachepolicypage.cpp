@@ -19,7 +19,9 @@
 
 #include "cachepolicypage.h"
 
-#if KDE_IS_VERSION(4,5,74)
+#include <kdeversion.h>
+
+#if KDE_IS_VERSION( 4, 5, 74 )
 #include "ui_cachepolicypage.h"
 #else
 #include "ui_cachepolicypage-45.h"
@@ -31,96 +33,121 @@
 
 using namespace Akonadi;
 
-CachePolicyPage::CachePolicyPage(QWidget * parent, bool rawMode ) :
-    CollectionPropertiesPage( parent )
-    ,ui( new Ui::CachePolicyPage )
+class CachePolicyPage::Private
+{
+  public:
+    Private()
+      : mUi( new Ui::CachePolicyPage )
+    {
+    }
+
+    ~Private()
+    {
+      delete mUi;
+    }
+
+    void slotIntervalValueChanged( int );
+    void slotCacheValueChanged( int );
+
+    Ui::CachePolicyPage* mUi;
+};
+
+void CachePolicyPage::Private::slotIntervalValueChanged( int interval )
+{
+  mUi->checkInterval->setSuffix( QLatin1Char( ' ' ) + i18np( "minute", "minutes", interval ) );
+}
+
+void CachePolicyPage::Private::slotCacheValueChanged( int interval )
+{
+  mUi->localCacheTimeout->setSuffix( QLatin1Char( ' ' ) + i18np( "minute", "minutes", interval ) );
+}
+
+CachePolicyPage::CachePolicyPage( QWidget *parent, GuiMode mode )
+  : CollectionPropertiesPage( parent ),
+    d( new Private )
 {
   setPageTitle( i18n( "Retrieval" ) );
-  ui->setupUi( this );
-  connect( ui->checkInterval, SIGNAL( valueChanged( int ) ),
+
+  d->mUi->setupUi( this );
+  connect( d->mUi->checkInterval, SIGNAL( valueChanged( int ) ),
            SLOT( slotIntervalValueChanged( int ) ) );
-  connect( ui->localCacheTimeout, SIGNAL( valueChanged( int ) ),
+  connect( d->mUi->localCacheTimeout, SIGNAL( valueChanged( int ) ),
            SLOT( slotCacheValueChanged( int ) ) );
-  if ( rawMode ) {
-    ui->stackedWidget->setCurrentWidget( ui->rawPage );
+
+  if ( mode == AdvancedMode ) {
+    d->mUi->stackedWidget->setCurrentWidget( d->mUi->rawPage );
   }
 }
 
 CachePolicyPage::~CachePolicyPage()
 {
-  delete ui;
+  delete d;
 }
 
-bool Akonadi::CachePolicyPage::canHandle(const Collection & collection) const
+bool Akonadi::CachePolicyPage::canHandle( const Collection &collection ) const
 {
   return !CollectionUtils::isVirtual( collection );
 }
 
-void CachePolicyPage::load(const Collection & collection)
+void CachePolicyPage::load( const Collection &collection )
 {
-  CachePolicy policy = collection.cachePolicy();
+  const CachePolicy policy = collection.cachePolicy();
 
   int interval = policy.intervalCheckTime();
-  if (interval == -1)
+  if ( interval == -1 )
     interval = 0;
 
   int cache = policy.cacheTimeout();
-  if (cache == -1)
+  if ( cache == -1 )
     cache = 0;
 
-  ui->inherit->setChecked( policy.inheritFromParent() );
-  ui->checkInterval->setValue( interval );
-  ui->localCacheTimeout->setValue( cache );
-  ui->syncOnDemand->setChecked( policy.syncOnDemand() );
-  ui->localParts->setItems( policy.localParts() );
-  const bool fetchBodies = policy.localParts().contains( QLatin1String("RFC822") );
-  ui->retrieveFullMessages->setChecked( fetchBodies );
+  d->mUi->inherit->setChecked( policy.inheritFromParent() );
+  d->mUi->checkInterval->setValue( interval );
+  d->mUi->localCacheTimeout->setValue( cache );
+  d->mUi->syncOnDemand->setChecked( policy.syncOnDemand() );
+  d->mUi->localParts->setItems( policy.localParts() );
+
+  const bool fetchBodies = policy.localParts().contains( QLatin1String( "RFC822" ) );
+  d->mUi->retrieveFullMessages->setChecked( fetchBodies );
+
   //done explicitely to disable/enabled widgets
-  ui->retrieveOnlyHeaders->setChecked( !fetchBodies );
+  d->mUi->retrieveOnlyHeaders->setChecked( !fetchBodies );
 }
 
-void CachePolicyPage::save(Collection & collection)
+void CachePolicyPage::save( Collection &collection )
 {
-  int interval = ui->checkInterval->value();
-  if (interval == 0)
+  int interval = d->mUi->checkInterval->value();
+  if ( interval == 0 )
     interval = -1;
 
-  int cache = ui->localCacheTimeout->value();
-  if (cache == 0)
+  int cache = d->mUi->localCacheTimeout->value();
+  if ( cache == 0 )
     cache = -1;
 
   CachePolicy policy = collection.cachePolicy();
-  policy.setInheritFromParent( ui->inherit->isChecked() );
+  policy.setInheritFromParent( d->mUi->inherit->isChecked() );
   policy.setIntervalCheckTime( interval );
   policy.setCacheTimeout( cache );
-  policy.setSyncOnDemand( ui->syncOnDemand->isChecked() );
-  QStringList localParts = ui->localParts->items();
+  policy.setSyncOnDemand( d->mUi->syncOnDemand->isChecked() );
+
+  QStringList localParts = d->mUi->localParts->items();
 
   // Unless we are in "raw" mode, add "bodies" to the list of message
   // parts to keep around locally, if the user selected that, or remove
   // it otherwise. In "raw" mode we simple use the values from the list
   // view.
-  if ( ui->stackedWidget->currentWidget() != ui->rawPage ) {
-    if ( ui->retrieveFullMessages->isChecked()
-         && !localParts.contains( QLatin1String("RFC822") ) ) {
-        localParts.append( QLatin1String("RFC822") );
-    } else if ( !ui->retrieveFullMessages->isChecked()
-         && localParts.contains( QLatin1String("RFC822") ) ) {
-      localParts.removeAll( QLatin1String("RFC822")  );
+  if ( d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage ) {
+    if ( d->mUi->retrieveFullMessages->isChecked()
+         && !localParts.contains( QLatin1String( "RFC822" ) ) ) {
+        localParts.append( QLatin1String( "RFC822" ) );
+    } else if ( !d->mUi->retrieveFullMessages->isChecked()
+         && localParts.contains( QLatin1String( "RFC822" ) ) ) {
+      localParts.removeAll( QLatin1String( "RFC822" )  );
     }
   }
+
   policy.setLocalParts( localParts );
   collection.setCachePolicy( policy );
-}
-
-void CachePolicyPage::slotIntervalValueChanged( int i )
-{
-    ui->checkInterval->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
-}
-
-void CachePolicyPage::slotCacheValueChanged( int i )
-{
-    ui->localCacheTimeout->setSuffix( QLatin1Char(' ') + i18np( "minute", "minutes", i ) );
 }
 
 #include "cachepolicypage.moc"

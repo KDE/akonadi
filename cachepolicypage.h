@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Till Adam <adam@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,36 +24,74 @@
 
 #include <akonadi/collectionpropertiespage.h>
 
-#include <kdeversion.h>
-
-namespace Ui {
-  class CachePolicyPage;
-}
-
 namespace Akonadi {
 
 /**
-  Cache policy configuration page.
-*/
+ * @short A page in a collection properties dialog to configure the cache policy.
+ *
+ * This page allows the user to fine tune the cache policy of a collection
+ * in the Akonadi storage. It provides two modes, a UserMode and an AdvancedMode.
+ * While the former should be used in end-user applications, the latter can be
+ * used in debugging tools.
+ *
+ * @see Akonadi::CollectionPropertiesDialog, Akonadi::CollectionPropertiesPageFactory
+ *
+ * @author Till Adam <adam@kde.org>
+ * @since 4.6
+ */
 class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
 {
   Q_OBJECT
+
   public:
-    explicit CachePolicyPage( QWidget * parent, bool rawMode = false );
+    /**
+     * Describes the mode of the cache policy page.
+     */
+    enum GuiMode
+    {
+      UserMode,     ///< A simplified UI for end-users will be provided.
+      AdvancedMode  ///< An advanced UI for debugging will be provided.
+    };
+
+    /**
+     * Creates a new cache policy page.
+     *
+     * @param parent The parent widget.
+     * @param mode The UI mode that will be used for the page.
+     */
+    explicit CachePolicyPage( QWidget *parent, GuiMode mode = UserMode );
+
+    /**
+     * Destroys the cache policy page.
+     */
     ~CachePolicyPage();
+
+    /**
+     * Checks if the cache policy page can actually handle the given @p collection.
+     */
     bool canHandle( const Collection &collection ) const;
+
+    /**
+     * Loads the page content from the given @p collection.
+     */
     void load( const Collection &collection );
+
+    /**
+     * Saves page content to the given @p collection.
+     */
     void save( Collection &collection );
 
-private:
-    Ui::CachePolicyPage* ui;
+  private:
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-  private slots:
-    void slotIntervalValueChanged( int );
-    void slotCacheValueChanged( int );
+    Q_PRIVATE_SLOT( d, void slotIntervalValueChanged( int ) )
+    Q_PRIVATE_SLOT( d, void slotCacheValueChanged( int ) )
+    //@endcond
 };
 
-AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(CachePolicyPageFactory, CachePolicyPage)
+AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY( CachePolicyPageFactory, CachePolicyPage )
 
 }
 
