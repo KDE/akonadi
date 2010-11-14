@@ -111,16 +111,17 @@ class AKONADI_EXPORT ItemModifyJob : public Job
 
     /**
      * Creates a new item modify job for bulk modifications.
+     *
      * Using this is different from running a modification job per item.
      * Use this when applying the same change to a set of items, such as a
      * mass-change of item flags, not if you just want to store a bunch of
-     * randmomly modified items.
+     * randomly modified items.
      *
      * Currently the following modifications are supported:
      * - flag changes
      *
-     * @note Since this does not do payload mdifications, it implies
-     * setIgnorePayload( true ) and disableRevisionCheck().
+     * @note Since this does not do payload modifications, it implies
+     *       setIgnorePayload( true ) and disableRevisionCheck().
      * @param items The list of items to modify, must not be empty.
      * @since 4.6
      */
@@ -154,12 +155,14 @@ class AKONADI_EXPORT ItemModifyJob : public Job
 
     /**
      * Returns the modified and stored item including the changed revision number.
+     *
      * @note Use this method only when using the single item constructor.
      */
     Item item() const;
 
     /**
      * Returns the modified and stored items including the changed revision number.
+     *
      * @since 4.6
      */
     Item::List items() const;
