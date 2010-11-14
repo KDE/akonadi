@@ -110,8 +110,8 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
 }
 
-ItemModifyJob::ItemModifyJob(const Akonadi::Item::List& items, QObject* parent) :
-  Job( new ItemModifyJobPrivate( this ), parent )
+ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
+  : Job( new ItemModifyJobPrivate( this ), parent )
 {
   Q_ASSERT( !items.isEmpty() );
   Q_D( ItemModifyJob );
