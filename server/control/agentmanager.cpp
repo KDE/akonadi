@@ -267,6 +267,13 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 
   preProcessorManager.unregisterInstance( instance->identifier() );
 
+  if ( instance->hasAgentInterface() ) {
+    qDebug() << "AgentManager::removeAgentInstance: calling instance->quit()";
+    instance->quit();
+  } else {
+    akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
+  }
+
   emit agentInstanceRemoved( identifier );
 }
 

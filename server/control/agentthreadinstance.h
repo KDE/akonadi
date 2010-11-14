@@ -31,6 +31,7 @@ class AgentThreadInstance : public AgentInstance
     AgentThreadInstance( AgentManager *manager );
 
     virtual bool start( const AgentType &agentInfo );
+    virtual void quit();
     virtual void restartWhenIdle();
 
   private Q_SLOTS:

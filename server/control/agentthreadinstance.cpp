@@ -57,6 +57,15 @@ bool AgentThreadInstance::start( const AgentType &agentInfo )
   return true;
 }
 
+void AgentThreadInstance::quit()
+{
+  AgentInstance::quit();
+
+  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                      "/AgentServer", QDBusConnection::sessionBus() );
+  agentServer.stopAgent( identifier() );
+}
+
 void AgentThreadInstance::restartWhenIdle()
 {
   if ( status() == 0 && !identifier().isEmpty() ) {
