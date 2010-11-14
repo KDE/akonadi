@@ -37,7 +37,7 @@ class ItemModifyJobPrivate : public JobPrivate
       Dirty
     };
 
-    ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item );
+    ItemModifyJobPrivate( ItemModifyJob *parent );
 
     void setClean();
     QByteArray nextPartHeader();
@@ -51,7 +51,7 @@ class ItemModifyJobPrivate : public JobPrivate
 
     QSet<int> mOperations;
     QByteArray mTag;
-    Item mItem;
+    Item::List mItems;
     bool mRevCheck;
     QSet<QByteArray> mParts;
     QByteArray mPendingData;

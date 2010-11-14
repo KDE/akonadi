@@ -33,14 +33,12 @@
 
 using namespace Akonadi;
 
-ItemModifyJobPrivate::ItemModifyJobPrivate( ItemModifyJob *parent, const Item &item )
+ItemModifyJobPrivate::ItemModifyJobPrivate( ItemModifyJob *parent )
   : JobPrivate( parent ),
-    mItem( item ),
     mRevCheck( true ),
     mIgnorePayload( false ),
     mAutomaticConflictHandlingEnabled( true )
 {
-  mParts = mItem.loadedPayloadParts();
 }
 
 void ItemModifyJobPrivate::setClean()
@@ -58,7 +56,7 @@ QByteArray ItemModifyJobPrivate::nextPartHeader()
 
     mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize( mItem, label, mPendingData, version );
+    ItemSerializer::serialize( mItems.first(), label, mPendingData, version );
     command += ' ' + ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartPayload, label, version );
     if ( mPendingData.size() > 0 ) {
       command += " {" + QByteArray::number( mPendingData.size() ) + "}\n";
@@ -94,19 +92,42 @@ void ItemModifyJobPrivate::conflictResolveError( const QString &message )
 
 void ItemModifyJobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int oldRevision, int newRevision )
 {
-  if ( mItem.id() == itemId && mItem.revision() == oldRevision )
-    mItem.setRevision( newRevision );
+  Item::List::iterator it = std::find_if( mItems.begin(), mItems.end(), boost::bind( &Item::id, _1 ) == itemId );
+  if ( it != mItems.end() && (*it).revision() == oldRevision )
+    (*it).setRevision( newRevision );
 }
 
 
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
-  : Job( new ItemModifyJobPrivate( this, item ), parent )
+  : Job( new ItemModifyJobPrivate( this ), parent )
 {
   Q_D( ItemModifyJob );
+
+  d->mItems.append( item );
+  d->mParts = item.loadedPayloadParts();
 
   d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
   d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
 }
+
+ItemModifyJob::ItemModifyJob(const Akonadi::Item::List& items, QObject* parent) :
+  Job( new ItemModifyJobPrivate( this ), parent )
+{
+  Q_ASSERT( !items.isEmpty() );
+  Q_D( ItemModifyJob );
+  d->mItems = items;
+
+  // same as single item ctor
+  if ( d->mItems.size() == 1 ) {
+    d->mParts = items.first().loadedPayloadParts();
+    d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
+    d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
+  } else {
+    d->mIgnorePayload = true;
+    d->mRevCheck = false;
+  }
+}
+
 
 ItemModifyJob::~ItemModifyJob()
 {
@@ -116,19 +137,20 @@ void ItemModifyJob::doStart()
 {
   Q_D( ItemModifyJob );
 
+  const Akonadi::Item item = d->mItems.first();
   QList<QByteArray> changes;
   foreach ( int op, d->mOperations ) {
     switch ( op ) {
       case ItemModifyJobPrivate::RemoteId:
-        if ( !d->mItem.remoteId().isNull() ) {
+        if ( !item.remoteId().isNull() ) {
           changes << "REMOTEID";
-          changes << ImapParser::quote( d->mItem.remoteId().toUtf8() );
+          changes << ImapParser::quote( item.remoteId().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::RemoteRevision:
-        if ( !d->mItem.remoteRevision().isNull() ) {
+        if ( !item.remoteRevision().isNull() ) {
           changes << "REMOTEREVISION";
-          changes << ImapParser::quote( d->mItem.remoteRevision().toUtf8() );
+          changes << ImapParser::quote( item.remoteRevision().toUtf8() );
         }
         break;
       case ItemModifyJobPrivate::Dirty:
@@ -138,51 +160,59 @@ void ItemModifyJob::doStart()
     }
   }
 
-  if ( d->mItem.d_func()->mClearPayload )
+  if ( item.d_func()->mClearPayload )
     changes << "INVALIDATECACHE";
 
-  if ( d->mItem.d_func()->mFlagsOverwritten ) {
+  if ( item.d_func()->mFlagsOverwritten ) {
     changes << "FLAGS";
-    changes << '(' + ImapParser::join( d->mItem.flags(), " " ) + ')';
+    changes << '(' + ImapParser::join( item.flags(), " " ) + ')';
   } else {
-    if ( !d->mItem.d_func()->mAddedFlags.isEmpty() ) {
+    if ( !item.d_func()->mAddedFlags.isEmpty() ) {
       changes << "+FLAGS";
-      changes << '(' + ImapParser::join( d->mItem.d_func()->mAddedFlags, " " ) + ')';
+      changes << '(' + ImapParser::join( item.d_func()->mAddedFlags, " " ) + ')';
     }
-    if ( !d->mItem.d_func()->mDeletedFlags.isEmpty() ) {
+    if ( !item.d_func()->mDeletedFlags.isEmpty() ) {
       changes << "-FLAGS";
-      changes << '(' + ImapParser::join( d->mItem.d_func()->mDeletedFlags, " " ) + ')';
+      changes << '(' + ImapParser::join( item.d_func()->mDeletedFlags, " " ) + ')';
     }
   }
 
-  if ( !d->mItem.d_func()->mDeletedAttributes.isEmpty() ) {
+  if ( !item.d_func()->mDeletedAttributes.isEmpty() ) {
     changes << "-PARTS";
     QList<QByteArray> attrs;
-    foreach ( const QByteArray &attr, d->mItem.d_func()->mDeletedAttributes )
+    foreach ( const QByteArray &attr, item.d_func()->mDeletedAttributes )
       attrs << ProtocolHelper::encodePartIdentifier( ProtocolHelper::PartAttribute, attr );
     changes << '(' + ImapParser::join( attrs, " " ) + ')';
   }
 
   // nothing to do
-  if ( changes.isEmpty() && d->mParts.isEmpty() && d->mItem.attributes().isEmpty() ) {
+  if ( changes.isEmpty() && d->mParts.isEmpty() && item.attributes().isEmpty() ) {
     emitResult();
     return;
   }
 
   d->mTag = d->newTag();
   QByteArray command = d->mTag;
-  command += " UID STORE " + QByteArray::number( d->mItem.id() ) + ' ';
-  if ( !d->mRevCheck || d->mItem.revision() < 0 ) {
+  try {
+    command += ProtocolHelper::entitySetToByteArray( d->mItems, "STORE" );
+  } catch ( const Exception &e ) {
+    setError( Job::Unknown );
+    setErrorText( QString::fromUtf8( e.what() ) );
+    emitResult();
+    return;
+  }
+  command += ' ';
+  if ( !d->mRevCheck || item.revision() < 0 ) {
     command += "NOREV ";
   } else {
-    command += "REV " + QByteArray::number( d->mItem.revision() ) + ' ';
+    command += "REV " + QByteArray::number( item.revision() ) + ' ';
   }
 
-  if ( d->mItem.d_func()->mSizeChanged )
-    command += "SIZE " + QByteArray::number( d->mItem.size() );
+  if ( item.d_func()->mSizeChanged )
+    command += "SIZE " + QByteArray::number( item.size() );
 
   command += " (" + ImapParser::join( changes, " " );
-  const QByteArray attrs = ProtocolHelper::attributesToByteArray( d->mItem, true );
+  const QByteArray attrs = ProtocolHelper::attributesToByteArray( item, true );
   if ( !attrs.isEmpty() )
     command += ' ' + attrs;
   command += d->nextPartHeader();
@@ -211,13 +241,14 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
         }
       }
 
-      if ( d->mItem.modificationTime() != modificationDateTime )
+      Item &item = d->mItems.first();
+      if ( item.modificationTime() != modificationDateTime )
       {
-        d->mItem.setModificationTime( modificationDateTime );
+        item.setModificationTime( modificationDateTime );
       } else {
-        kDebug() << "No changes on item" << d->mItem.id();
+        kDebug() << "No changes on item" << item.id();
       }
-      d->mItem.d_ptr->resetChangeLog();
+      item.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );
       setErrorText( QString::fromUtf8( data ) );
@@ -225,7 +256,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       if ( data.contains( "[LLCONFLICT]" ) ) {
         if ( d->mAutomaticConflictHandlingEnabled ) {
           ConflictHandler *handler = new ConflictHandler( ConflictHandler::LocalLocalConflict, this );
-          handler->setConflictingItems( d->mItem, d->mItem );
+          handler->setConflictingItems( d->mItems.first(), d->mItems.first() );
           connect( handler, SIGNAL( conflictResolved() ), SLOT( conflictResolved() ) );
           connect( handler, SIGNAL( error( const QString& ) ), SLOT( conflictResolveError( const QString& ) ) );
 
@@ -246,7 +277,8 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       kDebug() << "Ignoring strange response: " << _tag << data;
       return;
     }
-    if ( d->mItem.id() != id ) {
+    Item::List::iterator it = std::find_if( d->mItems.begin(), d->mItems.end(), boost::bind( &Item::id, _1 ) == id );
+    if ( it == d->mItems.end() ) {
       kDebug() << "Received STORE response for an item we did not modify: " << _tag << data;
       return;
     }
@@ -256,11 +288,11 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       const QByteArray key = attrs.at( i );
       if ( key == "REV" ) {
         const int newRev = attrs.at( i + 1 ).toInt();
-        const int oldRev = d->mItem.revision();
+        const int oldRev = (*it).revision();
         if ( newRev < oldRev || newRev < 0 )
           continue;
-        d->itemRevisionChanged( d->mItem.id(), oldRev, newRev );
-        d->mItem.setRevision( newRev );
+        d->itemRevisionChanged( (*it).id(), oldRev, newRev );
+        (*it).setRevision( newRev );
       }
     }
     return;
@@ -280,8 +312,8 @@ void ItemModifyJob::setIgnorePayload( bool ignore )
   if ( d->mIgnorePayload )
     d->mParts = QSet<QByteArray>();
   else {
-    Q_ASSERT( !d->mItem.mimeType().isEmpty() );
-    d->mParts = d->mItem.loadedPayloadParts();
+    Q_ASSERT( !d->mItems.first().mimeType().isEmpty() );
+    d->mParts = d->mItems.first().loadedPayloadParts();
   }
 }
 
@@ -309,8 +341,15 @@ void ItemModifyJob::disableAutomaticConflictHandling()
 Item ItemModifyJob::item() const
 {
   Q_D( const ItemModifyJob );
+  Q_ASSERT( d->mItems.size() == 1 );
 
-  return d->mItem;
+  return d->mItems.first();
+}
+
+Item::List ItemModifyJob::items() const
+{
+  Q_D( const ItemModifyJob );
+  return d->mItems;
 }
 
 #include "itemmodifyjob.moc"
