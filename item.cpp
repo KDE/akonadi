@@ -470,6 +470,7 @@ void Item::apply( const Item &other )
   }
 
   ItemSerializer::apply( *this, other );
+  d_func()->resetChangeLog();
 }
 
 AKONADI_DEFINE_PRIVATE( Item )
