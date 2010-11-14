@@ -660,10 +660,10 @@ class StandardActionManager::Private
       favoritesModel->setFavoriteLabel( collection, label );
     }
 
-     void slotCopyCollectionTo()
-     {
-       pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
-     }
+    void slotCopyCollectionTo()
+    {
+      pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
+    }
 
     void slotCopyItemTo()
     {
