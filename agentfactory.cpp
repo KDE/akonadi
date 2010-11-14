@@ -23,8 +23,9 @@
 #include "agentfactory.h"
 
 #include <klocale.h>
-#include <QThreadStorage>
+
 #include <QtCore/QThread>
+#include <QtCore/QThreadStorage>
 
 QThreadStorage<KComponentData*> s_agentComponentDatas;
 
@@ -36,8 +37,8 @@ class Akonadi::AgentFactoryBasePrivate
     QString catalogName;
 };
 
-AgentFactoryBase::AgentFactoryBase(const char* catalogName, QObject* parent):
-  QObject( parent ), d( new AgentFactoryBasePrivate )
+AgentFactoryBase::AgentFactoryBase( const char *catalogName, QObject *parent)
+  : QObject( parent ), d( new AgentFactoryBasePrivate )
 {
   d->catalogName = QString::fromLatin1( catalogName );
   if ( !KGlobal::hasMainComponent() )
@@ -57,6 +58,5 @@ void AgentFactoryBase::createComponentData( const QString& identifier ) const
     s_agentComponentDatas.setLocalData( new KComponentData( identifier.toLatin1(), d->catalogName.toLatin1() ) );
   }
 }
-
 
 #include "agentfactory.moc"

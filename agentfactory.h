@@ -33,7 +33,8 @@ namespace Akonadi {
 class AgentFactoryBasePrivate;
  
 /**
- * Factory base class for in-process agents.
+ * @short A factory base class for in-process agents.
+ *
  * @see AKONADI_AGENT_FACTORY()
  * @internal
  * @since 4.6
@@ -41,14 +42,16 @@ class AgentFactoryBasePrivate;
 class AKONADI_EXPORT AgentFactoryBase : public QObject
 {
   Q_OBJECT
+
   public:
     /**
      * Creates a new agent factory.
      * Executed in the main thread, performs KDE infrastructure setup.
+     *
      * @param catalogName The translation catalog of this resource.
      * @param parent The parent object.
      */
-    explicit AgentFactoryBase(const char* catalogName, QObject* parent = 0);
+    explicit AgentFactoryBase( const char *catalogName, QObject *parent = 0 );
 
   public Q_SLOTS:
     /**
@@ -60,11 +63,12 @@ class AKONADI_EXPORT AgentFactoryBase : public QObject
     void createComponentData( const QString &identifier ) const;
 
   private:
-    AgentFactoryBasePrivate * const d;
+    AgentFactoryBasePrivate* const d;
 };
 
 /**
- * Factory for in-process agents.
+ * @short A factory for in-process agents.
+ *
  * @see AKONADI_AGENT_FACTORY()
  * @internal
  * @since 4.6
@@ -74,11 +78,12 @@ class AgentFactory : public AgentFactoryBase
 {
   public:
     /** reimplemented */
-    explicit AgentFactory(const char* catalogName, QObject* parent = 0) :
-      AgentFactoryBase( catalogName, parent )
-    {}
+    explicit AgentFactory( const char *catalogName, QObject *parent = 0 )
+      : AgentFactoryBase( catalogName, parent )
+    {
+    }
 
-    QObject* createInstance(const QString& identifier) const
+    QObject* createInstance( const QString &identifier ) const
     {
       createComponentData( identifier );
       T* instance = new T( identifier );
@@ -98,6 +103,7 @@ class AgentFactory : public AgentFactoryBase
 #ifndef AKONADI_AGENT_FACTORY
 /**
  * Macro to create an agent factory for in-process agents.
+ *
  * @param agentClass class name of the agent type this factory should create.
  * @param catalogName name of the translation catalog of this agent type.
  * @since 4.6
