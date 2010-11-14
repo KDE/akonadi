@@ -736,7 +736,7 @@ KSharedConfigPtr AgentBase::config()
   if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
     return KGlobal::config();
   else
-    return KSharedConfig::openConfig( identifier() );
+    return componentData().config();
 }
 
 void AgentBase::abort()
