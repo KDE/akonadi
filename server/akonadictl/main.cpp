@@ -132,17 +132,36 @@ int main( int argc, char **argv )
     return 2;
   }
 #else
-    /* For Windows Ce just start it*/
     QStringList arguments = app.arguments();
-    arguments.append(QLatin1String("start"));
+    if (argc > 1) {
+      if (strcmp(argv[1],"start") == 0) {
+        arguments.append(QLatin1String("start"));
+      } else if (strcmp(argv[1],"stop") == 0) {
+        arguments.append(QLatin1String("stop"));
+      } else if (strcmp(argv[1],"restart") == 0) {
+        arguments.append(QLatin1String("restart"));
+      } else if (strcmp(argv[1],"status") == 0) {
+        arguments.append(QLatin1String("status"));
+      }
+    } else {
+      arguments.append(QLatin1String("start"));
+    }
 #endif
 
   if ( arguments[ 1 ] == QLatin1String( "start" ) ) {
     if ( !startServer() )
       return 3;
   } else if ( arguments[ 1 ] == QLatin1String( "stop" ) ) {
-    if ( !stopServer() )
+    if ( !stopServer() ) 
       return 4;
+    else {
+    //Block until akonadi is shut down
+#ifdef _WIN32_WCE
+        do {
+          Sleep(100000);
+        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
+#endif
+    }
   } else if ( arguments[ 1 ] == QLatin1String( "status" ) ) {
     if ( !statusServer() )
       return 5;
