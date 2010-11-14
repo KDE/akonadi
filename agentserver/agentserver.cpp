@@ -91,6 +91,8 @@ void AgentServer::stopAgent( const QString &identifier )
 
   AgentThread* thread = m_agents.take( identifier );
   thread->quit();
+  thread->wait();
+  delete thread;
 }
 
 void AgentServer::quit()

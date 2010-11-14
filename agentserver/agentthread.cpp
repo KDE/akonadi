@@ -51,6 +51,7 @@ void AgentThread::run()
   }
 
   exec();
+  delete m_instance;
 }
 
 void AgentThread::configure( qlonglong windowId )
