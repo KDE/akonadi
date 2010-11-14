@@ -26,17 +26,17 @@
 
 MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List& msgList, bool invert, QObject* parent): CommandBase( parent )
 {
-  mInvertMark = invert;
+  mInvertMark = targetStatus.isUnread() ? !invert : invert;
   mMessages = msgList;
-  mTargetStatus = targetStatus;
+  mTargetStatus = targetStatus.isUnread() ? Akonadi::MessageStatus::statusRead() : targetStatus;
   mFolderListJobCount = 0;
 }
 
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, bool invert, QObject* parent): CommandBase( parent )
 {
-  mInvertMark = invert;
+  mInvertMark = targetStatus.isUnread() ? !invert : invert;
   mFolders = folders;
-  mTargetStatus = targetStatus;
+  mTargetStatus = targetStatus.isUnread() ? Akonadi::MessageStatus::statusRead() : targetStatus;
   mFolderListJobCount = mFolders.size();  
 }
 
@@ -101,30 +101,34 @@ void MarkAsCommand::markMessages()
 {
   mMarkJobCount = 0;
 
+  Q_ASSERT( mTargetStatus.statusFlags().size() == 1 );
+  const Akonadi::Item::Flag flag = *(mTargetStatus.statusFlags().begin());
+
+  Akonadi::Item::List itemsToModify;
   foreach( const Akonadi::Item &it, mMessages ) {
     Akonadi::Item item( it );
 
-    // Set a custom flag
-    Akonadi::MessageStatus itemStatus;
-    itemStatus.setStatusFromFlags( it.flags() );
-
+    // be careful to only change the flags we want to change, not to overwrite them
+    // otherwise ItemModifyJob will not do what we expect
     if ( mInvertMark ) {
-      
-      if ( mTargetStatus & Akonadi::MessageStatus::statusRead() ) {
-        itemStatus.setUnread();
-      } else if ( mTargetStatus & Akonadi::MessageStatus::statusUnread() ) {
-        itemStatus.setRead();
-      } else
-        itemStatus.toggle( mTargetStatus );
+      if ( item.hasFlag( flag ) ) {
+        item.clearFlag( flag );
+        itemsToModify.push_back( item );
+      }
     } else {
-      itemStatus.set( mTargetStatus );
+      if ( !item.hasFlag( flag ) ) {
+        item.setFlag( flag );
+        itemsToModify.push_back( item );
+      }
     }
+  }
 
-    item.setFlags( itemStatus.statusFlags() );
-    // Store back modified item
-    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( item, this );
+  mMarkJobCount++;
+  if ( itemsToModify.isEmpty() ) {
+    slotModifyItemDone( 0 ); // pretend we did something
+  } else {
+    Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
     modifyJob->setIgnorePayload( true );
-    mMarkJobCount++;
     connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
   }
 }
@@ -133,7 +137,7 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
 {
   mMarkJobCount--;
   //NOTE(Andras): from kmail/kmmcommands, KMSetStatusCommand
-  if ( job->error() ) {
+  if ( job && job->error() ) {
     kDebug()<<" Error trying to set item status:" << job->errorText();
     emitResult( Failed );
   }
