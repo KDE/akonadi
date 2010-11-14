@@ -34,8 +34,8 @@ class MoveToTrashCommand : public CommandBase
 {
   Q_OBJECT
 public:
-  MoveToTrashCommand( QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent = 0 );
-  MoveToTrashCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0 );
+  MoveToTrashCommand( const QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent = 0 );
+  MoveToTrashCommand( const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0 );
 
   /*reimp*/ void execute();
 
@@ -53,7 +53,7 @@ private:
   Akonadi::Collection::List mFolders;
   QList<Akonadi::Item> mMessages;
   Akonadi::Collection::Id the_trashCollectionFolder;
-  QAbstractItemModel* mModel;
+  const QAbstractItemModel* mModel;
   int mFolderListJobCount;
 };
 

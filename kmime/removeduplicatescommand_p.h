@@ -33,7 +33,7 @@ class RemoveDuplicatesCommand : public CommandBase
 {
   Q_OBJECT
 public:
-    RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0);
+    RemoveDuplicatesCommand( const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent = 0);
     virtual void execute();
 
 private Q_SLOTS:
@@ -42,7 +42,7 @@ private:
     Akonadi::Collection::List mFolders;
     Akonadi::Item::List mDuplicateItems;
     int mJobCount;
-    QAbstractItemModel* mModel; //just pass to the internal trash command
+    const QAbstractItemModel* mModel; //just pass to the internal trash command
 };
 
 #endif // REMOVEDUPLICATESCOMMAND_P_H

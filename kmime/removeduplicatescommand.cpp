@@ -26,7 +26,7 @@
 #include "akonadi/itemfetchscope.h"
 #include "kmime/kmime_message.h"
 
-RemoveDuplicatesCommand::RemoveDuplicatesCommand( QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent ) :
+RemoveDuplicatesCommand::RemoveDuplicatesCommand( const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent ) :
   CommandBase( parent )
 {
   mModel = model;

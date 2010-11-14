@@ -28,7 +28,7 @@
 #include <akonadi/kmime/specialmailcollections.h>
 #include <akonadi/entitytreemodel.h>
 
-MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent): CommandBase( parent )
+MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent): CommandBase( parent )
 {
   the_trashCollectionFolder = -1;
   mFolders = folders;
@@ -36,7 +36,7 @@ MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const Akonadi:
   mFolderListJobCount = mFolders.size();
 }
 
-MoveToTrashCommand::MoveToTrashCommand(QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent): CommandBase( parent )
+MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel* model, const QList< Akonadi::Item >& msgList, QObject* parent): CommandBase( parent )
 {
   the_trashCollectionFolder = -1;
   mMessages = msgList;

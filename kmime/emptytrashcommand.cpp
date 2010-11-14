@@ -33,7 +33,7 @@
 #include "akonadi/agentmanager.h"
 #include "kmime/kmime_message.h"
 
-EmptyTrashCommand::EmptyTrashCommand(QAbstractItemModel* model, QObject* parent) : CommandBase( parent )
+EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent) : CommandBase( parent )
 {
   the_trashCollectionFolder = -1;
   mModel = model;

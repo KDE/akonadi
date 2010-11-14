@@ -34,7 +34,7 @@ class EmptyTrashCommand : public CommandBase
   Q_OBJECT
 
 public:
-    EmptyTrashCommand(QAbstractItemModel* model, QObject* parent);
+    EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent);
     EmptyTrashCommand(Akonadi::Collection folder, QObject* parent);
     /*reimp*/ void execute();
      
@@ -48,7 +48,7 @@ private:
   Akonadi::Collection collectionFromId(const Akonadi::Collection::Id& id) const;
   bool folderIsTrash( const Akonadi::Collection & col );
 
-  QAbstractItemModel* mModel;
+  const QAbstractItemModel* mModel;
   Akonadi::Collection::Id the_trashCollectionFolder;
   Akonadi::Collection mFolder;
 };

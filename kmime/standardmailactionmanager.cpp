@@ -22,27 +22,28 @@
 */
 
 #include "standardmailactionmanager.h"
-#include "movetotrashcommand_p.h"
-#include "markascommand_p.h"
+
 #include "emptytrashcommand_p.h"
+#include "markascommand_p.h"
+#include "movetotrashcommand_p.h"
 #include "removeduplicatescommand_p.h"
 
-#include "akonadi/subscriptiondialog_p.h"
 #include "akonadi/agentfilterproxymodel.h"
 #include "akonadi/agentinstance.h"
 #include "akonadi/agentinstancecreatejob.h"
 #include "akonadi/agentmanager.h"
 #include "akonadi/agenttypedialog.h"
-#include "akonadi/entitytreemodel.h"
-#include "akonadi/mimetypechecker.h"
-#include "akonadi/collectionmodel.h"
-#include "akonadi/kmime/messagestatus.h"
 #include "akonadi/collectionstatistics.h"
+#include "akonadi/entitytreemodel.h"
+#include "akonadi/kmime/messagestatus.h"
+#include "akonadi/mimetypechecker.h"
+#include "akonadi/subscriptiondialog_p.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kmime/kmime_message.h>
 
 #include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
@@ -53,12 +54,17 @@ class StandardMailActionManager::Private
 {
   public:
     Private( KActionCollection *actionCollection, QWidget *parentWidget, StandardMailActionManager *parent )
-      : mActionCollection( actionCollection ), mParentWidget( parentWidget ),
-        mCollectionSelectionModel( 0 ), mItemSelectionModel( 0 ), mParent( parent )
+      : mActionCollection( actionCollection ),
+        mParentWidget( parentWidget ),
+        mCollectionSelectionModel( 0 ),
+        mItemSelectionModel( 0 ),
+        mParent( parent )
     {
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
+
       mParent->connect( mGenericManager, SIGNAL( actionStateUpdated() ),
                         mParent, SIGNAL( actionStateUpdated() ) );
+
       mGenericManager->createAllActions();
 
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
@@ -210,12 +216,11 @@ class StandardMailActionManager::Private
         StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
         i18n( "Paste failed" ) );
 
-      mGenericManager->setMimeTypeFilter( QStringList() << QLatin1String( "message/rfc822" ) );
+      mGenericManager->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
       mGenericManager->interceptAction( Akonadi::StandardActionManager::ManageLocalSubscriptions );
-      connect( mGenericManager->action( StandardActionManager::ManageLocalSubscriptions ),
-               SIGNAL(triggered(bool)),
-               mParent, SLOT(slotMailLocalSubscription()) );
+      connect( mGenericManager->action( StandardActionManager::ManageLocalSubscriptions ), SIGNAL( triggered( bool ) ),
+               mParent, SLOT( slotMailLocalSubscription() ) );
     }
 
     ~Private()
@@ -223,55 +228,20 @@ class StandardMailActionManager::Private
       delete mGenericManager;
     }
 
-    static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
-    {
-      const Akonadi::Collection collection =
-        index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-      if ( collection.isValid() ) {
-        if ( collection.contentMimeTypes().contains( mimeType ) &&
-             ( collection.rights() & Akonadi::Collection::CanCreateItem ) ) {
-          return true;
-        }
-      }
-
-      const QAbstractItemModel *model = index.model();
-      if ( !model )
-        return false;
-
-      for ( int row = 0; row < model->rowCount( index ); ++row ) {
-        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) )
-          return true;
-      }
-
-      return false;
-    }
-
-    bool hasWritableCollection( const QString &mimeType ) const
-    {
-      if ( !mCollectionSelectionModel )
-        return false;
-
-      const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
-      for ( int row = 0; row < collectionModel->rowCount(); ++row ) {
-        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) )
-          return true;
-      }
-
-      return false;
-    }
-
     void updateActions()
     {
-      bool itemIsSelected = mItemSelectionModel && !mItemSelectionModel->selectedIndexes().isEmpty();
-      bool collectionIsSelected = mCollectionSelectionModel && !mCollectionSelectionModel->selectedIndexes().isEmpty();
+      const Akonadi::Item::List selectedItems = mGenericManager->selectedItems();
+      const Akonadi::Collection::List selectedCollections = mGenericManager->selectedCollections();
+
+      bool itemIsSelected = !selectedItems.isEmpty();
+      bool collectionIsSelected = !selectedCollections.isEmpty();
 
       if ( itemIsSelected ) {
         bool allMarkedAsImportant = true;
         bool allMarkedAsRead = true;
         bool allMarkedAsActionItem = true;
 
-        Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
-          const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+        foreach ( const Akonadi::Item &item, selectedItems ) {
           Akonadi::MessageStatus status;
           status.setStatusFromFlags( item.flags() );
           if ( !status.isImportant() )
@@ -280,15 +250,15 @@ class StandardMailActionManager::Private
             allMarkedAsRead= false;
           if ( !status.isToAct() )
             allMarkedAsActionItem = false;
-      }
+        }
 
         QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
         if ( action ) {
-          updateMarkAction( action, allMarkedAsRead);
+          updateMarkAction( action, allMarkedAsRead );
           if ( allMarkedAsRead )
-            action->setText( i18n("&Mark Mail as Unread") );
+            action->setText( i18n( "&Mark Mail as Unread" ) );
           else
-            action->setText( i18n("&Mark Mail as Read") );
+            action->setText( i18n( "&Mark Mail as Read" ) );
           action->setEnabled( true );
         }
 
@@ -296,9 +266,9 @@ class StandardMailActionManager::Private
         if ( action ) {
           updateMarkAction( action, allMarkedAsImportant );
           if ( allMarkedAsImportant )
-            action->setText( i18n("Remove Important Mark") );
+            action->setText( i18n( "Remove Important Mark" ) );
           else
-            action->setText( i18n("&Mark Mail as Important") );
+            action->setText( i18n( "&Mark Mail as Important" ) );
           action->setEnabled( true );
         }
 
@@ -306,34 +276,43 @@ class StandardMailActionManager::Private
         if ( action ) {
           updateMarkAction( action, allMarkedAsActionItem );
           if ( allMarkedAsActionItem )
-            action->setText( i18n("Remove Action Item Mark") );
+            action->setText( i18n( "Remove Action Item Mark" ) );
           else
-            action->setText( i18n("&Mark Mail as Action Item") );
+            action->setText( i18n( "&Mark Mail as Action Item" ) );
           action->setEnabled( true );
         }
      } else {
         QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
-        if ( action ) action->setEnabled( false );
+        if ( action )
+          action->setEnabled( false );
+
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
-        if ( action ) action->setEnabled( false );
+        if ( action )
+          action->setEnabled( false );
+
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
-        if ( action ) action->setEnabled( false );
+        if ( action )
+          action->setEnabled( false );
      }
 
       bool enableMarkAllAsRead = false;
       bool enableMarkAllAsUnread = false;
       if ( collectionIsSelected ) {
-        Collection collection = selectedCollection();
+        const Collection collection = selectedCollections.first();
         if ( collection.isValid() ) {
-          Akonadi::CollectionStatistics stats = collection.statistics();
-          enableMarkAllAsRead = ( stats.unreadCount() > 0 );
-          enableMarkAllAsUnread = ( stats.count() != stats.unreadCount() );
+          const Akonadi::CollectionStatistics stats = collection.statistics();
+          enableMarkAllAsRead = (stats.unreadCount() > 0);
+          enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
         }
       }
+
       QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
-      if ( action ) action->setEnabled( enableMarkAllAsRead );
-      action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsUnread);
-      if ( action ) action->setEnabled( enableMarkAllAsUnread );
+      if ( action )
+        action->setEnabled( enableMarkAllAsRead );
+
+      action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsUnread );
+      if ( action )
+        action->setEnabled( enableMarkAllAsUnread );
 
       emit mParent->actionStateUpdated();
     }
@@ -351,61 +330,20 @@ class StandardMailActionManager::Private
       action->setData( data );
     }
 
-
-    Collection selectedCollection() const
-    {
-      if ( !mCollectionSelectionModel )
-        return Collection();
-
-      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
-        return Collection();
-
-      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return Collection();
-
-      return index.data( EntityTreeModel::CollectionRole).value<Collection>();
-    }
-
-    Collection::List selectedCollections() const
-    {
-      Collection::List collections;
-
-      if ( !mCollectionSelectionModel )
-        return collections;
-
-      foreach ( const QModelIndex &index, mCollectionSelectionModel->selectedRows() ) {
-        const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-        if ( collection.isValid() )
-          collections << collection;
-      }
-
-      return collections;
-    }
-
-
-    AgentInstance selectedAgentInstance() const
-    {
-      const Collection collection = selectedCollection();
-      if ( !collection.isValid() )
-        return AgentInstance();
-
-      const QString identifier = collection.resource();
-
-      return AgentManager::self()->instance( identifier );
-    }
-
     void slotMarkAs()
     {
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
+      const QAction *action = qobject_cast<QAction*>( mParent->sender() );
+      Q_ASSERT( action );
+
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark mail as: " << typeStr;
 
       bool invert = false;
       if ( typeStr.startsWith( '!' ) ) {
         invert = true;
-        typeStr = typeStr.mid(1);
+        typeStr = typeStr.mid( 1 );
       }
+
       StandardMailActionManager::Type type = MarkMailAsRead;
       if ( typeStr == "U" )
         type = MarkMailAsUnread;
@@ -417,18 +355,9 @@ class StandardMailActionManager::Private
       if ( mInterceptedActions.contains( type ) )
         return;
 
-      if ( mItemSelectionModel->selection().indexes().isEmpty() )
-        return;
-
-      Akonadi::Item::List items;
-      Q_FOREACH( QModelIndex index, mItemSelectionModel->selectedRows() ) {
-        Q_ASSERT( index.isValid() );
-        const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-        items << item;
-      }
+      const Akonadi::Item::List items = mGenericManager->selectedItems();
       if ( items.isEmpty() )
         return;
-
 
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
@@ -439,8 +368,8 @@ class StandardMailActionManager::Private
 
     void slotMarkAllAs()
     {
-      QAction *action = dynamic_cast<QAction*>( mParent->sender() );
-      Q_ASSERT(action);
+      const QAction *action = qobject_cast<QAction*>( mParent->sender() );
+      Q_ASSERT( action );
 
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark all as: " << typeStr;
@@ -448,8 +377,9 @@ class StandardMailActionManager::Private
       bool invert = false;
       if ( typeStr.startsWith( '!' ) ) {
         invert = true;
-        typeStr = typeStr.mid(1);
+        typeStr = typeStr.mid( 1 );
       }
+
       StandardMailActionManager::Type type = MarkAllMailAsRead;
       if ( typeStr == "U" )
         type = MarkAllMailAsUnread;
@@ -461,11 +391,7 @@ class StandardMailActionManager::Private
       if ( mInterceptedActions.contains( type ) )
         return;
 
-      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
-        return;
-
-
-      Collection::List collections = selectedCollections();
+      const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
       if ( collections.isEmpty() )
         return;
 
@@ -484,11 +410,11 @@ class StandardMailActionManager::Private
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      const Item::List items = mParent->selectedItems();
+      const Item::List items = mGenericManager->selectedItems();
       if ( items.isEmpty() )
         return;
 
-      MoveToTrashCommand *command = new MoveToTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), items, mParent );
+      MoveToTrashCommand *command = new MoveToTrashCommand( mCollectionSelectionModel->model(), items, mParent );
       command->execute();
     }
 
@@ -500,12 +426,11 @@ class StandardMailActionManager::Private
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      Collection::List collections = selectedCollections();
-
+      const Collection::List collections = mGenericManager->selectedCollections();
       if ( collections.isEmpty() )
         return;
 
-      MoveToTrashCommand *command = new MoveToTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collections, mParent );
+      MoveToTrashCommand *command = new MoveToTrashCommand( mCollectionSelectionModel->model(), collections, mParent );
       command->execute();
     }
 
@@ -514,15 +439,11 @@ class StandardMailActionManager::Private
       if ( mInterceptedActions.contains( StandardMailActionManager::RemoveDuplicates ) )
         return;
 
-      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
-        return;
-
-      Collection::List collections = selectedCollections();
-
+      const Collection::List collections = mGenericManager->selectedCollections();
       if ( collections.isEmpty() )
         return;
 
-      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), collections, mParent );
+      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( mCollectionSelectionModel->model(), collections, mParent );
       command->execute();
     }
 
@@ -543,8 +464,7 @@ class StandardMailActionManager::Private
       if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
         return;
 
-      Collection::List collections = selectedCollections();
-
+      const Collection::List collections = mGenericManager->selectedCollections();
       if ( collections.count() != 1 )
         return;
 
@@ -555,10 +475,9 @@ class StandardMailActionManager::Private
     void slotMailLocalSubscription()
     {
 #ifndef Q_OS_WINCE
-      SubscriptionDialog* dlg = new SubscriptionDialog( QLatin1String( "message/rfc822" ), mParentWidget );
+      SubscriptionDialog* dlg = new SubscriptionDialog( KMime::Message::mimeType(), mParentWidget );
       dlg->show();
 #endif
-
     }
 
     KActionCollection *mActionCollection;
@@ -570,6 +489,7 @@ class StandardMailActionManager::Private
     QSet<StandardMailActionManager::Type> mInterceptedActions;
     StandardMailActionManager *mParent;
 };
+
 
 StandardMailActionManager::StandardMailActionManager( KActionCollection *actionCollection, QWidget *parent )
   : QObject( parent ), d( new Private( actionCollection, parent, this ) )
@@ -605,9 +525,8 @@ void StandardMailActionManager::setItemSelectionModel( QItemSelectionModel* sele
            SLOT( updateActions() ) );
 
   //to catch item modifications, listen to the model's dataChanged signal as well
-  connect( selectionModel->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+  connect( selectionModel->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
            SLOT( updateActions() ) );
-
 
   d->updateActions();
 }
@@ -627,7 +546,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Mark selected messages as read" ) );
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
-      action->setData( QByteArray("R") );
+      action->setData( QByteArray( "R" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsUnread:
@@ -636,7 +555,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
-      action->setData( QByteArray("U") );
+      action->setData( QByteArray( "U" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsImportant:
@@ -645,7 +564,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setText( i18n( "&Mark Mail as Important" ) );
       d->mActions.insert( MarkMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_important" ), action );
-      action->setData( QByteArray("G") );
+      action->setData( QByteArray( "G" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkMailAsActionItem:
@@ -654,7 +573,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_action_item" ), action );
-      action->setData( QByteArray("K") );
+      action->setData( QByteArray( "K" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
     case MarkAllMailAsRead:
@@ -663,7 +582,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setText( i18n( "Mark &All Mails as Read" ) );
       d->mActions.insert( MarkAllMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_read" ), action );
-      action->setData( QByteArray("R") );
+      action->setData( QByteArray( "R" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsUnread:
@@ -673,7 +592,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
       action->setShortcut( Qt::CTRL+Qt::Key_U );
-      action->setData( QByteArray("U") );
+      action->setData( QByteArray( "U" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsImportant:
@@ -682,7 +601,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-important" ) ) );
       d->mActions.insert( MarkAllMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_important" ), action );
-      action->setData( QByteArray("G") );
+      action->setData( QByteArray( "G" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
     case MarkAllMailAsActionItem:
@@ -818,7 +737,5 @@ void StandardMailActionManager::setFavoriteSelectionModel( QItemSelectionModel *
 {
   d->mGenericManager->setFavoriteSelectionModel( selectionModel );
 }
-
-
 
 #include "standardmailactionmanager.moc"
