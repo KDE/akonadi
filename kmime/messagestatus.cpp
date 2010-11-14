@@ -207,7 +207,7 @@ bool Akonadi::MessageStatus::isOfUnknownStatus() const
 
 bool Akonadi::MessageStatus::isUnread() const
 {
-  return ( mStatus & StatusUnread && !( mStatus & StatusIgnored ) );
+  return ( ( ( mStatus & StatusUnread ) || !(mStatus & StatusRead ) ) && !( mStatus & StatusIgnored ) );
 }
 
 bool Akonadi::MessageStatus::isRead() const
