@@ -26,16 +26,16 @@
 
 #include <kicon.h>
 #include <klocale.h>
+#include <ksqueezedtextlabel.h>
 
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
 #include <QtGui/QToolButton>
 
 TagWidget::TagWidget( QWidget *parent )
   : QWidget( parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
-  mTagLabel = new QLabel;
+  mTagLabel = new KSqueezedTextLabel;
   mTagLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   layout->addWidget( mTagLabel );
 
@@ -80,7 +80,7 @@ void TagWidget::updateView()
     text += tag.genericLabel() + separator;
   }
 
-  mTagLabel->setText( text );
+  qobject_cast<KSqueezedTextLabel*>( mTagLabel )->setText( text );
 }
 
 #include "tagwidget.h"
