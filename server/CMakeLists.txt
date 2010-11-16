@@ -179,8 +179,10 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
-  ${SOPRANO_LIBRARIES}
 )
+if(Soprano_FOUND)
+  target_link_libraries(akonadiprivate ${SOPRANO_LIBRARIES})
+endif()
 if(NOT WINCE)
     target_link_libraries( akonadiprivate ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif(NOT WINCE)
