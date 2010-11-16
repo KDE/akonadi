@@ -22,19 +22,21 @@
 
 #include "messagestatus.h"
 
-#include <KDE/KDebug>
-#include <QString>
 #include "messageflags.h"
+
+#include <KDE/KDebug>
+
+#include <QtCore/QString>
 
 /** The message status format. These can be or'd together.
     Note, that the StatusIgnored implies the
-    status to be Read even if the flags are set
-    to Unread. This is done in isRead()
-    and related getters. So we can preserve the state
-    when switching a thread to Ignored and back. */
+    status to be Read. 
+    This is done in isRead() and related getters.
+    So we can preserve the state when switching a
+    thread to Ignored and back. */
 enum Status {
     StatusUnknown =           0x00000000,
-    StatusUnread =            0x00000002,
+    StatusUnread =            0x00000002, // deprecated
     StatusRead =              0x00000004,
     StatusDeleted =           0x00000010,
     StatusReplied =           0x00000020,
@@ -77,6 +79,12 @@ bool Akonadi::MessageStatus::operator != ( const Akonadi::MessageStatus &other )
 
 bool Akonadi::MessageStatus::operator & ( const Akonadi::MessageStatus &other ) const
 {
+  if ( mStatus == StatusUnread )
+    return !(other.mStatus & StatusRead);
+
+  if ( other.mStatus == StatusUnread )
+    return !(mStatus & StatusRead);
+
   return ( mStatus & other.mStatus );
 }
 
@@ -87,12 +95,11 @@ void Akonadi::MessageStatus::clear()
 
 void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
 {
+  Q_ASSERT( !(other.mStatus & StatusUnread) );
+
   // Those stati are exclusive, but we have to lock at the
   // internal representation because Ignored can manipulate
   // the result of the getter methods.
-  if ( other.mStatus & StatusUnread ) {
-    setUnread();
-  }
   if ( other.mStatus & StatusRead ) {
     setRead();
   }
@@ -149,6 +156,8 @@ void Akonadi::MessageStatus::set( const Akonadi::MessageStatus &other )
 
 void Akonadi::MessageStatus::toggle( const Akonadi::MessageStatus &other )
 {
+  Q_ASSERT( !(other.mStatus & StatusUnread) );
+
   if ( other.isDeleted() ) {
     setDeleted( !( mStatus & StatusDeleted ) );
   }
@@ -205,14 +214,9 @@ bool Akonadi::MessageStatus::isOfUnknownStatus() const
   return ( mStatus == StatusUnknown );
 }
 
-bool Akonadi::MessageStatus::isUnread() const
-{
-  return ( ( ( mStatus & StatusUnread ) || !(mStatus & StatusRead ) ) && !( mStatus & StatusIgnored ) );
-}
-
 bool Akonadi::MessageStatus::isRead() const
 {
-  return ( mStatus & StatusRead || mStatus & StatusIgnored );
+  return ( (mStatus & StatusRead) || (mStatus & StatusIgnored) );
 }
 
 bool Akonadi::MessageStatus::isDeleted() const
@@ -296,18 +300,13 @@ bool Akonadi::MessageStatus::hasError() const
 }
 
 
-void Akonadi::MessageStatus::setUnread()
+void Akonadi::MessageStatus::setRead( bool read )
 {
-  // unread overrides read
-  mStatus &= ~StatusRead;
-  mStatus |= StatusUnread;
-}
-
-void Akonadi::MessageStatus::setRead()
-{
-  // Unset unread and set read
-  mStatus &= ~StatusUnread;
-  mStatus |= StatusRead;
+  if ( read ) {
+    mStatus |= StatusRead;
+  } else {
+    mStatus &= ~StatusRead;
+  }
 }
 
 void Akonadi::MessageStatus::setDeleted( bool deleted )
@@ -350,8 +349,6 @@ void Akonadi::MessageStatus::setSent( bool sent )
 {
   if ( sent ) {
     mStatus &= ~StatusQueued;
-    // FIXME to be discussed if sent messages are Read
-    mStatus &= ~StatusUnread;
     mStatus |= StatusSent;
   } else {
     mStatus &= ~StatusSent;
@@ -477,11 +474,10 @@ void Akonadi::MessageStatus::fromQInt32( qint32 status )
 QString Akonadi::MessageStatus::statusStr() const
 {
   QByteArray sstr;
-  if ( mStatus & StatusUnread ) {
-    sstr += 'U';
-  }
   if ( mStatus & StatusRead ) {
     sstr += 'R';
+  } else {
+    sstr += 'U';
   }
   if ( mStatus & StatusDeleted ) {
     sstr += 'D';
@@ -528,7 +524,7 @@ void Akonadi::MessageStatus::setStatusFromStr( const QString& aStr )
   mStatus = StatusUnknown;
 
   if ( aStr.contains( QLatin1Char( 'U' ) ) ) {
-    setUnread();
+    setRead( false );
   }
   if ( aStr.contains( QLatin1Char( 'R' ) ) ) {
     setRead();
@@ -625,7 +621,6 @@ QSet<QByteArray> Akonadi::MessageStatus::statusFlags() const
 void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
 {
   mStatus = StatusUnknown;
-  setUnread();
 
   foreach ( const QByteArray &flag, flags ) {
     const QByteArray &upperedFlag = flag.toUpper();
@@ -673,126 +668,126 @@ void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
   }
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusRead()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusUnread()
+{
+  Akonadi::MessageStatus st;
+  st.mStatus = StatusUnread;
+  return st;
+}
+
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusRead()
 {
   Akonadi::MessageStatus st;
   st.setRead();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusUnread()
-{
-  Akonadi::MessageStatus st;
-  st.setUnread();
-  return st;
-}
-
-Akonadi::MessageStatus Akonadi::MessageStatus::statusDeleted()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusDeleted()
 {
   Akonadi::MessageStatus st;
   st.setDeleted();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusReplied()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusReplied()
 {
   Akonadi::MessageStatus st;
   st.setReplied();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusForwarded()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusForwarded()
 {
   Akonadi::MessageStatus st;
   st.setForwarded();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusQueued()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusQueued()
 {
   Akonadi::MessageStatus st;
   st.setQueued();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusSent()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusSent()
 {
   Akonadi::MessageStatus st;
   st.setSent();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusImportant()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusImportant()
 {
   Akonadi::MessageStatus st;
   st.setImportant();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusWatched()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusWatched()
 {
   Akonadi::MessageStatus st;
   st.setWatched();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusIgnored()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusIgnored()
 {
   Akonadi::MessageStatus st;
   st.setIgnored();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusToAct()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusToAct()
 {
   Akonadi::MessageStatus st;
   st.setToAct();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusSpam()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusSpam()
 {
   Akonadi::MessageStatus st;
   st.setSpam();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusHam()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusHam()
 {
   Akonadi::MessageStatus st;
   st.setHam();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusHasAttachment()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusHasAttachment()
 {
   Akonadi::MessageStatus st;
   st.setHasAttachment();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusHasInvitation()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusHasInvitation()
 {
   MessageStatus st;
   st.setHasInvitation();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusSigned()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusSigned()
 {
   MessageStatus st;
   st.setSigned();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusEncrypted()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusEncrypted()
 {
   MessageStatus st;
   st.setEncrypted();
   return st;
 }
 
-Akonadi::MessageStatus Akonadi::MessageStatus::statusHasError()
+const Akonadi::MessageStatus Akonadi::MessageStatus::statusHasError()
 {
   MessageStatus st;
   st.setHasError();

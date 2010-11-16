@@ -43,8 +43,6 @@ namespace Akonadi {
   values can't be set at the same time, however they can
   be unset at the same time.
 
-  The stati Unread/Read are mutually exclusive
-
   Note that this class does not sync with the Akonadi storage. It is
   used as an in-memory helper when manipulating Akonadi items.
 
@@ -92,8 +90,6 @@ class AKONADI_KMIME_EXPORT MessageStatus
     /** Toggle one or more stati described by another MessageStatus object.
         Internally the setters are used to ensure the integrity of the
         resulting status.
-        Toggling of the stati Unread, Read is not supported.
-        These stati are completely ignored.
     */
     void toggle( const MessageStatus &other );
 
@@ -103,12 +99,6 @@ class AKONADI_KMIME_EXPORT MessageStatus
         @return true if status is unknown.
     */
     bool isOfUnknownStatus() const;
-
-    /** Check for Unread status.
-        Ignored messages are not unread.
-        @return true if status is unread.
-    */
-    bool isUnread() const;
 
     /** Check for Read status. Note that ignored messages are read.
         @return true if status is read.
@@ -197,11 +187,8 @@ class AKONADI_KMIME_EXPORT MessageStatus
 
     /* ----- setters ----------------------------------------------------- */
 
-    /** Set the status to unread. */
-    void setUnread();
-
     /** Set the status to read. */
-    void setRead();
+    void setRead( bool read = true );
 
     /** Set the status for deleted.
         @param deleted Set (true) or unset (false) this status flag.
@@ -328,113 +315,112 @@ class AKONADI_KMIME_EXPORT MessageStatus
 
     /* ----- static accessors to simple states --------------------------- */
 
+    /** Return a special status that expresses Unread.
+        This status can only be used for comparison with other states.
+    */
+    static const MessageStatus statusUnread();
+
     /** Return a predefined status initialized as Read as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Read.
     */
-    static MessageStatus statusRead();
-
-    /** Return a predefined status initialized as Unread as is useful
-        e.g. when providing a state for comparison.
-        @return A reference to a status instance initialized as Unread.
-    */
-    static MessageStatus statusUnread();
+    static const MessageStatus statusRead();
 
     /** Return a predefined status initialized as Deleted as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Deleted.
     */
-    static MessageStatus statusDeleted();
+    static const MessageStatus statusDeleted();
 
     /** Return a predefined status initialized as Replied as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Replied.
     */
-    static MessageStatus statusReplied();
+    static const MessageStatus statusReplied();
 
     /** Return a predefined status initialized as Forwarded as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Forwarded.
     */
-    static MessageStatus statusForwarded();
+    static const MessageStatus statusForwarded();
 
     /** Return a predefined status initialized as Queued as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Queued.
     */
-    static MessageStatus statusQueued();
+    static const MessageStatus statusQueued();
 
     /** Return a predefined status initialized as Sent as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Sent.
     */
-    static MessageStatus statusSent();
+    static const MessageStatus statusSent();
 
     /** Return a predefined status initialized as Important as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Important.
     */
-    static MessageStatus statusImportant();
+    static const MessageStatus statusImportant();
 
     /** Return a predefined status initialized as Watched as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Watched.
     */
-    static MessageStatus statusWatched();
+    static const MessageStatus statusWatched();
 
     /** Return a predefined status initialized as Ignored as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Ignored.
     */
-    static MessageStatus statusIgnored();
+    static const MessageStatus statusIgnored();
 
     /** Return a predefined status initialized as Action Item as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as ToAct.
     */
-    static MessageStatus statusToAct();
+    static const MessageStatus statusToAct();
 
     /** Return a predefined status initialized as Spam as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Spam.
     */
-    static MessageStatus statusSpam();
+    static const MessageStatus statusSpam();
 
     /** Return a predefined status initialized as Ham as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Ham.
     */
-    static MessageStatus statusHam();
+    static const MessageStatus statusHam();
 
     /** Return a predefined status initialized as Attachment as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Attachment.
     */
-    static MessageStatus statusHasAttachment();
+    static const MessageStatus statusHasAttachment();
 
     /** Return a predefined status initialized as Invitation as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Invitation.
     */
-    static MessageStatus statusHasInvitation();
+    static const MessageStatus statusHasInvitation();
 
     /** Return a predefined status initialized as Signed as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Signed.
     */
-    static MessageStatus statusSigned();
+    static const MessageStatus statusSigned();
 
     /** Return a predefined status initialized as Encrypted as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Encrypted.
     */
-    static MessageStatus statusEncrypted();
+    static const MessageStatus statusEncrypted();
 
     /** Return a predefined status initialized as Error as is useful
         e.g. when providing a state for comparison.
         @return A reference to a status instance initialized as Error.
     */
-    static MessageStatus statusHasError();
+    static const MessageStatus statusHasError();
 
   private:
     quint32 mStatus;

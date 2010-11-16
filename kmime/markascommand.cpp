@@ -26,17 +26,17 @@
 
 MarkAsCommand::MarkAsCommand( const Akonadi::MessageStatus& targetStatus, const Akonadi::Item::List& msgList, bool invert, QObject* parent): CommandBase( parent )
 {
-  mInvertMark = targetStatus.isUnread() ? !invert : invert;
+  mInvertMark = invert;
   mMessages = msgList;
-  mTargetStatus = targetStatus.isUnread() ? Akonadi::MessageStatus::statusRead() : targetStatus;
+  mTargetStatus = targetStatus;
   mFolderListJobCount = 0;
 }
 
 MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const Akonadi::Collection::List& folders, bool invert, QObject* parent): CommandBase( parent )
 {
-  mInvertMark = targetStatus.isUnread() ? !invert : invert;
+  mInvertMark = invert;
   mFolders = folders;
-  mTargetStatus = targetStatus.isUnread() ? Akonadi::MessageStatus::statusRead() : targetStatus;
+  mTargetStatus = targetStatus;
   mFolderListJobCount = mFolders.size();  
 }
 
