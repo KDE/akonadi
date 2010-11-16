@@ -140,18 +140,21 @@ endif(STATIC_LIBRARY)
 # 2/ We're running CMake in kdesupport but Soprano won't be built. we look for installed headers.
 # 3/ We're just building akonadi. We look for the Soprano headers.
 
-if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
-  if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
-    message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
-    set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano ${KDESupport_SOURCE_DIR}/soprano/soprano ${KDESupport_BINARY_DIR}/soprano)
-    set (SOPRANO_LIBRARIES soprano)
-    set (Soprano_FOUND TRUE)
-  endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
-endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+if (NOT WINCE)
+  if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
+    if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
+      message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
+      set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano ${KDESupport_SOURCE_DIR}/soprano/soprano ${KDESupport_BINARY_DIR}/soprano)
+      set (SOPRANO_LIBRARIES soprano)
+      set (Soprano_FOUND TRUE)
+    endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
+  endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
 
-if(NOT Soprano_FOUND)
-  find_package(Soprano)
-endif(NOT Soprano_FOUND)
+  if(NOT Soprano_FOUND)
+    find_package(Soprano)
+  endif(NOT Soprano_FOUND)
+
+endif(NOT WINCE)
 
 if(AKONADI_USE_STRIGI_SEARCH)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is required for the Nepomuk search backend")
