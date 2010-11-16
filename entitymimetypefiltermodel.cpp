@@ -105,6 +105,13 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelInd
 
   const QString rowMimetype = idx.data( EntityTreeModel::MimeTypeRole ).toString();
 
+  const Akonadi::Item item = idx.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  if ( item.isValid() && !item.hasPayload() ) {
+    kDebug() << "Item " << item.id() << " doesn't have payload";
+    return false;
+  }
+
   if ( d->excludedMimeTypes.contains( rowMimetype ) )
     return false;
   if ( d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains( rowMimetype ) )
