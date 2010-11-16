@@ -117,6 +117,11 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
      */
     Akonadi::Collection currentCollection() const;
 
+#ifdef Q_OS_WINCE
+    /** reimp */ void showPopup();
+    /** reimp */ void hidePopup();
+#endif
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the current selection

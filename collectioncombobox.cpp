@@ -161,4 +161,22 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
     return Akonadi::Collection();
 }
 
+#ifdef Q_OS_WINCE
+// Usually the popup appears below or above the combo, depending on the available space.
+// If embedded in a QGV, it will always appear below, and will be cut off if it doesn't
+// have space.
+// Here's an hack/workaround until we figure something better.
+  void CollectionComboBox::showPopup()
+  {
+    setAttribute( Qt::WA_DontShowOnScreen, false );
+    KComboBox::showPopup();
+  }
+
+  void CollectionComboBox::hidePopup()
+  {
+    setAttribute( Qt::WA_DontShowOnScreen, true );
+    KComboBox::hidePopup();
+  }
+#endif
+
 #include "collectioncombobox.moc"
