@@ -153,7 +153,11 @@ if(NOT Soprano_FOUND)
   find_package(Soprano)
 endif(NOT Soprano_FOUND)
 
-macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "" "Soprano is required to build Akonadi")
+if(AKONADI_USE_STRIGI_SEARCH)
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is required for the Nepomuk search backend")
+elseif()
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "" "Soprano is required to build Akonadi")
+endif()
 
 #### Automoc ####
 find_package(Automoc4 REQUIRED)
@@ -277,6 +281,9 @@ make_install_path_absolute(AKONADI_XDG_MIME_DIR        ${XDG_MIME_INSTALL_DIR})
 
 ############### Generate files ###############
 
+if (Soprano_FOUND)
+  set(HAVE_SOPRANO TRUE)
+endif (Soprano_FOUND)
 configure_file(akonadi-prefix.h.cmake ${Akonadi_BINARY_DIR}/akonadi-prefix.h)
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 configure_file(AkonadiConfig.cmake.in "${Akonadi_BINARY_DIR}/AkonadiConfig.cmake" @ONLY)

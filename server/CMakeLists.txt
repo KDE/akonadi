@@ -85,13 +85,8 @@ set(libakonadiprivate_SRCS
   src/handler/transaction.cpp
 
   src/search/agentsearchengine.cpp
-  src/search/nepomuksearchengine.cpp
   src/search/searchmanager.cpp
   src/search/xesamsearchengine.cpp
-
-  src/nepomuk/dbusoperators.cpp
-  src/nepomuk/queryserviceclient.cpp
-  src/nepomuk/result.cpp
 
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
@@ -125,13 +120,29 @@ set(libakonadiprivate_SRCS
   src/notificationsource.cpp
   src/resourcemanager.cpp
   src/cachecleaner.cpp
-  src/nepomuksearch.cpp
   src/xesamsearch.cpp
   src/debuginterface.cpp
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp
   src/preprocessormanager.cpp
 )
+
+if (Soprano_FOUND)
+  set(libakonadiprivate_SRCS
+    ${libakonadiprivate_SRCS}
+    src/nepomuksearch.cpp
+    src/search/nepomuksearchengine.cpp
+    src/nepomuk/dbusoperators.cpp
+    src/nepomuk/queryserviceclient.cpp
+    src/nepomuk/result.cpp
+  )
+
+  set_source_files_properties(src/nepomuk/org.kde.nepomuk.QueryService.xml PROPERTIES INCLUDE "querymetatype.h")
+  set_source_files_properties(src/nepomuk/org.kde.nepomuk.Query.xml PROPERTIES INCLUDE "result.h")
+
+  qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.QueryService.xml queryserviceinterface)
+  qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.Query.xml queryinterface)
+endif (Soprano_FOUND)
 
 qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
 
@@ -154,12 +165,6 @@ set(xesam_xml  ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.xesam.Search.xml
 set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
 
 qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
-
-set_source_files_properties(src/nepomuk/org.kde.nepomuk.QueryService.xml PROPERTIES INCLUDE "querymetatype.h")
-set_source_files_properties(src/nepomuk/org.kde.nepomuk.Query.xml PROPERTIES INCLUDE "result.h")
-
-qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.QueryService.xml queryserviceinterface)
-qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.Query.xml queryinterface)
 
 qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
 

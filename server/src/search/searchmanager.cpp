@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 
+#include "config-akonadi.h"
 #include "searchmanager.h"
 #include <akdebug.h>
 #include "agentsearchengine.h"
@@ -42,7 +43,11 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
   m_engines.reserve( searchEngines.size() );
   foreach ( const QString &engineName, searchEngines ) {
     if ( engineName == QLatin1String( "Nepomuk" ) ) {
+#ifdef HAVE_SOPRANO
       m_engines.append( new NepomukSearchEngine );
+#else
+      akError() << "Akonadi has been built without Nepomuk support!";
+#endif
     } else if ( engineName == QLatin1String( "Agent" ) ) {
       m_engines.append( new AgentSearchEngine );
     } else if ( engineName == QLatin1String( "Xesam" ) ) {
