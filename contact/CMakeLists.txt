@@ -120,8 +120,12 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kmime
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
-                                      ${KDE4_KIO_LIBS}
+                                      ${KDE4_KIO_LIBS})
+if(NOT WINCE)
+target_link_libraries(akonadi-contact akonadi-kde
                                       ${NEPOMUK_LIBRARIES})
+endif(NOT WINCE)
+
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc

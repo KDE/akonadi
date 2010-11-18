@@ -15,8 +15,12 @@ target_link_libraries(akonadi-calendar    akonadi-kde
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
                                       ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS}
+                                      ${KDE4_PHONON_LIBS})
+
+if(NOT WINCE)
+target_link_libraries(akonadi-calendar 
                                       ${NEPOMUK_LIBRARIES})
+endif(NOT WINCE)
 
 set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
