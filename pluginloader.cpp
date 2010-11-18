@@ -28,6 +28,10 @@
 
 #include <QtCore/QDebug>
 
+#ifdef _WIN32_WCE
+ #include <QMessageBox>
+#endif
+
 using namespace Akonadi;
 
 PluginMetaData::PluginMetaData()
@@ -80,10 +84,19 @@ QObject* PluginLoader::createForName( const QString & name )
   //First try to load it staticly
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
     if(QLatin1String(plugin->metaObject()->className()) == info.className) {
+      info.loaded = true;
       return plugin;
       break;
     }
   }
+  
+#ifdef _WIN32_WCE
+    QString errMessage;
+    errMessage.append(QLatin1String("plugin \""));
+    errMessage.append(name);
+    errMessage.append(QLatin1String("\" is not buildin static, please specify this information in the bugreport."));
+    QMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
+#endif
 
   if ( !info.loaded ) {
     KPluginLoader* loader = new KPluginLoader( info.library );
