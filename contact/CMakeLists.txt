@@ -7,6 +7,12 @@ include_directories(
     ${SOPRANO_INCLUDE_DIR}
 )
 
+if (SopranoFOUND)
+  include_directories(
+      ${SOPRANO_INCLUDE_DIR}
+  )
+endif (SopranoFOUND)
+
 add_subdirectory(tests)
 add_subdirectory(kcm)
 add_subdirectory(editor/im)
