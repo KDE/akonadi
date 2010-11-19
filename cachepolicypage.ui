@@ -72,17 +72,29 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="KEditListBox" name="localParts">
+         <widget class="QGroupBox" name="groupBox_2">
+           <property name="title">
+	     <string>Locally Cached Parts</string>
+	   </property>
+	   <layout class="QGridLayout" name="gridLayout">
+	     <item row="0" column="0">
+	       <widget class="KEditListWidget" name="localParts">
          <property name="enabled">
           <bool>false</bool>
          </property>
-         <property name="title">
-          <string>Locally Cached Parts</string>
+         <property name="buttons">
+           <set>KEditListWidget::Add|KEditListWidget::Remove</set>
+         </property>
+         <property name="title" stdset="0">
+	 <string>Locally Cached Parts</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
+      </item>
+      </layout>
+      </widget>
      <widget class="QWidget" name="endUserPage">
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <property name="margin">
@@ -162,10 +174,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KEditListBox</class>
-   <extends>QGroupBox</extends>
-   <header>keditlistbox.h</header>
-   <container>1</container>
+   <class>KEditListWidget</class>
+   <extends>QWidget</extends>
+   <header>keditlistwidget.h</header>
   </customwidget>
   <customwidget>
    <class>KIntNumInput</class>
