@@ -4,7 +4,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/kabc
-    ${SOPRANO_INCLUDE_DIR}
 )
 
 if (SopranoFOUND)
