@@ -6,11 +6,11 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kabc
 )
 
-if (SopranoFOUND)
+if (Soprano_FOUND)
   include_directories(
       ${SOPRANO_INCLUDE_DIR}
   )
-endif (SopranoFOUND)
+endif (Soprano_FOUND)
 
 add_subdirectory(tests)
 add_subdirectory(kcm)
