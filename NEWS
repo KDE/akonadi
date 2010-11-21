@@ -1,3 +1,23 @@
+1.4.80                       21-November-2010
+---------------------------------------------
+- Experimental support for MeeGo.
+- Return changed revision numbers in STORE response.
+- Fix Nepomuk searches mixing up items and email attachments.
+- Experimental Strigi search backend.
+- Compensate for Nepomuk D-Bus API breakage.
+- Fix parsing of serialization format version.
+- Optimize collection statistics queries.
+- Optimize protocol output generation.
+- Optimize protocol parsing.
+- Build-time configurable default database backend.
+- Fix ancestor chain quoting.
+- Fix finding of components on Windows in install location.
+- New subscription interface for change notifications.
+- Support for in-process agents and agent server.
+- Support for Sqlite.
+- Experimental support for ODBC-based database backends.
+- Support Windows CE.
+
 1.4.1                         22-October-2010
 ---------------------------------------------
 - Improve range query performance.
