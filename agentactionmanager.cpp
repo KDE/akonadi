@@ -24,6 +24,7 @@
 #include "agentinstancemodel.h"
 #include "agentmanager.h"
 #include "agenttypedialog.h"
+#include "metatypes.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -36,8 +37,6 @@
 
 #include <boost/static_assert.hpp>
 
-Q_DECLARE_METATYPE(QModelIndex)
-
 using namespace Akonadi;
 
 //@cond PRIVATE
@@ -48,14 +47,14 @@ static const struct {
   const char *icon;
   int shortcut;
   const char* slot;
-} actionData[] = {
+} agentActionData[] = {
   { "akonadi_agentinstance_create", I18N_NOOP( "&New Agent Instance..." ), "folder-new", 0, SLOT( slotCreateAgentInstance() ) },
   { "akonadi_agentinstance_delete", I18N_NOOP( "&Delete Agent Instance" ), "edit-delete", 0, SLOT( slotDeleteAgentInstance() ) },
   { "akonadi_agentinstance_configure", I18N_NOOP( "&Configure Agent Instance" ), "configure", 0, SLOT( slotConfigureAgentInstance() ) }
 };
-static const int numActionData = sizeof actionData / sizeof *actionData;
+static const int numAgentActionData = sizeof agentActionData / sizeof *agentActionData;
 
-BOOST_STATIC_ASSERT( numActionData == AgentActionManager::LastType );
+BOOST_STATIC_ASSERT( numAgentActionData == AgentActionManager::LastType );
 
 /**
  * @internal
@@ -248,22 +247,22 @@ void AgentActionManager::setCapabilityFilter( const QStringList &capabilities )
 KAction* AgentActionManager::createAction( Type type )
 {
   Q_ASSERT( type >= 0 && type < LastType );
-  Q_ASSERT( actionData[ type ].name );
+  Q_ASSERT( agentActionData[ type ].name );
   if ( d->mActions[ type ] )
     return d->mActions[ type ];
 
   KAction *action = new KAction( d->mParentWidget );
-  action->setText( i18n( actionData[ type ].label ) );
+  action->setText( i18n( agentActionData[ type ].label ) );
 
-  if ( actionData[ type ].icon )
-    action->setIcon( KIcon( QString::fromLatin1( actionData[ type ].icon ) ) );
+  if ( agentActionData[ type ].icon )
+    action->setIcon( KIcon( QString::fromLatin1( agentActionData[ type ].icon ) ) );
 
-  action->setShortcut( actionData[ type ].shortcut );
+  action->setShortcut( agentActionData[ type ].shortcut );
 
-  if ( actionData[ type ].slot )
-    connect( action, SIGNAL( triggered() ), actionData[ type ].slot );
+  if ( agentActionData[ type ].slot )
+    connect( action, SIGNAL( triggered() ), agentActionData[ type ].slot );
 
-  d->mActionCollection->addAction( QString::fromLatin1( actionData[ type ].name), action );
+  d->mActionCollection->addAction( QString::fromLatin1( agentActionData[ type ].name), action );
   d->mActions[ type ] = action;
   d->updateActions();
 
@@ -292,9 +291,9 @@ void AgentActionManager::interceptAction( Type type, bool intercept )
     return;
 
   if ( intercept )
-    disconnect( action, SIGNAL( triggered() ), this, actionData[ type ].slot );
+    disconnect( action, SIGNAL( triggered() ), this, agentActionData[ type ].slot );
   else
-    connect( action, SIGNAL( triggered() ), actionData[ type ].slot );
+    connect( action, SIGNAL( triggered() ), agentActionData[ type ].slot );
 }
 
 AgentInstance::List AgentActionManager::selectedAgentInstances() const

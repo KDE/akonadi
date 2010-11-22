@@ -33,6 +33,7 @@
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
 #include "itemmodel.h"
+#include "metatypes.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute_p.h"
 #ifndef Q_OS_WINCE
@@ -57,8 +58,6 @@
 
 #include <boost/static_assert.hpp>
 
-Q_DECLARE_METATYPE(QModelIndex)
-
 using namespace Akonadi;
 
 //@cond PRIVATE
@@ -77,7 +76,7 @@ static const struct {
   int shortcut;
   const char* slot;
   ActionType actionType;
-} actionData[] = {
+} standardActionData[] = {
   { "akonadi_collection_create", I18N_NOOP( "&New Folder..." ), "folder-new", 0, SLOT( slotCreateCollection() ), NormalAction },
   { "akonadi_collection_copy", 0, "edit-copy", 0, SLOT( slotCopyCollections() ), NormalAction },
   { "akonadi_collection_delete", I18N_NOOP( "&Delete Folder" ), "edit-delete", 0, SLOT( slotDeleteCollection() ), NormalAction },
@@ -106,9 +105,9 @@ static const struct {
   { "akonadi_item_copy_to_dialog", I18N_NOOP( "Copy Item To..." ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
   { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction }
 };
-static const int numActionData = sizeof actionData / sizeof *actionData;
+static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
 
-BOOST_STATIC_ASSERT( numActionData == StandardActionManager::LastType );
+BOOST_STATIC_ASSERT( numStandardActionData == StandardActionManager::LastType );
 
 static bool canCreateCollection( const Collection &collection )
 {
@@ -1151,11 +1150,11 @@ void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *sele
 KAction* StandardActionManager::createAction( Type type )
 {
   Q_ASSERT( type < LastType );
-  Q_ASSERT( actionData[type].name );
+  Q_ASSERT( standardActionData[type].name );
   if ( d->actions[type] )
     return d->actions[type];
   KAction *action = 0;
-  switch ( actionData[type].actionType ) {
+  switch ( standardActionData[type].actionType ) {
     case NormalAction:
       action = new KAction( d->parentWidget );
       break;
@@ -1169,28 +1168,28 @@ KAction* StandardActionManager::createAction( Type type )
 
   if ( d->pluralLabels.contains( type ) && !d->pluralLabels.value( type ).isEmpty() )
     action->setText( d->pluralLabels.value( type ).subs( 1 ).toString() );
-  else if ( actionData[type].label )
-    action->setText( i18n( actionData[type].label ) );
+  else if ( standardActionData[type].label )
+    action->setText( i18n( standardActionData[type].label ) );
 
-  if ( actionData[type].icon )
-    action->setIcon( KIcon( QString::fromLatin1( actionData[type].icon ) ) );
+  if ( standardActionData[type].icon )
+    action->setIcon( KIcon( QString::fromLatin1( standardActionData[type].icon ) ) );
 
-  action->setShortcut( actionData[type].shortcut );
+  action->setShortcut( standardActionData[type].shortcut );
 
-  if ( actionData[type].slot ) {
-    switch ( actionData[type].actionType ) {
+  if ( standardActionData[type].slot ) {
+    switch ( standardActionData[type].actionType ) {
       case NormalAction:
-        connect( action, SIGNAL( triggered() ), actionData[type].slot );
+        connect( action, SIGNAL( triggered() ), standardActionData[type].slot );
         break;
       case MenuAction:
         {
           KActionMenu *actionMenu = qobject_cast<KActionMenu*>( action );
-          connect( actionMenu->menu(), SIGNAL( triggered( QAction* ) ), actionData[type].slot );
+          connect( actionMenu->menu(), SIGNAL( triggered( QAction* ) ), standardActionData[type].slot );
         }
         break;
       case ToggleAction:
         {
-          connect( action, SIGNAL( triggered( bool ) ), actionData[type].slot );
+          connect( action, SIGNAL( triggered( bool ) ), standardActionData[type].slot );
         }
         break;
     }
@@ -1198,14 +1197,14 @@ KAction* StandardActionManager::createAction( Type type )
 
   if ( type == ToggleWorkOffline ) {
     // inititalize the action state with information from config file
-    disconnect( action, SIGNAL( triggered( bool ) ), this, actionData[type].slot );
+    disconnect( action, SIGNAL( triggered( bool ) ), this, standardActionData[type].slot );
     action->setChecked( workOffline() );
-    connect( action, SIGNAL( triggered( bool ) ), this, actionData[type].slot );
+    connect( action, SIGNAL( triggered( bool ) ), this, standardActionData[type].slot );
 
     //TODO: find a way to check for updates to the config file
   }
 
-  d->actionCollection->addAction( QString::fromLatin1(actionData[type].name), action );
+  d->actionCollection->addAction( QString::fromLatin1(standardActionData[type].name), action );
   d->actions[type] = action;
   d->updateActions();
   return action;
@@ -1240,9 +1239,9 @@ void StandardActionManager::interceptAction( Type type, bool intercept )
     return;
 
   if ( intercept )
-    disconnect( action, SIGNAL( triggered() ), this, actionData[type].slot );
+    disconnect( action, SIGNAL( triggered() ), this, standardActionData[type].slot );
   else
-    connect( action, SIGNAL( triggered() ), actionData[type].slot );
+    connect( action, SIGNAL( triggered() ), standardActionData[type].slot );
 }
 
 Collection::List StandardActionManager::selectedCollections() const

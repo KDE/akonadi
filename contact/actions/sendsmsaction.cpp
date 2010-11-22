@@ -30,7 +30,7 @@
 #include <kmessagebox.h>
 #include <krun.h>
 
-static QString strippedNumber( const QString &number )
+static QString strippedSmsNumber( const QString &number )
 {
   QString result;
 
@@ -79,7 +79,7 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
    * %n the number with all additional non-number characters removed
    */
   command = command.replace( QLatin1String( "%N" ), phoneNumber.number() );
-  command = command.replace( QLatin1String( "%n" ), strippedNumber( number ) );
+  command = command.replace( QLatin1String( "%n" ), strippedSmsNumber( number ) );
   command = command.replace( QLatin1String( "%t" ), dlg.message() );
 
   KRun::runCommand( command, 0 );

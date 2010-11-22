@@ -33,7 +33,7 @@
 
 using namespace Akonadi;
 
-static QString strippedNumber( const QString &number )
+static QString strippedDialNumber( const QString &number )
 {
   QString result;
 
@@ -54,7 +54,7 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
   // we handle skype separated
   if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
     QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
-    if ( !dialer.dialNumber( strippedNumber( number.number().trimmed() ) ) ) {
+    if ( !dialer.dialNumber( strippedDialNumber( number.number().trimmed() ) ) ) {
       KMessageBox::sorry( 0, dialer.errorMessage() );
     }
     return;
@@ -72,7 +72,7 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
    * %n the number with all additional non-number characters removed
    */
   command = command.replace( QLatin1String( "%N" ), number.number() );
-  command = command.replace( QLatin1String( "%n" ), strippedNumber( number.number().trimmed() ) );
+  command = command.replace( QLatin1String( "%n" ), strippedDialNumber( number.number().trimmed() ) );
 
   KRun::runCommand( command, 0 );
 }
