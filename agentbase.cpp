@@ -160,6 +160,9 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mSettings( 0 ),
     mObserver( 0 )
 {
+#ifdef _WIN32_WCE
+  QThread::currentThread()->setPriority(QThread::LowPriority);
+#endif
   Internal::setClientType( Internal::Agent );
 }
 
