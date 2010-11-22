@@ -89,14 +89,6 @@ QObject* PluginLoader::createForName( const QString & name )
       break;
     }
   }
-  
-#ifdef _WIN32_WCE
-    QString errMessage;
-    errMessage.append(QLatin1String("plugin \""));
-    errMessage.append(name);
-    errMessage.append(QLatin1String("\" is not buildin static, please specify this information in the bugreport."));
-    QMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
-#endif
 
   if ( !info.loaded ) {
     KPluginLoader* loader = new KPluginLoader( info.library );
@@ -115,6 +107,16 @@ QObject* PluginLoader::createForName( const QString & name )
 
   QObject *object = loader->instance();
   if ( !object ) {
+#ifdef _WIN32_WCE
+	//Maybe filter out the default plugins, they should be found but...
+    //if ( !name.endsWith( QLatin1String( "@default" ) ) ) {
+      QString errMessage;
+      errMessage.append(QLatin1String("plugin \""));
+      errMessage.append(info.className);
+      errMessage.append(QLatin1String("\" is not buildin static, please specify this information in the bugreport."));
+      QMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
+    //}
+#endif
     kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
     kWarning( 5300 ) << "Error was:\"" << loader->errorString() << "\"." << endl;
     return 0;
