@@ -60,7 +60,7 @@
     <entry type="Enum" name="SendSmsAction">
       <choices>
         <choice name="UseSkypeSms"/>
-        <choise name="UseWinCESms"/>
+        <choice name="UseWinCESms"/>
         <choice name="UseExternalSmsApplication"/>
       </choices>
       <whatsthis>Defines which application shall be used to send an SMS to the phone number of a contact. If 'Skype' is selected the Skype application will be started (if installed on the computer) and the SMS is sent via Skype. If 'External Application' is selected, a command with placeholders can be defined.</whatsthis>
