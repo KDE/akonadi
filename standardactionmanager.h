@@ -304,6 +304,14 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     void setCapabilityFilter( const QStringList &capabilities );
 
+    /**
+     * Sets the page @p names of the config pages that will be used by the
+     * built-in collection properties dialog.
+     *
+     * @since 4.6
+     */
+    void setCollectionPropertiesPageNames( const QStringList &names );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.

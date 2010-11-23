@@ -518,7 +518,7 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, parentWidget );
+      CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
       dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( collection.name() ) );
       dlg->show();
 #endif
@@ -1095,6 +1095,7 @@ class StandardActionManager::Private
 
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
+    QStringList mCollectionPropertiesPageNames;
 };
 
 //@endcond
@@ -1294,6 +1295,11 @@ void StandardActionManager::setMimeTypeFilter( const QStringList &mimeTypes )
 void StandardActionManager::setCapabilityFilter( const QStringList &capabilities )
 {
   d->mCapabilityFilter = capabilities;
+}
+
+void StandardActionManager::setCollectionPropertiesPageNames( const QStringList &names )
+{
+  d->mCollectionPropertiesPageNames = names;
 }
 
 #include "standardactionmanager.moc"

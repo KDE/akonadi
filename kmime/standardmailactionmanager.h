@@ -185,6 +185,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      */
     void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
 
+    void setCollectionPropertiesPageNames( const QStringList &names );
 
   Q_SIGNALS:
     /**

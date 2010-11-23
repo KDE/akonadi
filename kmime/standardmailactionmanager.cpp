@@ -738,4 +738,9 @@ void StandardMailActionManager::setFavoriteSelectionModel( QItemSelectionModel *
   d->mGenericManager->setFavoriteSelectionModel( selectionModel );
 }
 
+void StandardMailActionManager::setCollectionPropertiesPageNames( const QStringList &names )
+{
+  d->mGenericManager->setCollectionPropertiesPageNames( names );
+}
+
 #include "standardmailactionmanager.moc"
