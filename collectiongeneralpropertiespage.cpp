@@ -30,9 +30,11 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage(QWidget * parent) :
-    CollectionPropertiesPage( parent )
+CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage( QWidget *parent )
+  : CollectionPropertiesPage( parent )
 {
+  setObjectName( QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" ) );
+
   setPageTitle( i18nc( "@title:tab general properties page", "General" ) );
   ui.setupUi( this );
 #ifdef KDEPIM_MOBILE_UI

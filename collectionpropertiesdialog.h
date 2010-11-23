@@ -64,6 +64,22 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
     explicit CollectionPropertiesDialog( const Collection &collection, QWidget *parent = 0 );
 
     /**
+     * Creates a new collection properties dialog.
+     *
+     * This constructor allows to specify the subset of registered pages that will
+     * be shown as well as their order. The pages have to set an objectName in their
+     * constructor to make it work. If an empty list is passed, all registered pages
+     * will be loaded.
+     *
+     * @param collection The collection which properties should be shown.
+     * @param pages The object names of the pages that shall be loaded.
+     * @param parent The parent widget.
+     *
+     * @since 4.6
+     */
+    CollectionPropertiesDialog( const Collection &collection, const QStringList &pages, QWidget *parent = 0 );
+
+    /**
      * Destroys the collection properties dialog.
      *
      * @note Never call manually, the dialog is deleted automatically once all changes

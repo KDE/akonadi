@@ -38,18 +38,20 @@ using namespace Akonadi;
 class CollectionPropertiesDialog::Private
 {
   public:
-    Private( CollectionPropertiesDialog *parent );
+    Private( CollectionPropertiesDialog *parent, const Akonadi::Collection &collection, const QStringList &pageNames );
+
+    void init();
 
     static void registerBuiltinPages();
 
     void save()
     {
-      for ( int i = 0; i < tabWidget->count(); ++i ) {
-        CollectionPropertiesPage *page = static_cast<CollectionPropertiesPage*>( tabWidget->widget( i ) );
-        page->save( collection );
+      for ( int i = 0; i < mTabWidget->count(); ++i ) {
+        CollectionPropertiesPage *page = static_cast<CollectionPropertiesPage*>( mTabWidget->widget( i ) );
+        page->save( mCollection );
       }
 
-      CollectionModifyJob *job = new CollectionModifyJob( collection, q );
+      CollectionModifyJob *job = new CollectionModifyJob( mCollection, q );
       connect( job, SIGNAL( result( KJob* ) ), q, SLOT( saveResult( KJob* ) ) );
     }
 
@@ -62,9 +64,10 @@ class CollectionPropertiesDialog::Private
       q->deleteLater();
     }
 
-    Collection collection;
-    KTabWidget* tabWidget;
     CollectionPropertiesDialog *q;
+    Collection mCollection;
+    QStringList mPageNames;
+    KTabWidget* mTabWidget;
 };
 
 typedef QList<CollectionPropertiesPageFactory*> CollectionPropertiesPageFactoryList;
@@ -73,7 +76,10 @@ K_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
 
 static bool s_defaultPage = true;
 
-CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *parent ) : q( parent )
+CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *qq, const Akonadi::Collection &collection, const QStringList &pageNames )
+  : q( qq ),
+    mCollection( collection ),
+    mPageNames( pageNames )
 {
   if ( s_pages->isEmpty() && s_defaultPage)
     registerBuiltinPages();
@@ -85,30 +91,63 @@ void CollectionPropertiesDialog::Private::registerBuiltinPages()
   s_pages->append( new CachePolicyPageFactory() );
 }
 
-
-CollectionPropertiesDialog::CollectionPropertiesDialog(const Collection & collection, QWidget * parent) :
-    KDialog( parent ),
-    d( new Private( this ) )
+void CollectionPropertiesDialog::Private::init()
 {
-  d->collection = collection;
-
-  QBoxLayout *layout = new QHBoxLayout( mainWidget() );
+  QBoxLayout *layout = new QHBoxLayout( q->mainWidget() );
   layout->setMargin( 0 );
-  d->tabWidget = new KTabWidget( mainWidget() );
-  layout->addWidget( d->tabWidget );
+  mTabWidget = new KTabWidget( q->mainWidget() );
+  layout->addWidget( mTabWidget );
 
-  foreach ( CollectionPropertiesPageFactory *factory, *s_pages ) {
-    CollectionPropertiesPage *page = factory->createWidget( d->tabWidget );
-    if ( page->canHandle( d->collection ) ) {
-      d->tabWidget->addTab( page, page->pageTitle() );
-      page->load( d->collection );
-    } else {
-      delete page;
+  if ( mPageNames.isEmpty() ) { // default loading
+    foreach ( CollectionPropertiesPageFactory *factory, *s_pages ) {
+      CollectionPropertiesPage *page = factory->createWidget( mTabWidget );
+      if ( page->canHandle( mCollection ) ) {
+        mTabWidget->addTab( page, page->pageTitle() );
+        page->load( mCollection );
+      } else {
+        delete page;
+      }
+    }
+  } else { // custom loading
+    QHash<QString, CollectionPropertiesPage*> pages;
+
+    foreach ( CollectionPropertiesPageFactory *factory, *s_pages ) {
+      CollectionPropertiesPage *page = factory->createWidget( mTabWidget );
+      const QString pageName = page->objectName();
+
+      if ( page->canHandle( mCollection ) && mPageNames.contains( pageName ) ) {
+        pages.insert( page->objectName(), page );
+      } else {
+        delete page;
+      }
+    }
+
+    foreach ( const QString &pageName, mPageNames ) {
+      CollectionPropertiesPage *page = pages.value( pageName );
+      if ( page ) {
+        mTabWidget->addTab( page, page->pageTitle() );
+        page->load( mCollection );
+      }
     }
   }
 
-  connect( this, SIGNAL( okClicked() ), SLOT( save() ) );
-  connect( this, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
+  q->connect( q, SIGNAL( okClicked() ), SLOT( save() ) );
+  q->connect( q, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
+}
+
+
+CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, QWidget *parent)
+  : KDialog( parent ),
+    d( new Private( this, collection, QStringList() ) )
+{
+  d->init();
+}
+
+CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, const QStringList &pages, QWidget *parent )
+  : KDialog( parent ),
+    d( new Private( this, collection, pages ) )
+{
+  d->init();
 }
 
 CollectionPropertiesDialog::~CollectionPropertiesDialog()
@@ -116,7 +155,7 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
   delete d;
 }
 
-void CollectionPropertiesDialog::registerPage(CollectionPropertiesPageFactory * factory)
+void CollectionPropertiesDialog::registerPage( CollectionPropertiesPageFactory *factory )
 {
   if ( s_pages->isEmpty() && s_defaultPage)
     Private::registerBuiltinPages();
