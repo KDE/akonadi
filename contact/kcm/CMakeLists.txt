@@ -6,6 +6,7 @@ set(kcm_akonadicontact_actions_SRCS
 
 qt4_wrap_ui(kcm_akonadicontact_actions_SRCS akonadicontactactions.ui)
 
+configure_file( ../actions/contactactionssettings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/contactactionssettings.kcfg @ONLY)
 kde4_add_kcfg_files(kcm_akonadicontact_actions_SRCS ../actions/contactactionssettings.kcfgc)
 
 kde4_add_plugin(kcm_akonadicontact_actions ${kcm_akonadicontact_actions_SRCS})

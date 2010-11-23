@@ -45,7 +45,7 @@
         <choice name="UseExternalPhoneApplication"/>
       </choices>
       <whatsthis>Defines which application shall be used to dial the phone number of a contact. If 'Skype' is selected the Skype application will be started (if installed on the computer) and the number is dialed. If 'External Application' is selected, a command with placeholders can be defined.</whatsthis>
-      <default>UseSkype</default>
+      <default>@AKONADI_PHONE_DIAL_DEFAULT@</default>
     </entry>
     <entry type="String" name="PhoneCommand">
       <label>Phone Command</label>
@@ -64,7 +64,7 @@
         <choice name="UseExternalSmsApplication"/>
       </choices>
       <whatsthis>Defines which application shall be used to send an SMS to the phone number of a contact. If 'Skype' is selected the Skype application will be started (if installed on the computer) and the SMS is sent via Skype. If 'External Application' is selected, a command with placeholders can be defined.</whatsthis>
-      <default>UseSkype</default>
+      <default>@AKONADI_SEND_SMS_DEFAULT@</default>
     </entry>
     <entry type="String" name="SmsCommand">
       <label>SMS Command</label>

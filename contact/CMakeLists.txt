@@ -11,6 +11,13 @@ if (Soprano_FOUND)
       ${SOPRANO_INCLUDE_DIR}
   )
 endif (Soprano_FOUND)
+if (WINCE)
+  set( AKONADI_PHONE_DIAL_DEFAULT "UseWinCE" )
+  set( AKONADI_SEND_SMS_DEFAULT "UseWinCESms" )
+else (WINCE)
+  set( AKONADI_PHONE_DIAL_DEFAULT "UseSkype" )
+  set( AKONADI_SEND_SMS_DEFAULT  "UseSkypeSms" )
+endif (WINCE)
 
 add_subdirectory(tests)
 add_subdirectory(kcm)
@@ -34,6 +41,8 @@ if (WINCE)
     actions/qwincedialer.cpp
   )
 endif (WINCE)
+
+configure_file( actions/contactactionssettings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/contactactionssettings.kcfg @ONLY)
 kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
 
 set(akonadicontact_editor_SRCS
