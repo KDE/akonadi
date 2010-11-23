@@ -11,11 +11,13 @@ set(akonadicalendar_LIB_SRC
 )
 kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 
-target_link_libraries(akonadi-calendar    akonadi-kde
-                                      kpimutils
-                                      ${KDE4_KDEUI_LIBS}
-                                      ${KDE4_KIO_LIBS}
-                                      ${KDE4_PHONON_LIBS})
+target_link_libraries(akonadi-calendar
+                      akonadi-kde
+                      kpimutils
+                      kcalcore
+                      ${KDE4_KDEUI_LIBS}
+                      ${KDE4_KIO_LIBS}
+                      ${KDE4_PHONON_LIBS})
 
 if(NOT WINCE)
 target_link_libraries(akonadi-calendar 

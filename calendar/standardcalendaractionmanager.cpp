@@ -21,16 +21,15 @@
 
 #include "standardcalendaractionmanager.h"
 
-#include <akonadi/agentinstance.h>
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
 #include <akonadi/entitytreemodel.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kcalcore/event.h>
+#include <kcalcore/journal.h>
+#include <kcalcore/todo.h>
 #include <klocale.h>
 
-#include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
 
 using namespace Akonadi;
@@ -218,112 +217,139 @@ class StandardCalendarActionManager::Private
       delete mGenericManager;
     }
 
+    static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
+    {
+      const Akonadi::Collection collection =
+        index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.isValid() ) {
+        if ( collection.contentMimeTypes().contains( mimeType ) &&
+             ( collection.rights() & Akonadi::Collection::CanCreateItem ) ) {
+          return true;
+        }
+      }
+
+      const QAbstractItemModel *model = index.model();
+      if ( !model )
+        return false;
+
+      for ( int row = 0; row < model->rowCount( index ); ++row ) {
+        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) )
+          return true;
+      }
+
+      return false;
+    }
+
+    bool hasWritableCollection( const QString &mimeType ) const
+    {
+      if ( !mCollectionSelectionModel )
+        return false;
+
+      const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
+      for ( int row = 0; row < collectionModel->rowCount(); ++row ) {
+        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) )
+          return true;
+      }
+
+      return false;
+    }
+
     void updateActions()
     {
-      //TODO impl
+      if ( !mItemSelectionModel )
+        return;
+
+      // update action labels
+      const int itemCount = mItemSelectionModel->selectedRows().count();
+      if ( itemCount == 1 ) {
+        const QModelIndex index = mItemSelectionModel->selectedRows().first();
+        if ( index.isValid() ) {
+          const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
+          if ( mimeType == KCalCore::Event::eventMimeType() ) {
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                            ki18np( "Copy Event", "Copy %1 Events" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                            ki18np( "Delete Event", "Delete %1 Events" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                            ki18np( "Cut Event", "Cut %1 Events" ) );
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+              mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Event..." ) );
+          } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                            ki18np( "Copy To-do", "Copy %1 To-dos" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                            ki18np( "Delete To-do", "Delete %1 To-dos" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                            ki18np( "Cut To-do", "Cut %1 To-dos" ) );
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+              mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit To-do..." ) );
+          } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                            ki18np( "Copy Journal", "Copy %1 Journals" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                            ki18np( "Delete Journal", "Delete %1 Journals" ) );
+            mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                            ki18np( "Cut Journal", "Cut %1 Journals" ) );
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+              mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Journal..." ) );
+          }
+        }
+      }
+
+      // update action states
+      if ( mActions.contains( StandardCalendarActionManager::CreateEvent ) )
+        mActions[ StandardCalendarActionManager::CreateEvent ]->setEnabled( hasWritableCollection( KCalCore::Event::eventMimeType() ) );
+      if ( mActions.contains( StandardCalendarActionManager::CreateTodo ) )
+        mActions[ StandardCalendarActionManager::CreateTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
+      if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
+        mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
+      if ( mActions.contains( StandardCalendarActionManager::CreateJournal ) )
+        mActions[ StandardCalendarActionManager::CreateJournal ]->setEnabled( hasWritableCollection( KCalCore::Journal::journalMimeType() ) );
+
+      if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) ) {
+        bool canEditItem = true;
+
+        // only one selected item can be edited
+        canEditItem = canEditItem && (itemCount == 1);
+
+        // check whether parent collection allows changing the item
+        const QModelIndexList rows = mItemSelectionModel->selectedRows();
+        if ( rows.count() == 1 ) {
+          const QModelIndex index = rows.first();
+          const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+          if ( parentCollection.isValid() )
+            canEditItem = canEditItem && (parentCollection.rights() & Collection::CanChangeItem);
+        }
+
+        mActions.value( StandardCalendarActionManager::EditIncidence )->setEnabled( canEditItem );
+      }
+
       emit mParent->actionStateUpdated();
     }
 
     void slotCreateEvent()
     {
-      if( mInterceptedActions.contains( StandardCalendarActionManager::CreateEvent ) )
-        return;
+      // dummy as long as there are no editors available in kdepimlibs/
     }
 
-    void slotMakeDefault()
+    void slotCreateTodo()
     {
-      if ( mInterceptedActions.contains( StandardCalendarActionManager::DefaultMake ) )
-        return;
-
-      if( mItemSelectionModel->selection().indexes().isEmpty() )
-        return;
-
-      const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return;
-
-      const Collection calendar = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-      if ( !calendar.isValid() )
-        return;
-
-      //TODO impl
+      // dummy as long as there are no editors available in kdepimlibs/
     }
 
-    void slotRemoveDefault()
+    void slotCreateSubTodo()
     {
-      if ( mInterceptedActions.contains( StandardCalendarActionManager::DefaultMake ) )
-        return;
-
-      if( mItemSelectionModel->selection().indexes().isEmpty() )
-        return;
-
-      const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
-        return;
-
-      const Collection calendar = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
-      if ( !calendar.isValid() )
-        return;
-
-      //TODO impl
+      // dummy as long as there are no editors available in kdepimlibs/
     }
 
-    void slotAddFavorite()
+    void slotCreateJournal()
     {
-      //TODO impl
+      // dummy as long as there are no editors available in kdepimlibs/
     }
 
-    void slotRemoveFavorite()
+    void slotEditIncidence()
     {
-      //TODO impl
-    }
-
-    void slotRenameFavorite()
-    {
-      //TODO impl
-    }
-
-    void slotEditEvent()
-    {
-      //TODO impl
-    }
-
-    void slotPublishItemInformation()
-    {
-      //TODO impl
-    }
-    void slotSendInvitations()
-    {
-      //TODO impl
-    }
-
-    void slotSendStatusUpdate()
-    {
-      //TODO impl
-    }
-
-    void slotSendCancellation()
-    {
-      //TODO impl
-    }
-
-    void slotSendAsICal()
-    {
-      //TODO impl
-    }
-
-    void slotMailFreeBusy()
-    {
-      //TODO impl
-    }
-
-    void slotUploadFeeBusy()
-    {
-      //TODO impl
-    }
-    void slotSaveAllAttachments()
-    {
-      //TODO impl
+      // dummy as long as there are no editors available in kdepimlibs/
     }
 
     KActionCollection *mActionCollection;
@@ -382,124 +408,47 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
   switch ( type ) {
     case CreateEvent:
       action = new KAction( d->mParentWidget );
-      action->setIcon( KIcon( QLatin1String( "event-new" ) ) );
-      action->setText( i18n( "New &Event..." ) );
+      action->setIcon( KIcon( QLatin1String( "appointment-new" ) ) );
+      action->setText( i18n( "New E&vent..." ) );
       action->setWhatsThis( i18n( "Create a new event" ) );
       d->mActions.insert( CreateEvent, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_event_create" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateEvent() ) );
       break;
-    case DefaultRemove:
+    case CreateTodo:
       action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Remove Default" ) );
-      action->setWhatsThis( i18n( "Remove the selected calendar as the default calendar. There can only be one default calendar at a time." ) );
-      d->mActions.insert( DefaultRemove, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_remove_default_calendar" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveDefault()) );
+      action->setIcon( KIcon( QLatin1String( "task-new" ) ) );
+      action->setText( i18n( "New &To-do..." ) );
+      action->setWhatsThis( i18n( "Create a new To-do" ) );
+      d->mActions.insert( CreateTodo, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_todo_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateTodo() ) );
       break;
-    case DefaultMake:
+    case CreateSubTodo:
       action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Make Default" ) );
-      action->setWhatsThis( i18n( "Make the selected calendar the default calendar, which will be loaded when the application starts. There can only be one default calendar at a time." ) );
-      d->mActions.insert( DefaultMake, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_make_default_calendar" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMakeDefault() ) );
+      action->setIcon( KIcon( QLatin1String( "new_subtodo" ) ) );
+      action->setText( i18n( "New Su&b-to-do..." ) );
+      action->setWhatsThis( i18n( "Create a new Sub-to-do" ) );
+      d->mActions.insert( CreateSubTodo, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_subtodo_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateSubTodo() ) );
       break;
-    case FavoriteAdd:
+    case CreateJournal:
       action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Add Calendar to Favorites" ) );
-      action->setWhatsThis( i18n( "Adds the calendar to your list of favorites." ) );
-      d->mActions.insert( FavoriteAdd, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "add_favorite" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotAddFavorite() ) );
+      action->setIcon( KIcon( QLatin1String( "journal-new" ) ) );
+      action->setText( i18n( "New &Journal..." ) );
+      action->setWhatsThis( i18n( "Create a new Journal" ) );
+      d->mActions.insert( CreateJournal, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_journal_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateJournal() ) );
       break;
-    case FavoriteRemove:
+    case EditIncidence:
       action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Remove Calendar from Favorites" ) );
-      action->setWhatsThis( i18n( "Removes the calendar from your list of favorites." ) );
-      d->mActions.insert( FavoriteRemove, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "remove_favorite" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRemoveFavorite() ) );
-      break;
-    case FavoriteRename:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Rename Favorite" ) );
-      action->setWhatsThis( i18n( "Allows you to change the name of the favorite." ) );
-      d->mActions.insert( FavoriteRename, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "rename_favorite" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotRenameFavorite() ) );
-      break;
-    case EventEdit:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Edit Event" ) );
-      action->setWhatsThis( i18n( "Edit the selected event." ) );
-      d->mActions.insert( EventEdit, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "event_edit" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditEvent() ) );
-      break;
-    case PublishItemInformation:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Publish Item Information" ) );
-      action->setWhatsThis( i18n( "FIXME Publishes the items information." ) );
-      d->mActions.insert( PublishItemInformation, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "publish_item_information" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotPublishItemInformation() ) );
-      break;
-    case SendInvitations:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "Send &Invitations" ) );
-      action->setWhatsThis( i18n( "FIXME Send Invitations" ) );
-      d->mActions.insert( SendInvitations, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "send_invitations" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendInvitations() ) );
-      break;
-    case SendStatusUpdate:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "Send Status &Update" ) );
-      action->setWhatsThis( i18n( "FIXME Status Update" ) );
-      d->mActions.insert( SendStatusUpdate, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "send_status_update" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendStatusUpdate() ) );
-      break;
-    case SendCancellation:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "Send &Cancellation" ) );
-      action->setWhatsThis( i18n( "FIXME Send Cancellation" ) );
-      d->mActions.insert( SendCancellation, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "send_cancellation" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendCancellation() ) );
-      break;
-    case SendAsICal:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "Send as I&Cal" ) );
-      action->setWhatsThis( i18n( "FIXME Send As ICal" ) );
-      d->mActions.insert( SendAsICal, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "send_as_ical" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSendAsICal() ) );
-      break;
-    case MailFreeBusy:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Mail Free/Busy" ) );
-      action->setWhatsThis( i18n( "FIXME Email Free/Busy information" ) );
-      d->mActions.insert( MailFreeBusy, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "mail_free_busy" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMailFreeBusy() ) );
-      break;
-    case UploadFeeBusy:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Upload Free/Busy" ) );
-      action->setWhatsThis( i18n( "FIXME Upload Free/Busy information to the groupware server." ) );
-      d->mActions.insert( UploadFeeBusy, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "upload_free_busy" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotUploadFeeBusy() ) );
-      break;
-    case SaveAllAttachments:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Save All Attachments" ) );
-      action->setWhatsThis( i18n( "FIXME Save all attachments." ) );
-      d->mActions.insert( SaveAllAttachments, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "save_all_attachments" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotSaveAllAttachments() ) );
+      action->setText( i18n( "&Edit..." ) );
+      action->setWhatsThis( i18n( "Edit the selected incidence." ) );
+      d->mActions.insert( EditIncidence, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_incidence_edit" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditIncidence() ) );
       break;
     default:
       Q_ASSERT( false ); // should never happen
@@ -517,6 +466,10 @@ KAction* StandardCalendarActionManager::createAction( StandardActionManager::Typ
 void StandardCalendarActionManager::createAllActions()
 {
   createAction( CreateEvent );
+  createAction( CreateTodo );
+  createAction( CreateSubTodo );
+  createAction( CreateJournal );
+  createAction( EditIncidence );
 
   d->mGenericManager->createAllActions();
   d->updateActions();
