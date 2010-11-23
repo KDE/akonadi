@@ -205,10 +205,10 @@ class AKONADI_EXPORT CollectionPropertiesPageFactory
  * @ingroup AkonadiMacros
  */
 #define AKONADI_COLLECTION_PROPERTIES_PAGE_FACTORY(factoryName, className) \
-class factoryName: public CollectionPropertiesPageFactory \
+class factoryName: public Akonadi::CollectionPropertiesPageFactory \
 { \
   public: \
-    inline CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const \
+    inline Akonadi::CollectionPropertiesPage* createWidget( QWidget *parent = 0 ) const \
     { \
       return new className( parent ); \
     } \
