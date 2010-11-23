@@ -38,7 +38,7 @@ namespace Akonadi
 
 class Item;
 /**
- * @short Manages contact specific actions for collection and item views.
+ * @short Manages calendar specific actions for collection and item views.
  *
  * @author Casey Link <unnamedrambler@gmail.com>
  * @since 4.6
