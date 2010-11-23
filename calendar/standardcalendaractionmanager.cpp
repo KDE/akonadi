@@ -268,11 +268,6 @@ class StandardCalendarActionManager::Private
       //TODO impl
     }
 
-    void slotStartMaintenanceMode()
-    {
-      //TODO impl
-    }
-
     void slotAddFavorite()
     {
       //TODO impl
@@ -409,14 +404,6 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       d->mActions.insert( DefaultMake, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_make_default_calendar" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMakeDefault() ) );
-      break;
-    case StartMaintenanceMode:
-      action = new KAction( d->mParentWidget );
-      action->setText( i18n( "&Start Maintenance Mode" ) );
-      action->setWhatsThis( i18n( "Opens a bulk actions dialog, that allows mass move, copy and delete; and to toggle reminders' and alarms' actions." ) );
-      d->mActions.insert( StartMaintenanceMode, action );
-      d->mActionCollection->addAction( QString::fromLatin1( "start_maintenance_mode" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotStartMaintenanceMode() ) );
       break;
     case FavoriteAdd:
       action = new KAction( d->mParentWidget );

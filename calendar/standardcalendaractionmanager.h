@@ -58,7 +58,6 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
         //Home -> Favorites
         DefaultMake,
         DefaultRemove,
-        StartMaintenanceMode,
 //         FilterView,
 //         ViewOptions,
         FavoriteAdd,
@@ -196,7 +195,6 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCreateEvent() )
     Q_PRIVATE_SLOT( d, void slotMakeDefault() )
     Q_PRIVATE_SLOT( d, void slotRemoveDefault() )
-    Q_PRIVATE_SLOT( d, void slotStartMaintenanceMode() )
     Q_PRIVATE_SLOT( d, void slotAddFavorite() )
     Q_PRIVATE_SLOT( d, void slotRemoveFavorite() )
     Q_PRIVATE_SLOT( d, void slotRenameFavorite() )
