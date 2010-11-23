@@ -115,7 +115,7 @@ void CollectionPropertiesDialog::Private::init()
       CollectionPropertiesPage *page = factory->createWidget( mTabWidget );
       const QString pageName = page->objectName();
 
-      if ( page->canHandle( mCollection ) && mPageNames.contains( pageName ) ) {
+      if ( page->canHandle( mCollection ) && mPageNames.contains( pageName ) && !pages.contains( pageName ) ) {
         pages.insert( page->objectName(), page );
       } else {
         delete page;
