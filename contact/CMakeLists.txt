@@ -23,10 +23,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_
 set(akonadicontact_actions_SRCS
   actions/dialphonenumberaction.cpp
   actions/showaddressaction.cpp
+  actions/qdialer.cpp
   actions/qskypedialer.cpp
   actions/sendsmsaction.cpp
   actions/smsdialog.cpp
 )
+
+if (WINCE)
+  set( akonadicontact_actions_SRCS ${akonadicontact_actions_SRCS}
+    actions/qwincedialer.cpp
+  )
+endif (WINCE)
 kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
 
 set(akonadicontact_editor_SRCS

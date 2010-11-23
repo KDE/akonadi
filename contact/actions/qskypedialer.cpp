@@ -63,7 +63,7 @@ static QDBusInterface* searchSkypeDBusInterface()
 }
 
 QSkypeDialer::QSkypeDialer( const QString &applicationName )
-  : mInterface( 0 ), mApplicationName( applicationName )
+  : QDialer( applicationName ), mInterface( 0 )
 {
 }
 
@@ -162,7 +162,3 @@ bool QSkypeDialer::sendSms( const QString &number, const QString &text )
   return true;
 }
 
-QString QSkypeDialer::errorMessage() const
-{
-  return mErrorMessage;
-}

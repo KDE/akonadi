@@ -22,7 +22,11 @@
 #include "dialphonenumberaction.h"
 
 #include "contactactionssettings.h"
+#include "qdialer.h"
 #include "qskypedialer.h"
+#ifdef Q_OS_WINCE
+#include "qwincedialer.h"
+#endif // Q_OS_WINCE
 
 #include <kabc/phonenumber.h>
 #include <kconfig.h>
@@ -51,14 +55,24 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
   // synchronize
   ContactActionsSettings::self()->readConfig();
 
+  QDialer *dialer = NULL;
   // we handle skype separated
   if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSkype ) {
-    QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
-    if ( !dialer.dialNumber( strippedDialNumber( number.number().trimmed() ) ) ) {
-      KMessageBox::sorry( 0, dialer.errorMessage() );
+    dialer = new QSkypeDialer(QLatin1String( "AkonadiContacts" ));
+  }
+#ifdef Q_OS_WINCE
+  else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseWinCE) {
+    dialer = new QWinCEDialer(QLatin1String( "AkonadiContacts" )); 
+  }
+#endif // Q_OS_WINCE
+  if ( dialer ) {
+    if ( !dialer->dialNumber( strippedDialNumber( number.number().trimmed() ) ) ) {
+      KMessageBox::sorry( 0, dialer->errorMessage() );
     }
+    delete dialer;
     return;
   }
+
 
   QString command = ContactActionsSettings::self()->phoneCommand();
 
@@ -76,3 +90,4 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
 
   KRun::runCommand( command, 0 );
 }
+

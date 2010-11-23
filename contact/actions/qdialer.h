@@ -2,6 +2,8 @@
     This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+                  2010 Bjoern Ricks <bjoern.ricks@intevation.de>
+
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,29 +21,27 @@
     02110-1301, USA.
 */
 
-#ifndef QSKYPEDIALER_H
-#define QSKYPEDIALER_H
-
-#include "qdialer.h"
+#ifndef QDIALER_H
+#define QDIALER_H
 
 #include <QtCore/QString>
 
-class QDBusInterface;
-
-class QSkypeDialer: public QDialer
+class QDialer
 {
   public:
-    QSkypeDialer( const QString &applicationName );
-    ~QSkypeDialer();
+    QDialer( const QString &applicationName);
+    virtual ~QDialer();
 
-    bool dialNumber( const QString &number );
-    bool sendSms( const QString &number, const QString &text );
+    virtual bool dialNumber( const QString &number );
+    virtual bool sendSms( const QString &number, const QString &text);
 
-  private:
-    bool initializeSkype();
+    QString errorMessage() const;
 
-    QDBusInterface* mInterface;
+  protected:
 
+    QString mApplicationName;
+    QString mErrorMessage;
 };
 
-#endif
+#endif // QDIALER_H
+
