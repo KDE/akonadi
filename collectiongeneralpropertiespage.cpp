@@ -37,10 +37,6 @@ CollectionGeneralPropertiesPage::CollectionGeneralPropertiesPage( QWidget *paren
 
   setPageTitle( i18nc( "@title:tab general properties page", "General" ) );
   ui.setupUi( this );
-#ifdef KDEPIM_MOBILE_UI
-  ui.customIcon->hide();
-  ui.customIconCheckbox->hide();
-#endif
 }
 
 void CollectionGeneralPropertiesPage::load(const Collection & collection)
@@ -57,11 +53,13 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
   else
     ui.nameEdit->setText( displayName );
 
+#ifndef KDEPIM_MOBILE_UI
   if ( iconName.isEmpty() )
     ui.customIcon->setIcon( CollectionUtils::defaultIconName( collection ) );
   else
     ui.customIcon->setIcon( iconName );
   ui.customIconCheckbox->setChecked( !iconName.isEmpty() );
+#endif
 
   if ( collection.statistics().count() >= 0 ) {
     ui.countLabel->setText( i18ncp( "@label", "One object", "%1 objects",
@@ -80,10 +78,12 @@ void CollectionGeneralPropertiesPage::save(Collection & collection)
   else
     collection.setName( ui.nameEdit->text() );
 
+#ifndef KDEPIM_MOBILE_UI
   if ( ui.customIconCheckbox->isChecked() )
     collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
   else if ( collection.hasAttribute<EntityDisplayAttribute>() )
     collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
+#endif
 }
 
 //@endcond

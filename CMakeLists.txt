@@ -84,6 +84,7 @@ set( akonadikde_LIB_SRC
   collectionstatisticsmodel.cpp
   collectionstatisticsdelegate.cpp
   collectionsync.cpp
+  cachepolicypage.cpp
   collectiongeneralpropertiespage.cpp
   collectionpropertiesdialog.cpp
   collectionpropertiespage.cpp
@@ -178,7 +179,6 @@ endif (KDEPIM_MOBILE_UI)
 if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
   # pending: fix KIconButton (remove icon selection stuff) and then should be ok
-  cachepolicypage.cpp
   dragdropmanager.cpp
   # pending: remove xmlguiclient stuff (for context menu) and then should be ok
   collectionview.cpp
@@ -224,11 +224,20 @@ kde4_add_ui_files( akonadikde_LIB_SRC
 endif(KDE_IS_AT_LEAST_4_5_74)
 
 kde4_add_ui_files( akonadikde_LIB_SRC
-  collectiongeneralpropertiespage.ui
   controlprogressindicator.ui
   selftestdialog.ui
   erroroverlay.ui
 )
+
+if (KDEPIM_MOBILE_UI)
+  kde4_add_ui_files( akonadikde_LIB_SRC
+    collectiongeneralpropertiespage_mobile.ui
+  )
+else(KDEPIM_MOBILE_UI)
+  kde4_add_ui_files( akonadikde_LIB_SRC
+    collectiongeneralpropertiespage.ui
+  )
+endif(KDEPIM_MOBILE_UI)
 
 kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
