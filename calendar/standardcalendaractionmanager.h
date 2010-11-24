@@ -28,6 +28,9 @@
 
 #include <QtCore/QObject>
 
+//needed for windows ce, its defined somewhere
+#undef CreateEvent
+
 class KAction;
 class KActionCollection;
 class QItemSelectionModel;
