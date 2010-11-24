@@ -93,9 +93,9 @@ class Akonadi::ServerManagerPrivate
         }
 
         if ( state == ServerManager::Starting || state == ServerManager::Stopping )
-          mSafetyTimer->start();
+          QMetaObject::invokeMethod( mSafetyTimer.get(), "start", Qt::QueuedConnection ); // in case we are in a different thread
         else
-          mSafetyTimer->stop();
+          QMetaObject::invokeMethod( mSafetyTimer.get(), "stop", Qt::QueuedConnection ); // in case we are in a different thread
       }
     }
 

@@ -23,6 +23,7 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QMetaType>
 
 namespace Akonadi {
 
@@ -127,5 +128,7 @@ class AKONADI_EXPORT ServerManager : public QObject
 };
 
 }
+
+Q_DECLARE_METATYPE( Akonadi::ServerManager::State )
 
 #endif

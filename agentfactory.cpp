@@ -21,6 +21,8 @@
 */
 
 #include "agentfactory.h"
+#include "servermanager.h"
+#include "servermanager_p.h"
 
 #include <klocale.h>
 
@@ -45,6 +47,9 @@ AgentFactoryBase::AgentFactoryBase( const char *catalogName, QObject *parent)
     new KComponentData( "AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
 
   KGlobal::locale()->insertCatalog( d->catalogName );
+
+  Internal::setClientType( Internal::Agent );
+  ServerManager::self(); // make sure it's created in the main thread
 }
 
 void AgentFactoryBase::createComponentData( const QString& identifier ) const
