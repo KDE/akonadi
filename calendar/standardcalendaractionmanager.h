@@ -163,6 +163,8 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      */
     Akonadi::Item::List selectedItems() const;
 
+    void setCollectionPropertiesPageNames( const QStringList &names );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.

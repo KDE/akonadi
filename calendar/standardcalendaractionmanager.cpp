@@ -526,4 +526,9 @@ Akonadi::Item::List StandardCalendarActionManager::selectedItems() const
   return d->mGenericManager->selectedItems();
 }
 
+void StandardCalendarActionManager::setCollectionPropertiesPageNames( const QStringList &names )
+{
+  d->mGenericManager->setCollectionPropertiesPageNames( names );
+}
+
 #include "standardcalendaractionmanager.moc"
