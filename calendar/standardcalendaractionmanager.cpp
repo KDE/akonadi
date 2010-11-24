@@ -301,8 +301,6 @@ class StandardCalendarActionManager::Private
         mActions[ StandardCalendarActionManager::CreateEvent ]->setEnabled( hasWritableCollection( KCalCore::Event::eventMimeType() ) );
       if ( mActions.contains( StandardCalendarActionManager::CreateTodo ) )
         mActions[ StandardCalendarActionManager::CreateTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
-      if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
-        mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
       if ( mActions.contains( StandardCalendarActionManager::CreateJournal ) )
         mActions[ StandardCalendarActionManager::CreateJournal ]->setEnabled( hasWritableCollection( KCalCore::Journal::journalMimeType() ) );
 
@@ -322,6 +320,18 @@ class StandardCalendarActionManager::Private
         }
 
         mActions.value( StandardCalendarActionManager::EditIncidence )->setEnabled( canEditItem );
+      }
+
+      if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
+        mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( false );
+
+      if ( itemCount == 1 ) {
+        const Akonadi::Item item = mGenericManager->selectedItems().first();
+
+        if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
+          if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
+            mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
+        }
       }
 
       emit mParent->actionStateUpdated();
