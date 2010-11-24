@@ -29,19 +29,17 @@
 class QDialer
 {
   public:
-    QDialer( const QString &applicationName);
+    QDialer( const QString &applicationName );
     virtual ~QDialer();
 
     virtual bool dialNumber( const QString &number );
-    virtual bool sendSms( const QString &number, const QString &text);
+    virtual bool sendSms( const QString &number, const QString &text );
 
     QString errorMessage() const;
 
   protected:
-
     QString mApplicationName;
     QString mErrorMessage;
 };
 
-#endif // QDIALER_H
-
+#endif

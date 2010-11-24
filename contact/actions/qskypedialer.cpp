@@ -161,4 +161,3 @@ bool QSkypeDialer::sendSms( const QString &number, const QString &text )
 
   return true;
 }
-

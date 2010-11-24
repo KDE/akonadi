@@ -41,7 +41,6 @@ class QSkypeDialer: public QDialer
     bool initializeSkype();
 
     QDBusInterface* mInterface;
-
 };
 
 #endif
