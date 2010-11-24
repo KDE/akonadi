@@ -84,6 +84,9 @@ set( akonadikde_LIB_SRC
   collectionstatisticsmodel.cpp
   collectionstatisticsdelegate.cpp
   collectionsync.cpp
+  collectiongeneralpropertiespage.cpp
+  collectionpropertiesdialog.cpp
+  collectionpropertiespage.cpp
   conflicthandling/conflicthandler.cpp
   conflicthandling/conflictresolvedialog.cpp
   control.cpp
@@ -176,9 +179,6 @@ if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
   # pending: fix KIconButton (remove icon selection stuff) and then should be ok
   cachepolicypage.cpp
-  collectiongeneralpropertiespage.cpp
-  collectionpropertiesdialog.cpp
-  collectionpropertiespage.cpp
   dragdropmanager.cpp
   # pending: remove xmlguiclient stuff (for context menu) and then should be ok
   collectionview.cpp
