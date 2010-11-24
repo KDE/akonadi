@@ -163,6 +163,16 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      */
     Akonadi::Item::List selectedItems() const;
 
+    /**
+     * Sets the @p text of the action @p type for the given @p context.
+     */
+    void setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &text );
+
+    /**
+     * Sets the @p text of the action @p type for the given @p context.
+     */
+    void setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const KLocalizedString &text );
+
     void setCollectionPropertiesPageNames( const QStringList &names );
 
   Q_SIGNALS:

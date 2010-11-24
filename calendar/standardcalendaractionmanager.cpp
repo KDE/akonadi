@@ -526,6 +526,16 @@ Akonadi::Item::List StandardCalendarActionManager::selectedItems() const
   return d->mGenericManager->selectedItems();
 }
 
+void StandardCalendarActionManager::setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const QString &text )
+{
+  d->mGenericManager->setContextText( type, context, text );
+}
+
+void StandardCalendarActionManager::setContextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const KLocalizedString &text )
+{
+  d->mGenericManager->setContextText( type, context, text );
+}
+
 void StandardCalendarActionManager::setCollectionPropertiesPageNames( const QStringList &names )
 {
   d->mGenericManager->setCollectionPropertiesPageNames( names );
