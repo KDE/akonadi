@@ -550,9 +550,13 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
 
   //qDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
-  if ( name == "org.freedesktop.Akonadi" && !newOwner.isEmpty() ) {
-    // server is operational, start agents
-    continueStartup();
+  if ( (name == AKONADI_DBUS_SERVER_SERVICE || name == AKONADI_DBUS_AGENTSERVER_SERVICE) && !newOwner.isEmpty() ) {
+    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE )
+      && QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_AGENTSERVER_SERVICE ) )
+    {
+      // server is operational, start agents
+      continueStartup();
+    }
   }
 
   if ( name.startsWith( QLatin1String("org.freedesktop.Akonadi.Agent.") ) ) {
