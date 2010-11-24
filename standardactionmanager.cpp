@@ -533,13 +533,18 @@ class StandardActionManager::Private
       const QModelIndexList list = collectionSelectionModel->selectedRows();
       if ( list.isEmpty() )
         return;
+
       const QModelIndex index = list.first();
       Q_ASSERT( index.isValid() );
+
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
+      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName()
+                                                                                    : collection.name();
+
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
-      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( collection.name() ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( displayName ) );
       dlg->show();
 #endif
     }
