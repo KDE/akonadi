@@ -121,6 +121,8 @@ K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
 ServerManager::ServerManager(ServerManagerPrivate * dd ) :
     d( dd )
 {
+  qRegisterMetaType<Akonadi::ServerManager::State>();
+
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AKONADI_SERVER_SERVICE,
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
