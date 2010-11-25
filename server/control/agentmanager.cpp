@@ -47,8 +47,15 @@
 
 using Akonadi::ProcessControl;
 
+#if defined(Q_WS_MAEMO_5) || defined(_WIN32_WCE)
+static bool enableAgentServerDefault = true;
+#else
+static bool enableAgentServerDefault = false;
+#endif
+
 AgentManager::AgentManager( QObject *parent )
-  : QObject( parent )
+  : QObject( parent ),
+  mAgentServer( 0 )
 #ifndef QT_NO_DEBUG
   , mAgentWatcher( new QFileSystemWatcher( this ) )
 #endif
@@ -63,13 +70,18 @@ AgentManager::AgentManager( QObject *parent )
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.freedesktop.Akonadi" ) )
     akFatal() << "akonadiserver already running!";
 
+  const QSettings settings( configPath( false ), QSettings::IniFormat );
+  mAgentServerEnabled = settings.value( "AgentServer/Enabled", enableAgentServerDefault ).toBool();
+
   mStorageController = new Akonadi::ProcessControl;
   connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 
-  mAgentServer = new Akonadi::ProcessControl;
-  connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
-  mAgentServer->start( "akonadi_agent_server", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+  if ( mAgentServerEnabled ) {
+    mAgentServer = new Akonadi::ProcessControl;
+    connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
+    mAgentServer->start( "akonadi_agent_server", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+  }
 
 #ifndef QT_NO_DEBUG
   connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
@@ -130,11 +142,13 @@ void AgentManager::cleanup()
                                            QDBusConnection::sessionBus(), this );
   serverIface->quit();
 
-  mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
-  org::freedesktop::Akonadi::AgentServer *agentServerIface =
-      new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                  "/AgentServer", QDBusConnection::sessionBus(), this );
-  agentServerIface->quit();
+  if ( mAgentServer ) {
+    mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
+    org::freedesktop::Akonadi::AgentServer *agentServerIface =
+        new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                    "/AgentServer", QDBusConnection::sessionBus(), this );
+    agentServerIface->quit();
+  }
 
   delete mStorageController;
   mStorageController = 0;
@@ -381,7 +395,7 @@ void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identi
 {
   if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronizeCollectionTree" ) ) )
     return;
-  mAgentInstances.value( identifier )->resourceInterface()->synchronizeCollectionTree();
+  mAgentInstances.value( identifier  )->resourceInterface()->synchronizeCollectionTree();
 }
 
 void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, qint64 collection)
@@ -452,6 +466,9 @@ void AgentManager::readPluginInfos( const QDir& directory )
         qDebug() << "Autostarting of agents is disabled.";
         agentInfo.capabilities.removeOne( AgentType::CapabilityAutostart );
       }
+
+      if ( !mAgentServerEnabled && agentInfo.launchMethod == AgentType::Server )
+        agentInfo.launchMethod = AgentType::Launcher;
 
       if ( agentInfo.launchMethod == AgentType::Process ) {
         const QString executable = Akonadi::XdgBaseDirs::findExecutableFile( agentInfo.exec );
@@ -552,7 +569,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString &, co
 
   if ( (name == AKONADI_DBUS_SERVER_SERVICE || name == AKONADI_DBUS_AGENTSERVER_SERVICE) && !newOwner.isEmpty() ) {
     if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE )
-      && QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_AGENTSERVER_SERVICE ) )
+      && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_AGENTSERVER_SERVICE ) ) )
     {
       // server is operational, start agents
       continueStartup();

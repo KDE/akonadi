@@ -375,6 +375,7 @@ class AgentManager : public QObject, protected QDBusContext
 #ifndef QT_NO_DEBUG
     QFileSystemWatcher *mAgentWatcher;
 #endif
+    bool mAgentServerEnabled;
 
     friend class AgentInstance;
 };
