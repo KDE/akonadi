@@ -543,6 +543,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "&Mark Mail as Read" ) );
+      action->setIconText( i18n( "Mark as Read" ) );
       action->setWhatsThis( i18n( "Mark selected messages as read" ) );
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
@@ -552,6 +553,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkMailAsUnread:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "&Mark Mail as Unread" ) );
+      action->setIconText( i18n( "Mark as Unread" ) );
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
@@ -562,6 +564,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "mail-mark-important" ) ) );
       action->setText( i18n( "&Mark Mail as Important" ) );
+      action->setIconText( i18n( "Mark as Important" ) );
       d->mActions.insert( MarkMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_important" ), action );
       action->setData( QByteArray( "G" ) );
@@ -570,6 +573,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkMailAsActionItem:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "&Mark Mail as Action Item" ) );
+      action->setIconText( i18n( "Mark as Action Item" ) );
       action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_action_item" ), action );
@@ -580,6 +584,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( QLatin1String( "mail-mark-read" ) ) );
       action->setText( i18n( "Mark &All Mails as Read" ) );
+      action->setIconText( i18n( "Mark All as Read" ) );
       d->mActions.insert( MarkAllMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_read" ), action );
       action->setData( QByteArray( "R" ) );
@@ -588,6 +593,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsUnread:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Unread" ) );
+      action->setIconText( i18n( "Mark All as Unread" ) );
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
@@ -598,6 +604,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsImportant:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Important" ) );
+      action->setIconText( i18n( "Mark All as Important" ) );
       action->setIcon( KIcon( QLatin1String( "mail-mark-important" ) ) );
       d->mActions.insert( MarkAllMailAsImportant, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_important" ), action );
@@ -607,6 +614,7 @@ KAction* StandardMailActionManager::createAction( Type type )
     case MarkAllMailAsActionItem:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "Mark &All Mails as Action Item" ) );
+      action->setIconText( i18n( "Mark All as Action Item" ) );
       action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkAllMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_action_item" ), action );
