@@ -37,6 +37,7 @@ endmacro(add_resource_iface)
 
 set( kmimeakonadi_LIB_SRC 
   addressattribute.cpp
+  attributeregistrar.cpp
   specialmailcollections.cpp
   specialmailcollectionsrequestjob.cpp
   messagefolderattribute.cpp
