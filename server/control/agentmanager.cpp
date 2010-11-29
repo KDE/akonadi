@@ -543,12 +543,11 @@ void AgentManager::save()
 {
   QSettings file( configPath( true ), QSettings::IniFormat );
 
-  file.clear();
   foreach ( const AgentType &info, mAgents )
     info.save( &file );
 
   file.beginGroup( "Instances" );
-
+  file.remove( "" );
   foreach ( const AgentInstance::Ptr &inst, mAgentInstances ) {
     file.beginGroup( inst->identifier() );
     file.setValue( "AgentType", inst->agentType() );
