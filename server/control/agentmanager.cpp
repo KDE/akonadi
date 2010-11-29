@@ -727,30 +727,16 @@ void AgentManager::ensureAutoStart(const AgentType & info)
 
   org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                       "/AgentServer", QDBusConnection::sessionBus(), this );
-    
+
   if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
     return; // already running
 
-  switch ( info.launchMethod ) {
-  case AgentType::Server:
-    agentServer.startAgent( info.identifier, info.identifier, info.exec );
-    registerAgentAtServer( info.identifier, info );
+  AgentInstance::Ptr instance = createAgentInstance( info );
+  instance->setIdentifier( info.identifier );
+  if ( instance->start( info ) ) {
+    mAgentInstances.insert( instance->identifier(), instance );
+    registerAgentAtServer( instance->identifier(), info );
     save();
-    break;
-  case AgentType::Process:  // Fall through
-  case AgentType::Launcher:
-  {
-    AgentInstance::Ptr instance = createAgentInstance( info );
-    instance->setIdentifier( info.identifier );
-    if ( instance->start( info ) ) {
-      mAgentInstances.insert( instance->identifier(), instance );
-      registerAgentAtServer( instance->identifier(), info );
-      save();
-    }
-    break;
-  }
-  default:
-    Q_ASSERT_X( false, "AgentManager::ensureAutoStart", "unhandled AgentType::LaunchMethod case" );
   }
 }
 
