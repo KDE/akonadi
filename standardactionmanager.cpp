@@ -831,6 +831,12 @@ class StandardActionManager::Private
 
       CollectionDialog dlg;
       dlg.setMimeTypeFilter( mimeTypes.toList() );
+
+      if ( type == CopyItemToMenu || type == MoveItemToMenu )
+        dlg.setAccessRightsFilter( Collection::CanCreateItem );
+      else if ( type == CopyCollectionToMenu || type == MoveCollectionToMenu )
+        dlg.setAccessRightsFilter( Collection::CanCreateCollection );
+
       if ( dlg.exec() ) {
         const QModelIndex index = EntityTreeModel::modelIndexForCollection( collectionSelectionModel->model(), dlg.selectedCollection() );
         if ( !index.isValid() )
