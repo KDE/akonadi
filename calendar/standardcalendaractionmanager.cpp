@@ -268,28 +268,40 @@ class StandardCalendarActionManager::Private
           if ( mimeType == KCalCore::Event::eventMimeType() ) {
             mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                             ki18np( "Copy Event", "Copy %1 Events" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Event To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Event To" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                             ki18np( "Delete Event", "Delete %1 Events" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
                                             ki18np( "Cut Event", "Cut %1 Events" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Event To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Event To" ) );
             if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Event..." ) );
           } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
             mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                             ki18np( "Copy To-do", "Copy %1 To-dos" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy To-do To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy To-do To" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                             ki18np( "Delete To-do", "Delete %1 To-dos" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
                                             ki18np( "Cut To-do", "Cut %1 To-dos" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move To-do To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move To-do To" ) );
             if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit To-do..." ) );
           } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
             mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                             ki18np( "Copy Journal", "Copy %1 Journals" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Journal To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Journal To" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                             ki18np( "Delete Journal", "Delete %1 Journals" ) );
             mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
                                             ki18np( "Cut Journal", "Cut %1 Journals" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Journal To" ) );
+            mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Journal To" ) );
             if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Journal..." ) );
           }
