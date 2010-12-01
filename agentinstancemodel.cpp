@@ -86,6 +86,13 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
 {
   d->mInstances = AgentManager::self()->instances();
 
+  QHash<int, QByteArray> roles = roleNames();
+  roles.insert( StatusRole, "status" );
+  roles.insert( StatusMessageRole, "statusMessage" );
+  roles.insert( ProgressRole, "progress" );
+  roles.insert( OnlineRole, "online" );
+  setRoleNames( roles );
+
   connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
            this, SLOT( instanceAdded( const Akonadi::AgentInstance& ) ) );
   connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
