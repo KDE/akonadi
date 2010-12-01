@@ -85,3 +85,8 @@ void AgentProcessInstance::restartWhenIdle()
     quit();
   }
 }
+
+void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
+{
+  controlInterface()->configure( windowId );
+}

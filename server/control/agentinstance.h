@@ -67,6 +67,7 @@ class AgentInstance : public QObject
     virtual void quit();
     virtual void cleanup();
     virtual void restartWhenIdle() = 0;
+    virtual void configure( qlonglong windowId ) = 0;
 
     bool hasResourceInterface() const { return mResourceInterface; }
     bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }

@@ -80,3 +80,10 @@ void AgentThreadInstance::agentServerRegistered()
 {
   start( mAgentType );
 }
+
+void Akonadi::AgentThreadInstance::configure(qlonglong windowId)
+{
+  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
+                                                      "/AgentServer", QDBusConnection::sessionBus() );
+  agentServer.agentInstanceConfigure( identifier(), windowId );
+}
