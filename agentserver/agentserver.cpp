@@ -63,9 +63,11 @@ bool AgentServer::started( const QString &identifier ) const
 
 void AgentServer::startAgent( const QString &identifier, const QString &typeIdentifier, const QString &fileName )
 {
+  akDebug() << Q_FUNC_INFO << identifier << typeIdentifier << fileName;
+
   //First try to load it staticly
   foreach ( QObject *plugin, QPluginLoader::staticInstances() ) {
-    if ( plugin->objectName() == typeIdentifier ) {
+    if ( plugin->objectName() == fileName ) {
       AgentThread* thread = new AgentThread( identifier, plugin, this );
       m_agents.insert( identifier, thread );
       thread->start();
