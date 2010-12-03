@@ -20,7 +20,10 @@ else (WINCE)
 endif (WINCE)
 
 add_subdirectory(tests)
-add_subdirectory(kcm)
+#We dont have kcms under wince so dont build them
+if(NOT WINCE)
+  add_subdirectory(kcm)
+endif(NOT WINCE)
 add_subdirectory(editor/im)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
