@@ -999,6 +999,9 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
     return;
   }
 
+  Q_ASSERT( m_childEntities.contains( sourceCollection.id() ) );
+  Q_ASSERT( m_childEntities[ sourceCollection.id() ].size() > srcRow );
+
   Node *node = m_childEntities[ sourceCollection.id() ].takeAt( srcRow );
   m_items.insert( item.id(), item );
   node->parent = destCollection.id();
