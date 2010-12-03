@@ -698,6 +698,21 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( parentId ) );
 
+  // Top-level search collection
+  if ( parentId == 1 && m_childEntities.value( parentId ).size() == 0 ) {
+    // Special case for removing the last search folder.
+    // We need to remove the top-level search folder in that case.
+    const int searchCollectionRow = parentIndex.row();
+    q->beginRemoveRows( QModelIndex(), searchCollectionRow, searchCollectionRow );
+
+    removeChildEntities( parentId );
+    m_childEntities[ m_rootCollection.id() ].removeAt( searchCollectionRow );
+    m_collections.remove( parentId );
+
+    q->endRemoveRows();
+    return;
+  }
+
   q->beginRemoveRows( parentIndex, row, row );
 
   // Delete all descendant collections and items.
