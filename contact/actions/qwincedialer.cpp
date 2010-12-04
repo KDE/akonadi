@@ -66,7 +66,7 @@ bool QWinCEDialer::dialNumber(const QString &number)
 bool QWinCEDialer::sendSms(const QString &number, const QString &text)
 {
     //TODO: see http://msdn.microsoft.com/en-us/library/aa921968.aspx
-    mErrorMessage = i18n("Sending a SMS is currently not supported on WinCE");
+    mErrorMessage = i18n("Sending an SMS is currently not supported on WinCE");
     return false;
 }
 

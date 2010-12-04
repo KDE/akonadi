@@ -42,7 +42,7 @@ bool QDialer::dialNumber( const QString &number )
 
 bool QDialer::sendSms( const QString &number, const QString &text )
 {
-  mErrorMessage = i18n( "Sending a SMS is not supported" );
+  mErrorMessage = i18n( "Sending an SMS is not supported" );
 
   return false;
 }
