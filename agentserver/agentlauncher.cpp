@@ -49,13 +49,13 @@ int main( int argc, char *argv[] )
                                                           Q_ARG( QString, agentIdentifier ) );
   if ( invokeSucceeded ) {
     qDebug() << "Agent instance created in separate process.";
-    instance->setParent( &app );
   } else {
     qDebug() << "Agent instance creation in separate process failed";
     return 2;
   }
 
-
-  return app.exec();
+  const int rv = app.exec();
+  delete instance;
+  return rv;
 }
 
