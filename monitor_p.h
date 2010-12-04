@@ -165,6 +165,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
   private:
     // collections that need a statistics update
     QSet<Collection::Id> recentlyChangedCollections;
+    QTimer statisticsCompressionTimer;
 
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
@@ -211,14 +212,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       QObject::connect( job, SIGNAL( result( KJob* ) ), q_ptr, SLOT( slotStatisticsChangedFinished( KJob* ) ) );
     }
 
-    void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource )
-    {
-      if ( collection > 0 && (monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) ) ) {
-        if (recentlyChangedCollections.empty() )
-          QTimer::singleShot( 500, q_ptr, SLOT( slotFlushRecentlyChangedCollections() ) );
-        recentlyChangedCollections.insert( collection );
-      }
-    }
+    void notifyCollectionStatisticsWatchers( Collection::Id collection, const QByteArray &resource );
 };
 
 }

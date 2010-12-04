@@ -57,6 +57,10 @@ void MonitorPrivate::init()
                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   NotificationMessage::registerDBusTypes();
+
+  statisticsCompressionTimer.setSingleShot( true );
+  statisticsCompressionTimer.setInterval( 500 );
+  QObject::connect( &statisticsCompressionTimer, SIGNAL(timeout()), q_ptr, SLOT(slotFlushRecentlyChangedCollections()) );
 }
 
 bool MonitorPrivate::connectToNotificationManager()
@@ -597,6 +601,14 @@ Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
   ++m_index;
 
   return bumpedId;
+}
+
+void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray& resource) {
+  if ( collection > 0 && (monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) ) ) {
+    recentlyChangedCollections.insert( collection );
+    if ( !statisticsCompressionTimer.isActive() )
+      statisticsCompressionTimer.start();
+  }
 }
 
 // @endcond
