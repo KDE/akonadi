@@ -242,12 +242,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
       }
 
       Item &item = d->mItems.first();
-      if ( item.modificationTime() != modificationDateTime )
-      {
-        item.setModificationTime( modificationDateTime );
-      } else {
-        kDebug() << "No changes on item" << item.id();
-      }
+      item.setModificationTime( modificationDateTime );
       item.d_ptr->resetChangeLog();
     } else {
       setError( Unknown );
