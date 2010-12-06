@@ -25,14 +25,14 @@
 namespace {
 
 // Anonymous namespace; function is invisible outside this file.
-bool dummy()
+bool messagefolder_dummy()
 {
   Akonadi::AttributeFactory::registerAttribute<Akonadi::MessageFolderAttribute>();
   return true;
 }
 
 // Called when this library is loaded.
-const bool registered = dummy();
+const bool registered = messagefolder_dummy();
 
 } // namespace
 

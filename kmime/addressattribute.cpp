@@ -130,13 +130,13 @@ void AddressAttribute::setBcc( const QStringList &bcc )
 // Register the attribute when the library is loaded.
 namespace {
 
-bool dummy()
+bool address_dummy()
 {
   using namespace Akonadi;
   AttributeFactory::registerAttribute<AddressAttribute>();
   return true;
 }
 
-const bool registered = dummy();
+const bool address_registered = address_dummy();
 
 }
