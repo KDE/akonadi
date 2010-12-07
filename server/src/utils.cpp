@@ -28,9 +28,9 @@
 #include <QtCore/QSettings>
 #include <QtNetwork/QHostInfo>
 
+#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
 #include <cstdlib>
 #include <sys/types.h>
-#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
 #include <cerrno>
 #include <pwd.h>
 #include <unistd.h>
