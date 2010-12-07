@@ -106,7 +106,12 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
            q, SLOT( slotSynchronized( qlonglong ) ) );
 
   if ( interface->isValid() ) {
-    interface->call( QString::fromUtf8( "synchronizeCollectionAttributes" ), collection.id() );
+    const QDBusMessage reply = interface->call( QString::fromUtf8( "synchronizeCollectionAttributes" ), collection.id() );
+    if ( reply.type() == QDBusMessage::ErrorMessage ) {
+      // This means that the resource doesn't provide a synchronizeCollectionAttributes method, so we just finish the job
+      q->emitResult();
+      return;
+    }
     safetyTimer->start();
   } else {
     q->setError( KJob::UserDefinedError );
