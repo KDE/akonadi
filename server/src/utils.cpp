@@ -30,13 +30,15 @@
 
 #include <cerrno>
 #include <cstdlib>
-#include <pwd.h>
 #include <sys/types.h>
+#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
+#include <pwd.h>
 #include <unistd.h>
 
 static QString akonadiSocketDirectory();
 static bool checkSocketDirectory( const QString &path );
 static bool createSocketDirectory( const QString &link, const QString &tmpl );
+#endif
 
 using namespace Akonadi;
 
@@ -45,6 +47,9 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
   const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
   const QSettings serverSettings( serverConfigFile, QSettings::IniFormat );
 
+#if defined(Q_OS_WINCE) || defined(Q_OS_WIN)
+  const QString socketDir = serverSettings.value( QLatin1String( "Connection/SocketDirectory" ), defaultDirectory ).toString();
+#else
   QString socketDir = defaultDirectory;
   if ( !serverSettings.contains( QLatin1String( "Connection/SocketDirectory" ) ) ) {
     // if no socket directory is defined, use the symlinked from /tmp
@@ -68,10 +73,11 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
   QFileInfo dirInfo( socketDir );
   if ( !dirInfo.exists() )
     QDir::home().mkpath( dirInfo.absoluteFilePath() );
-
+#endif
   return socketDir;
 }
 
+#if !defined(Q_OS_WINCE) && !defined(Q_OS_WIN)
 QString akonadiSocketDirectory()
 {
   const QString hostname = QHostInfo::localHostName();
@@ -142,3 +148,4 @@ static bool createSocketDirectory( const QString &link, const QString &tmpl )
 
   return true;
 }
+#endif
