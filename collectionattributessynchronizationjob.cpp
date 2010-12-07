@@ -36,12 +36,13 @@ namespace Akonadi
 class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 {
   public:
-    CollectionAttributesSynchronizationJobPrivate( CollectionAttributesSynchronizationJob* parent ) :
-      q( parent ),
-      interface( 0 ),
-      safetyTimer( 0 ),
-      timeoutCount( 0 )
-    {}
+    CollectionAttributesSynchronizationJobPrivate( CollectionAttributesSynchronizationJob* parent )
+      : q( parent ),
+        interface( 0 ),
+        safetyTimer( 0 ),
+        timeoutCount( 0 )
+    {
+    }
 
     void doStart();
 
@@ -53,15 +54,15 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
     int timeoutCount;
     static int timeoutCountLimit;
 
-    void slotSynchronized(qlonglong);
+    void slotSynchronized( qlonglong );
     void slotTimeout();
 };
 
 int CollectionAttributesSynchronizationJobPrivate::timeoutCountLimit = 60;
 
-CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(const Collection& collection, QObject* parent) :
-  KJob( parent ),
-  d( new CollectionAttributesSynchronizationJobPrivate( this ) )
+CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob( const Collection &collection, QObject *parent )
+  : KJob( parent ),
+    d( new CollectionAttributesSynchronizationJobPrivate( this ) )
 {
   d->instance = AgentManager::self()->instance( collection.resource() );
   d->collection = collection;
@@ -101,8 +102,8 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
                                   QString::fromLatin1( "/" ),
                                   QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
                                   DBusConnectionPool::threadConnection(), this );
-  connect( interface, SIGNAL( attributesSynchronized(qlonglong) ),
-           q, SLOT( slotSynchronized(qlonglong) ) );
+  connect( interface, SIGNAL( attributesSynchronized( qlonglong ) ),
+           q, SLOT( slotSynchronized( qlonglong ) ) );
 
   if ( interface->isValid() ) {
     interface->call( QString::fromUtf8( "synchronizeCollectionAttributes" ), collection.id() );
@@ -118,8 +119,8 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
 void CollectionAttributesSynchronizationJobPrivate::slotSynchronized( qlonglong id )
 {
   if ( id == collection.id() ) {
-    q->disconnect( interface, SIGNAL( attributesSynchronized(qlonglong) ),
-                   q, SLOT( slotSynchronized(qlonglong) ) );
+    q->disconnect( interface, SIGNAL( attributesSynchronized( qlonglong ) ),
+                   q, SLOT( slotSynchronized( qlonglong ) ) );
     safetyTimer->stop();
     q->emitResult();
   }
