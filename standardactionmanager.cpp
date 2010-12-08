@@ -36,10 +36,8 @@
 #include "metatypes.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute_p.h"
-#ifndef Q_OS_WINCE
 #include "collectionpropertiesdialog.h"
 #include "subscriptiondialog_p.h"
-#endif
 
 #include <KAction>
 #include <KActionCollection>
@@ -529,7 +527,6 @@ class StandardActionManager::Private
 
     void slotCollectionProperties()
     {
-#ifndef Q_OS_WINCE
       const QModelIndexList list = collectionSelectionModel->selectedRows();
       if ( list.isEmpty() )
         return;
@@ -546,7 +543,6 @@ class StandardActionManager::Private
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
       dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( displayName ) );
       dlg->show();
-#endif
     }
 
     void slotCopyItems()
@@ -617,10 +613,8 @@ class StandardActionManager::Private
 
     void slotLocalSubscription()
     {
-#ifndef Q_OS_WINCE
       SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
       dlg->show();
-#endif
     }
 
     void slotAddToFavorites()
