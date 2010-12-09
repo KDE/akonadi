@@ -456,6 +456,11 @@ class StandardActionManager::Private
       Collection collection;
       collection.setName( name );
       collection.setParentCollection( parentCollection );
+      if ( actions[StandardActionManager::CreateCollection] ) {
+        const QStringList mts = actions[StandardActionManager::CreateCollection]->property( "ContentMimeTypes" ).toStringList();
+        if ( !mts.isEmpty() )
+          collection.setContentMimeTypes( mts );
+      }
       CollectionCreateJob *job = new CollectionCreateJob( collection );
       q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionCreationResult( KJob* ) ) );
     }
