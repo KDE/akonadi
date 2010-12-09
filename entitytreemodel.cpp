@@ -485,7 +485,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       foreach ( const KUrl &url, urls ) {
         const Collection collection = d->m_collections.value( Collection::fromUrl( url ).id() );
         if ( collection.isValid() ) {
-          if ( collection.parentCollection().id() == destCollection.id() ) {
+          if ( collection.parentCollection().id() == destCollection.id() && action != Qt::CopyAction) {
             kDebug() << "Error: source and destination of move are the same.";
             return false;
           }
@@ -497,7 +497,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
         } else {
           const Item item = d->m_items.value( Item::fromUrl( url ).id() );
           if ( item.isValid() ) {
-            if ( item.parentCollection().id() == destCollection.id() ) {
+            if ( item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction ) {
               kDebug() << "Error: source and destination of move are the same.";
               return false;
             }
