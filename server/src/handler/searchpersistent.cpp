@@ -74,6 +74,9 @@ bool SearchPersistent::parseStream()
   if ( !db->appendCollection( col ) )
     return failureResponse( "Unable to create persistent search" );
 
+  if ( !db->addCollectionAttribute( col, "AccessRights", "lu" ) )
+    return failureResponse( "Unable to set rights attribute on persistent search" );
+
   // work around the fact that we have no clue what might be in there
   MimeType::List mts = MimeType::retrieveAll();
   foreach ( const MimeType &mt, mts ) {
