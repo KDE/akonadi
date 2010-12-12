@@ -391,11 +391,16 @@ void AgentManager::removeInstance( const AgentInstance &instance )
   d->mManager->removeAgentInstance( instance.identifier() );
 }
 
-void AgentManager::synchronizeCollection(const Collection & collection)
+void AgentManager::synchronizeCollection( const Collection & collection )
+{
+  synchronizeCollection( collection, false );
+}
+
+void AgentManager::synchronizeCollection( const Collection & collection, bool recursive )
 {
   const QString resId = collection.resource();
   Q_ASSERT( !resId.isEmpty() );
-  d->mManager->agentInstanceSynchronizeCollection( resId, collection.id() );
+  d->mManager->agentInstanceSynchronizeCollection( resId, collection.id(), recursive );
 }
 
 #include "agentmanager.moc"

@@ -105,7 +105,17 @@ class AKONADI_EXPORT AgentManager : public QObject
      */
     void synchronizeCollection( const Collection &collection );
 
-  Q_SIGNALS:
+    /**
+     * Trigger a synchronization of the given collection by its owning resource agent.
+     * 
+     * @param collection The collection to synchronize.
+     * @param recursive If true, the sub-collections are also syncronized
+     *
+     * @since 4.6
+     */
+    void synchronizeCollection( const Collection &collection, bool recursive );
+
+Q_SIGNALS:
     /**
      * This signal is emitted whenever a new agent type was installed on the system.
      *

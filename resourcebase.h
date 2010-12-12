@@ -461,6 +461,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * This method is called whenever the collection with the given @p id
+     * shall be synchronized.
+     * @param recursive if true, a recursive syncronization is done
+     */
+    void synchronizeCollection( qint64 id, bool recursive );
+
+    /**
+     * This method is called whenever the collection with the given @p id
      * shall have its attributes synchronized.
      *
      * @param id The id of the collection to synchronize

@@ -688,9 +688,15 @@ void ResourceBase::doSetOnline( bool state )
 
 void ResourceBase::synchronizeCollection( qint64 collectionId )
 {
-  CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), CollectionFetchJob::Base );
+  synchronizeCollection( collectionId, false );
+}
+
+void ResourceBase::synchronizeCollection( qint64 collectionId, bool recursive )
+{
+  CollectionFetchJob* job = new CollectionFetchJob( Collection( collectionId ), recursive ? CollectionFetchJob::Recursive : CollectionFetchJob::Base );
   job->setFetchScope( changeRecorder()->collectionFetchScope() );
   job->fetchScope().setResource( identifier() );
+  job->setProperty( "recursive", recursive );
   connect( job, SIGNAL( result( KJob* ) ), SLOT( slotCollectionListDone( KJob* ) ) );
 }
 
@@ -699,8 +705,14 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
   if ( !job->error() ) {
     Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
     if ( !list.isEmpty() ) {
-      Collection col = list.first();
-      scheduler->scheduleSync( col );
+      if ( job->property( "recursive" ).toBool() ) {
+        Q_FOREACH( Collection collection, list ) {
+          scheduler->scheduleSync( collection );
+        }
+      } else {
+        Collection col = list.first();
+        scheduler->scheduleSync( col );
+      }
     }
   }
   // TODO: error handling
