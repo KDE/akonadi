@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -74,21 +75,25 @@ typedef QList<CollectionPropertiesPageFactory*> CollectionPropertiesPageFactoryL
 
 K_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
 
-static bool s_defaultPage = true;
+static bool s_defaultPages = CollectionPropertiesDialog::AllPages;
 
 CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *qq, const Akonadi::Collection &collection, const QStringList &pageNames )
   : q( qq ),
     mCollection( collection ),
     mPageNames( pageNames )
 {
-  if ( s_pages->isEmpty() && s_defaultPage)
+  if ( s_pages->isEmpty() && s_defaultPages)
     registerBuiltinPages();
 }
 
 void CollectionPropertiesDialog::Private::registerBuiltinPages()
 {
-  s_pages->append( new CollectionGeneralPropertiesPageFactory() );
-  s_pages->append( new CachePolicyPageFactory() );
+  if ( s_defaultPages & GeneralPage ) {
+    s_pages->append( new CollectionGeneralPropertiesPageFactory() );
+  }
+  if ( s_defaultPages & CachePage ) {
+    s_pages->append( new CachePolicyPageFactory() );
+  }
 }
 
 void CollectionPropertiesDialog::Private::init()
@@ -157,14 +162,19 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 
 void CollectionPropertiesDialog::registerPage( CollectionPropertiesPageFactory *factory )
 {
-  if ( s_pages->isEmpty() && s_defaultPage)
+  if ( s_pages->isEmpty() && s_defaultPages)
     Private::registerBuiltinPages();
   s_pages->append( factory );
 }
 
 void CollectionPropertiesDialog::useDefaultPage( bool defaultPage )
 {
-  s_defaultPage = defaultPage;
+  s_defaultPages = defaultPage ? AllPages : NoPages;
+}
+
+void CollectionPropertiesDialog::useDefaultPages( DefaultPages defaultPages )
+{
+  s_defaultPages = defaultPages;
 }
 
 #include "collectionpropertiesdialog.moc"

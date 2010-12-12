@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 David Jarvie <djarvie@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -56,6 +57,19 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
   Q_OBJECT
   public:
     /**
+     * Enumerates the default pages which can be displayed.
+     *
+     * @since 4.6
+     */
+    enum DefaultPages
+    {
+      NoPages     = 0,      ///< No default pages
+      GeneralPage = 0x01,   ///< General properties page
+      CachePage   = 0x02,   ///< Cache properties page
+      AllPages    = 0xFF    ///< All default pages
+    };
+      
+    /**
      * Creates a new collection properties dialog.
      *
      * @param collection The collection which properties should be shown.
@@ -97,11 +111,22 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
     static void registerPage( CollectionPropertiesPageFactory *factory );
 
     /**
-     * Sets whether to @p use default page or not.
+     * Sets whether to @p use all default pages or not.
      *
      * @since 4.4
+     * @deprecated Use useDefaultPages() instead.
      */
     static void useDefaultPage( bool use );
+
+    /**
+     * Sets which default pages to display. By default, all default pages
+     * are displayed.
+     *
+     * @param defaultPages OR of the pages to display.
+     *
+     * @since 4.6
+     */
+    static void useDefaultPages( DefaultPages defaultPages = AllPages );
 
   private:
     //@cond PRIVATE
