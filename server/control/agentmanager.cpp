@@ -392,9 +392,14 @@ void AgentManager::agentInstanceSynchronizeCollectionTree(const QString & identi
 
 void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, qint64 collection)
 {
+  agentInstanceSynchronizeCollection( identifier, collection, false );
+}
+
+void AgentManager::agentInstanceSynchronizeCollection(const QString & identifier, qint64 collection, bool recursive)
+{
   if ( !checkResourceInterface( identifier, QLatin1String( "agentInstanceSynchronizeCollection" ) ) )
     return;
-  mAgentInstances.value( identifier )->resourceInterface()->synchronizeCollection( collection );
+  mAgentInstances.value( identifier )->resourceInterface()->synchronizeCollection( collection, recursive );
 }
 
 void AgentManager::restartAgentInstance(const QString& identifier)

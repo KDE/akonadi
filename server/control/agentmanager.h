@@ -194,6 +194,11 @@ class AgentManager : public QObject, protected QDBusContext
     */
     void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection );
 
+    /**
+      Trigger a synchronization of the given collection by its owning resource agent.
+      @param recursive set it true to have sub-collection syncronized as well
+    */
+    void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection, bool recursive );
 
     /**
       Returns if the agent instance @p identifier is in online mode.
