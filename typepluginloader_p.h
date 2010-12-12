@@ -52,7 +52,7 @@ enum Option {
     _LastOption,
     OptionMask = 2*_LastOption-1
 };
-Q_DECLARE_FLAGS( Options, Option );
+Q_DECLARE_FLAGS( Options, Option )
 
 
 #if 0

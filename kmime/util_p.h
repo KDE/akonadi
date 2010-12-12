@@ -32,6 +32,6 @@ namespace Util
   void showJobError( KJob* job );
 
   OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident );
-};
+}
 
 #endif // UTIL_H

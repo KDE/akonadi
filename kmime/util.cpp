@@ -50,4 +50,4 @@ OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &
                                                  Akonadi::DBusConnectionPool::threadConnection() );
 }
 
-};
+}
