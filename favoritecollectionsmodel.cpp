@@ -40,7 +40,7 @@ class FavoriteCollectionsModel::Private
     {
     }
 
-    QString labelForCollection( Collection::Id collectionId )
+    QString labelForCollection( Collection::Id collectionId ) const
     {
       if ( labelMap.contains( collectionId ) ) {
         return labelMap[ collectionId ];
@@ -72,14 +72,13 @@ class FavoriteCollectionsModel::Private
 
     void updateSelection()
     {
-        foreach ( const Collection::Id &collectionId, collectionIds ) {
-          const QModelIndex idx = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
+      foreach ( const Collection::Id &collectionId, collectionIds ) {
+        const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
 
-        if ( !idx.isValid() )
-          return;
+        if ( !index.isValid() )
+          continue;
 
-        q->selectionModel()->select( idx,
-                                     QItemSelectionModel::Select );
+        q->selectionModel()->select( index, QItemSelectionModel::Select );
       }
     }
 
