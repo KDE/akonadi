@@ -35,6 +35,8 @@
 
 using namespace Akonadi;
 
+static const int s_maxCrashCount = 2;
+
 ProcessControl::ProcessControl( QObject *parent )
   : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 ),
   mRestartOnceOnExit( false )
@@ -79,6 +81,7 @@ void ProcessControl::slotError( QProcess::ProcessError error )
 {
   switch ( error ) {
     case QProcess::Crashed:
+      mCrashCount++;
       // do nothing, we'll respawn in slotFinished
       break;
     case QProcess::FailedToStart:
@@ -95,9 +98,9 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 {
   if ( exitStatus == QProcess::CrashExit ) {
     if ( mPolicy == RestartOnCrash ) {
-       // don't try to start an unstartable application
-      if ( !mFailedToStart && --mCrashCount >= 0 ) {
-        qDebug( "Application '%s' crashed! %d restarts left.", qPrintable( mApplication ), mCrashCount );
+      // don't try to start an unstartable application
+      if ( !mFailedToStart && mCrashCount <= s_maxCrashCount ) {
+        qDebug( "Application '%s' crashed! %d restarts left.", qPrintable( mApplication ), s_maxCrashCount - mCrashCount );
         start();
         emit restarted();
       } else {
@@ -137,7 +140,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 	  }
 #endif
       if ( mPolicy == RestartOnCrash ) {
-        if ( mCrashCount > 2 ) {
+        if ( mCrashCount > s_maxCrashCount ) {
           qWarning() << mApplication << "crashed too often and will not be restarted!";
           mPolicy = StopOnCrash;
           emit unableToStart();
