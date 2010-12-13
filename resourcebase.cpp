@@ -706,12 +706,11 @@ void ResourceBasePrivate::slotCollectionListDone( KJob *job )
     Collection::List list = static_cast<CollectionFetchJob*>( job )->collections();
     if ( !list.isEmpty() ) {
       if ( job->property( "recursive" ).toBool() ) {
-        Q_FOREACH( Collection collection, list ) {
+        Q_FOREACH ( const Collection &collection, list ) {
           scheduler->scheduleSync( collection );
         }
       } else {
-        Collection col = list.first();
-        scheduler->scheduleSync( col );
+        scheduler->scheduleSync( list.first() );
       }
     }
   }
