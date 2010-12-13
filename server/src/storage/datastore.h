@@ -57,7 +57,7 @@ Name=akonadi
 Host=localhost
 User=foo
 Password=*****
-#Options=UNIX_SOCKET=/home/foo/.local/share/akonadi/db_misc/mysql.socket
+#Options=UNIX_SOCKET=/home/foo/.local/share/akonadi/socket-bar/mysql.socket
 StartServer=true
 ServerPath=/usr/sbin/mysqld
 

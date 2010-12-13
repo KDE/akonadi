@@ -12,5 +12,5 @@ fi
 /usr/sbin/mysqld \
 	--defaults-file=$akonadihome/mysql.conf \
 	--datadir=$akonadihome/db_data/ \
-	--socket=$akonadihome/db_misc/mysql.socket
+	"--socket=$akonadihome/socket-`hostname`/mysql.socket"
 
