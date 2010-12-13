@@ -42,8 +42,10 @@ public:
   }
   void pop(const QModelIndex &index) {
     m_animations.remove(Animation(index));
-    if (m_animations.isEmpty() && m_timerId != -1)
+    if (m_animations.isEmpty() && m_timerId != -1) {
       killTimer(m_timerId);
+      m_timerId = -1;
+    }
   }
 
   QPixmap sequenceFrame(const QModelIndex &index);
