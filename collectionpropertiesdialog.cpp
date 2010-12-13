@@ -82,7 +82,7 @@ CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *qq, co
     mCollection( collection ),
     mPageNames( pageNames )
 {
-  if ( s_pages->isEmpty() && s_defaultPages)
+  if ( s_pages->isEmpty() && s_defaultPages )
     registerBuiltinPages();
 }
 
@@ -141,7 +141,7 @@ void CollectionPropertiesDialog::Private::init()
 }
 
 
-CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, QWidget *parent)
+CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, QWidget *parent )
   : KDialog( parent ),
     d( new Private( this, collection, QStringList() ) )
 {
@@ -162,7 +162,7 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 
 void CollectionPropertiesDialog::registerPage( CollectionPropertiesPageFactory *factory )
 {
-  if ( s_pages->isEmpty() && s_defaultPages)
+  if ( s_pages->isEmpty() && s_defaultPages )
     Private::registerBuiltinPages();
   s_pages->append( factory );
 }

@@ -68,7 +68,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
       CachePage   = 0x02,   ///< Cache properties page
       AllPages    = 0xFF    ///< All default pages
     };
-      
+
     /**
      * Creates a new collection properties dialog.
      *
