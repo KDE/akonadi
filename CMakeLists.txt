@@ -114,9 +114,6 @@ endif(NOT XSLTPROC_EXECUTABLE)
 
 #### Boost ####
 if(MSVC)
-  # otherwise we get an undefined reference to
-  # boost::program_options::options_description::m_default_line_length
-  set(Boost_USE_STATIC_LIBS ON)
   set (_ENABLE_EXCEPTIONS -EHsc)
 endif(MSVC)
 
@@ -128,6 +125,7 @@ endif(NOT WINCE)
 # should be handled by FindBoost.cmake -> cmake bug #8335
 if(NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
+  add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
 endif(NOT Boost_USE_STATIC_LIBS)
 
 #### Sqlite ####
