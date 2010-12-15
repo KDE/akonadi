@@ -272,6 +272,7 @@ class StandardActionManager::Private
 
         menu->setProperty( "actionType", static_cast<int>( type ) );
         q->connect( menu, SIGNAL( aboutToShow() ), SLOT( aboutToShowMenu() ) );
+        q->connect( menu, SIGNAL( triggered( QAction* ) ), standardActionData[ type ].slot );
         actionMenu->setMenu( menu );
       }
     }
