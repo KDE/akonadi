@@ -24,7 +24,10 @@ endif (AKONADI_BUILD_TESTS)
 
 if (AKONADI_USE_STRIGI_SEARCH)
   add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
-endif (AKONADI_USE_STRIGI_SEARCH)
+  set(SOPRANO_REQUIRED FALSE)
+else()
+  set(SOPRANO_REQUIRED TRUE)
+endif(AKONADI_BUILD_TESTS)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
   option(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead of lib/<package>/cmake" TRUE)
@@ -137,33 +140,11 @@ else(STATIC_LIBRARY)
 endif(STATIC_LIBRARY)
 
 #### Soprano ####
-
-# There are different cases :
-# 1/ We're running CMake in kdesupport. The Soprano dir exists and its compilation is enabled.
-# 2/ We're running CMake in kdesupport but Soprano won't be built. we look for installed headers.
-# 3/ We're just building akonadi. We look for the Soprano headers.
-
 if (NOT WINCE)
-  if("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}") # We ran CMake in kdesupport
-    if(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano) # and we plan to build Soprano
-      message(STATUS "Soprano is needed to build Akonadi. We will use Soprano from kdesupport.")
-      set (SOPRANO_INCLUDE_DIR ${KDESupport_SOURCE_DIR}/soprano ${KDESupport_SOURCE_DIR}/soprano/soprano ${KDESupport_BINARY_DIR}/soprano)
-      set (SOPRANO_LIBRARIES soprano)
-      set (Soprano_FOUND TRUE)
-    endif(EXISTS ${KDESupport_SOURCE_DIR}/soprano AND BUILD_soprano)
-  endif("${KDESupport_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
-
-  if(NOT Soprano_FOUND)
-    find_package(Soprano)
-  endif(NOT Soprano_FOUND)
-
+  find_package(Soprano)
 endif(NOT WINCE)
 
-if(AKONADI_USE_STRIGI_SEARCH)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is required for the Nepomuk search backend")
-elseif()
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "" "Soprano is required to build Akonadi")
-endif()
+macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "" "Soprano is needed for the Nepomuk search backend")
 
 #### Automoc ####
 find_package(Automoc4 REQUIRED)
