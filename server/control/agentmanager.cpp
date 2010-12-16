@@ -745,8 +745,10 @@ void AgentManager::ensureAutoStart( const AgentType &info )
   org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
                                                       "/AgentServer", QDBusConnection::sessionBus(), this );
 
-  if ( mAgentInstances.contains( info.identifier ) || agentServer.started( info.identifier ) )
+  if ( mAgentInstances.contains( info.identifier ) ||
+       (agentServer.isValid() && agentServer.started( info.identifier )) ) {
     return; // already running
+  }
 
   const AgentInstance::Ptr instance = createAgentInstance( info );
   instance->setIdentifier( info.identifier );
