@@ -71,10 +71,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         mItemSyncFetchScope( 0 ),
         mItemTransactionMode( ItemSync::SingleTransaction ),
         mCollectionSyncer( 0 ),
-        mHierarchicalRid( false )
+        mHierarchicalRid( false ),
+        mUnemittedProgress( 0 )
     {
       Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
+      mProgressEmissionCompressor.setInterval( 1000 );
+      mProgressEmissionCompressor.setSingleShot( true );
     }
 
     ~ResourceBasePrivate()
@@ -123,6 +126,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotItemSyncDone( KJob *job );
 
     void slotPercent( KJob* job, unsigned long percent );
+    void slotDelayedEmitProgress();
     void slotDeleteResourceCollection();
     void slotDeleteResourceCollectionDone( KJob *job );
     void slotCollectionDeletionDone( KJob *job );
@@ -170,6 +174,9 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     ItemSync::TransactionMode mItemTransactionMode;
     CollectionSync *mCollectionSyncer;
     bool mHierarchicalRid;
+    QTimer mProgressEmissionCompressor;
+    int mUnemittedProgress;
+    QMap<Akonadi::Collection::Id, QVariantMap> mUnemittedAdvancedStatus;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -211,6 +218,9 @@ ResourceBase::ResourceBase( const QString & id )
   connect( this, SIGNAL( synchronized() ), d->scheduler, SLOT( taskDone() ) );
   connect( this, SIGNAL( agentNameChanged( const QString& ) ),
            this, SIGNAL( nameChanged( const QString& ) ) );
+
+  connect( &d->mProgressEmissionCompressor, SIGNAL( timeout() ),
+           d, SLOT( slotDelayedEmitProgress() ) );
 
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mChangeRecorder->isEmpty() )
@@ -776,10 +786,24 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
   scheduler->taskDone();
 }
 
+
+void ResourceBasePrivate::slotDelayedEmitProgress()
+{
+  Q_Q( ResourceBase );
+  emit q->percent( mUnemittedProgress );
+
+  Q_FOREACH( QVariantMap statusMap, mUnemittedAdvancedStatus.values() ) {
+      emit q->advancedStatus( statusMap );
+  }
+  mUnemittedProgress = 0;
+  mUnemittedAdvancedStatus.clear();
+}
+
 void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
 {
   Q_Q( ResourceBase );
-  emit q->percent( percent );
+
+  mUnemittedProgress = percent;
 
   const Collection collection = job->property( "collection" ).value<Collection>();
   if ( collection.isValid() ) {
@@ -788,7 +812,14 @@ void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
     statusMap.insert( QLatin1String( "collectionId" ), collection.id() );
     statusMap.insert( QLatin1String( "percent" ), static_cast<unsigned int>( percent ) );
 
-    emit q->advancedStatus( statusMap );
+    mUnemittedAdvancedStatus[collection.id()] = statusMap;
+  }
+  // deliver completion right away, intermediate progress at 1s intervals
+  if ( percent == 100 ) {
+    mProgressEmissionCompressor.stop();
+    slotDelayedEmitProgress();
+  } else if ( !mProgressEmissionCompressor.isActive() ) {
+    mProgressEmissionCompressor.start();
   }
 }
 
