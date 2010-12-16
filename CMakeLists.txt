@@ -13,6 +13,7 @@ option(AKONADI_BUILD_TESTS "Build the Akonadi unit tests." TRUE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
+set(DATABASE_BACKEND "MYSQL" CACHE STRING "The database backend to use for Akonadi")
 
 if (AKONADI_BUILD_TESTS)
   enable_testing()
