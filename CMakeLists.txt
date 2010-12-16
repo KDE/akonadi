@@ -27,7 +27,7 @@ if (AKONADI_USE_STRIGI_SEARCH)
   set(SOPRANO_REQUIRED FALSE)
 else()
   set(SOPRANO_REQUIRED TRUE)
-endif(AKONADI_BUILD_TESTS)
+endif (AKONADI_USE_STRIGI_SEARCH)
 
 if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
   option(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead of lib/<package>/cmake" TRUE)
