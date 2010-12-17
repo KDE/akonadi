@@ -136,6 +136,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void changeCommittedResult( KJob* job );
 
+    void slotSessionReconnected()
+    {
+      Q_Q( ResourceBase );
+
+      new ResourceSelectJob( q->identifier() );
+    }
+
     void createItemSyncInstanceIfMissing()
     {
       Q_Q( ResourceBase );
@@ -229,6 +236,8 @@ ResourceBase::ResourceBase( const QString & id )
   DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/Debug" ), d, QDBusConnection::ExportScriptableSlots );
 
   new ResourceSelectJob( identifier() );
+
+  connect( d->mChangeRecorder->session(), SIGNAL( reconnected() ), SLOT( slotSessionReconnected() ) );
 }
 
 ResourceBase::~ResourceBase()

@@ -152,6 +152,8 @@ void SessionPrivate::reconnect()
     tcpSocket->connectToHost( serverAddress, port );
   }
 #endif
+
+  emit mParent->reconnected();
 }
 
 void SessionPrivate::socketError( QLocalSocket::LocalSocketError )

@@ -95,6 +95,15 @@ class AKONADI_EXPORT Session : public QObject
      */
     void clear();
 
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the session has been reconnected
+     * to the server (e.g. after a server crash).
+     *
+     * @since 4.6
+     */
+    void reconnected();
+
   protected:
     /**
      * Creates a new session with shared private object.
