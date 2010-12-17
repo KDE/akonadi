@@ -227,7 +227,7 @@ ResourceBase::ResourceBase( const QString & id )
            this, SIGNAL( nameChanged( const QString& ) ) );
 
   connect( &d->mProgressEmissionCompressor, SIGNAL( timeout() ),
-           d, SLOT( slotDelayedEmitProgress() ) );
+           this, SLOT( slotDelayedEmitProgress() ) );
 
   d->scheduler->setOnline( d->mOnline );
   if ( !d->mChangeRecorder->isEmpty() )
