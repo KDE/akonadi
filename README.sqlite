@@ -1,3 +1,9 @@
+== PREFACE ==
+
+The reason we have our own QtSql Sqlite driver here is because the one shipped
+with Qt misses a bunch of multi-threading fixes crucial for Akonadi. Of course,
+these changes should be pushed upstream eventually.
+
 == INSTALL ==
 When Sqlite is found the custom driver will be build and installed at:
 
