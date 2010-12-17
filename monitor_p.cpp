@@ -606,14 +606,8 @@ Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
 void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray& resource) {
   if ( collection > 0 && (monitorAll || isCollectionMonitored( collection ) || resources.contains( resource ) ) ) {
     recentlyChangedCollections.insert( collection );
-    /* FIXME: original buggy code
     if ( !statisticsCompressionTimer.isActive() )
       statisticsCompressionTimer.start();
-    */
-
-    //FIXME: temporary workaround
-    statisticsCompressionTimer.stop();
-    statisticsCompressionTimer.start();
   }
 }
 
