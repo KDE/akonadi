@@ -168,6 +168,8 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionSelected && 
                                                                collectionsAreFolders ); // it must be a valid folder collection
 
+  enableAction( StandardActionManager::SynchronizeCollectionsRecursive, atLeastOneCollectionSelected &&
+                                                               collectionsAreFolders ); // it must be a valid folder collection
 #ifndef QT_NO_CLIPBOARD
   enableAction( StandardActionManager::Paste, singleCollectionSelected && // we can paste only into a single collection
                                               PasteHelper::canPaste( QApplication::clipboard()->mimeData(), collection ) ); // there must be data on the clipboard

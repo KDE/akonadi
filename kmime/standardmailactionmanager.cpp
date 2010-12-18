@@ -85,12 +85,9 @@ class StandardMailActionManager::Private
       mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections,
                                       ki18np( "Update Folder", "Update Folders" ) );
 
-      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
-                                      ki18np( "Update folder and its subfolders", "Update folders and their subfolders" ) );
-
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
         i18n( "Update the content of the selected folders." ) );
-
+      
       mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections,
                                       ki18np( "Cut Folder", "Cut %1 Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis(
@@ -139,6 +136,12 @@ class StandardMailActionManager::Private
                                       ki18np( "Update Account", "Update %1 Accounts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeResources )->setWhatsThis(
         i18n( "Updates the content of all folders of the selected accounts." ) );
+
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
+                                      ki18np( "Update folder and its subfolders", "Update folders and their subfolders" ) );
+
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive )->setWhatsThis(
+        i18n( "Update the content of the selected folders and their subfolders." ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::DialogTitle,
