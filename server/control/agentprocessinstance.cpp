@@ -81,9 +81,13 @@ void AgentProcessInstance::cleanup()
 
 void AgentProcessInstance::restartWhenIdle()
 {
-  if ( status() == 0 ) {
-    mController->restartOnceWhenFinished();
-    quit();
+  if ( mController->isRunning() ) {
+    if ( status() == 0 ) {
+      mController->restartOnceWhenFinished();
+      quit();
+    }
+  } else {
+    mController->start();
   }
 }
 

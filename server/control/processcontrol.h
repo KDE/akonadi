@@ -66,6 +66,11 @@ class ProcessControl : public QObject
                 CrashPolicy policy = RestartOnCrash );
 
     /**
+     * Starts the process with the previously set application and arguments.
+     */
+    void start();
+
+    /**
      * Stops the currently running application.
      */
     void stop();
@@ -80,6 +85,10 @@ class ProcessControl : public QObject
      */
     void restartOnceWhenFinished() { mRestartOnceOnExit = true; }
 
+    /**
+     * Returns true if the process is currently running.
+     */
+    bool isRunning() const;
 
   Q_SIGNALS:
     /**
@@ -107,8 +116,6 @@ class ProcessControl : public QObject
     void resetCrashCount();
 
   private:
-    void start();
-
     QProcess mProcess;
     QString mApplication;
     QStringList mArguments;

@@ -225,4 +225,9 @@ void ProcessControl::resetCrashCount()
   mCrashCount = 0;
 }
 
+bool ProcessControl::isRunning() const
+{
+  return mProcess.state() != QProcess::NotRunning;
+}
+
 #include "processcontrol.moc"
