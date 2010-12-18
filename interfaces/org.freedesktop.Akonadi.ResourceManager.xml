@@ -8,5 +8,8 @@
     <method name="removeResourceInstance">
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="resourceInstances">
+      <arg type="as" direction="out"/>
+    </method>
   </interface>
 </node>

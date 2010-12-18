@@ -41,6 +41,7 @@ class ResourceManager : public QObject
   public Q_SLOTS:
     void addResourceInstance( const QString &name, const QStringList &capabilities );
     void removeResourceInstance( const QString &name );
+    QStringList resourceInstances() const;
 
   private:
     static ResourceManager* mSelf;

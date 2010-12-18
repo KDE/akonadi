@@ -526,6 +526,9 @@ QString AgentManager::configPath( bool writeable )
 
 void AgentManager::load()
 {
+  org::freedesktop::Akonadi::ResourceManager resmanager( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
+  const QStringList knownResources = resmanager.resourceInstances();
+
   QSettings file( configPath( false ), QSettings::IniFormat );
   file.beginGroup( "Instances" );
   const QStringList entries = file.childGroups();
@@ -545,10 +548,17 @@ void AgentManager::load()
       file.endGroup();
       continue;
     }
+    const AgentType type = mAgents.value( agentType );
 
-    const AgentInstance::Ptr instance = createAgentInstance( mAgents.value( agentType ) );
+    // recover if the db has been deleted in the meantime or got otherwise corrupted
+    if ( !knownResources.contains( instanceIdentifier ) && type.capabilities.contains( AgentType::CapabilityResource ) ) {
+      akDebug() << "Recovering instance" << instanceIdentifier << "after database loss";
+      registerAgentAtServer( instanceIdentifier, type );
+    }
+
+    const AgentInstance::Ptr instance = createAgentInstance( type );
     instance->setIdentifier( instanceIdentifier );
-    if ( instance->start( mAgents.value( agentType ) ) )
+    if ( instance->start( type ) )
       mAgentInstances.insert( instanceIdentifier, instance );
 
     file.endGroup();
