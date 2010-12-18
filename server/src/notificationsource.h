@@ -44,9 +44,11 @@ class NotificationSource : public QObject
     /**
      * Construct a NotificationSource.
      *
+     * @param identifier The identifier of this notification source, defined by the client
+     * @param clientServiceName The D-Bus service name of the client, used to clean up if the client does not unsubscribe correctly.
      * @param parent The parent object.
      */
-    NotificationSource( const QString &identifier, Akonadi::NotificationManager *parent );
+    NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager *parent );
 
     /**
      * Destroy the NotificationSource.
@@ -70,6 +72,12 @@ class NotificationSource : public QObject
      */
     QString identifier() const;
 
+    /**
+     * Add another client service to watch for. Auto-unsubcription only happens if
+     * all watched client servies have been stopped.
+     */
+    void addClientServiceName( const QString &clientServiceName );
+
     public Q_SLOTS:
 
       /**
@@ -83,11 +91,15 @@ class NotificationSource : public QObject
 
       Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
 
+    private slots:
+      void serviceUnregistered( const QString &serviceName );
+
     private:
 
       Akonadi::NotificationManager *mManager;
       QString mIdentifier;
       QString mDBusIdentifier;
+      QDBusServiceWatcher* mClientWatcher;
 
     }; // class NotificationSource
 

@@ -26,11 +26,12 @@
 using namespace Akonadi;
 
 
-NotificationSource::NotificationSource( const QString &identifier, Akonadi::NotificationManager* parent )
+NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager* parent )
   : QObject( parent ),
     mManager( parent ),
     mIdentifier( identifier ),
-    mDBusIdentifier( identifier )
+    mDBusIdentifier( identifier ),
+    mClientWatcher( 0 )
 {
   new NotificationSourceAdaptor( this );
 
@@ -45,6 +46,9 @@ NotificationSource::NotificationSource( const QString &identifier, Akonadi::Noti
       dbusPath().path(),
       this,
       QDBusConnection::ExportAdaptors );
+
+  mClientWatcher = new QDBusServiceWatcher( clientServiceName, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, this );
+  connect( mClientWatcher, SIGNAL(serviceUnregistered(QString)), SLOT(serviceUnregistered(QString)) );
 }
 
 
@@ -56,7 +60,7 @@ NotificationSource::~NotificationSource()
 
 QDBusObjectPath NotificationSource::dbusPath() const
 {
-        return QDBusObjectPath( QLatin1String( "/subscriber/" ) + mDBusIdentifier );
+  return QDBusObjectPath( QLatin1String( "/subscriber/" ) + mDBusIdentifier );
 }
 
 
@@ -73,13 +77,26 @@ QString NotificationSource::identifier() const
   return mIdentifier;
 }
 
-
-
 void NotificationSource::unsubscribe()
 {
+  qDebug() << Q_FUNC_INFO << mIdentifier;
   mManager->unsubscribe( mIdentifier );
 }
 
+void NotificationSource::addClientServiceName(const QString& clientServiceName)
+{
+  if ( mClientWatcher->watchedServices().contains( clientServiceName ) )
+    return;
+  mClientWatcher->addWatchedService( clientServiceName );
+  qDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+}
 
+void NotificationSource::serviceUnregistered(const QString& serviceName)
+{
+  mClientWatcher->removeWatchedService( serviceName );
+  qDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+  if ( mClientWatcher->watchedServices().isEmpty() )
+    unsubscribe();
+}
 
 #include "notificationsource.moc"

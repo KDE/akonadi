@@ -25,6 +25,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QtDBus/qdbuscontext.h>
 
 namespace Akonadi {
 
@@ -34,7 +35,7 @@ class NotificationSource;
 /**
   Notification manager D-Bus interface.
 */
-class NotificationManager : public QObject
+class NotificationManager : public QObject, protected QDBusContext
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.NotificationManager" )
