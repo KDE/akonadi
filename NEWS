@@ -1,3 +1,14 @@
+1.4.85                       18-December-2010
+---------------------------------------------
+- Fix agent server startup race.
+- Allow to globally enable/disable the agent server.
+- Fix autostart of agents running in the agent server.
+- Fix agent configuration when running in the agent server.
+- Fix agent server shutdown crash.
+- Put sockets into /tmp to support AFS/NFS home directories.
+- Fix access rights on persistent search folders.
+- Add support for sub-collection tree syncs in resource interface.
+
 1.4.80                       21-November-2010
 ---------------------------------------------
 - Experimental support for MeeGo.
