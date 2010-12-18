@@ -275,8 +275,8 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 
   save();
 
-  org::freedesktop::Akonadi::ResourceManager * resmanager = new org::freedesktop::Akonadi::ResourceManager( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
-  resmanager->removeResourceInstance( instance->identifier() );
+  org::freedesktop::Akonadi::ResourceManager resmanager( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
+  resmanager.removeResourceInstance( instance->identifier() );
 
   // Kill the preprocessor instance, if any.
   org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
