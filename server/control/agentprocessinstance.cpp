@@ -52,6 +52,7 @@ bool AgentProcessInstance::start( const AgentType &agentInfo )
   }
 
   mController = new Akonadi::ProcessControl( this );
+  connect( mController, SIGNAL(unableToStart()), SLOT(failedToStart()) );
 
   if ( agentInfo.launchMethod == AgentType::Process ) {
     QStringList arguments;
@@ -89,4 +90,9 @@ void AgentProcessInstance::restartWhenIdle()
 void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
 {
   controlInterface()->configure( windowId );
+}
+
+void AgentProcessInstance::failedToStart()
+{
+  statusChanged( 2 /*Broken*/, QLatin1String( "Unable to start." ) );
 }

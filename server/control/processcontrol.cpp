@@ -198,6 +198,7 @@ void ProcessControl::start()
   if ( !mProcess.waitForStarted( ) ) {
     qDebug( "ProcessControl: Unable to start application '%s' (%s)",
             qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
+    emit unableToStart();
     return;
   }
 

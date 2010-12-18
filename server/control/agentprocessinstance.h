@@ -40,6 +40,9 @@ class AgentProcessInstance : public AgentInstance
     virtual void restartWhenIdle();
     virtual void configure(qlonglong windowId);
 
+  private slots:
+    void failedToStart();
+
   private:
     Akonadi::ProcessControl *mController;
 };
