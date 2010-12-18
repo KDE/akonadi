@@ -85,6 +85,9 @@ class StandardMailActionManager::Private
       mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections,
                                       ki18np( "Update Folder", "Update Folders" ) );
 
+      mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
+                                      ki18np( "Update folder and its subfolders", "Update folders and their subfolders" ) );
+
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
         i18n( "Update the content of the selected folders." ) );
 

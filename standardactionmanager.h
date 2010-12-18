@@ -157,6 +157,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       MoveCollectionToDialog,    ///< Move a collection into another collection, select the target in a dialog @since 4.6
       CopyItemToDialog,          ///< Copy an item into a collection, select the target in a dialog @since 4.6
       MoveItemToDialog,          ///< Move an item into a collection, select the target in a dialog @since 4.6
+      SynchronizeCollectionsRecursive,    ///< Synchronizes collections in a recursive way @since 4.6
       LastType                   ///< Marks last action
     };
 
@@ -337,6 +338,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCutCollections() )
     Q_PRIVATE_SLOT( d, void slotDeleteCollection() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
+    Q_PRIVATE_SLOT( d, void slotSynchronizeCollectionRecursive() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
     Q_PRIVATE_SLOT( d, void slotCopyItems() )
     Q_PRIVATE_SLOT( d, void slotCutItems() )

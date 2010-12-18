@@ -102,7 +102,8 @@ static const struct {
   { "akonadi_collection_copy_to_dialog", I18N_NOOP( "Copy Folder To..." ), I18N_NOOP( "Copy To" ), "edit-copy", 0, SLOT( slotCopyCollectionTo() ), NormalAction },
   { "akonadi_collection_move_to_dialog", I18N_NOOP( "Move Folder To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), NormalAction },
   { "akonadi_item_copy_to_dialog", I18N_NOOP( "Copy Item To..." ), I18N_NOOP( "Copy To" ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
-  { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction }
+  { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction },
+  { "akonadi_collection_sync_recursive", I18N_NOOP( "&Synchronize Folder Recursively" ), I18N_NOOP( "Synchronize Recursively" ), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT( slotSynchronizeCollectionRecursive() ), NormalAction }
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
 
@@ -527,7 +528,23 @@ class StandardActionManager::Private
         return;
 
       foreach( Collection collection, collections ) {
-        AgentManager::self()->synchronizeCollection( collection );
+        AgentManager::self()->synchronizeCollection( collection, false );
+      }
+    }
+
+    void slotSynchronizeCollectionRecursive()
+    {
+      Q_ASSERT( collectionSelectionModel );
+      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      if ( list.isEmpty() )
+        return;
+
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
+
+      foreach( Collection collection, collections ) {
+        AgentManager::self()->synchronizeCollection( collection, true );
       }
     }
 
