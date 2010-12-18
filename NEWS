@@ -1,3 +1,9 @@
+1.4.2                        18-December-2010
+---------------------------------------------
+- Fix ImapSet copy ctor.
+- Fix build with MSVC.
+- Remove too strict assert in Sqlite driver.
+
 1.4.1                         22-October-2010
 ---------------------------------------------
 - Improve range query performance.
