@@ -31,7 +31,7 @@ namespace Akonadi {
 
   A persistent search can have the following forms:
   @verbatim
-  123 SEARCH_STORE <name> <query>
+  123 SEARCH_STORE <name> <query> [ '(' (<key> <value>)* ')' ]
   @endverbatim
 */
 class SearchPersistent : public Handler

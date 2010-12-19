@@ -60,13 +60,26 @@ bool SearchPersistent::parseStream()
   if ( queryString.isEmpty() )
     return failureResponse( "No query specified" );
 
+  // for legacy clients we have to guess the language
+#ifdef AKONADI_USE_STRIGI_SEARCH
+  QString lang = QLatin1String( "XESAM" );
+#else
+  QString lang = QLatin1String( "SPARQL" );
+#endif
+
+  if ( m_streamParser->hasList() ) {
+    m_streamParser->beginList();
+    while ( !m_streamParser->atListEnd() ) {
+      const QByteArray key = m_streamParser->readString();
+      if ( key == AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG ) {
+        lang = m_streamParser->readUtf8String();
+      }
+    }
+  }
+
   Collection col;
   col.setQueryString( queryString );
-#ifdef AKONADI_USE_STRIGI_SEARCH
-  col.setQueryLanguage( QLatin1String( "XESAM" ) ); // TODO receive from client
-#else
-  col.setQueryLanguage( QLatin1String( "SPARQL" ) ); // TODO receive from client
-#endif
+  col.setQueryLanguage( lang );
   col.setRemoteId( queryString ); // ### remove, legacy compat
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource
