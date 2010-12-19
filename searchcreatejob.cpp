@@ -24,6 +24,7 @@
 #include "imapparser_p.h"
 #include "protocolhelper_p.h"
 #include "job_p.h"
+#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 
@@ -37,6 +38,7 @@ class Akonadi::SearchCreateJobPrivate : public JobPrivate
 
     QString mName;
     QString mQuery;
+    QString mQueryLanguage;
     Collection mCreatedCollection;
 };
 
@@ -53,6 +55,12 @@ SearchCreateJob::~SearchCreateJob()
 {
 }
 
+void SearchCreateJob::setQueryLanguage(const QString& queryLanguage)
+{
+  Q_D( SearchCreateJob );
+  d->mQueryLanguage = queryLanguage;
+}
+
 void SearchCreateJob::doStart()
 {
   Q_D( SearchCreateJob );
@@ -61,6 +69,11 @@ void SearchCreateJob::doStart()
   command += ImapParser::quote( d->mName.toUtf8() );
   command += ' ';
   command += ImapParser::quote( d->mQuery.toUtf8() );
+  if ( !d->mQueryLanguage.isEmpty() ) {
+    command += " (" AKONADI_PARAM_PERSISTENTSEARCH_QUERYLANG " ";
+    command += ImapParser::quote( d->mQueryLanguage.toUtf8() );
+    command += ')';
+  }
   command += '\n';
   d->writeData( command );
 }

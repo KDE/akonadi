@@ -72,6 +72,13 @@ class AKONADI_EXPORT SearchCreateJob : public Job
     SearchCreateJob( const QString &name, const QString &query, QObject *parent = 0 );
 
     /**
+     * Sets the query language.
+     * @param queryLanguage The query language used.
+     * @since 4.6
+     */
+    void setQueryLanguage( const QString &queryLanguage );
+
+    /**
      * Destroys the search create job.
      */
     ~SearchCreateJob();
