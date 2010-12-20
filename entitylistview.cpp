@@ -22,6 +22,7 @@
 #include "entitylistview.h"
 
 #include "dragdropmanager_p.h"
+#include "favoritecollectionsmodel.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
@@ -171,7 +172,7 @@ void EntityListView::setModel( QAbstractItemModel * model )
 
 void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 {
-  if ( d->mDragDropManager->dropAllowed( event ) ) {
+  if ( d->mDragDropManager->dropAllowed( event ) || qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
     // All urls are supported. process the event.
     QListView::dragMoveEvent( event );
     return;
@@ -182,7 +183,7 @@ void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 
 void EntityListView::dropEvent( QDropEvent * event )
 {
-  if ( d->mDragDropManager->processDropEvent( event ) ) {
+  if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) || d->mDragDropManager->processDropEvent( event ) ) {
     QListView::dropEvent( event );
   }
 }
