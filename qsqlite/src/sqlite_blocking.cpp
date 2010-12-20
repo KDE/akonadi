@@ -1,7 +1,12 @@
 #include "sqlite_blocking.h"
 
 #include <sqlite3.h>
-#include <unistd.h>
+
+#ifdef _WIN32
+#  include <windows.h>
+#else
+#  include <unistd.h>
+#endif
 
 #include "qdebug.h"
 #include "qthread.h"
@@ -23,7 +28,11 @@ int sqlite3_blocking_step( sqlite3_stmt *pStmt )
     qDebug() << debugString() + "sqlite3_blocking_step: Entering while loop";
 
   while( rc == SQLITE_BUSY ) {
+#ifdef _WIN32
+    Sleep(5);
+#else
     usleep(5000);
+#endif
     sqlite3_reset( pStmt );
     rc = sqlite3_step( pStmt );
 
@@ -47,7 +56,11 @@ int sqlite3_blocking_prepare16_v2( sqlite3 *db,           /* Database handle. */
     qDebug() << debugString() + "sqlite3_blocking_prepare16_v2: Entering while loop";
 
   while( rc == SQLITE_BUSY ) {
+#ifdef _WIN32
+    Sleep(500);
+#else
     usleep(500000);
+#endif
     rc = sqlite3_prepare16_v2( db, zSql, nSql, ppStmt, pzTail );
 
     if ( rc != SQLITE_BUSY ) {
@@ -57,3 +70,4 @@ int sqlite3_blocking_prepare16_v2( sqlite3 *db,           /* Database handle. */
 
   return rc;
 }
+
