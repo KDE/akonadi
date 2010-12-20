@@ -237,6 +237,8 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Returns whether the collection is virtual, for example a search collection.
+     *
+     * @since 4.6
      */
     bool isVirtual() const;
 
