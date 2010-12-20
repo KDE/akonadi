@@ -279,32 +279,35 @@ QString NotificationMessage::toString() const
 
 void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg )
 {
-  NotificationMessage::List::Iterator end = list.end();
-  for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
-    if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
-      // same operation: merge changed parts and drop the new one
-      if ( msg.operation() == (*it).operation() ) {
-        (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
-        return;
-      }
-      // new one is a modification, the existing one not, so drop the new one
-      else if ( msg.operation() == Modify ) {
-        return;
-      }
-      // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
-      else if ( msg.operation() == Remove && (*it).operation() == Modify ) {
-        it = list.erase( it );
-        end = list.end();
-      }
-      // keep looking
-      else {
+  // fast-path for stuff that is not considered during O(n) compression below
+  if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
+    NotificationMessage::List::Iterator end = list.end();
+    for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
+      if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
+        // same operation: merge changed parts and drop the new one
+        if ( msg.operation() == (*it).operation() ) {
+          (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+          return;
+        }
+        // new one is a modification, the existing one not, so drop the new one
+        else if ( msg.operation() == Modify ) {
+          return;
+        }
+        // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
+        else if ( msg.operation() == Remove && (*it).operation() == Modify ) {
+          it = list.erase( it );
+          end = list.end();
+        }
+        // keep looking
+        else {
+          ++it;
+        }
+      } else {
         ++it;
       }
-    } else {
-      ++it;
     }
   }
-  list << msg;
+  list.append( msg );
 }
 
 QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
