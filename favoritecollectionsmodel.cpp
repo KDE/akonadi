@@ -198,7 +198,7 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &coll
 
 QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int role ) const
 {
-  if ( index.column() == 0 && role == Qt::DisplayRole ) {
+  if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
     const QModelIndex sourceIndex = mapToSource( index );
     const Collection::Id collectionId = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionIdRole ).toLongLong();
 
@@ -206,6 +206,20 @@ QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int 
   } else {
     return KSelectionProxyModel::data( index, role );
   }
+}
+
+bool FavoriteCollectionsModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( index.isValid() && index.column() == 0 && role == Qt::EditRole ) {
+    const QString newLabel = value.toString();
+    if ( newLabel.isEmpty() )
+      return false;
+    const QModelIndex sourceIndex = mapToSource( index );
+    const Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
+    setFavoriteLabel( collection, newLabel );
+    return true;
+  }
+  return Akonadi::SelectionProxyModel::setData(index, value, role);
 }
 
 QString Akonadi::FavoriteCollectionsModel::favoriteLabel( const Akonadi::Collection & collection )

@@ -118,6 +118,7 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
     QString favoriteLabel( const Akonadi::Collection & col );
 
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   public Q_SLOTS:
