@@ -600,6 +600,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     //@cond PRIVATE
     AgentBasePrivate *d_ptr;
     explicit AgentBase( AgentBasePrivate* d, const QString &id );
+    friend class ObserverV2;
     //@endcond
 
     /**

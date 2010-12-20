@@ -124,7 +124,7 @@ void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi
   if ( sAgentBase != 0 ) {
     // not implementation, let's disconnect the signal to enable optimizations in Monitor
     QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                         sAgentBase, SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+                         sAgentBase->d_ptr, SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
     sAgentBase->d_ptr->changeProcessed();
   }
 }
@@ -136,7 +136,7 @@ void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akona
   if ( sAgentBase != 0 ) {
     // not implementation, let's disconnect the signal to enable optimizations in Monitor
     QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                         sAgentBase, SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+                         sAgentBase->d_ptr, SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
     sAgentBase->d_ptr->changeProcessed();
   }
 }
