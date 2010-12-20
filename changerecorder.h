@@ -36,6 +36,12 @@ class ChangeRecorderPrivate;
  * is online again. Therefore the agent doesn't have to care about
  * online/offline mode in its synchronization algorithm.
  *
+ * Unlike Akonadi::Monitor this class only emits one change signal at a
+ * time. To receive the next one you need to explicitly call replayNext().
+ * If a signal is emitted that has no receivers, it's automatically skipped,
+ * which means you only need to connect to signals you are actually interested
+ * in.
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
 class AKONADI_EXPORT ChangeRecorder : public Monitor

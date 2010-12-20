@@ -55,6 +55,14 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       }
     }
 
+    virtual bool emitNotification(const Akonadi::NotificationMessage& msg)
+    {
+      const bool someoneWasListening = MonitorPrivate::emitNotification( msg );
+      if ( !someoneWasListening && enableChangeRecording )
+        QMetaObject::invokeMethod( q_ptr, "replayNext", Qt::QueuedConnection ); // skip notifications noone was listening to
+      return someoneWasListening;
+    }
+
     void loadNotifications()
     {
       pendingNotifications.clear();

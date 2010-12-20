@@ -252,7 +252,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
   return allCached;
 }
 
-void MonitorPrivate::emitNotification( const NotificationMessage &msg )
+bool MonitorPrivate::emitNotification( const NotificationMessage &msg )
 {
   const Collection parent = collectionCache.retrieve( msg.parentCollection() );
   Collection destParent;
@@ -261,11 +261,13 @@ void MonitorPrivate::emitNotification( const NotificationMessage &msg )
 
   if ( msg.type() == NotificationMessage::Collection ) {
     const Collection col = collectionCache.retrieve( msg.uid() );
-    emitCollectionNotification( msg, col, parent, destParent );
+    return emitCollectionNotification( msg, col, parent, destParent );
   } else if ( msg.type() == NotificationMessage::Item ) {
     const Item item = itemCache.retrieve( msg.uid() );
-    emitItemNotification( msg, item, parent, destParent );
+    return emitItemNotification( msg, item, parent, destParent );
   }
+
+  return false; // nothing emitted
 }
 
 void MonitorPrivate::dataAvailable()
@@ -370,8 +372,8 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
   dispatchNotifications();
 }
 
-void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const Item &item,
-                                             const Collection &collection, const Collection &collectionDest  )
+bool MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const Item &item,
+                                           const Collection &collection, const Collection &collectionDest  )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Item );
   Collection col = collection;
@@ -420,31 +422,44 @@ void MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
 
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
+      if ( q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->itemAdded( it, col );
-      break;
+      return true;
     case NotificationMessage::Modify:
+      if ( q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
+        return false;
       emit q_ptr->itemChanged( it, msg.itemParts() );
-      break;
+      return true;
     case NotificationMessage::Move:
+      if ( q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->itemMoved( it, col, colDest );
-      break;
+      return true;
     case NotificationMessage::Remove:
+      if ( q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
+        return false;
       emit q_ptr->itemRemoved( it );
-      break;
+      return true;
     case NotificationMessage::Link:
+      if ( q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->itemLinked( it, col );
-      break;
+      return true;
     case NotificationMessage::Unlink:
+      if ( q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->itemUnlinked( it, col );
-      break;
+      return true;;
     default:
       kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
-      break;
   }
+
+  return false;
 }
 
-void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg, const Collection &col,
-                                                   const Collection &par, const Collection &dest )
+bool MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg, const Collection &col,
+                                                 const Collection &par, const Collection &dest )
 {
   Q_ASSERT( msg.type() == NotificationMessage::Collection );
   Collection parent = par;
@@ -487,29 +502,44 @@ void MonitorPrivate::emitCollectionNotification( const NotificationMessage &msg,
 
   switch ( msg.operation() ) {
     case NotificationMessage::Add:
+      if ( q_ptr->receivers( SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->collectionAdded( collection, parent );
-      break;
+      return true;
     case NotificationMessage::Modify:
+      if ( q_ptr->receivers( SIGNAL(collectionChanged(Akonadi::Collection)) ) == 0
+        && q_ptr->receivers( SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) ) == 0 )
+        return false;
       emit q_ptr->collectionChanged( collection );
       emit q_ptr->collectionChanged( collection, msg.itemParts() );
-      break;
+      return true;
     case NotificationMessage::Move:
+      if ( q_ptr->receivers( SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->collectionMoved( collection, parent, destination );
-      break;
+      return true;
     case NotificationMessage::Remove:
+      if ( q_ptr->receivers( SIGNAL(collectionRemoved(Akonadi::Collection)) ) == 0 )
+        return false;
       emit q_ptr->collectionRemoved( collection );
-      break;
+      return true;
     case NotificationMessage::Subscribe:
-      if ( !monitorAll )
+      if ( q_ptr->receivers( SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+        return false;
+      if ( !monitorAll ) // ### why??
         emit q_ptr->collectionSubscribed( collection, parent );
-      break;
+      return true;
     case NotificationMessage::Unsubscribe:
-      if ( !monitorAll )
+      if ( q_ptr->receivers( SIGNAL(collectionUnsubscribed(Akonadi::Collection)) ) == 0 )
+        return false;
+      if ( !monitorAll ) // ### why??
         emit q_ptr->collectionUnsubscribed( collection );
-      break;
+      return true;
     default:
       kDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
   }
+
+  return false;
 }
 
 void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )

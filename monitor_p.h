@@ -81,7 +81,11 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     void cleanOldNotifications();
 
     bool ensureDataAvailable( const NotificationMessage &msg );
-    void emitNotification( const NotificationMessage &msg );
+    /**
+     * Sends out the change notification @p msg.
+     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     */
+    virtual bool emitNotification( const NotificationMessage &msg );
     void updatePendingStatistics( const NotificationMessage &msg );
     void invalidateCaches( const NotificationMessage &msg );
 
@@ -102,9 +106,17 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     virtual void slotNotify( const NotificationMessage::List &msgs );
 
-    void emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
+    /**
+     * Sends out a change notification for an item.
+     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     */
+    bool emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
-    void emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
+    /**
+     * Sends out a change notification for a collection.
+     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     */
+    bool emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
 
     void serverStateChanged( Akonadi::ServerManager::State state );
