@@ -121,16 +121,24 @@ void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi
 {
   Q_UNUSED( item );
   Q_UNUSED( collection );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+                         sAgentBase, SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
 {
   Q_UNUSED( item );
   Q_UNUSED( collection );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
+                         sAgentBase, SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::ObserverV2::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
@@ -686,6 +694,7 @@ void AgentBase::cleanup()
 
 void AgentBase::registerObserver( Observer *observer )
 {
+  // TODO in theory we should re-connect change recorder signals here that we disconnected previously
   d_ptr->mObserver = observer;
 }
 

@@ -101,6 +101,10 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @note In the multiple inheritance approach the init() method automatically
      *       registers itself as the observer.
      *
+     * @note Do not call the base implementation of reimplemented virtual methods!
+     *       The default implementation disconnected themselves from the Akonadi::ChangeRecorder
+     *       to enable internal optimizations for unused notifications.
+     *
      * Example for stand-alone observer:
      * @code
      * class ExampleAgent : public AgentBase
