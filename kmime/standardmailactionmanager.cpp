@@ -341,6 +341,10 @@ class StandardMailActionManager::Private
       const QAction *action = qobject_cast<QAction*>( mParent->sender() );
       Q_ASSERT( action );
 
+      const Akonadi::Item::List items = mGenericManager->selectedItems();
+      if ( items.isEmpty() )
+        return;
+
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark mail as: " << typeStr;
 
@@ -350,23 +354,21 @@ class StandardMailActionManager::Private
         typeStr = typeStr.mid( 1 );
       }
 
+      Akonadi::MessageStatus targetStatus;
+      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
+
       StandardMailActionManager::Type type = MarkMailAsRead;
-      if ( typeStr == "U" )
+      if ( typeStr == "U" ) {
         type = MarkMailAsUnread;
-      else if ( typeStr == "K" )
+        targetStatus.setRead( true );
+        invert = true;
+      } else if ( typeStr == "K" )
         type = MarkMailAsActionItem;
       else if ( typeStr == "G" )
         type = MarkMailAsImportant;
 
       if ( mInterceptedActions.contains( type ) )
         return;
-
-      const Akonadi::Item::List items = mGenericManager->selectedItems();
-      if ( items.isEmpty() )
-        return;
-
-      Akonadi::MessageStatus targetStatus;
-      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, items, invert, mParent );
       command->execute();
@@ -380,6 +382,13 @@ class StandardMailActionManager::Private
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark all as: " << typeStr;
 
+      const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
+      if ( collections.isEmpty() )
+        return;
+
+      Akonadi::MessageStatus targetStatus;
+      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
+
       bool invert = false;
       if ( typeStr.startsWith( '!' ) ) {
         invert = true;
@@ -387,22 +396,17 @@ class StandardMailActionManager::Private
       }
 
       StandardMailActionManager::Type type = MarkAllMailAsRead;
-      if ( typeStr == "U" )
+      if ( typeStr == "U" ) {
         type = MarkAllMailAsUnread;
-      else if ( typeStr == "K" )
+        targetStatus.setRead( true );
+        invert = true;
+      } else if ( typeStr == "K" )
         type = MarkAllMailAsActionItem;
       else if ( typeStr == "G" )
         type = MarkAllMailAsImportant;
 
       if ( mInterceptedActions.contains( type ) )
         return;
-
-      const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
-      if ( collections.isEmpty() )
-        return;
-
-      Akonadi::MessageStatus targetStatus;
-      targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, collections, invert, mParent );
       command->execute();
