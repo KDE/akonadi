@@ -259,4 +259,20 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropActio
   return false;
 }
 
+QStringList FavoriteCollectionsModel::mimeTypes() const
+{
+  QStringList mts = Akonadi::SelectionProxyModel::mimeTypes();
+  if ( !mts.contains( QLatin1String( "text/uri-list" ) ) )
+    mts.append( QLatin1String( "text/uri-list" ) );
+  return mts;
+}
+
+Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex& index) const
+{
+  Qt::ItemFlags fs = Akonadi::SelectionProxyModel::flags( index );
+  if ( !index.isValid() )
+    fs |= Qt::ItemIsDropEnabled;
+  return fs;
+}
+
 #include "favoritecollectionsmodel.moc"
