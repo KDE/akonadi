@@ -235,6 +235,11 @@ class AKONADI_EXPORT Collection : public Entity
      */
     KUrl url() const;
 
+    /**
+     * Returns whether the collection is virtual, for example a search collection.
+     */
+    bool isVirtual() const;
+
   private:
     AKONADI_DECLARE_PRIVATE( Collection )
     friend class CollectionFetchJob;

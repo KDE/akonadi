@@ -230,4 +230,10 @@ void Collection::setCachePolicy(const CachePolicy & cachePolicy)
   d->cachePolicyChanged = true;
 }
 
+bool Collection::isVirtual() const
+{
+  // TODO make this a proper flag
+  return ( (resource() == QLatin1String( "akonadi_search_resource" ) || resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
+}
+
 AKONADI_DEFINE_PRIVATE( Akonadi::Collection )
