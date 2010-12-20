@@ -1,3 +1,11 @@
+1.4.90                       20-December-2010
+---------------------------------------------
+- Set agent status for crashed instances.
+- Allow to restart crashed agent instances.
+- Automatically recover from loss of the resource table.
+- Allow to specify the query language in persistent search commands.
+- Fix leak of notification sources.
+
 1.4.85                       18-December-2010
 ---------------------------------------------
 - Fix agent server startup race.
