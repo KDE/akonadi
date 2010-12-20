@@ -21,6 +21,7 @@
 #include "favoritecollectionsmodel.h"
 
 #include <QtGui/QItemSelectionModel>
+#include <QtCore/QMimeData>
 
 #include <kconfiggroup.h>
 #include <klocale.h>
@@ -238,6 +239,24 @@ QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orie
   } else {
     return KSelectionProxyModel::headerData( section, orientation, role );
   }
+}
+
+bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent)
+{
+  Q_UNUSED( action );
+  Q_UNUSED( row );
+  Q_UNUSED( column );
+  Q_UNUSED( parent );
+  if ( data->hasFormat( QLatin1String( "text/uri-list" ) ) ) {
+    const KUrl::List urls = KUrl::List::fromMimeData( data );
+    foreach ( const KUrl &url, urls ) {
+      const Collection col = Collection::fromUrl( url );
+      if ( col.isValid() )
+        addCollection( col );
+    }
+    return true;
+  }
+  return false;
 }
 
 #include "favoritecollectionsmodel.moc"
