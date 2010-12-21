@@ -108,13 +108,21 @@ bool HandlerHelper::itemStatistics(const Akonadi::Collection& col, qint64& count
 
 int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & flag)
 {
-  CountQueryBuilder qb( PimItem::tableName() );
+  return itemWithFlagsCount( col, QStringList( flag ) );
+}
+
+int HandlerHelper::itemWithFlagsCount(const Akonadi::Collection& col, const QStringList& flags)
+{
+  CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
   qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
   qb.addJoin( QueryBuilder::InnerJoin, Flag::tableName(),
               Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
-  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
+  Query::Condition cond( Query::Or );
+  foreach ( const QString &flag, flags )
+    cond.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
+  qb.addCondition( cond );
   if ( !qb.exec() )
     return -1;
   return qb.result();
@@ -216,7 +224,7 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
     if ( itemStatistics( col, itemCount, itemSize ) ) {
       b += "MESSAGES " + QByteArray::number( itemCount ) + ' ';
       // itemWithFlagCount is twice as fast as itemWithoutFlagCount, so emulated that...
-      b += "UNSEEN " + QByteArray::number( itemCount - itemWithFlagCount( col, QLatin1String( "\\SEEN" ) ) ) + ' ';
+      b += "UNSEEN " + QByteArray::number( itemCount - itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) ) ) + ' ';
       b += "SIZE " + QByteArray::number( itemSize ) + ' ';
     }
   }

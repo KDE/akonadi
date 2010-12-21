@@ -33,12 +33,33 @@ namespace Akonadi {
 class CountQueryBuilder : public QueryBuilder
 {
   public:
+    enum CountMode {
+      All,
+      Distinct
+    };
+
     /**
-      Creates a new query builder.
+      Creates a new query builder that counts all entries in @p table.
     */
-    inline CountQueryBuilder( const QString& table ) : QueryBuilder( table, Select )
+    explicit inline CountQueryBuilder( const QString& table ) : QueryBuilder( table, Select )
     {
       addColumn( QLatin1String( "count(*)" ) );
+    }
+
+    /**
+     * Creates a new query builder that counts entries in @p column of @p table.
+     * If @p mode is set to @c Distinct, duplicate entries in that column are ignored.
+     */
+    inline CountQueryBuilder( const QString &table, const QString &column, CountMode mode ) : QueryBuilder( table, Select )
+    {
+      Q_ASSERT( !table.isEmpty() );
+      Q_ASSERT( !column.isEmpty() );
+      QString s = QLatin1String( "count(" );
+      if ( mode == Distinct )
+        s += QLatin1String( "DISTINCT " );
+      s += column;
+      s += QLatin1Char( ')' );
+      addColumn( s );
     }
 
     /**

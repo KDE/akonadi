@@ -90,7 +90,7 @@ bool Status::parseStream()
       statusResponse += "UNSEEN ";
 
     // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
-    const int count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\SEEN" ) );
+    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) );
     if ( count < 0 )
       return failureResponse( "Unable to retrieve unread count" );
     statusResponse += QByteArray::number( itemCount - count );
