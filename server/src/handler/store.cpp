@@ -265,7 +265,8 @@ bool Store::parseStream()
       QByteArray value;
       if ( m_streamParser->hasLiteral() ) {
         const qint64 dataSize = m_streamParser->remainingLiteralSize();
-        partSizes += dataSize;
+        if ( partName.startsWith( "PLD:" ) )
+          partSizes += dataSize;
         const bool storeInFile = ( DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold() );
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
@@ -310,7 +311,8 @@ bool Store::parseStream()
         }
       } else { //not a literal
         value = m_streamParser->readString();
-        partSizes += value.size();
+        if ( partName.startsWith( "PLD:" ) )
+          partSizes += value.size();
       }
 
       // only relevant for non-literals or non-external literals
