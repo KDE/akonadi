@@ -254,6 +254,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   updatePluralLabel( StandardActionManager::CutCollections, collectionCount );
   updatePluralLabel( StandardActionManager::DeleteCollections, collectionCount );
   updatePluralLabel( StandardActionManager::SynchronizeCollections, collectionCount );
+  updatePluralLabel( StandardActionManager::SynchronizeCollectionsRecursive, collectionCount );
   updatePluralLabel( StandardActionManager::DeleteResources, resourceCollectionCount );
   updatePluralLabel( StandardActionManager::SynchronizeResources, resourceCollectionCount );
 }
