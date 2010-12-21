@@ -703,22 +703,22 @@ class StandardActionManager::Private
 
     void slotCopyCollectionTo()
     {
-      pasteTo( collectionSelectionModel, CopyCollectionToMenu, Qt::CopyAction );
+      pasteTo( collectionSelectionModel, collectionSelectionModel->model(), CopyCollectionToMenu, Qt::CopyAction );
     }
 
     void slotCopyItemTo()
     {
-      pasteTo( itemSelectionModel, CopyItemToMenu, Qt::CopyAction );
+      pasteTo( itemSelectionModel, collectionSelectionModel->model(), CopyItemToMenu, Qt::CopyAction );
     }
 
     void slotMoveCollectionTo()
     {
-      pasteTo( collectionSelectionModel, MoveCollectionToMenu, Qt::MoveAction );
+      pasteTo( collectionSelectionModel, collectionSelectionModel->model(), MoveCollectionToMenu, Qt::MoveAction );
     }
 
     void slotMoveItemTo()
     {
-      pasteTo( itemSelectionModel, MoveItemToMenu, Qt::MoveAction );
+      pasteTo( itemSelectionModel, collectionSelectionModel->model(), MoveItemToMenu, Qt::MoveAction );
     }
 
     void slotCopyCollectionTo( QAction *action )
@@ -842,11 +842,11 @@ class StandardActionManager::Private
       }
     }
 
-    void pasteTo( QItemSelectionModel *selectionModel, StandardActionManager::Type type, Qt::DropAction dropAction )
+    void pasteTo( QItemSelectionModel *selectionModel, const QAbstractItemModel *model, StandardActionManager::Type type, Qt::DropAction dropAction )
     {
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
 
-      CollectionDialog dlg;
+      CollectionDialog dlg( const_cast<QAbstractItemModel*>( model ) );
       dlg.setMimeTypeFilter( mimeTypes.toList() );
 
       if ( type == CopyItemToMenu || type == MoveItemToMenu )
