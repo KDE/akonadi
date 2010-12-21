@@ -1109,14 +1109,13 @@ class StandardActionManager::Private
         return contextTexts[ type ].value( context ).text;
 
       KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
-      QString str = text.subs(count).toString();
-      int argCount = str.count( QRegExp( QLatin1String("%[0-9]") ) );
+      const QString str = text.subs( count ).toString();
+      const int argCount = str.count( QRegExp( QLatin1String( "%[0-9]" ) ) );
       if ( argCount > 0 ) {
-          return text.subs( count ).subs( value ).toString();
+        return text.subs( count ).subs( value ).toString();
       } else {
         return text.subs( count ).toString();
       }
-
     }
 
     StandardActionManager *q;
