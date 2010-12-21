@@ -312,6 +312,9 @@ class StandardMailActionManager::Private
         }
       }
 
+      if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) )
+        mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected );
+
       QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
       if ( action )
         action->setEnabled( enableMarkAllAsRead );
