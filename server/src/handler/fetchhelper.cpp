@@ -92,7 +92,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayl
 
     partQuery.addColumn( Part::versionFullColumnName() );
 
-    partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+    partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
     Query::Condition cond( Query::Or );
     if ( !partList.isEmpty() )
@@ -149,7 +149,7 @@ QSqlQuery FetchHelper::buildItemQuery()
   itemQuery.addColumn( PimItem::datetimeFullColumnName() );
   itemQuery.addColumn( PimItem::collectionIdFullColumnName() );
 
-  itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+  itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
@@ -178,7 +178,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
   flagQuery.addColumn( PimItem::idFullColumnName() );
   flagQuery.addColumn( Flag::nameFullColumnName() );
   ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
-  flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
+  flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( !flagQuery.exec() ) {
     throw HandlerException("Unable to retrieve item flags");
@@ -276,10 +276,10 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       QList<QByteArray> flags;
       while ( flagQuery.isValid() ) {
         const qint64 id = flagQuery.value( FlagQueryIdColumn ).toLongLong();
-        if ( id < pimItemId ) {
+        if ( id > pimItemId ) {
           flagQuery.next();
           continue;
-        } else if ( id > pimItemId ) {
+        } else if ( id < pimItemId ) {
           break;
         }
         flags << Utils::variantToByteArray( flagQuery.value( FlagQueryNameColumn ) );
@@ -293,10 +293,10 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
     while ( partQuery.isValid() ) {
       const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
-      if ( id < pimItemId ) {
+      if ( id > pimItemId ) {
         partQuery.next();
         continue;
-      } else if ( id > pimItemId ) {
+      } else if ( id < pimItemId ) {
         break;
       }
       QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
