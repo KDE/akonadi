@@ -10,8 +10,11 @@ QML.Rectangle {
     id : descriptionText
     anchors.top : parent.top
     anchors.left : parent.left
+    anchors.leftMargin : 15
     height : text == "" ? 0 : 20
     text : dialogController.descriptionText
+    font.bold : true
+    verticalAlignment : QML.Text.AlignVCenter
   }
 
   QML.ListView {
@@ -19,7 +22,9 @@ QML.Rectangle {
     anchors.top : descriptionText.bottom
     anchors.topMargin : 20
     anchors.left : parent.left
+    anchors.leftMargin : 15
     anchors.right : parent.right
+    anchors.rightMargin : 15
     anchors.bottom : filterLine.top
     clip : true
     boundsBehavior : QML.Flickable.StopAtBounds
@@ -33,7 +38,7 @@ QML.Rectangle {
       QML.Rectangle {
         anchors.fill : parent
         color : "lightsteelblue"
-        opacity : QML.ListView.isCurrentItem ? 0.25 : 0
+        opacity : QML.ListView.isCurrentItem ? 0.30 : 0
         radius : 10
       }
 
@@ -61,15 +66,29 @@ QML.Rectangle {
 
   QML.TextInput {
     id : filterLine
+    anchors.topMargin : 5
     anchors.left : parent.left
+    anchors.leftMargin : 20
     anchors.right : parent.right
+    anchors.rightMargin : 20
     anchors.bottom : okButton.top
+    anchors.bottomMargin : 5
 
     focus : true
     height : text == "" ? 0 : 20
     opacity : text == "" ? 0 : 1
 
     onTextChanged : dialogController.setFilterText( text )
+
+    QML.Rectangle {
+      anchors.fill : parent
+      anchors.leftMargin : -5
+      anchors.rightMargin : -5
+      z: parent.z - 1
+      color : "lightsteelblue"
+      opacity : 0.50
+      radius : 5
+    }
   }
 
   KPIM.Button2 {
@@ -99,6 +118,7 @@ QML.Rectangle {
   KPIM.Button2 {
     id: cancelButton
     anchors.right : parent.right
+    anchors.rightMargin: 15
     anchors.bottom : parent.bottom
     width : 150
 
