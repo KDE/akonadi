@@ -96,18 +96,18 @@ class AgentBasePrivate : public QObject
     AgentBase::Observer *mObserver;
 
   protected Q_SLOTS:
-    void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
-    void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
-    void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );
-    void itemRemoved( const Akonadi::Item &item );
+    virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
+    virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
+    virtual void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    virtual void itemRemoved( const Akonadi::Item &item );
     void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
-    void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
-    void collectionChanged( const Akonadi::Collection &collection );
-    void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
-    void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
-    void collectionRemoved( const Akonadi::Collection &collection );
+    virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
+    virtual void collectionChanged( const Akonadi::Collection &collection );
+    virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
+    virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    virtual void collectionRemoved( const Akonadi::Collection &collection );
     void collectionSubscribed( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     void collectionUnsubscribed( const Akonadi::Collection &collection );
 };

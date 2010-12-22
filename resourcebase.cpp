@@ -171,6 +171,95 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       scheduler->clear();
     }
 
+  protected Q_SLOTS:
+    // reimplementations from AgentbBasePrivate, containing sanity checks that only apply to resources
+    // such as making sure that RIDs are present as well as translations of cross-resource moves
+    // TODO: we could possibly add recovery code for no-RID notifications by re-enquing those to the change recorder
+    // as the corresponding Add notifications, although that contains a risk of endless fail/retry loops
+
+    void itemAdded(const Akonadi::Item& item, const Akonadi::Collection& collection)
+    {
+      if ( collection.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::itemAdded( item, collection );
+    }
+
+    void itemChanged(const Akonadi::Item& item, const QSet< QByteArray >& partIdentifiers)
+    {
+      if ( item.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::itemChanged( item, partIdentifiers );
+    }
+
+    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination)
+    {
+      if ( item.remoteId().isEmpty() || destination.remoteId().isEmpty() || destination == source ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::itemMoved( item, source, destination );
+    }
+
+    void itemRemoved(const Akonadi::Item& item)
+    {
+      if ( item.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::itemRemoved( item );
+    }
+
+    void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
+    {
+      if ( parent.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::collectionAdded( collection, parent );
+    }
+
+    void collectionChanged(const Akonadi::Collection& collection)
+    {
+      if ( collection.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::collectionChanged( collection );
+    }
+
+    void collectionChanged(const Akonadi::Collection& collection, const QSet< QByteArray >& partIdentifiers)
+    {
+      if ( collection.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::collectionChanged( collection, partIdentifiers );
+    }
+
+    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
+    void collectionMoved(const Akonadi::Collection& collection, const Akonadi::Collection& source, const Akonadi::Collection& destination)
+    {
+      if ( collection.remoteId().isEmpty() || destination.remoteId().isEmpty() || source == destination ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::collectionMoved( collection, source, destination );
+    }
+
+    void collectionRemoved(const Akonadi::Collection& collection)
+    {
+      if ( collection.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+      AgentBasePrivate::collectionRemoved( collection );
+    }
+
   public:
     // synchronize states
     Collection currentCollection;
