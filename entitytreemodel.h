@@ -355,12 +355,22 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     };
 
     /**
-     * Describes the state of fetch jobs related to particular entities.
+     * Describes the state of fetch jobs related to particular collections.
+     *
+     * @code
+     *   QModelIndex collectionIndex = getIndex();
+     *   if (collectionIndex.data(EntityTreeModel::FetchStateRole).toLongLong() == FetchingState) {
+     *     // There is a fetch underway
+     *   } else {
+     *     // There is no fetch underway.
+     *   }
+     * @endcode
+     *
      * @since 4.5
      */
     enum FetchState {
-      IdleState,                              ///< There is no fetch in progress.
-      FetchingState                           ///< There is a fetch in progress.
+      IdleState,                              ///< There is no fetch of items in this collection in progress.
+      FetchingState                           ///< There is a fetch of items in this collection in progress.
       // TODO: Change states for reporting of fetching payload parts of items.
     };
 
