@@ -1000,11 +1000,6 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 
   if ( isHidden( item ) )
     return;
-
-  if ( !m_items.contains( item.id() ) ) {
-    kWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
-    return;
-  }
   Q_ASSERT( m_collections.contains( collection.id() ) );
 
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
@@ -1015,6 +1010,9 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginInsertRows( parentIndex, row, row );
+  if ( !m_items.contains( item.id() ) ) {
+      m_items.insert( item.id(), item );
+  }
   Node *node = new Node;
   node->id = item.id();
   node->parent = collection.id();
