@@ -233,6 +233,7 @@ if (KDEPIM_MOBILE_UI)
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage_mobile.ui
   )
+  qt4_add_resources( akonadikde_LIB_SRC collectiondialog_mobile.qrc )
 else(KDEPIM_MOBILE_UI)
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage.ui
@@ -245,6 +246,10 @@ macro_ensure_version( "4.2.0" ${KDE_VERSION} KDE_IS_AT_LEAST_42 )
 
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
+
+if (KDEPIM_MOBILE_UI)
+target_link_libraries( akonadi-kde ${QT_QTDECLARATIVE_LIBRARY} )
+endif(KDEPIM_MOBILE_UI)
 
 if(KDE_IS_AT_LEAST_42)
 target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/" >
+        <file>CollectionDialogMobile.qml</file>
+    </qresource>
+</RCC>
+
+

@@ -18,96 +18,130 @@
 */
 
 #include "collectiondialog.h"
+#include "collectiondialog_mobile_p.h"
 
-#include <akonadi/collectioncombobox.h>
+#include "asyncselectionhandler_p.h"
+#include "kdescendantsproxymodel_p.h"
+
+#include <akonadi/changerecorder.h>
 #include <akonadi/collectioncreatejob.h>
+#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionutils_p.h>
-
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <akonadi/entityrightsfiltermodel.h>
+#include <akonadi/entitytreemodel.h>
 
 #include <KLocale>
 #include <KInputDialog>
 #include <KMessageBox>
+#include <KStandardDirs>
+
+#include <QtDeclarative/QDeclarativeContext>
+#include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeView>
 
 using namespace Akonadi;
 
-class CollectionDialog::Private
+CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options )
+  : QObject( parent ),
+    mParent( parent ),
+    mSelectionMode( QAbstractItemView::SingleSelection ),
+    mOkButtonEnabled( false ),
+    mCancelButtonEnabled( true ),
+    mCreateButtonEnabled( false )
 {
-  public:
-    Private( QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options )
-      : mParent( parent ),
-        mSelectionMode( QAbstractItemView::SingleSelection )
-    {
-      // setup GUI
-      QWidget *widget = mParent->mainWidget();
-      QVBoxLayout *layout = new QVBoxLayout( widget );
+  // setup GUI
+  mView = new QDeclarativeView( mParent );
 
-      changeCollectionDialogOptions( options );
+  mParent->setMainWidget( mView );
+  mParent->setButtons( KDialog::None );
 
-      mTextLabel = new QLabel;
-      layout->addWidget( mTextLabel );
-      mTextLabel->hide();
+  changeCollectionDialogOptions( options );
 
-      mCollectionComboBox = new CollectionComboBox( customModel, widget );
-      layout->addWidget( mCollectionComboBox );
-      mParent->connect( mCollectionComboBox, SIGNAL( currentIndexChanged( int ) ), SLOT( slotSelectionChanged() ) );
+  QAbstractItemModel *baseModel;
 
-      mParent->enableButton( KDialog::Ok, false );
-    }
+  if ( customModel ) {
+    baseModel = customModel;
+  } else {
+    mMonitor = new Akonadi::ChangeRecorder( mParent );
+    mMonitor->fetchCollection( true );
+    mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-    ~Private()
-    {
-    }
+    mModel = new EntityTreeModel( mMonitor, mParent );
+    mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
-    void slotCollectionAvailable( const QModelIndex& )
-    {
-    }
+    baseModel = mModel;
+  }
 
-    CollectionDialog *mParent;
+  KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
+  proxyModel->setDisplayAncestorData( true );
+  proxyModel->setSourceModel( baseModel );
 
-    QLabel *mTextLabel;
-    CollectionComboBox *mCollectionComboBox;
-    QAbstractItemView::SelectionMode mSelectionMode;
-    bool mAllowToCreateNewChildCollection;
+  mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
+  mMimeTypeFilterModel->setSourceModel( proxyModel );
 
-    void slotSelectionChanged();
-    void slotAddChildCollection();
-    void slotCollectionCreationResult( KJob* job );
-    bool canCreateCollection( const Akonadi::Collection &parentCollection ) const;
-    void changeCollectionDialogOptions( CollectionDialogOptions options );
+  mRightsFilterModel = new EntityRightsFilterModel( parent );
+  mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
-};
+  mFilterModel = new QSortFilterProxyModel( parent );
+  mFilterModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  mFilterModel->setSourceModel( mRightsFilterModel );
+
+  mSelectionModel = new QItemSelectionModel( mFilterModel );
+  mParent->connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+                    SLOT( slotSelectionChanged() ) );
+  mParent->connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+                    this, SLOT( selectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+
+  mSelectionHandler = new AsyncSelectionHandler( mFilterModel, mParent );
+  mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
+                    SLOT( slotCollectionAvailable( const QModelIndex& ) ) );
+
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String( "imports" ) ) )
+    mView->engine()->addImportPath( importPath );
+
+  mView->rootContext()->setContextProperty( QLatin1String( "dialogController" ), this );
+  mView->rootContext()->setContextProperty( QLatin1String( "collectionModel" ), mFilterModel );
+
+  // QUICKHACK: since we have no KDE integration plugin available in kdelibs, we have to do the translation in C++ space
+  mView->rootContext()->setContextProperty( QLatin1String( "okButtonText" ), KStandardGuiItem::ok().text().remove( QLatin1Char( '&' ) ) );
+  mView->rootContext()->setContextProperty( QLatin1String( "cancelButtonText" ), KStandardGuiItem::cancel().text().remove( QLatin1Char( '&' ) ) );
+  mView->rootContext()->setContextProperty( QLatin1String( "createButtonText" ), i18n( "&New Subfolder..." ).remove( QLatin1Char( '&' ) ) );
+
+  mView->setSource( QUrl( QLatin1String( "qrc:/CollectionDialogMobile.qml" ) ) );
+}
+
+CollectionDialog::Private::~Private()
+{
+}
+
+void CollectionDialog::Private::slotCollectionAvailable( const QModelIndex &index )
+{
+  mSelectionModel->setCurrentIndex( index, QItemSelectionModel::ClearAndSelect );
+}
 
 void CollectionDialog::Private::slotSelectionChanged()
 {
-  mParent->enableButton( KDialog::Ok, mCollectionComboBox->count() > 0 );
+  mOkButtonEnabled = mSelectionModel->hasSelection();
   if ( mAllowToCreateNewChildCollection ) {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
     const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
 
-    mParent->enableButton( KDialog::User1, (canCreateChildCollections && !isVirtual) );
+    mCreateButtonEnabled = (canCreateChildCollections && !isVirtual);
     if ( parentCollection.isValid() ) {
       const bool canCreateItems = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
-      mParent->enableButton( KDialog::Ok, canCreateItems );
+      mOkButtonEnabled = canCreateItems;
     }
   }
+
+  emit buttonStatusChanged();
 }
 
 void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogOptions options )
 {
   mAllowToCreateNewChildCollection = ( options & AllowToCreateNewChildCollection );
-  if ( mAllowToCreateNewChildCollection ) {
-    mParent->setButtons( Ok | Cancel | User1 );
-    mParent->setButtonGuiItem( User1, KGuiItem( i18n( "&New Subfolder..." ), QLatin1String( "folder-new" ),
-                                                i18n( "Create a new subfolder under the currently selected folder" ) ) );
-    mParent->enableButton( KDialog::User1, false );
-    connect( mParent, SIGNAL( user1Clicked() ), mParent, SLOT( slotAddChildCollection() ) );
-  }
+  emit buttonStatusChanged();
 }
-
-
 
 bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &parentCollection ) const
 {
@@ -125,7 +159,6 @@ bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &
   }
   return false;
 }
-
 
 void CollectionDialog::Private::slotAddChildCollection()
 {
@@ -153,7 +186,70 @@ void CollectionDialog::Private::slotCollectionCreationResult( KJob* job )
   }
 }
 
+void CollectionDialog::Private::setDescriptionText( const QString &text )
+{
+  mDescriptionText = text;
+  emit descriptionTextChanged();
+}
 
+QString CollectionDialog::Private::descriptionText() const
+{
+  return mDescriptionText;
+}
+
+bool CollectionDialog::Private::okButtonEnabled() const
+{
+  return mOkButtonEnabled;
+}
+
+bool CollectionDialog::Private::cancelButtonEnabled() const
+{
+  return mCancelButtonEnabled;
+}
+
+bool CollectionDialog::Private::createButtonEnabled() const
+{
+  return mCreateButtonEnabled;
+}
+
+bool CollectionDialog::Private::createButtonVisible() const
+{
+  return mAllowToCreateNewChildCollection;
+}
+
+void CollectionDialog::Private::okClicked()
+{
+  mParent->accept();
+}
+
+void CollectionDialog::Private::cancelClicked()
+{
+  mParent->reject();
+}
+
+void CollectionDialog::Private::createClicked()
+{
+  slotAddChildCollection();
+}
+
+void CollectionDialog::Private::setCurrentIndex( int row )
+{
+  const QModelIndex index = mSelectionModel->model()->index( row, 0 );
+  mSelectionModel->select( index, QItemSelectionModel::ClearAndSelect );
+}
+
+void CollectionDialog::Private::setFilterText( const QString &text )
+{
+  mFilterModel->setFilterFixedString( text );
+}
+
+void CollectionDialog::Private::selectionChanged( const QItemSelection &selection, const QItemSelection& )
+{
+  if ( selection.isEmpty() )
+    return;
+
+  emit selectionChanged( selection.indexes().first().row() );
+}
 
 CollectionDialog::CollectionDialog( QWidget *parent )
   : KDialog( parent ),
@@ -176,48 +272,53 @@ CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractIt
 
 CollectionDialog::~CollectionDialog()
 {
-  delete d;
 }
 
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {
-  return d->mCollectionComboBox->currentCollection();
+  if ( !d->mSelectionModel->hasSelection() )
+    return Akonadi::Collection();
+
+  return d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
 
 Akonadi::Collection::List CollectionDialog::selectedCollections() const
 {
-  return (Collection::List() << d->mCollectionComboBox->currentCollection());
+  if ( !d->mSelectionModel->hasSelection() )
+    return Akonadi::Collection::List();
+
+  return (Akonadi::Collection::List() << d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>());
 }
 
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
-  d->mCollectionComboBox->setMimeTypeFilter( mimeTypes );
+  d->mMimeTypeFilterModel->clearFilters();
+  d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const
 {
-  return d->mCollectionComboBox->mimeTypeFilter();
+  return d->mMimeTypeFilterModel->mimeTypes();
 }
 
 void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
 {
-  d->mCollectionComboBox->setAccessRightsFilter( rights );
+  d->mRightsFilterModel->setAccessRights( rights );
 }
 
 Collection::Rights CollectionDialog::accessRightsFilter() const
 {
-  return d->mCollectionComboBox->accessRightsFilter();
+  return d->mRightsFilterModel->accessRights();
 }
 
 void CollectionDialog::setDescription( const QString &text )
 {
-  d->mTextLabel->setText( text );
-  d->mTextLabel->show();
+  d->setDescriptionText( text );
 }
 
 void CollectionDialog::setDefaultCollection( const Collection &collection )
 {
-  d->mCollectionComboBox->setDefaultCollection( collection );
+  d->mSelectionHandler->waitForCollection( collection );
 }
 
 void CollectionDialog::setSelectionMode( QAbstractItemView::SelectionMode mode )
@@ -236,3 +337,4 @@ void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions op
 }
 
 #include "collectiondialog.moc"
+#include "collectiondialog_mobile_p.moc"
