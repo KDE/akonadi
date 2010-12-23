@@ -259,19 +259,19 @@ void CollectionDialog::Private::selectionChanged( const QItemSelection &selectio
 }
 
 CollectionDialog::CollectionDialog( QWidget *parent )
-  : KDialog( parent ),
+  : KDialog( parent, Qt::Window ),
     d( new Private( 0, this, CollectionDialog::None ) )
 {
 }
 
 CollectionDialog::CollectionDialog( QAbstractItemModel *model, QWidget *parent )
-  : KDialog( parent ),
+  : KDialog( parent, Qt::Window ),
     d( new Private( model, this, CollectionDialog::None ) )
 {
 }
 
 CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractItemModel *model, QWidget *parent )
-  : KDialog( parent ),
+  : KDialog( parent, Qt::Window ),
     d( new Private( model, this, options ) )
 {
 }
