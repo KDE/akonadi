@@ -124,6 +124,12 @@ void EntityTreeView::Private::slotSelectionChanged( const QItemSelection & selec
       mParent->model()->fetchMore( index.sibling( row, column ) );
     }
   }
+
+  if ( selected.size() == 1 ) {
+    const QItemSelectionRange &range = selected.first();
+    if ( range.topLeft().row() == range.bottomRight().row() )
+      mParent->scrollTo( range.topLeft(), QTreeView::EnsureVisible );
+  }
 }
 
 void EntityTreeView::Private::itemClicked( const QModelIndex &index )
