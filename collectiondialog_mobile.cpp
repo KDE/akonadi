@@ -108,6 +108,13 @@ CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionD
   mView->rootContext()->setContextProperty( QLatin1String( "createButtonText" ), i18n( "&New Subfolder..." ).remove( QLatin1Char( '&' ) ) );
 
   mView->setSource( QUrl( QLatin1String( "qrc:/CollectionDialogMobile.qml" ) ) );
+
+#if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
+  mParent->setWindowState( Qt::WindowFullScreen );
+#else
+  // on the desktop start with a nice size
+  mParent->resize( 800, 480 );
+#endif
 }
 
 CollectionDialog::Private::~Private()
