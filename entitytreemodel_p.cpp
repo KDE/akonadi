@@ -1009,7 +1009,16 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
-  const int row = m_childEntities.value( collectionId ).size();
+  QList<Node*> &collectionEntities =  m_childEntities[ collectionId ];
+
+  int existingPosition = indexOf<Node::Item>( collectionEntities, itemId );
+
+  if ( existingPosition > 0 ) {
+    qWarning() << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
+    return;
+  }
+
+  const int row = collectionEntities.size();
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collectionId ) );
 
@@ -1021,7 +1030,7 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
   node->id = itemId;
   node->parent = collectionId;
   node->type = Node::Item;
-  m_childEntities[ collectionId ].append( node );
+  collectionEntities.append( node );
   q->endInsertRows();
 }
 
