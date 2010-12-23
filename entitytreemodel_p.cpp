@@ -1000,24 +1000,28 @@ void EntityTreeModelPrivate::monitoredItemLinked( const Akonadi::Item& item, con
 
   if ( isHidden( item ) )
     return;
-  Q_ASSERT( m_collections.contains( collection.id() ) );
+
+  const Collection::Id collectionId = collection.id();
+  const Item::Id itemId = item.id();
+
+  Q_ASSERT( m_collections.contains( collectionId ) );
 
   if ( !m_mimeChecker.wantedMimeTypes().isEmpty() && !m_mimeChecker.isWantedItem( item ) )
     return;
 
-  const int row = m_childEntities.value( collection.id() ).size();
+  const int row = m_childEntities.value( collectionId ).size();
 
-  const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
+  const QModelIndex parentIndex = indexForCollection( m_collections.value( collectionId ) );
 
   q->beginInsertRows( parentIndex, row, row );
-  if ( !m_items.contains( item.id() ) ) {
-      m_items.insert( item.id(), item );
+  if ( !m_items.contains( itemId ) ) {
+      m_items.insert( itemId, item );
   }
   Node *node = new Node;
-  node->id = item.id();
-  node->parent = collection.id();
+  node->id = itemId;
+  node->parent = collectionId;
   node->type = Node::Item;
-  m_childEntities[ collection.id() ].append( node );
+  m_childEntities[ collectionId ].append( node );
   q->endInsertRows();
 }
 
