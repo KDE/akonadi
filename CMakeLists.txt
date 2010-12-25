@@ -262,11 +262,10 @@ make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL
 make_install_path_absolute(AKONADI_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
 make_install_path_absolute(AKONADI_XDG_MIME_DIR        ${XDG_MIME_INSTALL_DIR})
 
-# Used in configure_file() and install(EXPORT)
-#set(AKONADI_TARGET_PREFIX Akonadi__)
-
 
 ############### Generate files ###############
+# Used in configure_file() and install(EXPORT). Must be set before setting the AkonadiConfig.cmake vars.
+set(AKONADI_TARGET_PREFIX Akonadi__)
 
 if (Soprano_FOUND)
   set(HAVE_SOPRANO TRUE)
@@ -343,3 +342,9 @@ include(CPack) # needs to happen after the above variables are set!
 
 
 macro_display_feature_log()
+
+# Install the file with the exported targets
+install(EXPORT akonadiLibraryTargets
+        NAMESPACE ${AKONADI_TARGET_PREFIX}
+        DESTINATION ${_AkonadiConfig_INSTALL_DIR}
+        FILE AkonadiTargetsWithPrefix.cmake )

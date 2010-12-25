@@ -19,7 +19,7 @@ set_target_properties( akonadiprotocolinternals PROPERTIES
                         DEFINE_SYMBOL MAKE_AKONADIPROTOCOLINTERNALS_LIB
                       )
 
-install( TARGETS akonadiprotocolinternals ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install( TARGETS akonadiprotocolinternals EXPORT akonadiLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES
   ${Akonadi_BINARY_DIR}/akonadiprotocolinternals_export.h 

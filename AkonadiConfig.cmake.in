@@ -22,15 +22,17 @@ set(AKONADI_LIB_DIR              "@AKONADI_LIB_DIR@")
 set(AKONADI_SHARE_DIR            "@SHARE_INSTALL_PREFIX@")
 set(AKONADI_XDG_MIME_INSTALL_DIR "@AKONADI_XDG_MIME_DIR@")
 
-# Compatibility
-if(WIN32)
-if(MINGW)
-  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.dll.a")
-else(MINGW)
-  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/akonadiprotocolinternals.lib")
-endif(MINGW)
-elseif(APPLE)
-  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.dylib")
-else()
-  set(AKONADI_COMMON_LIBRARIES     "@AKONADI_LIB_DIR@/libakonadiprotocolinternals.so")
+# the exports file exports
+set(AKONADI_TARGET_PREFIX @AKONADI_TARGET_PREFIX@)
+
+# Load the exported targets.
+if(NOT TARGET Akonadi__akonadiprotocolinternals)
+   get_filename_component(_currentDir "${CMAKE_CURRENT_LIST_FILE}" PATH)
+   include("${_currentDir}/AkonadiTargetsWithPrefix.cmake")
 endif()
+
+macro(_akonadi_Set_Lib_Vars _prefix _lib)
+  set(AKONADI_${_prefix}_LIBRARIES    ${AKONADI_TARGET_PREFIX}${_lib})
+endmacro()
+
+_akonadi_set_lib_vars(COMMON akonadiprotocolinternals)
