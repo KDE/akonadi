@@ -217,16 +217,18 @@ void MonitorPrivate::dispatchNotifications()
 
 void MonitorPrivate::cleanOldNotifications()
 {
-  foreach ( const NotificationMessage &msg, pipeline ) {
-    if ( !acceptNotification( msg ) ) {
-      pipeline.removeOne( msg );
-    }
+  for ( NotificationMessage::List::iterator it = pipeline.begin(); it != pipeline.end(); ) {
+    if ( !acceptNotification( *it ) )
+      it = pipeline.erase( it );
+    else
+      ++it;
   }
 
-  foreach ( const NotificationMessage &msg, pendingNotifications ) {
-    if ( !acceptNotification( msg ) ) {
-      pendingNotifications.removeOne( msg );
-    }
+  for ( NotificationMessage::List::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
+    if ( !acceptNotification( *it ) )
+      it = pendingNotifications.erase( it );
+    else
+      ++it;
   }
 }
 
@@ -259,15 +261,19 @@ bool MonitorPrivate::emitNotification( const NotificationMessage &msg )
   if ( msg.operation() == NotificationMessage::Move )
     destParent = collectionCache.retrieve( msg.parentDestCollection() );
 
+  bool someoneWasListening = false;
   if ( msg.type() == NotificationMessage::Collection ) {
     const Collection col = collectionCache.retrieve( msg.uid() );
-    return emitCollectionNotification( msg, col, parent, destParent );
+    someoneWasListening = emitCollectionNotification( msg, col, parent, destParent );
   } else if ( msg.type() == NotificationMessage::Item ) {
     const Item item = itemCache.retrieve( msg.uid() );
-    return emitItemNotification( msg, item, parent, destParent );
+    someoneWasListening = emitItemNotification( msg, item, parent, destParent );
   }
 
-  return false; // nothing emitted
+  if ( !someoneWasListening )
+    cleanOldNotifications(); // probably someone disconnected a signal in the meantime, get rid of the no longer interesting stuff
+
+  return someoneWasListening;
 }
 
 void MonitorPrivate::dataAvailable()
