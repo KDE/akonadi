@@ -27,53 +27,69 @@
 
 namespace Akonadi
 {
+
 class RecursiveCollectionFilterProxyModelPrivate;
 
+/**
+ * @short A model to filter out collections of non-matching content types.
+ *
+ * @author Stephen Kelly <steveire@gmail.com>
+ * @since 4.6
+ */
 class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilterProxyModel
 {
   Q_OBJECT
-public:
-  RecursiveCollectionFilterProxyModel(QObject* parent = 0);
 
-  virtual ~RecursiveCollectionFilterProxyModel();
+  public:
+    /**
+     * Creates a new recursive collection filter proxy model.
+     *
+     * @param parent The parent object.
+     */
+    RecursiveCollectionFilterProxyModel( QObject *parent = 0 );
 
-  /**
-  * Add content mime type to be shown by the filter.
-  *
-  * @param mimeType A mime type to be shown.
-  */
-  void addContentMimeTypeInclusionFilter( const QString &mimeType );
+    /**
+     * Destroys the recursive collection filter proxy model.
+     */
+    virtual ~RecursiveCollectionFilterProxyModel();
 
-  /**
-  * Add content mime types to be shown by the filter.
-  *
-  * @param mimeTypes A list of content mime types to be included.
-  */
-  void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+    /**
+     * Add content mime type to be shown by the filter.
+     *
+     * @param mimeType A mime type to be shown.
+     */
+    void addContentMimeTypeInclusionFilter( const QString &mimeType );
 
-  /**
-   * Clears the current filters.
-   */
-  void clearFilters();
+    /**
+     * Add content mime types to be shown by the filter.
+     *
+     * @param mimeTypes A list of content mime types to be included.
+     */
+    void addContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
 
-  /**
-  * Replace the content mime types to be shown by the filter.
-  *
-  * @param mimeTypes A list of content mime types to be included.
-  */
-  void setContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
+    /**
+     * Clears the current filters.
+     */
+    void clearFilters();
 
-  /**
-   * Returns the currently included mimetypes in the filter.
-   */
-  QStringList contentMimeTypeInclusionFilters() const;
+    /**
+     * Replace the content mime types to be shown by the filter.
+     *
+     * @param mimeTypes A list of content mime types to be included.
+     */
+    void setContentMimeTypeInclusionFilters( const QStringList &mimeTypes );
 
-protected:
-  /* reimp */ bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const;
+    /**
+     * Returns the currently included mimetypes in the filter.
+     */
+    QStringList contentMimeTypeInclusionFilters() const;
 
-protected:
-  RecursiveCollectionFilterProxyModelPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)
+  protected:
+    /* reimp */ bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+
+  protected:
+    RecursiveCollectionFilterProxyModelPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)
 };
 
 }
