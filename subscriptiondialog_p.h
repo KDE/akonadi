@@ -46,10 +46,10 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
      * Creates a new subscription dialog.
      *
      * @param parent The parent widget.
-     * @param mimetype The specific mimetype
+     * @param mimetypes The specific mimetypes
      * @since 4.6
      */
-    explicit SubscriptionDialog( const QString & mimetype, QWidget *parent = 0 );
+    explicit SubscriptionDialog( const QStringList &mimetypes, QWidget *parent = 0 );
 
     /**
      * Destroys the subscription dialog.
@@ -64,7 +64,7 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
     class Private;
     Private* const d;
 
-    void init( const QString& mimetype = QString());
+    void init( const QStringList &mimetypes );
 
     Q_PRIVATE_SLOT( d, void done() )
     Q_PRIVATE_SLOT( d, void subscriptionResult( KJob* job ) )

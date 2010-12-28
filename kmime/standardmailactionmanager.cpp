@@ -488,7 +488,7 @@ class StandardMailActionManager::Private
     void slotMailLocalSubscription()
     {
 #ifndef Q_OS_WINCE
-      SubscriptionDialog* dlg = new SubscriptionDialog( KMime::Message::mimeType(), mParentWidget );
+      SubscriptionDialog* dlg = new SubscriptionDialog( QStringList() << KMime::Message::mimeType(), mParentWidget );
       dlg->show();
 #endif
     }

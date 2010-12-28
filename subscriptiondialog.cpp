@@ -105,17 +105,17 @@ SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
     KDialog( parent ),
     d( new Private( this ) )
 {
-  init();
+  init( QStringList() );
 }
 
-SubscriptionDialog::SubscriptionDialog(const QString& mimetype, QWidget * parent) :
+SubscriptionDialog::SubscriptionDialog(const QStringList& mimetypes, QWidget * parent) :
     KDialog( parent ),
     d( new Private( this ) )
 {
-  init( mimetype );
+  init( mimetypes );
 }
 
-void SubscriptionDialog::init( const QString& mimetype )
+void SubscriptionDialog::init( const QStringList &mimetypes )
 {
   enableButtonOk( false );
   setCaption( i18n( "Local Subscriptions" ) );
@@ -134,8 +134,8 @@ void SubscriptionDialog::init( const QString& mimetype )
 
   RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
       = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-  if ( !mimetype.isEmpty() )
-    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
+  if ( !mimetypes.isEmpty() )
+    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
 
   filterRecursiveCollectionFilter->setSourceModel( filterTreeViewModel );
 
@@ -157,8 +157,8 @@ void SubscriptionDialog::init( const QString& mimetype )
 
   RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
       = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-  if ( !mimetype.isEmpty() )
-    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
+  if ( !mimetypes.isEmpty() )
+    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
 
   filterRecursiveCollectionFilter->setSourceModel( d->model );
 
