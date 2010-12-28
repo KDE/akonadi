@@ -20,7 +20,7 @@
 #include "recursivecollectionfilterproxymodel.h"
 
 #include "entitytreemodel.h"
-#include "entityhiddenattribute.h"
+#include "mimetypechecker.h"
 
 #include <kdebug.h>
 
@@ -56,23 +56,19 @@ RecursiveCollectionFilterProxyModel::~RecursiveCollectionFilterProxyModel()
   delete d_ptr;
 }
 
-bool RecursiveCollectionFilterProxyModel::acceptRow(int sourceRow, const QModelIndex& sourceParent) const
+bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModelIndex &sourceParent ) const
 {
-  Q_D(const RecursiveCollectionFilterProxyModel);
+  Q_D( const RecursiveCollectionFilterProxyModel );
 
-  QModelIndex rowIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-  Akonadi::Collection col = rowIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-  if (!col.isValid())
+  Akonadi::MimeTypeChecker checker;
+  checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
+
+  const QModelIndex rowIndex = sourceModel()->index( sourceRow, 0, sourceParent );
+  const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( !collection.isValid() )
     return false;
 
-  if (d->includedMimeTypes.isEmpty())
-    return true;
-
-  QSet<QString> contentMimeTypes = col.contentMimeTypes().toSet();
-
-  if ( contentMimeTypes.intersect(d->includedMimeTypes).isEmpty())
-    return false;
-  return true;
+  return checker.isWantedCollection( collection );
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
