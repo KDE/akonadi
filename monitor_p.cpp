@@ -415,6 +415,15 @@ bool MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
       it.setParentCollection( colDest );
     else
       it.setParentCollection( col );
+  } else {
+    // item has a valid parent collection, most likely due to retrieved ancestors
+    // still, collection might contain extra info, so inject that
+    if ( it.parentCollection() == col ) {
+      const Collection oldParent = it.parentCollection();
+      if ( oldParent.parentCollection().isValid() && !col.parentCollection().isValid() )
+        col.setParentCollection( oldParent.parentCollection() ); // preserve ancestor chain
+      it.setParentCollection( col );
+    }
   }
 
   // HACK: We have the remoteRevision stored in the itemParts set
