@@ -19,9 +19,10 @@
 
 #include "subscriptiondialog_p.h"
 
-#include "subscriptionmodel_p.h"
-#include "subscriptionjob_p.h"
 #include "control.h"
+#include "recursivecollectionfilterproxymodel.h"
+#include "subscriptionjob_p.h"
+#include "subscriptionmodel_p.h"
 
 #include <kdebug.h>
 
@@ -30,16 +31,15 @@
 #include <klocale.h>
 
 #ifndef KDEPIM_MOBILE_UI
+#include <klineedit.h>
 #include <krecursivefilterproxymodel.h>
-#include <recursivecollectionfilterproxymodel.h>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
-#include <klineedit.h>
 #else
+#include "kdescendantsproxymodel_p.h"
 #include <QtGui/QListView>
 #include <QtGui/QSortFilterProxyModel>
-#include "kdescendantsproxymodel_p.h"
 
 class CheckableFilterProxyModel : public QSortFilterProxyModel
 {
@@ -154,10 +154,18 @@ void SubscriptionDialog::init( const QString& mimetype )
   d->collectionView->setModel( filterRecursiveCollectionFilter );
   mainLayout->addWidget( d->collectionView );
 #else
+
+  RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
+      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
+  if ( !mimetype.isEmpty() )
+    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilter( mimetype );
+
+  filterRecursiveCollectionFilter->setSourceModel( d->model );
+
   KDescendantsProxyModel *flatModel = new KDescendantsProxyModel( this );
   flatModel->setDisplayAncestorData( true );
   flatModel->setAncestorSeparator( QLatin1String( "/" ) );
-  flatModel->setSourceModel( d->model );
+  flatModel->setSourceModel( filterRecursiveCollectionFilter );
 
   CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel( this );
   checkableModel->setSourceModel( flatModel );
