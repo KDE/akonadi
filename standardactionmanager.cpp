@@ -636,7 +636,7 @@ class StandardActionManager::Private
 
     void slotLocalSubscription()
     {
-      SubscriptionDialog* dlg = new SubscriptionDialog( parentWidget );
+      SubscriptionDialog* dlg = new SubscriptionDialog( mMimeTypeFilter, parentWidget );
       dlg->show();
     }
 
