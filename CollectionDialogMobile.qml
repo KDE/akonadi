@@ -2,8 +2,8 @@ import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 
 QML.Rectangle {
-  width : 800
-  height : 480
+  width : 780
+  height : 460
   color : "#00000000"
 
   QML.Text {
