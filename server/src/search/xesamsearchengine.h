@@ -46,11 +46,13 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
   private:
     void reloadSearches();
     void stopSearches();
+    qint64 searchToCollectionId( const QString& search );
 
   private Q_SLOTS:
     void initializeSearchInterface();
 
     void slotHitsAdded( const QString &search, uint count );
+    void slotSearchDone( const QString &search );
     void slotHitsRemoved( const QString &search, const QList<uint> &hits );
     void slotHitsModified( const QString &search, const QList<uint> &hits );
 

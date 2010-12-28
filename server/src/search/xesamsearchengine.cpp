@@ -78,26 +78,38 @@ void XesamSearchEngine::initializeSearchInterface()
 
   if ( mInterface->isValid() ) {
     mSession = mInterface->NewSession();
+
+    /* FIXME currently broken in strigi
     QDBusVariant result = mInterface->SetProperty( mSession, QLatin1String( "search.live" ), QDBusVariant( true ) );
-    mValid = mValid && result.variant().toBool();
-
-    connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( slotHitsAdded( QString, uint ) ) );
-    connect( mInterface, SIGNAL( HitsRemoved( QString, QList<uint> ) ), SLOT( slotHitsRemoved( QString, QList<uint> ) ) );
-    connect( mInterface, SIGNAL( HitsModified( QString, QList<uint> ) ), SLOT( slotHitsModified( QString, QList<uint> ) ) );
-
+    mValid = result.variant().toBool();
+    */
     mValid = true;
-    reloadSearches();
+
+    if ( mValid ) {
+      connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( slotHitsAdded( QString, uint ) ) );
+      connect( mInterface, SIGNAL( SearchDone( QString ) ), SLOT( slotSearchDone( QString ) ) );
+      connect( mInterface, SIGNAL( HitsRemoved( QString, QList<uint> ) ), SLOT( slotHitsRemoved( QString, QList<uint> ) ) );
+      connect( mInterface, SIGNAL( HitsModified( QString, QList<uint> ) ), SLOT( slotHitsModified( QString, QList<uint> ) ) );
+
+      reloadSearches();
+    }
   } else {
     mValid = false;
   }
 }
 
+qint64 XesamSearchEngine::searchToCollectionId( const QString& search )
+{
+  mMutex.lock();
+  const qint64 collectionId = mSearchMap.contains( search ) ? mSearchMap.value( search ) : -1;
+  mMutex.unlock();
+  return collectionId;
+}
+
 void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 {
   qDebug() << "hits added: " << search << count;
-  mMutex.lock();
-  const qint64 collectionId = mSearchMap.value( search );
-  mMutex.unlock();
+  const qint64 collectionId = searchToCollectionId( search );
 
   if ( collectionId <= 0 || count <= 0 )
     return;
@@ -118,8 +130,14 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
     if ( itemId == -1 )
       continue;
 
-    Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
-    mCollector->itemLinked( PimItem::retrieveById( itemId ), collection );
+
+    const PimItem item = PimItem::retrieveById( itemId );
+    if ( item.isValid() ) {
+      Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
+      mCollector->itemLinked( item, collection );
+    } else {
+      qDebug() << "Non-existing item referenced in XESAM search. Discarding id:" << itemId;
+    }
   }
 
   mCollector->dispatchNotifications();
@@ -128,9 +146,7 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint> &hits )
 {
   qDebug() << "hits removed: " << search << hits;
-  mMutex.lock();
-  const qint64 collectionId = mSearchMap.value( search );
-  mMutex.unlock();
+  const qint64 collectionId = searchToCollectionId( search );
 
   if ( collectionId <= 0 )
     return;
@@ -190,8 +206,11 @@ void XesamSearchEngine::addSearch( const Collection &collection )
   if ( collection.remoteId().isEmpty() )
     return;
 
-  const QString searchId = mInterface->NewSearch( mSession, collection.remoteId() );
-  qDebug() << "XesamSearchEngine::addSeach" << collection.name() << searchId;
+  const QString searchString = collection.queryString();
+  if ( searchString.isEmpty() )
+    return;
+  const QString searchId = mInterface->NewSearch( mSession, searchString );
+  qDebug() << "XesamSearchEngine::addSearch" << collection.name() << searchId << searchString;
 
   mMutex.lock();
   mSearchMap.insert( searchId, collection.id() );
@@ -203,12 +222,16 @@ void XesamSearchEngine::addSearch( const Collection &collection )
 
 void XesamSearchEngine::removeSearch( qint64 collectionId )
 {
+  if ( !mInvSearchMap.contains( collectionId ) )
+    return;
   mMutex.lock();
   const QString searchId = mInvSearchMap.value( collectionId );
   mMutex.unlock();
 
   if ( searchId.isEmpty() )
     return;
+
+  Q_ASSERT( mSearchMap.contains( searchId ) );
 
   mInterface->CloseSearch( searchId );
 
@@ -231,6 +254,16 @@ void XesamSearchEngine::stopSearches()
     qDebug() << "removing search" << collection.name();
     removeSearch( collection.id() );
   }
+}
+
+void XesamSearchEngine::slotSearchDone(const QString &search)
+{
+  // If we get a search done signal, this is not a live search
+  // so we can stop monitoring it. This is to avoid getting
+  // spurious hits for already finished searches.
+  qDebug() << "search done" << search;
+  if ( mSearchMap.contains( search ) )
+    mInterface->CloseSearch( search );
 }
 
 #include "xesamsearchengine.moc"
