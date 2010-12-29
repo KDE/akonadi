@@ -45,6 +45,7 @@ static qint64 uriToItemId( const QString &urlString )
 
 XesamSearchEngine::XesamSearchEngine( QObject *parent )
   : QObject( parent ),
+    mInterface( 0 ),
     mValid( true ),
     mCollector( new NotificationCollector( this ) )
 {
@@ -71,6 +72,7 @@ XesamSearchEngine::~XesamSearchEngine()
 
 void XesamSearchEngine::initializeSearchInterface()
 {
+  delete mInterface;
   mInterface = new OrgFreedesktopXesamSearchInterface(
       QLatin1String( "org.freedesktop.xesam.searcher" ),
       QLatin1String( "/org/freedesktop/xesam/searcher/main" ),
