@@ -93,8 +93,14 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   ui->notRunningIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 64 ) );
   ui->brokenIcon->setPixmap( KIcon( QString::fromLatin1( "dialog-error" ) ).pixmap( 64 ) );
   ui->progressIcon->setPixmap( KIcon( QLatin1String( "akonadi" ) ).pixmap( 32 ) );
+  ui->quitButton->setText( KStandardGuiItem::quit().text() );
+
+#ifndef KDEPIM_MOBILE_UI
+  ui->quitButton->hide();
+#endif
 
   connect( ui->startButton, SIGNAL( clicked() ), SLOT( startClicked() ) );
+  connect( ui->quitButton, SIGNAL( clicked() ), SLOT( quitClicked() ) );
   connect( ui->selfTestButton, SIGNAL( clicked() ), SLOT( selfTestClicked() ) );
 
   const ServerManager::State state = ServerManager::state();
@@ -163,6 +169,11 @@ bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
 void ErrorOverlay::startClicked()
 {
   ServerManager::start();
+}
+
+void ErrorOverlay::quitClicked()
+{
+  qApp->quit();
 }
 
 void ErrorOverlay::selfTestClicked()

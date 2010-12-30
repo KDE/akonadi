@@ -20,7 +20,7 @@
       <property name="toolTip">
        <string>The Akonadi personal information management service is not running. This application cannot be used without it.</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
@@ -73,11 +73,18 @@
           </spacer>
          </item>
          <item>
-          <widget class="KPushButton" name="startButton">
-           <property name="text">
-            <string comment="@action:button Start the Akonadi server">Start</string>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_2">
+           <item>
+            <widget class="KPushButton" name="startButton">
+             <property name="text">
+              <string comment="@action:button Start the Akonadi server">Start</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="KPushButton" name="quitButton"/>
+           </item>
+          </layout>
          </item>
          <item>
           <spacer name="horizontalSpacer_6">

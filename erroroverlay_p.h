@@ -60,6 +60,7 @@ class ErrorOverlay : public QWidget
 
   private slots:
     void startClicked();
+    void quitClicked();
     void selfTestClicked();
     void serverStateChanged( Akonadi::ServerManager::State state );
 
