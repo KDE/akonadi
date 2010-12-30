@@ -179,7 +179,7 @@ void ItemRetriever::exec()
   QList<ItemRetrievalRequest*> requests;
 
   QStringList parts;
-  foreach ( const QString part, mParts ) {
+  foreach ( const QString &part, mParts ) {
     if ( part.startsWith( QLatin1String( "PLD:" ) ) ) {
       parts << part.mid(4);
     }

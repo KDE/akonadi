@@ -27,7 +27,7 @@ using namespace Akonadi;
 void QueryHelper::setToQuery(const ImapSet& set, const QString &column, QueryBuilder& qb )
 {
   Query::Condition cond( Query::Or );
-  foreach ( const ImapInterval i, set.intervals() ) {
+  foreach ( const ImapInterval &i, set.intervals() ) {
     if ( i.hasDefinedBegin() && i.hasDefinedEnd() ) {
       if ( i.size() == 1 ) {
         cond.addValueCondition( column, Query::Equals, i.begin() );
