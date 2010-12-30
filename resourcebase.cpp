@@ -890,7 +890,7 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
   Q_Q( ResourceBase );
   emit q->percent( mUnemittedProgress );
 
-  Q_FOREACH( QVariantMap statusMap, mUnemittedAdvancedStatus.values() ) {
+  Q_FOREACH( const QVariantMap &statusMap, mUnemittedAdvancedStatus ) {
       emit q->advancedStatus( statusMap );
   }
   mUnemittedProgress = 0;
