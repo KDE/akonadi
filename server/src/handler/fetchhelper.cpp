@@ -224,7 +224,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.setScope( mScope );
     retriever.setRetrieveParts( payloadList );
     retriever.setRetrieveFullPayload( mFullPayload );
-    retriever.exec(); // There we go, retrieve the missing parts from the resource.
+    if ( !retriever.exec() ) { // There we go, retrieve the missing parts from the resource.
+      throw HandlerException( "Unable to fetch item from backend" );
+    }
   }
 
   QSqlQuery itemQuery = buildItemQuery();

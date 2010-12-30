@@ -62,7 +62,7 @@ class ItemRetriever
     void setScope( const Scope &scope );
     Scope scope() const;
 
-    void exec();
+    bool exec();
 
   private:
     /** Convenience method which returns the database driver name */

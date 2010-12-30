@@ -169,10 +169,10 @@ QSqlQuery ItemRetriever::buildQuery() const
 }
 
 
-void ItemRetriever::exec()
+bool ItemRetriever::exec()
 {
   if ( mParts.isEmpty() && !mFullPayload )
-    return;
+    return true;
 
   QSqlQuery query = buildQuery();
   ItemRetrievalRequest* lastRequest = 0;
@@ -234,6 +234,7 @@ void ItemRetriever::exec()
       ItemRetrievalManager::instance()->requestItemDelivery( request );
     } catch ( const ItemRetrieverException &e ) {
       akError() << e.type() << ": " << e.what();
+      return false;
     }
   }
 
@@ -247,6 +248,8 @@ void ItemRetriever::exec()
       retriever.exec();
     }
   }
+
+  return true;
 }
 
 QString ItemRetriever::driverName()
