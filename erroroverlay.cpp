@@ -54,9 +54,12 @@ static bool isParentOf( QObject* o1, QObject* o2 )
 ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
     QWidget( parent ? parent : baseWidget->window() ),
     mBaseWidget( baseWidget ),
+    mBaseWidgetIsParent( false ),
     ui( new Ui::ErrorOverlay )
 {
   Q_ASSERT( baseWidget );
+
+  mBaseWidgetIsParent = isParentOf( mBaseWidget, this );
 
   // check existing overlays to detect cascading
   for ( QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
@@ -113,7 +116,7 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
 
 ErrorOverlay::~ ErrorOverlay()
 {
-  if ( mBaseWidget )
+  if ( mBaseWidget && !mBaseWidgetIsParent )
     mBaseWidget->setEnabled( mPreviousState );
 }
 
@@ -176,13 +179,18 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
   if ( state == ServerManager::Running && mOverlayActive ) {
     mOverlayActive = false;
     hide();
-    mBaseWidget->setEnabled( mPreviousState );
+    if ( !mBaseWidgetIsParent )
+      mBaseWidget->setEnabled( mPreviousState );
   } else if ( !mOverlayActive ) {
     mOverlayActive = true;
     if ( mBaseWidget->isVisible() )
       show();
-    mPreviousState = mBaseWidget->isEnabled();
-    mBaseWidget->setEnabled( false );
+
+    if ( !mBaseWidgetIsParent ) {
+      mPreviousState = mBaseWidget->isEnabled();
+      mBaseWidget->setEnabled( false );
+    }
+
     reposition();
   }
 

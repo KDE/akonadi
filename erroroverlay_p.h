@@ -67,8 +67,8 @@ class ErrorOverlay : public QWidget
     QPointer<QWidget> mBaseWidget;
     bool mPreviousState;
     bool mOverlayActive;
+    bool mBaseWidgetIsParent;
     boost::scoped_ptr<Ui::ErrorOverlay> ui;
-
 };
 
 }
