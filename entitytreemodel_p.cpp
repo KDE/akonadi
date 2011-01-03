@@ -204,8 +204,13 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
     QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
   }
 
+#ifdef KDEPIM_MOBILE_UI
+  q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
+              q, SLOT( itemsFetched( KJob* ) ) );
+#else
   q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
               q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
+#endif
   q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
               q, SLOT( fetchJobDone( KJob* ) ) );
   ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
@@ -424,12 +429,33 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
   kDebug() << "Built the tree in: " << t.elapsed();
 }
 
-void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List& items )
+void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List &items )
 {
   Q_Q( EntityTreeModel );
-  QObject *job = q->sender();
+
+  KJob *job = qobject_cast<KJob*>( q->sender() );
 
   Q_ASSERT( job );
+
+  itemsFetched( job, items );
+}
+
+void EntityTreeModelPrivate::itemsFetched( KJob *job )
+{
+  Q_ASSERT( job );
+
+  if ( job->error() )
+    return;
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
+  const Akonadi::Item::List items = fetchJob->items();
+
+  itemsFetched( job, items );
+}
+
+void EntityTreeModelPrivate::itemsFetched( KJob *job, const Akonadi::Item::List &items )
+{
+  Q_Q( EntityTreeModel );
 
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
   Item::List itemsToInsert;

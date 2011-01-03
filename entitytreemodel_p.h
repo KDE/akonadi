@@ -83,7 +83,9 @@ public:
   void collectionsFetched( const Akonadi::Collection::List& );
   void firstCollectionsFetched( const Akonadi::Collection::List& );
   void collectionListFetched( const Akonadi::Collection::List& );
-  void itemsFetched( const Akonadi::Item::List& );
+  void itemsFetched( KJob* );
+  void itemsFetched( const Akonadi::Item::List &items );
+  void itemsFetched( KJob *job, const Akonadi::Item::List &items );
 
   void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& );
   void monitoredCollectionRemoved( const Akonadi::Collection& );
