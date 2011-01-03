@@ -337,5 +337,5 @@ macro_display_feature_log()
 # Install the file with the exported targets
 install(EXPORT akonadiLibraryTargets
         NAMESPACE ${AKONADI_TARGET_PREFIX}
-        DESTINATION ${_AkonadiConfig_INSTALL_DIR}
+        DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi
         FILE AkonadiTargetsWithPrefix.cmake )
