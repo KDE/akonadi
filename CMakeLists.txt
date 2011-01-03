@@ -13,11 +13,7 @@ if (KDE4_BUILD_TESTS)
 add_subdirectory( tests )
 endif (KDE4_BUILD_TESTS)
 
-option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
-if (AKONADI_USE_STRIGI_SEARCH)
-  add_definitions(-DAKONADI_USE_STRIGI_SEARCH)
-endif (AKONADI_USE_STRIGI_SEARCH)
-
+add_definitions( ${AKONADI_DEFINITIONS} )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
