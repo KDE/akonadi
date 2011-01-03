@@ -1,6 +1,6 @@
 project(Akonadi)
 
-cmake_minimum_required(VERSION 2.6.2 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.6.3 FATAL_ERROR)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
@@ -29,10 +29,6 @@ if (AKONADI_USE_STRIGI_SEARCH)
 else()
   set(SOPRANO_REQUIRED TRUE)
 endif (AKONADI_USE_STRIGI_SEARCH)
-
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
-  option(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead of lib/<package>/cmake" TRUE)
-endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
    set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
@@ -311,15 +307,9 @@ endif (SQLITE_FOUND)
 
 ############### install stuff ###############
 
-if(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
-   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/cmake/Akonadi)
-else(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
-   set(_AkonadiConfig_INSTALL_DIR ${LIB_INSTALL_DIR}/Akonadi/cmake)
-endif(USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR)
-
 install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
               ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake
-        DESTINATION ${_AkonadiConfig_INSTALL_DIR} )
+        DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi )
 
 install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
