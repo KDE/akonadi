@@ -56,6 +56,16 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
   Q_OBJECT
   public:
     /**
+     * Enumerates the registered default pages which can be displayed.
+     *
+     * @since 4.6
+     */
+    enum DefaultPage {
+      GeneralPage,      //!< General properties page
+      CachePage         //!< Cache properties page
+    };
+
+    /**
      * Creates a new collection properties dialog.
      *
      * @param collection The collection which properties should be shown.
@@ -69,7 +79,8 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * This constructor allows to specify the subset of registered pages that will
      * be shown as well as their order. The pages have to set an objectName in their
      * constructor to make it work. If an empty list is passed, all registered pages
-     * will be loaded.
+     * will be loaded. Use defaultPageObjectName() to fetch the object name for a
+     * registered default page.
      *
      * @param collection The collection which properties should be shown.
      * @param pages The object names of the pages that shall be loaded.
@@ -102,6 +113,18 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * @since 4.4
      */
     static void useDefaultPage( bool use );
+
+    /**
+     * Returns the object name of one of the dialog's registered default pages.
+     * The object name may be used in the QStringList constructor parameter to
+     * specify which default pages should be shown.
+     *
+     * @param page the desired page
+     * @return the page's object name
+     *
+     * @since 4.6
+     */
+    static QString defaultPageObjectName(DefaultPage page);
 
   private:
     //@cond PRIVATE
