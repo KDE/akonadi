@@ -174,15 +174,15 @@ void CollectionPropertiesDialog::useDefaultPage( bool defaultPage )
   s_defaultPage = defaultPage;
 }
 
-QString CollectionPropertiesDialog::defaultPageObjectName(DefaultPage page)
+QString CollectionPropertiesDialog::defaultPageObjectName( DefaultPage page )
 {
-  switch (page)
-  {
+  switch ( page ) {
     case GeneralPage:
       return QLatin1String( "Akonadi::CollectionGeneralPropertiesPage" );
     case CachePage:
       return QLatin1String( "Akonadi::CachePolicyPage" );
   }
+
   return QString();
 }
 

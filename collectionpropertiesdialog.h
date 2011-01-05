@@ -124,7 +124,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      *
      * @since 4.6
      */
-    static QString defaultPageObjectName(DefaultPage page);
+    static QString defaultPageObjectName( DefaultPage page );
 
   private:
     //@cond PRIVATE
