@@ -36,7 +36,7 @@ class Collection;
  * viewing and changing collection attributes.
  *
  * The following example shows how to create a simple collection
- * properties page for the secercy attribute from the Akonadi::Attribute
+ * properties page for the secrecy attribute from the Akonadi::Attribute
  * example.
  *
  * @code
