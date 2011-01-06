@@ -366,12 +366,9 @@ QString ResourceBase::parseArguments( int argc, char **argv )
     exit( 1 );
   }
 
-  QByteArray catalog;
-  char *p = strrchr( argv[0], '/' );
-  if ( p )
-    catalog = QByteArray( p + 1 );
-  else
-    catalog = QByteArray( argv[0] );
+  const QFileInfo fi( QString::fromLocal8Bit( argv[0] ) );
+  // strip off full path and possible .exe suffix
+  const QByteArray catalog = fi.baseName().toLatin1();
 
   KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
                       ki18nc( "@title application name", "Akonadi Resource" ), "0.1",
