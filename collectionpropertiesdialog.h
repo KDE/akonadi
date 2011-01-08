@@ -122,7 +122,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * @param page the desired page
      * @return the page's object name
      *
-     * @since 4.6
+     * @since 4.7
      */
     static QString defaultPageObjectName( DefaultPage page );
 
