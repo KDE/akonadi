@@ -58,7 +58,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
     /**
      * Enumerates the registered default pages which can be displayed.
      *
-     * @since 4.6
+     * @since 4.7
      */
     enum DefaultPage {
       GeneralPage,      //!< General properties page
