@@ -175,6 +175,12 @@ if(WIN32 AND NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
 endif(WIN32 AND NOT Boost_USE_STATIC_LIBS)
 
+# should be handled by FindBoost.cmake ->  cmake bug #8335
+if(WIN32 AND NOT Boost_USE_STATIC_LIBS)
+  add_definitions(-DBOOST_DYN_LINK)
+  add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
+endif(WIN32 AND NOT Boost_USE_STATIC_LIBS)
+
 
 #### Sqlite ####
 # If Sqlite is the default backend, it cannot be optional.
