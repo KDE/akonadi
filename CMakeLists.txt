@@ -229,7 +229,6 @@ if (KDEPIM_MOBILE_UI)
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage_mobile.ui
   )
-  qt4_add_resources( akonadikde_LIB_SRC collectiondialog_mobile.qrc )
 else(KDEPIM_MOBILE_UI)
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage.ui
@@ -373,3 +372,10 @@ install( FILES
   kcfg2dbus.xsl
   DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde
 )
+
+if (KDEPIM_MOBILE_UI)
+install( FILES
+  CollectionDialogMobile.qml
+  DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde/qml
+)
+endif(KDEPIM_MOBILE_UI)
