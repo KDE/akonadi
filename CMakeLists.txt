@@ -169,6 +169,13 @@ if(NOT WINCE)
     macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries (program_options).")
 endif(NOT WINCE)
 
+# should be handled by FindBoost.cmake ->  cmake bug #8335
+if(WIN32 AND NOT Boost_USE_STATIC_LIBS)
+  add_definitions(-DBOOST_DYN_LINK)
+  add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
+endif(WIN32 AND NOT Boost_USE_STATIC_LIBS)
+
+
 #### Sqlite ####
 # If Sqlite is the default backend, it cannot be optional.
 if ("${DATABASE_BACKEND}" STREQUAL "SQLITE")
