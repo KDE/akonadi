@@ -27,6 +27,7 @@
 #include "markascommand_p.h"
 #include "movetotrashcommand_p.h"
 #include "removeduplicatescommand_p.h"
+#include "specialmailcollections.h"
 
 #include "akonadi/agentfilterproxymodel.h"
 #include "akonadi/agentinstance.h"
@@ -309,6 +310,19 @@ class StandardMailActionManager::Private
           const Akonadi::CollectionStatistics stats = collection.statistics();
           enableMarkAllAsRead = (stats.unreadCount() > 0);
           enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
+
+          const bool isSystemFolder = (collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
+                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
+                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
+                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Trash ) ||
+                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts ) ||
+                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates ));
+
+          if ( isSystemFolder ) {
+            if ( mGenericManager->action( StandardActionManager::DeleteCollections ) ) {
+              mGenericManager->action( StandardActionManager::DeleteCollections )->setEnabled( false );
+            }
+          }
         }
       }
 
