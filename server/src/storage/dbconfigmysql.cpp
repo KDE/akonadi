@@ -111,8 +111,10 @@ bool DbConfigMysql::init( QSettings &settings )
   settings.endGroup();
 
   // verify settings and apply permanent changes (written out below)
-  if ( mInternalServer )
+  if ( mInternalServer ) {
     mConnectionOptions = defaultOptions;
+    mDatabaseName = defaultDbName;
+  }
   if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) )
     mServerPath = defaultServerPath;
 
