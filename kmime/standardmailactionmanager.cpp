@@ -225,9 +225,6 @@ class StandardMailActionManager::Private
 
       mGenericManager->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
-      mGenericManager->interceptAction( Akonadi::StandardActionManager::ManageLocalSubscriptions );
-      connect( mGenericManager->action( StandardActionManager::ManageLocalSubscriptions ), SIGNAL( triggered( bool ) ),
-               mParent, SLOT( slotMailLocalSubscription() ) );
     }
 
     ~Private()
@@ -497,14 +494,6 @@ class StandardMailActionManager::Private
 
       EmptyTrashCommand *command = new EmptyTrashCommand( collections.first(), mParent );
       command->execute();
-    }
-
-    void slotMailLocalSubscription()
-    {
-#ifndef Q_OS_WINCE
-      SubscriptionDialog* dlg = new SubscriptionDialog( QStringList() << KMime::Message::mimeType(), mParentWidget );
-      dlg->show();
-#endif
     }
 
     KActionCollection *mActionCollection;
