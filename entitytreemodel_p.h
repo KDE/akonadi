@@ -36,6 +36,7 @@ namespace Akonadi
 {
 class ItemFetchJob;
 class ChangeRecorder;
+class AgentInstance;
 }
 
 struct Node
@@ -126,6 +127,7 @@ public:
   void runItemFetchJob( ItemFetchJob* itemFetchJob, const Collection &parent ) const;
   void changeFetchState( const Collection &parent );
   void agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& );
+  void agentInstanceRemoved( const Akonadi::AgentInstance &instace );
 
   QHash<Collection::Id, Collection> m_collections;
   QHash<Entity::Id, Item> m_items;

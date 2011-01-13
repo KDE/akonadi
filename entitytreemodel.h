@@ -662,6 +662,7 @@ private:
     Q_PRIVATE_SLOT( d_func(), void changeFetchState( const Akonadi::Collection & ) )
 
     Q_PRIVATE_SLOT( d_func(), void agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) )
+    Q_PRIVATE_SLOT( d_func(), void agentInstanceRemoved( Akonadi::AgentInstance ) )
     //@endcond
 };
 

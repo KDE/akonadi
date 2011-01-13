@@ -81,6 +81,11 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
 
   QObject::connect( manager, SIGNAL( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ),
                     q_ptr, SLOT( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ) );
+
+  Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
+  QObject::connect( agentManager, SIGNAL( instanceRemoved( Akonadi::AgentInstance ) ),
+                    q_ptr, SLOT( agentInstanceRemoved( Akonadi::AgentInstance ) ) );
+
 }
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
@@ -224,6 +229,28 @@ void EntityTreeModelPrivate::changeFetchState( const Collection &parent )
     // Because we are called delayed, it is possible that @p parent has been deleted.
     return;
   q->dataChanged(collectionIndex, collectionIndex);
+}
+
+void EntityTreeModelPrivate::agentInstanceRemoved( const Akonadi::AgentInstance &instance )
+{
+  Q_Q( EntityTreeModel );
+
+  QList<Node*> childEntities = m_childEntities[m_rootNode->id];
+
+  int row = 0;
+  for ( int row = 0; row < childEntities.size(); ++row ) {
+    Node *node = childEntities.at( row );
+    if ( node->type == Node::Collection ) {
+      const Collection::Id collectionId = node->id;
+      if ( m_collections[collectionId].resource() == instance.identifier() ) {
+        q->beginRemoveRows(QModelIndex(), row, row);
+        removeChildEntities( collectionId );
+        q->endRemoveRows();
+        --row;
+      }
+    }
+    ++row;
+  }
 }
 
 void EntityTreeModelPrivate::agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap &status )
