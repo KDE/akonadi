@@ -118,7 +118,12 @@ void Akonadi::DataStore::close()
 
 bool Akonadi::DataStore::init()
 {
-  DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, QLatin1String(":akonadidb.xml") );
+  QString dbtemplate = QLatin1String(":akonadidb.xml");
+#ifdef Q_OS_WINCE
+  dbtemplate = QLatin1String(":akonadidb-mobile.xml");
+#endif
+
+  DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, dbtemplate );
   if (! initializer->run() ) {
     akError() << initializer->errorMsg();
     return false;

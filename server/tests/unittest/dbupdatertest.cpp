@@ -30,7 +30,11 @@ QTEST_MAIN( DbUpdaterTest )
 
 void DbUpdaterTest::initTestCase()
 {
+#ifndef Q_OS_WINCE
   Q_INIT_RESOURCE( akonadidb );
+#else
+  Q_INIT_RESOURCE( akonadidb_mobile );
+#endif
 }
 
 void DbUpdaterTest::testMysqlUpdateStatements()
@@ -122,7 +126,11 @@ void DbUpdaterTest::testPsqlUpdateStatements()
 
 void DbUpdaterTest::cleanupTestCase()
 {
+#ifndef Q_OS_WINCE
   Q_CLEANUP_RESOURCE( akonadidb );
+#else
+  Q_CLEANUP_RESOURCE( akonadidb_mobile );
+#endif
 }
 
 #include "dbupdatertest.moc"
