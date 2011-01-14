@@ -34,13 +34,27 @@ if( NOT WIN32 )
   set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
 endif( NOT WIN32 )
 
-find_path(SQLITE_INCLUDE_DIR
-          NAMES sqlite3.h
-         )
+if(PC_SQLITE_FOUND)
+  find_path(SQLITE_INCLUDE_DIR
+            NAMES sqlite3.h
+            PATHS ${PC_SQLITE_INCLUDEDIR}
+            NO_DEFAULT_PATH
+           )
 
-find_library(SQLITE_LIBRARIES
-             NAMES sqlite3
-            )
+  find_library(SQLITE_LIBRARIES
+               NAMES sqlite3
+               PATHS ${PC_SQLITE_LIBDIR}
+               NO_DEFAULT_PATH
+              )
+else(PC_SQLITE_FOUND)
+  find_path(SQLITE_INCLUDE_DIR
+            NAMES sqlite3.h
+           )
+
+  find_library(SQLITE_LIBRARIES
+               NAMES sqlite3
+              )
+endif(PC_SQLITE_FOUND)
 
 if( UNIX )
   find_file(SQLITE_STATIC_LIBRARIES
