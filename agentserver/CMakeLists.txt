@@ -35,12 +35,18 @@ if(NOT WINCE)
     agentlauncher.cpp
   )
 
-  automoc4_add_executable(akonadi_agent_launcher ${akonadi_agent_launcher_SRCS})
+  automoc4_add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
   target_link_libraries(akonadi_agent_launcher
     ${QT_QTGUI_LIBRARY}
     ${AKONADI_SYSTEM_LIBS}
     ${AKONADI_PROTOCOLINTERNALS_LIBS}
   )
+
+  if (Q_WS_MAC)
+    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
+    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.agentlauncher")
+    set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Akonadi Agent Launcher")
+  endif (Q_WS_MAC)
 
   target_link_libraries(akonadi_agent_launcher ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif(NOT WINCE)
