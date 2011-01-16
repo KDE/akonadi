@@ -212,7 +212,7 @@ void Handler::setStreamParser( ImapStreamParser *parser )
 }
 
 
-UnknownCommandHandler::UnknownCommandHandler(const QByteArray command) :
+UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command) :
   mCommand( command )
 {
 }

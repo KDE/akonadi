@@ -140,7 +140,7 @@ class UnknownCommandHandler : public Handler
 {
   Q_OBJECT
   public:
-    UnknownCommandHandler( const QByteArray command );
+    UnknownCommandHandler( const QByteArray &command );
     bool parseStream();
 
   private:
