@@ -1327,6 +1327,9 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
 
       q->endInsertRows();
 
+      if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
+        fetchItems(collection);
+
       CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::FirstLevel, m_session );
       job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
       job->fetchScope().setIncludeStatistics( m_includeStatistics );
