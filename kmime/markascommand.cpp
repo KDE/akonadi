@@ -129,6 +129,7 @@ void MarkAsCommand::markMessages()
   } else {
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
     modifyJob->setIgnorePayload( true );
+    modifyJob->disableRevisionCheck();
     connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
   }
 }
