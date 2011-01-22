@@ -1,4 +1,9 @@
-1.4.95                        07-January-2010
+1.5.0                         22-January-2011
+---------------------------------------------
+- Fix Boost related build issues on Windows.
+- Hide akonadi_agent_launcher from Mac OS X dock.
+
+1.4.95                        07-January-2011
 ---------------------------------------------
 - Optimize notification compression.
 - Consider ignore flag when calculating collection statistics.
