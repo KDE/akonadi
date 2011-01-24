@@ -22,6 +22,7 @@
 #include "collectioncombobox.h"
 
 #include "asyncselectionhandler_p.h"
+#include "collectiondialog.h"
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectionfetchscope.h>
@@ -34,6 +35,7 @@
 #include "collectionutils_p.h"
 
 #include <QtCore/QAbstractItemModel>
+#include <QtCore/QEvent>
 
 using namespace Akonadi;
 
@@ -106,15 +108,63 @@ void CollectionComboBox::Private::activated( const QModelIndex &index )
   mParent->setCurrentIndex( index.row() );
 }
 
+class MobileEventHandler : public QObject
+{
+  public:
+    MobileEventHandler( CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
+                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel )
+      : QObject( comboBox ),
+        mComboBox( comboBox ),
+        mMimeTypeFilter( mimeTypeFilter ),
+        mAccessRightsFilter( accessRightsFilter ),
+        mCustomModel( customModel )
+    {
+    }
+
+  protected:
+    virtual bool eventFilter( QObject *object, QEvent *event )
+    {
+      if ( object == mComboBox && mComboBox->isEnabled() && event->type() == QEvent::MouseButtonPress ) {
+        Akonadi::CollectionDialog dialog( mCustomModel );
+        dialog.setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
+        dialog.setAccessRightsFilter( mAccessRightsFilter->accessRights() );
+
+        if ( dialog.exec() ) {
+          const Akonadi::Collection collection = dialog.selectedCollection();
+          const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mComboBox->model(), collection );
+          mComboBox->setCurrentIndex( index.row() );
+        }
+
+        return true;
+      }
+
+      return QObject::eventFilter( object, event );
+    }
+
+  private:
+    CollectionComboBox *mComboBox;
+    CollectionFilterProxyModel *mMimeTypeFilter;
+    EntityRightsFilterModel *mAccessRightsFilter;
+    QAbstractItemModel *mCustomModel;
+};
+
 
 CollectionComboBox::CollectionComboBox( QWidget *parent )
   : KComboBox( parent ), d( new Private( 0, this ) )
 {
+#ifdef KDEPIM_MOBILE_UI
+  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, 0 );
+  installEventFilter( handler );
+#endif
 }
 
 CollectionComboBox::CollectionComboBox( QAbstractItemModel *model, QWidget *parent )
   : KComboBox( parent ), d( new Private( model, this ) )
 {
+#ifdef KDEPIM_MOBILE_UI
+  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, model );
+  installEventFilter( handler );
+#endif
 }
 
 CollectionComboBox::~CollectionComboBox()
