@@ -642,6 +642,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void monitoredMimeTypeChanged( const QString&, bool ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionsChanged( const Akonadi::Collection&, bool ) )
+    Q_PRIVATE_SLOT( d_func(), void monitoredResourcesChanged( const QByteArray&, bool ) )
 
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void monitoredCollectionRemoved( const Akonadi::Collection& ) )

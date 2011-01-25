@@ -120,6 +120,8 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
               SLOT( monitoredMimeTypeChanged( const QString&, bool ) ) );
   q->connect( monitor, SIGNAL( collectionMonitored(Akonadi::Collection,bool)),
               SLOT( monitoredCollectionsChanged( const Akonadi::Collection&, bool ) ) );
+  q->connect( monitor, SIGNAL( resourceMonitored(QByteArray,bool)),
+              SLOT( monitoredResourcesChanged( const QByteArray&, bool ) ) );
 
   // monitor collection changes
   q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
@@ -566,6 +568,14 @@ void EntityTreeModelPrivate::monitoredMimeTypeChanged( const QString & mimeType,
 void EntityTreeModelPrivate::monitoredCollectionsChanged( const Akonadi::Collection &collection, bool monitored )
 {
   Q_UNUSED(collection)
+  Q_UNUSED(monitored)
+  beginResetModel();
+  endResetModel();
+}
+
+void EntityTreeModelPrivate::monitoredResourcesChanged(const QByteArray& resource, bool monitored)
+{
+  Q_UNUSED(resource)
   Q_UNUSED(monitored)
   beginResetModel();
   endResetModel();

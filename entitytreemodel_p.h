@@ -106,7 +106,8 @@ public:
   void monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& );
 
   void monitoredMimeTypeChanged( const QString &mimeType, bool monitored );
-  void monitoredCollectionsChanged( const Akonadi::Collection &colllection, bool monitored );
+  void monitoredCollectionsChanged( const Akonadi::Collection &collection, bool monitored );
+  void monitoredResourcesChanged( const QByteArray &resource, bool monitored );
 
   Collection::List getParentCollections( const Item &item ) const;
   Collection getParentCollection( const Collection &collection ) const;
