@@ -20,6 +20,7 @@
 */
 
 #include "collectioncombobox.h"
+#include "collectioncombobox_p.h"
 
 #include "asyncselectionhandler_p.h"
 #include "collectiondialog.h"
@@ -36,6 +37,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QEvent>
+#include <QtGui/QMouseEvent>
 
 using namespace Akonadi;
 
@@ -107,45 +109,45 @@ void CollectionComboBox::Private::activated( const QModelIndex &index )
   mParent->setCurrentIndex( index.row() );
 }
 
-class MobileEventHandler : public QObject
+MobileEventHandler::MobileEventHandler( CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
+                                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel )
+  : QObject( comboBox ),
+    mComboBox( comboBox ),
+    mMimeTypeFilter( mimeTypeFilter ),
+    mAccessRightsFilter( accessRightsFilter ),
+    mCustomModel( customModel )
 {
-  public:
-    MobileEventHandler( CollectionComboBox *comboBox, CollectionFilterProxyModel *mimeTypeFilter,
-                        EntityRightsFilterModel *accessRightsFilter, QAbstractItemModel *customModel )
-      : QObject( comboBox ),
-        mComboBox( comboBox ),
-        mMimeTypeFilter( mimeTypeFilter ),
-        mAccessRightsFilter( accessRightsFilter ),
-        mCustomModel( customModel )
-    {
+}
+
+bool MobileEventHandler::eventFilter( QObject *object, QEvent *event )
+{
+  if ( object == mComboBox && mComboBox->isEnabled() && event->type() == QEvent::MouseButtonPress ) {
+
+    const QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
+
+    // we receive mouse events from other widgets as well, so check for ours
+    if ( mComboBox->rect().contains( mouseEvent->pos() ) ) {
+      QMetaObject::invokeMethod( this, "openDialog", Qt::QueuedConnection );
     }
 
-  protected:
-    virtual bool eventFilter( QObject *object, QEvent *event )
-    {
-      if ( object == mComboBox && mComboBox->isEnabled() && event->type() == QEvent::MouseButtonPress ) {
-        Akonadi::CollectionDialog dialog( mCustomModel );
-        dialog.setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
-        dialog.setAccessRightsFilter( mAccessRightsFilter->accessRights() );
+    return true;
+  }
 
-        if ( dialog.exec() ) {
-          const Akonadi::Collection collection = dialog.selectedCollection();
-          const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mComboBox->model(), collection );
-          mComboBox->setCurrentIndex( index.row() );
-        }
+  return QObject::eventFilter( object, event );
+}
 
-        return true;
-      }
+void MobileEventHandler::openDialog()
+{
+  Akonadi::CollectionDialog dialog( mCustomModel );
+  dialog.setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
+  dialog.setAccessRightsFilter( mAccessRightsFilter->accessRights() );
 
-      return QObject::eventFilter( object, event );
-    }
-
-  private:
-    CollectionComboBox *mComboBox;
-    CollectionFilterProxyModel *mMimeTypeFilter;
-    EntityRightsFilterModel *mAccessRightsFilter;
-    QAbstractItemModel *mCustomModel;
-};
+  if ( dialog.exec() ) {
+    const Akonadi::Collection collection = dialog.selectedCollection();
+    const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mComboBox->model(), collection );
+    mComboBox->setCurrentIndex( index.row() );
+  }
+}
 
 
 CollectionComboBox::CollectionComboBox( QWidget *parent )
@@ -211,3 +213,4 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
 }
 
 #include "collectioncombobox.moc"
+#include "collectioncombobox_p.moc"
