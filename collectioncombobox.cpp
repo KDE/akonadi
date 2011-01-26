@@ -45,10 +45,8 @@ class CollectionComboBox::Private
     Private( QAbstractItemModel *customModel, CollectionComboBox *parent )
       : mParent( parent ), mMonitor( 0 ), mModel( 0 )
     {
-      QAbstractItemModel *baseModel;
-
       if ( customModel ) {
-        baseModel = customModel;
+        mBaseModel = customModel;
       } else {
         mMonitor = new Akonadi::ChangeRecorder( mParent );
         mMonitor->fetchCollection( true );
@@ -57,12 +55,12 @@ class CollectionComboBox::Private
         mModel = new EntityTreeModel( mMonitor, mParent );
         mModel->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
-        baseModel = mModel;
+        mBaseModel = mModel;
       }
 
       KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( parent );
       proxyModel->setDisplayAncestorData( true );
-      proxyModel->setSourceModel( baseModel );
+      proxyModel->setSourceModel( mBaseModel );
 
       mMimeTypeFilterModel = new CollectionFilterProxyModel( parent );
       mMimeTypeFilterModel->setSourceModel( proxyModel );
@@ -91,6 +89,7 @@ class CollectionComboBox::Private
 
     ChangeRecorder *mMonitor;
     EntityTreeModel *mModel;
+    QAbstractItemModel *mBaseModel;
     CollectionFilterProxyModel *mMimeTypeFilterModel;
     EntityRightsFilterModel *mRightsFilterModel;
     AsyncSelectionHandler *mSelectionHandler;
@@ -153,7 +152,7 @@ CollectionComboBox::CollectionComboBox( QWidget *parent )
   : KComboBox( parent ), d( new Private( 0, this ) )
 {
 #ifdef KDEPIM_MOBILE_UI
-  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, 0 );
+  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel );
   installEventFilter( handler );
 #endif
 }
@@ -162,7 +161,7 @@ CollectionComboBox::CollectionComboBox( QAbstractItemModel *model, QWidget *pare
   : KComboBox( parent ), d( new Private( model, this ) )
 {
 #ifdef KDEPIM_MOBILE_UI
-  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, model );
+  MobileEventHandler *handler = new MobileEventHandler( this, d->mMimeTypeFilterModel, d->mRightsFilterModel, d->mBaseModel );
   installEventFilter( handler );
 #endif
 }
