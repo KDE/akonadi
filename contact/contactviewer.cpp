@@ -74,6 +74,10 @@ class ContactViewer::Private
                                            defaultPixmap );
       }
 
+      mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                         QUrl( QLatin1String( "map_icon" ) ),
+                                         KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );
+
       // merge local and global custom field descriptions
       QList<QVariantMap> customFieldDescriptions;
       foreach ( const QVariant &entry, localCustomFieldDescriptions )

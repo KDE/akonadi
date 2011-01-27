@@ -132,7 +132,10 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
     formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
 
-    const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\">%2</a>" ).arg( counter).arg( formattedAddress );
+    const QString url = QString::fromLatin1( "%1 <a href=\"address:?index=%2\"><img src=\"map_icon\" alt=\"%3\"/></a>" )
+                                           .arg( formattedAddress )
+                                           .arg( counter )
+                                           .arg( i18n( "Show address on map" ) );
     counter++;
 
     dynamicPart += rowFmtStr
