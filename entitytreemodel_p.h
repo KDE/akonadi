@@ -114,6 +114,9 @@ public:
   Entity::Id childAt( Collection::Id, int position, bool *ok ) const;
   Item getItem( Item::Id id ) const;
   void removeChildEntities( Collection::Id collectionId );
+  /**
+   * Fetch parent collections and insert this @p collection and its parents into the node tree
+   */
   void retrieveAncestors( const Akonadi::Collection& collection );
   void ancestorsFetched( const Akonadi::Collection::List& collectionList );
   void insertCollection( const Akonadi::Collection &collection, const Akonadi::Collection& parent );
@@ -121,6 +124,10 @@ public:
 
   void beginResetModel();
   void endResetModel();
+  /**
+   * Start function for filling the Model, finds and fetches the root of the node tree
+   * Next relevant function for filling the model is startFirstListJob()
+   */
   void fillModel();
 
   ItemFetchJob* getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const;
@@ -153,6 +160,17 @@ public:
   QHash<Collection::Id, uint> m_collectionSyncProgress;
 
   void rootCollectionFetched( const Collection::List &list );
+
+  /**
+   * Called after the root collection was fetched by fillModel
+   *
+   * Initiates further fetching of collections depending on the monitored collections
+   * (in the monitor) and the m_collectionFetchStrategy.
+   *
+   * Further collections are either fetched directly with fetchCollections and
+   * fetchItems or, in case that collections or resources are monitored explicitly
+   * via fetchTopLevelCollections
+   */
   void startFirstListJob();
 
   void serverStarted();

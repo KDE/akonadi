@@ -1263,7 +1263,7 @@ void EntityTreeModelPrivate::startFirstListJob()
   kDebug() << "GEN" << generalPopulation << noMimetypes << noResources;
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
-  // HACK: fix this for recursive listing if we filter on mimetypes that only exit deeper
+  // HACK: fix this for recursive listing if we filter on mimetypes that only exist deeper
   // in the hierarchy
   if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchFirstLevelChildCollections && generalPopulation )
     /*|| ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )*/ ) {
@@ -1578,6 +1578,9 @@ void EntityTreeModelPrivate::fillModel()
   m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
 
   QList<Collection> list = m_monitor->collectionsMonitored();
+  // In case there is only a single collection monitored, we can use this 
+  // collection as root of the node tree, in all other cases 
+  // Collection::root() is used
   if ( list.size() == 1 )
     m_rootCollection = list.first();
   else
