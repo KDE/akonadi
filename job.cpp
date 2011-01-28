@@ -131,8 +131,8 @@ void JobPrivate::signalCreationToJobTracker()
       // publishing something not intended for public consumption.
       QList<QVariant> argumentList;
       argumentList << QLatin1String( mSession->sessionId() )
-                   << QString::number(reinterpret_cast<unsigned long>( q ), 16)
-                   << ( mParentJob ? QString::number( reinterpret_cast<unsigned long>( mParentJob ), 16) : QString() )
+                   << QString::number(reinterpret_cast<quintptr>( q ), 16)
+                   << ( mParentJob ? QString::number( reinterpret_cast<quintptr>( mParentJob ), 16) : QString() )
                    << QString::fromLatin1( q->metaObject()->className() );
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobCreated" ), argumentList);
   }
@@ -156,7 +156,7 @@ void JobPrivate::startQueued()
   // if there's a job tracker running, tell it a job started
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
-      argumentList << QString::number(reinterpret_cast<unsigned long>( q ), 16);
+      argumentList << QString::number(reinterpret_cast<quintptr>( q ), 16);
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobStarted" ), argumentList);
   }
 }
@@ -256,7 +256,7 @@ Job::~Job()
   // if there is a job tracer listening, tell it the job is done now
   if ( s_jobtracker ) {
       QList<QVariant> argumentList;
-      argumentList << QString::number(reinterpret_cast<unsigned long>( this ), 16)
+      argumentList << QString::number(reinterpret_cast<quintptr>( this ), 16)
                    << errorString();
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobEnded" ), argumentList);
   }
