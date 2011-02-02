@@ -35,7 +35,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 IMEditorDialog::IMEditorDialog( QWidget *parent )
   : KDialog( parent )
 {
-  setCaption( i18n( "Edit Instant Messaging Address" ) );
+  setCaption( i18n( "Edit Instant Messaging Addresses" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
 

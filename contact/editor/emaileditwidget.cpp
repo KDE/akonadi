@@ -206,7 +206,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
   topLayout->addWidget( mRemoveButton, 2, 2 );
 
-  mStandardButton = new QPushButton( i18n( "Set Standard" ), page );
+  mStandardButton = new QPushButton( i18n( "Set as Standard" ), page );
   mStandardButton->setEnabled( false );
   connect( mStandardButton, SIGNAL( clicked() ), SLOT( standard() ) );
   topLayout->addWidget( mStandardButton, 3, 2 );
