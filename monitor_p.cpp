@@ -297,7 +297,7 @@ void MonitorPrivate::updatePendingStatistics( const NotificationMessage &msg )
   if ( msg.type() == NotificationMessage::Item ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
     // FIXME use the proper resource of the target collection, for cross resource moves
-    notifyCollectionStatisticsWatchers( msg.parentDestCollection(), msg.resource() );
+    notifyCollectionStatisticsWatchers( msg.parentDestCollection(), msg.destinationResource() );
   } else if ( msg.type() == NotificationMessage::Collection && msg.operation() == NotificationMessage::Remove ) {
     // no need for statistics updates anymore
     recentlyChangedCollections.remove( msg.uid() );
@@ -339,11 +339,27 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
 
 void MonitorPrivate::appendAndCompress( const NotificationMessage &msg  )
 {
-  if ( !useRefCounting || msg.operation() != NotificationMessage::Move || msg.type() != NotificationMessage::Item )
+  // We have to split moves into insert or remove if the source or destination
+  // is not monitored.
+  if ( msg.operation() != NotificationMessage::Move )
     return NotificationMessage::appendAndCompress( pendingNotifications, msg );
 
-  bool sourceWatched = refCountMap.contains( msg.parentCollection() ) || m_buffer.isBuffered( msg.parentCollection() );
-  bool destWatched = refCountMap.contains( msg.parentDestCollection() ) || m_buffer.isBuffered( msg.parentDestCollection() );
+  bool sourceWatched = false;
+  bool destWatched = false;
+
+  if ( useRefCounting && msg.type() == NotificationMessage::Item ) {
+    sourceWatched = refCountMap.contains( msg.parentCollection() ) || m_buffer.isBuffered( msg.parentCollection() );
+    destWatched = refCountMap.contains( msg.parentDestCollection() ) || m_buffer.isBuffered( msg.parentDestCollection() );
+  } else {
+    if ( !resources.isEmpty() ) {
+      sourceWatched = resources.contains( msg.resource() );
+      destWatched = isMoveDestinationResourceMonitored( msg );
+    }
+    if ( !sourceWatched )
+      sourceWatched = isCollectionMonitored( msg.parentCollection() );
+    if ( !destWatched )
+      destWatched = isCollectionMonitored( msg.parentDestCollection() );
+  }
 
   if ( sourceWatched && destWatched )
     return NotificationMessage::appendAndCompress( pendingNotifications, msg );

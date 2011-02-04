@@ -212,10 +212,9 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
     {
-      if ( msg.operation() != NotificationMessage::Move || msg.itemParts().isEmpty() )
+      if ( msg.operation() != NotificationMessage::Move )
         return false;
-      const QByteArray res = *(msg.itemParts().begin());
-      return resources.contains( res );
+      return resources.contains( msg.destinationResource() );
     }
 
     void fetchStatistics( Collection::Id colId )
