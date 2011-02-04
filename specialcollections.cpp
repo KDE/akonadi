@@ -195,7 +195,6 @@ SpecialCollections::~SpecialCollections()
 
 bool SpecialCollections::hasCollection( const QByteArray &type, const AgentInstance &instance ) const
 {
-  kDebug() << "Type" << type << "resourceId" << instance.identifier();
 
   if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
     // We do not know any folders in this resource.
@@ -250,8 +249,6 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     d->emitChanged( resourceId );
   }
 
-  kDebug() << "Registered collection" << collection.id() << "as folder of type" << type
-    << "in resource" << resourceId;
   return true;
 }
 

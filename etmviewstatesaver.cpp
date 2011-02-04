@@ -48,7 +48,6 @@ QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *m
     QModelIndex idx = EntityTreeModel::modelIndexForCollection( model, Collection( id ) );
     if ( !idx.isValid() )
     {
-      kDebug() << "Collection with id" << id << "is not in model yet";
       return QModelIndex();
     }
     return idx;
@@ -58,7 +57,6 @@ QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *m
     QModelIndexList list = EntityTreeModel::modelIndexesForItem( model, Item( id ) );
     if ( list.isEmpty() )
     {
-      kDebug() << "Item with id" << id << "is not in model yet";
       return QModelIndex();
     }
     return list.first();

@@ -109,7 +109,6 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
     }
   }
 
-  kDebug() << "All requested folders already known.";
   return true;
 }
 

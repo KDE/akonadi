@@ -455,7 +455,6 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
       foreach ( const Collection::Id &collectionId, collectionIt.value() )
         fetchItems( m_collections.value( collectionId ) );
   }
-  kDebug() << "Built the tree in: " << t.elapsed();
 }
 
 void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List &items )
