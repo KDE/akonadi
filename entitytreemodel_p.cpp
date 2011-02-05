@@ -1339,7 +1339,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
       if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
         fetchItems(collection);
 
-      CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::FirstLevel, m_session );
+      CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Recursive, m_session );
       job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
       job->fetchScope().setIncludeStatistics( m_includeStatistics );
       job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
