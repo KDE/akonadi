@@ -19,4 +19,4 @@ set(CTEST_CUSTOM_ERROR_EXCEPTION
   )
 
 # No coverage for these files
-set(CTEST_CUSTOM_COVERAGE_EXCLUDE ".moc$" "moc_" "ui_")
+set(CTEST_CUSTOM_COVERAGE_EXCLUDE ".moc$" "moc_" "ui_" "/libs/tests" "/server/tests")
