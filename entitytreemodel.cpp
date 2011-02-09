@@ -31,6 +31,7 @@
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>
+#include <KDE/KMessageBox>
 #include <KDE/KUrl>
 
 #include <akonadi/attributefactory.h>
@@ -494,6 +495,17 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
             kDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
             return false;
           }
+
+          if ( url.hasQueryItem( QLatin1String( "name" ) ) ) {
+            const QString collectionName = url.queryItemValue( QLatin1String( "name" ) );
+            const QStringList collectionNames = d->childCollectionNames( destCollection );
+
+            if ( collectionNames.contains( collectionName ) ) {
+              KMessageBox::error( 0, i18n( "The target collection '%1' contains already\na collection with name '%2'.",
+                                           destCollection.name(), collection.name() ) );
+              return false;
+            }
+          }
         } else {
           const Item item = d->m_items.value( Item::fromUrl( url ).id() );
           if ( item.isValid() ) {
@@ -684,7 +696,7 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
     const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
 
     if ( Node::Collection == node->type )
-      urls << d->m_collections.value( node->id ).url();
+      urls << d->m_collections.value( node->id ).url( Collection::UrlWithName );
     else if ( Node::Item == node->type )
       urls << d->m_items.value( node->id ).url( Item::UrlWithMimeType );
     else // if that happens something went horrible wrong

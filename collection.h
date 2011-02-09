@@ -231,9 +231,29 @@ class AKONADI_EXPORT Collection : public Entity
     void setStatistics( const CollectionStatistics &statistics );
 
     /**
-     * Returns the collection url
+     * Returns the url of the collection.
+     *
+     * @todo KDE5 remove in favor of url( UrlType type = UrlShort ).
      */
     KUrl url() const;
+
+    /**
+     * Describes the type of url which is returned in url().
+     *
+     * @since 4.7
+     */
+    enum UrlType
+    {
+      UrlShort = 0,     ///< A short url which contains the identifier only (equivalent to url())
+      UrlWithName = 1   ///< A url with identifier and name
+    };
+
+    /**
+     * Returns the url of the collection.
+     *
+     * @since 4.7
+     */
+    KUrl url( UrlType type ) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.

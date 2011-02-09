@@ -114,6 +114,12 @@ public:
   Entity::Id childAt( Collection::Id, int position, bool *ok ) const;
   Item getItem( Item::Id id ) const;
   void removeChildEntities( Collection::Id collectionId );
+
+  /**
+   * Returns the list of names of the child collections of @p collection.
+   */
+  QStringList childCollectionNames( const Collection &collection ) const;
+
   /**
    * Fetch parent collections and insert this @p collection and its parents into the node tree
    */
