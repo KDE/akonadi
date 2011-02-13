@@ -443,7 +443,12 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
 
 void Item::apply( const Item &other )
 {
-  Q_ASSERT( mimeType() == other.mimeType() && id() == other.id() );
+  if ( mimeType() != other.mimeType() || id() != other.id() ) {
+    kDebug() << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
+    kDebug() << "id() = " << id() << "; other.id() = " << other.id();
+    Q_ASSERT_X( false, "Item::apply", "mimetype or id missmatch" );
+  }
+
   setRemoteId( other.remoteId() );
   setRevision( other.revision() );
   setFlags( other.flags() );
