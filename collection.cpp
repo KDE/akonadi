@@ -144,9 +144,18 @@ void Collection::setParentRemoteId(const QString & remoteParent)
 
 KUrl Collection::url() const
 {
+  return url( UrlShort );
+}
+
+KUrl Collection::url( UrlType type ) const
+{
   KUrl url;
   url.setProtocol( QString::fromLatin1( "akonadi" ) );
   url.addQueryItem( QLatin1String( "collection" ), QString::number( id() ) );
+
+  if ( type == UrlWithName )
+    url.addQueryItem( QLatin1String( "name" ), name() );
+
   return url;
 }
 

@@ -834,6 +834,20 @@ void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
   m_childEntities.remove( collectionId );
 }
 
+QStringList EntityTreeModelPrivate::childCollectionNames( const Collection &collection ) const
+{
+  QStringList names;
+
+  QHashIterator<Collection::Id, Collection> it( m_collections );
+  while ( it.hasNext() ) {
+    it.next();
+    if ( it.value().parentCollection().id() == collection.id() )
+      names << it.value().name();
+  }
+
+  return names;
+}
+
 void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection& collection,
                                                        const Akonadi::Collection& sourceCollection,
                                                        const Akonadi::Collection& destCollection )
