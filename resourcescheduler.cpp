@@ -292,6 +292,7 @@ void ResourceScheduler::executeNext()
     case Custom:
     {
       bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
+      Q_ASSERT_X( success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found" );
       if ( !success )
         success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName );
 
