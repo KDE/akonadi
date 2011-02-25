@@ -105,9 +105,10 @@ void Akonadi::NotificationCollector::collectionChanged( const Collection &collec
 
 void NotificationCollector::collectionMoved( const Collection &collection,
                                              const Collection &source,
-                                             const QByteArray &resource )
+                                             const QByteArray &resource,
+                                             const QByteArray &destResource )
 {
-  collectionNotification( NotificationMessage::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>() << "PARENT" );
+  collectionNotification( NotificationMessage::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource );
 }
 
 void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
@@ -169,9 +170,7 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   if ( op == NotificationMessage::Remove )
     msg.setItemParts( QSet<QByteArray>() << item.remoteRevision().toUtf8() );
 
-  // another HACK: store the destination resource for moves
-  if ( op == NotificationMessage::Move )
-    msg.setItemParts( QSet<QByteArray>() << collectionDest.resource().name().toLatin1() );
+  msg.setDestinationResource( collectionDest.resource().name().toLatin1() );
 
   Collection col = collection;
   if ( !col.isValid() )
@@ -195,7 +194,8 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
                                                     Collection::Id source,
                                                     Collection::Id destination,
                                                     const QByteArray & resource,
-                                                    const QSet<QByteArray> &changes )
+                                                    const QSet<QByteArray> &changes,
+                                                    const QByteArray & destResource )
 {
   NotificationMessage msg;
   msg.setType( NotificationMessage::Collection );
@@ -205,6 +205,7 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
   msg.setRemoteId( collection.remoteId() );
   msg.setParentCollection( source );
   msg.setParentDestCollection( destination );
+  msg.setDestinationResource( destResource );
   msg.setItemParts( changes );
 
   //HACK: store remoteRevision in itemparts for deletion

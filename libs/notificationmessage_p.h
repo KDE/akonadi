@@ -91,6 +91,9 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     Id parentDestCollection() const;
     void setParentDestCollection( Id parent );
 
+    QByteArray destinationResource() const;
+    void setDestinationResource( const QByteArray &destResource );
+
     QString mimeType() const;
     void setMimeType( const QString &mimeType );
 

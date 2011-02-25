@@ -138,7 +138,8 @@ class NotificationCollector : public QObject
     */
     void collectionMoved( const Collection &collection,
                           const Collection &source,
-                          const QByteArray &resource = QByteArray() );
+                          const QByteArray &resource = QByteArray(),
+                          const QByteArray &destResource = QByteArray() );
 
     /**
       Notify about a removed collection.
@@ -178,7 +179,8 @@ class NotificationCollector : public QObject
                                  const Collection &collection,
                                  Collection::Id source, Collection::Id destination,
                                  const QByteArray &resource,
-                                 const QSet<QByteArray> &changes = QSet<QByteArray>() );
+                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
+                                 const QByteArray &destResource = QByteArray() );
     void dispatchNotification( const NotificationMessage &msg );
     void clear();
 

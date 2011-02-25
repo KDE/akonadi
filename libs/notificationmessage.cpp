@@ -49,6 +49,7 @@ class NotificationMessage::Private : public QSharedData
       uid = other.uid;
       remoteId = other.remoteId;
       resource = other.resource;
+      destResource = other.destResource;
       parentCollection = other.parentCollection;
       parentDestCollection = other.parentDestCollection;
       mimeType = other.mimeType;
@@ -62,6 +63,7 @@ class NotificationMessage::Private : public QSharedData
           && sessionId == other.sessionId
           && remoteId == other.remoteId
           && resource == other.resource
+          && destResource == other.destResource
           && parentCollection == other.parentCollection
           && parentDestCollection == other.parentDestCollection
           && mimeType == other.mimeType;
@@ -78,6 +80,7 @@ class NotificationMessage::Private : public QSharedData
     Id uid;
     QString remoteId;
     QByteArray resource;
+    QByteArray destResource;
     Id parentCollection;
     Id parentDestCollection;
     QString mimeType;
@@ -195,6 +198,16 @@ void NotificationMessage::setParentCollection( Id parent )
 void NotificationMessage::setParentDestCollection( Id parent )
 {
   d->parentDestCollection = parent;
+}
+
+void NotificationMessage::setDestinationResource( const QByteArray &destResource )
+{
+  d->destResource = destResource;
+}
+
+QByteArray NotificationMessage::destinationResource() const
+{
+  return d->destResource;
 }
 
 QString NotificationMessage::mimeType() const
@@ -324,8 +337,13 @@ QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
   arg << msg.mimeType();
 
   QStringList itemParts;
-  foreach ( const QByteArray &itemPart, msg.itemParts() )
-    itemParts.append( QString::fromLatin1( itemPart ) );
+  if ( msg.operation() == NotificationMessage::Move ) {
+    // encode destination resource in parts, as a backward compat hack
+    itemParts.push_back( QString::fromLatin1( msg.destinationResource() ) );
+  } else {
+    foreach ( const QByteArray &itemPart, msg.itemParts() )
+      itemParts.append( QString::fromLatin1( itemPart ) );
+  }
 
   arg << itemParts;
   arg.endStructure();
@@ -361,8 +379,13 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &
   arg >> l;
 
   QSet<QByteArray> itemParts;
-  foreach ( const QString &itemPart, l )
-    itemParts.insert( itemPart.toLatin1() );
+  if ( msg.operation() == NotificationMessage::Move && l.size() >= 1 ) {
+    // decode destination resource, which is stored in parts as a backward compat hack
+    msg.setDestinationResource( l.first().toLatin1() );
+  } else {
+    foreach ( const QString &itemPart, l )
+      itemParts.insert( itemPart.toLatin1() );
+  }
 
   msg.setItemParts( itemParts );
   arg.endStructure();

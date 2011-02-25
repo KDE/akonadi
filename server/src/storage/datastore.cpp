@@ -302,6 +302,8 @@ bool Akonadi::DataStore::moveCollection( Collection & collection, const Collecti
   if ( !m_dbOpened || !newParent.isValid() )
     return false;
 
+  const QByteArray oldResource = collection.resource().name().toLatin1();
+
   int resourceId = collection.resourceId();
   const Collection source = collection.parent();
   if ( newParent.id() > 0 ) // not root
@@ -319,7 +321,7 @@ bool Akonadi::DataStore::moveCollection( Collection & collection, const Collecti
   if ( !collection.update() )
     return false;
 
-  mNotificationCollector->collectionMoved( collection, source );
+  mNotificationCollector->collectionMoved( collection, source, oldResource, newParent.resource().name().toLatin1() );
   return true;
 }
 
