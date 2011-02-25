@@ -198,6 +198,20 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     QString name() const;
 
+    /**
+     * Enable or disable automatic progress reporting. By default, it is enabled.
+     * When enabled, the resource will automatically emit the signals percent() and status()
+     * while syncing items or collections.
+     *
+     * The automatic progress reporting is done on a per item / per collection basis, so if a
+     * finer granularity is desired, automatic reporting should be disabled and the subclass should
+     * emit the percent() and status() signals itself.
+     *
+     * @param enabled Whether or not automatic emission of the signals is enabled.
+     * @since 4.7
+     */
+    void setAutomaticProgressReporting( bool enabled );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the name of the resource has changed.

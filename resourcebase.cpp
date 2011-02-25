@@ -72,7 +72,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         mItemTransactionMode( ItemSync::SingleTransaction ),
         mCollectionSyncer( 0 ),
         mHierarchicalRid( false ),
-        mUnemittedProgress( 0 )
+        mUnemittedProgress( 0 ),
+        mAutomaticProgressReporting( true )
     {
       Internal::setClientType( Internal::Resource );
       mStatusMessage = defaultReadyMessage();
@@ -273,6 +274,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
     QMap<Akonadi::Collection::Id, QVariantMap> mUnemittedAdvancedStatus;
+    bool mAutomaticProgressReporting;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -656,7 +658,9 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   QStringList contentTypes = currentCollection.contentMimeTypes();
   contentTypes.removeAll( Collection::mimeType() );
   if ( !contentTypes.isEmpty() || (col.rights() & (Collection::CanLinkItem)) ) { // HACK to check for virtual collections
-    emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
+    if ( mAutomaticProgressReporting ) {
+      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
+    }
     q->retrieveItems( currentCollection );
     return;
   }
@@ -887,10 +891,12 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
 void ResourceBasePrivate::slotDelayedEmitProgress()
 {
   Q_Q( ResourceBase );
-  emit q->percent( mUnemittedProgress );
+  if ( mAutomaticProgressReporting ) {
+    emit q->percent( mUnemittedProgress );
 
-  Q_FOREACH( const QVariantMap &statusMap, mUnemittedAdvancedStatus ) {
-      emit q->advancedStatus( statusMap );
+    Q_FOREACH( const QVariantMap &statusMap, mUnemittedAdvancedStatus ) {
+        emit q->advancedStatus( statusMap );
+    }
   }
   mUnemittedProgress = 0;
   mUnemittedAdvancedStatus.clear();
@@ -958,6 +964,12 @@ void ResourceBase::setItemSynchronizationFetchScope(const ItemFetchScope& fetchS
   if ( !d->mItemSyncFetchScope )
     d->mItemSyncFetchScope = new ItemFetchScope;
   *(d->mItemSyncFetchScope) = fetchScope;
+}
+
+void ResourceBase::setAutomaticProgressReporting( bool enabled )
+{
+  Q_D( ResourceBase );
+  d->mAutomaticProgressReporting = enabled;
 }
 
 #include "resourcebase.moc"
