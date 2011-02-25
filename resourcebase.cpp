@@ -289,6 +289,7 @@ ResourceBase::ResourceBase( const QString & id )
            d->scheduler, SLOT( scheduleChangeReplay() ) );
 
   d->mChangeRecorder->setResourceMonitored( d->mId.toLatin1() );
+  d->mChangeRecorder->fetchCollection( true );
 
   connect( d->scheduler, SIGNAL( executeFullSync() ),
            SLOT( retrieveCollections() ) );
