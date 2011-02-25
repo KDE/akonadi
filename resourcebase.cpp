@@ -898,8 +898,6 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
 
 void ResourceBasePrivate::slotPercent( KJob *job, unsigned long percent )
 {
-  Q_Q( ResourceBase );
-
   mUnemittedProgress = percent;
 
   const Collection collection = job->property( "collection" ).value<Collection>();
