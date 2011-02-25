@@ -57,7 +57,7 @@ class Session;
  * (3b) resource filters (f) (collections only)
  * (4) item is monitored (+)
  * (5) collection is monitored (+)
- * 
+ *
  * Optionally, the changed objects can be fetched automatically from the server.
  * To enable this, see itemFetchScope() and collectionFetchScope().
  *
