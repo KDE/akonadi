@@ -204,17 +204,6 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
   return false;
 }
 
-void MonitorPrivate::dispatchNotifications()
-{
-  while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
-    const NotificationMessage msg = pendingNotifications.dequeue();
-    if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )
-      emitNotification( msg );
-    else
-      pipeline.enqueue( msg );
-  }
-}
-
 void MonitorPrivate::cleanOldNotifications()
 {
   for ( NotificationMessage::List::iterator it = pipeline.begin(); it != pipeline.end(); ) {
@@ -274,22 +263,6 @@ bool MonitorPrivate::emitNotification( const NotificationMessage &msg )
     cleanOldNotifications(); // probably someone disconnected a signal in the meantime, get rid of the no longer interesting stuff
 
   return someoneWasListening;
-}
-
-void MonitorPrivate::dataAvailable()
-{
-  while ( !pipeline.isEmpty() ) {
-    const NotificationMessage msg = pipeline.head();
-    if ( ensureDataAvailable( msg ) ) {
-      // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
-      // being called again) and we end up dequeuing an empty pipeline
-      pipeline.dequeue();
-      emitNotification( msg );
-    } else {
-      break;
-    }
-  }
-  dispatchNotifications();
 }
 
 void MonitorPrivate::updatePendingStatistics( const NotificationMessage &msg )
@@ -392,6 +365,33 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
   }
 
   dispatchNotifications();
+}
+
+void MonitorPrivate::dataAvailable()
+{
+  while ( !pipeline.isEmpty() ) {
+    const NotificationMessage msg = pipeline.head();
+    if ( ensureDataAvailable( msg ) ) {
+      // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
+      // being called again) and we end up dequeuing an empty pipeline
+      pipeline.dequeue();
+      emitNotification( msg );
+    } else {
+      break;
+    }
+  }
+  dispatchNotifications();
+}
+
+void MonitorPrivate::dispatchNotifications()
+{
+  while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
+    const NotificationMessage msg = pendingNotifications.dequeue();
+    if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )
+      emitNotification( msg );
+    else
+      pipeline.enqueue( msg );
+  }
 }
 
 bool MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const Item &item,
