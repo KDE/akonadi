@@ -35,7 +35,7 @@ class Akonadi::ItemMoveJobPrivate: public MoveJobImpl<Item, ItemMoveJob>
     Q_DECLARE_PUBLIC( ItemMoveJob )
 };
 
-ItemMoveJob::ItemMoveJob(const Item & item, const Collection &destination, QObject * parent) :
+ItemMoveJob::ItemMoveJob(const Item &item, const Collection &destination, QObject *parent) :
     Job( new ItemMoveJobPrivate( this ), parent )
 {
   Q_D( ItemMoveJob );
@@ -43,7 +43,7 @@ ItemMoveJob::ItemMoveJob(const Item & item, const Collection &destination, QObje
   d->objectsToMove.append( item );
 }
 
-ItemMoveJob::ItemMoveJob( const Item::List& items, const Collection& destination, QObject* parent) :
+ItemMoveJob::ItemMoveJob( const Item::List &items, const Collection &destination, QObject* parent) :
   Job( new ItemMoveJobPrivate( this ), parent )
 {
   Q_D( ItemMoveJob );
