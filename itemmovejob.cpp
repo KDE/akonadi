@@ -51,7 +51,7 @@ ItemMoveJob::ItemMoveJob( const Item::List& items, const Collection& target, QOb
   d->objectsToMove = items;
 }
 
-ItemMoveJob::~ ItemMoveJob()
+ItemMoveJob::~ItemMoveJob()
 {
 }
 
@@ -59,6 +59,18 @@ void ItemMoveJob::doStart()
 {
   Q_D( ItemMoveJob );
   d->sendCommand( "MOVE" );
+}
+
+Collection ItemMoveJob::targetCollection() const
+{
+  Q_D( const ItemMoveJob );
+  return d->destination;
+}
+
+QList<Item> ItemMoveJob::items() const
+{
+  Q_D( const ItemMoveJob );
+  return d->objectsToMove;
 }
 
 #include "itemmovejob.moc"

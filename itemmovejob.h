@@ -74,6 +74,16 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      */
     ~ItemMoveJob();
 
+    /**
+     * Returns the target collection.
+     */
+    Collection targetCollection() const;
+
+    /**
+     * Returns the list of items that where passed in the constructor.
+     */
+    QList<Item> items() const;
+
   protected:
     void doStart();
 
