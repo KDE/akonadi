@@ -67,7 +67,7 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      * @param target The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob( const QList<Item> &items, const Collection &target, QObject *parent = 0 );
+    ItemMoveJob( const QList<Item> &items, const Collection &destination, QObject *parent = 0 );
 
     /**
      * Destroys the item move job.
@@ -75,9 +75,9 @@ class AKONADI_EXPORT ItemMoveJob : public Job
     ~ItemMoveJob();
 
     /**
-     * Returns the target collection.
+     * Returns the destination collection.
      */
-    Collection targetCollection() const;
+    Collection destinationCollection() const;
 
     /**
      * Returns the list of items that where passed in the constructor.
