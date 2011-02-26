@@ -55,16 +55,16 @@ class AKONADI_EXPORT ItemMoveJob : public Job
      * Move the given item into the given collection.
      *
      * @param item The item to move.
-     * @param target The target collection.
+     * @param destination The destination collection.
      * @param parent The parent object.
      */
-    ItemMoveJob( const Item &item, const Collection &target, QObject *parent = 0 );
+    ItemMoveJob( const Item &item, const Collection &destination, QObject *parent = 0 );
 
     /**
-     * Move the given items into @p target.
+     * Move the given items into @p destination.
      *
      * @param items A list of items to move.
-     * @param target The destination collection.
+     * @param destination The destination collection.
      * @param parent The parent object.
      */
     ItemMoveJob( const QList<Item> &items, const Collection &destination, QObject *parent = 0 );
