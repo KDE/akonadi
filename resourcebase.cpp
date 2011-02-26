@@ -45,6 +45,7 @@
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
+#include <kcomponentdata.h>
 #include <kdebug.h>
 #include <klocale.h>
 
@@ -970,6 +971,16 @@ void ResourceBase::setAutomaticProgressReporting( bool enabled )
 {
   Q_D( ResourceBase );
   d->mAutomaticProgressReporting = enabled;
+}
+
+void ResourceBase::initComponentData()
+{
+  // This will set the component name of the main component to the process name, which
+  // is used in kDebug() output. Without this call, the debug area would be the resource
+  // identifier, e.g. akonadi_imap_resource_42, akonadi_imap_resource_231 and so on, therefore
+  // creating too many debug areas in kdebugdialog. With this, the area name is just
+  // akonadi_imap_resource.
+  KComponentData dummy( KCmdLineArgs::appName().toUtf8() );
 }
 
 #include "resourcebase.moc"

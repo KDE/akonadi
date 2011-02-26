@@ -176,6 +176,10 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     static int init( int argc, char **argv )
     {
       const QString id = parseArguments( argc, argv );
+
+      // Needs to be called before the first kDebug(), but after parseArguments().
+      initComponentData();
+
       KApplication app;
       T* r = new T( id );
 
@@ -580,6 +584,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
   private:
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );
+    static void initComponentData();
 
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
