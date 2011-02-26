@@ -94,6 +94,7 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
 
     /**
      * Returns the content mimetype the collections are filtered by.
+     * Don't assume this list has the original order.
      */
     QStringList mimeTypeFilter() const;
 
