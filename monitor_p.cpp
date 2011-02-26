@@ -310,7 +310,7 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-void MonitorPrivate::appendAndCompress( const NotificationMessage &msg  )
+void MonitorPrivate::translateAndCompress( const NotificationMessage &msg  )
 {
   // We have to split moves into insert or remove if the source or destination
   // is not monitored.
@@ -360,7 +360,7 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
-      appendAndCompress( msg );
+      translateAndCompress( msg );
     }
   }
 
