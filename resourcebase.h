@@ -458,11 +458,15 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * Returns the collection that is currently synchronized.
+     * @note Calling this method is only allowed during a collection synchronization task, that
+     * is directly or indirectly from retrieveItems().
      */
     Collection currentCollection() const;
 
     /**
      * Returns the item that is currently retrieved.
+     * @note Calling this method is only allowed during fetching a single item, that
+     * is directly or indirectly from retrieveItem().
      */
     Item currentItem() const;
 
