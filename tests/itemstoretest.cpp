@@ -152,6 +152,7 @@ void ItemStoreTest::testDataChange()
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->fetchScope().fetchFullPayload();
+  fjob->fetchScope().setCacheOnly( true );
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];

@@ -132,6 +132,7 @@ void ItemAppendTest::testContent()
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( testFolder1, this );
+  fjob->fetchScope().setCacheOnly( true );
   fjob->fetchScope().fetchFullPayload();
   AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );

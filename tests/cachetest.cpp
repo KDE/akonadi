@@ -54,7 +54,7 @@ class CacheTest : public QObject
 
       ItemFetchJob *fetch = new ItemFetchJob( col, this );
       fetch->fetchScope().fetchFullPayload( true );
-      QVERIFY( fetch->exec() );
+      QVERIFY( !fetch->exec() );
     }
 
     void testResourceRetrievalOnFetch_data()
@@ -84,7 +84,6 @@ class CacheTest : public QObject
 
       fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
-      QEXPECT_FAIL( "resource offline", "what do we actually want here?", Continue );
       QCOMPARE( fetch->exec(), resourceEnabled );
       if ( resourceEnabled ) {
         QCOMPARE( fetch->items().count(), 1 );
