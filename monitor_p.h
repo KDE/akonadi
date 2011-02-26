@@ -102,7 +102,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 
-    void translateAndCompress( const NotificationMessage &msg  );
+    void translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  );
 
     virtual void slotNotify( const NotificationMessage::List &msgs );
 

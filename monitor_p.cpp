@@ -310,12 +310,12 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-void MonitorPrivate::translateAndCompress( const NotificationMessage &msg  )
+void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  )
 {
   // We have to split moves into insert or remove if the source or destination
   // is not monitored.
   if ( msg.operation() != NotificationMessage::Move )
-    return NotificationMessage::appendAndCompress( pendingNotifications, msg );
+    return NotificationMessage::appendAndCompress( notificationQueue, msg );
 
   bool sourceWatched = false;
   bool destWatched = false;
@@ -335,7 +335,7 @@ void MonitorPrivate::translateAndCompress( const NotificationMessage &msg  )
   }
 
   if ( sourceWatched && destWatched )
-    return NotificationMessage::appendAndCompress( pendingNotifications, msg );
+    return NotificationMessage::appendAndCompress( notificationQueue, msg );
 
   if ( sourceWatched )
   {
@@ -343,7 +343,7 @@ void MonitorPrivate::translateAndCompress( const NotificationMessage &msg  )
     NotificationMessage removalMessage = msg;
     removalMessage.setOperation( NotificationMessage::Remove );
     removalMessage.setParentDestCollection( -1 );
-    return NotificationMessage::appendAndCompress( pendingNotifications, removalMessage );
+    return NotificationMessage::appendAndCompress( notificationQueue, removalMessage );
   }
 
   // Transform into an insertion
@@ -351,7 +351,7 @@ void MonitorPrivate::translateAndCompress( const NotificationMessage &msg  )
   insertionMessage.setOperation( NotificationMessage::Add );
   insertionMessage.setParentCollection( msg.parentDestCollection() );
   insertionMessage.setParentDestCollection( -1 );
-  NotificationMessage::appendAndCompress( pendingNotifications, insertionMessage );
+  NotificationMessage::appendAndCompress( notificationQueue, insertionMessage );
 }
 
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
@@ -360,7 +360,7 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
-      translateAndCompress( msg );
+      translateAndCompress( pendingNotifications, msg );
     }
   }
 
