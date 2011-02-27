@@ -155,6 +155,20 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       }
     }
 
+    void addToStream( QDataStream &stream, const NotificationMessage &msg )
+    {
+        stream << msg.sessionId();
+        stream << msg.type();
+        stream << msg.operation();
+        stream << msg.uid();
+        stream << msg.remoteId();
+        stream << msg.resource();
+        stream << msg.parentCollection();
+        stream << msg.parentDestCollection();
+        stream << msg.mimeType();
+        stream << msg.itemParts();
+    }
+
     void saveNotifications()
     {
       if ( !settings )
@@ -178,17 +192,7 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 
       for ( int i = 0; i < pendingNotifications.count(); ++i ) {
         const NotificationMessage msg = pendingNotifications.at( i );
-
-        stream << msg.sessionId();
-        stream << msg.type();
-        stream << msg.operation();
-        stream << msg.uid();
-        stream << msg.remoteId();
-        stream << msg.resource();
-        stream << msg.parentCollection();
-        stream << msg.parentDestCollection();
-        stream << msg.mimeType();
-        stream << msg.itemParts();
+        addToStream( stream, msg );
       }
 
       file.close();
