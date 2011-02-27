@@ -61,6 +61,9 @@ class Session;
  * Optionally, the changed objects can be fetched automatically from the server.
  * To enable this, see itemFetchScope() and collectionFetchScope().
  *
+ * Note that as a consequence of rule 3a, it is not possible to monitor (more than zero resources
+ * OR more than zero mimetypes) AND more than zero collections.
+ *
  * @todo Distinguish between monitoring collection properties and collection content.
  * @todo Special case for collection content counts changed
  *
