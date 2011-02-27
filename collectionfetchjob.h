@@ -62,7 +62,8 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     {
       Base,       ///< Only fetch the base collection.
       FirstLevel, ///< Only list direct sub-collections of the base collection.
-      Recursive   ///< List all sub-collections.
+      Recursive,  ///< List all sub-collections.
+      NonOverlappingRoots  ///< List the roots of a list of fetched collections. @since 4.7
     };
 
     /**
@@ -88,6 +89,19 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @param parent The parent object.
      */
     explicit CollectionFetchJob( const Collection::List &collections, QObject *parent = 0 );
+
+    /**
+     * Creates a new collection fetch job to retrieve a list of collections.
+     * The same rules for identifiers apply as noted in the constructor
+     * description.
+     *
+     * @param collections A list of collections to fetch. Must not be empty.
+     * @param type The type of fetch depth.
+     * @param parent The parent object.
+     * @todo KDE5 merge with ctor above.
+     * @since 4.7
+     */
+    CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 );
 
     /**
      * Destroys the collection fetch job.
