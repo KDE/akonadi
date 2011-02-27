@@ -188,7 +188,12 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       QDataStream stream( &file );
       stream.setVersion( QDataStream::Qt_4_6 );
 
-      stream << (qulonglong)pendingNotifications.count();
+      stream << (qulonglong)(pipeline.count() + pendingNotifications.count());
+
+      for ( int i = 0; i < pipeline.count(); ++i ) {
+        const NotificationMessage msg = pipeline.at( i );
+        addToStream( stream, msg );
+      }
 
       for ( int i = 0; i < pendingNotifications.count(); ++i ) {
         const NotificationMessage msg = pendingNotifications.at( i );
