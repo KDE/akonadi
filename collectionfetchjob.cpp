@@ -42,6 +42,16 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     CollectionFetchJobPrivate( CollectionFetchJob *parent )
       : JobPrivate( parent )
     {
+
+    }
+
+    void init()
+    {
+      mEmitTimer = new QTimer( q_ptr );
+      mEmitTimer->setSingleShot( true );
+      mEmitTimer->setInterval( 100 );
+      q_ptr->connect( mEmitTimer, SIGNAL( timeout() ), q_ptr, SLOT( timeout() ) );
+      q_ptr->connect( q_ptr, SIGNAL( result( KJob* ) ), q_ptr, SLOT( timeout() ) );
     }
 
     Q_DECLARE_PUBLIC( CollectionFetchJob )
@@ -71,21 +81,17 @@ CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type,
   : Job( new CollectionFetchJobPrivate( this ), parent )
 {
   Q_D( CollectionFetchJob );
+  d->init();
 
   d->mBase = collection;
   d->mType = type;
-
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
-  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
 }
 
 CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject * parent )
   : Job( new CollectionFetchJobPrivate( this ), parent )
 {
   Q_D( CollectionFetchJob );
+  d->init();
 
   Q_ASSERT( !cols.isEmpty() );
   if ( cols.size() == 1 ) {
@@ -95,11 +101,6 @@ CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, QObject *
   }
   d->mType = CollectionFetchJob::Base;
 
-  d->mEmitTimer = new QTimer( this );
-  d->mEmitTimer->setSingleShot( true );
-  d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
-  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
 }
 
 CollectionFetchJob::~CollectionFetchJob()
