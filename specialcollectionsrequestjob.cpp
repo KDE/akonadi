@@ -197,7 +197,11 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult( KJob *job )
 
   if ( qobject_cast<DefaultResourceJob*>( job ) ) {
     // This is the default resource.
-    Q_ASSERT( resourceId == mSpecialCollections->d->defaultResourceId() );
+    if ( resourceId != mSpecialCollections->d->defaultResourceId() ) {
+      kError() << "Resource id's don't match: " << resourceId
+               << mSpecialCollections->d->defaultResourceId();
+      Q_ASSERT( false );
+    }
     //mToForget.append( mSpecialCollections->defaultResourceId() );
     createRequestedFolders( resjob, mDefaultFolders );
   } else {
