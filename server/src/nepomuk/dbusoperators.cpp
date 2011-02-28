@@ -19,16 +19,12 @@
 */
 
 #include "dbusoperators.h"
-#include "querymetatype.h"
-
-#include <soprano/version.h>
 
 #include <QtDBus/QDBusMetaType>
 
-Q_DECLARE_METATYPE(Nepomuk::Query::Result)
-Q_DECLARE_METATYPE(Soprano::Node)
-Q_DECLARE_METATYPE(QList<int>)
-Q_DECLARE_METATYPE(QList<Nepomuk::Query::Result>)
+#include <Soprano/Node>
+#include <Soprano/BindingSet>
+
 
 void Nepomuk::Query::registerDBusTypes()
 {
@@ -38,10 +34,11 @@ void Nepomuk::Query::registerDBusTypes()
     qDBusRegisterMetaType<RequestPropertyMapDBus>();
 }
 
+
 QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& result )
 {
     //
-    // Signature: (sda{s(isss)}s)
+    // Signature: (sda{s(isss)}a{s(isss)}s)
     //
 
     arg.beginStructure();
@@ -49,19 +46,28 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
     // resource URI and score
     arg << QString::fromAscii( result.resourceUri().toEncoded() ) << result.score();
 
-    arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
-
     // request properties
+    arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
     QHash<QUrl, Soprano::Node> rp = result.requestProperties();
     for ( QHash<QUrl, Soprano::Node>::const_iterator it = rp.constBegin(); it != rp.constEnd(); ++it ) {
         arg.beginMapEntry();
         arg << QString::fromAscii( it.key().toEncoded() ) << it.value();
         arg.endMapEntry();
     }
-
     arg.endMap();
 
-    arg << QString(); // excerpt
+    // additional bindings
+    arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
+    const Soprano::BindingSet additionalBindings; // = result.additionalBindings();
+    foreach( const QString& binding, additionalBindings.bindingNames() ) {
+        arg.beginMapEntry();
+        arg << binding << additionalBindings[binding];
+        arg.endMapEntry();
+    }
+    arg.endMap();
+
+    // full text search excerpt
+    arg << QString();//<< result.excerpt();
 
     arg.endStructure();
 
@@ -72,7 +78,7 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
 const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Result& result )
 {
     //
-    // Signature: (sda{s(isss)})
+    // Signature: (sda{s(isss)}s)
     //
 
     arg.beginStructure();
@@ -89,15 +95,29 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Resul
         arg.beginMapEntry();
         arg >> rs >> node;
         arg.endMapEntry();
-        if( !rs.startsWith(QLatin1String("|")) )
-            result.addRequestProperty( QUrl::fromEncoded( rs.toAscii() ), node );
+        result.addRequestProperty( QUrl::fromEncoded( rs.toAscii() ), node );
+    }
+    arg.endMap();
+
+    Soprano::BindingSet additionalBindings;
+    arg.beginMap();
+    while ( !arg.atEnd() ) {
+        QString binding;
+        Soprano::Node node;
+        arg.beginMapEntry();
+        arg >> binding >> node;
+        arg.endMapEntry();
+        additionalBindings.insert( binding, node );
     }
     arg.endMap();
 
     QString excerpt;
     arg >> excerpt;
+//    result.setExcerpt( excerpt );
 
     arg.endStructure();
+
+//   result.setAdditionalBindings( additionalBindings );
 
     return arg;
 }
@@ -129,14 +149,10 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& node )
     QString value, language, dataTypeUri;
     arg >> type >> value >> language >> dataTypeUri;
     if ( type == Soprano::Node::LiteralNode ) {
-#if SOPRANO_IS_VERSION( 2, 3, 0 )
         if ( dataTypeUri.isEmpty() )
             node = Soprano::Node( Soprano::LiteralValue::createPlainLiteral( value, language ) );
         else
             node = Soprano::Node( Soprano::LiteralValue::fromString( value, QUrl::fromEncoded( dataTypeUri.toAscii() ) ) );
-#else
-        node = Soprano::Node( Soprano::LiteralValue::fromString( value, dataTypeUri ), language );
-#endif
     }
     else if ( type == Soprano::Node::ResourceNode ) {
         node = Soprano::Node( QUrl::fromEncoded( value.toAscii() ) );

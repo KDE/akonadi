@@ -1,0 +1,8 @@
+#ifndef NEPOMUKQUERY_EXPORT_H
+#define NEPOMUKQUERY_EXPORT_H
+
+#ifndef NEPOMUKQUERY_EXPORT
+#define NEPOMUKQUERY_EXPORT
+#endif
+
+#endif

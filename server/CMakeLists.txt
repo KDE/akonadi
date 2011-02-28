@@ -139,7 +139,7 @@ if (Soprano_FOUND)
     src/nepomuk/result.cpp
   )
 
-  set_source_files_properties(src/nepomuk/org.kde.nepomuk.QueryService.xml PROPERTIES INCLUDE "querymetatype.h")
+  set_source_files_properties(src/nepomuk/org.kde.nepomuk.QueryService.xml PROPERTIES INCLUDE "dbusoperators.h")
   set_source_files_properties(src/nepomuk/org.kde.nepomuk.Query.xml PROPERTIES INCLUDE "result.h")
 
   qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.QueryService.xml queryserviceinterface)
