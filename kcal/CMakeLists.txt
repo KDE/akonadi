@@ -9,8 +9,13 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO
 
 if (NOT KDEPIM_NO_KCAL)
 set( kcalakonadi_LIB_SRC
+  freebusyproviderbase.cpp
   incidencemimetypevisitor.cpp
 )
+
+set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+qt4_add_dbus_adaptor( kcalakonadi_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor Akonadi__FreeBusyProviderAdaptor )
 
 kde4_add_library( akonadi-kcal ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
 
@@ -22,6 +27,7 @@ install(TARGETS akonadi-kcal EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_D
 
 install( FILES
   akonadi-kcal_export.h
+  freebusyproviderbase.h
   incidencemimetypevisitor.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kcal COMPONENT Devel
 )
