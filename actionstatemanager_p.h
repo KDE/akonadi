@@ -70,6 +70,7 @@ class ActionStateManager
 
     virtual void enableAction( int action, bool state );
     virtual void updatePluralLabel( int action, int count );
+    virtual void updateAlternatingAction( int action );
 
   private:
     QObject *mReceiver;

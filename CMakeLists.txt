@@ -91,6 +91,7 @@ set( akonadikde_LIB_SRC
   entitycache.cpp
   entitydisplayattribute.cpp
   entityhiddenattribute.cpp
+  entitydeletedattribute.cpp
   entitymimetypefiltermodel.cpp
   entityorderproxymodel.cpp
   entityrightsfiltermodel.cpp
@@ -150,6 +151,10 @@ set( akonadikde_LIB_SRC
   subscriptiondialog.cpp
   subscriptionjob.cpp
   subscriptionmodel.cpp
+  trashjob.cpp
+  trashrestorejob.cpp
+  trashsettings.cpp
+  trashfilterproxymodel.cpp
   transactionjobs.cpp
   transactionsequence.cpp
   transportresourcebase.cpp
@@ -289,6 +294,7 @@ install( FILES
   entity.h
   entitydisplayattribute.h
   entityhiddenattribute.h
+  entitydeletedattribute.h
   entitylistview.h
   entitymimetypefiltermodel.h
   entityrightsfiltermodel.h
@@ -335,6 +341,10 @@ install( FILES
   specialcollectionsrequestjob.h
   standardactionmanager.h
   statisticsproxymodel.h
+  trashjob.h
+  trashrestorejob.h
+  trashsettings.h
+  trashfilterproxymodel.h
   transactionjobs.h
   transactionsequence.h
   transportresourcebase.h

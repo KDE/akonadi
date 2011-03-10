@@ -138,6 +138,14 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CopyItems,                 ///< Copies the selected items
       Paste,                     ///< Paste collections or items
       DeleteItems,               ///< Deletes the selected items
+      MoveCollectionsToTrash,    ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
+      MoveItemsToTrash,          ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
+      RestoreCollectionsFromTrash,///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
+      RestoreItemsFromTrash,     ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreCollection,  ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreCollectionAlternative,   ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
+      MoveToTrashRestoreItem,    ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreItemAlternative,   ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
       ManageLocalSubscriptions,  ///< Manages local subscriptions
       AddToFavoriteCollections,  ///< Add the collection to the favorite collections model @since 4.4
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model @since 4.4
@@ -337,6 +345,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCopyCollections() )
     Q_PRIVATE_SLOT( d, void slotCutCollections() )
     Q_PRIVATE_SLOT( d, void slotDeleteCollection() )
+    Q_PRIVATE_SLOT( d, void slotMoveCollectionToTrash() )
+    Q_PRIVATE_SLOT( d, void slotMoveItemToTrash() )
+    Q_PRIVATE_SLOT( d, void slotRestoreCollectionFromTrash() )
+    Q_PRIVATE_SLOT( d, void slotRestoreItemFromTrash() )
+    Q_PRIVATE_SLOT( d, void slotTrashRestoreCollection() )
+    Q_PRIVATE_SLOT( d, void slotTrashRestoreItem() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollectionRecursive() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
@@ -365,12 +379,15 @@ class AKONADI_EXPORT StandardActionManager : public QObject
 
     Q_PRIVATE_SLOT( d, void collectionCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void collectionDeletionResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void moveCollectionToTrashResult(KJob*) )
+    Q_PRIVATE_SLOT( d, void moveItemToTrashResult(KJob*) )
     Q_PRIVATE_SLOT( d, void itemDeletionResult(KJob*) )
     Q_PRIVATE_SLOT( d, void resourceCreationResult(KJob*) )
     Q_PRIVATE_SLOT( d, void pasteResult(KJob*) )
 
     Q_PRIVATE_SLOT( d, void enableAction(int, bool) )
     Q_PRIVATE_SLOT( d, void updatePluralLabel(int, int) )
+    Q_PRIVATE_SLOT( d, void updateAlternatingAction(int) )
     Q_PRIVATE_SLOT( d, bool isFavoriteCollection(const Akonadi::Collection&) )
 
     Q_PRIVATE_SLOT( d, void aboutToShowMenu() )

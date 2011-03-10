@@ -25,6 +25,8 @@
 #include "specialcollectionattribute_p.h"
 #include "standardactionmanager.h"
 
+#include <akonadi/entitydeletedattribute.h>
+
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 
@@ -142,6 +144,14 @@ void ActionStateManager::updateState( const Collection::List &collections, const
     }
   }
 
+  bool collectionsAreInTrash = false;
+  foreach ( const Collection &collection, collections ) {
+    if ( collection.hasAttribute<EntityDeletedAttribute>() ) {
+      collectionsAreInTrash = true;
+      break;
+    }
+  }
+
   const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
   // collection specific actions
@@ -157,6 +167,10 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::CopyCollectionToMenu, canCopyCollections );
 
   enableAction( StandardActionManager::MoveCollectionToMenu, canMoveCollections );
+
+  enableAction( StandardActionManager::MoveCollectionsToTrash, canMoveCollections );
+
+  enableAction( StandardActionManager::RestoreCollectionsFromTrash, canMoveCollections && collectionsAreInTrash );
 
   enableAction( StandardActionManager::CopyCollectionToDialog, canCopyCollections );
 
@@ -218,6 +232,13 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::ResourceProperties, canConfigureResource );
   enableAction( StandardActionManager::SynchronizeResources, canSynchronizeResources );
 
+  if (collectionsAreInTrash) {
+    updateAlternatingAction( StandardActionManager::MoveToTrashRestoreCollectionAlternative );
+    //updatePluralLabel( StandardActionManager::MoveToTrashRestoreCollectionAlternative, collectionCount );
+  } else {
+    updateAlternatingAction( StandardActionManager::MoveToTrashRestoreCollection );
+  }
+
   // item specific actions
   bool canDeleteItems = (items.count() > 0); //TODO: fixme
   foreach ( const Item &item, items ) {
@@ -226,6 +247,14 @@ void ActionStateManager::updateState( const Collection::List &collections, const
       continue;
 
     canDeleteItems = canDeleteItems && (parentCollection.rights() & Collection::CanDeleteItem);
+  }
+
+  bool itemsAreInTrash = false;
+  foreach ( const Item &item, items ) {
+    if ( item.hasAttribute<EntityDeletedAttribute>() ) {
+      itemsAreInTrash = true;
+      break;
+    }
   }
 
   enableAction( StandardActionManager::CopyItems, atLeastOneItemSelected ); // we need items to work with
@@ -241,10 +270,23 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::MoveItemToMenu, atLeastOneItemSelected && // we need items to work with
                                                        canDeleteItems ); // we need the necessary rights
 
+  enableAction( StandardActionManager::MoveItemsToTrash, atLeastOneItemSelected && canDeleteItems );
+
+  enableAction( StandardActionManager::RestoreItemsFromTrash, atLeastOneItemSelected && itemsAreInTrash );
+
   enableAction( StandardActionManager::CopyItemToDialog, atLeastOneItemSelected ); // we need items to work with
 
   enableAction( StandardActionManager::MoveItemToDialog, atLeastOneItemSelected && // we need items to work with
                                                        canDeleteItems ); // we need the necessary rights
+
+  if (itemsAreInTrash) {
+    updateAlternatingAction( StandardActionManager::MoveToTrashRestoreItemAlternative );
+    //updatePluralLabel( StandardActionManager::MoveToTrashRestoreItemAlternative, itemCount );
+  } else {
+    updateAlternatingAction( StandardActionManager::MoveToTrashRestoreItem );
+  }
+  enableAction( StandardActionManager::MoveToTrashRestoreItem, atLeastOneItemSelected && // we need items to work with
+  canDeleteItems ); // we need the necessary rights
 
   // update the texts of the actions
   updatePluralLabel( StandardActionManager::CopyCollections, collectionCount );
@@ -257,6 +299,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   updatePluralLabel( StandardActionManager::SynchronizeCollectionsRecursive, collectionCount );
   updatePluralLabel( StandardActionManager::DeleteResources, resourceCollectionCount );
   updatePluralLabel( StandardActionManager::SynchronizeResources, resourceCollectionCount );
+
 }
 
 bool ActionStateManager::isRootCollection( const Collection &collection ) const
@@ -314,4 +357,12 @@ void ActionStateManager::updatePluralLabel( int action, int count )
     return;
 
   QMetaObject::invokeMethod( mReceiver, "updatePluralLabel", Qt::DirectConnection, Q_ARG( int, action ), Q_ARG( int, count ) );
+}
+
+void ActionStateManager::updateAlternatingAction( int action )
+{
+  if ( !mReceiver )
+    return;
+
+  QMetaObject::invokeMethod( mReceiver, "updateAlternatingAction", Qt::DirectConnection, Q_ARG( int, action ));
 }

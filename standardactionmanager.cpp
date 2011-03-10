@@ -39,6 +39,9 @@
 #include "collectionpropertiesdialog.h"
 #include "subscriptiondialog_p.h"
 #include "renamefavoritedialog.h"
+#include "trashjob.h"
+#include "trashrestorejob.h"
+#include "entitydeletedattribute.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -64,6 +67,8 @@ using namespace Akonadi;
 enum ActionType
 {
   NormalAction,
+  ActionWithAlternative, //Normal action, but with an alternative state
+  ActionAlternative, //Alternative state of the ActionWithAlternative
   MenuAction,
   ToggleAction
 };
@@ -85,6 +90,14 @@ static const struct {
   { "akonadi_item_copy", 0, 0, "edit-copy", 0, SLOT( slotCopyItems() ), NormalAction },
   { "akonadi_paste", I18N_NOOP( "&Paste" ), I18N_NOOP( "Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT( slotPaste() ), NormalAction },
   { "akonadi_item_delete", 0, 0, "edit-delete", Qt::Key_Delete, SLOT( slotDeleteItems() ), NormalAction },
+  { "akonadi_move_collection_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveCollectionToTrash() ), NormalAction },
+  { "akonadi_move_item_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveItemToTrash() ), NormalAction },
+  { "akonadi_restore_collection_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreCollectionFromTrash() ), NormalAction },
+  { "akonadi_restore_item_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreItemFromTrash() ), NormalAction },
+  { "akonadi_collection_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreCollection() ), ActionWithAlternative },
+  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
+  { "akonadi_item_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreItem() ), ActionWithAlternative },
+  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
   { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), I18N_NOOP( "Manage Local Subscriptions" ), 0, 0, SLOT( slotLocalSubscription() ), NormalAction },
   { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), I18N_NOOP( "Add to Favorite" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), NormalAction },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), I18N_NOOP( "Remove from Favorite" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), NormalAction },
@@ -175,6 +188,7 @@ class StandardActionManager::Private
                            ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
       pluralLabels.insert( StandardActionManager::SynchronizeResources,
                            ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
+
 
       pluralIconLabels.insert( StandardActionManager::CopyCollections,
                            ki18np( "Copy Folder", "Copy %1 Folders" ) );
@@ -294,6 +308,48 @@ class StandardActionManager::Private
                        menu,
                        collectionSelectionModel->model(),
                        QModelIndex() );
+    }
+
+    void updateAlternatingAction( int type)
+    {
+      updateAlternatingAction( static_cast<StandardActionManager::Type>( type ) );
+    }
+
+    void updateAlternatingAction( StandardActionManager::Type type )
+    {
+      Q_ASSERT( type < StandardActionManager::LastType );
+      if (!actions[type]) {
+        return;
+      }
+
+      if ( (standardActionData[type].actionType == ActionWithAlternative ) || ( standardActionData[type].actionType == ActionAlternative ) ) {
+        actions[type]->setText( i18n ( standardActionData[type].label ) );
+        actions[type]->setIcon( KIcon( QString::fromLatin1( standardActionData[type].icon ) ) );
+
+        if ( pluralLabels.contains( type ) && !pluralLabels.value( type ).isEmpty() )
+          actions[type]->setText( pluralLabels.value( type ).subs( 1 ).toString() );
+        else if ( standardActionData[type].label )
+          actions[type]->setText( i18n( standardActionData[type].label ) );
+
+        if ( pluralIconLabels.contains( type ) && !pluralIconLabels.value( type ).isEmpty() )
+          actions[type]->setIconText( pluralIconLabels.value( type ).subs( 1 ).toString() );
+        else if ( standardActionData[type].iconLabel )
+          actions[type]->setIconText( i18n( standardActionData[type].iconLabel ) );
+
+        if ( standardActionData[type].icon )
+          actions[type]->setIcon( KIcon( QString::fromLatin1( standardActionData[type].icon ) ) );
+
+        //actions[type]->setShortcut( standardActionData[type].shortcut );
+
+        /*if ( standardActionData[type].slot ) {
+          switch ( standardActionData[type].actionType ) {
+            case NormalAction:
+            case ActionWithAlternative:
+              connect( action, SIGNAL( triggered() ), standardActionData[type].slot );
+              break;
+          }
+        }*/
+      }
     }
 
     void updatePluralLabel( int type, int count )
@@ -514,6 +570,109 @@ class StandardActionManager::Private
       foreach ( const Collection &collection, collections ) {
         CollectionDeleteJob *job = new CollectionDeleteJob( collection, q );
         q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( collectionDeletionResult( KJob* ) ) );
+      }
+    }
+
+    void slotMoveCollectionToTrash()
+    {
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
+
+      foreach ( const Collection &collection, collections ) {
+        TrashJob *job = new TrashJob( collection, q );
+        q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( moveCollectionToTrashResult( KJob* ) ) );
+      }
+    }
+
+    void slotRestoreCollectionFromTrash()
+    {
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
+
+      foreach ( const Collection &collection, collections ) {
+        TrashRestoreJob *job = new TrashRestoreJob( collection, q );
+        q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( moveCollectionToTrashResult( KJob* ) ) );
+      }
+    }
+
+    Item::List selectedItems() const
+    {
+      Item::List items;
+
+      Q_ASSERT( itemSelectionModel );
+
+      foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
+        Q_ASSERT( index.isValid() );
+        const Item item = index.data( ItemModel::ItemRole ).value<Item>();
+        Q_ASSERT( item.isValid() );
+
+        items << item;
+      }
+
+      return items;
+    }
+
+    void slotMoveItemToTrash()
+    {
+      const Item::List items = selectedItems();
+      if ( items.isEmpty() )
+        return;
+
+      TrashJob *job = new TrashJob( items, q );
+      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( moveItemToTrashResult( KJob* ) ) );
+    }
+
+    void slotRestoreItemFromTrash()
+    {
+      const Item::List items = selectedItems();
+      if ( items.isEmpty() )
+        return;
+
+      TrashRestoreJob *job = new TrashRestoreJob( items, q );
+      q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( moveItemToTrashResult( KJob* ) ) );
+    }
+
+    void slotTrashRestoreCollection()
+    {
+      const Collection::List collections = selectedCollections();
+      if ( collections.isEmpty() )
+        return;
+
+      bool collectionsAreInTrash = false;
+      foreach ( const Collection &collection, collections ) {
+        if ( collection.hasAttribute<EntityDeletedAttribute>() ) {
+          collectionsAreInTrash = true;
+          break;
+        }
+      }
+
+      if (collectionsAreInTrash) {
+        slotRestoreCollectionFromTrash();
+      } else {
+        slotMoveCollectionToTrash();
+      }
+    }
+
+    void slotTrashRestoreItem()
+    {
+      const Item::List items = selectedItems();
+      if ( items.isEmpty() )
+        return;
+
+      bool itemsAreInTrash = false;
+      foreach ( const Item &item, items ) {
+        if ( item.hasAttribute<EntityDeletedAttribute>() ) {
+          itemsAreInTrash = true;
+          break;
+        }
+      }
+
+      if (itemsAreInTrash) {
+        slotRestoreItemFromTrash();
+      } else {
+        slotMoveItemToTrash();
       }
     }
 
@@ -902,6 +1061,24 @@ class StandardActionManager::Private
       }
     }
 
+    void moveCollectionToTrashResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageTitle ) );
+      }
+    }
+
+    void moveItemToTrashResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( parentWidget,
+                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageTitle ) );
+      }
+    }
+
     void itemDeletionResult( KJob *job )
     {
       if ( job->error() ) {
@@ -1199,14 +1376,21 @@ void StandardActionManager::setFavoriteSelectionModel( QItemSelectionModel *sele
 KAction* StandardActionManager::createAction( Type type )
 {
   Q_ASSERT( type < LastType );
-  Q_ASSERT( standardActionData[type].name );
   if ( d->actions[type] )
     return d->actions[type];
   KAction *action = 0;
   switch ( standardActionData[type].actionType ) {
     case NormalAction:
+    case ActionWithAlternative:
       action = new KAction( d->parentWidget );
       break;
+    case ActionAlternative:
+      d->actions[type] = d->actions[type-1];
+      Q_ASSERT( d->actions[type] );
+      if ( (LastType > type+1) && (standardActionData[type+1].actionType == ActionAlternative) ) {
+        createAction(static_cast<Type>(type+1)); //ensure that alternative actions are initialized when not created by createAllActions
+      }
+      return d->actions[type];
     case MenuAction:
       action = new KActionMenu( d->parentWidget );
       break;
@@ -1233,6 +1417,7 @@ KAction* StandardActionManager::createAction( Type type )
   if ( standardActionData[type].slot ) {
     switch ( standardActionData[type].actionType ) {
       case NormalAction:
+      case ActionWithAlternative:
         connect( action, SIGNAL( triggered() ), standardActionData[type].slot );
         break;
       case MenuAction:
@@ -1258,8 +1443,12 @@ KAction* StandardActionManager::createAction( Type type )
     //TODO: find a way to check for updates to the config file
   }
 
+  Q_ASSERT( standardActionData[type].name );
   d->actionCollection->addAction( QString::fromLatin1(standardActionData[type].name), action );
   d->actions[type] = action;
+  if ( ( standardActionData[type].actionType == ActionWithAlternative ) &&  (standardActionData[type+1].actionType == ActionAlternative)) {
+    createAction(static_cast<Type>(type+1)); //ensure that alternative actions are initialized when not created by createAllActions
+  }
   d->updateActions();
   return action;
 }

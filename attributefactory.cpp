@@ -25,6 +25,7 @@
 #include "entityhiddenattribute.h"
 #include "indexpolicyattribute.h"
 #include "persistentsearchattribute.h"
+#include "entitydeletedattribute.h"
 
 #include <KGlobal>
 
@@ -78,6 +79,7 @@ class StaticAttributeFactory : public AttributeFactory
       AttributeFactory::registerAttribute<EntityHiddenAttribute>();
       AttributeFactory::registerAttribute<IndexPolicyAttribute>();
       AttributeFactory::registerAttribute<PersistentSearchAttribute>();
+      AttributeFactory::registerAttribute<EntityDeletedAttribute>();
     }
     bool initialized;
 };
