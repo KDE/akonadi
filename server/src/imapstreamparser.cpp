@@ -324,6 +324,14 @@ QList<QByteArray> ImapStreamParser::readParenthesizedList()
       ++i;
       continue;
     }
+    if ( m_data.at(i) == '"' ) {
+      if ( count > 0 ) {
+        m_position = i;
+        parseQuotedString();
+        i = m_position;
+        continue;
+      }
+    }
     if ( m_data[i] == '[' ) {
       concatToLast = true;
       result.last()+='[';

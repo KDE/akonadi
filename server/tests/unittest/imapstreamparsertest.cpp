@@ -193,6 +193,7 @@ void ImapStreamParserTest::testParseParenthesizedList( )
   buffer.write( QByteArray( "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) " ) );
   buffer.write( QByteArray( "some_list-less_text" ) );
   buffer.write( QByteArray( "(foo {6}\n\n\nbar\n bla)" ));
+  buffer.write( QByteArray( "(AA (\"BB)\" CC))" ));	// parenthesis inside quoted string
   buffer.seek(0);
 
   QList<QByteArray>result;
@@ -235,6 +236,14 @@ void ImapStreamParserTest::testParseParenthesizedList( )
   reference << "foo";
   reference << "\n\nbar\n";
   reference << "bla";
+
+  QCOMPARE( result, reference );
+
+  // Don't try to parse characters inside a quoted-string
+  result = parser.readParenthesizedList();
+  reference.clear();
+  reference << "AA";
+  reference << "(\"BB)\" CC)";
 
   QCOMPARE( result, reference );
   } catch ( const Akonadi::Exception &e ) {
