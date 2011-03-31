@@ -22,6 +22,7 @@
 
 #include "collection.h"
 #include "item.h"
+#include "item_p.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
@@ -213,6 +214,13 @@ bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
    * storage.
    */
   if ( d->mIncremental )
+    return true;
+
+  if ( newItem.d_func()->mClearPayload )
+    return true;
+
+  // Check whether the remote revisions differ
+  if ( storedItem.remoteRevision() != newItem.remoteRevision() )
     return true;
 
   // Check whether the flags differ

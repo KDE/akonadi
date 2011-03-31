@@ -405,6 +405,7 @@ class AKONADI_EXPORT Item : public Entity
     //@cond PRIVATE
     friend class ItemCreateJob;
     friend class ItemModifyJob;
+    friend class ItemSync;
     friend class ProtocolHelper;
     PayloadBase* payloadBase() const;
     void setPayloadBase( PayloadBase* );
@@ -447,7 +448,7 @@ class AKONADI_EXPORT Item : public Entity
     template <typename T>
     typename boost::disable_if<Internal::is_shared_pointer<T>,bool>::type
     tryToClone( T * ) const;
-    
+
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
      * @param collectionId the unique identifier of the the collection where this item is stored in.
