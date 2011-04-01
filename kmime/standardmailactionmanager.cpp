@@ -573,6 +573,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_unread" ), action );
+      action->setShortcut( Qt::CTRL+Qt::Key_U );
       action->setData( QByteArray( "U" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAs() ) );
       break;
@@ -613,7 +614,6 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-unread" ) ) );
       d->mActions.insert( MarkAllMailAsUnread, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_unread" ), action );
-      action->setShortcut( Qt::CTRL+Qt::Key_U );
       action->setData( QByteArray( "U" ) );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotMarkAllAs() ) );
       break;
