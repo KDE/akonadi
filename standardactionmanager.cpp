@@ -109,20 +109,20 @@ static const int numStandardActionData = sizeof standardActionData / sizeof *sta
 
 BOOST_STATIC_ASSERT( numStandardActionData == StandardActionManager::LastType );
 
-static bool canCreateCollection( const Collection &collection )
+static bool canCreateCollection( const Akonadi::Collection &collection )
 {
-  if ( !( collection.rights() & Collection::CanCreateCollection ) )
+  if ( !( collection.rights() & Akonadi::Collection::CanCreateCollection ) )
     return false;
 
-  if ( !collection.contentMimeTypes().contains( Collection::mimeType() ) )
+  if ( !collection.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) )
     return false;
 
   return true;
 }
 
-static inline bool isRootCollection( const Collection &collection )
+static inline bool isRootCollection( const Akonadi::Collection &collection )
 {
-  return (collection == Collection::root());
+  return (collection == Akonadi::Collection::root());
 }
 
 static void setWorkOffline( bool offline )
@@ -1298,7 +1298,7 @@ void StandardActionManager::interceptAction( Type type, bool intercept )
     connect( action, SIGNAL( triggered() ), standardActionData[type].slot );
 }
 
-Collection::List StandardActionManager::selectedCollections() const
+Akonadi::Collection::List StandardActionManager::selectedCollections() const
 {
   Collection::List collections;
 

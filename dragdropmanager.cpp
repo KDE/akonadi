@@ -39,7 +39,7 @@ DragDropManager::DragDropManager( QAbstractItemView *view )
 {
 }
 
-Collection DragDropManager::currentDropTarget( QDropEvent *event ) const
+Akonadi::Collection DragDropManager::currentDropTarget( QDropEvent *event ) const
 {
   const QModelIndex index = m_view->indexAt( event->pos() );
 

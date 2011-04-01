@@ -158,12 +158,12 @@ bool SubscriptionModel::setData(const QModelIndex & index, const QVariant & valu
   return CollectionModel::setData( index, value, role );
 }
 
-Collection::List SubscriptionModel::subscribed() const
+Akonadi::Collection::List SubscriptionModel::subscribed() const
 {
   return d->changedSubscriptions( true );
 }
 
-Collection::List SubscriptionModel::unsubscribed() const
+Akonadi::Collection::List SubscriptionModel::unsubscribed() const
 {
   return d->changedSubscriptions( false );
 }

@@ -204,7 +204,7 @@ bool SpecialCollections::hasCollection( const QByteArray &type, const AgentInsta
   return d->mFoldersForResource[ instance.identifier() ].contains( type );
 }
 
-Collection SpecialCollections::collection( const QByteArray &type, const AgentInstance &instance ) const
+Akonadi::Collection SpecialCollections::collection( const QByteArray &type, const AgentInstance &instance ) const
 {
   if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
     // We do not know any folders in this resource.
@@ -257,7 +257,7 @@ bool SpecialCollections::hasDefaultCollection( const QByteArray &type ) const
   return hasCollection( type, d->defaultResource() );
 }
 
-Collection SpecialCollections::defaultCollection( const QByteArray &type ) const
+Akonadi::Collection SpecialCollections::defaultCollection( const QByteArray &type ) const
 {
   return collection( type, d->defaultResource() );
 }

@@ -106,7 +106,7 @@ CollectionFetchJob::~CollectionFetchJob()
 {
 }
 
-Collection::List CollectionFetchJob::collections() const
+Akonadi::Collection::List CollectionFetchJob::collections() const
 {
   Q_D( const CollectionFetchJob );
 

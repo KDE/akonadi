@@ -614,7 +614,7 @@ void MonitorPrivate::ref( Collection::Id id )
     m_buffer.purge( id );
 }
 
-Collection::Id MonitorPrivate::deref( Collection::Id id )
+Akonadi::Collection::Id MonitorPrivate::deref( Collection::Id id )
 {
   Q_ASSERT( refCountMap.contains( id ) );
   if ( --refCountMap[ id ] == 0 )
@@ -642,7 +642,7 @@ void MonitorPrivate::PurgeBuffer::purge( Collection::Id id )
   }
 }
 
-Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
+Akonadi::Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
 {
   if ( m_index == MAXBUFFERSIZE )
   {

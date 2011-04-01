@@ -174,12 +174,12 @@ void ResourceScanJob::setResourceId( const QString &resourceId )
   d->mResourceId = resourceId;
 }
 
-Collection ResourceScanJob::rootResourceCollection() const
+Akonadi::Collection ResourceScanJob::rootResourceCollection() const
 {
   return d->mRootCollection;
 }
 
-Collection::List ResourceScanJob::specialCollections() const
+Akonadi::Collection::List ResourceScanJob::specialCollections() const
 {
   return d->mSpecialCollections;
 }

@@ -78,7 +78,7 @@ void SearchCreateJob::doStart()
   d->writeData( command );
 }
 
-Collection SearchCreateJob::createdCollection() const
+Akonadi::Collection SearchCreateJob::createdCollection() const
 {
   Q_D( const SearchCreateJob );
   return d->mCreatedCollection;

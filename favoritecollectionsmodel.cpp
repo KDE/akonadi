@@ -169,7 +169,7 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
   d->saveConfig();
 }
 
-Collection::List FavoriteCollectionsModel::collections() const
+Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
   Collection::List cols;
   foreach (const Collection::Id &colId, d->collectionIds)

@@ -165,7 +165,7 @@ CollectionFetchScope& Monitor::collectionFetchScope()
   return d->mCollectionFetchScope;
 }
 
-Collection::List Monitor::collectionsMonitored() const
+Akonadi::Collection::List Monitor::collectionsMonitored() const
 {
   Q_D( const Monitor );
   return d->collections;

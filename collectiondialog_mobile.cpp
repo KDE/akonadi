@@ -313,7 +313,7 @@ void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
   d->mRightsFilterModel->setAccessRights( rights );
 }
 
-Collection::Rights CollectionDialog::accessRightsFilter() const
+Akonadi::Collection::Rights CollectionDialog::accessRightsFilter() const
 {
   return d->mRightsFilterModel->accessRights();
 }

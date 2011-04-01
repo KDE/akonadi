@@ -310,7 +310,7 @@ void SpecialCollectionsRequestJob::requestCollection( const QByteArray &type, co
   d->mRequestedResource = instance;
 }
 
-Collection SpecialCollectionsRequestJob::collection() const
+Akonadi::Collection SpecialCollectionsRequestJob::collection() const
 {
   if ( d->mRequestedResource.isValid() )
     return d->mSpecialCollections->collection( d->mRequestedType, d->mRequestedResource );
