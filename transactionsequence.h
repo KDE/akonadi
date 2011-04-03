@@ -107,7 +107,7 @@ class AKONADI_EXPORT TransactionSequence : public Job
     /**
      * Disable automatic committing.
      * Use this when you want to add jobs to this sequence after execution
-     * has been started, usually that is outside of the contstructor or the
+     * has been started, usually that is outside of the constructor or the
      * method that creates this transaction sequence.
      * @note Calling this method after execution of this job has been started
      * has no effect.
