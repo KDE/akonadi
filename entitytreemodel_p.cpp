@@ -1283,9 +1283,12 @@ void EntityTreeModelPrivate::startFirstListJob()
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
 
-  if ( ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive )
-    || ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ) ) && generalPopulation )
+  if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive ) && generalPopulation )
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel, FirstListing );
+
+  if ( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ) && generalPopulation )
+    fetchCollections( m_rootCollection, CollectionFetchJob::Recursive, FirstListing );
+
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
 
