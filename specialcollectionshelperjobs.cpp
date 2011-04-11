@@ -45,7 +45,7 @@
 #include <QtCore/QTimer>
 
 #define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.SpecialCollections" )
-#define LOCK_WAIT_TIMEOUT_SECONDS 3
+#define LOCK_WAIT_TIMEOUT_SECONDS 10
 
 using namespace Akonadi;
 
