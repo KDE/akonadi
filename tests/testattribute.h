@@ -26,6 +26,7 @@
 class TestAttribute : public Akonadi::Attribute
 {
   public:
+    TestAttribute(){};
     QByteArray type() const { return "EXTRA"; }
     QByteArray serialized() const { return data; }
     void deserialize( const QByteArray &ba ) { data = ba; }
