@@ -27,6 +27,7 @@ class ResourceSchedulerTest : public QObject
   Q_OBJECT
   public Q_SLOTS:
     void customTask( const QVariant &argument );
+    void customTaskNoArg();
 
   private Q_SLOTS:
 

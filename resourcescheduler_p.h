@@ -126,12 +126,12 @@ class ResourceScheduler : public QObject
     void scheduleResourceCollectionDeletion();
 
     /**
-      Insert synchronization completetion marker into the task queue.
+      Insert synchronization completion marker into the task queue.
     */
     void scheduleFullSyncCompletion();
 
     /**
-      Insert a custom taks.
+      Insert a custom task.
       @param methodName The method name, without signature, do not use the SLOT() macro
     */
     void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append );

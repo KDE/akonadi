@@ -291,8 +291,13 @@ void ResourceScheduler::executeNext()
       break;
     case Custom:
     {
-      bool success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
-      Q_ASSERT_X( success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found" );
+      const QByteArray methodSig = mCurrentTask.methodName + "(QVariant)";
+      const bool hasSlotWithVariant = mCurrentTask.receiver->metaObject()->indexOfMethod(methodSig) != -1;
+      bool success = false;
+      if ( hasSlotWithVariant ) {
+        success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName, Q_ARG(QVariant, mCurrentTask.argument) );
+        Q_ASSERT_X( success || !mCurrentTask.argument.isValid(), "ResourceScheduler::executeNext", "Valid argument was provided but the method wasn't found" );
+      }
       if ( !success )
         success = QMetaObject::invokeMethod( mCurrentTask.receiver, mCurrentTask.methodName );
 

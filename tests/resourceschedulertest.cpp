@@ -145,6 +145,11 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
 }
 
 
+void ResourceSchedulerTest::customTaskNoArg()
+{
+  ++mCustomCallCount;
+}
+
 void ResourceSchedulerTest::customTask(const QVariant& argument)
 {
   ++mCustomCallCount;
@@ -161,6 +166,7 @@ void ResourceSchedulerTest::testCustomTask()
   scheduler.scheduleCustomTask( this, "customTask", QString( "call1" ) );
   scheduler.scheduleCustomTask( this, "customTask", QString( "call1" ) );
   scheduler.scheduleCustomTask( this, "customTask", QString( "call2" ) );
+  scheduler.scheduleCustomTask( this, "customTaskNoArg", QVariant() );
 
   QCOMPARE( mCustomCallCount, 0 );
 
@@ -173,6 +179,11 @@ void ResourceSchedulerTest::testCustomTask()
   QTest::qWait( 1 );
   QCOMPARE( mCustomCallCount, 2 );
   QCOMPARE( mLastArgument.toString(), QString( "call2" ) );
+
+  scheduler.taskDone();
+  QVERIFY( !scheduler.isEmpty() );
+  QTest::qWait( 1 );
+  QCOMPARE( mCustomCallCount, 3 );
 
   scheduler.taskDone();
   QVERIFY( scheduler.isEmpty() );
