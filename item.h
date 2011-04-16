@@ -651,7 +651,7 @@ Item::setPayloadImpl( const T & p )
 template <typename T>
 void Item::setPayload( T* p )
 {
-  p.You_MUST_NOT_use_a_pointer_as_payload;
+  p->You_MUST_NOT_use_a_pointer_as_payload;
 }
 
 template <typename T>
