@@ -1592,8 +1592,8 @@ void EntityTreeModelPrivate::fillModel()
   m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
 
   QList<Collection> list = m_monitor->collectionsMonitored();
-  // In case there is only a single collection monitored, we can use this 
-  // collection as root of the node tree, in all other cases 
+  // In case there is only a single collection monitored, we can use this
+  // collection as root of the node tree, in all other cases
   // Collection::root() is used
   if ( list.size() == 1 )
     m_rootCollection = list.first();

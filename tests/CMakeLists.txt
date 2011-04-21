@@ -81,9 +81,9 @@ macro(add_akonadi_isolated_test _source)
 
   find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
   if ( MYSQLD_EXECUTABLE )
-    add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable} 
+    add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
       ${MYSQL_EXTRA_OPTIONS_DB} )
-    add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable} 
+    add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
       ${MYSQL_EXTRA_OPTIONS_FS} )
   endif ( MYSQLD_EXECUTABLE )
 
@@ -91,11 +91,11 @@ macro(add_akonadi_isolated_test _source)
   if ( POSTGRES_EXECUTABLE )
     add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
       ${POSTGRESL_EXTRA_OPTIONS_DB} )
-    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable} 
+    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
       ${POSTGRESL_EXTRA_OPTIONS_FS} )
   endif ( POSTGRES_EXECUTABLE )
 
-  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable} 
+  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
     ${SQLITE_EXTRA_OPTIONS} )
 endmacro(add_akonadi_isolated_test)
 
