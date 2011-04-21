@@ -461,11 +461,9 @@ void EntityTreeModelPrivate::itemsFetched( const Akonadi::Item::List &items )
 {
   Q_Q( EntityTreeModel );
 
-  KJob *job = qobject_cast<KJob*>( q->sender() );
+  const Collection::Id collectionId = q->sender()->property( FetchCollectionId() ).value<Collection::Id>();
 
-  Q_ASSERT( job );
-
-  itemsFetched( job, items );
+  itemsFetched( collectionId, items );
 }
 
 void EntityTreeModelPrivate::itemsFetched( KJob *job )
@@ -478,14 +476,14 @@ void EntityTreeModelPrivate::itemsFetched( KJob *job )
   ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   const Akonadi::Item::List items = fetchJob->items();
 
-  itemsFetched( job, items );
+  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
+  itemsFetched( collectionId, items );
 }
 
-void EntityTreeModelPrivate::itemsFetched( KJob *job, const Akonadi::Item::List &items )
+void EntityTreeModelPrivate::itemsFetched( const Collection::Id collectionId, const Akonadi::Item::List &items )
 {
   Q_Q( EntityTreeModel );
 
-  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
   Item::List itemsToInsert;
 
   const Collection collection = m_collections.value( collectionId );
