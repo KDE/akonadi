@@ -116,6 +116,7 @@ kde4_add_library(akonaditestfake STATIC
   fakemonitor.cpp
   fakeserverdata.cpp
   modelspy.cpp
+  inspectablemonitor.cpp
 )
 
 # demo applications
@@ -140,6 +141,7 @@ add_akonadi_test(itemserializertest.cpp)
 add_akonadi_test(mimetypecheckertest.cpp)
 add_akonadi_test(protocolhelpertest.cpp)
 add_akonadi_test(entitytreemodeltest.cpp)
+add_akonadi_test(monitornotificationtest.cpp)
 add_akonadi_test(collectionutilstest.cpp)
 add_akonadi_test(entitydisplayattributetest.cpp)
 add_akonadi_test(proxymodelstest.cpp)
