@@ -44,6 +44,11 @@ void ModelSpy::setExpectedSignals( QList< ExpectedSignal > expectedSignals )
   m_expectedSignals = expectedSignals;
 }
 
+QList<ExpectedSignal> ModelSpy::expectedSignals() const
+{
+  return m_expectedSignals;
+}
+
 void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int start, int end )
 {
   ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();

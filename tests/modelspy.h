@@ -61,6 +61,8 @@ public:
   bool isEmpty() const;
 
   void setExpectedSignals( QList<ExpectedSignal> expectedSignals );
+  QList<ExpectedSignal> expectedSignals() const;
+
   void verifySignal( SignalType type, const QModelIndex &parent, int start, int end );
   void verifySignal( SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart );
   void verifySignal( SignalType type, const QModelIndex &topLeft, const QModelIndex &bottomRight );
