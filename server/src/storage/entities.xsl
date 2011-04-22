@@ -144,8 +144,9 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   if ( Private::cacheEnabled ) {
     Private::cacheMutex.lock();
     if ( Private::<xsl:value-of select="$cache"/>.contains( <xsl:value-of select="$key"/> ) ) {
+      const <xsl:value-of select="$className"/> tmp = Private::<xsl:value-of select="$cache"/>.value( <xsl:value-of select="$key"/> );
       Private::cacheMutex.unlock();
-      return Private::<xsl:value-of select="$cache"/>.value( <xsl:value-of select="$key"/> );
+      return tmp;
     }
     Private::cacheMutex.unlock();
   }
