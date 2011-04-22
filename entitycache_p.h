@@ -75,10 +75,11 @@ struct EntityCacheNode
  * @internal
  * A in-memory FIFO cache for a small amount of Entity objects.
  */
-template<typename T, typename FetchJob, typename FetchScope>
+template<typename T, typename FetchJob, typename FetchScope_>
 class EntityCache : public EntityCacheBase
 {
   public:
+    typedef FetchScope_ FetchScope;
     explicit EntityCache( int maxCapacity, Session *session = 0, QObject *parent = 0 ) :
       EntityCacheBase( session, parent ),
       mCapacity( maxCapacity )
@@ -103,7 +104,7 @@ class EntityCache : public EntityCacheBase
     }
 
     /** Returns the cached object if available, an empty instance otherwise. */
-    T retrieve( typename T::Id id ) const
+    virtual T retrieve( typename T::Id id ) const
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( node && !node->pending && !node->invalid )
@@ -132,7 +133,7 @@ class EntityCache : public EntityCacheBase
     }
 
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
-    bool ensureCached( typename T::Id id, const FetchScope &scope )
+    virtual bool ensureCached( typename T::Id id, const FetchScope &scope )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( !node ) {
@@ -147,7 +148,7 @@ class EntityCache : public EntityCacheBase
       a token to indicate which request has been finished in the
       dataAvailable() signal.
     */
-    void request( typename T::Id id, const FetchScope &scope )
+    virtual void request( typename T::Id id, const FetchScope &scope )
     {
       Q_ASSERT( !isRequested( id ) );
       shrinkCache();
