@@ -38,7 +38,7 @@ using namespace Akonadi;
 
 Monitor::Monitor( QObject *parent ) :
     QObject( parent ),
-    d_ptr( new MonitorPrivate( this ) )
+    d_ptr( new MonitorPrivate( 0, this ) )
 {
   d_ptr->init();
   d_ptr->connectToNotificationManager();
@@ -215,8 +215,8 @@ void Monitor::setSession( Akonadi::Session *session )
   else
     d->session = session;
 
-  d->itemCache.setSession(d->session);
-  d->collectionCache.setSession(d->session);
+  d->itemCache->setSession(d->session);
+  d->collectionCache->setSession(d->session);
 }
 
 Session* Monitor::session() const

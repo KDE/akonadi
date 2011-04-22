@@ -27,7 +27,7 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 {
   public:
     ChangeRecorderPrivate( ChangeRecorder* parent ) :
-      MonitorPrivate( parent ),
+      MonitorPrivate( 0, parent ),
       settings( 0 ),
       enableChangeRecording( true )
     {

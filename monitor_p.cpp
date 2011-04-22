@@ -36,13 +36,49 @@ using namespace Akonadi;
 
 static const int PipelineSize = 5;
 
-MonitorPrivate::MonitorPrivate(Monitor * parent) :
+QObject* MonitorDependeciesFactory::createNotificationSource(QObject *parent)
+{
+  org::freedesktop::Akonadi::NotificationManager manager(
+          QLatin1String( "org.freedesktop.Akonadi" ),
+          QLatin1String( "/notifications" ),
+          DBusConnectionPool::threadConnection() );
+
+  QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
+  if ( manager.lastError().isValid() ) {
+    // :TODO: What to do?
+    return 0;
+  }
+
+  org::freedesktop::Akonadi::NotificationSource *notificationSource = new org::freedesktop::Akonadi::NotificationSource(
+              QLatin1String( "org.freedesktop.Akonadi" ),
+              p.path(),
+              DBusConnectionPool::threadConnection(), parent );
+
+  if ( !notificationSource ) {
+    // :TODO: error handling
+    return 0;
+  }
+  return notificationSource;
+}
+
+CollectionCache* MonitorDependeciesFactory::createCollectionCache(int maxCapacity, Session *session)
+{
+  return new CollectionCache(maxCapacity, session);
+}
+
+ItemCache* MonitorDependeciesFactory::createItemCache(int maxCapacity, Session* session)
+{
+  return new ItemCache(maxCapacity, session);
+}
+
+MonitorPrivate::MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_, Monitor * parent) :
   q_ptr( parent ),
+  dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new MonitorDependeciesFactory),
   notificationSource( 0 ),
   monitorAll( false ),
   session( Session::defaultSession() ),
-  collectionCache( 3*PipelineSize, session ), // needs to be at least 3x pipeline size for the collection move case
-  itemCache( PipelineSize, session ), // needs to be at least 1x pipeline size
+  collectionCache( 0 ),
+  itemCache( 0 ),
   fetchCollection( false ),
   fetchCollectionStatistics( false ),
   useRefCounting( false )
@@ -51,8 +87,13 @@ MonitorPrivate::MonitorPrivate(Monitor * parent) :
 
 void MonitorPrivate::init()
 {
-  QObject::connect( &collectionCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
-  QObject::connect( &itemCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
+  // needs to be at least 3x pipeline size for the collection move case
+  collectionCache = dependenciesFactory->createCollectionCache(3*PipelineSize, session);
+  // needs to be at least 1x pipeline size
+  itemCache = dependenciesFactory->createItemCache(PipelineSize, session);
+
+  QObject::connect( collectionCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
+  QObject::connect( itemCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
   QObject::connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
@@ -68,26 +109,10 @@ bool MonitorPrivate::connectToNotificationManager()
   delete notificationSource;
   notificationSource = 0;
 
-  org::freedesktop::Akonadi::NotificationManager manager(
-          QLatin1String( "org.freedesktop.Akonadi" ),
-          QLatin1String( "/notifications" ),
-          DBusConnectionPool::threadConnection() );
+  notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
 
-  QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
-  if ( manager.lastError().isValid() ) {
-    // :TODO: What to do?
+  if (!notificationSource)
     return false;
-  }
-
-  notificationSource = new org::freedesktop::Akonadi::NotificationSource(
-              QLatin1String( "org.freedesktop.Akonadi" ),
-              p.path(),
-              DBusConnectionPool::threadConnection(), q_ptr );
-
-  if ( !notificationSource ) {
-    // :TODO: error handling
-    return false;
-  }
 
   QObject::connect( notificationSource, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
                     q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
@@ -225,19 +250,19 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
 {
   bool allCached = true;
   if ( fetchCollection ) {
-    if ( !collectionCache.ensureCached( msg.parentCollection(), mCollectionFetchScope ) )
+    if ( !collectionCache->ensureCached( msg.parentCollection(), mCollectionFetchScope ) )
       allCached = false;
-    if ( msg.operation() == NotificationMessage::Move && !collectionCache.ensureCached( msg.parentDestCollection(), mCollectionFetchScope ) )
+    if ( msg.operation() == NotificationMessage::Move && !collectionCache->ensureCached( msg.parentDestCollection(), mCollectionFetchScope ) )
       allCached = false;
   }
   if ( msg.operation() == NotificationMessage::Remove )
     return allCached; // the actual object is gone already, nothing to fetch there
 
   if ( msg.type() == NotificationMessage::Item && !mItemFetchScope.isEmpty() ) {
-    if ( !itemCache.ensureCached( msg.uid(), mItemFetchScope ) )
+    if ( !itemCache->ensureCached( msg.uid(), mItemFetchScope ) )
       allCached = false;
   } else if ( msg.type() == NotificationMessage::Collection && fetchCollection ) {
-    if ( !collectionCache.ensureCached( msg.uid(), mCollectionFetchScope ) )
+    if ( !collectionCache->ensureCached( msg.uid(), mCollectionFetchScope ) )
       allCached = false;
   }
   return allCached;
@@ -245,17 +270,17 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
 
 bool MonitorPrivate::emitNotification( const NotificationMessage &msg )
 {
-  const Collection parent = collectionCache.retrieve( msg.parentCollection() );
+  const Collection parent = collectionCache->retrieve( msg.parentCollection() );
   Collection destParent;
   if ( msg.operation() == NotificationMessage::Move )
-    destParent = collectionCache.retrieve( msg.parentDestCollection() );
+    destParent = collectionCache->retrieve( msg.parentDestCollection() );
 
   bool someoneWasListening = false;
   if ( msg.type() == NotificationMessage::Collection ) {
-    const Collection col = collectionCache.retrieve( msg.uid() );
+    const Collection col = collectionCache->retrieve( msg.uid() );
     someoneWasListening = emitCollectionNotification( msg, col, parent, destParent );
   } else if ( msg.type() == NotificationMessage::Item ) {
-    const Item item = itemCache.retrieve( msg.uid() );
+    const Item item = itemCache->retrieve( msg.uid() );
     someoneWasListening = emitItemNotification( msg, item, parent, destParent );
   }
 
@@ -578,9 +603,9 @@ void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
   // remove invalidates
   if ( msg.operation() == NotificationMessage::Remove ) {
     if ( msg.type() == NotificationMessage::Collection ) {
-      collectionCache.invalidate( msg.uid() );
+      collectionCache->invalidate( msg.uid() );
     } else if ( msg.type() == NotificationMessage::Item ) {
-      itemCache.invalidate( msg.uid() );
+      itemCache->invalidate( msg.uid() );
     }
   }
 
@@ -590,16 +615,16 @@ void MonitorPrivate::invalidateCaches( const NotificationMessage &msg )
         || msg.operation() == NotificationMessage::Move
         || msg.operation() == NotificationMessage::Subscribe ) {
     if ( msg.type() == NotificationMessage::Collection ) {
-      collectionCache.update( msg.uid(), mCollectionFetchScope );
+      collectionCache->update( msg.uid(), mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessage::Item ) {
-      itemCache.update( msg.uid(), mItemFetchScope );
+      itemCache->update( msg.uid(), mItemFetchScope );
     }
   }
 }
 
 void MonitorPrivate::invalidateCache( const Collection &col )
 {
-  collectionCache.update( col.id(), mCollectionFetchScope );
+  collectionCache->update( col.id(), mCollectionFetchScope );
 }
 
 void MonitorPrivate::ref( Collection::Id id )

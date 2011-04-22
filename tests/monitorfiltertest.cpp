@@ -60,7 +60,7 @@ class MonitorFilterTest : public QObject
       QFETCH( QByteArray, signalName );
 
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
 
       NotificationMessage msg;
       msg.setUid( 1 );
@@ -80,7 +80,7 @@ class MonitorFilterTest : public QObject
     void filterSession()
     {
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
       m.monitorAll = true;
       QSignalSpy spy( &dummyMonitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
       QVERIFY( spy.isValid() );
@@ -126,7 +126,7 @@ class MonitorFilterTest : public QObject
       QFETCH( QByteArray, signalName );
 
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
@@ -167,7 +167,7 @@ class MonitorFilterTest : public QObject
       QFETCH( QByteArray, signalName );
 
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
@@ -223,7 +223,7 @@ class MonitorFilterTest : public QObject
       QFETCH( QByteArray, signalName );
 
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 
@@ -280,7 +280,7 @@ class MonitorFilterTest : public QObject
       QFETCH( QByteArray, signalName );
 
       Monitor dummyMonitor;
-      MonitorPrivate m( &dummyMonitor );
+      MonitorPrivate m( 0, &dummyMonitor );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
 

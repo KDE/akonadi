@@ -43,18 +43,36 @@ namespace Akonadi {
 class Monitor;
 
 /**
+ * This class exists so that we can create a fake notification source in
+ * unit tests.
+ */
+class AKONADI_TESTS_EXPORT MonitorDependeciesFactory
+{
+public:
+  virtual ~MonitorDependeciesFactory() {}
+  virtual QObject* createNotificationSource(QObject *parent);
+
+  virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
+  virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
+};
+
+
+/**
  * @internal
  */
 class AKONADI_TESTS_EXPORT MonitorPrivate
 {
   public:
-    MonitorPrivate( Monitor *parent );
-    virtual ~MonitorPrivate() {}
+    MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_, Monitor *parent );
+    virtual ~MonitorPrivate() {
+      delete dependenciesFactory;
+    }
     void init();
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    org::freedesktop::Akonadi::NotificationSource *notificationSource;
+    MonitorDependeciesFactory *dependenciesFactory;
+    QObject* notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
@@ -64,8 +82,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
     Session *session;
-    CollectionCache collectionCache;
-    ItemCache itemCache;
+    CollectionCache *collectionCache;
+    ItemCache *itemCache;
     QQueue<NotificationMessage> pendingNotifications;
     QQueue<NotificationMessage> pipeline;
     bool fetchCollection;
