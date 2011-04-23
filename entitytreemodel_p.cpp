@@ -1297,8 +1297,9 @@ void EntityTreeModelPrivate::startFirstListJob()
 
   // If the root collection is not collection::root, then it could have items, and they will need to be
   // retrieved now.
-
-  if ( m_itemPopulation != EntityTreeModel::NoItemPopulation && generalPopulation ) {
+  // Only fetch items NOT if there is NoItemPopulation, or if there is Lazypopulation and the root is visible
+  // (if the root is not visible the lazy population can not be triggered)
+  if ( (m_itemPopulation != EntityTreeModel::NoItemPopulation) && !((m_itemPopulation == EntityTreeModel::LazyPopulation) && m_showRootCollection) ) {
     if ( m_rootCollection != Collection::root() )
       fetchItems( m_rootCollection );
   }
