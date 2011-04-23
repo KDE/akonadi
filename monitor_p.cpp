@@ -379,6 +379,15 @@ void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
   NotificationMessage::appendAndCompress( notificationQueue, insertionMessage );
 }
 
+/*
+
+  server notification --> ?accepted --> pendingNotifications --> ?dataAvailable --> emit
+                                  |                                           |
+                                  x --> discard                               x --> pipeline
+
+  fetchJobDone --> pipeline ?dataAvailable --> emit
+ */
+
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
   foreach ( const NotificationMessage &msg, msgs ) {
