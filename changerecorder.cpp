@@ -35,7 +35,7 @@ ChangeRecorder::ChangeRecorder( ChangeRecorderPrivate *privateclass, QObject * p
 {
 }
 
-ChangeRecorder::~ ChangeRecorder()
+ChangeRecorder::~ChangeRecorder()
 {
   Q_D( ChangeRecorder );
   d->saveNotifications();
