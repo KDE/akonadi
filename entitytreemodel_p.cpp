@@ -726,7 +726,8 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if ( isHidden( collection ) )
     return;
 
-  if ( collection == m_rootCollection )
+  //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case) 
+  if ( ( collection == m_rootCollection ) || m_monitor->collectionsMonitored().contains(collection))
   {
     beginResetModel();
     endResetModel();
@@ -871,6 +872,13 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
     return;
   }
 
+  if (m_monitor->collectionsMonitored().contains(collection)) {
+    //if we don't reset here, we would have to make sure that destination collection is actually available,
+    //and remove the sources parents if they were only included as parents of the moved collection
+    beginResetModel();
+    endResetModel();
+    return;
+  }
   Q_Q( EntityTreeModel );
 
   const QModelIndex srcParentIndex = indexForCollection( sourceCollection );
