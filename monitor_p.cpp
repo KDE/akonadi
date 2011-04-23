@@ -401,7 +401,7 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
   dispatchNotifications();
 }
 
-void MonitorPrivate::dataAvailable()
+void MonitorPrivate::flushPipeline()
 {
   while ( !pipeline.isEmpty() ) {
     const NotificationMessage msg = pipeline.head();
@@ -414,6 +414,11 @@ void MonitorPrivate::dataAvailable()
       break;
     }
   }
+}
+
+void MonitorPrivate::dataAvailable()
+{
+  flushPipeline();
   dispatchNotifications();
 }
 
