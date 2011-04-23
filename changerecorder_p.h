@@ -115,8 +115,12 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       QFile file( changesFileName );
       if ( !file.open( QIODevice::ReadOnly ) )
         return;
+      pendingNotifications = loadFrom( &file );
+    }
 
-      QDataStream stream( &file );
+    QQueue<NotificationMessage> loadFrom( QIODevice *device )
+    {
+      QDataStream stream( device );
       stream.setVersion( QDataStream::Qt_4_6 );
 
       qulonglong size;
@@ -125,6 +129,8 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       qlonglong uid, parentCollection, parentDestCollection;
       QString remoteId, mimeType;
       QSet<QByteArray> itemParts;
+
+      QQueue<NotificationMessage> list;
 
       stream >> size;
       for ( qulonglong i = 0; i < size; ++i ) {
@@ -151,8 +157,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
         msg.setParentDestCollection( parentDestCollection );
         msg.setMimeType( mimeType );
         msg.setItemParts( itemParts );
-        pendingNotifications << msg;
+        list << msg;
       }
+      return list;
     }
 
     void addToStream( QDataStream &stream, const NotificationMessage &msg )
@@ -184,8 +191,13 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
         qWarning() << "could not save notifications to file " << file.fileName();
         return;
       }
+      saveTo(&file);
+    }
 
-      QDataStream stream( &file );
+    void saveTo( QIODevice *device )
+    {
+
+      QDataStream stream( device );
       stream.setVersion( QDataStream::Qt_4_6 );
 
       stream << (qulonglong)(pipeline.count() + pendingNotifications.count());
@@ -199,8 +211,6 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
         const NotificationMessage msg = pendingNotifications.at( i );
         addToStream( stream, msg );
       }
-
-      file.close();
     }
 };
 
