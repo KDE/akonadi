@@ -205,6 +205,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     bool isCollectionMonitored( Collection::Id collection ) const
     {
+      if (collection < 0)
+        return false;
       if ( collections.contains( Collection( collection ) ) )
         return true;
       if ( collections.contains( Collection::root() ) )
