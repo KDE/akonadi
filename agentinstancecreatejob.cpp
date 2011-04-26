@@ -82,8 +82,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
         new org::freedesktop::Akonadi::Agent::Control( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + agentInstance.identifier(),
                                                        QLatin1String( "/" ), DBusConnectionPool::threadConnection(), q );
       if ( !agentControlIface || !agentControlIface->isValid() ) {
-        if ( agentControlIface )
-          delete agentControlIface;
+        delete agentControlIface;
 
         q->setError( KJob::UserDefinedError );
         q->setErrorText( i18n( "Unable to access D-Bus interface of created agent." ) );
