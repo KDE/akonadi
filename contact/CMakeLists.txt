@@ -3,6 +3,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${Boost_INCLUDE_DIR}
+    ${CMAKE_BINARY_DIR}/kabc
     ${CMAKE_SOURCE_DIR}/kabc
 )
 
@@ -11,6 +12,14 @@ if (Soprano_FOUND)
       ${SOPRANO_INCLUDE_DIR}
   )
 endif (Soprano_FOUND)
+
+macro_optional_find_package(Prison)
+macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
+if (PRISON_FOUND)
+    add_definitions(-DHAVE_PRISON)
+    include_directories(${PRISON_INCLUDE_DIR})
+endif (PRISON_FOUND)
+
 if (WINCE)
   set( AKONADI_PHONE_DIAL_DEFAULT "UseWinCE" )
   set( AKONADI_SEND_SMS_DEFAULT "UseWinCESms" )
@@ -150,6 +159,9 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       ${NEPOMUK_LIBRARIES})
 endif(NOT WINCE)
 
+if(PRISON_FOUND) 
+target_link_libraries(akonadi-contact ${PRISON_LIBRARIES})
+endif(PRISON_FOUND)
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc

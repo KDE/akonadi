@@ -41,6 +41,12 @@
 
 #include <QtGui/QVBoxLayout>
 
+#ifdef HAVE_PRISON
+#include <prison/QRCodeBarcode>
+#include <prison/DataMatrixBarcode>
+#include <kabc/vcardconverter.h>
+#endif // HAVE_PRISON
+
 using namespace Akonadi;
 
 class ContactViewer::Private
@@ -51,6 +57,10 @@ class ContactViewer::Private
     {
       mStandardContactFormatter = new StandardContactFormatter;
       mContactFormatter = mStandardContactFormatter;
+#ifdef HAVE_PRISON
+      mQRCode = new prison::QRCodeBarcode();
+      mDataMatrix = new prison::DataMatrixBarcode();
+#endif // HAVE_PRISON
     }
 
     ~Private()
@@ -77,6 +87,19 @@ class ContactViewer::Private
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "map_icon" ) ),
                                          KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );
+
+#ifdef HAVE_PRISON
+      KABC::VCardConverter converter;
+      const QString data = QString::fromUtf8(converter.createVCard(mCurrentContact));
+      mQRCode->setData(data);
+      mDataMatrix->setData(data);
+      mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                         QUrl( QLatin1String( "qrcode" ) ),
+                                         mQRCode->toImage( QSizeF(50,50) ) );
+      mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                         QUrl( QLatin1String( "datamatrix" ) ),
+                                         mDataMatrix->toImage( QSizeF(50,50) ) );
+#endif // HAVE_PRISON
 
       // merge local and global custom field descriptions
       QList<QVariantMap> customFieldDescriptions;
@@ -175,6 +198,10 @@ class ContactViewer::Private
     AbstractContactFormatter *mContactFormatter;
     AbstractContactFormatter *mStandardContactFormatter;
     CollectionFetchJob *mParentCollectionFetchJob;
+#ifdef HAVE_PRISON
+    prison::AbstractBarcode* mQRCode;
+    prison::AbstractBarcode* mDataMatrix;
+#endif // HAVE_PRISON
 };
 
 ContactViewer::ContactViewer( QWidget *parent )

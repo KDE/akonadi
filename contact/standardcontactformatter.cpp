@@ -260,7 +260,19 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   strAddr.append( dynamicPart );
   strAddr.append( notes );
   strAddr.append( customData );
-  strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
+  strAddr.append( QString::fromLatin1( "</table>" ) );
+#ifdef HAVE_PRISON
+  strAddr.append( QString::fromLatin1(
+    "<p align=\"center\">"
+    "<img src=\"%1\" vspace=\"1\">"
+    "<img src=\"%2\" vspace=\"1\">"
+    "</p>"
+                           )
+    .arg( QLatin1String( "datamatrix" ) )
+    .arg( QLatin1String( "qrcode" ) ) );
+    
+#endif // HAVE_PRISON
+  strAddr.append( QString::fromLatin1( "</div>\n" ) );
 
   if ( form == EmbeddableForm )
     return strAddr;
