@@ -239,7 +239,6 @@ void EntityTreeModelPrivate::agentInstanceRemoved( const Akonadi::AgentInstance 
 
   QList<Node*> childEntities = m_childEntities[m_rootNode->id];
 
-  int row = 0;
   for ( int row = 0; row < childEntities.size(); ++row ) {
     Node *node = childEntities.at( row );
     if ( node->type == Node::Collection ) {
