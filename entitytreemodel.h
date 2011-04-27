@@ -665,6 +665,7 @@ private:
 
     Q_PRIVATE_SLOT( d_func(), void agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) )
     Q_PRIVATE_SLOT( d_func(), void agentInstanceRemoved( Akonadi::AgentInstance ) )
+    Q_PRIVATE_SLOT( d_func(), void monitoredItemsRetrieved(KJob* job) )
     //@endcond
 };
 

@@ -182,6 +182,7 @@ public:
 
   void serverStarted();
 
+  void monitoredItemsRetrieved( KJob* job );
   void firstFetchJobDone( KJob *job );
   void fetchJobDone( KJob *job );
   void updateJobDone( KJob *job );

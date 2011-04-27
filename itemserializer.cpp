@@ -178,7 +178,7 @@ QSet<QByteArray> ItemSerializer::availableParts( const Item & item )
 
 Item ItemSerializer::convert( const Item & item, int mtid )
 {
-  kDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
+//   kDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
   if ( !item.hasPayload() ) {
     kDebug() << "  -> but item has no payload!";
     return Item();
@@ -201,7 +201,7 @@ Item ItemSerializer::convert( const Item & item, int mtid )
       kDebug() << "    -> conversion FAILED";
     }
   } else {
-    kDebug() << "  -> found NO plugin that feels responsible";
+//     kDebug() << "  -> found NO plugin that feels responsible";
   }
   return Item();
 }

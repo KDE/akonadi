@@ -528,7 +528,9 @@ void EntityTreeModelPrivate::itemsFetched( const Collection::Id collectionId, co
   }
 
   if ( itemsToInsert.size() > 0 ) {
-    const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id() : collectionId;
+    const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id()
+                               : m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ? m_rootCollection.id()
+                               : collectionId;
     const int startRow = m_childEntities.value( colId ).size();
 
     Q_ASSERT( m_collections.contains( colId ) );
@@ -1570,6 +1572,18 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
   Q_Q( const EntityTreeModel );
   QModelIndexList indexes;
 
+  if ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) {
+    Q_ASSERT( m_childEntities.contains( m_rootCollection.id() ) );
+    QList<Node*> nodeList = m_childEntities.value( m_rootCollection.id() );
+    const int row = indexOf<Node::Item>( nodeList, item.id() );
+    Q_ASSERT(row >= 0);
+    Q_ASSERT(row < nodeList.size());
+    Node *node = nodeList.at( row );
+
+    indexes << q->createIndex( row, 0, reinterpret_cast<void*>( node ) );
+    return indexes;
+  }
+
   const Collection::List collections = getParentCollections( item );
 
   foreach ( const Collection &collection, collections ) {
@@ -1605,18 +1619,60 @@ void EntityTreeModelPrivate::endResetModel()
   fillModel();
 }
 
+void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob* job)
+{
+  if ( job->error() ) {
+    qWarning() << job->errorString();
+    return;
+  }
+
+  Q_Q( EntityTreeModel );
+
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>(job);
+  Q_ASSERT( fetchJob );
+  Item::List list = fetchJob->items();
+
+  q->beginResetModel();
+  foreach( const Item &item, list ) {
+    Node *node = new Node;
+    node->id = item.id();
+    node->parent = m_rootCollection.id();
+    node->type = Node::Item;
+
+    m_childEntities[ -1 ].append( node );
+    m_items.insert( item.id(), item );
+  }
+
+  q->endResetModel();
+}
+
 void EntityTreeModelPrivate::fillModel()
 {
   Q_Q( EntityTreeModel );
 
   m_mimeChecker.setWantedMimeTypes( m_monitor->mimeTypesMonitored() );
 
-  QList<Collection> list = m_monitor->collectionsMonitored();
+  const QList<Collection> collections = m_monitor->collectionsMonitored();
+
+  if ( collections.isEmpty()
+        && m_monitor->mimeTypesMonitored().isEmpty()
+        && m_monitor->resourcesMonitored().isEmpty()
+        && !m_monitor->itemsMonitoredEx().isEmpty() ) {
+    m_rootCollection = Collection( -1 );
+    Item::List items;
+    foreach( Entity::Id id, m_monitor->itemsMonitoredEx() ) {
+      items.append(Item(id));
+    }
+    ItemFetchJob *itemFetch = new ItemFetchJob( items, m_session );
+    itemFetch->setFetchScope( m_monitor->itemFetchScope() );
+    q->connect( itemFetch, SIGNAL(finished(KJob*)), q, SLOT(monitoredItemsRetrieved(KJob*)) );
+    return;
+  }
   // In case there is only a single collection monitored, we can use this
   // collection as root of the node tree, in all other cases
   // Collection::root() is used
-  if ( list.size() == 1 )
-    m_rootCollection = list.first();
+  if ( collections.size() == 1 )
+    m_rootCollection = collections.first();
   else
     m_rootCollection = Collection::root();
 

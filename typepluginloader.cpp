@@ -325,27 +325,27 @@ private:
       }
 
       // step 3: ask each one in turn if it can handle any of the metaTypeIds:
-      kDebug() << "Looking for " << format( type, metaTypeIds );
+//       kDebug() << "Looking for " << format( type, metaTypeIds );
       for ( QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd() ; it != end ; ++it ) {
-        kDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
-                 << "as the closest match";
+//         kDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
+// //                  << "as the closest match";
         const MimeTypeEntry & mt = allMimeTypes[matchingIndexes[*it]];
         if ( metaTypeIds.empty() ) {
           if ( const PluginEntry * const entry = mt.defaultPlugin() ) {
-            kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//             kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
             return entry->plugin();
           } else {
-            kDebug() << "    -> no default plugin for this mime type, trying next";
+//             kDebug() << "    -> no default plugin for this mime type, trying next";
           }
         } else if ( const PluginEntry * const entry = mt.plugin( metaTypeIds, chosen ) ) {
-          kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//           kDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
           return entry->plugin();
         } else {
-          kDebug() << "   -> can't handle any of the types, trying next";
+//           kDebug() << "   -> can't handle any of the types, trying next";
         }
       }
 
-      kDebug() << "  No further candidates, using default plugin";
+//       kDebug() << "  No further candidates, using default plugin";
       // no luck? Use the default plugin
       return mDefaultPlugin.plugin();
     }
@@ -361,7 +361,7 @@ private:
         if ( hit != cachedDefaultPlugins.end() )
             return *hit;
       }
-            
+
       const QHash<QString,QMap<int,QObject*> >::const_iterator hit = cachedPlugins.find( mimeType );
       if ( hit == cachedPlugins.end() )
         return 0;

@@ -221,7 +221,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
 
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
-  if ( ParentCollectionRole == role ) {
+  if ( ParentCollectionRole == role && d->m_collectionFetchStrategy != FetchNoCollections ) {
     const Collection parentCollection = d->m_collections.value( node->parent );
     Q_ASSERT( parentCollection.isValid() );
 
@@ -291,6 +291,8 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       return QVariant();
 
     switch ( role ) {
+      case ParentCollectionRole:
+        return QVariant::fromValue( item.parentCollection() );
       case MimeTypeRole:
         return item.mimeType();
         break;
@@ -582,7 +584,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections )
     return QModelIndex();
 
   const Node *node = reinterpret_cast<Node*>( index.internalPointer() );
@@ -614,7 +616,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections )
   {
     if ( parent.isValid() )
       return 0;
@@ -850,7 +852,7 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch )
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections )
     return parent.isValid() ? false : !d->m_items.isEmpty();
 
   // TODO: Empty collections right now will return true and get a little + to expand.
