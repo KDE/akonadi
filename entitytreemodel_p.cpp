@@ -1585,7 +1585,9 @@ void EntityTreeModelPrivate::beginResetModel()
 void EntityTreeModelPrivate::endResetModel()
 {
   Q_Q( EntityTreeModel );
-  m_session->clear();
+  foreach( Akonadi::Job *job, m_session->findChildren<Akonadi::Job*>() ) {
+    job->disconnect(q);
+  }
   m_collections.clear();
   m_items.clear();
   m_childEntities.clear();
