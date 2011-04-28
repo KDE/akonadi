@@ -24,12 +24,18 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
+#include "storage/collectionqueryhelper.h"
 #include "imapstreamparser.h"
 
 using namespace Akonadi;
 
 bool ColCopy::copyCollection(const Collection & source, const Collection & target)
 {
+  if ( !CollectionQueryHelper::canBeMovedTo( source, target ) ) {
+    // We don't accept source==target, or source being an ancestor of target.
+    return false;
+  }
+
   // copy the source collection
   Collection col = source;
   col.setParentId( target.id() );
