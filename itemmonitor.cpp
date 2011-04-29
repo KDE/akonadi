@@ -47,6 +47,11 @@ void ItemMonitor::setItem( const Item &item )
 
   d->mMonitor->setItemMonitored( d->mItem, true );
 
+  if ( !d->mItem.isValid() ) {
+    itemRemoved();
+    return;
+  }
+
   // start initial fetch of the new item
   ItemFetchJob* job = new ItemFetchJob( d->mItem );
   job->setFetchScope( fetchScope() );
