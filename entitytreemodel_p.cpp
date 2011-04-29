@@ -207,8 +207,8 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   m_pendingCollectionRetrieveJobs.insert( parent.id() );
 
   // If collections are not in the model, there will be no valid index for them.
-  if (!((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
-      || (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections)))
+  if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
+      || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
   {
     QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
   }
@@ -735,7 +735,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   if ( isHidden( collection ) )
     return;
 
-  //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case) 
+  //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
   if ( ( collection == m_rootCollection ) || m_monitor->collectionsMonitored().contains(collection))
   {
     beginResetModel();
@@ -1173,8 +1173,8 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   m_pendingCollectionRetrieveJobs.remove( collectionId );
 
   // If collections are not in the model, there will be no valid index for them.
-  if (!((m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
-      || (m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections)))
+  if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch)
+      || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
   {
     QModelIndex index = indexForCollection(Collection(collectionId));
     emit dataChanged(index, index);
