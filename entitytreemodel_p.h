@@ -107,6 +107,7 @@ public:
 
   void monitoredMimeTypeChanged( const QString &mimeType, bool monitored );
   void monitoredCollectionsChanged( const Akonadi::Collection &collection, bool monitored );
+  void monitoredItemsChanged( const Akonadi::Item &item, bool monitored );
   void monitoredResourcesChanged( const QByteArray &resource, bool monitored );
 
   Collection::List getParentCollections( const Item &item ) const;
