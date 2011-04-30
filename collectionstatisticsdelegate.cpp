@@ -279,9 +279,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       unreadRect.setLeft( folderRect.right() );
 
       // Draw folder name and unread count
-      painter->drawText( folderRect, Qt::AlignLeft, folderName );
+      painter->drawText( folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName );
       painter->setPen( unreadColor );
-      painter->drawText( unreadRect, Qt::AlignLeft, unread );
+      painter->drawText( unreadRect, Qt::AlignLeft | Qt::AlignVCenter, unread );
     } else if ( option.decorationPosition == QStyleOptionViewItem::Top ) {
       // draw over the icon
       painter->setPen( unreadColor );
@@ -313,12 +313,12 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       }
     }
 
-    painter->drawText( textRect, Qt::AlignRight, sumText );
+    painter->drawText( textRect, Qt::AlignRight | Qt::AlignVCenter, sumText );
 
     return;
   }
 
-  painter->drawText( textRect, option4.displayAlignment, text );
+  painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, text );
 }
 
 #include "collectionstatisticsdelegate.moc"
