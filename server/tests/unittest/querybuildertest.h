@@ -20,6 +20,8 @@
 #ifndef AKONADI_QUERYBUILDERTEST_H
 #define AKONADI_QUERYBUILDERTEST_H
 
+#undef QT_NO_CAST_FROM_ASCII
+
 #include <QtCore/QObject>
 
 namespace Akonadi {

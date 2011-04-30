@@ -28,7 +28,7 @@ ControlManager::ControlManager( QObject *parent )
   : QObject( parent )
 {
   new ControlManagerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( "/ControlManager", this );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/ControlManager"), this );
 }
 
 ControlManager::~ControlManager()

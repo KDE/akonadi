@@ -62,25 +62,25 @@ AgentManager::AgentManager( QObject *parent )
 {
   new AgentManagerAdaptor( this );
   new AgentManagerInternalAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( "/AgentManager", this );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/AgentManager"), this );
 
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
            this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
 
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.freedesktop.Akonadi" ) )
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.freedesktop.Akonadi") ) )
     akFatal() << "akonadiserver already running!";
 
   const QSettings settings( configPath( false ), QSettings::IniFormat );
-  mAgentServerEnabled = settings.value( "AgentServer/Enabled", enableAgentServerDefault ).toBool();
+  mAgentServerEnabled = settings.value( QLatin1String("AgentServer/Enabled"), enableAgentServerDefault ).toBool();
 
   mStorageController = new Akonadi::ProcessControl;
   connect( mStorageController, SIGNAL( unableToStart() ), SLOT( serverFailure() ) );
-  mStorageController->start( "akonadiserver", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+  mStorageController->start( QLatin1String("akonadiserver"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 
   if ( mAgentServerEnabled ) {
     mAgentServer = new Akonadi::ProcessControl;
     connect( mAgentServer, SIGNAL( unableToStart() ), SLOT( agentServerFailure() ) );
-    mAgentServer->start( "akonadi_agent_server", QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+    mAgentServer->start( QLatin1String("akonadi_agent_server"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
   }
 
 #ifndef QT_NO_DEBUG
@@ -118,7 +118,7 @@ void AgentManager::continueStartup()
     ensureAutoStart( info );
 
   // register the real service name once everything is up an running
-  if ( !QDBusConnection::sessionBus().registerService( AKONADI_DBUS_CONTROL_SERVICE ) ) {
+  if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
     // besides a race with an older Akonadi server I have no idea how we could possibly get here...
     akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
   }
@@ -139,15 +139,15 @@ void AgentManager::cleanup()
 
   mStorageController->setCrashPolicy( ProcessControl::StopOnCrash );
   org::freedesktop::Akonadi::Server *serverIface =
-    new org::freedesktop::Akonadi::Server( "org.freedesktop.Akonadi", "/Server",
+    new org::freedesktop::Akonadi::Server( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/Server"),
                                            QDBusConnection::sessionBus(), this );
   serverIface->quit();
 
   if ( mAgentServer ) {
     mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
     org::freedesktop::Akonadi::AgentServer *agentServerIface =
-        new org::freedesktop::Akonadi::AgentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                    "/AgentServer", QDBusConnection::sessionBus(), this );
+        new org::freedesktop::Akonadi::AgentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                    QLatin1String("/AgentServer"), QDBusConnection::sessionBus(), this );
     agentServerIface->quit();
   }
 
@@ -169,7 +169,7 @@ QString AgentManager::agentName( const QString &identifier, const QString &langu
     return QString();
 
   const QString name = mAgents.value( identifier ).name.value( language );
-  return name.isEmpty() ? mAgents.value( identifier ).name.value( "en_US" ) : name;
+  return name.isEmpty() ? mAgents.value( identifier ).name.value( QLatin1String("en_US") ) : name;
 }
 
 QString AgentManager::agentComment( const QString &identifier, const QString &language ) const
@@ -178,7 +178,7 @@ QString AgentManager::agentComment( const QString &identifier, const QString &la
     return QString();
 
   const QString comment = mAgents.value( identifier ).comment.value( language );
-  return comment.isEmpty() ? mAgents.value( identifier ).comment.value( "en_US" ) : comment;
+  return comment.isEmpty() ? mAgents.value( identifier ).comment.value( QLatin1String("en_US") ) : comment;
 }
 
 QString AgentManager::agentIcon( const QString &identifier ) const
@@ -190,7 +190,7 @@ QString AgentManager::agentIcon( const QString &identifier ) const
   if ( !info.icon.isEmpty() )
     return info.icon;
 
-  return "application-x-executable";
+  return QLatin1String("application-x-executable");
 }
 
 QStringList AgentManager::agentMimeTypes( const QString &identifier ) const
@@ -346,7 +346,7 @@ QString AgentManager::agentInstanceProgressMessage( const QString &identifier ) 
 
 void AgentManager::agentInstanceConfigure( const QString &identifier, qlonglong windowId )
 {
-  if ( !checkAgentInterfaces( identifier, "agentInstanceConfigure" ) )
+  if ( !checkAgentInterfaces( identifier, QLatin1String("agentInstanceConfigure") ) )
     return;
 
   mAgentInstances.value( identifier )->configure( windowId );
@@ -390,7 +390,7 @@ QString AgentManager::agentInstanceName( const QString &identifier, const QStrin
     return QString();
 
   const QString name = mAgents.value( instance->agentType() ).name.value( language );
-  return name.isEmpty() ? mAgents.value( instance->agentType() ).name.value( "en_US" ) : name;
+  return name.isEmpty() ? mAgents.value( instance->agentType() ).name.value( QLatin1String("en_US") ) : name;
 }
 
 void AgentManager::agentInstanceSynchronize( const QString &identifier )
@@ -459,7 +459,7 @@ void AgentManager::readPluginInfos()
   const QStringList pathList = pluginInfoPathList();
 
   foreach ( const QString &path, pathList ) {
-      const QDir directory( path, "*.desktop" );
+      const QDir directory( path, QLatin1String("*.desktop") );
       readPluginInfos( directory );
   }
 }
@@ -519,7 +519,7 @@ QString AgentManager::configPath( bool writeable )
   if ( !writeable && !configFile.isEmpty() )
     return configFile;
 
-  const QString configDir = Akonadi::XdgBaseDirs::saveDir( "config", "akonadi" );
+  const QString configDir = Akonadi::XdgBaseDirs::saveDir( "config", QLatin1String("akonadi") );
 
   return configDir + QLatin1String( "/agentsrc" );
 }
@@ -530,7 +530,7 @@ void AgentManager::load()
   const QStringList knownResources = resmanager.resourceInstances();
 
   QSettings file( configPath( false ), QSettings::IniFormat );
-  file.beginGroup( "Instances" );
+  file.beginGroup( QLatin1String("Instances") );
   const QStringList entries = file.childGroups();
   for ( int i = 0; i < entries.count(); ++i ) {
     const QString instanceIdentifier = entries[ i ];
@@ -542,7 +542,7 @@ void AgentManager::load()
 
     file.beginGroup( entries[ i ] );
 
-    const QString agentType = file.value( "AgentType" ).toString();
+    const QString agentType = file.value( QLatin1String("AgentType") ).toString();
     if ( !mAgents.contains( agentType ) ) {
       akError() << Q_FUNC_INFO << "Reference to unknown agent type" << agentType << "in agentsrc";
       file.endGroup();
@@ -574,11 +574,11 @@ void AgentManager::save()
   foreach ( const AgentType &info, mAgents )
     info.save( &file );
 
-  file.beginGroup( "Instances" );
-  file.remove( "" );
+  file.beginGroup( QLatin1String("Instances") );
+  file.remove( QString() );
   foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     file.beginGroup( instance->identifier() );
-    file.setValue( "AgentType", instance->agentType() );
+    file.setValue( QLatin1String("AgentType"), instance->agentType() );
     file.endGroup();
   }
 
@@ -594,9 +594,9 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
   //qDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
-  if ( (name == AKONADI_DBUS_SERVER_SERVICE || name == AKONADI_DBUS_AGENTSERVER_SERVICE) && !newOwner.isEmpty() ) {
-    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE )
-      && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_AGENTSERVER_SERVICE ) ) )
+  if ( (name == QLatin1String(AKONADI_DBUS_SERVER_SERVICE) || name == QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE)) && !newOwner.isEmpty() ) {
+    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) )
+      && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) ) )
     {
       // server is operational, start agents
       continueStartup();
@@ -712,7 +712,7 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
   if ( !checkInstance( identifier ) )
     return false;
 
-  if ( !mAgents[ mAgentInstances[ identifier ]->agentType() ].capabilities.contains( "Resource" ) )
+  if ( !mAgents[ mAgentInstances[ identifier ]->agentType() ].capabilities.contains( QLatin1String("Resource") ) )
     return false;
 
   if ( !mAgentInstances[ identifier ]->hasResourceInterface() ) {
@@ -752,8 +752,8 @@ void AgentManager::ensureAutoStart( const AgentType &info )
   if ( !info.capabilities.contains( AgentType::CapabilityAutostart ) )
     return; // no an autostart agent
 
-  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                      "/AgentServer", QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                      QLatin1String("/AgentServer"), QDBusConnection::sessionBus(), this );
 
   if ( mAgentInstances.contains( info.identifier ) ||
        (agentServer.isValid() && agentServer.started( info.identifier )) ) {

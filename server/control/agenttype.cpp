@@ -41,29 +41,29 @@ AgentType::AgentType() :
 bool AgentType::load(const QString & fileName, AgentManager * manager)
 {
   QSettings file( fileName, QSettings::IniFormat );
-  file.beginGroup( "Desktop Entry" );
+  file.beginGroup( QLatin1String("Desktop Entry") );
 
   foreach(const QString& key, file.allKeys() ) {
     if ( key.startsWith( QLatin1String("Name[") ) ) {
       QString lang = key.mid( 5, key.length()-6);
       name.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );
-    } else if ( key == "Name" ) {
-      name.insert( "en_US", QString::fromUtf8( file.value( "Name" ).toByteArray() ) );
+    } else if ( key == QLatin1String("Name") ) {
+      name.insert( QLatin1String("en_US"), QString::fromUtf8( file.value( QLatin1String("Name") ).toByteArray() ) );
     } else if ( key.startsWith( QLatin1String("Comment[") ) ) {
       QString lang = key.mid( 8, key.length()-9);
       comment.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() )  );
-    } else if ( key == "Comment" ) {
-      comment.insert( "en_US", QString::fromUtf8( file.value( "Comment" ).toByteArray() ) );
+    } else if ( key == QLatin1String("Comment") ) {
+      comment.insert( QLatin1String("en_US"), QString::fromUtf8( file.value( QLatin1String("Comment") ).toByteArray() ) );
     }
   }
-  icon = file.value( "Icon" ).toString();
-  mimeTypes = file.value( "X-Akonadi-MimeTypes" ).toStringList();
-  capabilities = file.value( "X-Akonadi-Capabilities" ).toStringList();
-  exec = file.value( "Exec" ).toString();
-  identifier = file.value( "X-Akonadi-Identifier" ).toString();
+  icon = file.value( QLatin1String("Icon") ).toString();
+  mimeTypes = file.value( QLatin1String("X-Akonadi-MimeTypes") ).toStringList();
+  capabilities = file.value( QLatin1String("X-Akonadi-Capabilities") ).toStringList();
+  exec = file.value( QLatin1String("Exec") ).toString();
+  identifier = file.value( QLatin1String("X-Akonadi-Identifier") ).toString();
   launchMethod = Process; // Save default
 
-  const QString method = file.value( "X-Akonadi-LaunchMethod" ).toString();
+  const QString method = file.value( QLatin1String("X-Akonadi-LaunchMethod") ).toString();
   if ( method.compare( QLatin1String( "AgentProcess" ), Qt::CaseInsensitive ) == 0 ) {
     launchMethod = Process;
   } else if ( method.compare( QLatin1String( "AgentServer" ), Qt::CaseInsensitive ) == 0 ) {

@@ -43,7 +43,7 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
 bool AkonadiStarter::start()
 {
   qDebug( "Starting Akonadi Server..." );
-  const bool ok = QProcess::startDetached( "akonadi_control" );
+  const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
   if ( !ok ) {
     qDebug( "Error: unable to execute binary akonadi_control" );
     return false;

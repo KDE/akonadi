@@ -191,19 +191,19 @@ void AgentInstance::refreshResourceStatus()
 void AgentInstance::errorHandler(const QDBusError & error)
 {
   //avoid using the server tracer, can result in D-BUS lockups
-  qDebug() <<  QString( "D-Bus communication error '%1': '%2'" ).arg( error.name(), error.message() ) ;
+  qDebug() <<  QString::fromLatin1( "D-Bus communication error '%1': '%2'" ).arg( error.name(), error.message() ) ;
   // TODO try again after some time, esp. on timeout errors
 }
 
 template <typename T>
 T* AgentInstance::findInterface(const char* service, const char* path)
 {
-  T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( service ).arg( mIdentifier ),
+  T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( QLatin1String(service) ).arg( mIdentifier ),
                      QLatin1String( path ), QDBusConnection::sessionBus(), this );
 
   if ( !iface || !iface->isValid() ) {
     akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-              << ", error message:" << (iface ? iface->lastError().message() : "");
+              << ", error message:" << (iface ? iface->lastError().message() : QString());
     delete iface;
     return 0;
   }

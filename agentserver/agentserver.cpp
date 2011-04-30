@@ -37,7 +37,7 @@ AgentServer::AgentServer( QObject* parent )
   , m_processingConfigureRequests( false )
   , m_quiting( false )
 {
-  QDBusConnection::sessionBus().registerObject( AKONADI_DBUS_AGENTSERVER_PATH,
+  QDBusConnection::sessionBus().registerObject( QLatin1String(AKONADI_DBUS_AGENTSERVER_PATH),
                                                 this, QDBusConnection::ExportScriptableSlots );
 }
 

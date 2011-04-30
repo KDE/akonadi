@@ -180,7 +180,7 @@ void ProcessControl::start()
 
     const QString valgrindOptions = getEnv( "AKONADI_VALGRIND_OPTIONS" );
     if ( !valgrindOptions.isEmpty() )
-      mArguments = valgrindOptions.split( ' ', QString::SkipEmptyParts ) << mArguments;
+      mArguments = valgrindOptions.split( QLatin1Char(' '), QString::SkipEmptyParts ) << mArguments;
 
     qDebug();
     qDebug() << "============================================================";

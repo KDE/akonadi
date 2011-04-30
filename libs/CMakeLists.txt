@@ -1,4 +1,4 @@
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${_ENABLE_EXCEPTIONS}" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 
 configure_file( akonadiprotocolinternals_export.h.in ${Akonadi_BINARY_DIR}/akonadiprotocolinternals_export.h )
 

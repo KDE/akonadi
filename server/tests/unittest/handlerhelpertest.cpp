@@ -43,7 +43,7 @@ class HandlerHelperTest : public QObject
       c.setCachePolicyInherit( false );
       c.setCachePolicyCheckInterval( 1 );
       c.setCachePolicyCacheTimeout( 2 );
-      c.setCachePolicyLocalParts( "PART1 PART2" );
+      c.setCachePolicyLocalParts( QLatin1String("PART1 PART2") );
       c.setCachePolicySyncOnDemand( true );
       QTest::newRow( "non-inherit" ) << c << QByteArray( "CACHEPOLICY (INHERIT false INTERVAL 1 CACHETIMEOUT 2 SYNCONDEMAND true LOCALPARTS (PART1 PART2))" );
     }
@@ -71,20 +71,20 @@ class HandlerHelperTest : public QObject
       Collection c;
 
       c.setId( 10 );
-      c.setRemoteId( "sl\\ash" );
+      c.setRemoteId( QLatin1String("sl\\ash") );
       ancestors.push ( c );
       QTest::newRow( "slash" ) << 1 << ancestors << QByteArray( "ANCESTORS ((10 \"sl\\\\ash\"))" );
 
       ancestors.clear();
       c.setId( 1 );
-      c.setRemoteId( "r1" );
+      c.setRemoteId( QLatin1String("r1") );
       ancestors.push( c );
       QTest::newRow( "one1" ) << 1 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\"))" );
       QTest::newRow( "one2" ) << 2 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\") (0 \"\"))" );
       QTest::newRow( "one3" ) << 3 << ancestors << QByteArray( "ANCESTORS ((1 \"r1\") (0 \"\"))" );
 
       c.setId( 2 );
-      c.setRemoteId( "r2" );
+      c.setRemoteId( QLatin1String("r2") );
       ancestors.push( c );
       QTest::newRow( "two1" ) << 1 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\"))" );
       QTest::newRow( "two2" ) << 2 << ancestors << QByteArray( "ANCESTORS ((2 \"r2\") (1 \"r1\"))" );

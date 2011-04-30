@@ -61,8 +61,8 @@ void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier
 
     const QString data = QString::fromUtf8( file.readAll() ).simplified();
     QString output = it.value();
-    output.replace( " ,", "," );
-    output.replace( " )", ")" );
+    output.replace( QLatin1String(" ,"), QLatin1String(",") );
+    output.replace( QLatin1String(" )"), QLatin1String(")") );
     QCOMPARE( output, data );
   }
 

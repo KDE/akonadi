@@ -45,8 +45,8 @@ bool AgentThreadInstance::start( const AgentType &agentInfo )
   setAgentType( agentInfo.identifier );
   mAgentType = agentInfo;
 
-  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                      "/AgentServer", QDBusConnection::sessionBus() );
+  org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                      QLatin1String("/AgentServer"), QDBusConnection::sessionBus() );
   if ( !agentServer.isValid() ) {
     akDebug() << "AgentServer not up (yet?)";
     return false;
@@ -61,16 +61,16 @@ void AgentThreadInstance::quit()
 {
   AgentInstance::quit();
 
-  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                      "/AgentServer", QDBusConnection::sessionBus() );
+  org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                      QLatin1String("/AgentServer"), QDBusConnection::sessionBus() );
   agentServer.stopAgent( identifier() );
 }
 
 void AgentThreadInstance::restartWhenIdle()
 {
   if ( status() == 0 && !identifier().isEmpty() ) {
-    org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                        "/AgentServer", QDBusConnection::sessionBus() );
+    org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                        QLatin1String("/AgentServer"), QDBusConnection::sessionBus() );
     agentServer.stopAgent( identifier() );
     agentServer.startAgent( identifier(), agentType(), mAgentType.exec );
   }
@@ -83,7 +83,8 @@ void AgentThreadInstance::agentServerRegistered()
 
 void Akonadi::AgentThreadInstance::configure(qlonglong windowId)
 {
-  org::freedesktop::Akonadi::AgentServer agentServer( "org.freedesktop.Akonadi.AgentServer",
-                                                      "/AgentServer", QDBusConnection::sessionBus() );
+  org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+                                                      QLatin1String("/AgentServer"),
+                                                      QDBusConnection::sessionBus() );
   agentServer.agentInstanceConfigure( identifier(), windowId );
 }

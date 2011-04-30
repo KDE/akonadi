@@ -46,8 +46,8 @@ static bool startServer()
 {
   //Needed for wince build
   #undef interface
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE )
-       || QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE ) ) {
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) )
+       || QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) ) ) {
     qDebug() << "Akonadi is already running.";
     return false;
   }
@@ -57,7 +57,9 @@ static bool startServer()
 
 static bool stopServer()
 {
-  org::freedesktop::Akonadi::ControlManager iface( AKONADI_DBUS_CONTROL_SERVICE, "/ControlManager", QDBusConnection::sessionBus(), 0 );
+  org::freedesktop::Akonadi::ControlManager iface( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE),
+                                                   QLatin1String("/ControlManager"),
+                                                   QDBusConnection::sessionBus(), 0 );
   if ( !iface.isValid() ) {
     qDebug( "Akonadi is not running." );
     return false;
@@ -70,19 +72,19 @@ static bool stopServer()
 
 static bool statusServer()
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE );
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) );
   qDebug( "Akonadi Control: %s", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_SERVER_SERVICE );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) );
   qDebug( "Akonadi Server: %s", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.nepomuk.services.nepomukqueryservice" );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
   if ( registered ) {
     QString backend = QLatin1String( "Unknown" );
 
     // check which backend is used
-    QDBusInterface interface( "org.kde.NepomukStorage", "/nepomukstorage" );
-    const QDBusReply<QString> reply = interface.call( "usedSopranoBackend" );
+    QDBusInterface interface( QLatin1String("org.kde.NepomukStorage"), QLatin1String("/nepomukstorage") );
+    const QDBusReply<QString> reply = interface.call( QLatin1String("usedSopranoBackend") );
     if ( reply.isValid() ) {
       const QString name = reply.value();
 
@@ -105,14 +107,14 @@ static bool statusServer()
 int main( int argc, char **argv )
 {
   AkApplication app( argc, argv );
-  app.setDescription( "Akonadi server manipulation tool\n"
+  app.setDescription( QLatin1String("Akonadi server manipulation tool\n"
       "Usage: akonadictl [command]\n\n"
       "Commands:\n"
       "  start      : Starts the Akonadi server with all its processes\n"
       "  stop       : Stops the Akonadi server and all its processes cleanly\n"
       "  restart    : Restart Akonadi server with all its processes\n"
       "  status     : Shows a status overview of the Akonadi server"
-  );
+  ) );
 
   app.parseCommandLine();
 
@@ -175,7 +177,7 @@ int main( int argc, char **argv )
 #else
           Sleep(100000);
 #endif
-        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
+        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) );
         if ( !startServer() )
           return 3;
       }
