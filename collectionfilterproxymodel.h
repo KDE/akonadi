@@ -88,6 +88,16 @@ class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
     QStringList mimeTypeFilters() const;
 
     /**
+     * Sets whether we want virtual collections to be filtered or not.
+     * By default, virtual collections are accepted.
+     *
+     * @param exclude If true, virtual collections aren't accepted.
+     *
+     * @since 4.7
+     */
+    void setExcludeVirtualCollections( bool exclude );
+
+    /**
      * Clears all mime type filters.
      */
     void clearFilters();

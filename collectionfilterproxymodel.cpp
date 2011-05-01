@@ -37,7 +37,7 @@ class CollectionFilterProxyModel::Private
 {
   public:
     Private( CollectionFilterProxyModel *parent )
-      : mParent( parent )
+      : mParent( parent ), mExcludeVirtualCollections( false )
     {
       mimeChecker.addWantedMimeType( QLatin1String( "text/uri-list" ) );
     }
@@ -47,12 +47,19 @@ class CollectionFilterProxyModel::Private
     QVector< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent;
     MimeTypeChecker mimeChecker;
+    bool mExcludeVirtualCollections;
 };
 
 bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex &index, bool checkResourceVisibility )
 {
   // Retrieve supported mimetypes
   const Collection collection = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>();
+
+  if ( !collection.isValid() )
+    return false;
+
+  if ( collection.isVirtual() && mExcludeVirtualCollections )
+    return false;
 
   // If this collection directly contains one valid mimetype, it is accepted
   if ( mimeChecker.isWantedCollection( collection ) ) {
@@ -139,6 +146,14 @@ void CollectionFilterProxyModel::clearFilters()
 {
   d->mimeChecker = MimeTypeChecker();
   invalidateFilter();
+}
+
+void CollectionFilterProxyModel::setExcludeVirtualCollections( bool exclude )
+{
+  if ( exclude != d->mExcludeVirtualCollections ) {
+    d->mExcludeVirtualCollections = exclude;
+    invalidateFilter();
+  }
 }
 
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const
