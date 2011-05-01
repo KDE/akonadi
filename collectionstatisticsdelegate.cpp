@@ -65,13 +65,13 @@ class CollectionStatisticsDelegatePrivate
                                            .foreground( KColorScheme::LinkText ).color();
     }
 
-    template<CountType countType>
-    qint64 getCountRecursive( const QModelIndex &index ) const
+    void getCountRecursive( const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount ) const
     {
       Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
       Q_ASSERT( collection.isValid() );
       CollectionStatistics statistics = collection.statistics();
-      qint64 count = qMax( 0LL, countType == UnreadCount ? statistics.unreadCount() : statistics.count() );
+      totalCount += qMax( 0LL, statistics.count() );
+      unreadCount += qMax( 0LL, statistics.unreadCount() );
 
       if ( index.model()->hasChildren( index ) )
       {
@@ -79,10 +79,9 @@ class CollectionStatisticsDelegatePrivate
         for ( int row = 0; row < rowCount; row++ )
         {
           static const int column = 0;
-          count += getCountRecursive<countType>( index.model()->index( row, column, index ) );
+          getCountRecursive( index.model()->index( row, column, index ), totalCount, unreadCount );
         }
       }
-      return count;
     }
 };
 
@@ -234,7 +233,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   CollectionStatistics statistics = collection.statistics();
 
   qint64 unreadCount = qMax( 0LL, statistics.unreadCount() );
-  qint64 unreadRecursiveCount = d->getCountRecursive<UnreadCount>( index.sibling( index.row(), 0 ) );
+  qint64 totalRecursiveCount = 0;
+  qint64 unreadRecursiveCount = 0;
+  d->getCountRecursive( index.sibling( index.row(), 0 ), totalRecursiveCount, unreadRecursiveCount );
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
@@ -307,7 +308,6 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     } else {
 
       qint64 totalCount = statistics.count();
-      qint64 totalRecursiveCount = d->getCountRecursive<TotalCount>( index.sibling( index.row(), 0 ) );
       if (index.column() == 2 && ( ( !expanded && totalRecursiveCount > 0 ) || ( expanded && totalCount > 0 ) ) ) {
         sumText = QString::number( expanded ? totalCount : totalRecursiveCount );
       }
