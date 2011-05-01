@@ -175,8 +175,9 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
     // Ugly hack.
     // The proper solution is a KExtraColumnsProxyModel, but this will do for now.
     QModelIndex parent = topLeft.parent();
-    QModelIndex extraTopLeft = mParent->index( topLeft.row(), mParent->columnCount( parent ) - 1 - 3 , parent );
-    QModelIndex extraBottomRight = mParent->index( bottomRight.row(), mParent->columnCount( parent ) -1, parent );
+    int parentColumnCount = mParent->columnCount( parent );
+    QModelIndex extraTopLeft = mParent->index( topLeft.row(), parentColumnCount - 1 - 3 , parent );
+    QModelIndex extraBottomRight = mParent->index( bottomRight.row(), parentColumnCount -1, parent );
     mParent->disconnect( mParent, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
                          mParent, SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
     emit mParent->dataChanged( extraTopLeft, extraBottomRight );
@@ -186,9 +187,10 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
     // so that recursive totals can be updated.
     while ( parent.isValid() )
     {
-      emit mParent->dataChanged( parent.sibling( parent.row(), mParent->columnCount( parent ) - 1 - 3 ),
-                                 parent.sibling( parent.row(), mParent->columnCount( parent ) - 1 ) );
+      emit mParent->dataChanged( parent.sibling( parent.row(), parentColumnCount - 1 - 3 ),
+                                 parent.sibling( parent.row(), parentColumnCount - 1 ) );
       parent = parent.parent();
+      parentColumnCount = mParent->columnCount( parent );
     }
     mParent->connect( mParent, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
                       SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
