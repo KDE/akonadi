@@ -166,6 +166,7 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   names.insert( EntityTreeModel::UnreadCountRole, "unreadCount" );
   names.insert( EntityTreeModel::FetchStateRole, "fetchState" );
   names.insert( EntityTreeModel::CollectionSyncProgressRole, "collectionSyncProgress" );
+  names.insert( EntityTreeModel::ItemIdRole, "itemId" );
 
   q->setRoleNames( names );
 
