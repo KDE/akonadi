@@ -644,7 +644,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
     id = node->id;
   }
 
-  if ( parent.column() <= 0 )
+  if ( parent.column() == 0 )
     return d->m_childEntities.value( id ).size();
 
   return 0;
