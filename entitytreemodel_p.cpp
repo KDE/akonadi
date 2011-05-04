@@ -316,7 +316,7 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
   if ( m_showSystemEntities )
     return false;
 
-  if ( entity.id() == Collection::root().id() )
+  if ( entity.id() == m_rootCollection.id() )
     return false;
 
   if ( entity.hasAttribute<EntityHiddenAttribute>() )
