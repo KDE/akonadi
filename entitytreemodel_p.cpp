@@ -592,8 +592,6 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
   Q_ASSERT( parentCollection != Collection::root() );
 
-  Collection temp;
-
   Collection::List ancestors;
 
   while ( !m_collections.contains( parentCollection.id() ) ) {
@@ -610,8 +608,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
                 q, SLOT( fetchJobDone( KJob* ) ) );
     ifDebug(kDebug() << "collection:" << parentCollection.name(); jobTimeTracker[job].start();)
 
-    temp = parentCollection.parentCollection();
-    parentCollection = temp;
+    parentCollection = parentCollection.parentCollection();
   }
 
   const QModelIndex parent = indexForCollection( parentCollection );
