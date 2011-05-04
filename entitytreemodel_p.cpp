@@ -627,11 +627,10 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
   node->type = Node::Collection;
   m_childEntities[ node->parent ].prepend( node );
 
-  Collection::List::const_iterator it;
-  const Collection::List::const_iterator begin = ancestors.constBegin();
+  Collection::List::const_iterator it = ancestors.constBegin();
   const Collection::List::const_iterator end = ancestors.constEnd();
 
-  for ( it = begin; it != end; ++it ) {
+  for ( ; it != end; ++it ) {
     const Collection ancestor = *it;
     m_collections.insert( ancestor.id(), ancestor );
 
@@ -820,11 +819,10 @@ void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Col
 
 void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
 {
-  QList<Node*>::const_iterator it;
   QList<Node*> childList = m_childEntities.value( collectionId );
-  const QList<Node*>::const_iterator begin = childList.constBegin();
+  QList<Node*>::const_iterator it = childList.constBegin();
   const QList<Node*>::const_iterator end = childList.constEnd();
-  for ( it = begin; it != end; ++it ) {
+  for ( ; it != end; ++it ) {
     if ( Node::Item == (*it)->type )
       m_items.remove( (*it)->id );
     else {
