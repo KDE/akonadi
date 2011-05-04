@@ -374,8 +374,8 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
     // or will already be in the model as a dummy node in m_collections
     // if returned and processed in an earlier batch.
     if ( isHidden( collection )
-      && !collectionsToInsert.contains( collectionId )
-      && !m_collections.contains( collectionId ) )
+        && !collectionsToInsert.contains( collectionId )
+        && !m_collections.contains( collectionId ) )
       continue;
 
     if ( m_collections.contains( collectionId ) ) {
@@ -733,7 +733,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
     return;
 
   //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
-  if ( ( collection == m_rootCollection ) || m_monitor->collectionsMonitored().contains(collection))
+  if ( ( collection == m_rootCollection ) || m_monitor->collectionsMonitored().contains( collection ) )
   {
     beginResetModel();
     endResetModel();
@@ -1583,8 +1583,8 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
 
   foreach ( const Collection &collection, collections ) {
     const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
-    Q_ASSERT(row >= 0);
-    Q_ASSERT(m_childEntities.contains(collection.id()));
+    Q_ASSERT( row >= 0 );
+    Q_ASSERT( m_childEntities.contains( collection.id() ) );
     QList<Node*> nodeList = m_childEntities.value( collection.id() );
     Q_ASSERT(row < nodeList.size());
     Node *node = nodeList.at( row );
@@ -1605,7 +1605,7 @@ void EntityTreeModelPrivate::endResetModel()
 {
   Q_Q( EntityTreeModel );
   foreach( Akonadi::Job *job, m_session->findChildren<Akonadi::Job*>() ) {
-    job->disconnect(q);
+    job->disconnect( q );
   }
   m_collections.clear();
   m_items.clear();
