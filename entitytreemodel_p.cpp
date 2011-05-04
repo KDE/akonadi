@@ -604,17 +604,18 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
     // Put a temporary node in the tree later.
     ancestors.prepend( parentCollection );
 
-    // Fetch the real ancestor
-    CollectionFetchJob *job = new CollectionFetchJob( parentCollection, CollectionFetchJob::Base, m_session );
+    parentCollection = parentCollection.parentCollection();
+  }
+
+  if ( !ancestors.isEmpty() ) {
+    // Fetch the real ancestors
+    CollectionFetchJob *job = new CollectionFetchJob( ancestors, CollectionFetchJob::Base, m_session );
     job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
     job->fetchScope().setIncludeStatistics( m_includeStatistics );
     q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
                 q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
     q->connect( job, SIGNAL( result( KJob* ) ),
                 q, SLOT( fetchJobDone( KJob* ) ) );
-    ifDebug(kDebug() << "collection:" << parentCollection.name(); jobTimeTracker[job].start();)
-
-    parentCollection = parentCollection.parentCollection();
   }
 
   const QModelIndex parent = indexForCollection( parentCollection );
