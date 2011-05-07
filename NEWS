@@ -1,3 +1,7 @@
+1.5.3                             07-May-2011
+---------------------------------------------
+- Fix crash when copying collections into themselves.
+
 1.5.2                           05-April-2011
 ---------------------------------------------
 - Fix XdgBaseDirs reporting duplicated paths.
