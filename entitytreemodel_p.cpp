@@ -653,15 +653,13 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
 void EntityTreeModelPrivate::ancestorsFetched( const Akonadi::Collection::List& collectionList )
 {
-  Q_ASSERT( collectionList.size() == 1 );
+  foreach( const Collection &collection, collectionList ) {
+    m_collections[ collection.id() ] = collection;
 
-  const Collection collection = collectionList.at( 0 );
-
-  m_collections[ collection.id() ] = collection;
-
-  const QModelIndex index = indexForCollection( collection );
-  Q_ASSERT( index.isValid() );
-  dataChanged( index, index );
+    const QModelIndex index = indexForCollection( collection );
+    Q_ASSERT( index.isValid() );
+    dataChanged( index, index );
+  }
 }
 
 void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collection, const Akonadi::Collection& parent )
