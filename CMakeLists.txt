@@ -207,19 +207,8 @@ qt4_add_dbus_adaptor( akonadikde_LIB_SRC interfaces/org.freedesktop.Akonadi.Agen
 kde4_add_kcfg_files( akonadikde_LIB_SRC resourcebasesettings.kcfgc )
 install( FILES resourcebase.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 
-macro_ensure_version( "4.5.74" ${KDE_VERSION} KDE_IS_AT_LEAST_4_5_74 )
-
-if(KDE_IS_AT_LEAST_4_5_74)
 kde4_add_ui_files( akonadikde_LIB_SRC
   cachepolicypage.ui
-)
-else(KDE_IS_AT_LEAST_4_5_74)
-kde4_add_ui_files( akonadikde_LIB_SRC
-  cachepolicypage-45.ui
-)
-endif(KDE_IS_AT_LEAST_4_5_74)
-
-kde4_add_ui_files( akonadikde_LIB_SRC
   controlprogressindicator.ui
   selftestdialog.ui
   erroroverlay.ui
@@ -237,8 +226,6 @@ endif(KDEPIM_MOBILE_UI)
 
 kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
-macro_ensure_version( "4.2.0" ${KDE_VERSION} KDE_IS_AT_LEAST_42 )
-
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
@@ -246,12 +233,7 @@ if (KDEPIM_MOBILE_UI)
 target_link_libraries( akonadi-kde ${QT_QTDECLARATIVE_LIBRARY} )
 endif(KDEPIM_MOBILE_UI)
 
-if(KDE_IS_AT_LEAST_42)
 target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})
-else(KDE_IS_AT_LEAST_42)
-target_link_libraries( akonadi-kde ${AKONADI_KDE_DEPS})
-endif(KDE_IS_AT_LEAST_42)
-
 
 set_target_properties( akonadi-kde PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install( TARGETS akonadi-kde EXPORT kdepimlibsLibraryTargets  ${INSTALL_TARGETS_DEFAULT_ARGS} )

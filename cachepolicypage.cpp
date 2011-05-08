@@ -19,13 +19,7 @@
 
 #include "cachepolicypage.h"
 
-#include <kdeversion.h>
-
-#if KDE_IS_VERSION( 4, 5, 74 )
 #include "ui_cachepolicypage.h"
-#else
-#include "ui_cachepolicypage-45.h"
-#endif
 
 #include "cachepolicy.h"
 #include "collection.h"

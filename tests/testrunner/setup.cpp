@@ -410,10 +410,8 @@ SetupTest::SetupTest() :
 
   mDBusDaemonPid = startDBusDaemon();
 
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 4, 2))
   const QString dbusAddress = symbol->symbols()[ QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ];
   registerWithInternalDBus( dbusAddress );
-#endif
 
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 }

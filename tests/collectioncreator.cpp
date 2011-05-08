@@ -64,9 +64,7 @@ class CollectionCreator : public QObject
 
       static int index = 0;
       Job *lastJob = 0;
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 5, 0))
       QBENCHMARK
-#endif
       {
         if ( useTransaction )
           lastJob = new TransactionBeginJob( this );
