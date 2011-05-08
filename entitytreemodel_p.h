@@ -64,7 +64,7 @@ public:
 
   EntityTreeModelPrivate( EntityTreeModel *parent );
   ~EntityTreeModelPrivate();
-  EntityTreeModel *q_ptr;
+  EntityTreeModel * const q_ptr;
 
   enum RetrieveDepth {
     Base,
