@@ -624,30 +624,26 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
       return d->m_items.size();
   }
 
-  const Node *node = reinterpret_cast<Node*>( parent.internalPointer() );
-
-  qint64 id;
   if ( !parent.isValid() ) {
     // If we're showing the root collection then it will be the only child of the root.
     if ( d->m_showRootCollection )
       return d->m_childEntities.value( -1 ).size();
-
-    id = d->m_rootCollection.id();
-  } else {
-
-    if ( !node )
-      return 0;
-
-    if ( Node::Item == node->type )
-      return 0;
-
-    id = node->id;
+    return d->m_childEntities.value( d->m_rootCollection.id() ).size();
   }
 
-  if ( parent.column() == 0 )
-    return d->m_childEntities.value( id ).size();
+  if ( parent.column() != 0 )
+    return 0;
 
-  return 0;
+  const Node *node = reinterpret_cast<Node*>( parent.internalPointer() );
+
+  if ( !node )
+    return 0;
+
+  if ( Node::Item == node->type )
+    return 0;
+
+  Q_ASSERT( parent.isValid() );
+  return d->m_childEntities.value( node->id ).size();
 }
 
 int EntityTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
