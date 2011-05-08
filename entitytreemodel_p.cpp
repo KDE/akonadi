@@ -234,6 +234,12 @@ void EntityTreeModelPrivate::agentInstanceRemoved( const Akonadi::AgentInstance 
 {
   Q_Q( EntityTreeModel );
 
+  if ( m_rootCollection.isValid() && m_rootCollection != Collection::root() ) {
+    if ( m_rootCollection.resource() == instance.identifier() )
+      q->clearAndReset();
+    return;
+  }
+
   QList<Node*> childEntities = m_childEntities[m_rootNode->id];
 
   for ( int row = 0; row < childEntities.size(); ++row ) {
