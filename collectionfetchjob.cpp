@@ -77,6 +77,24 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
         mPendingCollections.clear();
       }
     }
+
+    void subJobCollectionReceived( const Akonadi::Collection::List &collections )
+    {
+      mPendingCollections += collections;
+      if ( !mEmitTimer->isActive() )
+        mEmitTimer->start();
+    }
+
+    void flushIterativeResult()
+    {
+      Q_Q( CollectionFetchJob );
+
+      if ( mPendingCollections.isEmpty() )
+        return;
+
+      emit q->collectionsReceived( mPendingCollections );
+      mPendingCollections.clear();
+    }
 };
 
 CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type, QObject *parent )
@@ -142,15 +160,20 @@ void CollectionFetchJob::doStart()
       // Iterate over that result removing intersections and then perform the Recursive fetch on
       // the remainder.
       d->mBasePrefetch = true;
+      // No need to connect to the collectionsReceived signal here. This job is internal. The
+      // result needs to be filtered through filterDescendants before it is useful.
       new CollectionFetchJob( d->mBaseList, NonOverlappingRoots, this );
     } else if ( d->mType == NonOverlappingRoots ) {
       foreach ( const Collection &col, d->mBaseList ) {
+        // No need to connect to the collectionsReceived signal here. This job is internal. The (aggregated)
+        // result needs to be filtered through filterDescendants before it is useful.
         CollectionFetchJob *subJob = new CollectionFetchJob( col, Base, this );
         subJob->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
       }
     } else {
       foreach ( const Collection &col, d->mBaseList ) {
         CollectionFetchJob *subJob = new CollectionFetchJob( col, d->mType, this );
+        connect( subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)));
         subJob->setFetchScope( fetchScope() );
       }
     }
@@ -320,6 +343,7 @@ void CollectionFetchJob::slotResult(KJob * job)
     if ( !job->error() ) {
       foreach ( const Collection &col, roots ) {
         CollectionFetchJob *subJob = new CollectionFetchJob( col, d->mType, this );
+        connect( subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)) );
         subJob->setFetchScope( fetchScope() );
       }
     }
@@ -328,11 +352,20 @@ void CollectionFetchJob::slotResult(KJob * job)
     d->mPrefetchList += list->collections();
     Job::slotResult( job );
     if ( !job->error() && !hasSubjobs() ) {
-      d->mCollections = filterDescendants( d->mPrefetchList );
+      const Collection::List result = filterDescendants( d->mPrefetchList );
+      d->mPendingCollections += result;
+      d->mCollections = result;
+      d->flushIterativeResult();
       emitResult();
     }
   } else {
+    // We need to tell the subjob to emit its collectionsReceived signal before
+    // the result signal is emitted. That will populate my mPendingCollections
+    // which will be flushed by calling emitResult which will cause
+    // CollectionFetchJobPrivate::timeout to be called.
+    list->d_func()->flushIterativeResult();
     d->mCollections += list->collections();
+    // Pending collections should have already been emitted by listening to (and flushing) the job.
     Job::slotResult( job );
     if ( !job->error() && !hasSubjobs() )
       emitResult();
