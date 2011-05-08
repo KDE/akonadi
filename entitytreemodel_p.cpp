@@ -175,12 +175,6 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
 
 void EntityTreeModelPrivate::serverStarted()
 {
-  #if QT_VERSION < 0x040700
-    // This isn't in Qt4.6: http://qt.gitorious.org/qt/qt/commit/e884829f23fad15086f07aa92e1d92bcb71d53ba
-    // which would prevent korganizer from crashing when restarting akonadi
-    beginResetModel();
-  #endif
-
   // Don't emit about to be reset. Too late for that
   endResetModel();
 }
