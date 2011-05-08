@@ -66,6 +66,10 @@ class ContactViewer::Private
     ~Private()
     {
       delete mStandardContactFormatter;
+#ifdef HAVE_PRISON
+      delete mQRCode;
+      delete mDataMatrix;
+#endif // HAVE_PRISON
     }
 
     void updateView( const QVariantList &localCustomFieldDescriptions = QVariantList(), const QString &addressBookName = QString() )
