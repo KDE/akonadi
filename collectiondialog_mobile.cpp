@@ -21,7 +21,7 @@
 #include "collectiondialog_mobile_p.h"
 
 #include "asyncselectionhandler_p.h"
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/collectioncreatejob.h>

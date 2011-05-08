@@ -32,7 +32,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/session.h>
 
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include "collectionutils_p.h"
 
 #include <QtCore/QAbstractItemModel>

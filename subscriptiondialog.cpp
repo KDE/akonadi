@@ -37,7 +37,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #else
-#include "kdescendantsproxymodel_p.h"
+#include <kdescendantsproxymodel.h>
 #include <QtGui/QListView>
 #include <QtGui/QSortFilterProxyModel>
 

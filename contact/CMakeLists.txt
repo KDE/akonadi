@@ -127,12 +127,6 @@ set(akonadicontact_LIB_SRC
   ${akonadicontact_actions_SRCS}
 )
 
-if (NOT WINCE)
-  set(akonadicontact_LIB_SRC ${akonadicontact_LIB_SRC}
-    ../kdescendantsproxymodel.cpp
-  )
-endif (NOT WINCE)
-
 if(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
 set(akonadicontact_LIB_SRC
     ${akonadicontact_LIB_SRC}

@@ -119,7 +119,6 @@ set( akonadikde_LIB_SRC
   itemmodifyjob.cpp
   itemsync.cpp
   job.cpp
-  kdescendantsproxymodel.cpp
   kjobprivatebase.cpp
   linkjob.cpp
   mimetypechecker.cpp
