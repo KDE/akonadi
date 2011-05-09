@@ -58,7 +58,7 @@ void ChangeRecorder::replayNext()
 {
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() ) {
-    const NotificationMessage msg = d->pendingNotifications.first();
+    const NotificationMessage msg = d->pendingNotifications.head();
     if ( d->ensureDataAvailable( msg ) )
       d->emitNotification( msg );
     else
@@ -82,7 +82,7 @@ void ChangeRecorder::changeProcessed()
 {
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() )
-    d->pendingNotifications.removeFirst();
+    d->pendingNotifications.dequeue();
   d->saveNotifications();
 }
 
