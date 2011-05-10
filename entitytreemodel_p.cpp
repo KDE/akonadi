@@ -102,11 +102,6 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   // This may be updated if the CollectionFetchStrategy is changed.
   m_monitor->fetchCollection( true );
   m_session = m_monitor->session();
-  if (m_session == Session::defaultSession())
-  {
-    m_session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), q );
-    m_monitor->setSession( m_session );
-  }
 
   m_monitor->setChangeRecordingEnabled( false );
 
