@@ -359,6 +359,9 @@ void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
       destWatched = isCollectionMonitored( msg.parentDestCollection() );
   }
 
+  if ( !sourceWatched && !destWatched )
+    return;
+
   if ( sourceWatched && destWatched )
     return NotificationMessage::appendAndCompress( notificationQueue, msg );
 
