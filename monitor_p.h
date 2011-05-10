@@ -121,7 +121,10 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     void slotStatisticsChangedFinished( KJob* );
     void slotFlushRecentlyChangedCollections();
 
-    void translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  );
+    /**
+      Returns whether a message was appended to @p notificationQueue
+    */
+    bool translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  );
 
     virtual void slotNotify( const NotificationMessage::List &msgs );
 

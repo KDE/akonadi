@@ -335,12 +335,15 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
   recentlyChangedCollections.clear();
 }
 
-void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  )
+bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  )
 {
   // We have to split moves into insert or remove if the source or destination
   // is not monitored.
-  if ( msg.operation() != NotificationMessage::Move )
-    return NotificationMessage::appendAndCompress( notificationQueue, msg );
+  if ( msg.operation() != NotificationMessage::Move ) {
+    bool appended = false;
+    NotificationMessage::appendAndCompress( notificationQueue, msg, &appended );
+    return appended;
+  }
 
   bool sourceWatched = false;
   bool destWatched = false;
@@ -360,10 +363,13 @@ void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
   }
 
   if ( !sourceWatched && !destWatched )
-    return;
+    return false;
 
-  if ( sourceWatched && destWatched )
-    return NotificationMessage::appendAndCompress( notificationQueue, msg );
+  if ( sourceWatched && destWatched ) {
+    bool appended = false;
+    NotificationMessage::appendAndCompress( notificationQueue, msg, &appended );
+    return appended;
+  }
 
   if ( sourceWatched )
   {
@@ -371,7 +377,9 @@ void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
     NotificationMessage removalMessage = msg;
     removalMessage.setOperation( NotificationMessage::Remove );
     removalMessage.setParentDestCollection( -1 );
-    return NotificationMessage::appendAndCompress( notificationQueue, removalMessage );
+    bool appended = false;
+    NotificationMessage::appendAndCompress( notificationQueue, removalMessage, &appended );
+    return appended;
   }
 
   // Transform into an insertion
@@ -379,7 +387,9 @@ void MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
   insertionMessage.setOperation( NotificationMessage::Add );
   insertionMessage.setParentCollection( msg.parentDestCollection() );
   insertionMessage.setParentDestCollection( -1 );
-  NotificationMessage::appendAndCompress( notificationQueue, insertionMessage );
+  bool appended = false;
+  NotificationMessage::appendAndCompress( notificationQueue, insertionMessage, &appended );
+  return appended;
 }
 
 /*
