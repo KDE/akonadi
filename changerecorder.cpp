@@ -61,8 +61,12 @@ void ChangeRecorder::replayNext()
     const NotificationMessage msg = d->pendingNotifications.head();
     if ( d->ensureDataAvailable( msg ) )
       d->emitNotification( msg );
-    else
-      d->pipeline.enqueue( msg );
+    else if ( !d->translateAndCompress( d->pipeline, msg ) ) {
+      // In the case of a move where both source and destination are
+      // ignored, we ignore the message and process the next one.
+      d->pendingNotifications.dequeue();
+      return replayNext();
+    }
   } else {
     // This is necessary when none of the notifications were accepted / processed
     // above, and so there is no one to call changeProcessed() and the ChangeReplay task
