@@ -107,6 +107,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
       where possible.
     */
     static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg );
+    // BIC: make the above return bool.
+    static void appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg, bool *appended );
 
   private:
     class Private;

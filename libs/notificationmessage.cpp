@@ -292,6 +292,12 @@ QString NotificationMessage::toString() const
 
 void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg )
 {
+  bool appended;
+  appendAndCompress( list, msg, &appended );
+}
+
+void NotificationMessage::appendAndCompress( NotificationMessage::List &list, const NotificationMessage &msg, bool *appended )
+{
   // fast-path for stuff that is not considered during O(n) compression below
   if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
     NotificationMessage::List::Iterator end = list.end();
@@ -300,10 +306,12 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
         // same operation: merge changed parts and drop the new one
         if ( msg.operation() == (*it).operation() ) {
           (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+          *appended = false;
           return;
         }
         // new one is a modification, the existing one not, so drop the new one
         else if ( msg.operation() == Modify ) {
+          *appended = false;
           return;
         }
         // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
@@ -320,6 +328,7 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
       }
     }
   }
+  *appended = true;
   list.append( msg );
 }
 
