@@ -1157,8 +1157,10 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
 void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kWarning() << "Job error: " << job->errorString() << endl;
+    return; // let's be safe, otherwise emitting dataChanged will get us into loops
+  }
 
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
