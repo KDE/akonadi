@@ -91,6 +91,7 @@ class Firstrun : public QObject
     KConfig *mCurrentDefault;
     KProcess *mProcess;
 #ifndef KDEPIM_NO_KRESOURCES
+    QStringList mPendingKres;
     QString mResourceFamily;
 #endif
 };

@@ -85,6 +85,11 @@ void Firstrun::findPendingDefaults()
       mPendingDefaults << dirName + fileName;
     }
   }
+
+#ifndef KDEPIM_NO_KRESOURCES
+  // always check legacy kres for migration, their migrator might have changed again
+  mPendingKres << QLatin1String("contact") << QLatin1String("calendar");
+#endif
 }
 
 #ifndef KDEPIM_NO_KRESOURCES
@@ -155,6 +160,12 @@ void Firstrun::setupNext()
   mCurrentDefault = 0;
 
   if ( mPendingDefaults.isEmpty() ) {
+#ifndef KDEPIM_NO_KRESOURCES
+    if ( !mPendingKres.isEmpty() ) {
+      migrateKresType( mPendingKres.takeFirst() );
+      return;
+    }
+#endif
     deleteLater();
     return;
   }
@@ -192,7 +203,7 @@ void Firstrun::setupNext()
       KConfigGroup cfg( mConfig, "ProcessedDefaults" );
       cfg.writeEntry( agentCfg.readEntry( "Id", QString() ), QString::fromLatin1( "kres" ) );
       cfg.sync();
-      migrateKresType( kresType );
+      setupNext();
       return;
     }
   }
