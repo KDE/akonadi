@@ -26,7 +26,7 @@
 using namespace Akonadi;
 
 ChangeRecorder::ChangeRecorder( QObject * parent ) :
-    Monitor( new ChangeRecorderPrivate( this ), parent )
+    Monitor( new ChangeRecorderPrivate( 0, this ), parent )
 {
 }
 
