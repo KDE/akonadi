@@ -19,12 +19,6 @@
 
 #include "inspectablemonitor.h"
 
-FakeNotificationSource::FakeNotificationSource(QObject* parent): QObject(parent)
-{
-
-}
-
-
 InspectableMonitorPrivate::InspectableMonitorPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableMonitor* parent)
   : Akonadi::MonitorPrivate(dependenciesFactory, parent)
 {

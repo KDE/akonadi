@@ -116,6 +116,7 @@ kde4_add_library(akonaditestfake STATIC
   fakemonitor.cpp
   fakeserverdata.cpp
   modelspy.cpp
+  fakeentitycache.cpp
   inspectablemonitor.cpp
 )
 
