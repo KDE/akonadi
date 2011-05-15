@@ -113,19 +113,19 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 
   // Pending notifications remains empty because we don't fill the pipeline with one message.
 
-  Q_ASSERT(monitor->pipeline().isEmpty());
-  Q_ASSERT(monitor->pendingNotifications().isEmpty());
+  QVERIFY(monitor->pipeline().isEmpty());
+  QVERIFY(monitor->pendingNotifications().isEmpty());
 
   monitor->notifier()->emitNotify(list);
 
-  Q_ASSERT(monitor->pipeline().size() == 1);
-  Q_ASSERT(monitor->pendingNotifications().isEmpty());
+  QVERIFY(monitor->pipeline().size() == 1);
+  QVERIFY(monitor->pendingNotifications().isEmpty());
 
   collectionCache->setData(data);
   collectionCache->emitDataAvailable();
 
-  Q_ASSERT(monitor->pipeline().isEmpty());
-  Q_ASSERT(monitor->pendingNotifications().isEmpty());
+  QVERIFY(monitor->pipeline().isEmpty());
+  QVERIFY(monitor->pendingNotifications().isEmpty());
 }
 
 void MonitorNotificationTest::testFillPipeline_data()
@@ -185,19 +185,19 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     list << msg;
   }
 
-  Q_ASSERT(monitor->pipeline().isEmpty());
-  Q_ASSERT(monitor->pendingNotifications().isEmpty());
+  QVERIFY(monitor->pipeline().isEmpty());
+  QVERIFY(monitor->pendingNotifications().isEmpty());
 
   monitor->notifier()->emitNotify(list);
 
-  Q_ASSERT(monitor->pipeline().size() == 5);
-  Q_ASSERT(monitor->pendingNotifications().size() == 15);
+  QVERIFY(monitor->pipeline().size() == 5);
+  QVERIFY(monitor->pendingNotifications().size() == 15);
 
   collectionCache->setData(data);
   collectionCache->emitDataAvailable();
 
-  Q_ASSERT(monitor->pipeline().isEmpty());
-  Q_ASSERT(monitor->pendingNotifications().isEmpty());
+  QVERIFY(monitor->pipeline().isEmpty());
+  QVERIFY(monitor->pendingNotifications().isEmpty());
 }
 
 QTEST_MAIN( MonitorNotificationTest )
