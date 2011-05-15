@@ -118,6 +118,7 @@ kde4_add_library(akonaditestfake STATIC
   modelspy.cpp
   fakeentitycache.cpp
   inspectablemonitor.cpp
+  inspectablechangerecorder.cpp
 )
 
 # demo applications
