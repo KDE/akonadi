@@ -24,6 +24,7 @@
 #include "fakeserverdata.h"
 #include "fakesession.h"
 #include "inspectablemonitor.h"
+#include "inspectablechangerecorder.h"
 
 using namespace Akonadi;
 
@@ -42,17 +43,51 @@ private Q_SLOTS:
   void testSingleMessage();
   void testFillPipeline();
 
+  void testSingleMessage_data();
+  void testFillPipeline_data();
+
+private:
+  template<typename MonitorImpl>
+  void testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+  template<typename MonitorImpl>
+  void testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
+
 private:
   FakeSession *m_fakeSession;
   QByteArray m_sessionName;
 };
 
+void MonitorNotificationTest::testSingleMessage_data()
+{
+  QTest::addColumn<bool>("useChangeRecorder");
+
+  QTest::newRow("useChangeRecorder") << true;
+  QTest::newRow("useMonitor") << false;
+}
+
 void MonitorNotificationTest::testSingleMessage()
 {
+  QFETCH(bool, useChangeRecorder);
+
   FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
   FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
   FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
-  InspectableMonitor *monitor = new InspectableMonitor(depsFactory, this);
+
+  if (!useChangeRecorder)
+  {
+    testSingleMessage_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+  } else {
+    InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+    changeRecorder->setChangeRecordingEnabled(false);
+    testSingleMessage_impl(changeRecorder, collectionCache, itemCache);
+  }
+}
+
+template <typename MonitorImpl>
+void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
+{
+  Q_UNUSED(itemCache)
+
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
   monitor->setAllMonitored(true);
@@ -93,12 +128,37 @@ void MonitorNotificationTest::testSingleMessage()
   Q_ASSERT(monitor->pendingNotifications().isEmpty());
 }
 
+void MonitorNotificationTest::testFillPipeline_data()
+{
+  QTest::addColumn<bool>("useChangeRecorder");
+
+  QTest::newRow("useChangeRecorder") << true;
+  QTest::newRow("useMonitor") << false;
+}
+
 void MonitorNotificationTest::testFillPipeline()
 {
+  QFETCH(bool, useChangeRecorder);
+
   FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
   FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
   FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
-  InspectableMonitor *monitor = new InspectableMonitor(depsFactory, this);
+
+  if (!useChangeRecorder)
+  {
+    testFillPipeline_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
+  } else {
+    InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+    changeRecorder->setChangeRecordingEnabled(false);
+    testFillPipeline_impl(changeRecorder, collectionCache, itemCache);
+  }
+}
+
+template <typename MonitorImpl>
+void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache)
+{
+  Q_UNUSED(itemCache)
+
   monitor->setSession(m_fakeSession);
   monitor->fetchCollection(true);
   monitor->setAllMonitored(true);
