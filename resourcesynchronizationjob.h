@@ -47,6 +47,7 @@ class ResourceSynchronizationJobPrivate;
  *
  * ResourceSynchronizationJob *job = new ResourceSynchronizationJob( resource );
  * connect( job, SIGNAL( result( KJob* ) ), SLOT( synchronizationFinished( KJob* ) ) );
+ * job->start();
  *
  * @endcode
  *
