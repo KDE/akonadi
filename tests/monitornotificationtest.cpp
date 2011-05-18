@@ -118,7 +118,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 
   monitor->notifier()->emitNotify(list);
 
-  QVERIFY(monitor->pipeline().size() == 1);
+  QCOMPARE(monitor->pipeline().size(), 1);
   QVERIFY(monitor->pendingNotifications().isEmpty());
 
   collectionCache->setData(data);
@@ -190,8 +190,8 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
 
   monitor->notifier()->emitNotify(list);
 
-  QVERIFY(monitor->pipeline().size() == 5);
-  QVERIFY(monitor->pendingNotifications().size() == 15);
+  QCOMPARE(monitor->pipeline().size(), 5);
+  QCOMPARE(monitor->pendingNotifications().size(), 15);
 
   collectionCache->setData(data);
   collectionCache->emitDataAvailable();
