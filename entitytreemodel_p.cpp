@@ -195,21 +195,20 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   Q_Q( const EntityTreeModel );
   itemFetchJob->setProperty( FetchCollectionId(), QVariant( parent.id() ) );
 
-  if ( !m_showRootCollection && parent == m_rootCollection )
-    return;
+  if ( m_showRootCollection || parent != m_rootCollection ) {
+    m_pendingCollectionRetrieveJobs.insert( parent.id() );
 
-  m_pendingCollectionRetrieveJobs.insert( parent.id() );
-
-  // If collections are not in the model, there will be no valid index for them.
-  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
-    && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) )
-  {
-    // We need to invoke this delayed because we would otherwise be emitting a sequence like
-    // - beginInsertRows
-    // - dataChanged
-    // - endInsertRows
-    // which would confuse proxies.
-    QMetaObject::invokeMethod( const_cast<EntityTreeModel *>( q ), "changeFetchState", Qt::QueuedConnection, Q_ARG( Akonadi::Collection, parent ) );
+    // If collections are not in the model, there will be no valid index for them.
+    if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
+      && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) )
+    {
+      // We need to invoke this delayed because we would otherwise be emitting a sequence like
+      // - beginInsertRows
+      // - dataChanged
+      // - endInsertRows
+      // which would confuse proxies.
+      QMetaObject::invokeMethod( const_cast<EntityTreeModel *>( q ), "changeFetchState", Qt::QueuedConnection, Q_ARG( Akonadi::Collection, parent ) );
+    }
   }
 
 #ifdef KDEPIM_MOBILE_UI
