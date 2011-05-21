@@ -317,12 +317,29 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
   ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
 }
 
-bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
+// Specialization needs to be in the same namespace as the definition
+namespace Akonadi {
+
+template<>
+bool EntityTreeModelPrivate::isHidden<Akonadi::Collection>( const Akonadi::Collection &entity ) const
+{
+  return isHidden( entity, Node::Collection );
+}
+
+template<>
+bool EntityTreeModelPrivate::isHidden<Akonadi::Item>( const Akonadi::Item &entity ) const
+{
+  return isHidden( entity, Node::Item );
+}
+
+}
+
+bool EntityTreeModelPrivate::isHidden( const Entity &entity, Node::Type type ) const
 {
   if ( m_showSystemEntities )
     return false;
 
-  if ( entity.id() == m_rootCollection.id() )
+  if ( type == Node::Collection && entity.id() == m_rootCollection.id() )
     return false;
 
   if ( entity.hasAttribute<EntityHiddenAttribute>() )
@@ -330,7 +347,7 @@ bool EntityTreeModelPrivate::isHidden( const Entity &entity ) const
 
   const Collection parent = entity.parentCollection();
   if ( parent.isValid() )
-    return isHidden( parent );
+    return isHidden( parent, Node::Collection );
 
   return false;
 }

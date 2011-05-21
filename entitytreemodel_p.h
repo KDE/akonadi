@@ -224,7 +224,10 @@ public:
   /**
     @returns True if @p entity or one of its descemdants is hidden.
   */
-  bool isHidden( const Entity &entity ) const;
+  bool isHidden( const Entity &entity, Node::Type type ) const;
+
+  template<typename T>
+  bool isHidden( const T &entity ) const;
 
   bool m_showSystemEntities;
 
