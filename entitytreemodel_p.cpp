@@ -176,6 +176,7 @@ void EntityTreeModelPrivate::serverStarted()
 
 ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const
 {
+  Q_ASSERT( parent.isValid() );
   ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_session );
   itemJob->setFetchScope( scope );
   itemJob->fetchScope().setAncestorRetrieval( ItemFetchScope::All );
@@ -283,6 +284,7 @@ void EntityTreeModelPrivate::fetchItems( const Collection &parent )
 void EntityTreeModelPrivate::fetchCollections( const Collection &collection, CollectionFetchJob::Type type, const ListingOrder listing )
 {
   Q_Q( EntityTreeModel );
+  Q_ASSERT( collection.isValid() );
   CollectionFetchJob *job = new CollectionFetchJob( collection, type, m_session );
 
   job->setProperty( FetchCollectionId(), QVariant( collection.id() ) );
@@ -1383,6 +1385,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
       if ( m_itemPopulation == EntityTreeModel::ImmediatePopulation )
         fetchItems(collection);
 
+      Q_ASSERT( collection.isValid() );
       CollectionFetchJob *job = new CollectionFetchJob( collection, CollectionFetchJob::Recursive, m_session );
       job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
       job->fetchScope().setIncludeStatistics( m_includeStatistics );
