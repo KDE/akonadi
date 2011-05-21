@@ -166,8 +166,6 @@ public:
   bool m_showRootCollection;
   QHash<Collection::Id, uint> m_collectionSyncProgress;
 
-  void rootCollectionFetched( const Collection::List &list );
-
   /**
    * Called after the root collection was fetched by fillModel
    *
@@ -184,6 +182,7 @@ public:
 
   void monitoredItemsRetrieved( KJob* job );
   void firstFetchJobDone( KJob *job );
+  void rootFetchJobDone( KJob *job );
   void fetchJobDone( KJob *job );
   void updateJobDone( KJob *job );
   void pasteJobDone( KJob *job );

@@ -1247,10 +1247,15 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
   }
 }
 
-void EntityTreeModelPrivate::rootCollectionFetched( const Collection::List &list )
+void EntityTreeModelPrivate::rootFetchJobDone( KJob *job )
 {
-  if ( list.size() != 1 )
-      kDebug() << "Actual list size" << list.size();
+  if ( job->error() ) {
+    kWarning() << job->errorString();
+    return;
+  }
+  CollectionFetchJob *collectionJob = qobject_cast<CollectionFetchJob*>( job );
+  const Collection::List list = collectionJob->collections();
+
   Q_ASSERT( list.size() == 1 );
   m_rootCollection = list.first();
   startFirstListJob();
@@ -1701,9 +1706,8 @@ void EntityTreeModelPrivate::fillModel()
   } else {
     Q_ASSERT(m_rootCollection.isValid());
     CollectionFetchJob *rootFetchJob = new CollectionFetchJob( m_rootCollection, CollectionFetchJob::Base, m_session );
-    q->connect( rootFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                SLOT( rootCollectionFetched( const Akonadi::Collection::List& ) ) );
-    q->connect( rootFetchJob, SIGNAL( result( KJob* ) ), SLOT( fetchJobDone( KJob* ) ) );
+    q->connect( rootFetchJob, SIGNAL(result(KJob*)),
+                SLOT(rootFetchJobDone(KJob*)) );
     ifDebug(kDebug() << ""; jobTimeTracker[rootFetchJob].start();)
   }
 }
