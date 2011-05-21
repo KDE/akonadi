@@ -234,26 +234,19 @@ void EntityTreeModelPrivate::agentInstanceRemoved( const Akonadi::AgentInstance 
 {
   Q_Q( EntityTreeModel );
 
-  if ( m_rootCollection.isValid() && m_rootCollection != Collection::root() ) {
-    if ( m_rootCollection.resource() == instance.identifier() )
-      q->clearAndReset();
-    return;
-  }
-
-  QList<Node*> childEntities = m_childEntities[m_rootNode->id];
-
-  for ( int row = 0; row < childEntities.size(); ++row ) {
-    Node *node = childEntities.at( row );
-    if ( node->type == Node::Collection ) {
-      const Collection::Id collectionId = node->id;
-      if ( m_collections[collectionId].resource() == instance.identifier() ) {
-        q->beginRemoveRows( QModelIndex(), row, row );
-        removeChildEntities( collectionId );
-        q->endRemoveRows();
-        --row;
-      }
+  if ( m_rootCollection.isValid() ) {
+    if ( m_rootCollection != Collection::root() ) {
+      if ( m_rootCollection.resource() == instance.identifier() )
+        q->clearAndReset();
+      return;
     }
-    ++row;
+    foreach( Node *node, m_childEntities[Collection::root().id()] ) {
+      Q_ASSERT( node->type == Node::Collection );
+
+      const Collection collection = m_collections[node->id];
+      if ( collection.resource() == instance.identifier() )
+        monitoredCollectionRemoved( collection );
+    }
   }
 }
 
