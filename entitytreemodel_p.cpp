@@ -781,7 +781,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
   removeChildEntities( collection.id() );
 
   // Remove deleted collection from its parent.
-  m_childEntities[ parentId ].removeAt( row );
+  delete m_childEntities[ parentId ].takeAt( row );
 
   // Remove deleted collection itself.
   m_collections.remove( collection.id() );
@@ -830,7 +830,7 @@ void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
     }
   }
 
-  m_childEntities.remove( collectionId );
+  qDeleteAll( m_childEntities.take( collectionId ) );
 }
 
 QStringList EntityTreeModelPrivate::childCollectionNames( const Collection &collection ) const
@@ -1013,7 +1013,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
 
   q->beginRemoveRows( parentIndex, row, row );
   m_items.remove( item.id() );
-  m_childEntities[ collection.id() ].removeAt( row );
+  delete m_childEntities[ collection.id() ].takeAt( row );
   q->endRemoveRows();
 }
 
@@ -1150,7 +1150,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
   q->beginRemoveRows( parentIndex, row, row );
-  m_childEntities[ collection.id() ].removeAt( row );
+  delete m_childEntities[ collection.id() ].takeAt( row );
   q->endRemoveRows();
 }
 
@@ -1261,6 +1261,7 @@ void EntityTreeModelPrivate::startFirstListJob()
     // Notify the outside that we're putting collection::root into the model.
     q->beginInsertRows( QModelIndex(), 0, 0 );
     m_collections.insert( m_rootCollection.id(), m_rootCollection );
+    delete m_rootNode;
     m_rootNode = new Node;
     m_rootNode->id = m_rootCollection.id();
     m_rootNode->parent = -1;
@@ -1269,6 +1270,7 @@ void EntityTreeModelPrivate::startFirstListJob()
     q->endInsertRows();
   } else {
     // Otherwise store it silently because it's not part of the usable model.
+    delete m_rootNode;
     m_rootNode = new Node;
     m_rootNode->id = m_rootCollection.id();
     m_rootNode->parent = -1;
@@ -1476,11 +1478,18 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
     ++(*pos);
   }
+  QList<Node *>::iterator endIt = it;
+  it = startIt;
 
   const QModelIndex parentIndex = indexForCollection( collection );
 
   q->beginRemoveRows( parentIndex, start, (*pos) - 1 );
-  m_childEntities[ collection.id() ].erase( startIt, it );
+
+  QList<Node *> &es = m_childEntities[ collection.id() ];
+  while ( it != endIt ) {
+    delete *it;
+    it = es.erase( it );
+  }
   q->endRemoveRows();
 
   return it;
@@ -1612,7 +1621,11 @@ void EntityTreeModelPrivate::endResetModel()
   }
   m_collections.clear();
   m_items.clear();
+
+  foreach ( const QList<Node*> &list, m_childEntities )
+    qDeleteAll( list );
   m_childEntities.clear();
+
   q->endResetModel();
   fillModel();
 }
