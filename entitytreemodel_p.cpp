@@ -1339,8 +1339,11 @@ void EntityTreeModelPrivate::firstCollectionsFetched( const Akonadi::Collection:
 
 void EntityTreeModelPrivate::firstFetchJobDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     kWarning() << job->errorString();
+    return;
+  }
+
   // It is quicker to recursively list from the root again than to do
   // individual listings for each top level item from the first fetch.
   fetchCollections( m_rootCollection, CollectionFetchJob::Recursive );
