@@ -1299,6 +1299,8 @@ void EntityTreeModelPrivate::startFirstListJob()
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
 
+  // On start we first fetch the top-level collections to give a more convincing
+  // illusion of speed. That's what the FirstListing stuff is for.
   if ( ( m_collectionFetchStrategy == EntityTreeModel::FetchCollectionsRecursive ) && generalPopulation )
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel, FirstListing );
 
