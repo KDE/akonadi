@@ -1412,31 +1412,6 @@ Akonadi::Collection::List EntityTreeModelPrivate::getParentCollections( const It
   return list;
 }
 
-Akonadi::Collection EntityTreeModelPrivate::getParentCollection( const Collection &collection ) const
-{
-  return m_collections.value( collection.parentCollection().id() );
-}
-
-Entity::Id EntityTreeModelPrivate::childAt( Collection::Id id, int position, bool *ok ) const
-{
-  const QList<Node*> list = m_childEntities.value( id );
-  if ( list.size() <= position ) {
-    *ok = false;
-    return 0;
-  }
-
-  *ok = true;
-  return list.at( position )->id;
-}
-
-Item EntityTreeModelPrivate::getItem( Item::Id id ) const
-{
-  if ( id > 0 )
-    id *= -1;
-
-  return m_items.value( id );
-}
-
 void EntityTreeModelPrivate::ref( Collection::Id id )
 {
   m_monitor->d_ptr->ref( id );

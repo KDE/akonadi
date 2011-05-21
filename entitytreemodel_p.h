@@ -111,9 +111,6 @@ public:
   void monitoredResourcesChanged( const QByteArray &resource, bool monitored );
 
   Collection::List getParentCollections( const Item &item ) const;
-  Collection getParentCollection( const Collection &collection ) const;
-  Entity::Id childAt( Collection::Id, int position, bool *ok ) const;
-  Item getItem( Item::Id id ) const;
   void removeChildEntities( Collection::Id collectionId );
 
   /**
