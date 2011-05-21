@@ -302,10 +302,12 @@ static Collection::List filterDescendants( const Collection::List &list )
     QList<Collection::Id> ancestors;
     Collection parent = collection.parentCollection();
     ancestors << parent.id();
-    while ( parent.parentCollection() != Collection::root() ) {
-      parent = parent.parentCollection();
-      QList<Collection::Id>::iterator i = qLowerBound( ancestors.begin(), ancestors.end(), parent.id() );
-      ancestors.insert( i, parent.id() );
+    if ( parent != Collection::root() ) {
+      while ( parent.parentCollection() != Collection::root() ) {
+        parent = parent.parentCollection();
+        QList<Collection::Id>::iterator i = qLowerBound( ancestors.begin(), ancestors.end(), parent.id() );
+        ancestors.insert( i, parent.id() );
+      }
     }
     ids << ancestors;
   }
