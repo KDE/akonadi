@@ -200,7 +200,12 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
       || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
   {
-    QMetaObject::invokeMethod(const_cast<EntityTreeModel *>(q), "changeFetchState", Qt::QueuedConnection, Q_ARG(Akonadi::Collection, parent));
+    // We need to invoke this delayed because we would otherwise be emitting a sequence like
+    // - beginInsertRows
+    // - dataChanged
+    // - endInsertRows
+    // which would confuse proxies.
+    QMetaObject::invokeMethod( const_cast<EntityTreeModel *>( q ), "changeFetchState", Qt::QueuedConnection, Q_ARG( Akonadi::Collection, parent ) );
   }
 
 #ifdef KDEPIM_MOBILE_UI
