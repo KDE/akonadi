@@ -862,16 +862,13 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   if ( isHidden( collection ) )
     return;
 
-  // We can't just bundle the ( sourceCollection == m_rootCollection ) check into isHidden
-  // because that is called from other places and would cause the rootCollection not
-  // to be updated in the m_collections hash because of early returns in other functions.
-  if ( isHidden( sourceCollection ) || ( sourceCollection == m_rootCollection ) ) {
-    if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) )
+  if ( isHidden( sourceCollection ) ) {
+    if ( isHidden( destCollection ) )
       return;
 
     monitoredCollectionAdded( collection, destCollection );
     return;
-  } else if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) ) {
+  } else if ( isHidden( destCollection ) ) {
     monitoredCollectionRemoved( collection );
     return;
   }
@@ -1055,13 +1052,13 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   if ( isHidden( item ) )
     return;
 
-  if ( isHidden( sourceCollection ) || ( sourceCollection == m_rootCollection ) ) {
-    if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) )
+  if ( isHidden( sourceCollection ) ) {
+    if ( isHidden( destCollection ) )
       return;
 
     monitoredItemAdded( item, destCollection );
     return;
-  } else if ( isHidden( destCollection ) || ( destCollection == m_rootCollection ) ) {
+  } else if ( isHidden( destCollection ) ) {
     monitoredItemRemoved( item );
     return;
   }
