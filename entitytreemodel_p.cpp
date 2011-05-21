@@ -919,7 +919,7 @@ void EntityTreeModelPrivate::monitoredCollectionChanged( const Akonadi::Collecti
 
   m_collections[ collection.id() ] = collection;
 
-  if ( collection == m_rootCollection )
+  if ( !m_showRootCollection && collection == m_rootCollection )
     // If the root of the model is not Collection::root it might be modified.
     // But it doesn't exist in the accessible model structure, so we need to early return
     return;
@@ -938,7 +938,7 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
 
   m_collections[ id ].setStatistics( statistics );
 
-  if ( id == m_rootCollection.id() )
+  if ( !m_showRootCollection && id == m_rootCollection.id() )
     // If the root of the model is not Collection::root it might be modified.
     // But it doesn't exist in the accessible model structure, so we need to early return
     return;
