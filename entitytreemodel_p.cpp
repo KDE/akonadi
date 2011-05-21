@@ -197,8 +197,8 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   m_pendingCollectionRetrieveJobs.insert( parent.id() );
 
   // If collections are not in the model, there will be no valid index for them.
-  if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
-      || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
+  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
+    && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) )
   {
     // We need to invoke this delayed because we would otherwise be emitting a sequence like
     // - beginInsertRows
@@ -1174,9 +1174,8 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   m_pendingCollectionRetrieveJobs.remove( collectionId );
 
   // If collections are not in the model, there will be no valid index for them.
-  if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
-      || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
-  {
+  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
+      && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
     const QModelIndex index = indexForCollection( Collection( collectionId ) );
     emit dataChanged( index, index );
   }
