@@ -1526,6 +1526,9 @@ QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collec
 {
   Q_Q( const EntityTreeModel );
 
+  if ( !collection.isValid() )
+    return QModelIndex();
+
   if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
     return QModelIndex();
 
