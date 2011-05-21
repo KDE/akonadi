@@ -77,6 +77,7 @@ EntityTreeModel::~EntityTreeModel()
 
   foreach ( const QList<Node*> &list, d->m_childEntities )
     qDeleteAll( list );
+  d->m_rootNode = 0;
 
   delete d_ptr;
 }

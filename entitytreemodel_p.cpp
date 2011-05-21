@@ -90,7 +90,6 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
 {
-  delete m_rootNode;
 }
 
 void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
@@ -1616,6 +1615,7 @@ void EntityTreeModelPrivate::endResetModel()
   foreach ( const QList<Node*> &list, m_childEntities )
     qDeleteAll( list );
   m_childEntities.clear();
+  m_rootNode = 0;
 
   q->endResetModel();
   fillModel();
