@@ -1531,6 +1531,12 @@ QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collec
   // we ensure that we use -1 for the invalid Collection.
   Collection::Id parentId = -1;
 
+  if ( ( collection == m_rootCollection ) ) {
+    if ( m_showRootCollection )
+      return q->createIndex( 0, 0, reinterpret_cast<void*>( m_rootNode ) );
+    return QModelIndex();
+  }
+
   if ( collection == Collection::root() )
     parentId = -1;
   else if ( collection.parentCollection().isValid() )
