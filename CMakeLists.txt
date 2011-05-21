@@ -102,7 +102,6 @@ set( akonadikde_LIB_SRC
   exception.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
-  flatcollectionproxymodel.cpp
   indexpolicyattribute.cpp
   item.cpp
   itemcreatejob.cpp
