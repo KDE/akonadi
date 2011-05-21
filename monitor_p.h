@@ -66,6 +66,8 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_, Monitor *parent );
     virtual ~MonitorPrivate() {
       delete dependenciesFactory;
+      delete collectionCache;
+      delete itemCache;
     }
     void init();
 
