@@ -48,9 +48,6 @@
 #include "kdebug.h"
 #include "pastehelper_p.h"
 
-// TODO:
-// * Implement ordering support.
-
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 using namespace Akonadi;

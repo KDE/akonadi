@@ -681,14 +681,6 @@ void EntityTreeModelPrivate::insertCollection( const Akonadi::Collection& collec
   Q_ASSERT( parent.isValid() );
 
   Q_Q( EntityTreeModel );
-  // TODO: Use order attribute of parent if available
-  // Otherwise prepend collections and append items. Currently this prepends all collections.
-
-  // Or I can prepend and append for single signals, then 'change' the parent.
-
-//   QVector<qint64> childCols = m_childEntities.value( parent.id() );
-//   int row = childCols.size();
-//   int numChildCols = childCollections.value( parent.id() ).size();
 
   const int row = 0;
   const QModelIndex parentIndex = indexForCollection( parent );
