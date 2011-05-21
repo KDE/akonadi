@@ -1164,7 +1164,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   if ( !( ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
       || ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) ) )
   {
-    QModelIndex index = indexForCollection( Collection( collectionId ) );
+    const QModelIndex index = indexForCollection( Collection( collectionId ) );
     emit dataChanged( index, index );
   }
 
