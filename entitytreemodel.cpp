@@ -601,6 +601,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
       return createIndex( 0, 0, reinterpret_cast<void *>( d->m_rootNode ) );
   }
 
+  Q_ASSERT( collection.parentCollection().isValid() );
   const int row = d->indexOf<Node::Collection>( d->m_childEntities.value( collection.parentCollection().id() ), collection.id() );
 
   Q_ASSERT( row >= 0 );

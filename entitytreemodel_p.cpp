@@ -457,9 +457,10 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
       Node *node = new Node;
       node->id = collectionId;
+      Q_ASSERT( collection.parentCollection().isValid() );
       node->parent = collection.parentCollection().id();
       node->type = Node::Collection;
-      m_childEntities[ collection.parentCollection().id() ].prepend( node );
+      m_childEntities[ node->parent ].prepend( node );
     }
     q->endInsertRows();
 
@@ -603,6 +604,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
   Collection parentCollection = collection.parentCollection();
 
+  Q_ASSERT( parentCollection.isValid() );
   Q_ASSERT( parentCollection != Collection::root() );
 
   Collection::List ancestors;
@@ -613,6 +615,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
     parentCollection = parentCollection.parentCollection();
   }
+  Q_ASSERT( parentCollection.isValid() );
 
   if ( !ancestors.isEmpty() ) {
     // Fetch the real ancestors
@@ -625,6 +628,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
                 q, SLOT( fetchJobDone( KJob* ) ) );
   }
 
+  Q_ASSERT( parentCollection != m_rootCollection );
   const QModelIndex parent = indexForCollection( parentCollection );
 
   // Still prepending all collections for now.
@@ -637,6 +641,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
   m_collections.insert( collection.id(), collection );
   Node *node = new Node;
   node->id = collection.id();
+  // Can't just use parentCollection because that doesn't necessarily refer to collection.
   node->parent = collection.parentCollection().id();
   node->type = Node::Collection;
   m_childEntities[ node->parent ].prepend( node );
@@ -650,6 +655,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
     Node *node = new Node;
     node->id = ancestor.id();
+    Q_ASSERT( ancestor.parentCollection().isValid() );
     node->parent = ancestor.parentCollection().id();
     node->type = Node::Collection;
     m_childEntities[ node->parent ].prepend( node );
@@ -1368,6 +1374,7 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
       m_collections.insert( collection.id(), collection );
       Node *node = new Node;
       node->id = collection.id();
+      Q_ASSERT( collection.parentCollection() == Collection::root() );
       node->parent = collection.parentCollection().id();
       node->type = Node::Collection;
       m_childEntities[ collection.parentCollection().id() ].prepend( node );
