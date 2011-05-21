@@ -847,11 +847,9 @@ QStringList EntityTreeModelPrivate::childCollectionNames( const Collection &coll
 {
   QStringList names;
 
-  QHashIterator<Collection::Id, Collection> it( m_collections );
-  while ( it.hasNext() ) {
-    it.next();
-    if ( it.value().parentCollection().id() == collection.id() )
-      names << it.value().name();
+  foreach( Node *node, m_childEntities[collection.id()] ) {
+    if ( node->type == Node::Collection )
+      names << m_collections.value( node->id ).name();
   }
 
   return names;
