@@ -388,12 +388,9 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
     // Rights come from the parent collection.
 
     Collection parentCollection;
-    if ( !index.parent().isValid() )
-    {
+    if ( !index.parent().isValid() ) {
       parentCollection = d->m_rootCollection;
-    }
-    else
-    {
+    } else {
       const Node *parentNode = reinterpret_cast<Node *>( index.parent().internalPointer() );
 
       parentCollection = d->m_collections.value( parentNode->id );
@@ -616,8 +613,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections )
-  {
+  if ( d->m_collectionFetchStrategy == InvisibleCollectionFetch || d->m_collectionFetchStrategy == FetchNoCollections ) {
     if ( parent.isValid() )
       return 0;
     else
@@ -660,8 +656,7 @@ QVariant EntityTreeModel::entityHeaderData( int section, Qt::Orientation orienta
   // Not needed in this model.
   Q_UNUSED( headerGroup );
 
-  if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
-  {
+  if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     if ( d->m_rootCollection == Collection::root() )
       return i18nc( "@title:column Name of a thing", "Name" );
     return d->m_rootCollection.name();
@@ -1056,7 +1051,6 @@ void EntityTreeModel::setCollectionFetchStrategy( CollectionFetchStrategy strate
   Q_D( EntityTreeModel );
   d->beginResetModel();
   d->m_collectionFetchStrategy = strategy;
-
 
   if ( strategy == FetchNoCollections || strategy == InvisibleCollectionFetch ) {
     disconnect( d->m_monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
