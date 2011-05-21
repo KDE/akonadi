@@ -779,7 +779,7 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
     q->beginRemoveRows( QModelIndex(), searchCollectionRow, searchCollectionRow );
 
     removeChildEntities( parentId );
-    m_childEntities[ m_rootCollection.id() ].removeAt( searchCollectionRow );
+    delete m_childEntities[ m_rootCollection.id() ].takeAt( searchCollectionRow );
     m_collections.remove( parentId );
 
     q->endRemoveRows();
