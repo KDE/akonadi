@@ -194,6 +194,10 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
 {
   Q_Q( const EntityTreeModel );
   itemFetchJob->setProperty( FetchCollectionId(), QVariant( parent.id() ) );
+
+  if ( !m_showRootCollection && parent == m_rootCollection )
+    return;
+
   m_pendingCollectionRetrieveJobs.insert( parent.id() );
 
   // If collections are not in the model, there will be no valid index for them.
@@ -1165,16 +1169,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
-  m_pendingCollectionRetrieveJobs.remove( collectionId );
-
-  // If collections are not in the model, there will be no valid index for them.
-  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
-      && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
-    const QModelIndex index = indexForCollection( Collection( collectionId ) );
-    emit dataChanged( index, index );
-  }
-
-  #ifdef DBG_TRACK_JOB_TIMES
+#ifdef DBG_TRACK_JOB_TIMES
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
     if ( CollectionFetchJob* cJob = dynamic_cast<CollectionFetchJob*>( job ) ) {
       kDebug() << "was collection fetch job: collections:" << cJob->collections().size();
@@ -1187,7 +1182,20 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
         kDebug() << "first item collection:" << iJob->items().first().parentCollection().name();
       }
     }
-  #endif
+#endif
+
+  if ( !m_showRootCollection && collectionId == m_rootCollection.id() )
+    return;
+
+  m_pendingCollectionRetrieveJobs.remove( collectionId );
+
+  // If collections are not in the model, there will be no valid index for them.
+  if ( ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch )
+      && ( m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections ) ) {
+    const QModelIndex index = indexForCollection( Collection( collectionId ) );
+    Q_ASSERT( index.isValid() );
+    emit dataChanged( index, index );
+  }
 }
 
 void EntityTreeModelPrivate::pasteJobDone( KJob *job )
