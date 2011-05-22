@@ -45,7 +45,7 @@ RecentContactsCollectionRequestJob::RecentContactsCollectionRequestJob( QObject 
 
   QVariantMap options;
   options.insert( QLatin1String( "Name" ), displayNameMap.value( "recent-contacts" ) );
-  options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "recent-contacts" ) );
+  options.insert( QLatin1String( "Path" ), QString(KGlobal::dirs()->localxdgdatadir() + QLatin1String( "recent-contacts" )) );
 
   setDefaultResourceType( QLatin1String( "akonadi_contacts_resource" ) );
   setDefaultResourceOptions( options );
