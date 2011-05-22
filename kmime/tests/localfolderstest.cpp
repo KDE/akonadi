@@ -505,7 +505,7 @@ void LocalFoldersTest::testDefaultResourceJob()
 
     QVariantMap options;
     options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
-    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    options.insert( QLatin1String( "Path" ), QString( KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) ) );
     resjob->setDefaultResourceOptions( options );
     resjob->setTypes( mDisplayNameMap.keys() );
     resjob->setNameForTypeMap( mDisplayNameMap );
@@ -545,7 +545,7 @@ void LocalFoldersTest::testDefaultResourceJob()
 
     QVariantMap options;
     options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
-    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    options.insert( QLatin1String( "Path" ), QString( KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) ) );
     resjob->setDefaultResourceOptions( options );
     resjob->setTypes( mDisplayNameMap.keys() );
     resjob->setNameForTypeMap( mDisplayNameMap );
@@ -586,7 +586,7 @@ void LocalFoldersTest::testRecoverDefaultResource()
 
     QVariantMap options;
     options.insert( QLatin1String( "Name" ), i18nc( "local mail folder", "Local Folders" ) );
-    options.insert( QLatin1String( "Path" ), KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) );
+    options.insert( QLatin1String( "Path" ), QString(KGlobal::dirs()->localxdgdatadir() + QLatin1String( "local-mail" ) ) );
     resjob->setDefaultResourceOptions( options );
     resjob->setTypes( mDisplayNameMap.keys() );
     resjob->setNameForTypeMap( mDisplayNameMap );

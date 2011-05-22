@@ -392,9 +392,9 @@ SetupTest::SetupTest() :
   cleanTempEnvironment();
   createTempEnvironment();
 
-  setenv( "KDEHOME", qPrintable( basePath() + "kdehome" ), 1 );
-  setenv( "XDG_DATA_HOME", qPrintable( basePath() + "data" ), 1 );
-  setenv( "XDG_CONFIG_HOME", qPrintable( basePath() + "config" ), 1 );
+  setenv( "KDEHOME", qPrintable( QString( basePath() + "kdehome" ) ), 1 );
+  setenv( "XDG_DATA_HOME", qPrintable( QString( basePath() + "data" ) ), 1 );
+  setenv( "XDG_CONFIG_HOME", qPrintable( QString( basePath() + "config" ) ), 1 );
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
   while( iter.hasNext() ) {
     iter.next();
