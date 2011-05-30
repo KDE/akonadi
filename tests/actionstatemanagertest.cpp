@@ -160,7 +160,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, false );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, false );
+        
         QTest::newRow( "nothing selected" ) << collectionList << map;
       }
 
@@ -190,7 +195,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, false );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, false );
+        
         QTest::newRow( "root collection selected" ) << collectionList << map;
       }
 
@@ -220,7 +230,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, true );
         map.insert( StandardActionManager::ResourceProperties, true );
         map.insert( StandardActionManager::SynchronizeResources, true );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "read-only resource collection selected" ) << collectionList << map;
       }
 
@@ -250,7 +265,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, true );
         map.insert( StandardActionManager::ResourceProperties, true );
         map.insert( StandardActionManager::SynchronizeResources, true );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "writable resource collection selected" ) << collectionList << map;
       }
 
@@ -280,7 +300,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, true );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, true );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "non-configurable resource collection selected" ) << collectionList << map;
       }
 
@@ -310,7 +335,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "read-only folder collection selected" ) << collectionList << map;
       }
 
@@ -340,7 +370,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, true );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "writable folder collection selected" ) << collectionList << map;
       }
 
@@ -370,7 +405,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, true );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "favorite writable folder collection selected" ) << collectionList << map;
       }
 
@@ -400,7 +440,12 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
-
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, true );
+        map.insert( StandardActionManager::MoveCollectionToDialog, true );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, true );
+        
         QTest::newRow( "structural folder collection selected" ) << collectionList << map;
       }
 
@@ -431,6 +476,11 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::DeleteResources, false );
         map.insert( StandardActionManager::ResourceProperties, false );
         map.insert( StandardActionManager::SynchronizeResources, false );
+        map.insert( StandardActionManager::MoveItemToDialog, false );
+        map.insert( StandardActionManager::CopyItemToDialog, false );
+        map.insert( StandardActionManager::CopyCollectionToDialog, false );
+        map.insert( StandardActionManager::MoveCollectionToDialog, false );
+        map.insert( StandardActionManager::SynchronizeCollectionsRecursive, false );
 
         QTest::newRow( "root collection and writable resource collection selected" ) << collectionList << map;
       }
@@ -449,7 +499,7 @@ class ActionStateManagerTest : public QObject
       QHashIterator<StandardActionManager::Type, bool> it( stateMap );
       while ( it.hasNext() ) {
         it.next();
-        //qDebug() << it.key();
+        qDebug() << it.key();
         QVERIFY( mStateMap.contains( it.key() ) );
         QCOMPARE( it.value(), mStateMap.value( it.key() ) );
       }
