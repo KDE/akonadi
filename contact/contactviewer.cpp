@@ -94,9 +94,9 @@ class ContactViewer::Private
 
 #ifdef HAVE_PRISON
       KABC::VCardConverter converter;
-      const QString data = QString::fromUtf8(converter.createVCard(mCurrentContact));
-      mQRCode->setData(data);
-      mDataMatrix->setData(data);
+      const QString data = QString::fromUtf8( converter.createVCard( mCurrentContact ) );
+      mQRCode->setData( data );
+      mDataMatrix->setData( data );
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "qrcode" ) ),
                                          mQRCode->toImage( QSizeF(50,50) ) );
