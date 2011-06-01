@@ -499,7 +499,7 @@ class ActionStateManagerTest : public QObject
       QHashIterator<StandardActionManager::Type, bool> it( stateMap );
       while ( it.hasNext() ) {
         it.next();
-        qDebug() << it.key();
+        //qDebug() << it.key();
         QVERIFY( mStateMap.contains( it.key() ) );
         QCOMPARE( it.value(), mStateMap.value( it.key() ) );
       }
