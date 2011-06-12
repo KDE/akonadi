@@ -20,8 +20,9 @@
     </signal>
     <signal name="freeBusyRetrieved">
       <arg name="email" type="s" direction="out"/>
-      <arg name="success" type="b" direction="out"/>
       <arg name="freeBusy" type="s" direction="out"/>
+      <arg name="success" type="b" direction="out"/>
+      <arg name="errorText" type="s" direction="out"/>
     </signal>
   </interface>
 </node>
