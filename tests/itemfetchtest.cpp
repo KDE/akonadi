@@ -133,7 +133,7 @@ void ItemFetchTest::testIllegalFetch()
 
   // fetch a non-existing message
   job = new ItemFetchJob( Item( INT_MAX ), this );
-  QVERIFY( job->exec() );
+  QVERIFY( !job->exec() );
   QVERIFY( job->items().isEmpty() );
 
   // fetch message with empty reference
