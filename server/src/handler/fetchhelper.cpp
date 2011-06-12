@@ -231,6 +231,19 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
   QSqlQuery itemQuery = buildItemQuery();
 
+  // error if query did not find any item and scope is not listing items but
+  // a request for a specific item
+  if ( !itemQuery.isValid() ) {
+    switch ( mScope.scope() ) {
+      case Scope::Uid: // fall through
+      case Scope::Rid: // fall through
+      case Scope::HierarchicalRid:
+        throw HandlerException( "Item query returned empty result set" );
+      break;
+      default:
+        break;
+    }
+  }
   // build part query if needed
   QSqlQuery partQuery;
   if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
