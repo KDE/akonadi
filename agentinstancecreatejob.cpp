@@ -201,6 +201,20 @@ void AgentInstanceCreateJobPrivate::doStart()
     QString agentValgrind = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND" ) );
     if ( !agentValgrind.isEmpty() && agentType.identifier().contains( agentValgrind ) )
       timeout *= 15;
+
+    // change the timeout when debugging the agent, because we need time to start the debugger
+    const QString agentDebugging = QString::fromLocal8Bit( qgetenv( "AKONADI_DEBUG_WAIT" ) );
+    if ( !agentDebugging.isEmpty() ) {
+      // we are debugging
+      const QString agentDebuggingTimeout = QString::fromLocal8Bit( qgetenv( "AKONADI_DEBUG_TIMEOUT" ) );
+      if ( agentDebuggingTimeout.isEmpty() ) {
+        // use default value of 150 seconds (the same as "valgrinding", this has to be checked)
+        timeout = 15* safetyTimeout;
+      } else {
+        // use own value
+        timeout = agentDebuggingTimeout.toInt();
+      }
+    }
 #endif
     safetyTimer->start( timeout );
   }
