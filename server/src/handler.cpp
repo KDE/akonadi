@@ -196,7 +196,7 @@ bool Akonadi::Handler::failureResponse(const char * failureMessage)
   return failureResponse( QByteArray( failureMessage ) );
 }
 
-bool Handler::successResponse(const char * successMessage)
+bool Handler::successResponse(const QByteArray &successMessage)
 {
   Response response;
   response.setTag( tag() );
@@ -204,6 +204,11 @@ bool Handler::successResponse(const char * successMessage)
   response.setString( successMessage );
   emit responseAvailable( response );
   return true;
+}
+
+bool Handler::successResponse(const char * successMessage)
+{
+  return successResponse( QByteArray( successMessage ) );
 }
 
 void Handler::setStreamParser( ImapStreamParser *parser )
