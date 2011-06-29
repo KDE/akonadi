@@ -81,16 +81,10 @@ class DbConfig
 
     /**
      * Payload data bigger than this value will be stored in separate files, instead of the database. Valid
-     * only if @ref useExternalPayloadFile returns true, otherwise it is ignored.
+     *
      * @return the size threshold in bytes, defaults to 4096.
      */
     virtual qint64 sizeThreshold() const;
-
-    /**
-     * Check if big payload data (@ref sizeThreshold) is stored in external files instead of the database.
-     * @return true, if the big data is stored in external files. Default is @c false.
-     */
-    virtual bool useExternalPayloadFile() const;
 
     /**
      * This method is called to setup initial database settings after a connection is established.
@@ -102,7 +96,6 @@ class DbConfig
 
   private:
     qint64 mSizeThreshold;
-    bool mUseExternalPayloadFile;
 };
 
 #endif
