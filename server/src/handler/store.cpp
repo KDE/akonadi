@@ -267,7 +267,7 @@ bool Store::parseStream()
         const qint64 dataSize = m_streamParser->remainingLiteralSize();
         if ( partName.startsWith( "PLD:" ) )
           partSizes += dataSize;
-        const bool storeInFile = ( DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold() );
+        const bool storeInFile = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
         //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
         if ( storeInFile ) {
           // use first part as value for the initial insert into / update to the database.

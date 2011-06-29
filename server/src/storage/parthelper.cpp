@@ -42,7 +42,7 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
   if ( part->external() )
     origFileName = QString::fromUtf8( part->data() );
 
-  const bool storeExternal = DbConfig::configuredDatabase()->useExternalPayloadFile() && dataSize > DbConfig::configuredDatabase()->sizeThreshold();
+  const bool storeExternal = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
 
   if ( storeExternal ) {
     QString fileName = origFileName;
@@ -93,7 +93,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
   if (!part)
     return false;
 
-  const bool storeInFile = DbConfig::configuredDatabase()->useExternalPayloadFile()  && ( part->datasize() > DbConfig::configuredDatabase()->sizeThreshold() );
+  const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
 
   //it is needed to insert first the metadata so a new id is generated for the part,
   //and we need this id for the payload file name
@@ -206,7 +206,7 @@ bool Akonadi::PartHelper::truncate(Part& part)
   if ( part.external() ) {
     const QString fileName = QString::fromUtf8( part.data() );
     QFile::remove( fileName );
-  } 
+  }
 
   part.setData( QByteArray() );
   part.setDatasize( 0 );
