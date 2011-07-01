@@ -408,11 +408,13 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
             else {
               kWarning() << "Failed to open attribute file: " << lineTokens.value( i + 1 );
               delete attr;
+              attr = 0;
             }
           } else {
             attr->deserialize( lineTokens.value( i + 1 ) );
           }
-          item.addAttribute( attr );
+          if ( attr )
+            item.addAttribute( attr );
           break;
         }
         case ProtocolHelper::PartGlobal:
