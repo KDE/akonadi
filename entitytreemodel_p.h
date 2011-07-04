@@ -145,6 +145,7 @@ public:
   QHash<Entity::Id, Item> m_items;
   QHash<Collection::Id, QList<Node*> > m_childEntities;
   QSet<Collection::Id> m_populatedCols;
+  QSet<Collection::Id> m_collectionsWithoutItems;
 
   QVector<Entity::Id> m_pendingCutItems;
   QVector<Entity::Id> m_pendingCutCollections;
