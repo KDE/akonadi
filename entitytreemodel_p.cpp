@@ -507,6 +507,10 @@ void EntityTreeModelPrivate::itemsFetched( const Collection::Id collectionId, co
 
   Q_ASSERT( collection.isValid() );
 
+  // if there are any items at all, remove from set of collections known to be empty
+  if ( !items.isEmpty() )
+    m_collectionsWithoutItems.remove( collectionId );
+
   foreach ( const Item &item, items ) {
 
     if ( isHidden( item ) )
@@ -942,6 +946,13 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
   }
 
   m_collections[ id ].setStatistics( statistics );
+
+  // if the item count becomes 0, add to set of collections we know to be empty
+  // otherwise remove if in there
+  if ( statistics.count() == 0 )
+    m_collectionsWithoutItems.insert( id );
+  else
+    m_collectionsWithoutItems.remove( id );
 
   if ( !m_showRootCollection && id == m_rootCollection.id() )
     // If the root of the model is not Collection::root it might be modified.
@@ -1619,6 +1630,7 @@ void EntityTreeModelPrivate::endResetModel()
     job->disconnect( q );
   }
   m_collections.clear();
+  m_collectionsWithoutItems.clear();
   m_items.clear();
 
   foreach ( const QList<Node*> &list, m_childEntities )
@@ -1719,7 +1731,7 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
       return false;
 
     // Collections which contain no items at all can't contain more
-    if ( m_collections[colId].statistics().count() == 0 )
+    if ( m_collectionsWithoutItems.contains( colId ) )
       return false;
 
     // Don't start the same job multiple times.
