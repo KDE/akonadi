@@ -35,7 +35,7 @@ class EmptyTrashCommand : public CommandBase
 
 public:
     EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent);
-    EmptyTrashCommand(Akonadi::Collection folder, QObject* parent);
+    EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent);
     /*reimp*/ void execute();
      
 private slots:

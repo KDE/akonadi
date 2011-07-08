@@ -39,7 +39,7 @@ EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* p
   mModel = model;
 }
 
-EmptyTrashCommand::EmptyTrashCommand(Akonadi::Collection folder, QObject* parent) : CommandBase( parent )
+EmptyTrashCommand::EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent) : CommandBase( parent )
 {
   mFolder = folder;
   mModel = 0;
