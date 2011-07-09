@@ -201,6 +201,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapParser
     qint64 continuationSize() const;
 
   private:
+    Q_DISABLE_COPY( ImapParser )
     class Private;
     Private *const d;
 };
