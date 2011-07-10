@@ -1,3 +1,8 @@
+1.6.0                            10-July-2011
+---------------------------------------------
+- Enable external payload storage unconditionally.
+- Treat single UID/RID fetches as error if the result set is empty.
+
 1.5.80                            21-May-2011
 ---------------------------------------------
 - WinCE database performance improvements.
