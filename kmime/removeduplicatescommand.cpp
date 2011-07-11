@@ -19,11 +19,11 @@
 
 
 #include "removeduplicatescommand_p.h"
-#include "movetotrashcommand_p.h"
 #include "util_p.h"
 
 #include "akonadi/itemfetchjob.h"
 #include "akonadi/itemfetchscope.h"
+#include "akonadi/itemdeletejob.h"
 #include "kmime/kmime_message.h"
 
 RemoveDuplicatesCommand::RemoveDuplicatesCommand( const QAbstractItemModel* model, const Akonadi::Collection::List& folders, QObject* parent ) :
@@ -101,9 +101,8 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
     job->fetchScope().fetchFullPayload();
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );    
   } else {
-    MoveToTrashCommand *trashCmd = new MoveToTrashCommand( mModel, mDuplicateItems, parent() );
-    connect( trashCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );
-    trashCmd->execute();
+    Akonadi::ItemDeleteJob *delCmd = new Akonadi::ItemDeleteJob( mDuplicateItems, parent() );
+    connect( delCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );
   }
 }
 
