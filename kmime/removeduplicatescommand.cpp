@@ -79,7 +79,7 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
           if ( !bodyHashes.contains( mainId ) )
             bodyHashes[ mainId ] = qHash( items[mainId].payload<KMime::Message::Ptr>()->encodedContent() );
           uint hash = qHash( message->encodedContent() );
-          qDebug() << idStr << bodyHashes[ mainId ] << hash;
+          kDebug() << idStr << bodyHashes[ mainId ] << hash;
           if ( bodyHashes[ mainId ] == hash )
             duplicates[ mainId ].append( i );
         } else {
