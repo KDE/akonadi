@@ -301,13 +301,14 @@ class StandardMailActionManager::Private
 
       bool enableMarkAllAsRead = false;
       bool enableMarkAllAsUnread = false;
+      bool enableMoveToTrash = true;
       if ( collectionIsSelected ) {
         const Collection collection = selectedCollections.first();
         if ( collection.isValid() ) {
           const Akonadi::CollectionStatistics stats = collection.statistics();
           enableMarkAllAsRead = (stats.unreadCount() > 0);
           enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
-
+          enableMoveToTrash = collection.rights() & Akonadi::Collection::CanDeleteItem;
           const bool isSystemFolder = (collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
                                        collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
                                        collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
@@ -324,7 +325,7 @@ class StandardMailActionManager::Private
       }
 
       if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) )
-        mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected );
+        mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected && enableMoveToTrash );
 
       QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
       if ( action )
