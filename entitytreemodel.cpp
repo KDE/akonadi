@@ -320,7 +320,7 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
         if ( item.hasAttribute<EntityDisplayAttribute>() )
         {
           EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
-          QColor color = eda->backgroundColor();
+          const QColor color = eda->backgroundColor();
           if ( color.isValid() )
             return color;
         }
