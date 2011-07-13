@@ -181,7 +181,7 @@ QVariant EntityTreeModel::entityData( const Collection &collection, int column, 
         }
         if ( !collection.name().isEmpty() )
           return collection.name();
-        return i18n( "Loading ..." );
+        return i18n( "Loading..." );
       }
       break;
     case Qt::DecorationRole:
