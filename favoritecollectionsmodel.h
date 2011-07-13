@@ -27,6 +27,7 @@
 #include <akonadi/collection.h>
 
 class KConfigGroup;
+class KJob;
 
 namespace Akonadi {
 
@@ -145,6 +146,9 @@ class AKONADI_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyMo
      * favorite @p collection.
      */
     void setFavoriteLabel( const Collection &collection, const QString &label );
+
+  private Q_SLOTS:
+    void pasteJobDone( KJob *job );
 
   private:
     //@cond PRIVATE

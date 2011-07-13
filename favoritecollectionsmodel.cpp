@@ -25,8 +25,11 @@
 
 #include <kconfiggroup.h>
 #include <klocale.h>
+#include <KJob>
 
 #include "entitytreemodel.h"
+#include "mimetypechecker.h"
+#include "pastehelper_p.h"
 
 using namespace Akonadi;
 
@@ -246,13 +249,43 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropActio
   Q_UNUSED( action );
   Q_UNUSED( row );
   Q_UNUSED( column );
-  Q_UNUSED( parent );
   if ( data->hasFormat( QLatin1String( "text/uri-list" ) ) ) {
     const KUrl::List urls = KUrl::List::fromMimeData( data );
+
+    const QModelIndex sourceIndex = mapToSource( parent );
+    const Collection destCollection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
+    
+    MimeTypeChecker mimeChecker;
+    mimeChecker.setWantedMimeTypes( destCollection.contentMimeTypes() );
+    
     foreach ( const KUrl &url, urls ) {
       const Collection col = Collection::fromUrl( url );
-      if ( col.isValid() )
+      if ( col.isValid() ) {
         addCollection( col );
+      } else {
+        const Item item = Item::fromUrl( url );
+        if ( item.isValid() )
+        {
+          if ( item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction ) {
+            kDebug() << "Error: source and destination of move are the same.";
+            return false;
+          }
+#if 0                   
+          if ( !mimeChecker.isWantedItem( item ) ) {
+            kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+            return false;
+          }
+#endif          
+          KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
+          if ( !job )
+            return false;
+          connect( job, SIGNAL( result( KJob* ) ), SLOT( pasteJobDone( KJob* ) ) );          
+          // Accept the event so that it doesn't propagate.
+          return true;
+         
+        }
+      }
+        
     }
     return true;
   }
@@ -273,6 +306,13 @@ Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex& index) const
   if ( !index.isValid() )
     fs |= Qt::ItemIsDropEnabled;
   return fs;
+}
+
+void FavoriteCollectionsModel::pasteJobDone( KJob *job )
+{
+  if ( job->error() ) {
+    kDebug()<< job->errorString();
+  }
 }
 
 #include "favoritecollectionsmodel.moc"
