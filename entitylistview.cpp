@@ -183,7 +183,7 @@ void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 
 void EntityListView::dropEvent( QDropEvent * event )
 {
-  if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) || d->mDragDropManager->processDropEvent( event ) ) {
+  if ( d->mDragDropManager->processDropEvent( event ) || qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
     QListView::dropEvent( event );
   }
 }
