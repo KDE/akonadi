@@ -221,4 +221,20 @@ void EntityListView::startDrag( Qt::DropActions supportedActions )
   d->mDragDropManager->startDrag( supportedActions );
 }
 
+void EntityListView::setDropActionMenuEnabled( bool enabled )
+{
+#ifndef QT_NO_DRAGANDDROP
+  d->mDragDropManager->setShowDropActionMenu( enabled );
+#endif
+}
+
+bool EntityListView::isDropActionMenuEnabled() const
+{
+#ifndef QT_NO_DRAGANDDROP
+  return d->mDragDropManager->showDropActionMenu();
+#else
+  return false;
+#endif
+}
+
 #include "entitylistview.moc"

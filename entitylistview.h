@@ -113,6 +113,22 @@ class AKONADI_EXPORT EntityListView : public QListView
      */
     virtual void setModel( QAbstractItemModel * model );
 
+    /**
+     * Sets whether the drop action menu is @p enabled and will
+     * be shown on drop operation.
+     *
+     * @since 4.7
+     */
+    void setDropActionMenuEnabled( bool enabled );
+
+    /**
+     * Returns whether the drop action menu is enabled and will
+     * be shown on drop operation.
+     *
+     * @since 4.7
+     */
+    bool isDropActionMenuEnabled() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
