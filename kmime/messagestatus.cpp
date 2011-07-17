@@ -662,8 +662,6 @@ void Akonadi::MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
       setHam();
     } else if ( upperedFlag == Akonadi::MessageFlags::HasError ) {
       setHasError();
-    } else {
-      kWarning() << "Unknown flag:" << flag;
     }
   }
 }
