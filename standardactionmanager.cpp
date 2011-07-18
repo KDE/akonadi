@@ -38,6 +38,7 @@
 #include "specialcollectionattribute_p.h"
 #include "collectionpropertiesdialog.h"
 #include "subscriptiondialog_p.h"
+#include "renamefavoritedialog.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -691,14 +692,13 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      bool ok;
-      const QString label = KInputDialog::getText( contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),
-                                                   contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ),
-                                                   favoritesModel->favoriteLabel( collection ), &ok, parentWidget );
-      if ( !ok )
-        return;
+      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
 
-      favoritesModel->setFavoriteLabel( collection, label );
+      RenameFavoriteDialog dlg(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget );
+      if ( dlg.exec() )
+      {
+        favoritesModel->setFavoriteLabel( collection, dlg.newName() );
+      }
     }
 
     void slotCopyCollectionTo()

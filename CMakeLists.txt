@@ -158,6 +158,7 @@ set( akonadikde_LIB_SRC
 # Temporary until ported to Qt-plugin framework
   pluginloader.cpp
   resourcesettings.cpp
+  renamefavoritedialog.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
