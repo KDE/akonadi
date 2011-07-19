@@ -138,14 +138,6 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CopyItems,                 ///< Copies the selected items
       Paste,                     ///< Paste collections or items
       DeleteItems,               ///< Deletes the selected items
-      MoveCollectionsToTrash,    ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
-      MoveItemsToTrash,          ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
-      RestoreCollectionsFromTrash,///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
-      RestoreItemsFromTrash,     ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreCollection,  ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreCollectionAlternative,   ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
-      MoveToTrashRestoreItem,    ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
-      MoveToTrashRestoreItemAlternative,   ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
       ManageLocalSubscriptions,  ///< Manages local subscriptions
       AddToFavoriteCollections,  ///< Add the collection to the favorite collections model @since 4.4
       RemoveFromFavoriteCollections,  ///< Remove the collection from the favorite collections model @since 4.4
@@ -166,6 +158,14 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       CopyItemToDialog,          ///< Copy an item into a collection, select the target in a dialog @since 4.6
       MoveItemToDialog,          ///< Move an item into a collection, select the target in a dialog @since 4.6
       SynchronizeCollectionsRecursive,    ///< Synchronizes collections in a recursive way @since 4.6
+      MoveCollectionsToTrash,    ///< Moves the selected collection to trash and marks it as deleted, needs EntityDeletedAttribute @since 4.8
+      MoveItemsToTrash,          ///< Moves the selected items to trash and marks them as deleted, needs EntityDeletedAttribute @since 4.8
+      RestoreCollectionsFromTrash,///< Restores the selected collection from trash, needs EntityDeletedAttribute @since 4.8
+      RestoreItemsFromTrash,     ///< Restores the selected items from trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreCollection,  ///< Move Collection to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreCollectionAlternative,   ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
+      MoveToTrashRestoreItem,    ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
+      MoveToTrashRestoreItemAlternative,   ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
       LastType                   ///< Marks last action
     };
 

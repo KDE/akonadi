@@ -40,7 +40,6 @@
 
 #include <QHash>
 
-
 using namespace Akonadi;
 
 class TrashJob::TrashJobPrivate : public JobPrivate
@@ -222,7 +221,6 @@ void TrashJob::TrashJobPrivate::itemsReceived( const Akonadi::Item::List &items 
     q->emitResult();
     return;
   }
-  //mItems = items;
 
   Item::List toDelete;
 
@@ -359,6 +357,11 @@ void TrashJob::doStart()
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
     connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), this, SLOT( collectionsReceived( const Akonadi::Collection::List & ) ) );
 
+  } else {
+    kWarning() << "No valid collection or empty itemlist";
+    setError( Job::Unknown );
+    setErrorText( i18n( "No valid collection or empty itemlist" ) );
+    emitResult();
   }
 }
 

@@ -90,14 +90,6 @@ static const struct {
   { "akonadi_item_copy", 0, 0, "edit-copy", 0, SLOT( slotCopyItems() ), NormalAction },
   { "akonadi_paste", I18N_NOOP( "&Paste" ), I18N_NOOP( "Paste" ), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT( slotPaste() ), NormalAction },
   { "akonadi_item_delete", 0, 0, "edit-delete", Qt::Key_Delete, SLOT( slotDeleteItems() ), NormalAction },
-  { "akonadi_move_collection_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveCollectionToTrash() ), NormalAction },
-  { "akonadi_move_item_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveItemToTrash() ), NormalAction },
-  { "akonadi_restore_collection_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreCollectionFromTrash() ), NormalAction },
-  { "akonadi_restore_item_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreItemFromTrash() ), NormalAction },
-  { "akonadi_collection_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreCollection() ), ActionWithAlternative },
-  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
-  { "akonadi_item_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreItem() ), ActionWithAlternative },
-  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
   { "akonadi_manage_local_subscriptions", I18N_NOOP( "Manage Local &Subscriptions..." ), I18N_NOOP( "Manage Local Subscriptions" ), 0, 0, SLOT( slotLocalSubscription() ), NormalAction },
   { "akonadi_collection_add_to_favorites", I18N_NOOP( "Add to Favorite Folders" ), I18N_NOOP( "Add to Favorite" ), "bookmark-new", 0, SLOT( slotAddToFavorites() ), NormalAction },
   { "akonadi_collection_remove_from_favorites", I18N_NOOP( "Remove from Favorite Folders" ), I18N_NOOP( "Remove from Favorite" ), "edit-delete", 0, SLOT( slotRemoveFromFavorites() ), NormalAction },
@@ -117,7 +109,15 @@ static const struct {
   { "akonadi_collection_move_to_dialog", I18N_NOOP( "Move Folder To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT( slotMoveCollectionTo() ), NormalAction },
   { "akonadi_item_copy_to_dialog", I18N_NOOP( "Copy Item To..." ), I18N_NOOP( "Copy To" ), "edit-copy", 0, SLOT( slotCopyItemTo() ), NormalAction },
   { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT( slotMoveItemTo() ), NormalAction },
-  { "akonadi_collection_sync_recursive", I18N_NOOP( "&Synchronize Folder Recursively" ), I18N_NOOP( "Synchronize Recursively" ), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT( slotSynchronizeCollectionRecursive() ), NormalAction }
+  { "akonadi_collection_sync_recursive", I18N_NOOP( "&Synchronize Folder Recursively" ), I18N_NOOP( "Synchronize Recursively" ), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT( slotSynchronizeCollectionRecursive() ), NormalAction },
+  { "akonadi_move_collection_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveCollectionToTrash() ), NormalAction },
+  { "akonadi_move_item_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotMoveItemToTrash() ), NormalAction },
+  { "akonadi_restore_collection_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreCollectionFromTrash() ), NormalAction },
+  { "akonadi_restore_item_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT( slotRestoreItemFromTrash() ), NormalAction },
+  { "akonadi_collection_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreCollection() ), ActionWithAlternative },
+  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
+  { "akonadi_item_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT( slotTrashRestoreItem() ), ActionWithAlternative },
+  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative }
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
 
@@ -310,7 +310,7 @@ class StandardActionManager::Private
                        QModelIndex() );
     }
 
-    void updateAlternatingAction( int type)
+    void updateAlternatingAction( int type )
     {
       updateAlternatingAction( static_cast<StandardActionManager::Type>( type ) );
     }
@@ -322,7 +322,11 @@ class StandardActionManager::Private
         return;
       }
 
-      if ( (standardActionData[type].actionType == ActionWithAlternative ) || ( standardActionData[type].actionType == ActionAlternative ) ) {
+      /*
+       * The same action is stored at the ActionWithAlternative indexes as well as the corresponding ActionAlternative indexes in the actions array.
+       * The following simply changes the standardActionData
+       */
+      if ( ( standardActionData[type].actionType == ActionWithAlternative ) || ( standardActionData[type].actionType == ActionAlternative ) ) {
         actions[type]->setText( i18n ( standardActionData[type].label ) );
         actions[type]->setIcon( KIcon( QString::fromLatin1( standardActionData[type].icon ) ) );
 
@@ -1431,6 +1435,8 @@ KAction* StandardActionManager::createAction( Type type )
           connect( action, SIGNAL( triggered( bool ) ), standardActionData[type].slot );
         }
         break;
+      case ActionAlternative:
+        Q_ASSERT(0);
     }
   }
 

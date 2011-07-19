@@ -21,8 +21,9 @@
 #define AKONADI_TRASHSETTINGS_H
 
 #include "akonadi_export.h"
-#include <QString>
-#include <akonadi/collection.h>
+#include <Akonadi/Collection>
+
+class QString;
 
 namespace Akonadi
 {
@@ -36,17 +37,16 @@ namespace Akonadi
   * @since 4.8
   */
 //TODO setting for time before items are deleted by janitor agent
-class AKONADI_EXPORT TrashSettings
+namespace TrashSettings
 {
-  public:
     /**
      * Set the trash collection for the given @p resource which is then used by the TrashJob
      */
-    static void setTrashCollection( const QString &resource, const Collection &collection );
+    void setTrashCollection( const QString &resource, const Collection &collection );
     /**
      * Get the trash collection for the given @p resource
      */
-    static Collection getTrashCollection( const QString &resource );
+    Collection getTrashCollection( const QString &resource );
 };
 
 

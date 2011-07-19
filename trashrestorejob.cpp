@@ -25,6 +25,8 @@
 #include "job_p.h"
 #include "trashsettings.h"
 
+#include <KLocale>
+
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/itemmovejob.h>
@@ -33,14 +35,11 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemfetchjob.h>
-
-
+#include <akonadi/collectionfetchscope.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <QHash>
 
-#include <KLocale>
-#include <akonadi/collectionfetchscope.h>
-#include <akonadi/itemfetchscope.h>
 
 using namespace Akonadi;
 
@@ -173,7 +172,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived( const Akonadi::Item
     const Item &first = restoreCollections.value( col ).first();
     //Move the items to the correct collection if available
     Collection targetCollection = col;
-    QString restoreResource = first.attribute<Akonadi::EntityDeletedAttribute>()->restoreResource();
+    const QString restoreResource = first.attribute<Akonadi::EntityDeletedAttribute>()->restoreResource();
 
     //Restore in place if no restore collection is set
     if ( !targetCollection.isValid() ) {
@@ -213,7 +212,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived( const Akonadi
     return;
   }
 
-  QString restoreResource = mCollection.attribute<Akonadi::EntityDeletedAttribute>()->restoreResource();
+  const QString restoreResource = mCollection.attribute<Akonadi::EntityDeletedAttribute>()->restoreResource();
   Collection targetCollection = mCollection.attribute<EntityDeletedAttribute>()->restoreCollection();
 
   //Restore in place if no restore collection/resource is set
@@ -317,17 +316,21 @@ void TrashRestoreJob::doStart()
 {
   Q_D( TrashRestoreJob );
 
-  //We always have to fetch the entites to ensure that the EntityDeletedAttribute is available
+  //We always have to fetch the entities to ensure that the EntityDeletedAttribute is available
   if ( !d->mItems.isEmpty() ) {
     ItemFetchJob *job = new ItemFetchJob( d->mItems, this );
     job->fetchScope().setCacheOnly( true );
     job->fetchScope().fetchAttribute<EntityDeletedAttribute> ( true );
     connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List & ) ), this, SLOT( itemsReceived( const Akonadi::Item::List & ) ) );
-  } else
-    if ( d->mCollection.isValid() ) {
+  } else if ( d->mCollection.isValid() ) {
       CollectionFetchJob *job = new CollectionFetchJob( d->mCollection, CollectionFetchJob::Base, this );
       connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), this, SLOT( collectionsReceived( const Akonadi::Collection::List & ) ) );
-    }
+  }  else {
+    kWarning() << "No valid collection or empty itemlist";
+    setError( Job::Unknown );
+    setErrorText( i18n( "No valid collection or empty itemlist" ) );
+    emitResult();
+  }
 
 }
 

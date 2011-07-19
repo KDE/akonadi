@@ -168,9 +168,9 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   enableAction( StandardActionManager::MoveCollectionToMenu, canMoveCollections );
 
-  enableAction( StandardActionManager::MoveCollectionsToTrash, canMoveCollections );
+  enableAction( StandardActionManager::MoveCollectionsToTrash, atLeastOneCollectionSelected && canMoveCollections && !collectionsAreInTrash );
 
-  enableAction( StandardActionManager::RestoreCollectionsFromTrash, canMoveCollections && collectionsAreInTrash );
+  enableAction( StandardActionManager::RestoreCollectionsFromTrash, atLeastOneCollectionSelected && canMoveCollections && collectionsAreInTrash );
 
   enableAction( StandardActionManager::CopyCollectionToDialog, canCopyCollections );
 
@@ -238,6 +238,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   } else {
     updateAlternatingAction( StandardActionManager::MoveToTrashRestoreCollection );
   }
+  enableAction( StandardActionManager::MoveToTrashRestoreCollection, atLeastOneCollectionSelected && canMoveCollections );
 
   // item specific actions
   bool canDeleteItems = (items.count() > 0); //TODO: fixme
@@ -270,7 +271,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::MoveItemToMenu, atLeastOneItemSelected && // we need items to work with
                                                        canDeleteItems ); // we need the necessary rights
 
-  enableAction( StandardActionManager::MoveItemsToTrash, atLeastOneItemSelected && canDeleteItems );
+  enableAction( StandardActionManager::MoveItemsToTrash, atLeastOneItemSelected && canDeleteItems && !itemsAreInTrash );
 
   enableAction( StandardActionManager::RestoreItemsFromTrash, atLeastOneItemSelected && itemsAreInTrash );
 

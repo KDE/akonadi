@@ -58,7 +58,7 @@ class AKONADI_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
     Q_OBJECT
 
   public:
-    TrashFilterProxyModel( QObject *parent = 0 );
+    explicit TrashFilterProxyModel( QObject *parent = 0 );
     virtual ~TrashFilterProxyModel();
 
     void showTrash( bool enable );
