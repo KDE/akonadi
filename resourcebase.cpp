@@ -659,7 +659,7 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   contentTypes.removeAll( Collection::mimeType() );
   if ( !contentTypes.isEmpty() || (col.rights() & (Collection::CanLinkItem)) ) { // HACK to check for virtual collections
     if ( mAutomaticProgressReporting ) {
-      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing collection '%1'", currentCollection.name() ) );
+      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing folder '%1'", currentCollection.name() ) );
     }
     q->retrieveItems( currentCollection );
     return;
