@@ -47,7 +47,7 @@ namespace TrashSettings
      * Get the trash collection for the given @p resource
      */
     Collection getTrashCollection( const QString &resource );
-};
+}
 
 
 }
