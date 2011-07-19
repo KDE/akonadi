@@ -96,7 +96,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched( KJob *job
 
   if ( list.isEmpty() || !list.first().isValid() || list.first().hasAttribute<Akonadi::EntityDeletedAttribute>() ) { //target collection is invalid/not existing
 
-    QString res = fetchJob->property( "Resource" ).toString();
+    const QString res = fetchJob->property( "Resource" ).toString();
     if ( res.isEmpty() ) { //There is no fallback
       q->setError( Job::Unknown );
       q->setErrorText( i18n( "Could not find restore collection and restore resource is not available" ) );
