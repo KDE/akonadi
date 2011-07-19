@@ -21,7 +21,7 @@
 #define AKONADI_TRASHSETTINGS_H
 
 #include "akonadi_export.h"
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 
 class QString;
 
