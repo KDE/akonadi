@@ -44,7 +44,7 @@ class StandardCalendarActionManager::Private
         mItemSelectionModel( 0 ),
         mParent( parent )
     {
-      KGlobal::locale()->insertCatalog("libakonadi-calendar");
+      KGlobal::locale()->insertCatalog(QLatin1String("libakonadi-calendar"));
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
       mParent->connect( mGenericManager, SIGNAL( actionStateUpdated() ),
                         mParent, SIGNAL( actionStateUpdated() ) );
