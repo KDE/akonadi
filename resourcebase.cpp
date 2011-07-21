@@ -26,6 +26,7 @@
 #include "collectionsync_p.h"
 #include "dbusconnectionpool.h"
 #include "itemsync.h"
+#include "kdepimlibs-version.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
 #include "xdgbasedirs_p.h"
@@ -374,7 +375,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   const QByteArray catalog = fi.baseName().toLatin1();
 
   KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
-                      ki18nc( "@title application name", "Akonadi Resource" ), "0.1",
+                      ki18nc( "@title application name", "Akonadi Resource" ), KDEPIMLIBS_VERSION,
                       ki18nc( "@title application description", "Akonadi Resource" ) );
 
   KCmdLineOptions options;

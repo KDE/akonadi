@@ -17,6 +17,9 @@ add_definitions( ${AKONADI_DEFINITIONS} )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
 add_definitions( -DQT_NO_CAST_TO_ASCII )
 
+# Set the resources and agents version
+configure_file(kdepimlibs-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepimlibs-version.h)
+
 add_subdirectory( kabc )
 add_subdirectory( kcal )
 add_subdirectory( kmime )
