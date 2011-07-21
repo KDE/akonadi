@@ -56,7 +56,11 @@ class EntityListView::Private
 {
 public:
   Private( EntityListView *parent )
-      : mParent( parent ), mDragDropManager( new DragDropManager( mParent ) ), mXmlGuiClient( 0 )
+      : mParent( parent )
+#ifndef QT_NO_DRAGANDDROP
+      , mDragDropManager( new DragDropManager( mParent ) )
+#endif    
+      , mXmlGuiClient( 0 )
   {
   }
 
@@ -74,10 +78,11 @@ void EntityListView::Private::init()
 {
   mParent->setEditTriggers( QAbstractItemView::EditKeyPressed );
   mParent->setAcceptDrops( true );
+#ifndef QT_NO_DRAGANDDROP
   mParent->setDropIndicatorShown( true );
   mParent->setDragDropMode( DragDrop );
   mParent->setDragEnabled( true );
-
+#endif
   mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
                     mParent, SLOT( itemClicked( const QModelIndex& ) ) );
   mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
@@ -170,6 +175,7 @@ void EntityListView::setModel( QAbstractItemModel * model )
            SLOT( itemCurrentChanged( const QModelIndex& ) ) );
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 {
   if ( d->mDragDropManager->dropAllowed( event ) || qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
@@ -187,7 +193,9 @@ void EntityListView::dropEvent( QDropEvent * event )
     QListView::dropEvent( event );
   }
 }
+#endif
 
+#ifndef QT_NO_CONTEXTMENU
 void EntityListView::contextMenuEvent( QContextMenuEvent * event )
 {
   if ( !d->mXmlGuiClient )
@@ -210,16 +218,19 @@ void EntityListView::contextMenuEvent( QContextMenuEvent * event )
   if ( popup )
     popup->exec( event->globalPos() );
 }
+#endif
 
 void EntityListView::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
 {
   d->mXmlGuiClient = xmlGuiClient;
 }
 
+#ifndef QT_NO_DRAGANDDROP
 void EntityListView::startDrag( Qt::DropActions supportedActions )
 {
   d->mDragDropManager->startDrag( supportedActions );
 }
+#endif
 
 void EntityListView::setDropActionMenuEnabled( bool enabled )
 {

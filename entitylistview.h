@@ -180,11 +180,16 @@ class AKONADI_EXPORT EntityListView : public QListView
 
   protected:
     using QListView::currentChanged;
-    virtual void dragMoveEvent( QDragMoveEvent *event );
-    virtual void dropEvent( QDropEvent *event );
-    virtual void contextMenuEvent( QContextMenuEvent *event );
+#ifndef QT_NO_DRAGANDDROP
     virtual void startDrag( Qt::DropActions supportedActions );
+    virtual void dropEvent( QDropEvent *event );
+    virtual void dragMoveEvent( QDragMoveEvent *event );
+#endif
 
+#ifndef QT_NO_CONTEXTMENU
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+#endif
+  
   private:
     //@cond PRIVATE
     class Private;
