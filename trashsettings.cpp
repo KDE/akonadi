@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-Collection TrashSettings::getTrashCollection( const QString& resource )
+Akonadi::Collection TrashSettings::getTrashCollection( const QString& resource )
 {
   KConfig config( QString::fromLatin1( "akonaditrashrc" ) );
   KConfigGroup group( &config, resource );
