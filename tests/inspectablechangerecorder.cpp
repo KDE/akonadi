@@ -39,3 +39,4 @@ void InspectableChangeRecorder::doConnectToNotificationManager()
 }
 
 #include "inspectablechangerecorder.moc"
+

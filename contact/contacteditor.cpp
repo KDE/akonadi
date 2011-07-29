@@ -108,8 +108,8 @@ void ContactEditor::Private::itemFetchDone( KJob *job )
 
     Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( mItem.parentCollection(),
                                                                                        Akonadi::CollectionFetchJob::Base );
-    mParent->connect( collectionFetchJob, SIGNAL( result( KJob* ) ),
-                      SLOT( parentCollectionFetchDone( KJob* ) ) );
+    mParent->connect( collectionFetchJob, SIGNAL(result(KJob*)),
+                      SLOT(parentCollectionFetchDone(KJob*)) );
   } else {
     const KABC::Addressee addr = mItem.payload<KABC::Addressee>();
     mContactMetaData.load( mItem );
@@ -165,7 +165,7 @@ void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByte
     job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( itemFetchDone( KJob* ) ) );
+    mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(itemFetchDone(KJob*)) );
   }
 
   delete dlg;
@@ -187,8 +187,8 @@ void ContactEditor::Private::setupMonitor()
   mMonitor = new Akonadi::Monitor;
   mMonitor->ignoreSession( Akonadi::Session::defaultSession() );
 
-  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-           mParent, SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+  connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+           mParent, SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
 }
 
 
@@ -217,7 +217,7 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
   job->fetchScope().fetchAttribute<ContactMetaDataAttribute>();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
 
   d->setupMonitor();
   d->mMonitor->setItemMonitored( item );
@@ -241,7 +241,7 @@ bool ContactEditor::saveContact()
     d->mItem.setPayload<KABC::Addressee>( addr );
 
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mItem );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
   } else if ( d->mMode == CreateMode ) {
     if ( !d->mDefaultCollection.isValid() ) {
       const QStringList mimeTypeFilter( KABC::Addressee::mimeType() );
@@ -267,7 +267,7 @@ bool ContactEditor::saveContact()
     d->mContactMetaData.store( item );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
   }
 
   return true;

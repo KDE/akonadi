@@ -79,12 +79,12 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
                                                         QLatin1String( "/AgentManager" ),
                                                         DBusConnectionPool::threadConnection(), q_ptr );
 
-  QObject::connect( manager, SIGNAL( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ),
-                    q_ptr, SLOT( agentInstanceAdvancedStatusChanged( const QString&, const QVariantMap& ) ) );
+  QObject::connect( manager, SIGNAL(agentInstanceAdvancedStatusChanged(QString,QVariantMap)),
+                    q_ptr, SLOT(agentInstanceAdvancedStatusChanged(QString,QVariantMap)) );
 
   Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
-  QObject::connect( agentManager, SIGNAL( instanceRemoved( Akonadi::AgentInstance ) ),
-                    q_ptr, SLOT( agentInstanceRemoved( Akonadi::AgentInstance ) ) );
+  QObject::connect( agentManager, SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
+                    q_ptr, SLOT(agentInstanceRemoved(Akonadi::AgentInstance)) );
 
 }
 
@@ -110,50 +110,50 @@ void EntityTreeModelPrivate::init( ChangeRecorder *monitor )
   m_monitor->fetchCollectionStatistics( true );
   m_monitor->collectionFetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
 
-  q->connect( monitor, SIGNAL( mimeTypeMonitored( const QString&, bool ) ),
-              SLOT( monitoredMimeTypeChanged( const QString&, bool ) ) );
-  q->connect( monitor, SIGNAL( collectionMonitored(Akonadi::Collection,bool)),
-              SLOT( monitoredCollectionsChanged( const Akonadi::Collection&, bool ) ) );
-  q->connect( monitor, SIGNAL( itemMonitored(Akonadi::Item,bool)),
-              SLOT( monitoredItemsChanged( const Akonadi::Item&, bool ) ) );
-  q->connect( monitor, SIGNAL( resourceMonitored(QByteArray,bool)),
-              SLOT( monitoredResourcesChanged( const QByteArray&, bool ) ) );
+  q->connect( monitor, SIGNAL(mimeTypeMonitored(QString,bool)),
+              SLOT(monitoredMimeTypeChanged(QString,bool)) );
+  q->connect( monitor, SIGNAL(collectionMonitored(Akonadi::Collection,bool)),
+              SLOT(monitoredCollectionsChanged(Akonadi::Collection,bool)) );
+  q->connect( monitor, SIGNAL(itemMonitored(Akonadi::Item,bool)),
+              SLOT(monitoredItemsChanged(Akonadi::Item,bool)) );
+  q->connect( monitor, SIGNAL(resourceMonitored(QByteArray,bool)),
+              SLOT(monitoredResourcesChanged(QByteArray,bool)) );
 
   // monitor collection changes
-  q->connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-           SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-              SLOT( monitoredCollectionRemoved( const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ),
-              SLOT( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( collectionUnsubscribed( const Akonadi::Collection& ) ),
-              SLOT( monitoredCollectionUnsubscribed( const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection)),
+           SLOT(monitoredCollectionChanged(Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           SLOT(monitoredCollectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+              SLOT(monitoredCollectionRemoved(Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),
+              SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
+              SLOT(monitoredCollectionUnsubscribed(Akonadi::Collection)) );
   q->connect( monitor,
-           SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+           SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(monitoredCollectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
 
   // Monitor item changes.
-  q->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-              SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-  q->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-              SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
-  q->connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-              SLOT( monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
+              SLOT(monitoredItemAdded(Akonadi::Item,Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+              SLOT(monitoredItemChanged(Akonadi::Item,QSet<QByteArray>)) );
+  q->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
+              SLOT(monitoredItemRemoved(Akonadi::Item)) );
+  q->connect( monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+              SLOT(monitoredItemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
 
-  q->connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              SLOT( monitoredItemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  q->connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-              SLOT( monitoredItemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  q->connect( monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+              SLOT(monitoredItemLinked(Akonadi::Item,Akonadi::Collection)) );
+  q->connect( monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+              SLOT(monitoredItemUnlinked(Akonadi::Item,Akonadi::Collection)) );
 
-  q->connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
-               SLOT( monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
+  q->connect( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)),
+               SLOT(monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 
   Akonadi::ServerManager *serverManager = Akonadi::ServerManager::self();
-  q->connect( serverManager, SIGNAL( started() ), SLOT( serverStarted() ) );
+  q->connect( serverManager, SIGNAL(started()), SLOT(serverStarted()) );
 
   QHash<int, QByteArray> names = q->roleNames();
 
@@ -212,14 +212,14 @@ void EntityTreeModelPrivate::runItemFetchJob( ItemFetchJob *itemFetchJob, const 
   }
 
 #ifdef KDEPIM_MOBILE_UI
-  q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
-              q, SLOT( itemsFetched( KJob* ) ) );
+  q->connect( itemFetchJob, SIGNAL(result(KJob*)),
+              q, SLOT(itemsFetched(KJob*)) );
 #else
-  q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-              q, SLOT( itemsFetched( const Akonadi::Item::List& ) ) );
+  q->connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)),
+              q, SLOT(itemsFetched(Akonadi::Item::List)) );
 #endif
-  q->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
-              q, SLOT( fetchJobDone( KJob* ) ) );
+  q->connect( itemFetchJob, SIGNAL(result(KJob*)),
+              q, SLOT(fetchJobDone(KJob*)) );
   ifDebug(kDebug() << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();)
 }
 
@@ -294,21 +294,21 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
 
   if ( m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch )
   {
-    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                q, SLOT( collectionListFetched( const Akonadi::Collection::List& ) ) );
+    q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                q, SLOT(collectionListFetched(Akonadi::Collection::List)) );
   } else {
     job->fetchScope().setIncludeStatistics( m_includeStatistics );
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
     if ( listing != FirstListing ) {
-      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                  q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
-      q->connect( job, SIGNAL( result( KJob* ) ),
-                  q, SLOT( fetchJobDone( KJob* ) ) );
+      q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                  q, SLOT(collectionsFetched(Akonadi::Collection::List)) );
+      q->connect( job, SIGNAL(result(KJob*)),
+                  q, SLOT(fetchJobDone(KJob*)) );
     } else {
-      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                  q, SLOT( firstCollectionsFetched( const Akonadi::Collection::List& ) ) );
-      q->connect( job, SIGNAL( result( KJob* ) ),
-                  q, SLOT( firstFetchJobDone( KJob* ) ) );
+      q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                  q, SLOT(firstCollectionsFetched(Akonadi::Collection::List)) );
+      q->connect( job, SIGNAL(result(KJob*)),
+                  q, SLOT(firstFetchJobDone(KJob*)) );
     }
   }
   ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
@@ -630,10 +630,10 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
     CollectionFetchJob *job = new CollectionFetchJob( ancestors, CollectionFetchJob::Base, m_session );
     job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
     job->fetchScope().setIncludeStatistics( m_includeStatistics );
-    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                q, SLOT( ancestorsFetched( const Akonadi::Collection::List& ) ) );
-    q->connect( job, SIGNAL( result( KJob* ) ),
-                q, SLOT( fetchJobDone( KJob* ) ) );
+    q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                q, SLOT(ancestorsFetched(Akonadi::Collection::List)) );
+    q->connect( job, SIGNAL(result(KJob*)),
+                q, SLOT(fetchJobDone(KJob*)) );
   }
 
   Q_ASSERT( parentCollection != m_rootCollection );
@@ -1364,10 +1364,10 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
 {
   Q_Q( const EntityTreeModel );
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, m_session );
-  q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-              q, SLOT( topLevelCollectionsFetched( const Akonadi::Collection::List& ) ) );
-  q->connect( job, SIGNAL( result( KJob* ) ),
-              q, SLOT( fetchJobDone( KJob* ) ) );
+  q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+              q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)) );
+  q->connect( job, SIGNAL(result(KJob*)),
+              q, SLOT(fetchJobDone(KJob*)) );
   ifDebug(kDebug() << ""; jobTimeTracker[job].start();)
 }
 
@@ -1404,10 +1404,10 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched( const Akonadi::Collecti
       job->fetchScope().setIncludeUnsubscribed( m_includeUnsubscribed );
       job->fetchScope().setIncludeStatistics( m_includeStatistics );
       job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
-      q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-                  q, SLOT( collectionsFetched( const Akonadi::Collection::List& ) ) );
-      q->connect( job, SIGNAL( result( KJob* ) ),
-                  q, SLOT( fetchJobDone( KJob* ) ) );
+      q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+                  q, SLOT(collectionsFetched(Akonadi::Collection::List)) );
+      q->connect( job, SIGNAL(result(KJob*)),
+                  q, SLOT(fetchJobDone(KJob*)) );
       ifDebug(kDebug() << "collection:" << collection.name(); jobTimeTracker[job].start();)
     }
   }
@@ -1701,7 +1701,7 @@ void EntityTreeModelPrivate::fillModel()
 
   if ( m_rootCollection == Collection::root() )
   {
-    QTimer::singleShot( 0, q, SLOT( startFirstListJob() ) );
+    QTimer::singleShot( 0, q, SLOT(startFirstListJob()) );
   } else {
     Q_ASSERT(m_rootCollection.isValid());
     CollectionFetchJob *rootFetchJob = new CollectionFetchJob( m_rootCollection, CollectionFetchJob::Base, m_session );

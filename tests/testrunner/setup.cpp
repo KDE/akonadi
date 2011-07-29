@@ -186,8 +186,8 @@ void SetupTest::registerWithInternalDBus( const QString &address )
                                 QDBusConnection::ExportAdaptors );
   mInternalBus.registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 
-  connect( mInternalBus.interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
-           this, SLOT( dbusNameOwnerChanged( QString, QString, QString ) ) );
+  connect( mInternalBus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(dbusNameOwnerChanged(QString,QString,QString)) );
 }
 
 bool SetupTest::startAkonadiDaemon()
@@ -209,7 +209,7 @@ void SetupTest::stopAkonadiDaemon()
 {
   if ( !mAkonadiDaemonProcess )
     return;
-  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
+  disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
   mAkonadiDaemonProcess->terminate();
   const bool finished = mAkonadiDaemonProcess->waitForFinished( 5000 );
   if ( !finished ) {
@@ -438,7 +438,7 @@ void SetupTest::shutdown()
       shutdownHarder();
     } else {
       // safety timeout
-      QTimer::singleShot( 30 * 1000, this, SLOT( shutdownHarder() ) );
+      QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
     }
     // in case we indirectly started KDE processes, stop those before we kill their D-Bus
     shutdownKde();
@@ -477,7 +477,7 @@ void SetupTest::shutdownHarder()
 void SetupTest::restartAkonadiServer()
 {
   kDebug();
-  disconnect( mAkonadiDaemonProcess, SIGNAL( finished(int) ), this, 0 );
+  disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
   QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
                               QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
   QDBusReply<void> reply = controlIface.call( "shutdown" );

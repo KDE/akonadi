@@ -98,9 +98,9 @@ int main( int argc, char **argv )
     for ( int i = 0; i < args->count(); ++i )
       testArgs << args->arg( i );
     runner = new TestRunner( testArgs );
-    QObject::connect( setup, SIGNAL( setupDone() ), runner, SLOT( run() ) );
-    QObject::connect( setup, SIGNAL( serverExited(int) ), runner, SLOT( triggerTermination(int) ) );
-    QObject::connect( runner, SIGNAL( finished() ), setup, SLOT( shutdown() ) );
+    QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
+    QObject::connect( setup, SIGNAL(serverExited(int)), runner, SLOT(triggerTermination(int)) );
+    QObject::connect( runner, SIGNAL(finished()), setup, SLOT(shutdown()) );
   }
 
   int exitCode = app.exec();

@@ -93,18 +93,18 @@ AgentInstanceModel::AgentInstanceModel( QObject *parent )
   roles.insert( OnlineRole, "online" );
   setRoleNames( roles );
 
-  connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceAdded( const Akonadi::AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceRemoved( const Akonadi::AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceStatusChanged( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceProgressChanged( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceNameChanged( const Akonadi::AgentInstance& ) ),
-           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
-  connect( AgentManager::self(), SIGNAL( instanceOnline( const Akonadi::AgentInstance&, bool ) ),
-           this, SLOT( instanceChanged( const Akonadi::AgentInstance& ) ) );
+  connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
+           this, SLOT(instanceAdded(Akonadi::AgentInstance)) );
+  connect( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
+           this, SLOT(instanceRemoved(Akonadi::AgentInstance)) );
+  connect( AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
+           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
+  connect( AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),
+           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
+  connect( AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
+           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
+  connect( AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
+           this, SLOT(instanceChanged(Akonadi::AgentInstance)) );
 }
 
 AgentInstanceModel::~AgentInstanceModel()

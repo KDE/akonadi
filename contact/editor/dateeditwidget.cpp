@@ -47,7 +47,7 @@ void DateView::contextMenuEvent( QContextMenuEvent *event )
     return;
 
   QMenu menu;
-  menu.addAction( i18n( "Remove" ), this, SLOT( emitSignal() ) );
+  menu.addAction( i18n( "Remove" ), this, SLOT(emitSignal()) );
 
   menu.exec( event->globalPos() );
 }
@@ -86,9 +86,9 @@ DateEditWidget::DateEditWidget( Type type, QWidget *parent )
   mMenu = new KDatePickerPopup( KDatePickerPopup::DatePicker, QDate(), this );
   mSelectButton->setMenu( mMenu );
 
-  connect( mClearButton, SIGNAL( clicked() ), SLOT( resetDate() ) );
-  connect( mMenu, SIGNAL( dateChanged( const QDate& ) ), SLOT( dateSelected( const QDate& ) ) );
-  connect( mView, SIGNAL( resetDate() ), SLOT( resetDate() ) );
+  connect( mClearButton, SIGNAL(clicked()), SLOT(resetDate()) );
+  connect( mMenu, SIGNAL(dateChanged(QDate)), SLOT(dateSelected(QDate)) );
+  connect( mView, SIGNAL(resetDate()), SLOT(resetDate()) );
 
   updateView();
 }

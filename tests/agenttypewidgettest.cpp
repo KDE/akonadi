@@ -42,12 +42,12 @@ Dialog::Dialog( QWidget *parent )
   mFilter->addItem( "text/calendar" );
   mFilter->addItem( "text/directory" );
   mFilter->addItem( "message/rfc822" );
-  connect( mFilter, SIGNAL( activated( int ) ),
-           this, SLOT( filterChanged( int ) ) );
+  connect( mFilter, SIGNAL(activated(int)),
+           this, SLOT(filterChanged(int)) );
 
   mWidget = new Akonadi::AgentTypeWidget( this );
-  connect( mWidget, SIGNAL( currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& ) ),
-           this, SLOT( currentChanged( const Akonadi::AgentType&, const Akonadi::AgentType& ) ) );
+  connect( mWidget, SIGNAL(currentChanged(Akonadi::AgentType,Akonadi::AgentType)),
+           this, SLOT(currentChanged(Akonadi::AgentType,Akonadi::AgentType)) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
@@ -56,10 +56,10 @@ Dialog::Dialog( QWidget *parent )
   layout->addWidget( box );
 
   QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-  connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  connect( ok, SIGNAL(clicked()), this, SLOT(accept()) );
 
   QPushButton *cancel = box->addButton( QDialogButtonBox::Cancel );
-  connect( cancel, SIGNAL( clicked() ), this, SLOT( reject() ) );
+  connect( cancel, SIGNAL(clicked()), this, SLOT(reject()) );
 
   resize( 450, 320 );
 }

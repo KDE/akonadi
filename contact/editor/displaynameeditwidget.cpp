@@ -120,7 +120,7 @@ DisplayNameEditWidget::DisplayNameEditWidget( QWidget *parent )
 
   layout->addWidget( mView );
 
-  connect( mView, SIGNAL( activated( int ) ), SLOT( displayTypeChanged( int ) ) );
+  connect( mView, SIGNAL(activated(int)), SLOT(displayTypeChanged(int)) );
 
   DisplayNameDelegate *delegate = new DisplayNameDelegate( mView->view() );
   mView->view()->setItemDelegate( delegate );

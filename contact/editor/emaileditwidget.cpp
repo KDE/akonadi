@@ -98,13 +98,13 @@ EmailEditWidget::EmailEditWidget( QWidget *parent )
 
   mEmailEdit = new KLineEdit;
   new EmailAddressExtracter( mEmailEdit );
-  connect( mEmailEdit, SIGNAL( textChanged( const QString& ) ),
-           SLOT( textChanged( const QString& ) ) );
+  connect( mEmailEdit, SIGNAL(textChanged(QString)),
+           SLOT(textChanged(QString)) );
   layout->addWidget( mEmailEdit );
 
   mEditButton = new QToolButton;
   mEditButton->setText( QLatin1String( "..." ) );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
   layout->addWidget( mEditButton );
 }
 
@@ -186,29 +186,29 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
 
   // Make sure there is room for the scrollbar
   mEmailListBox->setMinimumHeight( mEmailListBox->sizeHint().height() + 30 );
-  connect( mEmailListBox, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
-           SLOT( selectionChanged() ) );
-  connect( mEmailListBox, SIGNAL( itemDoubleClicked( QListWidgetItem * ) ),
-           SLOT( edit() ) );
+  connect( mEmailListBox, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+           SLOT(selectionChanged()) );
+  connect( mEmailListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+           SLOT(edit()) );
   topLayout->addWidget( mEmailListBox, 0, 0, 5, 2 );
 
   mAddButton = new QPushButton( i18n( "Add..." ), page );
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(add()) );
   topLayout->addWidget( mAddButton, 0, 2 );
 
   mEditButton = new QPushButton( i18n( "Edit..." ), page );
   mEditButton->setEnabled( false );
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
   topLayout->addWidget( mEditButton, 1, 2 );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), page );
   mRemoveButton->setEnabled( false );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
+  connect( mRemoveButton, SIGNAL(clicked()), SLOT(remove()) );
   topLayout->addWidget( mRemoveButton, 2, 2 );
 
   mStandardButton = new QPushButton( i18n( "Set as Standard" ), page );
   mStandardButton->setEnabled( false );
-  connect( mStandardButton, SIGNAL( clicked() ), SLOT( standard() ) );
+  connect( mStandardButton, SIGNAL(clicked()), SLOT(standard()) );
   topLayout->addWidget( mStandardButton, 3, 2 );
 
   topLayout->setRowStretch( 4, 1 );

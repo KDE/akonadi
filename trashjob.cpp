@@ -116,12 +116,12 @@ void TrashJob::TrashJobPrivate::setAttribute( const Akonadi::Collection::List &l
     modCol.addAttribute( eda );
 
     CollectionModifyJob *job = new CollectionModifyJob( modCol, q );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
 
     ItemFetchJob *itemFetchJob = new ItemFetchJob( col, q );
     //TODO not sure if it is guaranteed that itemsReceived is always before result (otherwise the result is emitted before the attributes are set)
-    q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List & ) ), SLOT( setAttribute( const Akonadi::Item::List & ) ) );
-    q->connect( itemFetchJob, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(setAttribute(Akonadi::Item::List)) );
+    q->connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   }
 }
 
@@ -147,12 +147,12 @@ void TrashJob::TrashJobPrivate::setAttribute( const Akonadi::Item::List &list )
     modItem.addAttribute( eda );
     ItemModifyJob *job = new ItemModifyJob( modItem, q );
     job->setIgnorePayload( true );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   }
 
   //For some reason it is not possible to apply this change to multiple items at once
   /*ItemModifyJob *job = new ItemModifyJob(items, q);
-  q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );*/
+  q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );*/
 }
 
 void TrashJob::TrashJobPrivate::setAttribute( KJob* job )
@@ -180,8 +180,8 @@ void TrashJob::TrashJobPrivate::setAttribute( KJob* job )
   setAttribute( Collection::List() << mCollection );
   //Set the attribute on all subcollections and items
   CollectionFetchJob *colFetchJob = new CollectionFetchJob( mCollection, CollectionFetchJob::Recursive, q );
-  q->connect( colFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ), SLOT( setAttribute( const Akonadi::Collection::List& ) ) );
-  q->connect( colFetchJob, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+  q->connect( colFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(setAttribute(Akonadi::Collection::List)) );
+  q->connect( colFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
 }
 
 void TrashJob::TrashJobPrivate::parentCollectionReceived( const Akonadi::Collection::List &collections )
@@ -205,8 +205,8 @@ void TrashJob::TrashJobPrivate::parentCollectionReceived( const Akonadi::Collect
   if ( trashCollection.isValid() ) {  //Move the items to the correct collection if available
     ItemMoveJob *job = new ItemMoveJob( mCollectionItems.value( parentCollection ), trashCollection, q );
     job->setProperty( "MovedItems", parentCollection.id() );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( setAttribute( KJob* ) ) ); //Wait until the move finished to set the attirbute
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(setAttribute(KJob*)) ); //Wait until the move finished to set the attirbute
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   } else {
     setAttribute( mCollectionItems.value( parentCollection ) );
   }
@@ -237,12 +237,12 @@ void TrashJob::TrashJobPrivate::itemsReceived( const Akonadi::Item::List &items 
 
   foreach( const Collection &col, mCollectionItems.keys() ) {
     CollectionFetchJob *job = new CollectionFetchJob( col, Akonadi::CollectionFetchJob::Base, q );
-    q->connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), SLOT( parentCollectionReceived( const Akonadi::Collection::List & ) ) );
+    q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(parentCollectionReceived(Akonadi::Collection::List)) );
   }
 
   if ( mDeleteIfInTrash && !toDelete.isEmpty() ) {
     ItemDeleteJob *job = new ItemDeleteJob( toDelete, q );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   }
 
 }
@@ -262,7 +262,7 @@ void TrashJob::TrashJobPrivate::collectionsReceived( const Akonadi::Collection::
   if ( mCollection.hasAttribute<EntityDeletedAttribute>() ) {//marked as deleted
     if ( mDeleteIfInTrash ) {
       CollectionDeleteJob *job = new CollectionDeleteJob( mCollection, q );
-      q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+      q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
     }
     return;
   }
@@ -280,8 +280,8 @@ void TrashJob::TrashJobPrivate::collectionsReceived( const Akonadi::Collection::
 
   if ( trashCollection.isValid() ) {
     CollectionMoveJob *job = new CollectionMoveJob( mCollection, trashCollection, q );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( setAttribute( KJob* ) ) );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(setAttribute(KJob*)) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   } else {
     setAttribute( Collection::List() << mCollection );
   }
@@ -350,12 +350,12 @@ void TrashJob::doStart()
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent ); //so we have access to the resource
     //job->fetchScope().setCacheOnly(true);
     job->fetchScope().fetchAttribute<EntityDeletedAttribute>( true );
-    connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List & ) ), this, SLOT( itemsReceived( const Akonadi::Item::List & ) ) );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(itemsReceived(Akonadi::Item::List)) );
 
   } else if ( d->mCollection.isValid() ) {
     CollectionFetchJob *job = new CollectionFetchJob( d->mCollection, CollectionFetchJob::Base, this );
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::Parent );
-    connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), this, SLOT( collectionsReceived( const Akonadi::Collection::List & ) ) );
+    connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), this, SLOT(collectionsReceived(Akonadi::Collection::List)) );
 
   } else {
     kWarning() << "No valid collection or empty itemlist";

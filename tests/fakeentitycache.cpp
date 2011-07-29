@@ -20,3 +20,4 @@
 #include "fakeentitycache.h"
 
 #include "fakeentitycache.moc"
+

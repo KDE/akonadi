@@ -103,7 +103,7 @@ SoundEditWidget::SoundEditWidget( QWidget *parent )
     mReadOnly( false ),
     mSoundLoader( 0 )
 {
-  connect( this, SIGNAL( clicked() ), SLOT( playSound() ) );
+  connect( this, SIGNAL(clicked()), SLOT(playSound()) );
 
   updateView();
 }
@@ -152,16 +152,16 @@ void SoundEditWidget::contextMenuEvent( QContextMenuEvent *event )
   QMenu menu;
 
   if ( mHasSound )
-    menu.addAction( i18n( "Play" ), this, SLOT( playSound() ) );
+    menu.addAction( i18n( "Play" ), this, SLOT(playSound()) );
 
   if ( !mReadOnly )
-    menu.addAction( i18n( "Change..." ), this, SLOT( changeSound() ) );
+    menu.addAction( i18n( "Change..." ), this, SLOT(changeSound()) );
 
   if ( mHasSound ) {
-    menu.addAction( i18n( "Save..." ), this, SLOT( saveSound() ) );
+    menu.addAction( i18n( "Save..." ), this, SLOT(saveSound()) );
 
     if ( !mReadOnly )
-      menu.addAction( i18n( "Remove" ), this, SLOT( deleteSound() ) );
+      menu.addAction( i18n( "Remove" ), this, SLOT(deleteSound()) );
   }
 
   menu.exec( event->globalPos() );
@@ -178,7 +178,7 @@ void SoundEditWidget::playSound()
   soundData->setData( mSound );
   player->setCurrentSource( soundData );
   player->setParent( this );
-  connect( player, SIGNAL( finished() ), player, SLOT( deleteLater() ) );
+  connect( player, SIGNAL(finished()), player, SLOT(deleteLater()) );
   player->play();
 #endif
 }

@@ -43,7 +43,7 @@ void MoveCommand::execute()
   }
   else {
     Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( mMessages, this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotMoveResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotMoveResult(KJob*)) );
   }
 }
 

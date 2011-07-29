@@ -104,7 +104,7 @@ class AddressTypeDialog : public KDialog
 AddressSelectionWidget::AddressSelectionWidget( QWidget *parent )
   : KComboBox( parent )
 {
-  connect( this, SIGNAL( activated( int ) ), SLOT( selected( int ) ) );
+  connect( this, SIGNAL(activated(int)), SLOT(selected(int)) );
 }
 
 AddressSelectionWidget::~AddressSelectionWidget()
@@ -158,8 +158,8 @@ AddressTypeCombo::AddressTypeCombo( QWidget *parent )
 
   update();
 
-  connect( this, SIGNAL( activated( int ) ),
-           this, SLOT( selected( int ) ) );
+  connect( this, SIGNAL(activated(int)),
+           this, SLOT(selected(int)) );
 }
 
 AddressTypeCombo::~AddressTypeCombo()
@@ -233,8 +233,8 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->setMargin( 0 );
 
   mAddressSelectionWidget = new AddressSelectionWidget( this );
-  connect( mAddressSelectionWidget, SIGNAL( selectionChanged( const KABC::Address& ) ),
-           SLOT( updateAddressView() ) );
+  connect( mAddressSelectionWidget, SIGNAL(selectionChanged(KABC::Address)),
+           SLOT(updateAddressView()) );
   layout->addWidget( mAddressSelectionWidget, 0, 0, 1, 3 );
 
   mAddressView = new QLabel( this );
@@ -246,11 +246,11 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->addWidget( mAddressView, 1, 0, 1, 3 );
 
   mCreateButton = new QPushButton( i18nc( "street/postal", "New..." ), this );
-  connect( mCreateButton, SIGNAL( clicked() ), this, SLOT( createAddress() ) );
+  connect( mCreateButton, SIGNAL(clicked()), this, SLOT(createAddress()) );
   mEditButton = new QPushButton( i18nc( "street/postal", "Edit..." ), this );
-  connect( mEditButton, SIGNAL( clicked() ), this, SLOT( editAddress() ) );
+  connect( mEditButton, SIGNAL(clicked()), this, SLOT(editAddress()) );
   mDeleteButton = new QPushButton( i18nc( "street/postal", "Delete" ), this );
-  connect( mDeleteButton, SIGNAL( clicked() ), this, SLOT( deleteAddress() ) );
+  connect( mDeleteButton, SIGNAL(clicked()), this, SLOT(deleteAddress()) );
 
   layout->addWidget( mCreateButton, 2, 0 );
   layout->addWidget( mEditButton, 2, 1 );
@@ -443,7 +443,7 @@ AddressEditDialog::AddressEditDialog( QWidget *parent )
 
   QPushButton *labelButton = new QPushButton( i18n( "Edit Label..." ), page );
   topLayout->addWidget( labelButton, 7, 0, 1, 2 );
-  connect( labelButton, SIGNAL( clicked() ), SLOT( editLabel() ) );
+  connect( labelButton, SIGNAL(clicked()), SLOT(editLabel()) );
 
   fillCountryCombo();
   label->setBuddy( mCountryCombo );

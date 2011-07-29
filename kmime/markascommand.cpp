@@ -77,7 +77,7 @@ void MarkAsCommand::slotFetchDone(KJob* job)
   if ( mFolderListJobCount > 0 ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
   }
 }
 
@@ -88,7 +88,7 @@ void MarkAsCommand::execute()
     //yes, we go backwards, shouldn't matter
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
   } else if ( !mMessages.isEmpty() ) {
     mFolders << mMessages.first().parentCollection();
     markMessages();
@@ -130,7 +130,7 @@ void MarkAsCommand::markMessages()
     Akonadi::ItemModifyJob *modifyJob = new Akonadi::ItemModifyJob( itemsToModify, this );
     modifyJob->setIgnorePayload( true );
     modifyJob->disableRevisionCheck();
-    connect( modifyJob, SIGNAL( result( KJob* ) ), this, SLOT( slotModifyItemDone( KJob* ) ) );
+    connect( modifyJob, SIGNAL(result(KJob*)), this, SLOT(slotModifyItemDone(KJob*)) );
   }
 }
 

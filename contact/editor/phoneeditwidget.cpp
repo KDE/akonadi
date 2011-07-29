@@ -53,8 +53,8 @@ PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
 
   update();
 
-  connect( this, SIGNAL( activated( int ) ),
-           this, SLOT( selected( int ) ) );
+  connect( this, SIGNAL(activated(int)),
+           this, SLOT(selected(int)) );
 }
 
 PhoneTypeCombo::~PhoneTypeCombo()
@@ -126,17 +126,17 @@ PhoneNumberWidget::PhoneNumberWidget( QWidget *parent )
   layout->addWidget( mTypeCombo );
   layout->addWidget( mNumberEdit );
 
-  connect( mTypeCombo, SIGNAL( activated( int ) ), SIGNAL( modified() ) );
-  connect( mNumberEdit, SIGNAL( textChanged( const QString& ) ), SIGNAL( modified() ) );
+  connect( mTypeCombo, SIGNAL(activated(int)), SIGNAL(modified()) );
+  connect( mNumberEdit, SIGNAL(textChanged(QString)), SIGNAL(modified()) );
 }
 
 void PhoneNumberWidget::setNumber( const KABC::PhoneNumber &number )
 {
   mNumber = number;
 
-  disconnect( mTypeCombo, SIGNAL( activated( int ) ), this, SIGNAL( modified() ) );
+  disconnect( mTypeCombo, SIGNAL(activated(int)), this, SIGNAL(modified()) );
   mTypeCombo->setType( number.type() );
-  connect( mTypeCombo, SIGNAL( activated( int ) ), SIGNAL( modified() ) );
+  connect( mTypeCombo, SIGNAL(activated(int)), SIGNAL(modified()) );
 
   mNumberEdit->setText( number.number() );
 }
@@ -163,7 +163,7 @@ PhoneNumberListWidget::PhoneNumberListWidget( QWidget *parent )
   mWidgetLayout = new QVBoxLayout( this );
 
   mMapper = new QSignalMapper( this );
-  connect( mMapper, SIGNAL( mapped( int ) ), SLOT( changed( int ) ) );
+  connect( mMapper, SIGNAL(mapped(int)), SLOT(changed(int)) );
 
   setPhoneNumbers( KABC::PhoneNumber::List() );
 }
@@ -243,7 +243,7 @@ void PhoneNumberListWidget::recreateNumberWidgets()
     wdg->setNumber( *it );
 
     mMapper->setMapping( wdg, counter );
-    connect( wdg, SIGNAL( modified() ), mMapper, SLOT( map() ) );
+    connect( wdg, SIGNAL(modified()), mMapper, SLOT(map()) );
 
     mWidgetLayout->addWidget( wdg );
     mWidgets.append( wdg );
@@ -285,10 +285,10 @@ PhoneEditWidget::PhoneEditWidget( QWidget *parent )
   mRemoveButton->setMaximumSize( mRemoveButton->sizeHint() );
   layout->addWidget( mRemoveButton, 1, 1 );
 
-  connect( mAddButton, SIGNAL( clicked() ), mPhoneNumberListWidget, SLOT( add() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), mPhoneNumberListWidget, SLOT( remove() ) );
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( changed() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( changed() ) );
+  connect( mAddButton, SIGNAL(clicked()), mPhoneNumberListWidget, SLOT(add()) );
+  connect( mRemoveButton, SIGNAL(clicked()), mPhoneNumberListWidget, SLOT(remove()) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(changed()) );
+  connect( mRemoveButton, SIGNAL(clicked()), SLOT(changed()) );
 }
 
 PhoneEditWidget::~PhoneEditWidget()

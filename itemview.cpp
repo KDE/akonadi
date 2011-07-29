@@ -65,12 +65,12 @@ void ItemView::Private::init()
   mParent->header()->setClickable( true );
   mParent->header()->setStretchLastSection( true );
 
-  mParent->connect( mParent, SIGNAL( activated( const QModelIndex& ) ),
-                    mParent, SLOT( itemActivated( const QModelIndex& ) ) );
-  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
-  mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL(activated(QModelIndex)),
+                    mParent, SLOT(itemActivated(QModelIndex)) );
+  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
+                    mParent, SLOT(itemClicked(QModelIndex)) );
+  mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
+                    mParent, SLOT(itemDoubleClicked(QModelIndex)) );
 
   Control::widgetNeedsAkonadi( mParent );
 }
@@ -166,8 +166,8 @@ void ItemView::setModel( QAbstractItemModel * model )
 {
   QTreeView::setModel( model );
 
-  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemCurrentChanged(QModelIndex)) );
 }
 
 void ItemView::contextMenuEvent(QContextMenuEvent * event)

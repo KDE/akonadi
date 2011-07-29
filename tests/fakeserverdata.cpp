@@ -32,7 +32,7 @@ FakeServerData::FakeServerData( EntityTreeModel *model, FakeSession *session, Fa
     m_nextCollectionId( 1 ),
     m_nextItemId( 0 )
 {
-  connect(session, SIGNAL(jobAdded(Akonadi::Job *)), SLOT(jobAdded(Akonadi::Job *)), Qt::QueuedConnection);
+  connect(session, SIGNAL(jobAdded(Akonadi::Job*)), SLOT(jobAdded(Akonadi::Job*)), Qt::QueuedConnection);
 }
 
 void FakeServerData::setCommands(QList< FakeAkonadiServerCommand* > list)

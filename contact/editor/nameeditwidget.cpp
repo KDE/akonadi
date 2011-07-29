@@ -47,8 +47,8 @@ NameEditWidget::NameEditWidget( QWidget *parent )
   button->setText( i18n( "..." ) );
   layout->addWidget( button );
 
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
-  connect( button, SIGNAL( clicked() ), this, SLOT( openNameEditDialog() ) );
+  connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
+  connect( button, SIGNAL(clicked()), this, SLOT(openNameEditDialog()) );
 }
 
 NameEditWidget::~NameEditWidget()
@@ -64,9 +64,9 @@ void NameEditWidget::loadContact( const KABC::Addressee &contact )
 {
   mContact = contact;
 
-  disconnect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+  disconnect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
   mNameEdit->setText( contact.assembledName() );
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+  connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
 }
 
 void NameEditWidget::storeContact( KABC::Addressee &contact ) const
@@ -102,9 +102,9 @@ void NameEditWidget::openNameEditDialog()
     mContact.setFamilyName( dlg->familyName() );
     mContact.setSuffix( dlg->suffix() );
 
-    disconnect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+    disconnect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
     mNameEdit->setText( mContact.assembledName() );
-    connect( mNameEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( textChanged( const QString& ) ) );
+    connect( mNameEdit, SIGNAL(textChanged(QString)), this, SLOT(textChanged(QString)) );
 
     emit nameChanged( mContact );
   }

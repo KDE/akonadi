@@ -36,8 +36,8 @@ Dialog::Dialog( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   mWidget = new Akonadi::AgentInstanceWidget( this );
-  connect( mWidget, SIGNAL( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ),
-           this, SLOT( currentChanged( const Akonadi::AgentInstance&, const Akonadi::AgentInstance& ) ) );
+  connect( mWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
+           this, SLOT(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)) );
 
   QDialogButtonBox *box = new QDialogButtonBox( this );
 
@@ -45,7 +45,7 @@ Dialog::Dialog( QWidget *parent )
   layout->addWidget( box );
 
   QPushButton *ok = box->addButton( QDialogButtonBox::Ok );
-  connect( ok, SIGNAL( clicked() ), this, SLOT( accept() ) );
+  connect( ok, SIGNAL(clicked()), this, SLOT(accept()) );
 
   resize( 450, 320 );
 }

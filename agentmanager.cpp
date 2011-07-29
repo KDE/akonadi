@@ -296,26 +296,26 @@ void AgentManagerPrivate::createDBusInterface()
                                                           QLatin1String( "/AgentManager" ),
                                                           DBusConnectionPool::threadConnection(), mParent );
 
-  QObject::connect( mManager, SIGNAL( agentTypeAdded( const QString& ) ),
-                    mParent, SLOT( agentTypeAdded( const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentTypeRemoved( const QString& ) ),
-                    mParent, SLOT( agentTypeRemoved( const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceAdded( const QString& ) ),
-                    mParent, SLOT( agentInstanceAdded( const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceRemoved( const QString& ) ),
-                    mParent, SLOT( agentInstanceRemoved( const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceStatusChanged( const QString&, int, const QString& ) ),
-                    mParent, SLOT( agentInstanceStatusChanged( const QString&, int, const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceProgressChanged( const QString&, uint, const QString& ) ),
-                    mParent, SLOT( agentInstanceProgressChanged( const QString&, uint, const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceNameChanged( const QString&, const QString& ) ),
-                    mParent, SLOT( agentInstanceNameChanged( const QString&, const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceWarning( const QString&, const QString& ) ),
-                    mParent, SLOT( agentInstanceWarning( const QString&, const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceError( const QString&, const QString& ) ),
-                    mParent, SLOT( agentInstanceError( const QString&, const QString& ) ) );
-  QObject::connect( mManager, SIGNAL( agentInstanceOnlineChanged( const QString&, bool ) ),
-                    mParent, SLOT( agentInstanceOnlineChanged( const QString&, bool ) ) );
+  QObject::connect( mManager, SIGNAL(agentTypeAdded(QString)),
+                    mParent, SLOT(agentTypeAdded(QString)) );
+  QObject::connect( mManager, SIGNAL(agentTypeRemoved(QString)),
+                    mParent, SLOT(agentTypeRemoved(QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceAdded(QString)),
+                    mParent, SLOT(agentInstanceAdded(QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceRemoved(QString)),
+                    mParent, SLOT(agentInstanceRemoved(QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceStatusChanged(QString,int,QString)),
+                    mParent, SLOT(agentInstanceStatusChanged(QString,int,QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceProgressChanged(QString,uint,QString)),
+                    mParent, SLOT(agentInstanceProgressChanged(QString,uint,QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceNameChanged(QString,QString)),
+                    mParent, SLOT(agentInstanceNameChanged(QString,QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceWarning(QString,QString)),
+                    mParent, SLOT(agentInstanceWarning(QString,QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceError(QString,QString)),
+                    mParent, SLOT(agentInstanceError(QString,QString)) );
+  QObject::connect( mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
+                    mParent, SLOT(agentInstanceOnlineChanged(QString,bool)) );
 
   if ( mManager->isValid() ) {
     QDBusReply<QStringList> result = mManager->agentTypes();
@@ -347,8 +347,8 @@ AgentManager::AgentManager()
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
-  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 }
 
 // @endcond

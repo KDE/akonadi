@@ -47,7 +47,7 @@ IMEditWidget::IMEditWidget( QWidget *parent )
   mEditButton->setText( i18n( "..." ) );
   layout->addWidget( mEditButton );
 
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( edit() ) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
 }
 
 IMEditWidget::~IMEditWidget()

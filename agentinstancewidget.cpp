@@ -146,10 +146,10 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
   d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
 
-  connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) ) );
-  connect( d->mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
-           this, SLOT( currentAgentInstanceDoubleClicked( const QModelIndex& ) ) );
+  connect( d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)) );
+  connect( d->mView, SIGNAL(doubleClicked(QModelIndex)),
+           this, SLOT(currentAgentInstanceDoubleClicked(QModelIndex)) );
 }
 
 AgentInstanceWidget::~AgentInstanceWidget()

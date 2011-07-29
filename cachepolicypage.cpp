@@ -64,10 +64,10 @@ CachePolicyPage::CachePolicyPage( QWidget *parent, GuiMode mode )
   setPageTitle( i18n( "Retrieval" ) );
 
   d->mUi->setupUi( this );
-  connect( d->mUi->checkInterval, SIGNAL( valueChanged( int ) ),
-           SLOT( slotIntervalValueChanged( int ) ) );
-  connect( d->mUi->localCacheTimeout, SIGNAL( valueChanged( int ) ),
-           SLOT( slotCacheValueChanged( int ) ) );
+  connect( d->mUi->checkInterval, SIGNAL(valueChanged(int)),
+           SLOT(slotIntervalValueChanged(int)) );
+  connect( d->mUi->localCacheTimeout, SIGNAL(valueChanged(int)),
+           SLOT(slotCacheValueChanged(int)) );
 
   if ( mode == AdvancedMode ) {
     d->mUi->stackedWidget->setCurrentWidget( d->mUi->rawPage );

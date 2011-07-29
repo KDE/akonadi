@@ -83,10 +83,10 @@ void EntityListView::Private::init()
   mParent->setDragDropMode( DragDrop );
   mParent->setDragEnabled( true );
 #endif
-  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
-  mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
+                    mParent, SLOT(itemClicked(QModelIndex)) );
+  mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
+                    mParent, SLOT(itemDoubleClicked(QModelIndex)) );
 
   DelegateAnimator *animator = new DelegateAnimator(mParent);
   ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
@@ -165,14 +165,14 @@ EntityListView::~EntityListView()
 void EntityListView::setModel( QAbstractItemModel * model )
 {
   if ( selectionModel() ) {
-    disconnect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+    disconnect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemCurrentChanged(QModelIndex)) );
   }
 
   QListView::setModel( model );
 
-  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           SLOT(itemCurrentChanged(QModelIndex)) );
 }
 
 #ifndef QT_NO_DRAGANDDROP

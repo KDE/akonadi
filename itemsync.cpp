@@ -112,7 +112,7 @@ void ItemSync::Private::createLocalItem( const Item & item )
     return;
   mPendingJobs++;
   ItemCreateJob *create = new ItemCreateJob( item, mSyncCollection, subjobParent() );
-  q->connect( create, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
+  q->connect( create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)) );
 }
 
 void ItemSync::Private::checkDone()
@@ -199,7 +199,7 @@ void ItemSync::doStart()
   // we only can fetch parts already in the cache, otherwise this will deadlock
   job->fetchScope().setCacheOnly( true );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( slotLocalListDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(slotLocalListDone(KJob*)) );
 }
 
 bool ItemSync::updateItem( const Item &storedItem, Item &newItem )
@@ -285,7 +285,7 @@ void ItemSync::Private::execute()
     ++mTransactionJobs;
     mCurrentTransaction = new TransactionSequence( q );
     mCurrentTransaction->setAutomaticCommittingEnabled( false );
-    connect( mCurrentTransaction, SIGNAL( result( KJob* ) ), q, SLOT( slotTransactionResult( KJob* ) ) );
+    connect( mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)) );
   }
 
   processItems();
@@ -345,7 +345,7 @@ void ItemSync::Private::processItems()
       remoteItem.setRemoteId( localItem.remoteId() );  // in case someone clears remoteId by accident
       ItemModifyJob *mod = new ItemModifyJob( remoteItem, subjobParent() );
       mod->disableRevisionCheck();
-      q->connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalChangeDone( KJob* ) ) );
+      q->connect( mod, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)) );
     } else {
       mProgress++;
     }
@@ -386,7 +386,7 @@ void ItemSync::Private::deleteItems( const Item::List &items )
   if ( !itemsToDelete.isEmpty() ) {
     mPendingJobs++;
     ItemDeleteJob *job = new ItemDeleteJob( itemsToDelete, subjobParent() );
-    q->connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotLocalDeleteDone( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), q, SLOT(slotLocalDeleteDone(KJob*)) );
 
     // It can happen that the groupware servers report us deleted items
     // twice, in this case this item delete job will fail on the second try.

@@ -90,10 +90,10 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   layout->addWidget( d->mEditor, 1, 0, 1, 2 );
   layout->setColumnStretch( 1, 1 );
 
-  connect( d->mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
-           this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
-  connect( d->mEditor->d->mGui.groupName, SIGNAL( textChanged( const QString& ) ),
-           this, SLOT( slotGroupNameChanged( const QString& ) ) );
+  connect( d->mEditor, SIGNAL(contactGroupStored(Akonadi::Item)),
+           this, SIGNAL(contactGroupStored(Akonadi::Item)) );
+  connect( d->mEditor->d->mGui.groupName, SIGNAL(textChanged(QString)),
+           this, SLOT(slotGroupNameChanged(QString)) );
 
   button( Ok )->setEnabled( !d->mEditor->d->mGui.groupName->text().isEmpty() );
 

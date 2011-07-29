@@ -92,8 +92,8 @@ void MonitorPrivate::init()
   // needs to be at least 1x pipeline size
   itemCache = dependenciesFactory->createItemCache(PipelineSize, session);
 
-  QObject::connect( collectionCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
-  QObject::connect( itemCache, SIGNAL( dataAvailable() ), q_ptr, SLOT( dataAvailable() ) );
+  QObject::connect( collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
+  QObject::connect( itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
@@ -114,8 +114,8 @@ bool MonitorPrivate::connectToNotificationManager()
   if (!notificationSource)
     return false;
 
-  QObject::connect( notificationSource, SIGNAL( notify( Akonadi::NotificationMessage::List ) ),
-                    q_ptr, SLOT( slotNotify( Akonadi::NotificationMessage::List ) ) );
+  QObject::connect( notificationSource, SIGNAL(notify(Akonadi::NotificationMessage::List)),
+                    q_ptr, SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
 
   return true;
 }
@@ -136,12 +136,12 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
   NotificationMessage::Operation op = msg.operation();
 
   if ( !fetchCollectionStatistics &&
-       ( msg.type() == NotificationMessage::Item ) && ( ( op == NotificationMessage::Add && q_ptr->receivers( SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) ) == 0 )
-    || ( op == NotificationMessage::Remove && q_ptr->receivers( SIGNAL( itemRemoved( const Akonadi::Item& ) ) ) == 0 )
-    || ( op == NotificationMessage::Modify && q_ptr->receivers( SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) ) == 0 )
-    || ( op == NotificationMessage::Move && q_ptr->receivers( SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) ) == 0 )
-    || ( op == NotificationMessage::Link && q_ptr->receivers( SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) ) == 0 )
-    || ( op == NotificationMessage::Unlink && q_ptr->receivers( SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) ) == 0 ) ) )
+       ( msg.type() == NotificationMessage::Item ) && ( ( op == NotificationMessage::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessage::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
+    || ( op == NotificationMessage::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
+    || ( op == NotificationMessage::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessage::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessage::Unlink && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) == 0 ) ) )
   {
     return true;
   }

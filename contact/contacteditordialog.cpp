@@ -70,11 +70,11 @@ class ContactEditorDialog::Private
       layout->addWidget( mEditor, 1, 0, 1, 2 );
       layout->setColumnStretch( 1, 1 );
 
-      connect( mEditor, SIGNAL( contactStored( const Akonadi::Item& ) ),
-               q, SIGNAL( contactStored( const Akonadi::Item& ) ) );
+      connect( mEditor, SIGNAL(contactStored(Akonadi::Item)),
+               q, SIGNAL(contactStored(Akonadi::Item)) );
 
-      connect( q, SIGNAL( okClicked() ), q, SLOT( slotOkClicked() ) );
-      connect( q, SIGNAL( cancelClicked() ), q, SLOT( slotCancelClicked() ) );
+      connect( q, SIGNAL(okClicked()), q, SLOT(slotOkClicked()) );
+      connect( q, SIGNAL(cancelClicked()), q, SLOT(slotCancelClicked()) );
 
       q->setInitialSize( QSize( 800, 500 ) );
     }

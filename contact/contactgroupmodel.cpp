@@ -60,7 +60,7 @@ class ContactGroupModel::Private
       job->setProperty( "row", row );
       job->fetchScope().fetchFullPayload();
 
-      mParent->connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetched( KJob* ) ) );
+      mParent->connect( job, SIGNAL(result(KJob*)), SLOT(itemFetched(KJob*)) );
     }
 
     void itemFetched( KJob *job )

@@ -118,7 +118,7 @@ GeoEditWidget::GeoEditWidget( QWidget *parent )
 
   layout->setRowStretch( 3, 1 );
 
-  connect( mChangeButton, SIGNAL( clicked() ), SLOT( changeClicked() ) );
+  connect( mChangeButton, SIGNAL(clicked()), SLOT(changeClicked()) );
 
   updateView();
 }
@@ -322,28 +322,28 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
 
   loadCityList();
 
-  connect( mCityCombo, SIGNAL( activated( int ) ),
-           SLOT( cityInputChanged() ) );
-  connect( mLatitude, SIGNAL( valueChanged( double ) ),
-           SLOT( decimalInputChanged() ) );
-  connect( mLongitude, SIGNAL( valueChanged( double ) ),
-           SLOT( decimalInputChanged() ) );
-  connect( mLatDegrees, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatMinutes, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatSeconds, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLatDirection, SIGNAL( activated( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongDegrees, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongMinutes, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongSeconds, SIGNAL( valueChanged( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
-  connect( mLongDirection, SIGNAL( activated( int ) ),
-           SLOT( sexagesimalInputChanged() ) );
+  connect( mCityCombo, SIGNAL(activated(int)),
+           SLOT(cityInputChanged()) );
+  connect( mLatitude, SIGNAL(valueChanged(double)),
+           SLOT(decimalInputChanged()) );
+  connect( mLongitude, SIGNAL(valueChanged(double)),
+           SLOT(decimalInputChanged()) );
+  connect( mLatDegrees, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLatMinutes, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLatSeconds, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLatDirection, SIGNAL(activated(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLongDegrees, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLongMinutes, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLongSeconds, SIGNAL(valueChanged(int)),
+           SLOT(sexagesimalInputChanged()) );
+  connect( mLongDirection, SIGNAL(activated(int)),
+           SLOT(sexagesimalInputChanged()) );
 
   updateInputs();
 }

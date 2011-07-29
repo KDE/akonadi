@@ -50,10 +50,10 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate( KCoreConfigSkeleton *setti
   /// from one of our specialcollection folders,
   /// we have to watch all mail item add/move/delete notifications
   /// and check for the parent to see if it is one we care about
-  QObject::connect( mMonitor, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-                    q, SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
-  QObject::connect( mMonitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ),
-                    q, SLOT( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) ) );
+  QObject::connect( mMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
+                    q, SLOT(collectionRemoved(Akonadi::Collection)) );
+  QObject::connect( mMonitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)),
+                    q, SLOT(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
 }
 
 SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
@@ -122,7 +122,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection
   fetchJob->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::None );
   fetchJob->setProperty( "statistics", QVariant::fromValue( statistics ) );
 
-  q->connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchJobFinished( KJob* ) ) );
+  q->connect( fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchJobFinished(KJob*)) );
 }
 
 

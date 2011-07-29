@@ -43,7 +43,7 @@ void TransportResourceBasePrivate::send( Item::Id id )
   ItemFetchJob *job = new ItemFetchJob( Item( id ) );
   job->fetchScope().fetchFullPayload();
   job->setProperty( "id", QVariant( id ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(fetchResult(KJob*)) );
 }
 
 void TransportResourceBasePrivate::fetchResult( KJob *job )

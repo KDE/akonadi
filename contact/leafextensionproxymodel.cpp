@@ -207,17 +207,17 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
 
   beginResetModel();
 
-  disconnect( this, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-              this, SLOT( sourceRowsInserted( const QModelIndex&, int, int ) ) );
-  disconnect( this, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-              this, SLOT( sourceRowsRemoved( const QModelIndex&, int, int ) ) );
+  disconnect( this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+              this, SLOT(sourceRowsInserted(QModelIndex,int,int)) );
+  disconnect( this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+              this, SLOT(sourceRowsRemoved(QModelIndex,int,int)) );
 
   QSortFilterProxyModel::setSourceModel( _sourceModel );
 
-  connect( this, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           this, SLOT( sourceRowsInserted( const QModelIndex&, int, int ) ) );
-  connect( this, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-           this, SLOT( sourceRowsRemoved( const QModelIndex&, int, int ) ) );
+  connect( this, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(sourceRowsInserted(QModelIndex,int,int)) );
+  connect( this, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           this, SLOT(sourceRowsRemoved(QModelIndex,int,int)) );
 
   endResetModel();
 }

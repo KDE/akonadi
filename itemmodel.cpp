@@ -70,18 +70,18 @@ class ItemModel::Private
 
       monitor->ignoreSession( session );
 
-      mParent->connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-                        mParent, SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-      mParent->connect( monitor, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-                        mParent, SLOT( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-      mParent->connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                        mParent, SLOT( itemAdded( const Akonadi::Item& ) ) );
-      mParent->connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-                        mParent, SLOT( itemRemoved( const Akonadi::Item& ) ) );
-      mParent->connect( monitor, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                        mParent, SLOT( itemAdded( const Akonadi::Item& ) ) );
-      mParent->connect( monitor, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                        mParent, SLOT( itemRemoved( const Akonadi::Item& ) ) );
+      mParent->connect( monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+                        mParent, SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      mParent->connect( monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+                        mParent, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+      mParent->connect( monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
+                        mParent, SLOT(itemAdded(Akonadi::Item)) );
+      mParent->connect( monitor, SIGNAL(itemRemoved(Akonadi::Item)),
+                        mParent, SLOT(itemRemoved(Akonadi::Item)) );
+      mParent->connect( monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+                        mParent, SLOT(itemAdded(Akonadi::Item)) );
+      mParent->connect( monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+                        mParent, SLOT(itemRemoved(Akonadi::Item)) );
     }
 
     ~Private()
@@ -335,7 +335,7 @@ void ItemModel::setCollection( const Collection &collection )
   if ( collection.isValid() && collection.contentMimeTypes().isEmpty() )
   {
     CollectionFetchJob* job = new CollectionFetchJob( collection, CollectionFetchJob::Base, this );
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)) );
     return;
   }
 
@@ -357,9 +357,9 @@ void ItemModel::setCollection( const Collection &collection )
   if ( d->collectionIsCompatible() ) {
     ItemFetchJob* job = new ItemFetchJob( collection, session() );
     job->setFetchScope( d->monitor->itemFetchScope() );
-    connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-             SLOT( itemsAdded( const Akonadi::Item::List& ) ) );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( listingDone( KJob* ) ) );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+             SLOT(itemsAdded(Akonadi::Item::List)) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)) );
   }
 
   emit collectionChanged( collection );

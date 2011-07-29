@@ -52,7 +52,7 @@ class CollectionPropertiesDialog::Private
       }
 
       CollectionModifyJob *job = new CollectionModifyJob( mCollection, q );
-      connect( job, SIGNAL( result( KJob* ) ), q, SLOT( saveResult( KJob* ) ) );
+      connect( job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)) );
     }
 
     void saveResult( KJob *job )
@@ -138,8 +138,8 @@ void CollectionPropertiesDialog::Private::init()
     }
   }
 
-  q->connect( q, SIGNAL( okClicked() ), SLOT( save() ) );
-  q->connect( q, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
+  q->connect( q, SIGNAL(okClicked()), SLOT(save()) );
+  q->connect( q, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
 }
 
 

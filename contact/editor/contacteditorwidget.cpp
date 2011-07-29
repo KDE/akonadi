@@ -494,10 +494,10 @@ ContactEditorWidget::ContactEditorWidget( QWidget* )
 {
   d->initGui();
 
-  connect( d->mNameWidget, SIGNAL( nameChanged( const KABC::Addressee& ) ),
-           d->mDisplayNameWidget, SLOT( changeName( const KABC::Addressee& ) ) );
-  connect( d->mOrganizationWidget, SIGNAL( textChanged( const QString& ) ),
-           d->mDisplayNameWidget, SLOT( changeOrganization( const QString& ) ) );
+  connect( d->mNameWidget, SIGNAL(nameChanged(KABC::Addressee)),
+           d->mDisplayNameWidget, SLOT(changeName(KABC::Addressee)) );
+  connect( d->mOrganizationWidget, SIGNAL(textChanged(QString)),
+           d->mDisplayNameWidget, SLOT(changeOrganization(QString)) );
 }
 
 ContactEditorWidget::~ContactEditorWidget()

@@ -87,16 +87,16 @@ void MonitorTest::testMonitor()
   qRegisterMetaType<Akonadi::CollectionStatistics>();
   qRegisterMetaType<QSet<QByteArray> >();
   QSignalSpy caddspy( monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)) );
+  QSignalSpy cmodspy( monitor, SIGNAL(collectionChanged(Akonadi::Collection)) );
   QSignalSpy cmvspy( monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
-  QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)) );
+  QSignalSpy crmspy( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)) );
   QSignalSpy cstatspy( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)) );
   QSignalSpy cSubscribedSpy( monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
   QSignalSpy cUnsubscribedSpy( monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)) );
-  QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(const Akonadi::Item&, const Akonadi::Collection&)) );
-  QSignalSpy imodspy( monitor, SIGNAL(itemChanged(const Akonadi::Item&, const QSet<QByteArray>&)) );
-  QSignalSpy imvspy( monitor, SIGNAL(itemMoved(const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection&)) );
-  QSignalSpy irmspy( monitor, SIGNAL(itemRemoved(const Akonadi::Item&)) );
+  QSignalSpy iaddspy( monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+  QSignalSpy imodspy( monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+  QSignalSpy imvspy( monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+  QSignalSpy irmspy( monitor, SIGNAL(itemRemoved(Akonadi::Item)) );
 
   QVERIFY( caddspy.isValid() );
   QVERIFY( cmodspy.isValid() );
@@ -330,7 +330,7 @@ void MonitorTest::testMonitor()
   monitorCol.setName( "changed name" );
   CollectionModifyJob *mod = new CollectionModifyJob( monitorCol, this );
   AKVERIFYEXEC( mod );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionChanged(const Akonadi::Collection&)), 1000 ) );
+  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( cmodspy.count(), 1 );
   arg = cmodspy.takeFirst();
@@ -384,7 +384,7 @@ void MonitorTest::testMonitor()
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
   QVERIFY( cdel->exec() );
-  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionRemoved(const Akonadi::Collection&)), 1000 ) );
+  QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( crmspy.count(), 1 );
   arg = crmspy.takeFirst();

@@ -55,7 +55,7 @@ using namespace Akonadi;
 
 void SessionPrivate::startNext()
 {
-  QTimer::singleShot( 0, mParent, SLOT( doStartNext() ) );
+  QTimer::singleShot( 0, mParent, SLOT(doStartNext()) );
 }
 
 void SessionPrivate::reconnect()
@@ -132,13 +132,13 @@ void SessionPrivate::reconnect()
   if ( !socket ) {
     if ( !useTcp ) {
       socket = localSocket = new QLocalSocket( mParent );
-      mParent->connect( localSocket, SIGNAL( error( QLocalSocket::LocalSocketError ) ), SLOT( socketError( QLocalSocket::LocalSocketError ) ) );
+      mParent->connect( localSocket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(socketError(QLocalSocket::LocalSocketError)) );
     } else {
       socket = tcpSocket = new QTcpSocket( mParent );
-      mParent->connect( tcpSocket, SIGNAL( error( QAbstractSocket::SocketError ) ), SLOT( socketError( QAbstractSocket::SocketError ) ) );
+      mParent->connect( tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), SLOT(socketError(QAbstractSocket::SocketError)) );
     }
-    mParent->connect( socket, SIGNAL( disconnected() ), SLOT( socketDisconnected() ) );
-    mParent->connect( socket, SIGNAL( readyRead() ), SLOT( dataReceived() ) );
+    mParent->connect( socket, SIGNAL(disconnected()), SLOT(socketDisconnected()) );
+    mParent->connect( socket, SIGNAL(readyRead()), SLOT(dataReceived()) );
   }
 
   // actually do connect
@@ -195,7 +195,7 @@ void SessionPrivate::dataReceived()
         } else {
           kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();
-          QTimer::singleShot( 1000, mParent, SLOT( reconnect() ) );
+          QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
         }
       }
 
@@ -310,9 +310,9 @@ void SessionPrivate::jobDestroyed(QObject * job)
 void SessionPrivate::addJob(Job * job)
 {
   queue.append( job );
-  QObject::connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( jobDone( KJob* ) ) );
-  QObject::connect( job, SIGNAL( writeFinished( Akonadi::Job* ) ), mParent, SLOT( jobWriteFinished( Akonadi::Job* ) ) );
-  QObject::connect( job, SIGNAL( destroyed( QObject* ) ), mParent, SLOT( jobDestroyed( QObject* ) ) );
+  QObject::connect( job, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)) );
+  QObject::connect( job, SIGNAL(writeFinished(Akonadi::Job*)), mParent, SLOT(jobWriteFinished(Akonadi::Job*)) );
+  QObject::connect( job, SIGNAL(destroyed(QObject*)), mParent, SLOT(jobDestroyed(QObject*)) );
   startNext();
 }
 
@@ -369,8 +369,8 @@ void SessionPrivate::init( const QByteArray &id )
 
   if ( ServerManager::state() == ServerManager::NotRunning )
     ServerManager::start();
-  mParent->connect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ),
-                    SLOT( serverStateChanged( Akonadi::ServerManager::State ) ) );
+  mParent->connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+                    SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   reconnect();
 }

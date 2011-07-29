@@ -45,8 +45,8 @@ void ContactGroupLineEdit::setCompletionModel( QAbstractItemModel *model )
 {
   mCompleter = new QCompleter( model, this );
   mCompleter->setCompletionColumn( Akonadi::ContactCompletionModel::NameAndEmailColumn );
-  connect( mCompleter, SIGNAL( activated( const QModelIndex& ) ),
-           this, SLOT( autoCompleted( const QModelIndex& ) ) );
+  connect( mCompleter, SIGNAL(activated(QModelIndex)),
+           this, SLOT(autoCompleted(QModelIndex)) );
 
   setCompleter( mCompleter );
 }
@@ -84,7 +84,7 @@ void ContactGroupLineEdit::setContactReference( const KABC::ContactGroup::Contac
   mContactReference = reference;
   mContainsReference = true;
 
-  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
+  disconnect( this, SIGNAL(textChanged(QString)), this, SLOT(invalidateReference()) );
 
   updateView( reference.uid(), reference.preferredEmail() );
 }
@@ -103,17 +103,17 @@ void ContactGroupLineEdit::autoCompleted( const QModelIndex &index )
   if ( !item.isValid() )
     return;
 
-  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
+  disconnect( this, SIGNAL(textChanged(QString)), this, SLOT(invalidateReference()) );
   mContainsReference = true;
 
   updateView( item );
 
-  connect( this, SIGNAL( textChanged( const QString& ) ), SLOT( invalidateReference() ) );
+  connect( this, SIGNAL(textChanged(QString)), SLOT(invalidateReference()) );
 }
 
 void ContactGroupLineEdit::invalidateReference()
 {
-  disconnect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( invalidateReference() ) );
+  disconnect( this, SIGNAL(textChanged(QString)), this, SLOT(invalidateReference()) );
   mContainsReference = false;
 }
 
@@ -122,7 +122,7 @@ void ContactGroupLineEdit::updateView( const QString &uid, const QString &prefer
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Akonadi::Item( uid.toLongLong() ) );
   job->fetchScope().fetchFullPayload();
   job->setProperty( "preferredEmail", preferredEmail );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(fetchDone(KJob*)) );
 }
 
 void ContactGroupLineEdit::fetchDone( KJob *job )
@@ -134,7 +134,7 @@ void ContactGroupLineEdit::fetchDone( KJob *job )
     updateView( item, fetchJob->property( "preferredEmail" ).toString() );
   }
 
-  connect( this, SIGNAL( textChanged( const QString& ) ), SLOT( invalidateReference() ) );
+  connect( this, SIGNAL(textChanged(QString)), SLOT(invalidateReference()) );
 }
 
 void ContactGroupLineEdit::updateView( const Akonadi::Item &item, const QString &preferredEmail )

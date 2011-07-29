@@ -56,7 +56,7 @@ void ItemMonitor::setItem( const Item &item )
   ItemFetchJob* job = new ItemFetchJob( d->mItem );
   job->setFetchScope( fetchScope() );
 
-  d->connect( job, SIGNAL( result( KJob* ) ), d, SLOT( initialFetchDone( KJob* ) ) );
+  d->connect( job, SIGNAL(result(KJob*)), d, SLOT(initialFetchDone(KJob*)) );
 }
 
 Item ItemMonitor::item() const

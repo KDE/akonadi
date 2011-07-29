@@ -252,8 +252,8 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
         if ( d->mAutomaticConflictHandlingEnabled ) {
           ConflictHandler *handler = new ConflictHandler( ConflictHandler::LocalLocalConflict, this );
           handler->setConflictingItems( d->mItems.first(), d->mItems.first() );
-          connect( handler, SIGNAL( conflictResolved() ), SLOT( conflictResolved() ) );
-          connect( handler, SIGNAL( error( const QString& ) ), SLOT( conflictResolveError( const QString& ) ) );
+          connect( handler, SIGNAL(conflictResolved()), SLOT(conflictResolved()) );
+          connect( handler, SIGNAL(error(QString)), SLOT(conflictResolveError(QString)) );
 
           QMetaObject::invokeMethod( handler, "start", Qt::QueuedConnection );
           return;

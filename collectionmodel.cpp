@@ -200,7 +200,7 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
       return false;
     col.setName( value.toString() );
     CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( editDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
     return true;
   }
   return QAbstractItemModel::setData( index, value, role );
@@ -288,7 +288,7 @@ bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action
     return false;
 
   KJob *job = PasteHelper::paste( data, parentCol, action != Qt::MoveAction );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( dropResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(dropResult(KJob*)) );
   return true;
 }
 

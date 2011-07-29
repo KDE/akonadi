@@ -45,7 +45,7 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
   layout->setMargin(0);
 
   d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
-  connect( d->Widget, SIGNAL( activated() ), this, SLOT( accept() ) );
+  connect( d->Widget, SIGNAL(activated()), this, SLOT(accept()) );
 
   KFilterProxySearchLine* searchLine = new KFilterProxySearchLine( mainWidget() );
   layout->addWidget( searchLine );
@@ -53,7 +53,7 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
 
   layout->addWidget( d->Widget );
 
-  connect( this, SIGNAL( okClicked() ), this, SLOT( accept() ) );
+  connect( this, SIGNAL(okClicked()), this, SLOT(accept()) );
 
   resize( 460, 320 );
 

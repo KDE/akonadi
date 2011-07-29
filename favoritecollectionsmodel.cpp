@@ -125,8 +125,8 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, 
   setSourceModel( source );
   setFilterBehavior( ExactSelection );
 
-  connect( source, SIGNAL( modelReset() ), this, SLOT( clearAndUpdateSelection() ) );
-  connect( source, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ), this, SLOT( updateSelection() ) );
+  connect( source, SIGNAL(modelReset()), this, SLOT(clearAndUpdateSelection()) );
+  connect( source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateSelection()) );
 
   d->loadConfig();
   d->clearAndUpdateSelection();
@@ -279,7 +279,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropActio
           KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
           if ( !job )
             return false;
-          connect( job, SIGNAL( result( KJob* ) ), SLOT( pasteJobDone( KJob* ) ) );          
+          connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );          
           // Accept the event so that it doesn't propagate.
           return true;
          

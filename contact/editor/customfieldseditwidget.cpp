@@ -74,11 +74,11 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   mView->setModel( mModel );
   mView->setColumnHidden( 2, true ); // hide the 'key' column
 
-  connect( mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( slotUpdateButtons() ) );
-  connect( mAddButton, SIGNAL( clicked() ), this, SLOT( slotAdd() ) );
-  connect( mEditButton, SIGNAL( clicked() ), this, SLOT( slotEdit() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), this, SLOT( slotRemove() ) );
+  connect( mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(slotUpdateButtons()) );
+  connect( mAddButton, SIGNAL(clicked()), this, SLOT(slotAdd()) );
+  connect( mEditButton, SIGNAL(clicked()), this, SLOT(slotEdit()) );
+  connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemove()) );
 }
 
 CustomFieldsEditWidget::~CustomFieldsEditWidget()

@@ -43,7 +43,7 @@ void RemoveDuplicatesCommand::execute()
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[ mJobCount - 1] , parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().fetchFullPayload();
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
 }
 
 void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
@@ -99,7 +99,7 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[ mJobCount - 1 ] , parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
     job->fetchScope().fetchFullPayload();
-    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotFetchDone( KJob* ) ) );    
+    connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );    
   } else {
     Akonadi::ItemDeleteJob *delCmd = new Akonadi::ItemDeleteJob( mDuplicateItems, parent() );
     connect( delCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );

@@ -295,7 +295,7 @@ class CollectionSync::Private
         c.setParentCollection( localNode->collection.parentCollection() );
         ++pendingJobs;
         CollectionModifyJob *mod = new CollectionModifyJob( c, q );
-        connect( mod, SIGNAL( result( KJob* ) ), q, SLOT( updateLocalCollectionResult( KJob* ) ) );
+        connect( mod, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
       }
 
       // detecting moves is only possible with global RIDs
@@ -307,7 +307,7 @@ class CollectionSync::Private
         if ( newParent && oldParent != newParent ) {
           ++pendingJobs;
           CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, q );
-          connect( move, SIGNAL( result( KJob* ) ), q, SLOT( updateLocalCollectionResult( KJob* ) ) );
+          connect( move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
         }
       }
 
@@ -338,7 +338,7 @@ class CollectionSync::Private
         CollectionCreateJob *create = new CollectionCreateJob( col, q );
         create->setProperty( LOCAL_NODE, QVariant::fromValue( localParent ) );
         create->setProperty( REMOTE_NODE, QVariant::fromValue( remoteNode ) );
-        connect( create, SIGNAL( result( KJob* ) ), q, SLOT( createLocalCollectionResult( KJob* ) ) );
+        connect( create, SIGNAL(result(KJob*)), q, SLOT(createLocalCollectionResult(KJob*)) );
       }
     }
 
@@ -421,7 +421,7 @@ class CollectionSync::Private
       foreach ( const Collection &col, cols ) {
         ++pendingJobs;
         CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
-        connect( job, SIGNAL( result( KJob* ) ), q, SLOT( deleteLocalCollectionsResult( KJob* ) ) );
+        connect( job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)) );
 
         // It can happen that the groupware servers report us deleted collections
         // twice, in this case this collection delete job will fail on the second try.
@@ -576,9 +576,9 @@ void CollectionSync::doStart()
   job->fetchScope().setResource( d->resourceId );
   job->fetchScope().setIncludeUnsubscribed( true );
   job->fetchScope().setAncestorRetrieval( CollectionFetchScope::Parent );
-  connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List& ) ),
-           SLOT( localCollectionsReceived( const Akonadi::Collection::List& ) ) );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( localCollectionFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
+           SLOT(localCollectionsReceived(Akonadi::Collection::List)) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(localCollectionFetchResult(KJob*)) );
 }
 
 void CollectionSync::setStreamingEnabled( bool streaming )

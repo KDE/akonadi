@@ -65,8 +65,8 @@ class LinkTest : public QObject
 
       qRegisterMetaType<Akonadi::Collection>();
       qRegisterMetaType<Akonadi::Item>();
-      QSignalSpy lspy( monitor, SIGNAL(itemLinked(const Akonadi::Item&, const Akonadi::Collection&)) );
-      QSignalSpy uspy( monitor, SIGNAL(itemUnlinked(const Akonadi::Item&, const Akonadi::Collection&)) );
+      QSignalSpy lspy( monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+      QSignalSpy uspy( monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
       QVERIFY( lspy.isValid() );
       QVERIFY( uspy.isValid() );
 

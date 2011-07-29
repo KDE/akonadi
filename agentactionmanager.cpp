@@ -48,9 +48,9 @@ static const struct {
   int shortcut;
   const char* slot;
 } agentActionData[] = {
-  { "akonadi_agentinstance_create", I18N_NOOP( "&New Agent Instance..." ), "folder-new", 0, SLOT( slotCreateAgentInstance() ) },
-  { "akonadi_agentinstance_delete", I18N_NOOP( "&Delete Agent Instance" ), "edit-delete", 0, SLOT( slotDeleteAgentInstance() ) },
-  { "akonadi_agentinstance_configure", I18N_NOOP( "&Configure Agent Instance" ), "configure", 0, SLOT( slotConfigureAgentInstance() ) }
+  { "akonadi_agentinstance_create", I18N_NOOP( "&New Agent Instance..." ), "folder-new", 0, SLOT(slotCreateAgentInstance()) },
+  { "akonadi_agentinstance_delete", I18N_NOOP( "&Delete Agent Instance" ), "edit-delete", 0, SLOT(slotDeleteAgentInstance()) },
+  { "akonadi_agentinstance_configure", I18N_NOOP( "&Configure Agent Instance" ), "configure", 0, SLOT(slotConfigureAgentInstance()) }
 };
 static const int numAgentActionData = sizeof agentActionData / sizeof *agentActionData;
 
@@ -146,7 +146,7 @@ class AgentActionManager::Private
 
         if ( agentType.isValid() ) {
           AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, q );
-          q->connect( job, SIGNAL( result( KJob* ) ), SLOT( slotAgentInstanceCreationResult( KJob* ) ) );
+          q->connect( job, SIGNAL(result(KJob*)), SLOT(slotAgentInstanceCreationResult(KJob*)) );
           job->configure( mParentWidget );
           job->start();
         }
@@ -230,8 +230,8 @@ AgentActionManager::~AgentActionManager()
 void AgentActionManager::setSelectionModel( QItemSelectionModel *selectionModel )
 {
   d->mSelectionModel = selectionModel;
-  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( updateActions() ) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateActions()) );
 }
 
 void AgentActionManager::setMimeTypeFilter( const QStringList &mimeTypes )
@@ -260,7 +260,7 @@ KAction* AgentActionManager::createAction( Type type )
   action->setShortcut( agentActionData[ type ].shortcut );
 
   if ( agentActionData[ type ].slot )
-    connect( action, SIGNAL( triggered() ), agentActionData[ type ].slot );
+    connect( action, SIGNAL(triggered()), agentActionData[ type ].slot );
 
   d->mActionCollection->addAction( QString::fromLatin1( agentActionData[ type ].name), action );
   d->mActions[ type ] = action;
@@ -291,9 +291,9 @@ void AgentActionManager::interceptAction( Type type, bool intercept )
     return;
 
   if ( intercept )
-    disconnect( action, SIGNAL( triggered() ), this, agentActionData[ type ].slot );
+    disconnect( action, SIGNAL(triggered()), this, agentActionData[ type ].slot );
   else
-    connect( action, SIGNAL( triggered() ), agentActionData[ type ].slot );
+    connect( action, SIGNAL(triggered()), agentActionData[ type ].slot );
 }
 
 AgentInstance::List AgentActionManager::selectedAgentInstances() const

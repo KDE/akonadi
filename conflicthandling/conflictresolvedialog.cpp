@@ -193,9 +193,9 @@ ConflictResolveDialog::ConflictResolveDialog( QWidget *parent )
   button( User2 )->setText( i18n( "Take right one" ) );
   button( User1 )->setText( i18n( "Keep both" ) );
 
-  connect( this, SIGNAL( user1Clicked() ), SLOT( slotUseBothItemsChoosen() ) );
-  connect( this, SIGNAL( user2Clicked() ), SLOT( slotUseOtherItemChoosen() ) );
-  connect( this, SIGNAL( user3Clicked() ), SLOT( slotUseLocalItemChoosen() ) );
+  connect( this, SIGNAL(user1Clicked()), SLOT(slotUseBothItemsChoosen()) );
+  connect( this, SIGNAL(user2Clicked()), SLOT(slotUseOtherItemChoosen()) );
+  connect( this, SIGNAL(user3Clicked()), SLOT(slotUseLocalItemChoosen()) );
 
   QWidget *mainWidget = new QWidget;
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );

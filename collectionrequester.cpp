@@ -79,11 +79,11 @@ void CollectionRequester::Private::init()
   q->setFocusProxy( edit );
   q->setFocusPolicy( Qt::StrongFocus );
 
-  q->connect( button, SIGNAL( clicked() ), q, SLOT( _k_slotOpenDialog() ) );
+  q->connect( button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()) );
 
   QAction *openAction = new QAction( q );
   openAction->setShortcut( KStandardShortcut::Open );
-  q->connect( openAction, SIGNAL( triggered( bool ) ), q, SLOT( _k_slotOpenDialog() ) );
+  q->connect( openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()) );
 
   collectionDialog = new CollectionDialog( q );
   collectionDialog->setCaption( i18n( "Select a collection" ) );

@@ -58,9 +58,9 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
       doConfig( false ),
       tooLate( false )
     {
-      QObject::connect( AgentManager::self(), SIGNAL( instanceAdded( const Akonadi::AgentInstance& ) ),
-                        q, SLOT( agentInstanceAdded( const Akonadi::AgentInstance& ) ) );
-      QObject::connect( safetyTimer, SIGNAL( timeout() ), q, SLOT( timeout() ) );
+      QObject::connect( AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
+                        q, SLOT(agentInstanceAdded(Akonadi::AgentInstance)) );
+      QObject::connect( safetyTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
     }
 
     void agentInstanceAdded( const AgentInstance &instance )
@@ -69,7 +69,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
         safetyTimer->stop();
         if ( doConfig ) {
           // return from dbus call first before doing the next one
-          QTimer::singleShot( 0, q, SLOT( doConfigure() ) );
+          QTimer::singleShot( 0, q, SLOT(doConfigure()) );
         } else {
           q->emitResult();
         }
@@ -90,10 +90,10 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
         return;
       }
 
-      q->connect( agentControlIface, SIGNAL( configurationDialogAccepted() ),
-                  q, SLOT( configurationDialogAccepted() ) );
-      q->connect( agentControlIface, SIGNAL( configurationDialogRejected() ),
-                  q, SLOT( configurationDialogRejected() ) );
+      q->connect( agentControlIface, SIGNAL(configurationDialogAccepted()),
+                  q, SLOT(configurationDialogAccepted()) );
+      q->connect( agentControlIface, SIGNAL(configurationDialogRejected()),
+                  q, SLOT(configurationDialogRejected()) );
 
       agentInstance.configure( parentWidget );
     }
@@ -185,7 +185,7 @@ void AgentInstanceCreateJobPrivate::doStart()
   if ( !agentType.isValid() ) {
     q->setError( KJob::UserDefinedError );
     q->setErrorText( i18n( "Unable to obtain agent type '%1'.", agentTypeId) );
-    QTimer::singleShot( 0, q, SLOT( emitResult() ) );
+    QTimer::singleShot( 0, q, SLOT(emitResult()) );
     return;
   }
 
@@ -193,7 +193,7 @@ void AgentInstanceCreateJobPrivate::doStart()
   if ( !agentInstance.isValid() ) {
     q->setError( KJob::UserDefinedError );
     q->setErrorText( i18n( "Unable to create agent instance." ) );
-    QTimer::singleShot( 0, q, SLOT( emitResult() ) );
+    QTimer::singleShot( 0, q, SLOT(emitResult()) );
   } else {
     int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX

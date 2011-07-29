@@ -126,7 +126,7 @@ void Monitor::ignoreSession(Session * session)
 {
   Q_D( Monitor );
   d->sessions << session->sessionId();
-  connect( session, SIGNAL( destroyed( QObject* ) ), this, SLOT( slotSessionDestroyed( QObject* ) ) );
+  connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
 }
 
 void Monitor::fetchCollection(bool enable)

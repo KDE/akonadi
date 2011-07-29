@@ -130,7 +130,7 @@ void SpecialCollectionsRequestJobPrivate::lockResult( KJob *job )
     resjob->setTypes( mKnownTypes );
     resjob->setNameForTypeMap( mNameForTypeMap );
     resjob->setIconForTypeMap( mIconForTypeMap );
-    QObject::connect( resjob, SIGNAL( result( KJob* ) ), q, SLOT( resourceScanResult( KJob* ) ) );
+    QObject::connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
   } else {
     // If no default folders are requested, go straight to the next step.
     nextResource();
@@ -168,7 +168,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
     mSpecialCollections->d->endBatchRegister();
 
     // Release the lock once the transaction has been committed.
-    QObject::connect( q, SIGNAL( result( KJob* ) ), q, SLOT( releaseLock() ) );
+    QObject::connect( q, SIGNAL(result(KJob*)), q, SLOT(releaseLock()) );
 
     // We are done!
     q->commit();
@@ -178,7 +178,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
     kDebug() << "A resource is done," << mFoldersForResource.count()
              << "more to do. Now doing resource" << resourceId;
     ResourceScanJob *resjob = new ResourceScanJob( resourceId, mSpecialCollections->d->mSettings, q );
-    QObject::connect( resjob, SIGNAL( result( KJob* ) ), q, SLOT( resourceScanResult( KJob* ) ) );
+    QObject::connect( resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)) );
   }
 }
 
@@ -245,7 +245,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders( ResourceScanJo
 
       CollectionCreateJob *createJob = new CollectionCreateJob( collection, q );
       createJob->setProperty( "type", it.key() );
-      QObject::connect( createJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionCreateResult( KJob* ) ) );
+      QObject::connect( createJob, SIGNAL(result(KJob*)), q, SLOT(collectionCreateResult(KJob*)) );
 
       mPendingCreateJobs++;
     }
@@ -349,7 +349,7 @@ void SpecialCollectionsRequestJob::doStart()
     emitResult();
   } else {
     GetLockJob *lockJob = new GetLockJob( this );
-    connect( lockJob, SIGNAL( result( KJob* ) ), this, SLOT( lockResult( KJob* ) ) );
+    connect( lockJob, SIGNAL(result(KJob*)), this, SLOT(lockResult(KJob*)) );
     lockJob->start();
   }
 }

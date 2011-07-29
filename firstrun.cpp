@@ -115,7 +115,7 @@ void Firstrun::migrateKresType( const QString& resourceFamily )
   if ( enabled && currentVersion < targetVersion ) {
     kDebug() << "Performing migration of legacy KResource settings. Good luck!";
     mProcess = new KProcess( this );
-    connect( mProcess, SIGNAL( finished( int ) ), SLOT( migrationFinished( int ) ) );
+    connect( mProcess, SIGNAL(finished(int)), SLOT(migrationFinished(int)) );
     QStringList args = QStringList() << QLatin1String( "--interactive-on-change" )
                                      << QLatin1String( "--type" ) << resourceFamily;
     if ( !setupClientBridge )
@@ -210,7 +210,7 @@ void Firstrun::setupNext()
 #endif
 
   AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( instanceCreated( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(instanceCreated(KJob*)) );
   job->start();
 }
 

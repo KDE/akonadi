@@ -45,7 +45,7 @@ TagWidget::TagWidget( QWidget *parent )
 
   layout->setStretch( 0, 10 );
 
-  connect( mEditButton, SIGNAL( clicked() ), SLOT( editTags() ) );
+  connect( mEditButton, SIGNAL(clicked()), SLOT(editTags()) );
 }
 
 TagWidget::~TagWidget()

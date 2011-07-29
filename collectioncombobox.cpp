@@ -73,11 +73,11 @@ class CollectionComboBox::Private
       mParent->setModel( mRightsFilterModel );
 
       mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
-      mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
-                        mParent, SLOT( activated( const QModelIndex& ) ) );
+      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                        mParent, SLOT(activated(QModelIndex)) );
 
-      mParent->connect( mParent, SIGNAL( activated( int ) ),
-                        mParent, SLOT( activated( int ) ) );
+      mParent->connect( mParent, SIGNAL(activated(int)),
+                        mParent, SLOT(activated(int)) );
     }
 
     ~Private()

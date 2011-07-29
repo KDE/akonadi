@@ -87,14 +87,14 @@ CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionD
   mFilterModel->setSourceModel( mRightsFilterModel );
 
   mSelectionModel = new QItemSelectionModel( mFilterModel );
-  mParent->connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-                    SLOT( slotSelectionChanged() ) );
-  mParent->connect( mSelectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-                    this, SLOT( selectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+  mParent->connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                    SLOT(slotSelectionChanged()) );
+  mParent->connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                    this, SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   mSelectionHandler = new AsyncSelectionHandler( mFilterModel, mParent );
-  mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
-                    SLOT( slotCollectionAvailable( const QModelIndex& ) ) );
+  mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                    SLOT(slotCollectionAvailable(QModelIndex)) );
 
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String( "imports" ) ) )
     mView->engine()->addImportPath( importPath );
@@ -181,7 +181,7 @@ void CollectionDialog::Private::slotAddChildCollection()
     collection.setName( name );
     collection.setParentCollection( parentCollection );
     Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
-    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotCollectionCreationResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)) );
   }
 }
 

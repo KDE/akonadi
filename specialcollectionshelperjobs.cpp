@@ -198,7 +198,7 @@ void ResourceScanJob::doStart()
                                                          CollectionFetchJob::Recursive, this );
   fetchJob->fetchScope().setResource( d->mResourceId );
   fetchJob->fetchScope().setIncludeStatistics( true );
-  connect( fetchJob, SIGNAL( result( KJob* ) ), this, SLOT( fetchResult( KJob* ) ) );
+  connect( fetchJob, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)) );
 }
 
 
@@ -256,7 +256,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
     CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, q );
     fetchJob->fetchScope().setResource( resourceId );
     fetchJob->fetchScope().setIncludeStatistics( true );
-    q->connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchResult( KJob* ) ) );
+    q->connect( fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)) );
   } else {
     // Try harder: maybe the default resource has been removed and another one added
     //             without updating the config file, in this case search for a resource
@@ -282,7 +282,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
     kDebug() << "Creating maildir resource.";
     const AgentType type = AgentManager::self()->type( mDefaultResourceType );
     AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type, q );
-    QObject::connect( job, SIGNAL( result( KJob* ) ), q, SLOT( resourceCreateResult( KJob* ) ) );
+    QObject::connect( job, SIGNAL(result(KJob*)), q, SLOT(resourceCreateResult(KJob*)) );
     job->start(); // non-Akonadi::Job
   }
 }
@@ -356,7 +356,7 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
   // Sync the resource.
   {
     ResourceSynchronizationJob *syncJob = new ResourceSynchronizationJob( agent, q );
-    QObject::connect( syncJob, SIGNAL( result( KJob* ) ), q, SLOT( resourceSyncResult( KJob* ) ) );
+    QObject::connect( syncJob, SIGNAL(result(KJob*)), q, SLOT(resourceSyncResult(KJob*)) );
     syncJob->start(); // non-Akonadi
   }
 }
@@ -373,7 +373,7 @@ void DefaultResourceJobPrivate::resourceSyncResult( KJob *job )
   kDebug() << "Fetching maildir collections.";
   CollectionFetchJob *fetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, q );
   fetchJob->fetchScope().setResource( defaultResourceId( mSettings ) );
-  QObject::connect( fetchJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionFetchResult( KJob* ) ) );
+  QObject::connect( fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)) );
 }
 
 void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
@@ -443,7 +443,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
       setCollectionAttributes( collection, type, mNameForTypeMap, mIconForTypeMap );
 
       CollectionModifyJob *modifyJob = new CollectionModifyJob( collection, q );
-      QObject::connect( modifyJob, SIGNAL( result( KJob* ) ), q, SLOT( collectionModifyResult( KJob* ) ) );
+      QObject::connect( modifyJob, SIGNAL(result(KJob*)), q, SLOT(collectionModifyResult(KJob*)) );
       mPendingModifyJobs++;
     } else {
       kDebug() << "Searching for names: " << typeForName.keys();
@@ -578,14 +578,14 @@ void GetLockJob::Private::doStart()
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, DBusConnectionPool::threadConnection(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, q );
     //kDebug() << "Waiting for lock.";
-    connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-             q, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+    connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+             q, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 
     mSafetyTimer = new QTimer( q );
     mSafetyTimer->setSingleShot( true );
     mSafetyTimer->setInterval( LOCK_WAIT_TIMEOUT_SECONDS * 1000 );
     mSafetyTimer->start();
-    connect( mSafetyTimer, SIGNAL( timeout() ), q, SLOT( timeout() ) );
+    connect( mSafetyTimer, SIGNAL(timeout()), q, SLOT(timeout()) );
   }
 }
 
@@ -622,7 +622,7 @@ GetLockJob::~GetLockJob()
 
 void GetLockJob::start()
 {
-  QTimer::singleShot( 0, this, SLOT( doStart() ) );
+  QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 void Akonadi::setCollectionAttributes( Akonadi::Collection &collection, const QByteArray &type,

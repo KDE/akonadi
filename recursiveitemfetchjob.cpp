@@ -52,8 +52,8 @@ class RecursiveItemFetchJob::Private
       foreach ( const Collection &collection, collections ) {
         ItemFetchJob *itemFetchJob = new ItemFetchJob( collection, mParent );
         itemFetchJob->setFetchScope( mFetchScope );
-        mParent->connect( itemFetchJob, SIGNAL( result( KJob* ) ),
-                          mParent, SLOT( itemFetchResult( KJob* ) ) );
+        mParent->connect( itemFetchJob, SIGNAL(result(KJob*)),
+                          mParent, SLOT(itemFetchResult(KJob*)) );
 
         mFetchCount++;
       }
@@ -118,7 +118,7 @@ void RecursiveItemFetchJob::start()
   if ( !d->mMimeTypes.isEmpty() )
     job->fetchScope().setContentMimeTypes( d->mMimeTypes );
 
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( collectionFetchResult( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)) );
 }
 
 Akonadi::Item::List RecursiveItemFetchJob::items() const

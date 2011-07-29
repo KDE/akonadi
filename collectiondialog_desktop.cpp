@@ -96,8 +96,8 @@ class CollectionDialog::Private
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
       mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
-      mParent->connect( mSelectionHandler, SIGNAL( collectionAvailable( const QModelIndex& ) ),
-                        mParent, SLOT( slotCollectionAvailable( const QModelIndex& ) ) );
+      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                        mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
 
       KRecursiveFilterProxyModel* filterCollection = new KRecursiveFilterProxyModel( mParent );
       filterCollection->setDynamicSortFilter( true );
@@ -105,14 +105,14 @@ class CollectionDialog::Private
       filterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
       mView->setModel( filterCollection );
 
-      mParent->connect( filterCollectionLineEdit, SIGNAL( textChanged( const QString& ) ),
-                        filterCollection, SLOT( setFilterFixedString( const QString& ) ) );
+      mParent->connect( filterCollectionLineEdit, SIGNAL(textChanged(QString)),
+                        filterCollection, SLOT(setFilterFixedString(QString)) );
 
-      mParent->connect( mView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-                        mParent, SLOT( slotSelectionChanged() ) );
+      mParent->connect( mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                        mParent, SLOT(slotSelectionChanged()) );
 
-      mParent->connect( mView, SIGNAL( doubleClicked( const QModelIndex& ) ),
-                        mParent, SLOT( accept() ) );
+      mParent->connect( mView, SIGNAL(doubleClicked(QModelIndex)),
+                        mParent, SLOT(accept()) );
 
     }
 
@@ -168,7 +168,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
     mParent->setButtonGuiItem( User1, KGuiItem( i18n( "&New Subfolder..." ), QLatin1String( "folder-new" ),
                                                 i18n( "Create a new subfolder under the currently selected folder" ) ) );
     mParent->enableButton( KDialog::User1, false );
-    connect( mParent, SIGNAL( user1Clicked() ), mParent, SLOT( slotAddChildCollection() ) );
+    connect( mParent, SIGNAL(user1Clicked()), mParent, SLOT(slotAddChildCollection()) );
   }
 }
 
@@ -206,7 +206,7 @@ void CollectionDialog::Private::slotAddChildCollection()
     collection.setName( name );
     collection.setParentCollection( parentCollection );
     Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( collection );
-    connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( slotCollectionCreationResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)) );
   }
 }
 

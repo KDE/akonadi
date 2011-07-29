@@ -28,8 +28,8 @@ AsyncSelectionHandler::AsyncSelectionHandler( QAbstractItemModel *model, QObject
 {
   Q_ASSERT( mModel );
 
-  connect( mModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           this, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
+  connect( mModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
+           this, SLOT(rowsInserted(QModelIndex,int,int)) );
 }
 
 AsyncSelectionHandler::~AsyncSelectionHandler()

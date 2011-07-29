@@ -84,15 +84,15 @@ void ContactGroupEditor::Private::itemFetchDone( KJob *job )
 
     Akonadi::CollectionFetchJob *collectionFetchJob = new Akonadi::CollectionFetchJob( mItem.parentCollection(),
                                                                                        Akonadi::CollectionFetchJob::Base );
-    mParent->connect( collectionFetchJob, SIGNAL( result( KJob* ) ),
-                      SLOT( parentCollectionFetchDone( KJob* ) ) );
+    mParent->connect( collectionFetchJob, SIGNAL(result(KJob*)),
+                      SLOT(parentCollectionFetchDone(KJob*)) );
   } else {
     const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
     loadContactGroup( group );
 
     setReadOnly( mReadOnly );
 
-    QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
+    QTimer::singleShot( 0, mParent, SLOT(adaptHeaderSizes()) );
   }
 }
 
@@ -114,7 +114,7 @@ void ContactGroupEditor::Private::parentCollectionFetchDone( KJob *job )
 
   setReadOnly( mReadOnly );
 
-  QTimer::singleShot( 0, mParent, SLOT( adaptHeaderSizes() ) );
+  QTimer::singleShot( 0, mParent, SLOT(adaptHeaderSizes()) );
 }
 
 void ContactGroupEditor::Private::storeDone( KJob *job )
@@ -143,7 +143,7 @@ void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArra
     job->fetchScope().fetchFullPayload();
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-    mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( itemFetchDone( KJob* ) ) );
+    mParent->connect( job, SIGNAL(result(KJob*)), mParent, SLOT(itemFetchDone(KJob*)) );
     new WaitingOverlay( job, mParent );
   }
 }
@@ -186,8 +186,8 @@ void ContactGroupEditor::Private::setupMonitor()
   mMonitor = new Monitor;
   mMonitor->ignoreSession( Session::defaultSession() );
 
-  connect( mMonitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-           mParent, SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+  connect( mMonitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+           mParent, SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
 }
 
 void ContactGroupEditor::Private::setReadOnly( bool readOnly )
@@ -213,8 +213,8 @@ ContactGroupEditor::ContactGroupEditor( Mode mode, QWidget *parent )
     KABC::ContactGroup dummyGroup;
     d->mGroupModel->loadContactGroup( dummyGroup );
 
-    QTimer::singleShot( 0, this, SLOT( adaptHeaderSizes() ) );
-    QTimer::singleShot( 0, d->mGui.groupName, SLOT( setFocus() ) );
+    QTimer::singleShot( 0, this, SLOT(adaptHeaderSizes()) );
+    QTimer::singleShot( 0, d->mGui.groupName, SLOT(setFocus()) );
   }
 
   d->mGui.membersView->header()->setStretchLastSection( true );
@@ -234,7 +234,7 @@ void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
   job->fetchScope().fetchFullPayload();
   job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
 
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( itemFetchDone( KJob* ) ) );
+  connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchDone(KJob*)) );
 
   d->setupMonitor();
   d->mMonitor->setItemMonitored( item );
@@ -259,7 +259,7 @@ bool ContactGroupEditor::saveContactGroup()
     d->mItem.setPayload<KABC::ContactGroup>( group );
 
     ItemModifyJob *job = new ItemModifyJob( d->mItem );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
   } else if ( d->mMode == CreateMode ) {
     if ( !d->mDefaultCollection.isValid() ) {
       const QStringList mimeTypeFilter( KABC::ContactGroup::mimeType() );
@@ -285,7 +285,7 @@ bool ContactGroupEditor::saveContactGroup()
     item.setMimeType( KABC::ContactGroup::mimeType() );
 
     ItemCreateJob *job = new ItemCreateJob( item, d->mDefaultCollection );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
   }
 
   return true;

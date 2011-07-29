@@ -73,11 +73,11 @@ ContactLineEdit::ContactLineEdit( bool isReference, QWidget *parent )
   QCompleter *completer = new QCompleter( filter, this );
   completer->setCompletionColumn( Akonadi::ContactCompletionModel::NameColumn );
   completer->setCaseSensitivity( Qt::CaseInsensitive );
-  connect( completer, SIGNAL( activated( const QModelIndex& ) ), SLOT( completed( const QModelIndex& ) ) );
+  connect( completer, SIGNAL(activated(QModelIndex)), SLOT(completed(QModelIndex)) );
 
   setCompleter( completer );
 
-  connect( this, SIGNAL( textEdited( const QString& ) ), SLOT( slotTextEdited() ) );
+  connect( this, SIGNAL(textEdited(QString)), SLOT(slotTextEdited()) );
 }
 
 bool ContactLineEdit::isReference() const
@@ -144,7 +144,7 @@ QWidget* ContactGroupEditorDelegate::createEditor( QWidget *parent, const QStyle
       edit = new ContactLineEdit( false, parent );
     }
 
-    connect( edit, SIGNAL( completed( QWidget* ) ), SLOT( completed( QWidget* ) ) );
+    connect( edit, SIGNAL(completed(QWidget*)), SLOT(completed(QWidget*)) );
 
     return edit;
   } else {
@@ -282,7 +282,7 @@ bool ContactGroupEditorDelegate::editorEvent( QEvent *event, QAbstractItemModel 
 
       if ( buttonRect.contains( mouseEvent->pos() ) ) {
         model->removeRows( index.row(), 1 );
-        QTimer::singleShot( 0, this, SLOT( setFirstColumnAsCurrent() ) );
+        QTimer::singleShot( 0, this, SLOT(setFirstColumnAsCurrent()) );
         return true;
       }
     }

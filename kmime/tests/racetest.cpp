@@ -78,7 +78,7 @@ void RaceTest::testMultipleProcesses()
     if( types.contains( instance.type() ) ) {
       kDebug() << "Removing instance of type" << instance.type().identifier();
       AgentManager::self()->removeInstance( instance );
-      QTest::kWaitForSignal( AgentManager::self(), SIGNAL( instanceRemoved( const Akonadi::AgentInstance& ) ) );
+      QTest::kWaitForSignal( AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)) );
     }
   }
   instances = AgentManager::self()->instances();
@@ -93,8 +93,8 @@ void RaceTest::testMultipleProcesses()
     KProcess *proc = new KProcess;
     procs.append( proc );
     proc->setProgram( REQUESTER_EXE );
-    errorSpy[i] = new QSignalSpy( proc, SIGNAL( error( QProcess::ProcessError ) ) );
-    finishedSpy[i] = new QSignalSpy( proc, SIGNAL( finished( int, QProcess::ExitStatus ) ) );
+    errorSpy[i] = new QSignalSpy( proc, SIGNAL(error(QProcess::ProcessError)) );
+    finishedSpy[i] = new QSignalSpy( proc, SIGNAL(finished(int,QProcess::ExitStatus)) );
     proc->start();
     QTest::qWait( delay );
   }

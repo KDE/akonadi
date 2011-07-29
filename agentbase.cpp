@@ -124,8 +124,8 @@ void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi
   Q_UNUSED( collection );
   if ( sAgentBase != 0 ) {
     // not implementation, let's disconnect the signal to enable optimizations in Monitor
-    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                         sAgentBase->d_ptr, SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+                         sAgentBase->d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
     sAgentBase->d_ptr->changeProcessed();
   }
 }
@@ -136,8 +136,8 @@ void AgentBase::ObserverV2::itemUnlinked( const Akonadi::Item& item, const Akona
   Q_UNUSED( collection );
   if ( sAgentBase != 0 ) {
     // not implementation, let's disconnect the signal to enable optimizations in Monitor
-    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-                         sAgentBase->d_ptr, SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+                         sAgentBase->d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
     sAgentBase->d_ptr->changeProcessed();
   }
 }
@@ -225,37 +225,37 @@ void AgentBasePrivate::init()
     }
   }
 
-  connect( mChangeRecorder, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
-           SLOT( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
-  connect( mChangeRecorder, SIGNAL( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( itemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
-           SLOT( itemRemoved( const Akonadi::Item& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemLinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ),
-           SLOT( itemUnlinked( const Akonadi::Item&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-           SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ),
-           SLOT( collectionChanged( const Akonadi::Collection&, const QSet<QByteArray>& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( collectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionRemoved( const Akonadi::Collection& ) ),
-           SLOT( collectionRemoved( const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ),
-           SLOT( collectionSubscribed( const Akonadi::Collection&, const Akonadi::Collection& ) ) );
-  connect( mChangeRecorder, SIGNAL( collectionUnsubscribed( const Akonadi::Collection& ) ),
-           SLOT( collectionUnsubscribed( const Akonadi::Collection& ) ) );
+  connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
+           SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+  connect( mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
+           SLOT(itemRemoved(Akonadi::Item)) );
+  connect( mChangeRecorder, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
+           SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+           SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection)),
+           SLOT(collectionChanged(Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+           SLOT(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+  connect( mChangeRecorder, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
+           SLOT(collectionRemoved(Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),
+           SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
+           SLOT(collectionUnsubscribed(Akonadi::Collection)) );
 
-  connect( q, SIGNAL( status( int, const QString& ) ), q, SLOT( slotStatus( int, const QString& ) ) );
-  connect( q, SIGNAL( percent( int ) ), q, SLOT( slotPercent( int ) ) );
-  connect( q, SIGNAL( warning( const QString& ) ), q, SLOT( slotWarning( const QString& ) ) );
-  connect( q, SIGNAL( error( const QString& ) ), q, SLOT( slotError( const QString& ) ) );
+  connect( q, SIGNAL(status(int,QString)), q, SLOT(slotStatus(int,QString)) );
+  connect( q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)) );
+  connect( q, SIGNAL(warning(QString)), q, SLOT(slotWarning(QString)) );
+  connect( q, SIGNAL(error(QString)), q, SLOT(slotError(QString)) );
 
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.
@@ -269,7 +269,7 @@ void AgentBasePrivate::init()
     KApplication::kApplication()->disableSessionManagement();
 #endif
 
-  QTimer::singleShot( 0, q, SLOT( delayedInit() ) );
+  QTimer::singleShot( 0, q, SLOT(delayedInit()) );
 }
 
 void AgentBasePrivate::delayedInit()
@@ -423,7 +423,7 @@ void AgentBasePrivate::collectionUnsubscribed( const Akonadi::Collection &collec
 void AgentBasePrivate::changeProcessed()
 {
   mChangeRecorder->changeProcessed();
-  QTimer::singleShot( 0, mChangeRecorder, SLOT( replayNext() ) );
+  QTimer::singleShot( 0, mChangeRecorder, SLOT(replayNext()) );
 }
 
 void AgentBasePrivate::slotStatus( int status, const QString &message )
@@ -583,8 +583,8 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
 
   if ( d->mNeedsNetwork ) {
     connect( Solid::Networking::notifier()
-           , SIGNAL( statusChanged( Solid::Networking::Status ) )
-           , this, SLOT( slotNetworkStatusChange( Solid::Networking::Status ) ) );
+           , SIGNAL(statusChanged(Solid::Networking::Status))
+           , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status)) );
   } else {
     disconnect( Solid::Networking::notifier(), 0, 0, 0 );
     setOnline( true );

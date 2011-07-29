@@ -52,8 +52,8 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString& caption, const QString
 
   layout->addStretch();
 
-  connect(m_lineEdit, SIGNAL(textChanged(const QString&)),
-          SLOT(slotEditTextChanged(const QString&)));
+  connect(m_lineEdit, SIGNAL(textChanged(QString)),
+          SLOT(slotEditTextChanged(QString)));
   connect(this, SIGNAL(user1Clicked()), this, SLOT(slotDefaultName()));
 
 

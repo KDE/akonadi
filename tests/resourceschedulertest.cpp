@@ -60,9 +60,9 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   ResourceScheduler scheduler;
   scheduler.setOnline( true );
   qRegisterMetaType<Akonadi::Collection>("Akonadi::Collection");
-  QSignalSpy changeReplaySpy( &scheduler, SIGNAL( executeChangeReplay() ) );
-  QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL( executeCollectionTreeSync() ) );
-  QSignalSpy syncSpy( &scheduler, SIGNAL( executeCollectionSync( const Akonadi::Collection & ) ) );
+  QSignalSpy changeReplaySpy( &scheduler, SIGNAL(executeChangeReplay()) );
+  QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
+  QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)) );
   QVERIFY( changeReplaySpy.isValid() );
   QVERIFY( collectionTreeSyncSpy.isValid() );
   QVERIFY( syncSpy.isValid() );
@@ -197,7 +197,7 @@ void ResourceSchedulerTest::testCompression()
   qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
   QSignalSpy fullSyncSpy( &scheduler, SIGNAL(executeFullSync()) );
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
-  QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection) ) );
+  QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)) );
   QSignalSpy fetchSpy( &scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)) );
   QVERIFY( fullSyncSpy.isValid() );
   QVERIFY( collectionTreeSyncSpy.isValid() );
@@ -287,10 +287,10 @@ void ResourceSchedulerTest::testPriorities()
   scheduler.setOnline( true );
   qRegisterMetaType<Akonadi::Collection>("Akonadi::Collection");
   qRegisterMetaType<Akonadi::Item>( "Akonadi::Item" );
-  QSignalSpy changeReplaySpy( &scheduler, SIGNAL( executeChangeReplay() ) );
+  QSignalSpy changeReplaySpy( &scheduler, SIGNAL(executeChangeReplay()) );
   QSignalSpy fullSyncSpy( &scheduler, SIGNAL(executeFullSync()) );
   QSignalSpy collectionTreeSyncSpy( &scheduler, SIGNAL(executeCollectionTreeSync()) );
-  QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection) ) );
+  QSignalSpy syncSpy( &scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)) );
   QSignalSpy fetchSpy( &scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)) );
   QSignalSpy attributesSyncSpy( &scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)) );
   QVERIFY( changeReplaySpy.isValid() );

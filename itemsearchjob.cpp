@@ -65,8 +65,8 @@ ItemSearchJob::ItemSearchJob( const QString & query, QObject * parent )
   d->mEmitTimer = new QTimer( this );
   d->mEmitTimer->setSingleShot( true );
   d->mEmitTimer->setInterval( 100 );
-  connect( d->mEmitTimer, SIGNAL( timeout() ), this, SLOT( timeout() ) );
-  connect( this, SIGNAL( result( KJob* ) ), this, SLOT( timeout() ) );
+  connect( d->mEmitTimer, SIGNAL(timeout()), this, SLOT(timeout()) );
+  connect( this, SIGNAL(result(KJob*)), this, SLOT(timeout()) );
 }
 
 ItemSearchJob::~ItemSearchJob()

@@ -56,7 +56,7 @@ class Akonadi::ServerManagerPrivate
       mState = instance->state();
       mSafetyTimer->setSingleShot( true );
       mSafetyTimer->setInterval( 30000 );
-      QObject::connect( mSafetyTimer.get(), SIGNAL( timeout() ), instance, SLOT( timeout() ) );
+      QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
       KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
       if ( mState == ServerManager::Running && Internal::clientType() == Internal::User )
         mFirstRunner = new Firstrun( instance );
@@ -128,14 +128,14 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
 
-  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 
   // AgentManager is dangerous to use for agents themselves
   if ( Internal::clientType() != Internal::User )
     return;
-  connect( AgentManager::self(), SIGNAL( typeAdded( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
-  connect( AgentManager::self(), SIGNAL( typeRemoved( const Akonadi::AgentType& ) ), SLOT( checkStatusChanged() ) );
+  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
 }
 
 ServerManager * Akonadi::ServerManager::self()

@@ -49,23 +49,23 @@ void ContactDefaultActions::connectToView( QObject *view )
   const QMetaObject *metaObject = view->metaObject();
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "urlClicked( const KUrl& )" ) ) != -1 )
-    connect( view, SIGNAL( urlClicked( const KUrl& ) ), SLOT( showUrl( const KUrl& ) ) );
+    connect( view, SIGNAL(urlClicked(KUrl)), SLOT(showUrl(KUrl)) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "emailClicked( const QString&, const QString& )" ) ) != -1 )
-    connect( view, SIGNAL( emailClicked( const QString&, const QString& ) ),
-             this, SLOT( sendEmail( const QString&, const QString& ) ) );
+    connect( view, SIGNAL(emailClicked(QString,QString)),
+             this, SLOT(sendEmail(QString,QString)) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "phoneNumberClicked( const KABC::PhoneNumber& )" ) ) != -1 )
-    connect( view, SIGNAL( phoneNumberClicked( const KABC::PhoneNumber& ) ),
-             this, SLOT( dialPhoneNumber( const KABC::PhoneNumber& ) ) );
+    connect( view, SIGNAL(phoneNumberClicked(KABC::PhoneNumber)),
+             this, SLOT(dialPhoneNumber(KABC::PhoneNumber)) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "smsClicked( const KABC::PhoneNumber& )" ) ) != -1 )
-    connect( view, SIGNAL( smsClicked( const KABC::PhoneNumber& ) ),
-             this, SLOT( sendSms( const KABC::PhoneNumber& ) ) );
+    connect( view, SIGNAL(smsClicked(KABC::PhoneNumber)),
+             this, SLOT(sendSms(KABC::PhoneNumber)) );
 
   if ( metaObject->indexOfSignal( QMetaObject::normalizedSignature( "addressClicked( const KABC::Address& )" ) ) != -1 )
-    connect( view, SIGNAL( addressClicked( const KABC::Address& ) ),
-             this, SLOT( showAddress( const KABC::Address& ) ) );
+    connect( view, SIGNAL(addressClicked(KABC::Address)),
+             this, SLOT(showAddress(KABC::Address)) );
 }
 
 void ContactDefaultActions::showUrl( const KUrl &url )

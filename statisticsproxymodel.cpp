@@ -178,8 +178,8 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
     int parentColumnCount = mParent->columnCount( parent );
     QModelIndex extraTopLeft = mParent->index( topLeft.row(), parentColumnCount - 1 - 3 , parent );
     QModelIndex extraBottomRight = mParent->index( bottomRight.row(), parentColumnCount -1, parent );
-    mParent->disconnect( mParent, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-                         mParent, SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
+    mParent->disconnect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                         mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
     emit mParent->dataChanged( extraTopLeft, extraBottomRight );
 
     // We get this signal when the statistics of a row changes.
@@ -192,8 +192,8 @@ void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex& topLeft,
       parent = parent.parent();
       parentColumnCount = mParent->columnCount( parent );
     }
-    mParent->connect( mParent, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-                      SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
+    mParent->connect( mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                      SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
   }
 }
 
@@ -260,8 +260,8 @@ StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
-  connect( this, SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
-           SLOT( proxyDataChanged( const QModelIndex&, const QModelIndex& ) ) );
+  connect( this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+           SLOT(proxyDataChanged(QModelIndex,QModelIndex)) );
 }
 
 StatisticsProxyModel::~StatisticsProxyModel()

@@ -217,10 +217,10 @@ ContactViewer::ContactViewer( QWidget *parent )
   d->mBrowser = new TextBrowser;
   d->mBrowser->setNotifyClick( true );
 
-  connect( d->mBrowser, SIGNAL( mailClick( const QString&, const QString& ) ),
-           this, SLOT( slotMailClicked( const QString&, const QString& ) ) );
-  connect( d->mBrowser, SIGNAL( urlClick( const QString& ) ),
-           this, SLOT( slotUrlClicked( const QString& ) ) );
+  connect( d->mBrowser, SIGNAL(mailClick(QString,QString)),
+           this, SLOT(slotMailClicked(QString,QString)) );
+  connect( d->mBrowser, SIGNAL(urlClick(QString)),
+           this, SLOT(slotUrlClicked(QString)) );
 
   layout->addWidget( d->mBrowser );
 
@@ -275,13 +275,13 @@ void ContactViewer::itemChanged( const Item &contactItem )
 
   // stop any running fetch job
   if ( d->mParentCollectionFetchJob ) {
-    disconnect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), this, SLOT( slotParentCollectionFetched( KJob* ) ) );
+    disconnect( d->mParentCollectionFetchJob, SIGNAL(result(KJob*)), this, SLOT(slotParentCollectionFetched(KJob*)) );
     delete d->mParentCollectionFetchJob;
     d->mParentCollectionFetchJob = 0;
   }
 
   d->mParentCollectionFetchJob = new CollectionFetchJob( contactItem.parentCollection(), CollectionFetchJob::Base, this );
-  connect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ), SLOT( slotParentCollectionFetched( KJob* ) ) );
+  connect( d->mParentCollectionFetchJob, SIGNAL(result(KJob*)), SLOT(slotParentCollectionFetched(KJob*)) );
 }
 
 void ContactViewer::itemRemoved()

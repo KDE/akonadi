@@ -56,9 +56,9 @@ IMEditorDialog::IMEditorDialog( QWidget *parent )
   layout->addWidget( mRemoveButton, 1, 1 );
   layout->addWidget( mStandardButton, 2, 1 );
 
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( slotAdd() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( slotRemove() ) );
-  connect( mStandardButton, SIGNAL( clicked()), SLOT( slotSetStandard() ) );
+  connect( mAddButton, SIGNAL(clicked()), SLOT(slotAdd()) );
+  connect( mRemoveButton, SIGNAL(clicked()), SLOT(slotRemove()) );
+  connect( mStandardButton, SIGNAL(clicked()), SLOT(slotSetStandard()) );
 
   mRemoveButton->setEnabled( false );
   mStandardButton->setEnabled( false );
@@ -68,8 +68,8 @@ IMEditorDialog::IMEditorDialog( QWidget *parent )
   mView->setModel( mModel );
   mView->setItemDelegate( new IMDelegate( this ) );
 
-  connect( mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( slotUpdateButtons() ) );
+  connect( mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(slotUpdateButtons()) );
 }
 
 void IMEditorDialog::setAddresses( const IMAddress::List &addresses )

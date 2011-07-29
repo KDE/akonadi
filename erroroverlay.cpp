@@ -86,7 +86,7 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   }
   sInstanceOverlay->baseWidgets.append( qMakePair( mBaseWidget, QPointer<QWidget>( this ) ) );
 
-  connect( baseWidget, SIGNAL( destroyed() ), SLOT( deleteLater() ) );
+  connect( baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()) );
   mPreviousState = mBaseWidget->isEnabled();
 
   ui->setupUi( this );
@@ -101,16 +101,16 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   ui->detailsQuitButton->hide();
 #endif
 
-  connect( ui->startButton, SIGNAL( clicked() ), SLOT( startClicked() ) );
-  connect( ui->quitButton, SIGNAL( clicked() ), SLOT( quitClicked() ) );
-  connect( ui->detailsQuitButton, SIGNAL( clicked() ), SLOT( quitClicked() ) );
-  connect( ui->selfTestButton, SIGNAL( clicked() ), SLOT( selfTestClicked() ) );
+  connect( ui->startButton, SIGNAL(clicked()), SLOT(startClicked()) );
+  connect( ui->quitButton, SIGNAL(clicked()), SLOT(quitClicked()) );
+  connect( ui->detailsQuitButton, SIGNAL(clicked()), SLOT(quitClicked()) );
+  connect( ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()) );
 
   const ServerManager::State state = ServerManager::state();
   mOverlayActive = state == ServerManager::Running;
   serverStateChanged( state );
-  connect( ServerManager::self(), SIGNAL( stateChanged( Akonadi::ServerManager::State ) ),
-           SLOT( serverStateChanged( Akonadi::ServerManager::State ) ) );
+  connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );

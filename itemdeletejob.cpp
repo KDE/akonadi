@@ -111,7 +111,7 @@ void ItemDeleteJob::doStart()
     d->writeData( command );
   } else {
     CollectionSelectJob *job = new CollectionSelectJob( d->mCollection, this );
-    connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
     addSubjob( job );
   }
 }

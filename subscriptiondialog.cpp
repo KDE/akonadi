@@ -71,7 +71,7 @@ class SubscriptionDialog::Private
       SubscriptionJob *job = new SubscriptionJob( q );
       job->subscribe( model->subscribed() );
       job->unsubscribe( model->unsubscribed() );
-      connect( job, SIGNAL( result( KJob* ) ), q, SLOT( subscriptionResult( KJob* ) ) );
+      connect( job, SIGNAL(result(KJob*)), q, SLOT(subscriptionResult(KJob*)) );
     }
 
     void subscriptionResult( KJob *job )
@@ -150,8 +150,8 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   filterBarLayout->addWidget( new QLabel( i18n( "Search:" ) ) );
 
   KLineEdit *lineEdit = new KLineEdit( mainWidget );
-  connect( lineEdit, SIGNAL( textChanged( const QString& ) ),
-           filterTreeViewModel, SLOT( setFilterFixedString( const QString& ) ) );
+  connect( lineEdit, SIGNAL(textChanged(QString)),
+           filterTreeViewModel, SLOT(setFilterFixedString(QString)) );
   filterBarLayout->addWidget( lineEdit );
   mainLayout->addLayout( filterBarLayout );
   mainLayout->addWidget( d->collectionView );
@@ -178,9 +178,9 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   mainLayout->addWidget( d->collectionView );
 #endif
 
-  connect( d->model, SIGNAL( loaded() ), SLOT( modelLoaded() ) );
-  connect( this, SIGNAL( okClicked() ), SLOT( done() ) );
-  connect( this, SIGNAL( cancelClicked() ), SLOT( deleteLater() ) );
+  connect( d->model, SIGNAL(loaded()), SLOT(modelLoaded()) );
+  connect( this, SIGNAL(okClicked()), SLOT(done()) );
+  connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
   Control::widgetNeedsAkonadi( mainWidget );
 }
 

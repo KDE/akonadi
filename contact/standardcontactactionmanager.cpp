@@ -46,8 +46,8 @@ class StandardContactActionManager::Private
         mCollectionSelectionModel( 0 ), mItemSelectionModel( 0 ), mParent( parent )
     {
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
-      mParent->connect( mGenericManager, SIGNAL( actionStateUpdated() ),
-                        mParent, SIGNAL( actionStateUpdated() ) );
+      mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
+                        mParent, SIGNAL(actionStateUpdated()) );
       mGenericManager->createAllActions();
 
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
@@ -411,12 +411,12 @@ void StandardContactActionManager::setCollectionSelectionModel( QItemSelectionMo
   d->mCollectionSelectionModel = selectionModel;
   d->mGenericManager->setCollectionSelectionModel( selectionModel );
 
-  connect( selectionModel->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           SLOT( updateActions() ) );
-  connect( selectionModel->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-           SLOT( updateActions() ) );
-  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( updateActions() ) );
+  connect( selectionModel->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(updateActions()) );
+  connect( selectionModel->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           SLOT(updateActions()) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateActions()) );
 
   d->updateActions();
 }
@@ -426,8 +426,8 @@ void StandardContactActionManager::setItemSelectionModel( QItemSelectionModel* s
   d->mItemSelectionModel = selectionModel;
   d->mGenericManager->setItemSelectionModel( selectionModel );
 
-  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( updateActions() ) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateActions()) );
 
   d->updateActions();
 }
@@ -448,7 +448,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
       d->mActions.insert( CreateContact, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateContact() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateContact()) );
       break;
     case CreateContactGroup:
       action = new KAction( d->mParentWidget );
@@ -458,7 +458,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
       d->mActions.insert( CreateContactGroup, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_group_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateContactGroup() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateContactGroup()) );
       break;
     case EditItem:
       action = new KAction( d->mParentWidget );
@@ -468,7 +468,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setEnabled( false );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditItem() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotEditItem()) );
       break;
     default:
       Q_ASSERT( false ); // should never happen

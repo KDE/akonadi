@@ -101,10 +101,10 @@ void EntityTreeView::Private::init()
   mParent->setDragEnabled( true );
 #endif
 
-  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
-  mParent->connect( mParent, SIGNAL( doubleClicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemDoubleClicked( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
+                    mParent, SLOT(itemClicked(QModelIndex)) );
+  mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
+                    mParent, SLOT(itemDoubleClicked(QModelIndex)) );
 
   Control::widgetNeedsAkonadi( mParent );
 }
@@ -203,21 +203,21 @@ EntityTreeView::~EntityTreeView()
 void EntityTreeView::setModel( QAbstractItemModel * model )
 {
   if ( selectionModel() ) {
-    disconnect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+    disconnect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemCurrentChanged(QModelIndex)) );
 
-    disconnect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( slotSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+    disconnect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
   }
 
   QTreeView::setModel( model );
   header()->setStretchLastSection( true );
 
-  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           SLOT(itemCurrentChanged(QModelIndex)) );
 
-  connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( slotSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+  connect( selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(slotSelectionChanged(QItemSelection,QItemSelection)) );
 }
 
 

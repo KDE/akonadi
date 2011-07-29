@@ -159,14 +159,14 @@ void EmailAddressSelectionWidget::Private::init()
   mView->setModel( mSelectionModel );
   mView->header()->hide();
 
-  q->connect( mSearchLine, SIGNAL( textChanged( const QString& ) ),
-              filter, SLOT( setFilterString( const QString& ) ) );
+  q->connect( mSearchLine, SIGNAL(textChanged(QString)),
+              filter, SLOT(setFilterString(QString)) );
 
   Control::widgetNeedsAkonadi( q );
 
   mSearchLine->setFocus();
 
-  QTimer::singleShot( 1000, mView, SLOT( expandAll() ) );
+  QTimer::singleShot( 1000, mView, SLOT(expandAll()) );
 }
 
 

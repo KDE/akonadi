@@ -343,7 +343,7 @@ void LocalFoldersTest::testBatchRegister()
   SpecialMailCollectionsTesting *smct = SpecialMailCollectionsTesting::_t_self();
   Q_ASSERT( smc );
   Q_ASSERT( smct );
-  QSignalSpy spy( smc, SIGNAL(collectionsChanged(const Akonadi::AgentInstance&)) );
+  QSignalSpy spy( smc, SIGNAL(collectionsChanged(Akonadi::AgentInstance)) );
   QSignalSpy defSpy( smc, SIGNAL(defaultCollectionsChanged()) );
   QVERIFY( spy.isValid() );
   QVERIFY( defSpy.isValid() );

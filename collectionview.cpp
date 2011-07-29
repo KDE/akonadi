@@ -79,10 +79,10 @@ void CollectionView::Private::init()
   mParent->setDragEnabled( true );
 
   dragExpandTimer.setSingleShot( true );
-  mParent->connect( &dragExpandTimer, SIGNAL( timeout() ), SLOT( dragExpand() ) );
+  mParent->connect( &dragExpandTimer, SIGNAL(timeout()), SLOT(dragExpand()) );
 
-  mParent->connect( mParent, SIGNAL( clicked( const QModelIndex& ) ),
-                    mParent, SLOT( itemClicked( const QModelIndex& ) ) );
+  mParent->connect( mParent, SIGNAL(clicked(QModelIndex)),
+                    mParent, SLOT(itemClicked(QModelIndex)) );
 
   Control::widgetNeedsAkonadi( mParent );
 }
@@ -162,8 +162,8 @@ void CollectionView::setModel( QAbstractItemModel * model )
   QTreeView::setModel( model );
   header()->setStretchLastSection( true );
 
-  connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( itemCurrentChanged( const QModelIndex& ) ) );
+  connect( selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(itemCurrentChanged(QModelIndex)) );
 }
 
 void CollectionView::dragMoveEvent( QDragMoveEvent * event )

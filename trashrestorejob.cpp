@@ -113,8 +113,8 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched( KJob *job
     if ( var.isValid() ) {
       resRootFetch->setProperty( "Items", var.toInt() );
     }
-    q->connect( resRootFetch, SIGNAL( result( KJob* ) ), SLOT( targetCollectionFetched( KJob* ) ) );
-    q->connect( resRootFetch, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( resRootFetch, SIGNAL(result(KJob*)), SLOT(targetCollectionFetched(KJob*)) );
+    q->connect( resRootFetch, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
     return;
   }
   Q_ASSERT( list.size() == 1 );
@@ -130,19 +130,19 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched( KJob *job
     removeAttribute( items );
     if ( items.first().parentCollection() != list.first() ) {
       ItemMoveJob *job = new ItemMoveJob( items, list.first(), q );
-      q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+      q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
     }
   } else {
     Q_ASSERT( mCollection.isValid() );
     //TODO only remove the attribute if the move job was succesful
     removeAttribute( Collection::List() << mCollection );
     CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( mCollection, CollectionFetchJob::Recursive, q );
-    q->connect( collectionFetchJob, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
-    q->connect( collectionFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), SLOT( removeAttribute( const Akonadi::Collection::List & ) ) );
+    q->connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
+    q->connect( collectionFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(removeAttribute(Akonadi::Collection::List)) );
 
     if ( mCollection.parentCollection() != list.first() ) {
       CollectionMoveJob *job = new CollectionMoveJob( mCollection, list.first(), q );
-      q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+      q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
     }
   }
 
@@ -191,7 +191,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived( const Akonadi::Item
       fetchJob->setProperty( "Resource", restoreResource );
     }
     fetchJob->setProperty( "Items", col.id() );  //to find the items in restore collections again
-    q->connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( targetCollectionFetched( KJob* ) ) );
+    q->connect( fetchJob, SIGNAL(result(KJob*)), SLOT(targetCollectionFetched(KJob*)) );
   }
 }
 
@@ -219,8 +219,8 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived( const Akonadi
   if ( !targetCollection.isValid() ) {
     removeAttribute( Collection::List() << mCollection );
     CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( mCollection, CollectionFetchJob::Recursive, q );
-    q->connect( collectionFetchJob, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
-    q->connect( collectionFetchJob, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), SLOT( removeAttribute( const Akonadi::Collection::List & ) ) );
+    q->connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
+    q->connect( collectionFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(removeAttribute(Akonadi::Collection::List)) );
     return;
   }
 
@@ -234,7 +234,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived( const Akonadi
   if ( !mTargetCollection.isValid() ) { //explicit targets don't have a fallback
     fetchJob->setProperty( "Resource", restoreResource );
   }
-  q->connect( fetchJob, SIGNAL( result( KJob* ) ), SLOT( targetCollectionFetched( KJob* ) ) );
+  q->connect( fetchJob, SIGNAL(result(KJob*)), SLOT(targetCollectionFetched(KJob*)) );
 }
 
 
@@ -247,12 +247,12 @@ void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute( const Akonadi::Co
     col.removeAttribute<EntityDeletedAttribute>();
 
     CollectionModifyJob *job = new CollectionModifyJob( col, q );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
 
     ItemFetchJob *itemFetchJob = new ItemFetchJob( col, q );
     itemFetchJob->fetchScope().fetchAttribute<EntityDeletedAttribute> ( true );
-    q->connect( itemFetchJob, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
-    q->connect( itemFetchJob, SIGNAL( itemsReceived( const Akonadi::Item::List & ) ), SLOT( removeAttribute( const Akonadi::Item::List & ) ) );
+    q->connect( itemFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
+    q->connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(removeAttribute(Akonadi::Item::List)) );
   }
 }
 
@@ -266,11 +266,11 @@ void TrashRestoreJob::TrashRestoreJobPrivate::removeAttribute( const Akonadi::It
     item.removeAttribute<EntityDeletedAttribute>();
     ItemModifyJob *job = new ItemModifyJob( item, q );
     job->setIgnorePayload( true );
-    q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+    q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
   }
   //For some reason it is not possible to apply this change to multiple items at once
   //ItemModifyJob *job = new ItemModifyJob(items, q);
-  //q->connect( job, SIGNAL( result( KJob* ) ), SLOT( selectResult( KJob* ) ) );
+  //q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
 }
 
 
@@ -321,10 +321,10 @@ void TrashRestoreJob::doStart()
     ItemFetchJob *job = new ItemFetchJob( d->mItems, this );
     job->fetchScope().setCacheOnly( true );
     job->fetchScope().fetchAttribute<EntityDeletedAttribute> ( true );
-    connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List & ) ), this, SLOT( itemsReceived( const Akonadi::Item::List & ) ) );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)), this, SLOT(itemsReceived(Akonadi::Item::List)) );
   } else if ( d->mCollection.isValid() ) {
       CollectionFetchJob *job = new CollectionFetchJob( d->mCollection, CollectionFetchJob::Base, this );
-      connect( job, SIGNAL( collectionsReceived( const Akonadi::Collection::List & ) ), this, SLOT( collectionsReceived( const Akonadi::Collection::List & ) ) );
+      connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), this, SLOT(collectionsReceived(Akonadi::Collection::List)) );
   }  else {
     kWarning() << "No valid collection or empty itemlist";
     setError( Job::Unknown );

@@ -46,8 +46,8 @@ class StandardCalendarActionManager::Private
     {
       KGlobal::locale()->insertCatalog(QLatin1String("libakonadi-calendar"));
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
-      mParent->connect( mGenericManager, SIGNAL( actionStateUpdated() ),
-                        mParent, SIGNAL( actionStateUpdated() ) );
+      mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
+                        mParent, SIGNAL(actionStateUpdated()) );
       mGenericManager->createAllActions();
 
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
@@ -402,12 +402,12 @@ void StandardCalendarActionManager::setCollectionSelectionModel( QItemSelectionM
   d->mCollectionSelectionModel = selectionModel;
   d->mGenericManager->setCollectionSelectionModel( selectionModel );
 
-  connect( selectionModel->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
-           SLOT( updateActions() ) );
-  connect( selectionModel->model(), SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
-           SLOT( updateActions() ) );
-  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( updateActions() ) );
+  connect( selectionModel->model(), SIGNAL(rowsInserted(QModelIndex,int,int)),
+           SLOT(updateActions()) );
+  connect( selectionModel->model(), SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           SLOT(updateActions()) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateActions()) );
   d->updateActions();
 }
 
@@ -416,8 +416,8 @@ void StandardCalendarActionManager::setItemSelectionModel( QItemSelectionModel *
   d->mItemSelectionModel = selectionModel;
   d->mGenericManager->setItemSelectionModel( selectionModel );
 
-  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           SLOT( updateActions() ) );
+  connect( selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+           SLOT(updateActions()) );
 
   d->updateActions();
 }
@@ -436,7 +436,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action->setWhatsThis( i18n( "Create a new event" ) );
       d->mActions.insert( CreateEvent, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_event_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateEvent() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateEvent()) );
       break;
     case CreateTodo:
       action = new KAction( d->mParentWidget );
@@ -445,7 +445,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action->setWhatsThis( i18n( "Create a new To-do" ) );
       d->mActions.insert( CreateTodo, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_todo_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateTodo() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateTodo()) );
       break;
     case CreateSubTodo:
       action = new KAction( d->mParentWidget );
@@ -454,7 +454,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action->setWhatsThis( i18n( "Create a new Sub-to-do" ) );
       d->mActions.insert( CreateSubTodo, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_subtodo_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateSubTodo() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateSubTodo()) );
       break;
     case CreateJournal:
       action = new KAction( d->mParentWidget );
@@ -463,7 +463,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action->setWhatsThis( i18n( "Create a new Journal" ) );
       d->mActions.insert( CreateJournal, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_journal_create" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotCreateJournal() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCreateJournal()) );
       break;
     case EditIncidence:
       action = new KAction( d->mParentWidget );
@@ -471,7 +471,7 @@ KAction* StandardCalendarActionManager::createAction( StandardCalendarActionMana
       action->setWhatsThis( i18n( "Edit the selected incidence." ) );
       d->mActions.insert( EditIncidence, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_incidence_edit" ), action );
-      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( slotEditIncidence() ) );
+      connect( action, SIGNAL(triggered(bool)), this, SLOT(slotEditIncidence()) );
       break;
     default:
       Q_ASSERT( false ); // should never happen

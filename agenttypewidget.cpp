@@ -111,10 +111,10 @@ AgentTypeWidget::AgentTypeWidget( QWidget *parent )
 
   d->mView->selectionModel()->setCurrentIndex( d->mView->model()->index( 0, 0 ), QItemSelectionModel::Select );
   d->mView->scrollTo( d->mView->model()->index( 0, 0 ) );
-  connect( d->mView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
-           this, SLOT( currentAgentTypeChanged( const QModelIndex&, const QModelIndex& ) ) );
-  connect( d->mView, SIGNAL( activated( const QModelIndex& ) ),
-           SLOT( typeActivated(QModelIndex) ) );
+  connect( d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
+           this, SLOT(currentAgentTypeChanged(QModelIndex,QModelIndex)) );
+  connect( d->mView, SIGNAL(activated(QModelIndex)),
+           SLOT(typeActivated(QModelIndex)) );
 }
 
 AgentTypeWidget::~AgentTypeWidget()
