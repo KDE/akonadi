@@ -82,10 +82,10 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
 
   Nepomuk::Query::QueryServiceClient *query = new Nepomuk::Query::QueryServiceClient( this );
 
-  connect( query, SIGNAL( newEntries( const QList<Nepomuk::Query::Result>& ) ),
-           this, SLOT( hitsAdded( const QList<Nepomuk::Query::Result>& ) ) );
-  connect( query, SIGNAL( entriesRemoved( const QList<QUrl>& ) ),
-           this, SLOT( hitsRemoved( const QList<QUrl>& ) ) );
+  connect( query, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
+  connect( query, SIGNAL(entriesRemoved(QList<QUrl>)),
+           this, SLOT(hitsRemoved(QList<QUrl>)) );
 
   mMutex.lock();
   mQueryMap.insert( query, collection.id() );

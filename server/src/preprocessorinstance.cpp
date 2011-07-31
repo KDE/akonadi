@@ -77,9 +77,9 @@ bool PreprocessorInstance::init()
 
   QObject::connect(
       mInterface,
-      SIGNAL( itemProcessed( qlonglong ) ),
+      SIGNAL(itemProcessed(qlonglong)),
       this,
-      SLOT( itemProcessed( qlonglong ) )
+      SLOT(itemProcessed(qlonglong))
     );
 
   return true;

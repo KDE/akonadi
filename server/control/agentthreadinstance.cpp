@@ -32,8 +32,8 @@ AgentThreadInstance::AgentThreadInstance( AgentManager *manager )
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( "org.freedesktop.Akonadi.AgentServer" ),
                                                           QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForRegistration, this );
-  connect( watcher, SIGNAL( serviceRegistered( const QString& ) ),
-           this, SLOT( agentServerRegistered() ) );
+  connect( watcher, SIGNAL(serviceRegistered(QString)),
+           this, SLOT(agentServerRegistered()) );
 }
 
 bool AgentThreadInstance::start( const AgentType &agentInfo )

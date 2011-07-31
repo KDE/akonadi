@@ -46,8 +46,8 @@ NepomukSearch::NepomukSearch( QObject* parent )
   : QObject( parent ), mSearchService( 0 )
 {
   mSearchService = new Nepomuk::Query::QueryServiceClient( this );
-  connect( mSearchService, SIGNAL( newEntries( const QList<Nepomuk::Query::Result>& ) ),
-           this, SLOT( hitsAdded( const QList<Nepomuk::Query::Result>& ) ) );
+  connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
 }
 
 NepomukSearch::~NepomukSearch()

@@ -73,9 +73,9 @@ PreprocessorManager::PreprocessorManager()
 
   QObject::connect(
       mHeartbeatTimer,
-      SIGNAL( timeout() ),
+      SIGNAL(timeout()),
       this,
-      SLOT( heartbeat() )
+      SLOT(heartbeat())
    );
 
   mHeartbeatTimer->start( gHeartbeatTimeoutInMSecs );
@@ -253,9 +253,9 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
       mTransactionWaitQueueHash.insert( dataStore, waitQueue );
 
       // This will usually end up being a queued connection.
-      QObject::connect( dataStore, SIGNAL( destroyed() ), this, SLOT( dataStoreDestroyed() ) );
-      QObject::connect( dataStore, SIGNAL( transactionCommitted() ), this, SLOT( dataStoreTransactionCommitted() ) );
-      QObject::connect( dataStore, SIGNAL( transactionRolledBack() ), this, SLOT( dataStoreTransactionRolledBack() ) );
+      QObject::connect( dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()) );
+      QObject::connect( dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()) );
+      QObject::connect( dataStore, SIGNAL(transactionRolledBack()), this, SLOT(dataStoreTransactionRolledBack()) );
     }
 
     waitQueue->push_back( item.id() );
@@ -299,9 +299,9 @@ void PreprocessorManager::lockedKillWaitQueue( const DataStore * dataStore, bool
   if( !disconnectSlots )
     return;
 
-  QObject::disconnect( dataStore, SIGNAL( destroyed() ), this, SLOT( dataStoreDestroyed() ) );
-  QObject::disconnect( dataStore, SIGNAL( transactionCommitted() ), this, SLOT( dataStoreTransactionCommitted() ) );
-  QObject::disconnect( dataStore, SIGNAL( transactionRolledBack() ), this, SLOT( dataStoreTransactionRolledBack() ) );
+  QObject::disconnect( dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()) );
+  QObject::disconnect( dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()) );
+  QObject::disconnect( dataStore, SIGNAL(transactionRolledBack()), this, SLOT(dataStoreTransactionRolledBack()) );
   
 }
 

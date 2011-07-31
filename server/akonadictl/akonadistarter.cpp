@@ -36,8 +36,8 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
                                                           QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
 
-  connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+  connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 }
 
 bool AkonadiStarter::start()

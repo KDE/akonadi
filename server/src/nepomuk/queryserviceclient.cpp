@@ -121,12 +121,12 @@ bool Nepomuk::Query::QueryServiceClient::Private::handleQueryReply( QDBusReply<Q
         queryInterface = new org::kde::nepomuk::Query( queryServiceInterface->service(),
                                                        r.value().path(),
                                                        dbusConnection  );
-        connect( queryInterface, SIGNAL( newEntries( QList<Nepomuk::Query::Result> ) ),
-                 q, SIGNAL( newEntries( QList<Nepomuk::Query::Result> ) ) );
-        connect( queryInterface, SIGNAL( entriesRemoved( QStringList ) ),
-                 q, SLOT( _k_entriesRemoved( QStringList ) ) );
-        connect( queryInterface, SIGNAL( finishedListing() ),
-                 q, SLOT( _k_finishedListing() ) );
+        connect( queryInterface, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+                 q, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)) );
+        connect( queryInterface, SIGNAL(entriesRemoved(QStringList)),
+                 q, SLOT(_k_entriesRemoved(QStringList)) );
+        connect( queryInterface, SIGNAL(finishedListing()),
+                 q, SLOT(_k_finishedListing()) );
         // run the listing async in case the event loop below is the only one we have
         // and we need it to handle the signals and list returns results immediately
         QTimer::singleShot( 0, queryInterface, SLOT(list()) );

@@ -161,8 +161,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
                                                             QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, this );
 
-    connect( watcher, SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-             this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+    connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+             this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 
     // Unhide all the items that are actually hidden.
     // The hidden flag was probably left out after an (abrupt)
@@ -229,7 +229,7 @@ void AkonadiServer::quit()
     if ( !QDir::home().remove( connectionSettingsFile ) )
         akError() << "Failed to remove runtime connection config file";
 
-    QTimer::singleShot( 0, this, SLOT( doQuit() ) );
+    QTimer::singleShot( 0, this, SLOT(doQuit()) );
 }
 
 void AkonadiServer::doQuit()
@@ -246,7 +246,7 @@ void AkonadiServer::incomingConnection( quintptr socketDescriptor )
     if ( mAlreadyShutdown )
       return;
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
-    connect( thread, SIGNAL( finished() ), thread, SLOT( deleteLater() ) );
+    connect( thread, SIGNAL(finished()), thread, SLOT(deleteLater()) );
     mConnections.append( thread );
     thread->start();
 }

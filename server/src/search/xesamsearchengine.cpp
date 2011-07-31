@@ -55,7 +55,7 @@ XesamSearchEngine::XesamSearchEngine( QObject *parent )
     new QDBusServiceWatcher( QLatin1String( "org.freedesktop.xesam.searcher" ),
                              QDBusConnection::sessionBus(),
                              QDBusServiceWatcher::WatchForRegistration, this );
-  connect( watcher, SIGNAL( serviceRegistered( QString ) ), SLOT( initializeSearchInterface() ) );
+  connect( watcher, SIGNAL(serviceRegistered(QString)), SLOT(initializeSearchInterface()) );
 
   initializeSearchInterface();
 
@@ -88,10 +88,10 @@ void XesamSearchEngine::initializeSearchInterface()
     mValid = true;
 
     if ( mValid ) {
-      connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( slotHitsAdded( QString, uint ) ) );
-      connect( mInterface, SIGNAL( SearchDone( QString ) ), SLOT( slotSearchDone( QString ) ) );
-      connect( mInterface, SIGNAL( HitsRemoved( QString, QList<uint> ) ), SLOT( slotHitsRemoved( QString, QList<uint> ) ) );
-      connect( mInterface, SIGNAL( HitsModified( QString, QList<uint> ) ), SLOT( slotHitsModified( QString, QList<uint> ) ) );
+      connect( mInterface, SIGNAL(HitsAdded(QString,uint)), SLOT(slotHitsAdded(QString,uint)) );
+      connect( mInterface, SIGNAL(SearchDone(QString)), SLOT(slotSearchDone(QString)) );
+      connect( mInterface, SIGNAL(HitsRemoved(QString,QList<uint>)), SLOT(slotHitsRemoved(QString,QList<uint>)) );
+      connect( mInterface, SIGNAL(HitsModified(QString,QList<uint>)), SLOT(slotHitsModified(QString,QList<uint>)) );
 
       reloadSearches();
     }

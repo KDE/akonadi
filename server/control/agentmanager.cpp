@@ -64,8 +64,8 @@ AgentManager::AgentManager( QObject *parent )
   new AgentManagerInternalAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/AgentManager"), this );
 
-  connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( const QString&, const QString&, const QString& ) ),
-           this, SLOT( serviceOwnerChanged( const QString&, const QString&, const QString& ) ) );
+  connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.freedesktop.Akonadi") ) )
     akFatal() << "akonadiserver already running!";
@@ -74,17 +74,17 @@ AgentManager::AgentManager( QObject *parent )
   mAgentServerEnabled = settings.value( QLatin1String("AgentServer/Enabled"), enableAgentServerDefault ).toBool();
 
   mStorageController = new Akonadi::ProcessControl;
-  connect( mStorageController, SIGNAL( unableToStart() ), SLOT( serverFailure() ) );
+  connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( QLatin1String("akonadiserver"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
 
   if ( mAgentServerEnabled ) {
     mAgentServer = new Akonadi::ProcessControl;
-    connect( mAgentServer, SIGNAL( unableToStart() ), SLOT( agentServerFailure() ) );
+    connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
     mAgentServer->start( QLatin1String("akonadi_agent_server"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
   }
 
 #ifndef QT_NO_DEBUG
-  connect( mAgentWatcher, SIGNAL( fileChanged( QString ) ), SLOT( agentExeChanged( QString ) ) );
+  connect( mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)) );
 #endif
 }
 
@@ -108,8 +108,8 @@ void AgentManager::continueStartup()
     QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
     watcher->addPath( path );
 
-    connect( watcher, SIGNAL( directoryChanged( const QString& ) ),
-             this, SLOT( updatePluginInfos() ) );
+    connect( watcher, SIGNAL(directoryChanged(QString)),
+             this, SLOT(updatePluginInfos()) );
   }
 #endif
 

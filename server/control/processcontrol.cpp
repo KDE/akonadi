@@ -41,10 +41,10 @@ ProcessControl::ProcessControl( QObject *parent )
   : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 ),
   mRestartOnceOnExit( false )
 {
-  connect( &mProcess, SIGNAL( error( QProcess::ProcessError ) ),
-           this, SLOT( slotError( QProcess::ProcessError ) ) );
-  connect( &mProcess, SIGNAL( finished( int, QProcess::ExitStatus ) ),
-           this, SLOT( slotFinished( int, QProcess::ExitStatus ) ) );
+  connect( &mProcess, SIGNAL(error(QProcess::ProcessError)),
+           this, SLOT(slotError(QProcess::ProcessError)) );
+  connect( &mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+           this, SLOT(slotFinished(int,QProcess::ExitStatus)) );
   mProcess.setProcessChannelMode( QProcess::ForwardedChannels );
 }
 

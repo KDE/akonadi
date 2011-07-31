@@ -92,10 +92,10 @@ void AkonadiConnection::run()
      * outgoing data transfers in a streaming manner, without having to
      * hold them in memory 'en gros'. */
 
-    connect( m_socket, SIGNAL( readyRead() ),
-             this, SLOT( slotNewData() ), Qt::DirectConnection );
-    connect( m_socket, SIGNAL( disconnected() ),
-             this, SLOT( slotDisconnected() ), Qt::DirectConnection );
+    connect( m_socket, SIGNAL(readyRead()),
+             this, SLOT(slotNewData()), Qt::DirectConnection );
+    connect( m_socket, SIGNAL(disconnected()),
+             this, SLOT(slotDisconnected()), Qt::DirectConnection );
 
     writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 28]");
 
@@ -129,10 +129,10 @@ void AkonadiConnection::slotNewData()
       Tracer::self()->connectionInput( m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
-      connect( m_currentHandler, SIGNAL( responseAvailable( const Response & ) ),
-              this, SLOT( slotResponseAvailable( const Response & ) ), Qt::DirectConnection );
-      connect( m_currentHandler, SIGNAL( connectionStateChange( ConnectionState ) ),
-              this, SLOT( slotConnectionStateChange( ConnectionState ) ),
+      connect( m_currentHandler, SIGNAL(responseAvailable(Response)),
+              this, SLOT(slotResponseAvailable(Response)), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
+              this, SLOT(slotConnectionStateChange(ConnectionState)),
                Qt::DirectConnection );
       m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );

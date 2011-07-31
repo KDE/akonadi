@@ -52,7 +52,7 @@ XesamSearch::XesamSearch( QObject* parent )
 
   mSession = mInterface->NewSession();
 
-  connect( mInterface, SIGNAL( HitsAdded( QString, uint ) ), SLOT( hitsAdded( QString, uint ) ) );
+  connect( mInterface, SIGNAL(HitsAdded(QString,uint)), SLOT(hitsAdded(QString,uint)) );
 }
 
 XesamSearch::~XesamSearch()
@@ -77,7 +77,7 @@ QStringList XesamSearch::search( const QString &query )
   const QString searchId = reply.value();
 
   QEventLoop loop;
-  connect( mInterface, SIGNAL( SearchDone( QString ) ), &loop, SLOT( quit() ) );
+  connect( mInterface, SIGNAL(SearchDone(QString)), &loop, SLOT(quit()) );
   mInterface->StartSearch( searchId );
   loop.exec();
 
