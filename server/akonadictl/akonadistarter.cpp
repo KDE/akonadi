@@ -56,7 +56,7 @@ bool AkonadiStarter::start()
 
   if ( !mRegistered ) {
     qDebug( "Error: akonadi_control was started but didn't register at D-Bus session bus." );
-    qDebug( "Make sure your system is setup correctly!" );
+    qDebug( "Make sure your system is set up correctly!" );
     return false;
   }
 

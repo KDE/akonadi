@@ -90,7 +90,7 @@ void ProcessControl::slotError( QProcess::ProcessError error )
       break;
   }
 
-  qDebug( "ProcessControl: Application '%s' stopped unexpected (%s)",
+  qDebug( "ProcessControl: Application '%s' stopped unexpectedly (%s)",
           qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
 }
 
@@ -107,7 +107,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
         if ( mFailedToStart ) {
           qDebug( "Application '%s' failed to start!", qPrintable( mApplication ) );
         } else {
-          qDebug( "Application '%s' crashed to often. Giving up!", qPrintable( mApplication ) );
+          qDebug( "Application '%s' crashed too often. Giving up!", qPrintable( mApplication ) );
         }
         mPolicy = StopOnCrash;
         emit unableToStart();
