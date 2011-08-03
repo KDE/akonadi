@@ -1025,6 +1025,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   Q_ASSERT( m_childEntities.contains( collection.id() ) );
 
   const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
+  Q_ASSERT( row >= 0 );
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
 
