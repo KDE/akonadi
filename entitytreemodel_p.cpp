@@ -894,6 +894,9 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   const QModelIndex srcParentIndex = indexForCollection( sourceCollection );
   const QModelIndex destParentIndex = indexForCollection( destCollection );
 
+  Q_ASSERT( sourceCollection.resource() == destCollection.resource() );
+  Q_ASSERT( collection.parentCollection().isValid() );
+  Q_ASSERT( destCollection.isValid() );
   Q_ASSERT( collection.parentCollection() == destCollection );
 
   const int srcRow = indexOf<Node::Collection>( m_childEntities.value( sourceCollection.id() ), collection.id() );
