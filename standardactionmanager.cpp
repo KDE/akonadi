@@ -109,7 +109,7 @@ static const struct {
   { "akonadi_collection_move_to_dialog", I18N_NOOP( "Move Folder To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT(slotMoveCollectionTo()), NormalAction },
   { "akonadi_item_copy_to_dialog", I18N_NOOP( "Copy Item To..." ), I18N_NOOP( "Copy To" ), "edit-copy", 0, SLOT(slotCopyItemTo()), NormalAction },
   { "akonadi_item_move_to_dialog", I18N_NOOP( "Move Item To..." ), I18N_NOOP( "Move To" ), "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction },
-  { "akonadi_collection_sync_recursive", I18N_NOOP( "&Synchronize Folder Recursively" ), I18N_NOOP( "Synchronize Recursively" ), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction },
+  { "akonadi_collection_sync_recursive", I18N_NOOP( "&Synchronize Folder Recursively" ), I18N_NOOP( "Synchronize Recursively" ), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction },  
   { "akonadi_move_collection_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT(slotMoveCollectionToTrash()), NormalAction },
   { "akonadi_move_item_to_trash", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT(slotMoveItemToTrash()), NormalAction },
   { "akonadi_restore_collection_from_trash", I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, SLOT(slotRestoreCollectionFromTrash()), NormalAction },
@@ -117,7 +117,9 @@ static const struct {
   { "akonadi_collection_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT(slotTrashRestoreCollection()), ActionWithAlternative },
   { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
   { "akonadi_item_trash_restore", I18N_NOOP( "&Move To Trash" ), I18N_NOOP( "Move To Trash" ), "user-trash", 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
-  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative }
+  { 0, I18N_NOOP( "&Restore From Trash" ), I18N_NOOP( "Restore From Trash" ), "view-refresh", 0, 0, ActionAlternative },
+  { "akonadi_collection_sync_favorite_folders", I18N_NOOP( "&Synchronize Favorite Folders" ), I18N_NOOP( "Synchronize Favorite Folders" ), "view-refresh", Qt::CTRL+Qt::SHIFT+Qt::Key_L , SLOT(slotSynchronizeFavoriteCollections()), NormalAction }
+
 };
 static const int numStandardActionData = sizeof standardActionData / sizeof *standardActionData;
 
@@ -864,6 +866,14 @@ class StandardActionManager::Private
       }
     }
 
+    void slotSynchronizeFavoriteCollections()
+    {
+      Q_ASSERT( favoritesModel );
+      foreach( const Collection& collection, favoritesModel->collections() ) {
+        AgentManager::self()->synchronizeCollection( collection, false );
+      }
+    }
+  
     void slotCopyCollectionTo()
     {
       pasteTo( collectionSelectionModel, collectionSelectionModel->model(), CopyCollectionToMenu, Qt::CopyAction );

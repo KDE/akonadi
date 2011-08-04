@@ -166,6 +166,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
       MoveToTrashRestoreCollectionAlternative,   ///< Helper type for MoveToTrashRestoreCollection, do not create directly. Use this to override texts of the restore action. @since 4.8
       MoveToTrashRestoreItem,    ///< Move Item to Trash or Restore it from Trash, needs EntityDeletedAttribute @since 4.8
       MoveToTrashRestoreItemAlternative,   ///< Helper type for MoveToTrashRestoreItem, do not create directly. Use this to override texts of the restore action. @since 4.8
+      SynchronizeFavoriteCollections,   ///< Synchronize favorite collections @since 4.8
       LastType                   ///< Marks last action
     };
 
@@ -353,6 +354,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotTrashRestoreItem() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollection() )
     Q_PRIVATE_SLOT( d, void slotSynchronizeCollectionRecursive() )
+    Q_PRIVATE_SLOT( d, void slotSynchronizeFavoriteCollections() )
     Q_PRIVATE_SLOT( d, void slotCollectionProperties() )
     Q_PRIVATE_SLOT( d, void slotCopyItems() )
     Q_PRIVATE_SLOT( d, void slotCutItems() )
