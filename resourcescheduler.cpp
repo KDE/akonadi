@@ -467,7 +467,7 @@ QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
 {
   d << task.serial << s_taskTypes[task.type];
   if ( task.type != ResourceScheduler::Invalid ) {
-    if ( task.collection.id() != -1 )
+    if ( task.collection.isValid() )
       d << "collection" << task.collection.id();
     if ( task.item.id() != -1 )
       d << "item" << task.item.id();
