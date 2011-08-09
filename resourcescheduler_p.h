@@ -45,6 +45,7 @@ class ResourceScheduler : public QObject
   Q_OBJECT
 
   public:
+    // If you change this enum, keep s_taskTypes in sync in resourcescheduler.cpp
     enum TaskType {
       Invalid,
       SyncAll,

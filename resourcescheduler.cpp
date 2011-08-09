@@ -456,6 +456,7 @@ static const char s_taskTypes[][25] = {
       "SyncAll",
       "SyncCollectionTree",
       "SyncCollection",
+      "SyncCollectionAttributes",
       "FetchItem",
       "ChangeReplay",
       "DeleteResourceCollection",
