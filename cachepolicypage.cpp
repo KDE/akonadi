@@ -105,7 +105,7 @@ void CachePolicyPage::load( const Collection &collection )
   const bool fetchBodies = policy.localParts().contains( QLatin1String( "RFC822" ) );
   d->mUi->retrieveFullMessages->setChecked( fetchBodies );
 
-  //done explicitely to disable/enabled widgets
+  //done explicitly to disable/enabled widgets
   d->mUi->retrieveOnlyHeaders->setChecked( !fetchBodies );
 }
 

@@ -65,7 +65,7 @@ class AKONADI_EXPORT FreeBusyProviderBase
     virtual ~FreeBusyProviderBase();
 
     /**
-     * Returns the last time the free-busy informations were
+     * Returns the last time the free-busy information was
      * fetched from the server. This can be used for example
      * to issue a warning to the user that this information
      * may not be accurate and must be refreshed; pretty useful

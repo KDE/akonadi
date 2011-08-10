@@ -104,7 +104,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool ensureDataAvailable( const NotificationMessage &msg );
     /**
      * Sends out the change notification @p msg.
-     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
     virtual bool emitNotification( const NotificationMessage &msg );
     void updatePendingStatistics( const NotificationMessage &msg );
@@ -132,13 +132,13 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     /**
      * Sends out a change notification for an item.
-     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
     bool emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     /**
      * Sends out a change notification for a collection.
-     * @return @c true if the notification was actually send to someone, @c false if noone was listening.
+     * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
     bool emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );

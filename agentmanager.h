@@ -107,9 +107,9 @@ class AKONADI_EXPORT AgentManager : public QObject
 
     /**
      * Trigger a synchronization of the given collection by its owning resource agent.
-     * 
+     *
      * @param collection The collection to synchronize.
-     * @param recursive If true, the sub-collections are also syncronized
+     * @param recursive If true, the sub-collections are also synchronized
      *
      * @since 4.6
      */

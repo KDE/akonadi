@@ -54,14 +54,14 @@ class Session;
  * - configuration interface
  * - problem reporting
  *
- * Akonadi Server supports serveral ways to launch agents and resources:
- * - As a seperate application (@see AKONADI_AGENT_MAIN)
+ * Akonadi Server supports several ways to launch agents and resources:
+ * - As a separate application (@see AKONADI_AGENT_MAIN)
  * - As a thread in the AgentServer
- * - As a seperate process, using the akonadi_agent_launcher
+ * - As a separate process, using the akonadi_agent_launcher
  *
  * The idea is this, the agent or resource is written as a plugin instead of an
  * executable (@see AgentFactory). In the AgentServer case, the AgentServer
- * looks up the plugin and launches the agent in a seperate thread. In the
+ * looks up the plugin and launches the agent in a separate thread. In the
  * launcher case, a new akonadi_agent_launcher process is started for each
  * agent or resource instance.
  *

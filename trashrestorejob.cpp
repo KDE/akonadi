@@ -126,7 +126,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched( KJob *job
     const Item::List &items = restoreCollections[Collection( var.toInt() )];
 
     //store removed attribute if destination collection is valid or the item doesn't have a restore collection
-    //TODO only remove the attribute if the move job was succesful (although it is unlikely that it fails since we already fetched the collection)
+    //TODO only remove the attribute if the move job was successful (although it is unlikely that it fails since we already fetched the collection)
     removeAttribute( items );
     if ( items.first().parentCollection() != list.first() ) {
       ItemMoveJob *job = new ItemMoveJob( items, list.first(), q );
@@ -134,7 +134,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::targetCollectionFetched( KJob *job
     }
   } else {
     Q_ASSERT( mCollection.isValid() );
-    //TODO only remove the attribute if the move job was succesful
+    //TODO only remove the attribute if the move job was successful
     removeAttribute( Collection::List() << mCollection );
     CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( mCollection, CollectionFetchJob::Recursive, q );
     q->connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
