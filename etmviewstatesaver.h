@@ -32,7 +32,7 @@
 namespace Akonadi
 {
 
-class AKONADI_EXPORT ETMViewStateSaver : public KViewStateSaver
+class AKONADI_EXPORT ETMViewStateSaver : public KViewStateSaver  //krazy:exclude=dpointer
 {
   Q_OBJECT
 public:

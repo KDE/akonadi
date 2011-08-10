@@ -26,7 +26,7 @@
 
 namespace Akonadi {
 
-class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings
+class AKONADI_EXPORT ResourceSettings : public Akonadi::ResourceBaseSettings //krazy:exclude=dpointer
 {
   Q_OBJECT
   public:

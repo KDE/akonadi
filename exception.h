@@ -32,7 +32,7 @@ namespace Akonadi {
 /**
   Base class for exceptions used by the Akonadi library.
 */
-class AKONADI_EXPORT Exception : public std::exception
+class AKONADI_EXPORT Exception : public std::exception //krazy:exclude=dpointer
 {
   public:
     /**
