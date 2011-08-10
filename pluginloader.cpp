@@ -28,8 +28,8 @@
 
 #include <QtCore/QDebug>
 
-#ifdef _WIN32_WCE
- #include <QMessageBox>
+#ifdef Q_OS_WINCE
+#include <QMessageBox>
 #endif
 
 using namespace Akonadi;
@@ -107,8 +107,8 @@ QObject* PluginLoader::createForName( const QString & name )
 
   QObject *object = loader->instance();
   if ( !object ) {
-#ifdef _WIN32_WCE
-	//Maybe filter out the default plugins, they should be found but...
+#ifdef Q_OS_WINCE
+    //Maybe filter out the default plugins, they should be found but...
     //if ( !name.endsWith( QLatin1String( "@default" ) ) ) {
       QString errMessage;
       errMessage.append(QLatin1String("plugin \""));
@@ -178,7 +178,7 @@ void PluginLoader::scan()
         kWarning( 5300 ) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
         comment = i18n( "No description available" );
       }
-      
+
       QString cname      = group.readEntry( "X-KDE-ClassName" );
       if ( cname.isEmpty() ) {
         kWarning( 5300 ) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
