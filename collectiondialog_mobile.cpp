@@ -107,7 +107,7 @@ CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionD
   mView->rootContext()->setContextProperty( QLatin1String( "cancelButtonText" ), KStandardGuiItem::cancel().text().remove( QLatin1Char( '&' ) ) );
   mView->rootContext()->setContextProperty( QLatin1String( "createButtonText" ), i18n( "&New Subfolder..." ).remove( QLatin1Char( '&' ) ) );
 
-  mView->setSource( QUrl::fromLocalFile( KStandardDirs::locate( "data", QLatin1String( "akonadi-kde/qml/CollectionDialogMobile.qml" ) ) ) );
+  mView->setSource( KUrl::fromLocalFile( KStandardDirs::locate( "data", QLatin1String( "akonadi-kde/qml/CollectionDialogMobile.qml" ) ) ) );
 
 #if defined (Q_WS_MAEMO_5) || defined (Q_OS_WINCE)
   mParent->setWindowState( Qt::WindowFullScreen );
