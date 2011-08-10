@@ -21,7 +21,7 @@
 #define NOTEUTILS_H
 
 #include "akonadi-notes_export.h"
-#include <qnamespace.h>
+#include <QtGui/QTextEdit>
 
 class KDateTime;
 class QString;

@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_ETMSTATESAVER_H
-#define AKONADI_ETMSTATESAVER_H
+#ifndef AKONADI_ETMVIEWSTATESAVER_H
+#define AKONADI_ETMVIEWSTATESAVER_H
 
 #include <kviewstatesaver.h>
 

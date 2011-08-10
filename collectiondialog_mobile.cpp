@@ -17,10 +17,10 @@
     02110-1301, USA.
 */
 
-#include "collectiondialog.h"
 #include "collectiondialog_mobile_p.h"
-
 #include "asyncselectionhandler_p.h"
+#include "collectiondialog.h"
+
 #include <kdescendantsproxymodel.h>
 
 #include <akonadi/changerecorder.h>
