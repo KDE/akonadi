@@ -137,7 +137,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
 
   bool collectionsAreFolders = (!collections.isEmpty() ? true : false);
 
-  foreach ( Collection collection, collections ) {
+  foreach ( const Collection &collection, collections ) {
     if ( !isFolderCollection( collection ) ) {
       collectionsAreFolders = false;
       break;
@@ -179,7 +179,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::CollectionProperties, singleCollectionSelected && // we can only configure one collection at a time
                                                              !isRootCollection( collection ) ); // we can not configure the root collection
 
-  enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionSelected && 
+  enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionSelected &&
                                                                collectionsAreFolders ); // it must be a valid folder collection
 
   enableAction( StandardActionManager::SynchronizeCollectionsRecursive, atLeastOneCollectionSelected &&

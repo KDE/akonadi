@@ -160,7 +160,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived( const Akonadi::Item
   mItems = items;
 
   //Sort by restore collection
-  foreach( Item item, mItems ) {
+  foreach( const Item &item, mItems ) {
     if ( !item.hasAttribute<Akonadi::EntityDeletedAttribute>() ) {
       continue;
     }
@@ -168,7 +168,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived( const Akonadi::Item
     restoreCollections[item.attribute<Akonadi::EntityDeletedAttribute>()->restoreCollection()].append( item );
   }
 
-  foreach( const Collection &col, restoreCollections.keys() ) {
+  foreach( const Collection &col, restoreCollections.keys() ) { //krazy:exclude=foreach
     const Item &first = restoreCollections.value( col ).first();
     //Move the items to the correct collection if available
     Collection targetCollection = col;
