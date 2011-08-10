@@ -1,7 +1,7 @@
 /*  -*- mode: C++ -*-
     This file is part of Akonadi.
     Copyright (c) 2005 Andreas Gungl <a.gungl@gmx.de>
-    Copyright (c) 2010 KDAB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
     Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -249,7 +249,7 @@ class AKONADI_KMIME_EXPORT MessageStatus
         @param hasAttachment Set (true) or unset (false) this status flag.
     */
     void setHasAttachment( bool hasAttachment = true );
-    
+
     /** Set the status for an invitation.
         @param hasInvitation Set (true) or unset (false) this status flag.
     */
@@ -271,21 +271,21 @@ class AKONADI_KMIME_EXPORT MessageStatus
     void setHasError( bool value = true );
 
     /* ----- state representation  --------------------------------------- */
-    
+
     /** Get the status as a whole e.g. for storage in an index.
      D on't manipulte the *index via this value, this bypasses
      all integrity checks in the setter methods.
      @return The status encoded in bits.
      */
     qint32 toQInt32() const;
-    
+
     /** Set the status as a whole e.g. for reading from an index.
         Don't manipulte the index via this value, this bypasses
         all integrity checks in the setter methods.
         @param status The status encoded in bits to be set in this instance.
     */
     void fromQInt32( qint32 status );
-    
+
     /** Convert the status to a string representation.
         @return A string containing coded uppercase letters
                 which describe the status.

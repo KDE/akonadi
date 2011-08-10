@@ -1,7 +1,7 @@
 /*
     This file is part of Akonadi.
     Copyright (c) 2003 Andreas Gungl <a.gungl@gmx.de>
-    Copyright (c) 2010 KDAB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.com>
     Copyright (c) 2010 Leo Franchi <lfranchi@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 
 /** The message status format. These can be or'd together.
     Note, that the StatusIgnored implies the
-    status to be Read. 
+    status to be Read.
     This is done in isRead() and related getters.
     So we can preserve the state when switching a
     thread to Ignored and back. */
