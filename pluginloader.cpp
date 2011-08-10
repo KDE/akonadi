@@ -29,7 +29,7 @@
 #include <QtCore/QDebug>
 
 #ifdef Q_OS_WINCE
-#include <QMessageBox>
+#include <KMessageBox>
 #endif
 
 using namespace Akonadi;
@@ -114,7 +114,7 @@ QObject* PluginLoader::createForName( const QString & name )
       errMessage.append(QLatin1String("plugin \""));
       errMessage.append(info.className);
       errMessage.append(QLatin1String("\" is not buildin static, please specify this information in the bugreport."));
-      QMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
+      KMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
     //}
 #endif
     kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
