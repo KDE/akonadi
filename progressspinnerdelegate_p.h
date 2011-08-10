@@ -86,7 +86,7 @@ class ProgressSpinnerDelegate : public QStyledItemDelegate
 {
   Q_OBJECT
 public:
-  ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
+  explicit ProgressSpinnerDelegate(DelegateAnimator *animator, QObject* parent = 0);
 
 protected:
   virtual void initStyleOption(QStyleOptionViewItem* option, const QModelIndex& index) const;
