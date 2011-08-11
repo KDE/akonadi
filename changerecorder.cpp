@@ -87,6 +87,13 @@ void ChangeRecorder::changeProcessed()
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() )
     d->pendingNotifications.dequeue();
+
+  // SLOW! After loading 8000 notifications and processing one, we save back the 7999 remaining
+  // ones, and then process the next one etc.
+  // Testcase: mark 8000 emails as read.
+  // TODO: Reserve 4 bytes at the beginning of the file, for the number of the next change
+  // that must be processed. In the loading code, skip everything until that number.
+  // Do a full-save only once the notifications list is empty (or only once in a while).
   d->saveNotifications();
 }
 
