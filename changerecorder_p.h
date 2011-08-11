@@ -165,13 +165,13 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
     void addToStream( QDataStream &stream, const NotificationMessage &msg )
     {
         stream << msg.sessionId();
-        stream << msg.type();
-        stream << msg.operation();
-        stream << msg.uid();
+        stream << int(msg.type());
+        stream << int(msg.operation());
+        stream << qulonglong(msg.uid());
         stream << msg.remoteId();
         stream << msg.resource();
-        stream << msg.parentCollection();
-        stream << msg.parentDestCollection();
+        stream << qulonglong(msg.parentCollection());
+        stream << qulonglong(msg.parentDestCollection());
         stream << msg.mimeType();
         stream << msg.itemParts();
     }
