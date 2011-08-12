@@ -165,11 +165,20 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
   }
 }
 
+static bool listContains( const QStringList &list, const QString &pattern )
+{
+  foreach ( const QString &s, list ) {
+    if ( s.contains( pattern ) )
+      return true;
+  }
+  return false;
+}
+
 void ProcessControl::start()
 {
 #ifdef Q_OS_UNIX
   QString agentValgrind = getEnv( "AKONADI_VALGRIND" );
-  if ( !agentValgrind.isEmpty() && mApplication.contains( agentValgrind ) ) {
+  if ( !agentValgrind.isEmpty() && (mApplication.contains( agentValgrind ) || listContains( mArguments, agentValgrind )) ) {
 
     mArguments.prepend( mApplication );
     const QString originalArguments = mArguments.join( QString::fromLocal8Bit( " " ) );
