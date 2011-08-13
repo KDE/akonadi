@@ -244,6 +244,9 @@ void TrashJob::TrashJobPrivate::itemsReceived( const Akonadi::Item::List &items 
   if ( mDeleteIfInTrash && !toDelete.isEmpty() ) {
     ItemDeleteJob *job = new ItemDeleteJob( toDelete, q );
     q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
+  } else if ( mCollectionItems.isEmpty() ) { //No job started, so we abort the job
+    kWarning() << "Nothing to do";
+    q->emitResult();
   }
 
 }
@@ -264,6 +267,9 @@ void TrashJob::TrashJobPrivate::collectionsReceived( const Akonadi::Collection::
     if ( mDeleteIfInTrash ) {
       CollectionDeleteJob *job = new CollectionDeleteJob( mCollection, q );
       q->connect( job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)) );
+    } else {
+      kWarning() << "Nothing to do";
+      q->emitResult();
     }
     return;
   }
