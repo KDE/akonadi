@@ -42,11 +42,11 @@ namespace TrashSettings
     /**
      * Set the trash collection for the given @p resource which is then used by the TrashJob
      */
-    void setTrashCollection( const QString &resource, const Collection &collection );
+    AKONADI_EXPORT void setTrashCollection( const QString &resource, const Collection &collection );
     /**
      * Get the trash collection for the given @p resource
      */
-    Collection getTrashCollection( const QString &resource );
+    AKONADI_EXPORT Collection getTrashCollection( const QString &resource );
 }
 
 
