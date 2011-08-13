@@ -7,8 +7,10 @@ include_directories(
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(akonadicalendar_LIB_SRC
+  freebusyproviderbase.cpp
   standardcalendaractionmanager.cpp
 )
+qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
 kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 
 target_link_libraries(akonadi-calendar
@@ -29,6 +31,7 @@ set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
+  freebusyproviderbase.h
   standardcalendaractionmanager.h
   akonadi-calendar_export.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/calendar COMPONENT Devel
