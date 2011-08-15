@@ -110,11 +110,10 @@ QObject* PluginLoader::createForName( const QString & name )
 #ifdef Q_OS_WINCE
     //Maybe filter out the default plugins, they should be found but...
     //if ( !name.endsWith( QLatin1String( "@default" ) ) ) {
-      QString errMessage;
-      errMessage.append(QLatin1String("plugin \""));
-      errMessage.append(info.className);
-      errMessage.append(QLatin1String("\" is not buildin static, please specify this information in the bugreport."));
-      KMessageBox::critical(NULL,QLatin1String("Error"), errMessage);
+      QString errMessage =
+        i18n( "Plugin \"%1\" is not builtin static, "
+              "please specify this information in the bug report.", info.className );
+      KMessageBox::critical( 0, i18n( "Plugin Not Built Statically" ), errMessage );
     //}
 #endif
     kWarning( 5300 ) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
