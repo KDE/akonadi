@@ -28,15 +28,6 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-#if(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
-
-  # read from cache
-#  set(Soprano_FOUND TRUE)
-#  set(SopranoServer_FOUND TRUE)
-#  set(SopranoClient_FOUND TRUE)
-#  set(SopranoIndex_FOUND TRUE)
-
-#else(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
   include(FindLibraryWithDebug)
 
   # have packageconfig set variables to find Soprano:
@@ -220,5 +211,3 @@ mark_as_advanced(SOPRANO_CLIENT_LIBRARIES
                  SOPRANO_SERVER_LIBRARIES
                  SOPRANO_INCLUDE_DIR
                  SOPRANO_PLUGIN_DIR)
-
-#endif(SOPRANO_INCLUDE_DIR AND SOPRANO_LIBRARIES AND SOPRANO_INDEX_LIBRARIES AND SOPRANO_SERVER_LIBRARIES)
