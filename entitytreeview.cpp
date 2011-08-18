@@ -244,7 +244,6 @@ void EntityTreeView::dragMoveEvent( QDragMoveEvent * event )
   }
 
   event->setDropAction( Qt::IgnoreAction );
-  return;
 }
 
 void EntityTreeView::dropEvent( QDropEvent * event )
