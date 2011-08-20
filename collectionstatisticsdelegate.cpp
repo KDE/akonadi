@@ -269,11 +269,12 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       QString folderName = text;
       QFontMetrics fm( painter->fontMetrics() );
       int unreadWidth = fm.width( unread );
-      if ( fm.width( folderName ) + unreadWidth > textRect.width() ) {
+      int folderWidth( fm.width( folderName ) );
+      if ( folderWidth + unreadWidth > textRect.width() ) {
         folderName = fm.elidedText( folderName, Qt::ElideRight,
                                    textRect.width() - unreadWidth );
+        folderWidth = fm.width( folderName );
       }
-      int folderWidth = fm.width( folderName );
       QRect folderRect = textRect;
       QRect unreadRect = textRect;
       folderRect.setRight( textRect.left() + folderWidth );
