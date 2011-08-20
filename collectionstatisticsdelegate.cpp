@@ -244,12 +244,12 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     QString unread;
 //     qDebug() << expanded << unreadCount << unreadRecursiveCount;
     if ( expanded && unreadCount > 0 )
-      unread = QString( QLatin1String( " (%1)" ) ).arg( unreadCount );
+      unread = QString::fromLatin1( " (%1)" ).arg( unreadCount );
     else if ( !expanded ) {
       if ( unreadCount != unreadRecursiveCount )
-        unread = QString( QLatin1String( " (%1 + %2)" ) ).arg( unreadCount ).arg( unreadRecursiveCount - unreadCount );
+        unread = QString::fromLatin1( " (%1 + %2)" ).arg( unreadCount ).arg( unreadRecursiveCount - unreadCount );
       else if ( unreadCount > 0 )
-        unread = QString( QLatin1String( " (%1)" ) ).arg( unreadCount );
+        unread = QString::fromLatin1( " (%1)" ).arg( unreadCount );
     }
 
     PainterStateSaver stateSaver( painter );
