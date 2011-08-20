@@ -122,6 +122,7 @@ set( akonadikde_LIB_SRC
   itemserializerplugin.cpp
   itemmodifyjob.cpp
   itemsync.cpp
+  invalidatecachejob.cpp
   job.cpp
   kjobprivatebase.cpp
   linkjob.cpp
