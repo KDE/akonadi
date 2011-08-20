@@ -35,6 +35,7 @@
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmodifyjob.h"
+#include "invalidatecachejob_p.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
@@ -132,6 +133,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotDeleteResourceCollection();
     void slotDeleteResourceCollectionDone( KJob *job );
     void slotCollectionDeletionDone( KJob *job );
+
+    void slotInvalidateCache( const Akonadi::Collection &collection );
 
     void slotPrepareItemRetrieval( const Akonadi::Item &item );
     void slotPrepareItemRetrievalResult( KJob* job );
@@ -306,6 +309,8 @@ ResourceBase::ResourceBase( const QString & id )
            SLOT(slotPrepareItemRetrieval(Akonadi::Item)) );
   connect( d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
            SLOT(slotDeleteResourceCollection()) );
+  connect ( d->scheduler, SIGNAL(executeCacheInvalidation(Akonadi::Collection)),
+            SLOT(slotInvalidateCache(Akonadi::Collection)) );
   connect( d->scheduler, SIGNAL(status(int,QString)),
            SIGNAL(status(int,QString)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
@@ -499,6 +504,13 @@ void ResourceBasePrivate::slotCollectionDeletionDone( KJob *job )
   }
 
   scheduler->taskDone();
+}
+
+void ResourceBasePrivate::slotInvalidateCache( const Akonadi::Collection &collection )
+{
+  Q_Q( ResourceBase );
+  InvalidateCacheJob *job = new InvalidateCacheJob( collection, q );
+  connect( job, SIGNAL(result(KJob*)), scheduler, SLOT(taskDone()) );
 }
 
 void ResourceBase::changeCommitted( const Item& item )
@@ -727,6 +739,12 @@ void ResourceBase::clearCache()
 {
   Q_D( ResourceBase );
   d->scheduler->scheduleResourceCollectionDeletion();
+}
+
+void ResourceBase::invalidateCache(const Collection& collection)
+{
+  Q_D( ResourceBase );
+  d->scheduler->scheduleCacheInvalidation( collection );
 }
 
 Collection ResourceBase::currentCollection() const

@@ -134,6 +134,19 @@ void ResourceScheduler::scheduleResourceCollectionDeletion()
   scheduleNext();
 }
 
+void ResourceScheduler::scheduleCacheInvalidation( const Collection &collection )
+{
+  Task t;
+  t.type = InvalideCacheForCollection;
+  t.collection = collection;
+  TaskList& queue = queueForTaskType( t.type );
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+  queue << t;
+  signalTaskToTracker( t, "InvalideCacheForCollection" );
+  scheduleNext();
+}
+
 void ResourceScheduler::scheduleChangeReplay()
 {
   Task t;
@@ -282,6 +295,9 @@ void ResourceScheduler::executeNext()
       break;
     case DeleteResourceCollection:
       emit executeResourceCollectionDeletion();
+      break;
+    case InvalideCacheForCollection:
+      emit executeCacheInvalidation( mCurrentTask.collection );
       break;
     case ChangeReplay:
       emit executeChangeReplay();
@@ -451,7 +467,7 @@ void Akonadi::ResourceScheduler::cancelQueues()
   }
 }
 
-static const char s_taskTypes[][25] = {
+static const char s_taskTypes[][27] = {
       "Invalid",
       "SyncAll",
       "SyncCollectionTree",
@@ -460,6 +476,7 @@ static const char s_taskTypes[][25] = {
       "FetchItem",
       "ChangeReplay",
       "DeleteResourceCollection",
+      "InvalideCacheForCollection",
       "SyncAllDone",
       "Custom"
 };

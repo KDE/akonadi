@@ -55,6 +55,7 @@ class ResourceScheduler : public QObject
       FetchItem,
       ChangeReplay,
       DeleteResourceCollection,
+      InvalideCacheForCollection,
       SyncAllDone,
       Custom
     };
@@ -125,6 +126,12 @@ class ResourceScheduler : public QObject
       This method is used to implement the ResourceBase::clearCache() functionality.
      */
     void scheduleResourceCollectionDeletion();
+
+    /**
+     * Schedule cache invalidation for @p collection.
+     * @see ResourceBase::invalidateCache()
+     */
+    void scheduleCacheInvalidation( const Collection &collection );
 
     /**
       Insert synchronization completion marker into the task queue.
@@ -199,6 +206,7 @@ class ResourceScheduler : public QObject
     void executeCollectionTreeSync();
     void executeItemFetch( const Akonadi::Item &item, const QSet<QByteArray> &parts );
     void executeResourceCollectionDeletion();
+    void executeCacheInvalidation( const Akonadi::Collection &collection );
     void executeChangeReplay();
     void fullSyncComplete();
     void status( int status, const QString &message = QString() );

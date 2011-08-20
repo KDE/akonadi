@@ -445,12 +445,22 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * Call this method to remove all items and collections of the resource from the
      * server cache.
      *
-     * The method should be used whenever the configuration of the resource has changed
-     * and therefor the cached items might not be valid any longer.
+     * The method should not be used anymore
      *
+     * @see invalidateCache()
      * @since 4.3
      */
     void clearCache();
+
+    /**
+     * Call this method to invalidate all cached content in @p collection.
+     *
+     * The method should be used when the backend indicated that the cached content
+     * is no longer valid.
+     *
+     * @since 4.8
+     */
+    void invalidateCache( const Collection &collection );
 
     /**
      * Returns the collection that is currently synchronized.
