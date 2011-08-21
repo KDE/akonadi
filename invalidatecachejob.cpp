@@ -79,7 +79,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob* job)
     return;
   }
 
-  ItemModifyJob *modJob;
+  ItemModifyJob *modJob = 0;
   foreach ( Item item, fetchJob->items() ) {
     item.clearPayload();
     modJob = new ItemModifyJob( item, q );
