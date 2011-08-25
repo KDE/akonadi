@@ -236,6 +236,8 @@ void EntityTreeModelPrivate::changeFetchState( const Collection &parent )
 void EntityTreeModelPrivate::agentInstanceRemoved( const Akonadi::AgentInstance &instance )
 {
   Q_Q( EntityTreeModel );
+  if ( !instance.type().capabilities().contains( QLatin1String("Resource") ) )
+    return;
 
   if ( m_rootCollection.isValid() ) {
     if ( m_rootCollection != Collection::root() ) {
