@@ -609,6 +609,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollection() )
     Q_PRIVATE_SLOT( d_func(), void slotDeleteResourceCollectionDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionDeletionDone( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotInvalidateCache( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void slotLocalListDone( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotSynchronizeCollection( const Akonadi::Collection& ) )
     Q_PRIVATE_SLOT( d_func(), void slotCollectionListDone( KJob* ) )
