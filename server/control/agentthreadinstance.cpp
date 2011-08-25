@@ -68,7 +68,7 @@ void AgentThreadInstance::quit()
 
 void AgentThreadInstance::restartWhenIdle()
 {
-  if ( status() == 0 && !identifier().isEmpty() ) {
+  if ( status() != 1 && !identifier().isEmpty() ) {
     org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
                                                         QLatin1String("/AgentServer"), QDBusConnection::sessionBus() );
     agentServer.stopAgent( identifier() );
