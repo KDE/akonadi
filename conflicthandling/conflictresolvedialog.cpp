@@ -71,25 +71,25 @@ class HtmlDifferencesReporter : public AbstractDifferencesReporter
       switch ( mode ) {
         case NormalMode:
           mContent.append( QString::fromLatin1( "<tr><td align=\"right\"><b>%1:</b></td><td>%2</td><td></td><td>%3</td></tr>" )
-                                              .arg( name )
-                                              .arg( textToHTML( leftValue ) )
-                                              .arg( textToHTML( rightValue ) ) );
+                                              .arg( name,
+                                                    textToHTML( leftValue ),
+                                                    textToHTML( rightValue ) ) );
          break;
         case ConflictMode:
           mContent.append( QString::fromLatin1( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>" )
-                                              .arg( name )
-                                              .arg( textToHTML( leftValue ) )
-                                              .arg( textToHTML( rightValue ) ) );
+                                              .arg( name,
+                                                    textToHTML( leftValue ),
+                                                    textToHTML( rightValue ) ) );
          break;
        case AdditionalLeftMode:
          mContent.append( QString::fromLatin1( "<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>" )
-                                             .arg( name )
-                                             .arg( textToHTML( leftValue ) ) );
+                                             .arg( name,
+                                                   textToHTML( leftValue ) ) );
          break;
        case AdditionalRightMode:
          mContent.append( QString::fromLatin1( "<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>" )
-                                             .arg( name )
-                                             .arg( textToHTML( rightValue ) ) );
+                                             .arg( name,
+                                                   textToHTML( rightValue ) ) );
          break;
       }
     }
@@ -216,6 +216,7 @@ void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem,
   mOtherItem = otherItem;
 
   HtmlDifferencesReporter reporter;
+  compareItems( &reporter, localItem, otherItem );
 
   if ( mLocalItem.hasPayload() && mOtherItem.hasPayload() ) {
 
@@ -233,8 +234,6 @@ void ConflictResolveDialog::setConflictingItems( const Akonadi::Item &localItem,
                           QString::fromUtf8( mLocalItem.payloadData() ),
                           QString::fromUtf8( mOtherItem.payloadData() ) );
   }
-
-  compareItems( &reporter, localItem, otherItem );
 
   mView->setHtml( reporter.toHtml() );
 }
