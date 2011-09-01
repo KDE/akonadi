@@ -27,7 +27,7 @@
 # if defined(KDEPIM_STATIC_LIBS)
    /* No export/import for static libraries */
 #  define AKONADI_NOTES_EXPORT
-# elif defined(AKONADI_NOTES_EXPORT)
+# elif defined(MAKE_AKONADI_NOTES_LIB)
    /* We are building this library */
 #  define AKONADI_NOTES_EXPORT KDE_EXPORT
 # else

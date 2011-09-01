@@ -20,7 +20,7 @@
 #ifndef AKONADI_FREEBUSYPROVIDERBASE_H
 #define AKONADI_FREEBUSYPROVIDERBASE_H
 
-#include "../akonadi_export.h"
+#include "akonadi-kcal_export.h"
 
 #include <QtCore/QString>
 
@@ -51,7 +51,7 @@ class FreeBusyProviderBasePrivate;
  * @since 4.7
  */
 
-class AKONADI_EXPORT FreeBusyProviderBase
+class AKONADI_KCAL_EXPORT FreeBusyProviderBase
 {
   public:
     /**
