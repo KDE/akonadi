@@ -45,7 +45,7 @@ class NoteMessageWrapper::NoteMessageWrapperPrivate
         text = msg->mainBodyPart()->decodedText( true ); //remove trailing whitespace, so we get rid of "  " in empty notes
         from = msg->from( false )->asUnicodeString();
         creationDate = msg->date( true )->dateTime();
-        if ( msg->contentType( false )->asUnicodeString() == "text/html" ) {
+        if ( msg->contentType( false )->asUnicodeString() == QLatin1String("text/html") ) {
           textFormat = Qt::RichText;
         }
       } else {
