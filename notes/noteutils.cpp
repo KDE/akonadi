@@ -170,11 +170,11 @@ QString NoteMessageWrapper::toPlainText() const
   }
 
   //From cleanHtml in kdepimlibs/kcalutils/incidenceformatter.cpp
-  QRegExp rx( "<body[^>]*>(.*)</body>", Qt::CaseInsensitive );
+  QRegExp rx( QLatin1String("<body[^>]*>(.*)</body>"), Qt::CaseInsensitive );
   rx.indexIn( d->text );
   QString body = rx.cap( 1 );
 
-  return Qt::escape( body.remove( QRegExp( "<[^>]*>" ) ).trimmed() );
+  return Qt::escape( body.remove( QRegExp( QLatin1String("<[^>]*>") ) ).trimmed() );
 }
 
 QString noteIconName()
