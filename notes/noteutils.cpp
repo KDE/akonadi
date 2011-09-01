@@ -87,7 +87,7 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
     title = d->title;
   }
   // Need a non-empty body part so that the serializer regards this as a valid message.
-  QString text = "  ";
+  QString text = QLatin1String("  ");
   if ( !d->text.isEmpty() ) {
     text = d->text;
   }
