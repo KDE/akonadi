@@ -54,6 +54,11 @@
 #endif
 #include <stdlib.h>
 
+#ifdef Q_WS_WIN
+#include <windows.h>
+#include <Sddl.h>
+#endif
+
 using namespace Akonadi;
 
 static AkonadiServer *s_instance = 0;
@@ -88,7 +93,42 @@ AkonadiServer::AkonadiServer( QObject* parent )
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
 #ifdef Q_OS_WIN
-    QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
+    HANDLE hToken = NULL;
+    PSID sid;
+    QString userID;
+
+    OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hToken);
+    if(hToken)
+    {
+        DWORD size;
+        PTOKEN_USER userStruct;
+
+        GetTokenInformation(hToken, TokenUser, NULL, 0, &size);
+        if( ERROR_INSUFFICIENT_BUFFER == GetLastError() )
+        {
+            userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
+            GetTokenInformation(hToken, TokenUser, userStruct, size, &size);
+
+            int sidLength = GetLengthSid(userStruct->User.Sid);
+            sid = (PSID) malloc(sidLength);
+            CopySid(sidLength, sid, userStruct->User.Sid);
+            CloseHandle(hToken);
+            delete [] userStruct;
+        }
+
+        LPWSTR s;
+        if (!ConvertSidToStringSidW(sid, &s)) {
+            akError() << "Could not determine user id for current process.";
+            userID = QString();
+        } else {
+            userID = QString::fromUtf16(reinterpret_cast<ushort*>(s));
+            LocalFree(s);
+        }
+        free(sid);
+    }
+    QString defaultPipe = QLatin1String( "Akonadi-" ) + userID;
+
+    QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), defaultPipe ).toString();
 #ifdef Q_OS_WINCE
     if ( !listen( QHostAddress::LocalHost, 31414 ) )
 #else
