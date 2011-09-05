@@ -35,8 +35,9 @@
  
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent)
   : CommandBase( parent ),
-    mModel( mModel ), 
-    the_trashCollectionFolder( -1 )
+    mModel( model ), 
+    the_trashCollectionFolder( -1 ),
+    mNumberOfTrashToEmpty( 0 )
 {
 }
 
@@ -44,7 +45,8 @@ EmptyTrashCommand::EmptyTrashCommand(const Akonadi::Collection& folder, QObject*
   : CommandBase( parent ),
     mModel( 0 ), 
     the_trashCollectionFolder( -1 ),
-    mFolder( folder )
+    mFolder( folder ),
+    mNumberOfTrashToEmpty( 0 )
 {
 }
 
@@ -68,7 +70,8 @@ void EmptyTrashCommand::execute()
       return;
     }
     Akonadi::Collection trash = trashCollectionFolder();
-    expunge( trash );
+    QList<Akonadi::Collection> trashFolder;
+    trashFolder<<trash;
 
     const Akonadi::AgentInstance::List lst = agentInstances();
     foreach ( const Akonadi::AgentInstance& type, lst ) {
@@ -79,14 +82,19 @@ void EmptyTrashCommand::execute()
         if ( iface->isValid() ) {
           const int trashImap = iface->trashCollection();
           if ( trashImap != trash.id() ) {
-            expunge( Akonadi::Collection( trashImap ) );
+            trashFolder<<Akonadi::Collection( trashImap );
           }
         }
         delete iface;
       }
     }
+    mNumberOfTrashToEmpty = trashFolder.count();
+    for (int i = 0; i < mNumberOfTrashToEmpty; ++i) {
+      expunge( trashFolder.at( i ) );
+    }
   } else {
     if ( folderIsTrash( mFolder ) ) {
+      mNumberOfTrashToEmpty++;
       expunge( mFolder );
     } else {
       emitResult( OK ); 
@@ -187,3 +195,11 @@ bool EmptyTrashCommand::folderIsTrash( const Akonadi::Collection & col )
   return false;
 }
 
+void EmptyTrashCommand::emitResult( Result value )
+{
+  emit result( value );
+  mNumberOfTrashToEmpty--;
+  if ( mNumberOfTrashToEmpty <= 0 ) {
+    deleteLater();
+  }
+}

@@ -41,6 +41,10 @@ public:
 private slots:
   void slotExpungeJob( KJob *job );
   void slotDeleteJob( KJob *job );
+
+protected Q_SLOTS:
+    void emitResult( Result result );
+  
 private:      
   void expunge( const Akonadi::Collection& );
   Akonadi::AgentInstance::List agentInstances();
@@ -51,6 +55,7 @@ private:
   const QAbstractItemModel* mModel;
   Akonadi::Collection::Id the_trashCollectionFolder;
   Akonadi::Collection mFolder;
+  int mNumberOfTrashToEmpty;
 };
 
 #endif // EMPTYTRASHCOMMAND_P_H
