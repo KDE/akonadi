@@ -61,7 +61,7 @@ void EmptyTrashCommand::execute()
                                           QLatin1String( "confirm_empty_trash" ) )
         != KMessageBox::Continue)
     {
-      emitResult( Ok );
+      emitResult( OK );
       return;
     }
     Akonadi::Collection trash = trashCollectionFolder();
