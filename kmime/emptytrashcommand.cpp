@@ -32,7 +32,7 @@
 #include "akonadi/itemdeletejob.h"
 #include "akonadi/agentmanager.h"
 #include "kmime/kmime_message.h"
-
+ 
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent) : CommandBase( parent )
 {
   the_trashCollectionFolder = -1;
@@ -54,14 +54,14 @@ void EmptyTrashCommand::execute()
   }
 
   if ( !mFolder.isValid() ) { //expunge all
-    
-    QString title = i18n("Empty Trash");
-    QString text = i18n("Are you sure you want to empty the trash folders of all accounts?");
+    const QString title = i18n("Empty Trash");
+    const QString text = i18n("Are you sure you want to empty the trash folders of all accounts?");
     if (KMessageBox::warningContinueCancel(0, text, title,
                                           KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                           QLatin1String( "confirm_empty_trash" ) )
         != KMessageBox::Continue)
     {
+      emitResult( Ok );
       return;
     }
     Akonadi::Collection trash = trashCollectionFolder();
@@ -74,7 +74,7 @@ void EmptyTrashCommand::execute()
           continue;
         OrgKdeAkonadiImapSettingsInterface *iface = Util::createImapSettingsInterface( type.identifier() );
         if ( iface->isValid() ) {
-          int trashImap = iface->trashCollection();
+          const int trashImap = iface->trashCollection();
           if ( trashImap != trash.id() ) {
             expunge( Akonadi::Collection( trashImap ) );
           }
