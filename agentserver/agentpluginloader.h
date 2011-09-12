@@ -26,7 +26,7 @@ class AgentPluginLoader
 {
   public:
     /**
-      Unloads and deletes all instantiated QPluginLoaders.
+      Deletes all instantiated QPluginLoaders.
      */
     ~AgentPluginLoader();
 
