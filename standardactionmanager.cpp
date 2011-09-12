@@ -285,6 +285,9 @@ class StandardActionManager::Private
       if ( actionMenu ) {
         //get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
         KMenu *menu = actionMenu->menu();
+        //Not necessary to delete and recreate menu when it was not created
+        if ( menu->property( "actionType" ).isValid() && menu->isEmpty() )
+          return;
         delete menu;
         menu = new KMenu();
 
@@ -303,7 +306,6 @@ class StandardActionManager::Private
 
       if ( !menu->isEmpty() )
         return;
-
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
       fillFoldersMenu( type,
