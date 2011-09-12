@@ -25,13 +25,8 @@ using namespace Akonadi;
 
 AgentPluginLoader::~AgentPluginLoader()
 {
-  QHash<QString, QPluginLoader*>::iterator it = m_pluginLoaders.begin();
-  while ( it != m_pluginLoaders.end() ) {
-    it.value()->unload();
-    ++it;
-  }
-
   qDeleteAll( m_pluginLoaders );
+  m_pluginLoaders.clear();
 }
 
 QPluginLoader *AgentPluginLoader::load( const QString &pluginName )
