@@ -30,8 +30,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QVBoxLayout>
 
-static const unsigned int s_messageSize = 160;
-
 SmsDialog::SmsDialog( const KABC::PhoneNumber &number )
   : mNumber( number.number() )
 {
@@ -84,10 +82,20 @@ void SmsDialog::initUI()
 void SmsDialog::updateCounter()
 {
   mText = mSmsTextEdit->toPlainText();
+  unsigned int messageSize = 160;
 
-  int size = mText.size();
-  int numberSms = ( size - ( size % s_messageSize ) ) / s_messageSize + 1;
-  int numberChars = s_messageSize * numberSms;
+  bool noLatin1Char = false;
+  const int size = mText.length();
+  for ( int i = 0; i <size; ++i )
+  {
+    if ( mText[i].row() > 0 ) {
+      noLatin1Char = true;
+      messageSize = 70;
+      break;
+    }
+  }
+  const int numberSms = ( size - ( size % messageSize ) ) / messageSize + 1;
+  const int numberChars = messageSize * numberSms;
 
   mLengthLabel->setText( i18n( "%1/%2 (%3 SMS)", size, numberChars, numberSms ) );
 }
