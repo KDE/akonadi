@@ -520,6 +520,14 @@ class StandardActionManager::Private
       if ( name.isEmpty() )
         return;
 
+      if ( name.contains( QLatin1Char( '/' ) ) ) {
+        KMessageBox::error( parentWidget,
+                            i18n( "We can not add \"/\" in folder name." ),
+                            i18n( "Create new folder error" ) );
+
+        return;
+      }
+
       Collection collection;
       collection.setName( name );
       collection.setParentCollection( parentCollection );
@@ -853,12 +861,11 @@ class StandardActionManager::Private
       const QModelIndexList list = collectionSelectionModel->selectedRows();
       if ( list.isEmpty() )
         return;
-
       const QModelIndex index = list.first();
       Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
-
+      
       const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
 
       RenameFavoriteDialog dlg(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget );
