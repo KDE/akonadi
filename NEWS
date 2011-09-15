@@ -1,3 +1,11 @@
+1.6.1                       15-September-2011
+---------------------------------------------
+- Fix crash on agent launcher exit.
+- Fix valgrind-ing agents running in the agent launcher.
+- Fix restarting of agents in broken state.
+- Fix pipe naming on multi-user Windows systems.
+- Raise MySQL timeout.
+
 1.6.0                            10-July-2011
 ---------------------------------------------
 - Enable external payload storage unconditionally.
