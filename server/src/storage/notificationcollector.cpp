@@ -170,7 +170,8 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
   if ( op == NotificationMessage::Remove )
     msg.setItemParts( QSet<QByteArray>() << item.remoteRevision().toUtf8() );
 
-  msg.setDestinationResource( collectionDest.resource().name().toLatin1() );
+  if ( collectionDest.isValid() ) // only relevant for moves
+    msg.setDestinationResource( collectionDest.resource().name().toLatin1() );
 
   Collection col = collection;
   if ( !col.isValid() )
