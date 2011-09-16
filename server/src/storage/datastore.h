@@ -161,11 +161,6 @@ class DataStore : public QObject
     bool cleanupPimItem( const PimItem &item );
 
     /**
-     * Cleanups all items which have the '\\DELETED' flag set
-     */
-    bool cleanupPimItems( const Collection &collection );
-
-    /**
      * Unhides the specified PimItem. Emits the itemAdded() notification as 
      * the hidden flag is assumed to have been set by appendPimItem() before
      * pushing the item to the preprocessor chain. The hidden item had his

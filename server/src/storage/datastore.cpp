@@ -489,40 +489,6 @@ bool DataStore::cleanupPimItem( const PimItem &item )
   return true;
 }
 
-bool DataStore::cleanupPimItems( const Collection &collection )
-{
-  if ( !m_dbOpened || !collection.isValid() )
-    return false;
-
-  QueryBuilder qb( Flag::tableName(), QueryBuilder::Select );
-  qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
-              PimItemFlagRelation::rightFullColumnName(), Flag::idFullColumnName() );
-  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(),
-              PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
-
-  qb.addColumn( PimItemFlagRelation::leftFullColumnName() );
-
-  qb.addValueCondition( Flag::nameFullColumnName(), Query::Equals, QLatin1String("\\DELETED") );
-  qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
-
-  if ( !qb.exec() )
-    return false;
-
-  QVector<PimItem> pimItems;
-  while ( qb.query().next() ) {
-    PimItem item;
-    item.setId( qb.query().value( 0 ).toLongLong() );
-
-    pimItems.append( item );
-  }
-
-  bool ok = true;
-  for ( int i = 0; i < pimItems.count(); ++i )
-    ok = ok && cleanupPimItem( pimItems[ i ] );
-
-  return ok;
-}
-
 bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray & key, const QByteArray & value)
 {
   SelectQueryBuilder<CollectionAttribute> qb;
