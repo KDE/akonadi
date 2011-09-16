@@ -879,7 +879,11 @@ class StandardActionManager::Private
     {
       Q_ASSERT( favoritesModel );
       foreach( const Collection& collection, favoritesModel->collections() ) {
-        AgentManager::self()->synchronizeCollection( collection, false );
+        // there might be virtual collections in favorites which cannot be checked
+        // so let's be safe here, agentmanager asserts otherwise
+        if ( !collection.resource().isEmpty() ) {
+          AgentManager::self()->synchronizeCollection( collection, false );
+        }
       }
     }
 
