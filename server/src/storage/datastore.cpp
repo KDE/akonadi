@@ -376,8 +376,9 @@ void DataStore::activeCachePolicy(Collection & col)
   if ( !col.cachePolicyInherit() )
     return;
 
-  Collection parent = col.parent();
-  while ( parent.isValid() ) {
+  Collection parent = col;
+  while ( parent.parentId() != 0 ) {
+    parent = parent.parent();
     if ( !parent.cachePolicyInherit() ) {
       col.setCachePolicyCheckInterval( parent.cachePolicyCheckInterval() );
       col.setCachePolicyCacheTimeout( parent.cachePolicyCacheTimeout() );
@@ -385,7 +386,6 @@ void DataStore::activeCachePolicy(Collection & col)
       col.setCachePolicyLocalParts( parent.cachePolicyLocalParts() );
       return;
     }
-    parent = parent.parent();
   }
 
   // ### system default
