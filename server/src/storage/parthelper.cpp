@@ -151,6 +151,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   SelectQueryBuilder<Part> builder;
   builder.addValueCondition( column, Query::Equals, value );
   builder.addValueCondition( Part::externalColumn(), Query::Equals, true );
+  builder.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   if ( !builder.exec() ) {
 //      qDebug() << "Error selecting records to be deleted from table"
 //          << Part::tableName() << builder.query().lastError().text();
