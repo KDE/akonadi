@@ -1109,6 +1109,8 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
   const int srcRow = indexOf<Node::Item>( m_childEntities.value( sourceCollection.id() ), itemId );
   const int destRow = q->rowCount( destIndex );
 
+  Q_ASSERT(srcRow >= 0);
+  Q_ASSERT(destRow >= 0);
   if ( !q->beginMoveRows( srcIndex, srcRow, srcRow, destIndex, destRow ) ) {
     kWarning() << "Invalid move";
     return;
