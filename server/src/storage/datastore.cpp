@@ -257,9 +257,23 @@ bool DataStore::appendCollection( Collection &collection )
 bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 {
   // delete the content
-  PimItem::List items = collection.items();
-  foreach ( PimItem item, items )
-    cleanupPimItem( item );
+  const PimItem::List items = collection.items();
+  const QByteArray resource = collection.resource().name().toLatin1();
+  foreach ( const PimItem &item, items ) {
+
+    // generate the notification before actually removing the data
+    mNotificationCollector->itemRemoved( item, collection, QString(), resource ); // TODO: make mimetype available as part as an item bulk query
+
+    if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
+      return false;
+    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) // TODO: reduce to single query
+      return false;
+    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
+      return false;
+
+    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
+      return false;
+  }
 
   // delete collection mimetypes
   collection.clearMimeTypes();
