@@ -865,7 +865,7 @@ class StandardActionManager::Private
       Q_ASSERT( index.isValid() );
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
-      
+
       const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
 
       RenameFavoriteDialog dlg(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget );
