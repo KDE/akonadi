@@ -1200,6 +1200,13 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
       }
     }
 #endif
+  if ( ItemFetchJob* iJob = dynamic_cast<ItemFetchJob*>( job ) ) {
+    if ( iJob->items().isEmpty() ) {
+      m_collectionsWithoutItems.insert(collectionId);
+    } else {
+      m_collectionsWithoutItems.remove(collectionId);
+    }
+  }
 
   if ( !m_showRootCollection && collectionId == m_rootCollection.id() )
     return;
