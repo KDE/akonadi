@@ -175,8 +175,11 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
   Collection::List cols;
-  foreach (const Collection::Id &colId, d->collectionIds)
-    cols << Collection(colId);
+  foreach (const Collection::Id &colId, d->collectionIds) {
+    const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), Collection(colId) );
+    const Collection collection = sourceModel()->data( idx, EntityTreeModel::CollectionRole ).value<Collection>();
+    cols << collection;
+  }
   return cols;
 }
 
