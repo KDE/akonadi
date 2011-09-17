@@ -58,12 +58,12 @@ QStack<Collection> List::ancestorsForCollection( const Collection &col )
   if ( mAncestorDepth <= 0 )
     return QStack<Collection>();
   QStack<Collection> ancestors;
-  Collection parent = col.parent();
+  Collection parent = col;
   for ( int i = 0; i < mAncestorDepth; ++i ) {
-    if ( !parent.isValid() )
+    if ( parent.parentId() == 0 )
       break;
-    ancestors.prepend( parent );
     parent = parent.parent();
+    ancestors.prepend( parent );
   }
   return ancestors;
 }
