@@ -74,6 +74,11 @@ class StorageJanitor : public QThread
      * Look for parts belonging to non-existing items.
      */
     void findOrphanedParts();
+
+    /**
+     * Look for parts refering to the same external file.
+     */
+    void findOverlappingParts();
 };
 
 #endif // STORAGEJANITOR_H

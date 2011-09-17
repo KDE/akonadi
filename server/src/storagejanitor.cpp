@@ -66,7 +66,10 @@ void StorageJanitor::check()
   inform( "Looking for item parts not belonging to a valid item..." );
   findOrphanedParts();
 
-  /* TODO some check ideas:
+  inform( "Looking for overlapping external parts..." );
+  findOverlappingParts();
+
+  /* TODO some ideas for further checks:
    * the collection tree is non-cyclic
    * every item payload part belongs to an existing item
    * every part points to an existing file
@@ -142,6 +145,28 @@ void StorageJanitor::findOrphanedParts()
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
     // TODO: create lost+found items for those? delete?
   }
+}
+
+void StorageJanitor::findOverlappingParts()
+{
+  QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
+  qb.addColumn( Part::dataColumn() );
+  qb.addColumn( QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(") as cnt") );
+  qb.addValueCondition( Part::externalColumn(), Query::Equals, true );
+  qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
+  qb.addGroupColumn( Part::dataColumn() );
+  qb.addValueCondition( QLatin1String("cnt"), Query::Greater, 1, QueryBuilder::HavingCondition );
+  qb.exec();
+
+  int count = 0;
+  while ( qb.query().next() ) {
+    ++count;
+    inform( QLatin1Literal( "Found overlapping item: " ) + qb.query().value( 0 ).toString() );
+    // TODO: uh oh, this is bad, how do we recover from that?
+  }
+
+  if ( count > 0 )
+    inform( QLatin1Literal( "Found " ) + QString::number( count ) + QLatin1Literal( " overlapping parts - bad." ) );
 }
 
 void StorageJanitor::vacuum()
