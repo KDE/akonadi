@@ -422,7 +422,7 @@ void FetchHelper::parseCommandStream()
 
 QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
 {
-  if ( mAncestorDepth <= 0 )
+  if ( mAncestorDepth <= 0 || parentColId == 0 )
     return QStack<Collection>();
   if ( mAncestorCache.contains( parentColId ) )
     return mAncestorCache.value( parentColId );
