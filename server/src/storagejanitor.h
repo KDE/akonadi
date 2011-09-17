@@ -64,6 +64,11 @@ class StorageJanitor : public QThread
      * and that that everything along that path belongs to the same resource.
      */
     void checkPathToRoot( const Akonadi::Collection &col );
+
+    /**
+     * Look for items belonging to non-existing collections.
+     */
+    void findOrphanedItems();
 };
 
 #endif // STORAGEJANITOR_H

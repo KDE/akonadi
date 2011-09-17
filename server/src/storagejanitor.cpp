@@ -60,12 +60,15 @@ void StorageJanitor::check()
   const Collection::List cols = Collection::retrieveAll();
   std::for_each( cols.begin(), cols.end(), boost::bind( &StorageJanitor::checkPathToRoot, this, _1 ) );
 
+  inform( "Looking for items not belonging to a valid collection..." );
+  findOrphanedItems();
+
   /* TODO some check ideas:
-   * items belong to existing collections
    * the collection tree is non-cyclic
    * every item payload part belongs to an existing item
    * every part points to an existing file
    * content type constraints of collections are not violated
+   * look for dirty/RID-less items
    */
 
   inform( "Consistency check done." );
@@ -104,6 +107,20 @@ void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
   }
   
   checkPathToRoot( parent );
+}
+
+void StorageJanitor::findOrphanedItems()
+{
+  SelectQueryBuilder<PimItem> qb;
+  qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+  qb.addValueCondition( Collection::idFullColumnName(), Query::Is, QVariant() );
+
+  qb.exec();
+  const PimItem::List orphans = qb.result();
+  if ( orphans.size() > 0 ) {
+    inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
+    // TODO: attach to lost+found collection
+  }
 }
 
 void StorageJanitor::vacuum()
