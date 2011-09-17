@@ -71,17 +71,6 @@ bool Status::parseStream()
     statusResponse += "MESSAGES ";
     statusResponse += QByteArray::number( itemCount );
   }
-    // RECENT - The number of messages with the \Recent flag set
-  if ( attributeList.contains( "RECENT" ) ) {
-    if ( !statusResponse.isEmpty() )
-      statusResponse += " RECENT ";
-    else
-      statusResponse += "RECENT ";
-    const int count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
-    if ( count < 0 )
-      return failureResponse( "Could not determine recent item count" );
-    statusResponse += QByteArray::number( count );
-  }
 
   if ( attributeList.contains( "UNSEEN" ) ) {
     if ( !statusResponse.isEmpty() )

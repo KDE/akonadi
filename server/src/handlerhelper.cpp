@@ -106,11 +106,6 @@ bool HandlerHelper::itemStatistics(const Akonadi::Collection& col, qint64& count
   return true;
 }
 
-int HandlerHelper::itemWithFlagCount(const Collection & col, const QString & flag)
-{
-  return itemWithFlagsCount( col, QStringList( flag ) );
-}
-
 int HandlerHelper::itemWithFlagsCount(const Akonadi::Collection& col, const QStringList& flags)
 {
   CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
@@ -135,16 +130,6 @@ int HandlerHelper::itemCount(const Collection& col)
   if ( !qb.exec() )
     return -1;
   return qb.result();
-}
-
-int HandlerHelper::itemWithoutFlagCount(const Collection & col, const QString & flag)
-{
-  // FIXME optimize me: use only one query or reuse previously done count
-  const int flagCount = itemWithFlagCount( col, flag );
-  const int totalCount = itemCount( col );
-  if ( totalCount < 0 || flagCount < 0 )
-    return -1;
-  return totalCount - flagCount;
 }
 
 int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, int start, bool *changed )

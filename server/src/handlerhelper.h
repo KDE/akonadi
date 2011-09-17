@@ -72,15 +72,7 @@ class HandlerHelper
       which have a given flag set.
       @return -1 on error.
     */
-    static int itemWithFlagCount( const Collection &col, const QString &flag );
     static int itemWithFlagsCount( const Collection &col, const QStringList &flags );
-
-    /**
-      Returns the amount of existing items in the given collection
-      which have a given flag not set.
-      @return -1 on error
-    */
-    static int itemWithoutFlagCount( const Collection &col, const QString &flag );
 
     /**
       Parse cache policy and update the given Collection object accoordingly.

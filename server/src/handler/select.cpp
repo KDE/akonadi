@@ -95,25 +95,16 @@ bool Select::parseStream()
     response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() );
     emit responseAvailable( response );
 
-    int count = HandlerHelper::itemCount( col );
-    if ( count < 0 )
+    const int itemCount = HandlerHelper::itemCount( col );
+    if ( itemCount < 0 )
       return failureResponse( "Unable to determine item count" );
-    response.setString( QByteArray::number( count ) + " EXISTS" );
+    response.setString( QByteArray::number( itemCount ) + " EXISTS" );
     emit responseAvailable( response );
 
-    count = HandlerHelper::itemWithFlagCount( col, QLatin1String( "\\Recent" ) );
-    if ( count < 0 )
-      return failureResponse( "Unable to determine recent count" );
-    response.setString( QByteArray::number( count ) + " RECENT" );
-    emit responseAvailable( response );
-
-    count = HandlerHelper::itemWithoutFlagCount( col, QLatin1String( "\\SEEN" ) );
-    if ( count < 0 )
+    int readCount = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) );
+    if ( readCount < 0 || itemCount < readCount )
       return failureResponse( "Unable to retrieve unseen count" );
-    response.setString( "OK [UNSEEN " + QByteArray::number( count ) + "] Message 0 is first unseen" );
-    emit responseAvailable( response );
-
-    response.setString( "OK [UIDVALIDITY 1] UIDs valid" );
+    response.setString( "OK [UNSEEN " + QByteArray::number( itemCount - readCount ) + "] Message 0 is first unseen" );
     emit responseAvailable( response );
   }
 
