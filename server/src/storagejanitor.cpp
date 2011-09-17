@@ -24,6 +24,7 @@
 
 #include <akdebug.h>
 #include <libs/protocol_p.h>
+#include <libs/xdgbasedirs_p.h>
 
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
@@ -32,6 +33,8 @@
 
 #include <boost/bind.hpp>
 #include <algorithm>
+#include <QtCore/QDir>
+#include <QtCore/qdiriterator.h>
 
 using namespace Akonadi;
 
@@ -69,11 +72,11 @@ void StorageJanitor::check()
   inform( "Looking for overlapping external parts..." );
   findOverlappingParts();
 
+  inform( "Verifying external parts..." );
+  verifyExternalParts();
+
   /* TODO some ideas for further checks:
    * the collection tree is non-cyclic
-   * every item payload part belongs to an existing item
-   * every part points to an existing file
-   * every payload file belongs to an existing part object
    * content type constraints of collections are not violated
    * look for dirty/RID-less items
    * find unused flags
@@ -167,6 +170,42 @@ void StorageJanitor::findOverlappingParts()
 
   if ( count > 0 )
     inform( QLatin1Literal( "Found " ) + QString::number( count ) + QLatin1Literal( " overlapping parts - bad." ) );
+}
+
+void StorageJanitor::verifyExternalParts()
+{
+  QSet<QString> existingFiles;
+  QSet<QString> usedFiles;
+
+  // list all files
+  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
+  QDirIterator it( dataDir );
+  while ( it.hasNext() )
+    existingFiles.insert( it.next() );
+  inform( QLatin1Literal( "Found " ) + QString::number( existingFiles.size() ) + QLatin1Literal( " external files." ) );
+
+  // list all parts from the db which claim to have an associated file
+  QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
+  qb.addColumn( Part::dataColumn() );
+  qb.addValueCondition( Part::externalColumn(), Query::Equals, true );
+  qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
+  qb.exec();
+  while ( qb.query().next() ) {
+    const QString partPath = qb.query().value( 0 ).toString();
+    if ( existingFiles.contains( partPath ) ) {
+      usedFiles.insert( partPath );
+    } else {
+      inform( QLatin1Literal( "Missing external file: " ) + partPath );
+      // TODO: fix this, by clearing the data column?
+    }
+  }
+  inform( QLatin1Literal( "Found " ) + QString::number( usedFiles.size() ) + QLatin1Literal( " external parts." ) );
+
+  // see what's left
+  foreach ( const QString &file, existingFiles - usedFiles ) {
+    inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
+    // TODO: delete file?
+  }
 }
 
 void StorageJanitor::vacuum()

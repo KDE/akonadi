@@ -79,6 +79,11 @@ class StorageJanitor : public QThread
      * Look for parts refering to the same external file.
      */
     void findOverlappingParts();
+
+    /**
+     * Verify fs and db part state.
+     */
+    void verifyExternalParts();
 };
 
 #endif // STORAGEJANITOR_H
