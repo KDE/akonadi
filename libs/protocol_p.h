@@ -33,9 +33,11 @@
 #define AKONADI_DBUS_CONTROL_SERVICE "org.freedesktop.Akonadi.Control"
 #define AKONADI_DBUS_CONTROL_SERVICE_LOCK "org.freedesktop.Akonadi.Control.lock"
 #define AKONADI_DBUS_AGENTSERVER_SERVICE "org.freedesktop.Akonadi.AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_SERVICE "org.freedesktop.Akonadi.Janitor"
 
 #define AKONADI_DBUS_AGENTMANAGER_PATH "/AgentManager"
 #define AKONADI_DBUS_AGENTSERVER_PATH "/AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_PATH "/Janitor"
 
 // Commands
 #define AKONADI_CMD_COLLECTIONCOPY "COLCOPY"

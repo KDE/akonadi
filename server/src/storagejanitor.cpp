@@ -22,6 +22,7 @@
 #include "storage/datastore.h"
 
 #include <akdebug.h>
+#include <libs/protocol_p.h>
 
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
@@ -39,8 +40,8 @@ void StorageJanitor::run()
 {
   DataStore::self();
   QDBusConnection con = QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(metaObject()->className()) );
-  con.registerService(QLatin1String( "org.freedesktop.Akonadi.Janitor" ) );
-  con.registerObject( QLatin1String( "/Janitor" ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
+  con.registerService(QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
+  con.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
   exec();
   con.disconnectFromBus( con.name() );
   DataStore::self()->close();

@@ -113,7 +113,8 @@ int main( int argc, char **argv )
       "  start      : Starts the Akonadi server with all its processes\n"
       "  stop       : Stops the Akonadi server and all its processes cleanly\n"
       "  restart    : Restart Akonadi server with all its processes\n"
-      "  status     : Shows a status overview of the Akonadi server"
+      "  status     : Shows a status overview of the Akonadi server\n"
+      "  vacuum     : Vacuum internal storage (WARNING: needs a lot of time and disk space!)"
   ) );
 
   app.parseCommandLine();
@@ -123,6 +124,7 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "stop" ) );
   optionsList.append( QLatin1String( "status" ) );
   optionsList.append( QLatin1String( "restart" ) );
+  optionsList.append( QLatin1String( "vacuum" ) );
 
 #ifndef _WIN32_WCE
   const QStringList arguments = app.arguments();
@@ -181,7 +183,9 @@ int main( int argc, char **argv )
         if ( !startServer() )
           return 3;
       }
+  } else if ( arguments[ 1 ] == QLatin1String( "vacuum" ) ) {
+    QDBusInterface iface( QLatin1String(AKONADI_DBUS_STORAGEJANITOR_SERVICE), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
+    iface.call( QDBus::NoBlock, QLatin1String( "vacuum" ) );
   }
-
   return 0;
 }
