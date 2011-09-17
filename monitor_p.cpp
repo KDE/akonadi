@@ -261,7 +261,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
 
   if ( msg.type() == NotificationMessage::Item && !mItemFetchScope.isEmpty() ) {
     ItemFetchScope scope( mItemFetchScope );
-    if ( mFetchChangedOnly ) {
+    if ( mFetchChangedOnly && msg.operation() == NotificationMessage::Modify ) {
       scope.fetchFullPayload( false );
       QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
       Q_FOREACH( QByteArray part, requestedPayloadParts ) {

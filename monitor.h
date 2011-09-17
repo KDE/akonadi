@@ -188,6 +188,7 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
      * Instructs the monitor to fetch only those parts that were changed and were requested in the fetch scope.
+     * This is taken in account only for item modifications.
      * Example usage:
      * @code
      *   monitor->itemFetchScope().fetchFullPayload( true );
