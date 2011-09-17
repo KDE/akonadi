@@ -55,7 +55,8 @@ class StorageJanitor : public QThread
     void inform( const QString &msg );
 
     /**
-     * Verifies there is a path from @p col to the root of the collection tree.
+     * Verifies there is a path from @p col to the root of the collection tree
+     * and that that everything along that path belongs to the same resource.
      */
     void checkPathToRoot( const Akonadi::Collection &col );
 };

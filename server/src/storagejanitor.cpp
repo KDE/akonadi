@@ -60,7 +60,6 @@ void StorageJanitor::check()
    * items belong to existing collections
    * the collection tree is non-cyclic
    * every collection is owned by an existing resource
-   * collection sub-trees are owned by the same resource
    * every item payload part belongs to an existing item
    * content type constraints of collections are not violated
    */
@@ -74,10 +73,18 @@ void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
     return;
   const Akonadi::Collection parent = col.parent();
   if ( !parent.isValid() ) {
-    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  ) + QLatin1Literal( ") has no valid parent" ) );
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+          + QLatin1Literal( ") has no valid parent." ) );
     // TODO fix that by attaching to a top-level lost+found folder
     return;
   }
+
+  if ( col.resourceId() != parent.resourceId() ) {
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+          + QLatin1Literal( ") belongs to a different resource than its parent." ) );
+    // can/should we actually fix that?
+  }
+  
   checkPathToRoot( parent );
 }
 
