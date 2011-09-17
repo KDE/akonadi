@@ -153,6 +153,13 @@ ItemFetchScope &Monitor::itemFetchScope()
   return d->mItemFetchScope;
 }
 
+void Monitor::fetchChangedOnly( bool enable )
+{
+  Q_D( Monitor );
+  d->mFetchChangedOnly = true;
+}
+
+
 void Monitor::setCollectionFetchScope( const CollectionFetchScope &fetchScope )
 {
   Q_D( Monitor );

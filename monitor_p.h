@@ -83,6 +83,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     CollectionFetchScope mCollectionFetchScope;
+    bool mFetchChangedOnly;
     Session *session;
     CollectionCache *collectionCache;
     ItemCache *itemCache;

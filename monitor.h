@@ -185,6 +185,27 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void setItemFetchScope( const ItemFetchScope &fetchScope );
 
+
+    /**
+     * Instructs the monitor to fetch only those parts that were changed and were requested in the fetch scope.
+     * Example usage:
+     * @code
+     *   monitor->itemFetchScope().fetchFullPayload( true );
+     *   monitor->fetchChangedOnly(true);
+     * @endcode
+     *
+     * In the example if an item was changed, but its payload was not, the full payload will not be retrieved.
+     * If the item's payload was changed, the monitor retrieves the changed payload as well.
+     *
+     * The default is to fetch everything requested.
+     *
+     * @since 4.8
+     * 
+     * @param enable @c true to enable the featue, @c false means everything that was requested will be fetched
+     * @return void
+     **/
+    void fetchChangedOnly( bool enable );
+
     /**
      * Returns the item fetch scope.
      *

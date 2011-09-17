@@ -76,6 +76,7 @@ MonitorPrivate::MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_,
   dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new MonitorDependeciesFactory),
   notificationSource( 0 ),
   monitorAll( false ),
+  mFetchChangedOnly( false ),
   session( Session::defaultSession() ),
   collectionCache( 0 ),
   itemCache( 0 ),
@@ -259,7 +260,31 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
     return allCached; // the actual object is gone already, nothing to fetch there
 
   if ( msg.type() == NotificationMessage::Item && !mItemFetchScope.isEmpty() ) {
-    if ( !itemCache->ensureCached( msg.uid(), mItemFetchScope ) )
+    ItemFetchScope scope( mItemFetchScope );
+    if ( mFetchChangedOnly ) {
+      scope.fetchFullPayload( false );
+      QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
+      Q_FOREACH( QByteArray part, requestedPayloadParts ) {
+        scope.fetchPayloadPart( part, false );
+      }
+
+      QSet<QByteArray> requestedAttrParts = scope.attributes();
+      Q_FOREACH( QByteArray part, requestedAttrParts ) {
+        scope.fetchAttribute( part, false );
+      }
+
+      QSet<QByteArray> changedParts = msg.itemParts();
+      Q_FOREACH( const QByteArray &part, changedParts )  {
+        if( part.startsWith( "PLD:" ) && requestedPayloadParts.contains( part ) ) {
+          scope.fetchPayloadPart( part, true );;
+        }
+        if ( part.startsWith( "ATR:" ) && requestedAttrParts.contains( part ) ) {
+          scope.fetchAttribute( part, true );
+        }
+      }
+    }
+    
+    if ( !itemCache->ensureCached( msg.uid(), scope ) )
       allCached = false;
   } else if ( msg.type() == NotificationMessage::Collection && fetchCollection ) {
     if ( !collectionCache->ensureCached( msg.uid(), mCollectionFetchScope ) )
