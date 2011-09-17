@@ -32,6 +32,14 @@
 
 using namespace Akonadi;
 
+static QString fileNameForPart( Part *part )
+{
+  Q_ASSERT( part->id() >= 0 );
+  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
+  Q_ASSERT( dataDir != QDir::separator() );
+  return dataDir + QString::number( part->id() );
+}
+
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 {
   if (!part)
@@ -47,7 +55,7 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
   if ( storeExternal ) {
     QString fileName = origFileName;
     if ( fileName.isEmpty() )
-      fileName = fileNameForId( part->pimItemId() );
+      fileName = fileNameForPart( part );
     QString rev = QString::fromAscii("_r0");
     if ( fileName.contains( QString::fromAscii("_r") ) ) {
       int revIndex = fileName.indexOf(QString::fromAscii("_r"));
@@ -110,7 +118,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
   if ( storeInFile && result )
   {
-    QString fileName = PartHelper::fileNameForId( part->id() );
+    QString fileName = fileNameForPart( part );
     fileName +=  QString::fromUtf8("_r0");
 
     QFile file( fileName );
@@ -192,14 +200,6 @@ QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 QByteArray PartHelper::translateData( const Part& part )
 {
   return translateData( part.data(), part.external() );
-}
-
-QString PartHelper::fileNameForId( qint64 id )
-{
-  Q_ASSERT( id >= 0 );
-  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
-  Q_ASSERT( dataDir != QDir::separator() );
-  return dataDir + QString::number(id);
 }
 
 bool Akonadi::PartHelper::truncate(Part& part)
