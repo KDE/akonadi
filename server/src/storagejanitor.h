@@ -69,6 +69,11 @@ class StorageJanitor : public QThread
      * Look for items belonging to non-existing collections.
      */
     void findOrphanedItems();
+
+    /**
+     * Look for parts belonging to non-existing items.
+     */
+    void findOrphanedParts();
 };
 
 #endif // STORAGEJANITOR_H

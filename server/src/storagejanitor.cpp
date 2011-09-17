@@ -63,12 +63,19 @@ void StorageJanitor::check()
   inform( "Looking for items not belonging to a valid collection..." );
   findOrphanedItems();
 
+  inform( "Looking for item parts not belonging to a valid item..." );
+  findOrphanedParts();
+
   /* TODO some check ideas:
    * the collection tree is non-cyclic
    * every item payload part belongs to an existing item
    * every part points to an existing file
+   * every payload file belongs to an existing part object
    * content type constraints of collections are not violated
    * look for dirty/RID-less items
+   * find unused flags
+   * find unused mimetypes
+   * check for dead entries in relation tables
    */
 
   inform( "Consistency check done." );
@@ -120,6 +127,20 @@ void StorageJanitor::findOrphanedItems()
   if ( orphans.size() > 0 ) {
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
     // TODO: attach to lost+found collection
+  }
+}
+
+void StorageJanitor::findOrphanedParts()
+{
+  SelectQueryBuilder<Part> qb;
+  qb.addJoin( QueryBuilder::LeftJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
+  qb.addValueCondition( PimItem::idFullColumnName(), Query::Is, QVariant() );
+
+  qb.exec();
+  const Part::List orphans = qb.result();
+  if ( orphans.size() > 0 ) {
+    inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
+    // TODO: create lost+found items for those? delete?
   }
 }
 
