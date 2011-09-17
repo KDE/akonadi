@@ -24,6 +24,7 @@
 
 #include "cachecleaner.h"
 #include "intervalcheck.h"
+#include "storagejanitor.h"
 #include "storage/dbconfig.h"
 #include "storage/datastore.h"
 #include "notificationmanager.h"
@@ -71,6 +72,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 #endif
     , mCacheCleaner( 0 )
     , mIntervalChecker( 0 )
+    , mStorageJanitor( 0 )
     , mItemRetrievalThread( 0 )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
@@ -176,6 +178,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mIntervalChecker = new IntervalCheck( this );
     mIntervalChecker->start( QThread::IdlePriority );
 
+    mStorageJanitor = new StorageJanitor;
+    mStorageJanitor->start( QThread::IdlePriority );
+
     mItemRetrievalThread = new ItemRetrievalThread( this );
     mItemRetrievalThread->start( QThread::HighPriority );
 
@@ -237,6 +242,7 @@ void AkonadiServer::quit()
     qDebug() << "terminating service threads";
     quitThread( mCacheCleaner );
     quitThread( mIntervalChecker );
+    quitThread( mStorageJanitor );
     quitThread( mItemRetrievalThread );
 
     delete mSearchManager;

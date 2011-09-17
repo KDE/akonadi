@@ -68,6 +68,9 @@ class <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation;
 <xsl:call-template name="relation-header"/>
 </xsl:for-each>
 
+/** Returns a list of all table names. */
+QVector&lt;QString&gt; allDatabaseTables();
+
 }
 
 <xsl:for-each select="database/table">
@@ -105,6 +108,19 @@ using namespace Akonadi;
 <xsl:for-each select="database/relation">
 <xsl:call-template name="relation-source"/>
 </xsl:for-each>
+
+QVector&lt;QString&gt; Akonadi::allDatabaseTables()
+{
+  static QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
+  <xsl:for-each select="database/table">
+    &lt;&lt; QLatin1String( "<xsl:value-of select="@name"/>Table" )
+  </xsl:for-each>
+  <xsl:for-each select="database/relation">
+    &lt;&lt; QLatin1String( "<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation" )
+  </xsl:for-each>
+  ;
+  return allTables;
+}
 
 </xsl:if>
 

@@ -30,6 +30,7 @@
 #include <QtNetwork/QLocalServer>
 #endif
 
+class StorageJanitor;
 class QProcess;
 class IntervalCheck;
 
@@ -82,6 +83,7 @@ class AkonadiServer: public QLocalServer
 
     CacheCleaner *mCacheCleaner;
     IntervalCheck *mIntervalChecker;
+    StorageJanitor *mStorageJanitor;
     ItemRetrievalThread *mItemRetrievalThread;
     QProcess *mDatabaseProcess;
     QVector< QPointer<AkonadiConnection> > mConnections;

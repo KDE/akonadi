@@ -133,6 +133,7 @@ set(libakonadiprivate_SRCS
   src/imapstreamparser.cpp
   src/preprocessorinstance.cpp
   src/preprocessormanager.cpp
+  src/storagejanitor.cpp
 )
 
 if (Soprano_FOUND)
