@@ -29,6 +29,9 @@
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
 
+#include <boost/bind.hpp>
+#include <algorithm>
+
 using namespace Akonadi;
 
 StorageJanitor::StorageJanitor(QObject* parent) : QThread(parent)
@@ -49,7 +52,33 @@ void StorageJanitor::run()
 
 void StorageJanitor::check()
 {
-  inform( "checking db not yet implemented" );
+  inform( "Checking collection tree consistency..." );
+  const Collection::List cols = Collection::retrieveAll();
+  std::for_each( cols.begin(), cols.end(), boost::bind( &StorageJanitor::checkPathToRoot, this, _1 ) );
+
+  /* TODO some check ideas:
+   * items belong to existing collections
+   * the collection tree is non-cyclic
+   * every collection is owned by an existing resource
+   * collection sub-trees are owned by the same resource
+   * every item payload part belongs to an existing item
+   * content type constraints of collections are not violated
+   */
+
+  inform( "Consistency check done." );
+}
+
+void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
+{
+  if ( col.parentId() == 0 )
+    return;
+  const Akonadi::Collection parent = col.parent();
+  if ( !parent.isValid() ) {
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  ) + QLatin1Literal( ") has no valid parent" ) );
+    // TODO fix that by attaching to a top-level lost+found folder
+    return;
+  }
+  checkPathToRoot( parent );
 }
 
 void StorageJanitor::vacuum()

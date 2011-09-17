@@ -23,6 +23,10 @@
 #include <QThread>
 #include <qdbusmacros.h>
 
+namespace Akonadi {
+class Collection;
+}
+
 /**
  * Various database checking/maintenance features.
  */
@@ -49,6 +53,11 @@ class StorageJanitor : public QThread
   private:
     void inform( const char *msg );
     void inform( const QString &msg );
+
+    /**
+     * Verifies there is a path from @p col to the root of the collection tree.
+     */
+    void checkPathToRoot( const Akonadi::Collection &col );
 };
 
 #endif // STORAGEJANITOR_H
