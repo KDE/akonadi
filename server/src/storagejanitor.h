@@ -55,6 +55,11 @@ class StorageJanitor : public QThread
     void inform( const QString &msg );
 
     /**
+     * Look for collections belonging to non-existent resources.
+     */
+    void findOrphanedCollections();
+
+    /**
      * Verifies there is a path from @p col to the root of the collection tree
      * and that that everything along that path belongs to the same resource.
      */

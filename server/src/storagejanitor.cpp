@@ -20,6 +20,7 @@
 #include "storagejanitor.h"
 
 #include "storage/datastore.h"
+#include "storage/selectquerybuilder.h"
 
 #include <akdebug.h>
 #include <libs/protocol_p.h>
@@ -52,6 +53,9 @@ void StorageJanitor::run()
 
 void StorageJanitor::check()
 {
+  inform( "Looking for collections not belonging to a valid resource..." );
+  findOrphanedCollections();
+
   inform( "Checking collection tree consistency..." );
   const Collection::List cols = Collection::retrieveAll();
   std::for_each( cols.begin(), cols.end(), boost::bind( &StorageJanitor::checkPathToRoot, this, _1 ) );
@@ -59,12 +63,26 @@ void StorageJanitor::check()
   /* TODO some check ideas:
    * items belong to existing collections
    * the collection tree is non-cyclic
-   * every collection is owned by an existing resource
    * every item payload part belongs to an existing item
+   * every part points to an existing file
    * content type constraints of collections are not violated
    */
 
   inform( "Consistency check done." );
+}
+
+void StorageJanitor::findOrphanedCollections()
+{
+  SelectQueryBuilder<Collection> qb;
+  qb.addJoin( QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
+  qb.addValueCondition( Resource::idFullColumnName(), Query::Is, QVariant() );
+
+  qb.exec();
+  const Collection::List orphans = qb.result();
+  if ( orphans.size() > 0 ) {
+    inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan collections." ) );
+    // TODO: attach to lost+found resource
+  }
 }
 
 void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
