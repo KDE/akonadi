@@ -69,8 +69,6 @@ namespace PartHelper
    *  This is more efficient than using update since it does not require the data to be loaded.
    */
   bool truncate( Part &part );
-
-  QString fileNameForId( qint64 id );
 }
 
 }
