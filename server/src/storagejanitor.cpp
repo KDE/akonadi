@@ -261,18 +261,24 @@ void StorageJanitor::findDirtyObjects()
 
 void StorageJanitor::vacuum()
 {
-  if ( DataStore::self()->database().driverName() == QLatin1String( "QMYSQL" ) ) {
+  const QString driverName = DataStore::self()->database().driverName();
+  if( ( driverName == QLatin1String( "QMYSQL" ) ) || ( driverName == QLatin1String( "QPSQL" ) ) ) {
     inform( "vacuuming database, that'll take some time and require a lot of temporary disk space..." );
-
     foreach ( const QString &table, Akonadi::allDatabaseTables() ) {
       inform( QString::fromLatin1( "optimizing table %1..." ).arg( table ) );
-      const QString queryStr = QLatin1Literal( "OPTIMIZE TABLE " ) + table;
+
+      QString queryStr;
+      if ( driverName == QLatin1String( "QMYSQL" ) ) {
+        queryStr = QLatin1Literal( "OPTIMIZE TABLE " ) + table;
+      } else {
+        queryStr = QLatin1Literal( "VACUUM FULL ANALYZE " ) + table;
+      }
       QSqlQuery q( DataStore::self()->database() );
       if ( !q.exec( queryStr ) ) {
         akError() << "failed to optimize table" << table << ":" << q.lastError().text();
       }
     }
-    inform( "vacuum done" );
+      inform( "vacuum done" );
   } else {
     inform( "Vacuum not supported for this database backend." );
   }
