@@ -252,6 +252,7 @@ void StorageJanitor::findDirtyObjects()
   SelectQueryBuilder<PimItem> iqb2;
   iqb2.addValueCondition( PimItem::dirtyColumn(), Query::Equals, true );
   iqb2.addValueCondition( PimItem::remoteIdColumn(), Akonadi::Query::IsNot, QVariant() );
+  iqb2.addSortColumn( PimItem::idFullColumnName() );
   iqb2.exec();
   const PimItem::List dirtyItems = iqb2.result();
   foreach ( const PimItem &item, dirtyItems )
