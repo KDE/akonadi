@@ -198,8 +198,8 @@ void StorageJanitor::verifyExternalParts()
   QDirIterator it( dataDir );
   while ( it.hasNext() )
     existingFiles.insert( it.next() );
-  existingFiles.remove( QLatin1String( "." ) );
-  existingFiles.remove( QLatin1String( ".." ) );
+  existingFiles.remove( dataDir + QDir::separator() + QLatin1String( "." ) );
+  existingFiles.remove( dataDir + QDir::separator() + QLatin1String( ".." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( existingFiles.size() ) + QLatin1Literal( " external files." ) );
 
   // list all parts from the db which claim to have an associated file
