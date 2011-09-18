@@ -26,7 +26,7 @@
 class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::MonitorPrivate
 {
   public:
-    ChangeRecorderPrivate( MonitorDependeciesFactory *dependenciesFactory_, ChangeRecorder* parent ) :
+    ChangeRecorderPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder* parent ) :
       MonitorPrivate( dependenciesFactory_, parent ),
       settings( 0 ),
       enableChangeRecording( true )

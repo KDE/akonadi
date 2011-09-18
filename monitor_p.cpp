@@ -36,44 +36,9 @@ using namespace Akonadi;
 
 static const int PipelineSize = 5;
 
-QObject* MonitorDependeciesFactory::createNotificationSource(QObject *parent)
-{
-  org::freedesktop::Akonadi::NotificationManager manager(
-          QLatin1String( "org.freedesktop.Akonadi" ),
-          QLatin1String( "/notifications" ),
-          DBusConnectionPool::threadConnection() );
-
-  QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
-  if ( manager.lastError().isValid() ) {
-    // :TODO: What to do?
-    return 0;
-  }
-
-  org::freedesktop::Akonadi::NotificationSource *notificationSource = new org::freedesktop::Akonadi::NotificationSource(
-              QLatin1String( "org.freedesktop.Akonadi" ),
-              p.path(),
-              DBusConnectionPool::threadConnection(), parent );
-
-  if ( !notificationSource ) {
-    // :TODO: error handling
-    return 0;
-  }
-  return notificationSource;
-}
-
-CollectionCache* MonitorDependeciesFactory::createCollectionCache(int maxCapacity, Session *session)
-{
-  return new CollectionCache(maxCapacity, session);
-}
-
-ItemCache* MonitorDependeciesFactory::createItemCache(int maxCapacity, Session* session)
-{
-  return new ItemCache(maxCapacity, session);
-}
-
-MonitorPrivate::MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_, Monitor * parent) :
+MonitorPrivate::MonitorPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor * parent) :
   q_ptr( parent ),
-  dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new MonitorDependeciesFactory),
+  dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory),
   notificationSource( 0 ),
   monitorAll( false ),
   mFetchChangedOnly( false ),

@@ -32,6 +32,7 @@
 #include "notificationsourceinterface.h"
 #include "entitycache_p.h"
 #include "servermanager.h"
+#include "changenotificationdependenciesfactory_p.h"
 
 #include <kmimetype.h>
 
@@ -43,27 +44,12 @@ namespace Akonadi {
 class Monitor;
 
 /**
- * This class exists so that we can create a fake notification source in
- * unit tests.
- */
-class AKONADI_TESTS_EXPORT MonitorDependeciesFactory
-{
-public:
-  virtual ~MonitorDependeciesFactory() {}
-  virtual QObject* createNotificationSource(QObject *parent);
-
-  virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
-  virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
-};
-
-
-/**
  * @internal
  */
 class AKONADI_TESTS_EXPORT MonitorPrivate
 {
   public:
-    MonitorPrivate( MonitorDependeciesFactory *dependenciesFactory_, Monitor *parent );
+    MonitorPrivate( ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent );
     virtual ~MonitorPrivate() {
       delete dependenciesFactory;
       delete collectionCache;
@@ -73,7 +59,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
-    MonitorDependeciesFactory *dependenciesFactory;
+    ChangeNotificationDependenciesFactory *dependenciesFactory;
     QObject* notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;

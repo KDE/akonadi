@@ -86,12 +86,12 @@ signals:
   void notify( const Akonadi::NotificationMessage::List &msgs );
 };
 
-class FakeMonitorDependeciesFactory : public Akonadi::MonitorDependeciesFactory
+class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
 {
 public:
 
   FakeMonitorDependeciesFactory(FakeItemCache* itemCache_, FakeCollectionCache* collectionCache_)
-    : Akonadi::MonitorDependeciesFactory(), itemCache(itemCache_), collectionCache(collectionCache_)
+    : Akonadi::ChangeNotificationDependenciesFactory(), itemCache(itemCache_), collectionCache(collectionCache_)
   {
 
   }
