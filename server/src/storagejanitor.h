@@ -22,20 +22,31 @@
 
 #include <QThread>
 #include <qdbusmacros.h>
+#include <QtDBus/QDBusConnection>
 
 namespace Akonadi {
 class Collection;
 }
 
+class StorageJanitorThread : public QThread
+{
+  Q_OBJECT
+  public:
+    explicit StorageJanitorThread( QObject * parent = 0 );
+  protected:
+    virtual void run();
+};
+
 /**
  * Various database checking/maintenance features.
  */
-class StorageJanitor : public QThread
+class StorageJanitor : public QObject
 {
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.Janitor" )
   public:
     explicit StorageJanitor(QObject* parent = 0);
+    ~StorageJanitor();
 
   public slots:
     /** Triggers a consistency check of the internal storage. */
@@ -46,9 +57,6 @@ class StorageJanitor : public QThread
   signals:
     /** Sends informational messages to a possible UI for this. */
     Q_SCRIPTABLE void information( const QString &msg );
-
-  protected:
-    virtual void run();
 
   private:
     void inform( const char *msg );
@@ -84,6 +92,9 @@ class StorageJanitor : public QThread
      * Verify fs and db part state.
      */
     void verifyExternalParts();
+
+  private:
+    QDBusConnection m_connection;
 };
 
 #endif // STORAGEJANITOR_H

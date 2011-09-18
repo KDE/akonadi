@@ -38,19 +38,32 @@
 
 using namespace Akonadi;
 
-StorageJanitor::StorageJanitor(QObject* parent) : QThread(parent)
+StorageJanitorThread::StorageJanitorThread(QObject* parent): QThread(parent)
 {
-  moveToThread(this);
 }
 
-void StorageJanitor::run()
+void StorageJanitorThread::run()
+{
+  StorageJanitor* janitor = new StorageJanitor;
+  exec();
+  delete janitor;
+}
+
+StorageJanitor::StorageJanitor(QObject* parent) :
+  QObject(parent),
+  m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(staticMetaObject.className()) ) )
 {
   DataStore::self();
-  QDBusConnection con = QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(metaObject()->className()) );
-  con.registerService(QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
-  con.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
-  exec();
-  con.disconnectFromBus( con.name() );
+  m_connection.registerService( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
+  m_connection.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
+}
+
+StorageJanitor::~StorageJanitor()
+{
+  m_connection.unregisterObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), QDBusConnection::UnregisterTree );
+  m_connection.unregisterService( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
+  m_connection.disconnectFromBus( m_connection.name() );
+
   DataStore::self()->close();
 }
 

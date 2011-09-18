@@ -178,7 +178,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     mIntervalChecker = new IntervalCheck( this );
     mIntervalChecker->start( QThread::IdlePriority );
 
-    mStorageJanitor = new StorageJanitor;
+    mStorageJanitor = new StorageJanitorThread;
     mStorageJanitor->start( QThread::IdlePriority );
 
     mItemRetrievalThread = new ItemRetrievalThread( this );
