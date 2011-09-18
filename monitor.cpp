@@ -53,14 +53,13 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
   d_ptr->init();
   d_ptr->connectToNotificationManager();
 
-  if ( ChangeMediator::instance() )
-    QMetaObject::invokeMethod( ChangeMediator::instance(), "registerMonitor", Qt::AutoConnection, Q_ARG( QObject*, this ) );
+  ChangeMediator::registerMonitor(this);
 }
 //@endcond
 
 Monitor::~Monitor()
 {
-  QMetaObject::invokeMethod( ChangeMediator::instance(), "unregisterMonitor", Qt::AutoConnection, Q_ARG( QObject*, this ) );
+  ChangeMediator::unregisterMonitor(this);
 
   // :TODO: Unsubscribe from the notification manager. That means having some kind of reference
   // counting on the server side.

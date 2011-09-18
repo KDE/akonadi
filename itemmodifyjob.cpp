@@ -263,7 +263,7 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
     }
 
     foreach ( const Item &item, d->mItems ) {
-      QMetaObject::invokeMethod( ChangeMediator::instance(), "invalidateItem", Qt::AutoConnection, Q_ARG( Akonadi::Item, item ) );
+      ChangeMediator::invalidateItem(item);
     }
 
     emitResult();

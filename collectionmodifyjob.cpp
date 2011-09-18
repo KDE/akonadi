@@ -94,7 +94,7 @@ void CollectionModifyJob::doStart()
   command += changes + '\n';
   d->writeData( command );
 
-  QMetaObject::invokeMethod( ChangeMediator::instance(), "invalidateCollection", Qt::AutoConnection, Q_ARG( Akonadi::Collection, d->mCollection ) );
+  ChangeMediator::invalidateCollection( d->mCollection );
 }
 
 Collection CollectionModifyJob::collection() const
