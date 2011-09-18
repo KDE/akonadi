@@ -246,7 +246,7 @@ void StorageJanitor::findDirtyObjects()
   iqb1.exec();
   const PimItem::List ridLessItems = iqb1.result();
   foreach ( const PimItem &item, ridLessItems )
-    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( " has no RID." ) );
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has no RID." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessItems.size() ) + QLatin1Literal( " items without RID." ) );
 
   SelectQueryBuilder<PimItem> iqb2;
@@ -255,7 +255,7 @@ void StorageJanitor::findDirtyObjects()
   iqb2.exec();
   const PimItem::List dirtyItems = iqb2.result();
   foreach ( const PimItem &item, dirtyItems )
-    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( " has RID and is dirty." ) );
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has RID and is dirty." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( dirtyItems.size() ) + QLatin1Literal( " dirty items." ) );
 }
 
