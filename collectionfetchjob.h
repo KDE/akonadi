@@ -104,6 +104,12 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 );
 
     /**
+     * Convenience ctor equivalent to CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 )
+     * @since 4.8
+     */
+    explicit CollectionFetchJob( const QList<Collection::Id> &collections, Type type = Base, QObject *parent = 0 );
+
+    /**
      * Destroys the collection fetch job.
      */
     virtual ~CollectionFetchJob();

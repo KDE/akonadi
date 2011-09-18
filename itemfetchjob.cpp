@@ -144,6 +144,16 @@ ItemFetchJob::ItemFetchJob(const Akonadi::Item::List& items, QObject* parent)
   d->mRequestedItems = items;
 }
 
+ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id>& items, QObject* parent)
+  : Job( new ItemFetchJobPrivate( this ), parent )
+{
+  Q_D( ItemFetchJob );
+
+  d->init();
+  foreach(Item::Id id, items)
+    d->mRequestedItems.append(Item(id));
+}
+
 
 ItemFetchJob::~ItemFetchJob()
 {

@@ -119,6 +119,12 @@ class AKONADI_EXPORT ItemFetchJob : public Job
     explicit ItemFetchJob( const Item::List &items, QObject *parent = 0 );
 
     /**
+     * Convenience ctor equivalent to ItemFetchJob( const Item::List &items, QObject *parent = 0 )
+     * @since 4.8
+     */
+    explicit ItemFetchJob( const QList<Item::Id> &items, QObject *parent = 0 );
+
+    /**
      * Destroys the item fetch job.
      */
     virtual ~ItemFetchJob();

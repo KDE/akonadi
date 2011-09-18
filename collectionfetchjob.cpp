@@ -137,6 +137,22 @@ CollectionFetchJob::CollectionFetchJob( const Collection::List & cols, Type type
   d->mType = type;
 }
 
+CollectionFetchJob::CollectionFetchJob( const QList<Collection::Id> & cols, Type type, QObject * parent )
+  : Job( new CollectionFetchJobPrivate( this ), parent )
+{
+  Q_D( CollectionFetchJob );
+  d->init();
+
+  Q_ASSERT( !cols.isEmpty() );
+  if ( cols.size() == 1 ) {
+    d->mBase = Collection(cols.first());
+  } else {
+    foreach(Collection::Id id, cols)
+      d->mBaseList.append(Collection(id));
+  }
+  d->mType = type;
+}
+
 CollectionFetchJob::~CollectionFetchJob()
 {
 }
