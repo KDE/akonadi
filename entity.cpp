@@ -119,6 +119,11 @@ Entity& Entity ::operator=( const Entity &other )
   return *this;
 }
 
+bool Akonadi::Entity::operator<( const Entity & other ) const
+{
+  return d_ptr->mId < other.d_ptr->mId;
+}
+
 void Entity::addAttribute(Attribute * attr)
 {
   if ( d_ptr->mAttributes.contains( attr->type() ) ) {

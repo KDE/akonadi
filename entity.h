@@ -125,6 +125,13 @@ class AKONADI_EXPORT Entity
     Entity& operator=( const Entity &other );
 
     /**
+     * @internal For use with containers only.
+     *
+     * @since 4.8
+     */
+    bool operator<( const Entity &other ) const;
+
+    /**
      * Returns the parent collection of this object.
      * @note This will of course only return a useful value if it was explictly retrieved
      *       from the Akonadi server.
