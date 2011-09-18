@@ -45,6 +45,15 @@
 
 using namespace Akonadi;
 
+static bool payloadChanged( const QSet<QByteArray> &changes )
+{
+  foreach ( const QByteArray &change, changes ) {
+    if ( change.startsWith( "PLD:" ) )
+      return true;
+  }
+  return false;
+}
+
 Store::Store( Scope::SelectionScope scope )
   : Handler()
   , mScope( scope )
@@ -357,7 +366,7 @@ bool Store::parseStream()
       PimItem &item = pimItems[ i ];
       item.setDatetime( modificationtime );
       item.setAtime( modificationtime );
-      if ( !connection()->isOwnerResource( item ) )
+      if ( !connection()->isOwnerResource( item ) && payloadChanged( changes ) )
         item.setDirty( true );
       if ( !item.update() )
         throw HandlerException( "Unable to write item changes into the database" );
