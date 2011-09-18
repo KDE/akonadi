@@ -93,6 +93,11 @@ class StorageJanitor : public QObject
      */
     void verifyExternalParts();
 
+    /**
+     * Look for dirty objects.
+     */
+    void findDirtyObjects();
+
   private:
     QDBusConnection m_connection;
 };

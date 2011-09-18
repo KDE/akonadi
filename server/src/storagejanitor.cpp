@@ -88,13 +88,16 @@ void StorageJanitor::check()
   inform( "Verifying external parts..." );
   verifyExternalParts();
 
+  inform( "Looking for dirty objects..." );
+  findDirtyObjects();
+
   /* TODO some ideas for further checks:
    * the collection tree is non-cyclic
    * content type constraints of collections are not violated
-   * look for dirty/RID-less items
    * find unused flags
    * find unused mimetypes
    * check for dead entries in relation tables
+   * check if part size matches file size
    */
 
   inform( "Consistency check done." );
@@ -221,6 +224,39 @@ void StorageJanitor::verifyExternalParts()
     inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
     // TODO: delete file?
   }
+}
+
+void StorageJanitor::findDirtyObjects()
+{
+  SelectQueryBuilder<Collection> cqb;
+  cqb.setSubQueryMode( Query::Or);
+  cqb.addValueCondition( Collection::remoteIdColumn(), Query::Is, QVariant() );
+  cqb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString() );
+  cqb.exec();
+  const Collection::List ridLessCols = cqb.result();
+  foreach ( const Collection &col, ridLessCols )
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+          + QLatin1Literal( ") has no RID." ) );
+  inform( QLatin1Literal( "Found " ) + QString::number( ridLessCols.size() ) + QLatin1Literal( " collections without RID." ) );
+
+  SelectQueryBuilder<PimItem> iqb1;
+  iqb1.setSubQueryMode( Query::Or);
+  iqb1.addValueCondition( PimItem::remoteIdColumn(), Query::Is, QVariant() );
+  iqb1.addValueCondition( PimItem::remoteIdColumn(), Query::Equals, QString() );
+  iqb1.exec();
+  const PimItem::List ridLessItems = iqb1.result();
+  foreach ( const PimItem &item, ridLessItems )
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( " has no RID." ) );
+  inform( QLatin1Literal( "Found " ) + QString::number( ridLessItems.size() ) + QLatin1Literal( " items without RID." ) );
+
+  SelectQueryBuilder<PimItem> iqb2;
+  iqb2.addValueCondition( PimItem::dirtyColumn(), Query::Equals, true );
+  iqb2.addValueCondition( PimItem::remoteIdColumn(), Akonadi::Query::IsNot, QVariant() );
+  iqb2.exec();
+  const PimItem::List dirtyItems = iqb2.result();
+  foreach ( const PimItem &item, dirtyItems )
+    inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( " has RID and is dirty." ) );
+  inform( QLatin1Literal( "Found " ) + QString::number( dirtyItems.size() ) + QLatin1Literal( " dirty items." ) );
 }
 
 void StorageJanitor::vacuum()
