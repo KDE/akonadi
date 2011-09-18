@@ -21,6 +21,7 @@
 #include "dbusconnectionpool.h"
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
+#include "changemediator_p.h"
 
 #include <KComponentData>
 #include <KGlobal>
@@ -51,6 +52,11 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     return 0;
   }
   return notificationSource;
+}
+
+QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* parent)
+{
+  return ChangeMediator::instance();
 }
 
 CollectionCache* ChangeNotificationDependenciesFactory::createCollectionCache(int maxCapacity, Session *session)

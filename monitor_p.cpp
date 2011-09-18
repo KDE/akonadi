@@ -31,6 +31,7 @@
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
+#include "changemediator_p.h"
 
 using namespace Akonadi;
 

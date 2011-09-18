@@ -35,6 +35,7 @@ class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 public:
   virtual ~ChangeNotificationDependenciesFactory() {}
   virtual QObject* createNotificationSource(QObject *parent);
+  virtual QObject* createChangeMediator(QObject *parent);
 
   virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
   virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
