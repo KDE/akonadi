@@ -127,6 +127,16 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
     connectToNotificationManager();
 }
 
+void MonitorPrivate::invalidateCollectionCache( qint64 id )
+{
+  collectionCache->update( id, mCollectionFetchScope );
+}
+
+void MonitorPrivate::invalidateItemCache( qint64 id )
+{
+  itemCache->update( id, mItemFetchScope );
+}
+
 int MonitorPrivate::pipelineSize() const
 {
   return PipelineSize;

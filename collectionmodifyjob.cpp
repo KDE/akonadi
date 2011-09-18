@@ -18,11 +18,13 @@
 */
 
 #include "collectionmodifyjob.h"
+
+#include "changemediator_p.h"
+#include "collection_p.h"
+#include "collectionstatistics.h"
 #include "imapparser_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
-#include "collectionstatistics.h"
-#include "collection_p.h"
 
 #include <akonadi/private/protocol_p.h>
 
@@ -91,6 +93,8 @@ void CollectionModifyJob::doStart()
   }
   command += changes + '\n';
   d->writeData( command );
+
+  QMetaObject::invokeMethod( ChangeMediator::instance(), "invalidateCollection", Qt::AutoConnection, Q_ARG( Akonadi::Collection, d->mCollection ) );
 }
 
 Collection CollectionModifyJob::collection() const

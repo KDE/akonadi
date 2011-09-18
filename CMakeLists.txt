@@ -60,6 +60,7 @@ set( akonadikde_LIB_SRC
   attribute.cpp
   attributefactory.cpp
   cachepolicy.cpp
+  changemediator_p.cpp
   changerecorder.cpp
   collection.cpp
   collectionattributessynchronizationjob.cpp

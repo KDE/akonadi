@@ -146,6 +146,15 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     void serverStateChanged( Akonadi::ServerManager::State state );
 
+    /**
+     * This method is called by the ChangeMediator to enforce an invalidation of the passed collection.
+     */
+    void invalidateCollectionCache( qint64 collectionId );
+
+    /**
+     * This method is called by the ChangeMediator to enforce an invalidation of the passed item.
+     */
+    void invalidateItemCache( qint64 itemId );
 
     /**
       @brief Class used to determine when to purge items in a Collection

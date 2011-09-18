@@ -20,6 +20,8 @@
 #include "monitor.h"
 #include "monitor_p.h"
 
+#include "changemediator_p.h"
+#include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "notificationmessage_p.h"
 #include "session.h"
@@ -31,7 +33,6 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
-#include "collectionfetchscope.h"
 #include <iterator>
 
 using namespace Akonadi;
@@ -51,11 +52,16 @@ Monitor::Monitor(MonitorPrivate * d, QObject *parent) :
 {
   d_ptr->init();
   d_ptr->connectToNotificationManager();
+
+  if ( ChangeMediator::instance() )
+    QMetaObject::invokeMethod( ChangeMediator::instance(), "registerMonitor", Qt::AutoConnection, Q_ARG( QObject*, this ) );
 }
 //@endcond
 
 Monitor::~Monitor()
 {
+  QMetaObject::invokeMethod( ChangeMediator::instance(), "unregisterMonitor", Qt::AutoConnection, Q_ARG( QObject*, this ) );
+
   // :TODO: Unsubscribe from the notification manager. That means having some kind of reference
   // counting on the server side.
   delete d_ptr;

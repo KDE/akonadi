@@ -20,6 +20,7 @@
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
 
+#include "changemediator_p.h"
 #include "collection.h"
 #include "conflicthandling/conflicthandler_p.h"
 #include "entity_p.h"
@@ -260,6 +261,11 @@ void ItemModifyJob::doHandleResponse(const QByteArray &_tag, const QByteArray & 
         }
       }
     }
+
+    foreach ( const Item &item, d->mItems ) {
+      QMetaObject::invokeMethod( ChangeMediator::instance(), "invalidateItem", Qt::AutoConnection, Q_ARG( Akonadi::Item, item ) );
+    }
+
     emitResult();
     return;
   }
