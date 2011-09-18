@@ -53,7 +53,7 @@ class ProtocolHelperTest : public QObject
       QTest::newRow( "empty command, uid" ) << (Item::List() << u1) << QByteArray() << QByteArray( " UID 1" ) << false;
       QTest::newRow( "empty command, single rid" ) << (Item::List() << r1) << QByteArray() << QByteArray( " RID (\"A\")" ) << false;
       QTest::newRow( "single hrid" ) << (Item::List() << h1) << QByteArray( "CMD" ) << QByteArray( " HRID CMD ((-1 \"H1\") (0 \"\"))" ) << false;
-      QTest::newRow( "single hrid 2" ) << (Item::List() << h2) << QByteArray( "CMD" ) << QByteArray( " HRID CMD ((-1 \"H2a\") (-1 \"H2b\") (0 \"\"))" ) << false;
+      QTest::newRow( "single hrid 2" ) << (Item::List() << h2) << QByteArray( "CMD" ) << QByteArray( " HRID CMD ((-1 \"H2a\") (-2 \"H2b\") (0 \"\"))" ) << false;
       QTest::newRow( "mixed hrid/rid" ) << (Item::List() << h1 << r1) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"H1\" \"A\")" ) << false;
       QTest::newRow( "unterminated hrid" ) << (Item::List() << h3) << QByteArray( "CMD" ) << QByteArray( " RID CMD (\"H3a\")" ) << false;
     }
@@ -177,11 +177,11 @@ class ProtocolHelperTest : public QObject
       Collection c;
       c.setParentCollection( Collection::root() );
       c.setRemoteId( "r1" );
-      QTest::newRow( "one level" ) << c << QByteArray( "(-22 \"r1\") (0 \"\")" );
+      QTest::newRow( "one level" ) << c << QByteArray( "(-23 \"r1\") (0 \"\")" );
       Collection c2;
       c2.setParentCollection( c );
       c2.setRemoteId( "r2" );
-      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-23 \"r2\") (-22 \"r1\") (0 \"\")" );
+      QTest::newRow( "two level ok" ) << c2 << QByteArray( "(-24 \"r2\") (-23 \"r1\") (0 \"\")" );
     }
 
     void testHRidToByteArray()
