@@ -516,6 +516,12 @@ bool MonitorPrivate::emitItemNotification( const NotificationMessage &msg, const
       if ( oldParent.parentCollection().isValid() && !col.parentCollection().isValid() )
         col.setParentCollection( oldParent.parentCollection() ); // preserve ancestor chain
       it.setParentCollection( col );
+    } else {
+      // If one client does a modify followed by a move we have to make sure that the
+      // AgentBase::itemChanged() in another client always sees the parent collection
+      // of the item before it has been moved.
+      if ( msg.operation() != NotificationMessage::Move )
+        it.setParentCollection( col );
     }
   }
 
