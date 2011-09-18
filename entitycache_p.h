@@ -58,7 +58,7 @@ class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
     void dataAvailable();
 
   private slots:
-    virtual void fetchResult( KJob* job ) = 0;
+    virtual void processResult( KJob* job ) = 0;
 };
 
 template <typename T>
@@ -156,7 +156,7 @@ class EntityCache : public EntityCacheBase
       FetchJob* job = createFetchJob( id );
       job->setFetchScope( scope );
       job->setProperty( "EntityCacheNode", QVariant::fromValue<typename T::Id>( id ) );
-      connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchResult( KJob* ) ) );
+      connect( job, SIGNAL( result( KJob* )), SLOT(processResult( KJob* ) ) );
       mCache.enqueue( node );
     }
 
@@ -172,8 +172,9 @@ class EntityCache : public EntityCacheBase
       return 0;
     }
 
-    void fetchResult( KJob* job )
+    void processResult( KJob* job )
     {
+      // Error handling?
       typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
       EntityCacheNode<T> *node = cacheNodeForId( id );
       if ( !node )
@@ -184,6 +185,7 @@ class EntityCache : public EntityCacheBase
       // make sure we find this node again if something went wrong here,
       // most likely the object got deleted from the server in the meantime
       if ( node->entity.id() != id ) {
+        // TODO: Recursion guard? If this is called with non-existing ids, the if will never be true!
         node->entity.setId( id );
         node->invalid = true;
       }
