@@ -174,7 +174,7 @@ void StorageJanitor::findOverlappingParts()
   qb.addValueCondition( Part::externalColumn(), Query::Equals, true );
   qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   qb.addGroupColumn( Part::dataColumn() );
-  qb.addValueCondition( QLatin1String("cnt"), Query::Greater, 1, QueryBuilder::HavingCondition );
+  qb.addValueCondition( QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(")"), Query::Greater, 1, QueryBuilder::HavingCondition );
   qb.exec();
 
   int count = 0;
