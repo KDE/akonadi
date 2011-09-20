@@ -22,9 +22,9 @@
 using namespace Akonadi;
 
 ObjectNotificationMessage::ObjectNotificationMessage(const Akonadi::NotificationMessage &message)
-  : m_message(message),
-    m_parentCollection(message.parentCollection()),
-    m_parentDestCollection(message.parentDestCollection())
+  : m_parentCollection(message.parentCollection()),
+    m_parentDestCollection(message.parentDestCollection()), 
+    m_message(message)
 {
   if (message.type() == NotificationMessage::Collection) {
     Collection col( message.uid() );
