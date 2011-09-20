@@ -74,7 +74,7 @@ class AKONADI_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
     //@cond PRIVATE
     class TrashFilterProxyModelPrivate;
     TrashFilterProxyModelPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( TrashFilterProxyModel );
+    Q_DECLARE_PRIVATE( TrashFilterProxyModel )
     //@endcond
 };
 
