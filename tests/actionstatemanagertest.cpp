@@ -123,6 +123,9 @@ class ActionStateManagerTest : public QObject
       return mFavoriteCollectionMap.contains( collection.id() );
     }
 
+      void updateAlternatingAction( int action ) {}
+
+
   private Q_SLOTS:
 
     void init()

@@ -238,12 +238,14 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
   if ( msg.type() == NotificationMessage::Item && !mItemFetchScope.isEmpty() ) {
     ItemFetchScope scope( mItemFetchScope );
     if ( mFetchChangedOnly && msg.operation() == NotificationMessage::Modify ) {
+      bool fullPayloadWasRequested = scope.fullPayload();
       scope.fetchFullPayload( false );
       QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
       Q_FOREACH( QByteArray part, requestedPayloadParts ) {
         scope.fetchPayloadPart( part, false );
       }
 
+      bool allAttributesWereRequested = scope.allAttributes();
       QSet<QByteArray> requestedAttrParts = scope.attributes();
       Q_FOREACH( QByteArray part, requestedAttrParts ) {
         scope.fetchAttribute( part, false );
@@ -251,15 +253,14 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
 
       QSet<QByteArray> changedParts = msg.itemParts();
       Q_FOREACH( const QByteArray &part, changedParts )  {
-        if( part.startsWith( "PLD:" ) && requestedPayloadParts.contains( part ) ) {
-          scope.fetchPayloadPart( part, true );;
+        if( part.startsWith( "PLD:" ) && ( fullPayloadWasRequested || requestedPayloadParts.contains( part ) ) ) {
+          scope.fetchPayloadPart( part.mid(4), true );;
         }
-        if ( part.startsWith( "ATR:" ) && requestedAttrParts.contains( part ) ) {
-          scope.fetchAttribute( part, true );
+        if ( part.startsWith( "ATR:" ) && ( allAttributesWereRequested || requestedAttrParts.contains( part ) ) ) {
+          scope.fetchAttribute( part.mid(4), true );
         }
       }
     }
-    
     if ( !itemCache->ensureCached( msg.uid(), scope ) )
       allCached = false;
   } else if ( msg.type() == NotificationMessage::Collection && fetchCollection ) {
