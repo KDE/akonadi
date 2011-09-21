@@ -69,6 +69,8 @@ class AgentBasePrivate : public QObject
       return i18nc( "@info:status", "Error." );
     }
 
+    void setProgramName();
+
     AgentBase *q_ptr;
     Q_DECLARE_PUBLIC( AgentBase )
 

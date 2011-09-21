@@ -23,6 +23,7 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
+#include "agentmanager.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
 #include "dbusconnectionpool.h"
@@ -49,6 +50,7 @@
 
 #include <signal.h>
 #include <stdlib.h>
+
 
 //#define EXPERIMENTAL_INPROCESS_AGENTS 1
 
@@ -269,6 +271,8 @@ void AgentBasePrivate::init()
     KApplication::kApplication()->disableSessionManagement();
 #endif
 
+  setProgramName();
+
   QTimer::singleShot( 0, q, SLOT(delayedInit()) );
 }
 
@@ -278,6 +282,16 @@ void AgentBasePrivate::delayedInit()
   if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
     kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
+}
+
+void AgentBasePrivate::setProgramName()
+{
+  // ugly, really ugly, if you find another solution, change it and blame me for this code (Andras)
+  QString programName = AgentManager::self()->instance(mId).name();
+  if ( !mName.isEmpty() ) {
+    programName = i18nc( "Name and type of Akonadi resource", "%1 of type %2", mName, programName ) ;
+  }
+  const_cast<KAboutData*>( KGlobal::mainComponent().aboutData() )->setProgramName( ki18n( programName.toUtf8() ) );
 }
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
@@ -717,6 +731,8 @@ void AgentBase::setAgentName( const QString &name )
     d->mSettings->setValue( QLatin1String( "Agent/Name" ), d->mName );
 
   d->mSettings->sync();
+
+  d->setProgramName();
 
   emit agentNameChanged( d->mName );
 }
