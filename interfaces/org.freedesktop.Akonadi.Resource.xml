@@ -8,6 +8,7 @@
     <signal name="attributesSynchronized">
       <arg type="x" name="collectionId"/>
     </signal>
+    <signal name="collectionTreeSynchronized"/>
     <method name="requestItemDelivery">
       <arg type="b" direction="out"/>
       <arg name="uid" type="x" direction="in"/>
