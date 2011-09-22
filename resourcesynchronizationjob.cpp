@@ -39,7 +39,8 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
       q( parent ),
       interface( 0 ),
       safetyTimer( 0 ),
-      timeoutCount( 0 )
+      timeoutCount( 0 ),
+      collectionTreeOnly( false )
     {}
 
     void doStart();
@@ -49,6 +50,7 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
     QDBusInterface* interface;
     QTimer* safetyTimer;
     int timeoutCount;
+    bool collectionTreeOnly;
     static int timeoutCountLimit;
 
     void slotSynchronized();
@@ -78,6 +80,16 @@ void ResourceSynchronizationJob::start()
   d->start();
 }
 
+bool ResourceSynchronizationJob::collectionTreeOnly() const
+{
+  return d->collectionTreeOnly;
+}
+
+void ResourceSynchronizationJob::setCollectionTreeOnly( bool b )
+{
+  d->collectionTreeOnly = b;
+}
+
 void ResourceSynchronizationJobPrivate::doStart()
 {
   if ( !instance.isValid() ) {
@@ -91,10 +103,17 @@ void ResourceSynchronizationJobPrivate::doStart()
                                   QString::fromLatin1( "/" ),
                                   QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
                                   DBusConnectionPool::threadConnection(), this );
-  connect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+  if ( collectionTreeOnly )
+    connect( interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()) );
+  else
+    connect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
 
   if ( interface->isValid() ) {
-    instance.synchronize();
+    if ( collectionTreeOnly )
+      instance.synchronizeCollectionTree();
+    else
+      instance.synchronize();
+
     safetyTimer->start();
   } else {
     q->setError( KJob::UserDefinedError );
@@ -106,7 +125,10 @@ void ResourceSynchronizationJobPrivate::doStart()
 
 void ResourceSynchronizationJobPrivate::slotSynchronized()
 {
-  q->disconnect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
+  if ( collectionTreeOnly )
+    q->disconnect( interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()) );
+  else
+    q->disconnect( interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()) );
   safetyTimer->stop();
   q->emitResult();
 }
@@ -125,9 +147,12 @@ void ResourceSynchronizationJobPrivate::slotTimeout()
   }
 
   if ( instance.status() == AgentInstance::Idle ) {
-    // try again, we might have lost the synchronized() signal
+    // try again, we might have lost the synchronized()/synchronizedCollectionTree() signal
     kDebug() << "trying again to sync resource" << instance.identifier();
-    instance.synchronize();
+    if ( collectionTreeOnly )
+      instance.synchronizeCollectionTree();
+    else
+      instance.synchronize();
   }
 }
 

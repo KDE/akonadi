@@ -171,6 +171,17 @@ void Akonadi::ResourceScheduler::scheduleFullSyncCompletion()
   scheduleNext();
 }
 
+void Akonadi::ResourceScheduler::scheduleCollectionTreeSyncCompletion()
+{
+  Task t;
+  t.type = SyncCollectionTreeDone;
+  TaskList& queue = queueForTaskType( t.type );
+  // no compression here, all this does is emitting a D-Bus signal anyway, and compression can trigger races on the receiver side with the signal being lost
+  queue << t;
+  signalTaskToTracker( t, "SyncCollectionTreeDone" );
+  scheduleNext();
+}
+
 void Akonadi::ResourceScheduler::scheduleCustomTask( QObject *receiver, const char* methodName, const QVariant &argument, ResourceBase::SchedulePriority priority )
 {
   Task t;
@@ -304,6 +315,9 @@ void ResourceScheduler::executeNext()
       break;
     case SyncAllDone:
       emit fullSyncComplete();
+      break;
+    case SyncCollectionTreeDone:
+      emit collectionTreeSyncComplete();
       break;
     case Custom:
     {
@@ -478,6 +492,7 @@ static const char s_taskTypes[][27] = {
       "DeleteResourceCollection",
       "InvalideCacheForCollection",
       "SyncAllDone",
+      "SyncCollectionTreeDone",
       "Custom"
 };
 

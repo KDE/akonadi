@@ -57,6 +57,7 @@ class ResourceScheduler : public QObject
       DeleteResourceCollection,
       InvalideCacheForCollection,
       SyncAllDone,
+      SyncCollectionTreeDone,
       Custom
     };
 
@@ -139,6 +140,11 @@ class ResourceScheduler : public QObject
     void scheduleFullSyncCompletion();
 
     /**
+      Insert collection tree synchronization completion marker into the task queue.
+    */
+    void scheduleCollectionTreeSyncCompletion();
+
+    /**
       Insert a custom task.
       @param methodName The method name, without signature, do not use the SLOT() macro
     */
@@ -208,6 +214,7 @@ class ResourceScheduler : public QObject
     void executeResourceCollectionDeletion();
     void executeCacheInvalidation( const Akonadi::Collection &collection );
     void executeChangeReplay();
+    void collectionTreeSyncComplete();
     void fullSyncComplete();
     void status( int status, const QString &message = QString() );
 

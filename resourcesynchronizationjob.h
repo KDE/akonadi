@@ -74,6 +74,22 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
     ~ResourceSynchronizationJob();
 
     /**
+     * Returns whether a full synchronization will be done, or just the collection tree (without items).
+     * The default is @p false, i.e. a full sync will be requested.
+     *
+     * @since 4.8
+     */
+    bool collectionTreeOnly() const;
+
+    /**
+     * Sets the collectionTreeOnly property.
+     *
+     * @param collectionTreeOnly If set, only the collection tree will be synchronized.
+     * @since 4.8
+     */
+    void setCollectionTreeOnly( bool collectionTreeOnly );
+
+    /**
      * Returns the resource that has been synchronized.
      */
     AgentInstance resource() const;

@@ -233,6 +233,13 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void attributesSynchronized( qlonglong collectionId );
 
+    /**
+     * Emitted when a collection tree synchronization has been completed.
+     *
+     * @since 4.8
+     */
+    void collectionTreeSynchronized();
+
   protected Q_SLOTS:
     /**
      * Retrieve the collection tree from the remote server and supply it via

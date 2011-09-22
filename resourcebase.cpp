@@ -316,11 +316,13 @@ ResourceBase::ResourceBase( const QString & id )
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mChangeRecorder, SLOT(replayNext()) );
   connect( d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()) );
+  connect( d->scheduler, SIGNAL(collectionTreeSyncComplete()), SIGNAL(collectionTreeSynchronized()) );
   connect( d->mChangeRecorder, SIGNAL(nothingToReplay()), d->scheduler, SLOT(taskDone()) );
   connect( d->mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
            d->scheduler, SLOT(collectionRemoved(Akonadi::Collection)) );
   connect( this, SIGNAL(abortRequested()), this, SLOT(slotAbortRequested()) );
   connect( this, SIGNAL(synchronized()), d->scheduler, SLOT(taskDone()) );
+  connect( this, SIGNAL(collectionTreeSynchronized()), d->scheduler, SLOT(taskDone()) );
   connect( this, SIGNAL(agentNameChanged(QString)),
            this, SIGNAL(nameChanged(QString)) );
 
@@ -643,6 +645,8 @@ void ResourceBasePrivate::slotCollectionSyncDone( KJob * job )
       list->fetchScope().setResource( mId );
       q->connect( list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)) );
       return;
+    } else if ( scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree ) {
+      scheduler->scheduleCollectionTreeSyncCompletion();
     }
   }
   scheduler->taskDone();
