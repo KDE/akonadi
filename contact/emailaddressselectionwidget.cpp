@@ -151,6 +151,7 @@ void EmailAddressSelectionWidget::Private::init()
   layout->addWidget( mView );
 
   Akonadi::ContactsFilterProxyModel *filter = new Akonadi::ContactsFilterProxyModel( q );
+  filter->setFilterFlags( ContactsFilterProxyModel::HasEmail );
   filter->setSourceModel( mModel );
 
   mSelectionModel = new EmailAddressSelectionProxyModel( q );

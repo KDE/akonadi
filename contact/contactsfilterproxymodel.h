@@ -62,6 +62,12 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
   Q_OBJECT
 
   public:
+
+    enum FilterFlag {
+      HasEmail = 0x01
+    };
+    Q_DECLARE_FLAGS( FilterFlags, FilterFlag )
+  
     /**
      * Creates a new contacts filter proxy model.
      *
@@ -73,6 +79,13 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
      * Destroys the contacts filter proxy model.
      */
     ~ContactsFilterProxyModel();
+
+     /**
+     * Sets the filter @p flags. By default
+     * ContactsFilterProxyModel::FilterString is set.
+     */
+   void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );
+
 
   public Q_SLOTS:
     /**
@@ -93,6 +106,8 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
     Private* const d;
     //@endcond
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS ( ContactsFilterProxyModel::FilterFlags )
 
 }
 

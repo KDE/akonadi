@@ -35,7 +35,9 @@ using namespace Akonadi;
 class ContactsFilterProxyModel::Private
 {
   public:
+    Private() { flags=0; }
     QString mFilter;
+    ContactsFilterProxyModel::FilterFlags flags;
 };
 
 ContactsFilterProxyModel::ContactsFilterProxyModel( QObject *parent )
@@ -59,7 +61,7 @@ void ContactsFilterProxyModel::setFilterString( const QString &filter )
 
 bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
 {
-  if ( d->mFilter.isEmpty() )
+  if ( ( d->mFilter.isEmpty() ) && ( !( d->flags & ContactsFilterProxyModel::HasEmail ) ))
     return true;
 
   const QModelIndex index = sourceModel()->index( row, 0, parent );
@@ -68,10 +70,20 @@ bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &par
 
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    return contactMatchesFilter( contact, d->mFilter );
-  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-    const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-    return contactGroupMatchesFilter( group, d->mFilter );
+    if ( d->flags & ContactsFilterProxyModel::HasEmail ){
+      if ( contact.emails().isEmpty() )
+        return false;
+    }
+    if ( !d->mFilter.isEmpty() ) {
+        return contactMatchesFilter( contact, d->mFilter );
+    }
+  } else {
+    if ( !d->mFilter.isEmpty() ) {
+      if ( item.hasPayload<KABC::ContactGroup>() ) {
+      const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+      return contactGroupMatchesFilter( group, d->mFilter );
+      }
+    }
   }
 
   return true;
@@ -92,6 +104,11 @@ bool ContactsFilterProxyModel::lessThan( const QModelIndex &leftIndex, const QMo
   }
 
   return QSortFilterProxyModel::lessThan( leftIndex, rightIndex );
+}
+
+void ContactsFilterProxyModel::setFilterFlags( ContactsFilterProxyModel::FilterFlags flags )
+{
+  d->flags = flags;
 }
 
 static bool addressMatchesFilter( const KABC::Address &address, const QString &filterString )
