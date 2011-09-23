@@ -51,7 +51,7 @@ class ResourceSynchronizationJobPrivate;
  *
  * @endcode
  *
- * @note This is a KJob not an Akonadi::Job, so it wont auto-start!
+ * @note This is a KJob, not an Akonadi::Job, so it won't auto-start!
  *
  * @author Volker Krause <vkrause@kde.org>
  * @since 4.4
@@ -75,7 +75,7 @@ class AKONADI_EXPORT ResourceSynchronizationJob : public KJob
 
     /**
      * Returns whether a full synchronization will be done, or just the collection tree (without items).
-     * The default is @p false, i.e. a full sync will be requested.
+     * The default is @c false, i.e. a full sync will be requested.
      *
      * @since 4.8
      */
