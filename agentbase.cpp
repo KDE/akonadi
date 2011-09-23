@@ -271,6 +271,7 @@ void AgentBasePrivate::init()
     KApplication::kApplication()->disableSessionManagement();
 #endif
 
+  mResourceTypeName = AgentManager::self()->instance(mId).type().name();
   setProgramName();
 
   QTimer::singleShot( 0, q, SLOT(delayedInit()) );
@@ -287,9 +288,9 @@ void AgentBasePrivate::delayedInit()
 void AgentBasePrivate::setProgramName()
 {
   // ugly, really ugly, if you find another solution, change it and blame me for this code (Andras)
-  QString programName = AgentManager::self()->instance(mId).name();
+  QString programName = mResourceTypeName;
   if ( !mName.isEmpty() ) {
-    programName = i18nc( "Name and type of Akonadi resource", "%1 of type %2", mName, programName ) ;
+    programName = i18nc( "Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName ) ;
   }
   const_cast<KAboutData*>( KGlobal::mainComponent().aboutData() )->setProgramName( ki18n( programName.toUtf8() ) );
 }
