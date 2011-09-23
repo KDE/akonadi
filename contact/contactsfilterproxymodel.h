@@ -64,7 +64,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
   public:
 
     enum FilterFlag {
-      HasEmail = 0x01
+      HasEmail = 0x01 /// Filters out contacts without any email address set.
     };
     Q_DECLARE_FLAGS( FilterFlags, FilterFlag )
   
@@ -83,6 +83,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
      /**
      * Sets the filter @p flags. By default
      * ContactsFilterProxyModel::FilterString is set.
+     * @since 4.8
      */
    void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );
 
