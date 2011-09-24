@@ -149,6 +149,7 @@ bool Store::parseStream()
   QSet<QByteArray> changes;
   qint64 partSizes = 0;
   bool invalidateCache = false;
+  bool undirty = false;
   bool silent = false;
 
   // apply modifications
@@ -226,6 +227,7 @@ bool Store::parseStream()
     else if ( command == AKONADI_PARAM_UNDIRTY ) {
       m_streamParser->readString(); // read the 'false' string
       item.setDirty( false );
+      undirty = true;
     }
 
     else if ( command == AKONADI_PARAM_INVALIDATECACHE ) {
@@ -342,7 +344,7 @@ bool Store::parseStream()
   }
 
   QString datetime;
-  if ( !changes.isEmpty() ) {
+  if ( !changes.isEmpty() || invalidateCache || undirty ) {
 
     // update item size
     if ( pimItems.size() == 1 && (mSize > 0 || partSizes > 0) )
@@ -377,7 +379,8 @@ bool Store::parseStream()
         }
       }
 
-      store->notificationCollector()->itemChanged( item, changes );
+      if ( !changes.isEmpty() )
+        store->notificationCollector()->itemChanged( item, changes );
       if ( !silent )
         sendPimItemResponse( item );
     }
