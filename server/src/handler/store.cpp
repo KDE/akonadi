@@ -357,7 +357,7 @@ bool Store::parseStream()
 
     // If only the remote id and/or the remote revision changed, we don't have to increase the REV,
     // because these updates do not change the payload and can only be done by the owning resource -> no conflicts possible
-    const bool revisionNeedsUpdate = (!onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged);
+    const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged);
 
     // run update query and prepare change notifications
     for ( int i = 0; i < pimItems.count(); ++i ) {
