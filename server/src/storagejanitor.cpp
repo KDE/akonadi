@@ -161,7 +161,7 @@ void StorageJanitor::findOrphanedParts()
   qb.exec();
   const Part::List orphans = qb.result();
   if ( orphans.size() > 0 ) {
-    inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
+    inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan parts." ) );
     // TODO: create lost+found items for those? delete?
   }
 }
@@ -180,7 +180,7 @@ void StorageJanitor::findOverlappingParts()
   int count = 0;
   while ( qb.query().next() ) {
     ++count;
-    inform( QLatin1Literal( "Found overlapping item: " ) + qb.query().value( 0 ).toString() );
+    inform( QLatin1Literal( "Found overlapping part data: " ) + qb.query().value( 0 ).toString() );
     // TODO: uh oh, this is bad, how do we recover from that?
   }
 
@@ -219,10 +219,18 @@ void StorageJanitor::verifyExternalParts()
   }
   inform( QLatin1Literal( "Found " ) + QString::number( usedFiles.size() ) + QLatin1Literal( " external parts." ) );
 
-  // see what's left
-  foreach ( const QString &file, existingFiles - usedFiles ) {
-    inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
-    // TODO: delete file?
+  // see what's left and move it to lost+found
+  const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
+  if ( !unreferencedFiles.isEmpty() ) {
+    const QString lfDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_lost+found" ) );
+    foreach ( const QString &file, unreferencedFiles ) {
+      inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
+      const QFileInfo f( file );
+      QFile::rename( file, lfDir + QDir::separator() + f.fileName() );
+    }
+    inform( QString::fromLatin1("Moved %1 unreferenced files to lost+found.").arg(unreferencedFiles.size()) );
+  } else {
+    inform( "Found no unreferenced external files." );
   }
 }
 
