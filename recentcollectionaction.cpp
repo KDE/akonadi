@@ -18,7 +18,7 @@
 
 #include "recentcollectionaction_p.h"
 #include "metatypes.h"
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/entitytreemodel.h>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocale>
