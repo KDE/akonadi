@@ -62,10 +62,12 @@ void RecentCollectionAction::fillRecentCollection()
   for ( int i=0; i < numberOfRecentCollection; ++i )
   {
     const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mModel, Akonadi::Collection( mListRecentCollection.at( i ).toLongLong() ) );
-    QAction *action = popup->addAction( actionName( index ) );
-    const QIcon icon = mModel->data( index, Qt::DecorationRole ).value<QIcon>();
-    action->setIcon( icon );
-    action->setData( QVariant::fromValue<QModelIndex>( index ) );
+    if ( index.isValid() ) {
+      QAction *action = popup->addAction( actionName( index ) );
+      const QIcon icon = mModel->data( index, Qt::DecorationRole ).value<QIcon>();
+      action->setIcon( icon );
+      action->setData( QVariant::fromValue<QModelIndex>( index ) );
+    }
   }
 }
 
