@@ -24,6 +24,7 @@
 #include <KLocale>
 
 #include <QMenu>
+#include <QAction>
 using namespace Akonadi;
 
 static int s_maximumRecentCollection = 10;

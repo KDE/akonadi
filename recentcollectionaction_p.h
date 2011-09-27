@@ -18,7 +18,6 @@
 #ifndef RECENTCOLLECTIONACTION_P_H
 #define RECENTCOLLECTIONACTION_P_H
 
-#include <KAction>
 #include <QStringList>
 #include <QModelIndex>
 #include <Akonadi/Collection>
@@ -26,7 +25,7 @@
 
 class QMenu;
 class QAbstractItemModel;
-
+class QAction;
 /**
  * @short A class to manage recent selected folder.
  *
