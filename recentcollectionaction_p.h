@@ -20,7 +20,7 @@
 
 #include <QStringList>
 #include <QModelIndex>
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 #include <ksharedconfig.h>
 
 class QMenu;
