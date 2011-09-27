@@ -42,6 +42,7 @@
 #include "trashjob.h"
 #include "trashrestorejob.h"
 #include "entitydeletedattribute.h"
+#include "recentcollectionaction_p.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -57,6 +58,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QItemSelectionModel>
+#include <QPointer>
 
 #include <boost/static_assert.hpp>
 
@@ -297,7 +299,7 @@ class StandardActionManager::Private
         actionMenu->setMenu( menu );
       }
     }
-
+  
     void aboutToShowMenu()
     {
       QMenu *menu = qobject_cast<QMenu*>( q->sender() );
@@ -308,6 +310,8 @@ class StandardActionManager::Private
         return;
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
+      QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+      mRecentCollectionsMenu.insert( type, recentCollection );      
       fillFoldersMenu( type,
                        menu,
                        collectionSelectionModel->model(),
@@ -1064,13 +1068,23 @@ class StandardActionManager::Private
       const QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
 
       const QModelIndex index = action->data().value<QModelIndex>();
-
       Q_ASSERT( index.isValid() );
 
       QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
+      const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+      addRecentCollection( collection.id() );
       model->dropMimeData( mimeData, dropAction, -1, -1, index );
     }
 
+    void addRecentCollection( Akonadi::Collection::Id id )
+    {
+      QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
+      while (item.hasNext()) {
+        item.next();
+        item.value()->addRecentCollection( id );
+      }
+    }
+  
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
@@ -1349,6 +1363,7 @@ class StandardActionManager::Private
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
+    QMap<StandardActionManager::Type, QPointer<RecentCollectionAction> > mRecentCollectionsMenu;
 };
 
 //@endcond

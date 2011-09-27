@@ -172,6 +172,7 @@ set( akonadikde_LIB_SRC
   pluginloader.cpp
   resourcesettings.cpp
   renamefavoritedialog.cpp
+  recentcollectionaction.cpp
 )
 
 if (KDEPIM_MOBILE_UI)
