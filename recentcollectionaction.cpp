@@ -74,7 +74,9 @@ void RecentCollectionAction::fillRecentCollection()
 
 QString RecentCollectionAction::actionName(QModelIndex index)
 {
-  const QString name = index.data().toString();
+  QString name = index.data().toString();
+  name.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
+
   index = index.parent();
   QString topLevelName;
   while ( index != QModelIndex() ) {
@@ -83,8 +85,10 @@ QString RecentCollectionAction::actionName(QModelIndex index)
   }
   if ( topLevelName.isEmpty() )
     return QString::fromLatin1( "%1" ).arg( name );
-  else
+  else {
+    topLevelName.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
     return QString::fromLatin1( "%1 - %2" ).arg( name ).arg( topLevelName );
+  }
 }
   
 void RecentCollectionAction::addRecentCollection( Akonadi::Collection::Id id)
