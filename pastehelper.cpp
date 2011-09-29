@@ -137,6 +137,12 @@ KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &de
   }
 
   TransactionSequence *transaction = new TransactionSequence( session );
+
+  //FIXME: The below code disables transactions in otder to avoid data loss due to nested
+  //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
+  //Remove once this is fixed properly, see the other FIXME comments.
+  transaction->setProperty( "transactionsDisabled", true );
+  
   switch ( action ) {
     case Qt::CopyAction:
       if ( !items.isEmpty() )
