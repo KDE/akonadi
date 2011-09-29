@@ -37,6 +37,7 @@
 #include <kabc/contactgroup.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kglobal.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
@@ -100,6 +101,7 @@ class EmailAddressSelectionWidget::Private
 
 void EmailAddressSelectionWidget::Private::init()
 {
+  KGlobal::locale()->insertCatalog( QLatin1String( "akonadicontact" ) );
   // setup internal model if needed
   if ( !mModel ) {
     Akonadi::Session *session = new Akonadi::Session( "InternalEmailAddressSelectionWidgetModel", q );
