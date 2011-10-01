@@ -71,71 +71,101 @@ void ActionStateManager::setReceiver( QObject *object )
 
 void ActionStateManager::updateState( const Collection::List &collections, const Item::List &items )
 {
-  const bool singleCollectionSelected = (collections.count() == 1);
-  const bool multipleCollectionsSelected = (collections.count() > 1);
-  const bool atLeastOneCollectionSelected = (singleCollectionSelected || multipleCollectionsSelected);
   const int collectionCount = collections.count();
+  const bool singleCollectionSelected = (collectionCount == 1);
+  const bool multipleCollectionsSelected = (collectionCount > 1);
+  const bool atLeastOneCollectionSelected = (singleCollectionSelected || multipleCollectionsSelected);
 
-  const bool singleItemSelected = (items.count() == 1);
-  const bool multipleItemsSelected = (items.count() > 1);
-  const bool atLeastOneItemSelected = (singleItemSelected || multipleItemsSelected);
   const int itemCount = items.count();
+  const bool singleItemSelected = (itemCount == 1);
+  const bool multipleItemsSelected = (itemCount > 1);
+  const bool atLeastOneItemSelected = (singleItemSelected || multipleItemsSelected);
 
-  bool canDeleteCollections = (collections.count() > 0);
-  foreach ( const Collection &collection, collections ) {
-    // do we have the necessary rights?
-    if ( !(collection.rights() & Collection::CanDeleteCollection) )
-      canDeleteCollections = false;
+  const bool listOfCollectionNotEmpty = collections.isEmpty() ? false : true;
+  bool canDeleteCollections = listOfCollectionNotEmpty;
+  if ( canDeleteCollections )
+  {
+    foreach ( const Collection &collection, collections ) {
+      // do we have the necessary rights?
+      if ( !(collection.rights() & Collection::CanDeleteCollection) ) {
+        canDeleteCollections = false;
+        break;
+      }
 
-    if ( isRootCollection( collection ) )
-      canDeleteCollections = false;
+      if ( isRootCollection( collection ) ) {
+        canDeleteCollections = false;
+        break;
+      }
 
-    if ( isResourceCollection( collection ) )
-      canDeleteCollections = false;
+      if ( isResourceCollection( collection ) ) {
+        canDeleteCollections = false;
+        break;
+      }
+    }
   }
 
   bool canCutCollections = canDeleteCollections; // we must be able to delete for cutting
   foreach ( const Collection &collection, collections ) {
-    if ( isSpecialCollection( collection ) )
+    if ( isSpecialCollection( collection ) ) {
       canCutCollections = false;
+      break;
+    }
 
-    if ( !isFolderCollection( collection ) )
+    if ( !isFolderCollection( collection ) ) {
       canCutCollections = false;
+      break;
+    }
   }
 
   const bool canMoveCollections = canCutCollections; // we must be able to cut for moving
 
-  bool canCopyCollections = (collections.count() > 0);
-  foreach ( const Collection &collection, collections ) {
-    if ( isRootCollection( collection ) )
-      canCopyCollections = false;
+  bool canCopyCollections = listOfCollectionNotEmpty;
+  if ( canCopyCollections ) {
+    foreach ( const Collection &collection, collections ) {
+      if ( isRootCollection( collection ) ) {
+        canCopyCollections = false;
+        break;
+      }
 
-    if ( !isFolderCollection( collection ) )
-      canCopyCollections = false;
+      if ( !isFolderCollection( collection ) ) {
+        canCopyCollections = false;
+        break;
+      }
+    }
   }
+  bool canAddToFavoriteCollections = listOfCollectionNotEmpty;
+  if ( canAddToFavoriteCollections ) {
+    foreach ( const Collection &collection, collections ) {
+      if ( isRootCollection( collection ) ) {
+        canAddToFavoriteCollections = false;
+        break;
+      }
 
-  bool canAddToFavoriteCollections = (collections.count() > 0);
-  foreach ( const Collection &collection, collections ) {
-    if ( isRootCollection( collection ) )
-      canAddToFavoriteCollections = false;
+      if ( isFavoriteCollection( collection ) ) {
+        canAddToFavoriteCollections = false;
+        break;
+      }
 
-    if ( isFavoriteCollection( collection ) )
-      canAddToFavoriteCollections = false;
+      if ( !isFolderCollection( collection ) ) {
+        canAddToFavoriteCollections = false;
+        break;
+      }
 
-    if ( !isFolderCollection( collection ) )
-      canAddToFavoriteCollections = false;
-
-    if ( !canContainItems( collection ) )
-      canAddToFavoriteCollections = false;
+      if ( !canContainItems( collection ) ) {
+        canAddToFavoriteCollections = false;
+        break;
+      }
+    }
   }
-
-  bool canRemoveFromFavoriteCollections = (collections.count() > 0);
+  bool canRemoveFromFavoriteCollections = listOfCollectionNotEmpty;
   foreach ( const Collection &collection, collections ) {
-    if ( !isFavoriteCollection( collection ) )
+    if ( !isFavoriteCollection( collection ) ) {
       canRemoveFromFavoriteCollections = false;
+      break;
+    }
   }
 
-  bool collectionsAreFolders = (!collections.isEmpty() ? true : false);
+  bool collectionsAreFolders = listOfCollectionNotEmpty;
 
   foreach ( const Collection &collection, collections ) {
     if ( !isFolderCollection( collection ) ) {
