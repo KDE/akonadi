@@ -64,7 +64,8 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
   QMap<QByteArray, uint> messageIds;
   QMap<uint, QList<uint> > duplicates;
   QMap<uint, uint> bodyHashes;
-  for ( int i = 0; i < items.size(); ++i ) {
+  const int numberOfItems( items.size() );
+  for ( int i = 0; i < numberOfItems; ++i ) {
     Akonadi::Item item = items[i];
     if ( item.hasPayload<KMime::Message::Ptr>() ) {
       KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
@@ -89,8 +90,10 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
     }
   }
 
-  for(  QMap<uint, QList<uint> >::iterator it = duplicates.begin(); it != duplicates.end(); ++it ) {    
-    for (QList<uint>::iterator dupIt = it.value().begin(); dupIt != it.value().end(); ++dupIt ) {
+  QMap<uint, QList<uint> >::ConstIterator end( duplicates.constEnd() );
+  for(  QMap<uint, QList<uint> >::ConstIterator it = duplicates.constBegin(); it != end; ++it ) {
+    QList<uint>::ConstIterator dupEnd( it.value().constEnd() );
+    for (QList<uint>::ConstIterator dupIt = it.value().constBegin(); dupIt != dupEnd; ++dupIt ) {
       mDuplicateItems.append( items[*dupIt] );
     }
   }
