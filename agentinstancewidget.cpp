@@ -177,7 +177,7 @@ QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
   if ( !selectionModel )
     return list;
 
-  QModelIndexList indexes = selectionModel->selection().indexes();
+  const QModelIndexList indexes = selectionModel->selection().indexes();
 
   foreach (const QModelIndex &index, indexes )
   {

@@ -47,7 +47,8 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 
       QStringList rv;
       int begin = 0;
-      for ( int i = 0; i < path.size(); ++i ) {
+      const int pathSize( path.size() );
+      for ( int i = 0; i < pathSize; ++i ) {
         if ( path[i] == QLatin1Char('/') ) {
           QString pathElement = path.mid( begin, i - begin );
           pathElement = pathElement.replace( QLatin1String( "\\/" ), QLatin1String( "/" ) );

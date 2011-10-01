@@ -68,7 +68,8 @@ void AgentInstanceModel::Private::instanceRemoved( const AgentInstance &instance
 
 void AgentInstanceModel::Private::instanceChanged( const AgentInstance &instance )
 {
-  for ( int i = 0; i < mInstances.count(); ++i ) {
+  const int numberOfInstance( mInstances.count() );
+  for ( int i = 0; i < numberOfInstance; ++i ) {
     if ( mInstances[ i ] == instance ) {
       mInstances[ i ] = instance;
 
