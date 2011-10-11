@@ -179,7 +179,8 @@ QString ContactGroupLineEdit::requestPreferredEmail( const KABC::Addressee &cont
 
   QMenu menu;
   menu.setTitle( i18n( "Select preferred email address" ) );
-  for ( int i = 0; i < emails.count(); ++i ) {
+  const int numberOfEmails( emails.count() );
+  for ( int i = 0; i < numberOfEmails; ++i ) {
     action = menu.addAction( emails.at( i ) );
     action->setData( i );
   }

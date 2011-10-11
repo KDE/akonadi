@@ -148,25 +148,25 @@ class ContactViewer::Private
     void slotUrlClicked( const QString &urlString )
     {
       KUrl url( urlString );
-
-      if ( url.scheme() == QLatin1String( "http" ) ||
-           url.scheme() == QLatin1String( "https" ) ) {
+      const QString urlScheme( url.scheme() );
+      if ( urlScheme == QLatin1String( "http" ) ||
+           urlScheme == QLatin1String( "https" ) ) {
         emit mParent->urlClicked( url );
-      } else if ( url.scheme() == QLatin1String( "phone" ) ) {
+      } else if ( urlScheme == QLatin1String( "phone" ) ) {
         const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
 
         const KABC::PhoneNumber::List numbers = mCurrentContact.phoneNumbers();
         if ( pos < numbers.count() ) {
           emit mParent->phoneNumberClicked( numbers.at( pos ) );
         }
-      } else if ( url.scheme() == QLatin1String( "sms" ) ) {
+      } else if ( urlScheme == QLatin1String( "sms" ) ) {
         const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
 
         const KABC::PhoneNumber::List numbers = mCurrentContact.phoneNumbers();
         if ( pos < numbers.count() ) {
           emit mParent->smsClicked( numbers.at( pos ) );
         }
-      } else if ( url.scheme() == QLatin1String( "address" ) ) {
+      } else if ( urlScheme == QLatin1String( "address" ) ) {
         const int pos = url.queryItemValue( QLatin1String( "index" ) ).toInt();
 
         const KABC::Address::List addresses = mCurrentContact.addresses();
