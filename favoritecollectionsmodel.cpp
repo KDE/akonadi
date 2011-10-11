@@ -90,9 +90,10 @@ class FavoriteCollectionsModel::Private
     {
       collectionIds = configGroup.readEntry( "FavoriteCollectionIds", QList<qint64>() );
       const QStringList labels = configGroup.readEntry( "FavoriteCollectionLabels", QStringList() );
-
-      for ( int i = 0; i < collectionIds.size(); ++i ) {
-        if ( i<labels.size() ) {
+      const int numberOfCollection( collectionIds.size() );
+      const int numberOfLabels( labels.size() );
+      for ( int i = 0; i < numberOfCollection; ++i ) {
+        if ( i<numberOfLabels ) {
           labelMap[ collectionIds[i] ] = labels[i];
         }
       }

@@ -168,7 +168,8 @@ int ItemModel::Private::rowForItem( const Akonadi::Item& item )
     return container->row;
   else { // Slow solution if the fist one has not succeeded
     int row = -1;
-    for ( int i = 0; i < items.size(); ++i ) {
+    const int numberOfItems( items.size() );
+    for ( int i = 0; i < numberOfItems; ++i ) {
       if ( items.at( i )->item == item ) {
         row = i;
         break;

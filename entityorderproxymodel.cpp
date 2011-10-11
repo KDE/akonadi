@@ -176,8 +176,8 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
       existingList.append( configString( idx ) );
     }
   }
-
-  for ( int i = 0; i < droppedList.size(); ++i )
+  const int numberOfDroppedElement( droppedList.size() );
+  for ( int i = 0; i < numberOfDroppedElement; ++i )
   {
     const QString droppedItem = droppedList.at( i );
     const int existingIndex = existingList.indexOf( droppedItem );
