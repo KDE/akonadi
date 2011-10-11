@@ -91,6 +91,7 @@ class CollectionDialog::Private
 
       mMimeTypeFilterModel = new CollectionFilterProxyModel( mParent );
       mMimeTypeFilterModel->setSourceModel( baseModel );
+      mMimeTypeFilterModel->setExcludeVirtualCollections( true );
 
       mRightsFilterModel = new EntityRightsFilterModel( mParent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
