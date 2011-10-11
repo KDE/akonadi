@@ -89,6 +89,16 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
   
      virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
+    /**
+     * Sets whether we want virtual collections to be filtered or not.
+     * By default, virtual collections are accepted.
+     *
+     * @param exclude If true, virtual collections aren't accepted.
+     *
+     * @since 4.8
+     */
+     void setExcludeVirtualCollections( bool exclude );
+  
   public Q_SLOTS:
     /**
      * Sets the @p filter that is used to filter for matching contacts

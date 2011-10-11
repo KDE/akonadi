@@ -154,6 +154,7 @@ void EmailAddressSelectionWidget::Private::init()
 
   Akonadi::ContactsFilterProxyModel *filter = new Akonadi::ContactsFilterProxyModel( q );
   filter->setFilterFlags( ContactsFilterProxyModel::HasEmail );
+  filter->setExcludeVirtualCollections( true );
   filter->setSourceModel( mModel );
 
   mSelectionModel = new EmailAddressSelectionProxyModel( q );

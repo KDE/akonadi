@@ -35,9 +35,14 @@ using namespace Akonadi;
 class ContactsFilterProxyModel::Private
 {
   public:
-    Private() { flags=0; }
+    Private()
+      : flags( 0 ),
+        mExcludeVirtualCollections( false )
+    {
+    }
     QString mFilter;
     ContactsFilterProxyModel::FilterFlags flags;
+    bool mExcludeVirtualCollections;
 };
 
 ContactsFilterProxyModel::ContactsFilterProxyModel( QObject *parent )
@@ -61,10 +66,15 @@ void ContactsFilterProxyModel::setFilterString( const QString &filter )
 
 bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
 {
+  const QModelIndex index = sourceModel()->index( row, 0, parent );
+  if ( d->mExcludeVirtualCollections ) {
+    const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    if ( collection.isValid() && collection.isVirtual())
+      return false;
+  }
+    
   if ( ( d->mFilter.isEmpty() ) && ( !( d->flags & ContactsFilterProxyModel::HasEmail ) ))
     return true;
-
-  const QModelIndex index = sourceModel()->index( row, 0, parent );
 
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
@@ -109,6 +119,14 @@ bool ContactsFilterProxyModel::lessThan( const QModelIndex &leftIndex, const QMo
 void ContactsFilterProxyModel::setFilterFlags( ContactsFilterProxyModel::FilterFlags flags )
 {
   d->flags = flags;
+}
+
+void ContactsFilterProxyModel::setExcludeVirtualCollections( bool exclude )
+{
+  if ( exclude != d->mExcludeVirtualCollections ) {
+    d->mExcludeVirtualCollections = exclude;
+    invalidateFilter();
+  }
 }
 
 Qt::ItemFlags ContactsFilterProxyModel::flags( const QModelIndex& index ) const
