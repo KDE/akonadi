@@ -78,15 +78,16 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
     /**
      * Destroys the contacts filter proxy model.
      */
-    ~ContactsFilterProxyModel();
+    virtual ~ContactsFilterProxyModel();
 
      /**
      * Sets the filter @p flags. By default
      * ContactsFilterProxyModel::FilterString is set.
      * @since 4.8
      */
-   void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );
-
+     void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );
+  
+     virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
   public Q_SLOTS:
     /**

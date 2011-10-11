@@ -111,6 +111,20 @@ void ContactsFilterProxyModel::setFilterFlags( ContactsFilterProxyModel::FilterF
   d->flags = flags;
 }
 
+Qt::ItemFlags ContactsFilterProxyModel::flags( const QModelIndex& index ) const
+{
+  if ( !index.isValid() ) {
+    // Don't crash
+    return 0;
+  }
+  const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+  if ( collection.isValid() )
+  {
+    return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable );
+  }
+  return QSortFilterProxyModel::flags( index );
+}
+
 static bool addressMatchesFilter( const KABC::Address &address, const QString &filterString )
 {
   if ( address.street().contains( filterString, Qt::CaseInsensitive ) )
