@@ -49,6 +49,7 @@ class AgentBasePrivate : public QObject
     void slotWarning( const QString& message );
     void slotError( const QString& message );
     void slotNetworkStatusChange( Solid::Networking::Status );
+    void slotResumedFromSuspend();
 
     virtual void changeProcessed();
 

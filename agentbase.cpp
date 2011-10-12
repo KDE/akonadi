@@ -42,6 +42,8 @@
 #include <klocale.h>
 #include <kstandarddirs.h>
 
+#include <Solid/PowerManagement>
+
 #include <QtCore/QDir>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
@@ -258,6 +260,8 @@ void AgentBasePrivate::init()
   connect( q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)) );
   connect( q, SIGNAL(warning(QString)), q, SLOT(slotWarning(QString)) );
   connect( q, SIGNAL(error(QString)), q, SLOT(slotError(QString)) );
+
+  connect( Solid::PowerManagement::notifier(), SIGNAL(resumingFromSuspend()), q, SLOT(slotResumedFromSuspend()) );
 
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.
@@ -490,6 +494,12 @@ void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
 {
   Q_Q( AgentBase );
   q->setOnline( stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected );
+}
+
+void AgentBasePrivate::slotResumedFromSuspend()
+{
+  if ( mNeedsNetwork )
+    slotNetworkStatusChange( Solid::Networking::status() );
 }
 
 AgentBase::AgentBase( const QString & id )
