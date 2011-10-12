@@ -87,8 +87,10 @@ bool TransactionSequence::addSubjob(KJob * job)
 
   // TODO KDE5: remove property hack once SpecialCollectionsRequestJob has been fixed
   if ( d->mState == TransactionSequencePrivate::Idle && !property( "transactionsDisabled" ).toBool() ) {
-    d->mState = TransactionSequencePrivate::Running;
+    d->mState = TransactionSequencePrivate::Running; // needs to be set before creating the transaction job to avoid infinite recursion
     new TransactionBeginJob( this );
+  } else {
+    d->mState = TransactionSequencePrivate::Running;
   }
   return Job::addSubjob( job );
 }
@@ -107,6 +109,10 @@ void TransactionSequence::slotResult(KJob * job)
       Job::removeSubjob( job );
 
     if ( !hasSubjobs() && d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
+      if ( property( "transactionsDisabled" ).toBool() ) {
+        emitResult();
+        return;
+      }
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)) );
@@ -124,12 +130,13 @@ void TransactionSequence::slotResult(KJob * job)
     clearSubjobs();
 
     if ( d->mState == TransactionSequencePrivate::Running || d->mState == TransactionSequencePrivate::WaitingForSubjobs ) {
+      if ( property( "transactionsDisabled" ).toBool() ) {
+        emitResult();
+        return;
+      }
       d->mState = TransactionSequencePrivate::RollingBack;
       TransactionRollbackJob *job = new TransactionRollbackJob( this );
       connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
-    } else if ( d->mState == TransactionSequencePrivate::Idle ) {
-      // we can get here if transactions are disabled
-      emitResult();
     }
   }
 }
@@ -149,6 +156,10 @@ void TransactionSequence::commit()
   }
 
   if ( subjobs().isEmpty() ) {
+    if ( property( "transactionsDisabled" ).toBool() ) {
+      emitResult();
+      return;
+    }
     if ( !error() ) {
       d->mState = TransactionSequencePrivate::Committing;
       TransactionCommitJob *job = new TransactionCommitJob( this );
