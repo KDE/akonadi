@@ -73,7 +73,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
     defaultHostName = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
-    defaultCleanShutdownCommand = QString::fromLatin1( "%1 stop -D%2" )
+    defaultCleanShutdownCommand = QString::fromLatin1( "%1 stop -D%2 -m fast" )
                                       .arg( defaultServerPath )
                                       .arg( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) ) );
   }
