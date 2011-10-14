@@ -100,10 +100,7 @@ void EntityMimeTypeFilterModel::addMimeTypeExclusionFilter(const QString &type)
 bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   Q_D(const EntityMimeTypeFilterModel);
-
   const QModelIndex idx = sourceModel()->index(sourceRow, 0, sourceParent);
-
-  const QString rowMimetype = idx.data( EntityTreeModel::MimeTypeRole ).toString();
 
   const Akonadi::Item item = idx.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
@@ -111,6 +108,8 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelInd
     kDebug() << "Item " << item.id() << " doesn't have payload";
     return false;
   }
+
+  const QString rowMimetype = idx.data( EntityTreeModel::MimeTypeRole ).toString();
 
   if ( d->excludedMimeTypes.contains( rowMimetype ) )
     return false;

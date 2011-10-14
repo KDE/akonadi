@@ -86,16 +86,16 @@ bool EntityOrderProxyModel::lessThan( const QModelIndex& left, const QModelIndex
   if ( !d->m_orderConfig.hasKey( QString::number( col.id() ) ) )
     return QSortFilterProxyModel::lessThan( left, right );
 
-  QStringList list = d->m_orderConfig.readEntry( QString::number( col.id() ), QStringList() );
+  const QStringList list = d->m_orderConfig.readEntry( QString::number( col.id() ), QStringList() );
 
   if ( list.isEmpty() )
     return QSortFilterProxyModel::lessThan( left, right );
 
-  QString leftValue = configString( left );
-  QString rightValue = configString( right );
+  const QString leftValue = configString( left );
+  const QString rightValue = configString( right );
 
-  int leftPosition = list.indexOf( leftValue );
-  int rightPosition = list.indexOf( rightValue );
+  const int leftPosition = list.indexOf( leftValue );
+  const int rightPosition = list.indexOf( rightValue );
 
   if ( leftPosition < 0 || rightPosition < 0 )
     return QSortFilterProxyModel::lessThan( left, right );
@@ -282,7 +282,7 @@ void EntityOrderProxyModel::clearOrder( const QModelIndex& parent )
 {
   Q_D( EntityOrderProxyModel );
 
-  QString parentKey = parentConfigString( index( 0, 0, parent ) );
+  const QString parentKey = parentConfigString( index( 0, 0, parent ) );
 
   if ( parentKey.isEmpty() )
     return;
