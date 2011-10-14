@@ -298,8 +298,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   // is collapsed
   if ( ( index.column() == 1 || index.column() == 2 ) ) {
 
-    PainterStateSaver stateSaver( painter );
-
+    QFont savedFont = painter->font();
     QString sumText;
     if ( index.column() == 1 && ( ( !expanded && unreadRecursiveCount > 0 ) || ( expanded && unreadCount > 0 ) ) ) {
       QFont font = painter->font();
@@ -315,7 +314,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     }
 
     painter->drawText( textRect, Qt::AlignRight | Qt::AlignVCenter, sumText );
-
+    painter->setFont( savedFont );
     return;
   }
 
