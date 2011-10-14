@@ -285,9 +285,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       painter->setPen( unreadColor );
       painter->drawText( unreadRect, Qt::AlignLeft | Qt::AlignVCenter, unread );
     } else if ( option.decorationPosition == QStyleOptionViewItem::Top ) {
-      // draw over the icon
-      painter->setPen( unreadColor );
       if ( unreadCount > 0 ) {
+        // draw over the icon
+        painter->setPen( unreadColor );
         painter->drawText( iconRect, Qt::AlignCenter, QString::number( unreadCount ) );
       }
     }
