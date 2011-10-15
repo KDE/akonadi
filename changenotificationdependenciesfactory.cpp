@@ -56,6 +56,7 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
 
 QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* parent)
 {
+  Q_UNUSED( parent );
   return ChangeMediator::instance();
 }
 
