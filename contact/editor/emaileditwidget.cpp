@@ -43,7 +43,7 @@
 class EmailAddressExtracter : public QObject
 {
   public:
-    EmailAddressExtracter( QLineEdit *lineEdit )
+    EmailAddressExtracter( KLineEdit *lineEdit )
       : QObject( lineEdit ), mLineEdit( lineEdit )
     {
       lineEdit->installEventFilter( this );
@@ -61,7 +61,7 @@ class EmailAddressExtracter : public QObject
     }
 
   private:
-    QLineEdit *mLineEdit;
+    KLineEdit *mLineEdit;
     bool mIgnoreFocusOutEvent;
 };
 
