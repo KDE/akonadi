@@ -80,7 +80,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob* job)
   }
 
   ItemModifyJob *modJob = 0;
-  foreach ( Item item, fetchJob->items() ) {
+  foreach ( Item item, fetchJob->items() ) { //krazy:exclude=foreach, item cannot be const
     item.clearPayload();
     modJob = new ItemModifyJob( item, q );
   }
