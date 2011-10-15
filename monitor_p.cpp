@@ -241,13 +241,13 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
       bool fullPayloadWasRequested = scope.fullPayload();
       scope.fetchFullPayload( false );
       QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
-      Q_FOREACH( QByteArray part, requestedPayloadParts ) {
+      Q_FOREACH( const QByteArray &part, requestedPayloadParts ) {
         scope.fetchPayloadPart( part, false );
       }
 
       bool allAttributesWereRequested = scope.allAttributes();
       QSet<QByteArray> requestedAttrParts = scope.attributes();
-      Q_FOREACH( QByteArray part, requestedAttrParts ) {
+      Q_FOREACH( const QByteArray &part, requestedAttrParts ) {
         scope.fetchAttribute( part, false );
       }
 
