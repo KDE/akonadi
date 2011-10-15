@@ -108,7 +108,6 @@ void EntityDeletedAttribute::deserialize( const QByteArray &data )
 
   QList<QByteArray> l;
   ImapParser::parseParenthesizedList( data, l );
-  int size = l.size();
   if ( l.size() != 2 ) {
     kWarning() << "invalid size";
     return;
