@@ -156,7 +156,7 @@ static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::
   }
 
   if ( localAttributes != otherAttributes ) {
-    foreach ( const QByteArray &localKey, localAttributes.keys() ) {
+    foreach ( const QByteArray &localKey, localAttributes ) {
       if ( !otherAttributes.contains( localKey ) ) {
         reporter->addProperty( AbstractDifferencesReporter::AdditionalLeftMode, i18n( "Attribute: %1", QString::fromUtf8( localKey ) ),
                                QString::fromUtf8( localAttributes.value( localKey ) ),
@@ -172,7 +172,7 @@ static void compareItems( AbstractDifferencesReporter *reporter, const Akonadi::
       }
     }
 
-    foreach ( const QByteArray &otherKey, otherAttributes.keys() ) {
+    foreach ( const QByteArray &otherKey, otherAttributes ) {
       if ( !localAttributes.contains( otherKey ) ) {
         reporter->addProperty( AbstractDifferencesReporter::AdditionalRightMode, i18n( "Attribute: %1", QString::fromUtf8( otherKey ) ),
                                QString(),
