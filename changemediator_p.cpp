@@ -159,9 +159,6 @@ void ChangeMediator::do_beginMoveItems( JobPrivate *movePrivate, const QByteArra
   Q_ASSERT(movePrivate->q_ptr->inherits("Akonadi::ItemMoveJob"));
   MoveJobImpl<Item, ItemMoveJob> *itemMoveJob = static_cast<MoveJobImpl<Item, ItemMoveJob>*>(movePrivate);
 
-  bool allDataAvailable = true;
-  bool noDataAvailable = true;
-
   Item::List itemsDataAvailable;
   Item::List itemsDataNotAvailable;
 
