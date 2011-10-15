@@ -187,7 +187,9 @@ class AKONADI_EXPORT Monitor : public QObject
 
 
     /**
-     * Instructs the monitor to fetch only those parts that were changed and were requested in the fetch scope.
+     * Instructs the monitor to fetch only those parts that were changed and
+     * were requested in the fetch scope.
+     *
      * This is taken in account only for item modifications.
      * Example usage:
      * @code
@@ -195,16 +197,19 @@ class AKONADI_EXPORT Monitor : public QObject
      *   monitor->fetchChangedOnly(true);
      * @endcode
      *
-     * In the example if an item was changed, but its payload was not, the full payload will not be retrieved.
-     * If the item's payload was changed, the monitor retrieves the changed payload as well.
+     * In the example if an item was changed, but its payload was not, the full
+     * payload will not be retrieved.
+     * If the item's payload was changed, the monitor retrieves the changed
+     * payload as well.
      *
      * The default is to fetch everything requested.
      *
      * @since 4.8
-     * 
-     * @param enable @c true to enable the featue, @c false means everything that was requested will be fetched
+     *
+     * @param enable @c true to enable the feature, @c false means everything
+     * that was requested will be fetched.
      * @return void
-     **/
+     */
     void fetchChangedOnly( bool enable );
 
     /**
