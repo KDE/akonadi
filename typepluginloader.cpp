@@ -240,12 +240,15 @@ class PluginRegistry
       QRegExp rx( QLatin1String( "(.+)@(.+)" ) );
       Q_FOREACH ( const QString & name, names )
         if ( rx.exactMatch( name ) ) {
-          const QString mimeType = rx.cap(1);
-          const QByteArray classType = rx.cap(2).toLatin1();
-          QMap<QString,MimeTypeEntry>::iterator it = map.find( mimeType );
-          if ( it == map.end() )
-              it = map.insert( mimeType, MimeTypeEntry( mimeType ) );
-          it->add( classType, PluginEntry( name ) );
+          KMimeType::Ptr mime = KMimeType::mimeType( rx.cap(1), KMimeType::ResolveAliases );
+          if ( mime ) {
+              const QString mimeType = mime->name();
+              const QByteArray classType = rx.cap(2).toLatin1();
+              QMap<QString,MimeTypeEntry>::iterator it = map.find( mimeType );
+              if ( it == map.end() )
+                  it = map.insert( mimeType, MimeTypeEntry( mimeType ) );
+              it->add( classType, PluginEntry( name ) );
+          }
         } else {
           kDebug() << "ItemSerializerPluginLoader: "
                    << "name" << name << "doesn't look like mimetype@classtype" << endl;
