@@ -161,7 +161,7 @@ ItemFetchScope &Monitor::itemFetchScope()
 void Monitor::fetchChangedOnly( bool enable )
 {
   Q_D( Monitor );
-  d->mFetchChangedOnly = true;
+  d->mFetchChangedOnly = enable;
 }
 
 
