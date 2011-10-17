@@ -24,6 +24,7 @@
 #include <akonadi/item.h>
 #include <kabc/addressee.h>
 #include <kcolorscheme.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -263,14 +264,18 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   strAddr.append( QString::fromLatin1( "</table>" ) );
 
 #ifdef HAVE_PRISON
-  strAddr.append( QString::fromLatin1(
-    "<p align=\"center\">"
-    "<img src=\"%1\" vspace=\"1\">"
-    "<img src=\"%2\" vspace=\"1\">"
-    "</p>"
-                           )
+  KConfig config( QLatin1String( "akonadi_contactrc" ) );
+  KConfigGroup group( &config, QLatin1String( "View" ) );
+  if ( group.readEntry( "QRCodes", true ) ) {
+    strAddr.append( QString::fromLatin1(
+      "<p align=\"center\">"
+      "<img src=\"%1\" vspace=\"1\">"
+      "<img src=\"%2\" vspace=\"1\">"
+      "</p>"
+    )
     .arg( QLatin1String( "datamatrix" ) )
     .arg( QLatin1String( "qrcode" ) ) );
+  }
 #endif // HAVE_PRISON
 
   strAddr.append( QString::fromLatin1( "</div>\n" ) );

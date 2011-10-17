@@ -34,6 +34,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
 #include <kcolorscheme.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <kicon.h>
 #include <klocale.h>
@@ -93,20 +94,22 @@ class ContactViewer::Private
                                          KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );
 
 #ifdef HAVE_PRISON
-      {
-      KABC::VCardConverter converter;
-      KABC::Addressee addr(mCurrentContact);
-      addr.setPhoto(KABC::Picture());
-      addr.setLogo(KABC::Picture());
-      const QString data = QString::fromUtf8( converter.createVCard( addr ) );
-      mQRCode->setData( data );
-      mDataMatrix->setData( data );
-      mBrowser->document()->addResource( QTextDocument::ImageResource,
-                                         QUrl( QLatin1String( "qrcode" ) ),
-                                         mQRCode->toImage( QSizeF(50,50) ) );
-      mBrowser->document()->addResource( QTextDocument::ImageResource,
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, QLatin1String( "View" ) );
+      if ( group.readEntry( "QRCodes", true ) ) {
+        KABC::VCardConverter converter;
+        KABC::Addressee addr(mCurrentContact);
+        addr.setPhoto(KABC::Picture());
+        addr.setLogo(KABC::Picture());
+        const QString data = QString::fromUtf8( converter.createVCard( addr ) );
+        mQRCode->setData( data );
+        mDataMatrix->setData( data );
+        mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                           QUrl( QLatin1String( "qrcode" ) ),
+                                           mQRCode->toImage( QSizeF(50,50) ) );
+        mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "datamatrix" ) ),
-                                         mDataMatrix->toImage( QSizeF(50,50) ) );
+                                           mDataMatrix->toImage( QSizeF(50,50) ) );
       }
 #endif // HAVE_PRISON
 
