@@ -74,15 +74,18 @@ class FavoriteCollectionsModel::Private
       updateSelection();
     }
 
+    void updateSelectionId( const Collection::Id &collectionId )
+    {
+      const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
+      
+      if ( index.isValid() )
+        q->selectionModel()->select( index, QItemSelectionModel::Select );
+    }
+
     void updateSelection()
     {
       foreach ( const Collection::Id &collectionId, collectionIds ) {
-        const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
-
-        if ( !index.isValid() )
-          continue;
-
-        q->selectionModel()->select( index, QItemSelectionModel::Select );
+        updateSelectionId( collectionId );
       }
     }
 
@@ -126,11 +129,9 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, 
   setSourceModel( source );
   setFilterBehavior( ExactSelection );
 
+  d->loadConfig();
   connect( source, SIGNAL(modelReset()), this, SLOT(clearAndUpdateSelection()) );
   connect( source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateSelection()) );
-
-  d->loadConfig();
-  d->clearAndUpdateSelection();
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()
@@ -152,7 +153,7 @@ void FavoriteCollectionsModel::setCollections( const Collection::List &collectio
 void FavoriteCollectionsModel::addCollection( const Collection &collection )
 {
   d->collectionIds << collection.id();
-  d->updateSelection();
+  d->updateSelectionId(collection.id());
   d->saveConfig();
 }
 
