@@ -133,6 +133,7 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
 
   d->collectionView = new QTreeView( mainWidget );
+  d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->collectionView->header()->hide();
 
   if ( !mimetypes.isEmpty() ) {
