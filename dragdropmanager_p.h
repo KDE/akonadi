@@ -44,7 +44,7 @@ class DragDropManager
      *
      * @returns True if the event should be further processed, and false otherwise.
      */
-    bool processDropEvent( QDropEvent *event );
+    bool processDropEvent( QDropEvent *event, bool dropOnItem = true );
 
     /**
      * Starts a drag if possible and sets the appropriate supported actions to allow moves.

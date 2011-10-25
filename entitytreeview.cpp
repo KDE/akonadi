@@ -249,7 +249,7 @@ void EntityTreeView::dragMoveEvent( QDragMoveEvent * event )
 void EntityTreeView::dropEvent( QDropEvent * event )
 {
   d->mDragExpandTimer.stop();
-  if ( d->mDragDropManager->processDropEvent( event ) )
+  if ( d->mDragDropManager->processDropEvent( event, ( dropIndicatorPosition () == QAbstractItemView::OnItem ) ) )
     QTreeView::dropEvent( event );
 }
 #endif

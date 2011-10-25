@@ -42,7 +42,6 @@ DragDropManager::DragDropManager( QAbstractItemView *view )
 Akonadi::Collection DragDropManager::currentDropTarget( QDropEvent *event ) const
 {
   const QModelIndex index = m_view->indexAt( event->pos() );
-
   Collection collection = m_view->model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( !collection.isValid() ) {
     const Item item = m_view->model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
@@ -97,12 +96,25 @@ bool DragDropManager::hasAncestor( const QModelIndex &_index, Collection::Id par
   return false;
 }
 
-bool DragDropManager::processDropEvent( QDropEvent *event )
+bool DragDropManager::processDropEvent( QDropEvent *event, bool dropOnItem )
 {
   const Collection targetCollection = currentDropTarget( event );
   if ( !targetCollection.isValid() )
     return false;
 
+  const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
+  
+  const QMimeData *data = event->mimeData();
+  const KUrl::List urls = KUrl::List::fromMimeData( data );
+  foreach ( const KUrl &url, urls ) {
+    const Collection collection = Collection::fromUrl( url );
+    if( !collection.isValid() ) {
+      if ( !dropOnItem ) {
+        return false;
+      }
+    }
+  } 
+  
   int actionCount = 0;
   Qt::DropAction defaultAction;
   // TODO check if the source supports moving
