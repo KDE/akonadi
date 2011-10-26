@@ -64,7 +64,7 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob* job)
 
 
   ItemFetchJob *itemFetch = new ItemFetchJob( collection, q );
-  QObject::connect( itemFetch, SLOT(result(KJob*)), q, SLOT(itemFetchResult(KJob*)) );
+  QObject::connect( itemFetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)) );
 }
 
 void InvalidateCacheJobPrivate::itemFetchResult(KJob* job)
