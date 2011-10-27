@@ -602,7 +602,7 @@ void GetLockJob::Private::serviceOwnerChanged( const QString&, const QString&, c
 
 void GetLockJob::Private::timeout()
 {
-  kWarning() << "Timeout trying to get lock.";
+  kWarning() << "Timeout trying to get lock. Check who has acquired the name" << DBUS_SERVICE_NAME << "on DBus, using qdbus or qdbusviewer.";
   q->setError( Job::Unknown );
   q->setErrorText( i18n( "Timeout trying to get lock." ) );
   q->emitResult();
