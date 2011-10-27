@@ -88,6 +88,8 @@ class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
 
     Q_PRIVATE_SLOT( d, void slotIntervalValueChanged( int ) )
     Q_PRIVATE_SLOT( d, void slotCacheValueChanged( int ) )
+    Q_PRIVATE_SLOT( d, void slotRetrievalOptionsGroupBoxDisabled( bool ) )
+
     //@endcond
 };
 

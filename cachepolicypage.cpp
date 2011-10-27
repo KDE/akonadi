@@ -42,6 +42,7 @@ class CachePolicyPage::Private
 
     void slotIntervalValueChanged( int );
     void slotCacheValueChanged( int );
+    void slotRetrievalOptionsGroupBoxDisabled( bool disable );
 
     Ui::CachePolicyPage* mUi;
 };
@@ -56,6 +57,16 @@ void CachePolicyPage::Private::slotCacheValueChanged( int interval )
   mUi->localCacheTimeout->setSuffix( QLatin1Char( ' ' ) + i18np( "minute", "minutes", interval ) );
 }
 
+void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled( bool disable )
+{
+  mUi->retrievalOptionsGroupBox->setDisabled( disable );
+  if ( !disable ) {
+    mUi->label->setEnabled( mUi->retrieveOnlyHeaders->isChecked() );
+    mUi->localCacheTimeout->setEnabled( mUi->retrieveOnlyHeaders->isChecked() );
+  }
+}
+
+
 CachePolicyPage::CachePolicyPage( QWidget *parent, GuiMode mode )
   : CollectionPropertiesPage( parent ),
     d( new Private )
@@ -68,7 +79,8 @@ CachePolicyPage::CachePolicyPage( QWidget *parent, GuiMode mode )
            SLOT(slotIntervalValueChanged(int)) );
   connect( d->mUi->localCacheTimeout, SIGNAL(valueChanged(int)),
            SLOT(slotCacheValueChanged(int)) );
-
+  connect( d->mUi->inherit, SIGNAL(toggled(bool)),
+           SLOT(slotRetrievalOptionsGroupBoxDisabled(bool)));
   if ( mode == AdvancedMode ) {
     d->mUi->stackedWidget->setCurrentWidget( d->mUi->rawPage );
   }
