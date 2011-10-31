@@ -189,7 +189,14 @@ void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 
 void EntityListView::dropEvent( QDropEvent * event )
 {
-  if ( d->mDragDropManager->processDropEvent( event ) || qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
+  bool menuCanceled = false;
+  if ( d->mDragDropManager->processDropEvent( event, menuCanceled ) && !menuCanceled) {
+    if ( menuCanceled )
+      return;
+    QListView::dropEvent( event );
+  }
+  else if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) &&!menuCanceled )
+  {
     QListView::dropEvent( event );
   }
 }
