@@ -1,0 +1,14 @@
+<config>
+  <!--  path to KDE configuration ($KDEHOME) -->
+  <kdehome>kdehome</kdehome>
+  <!-- path to Akonadi configuration, ie. the stuff that
+       usually goes into ~/.config/akonadi/ -->
+  <confighome>xdgconfig</confighome>
+  <!-- path to Akonadi data, ie. the stuff that usually
+       goes into ~/.local/share/akonadi/ -->
+  <datahome>xdgdata</datahome>
+  <!-- load resources of the specified types -->
+  <agent synchronize="true">akonadi_ical_resource</agent>
+  <!-- set environment variables -->
+  <envvar name="AKONADI_DISABLE_AGENT_AUTOSTART">true</envvar>
+</config>
