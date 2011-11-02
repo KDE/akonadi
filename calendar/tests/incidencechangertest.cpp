@@ -19,7 +19,6 @@
 
 #include "../incidencechanger.h"
 
-
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
@@ -27,6 +26,8 @@
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
+#include <Akonadi/ItemFetchJob>
+#include <akonadi/itemfetchscope.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/Journal>
@@ -48,15 +49,14 @@ class IncidenceChangerTest : public QObject
   IncidenceChanger *mChanger;
 
   QSet<int> mKnownChangeIds;
+  QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
 
   private slots:
     void initTestCase()
     {
-      return;
       mWaitingForIncidenceChangerSignals = false;
       mExpectedResult = IncidenceChanger::ResultCodeSuccess;
       //Control::start(); //TODO: uncomment when using testrunner
-      qRegisterMetaType<Akonadi::IncidenceChanger::ResultCode>("Akonadi::IncidenceChanger::ResultCode");
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
       CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
                                                         CollectionFetchJob::Recursive,
@@ -85,35 +85,75 @@ class IncidenceChangerTest : public QObject
                SLOT(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
     }
 
+    void testCreating_data()
+    {
+      QTest::addColumn<bool>( "sendInvalidIncidence" );
+      QTest::addColumn<QString>( "uid" );
+      QTest::addColumn<QString>( "summary" );
+      QTest::addColumn<Akonadi::Collection>( "destinationCollection" );
+      QTest::addColumn<Akonadi::Collection>( "defaultCollection" );
+      QTest::addColumn<Akonadi::IncidenceChanger::DestinationPolicy>( "destinationPolicy" );
+      QTest::addColumn<bool>( "failureExpected" );
+      QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
+
+
+      QTest::newRow( "Simple Creation1" ) << false << "SomeUid1" << "Summary1" << mCollection
+                                          << Collection()
+                                          << IncidenceChanger::DestinationPolicyNeverAsk
+                                          << false << IncidenceChanger::ResultCodeSuccess;
+
+      QTest::newRow( "Simple Creation2" ) << false << "SomeUid2" << "Summary2" << mCollection
+                                          << Collection()
+                                          << IncidenceChanger::DestinationPolicyNeverAsk
+                                          << false << IncidenceChanger::ResultCodeSuccess;
+    }
+
     void testCreating()
     {
-      return;
-      int changeId;
+      QFETCH( bool, sendInvalidIncidence );
+      QFETCH( QString, uid );
+      QFETCH( QString, summary );
+      QFETCH( Akonadi::Collection, destinationCollection );
+      QFETCH( Akonadi::Collection, defaultCollection );
+      QFETCH( Akonadi::IncidenceChanger::DestinationPolicy, destinationPolicy );
+      QFETCH( bool, failureExpected );
+      QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
 
-      { // Create 5 incidences, wait for the signal.
-        mWaitingForIncidenceChangerSignals = true;
-        for ( int i = 0; i < 5; ++i ) {
-          const QString uid( QLatin1String( "uid" ) + QString::number( i ) );
-          const QString summary( QLatin1String( "summary" ) + QString::number( i ) );
-          Incidence::Ptr incidence( new Event() );
-          incidence->setUid( uid );
-          incidence->setSummary( summary );
-          changeId = mChanger->createIncidence( incidence, mCollection );
-          QVERIFY( changeId != -1 );
-          mKnownChangeIds.insert( changeId );
-        }
-        waitForSignals();
+      Incidence::Ptr incidence;
+
+      if ( !sendInvalidIncidence ) {
+        incidence = Incidence::Ptr( new Event() );
+        incidence->setUid( uid );
+        incidence->setSummary( summary );
       }
 
-      { // Invalid parameters
-        changeId = mChanger->createIncidence( Incidence::Ptr(), // Invalid payload
-                                              mCollection );
-        QVERIFY( changeId == -1 );
-      }
+      mChanger->setDestinationPolicy( destinationPolicy );
+      mChanger->setDefaultCollection( defaultCollection );
+      const int changeId = mChanger->createIncidence( incidence, destinationCollection );
 
-      { // Invalid collections
+      QVERIFY( !( !failureExpected && changeId == -1 ) );
 
+      if ( changeId > -1 )
+        mKnownChangeIds.insert( changeId );
 
+      waitForSignals( expectedResultCode );
+
+      if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess && !failureExpected ) {
+        Item item;
+        QVERIFY( mItemIdByChangeId.contains( changeId ) );
+        item.setId( mItemIdByChangeId.value( changeId ) );
+        ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+        fetchJob->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC( fetchJob );
+        QVERIFY( !fetchJob->items().isEmpty() );
+        Item retrievedItem = fetchJob->items().first();
+        QVERIFY( retrievedItem.isValid() );
+        QVERIFY( retrievedItem.hasPayload() );
+        QVERIFY( retrievedItem.hasPayload<KCalCore::Event::Ptr>() );
+        QVERIFY( retrievedItem.hasPayload<KCalCore::Incidence::Ptr>() );
+        Incidence::Ptr incidence = retrievedItem.payload<KCalCore::Incidence::Ptr>();
+        QCOMPARE( incidence->summary(), summary );
+        QCOMPARE( incidence->uid(), uid );
       }
     }
 
@@ -276,8 +316,11 @@ class IncidenceChangerTest : public QObject
 
   public Q_SLOTS:
 
-    void waitForSignals()
+    void waitForSignals( Akonadi::IncidenceChanger::ResultCode expectedResultCode )
     {
+      mWaitingForIncidenceChangerSignals = true;
+      mExpectedResult = expectedResultCode;
+
       while ( mWaitingForIncidenceChangerSignals ) {
         QTest::qWait( 1000 );
       }
@@ -317,6 +360,7 @@ class IncidenceChangerTest : public QObject
     if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
       QVERIFY( item.isValid() );
       QVERIFY( item.parentCollection().isValid() );
+      mItemIdByChangeId.insert( changeId, item.id() );
     } else {
       kDebug() << "Error string is " << errorString;
     }
