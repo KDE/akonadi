@@ -311,8 +311,10 @@ class StandardActionManager::Private
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
       QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
-      mRecentCollectionsMenu.insert( type, recentCollection );      
-      fillFoldersMenu( type,
+      mRecentCollectionsMenu.insert( type, recentCollection );
+      const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
+      fillFoldersMenu( mimeTypes, 
+                       type,
                        menu,
                        collectionSelectionModel->model(),
                        QModelIndex() );
@@ -1202,12 +1204,10 @@ class StandardActionManager::Private
       return !(CollectionUtils::isStructural( collection ) || isReadOnlyForItems || isReadOnlyForCollections);
     }
 
-    void fillFoldersMenu( StandardActionManager::Type type, QMenu *menu,
+    void fillFoldersMenu( const QSet<QString>& mimeTypes,  StandardActionManager::Type type, QMenu *menu,
                           const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       const int rowCount = model->rowCount( parentIndex );
-
-      const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
 
       for ( int row = 0; row < rowCount; ++row ) {
         const QModelIndex index = model->index( row, 0, parentIndex );
@@ -1231,7 +1231,7 @@ class StandardActionManager::Private
           popup->setTitle( label );
           popup->setIcon( icon );
 
-          fillFoldersMenu( type, popup, model, index );
+          fillFoldersMenu( mimeTypes, type, popup, model, index );
 
           if ( !readOnly ) {
             popup->addSeparator();
