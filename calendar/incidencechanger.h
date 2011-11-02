@@ -336,4 +336,8 @@ Q_SIGNALS:
 
 }
 
+Q_DECLARE_METATYPE( Akonadi::IncidenceChanger::DestinationPolicy )
+Q_DECLARE_METATYPE( Akonadi::IncidenceChanger::ResultCode )
+Q_DECLARE_METATYPE( Akonadi::IncidenceChanger::ChangeType )
+
 #endif
