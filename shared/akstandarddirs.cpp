@@ -26,19 +26,14 @@
 
 using namespace Akonadi;
 
-// FIXME: this is largely copied from XdgBaseDirs
 QString AkStandardDirs::configFile(const QString& configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode)
 {
-  QString akonadiDir = QLatin1String( "akonadi" );
-  if ( !AkApplication::instanceIdentifier().isEmpty() )
-    akonadiDir += QLatin1Char('/') + AkApplication::instanceIdentifier();
-
   const QString savePath = AkStandardDirs::saveDir( "config" ) + QLatin1Char( '/' ) + configFile;
 
   if ( openMode == XdgBaseDirs::WriteOnly )
     return savePath;
 
-  const QString path = XdgBaseDirs::findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + configFile );
+  const QString path = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/") + configFile );
 
   if ( path.isEmpty() ) {
     return savePath;
