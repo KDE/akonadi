@@ -170,46 +170,64 @@ class IncidenceChangerTest : public QObject
           QCOMPARE( incidence->uid(), uid );
         }
       }
+      mKnownChangeIds.clear();
+      mItemIdByChangeId.clear();
+    }
+
+    void testDeleting_data()
+    {
+      QTest::addColumn<Akonadi::Item::List>( "items" );
+      QTest::addColumn<bool>( "failureExpected" );
+      QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
+
+
+      QTest::newRow( "Delete empty list" )   << Item::List() << true;
+      QTest::newRow( "Delete invalid item" ) << (Item::List() << Item()) << true;
+
+      ItemFetchJob *fetchJob = new ItemFetchJob( mCollection );
+      fetchJob->fetchScope().fetchFullPayload();
+      AKVERIFYEXEC( fetchJob );
+      Item::List items = fetchJob->items();
+
+      // 3 Incidences were created in testCreating(). Keep this in sync.
+      QVERIFY( items.count() == 3 );
+      QTest::newRow( "Simple delete" ) << (Item::List() << items.at( 0 ) ) << false
+                                       << IncidenceChanger::ResultCodeSuccess;
+
+      QTest::newRow( "Delete already deleted" ) << ( Item::List() << items.at( 0 ) ) << false
+                                                << IncidenceChanger::ResultCodeAlreadyDeleted;
+
+      QTest::newRow( "Delete all others" ) << ( Item::List() << items.at( 1 ) << items.at( 2 ) )
+                                           << false << IncidenceChanger::ResultCodeSuccess;
     }
 
     void testDeleting()
     {
-      /*
-      int changeId;
-      const Item::List incidences = mCalendar->rawIncidences();
+      QFETCH( Akonadi::Item::List, items );
+      QFETCH( bool, failureExpected );
+      const int changeId = mChanger->deleteIncidences( items );
 
-      { // Delete 5 incidences, previously created
-        foreach( const Item &item, incidences ) {
-          mPendingDeletesInETM.append( item.payload<Incidence::Ptr>()->uid() );
+      QVERIFY( failureExpected ^ ( changeId != -1 ) );
+
+      if ( !failureExpected ) {
+        mKnownChangeIds.insert( changeId );
+        QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
+
+        waitForSignals( expectedResultCode );
+
+        if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess ) {
+          // Check that the incidence was really deleted
+          Item item;
+          foreach( const Akonadi::Item &item, items ) {
+            ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+            fetchJob->fetchScope().fetchFullPayload();
+            QVERIFY( !fetchJob->exec() );
+            QVERIFY( fetchJob->items().isEmpty() );
+            delete fetchJob;
+          }
         }
-        changeId = mChanger->deleteIncidences( incidences );
-        mKnownChangeIds.insert( changeId );
-        QVERIFY( changeId != -1 );
-        waitForSignals();
+        mKnownChangeIds.clear();
       }
-
-      { // Delete something already deleted
-        mWaitingForIncidenceChangerSignals = true;
-        changeId = mChanger->deleteIncidences( incidences );
-        mKnownChangeIds.insert( changeId );
-        QVERIFY( changeId != -1 );
-        mExpectedResult = IncidenceChanger::ResultCodeAlreadyDeleted;
-        waitForSignals();
-      }
-
-      { // If we provide an empty list, a job won't be created
-        changeId = mChanger->deleteIncidences( Item::List() );
-        mKnownChangeIds.insert( changeId );
-        QVERIFY( changeId == -1 );
-      }
-
-      { // If we provide a list with at least one invalid item, a job won't be created
-        Item::List list;
-        list << Item();
-        changeId = mChanger->deleteIncidences( list );
-        QVERIFY( changeId == -1 );
-      }
-*/
     }
 
     void testModifying()
