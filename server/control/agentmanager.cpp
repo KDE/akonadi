@@ -33,6 +33,9 @@
 #include "resource_manager.h"
 #include "serverinterface.h"
 
+#include <akapplication.h>
+#include <akdbus.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -67,7 +70,7 @@ AgentManager::AgentManager( QObject *parent )
   connect( QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
 
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.freedesktop.Akonadi") ) )
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) ) )
     akFatal() << "akonadiserver already running!";
 
   const QSettings settings( configPath( false ), QSettings::IniFormat );
@@ -118,9 +121,10 @@ void AgentManager::continueStartup()
     ensureAutoStart( info );
 
   // register the real service name once everything is up an running
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) ) {
+  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::Control) ) ) {
     // besides a race with an older Akonadi server I have no idea how we could possibly get here...
-    akFatal() << "Unable to register service as" << AKONADI_DBUS_CONTROL_SERVICE << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
+    akFatal() << "Unable to register service as" << AkDBus::serviceName(AkDBus::Control)
+              << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
   }
   akDebug() << "Akonadi server is now operational.";
 }
@@ -139,14 +143,14 @@ void AgentManager::cleanup()
 
   mStorageController->setCrashPolicy( ProcessControl::StopOnCrash );
   org::freedesktop::Akonadi::Server *serverIface =
-    new org::freedesktop::Akonadi::Server( QLatin1String("org.freedesktop.Akonadi"), QLatin1String("/Server"),
+    new org::freedesktop::Akonadi::Server( AkDBus::serviceName(AkDBus::Server), QLatin1String("/Server"),
                                            QDBusConnection::sessionBus(), this );
   serverIface->quit();
 
   if ( mAgentServer ) {
     mAgentServer->setCrashPolicy( ProcessControl::StopOnCrash );
     org::freedesktop::Akonadi::AgentServer *agentServerIface =
-        new org::freedesktop::Akonadi::AgentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+        new org::freedesktop::Akonadi::AgentServer( AkDBus::serviceName(AkDBus::AgentServer),
                                                     QLatin1String("/AgentServer"), QDBusConnection::sessionBus(), this );
     agentServerIface->quit();
   }
@@ -275,7 +279,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
 
   save();
 
-  org::freedesktop::Akonadi::ResourceManager resmanager( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::ResourceManager resmanager( AkDBus::serviceName(AkDBus::Server), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
   resmanager.removeResourceInstance( instance->identifier() );
 
   // Kill the preprocessor instance, if any.
@@ -526,7 +530,7 @@ QString AgentManager::configPath( bool writeable )
 
 void AgentManager::load()
 {
-  org::freedesktop::Akonadi::ResourceManager resmanager( QLatin1String( "org.freedesktop.Akonadi" ), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
+  org::freedesktop::Akonadi::ResourceManager resmanager( AkDBus::serviceName(AkDBus::Server), QLatin1String( "/ResourceManager" ), QDBusConnection::sessionBus(), this );
   const QStringList knownResources = resmanager.resourceInstances();
 
   QSettings file( configPath( false ), QSettings::IniFormat );
@@ -594,9 +598,9 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
   //qDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
-  if ( (name == QLatin1String(AKONADI_DBUS_SERVER_SERVICE) || name == QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE)) && !newOwner.isEmpty() ) {
-    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) )
-      && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_AGENTSERVER_SERVICE) ) ) )
+  if ( (name == AkDBus::serviceName(AkDBus::Server) || name == AkDBus::serviceName(AkDBus::AgentServer)) && !newOwner.isEmpty() ) {
+    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) )
+      && ( !mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::AgentServer) ) ) )
     {
       // server is operational, start agents
       continueStartup();
@@ -752,7 +756,7 @@ void AgentManager::ensureAutoStart( const AgentType &info )
   if ( !info.capabilities.contains( AgentType::CapabilityAutostart ) )
     return; // no an autostart agent
 
-  org::freedesktop::Akonadi::AgentServer agentServer( QLatin1String("org.freedesktop.Akonadi.AgentServer"),
+  org::freedesktop::Akonadi::AgentServer agentServer( AkDBus::serviceName(AkDBus::AgentServer),
                                                       QLatin1String("/AgentServer"), QDBusConnection::sessionBus(), this );
 
   if ( mAgentInstances.contains( info.identifier ) ||
@@ -788,7 +792,7 @@ void AgentManager::registerAgentAtServer( const QString &agentIdentifier, const 
 {
   if ( type.capabilities.contains( AgentType::CapabilityResource ) ) {
     boost::scoped_ptr<org::freedesktop::Akonadi::ResourceManager> resmanager(
-      new org::freedesktop::Akonadi::ResourceManager( QLatin1String( "org.freedesktop.Akonadi" ),
+      new org::freedesktop::Akonadi::ResourceManager( AkDBus::serviceName(AkDBus::Server),
                                                       QLatin1String( "/ResourceManager" ),
                                                       QDBusConnection::sessionBus(), this ) );
     resmanager->addResourceInstance( agentIdentifier, type.capabilities );
