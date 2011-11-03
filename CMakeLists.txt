@@ -292,6 +292,7 @@ macro_write_basic_cmake_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.
 set( AKONADI_SHARED_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akapplication.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdbus.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
 )
 
