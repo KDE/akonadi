@@ -76,14 +76,18 @@ AgentManager::AgentManager( QObject *parent )
   const QSettings settings( configPath( false ), QSettings::IniFormat );
   mAgentServerEnabled = settings.value( QLatin1String("AgentServer/Enabled"), enableAgentServerDefault ).toBool();
 
+  QStringList serviceArgs;
+  if ( !AkApplication::instanceIdentifier().isEmpty() )
+    serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
+
   mStorageController = new Akonadi::ProcessControl;
   connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
-  mStorageController->start( QLatin1String("akonadiserver"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+  mStorageController->start( QLatin1String("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash );
 
   if ( mAgentServerEnabled ) {
     mAgentServer = new Akonadi::ProcessControl;
     connect( mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()) );
-    mAgentServer->start( QLatin1String("akonadi_agent_server"), QStringList(), Akonadi::ProcessControl::RestartOnCrash );
+    mAgentServer->start( QLatin1String("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash );
   }
 
 #ifndef QT_NO_DEBUG
