@@ -23,7 +23,9 @@
 #include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
-#include "../../libs/xdgbasedirs_p.h"
+
+#include <akstandarddirs.h>
+#include <libs/xdgbasedirs_p.h>
 
 #include <QtCore/QDebug>
 #include <QDBusConnection>
@@ -45,7 +47,7 @@ NotificationManager::NotificationManager()
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications/debug"),
     this, QDBusConnection::ExportScriptableSlots );
 
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+  const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
   QSettings settings( serverConfigFile, QSettings::IniFormat );
 
   mTimer.setInterval( settings.value( QLatin1String("NotificationManager/Interval"), 50 ).toInt() );

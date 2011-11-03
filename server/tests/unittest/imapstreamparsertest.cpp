@@ -31,6 +31,7 @@ Q_DECLARE_METATYPE( QList<int> )
 
 using namespace Akonadi;
 
+#if 0
 QString akBacktrace()
 {
   QString s;
@@ -59,6 +60,7 @@ QString akBacktrace()
 
   return s;
 }
+#endif
 
 QTEST_MAIN( ImapStreamParserTest )
 

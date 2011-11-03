@@ -26,6 +26,7 @@
 #include "dbconfigvirtuoso.h"
 
 #include <akdebug.h>
+#include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
 #include <config-akonadi.h>
 
@@ -38,7 +39,7 @@ static DbConfig *s_DbConfigInstance = 0;
 
 DbConfig::DbConfig()
 {
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+  const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
   QSettings settings( serverConfigFile, QSettings::IniFormat );
 
   mSizeThreshold = 4096;
@@ -59,7 +60,7 @@ DbConfig::~DbConfig()
 DbConfig* DbConfig::configuredDatabase()
 {
   if ( !s_DbConfigInstance ) {
-    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+    const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
     // determine driver to use

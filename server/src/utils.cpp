@@ -20,7 +20,8 @@
 
 #include "utils.h"
 
-#include "libs/xdgbasedirs_p.h"
+#include <akstandarddirs.h>
+#include <libs/xdgbasedirs_p.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
@@ -44,7 +45,7 @@ using namespace Akonadi;
 
 QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
 {
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+  const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
   const QSettings serverSettings( serverConfigFile, QSettings::IniFormat );
 
 #if defined(Q_OS_WINCE) || defined(Q_OS_WIN)

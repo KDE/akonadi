@@ -26,7 +26,8 @@
 #include "dbustracer.h"
 #include "filetracer.h"
 #include "nulltracer.h"
-#include "../libs/xdgbasedirs_p.h"
+#include <libs/xdgbasedirs_p.h>
+#include <akstandarddirs.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
 #define DEFAULT_TRACER QLatin1String( "null" )
@@ -120,7 +121,7 @@ void Akonadi::Tracer::error(const char * componentName, const QString & msg)
 QString Tracer::currentTracer() const
 {
   QMutexLocker locker( &mMutex );
-  const QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
+  const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
   return settings.value( QLatin1String( "Debug/Tracer" ), DEFAULT_TRACER ).toString();
 }
 
@@ -130,12 +131,12 @@ void Tracer::activateTracer(const QString & type)
   delete mTracerBackend;
   mTracerBackend = 0;
 
-  QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
+  QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
   settings.setValue( QLatin1String( "Debug/Tracer" ), type );
   settings.sync();
 
   if ( type == QLatin1String("file") ) {
-    const QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
+    const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
     const QString file = settings.value( QLatin1String( "Debug/File" ), QLatin1String("/dev/null") ).toString();
     mTracerBackend = new FileTracer( file );
   } else if ( type == QLatin1String("null") ) {

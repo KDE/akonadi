@@ -21,7 +21,8 @@
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
 #include <akdbus.h>
-#include "akdebug.h"
+#include <akdebug.h>
+#include <akstandarddirs.h>
 
 #include "cachecleaner.h"
 #include "intervalcheck.h"
@@ -78,7 +79,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
-    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
+    const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
     DbConfig::configuredDatabase()->init( settings );
@@ -92,7 +93,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     s_instance = this;
 
-    const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
+    const QString connectionSettingsFile = AkStandardDirs::connectionConfigFile( XdgBaseDirs::WriteOnly );
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
 
 #ifdef Q_OS_WIN
@@ -263,8 +264,8 @@ void AkonadiServer::quit()
     qDebug() << "stopping db process";
     stopDatabaseProcess();
 
-    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
-    const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
+    QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
+    const QString connectionSettingsFile = AkStandardDirs::connectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN
     QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
