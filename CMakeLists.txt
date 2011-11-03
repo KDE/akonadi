@@ -294,6 +294,7 @@ set( AKONADI_SHARED_SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdbus.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akstandarddirs.cpp
 )
 
 include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES} ${Boost_INCLUDE_DIR})
