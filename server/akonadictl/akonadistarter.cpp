@@ -19,7 +19,8 @@
 
 #include "akonadistarter.h"
 
-#include "../../libs/protocol_p.h"
+#include <akapplication.h>
+#include <akdbus.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -32,7 +33,7 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
     QObject( parent ),
     mRegistered( false )
 {
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE_LOCK ),
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName(AkDBus::ControlLock),
                                                           QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
 
@@ -43,7 +44,12 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
 bool AkonadiStarter::start()
 {
   qDebug( "Starting Akonadi Server..." );
-  const bool ok = QProcess::startDetached( QLatin1String("akonadi_control") );
+
+  QStringList serverArgs;
+  if ( !AkApplication::instanceIdentifier().isEmpty() )
+    serverArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
+  
+  const bool ok = QProcess::startDetached( QLatin1String("akonadi_control"), serverArgs );
   if ( !ok ) {
     qDebug( "Error: unable to execute binary akonadi_control" );
     return false;

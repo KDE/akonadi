@@ -29,7 +29,8 @@
 
 #include <config-akonadi.h>
 
-#include "akapplication.h"
+#include <akapplication.h>
+#include <akdbus.h>
 #include "protocol_p.h"
 
 #include "controlmanagerinterface.h"
@@ -46,8 +47,8 @@ static bool startServer()
 {
   //Needed for wince build
   #undef interface
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) )
-       || QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) ) ) {
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) )
+       || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) ) ) {
     qDebug() << "Akonadi is already running.";
     return false;
   }
@@ -57,7 +58,7 @@ static bool startServer()
 
 static bool stopServer()
 {
-  org::freedesktop::Akonadi::ControlManager iface( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE),
+  org::freedesktop::Akonadi::ControlManager iface( AkDBus::serviceName(AkDBus::Control),
                                                    QLatin1String("/ControlManager"),
                                                    QDBusConnection::sessionBus(), 0 );
   if ( !iface.isValid() ) {
@@ -72,10 +73,10 @@ static bool stopServer()
 
 static bool statusServer()
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) );
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) );
   qDebug( "Akonadi Control: %s", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) );
   qDebug( "Akonadi Server: %s", registered ? "running" : "stopped" );
 
   registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
@@ -181,15 +182,15 @@ int main( int argc, char **argv )
 #else
           Sleep(100000);
 #endif
-        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE) ) );
+        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) ) );
         if ( !startServer() )
           return 3;
       }
   } else if ( arguments[ 1 ] == QLatin1String( "vacuum" ) ) {
-    QDBusInterface iface( QLatin1String(AKONADI_DBUS_STORAGEJANITOR_SERVICE), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
+    QDBusInterface iface( AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
     iface.call( QDBus::NoBlock, QLatin1String( "vacuum" ) );
   } else if ( arguments[ 1 ] == QLatin1String( "fsck" ) ) {
-    QDBusInterface iface( QLatin1String(AKONADI_DBUS_STORAGEJANITOR_SERVICE), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
+    QDBusInterface iface( AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
     iface.call( QDBus::NoBlock, QLatin1String( "check" ) );
   }
   return 0;
