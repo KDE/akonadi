@@ -55,8 +55,12 @@ void AkApplication::parseCommandLine()
     generalOptions.add_options()
       ("help,h", "show this help message")
       ("version","show version information");
-
     mCmdLineOptions.add( generalOptions );
+
+    po::options_description miOptions( "Multi-instance options" );
+    miOptions.add_options()
+      ( "instance", po::value<std::string>(), "Namespace for starting multiple Akonadi instances in the same user session" );
+    mCmdLineOptions.add( miOptions );
 
     po::store( po::parse_command_line( mArgc, mArgv, mCmdLineOptions ), mCmdLineArguments );
     po::notify( mCmdLineArguments );
@@ -69,6 +73,10 @@ void AkApplication::parseCommandLine()
     if ( mCmdLineArguments.count( "version" ) ) {
       std::cout << "Akonadi " << AKONADI_VERSION_STRING << std::endl;
       ::exit( 0 );
+    }
+
+    if ( mCmdLineArguments.count( "instance" ) ) {
+      mInstanceId = QString::fromStdString( mCmdLineArguments["instance"].as<std::string>() );
     }
   } catch ( std::exception &e ) {
     std::cerr << "Failed to parse command line arguments: " << e.what() << std::endl;
@@ -101,5 +109,12 @@ void AkApplication::printUsage() const
   std::cout << mCmdLineOptions << std::endl;
 #endif
 }
+
+QString AkApplication::instanceIdentifier()
+{
+  Q_ASSERT(qobject_cast<AkApplication*>( QCoreApplication::instance() ) );
+  return static_cast<AkApplication*>( QCoreApplication::instance() )->mInstanceId;
+}
+
 
 #include "akapplication.moc"

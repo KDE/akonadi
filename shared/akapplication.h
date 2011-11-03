@@ -44,6 +44,9 @@ class AkApplication : public QCoreApplication
     
     void printUsage() const;
 
+    /** Returns the instance identifier when running in multi-instance mode, empty string otherwise. */
+    static QString instanceIdentifier();
+
   private slots:
     void pollSessionBus() const;
 
@@ -51,6 +54,7 @@ class AkApplication : public QCoreApplication
     int mArgc;
     char **mArgv;
     QString mDescription;
+    QString mInstanceId;
 
 #ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
