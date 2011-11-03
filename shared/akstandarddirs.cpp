@@ -70,3 +70,12 @@ QString AkStandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
   return configFile( QLatin1String("agentsrc"), openMode );
 }
 
+QString AkStandardDirs::saveDir(const char* resource, const QString& relPath)
+{
+  QString fullRelPath = QLatin1String("akonadi");
+  if ( !AkApplication::instanceIdentifier().isEmpty() )
+    fullRelPath += QLatin1Char('/') + AkApplication::instanceIdentifier();
+  if ( !relPath.isEmpty() )
+    fullRelPath += QLatin1Char('/') + relPath;
+  return XdgBaseDirs::saveDir( resource, fullRelPath );
+}

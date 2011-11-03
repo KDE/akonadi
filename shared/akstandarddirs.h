@@ -40,6 +40,13 @@ namespace AkStandardDirs
 
   /** Returns the full path to the agent config file (agentsrc). */
   QString agentConfigFile( Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly );
+
+  /**
+   * Instance-aware wrapper for XdgBaseDirs::saveDir().
+   * @note @p relPath does not need to include the "akonadi/" folder.
+   * @see XdgBaseDirs::saveDir()
+   */
+  QString saveDir( const char *resource, const QString &relPath = QString() );
 }
 
 #endif
