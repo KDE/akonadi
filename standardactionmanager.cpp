@@ -320,6 +320,25 @@ class StandardActionManager::Private
                        QModelIndex() );
     }
 
+    void createActionFolderMenu(QMenu *menu, StandardActionManager::Type type)
+    {
+      if ( type == CopyCollectionToMenu ||
+           type == CopyItemToMenu ||
+           type == MoveItemToMenu ||
+           type ==MoveCollectionToMenu )
+      {
+
+        QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+        const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
+        fillFoldersMenu( mimeTypes, 
+                         type,
+                         menu,
+                         collectionSelectionModel->model(),
+                         QModelIndex() );
+      }
+    }
+
+  
     void updateAlternatingAction( int type )
     {
       updateAlternatingAction( static_cast<StandardActionManager::Type>( type ) );
@@ -1588,5 +1607,12 @@ void StandardActionManager::setCollectionPropertiesPageNames( const QStringList 
 {
   d->mCollectionPropertiesPageNames = names;
 }
+
+void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
+{
+  d->createActionFolderMenu( menu, type );
+}
+  
+
 
 #include "standardactionmanager.moc"

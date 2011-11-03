@@ -770,4 +770,10 @@ void StandardMailActionManager::setCollectionPropertiesPageNames( const QStringL
   d->mGenericManager->setCollectionPropertiesPageNames( names );
 }
 
+Akonadi::StandardActionManager* StandardMailActionManager::standardActionManager() const
+{
+  return d->mGenericManager;
+}
+
+
 #include "standardmailactionmanager.moc"

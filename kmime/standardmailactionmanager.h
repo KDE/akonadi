@@ -187,6 +187,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
 
     void setCollectionPropertiesPageNames( const QStringList &names );
 
+    Akonadi::StandardActionManager* standardActionManager() const;
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
