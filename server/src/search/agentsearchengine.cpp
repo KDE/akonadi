@@ -18,6 +18,7 @@
 */
 
 #include "agentsearchengine.h"
+#include <akdbus.h>
 #include <akdebug.h>
 #include "entities.h"
 
@@ -27,7 +28,7 @@
 
 void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection)
 {
-  QDBusInterface agentMgr( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+  QDBusInterface agentMgr( AkDBus::serviceName(AkDBus::Control),
                            QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
                            QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
   if ( agentMgr.isValid() ) {
@@ -44,7 +45,7 @@ void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection
 
 void Akonadi::AgentSearchEngine::removeSearch(qint64 id)
 {
-  QDBusInterface agentMgr( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+  QDBusInterface agentMgr( AkDBus::serviceName(AkDBus::Control),
                             QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
                             QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
   if ( agentMgr.isValid() ) {

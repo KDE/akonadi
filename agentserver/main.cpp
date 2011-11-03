@@ -20,9 +20,8 @@
 #include "agentserver.h"
 
 #include "shared/akapplication.h"
+#include <shared/akdbus.h>
 #include "shared/akdebug.h"
-
-#include "libs/protocol_p.h"
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
@@ -41,14 +40,14 @@ int cemain( int argc, char ** argv )
   //Needed for wince build
   #undef interface
 
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE_LOCK ) ) ) {
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::ControlLock) ) ) {
     akError() << "Akonadi control process not found - aborting.";
     akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
   }
 
   new Akonadi::AgentServer( &app );
 
-  if ( !QDBusConnection::sessionBus().registerService( QLatin1String( AKONADI_DBUS_AGENTSERVER_SERVICE ) ) )
+  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::AgentServer) ) )
     akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
 
   return app.exec();

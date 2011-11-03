@@ -20,6 +20,7 @@
 #include "akonadi.h"
 #include "akonadiconnection.h"
 #include "serveradaptor.h"
+#include <akdbus.h>
 #include "akdebug.h"
 
 #include "cachecleaner.h"
@@ -202,7 +203,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName(AkDBus::Control),
                                                             QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, this );
 

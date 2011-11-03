@@ -22,6 +22,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 
+#include <akdbus.h>
 #include <akdebug.h>
 #include <libs/protocol_p.h>
 #include <libs/xdgbasedirs_p.h>
@@ -30,11 +31,11 @@
 #include <QtDBus/QDBusConnection>
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
+#include <QtCore/QDir>
+#include <QtCore/qdiriterator.h>
 
 #include <boost/bind.hpp>
 #include <algorithm>
-#include <QtCore/QDir>
-#include <QtCore/qdiriterator.h>
 
 using namespace Akonadi;
 
@@ -54,14 +55,14 @@ StorageJanitor::StorageJanitor(QObject* parent) :
   m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(staticMetaObject.className()) ) )
 {
   DataStore::self();
-  m_connection.registerService( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
+  m_connection.registerService( AkDBus::serviceName(AkDBus::StorageJanitor) );
   m_connection.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
 }
 
 StorageJanitor::~StorageJanitor()
 {
   m_connection.unregisterObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), QDBusConnection::UnregisterTree );
-  m_connection.unregisterService( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_SERVICE ) );
+  m_connection.unregisterService( AkDBus::serviceName(AkDBus::StorageJanitor) );
   m_connection.disconnectFromBus( m_connection.name() );
 
   DataStore::self()->close();

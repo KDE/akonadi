@@ -20,6 +20,7 @@
 
 #include "akonadi.h"
 #include "akapplication.h"
+#include "akdbus.h"
 #include "akdebug.h"
 #include "akcrash.h"
 
@@ -78,7 +79,7 @@ int main( int argc, char ** argv )
 #else
    if (
 #endif
-        !QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String(AKONADI_DBUS_CONTROL_SERVICE_LOCK) ) ) {
+        !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::ControlLock) ) ) {
      akError() << "Akonadi control process not found - aborting.";
      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
    }
@@ -86,7 +87,7 @@ int main( int argc, char ** argv )
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
     AkonadiCrash::setShutdownMethod( shutdownHandler );
 
-    if ( !QDBusConnection::sessionBus().registerService( QLatin1String(AKONADI_DBUS_SERVER_SERVICE) ) )
+    if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::Server) ) )
       akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
 
     const int result = app.exec();
