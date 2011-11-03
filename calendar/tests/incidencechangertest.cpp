@@ -106,6 +106,21 @@ class IncidenceChangerTest : public QObject
                                           << Collection()
                                           << IncidenceChanger::DestinationPolicyNeverAsk
                                           << false << IncidenceChanger::ResultCodeSuccess;
+
+      QTest::newRow( "Invalid incidence" ) << true << "SomeUid3" << "Summary3" << mCollection
+                                           << Collection()
+                                           << IncidenceChanger::DestinationPolicyNeverAsk
+                                           << true;
+
+      QTest::newRow( "Invalid collection" ) << false << "SomeUid4" << "Summary4" << Collection()
+                                            << Collection()
+                                            << IncidenceChanger::DestinationPolicyNeverAsk
+                                            << false << IncidenceChanger::ResultCodeInvalidDefaultCollection;
+
+      QTest::newRow( "Default collection" ) << false << "SomeUid5" << "Summary5" << Collection()
+                                            << mCollection
+                                            << IncidenceChanger::DestinationPolicyDefault
+                                            << false << IncidenceChanger::ResultCodeSuccess;
     }
 
     void testCreating()
@@ -117,7 +132,6 @@ class IncidenceChangerTest : public QObject
       QFETCH( Akonadi::Collection, defaultCollection );
       QFETCH( Akonadi::IncidenceChanger::DestinationPolicy, destinationPolicy );
       QFETCH( bool, failureExpected );
-      QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
 
       Incidence::Ptr incidence;
 
@@ -131,29 +145,30 @@ class IncidenceChangerTest : public QObject
       mChanger->setDefaultCollection( defaultCollection );
       const int changeId = mChanger->createIncidence( incidence, destinationCollection );
 
-      QVERIFY( !( !failureExpected && changeId == -1 ) );
+      QVERIFY( failureExpected ^ ( changeId != -1 ) );
 
-      if ( changeId > -1 )
+      if ( !failureExpected ) {
+        QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
         mKnownChangeIds.insert( changeId );
+        waitForSignals( expectedResultCode );
 
-      waitForSignals( expectedResultCode );
-
-      if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess && !failureExpected ) {
-        Item item;
-        QVERIFY( mItemIdByChangeId.contains( changeId ) );
-        item.setId( mItemIdByChangeId.value( changeId ) );
-        ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
-        fetchJob->fetchScope().fetchFullPayload();
-        AKVERIFYEXEC( fetchJob );
-        QVERIFY( !fetchJob->items().isEmpty() );
-        Item retrievedItem = fetchJob->items().first();
-        QVERIFY( retrievedItem.isValid() );
-        QVERIFY( retrievedItem.hasPayload() );
-        QVERIFY( retrievedItem.hasPayload<KCalCore::Event::Ptr>() );
-        QVERIFY( retrievedItem.hasPayload<KCalCore::Incidence::Ptr>() );
-        Incidence::Ptr incidence = retrievedItem.payload<KCalCore::Incidence::Ptr>();
-        QCOMPARE( incidence->summary(), summary );
-        QCOMPARE( incidence->uid(), uid );
+        if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess && !failureExpected ) {
+          Item item;
+          QVERIFY( mItemIdByChangeId.contains( changeId ) );
+          item.setId( mItemIdByChangeId.value( changeId ) );
+          ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+          fetchJob->fetchScope().fetchFullPayload();
+          AKVERIFYEXEC( fetchJob );
+          QVERIFY( !fetchJob->items().isEmpty() );
+          Item retrievedItem = fetchJob->items().first();
+          QVERIFY( retrievedItem.isValid() );
+          QVERIFY( retrievedItem.hasPayload() );
+          QVERIFY( retrievedItem.hasPayload<KCalCore::Event::Ptr>() );
+          QVERIFY( retrievedItem.hasPayload<KCalCore::Incidence::Ptr>() );
+          Incidence::Ptr incidence = retrievedItem.payload<KCalCore::Incidence::Ptr>();
+          QCOMPARE( incidence->summary(), summary );
+          QCOMPARE( incidence->uid(), uid );
+        }
       }
     }
 
@@ -321,9 +336,12 @@ class IncidenceChangerTest : public QObject
       mWaitingForIncidenceChangerSignals = true;
       mExpectedResult = expectedResultCode;
 
-      while ( mWaitingForIncidenceChangerSignals ) {
+      int i = 0;
+      while ( mWaitingForIncidenceChangerSignals && i++ < 10) { // wait 10 seconds max.
         QTest::qWait( 1000 );
       }
+
+      QVERIFY( !mWaitingForIncidenceChangerSignals );
     }
 
   void deleteFinished( int changeId,
