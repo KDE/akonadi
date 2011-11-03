@@ -35,6 +35,7 @@
 
 #include <akapplication.h>
 #include <akdbus.h>
+#include <akstandarddirs.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -527,7 +528,7 @@ QString AgentManager::configPath( bool writeable )
   if ( !writeable && !configFile.isEmpty() )
     return configFile;
 
-  const QString configDir = Akonadi::XdgBaseDirs::saveDir( "config", QLatin1String("akonadi") );
+  const QString configDir = AkStandardDirs::saveDir( "config" );
 
   return configDir + QLatin1String( "/agentsrc" );
 }

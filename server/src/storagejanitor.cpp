@@ -24,6 +24,8 @@
 
 #include <akdbus.h>
 #include <akdebug.h>
+#include <akstandarddirs.h>
+
 #include <libs/protocol_p.h>
 #include <libs/xdgbasedirs_p.h>
 
@@ -195,7 +197,7 @@ void StorageJanitor::verifyExternalParts()
   QSet<QString> usedFiles;
 
   // list all files
-  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) );
+  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
   QDirIterator it( dataDir );
   while ( it.hasNext() )
     existingFiles.insert( it.next() );
@@ -223,7 +225,7 @@ void StorageJanitor::verifyExternalParts()
   // see what's left and move it to lost+found
   const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
   if ( !unreferencedFiles.isEmpty() ) {
-    const QString lfDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_lost+found" ) );
+    const QString lfDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_lost+found" ) );
     foreach ( const QString &file, unreferencedFiles ) {
       inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
       const QFileInfo f( file );

@@ -19,8 +19,9 @@
 
 #include "dbconfigsqlite.h"
 
-#include "../../libs/xdgbasedirs_p.h"
-#include "akdebug.h"
+#include <libs/xdgbasedirs_p.h>
+#include <akdebug.h>
+#include <akstandarddirs.h>
 
 #include <QtCore/QDir>
 #include <QtSql/QSqlDriver>
@@ -31,7 +32,7 @@ using namespace Akonadi;
 
 static QString dataDir()
 {
-  QString akonadiHomeDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
+  QString akonadiHomeDir = AkStandardDirs::saveDir( "data" );
   if ( akonadiHomeDir.isEmpty() ) {
     akFatal() << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath( "data" )
               << "during database initialization";

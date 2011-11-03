@@ -18,10 +18,12 @@
 */
 
 #include "dbconfigmysql.h"
-
-#include "../../libs/xdgbasedirs_p.h"
-#include "akdebug.h"
 #include "utils.h"
+
+#include <akdebug.h>
+#include <akstandarddirs.h>
+
+#include <libs/xdgbasedirs_p.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
@@ -56,7 +58,7 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultServerPath;
   QString defaultCleanShutdownCommand;
 
-  const QString socketDirectory = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
 
   defaultDbName = QLatin1String( "akonadi" );
   const bool defaultInternalServer = true;
@@ -165,14 +167,14 @@ void DbConfigMysql::startInternalServer()
 {
   const QString mysqldPath = mServerPath;
 
-  const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
-  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
-  const QString socketDirectory = Utils::preferredSocketDirectory( XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_misc" ) ) );
+  const QString akDir   = AkStandardDirs::saveDir( "data" );
+  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
+  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
-  const QString actualConfig = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1String( "/mysql.conf" );
+  const QString actualConfig = AkStandardDirs::saveDir( "data" ) + QLatin1String( "/mysql.conf" );
   if ( globalConfig.isEmpty() )
     akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
 

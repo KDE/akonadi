@@ -33,7 +33,7 @@ QString AkStandardDirs::configFile(const QString& configFile, Akonadi::XdgBaseDi
   if ( !AkApplication::instanceIdentifier().isEmpty() )
     akonadiDir += QLatin1Char('/') + AkApplication::instanceIdentifier();
 
-  const QString savePath = XdgBaseDirs::saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + configFile;
+  const QString savePath = AkStandardDirs::saveDir( "config" ) + QLatin1Char( '/' ) + configFile;
 
   if ( openMode == XdgBaseDirs::WriteOnly )
     return savePath;

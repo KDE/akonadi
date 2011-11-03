@@ -95,7 +95,7 @@ QString akonadiSocketDirectory()
     return QString();
   }
 
-  const QString link = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) ) + QLatin1Char( '/' ) + QLatin1String( "socket-" ) + hostname;
+  const QString link = AkStandardDirs::saveDir( "data" ) + QLatin1Char( '/' ) + QLatin1String( "socket-" ) + hostname;
   const QString tmpl = QLatin1String( "akonadi-" ) + QLatin1String( pw_ent->pw_name ) + QLatin1String( ".XXXXXX" );
 
   if ( checkSocketDirectory( link ) )

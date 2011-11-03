@@ -23,7 +23,9 @@
 
 #include "akdebug.h"
 #include "akcrash.h"
-#include "../libs/xdgbasedirs_p.h"
+#include "akstandarddirs.h"
+
+#include <libs/xdgbasedirs_p.h>
 using Akonadi::XdgBaseDirs;
 
 #include <QDir>
@@ -90,7 +92,7 @@ class DebugPrivate
 
     QString errorLogFileName() const
     {
-      return XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) )
+      return AkStandardDirs::saveDir( "data" )
           + QDir::separator()
           + name
           + QString::fromLatin1( ".error" );

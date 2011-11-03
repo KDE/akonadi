@@ -22,6 +22,7 @@
 #include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
+#include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
 
 #include <QDir>
@@ -35,7 +36,7 @@ using namespace Akonadi;
 static QString fileNameForPart( Part *part )
 {
   Q_ASSERT( part->id() >= 0 );
-  const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/file_db_data" ) ) + QDir::separator();
+  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) ) + QDir::separator();
   Q_ASSERT( dataDir != QDir::separator() );
   return dataDir + QString::number( part->id() );
 }
