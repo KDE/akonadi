@@ -522,15 +522,9 @@ QStringList AgentManager::pluginInfoPathList()
 
 QString AgentManager::configPath( bool writeable )
 {
-  const QString configFile =
-    Akonadi::XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/agentsrc" ) );
-
-  if ( !writeable && !configFile.isEmpty() )
-    return configFile;
-
-  const QString configDir = AkStandardDirs::saveDir( "config" );
-
-  return configDir + QLatin1String( "/agentsrc" );
+  if ( writeable )
+    return AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::WriteOnly );
+  return AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::ReadOnly );
 }
 
 void AgentManager::load()
