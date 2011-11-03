@@ -269,9 +269,10 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
   const ItemDeleteJob *j = qobject_cast<const ItemDeleteJob*>( job );
   const Item::List items = j->deletedItems();
 
-  QVector<Akonadi::Item::Id> itemIdList;
+  QSharedPointer<DeletionChange> deletionChange = change.staticCast<DeletionChange>();
+
   foreach( const Akonadi::Item &item, items ) {
-    itemIdList.append( item.id() );
+    deletionChange->mItemIds.append( item.id() );
   }
 
   if ( j->error() ) {
