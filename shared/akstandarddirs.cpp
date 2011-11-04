@@ -33,7 +33,10 @@ QString AkStandardDirs::configFile(const QString& configFile, Akonadi::XdgBaseDi
   if ( openMode == XdgBaseDirs::WriteOnly )
     return savePath;
 
-  const QString path = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/") + configFile );
+  QString path = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/") + configFile );
+  // HACK: when using instance namespaces, ignore the non-namespaced file
+  if ( !AkApplication::instanceIdentifier().isEmpty() && path.startsWith( XdgBaseDirs::homePath("config") ) )
+    path.clear();
 
   if ( path.isEmpty() ) {
     return savePath;
