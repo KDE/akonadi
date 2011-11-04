@@ -27,6 +27,7 @@
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemCreateJob>
 #include <akonadi/itemfetchscope.h>
 
 #include <KCalCore/Event>
@@ -230,59 +231,60 @@ class IncidenceChangerTest : public QObject
       }
     }
 
+    void testModifying_data()
+    {
+      QTest::addColumn<Akonadi::Item>( "item" );
+      QTest::addColumn<QString>( "newSummary" );
+      QTest::addColumn<int>( "expectedRevision" );
+      QTest::addColumn<bool>( "failureExpected" );
+      QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
+
+      QTest::newRow( "Invalid item" ) << Item() << QString() << 0 << true;
+      QTest::newRow( "Valid item, invalid payload" ) << Item(1) << QString() << 0 << true;
+
+      Item item;
+      item.setMimeType( Event::eventMimeType() );
+      Incidence::Ptr incidence = Incidence::Ptr( new Event() );
+      incidence->setUid( QLatin1String( "test123uid" ) );
+      incidence->setSummary( QLatin1String( "summary" ) );
+      item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+      ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
+      AKVERIFYEXEC( job );
+      item = job->item();
+      incidence->setSummary( QLatin1String( "New Summary" ) );
+      item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+
+      QTest::newRow("Change summary") << item << "New Summary" << 1 << false
+                                      << IncidenceChanger::ResultCodeSuccess;
+    }
+
     void testModifying()
     {
-      /*
-      int changeId;
+      QFETCH( Akonadi::Item, item );
+      QFETCH( QString, newSummary );
+      QFETCH( int, expectedRevision );
+      QFETCH( bool, failureExpected );
 
-      // First create an incidence
-      const QString uid( "uid");
-      const QString summary( "summary");
-      Incidence::Ptr incidence( new Event() );
-      incidence->setUid( uid );
-      incidence->setSummary( summary );
-      mWaitingForIncidenceChangerSignals = true;
-      changeId = mChanger->createIncidence( incidence, mCollection );
-      QVERIFY( changeId != -1 );
-      mKnownChangeIds.insert( changeId );
-      waitForSignals();
+      const int changeId = mChanger->modifyIncidence( item );
+      QVERIFY( failureExpected ^ ( changeId != -1 ) );
 
-      { // Just a summary change
-        Item item = mCalendar->itemForIncidenceUid( uid );
-        QVERIFY( item.isValid() );
-        item.payload<Incidence::Ptr>()->setSummary( "summary2" );
-        mWaitingForIncidenceChangerSignals = true;
-        changeId = mChanger->modifyIncidence( item );
-        QVERIFY( changeId != -1 );
+      if ( !failureExpected ) {
+        QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
         mKnownChangeIds.insert( changeId );
-        waitForSignals();
-        item = mCalendar->itemForIncidenceUid( uid );
-        QVERIFY( item.isValid() );
-        QVERIFY( item.payload<Incidence::Ptr>()->summary() == "summary2" );
+        waitForSignals( expectedResultCode );
+        ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+        fetchJob->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC( fetchJob );
+        QVERIFY( fetchJob->items().count() == 1 );
+        Item fetchedItem = fetchJob->items().first();
+        QVERIFY( fetchedItem.isValid() );
+        QVERIFY( fetchedItem.hasPayload<KCalCore::Incidence::Ptr>() );
+        Incidence::Ptr incidence = fetchedItem.payload<KCalCore::Incidence::Ptr>();
+        QCOMPARE( incidence->summary(), newSummary );
+        QCOMPARE( incidence->revision(), expectedRevision );
+        mKnownChangeIds.clear();
+        delete fetchJob;
       }
-
-      { // Invalid item
-        changeId = mChanger->modifyIncidence( Item() );
-        QVERIFY( changeId == -1 );
-      }
-
-      { // Delete it and try do modify it, should result in error
-        Item item = mCalendar->itemForIncidenceUid( uid );
-        QVERIFY( item.isValid() );
-        mPendingDeletesInETM.append( uid );
-        changeId = mChanger->deleteIncidence( item );
-        QVERIFY( changeId != -1 );
-        mKnownChangeIds.insert( changeId );
-        waitForSignals();
-
-        mWaitingForIncidenceChangerSignals = true;
-        changeId = mChanger->modifyIncidence( item );
-        mKnownChangeIds.insert( changeId );
-        mExpectedResult = IncidenceChanger::ResultCodeAlreadyDeleted;
-        QVERIFY( changeId != -1 );
-        waitForSignals();
-      }
-      */
     }
 
     void testMassModifyForConflicts()
