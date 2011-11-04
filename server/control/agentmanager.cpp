@@ -653,7 +653,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
       }
 
       org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-          QLatin1String( "org.freedesktop.Akonadi" ),
+          AkDBus::serviceName(AkDBus::Server),
           QLatin1String( "/PreprocessorManager" ),
           QDBusConnection::sessionBus(),
           this
