@@ -94,6 +94,13 @@ class DbConfig
   protected:
     DbConfig();
 
+    /**
+     * Returns the suggested default database name, if none is specified in the configuration already.
+     * This includes instance namespaces, so usually this is not necessary to use in combination
+     * with internal databases (in process or using our own server instance).
+     */
+    static QString defaultDatabaseName();
+
   private:
     qint64 mSizeThreshold;
 };

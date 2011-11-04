@@ -50,14 +50,12 @@ QString DbConfigPostgresql::databaseName() const
 bool DbConfigPostgresql::init( QSettings &settings )
 {
   // determine default settings depending on the driver
-  QString defaultDbName;
   QString defaultHostName;
   QString defaultOptions;
   QString defaultServerPath;
   QString defaultInitDbPath;
   QString defaultCleanShutdownCommand;
 
-  defaultDbName = QLatin1String( "akonadi" );
 #ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
   const bool defaultInternalServer = true;
 #else
@@ -81,7 +79,7 @@ bool DbConfigPostgresql::init( QSettings &settings )
 
   // read settings for current driver
   settings.beginGroup( driverName() );
-  mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
+  mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDatabaseName() ).toString();
   mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();

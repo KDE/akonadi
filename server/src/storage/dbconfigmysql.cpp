@@ -52,7 +52,6 @@ QString DbConfigMysql::databaseName() const
 bool DbConfigMysql::init( QSettings &settings )
 {
   // determine default settings depending on the driver
-  QString defaultDbName;
   QString defaultHostName;
   QString defaultOptions;
   QString defaultServerPath;
@@ -60,7 +59,6 @@ bool DbConfigMysql::init( QSettings &settings )
 
   const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
 
-  defaultDbName = QLatin1String( "akonadi" );
   const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
    if ( QFile::exists( QLatin1String( MYSQLD_EXECUTABLE ) ) )
@@ -103,7 +101,7 @@ bool DbConfigMysql::init( QSettings &settings )
 
   // read settings for current driver
   settings.beginGroup( driverName() );
-  mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDbName ).toString();
+  mDatabaseName = settings.value( QLatin1String( "Name" ), defaultDatabaseName() ).toString();
   mHostName = settings.value( QLatin1String( "Host" ), defaultHostName ).toString();
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();
@@ -115,7 +113,8 @@ bool DbConfigMysql::init( QSettings &settings )
   // verify settings and apply permanent changes (written out below)
   if ( mInternalServer ) {
     mConnectionOptions = defaultOptions;
-    mDatabaseName = defaultDbName;
+    // intentionally not namespaced as we are the only one in this db instance when using internal mode
+    mDatabaseName = QLatin1String("akonadi");
   }
   if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) )
     mServerPath = defaultServerPath;
