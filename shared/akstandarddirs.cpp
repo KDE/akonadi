@@ -72,7 +72,7 @@ QString AkStandardDirs::saveDir(const char* resource, const QString& relPath)
 {
   QString fullRelPath = QLatin1String("akonadi");
   if ( !AkApplication::instanceIdentifier().isEmpty() )
-    fullRelPath += QLatin1Char('/') + AkApplication::instanceIdentifier();
+    fullRelPath += QLatin1String("/instance/") + AkApplication::instanceIdentifier();
   if ( !relPath.isEmpty() )
     fullRelPath += QLatin1Char('/') + relPath;
   return XdgBaseDirs::saveDir( resource, fullRelPath );
