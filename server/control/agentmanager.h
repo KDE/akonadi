@@ -66,11 +66,6 @@ class AgentManager : public QObject, protected QDBusContext
      */
     void cleanup();
 
-     /**
-     * Returns the path of the config file.
-     */
-    static QString configPath( bool writeable );
-
   public Q_SLOTS:
     /**
      * Returns the list of identifiers of all available

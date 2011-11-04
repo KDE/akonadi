@@ -21,7 +21,8 @@
 #include "agentmanager.h"
 #include "libs/xdgbasedirs_p.h"
 #include "libs/capabilities_p.h"
-#include "akdebug.h"
+#include <akdebug.h>
+#include <akstandarddirs.h>
 
 #include <QSettings>
 
@@ -91,7 +92,7 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
 
   // load instance count if needed
   if ( !capabilities.contains( CapabilityUnique ) ) {
-    QSettings agentrc( manager->configPath( false ), QSettings::IniFormat );
+    QSettings agentrc( AkStandardDirs::agentConfigFile( XdgBaseDirs::ReadOnly ), QSettings::IniFormat );
     instanceCounter = agentrc.value( QString::fromLatin1( "InstanceCounters/%1/InstanceCounter" )
         .arg( identifier ), 0 ).toInt();
   }
