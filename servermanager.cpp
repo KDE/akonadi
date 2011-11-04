@@ -277,6 +277,11 @@ QString Internal::instanceIdentifier()
   return QLatin1String( qgetenv("AKONADI_INSTANCE") );
 }
 
+bool Internal::hasInstanceIdentifier()
+{
+  return !instanceIdentifier().isEmpty();
+}
+
 static QString makeServiceName( const char* base )
 {
   if (Internal::instanceIdentifier().isEmpty())

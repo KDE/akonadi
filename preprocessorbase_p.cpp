@@ -37,7 +37,7 @@ PreprocessorBasePrivate::PreprocessorBasePrivate( PreprocessorBase *parent )
 
 void PreprocessorBasePrivate::delayedInit()
 {
-  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName( "Preprocessor" ) ) )
     kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
   AgentBasePrivate::delayedInit();
 }

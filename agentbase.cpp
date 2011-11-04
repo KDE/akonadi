@@ -283,7 +283,7 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName("Agent") ) )
     kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
 }
@@ -484,6 +484,15 @@ void AgentBasePrivate::slotResumedFromSuspend()
 {
   if ( mNeedsNetwork )
     slotNetworkStatusChange( Solid::Networking::status() );
+}
+
+QString AgentBasePrivate::agentServiceName( const char *agentType ) const
+{
+  Q_ASSERT( agentType );
+  QString serviceName = QLatin1String( "org.freedesktop.Akonadi." ) + QLatin1String(agentType) + QLatin1Char('.') + mId;
+  if ( Internal::hasInstanceIdentifier() )
+    serviceName += QLatin1Char('.' ) + Internal::instanceIdentifier();
+  return serviceName;
 }
 
 AgentBase::AgentBase( const QString & id )

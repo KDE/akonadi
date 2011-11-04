@@ -93,7 +93,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
+      if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName("Resource") ) ) {
         QString reason = DBusConnectionPool::threadConnection().lastError().message();
         if ( reason.isEmpty() ) {
           reason = QString::fromLatin1( "this service is probably running already." );

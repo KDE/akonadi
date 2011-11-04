@@ -42,6 +42,9 @@ namespace Internal {
    */
   QString instanceIdentifier();
 
+  /** Returns @c true if we are running in multi-instance mode. */
+  bool hasInstanceIdentifier();
+
   enum ServiceType {
     Server,
     Control,
