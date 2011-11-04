@@ -618,6 +618,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
 
       if ( !restarting )
         emit agentInstanceAdded( agentIdentifier );
+
+      break;
     }
     case AkDBus::Resource:
     {
@@ -629,6 +631,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
         return;
 
       mAgentInstances.value( agentIdentifier )->obtainResourceInterface();
+
+      break;
     }
     case AkDBus::Preprocessor:
     {
@@ -686,6 +690,8 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
           preProcessorManager.registerInstance( agentIdentifier );
         }
       }
+
+      break;
     }
     default: break;
   }
