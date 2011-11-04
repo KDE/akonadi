@@ -160,7 +160,7 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      *         case.
      */
     int deleteIncidence( const Akonadi::Item &item, QWidget *parent = 0 );
-    
+
     /**
      * Deletes a list of Items.
      *
@@ -193,7 +193,6 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
                          const KCalCore::Incidence::Ptr &originalPayload = KCalCore::Incidence::Ptr(),
                          QWidget *parent = 0 );
 
-    
     /**
      * Some incidence operations require more than one change. Like dissociating
      * occurrences, which needs an incidence add, and an incidence change.
