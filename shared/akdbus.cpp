@@ -24,6 +24,7 @@
 
 #include <QString>
 #include <QStringBuilder>
+#include <QStringList>
 
 static QString makeServiceName( const char* base )
 {
@@ -43,5 +44,29 @@ QString AkDBus::serviceName(AkDBus::ServiceType serviceType)
     case StorageJanitor: return makeServiceName(AKONADI_DBUS_STORAGEJANITOR_SERVICE);
   }
   Q_ASSERT(!"WTF?");
+  return QString();
+}
+
+QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentType& agentType)
+{
+  agentType = Unknown;
+  if ( !serviceName.startsWith( QLatin1String("org.freedesktop.Akonadi." ) ) )
+    return QString();
+  const QStringList parts = serviceName.mid( 24 ).split( QLatin1Char('.') );
+  if ( (parts.size() == 2 && AkApplication::instanceIdentifier().isEmpty())
+    || (parts.size() == 3 && !AkApplication::instanceIdentifier().isEmpty() && AkApplication::instanceIdentifier() == parts.at(2)) )
+  {
+    // switch on parts.at(0)
+    if (parts.first() == QLatin1String("Agent"))
+      agentType = Agent;
+    else if (parts.first() == QLatin1String("Resource"))
+      agentType = Resource;
+    else if (parts.first() == QLatin1String("Preprocessor"))
+      agentType = Preprocessor;
+    else
+      return QString();
+    return parts.at(1);
+  }
+  
   return QString();
 }
