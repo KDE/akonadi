@@ -33,6 +33,8 @@
 
 #include "tracer.h"
 
+#include <akdbus.h>
+
 #include <QtCore/QTimer>
 
 namespace Akonadi
@@ -56,7 +58,7 @@ bool PreprocessorInstance::init()
   Q_ASSERT( !mInterface );
 
   mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
-      QLatin1String( "org.freedesktop.Akonadi.Preprocessor." ) + mId,
+      AkDBus::agentServiceName( mId, AkDBus::Preprocessor ),
       QLatin1String( "/" ),
       QDBusConnection::sessionBus(),
       this
@@ -164,7 +166,7 @@ bool PreprocessorInstance::abortProcessing()
   Q_ASSERT_X( mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false" );
 
   OrgFreedesktopAkonadiAgentControlInterface iface(
-      QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId,
+      AkDBus::agentServiceName( mId, AkDBus::Agent ),
       QLatin1String( "/" ),
       QDBusConnection::sessionBus(),
       this
@@ -194,7 +196,7 @@ bool PreprocessorInstance::invokeRestart()
   Q_ASSERT_X( mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false" );
 
   OrgFreedesktopAkonadiAgentManagerInterface iface(
-      QLatin1String( "org.freedesktop.Akonadi" ),
+      AkDBus::serviceName(AkDBus::Control),
       QLatin1String( "/AgentManager" ),
       QDBusConnection::sessionBus(),
       this
