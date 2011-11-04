@@ -34,7 +34,6 @@
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
-#include "xdgbasedirs_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -199,7 +198,7 @@ void AgentBasePrivate::init()
     Q_ASSERT( mDBusConnection.isConnected() );
   }
 
-  mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ),
+  mTracer = new org::freedesktop::Akonadi::Tracer( Internal::serviceName(Internal::Server),
                                                    QLatin1String( "/tracing" ),
                                                    DBusConnectionPool::threadConnection(), q );
 
@@ -208,7 +207,7 @@ void AgentBasePrivate::init()
   if ( !DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( DBusConnectionPool::threadConnection().lastError().message() ) );
 
-  mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
+  mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( Internal::xdgSaveDir( "config" ), mId ), QSettings::IniFormat );
 
   mChangeRecorder = new ChangeRecorder( q );
   mChangeRecorder->ignoreSession( Session::defaultSession() );
