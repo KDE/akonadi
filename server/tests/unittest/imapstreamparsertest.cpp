@@ -25,6 +25,7 @@
 #include <QBuffer>
 
 #include "imapstreamparser.h"
+#include <aktest.h>
 
 Q_DECLARE_METATYPE( QList<QByteArray> )
 Q_DECLARE_METATYPE( QList<int> )
@@ -62,7 +63,7 @@ QString akBacktrace()
 }
 #endif
 
-QTEST_MAIN( ImapStreamParserTest )
+AKTEST_MAIN( ImapStreamParserTest )
 
 
 void ImapStreamParserTest::testParseQuotedString( )
