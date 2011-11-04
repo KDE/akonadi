@@ -20,6 +20,8 @@
 #ifndef AKONADI_SERVERMANAGER_P_H
 #define AKONADI_SERVERMANAGER_P_H
 
+class QString;
+
 namespace Akonadi {
 
 namespace Internal {
@@ -34,6 +36,20 @@ namespace Internal {
   };
   ClientType clientType();
   void setClientType( ClientType type );
+
+  /** Instance identifier in case of using multiple Akonadi instances in the same
+   * user session, empty string otherwise.
+   */
+  QString instanceIdentifier();
+
+  enum ServiceType {
+    Server,
+    Control,
+    ControlLock
+  };
+
+  /** Returns the multi-instance aware D-Bus service name for @p serviceType. */
+  QString serviceName( ServiceType serviceType );
 }
 
 }

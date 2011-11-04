@@ -34,13 +34,12 @@
 #include <KGlobal>
 #include <KLocale>
 
+#include <akonadi/private/protocol_p.h>
+
 #include <QtDBus>
 #include <QTimer>
 
 #include <boost/scoped_ptr.hpp>
-
-#define AKONADI_CONTROL_SERVICE QLatin1String( "org.freedesktop.Akonadi.Control" )
-#define AKONADI_SERVER_SERVICE QLatin1String( "org.freedesktop.Akonadi" )
 
 using namespace Akonadi;
 
@@ -123,10 +122,10 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
 {
   qRegisterMetaType<Akonadi::ServerManager::State>();
 
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AKONADI_SERVER_SERVICE,
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( Internal::serviceName(Internal::Server),
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
-  watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
+  watcher->addWatchedService( Internal::serviceName(Internal::Control) );
 
   // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
   // the current agent types and instances
@@ -149,13 +148,12 @@ ServerManager * Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
-  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Control) );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Server) );
   if (  controlRegistered && serverRegistered )
     return true;
 
-  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::ControlLock) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     sInstance->setState( Starting );
@@ -166,7 +164,7 @@ bool ServerManager::start()
   const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-    QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( AKONADI_CONTROL_SERVICE );
+    QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( Internal::serviceName(Internal::Control) );
     if ( !reply.isValid() ) {
       kDebug() << "Akonadi server could not be started via D-Bus either: "
                << reply.error().message();
@@ -179,7 +177,7 @@ bool ServerManager::start()
 
 bool ServerManager::stop()
 {
-  QDBusInterface iface( AKONADI_CONTROL_SERVICE,
+  QDBusInterface iface( Internal::serviceName(Internal::Control),
                         QString::fromLatin1( "/ControlManager" ),
                         QString::fromLatin1( "org.freedesktop.Akonadi.ControlManager" ) );
   if ( !iface.isValid() )
@@ -209,8 +207,8 @@ ServerManager::State ServerManager::state()
   if ( sInstance.exists() ) // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
     previousState = sInstance->mState;
 
-  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Control) );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Server) );
   if (  controlRegistered && serverRegistered ) {
     // check if the server protocol is recent enough
     if ( sInstance.exists() ) {
@@ -233,8 +231,7 @@ ServerManager::State ServerManager::state()
     }
   }
 
-  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::ControlLock) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     if ( previousState == Running )
@@ -272,6 +269,29 @@ Internal::ClientType Internal::clientType()
 void Internal::setClientType( ClientType type )
 {
   ServerManagerPrivate::clientType = type;
+}
+
+QString Internal::instanceIdentifier()
+{
+  return QLatin1String( qgetenv("AKONADI_INSTANCE") );
+}
+
+static QString makeServiceName( const char* base )
+{
+  if (Internal::instanceIdentifier().isEmpty())
+    return QLatin1String(base);
+  return QLatin1String(base) % QLatin1Literal(".") % Internal::instanceIdentifier();
+}
+
+QString Internal::serviceName( Internal::ServiceType serviceType )
+{
+  switch(serviceType) {
+    case Server: return makeServiceName(AKONADI_DBUS_SERVER_SERVICE);
+    case Control: return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE);
+    case ControlLock: return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE_LOCK);
+  }
+  Q_ASSERT(!"WTF?");
+  return QString();
 }
 
 #include "servermanager.moc"

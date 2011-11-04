@@ -47,8 +47,6 @@
 
 // @cond PRIVATE
 
-#define AKONADI_CONTROL_SERVICE QLatin1String( "org.freedesktop.Akonadi.Control" )
-#define AKONADI_SERVER_SERVICE QLatin1String( "org.freedesktop.Akonadi" )
 #define AKONADI_SEARCH_SERVICE QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" )
 
 using namespace Akonadi;
@@ -403,7 +401,7 @@ void SelfTestDialog::testAkonadiCtl()
 
 void SelfTestDialog::testServerStatus()
 {
-  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE ) ) {
+  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Control) ) ) {
     report( Success, ki18n( "Akonadi control process registered at D-Bus." ),
                    ki18n( "The Akonadi control process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
@@ -412,7 +410,7 @@ void SelfTestDialog::testServerStatus()
                        "or encountered a fatal error during startup."  ) );
   }
 
-  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE ) ) {
+  if ( DBusConnectionPool::threadConnection().interface()->isServiceRegistered( Internal::serviceName(Internal::Server) ) ) {
     report( Success, ki18n( "Akonadi server process registered at D-Bus." ),
                    ki18n( "The Akonadi server process is registered at D-Bus which typically indicates it is operational." ) );
   } else {
