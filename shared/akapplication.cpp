@@ -116,5 +116,11 @@ QString AkApplication::instanceIdentifier()
   return static_cast<AkApplication*>( QCoreApplication::instance() )->mInstanceId;
 }
 
+bool AkApplication::hasInstanceIdentifier()
+{
+  return !instanceIdentifier().isEmpty();
+}
+
+
 
 #include "akapplication.moc"

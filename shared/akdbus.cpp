@@ -28,7 +28,7 @@
 
 static QString makeServiceName( const char* base )
 {
-  if (AkApplication::instanceIdentifier().isEmpty())
+  if (!AkApplication::hasInstanceIdentifier())
     return QLatin1String(base);
   return QLatin1String(base) % QLatin1Literal(".") % AkApplication::instanceIdentifier();
 }
@@ -53,8 +53,8 @@ QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentT
   if ( !serviceName.startsWith( QLatin1String("org.freedesktop.Akonadi." ) ) )
     return QString();
   const QStringList parts = serviceName.mid( 24 ).split( QLatin1Char('.') );
-  if ( (parts.size() == 2 && AkApplication::instanceIdentifier().isEmpty())
-    || (parts.size() == 3 && !AkApplication::instanceIdentifier().isEmpty() && AkApplication::instanceIdentifier() == parts.at(2)) )
+  if ( (parts.size() == 2 && !AkApplication::hasInstanceIdentifier())
+    || (parts.size() == 3 && AkApplication::hasInstanceIdentifier() && AkApplication::instanceIdentifier() == parts.at(2)) )
   {
     // switch on parts.at(0)
     if (parts.first() == QLatin1String("Agent"))
@@ -69,4 +69,21 @@ QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentT
   }
   
   return QString();
+}
+
+QString AkDBus::agentServiceName(const QString& agentIdentifier, AkDBus::AgentType agentType)
+{
+  Q_ASSERT( !agentIdentifier.isEmpty() );
+  Q_ASSERT( agentType != Unknown );
+  QString serviceName = QLatin1String( "org.freedesktop.Akonadi." );
+  switch (agentType) {
+    case Agent: serviceName += QLatin1String( "Agent." ); break;
+    case Resource: serviceName += QLatin1String( "Resource." ); break;
+    case Preprocessor: serviceName += QLatin1String( "Preprocessor."); break;
+    default: Q_ASSERT(!"WTF?");
+  }
+  serviceName += agentIdentifier;
+  if ( AkApplication::hasInstanceIdentifier() )
+    serviceName += QLatin1Char('.' ) % AkApplication::instanceIdentifier();
+  return serviceName;
 }

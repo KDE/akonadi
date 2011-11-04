@@ -68,6 +68,11 @@ class AkDBusTest : public QObject
       QCOMPARE( parsedName, agentId );
       QCOMPARE( parsedType, agentType );
     }
+
+    void testAgentServiceName()
+    {
+      QCOMPARE( AkDBus::agentServiceName( QLatin1String("akonadi_maildir_resource_0"), AkDBus::Agent ), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0") );
+    }
 };
 
 AKTEST_MAIN( AkDBusTest )

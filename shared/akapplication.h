@@ -47,6 +47,9 @@ class AkApplication : public QCoreApplication
     /** Returns the instance identifier when running in multi-instance mode, empty string otherwise. */
     static QString instanceIdentifier();
 
+    /** Returns @c true if we run in multi-instance mode. */
+    static bool hasInstanceIdentifier();
+
   private slots:
     void pollSessionBus() const;
 

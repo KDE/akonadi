@@ -59,6 +59,11 @@ namespace AkDBus
    * @return The identifier of the agent, empty string if that's not an agent (or an agent of a different Akonadi instance)
    */
   QString parseAgentServiceName( const QString& serviceName, AkDBus::AgentType& agentType );
+
+  /**
+   * Returns the D-Bus service name of the agent @p agentIdentifier for type @p agentType.
+   */
+  QString agentServiceName( const QString &agentIdentifier, AkDBus::AgentType agentType );
 }
 
 #endif

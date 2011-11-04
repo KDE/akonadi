@@ -22,7 +22,9 @@
 #include "itemretrievaljob.h"
 
 #include "resourceinterface.h"
-#include "akdebug.h"
+
+#include <akdbus.h>
+#include <akdebug.h>
 
 #include <QCoreApplication>
 #include <QReadWriteLock>
@@ -75,9 +77,10 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const
   Q_UNUSED( newOwner );
   if ( oldOwner.isEmpty() )
     return;
-  if ( !serviceName.startsWith( QLatin1String("org.freedesktop.Akonadi.Resource.") ) )
+  AkDBus::AgentType type = AkDBus::Unknown;
+  const QString resourceId = AkDBus::parseAgentServiceName( serviceName, type );
+  if ( resourceId.isEmpty() || type != AkDBus::Resource )
     return;
-  const QString resourceId = serviceName.mid( 33 );
   qDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
   mResourceInterfaces.remove( resourceId );
 }
@@ -93,7 +96,7 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
     return iface;
 
   delete iface;
-  iface = new OrgFreedesktopAkonadiResourceInterface( QLatin1String("org.freedesktop.Akonadi.Resource.") + id,
+  iface = new OrgFreedesktopAkonadiResourceInterface( AkDBus::agentServiceName( id, AkDBus::Resource ),
                                                       QLatin1String("/"), mDBusConnection, this );
   if ( !iface || !iface->isValid() ) {
     qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
