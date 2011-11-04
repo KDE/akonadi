@@ -26,6 +26,8 @@
 #include "preprocessorinterface.h"
 #include "searchinterface.h"
 
+#include <akdbus.h>
+
 #include <QDBusError>
 #include <QString>
 #include <QStringList>
@@ -100,7 +102,7 @@ class AgentInstance : public QObject
     void errorHandler( const QDBusError &error );
 
   private:
-    template <typename T> T* findInterface( const char* service, const char* path = 0 );
+    template <typename T> T* findInterface( AkDBus::AgentType agentType, const char* path = 0 );
 
   protected:
     void setAgentType( const QString &agentType ) { mType = agentType; }

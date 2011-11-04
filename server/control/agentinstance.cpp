@@ -21,8 +21,9 @@
 
 #include "agenttype.h"
 #include "agentmanager.h"
-#include "../../libs/xdgbasedirs_p.h"
-#include "akdebug.h"
+
+#include <akdebug.h>
+#include <libs/xdgbasedirs_p.h>
 
 AgentInstance::AgentInstance(AgentManager * manager) :
     QObject( manager ),
@@ -56,15 +57,15 @@ bool AgentInstance::obtainAgentInterface()
   delete mAgentStatusInterface;
 
   mAgentControlInterface =
-    findInterface<org::freedesktop::Akonadi::Agent::Control>( "org.freedesktop.Akonadi.Agent", "/" );
+    findInterface<org::freedesktop::Akonadi::Agent::Control>( AkDBus::Agent, "/" );
   mAgentStatusInterface =
-    findInterface<org::freedesktop::Akonadi::Agent::Status>( "org.freedesktop.Akonadi.Agent", "/" );
+    findInterface<org::freedesktop::Akonadi::Agent::Status>( AkDBus::Agent, "/" );
 
   if ( !mAgentControlInterface || !mAgentStatusInterface )
     return false;
 
   mSearchInterface =
-    findInterface<org::freedesktop::Akonadi::Agent::Search>( "org.freedesktop.Akonadi.Agent", "/Search" );
+    findInterface<org::freedesktop::Akonadi::Agent::Search>( AkDBus::Agent, "/Search" );
 
   connect( mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)) );
   connect( mAgentStatusInterface, SIGNAL(advancedStatus(QVariantMap)), SLOT(advancedStatusChanged(QVariantMap)) );
@@ -81,7 +82,7 @@ bool AgentInstance::obtainResourceInterface()
 {
   delete mResourceInterface;
   mResourceInterface =
-    findInterface<org::freedesktop::Akonadi::Resource>( "org.freedesktop.Akonadi.Resource", "/" );
+    findInterface<org::freedesktop::Akonadi::Resource>( AkDBus::Resource, "/" );
 
   if ( !mResourceInterface )
     return false;
@@ -95,7 +96,7 @@ bool AgentInstance::obtainPreprocessorInterface()
 {
   delete mPreprocessorInterface;
   mPreprocessorInterface =
-    findInterface<org::freedesktop::Akonadi::Preprocessor>( "org.freedesktop.Akonadi.Preprocessor", "/" );
+    findInterface<org::freedesktop::Akonadi::Preprocessor>( AkDBus::Preprocessor, "/" );
   return mPreprocessorInterface;
 }
 
@@ -196,9 +197,9 @@ void AgentInstance::errorHandler(const QDBusError & error)
 }
 
 template <typename T>
-T* AgentInstance::findInterface(const char* service, const char* path)
+T* AgentInstance::findInterface(AkDBus::AgentType agentType, const char* path)
 {
-  T * iface = new T( QString::fromLatin1( "%1.%2" ).arg( QLatin1String(service) ).arg( mIdentifier ),
+  T * iface = new T( AkDBus::agentServiceName( mIdentifier, agentType ),
                      QLatin1String( path ), QDBusConnection::sessionBus(), this );
 
   if ( !iface || !iface->isValid() ) {
