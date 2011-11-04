@@ -51,11 +51,13 @@ class IncidenceChangerTest : public QObject
 
   QSet<int> mKnownChangeIds;
   QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
+  int mChangeToWaitFor;
 
   private slots:
     void initTestCase()
     {
       mWaitingForIncidenceChangerSignals = false;
+      mChangeToWaitFor = -1;
       mExpectedResult = IncidenceChanger::ResultCodeSuccess;
       //Control::start(); //TODO: uncomment when using testrunner
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
@@ -287,66 +289,66 @@ class IncidenceChangerTest : public QObject
       }
     }
 
+    void testMassModifyForConflicts_data()
+    {
+      QTest::addColumn<Akonadi::Item>( "item" );
+      QTest::addColumn<bool>( "waitForPreviousJob" );
+      QTest::addColumn<int>( "numberOfModifications" );
+
+      // Create an incidence
+      Item item;
+      item.setMimeType( Event::eventMimeType() );
+      Incidence::Ptr incidence = Incidence::Ptr( new Event() );
+      incidence->setUid( QLatin1String( "test123uid" ) );
+      incidence->setSummary( QLatin1String( "summary" ) );
+      item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+      ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
+      AKVERIFYEXEC( job );
+      item = job->item();
+
+      QTest::newRow("15 modifications in sequence") << item << true  << 15;
+      QTest::newRow("15 modifications in parallel") << item << false << 15;
+    }
+
     void testMassModifyForConflicts()
     {
-      /*
-      int changeId;
+      QFETCH( Akonadi::Item, item );
+      QFETCH( bool, waitForPreviousJob );
+      QFETCH( int, numberOfModifications );
 
-      // First create an incidence
-      const QString uid( "uid");
-      const QString summary( "summary");
-      Incidence::Ptr incidence( new Event() );
-      incidence->setUid( uid );
-      incidence->setSummary( summary );
-      mPendingInsertsInETM.append( uid );
-      changeId = mChanger->createIncidence( incidence,
-                                            mCollection );
-      QVERIFY( changeId != -1 );
-      mKnownChangeIds.insert( changeId );
-      waitForSignals();
-
-      kDebug() << "Doing 30 modifications, but waiting for jobs to end before starting a new one.";
-      const int LIMIT = 30;
-      for ( int i = 0; i < LIMIT; ++i ) {
-        mWaitingForIncidenceChangerSignals = true;
-        mPendingUpdatesInETM.append( uid );
-        Item item = mCalendar->itemForIncidenceUid( uid );
-        QVERIFY( item.isValid() );
-        item.payload<Incidence::Ptr>()->setSummary( QString::number( i ) );
-        int changeId = mChanger->modifyIncidence( item );
-        QVERIFY( changeId > -1 );
-        mKnownChangeIds.insert( changeId );
-        waitForSignals();
-      }
-
-      Item item = mCalendar->itemForIncidenceUid( uid );
-      QVERIFY( item.isValid() );
-
-      kDebug() << "Doing 30 modifications, and not for jobs to end before starting a new one.";
-
-      for ( int i = 0; i < LIMIT; ++i ) {
-        item.payload<Incidence::Ptr>()->setSummary( QString::number( i ) );
-        const int changeId = mChanger->modifyIncidence( item );
-        QVERIFY( changeId > -1 );
+      Q_ASSERT( numberOfModifications > 0 );
+      int changeId = -1;
+      for( int i=0; i<numberOfModifications; ++i ) {
+        Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+        Q_ASSERT( incidence );
+        incidence->setSummary( QString::number( i ) );
+        changeId = mChanger->modifyIncidence( item );
+        QVERIFY( changeId != -1 );
         mKnownChangeIds.insert( changeId );
 
-        if ( i == LIMIT-1 ) {
-          // Let's catch the last signal, so we don't exit our test with jobs still running
-          mWaitingForIncidenceChangerSignals = true;
+        if ( waitForPreviousJob ) {
+          waitForSignals( IncidenceChanger::ResultCodeSuccess );
+          ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+          fetchJob->fetchScope().fetchFullPayload();
+          AKVERIFYEXEC( fetchJob );
+          QVERIFY( fetchJob->items().count() == 1 );
+          QCOMPARE( fetchJob->items().first().payload<KCalCore::Incidence::Ptr>()->summary(),
+                    QString::number( i ) );
         }
-        QTest::qWait( 100 );
       }
-      waitForSignals();
 
-      // Cleanup, delete the incidence
-      item = mCalendar->itemForIncidenceUid( uid );
-      QVERIFY( item.isValid() );
-      mPendingDeletesInETM.append( uid );
-      changeId = mChanger->deleteIncidence( item );
-      QVERIFY( changeId != -1 );
-      mKnownChangeIds.insert( changeId );
-      waitForSignals();
-      */
+      if ( !waitForPreviousJob ) {
+        // Wait for the last one only.
+        waitForChange( changeId, IncidenceChanger::ResultCodeSuccess );
+        ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
+        fetchJob->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC( fetchJob );
+        QVERIFY( fetchJob->items().count() == 1 );
+        QCOMPARE( fetchJob->items().first().payload<KCalCore::Incidence::Ptr>()->summary(),
+                  QString::number( numberOfModifications-1 ) );
+      }
+
+      mKnownChangeIds.clear();
     }
 
   public Q_SLOTS:
@@ -362,6 +364,20 @@ class IncidenceChangerTest : public QObject
       }
 
       QVERIFY( !mWaitingForIncidenceChangerSignals );
+    }
+
+    // Waits for a specific change
+    void waitForChange( int changeId, Akonadi::IncidenceChanger::ResultCode expectedResultCode )
+    {
+      mChangeToWaitFor = changeId;
+      mExpectedResult = expectedResultCode;
+
+      int i = 0;
+      while ( mChangeToWaitFor != -1 && i++ < 10) { // wait 10 seconds max.
+        QTest::qWait( 1000 );
+      }
+
+      QVERIFY( mChangeToWaitFor == -1 );
     }
 
   void deleteFinished( int changeId,
@@ -384,6 +400,7 @@ class IncidenceChangerTest : public QObject
 
     QVERIFY( resultCode == mExpectedResult );
     mExpectedResult = IncidenceChanger::ResultCodeSuccess;
+    mChangeToWaitFor = -1;
     mWaitingForIncidenceChangerSignals = false;
   }
 
@@ -406,6 +423,7 @@ class IncidenceChangerTest : public QObject
     QVERIFY( resultCode == mExpectedResult );
     mExpectedResult = IncidenceChanger::ResultCodeSuccess;
     mWaitingForIncidenceChangerSignals = false;
+    mChangeToWaitFor = -1;
   }
 
   void modifyFinished( int changeId,
@@ -426,6 +444,7 @@ class IncidenceChangerTest : public QObject
 
     mExpectedResult = IncidenceChanger::ResultCodeSuccess;
     mWaitingForIncidenceChangerSignals = false;
+    mChangeToWaitFor = -1;
   }
 };
 
