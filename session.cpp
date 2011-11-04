@@ -119,7 +119,7 @@ void SessionPrivate::reconnect()
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
     serverAddress = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
 #else
-    const QString defaultSocketDir = Internal::xdgSaveDir( "data", QLatin1String( "akonadi" ) );
+    const QString defaultSocketDir = Internal::xdgSaveDir( "data" );
     serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
 #endif
   }
