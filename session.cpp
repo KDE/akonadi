@@ -106,7 +106,7 @@ void SessionPrivate::reconnect()
 
   // try config file next, fall back to defaults if that fails as well
   if ( serverAddress.isEmpty() ) {
-    const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    const QString connectionConfigFile = connectionFile();
     const QFileInfo fileInfo( connectionConfigFile );
     if ( !fileInfo.exists() ) {
       kDebug() << "Akonadi Client Session: connection config file '"
@@ -119,7 +119,7 @@ void SessionPrivate::reconnect()
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
     serverAddress = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
 #else
-    const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
+    const QString defaultSocketDir = Internal::xdgSaveDir( "data", QLatin1String( "akonadi" ) );
     serverAddress = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
 #endif
   }
@@ -154,6 +154,11 @@ void SessionPrivate::reconnect()
 #endif
 
   emit mParent->reconnected();
+}
+
+QString SessionPrivate::connectionFile()
+{
+  return Internal::xdgSaveDir( "config" ) + QLatin1String("/akonadiconnectionrc");
 }
 
 void SessionPrivate::socketError( QLocalSocket::LocalSocketError )

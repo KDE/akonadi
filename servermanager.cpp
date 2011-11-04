@@ -35,6 +35,7 @@
 #include <KLocale>
 
 #include <akonadi/private/protocol_p.h>
+#include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtDBus>
 #include <QTimer>
@@ -293,5 +294,16 @@ QString Internal::serviceName( Internal::ServiceType serviceType )
   Q_ASSERT(!"WTF?");
   return QString();
 }
+
+QString Internal::xdgSaveDir( const char *resource, const QString &relPath )
+{
+  QString fullRelPath = QLatin1String("akonadi");
+  if ( !Internal::instanceIdentifier().isEmpty() )
+    fullRelPath += QLatin1String("/instance/") + Internal::instanceIdentifier();
+  if ( !relPath.isEmpty() )
+    fullRelPath += QLatin1Char('/') + relPath;
+  return XdgBaseDirs::saveDir( resource, fullRelPath );
+}
+
 
 #include "servermanager.moc"

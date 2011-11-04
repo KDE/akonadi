@@ -104,6 +104,11 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     static int minimumProtocolVersion() { return 28; }
 
+    /**
+     * Default location for akonadiconnectionrc
+     */
+    static QString connectionFile();
+
     Session *mParent;
     QByteArray sessionId;
     QIODevice* socket;

@@ -50,6 +50,11 @@ namespace Internal {
 
   /** Returns the multi-instance aware D-Bus service name for @p serviceType. */
   QString serviceName( ServiceType serviceType );
+
+  /** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
+   * @note: Does not need to include the "akonadi/" in @p relPath.
+   */
+  QString xdgSaveDir( const char* resource, const QString &relPath = QString() );
 }
 
 }
