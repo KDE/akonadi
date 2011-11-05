@@ -39,10 +39,10 @@ using namespace Akonadi;
 using namespace KCalCore;
 
 namespace Akonadi {
-  Akonadi::Collection selectCollection( QWidget *parent,
-                                        int &dialogCode,
-                                        const QStringList &mimeTypes,
-                                        const Akonadi::Collection &defCollection )
+  static Akonadi::Collection selectCollection( QWidget *parent,
+                                               int &dialogCode,
+                                               const QStringList &mimeTypes,
+                                               const Akonadi::Collection &defCollection )
   {
     QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
 

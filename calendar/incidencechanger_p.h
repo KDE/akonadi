@@ -44,27 +44,27 @@ class QWidget;
 namespace Akonadi {
 
   class TransactionSequence;
-  
-  // Does a queued emit, with QMetaObject::invokeMethod
-  void emitCreateFinished( IncidenceChanger *changer,
-                           int changeId,
-                           const Akonadi::Item &item,
-                           IncidenceChanger::ResultCode resultCode,
-                           const QString &errorString );
 
   // Does a queued emit, with QMetaObject::invokeMethod
-  void emitModifyFinished( IncidenceChanger *changer,
-                           int changeId,
-                           const Akonadi::Item &item,
-                           IncidenceChanger::ResultCode resultCode,
-                           const QString &errorString );
+  static void emitCreateFinished( IncidenceChanger *changer,
+                                  int changeId,
+                                  const Akonadi::Item &item,
+                                  IncidenceChanger::ResultCode resultCode,
+                                  const QString &errorString );
 
   // Does a queued emit, with QMetaObject::invokeMethod
-  void emitDeleteFinished( IncidenceChanger *changer,
-                           int changeId,
-                           const QVector<Akonadi::Item::Id> &itemIdList,
-                           IncidenceChanger::ResultCode resultCode,
-                           const QString &errorString );
+  static void emitModifyFinished( IncidenceChanger *changer,
+                                  int changeId,
+                                  const Akonadi::Item &item,
+                                  IncidenceChanger::ResultCode resultCode,
+                                  const QString &errorString );
+
+  // Does a queued emit, with QMetaObject::invokeMethod
+  static void emitDeleteFinished( IncidenceChanger *changer,
+                                  int changeId,
+                                  const QVector<Akonadi::Item::Id> &itemIdList,
+                                  IncidenceChanger::ResultCode resultCode,
+                                  const QString &errorString );
   
   class Change {
     public:
