@@ -446,6 +446,39 @@ class IncidenceChangerTest : public QObject
     mWaitingForIncidenceChangerSignals = false;
     mChangeToWaitFor = -1;
   }
+
+  void testDefaultCollection()
+  {
+    const Collection newCollection( 42 );
+    IncidenceChanger changer;
+    QCOMPARE( changer.defaultCollection(), Collection() );
+    changer.setDefaultCollection( newCollection );
+    QCOMPARE( changer.defaultCollection(), newCollection );
+  }
+
+  void testDestinationPolicy()
+  {
+    IncidenceChanger changer;
+    QCOMPARE( changer.destinationPolicy(), IncidenceChanger::DestinationPolicyDefault );
+    changer.setDestinationPolicy( IncidenceChanger::DestinationPolicyNeverAsk );
+    QCOMPARE( changer.destinationPolicy(), IncidenceChanger::DestinationPolicyNeverAsk );
+  }
+
+  void testDialogsOnError()
+  {
+    IncidenceChanger changer;
+    QCOMPARE( changer.showDialogsOnError(), true );
+    changer.setShowDialogsOnError( false );
+    QCOMPARE( changer.showDialogsOnError(), false );
+  }
+
+  void testRespectsCollectionRights()
+  {
+    IncidenceChanger changer;
+    QCOMPARE( changer.respectsCollectionRights(), true );
+    changer.setRespectsCollectionRights( false );
+    QCOMPARE( changer.respectsCollectionRights(), false );
+  }
 };
 
 QTEST_AKONADIMAIN( IncidenceChangerTest, NoGUI )
