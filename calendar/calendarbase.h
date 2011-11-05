@@ -65,7 +65,7 @@ namespace Akonadi {
 
     /**
      * Returns the Item with @p id or an invalid Item if not found.
-     */    
+     */
     Akonadi::Item item( Akonadi::Item::Id ) const;
 
     /**
@@ -77,7 +77,7 @@ namespace Akonadi {
     /**
      * Returns the child incidences of @p parent.
      * Only the direct childs are returned
-     */    
+     */
     KCalCore::Incidence::List childIncidences( const Akonadi::Item &parent ) const;
 
     /**
@@ -109,13 +109,13 @@ namespace Akonadi {
     /**
      * Deletes an Event from the calendar.
      * It's removed from akonadi in the background @see deleteFinished().
-     */  
+     */
     /**reimp*/ bool deleteEvent( const KCalCore::Event::Ptr &event );
 
     /**
      * Deletes all Events from the calendar.
      * They are removed from akonadi in the background @see deleteFinished().
-     */   
+     */
     /**reimp*/ void deleteAllEvents();
 
     /**
@@ -139,31 +139,31 @@ namespace Akonadi {
     /**
      * Adds a Journal to the calendar.
      * It's added to akonadi in the background @see createFinished().
-     */  
+     */
     /**reimp*/ bool addJournal( const KCalCore::Journal::Ptr &journal );
 
     /**
      * Deletes a Journal from the calendar.
      * It's removed from akonadi in the background @see deleteFinished().
-     */     
+     */
     /**reimp*/ bool deleteJournal( const KCalCore::Journal::Ptr &journal );
 
     /**
      * Deletes all Journals from the calendar.
      * They are removed from akonadi in the background @see deleteFinished().
-     */  
+     */
     /**reimp*/ void deleteAllJournals();
 
     /**
      * Adds an incidence to the calendar.
      * It's added to akonadi in the background @see createFinished().
-     */ 
+     */
     /**reimp*/ bool addIncidence( const KCalCore::Incidence::Ptr &incidence );
 
     /**
      * Deletes an incidence from the calendar.
      * It's removed from akonadi in the background @see deleteFinished().
-     */    
+     */
     /**reimp*/ bool deleteIncidence( const KCalCore::Incidence::Ptr & );
 
   Q_SIGNALS:
@@ -180,7 +180,7 @@ namespace Akonadi {
      * delete{Incidence,Event,Todo,Journal} or deleteAll{Events,Todos,Journals}
      * @param success the success of the operation
      * @param errorMessage if @p success is false, contains the error message
-     */    
+     */
     void deleteFinished( bool success, const QString &errorMessage );
 
   protected:

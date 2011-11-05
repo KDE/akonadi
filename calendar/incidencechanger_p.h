@@ -78,9 +78,8 @@ namespace Akonadi {
                                 , resultCode( Akonadi::IncidenceChanger::ResultCodeSuccess )
                                 , changer( incidenceChanger )
       {
-        
       }
-                           
+
       virtual ~Change()
       {
         if ( parentChange ) {
@@ -129,7 +128,7 @@ namespace Akonadi {
         if ( !parentChange )
           emitCompletionSignal();
       }
-      
+
       /**reimp*/
       void emitCompletionSignal()
       {
@@ -144,7 +143,6 @@ namespace Akonadi {
                       QWidget *parent ) : Change( changer, id, IncidenceChanger::ChangeTypeCreate,
                                                   atomicOperationId, parent )
       {
-
       }
 
       ~CreationChange()
@@ -152,7 +150,7 @@ namespace Akonadi {
         if ( !parentChange )
           emitCompletionSignal();
       }
-     
+
       /**reimp*/
       void emitCompletionSignal()
       {
@@ -170,7 +168,6 @@ namespace Akonadi {
                       QWidget *parent ) : Change( changer, id, IncidenceChanger::ChangeTypeDelete,
                                                    atomicOperationId, parent )
       {
-
       }
 
       ~DeletionChange()
