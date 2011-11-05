@@ -481,6 +481,6 @@ class IncidenceChangerTest : public QObject
   }
 };
 
-QTEST_AKONADIMAIN( IncidenceChangerTest, NoGUI )
+QTEST_AKONADIMAIN( IncidenceChangerTest, GUI )
 
 #include "incidencechangertest.moc"
