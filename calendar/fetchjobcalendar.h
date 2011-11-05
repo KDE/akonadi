@@ -21,7 +21,7 @@
 #define _AKONADI_FETCHJOBCALENDAR_H_
 
 #include "akonadi-calendar_export.h"
-#include "akonadicalendar.h"
+#include "calendarbase.h"
 
 #include <Akonadi/Item>
 #include <KDateTime>
@@ -31,18 +31,18 @@ namespace Akonadi {
   class FetchJobCalendarPrivate;
   /**
   * @short
-  * An AkonadiCalendar that gets populated by a one time IncidenceFetchJob.
+  * A Calendar that gets populated by a one time IncidenceFetchJob.
   *
   * If you want a persistent calendar ( which monitors Akonadi for changes )
   * use an ETMCalendar.
   * 
   * @see ETMCalendar
-  * @see AkonadiCalendar
+  * @see CalendarBase
   *
   * @author Sérgio Martins <sergio.martins@kdab.com>
   * @since 4.9
   */
-  class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::AkonadiCalendar
+  class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::CalendarBase
   {
   Q_OBJECT
   public:

@@ -17,10 +17,10 @@
    02110-1301, USA.
 */
 
-#ifndef CALENDARSUPPORT_AKONADICALENDAR_P_H
-#define CALENDARSUPPORT_AKONADICALENDAR_P_H
+#ifndef AKONADI_CALENDARBASE_P_H
+#define AKONADI_CALENDARBASE_P_H
 
-#include "akonadicalendar.h"
+#include "calendarbase.h"
 #include "incidencechanger.h"
 
 #include <QVector>
@@ -29,13 +29,13 @@ class KJob;
 
 namespace Akonadi {
 
-class AkonadiCalendarPrivate : public QObject
+class CalendarBasePrivate : public QObject
 {
   Q_OBJECT
   public:
 
-    explicit AkonadiCalendarPrivate( AkonadiCalendar *qq );
-    ~AkonadiCalendarPrivate();
+    explicit CalendarBasePrivate( CalendarBase *qq );
+    ~CalendarBasePrivate();
 
     void internalInsert( const Akonadi::Item &item );
     void internalRemove( const Akonadi::Item &item );
@@ -56,10 +56,10 @@ class AkonadiCalendarPrivate : public QObject
     QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
     Akonadi::IncidenceChanger *mIncidenceChanger;
     QHash<QString,QStringList> mParentUidToChildrenUid;
-    QWeakPointer<AkonadiCalendar> mWeakPointer;
+    QWeakPointer<CalendarBase> mWeakPointer;
 
   private:
-    AkonadiCalendar *const q;
+    CalendarBase *const q;
 };
 
 }

@@ -43,7 +43,7 @@ using namespace KCalCore;
 
 //TODO: implement batchAdding
 
-ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : AkonadiCalendarPrivate( qq )
+ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate( qq )
                                                             , mETM( 0 )
                                                             , mFilteredETM( 0 )
                                                             , mCheckableProxyModel( 0 )
@@ -336,7 +336,7 @@ void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel( const QModelInde
 }
 
 ETMCalendar::ETMCalendar( const KDateTime::Spec &timeSpec )
-            : AkonadiCalendar( new ETMCalendarPrivate( this ), timeSpec )
+            : CalendarBase( new ETMCalendarPrivate( this ), timeSpec )
 {
   Q_D( ETMCalendar );
   d->init();

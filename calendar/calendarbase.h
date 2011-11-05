@@ -17,8 +17,8 @@
    02110-1301, USA.
 */
 
-#ifndef _AKONADI_AKONADICALENDAR_H_
-#define _AKONADI_AKONADICALENDAR_H_
+#ifndef _AKONADI_CALENDARBASE_H_
+#define _AKONADI_CALENDARBASE_H_
 
 #include "akonadi-calendar_export.h"
 
@@ -29,33 +29,33 @@
 #include <KDateTime>
 
 namespace Akonadi {
-  class AkonadiCalendarPrivate;
+  class CalendarBasePrivate;
 
   /**
   * @short 
-  * AkonadiCalendar is the base class for all akonadi aware calendars.
+  * CalendarBase is the base class for all akonadi aware calendars.
   *
   * Because it inherits KCalCore::Calendar, it provides seamless integration
   * with the KCalCore and KCalUtils libraries eliminating any need for
   * adapter ( akonadi<->KCalCore ) classes.
   *
-  * AkonadiCalendar can not be instantiated directly.
+  * CalendarBase can not be instantiated directly.
   * @see ETMCalendar
   * @see FetchJobCalendar
   *
   * @author Sérgio Martins <sergio.martins@kdab.com>
   * @since 4.9
   */
-  class AKONADI_CALENDAR_EXPORT AkonadiCalendar : public KCalCore::MemoryCalendar
+  class AKONADI_CALENDAR_EXPORT CalendarBase : public KCalCore::MemoryCalendar
   {
   Q_OBJECT
   public:
-    typedef QSharedPointer<AkonadiCalendar> Ptr;
+    typedef QSharedPointer<CalendarBase> Ptr;
 
     /**
      * Destroys the calendar.
      */
-    ~AkonadiCalendar();
+    ~CalendarBase();
 
     /**
      * Returns the Item containing the incidence with uid @p uid or an invalid Item
@@ -85,20 +85,20 @@ namespace Akonadi {
      * Use this if later on you need to cast sender() into a QSharedPointer
      *
      * @code
-     *   QWeakPointer<AkonadiCalendar> weakPtr = qobject_cast<AkonadiCalendar*>( sender() )->weakPointer();
-     *   AkonadiCalendar::Ptr calendar( weakPtr.toStrongRef() );
+     *   QWeakPointer<CalendarBase> weakPtr = qobject_cast<CalendarBase*>( sender() )->weakPointer();
+     *   CalendarBase::Ptr calendar( weakPtr.toStrongRef() );
      * @endcode
      *
      * @see weakPointer()
      */
-    void setWeakPointer( const QWeakPointer<Akonadi::AkonadiCalendar> &pointer );
+    void setWeakPointer( const QWeakPointer<Akonadi::CalendarBase> &pointer );
 
     /**
      * Returns the weak pointer set with setWeakPointer().
      * The default is an invalid weak pointer.
      * @see setWeakPointer()
      */
-    QWeakPointer<AkonadiCalendar> weakPointer() const;
+    QWeakPointer<CalendarBase> weakPointer() const;
 
     /**
      * Adds an Event to the calendar.
@@ -184,10 +184,10 @@ namespace Akonadi {
     void deleteFinished( bool success, const QString &errorMessage );
 
   protected:
-    Q_DECLARE_PRIVATE( AkonadiCalendar );
-    QScopedPointer<AkonadiCalendarPrivate> d_ptr;
-    explicit AkonadiCalendar( const KDateTime::Spec &timeSpec );
-    AkonadiCalendar( AkonadiCalendarPrivate *const d, const KDateTime::Spec &timeSpec );
+    Q_DECLARE_PRIVATE( CalendarBase );
+    QScopedPointer<CalendarBasePrivate> d_ptr;
+    explicit CalendarBase( const KDateTime::Spec &timeSpec );
+    CalendarBase( CalendarBasePrivate *const d, const KDateTime::Spec &timeSpec );
   };
 }
 

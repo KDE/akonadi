@@ -27,8 +27,8 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-FetchJobCalendarPrivate::FetchJobCalendarPrivate( FetchJobCalendar *qq ) : AkonadiCalendarPrivate( qq )
-                                                                           , q( qq )
+FetchJobCalendarPrivate::FetchJobCalendarPrivate( FetchJobCalendar *qq ) : CalendarBasePrivate( qq )
+                                                                         , q( qq )
 {
   IncidenceFetchJob *job = new IncidenceFetchJob();
   connect( job, SIGNAL(result(KJob*)),
@@ -55,7 +55,7 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
 }
 
 FetchJobCalendar::FetchJobCalendar( const KDateTime::Spec &timeSpec )
-                 : AkonadiCalendar( new FetchJobCalendarPrivate( this ), timeSpec )
+                 : CalendarBase( new FetchJobCalendarPrivate( this ), timeSpec )
 {
 }
 

@@ -34,9 +34,6 @@
 #include <KCalCore/Journal>
 #include <KCalCore/Todo>
 
-#include <QtCore/QObject>
-#include <QPushButton>
-
 using namespace Akonadi;
 using namespace KCalCore;
 

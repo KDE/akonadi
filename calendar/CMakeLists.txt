@@ -9,7 +9,7 @@ add_subdirectory( tests )
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
 
 set(akonadicalendar_LIB_SRC
-  akonadicalendar.cpp
+  calendarbase.cpp
   calendarmodel.cpp
   collectionselection.cpp
   etmcalendar.cpp
@@ -41,7 +41,7 @@ set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
-  akonadicalendar.h
+  calendarbase.h
   etmcalendar.h
   incidencechanger.h
   fetchjobcalendar.h

@@ -17,8 +17,8 @@
    02110-1301, USA.
 */
 
-#include "akonadicalendar.h"
-#include "akonadicalendar_p.h"
+#include "calendarbase.h"
+#include "calendarbase_p.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
@@ -26,9 +26,9 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-AkonadiCalendarPrivate::AkonadiCalendarPrivate( AkonadiCalendar *qq ) : QObject()
-                                                                        , mIncidenceChanger( new IncidenceChanger() )
-                                                                        , q( qq )
+CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
+                                                             , mIncidenceChanger( new IncidenceChanger() )
+                                                             , q( qq )
 {
   connect( mIncidenceChanger,
            SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
@@ -39,12 +39,12 @@ AkonadiCalendarPrivate::AkonadiCalendarPrivate( AkonadiCalendar *qq ) : QObject(
            SLOT(slotDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
-AkonadiCalendarPrivate::~AkonadiCalendarPrivate()
+CalendarBasePrivate::~CalendarBasePrivate()
 {
   delete mIncidenceChanger;
 }
 
-void AkonadiCalendarPrivate::internalInsert( const Akonadi::Item &item )
+void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   mItemById.insert( item.id(), item );
@@ -65,14 +65,14 @@ void AkonadiCalendarPrivate::internalInsert( const Akonadi::Item &item )
   }
 }
 
-void AkonadiCalendarPrivate::internalRemove( const Akonadi::Item &item )
+void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
   Incidence::Ptr incidence = q->incidence( item.payload<KCalCore::Incidence::Ptr>()->uid() );
 
 
-  // Null incidence means it was deleted via AkonadiCalendar::deleteIncidence(), but then
+  // Null incidence means it was deleted via CalendarBase::deleteIncidence(), but then
   // the ETMCalendar received the monitor notification and tried to delete it again.
   if ( incidence ) {
     mItemById.remove( item.id() );
@@ -89,10 +89,10 @@ void AkonadiCalendarPrivate::internalRemove( const Akonadi::Item &item )
   }
 }
 
-void AkonadiCalendarPrivate::slotDeleteFinished( int changeId,
-                                                 const QVector<Akonadi::Item::Id> &itemIds,
-                                                 IncidenceChanger::ResultCode resultCode,
-                                                 const QString &errorMessage )
+void CalendarBasePrivate::slotDeleteFinished( int changeId,
+                                              const QVector<Akonadi::Item::Id> &itemIds,
+                                              IncidenceChanger::ResultCode resultCode,
+                                              const QString &errorMessage )
 {
   Q_UNUSED( changeId );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
@@ -104,10 +104,10 @@ void AkonadiCalendarPrivate::slotDeleteFinished( int changeId,
   emit q->deleteFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-void AkonadiCalendarPrivate::slotCreateFinished( int changeId,
-                                                 const Akonadi::Item &item,
-                                                 IncidenceChanger::ResultCode resultCode,
-                                                 const QString &errorMessage )
+void CalendarBasePrivate::slotCreateFinished( int changeId,
+                                              const Akonadi::Item &item,
+                                              IncidenceChanger::ResultCode resultCode,
+                                              const QString &errorMessage )
 {
   Q_UNUSED( changeId );
   Q_UNUSED( item );
@@ -117,24 +117,24 @@ void AkonadiCalendarPrivate::slotCreateFinished( int changeId,
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-AkonadiCalendar::AkonadiCalendar( const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
-                                                                      , d_ptr( new AkonadiCalendarPrivate( this ) )
+CalendarBase::CalendarBase( const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
+                                                              , d_ptr( new CalendarBasePrivate( this ) )
 {
 }
 
-AkonadiCalendar::AkonadiCalendar( AkonadiCalendarPrivate *const dd,
-                                  const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
-                                                                      , d_ptr( dd )
+CalendarBase::CalendarBase( CalendarBasePrivate *const dd,
+                            const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
+                                                              , d_ptr( dd )
 {
 }
 
-AkonadiCalendar::~AkonadiCalendar()
+CalendarBase::~CalendarBase()
 {
 }
 
-Akonadi::Item AkonadiCalendar::item( Akonadi::Item::Id id ) const
+Akonadi::Item CalendarBase::item( Akonadi::Item::Id id ) const
 {
-  Q_D(const AkonadiCalendar);
+  Q_D(const CalendarBase);
   Akonadi::Item i;
   if ( d->mItemById.contains( id ) ) {
     i = d->mItemById[id];
@@ -144,16 +144,16 @@ Akonadi::Item AkonadiCalendar::item( Akonadi::Item::Id id ) const
   return i;
 }
 
-Akonadi::Item AkonadiCalendar::item( const QString &uid ) const
+Akonadi::Item CalendarBase::item( const QString &uid ) const
 {
-  Q_D(const AkonadiCalendar);
+  Q_D(const CalendarBase);
   Q_ASSERT( !uid.isEmpty() );
   Akonadi::Item i;
   if ( d->mItemIdByUid.contains( uid ) ) {
     const Akonadi::Item::Id id = d->mItemIdByUid[uid];
     if ( !d->mItemById.contains( id ) ) {
       kError() << "Item with id " << id << "(uid=" << uid << ") not found, but in uid map";
-      Q_ASSERT_X( false, "AkonadiCalendar::item", "not in mItemById" );
+      Q_ASSERT_X( false, "CalendarBase::item", "not in mItemById" );
     }
     i = d->mItemById[id];
   } else {
@@ -162,7 +162,7 @@ Akonadi::Item AkonadiCalendar::item( const QString &uid ) const
   return i;
 }
 
-KCalCore::Incidence::List AkonadiCalendar::childIncidences( const KCalCore::Incidence::Ptr &parent ) const
+KCalCore::Incidence::List CalendarBase::childIncidences( const KCalCore::Incidence::Ptr &parent ) const
 {
   Q_ASSERT( parent );
   Akonadi::Item item = this->item( parent->uid() );
@@ -170,9 +170,9 @@ KCalCore::Incidence::List AkonadiCalendar::childIncidences( const KCalCore::Inci
   return childIncidences( item );
 }
 
-KCalCore::Incidence::List AkonadiCalendar::childIncidences( const Akonadi::Item &parent ) const
+KCalCore::Incidence::List CalendarBase::childIncidences( const Akonadi::Item &parent ) const
 {
-  Q_D(const AkonadiCalendar);
+  Q_D(const CalendarBase);
   KCalCore::Incidence::List children;
   const KCalCore::Incidence::Ptr incidence = parent.payload<KCalCore::Incidence::Ptr>();
   Q_ASSERT( incidence );
@@ -185,78 +185,78 @@ KCalCore::Incidence::List AkonadiCalendar::childIncidences( const Akonadi::Item 
   return children;
 }
 
-bool AkonadiCalendar::addEvent( const KCalCore::Event::Ptr &event )
+bool CalendarBase::addEvent( const KCalCore::Event::Ptr &event )
 {
   return addIncidence( event );
 }
 
-bool AkonadiCalendar::deleteEvent( const KCalCore::Event::Ptr &event )
+bool CalendarBase::deleteEvent( const KCalCore::Event::Ptr &event )
 {
   return deleteIncidence( event );
 }
 
-void AkonadiCalendar::deleteAllEvents()
+void CalendarBase::deleteAllEvents()
 {
   //TODO
 }
 
-bool AkonadiCalendar::addTodo( const KCalCore::Todo::Ptr &todo )
+bool CalendarBase::addTodo( const KCalCore::Todo::Ptr &todo )
 {
   return addIncidence( todo );
 }
 
-bool AkonadiCalendar::deleteTodo( const KCalCore::Todo::Ptr &todo )
+bool CalendarBase::deleteTodo( const KCalCore::Todo::Ptr &todo )
 {
   return deleteIncidence( todo );
 }
 
-void AkonadiCalendar::deleteAllTodos()
+void CalendarBase::deleteAllTodos()
 {
   //TODO
 }
 
-bool AkonadiCalendar::addJournal( const KCalCore::Journal::Ptr &journal )
+bool CalendarBase::addJournal( const KCalCore::Journal::Ptr &journal )
 {
   return addIncidence( journal );
 }
 
-bool AkonadiCalendar::deleteJournal( const KCalCore::Journal::Ptr &journal )
+bool CalendarBase::deleteJournal( const KCalCore::Journal::Ptr &journal )
 {
   return deleteIncidence( journal );
 }
 
-void AkonadiCalendar::deleteAllJournals()
+void CalendarBase::deleteAllJournals()
 {
   //TODO
 }
 
-bool AkonadiCalendar::addIncidence( const KCalCore::Incidence::Ptr &incidence )
+bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   //TODO: Collection 1?
   //TODO: Parent for dialogs
-  Q_D(AkonadiCalendar);
+  Q_D(CalendarBase);
   return -1 != d->mIncidenceChanger->createIncidence( incidence, Akonadi::Collection() );
 }
 
-bool AkonadiCalendar::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
+bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  Q_D(AkonadiCalendar);
+  Q_D(CalendarBase);
   Q_ASSERT( incidence );
   Akonadi::Item item_ = item( incidence->uid() );
   return -1 != d->mIncidenceChanger->deleteIncidence( item_ );
 }
 
-void AkonadiCalendar::setWeakPointer( const QWeakPointer<AkonadiCalendar> &pointer )
+void CalendarBase::setWeakPointer( const QWeakPointer<CalendarBase> &pointer )
 {
-  Q_D(AkonadiCalendar);
+  Q_D(CalendarBase);
   d->mWeakPointer = pointer;
 }
 
-QWeakPointer<AkonadiCalendar> AkonadiCalendar::weakPointer() const
+QWeakPointer<CalendarBase> CalendarBase::weakPointer() const
 {
-  Q_D(const AkonadiCalendar);
+  Q_D(const CalendarBase);
   return d->mWeakPointer;
 }
 
-#include "akonadicalendar.moc"
-#include "akonadicalendar_p.moc"
+#include "calendarbase.moc"
+#include "calendarbase_p.moc"

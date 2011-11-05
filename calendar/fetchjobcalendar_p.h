@@ -17,11 +17,11 @@
   02110-1301, USA.
 */
 
-#ifndef CALENDARSUPPORT_FETCHJOBCALENDAR_P_H
-#define CALENDARSUPPORT_FETCHJOBCALENDAR_P_H
+#ifndef AKONADI_FETCHJOBCALENDAR_P_H
+#define AKONADI_FETCHJOBCALENDAR_P_H
 
 #include "fetchjobcalendar.h"
-#include "akonadicalendar_p.h"
+#include "calendarbase_p.h"
 
 #include <QVector>
 
@@ -29,7 +29,7 @@ class KJob;
 
 namespace Akonadi {
 
-class FetchJobCalendarPrivate : public AkonadiCalendarPrivate
+class FetchJobCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
   public:

@@ -21,7 +21,7 @@
 #define _AKONADI_ETMCALENDAR_H_
 
 #include "akonadi-calendar_export.h"
-#include "akonadicalendar.h"
+#include "calendarbase.h"
 
 #include <Akonadi/Collection>
 #include <KSystemTimeZones>
@@ -32,7 +32,7 @@ class KCheckableProxyModel;
 namespace Akonadi {
   class ETMCalendarPrivate;
   class CollectionSelection;
-  class AKONADI_CALENDAR_EXPORT ETMCalendar : public AkonadiCalendar
+  class AKONADI_CALENDAR_EXPORT ETMCalendar : public CalendarBase
   {
   Q_OBJECT
   public:

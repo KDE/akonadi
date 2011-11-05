@@ -21,7 +21,7 @@
 #define AKONADI_ETMCALENDAR_P_H
 
 #include "etmcalendar.h"
-#include "akonadicalendar_p.h"
+#include "calendarbase_p.h"
 #include "incidencechanger.h"
 #include "collectionselection_p.h"
 
@@ -35,7 +35,7 @@ namespace Akonadi {
 
 class EntityMimeTypeFilterModel;
   
-class ETMCalendarPrivate : public AkonadiCalendarPrivate
+class ETMCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
   public:
