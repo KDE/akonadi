@@ -121,8 +121,9 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
 
     /**
      * Creates a new IncidenceChanger instance.
+     * @param parent parent QObject
      */
-    IncidenceChanger();
+    IncidenceChanger( QObject *parent = 0 );
 
     /**
      * Destroys this IncidenceChanger instance.

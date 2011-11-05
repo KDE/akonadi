@@ -365,7 +365,8 @@ bool IncidenceChanger::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) cons
   return mDeletedItemIds.contains( id );
 }
 
-IncidenceChanger::IncidenceChanger() : QObject(), d( new Private( this ) )
+IncidenceChanger::IncidenceChanger( QObject *parent ) : QObject( parent )
+                                                      , d( new Private( this ) )
 {
 }
 
