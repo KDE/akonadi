@@ -72,11 +72,11 @@ namespace Akonadi {
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void Akonadi::emitCreateFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const Akonadi::Item &item,
-                                  Akonadi::IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString )
+static void Akonadi::emitCreateFinished( IncidenceChanger *changer,
+                                         int changeId,
+                                         const Akonadi::Item &item,
+                                         Akonadi::IncidenceChanger::ResultCode resultCode,
+                                         const QString &errorString )
 {
   QMetaObject::invokeMethod( changer, "createFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
@@ -86,11 +86,11 @@ void Akonadi::emitCreateFinished( IncidenceChanger *changer,
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void Akonadi::emitModifyFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const Akonadi::Item &item,
-                                  IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString )
+static void Akonadi::emitModifyFinished( IncidenceChanger *changer,
+                                         int changeId,
+                                         const Akonadi::Item &item,
+                                         IncidenceChanger::ResultCode resultCode,
+                                         const QString &errorString )
 {
   QMetaObject::invokeMethod( changer, "modifyFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
@@ -100,11 +100,11 @@ void Akonadi::emitModifyFinished( IncidenceChanger *changer,
 }
 
 // Does a queued emit, with QMetaObject::invokeMethod
-void Akonadi::emitDeleteFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const QVector<Akonadi::Item::Id> &itemIdList,
-                                  IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString )
+static void Akonadi::emitDeleteFinished( IncidenceChanger *changer,
+                                         int changeId,
+                                         const QVector<Akonadi::Item::Id> &itemIdList,
+                                         IncidenceChanger::ResultCode resultCode,
+                                         const QString &errorString )
 {
   QMetaObject::invokeMethod( changer, "deleteFinished", Qt::QueuedConnection,
                              Q_ARG( int, changeId ),
