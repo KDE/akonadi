@@ -92,33 +92,34 @@ class IncidenceChangerTest : public QObject
       QTest::addColumn<QString>( "summary" );
       QTest::addColumn<Akonadi::Collection>( "destinationCollection" );
       QTest::addColumn<Akonadi::Collection>( "defaultCollection" );
+      QTest::addColumn<bool>( "respectsCollectionRights" );
       QTest::addColumn<Akonadi::IncidenceChanger::DestinationPolicy>( "destinationPolicy" );
       QTest::addColumn<bool>( "failureExpected" );
       QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
 
 
       QTest::newRow( "Simple Creation1" ) << false << "SomeUid1" << "Summary1" << mCollection
-                                          << Collection()
+                                          << Collection() << true
                                           << IncidenceChanger::DestinationPolicyNeverAsk
                                           << false << IncidenceChanger::ResultCodeSuccess;
 
       QTest::newRow( "Simple Creation2" ) << false << "SomeUid2" << "Summary2" << mCollection
-                                          << Collection()
+                                          << Collection() << true
                                           << IncidenceChanger::DestinationPolicyNeverAsk
                                           << false << IncidenceChanger::ResultCodeSuccess;
 
       QTest::newRow( "Invalid incidence" ) << true << "SomeUid3" << "Summary3" << mCollection
-                                           << Collection()
+                                           << Collection() << true
                                            << IncidenceChanger::DestinationPolicyNeverAsk
                                            << true;
 
       QTest::newRow( "Invalid collection" ) << false << "SomeUid4" << "Summary4" << Collection()
-                                            << Collection()
+                                            << Collection() << true
                                             << IncidenceChanger::DestinationPolicyNeverAsk
                                             << false << IncidenceChanger::ResultCodeInvalidDefaultCollection;
 
       QTest::newRow( "Default collection" ) << false << "SomeUid5" << "Summary5" << Collection()
-                                            << mCollection
+                                            << mCollection << true
                                             << IncidenceChanger::DestinationPolicyDefault
                                             << false << IncidenceChanger::ResultCodeSuccess;
     }
@@ -130,6 +131,7 @@ class IncidenceChangerTest : public QObject
       QFETCH( QString, summary );
       QFETCH( Akonadi::Collection, destinationCollection );
       QFETCH( Akonadi::Collection, defaultCollection );
+      QFETCH( bool, respectsCollectionRights );
       QFETCH( Akonadi::IncidenceChanger::DestinationPolicy, destinationPolicy );
       QFETCH( bool, failureExpected );
 
@@ -140,7 +142,7 @@ class IncidenceChangerTest : public QObject
         incidence->setUid( uid );
         incidence->setSummary( summary );
       }
-
+      mChanger->setRespectsCollectionRights( respectsCollectionRights );
       mChanger->setDestinationPolicy( destinationPolicy );
       mChanger->setDefaultCollection( defaultCollection );
       const int changeId = mChanger->createIncidence( incidence, destinationCollection );
@@ -177,12 +179,13 @@ class IncidenceChangerTest : public QObject
     void testDeleting_data()
     {
       QTest::addColumn<Akonadi::Item::List>( "items" );
+      QTest::addColumn<bool>( "respectsCollectionRights" );
       QTest::addColumn<bool>( "failureExpected" );
       QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
 
 
-      QTest::newRow( "Delete empty list" )   << Item::List() << true;
-      QTest::newRow( "Delete invalid item" ) << (Item::List() << Item()) << true;
+      QTest::newRow( "Delete empty list" )   << Item::List() << true << true;
+      QTest::newRow( "Delete invalid item" ) << (Item::List() << Item()) << true << true;
 
       ItemFetchJob *fetchJob = new ItemFetchJob( mCollection );
       fetchJob->fetchScope().fetchFullPayload();
@@ -191,20 +194,23 @@ class IncidenceChangerTest : public QObject
 
       // 3 Incidences were created in testCreating(). Keep this in sync.
       QVERIFY( items.count() == 3 );
-      QTest::newRow( "Simple delete" ) << (Item::List() << items.at( 0 ) ) << false
+      QTest::newRow( "Simple delete" ) << (Item::List() << items.at( 0 ) ) << true << false
                                        << IncidenceChanger::ResultCodeSuccess;
 
-      QTest::newRow( "Delete already deleted" ) << ( Item::List() << items.at( 0 ) ) << false
+      QTest::newRow( "Delete already deleted" ) << ( Item::List() << items.at( 0 ) ) << true
+                                                << false
                                                 << IncidenceChanger::ResultCodeAlreadyDeleted;
 
       QTest::newRow( "Delete all others" ) << ( Item::List() << items.at( 1 ) << items.at( 2 ) )
-                                           << false << IncidenceChanger::ResultCodeSuccess;
+                                           << true << false << IncidenceChanger::ResultCodeSuccess;
     }
 
     void testDeleting()
     {
       QFETCH( Akonadi::Item::List, items );
+      QFETCH( bool, respectsCollectionRights );
       QFETCH( bool, failureExpected );
+      mChanger->setRespectsCollectionRights( respectsCollectionRights );
       const int changeId = mChanger->deleteIncidences( items );
 
       QVERIFY( failureExpected ^ ( changeId != -1 ) );
@@ -234,12 +240,13 @@ class IncidenceChangerTest : public QObject
     {
       QTest::addColumn<Akonadi::Item>( "item" );
       QTest::addColumn<QString>( "newSummary" );
+      QTest::addColumn<bool>( "respectsCollectionRights" );
       QTest::addColumn<int>( "expectedRevision" );
       QTest::addColumn<bool>( "failureExpected" );
       QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
 
-      QTest::newRow( "Invalid item" ) << Item() << QString() << 0 << true;
-      QTest::newRow( "Valid item, invalid payload" ) << Item(1) << QString() << 0 << true;
+      QTest::newRow( "Invalid item" ) << Item() << QString() << true << 0 << true;
+      QTest::newRow( "Valid item, invalid payload" ) << Item(1) << QString() << true << 0 << true;
 
       Item item;
       item.setMimeType( Event::eventMimeType() );
@@ -253,7 +260,7 @@ class IncidenceChangerTest : public QObject
       incidence->setSummary( QLatin1String( "New Summary" ) );
       item.setPayload<KCalCore::Incidence::Ptr>( incidence );
 
-      QTest::newRow("Change summary") << item << "New Summary" << 1 << false
+      QTest::newRow("Change summary") << item << "New Summary" << true << 1 << false
                                       << IncidenceChanger::ResultCodeSuccess;
     }
 
@@ -261,9 +268,11 @@ class IncidenceChangerTest : public QObject
     {
       QFETCH( Akonadi::Item, item );
       QFETCH( QString, newSummary );
+      QFETCH( bool, respectsCollectionRights );
       QFETCH( int, expectedRevision );
       QFETCH( bool, failureExpected );
 
+      mChanger->setRespectsCollectionRights( respectsCollectionRights );
       const int changeId = mChanger->modifyIncidence( item );
       QVERIFY( failureExpected ^ ( changeId != -1 ) );
 
