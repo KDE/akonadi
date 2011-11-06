@@ -121,7 +121,7 @@ int main( int argc, char **argv )
 
   app.parseCommandLine();
 
-  QString optionsList;
+  QStringList optionsList;
   optionsList.append( QLatin1String( "start" ) );
   optionsList.append( QLatin1String( "stop" ) );
   optionsList.append( QLatin1String( "status" ) );
