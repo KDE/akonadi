@@ -56,7 +56,6 @@ add_custom_command(
 )
 
 set(libakonadiprivate_SRCS
-  ${AKONADI_SHARED_SOURCES}
   src/akonadi.cpp
   src/akonadiconnection.cpp
   src/handler.cpp
@@ -192,6 +191,7 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
+  akonadi_shared
 )
 if(Soprano_FOUND)
   target_link_libraries(akonadiprivate ${SOPRANO_LIBRARIES})
@@ -207,8 +207,7 @@ set_target_properties( akonadiprivate PROPERTIES
                         DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
                       )
 
-set( akonadiserver_bin_SRCS src/main.cpp
-  ${AKONADI_SHARED_SOURCES} )
+set( akonadiserver_bin_SRCS src/main.cpp )
 
 if (AKONADI_STATIC_SQLITE)
 add_definitions(-DQT_STATICPLUGIN)
@@ -216,7 +215,7 @@ endif (AKONADI_STATIC_SQLITE)
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
-target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} )
+target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} akonadi_shared )
 if (AKONADI_STATIC_SQLITE)
 target_link_libraries( akonadiserver_bin qsqlite3 )
 endif (AKONADI_STATIC_SQLITE)

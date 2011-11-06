@@ -289,20 +289,13 @@ macro_write_basic_cmake_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.
 
 ############### build targets ###############
 
-set( AKONADI_SHARED_SOURCES
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akapplication.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akcrash.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdbus.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akdebug.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/shared/akstandarddirs.cpp
-)
-
 include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES} ${Boost_INCLUDE_DIR})
 
 add_subdirectory(interfaces)
 add_subdirectory(libs)
 set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
 
+add_subdirectory(shared)
 add_subdirectory(agentserver)
 
 if (XSLTPROC_EXECUTABLE)

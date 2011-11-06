@@ -14,7 +14,6 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 ########### next target ###############
 
 set( control_SRCS
-  ${AKONADI_SHARED_SOURCES}
   agenttype.cpp
   agentinstance.cpp
   agentprocessinstance.cpp
@@ -47,7 +46,7 @@ if (WIN32)
   target_link_libraries(akonadi_control ${QT_QTMAIN_LIBRARY})
 endif (WIN32)
 
-target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${AKONADI_SYSTEM_LIBS})
+target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${AKONADI_SYSTEM_LIBS} akonadi_shared)
 
 if(NOT WINCE)
     target_link_libraries(akonadi_control ${Boost_PROGRAM_OPTIONS_LIBRARY})

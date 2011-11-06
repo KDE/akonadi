@@ -1,0 +1,11 @@
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+set(akonadi_shared_srcs
+  akapplication.cpp
+  akcrash.cpp
+  akdbus.cpp
+  akdebug.cpp
+  akstandarddirs.cpp
+)
+
+automoc4_add_library(akonadi_shared STATIC ${akonadi_shared_srcs})

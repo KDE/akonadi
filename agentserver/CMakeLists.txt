@@ -4,7 +4,6 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Akonadi_SOURCE_DIR})
 # Agent server
 
 set( akonadi_agent_server_srcs
-  ${AKONADI_SHARED_SOURCES}
   agentpluginloader.cpp
   agentserver.cpp
   agentthread.cpp
@@ -22,6 +21,7 @@ target_link_libraries(akonadi_agent_server
   ${QT_QTDBUS_LIBRARY}
   ${AKONADI_SYSTEM_LIBS}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
+  akonadi_shared
 )
 
 if(NOT WINCE)
@@ -30,7 +30,6 @@ if(NOT WINCE)
   # Agent plugin launcher
 
   set( akonadi_agent_launcher_SRCS
-    ${AKONADI_SHARED_SOURCES}
     agentpluginloader.cpp
     agentlauncher.cpp
   )
@@ -40,6 +39,7 @@ if(NOT WINCE)
     ${QT_QTGUI_LIBRARY}
     ${AKONADI_SYSTEM_LIBS}
     ${AKONADI_PROTOCOLINTERNALS_LIBS}
+    akonadi_shared
   )
 
   if (Q_WS_MAC)
