@@ -19,9 +19,9 @@
 
 #include "agentserver.h"
 
-#include "shared/akapplication.h"
+#include <shared/akapplication.h>
 #include <shared/akdbus.h>
-#include "shared/akdebug.h"
+#include <shared/akdebug.h>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
@@ -34,8 +34,10 @@ int main( int argc, char ** argv )
 int cemain( int argc, char ** argv )
 #endif
 {
-  QApplication app( argc, argv );
-  app.setQuitOnLastWindowClosed( false );
+  AkGuiApplication app( argc, argv );
+  app.setDescription(QLatin1String("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
+  app.parseCommandLine();
+  qApp->setQuitOnLastWindowClosed( false );
 
   //Needed for wince build
   #undef interface
