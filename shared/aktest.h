@@ -25,7 +25,7 @@
 #define AKTEST_MAIN( TestObject ) \
 int main(int argc, char **argv) \
 { \
-  AkApplication app(argc, argv); \
+  AkCoreApplication app(argc, argv); \
   app.parseCommandLine(); \
   TestObject tc; \
   return QTest::qExec(&tc, argc, argv); \

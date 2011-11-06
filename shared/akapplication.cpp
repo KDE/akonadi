@@ -23,6 +23,7 @@
 
 #include <QDBusConnection>
 #include <QTimer>
+#include <QtCore/QCoreApplication>
 
 #include <iostream>
 
@@ -30,13 +31,20 @@
 namespace po = boost::program_options;
 #endif
 
+AkApplication* AkApplication::sInstance = 0;
 
 AkApplication::AkApplication(int & argc, char ** argv) :
-    QCoreApplication( argc, argv ),
+    QObject( 0 ),
     mArgc( argc ),
     mArgv( argv )
 {
-  akInit( QString::fromLatin1( argv[ 0 ] ) );
+  Q_ASSERT(!sInstance);
+  sInstance = this;
+}
+
+void AkApplication::init()
+{
+  akInit( QString::fromLatin1( mArgv[ 0 ] ) );
 
   if ( !QDBusConnection::sessionBus().isConnected() )
     akFatal() << "D-Bus session bus is not available!";
@@ -90,7 +98,7 @@ void AkApplication::pollSessionBus() const
 {
   if ( !QDBusConnection::sessionBus().isConnected() ) {
     akError() << "D-Bus session bus went down - quitting";
-    quit();
+    mApp->quit();
   }
 }
 
@@ -112,8 +120,8 @@ void AkApplication::printUsage() const
 
 QString AkApplication::instanceIdentifier()
 {
-  Q_ASSERT(qobject_cast<AkApplication*>( QCoreApplication::instance() ) );
-  return static_cast<AkApplication*>( QCoreApplication::instance() )->mInstanceId;
+  Q_ASSERT(sInstance);
+  return sInstance->mInstanceId;
 }
 
 bool AkApplication::hasInstanceIdentifier()
@@ -121,6 +129,10 @@ bool AkApplication::hasInstanceIdentifier()
   return !instanceIdentifier().isEmpty();
 }
 
+int AkApplication::exec()
+{
+  return mApp->exec();
+}
 
 
 #include "akapplication.moc"

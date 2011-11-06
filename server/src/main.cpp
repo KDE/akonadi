@@ -59,7 +59,7 @@ int main( int argc, char ** argv )
 #else
     Q_INIT_RESOURCE( akonadidb_mobile );
 #endif
-    AkApplication app( argc, argv );
+    AkCoreApplication app( argc, argv );
     app.setDescription( QLatin1String( "Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
 
 #if !defined(NDEBUG) && !defined(_WIN32_WCE)

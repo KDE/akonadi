@@ -107,7 +107,7 @@ static bool statusServer()
 
 int main( int argc, char **argv )
 {
-  AkApplication app( argc, argv );
+  AkCoreApplication app( argc, argv );
   app.setDescription( QLatin1String("Akonadi server manipulation tool\n"
       "Usage: akonadictl [command]\n\n"
       "Commands:\n"
@@ -130,7 +130,7 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "fsck" ) );
 
 #ifndef _WIN32_WCE
-  const QStringList arguments = app.arguments();
+  const QStringList arguments = QCoreApplication::instance()->arguments();
   if ( arguments.count() != 2 ) {
     app.printUsage();
     return 1;
@@ -139,7 +139,7 @@ int main( int argc, char **argv )
     return 2;
   }
 #else
-    QStringList arguments = app.arguments();
+    QStringList arguments = QCoreApplication::instance()->arguments();
     if (argc > 1) {
       if (strcmp(argv[1],"start") == 0) {
         arguments.append(QLatin1String("start"));

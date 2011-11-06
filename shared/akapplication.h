@@ -20,20 +20,22 @@
 #ifndef AKAPPLICATION_H
 #define AKAPPLICATION_H
 
-#include <QtCore/QCoreApplication>
+#include <QtCore/QObject>
 
 #ifndef _WIN32_WCE
 #include <boost/program_options.hpp>
 #endif
 
+class QCoreApplication;
+class QApplication;
+
 /**
  * D-Bus session bus monitoring and command line handling.
  */
-class AkApplication : public QCoreApplication
+class AkApplication : public QObject
 {
   Q_OBJECT
   public:
-    AkApplication( int & argc, char ** argv );
     void parseCommandLine();
     void setDescription( const QString &desc ) { mDescription = desc; }
 
@@ -41,7 +43,7 @@ class AkApplication : public QCoreApplication
     void addCommandLineOptions( const boost::program_options::options_description &desc );
     const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
 #endif
-    
+
     void printUsage() const;
 
     /** Returns the instance identifier when running in multi-instance mode, empty string otherwise. */
@@ -49,6 +51,14 @@ class AkApplication : public QCoreApplication
 
     /** Returns @c true if we run in multi-instance mode. */
     static bool hasInstanceIdentifier();
+
+    /** Forward to Q[Core]Application for convenience. */
+    int exec();
+
+  protected:
+    AkApplication( int & argc, char ** argv );
+    void init();
+    QScopedPointer<QCoreApplication> mApp;
 
   private slots:
     void pollSessionBus() const;
@@ -58,11 +68,26 @@ class AkApplication : public QCoreApplication
     char **mArgv;
     QString mDescription;
     QString mInstanceId;
+    static AkApplication* sInstance;
 
 #ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
     boost::program_options::variables_map mCmdLineArguments;
 #endif
 };
+
+template <typename T>
+class AkApplicationImpl : public AkApplication
+{
+  public:
+    AkApplicationImpl( int &argc, char ** argv ) : AkApplication( argc, argv )
+    {
+      mApp.reset( new T( argc, argv ) );
+      init();
+    }
+};
+
+typedef AkApplicationImpl<QCoreApplication> AkCoreApplication;
+typedef AkApplicationImpl<QApplication> AkGuiApplication;
 
 #endif
