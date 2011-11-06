@@ -19,7 +19,7 @@
 
 #include "bridgeconnection.h"
 
-#include <libs/xdgbasedirs_p.h>
+#include <shared/akstandarddirs.h>
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QRegExp>
@@ -67,7 +67,7 @@ AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObj
 
 void AkonadiBridgeConnection::connectLocal()
 {
-  const QSettings connectionSettings( Akonadi::XdgBaseDirs::akonadiConnectionConfigFile(), QSettings::IniFormat );
+  const QSettings connectionSettings( AkStandardDirs::connectionConfigFile(), QSettings::IniFormat );
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
 #ifdef Q_OS_WINCE
   (static_cast<QTcpSocket*>( m_localSocket ))->connectToHost( "127.0.0.1", 31414 );
@@ -76,7 +76,7 @@ void AkonadiBridgeConnection::connectLocal()
   (static_cast<QLocalSocket*>( m_localSocket ))->connectToServer( namedPipe );
 #endif
 #else
-  const QString defaultSocketDir = Akonadi::XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
+  const QString defaultSocketDir = AkStandardDirs::saveDir( "data" );
   const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
   (static_cast<QLocalSocket*>( m_localSocket ))->connectToServer( path );
 #endif

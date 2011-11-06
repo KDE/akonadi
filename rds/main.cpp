@@ -20,12 +20,16 @@
 #include "bridgeserver.h"
 #include "bridgeconnection.h"
 
+#include <shared/akapplication.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 
 int main( int argc, char **argv )
 {
-  QCoreApplication app( argc, argv );
+  AkCoreApplication app( argc, argv );
+  app.setDescription( QLatin1String("Akonadi Remote Debugging Server\nUse for debugging only." ) );
+  app.parseCommandLine();
   try {
       new BridgeServer<AkonadiBridgeConnection>( 31415 );
       new BridgeServer<DBusBridgeConnection>( 31416 );
