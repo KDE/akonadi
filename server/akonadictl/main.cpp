@@ -129,8 +129,12 @@ int main( int argc, char **argv )
   optionsList.append( QLatin1String( "vacuum" ) );
   optionsList.append( QLatin1String( "fsck" ) );
 
+  QStringList arguments = QCoreApplication::instance()->arguments();
 #ifndef _WIN32_WCE
-  const QStringList arguments = QCoreApplication::instance()->arguments();
+  if ( AkApplication::hasInstanceIdentifier() ) { // HACK: we should port all of this to boost::program_options...
+    arguments.removeFirst();
+    arguments.removeFirst();
+  }
   if ( arguments.count() != 2 ) {
     app.printUsage();
     return 1;
@@ -139,7 +143,6 @@ int main( int argc, char **argv )
     return 2;
   }
 #else
-    QStringList arguments = QCoreApplication::instance()->arguments();
     if (argc > 1) {
       if (strcmp(argv[1],"start") == 0) {
         arguments.append(QLatin1String("start"));
