@@ -45,27 +45,6 @@ namespace Akonadi {
 
   class TransactionSequence;
 
-  // Does a queued emit, with QMetaObject::invokeMethod
-  static void emitCreateFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const Akonadi::Item &item,
-                                  IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString );
-
-  // Does a queued emit, with QMetaObject::invokeMethod
-  static void emitModifyFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const Akonadi::Item &item,
-                                  IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString );
-
-  // Does a queued emit, with QMetaObject::invokeMethod
-  static void emitDeleteFinished( IncidenceChanger *changer,
-                                  int changeId,
-                                  const QVector<Akonadi::Item::Id> &itemIdList,
-                                  IncidenceChanger::ResultCode resultCode,
-                                  const QString &errorString );
-  
   class Change {
     public:
       typedef QSharedPointer<Change> Ptr;
@@ -120,7 +99,6 @@ namespace Akonadi {
                                                       IncidenceChanger::ChangeTypeModify,
                                                       atomicOperationId, parent )
       {
-        
       }
 
       ~ModificationChange()
@@ -130,10 +108,7 @@ namespace Akonadi {
       }
 
       /**reimp*/
-      void emitCompletionSignal()
-      {
-        emitModifyFinished( changer, id, newItem, resultCode, errorString );
-      }
+      void emitCompletionSignal();
   };
 
   class CreationChange : public Change
@@ -152,11 +127,7 @@ namespace Akonadi {
       }
 
       /**reimp*/
-      void emitCompletionSignal()
-      {
-        // Does a queued emit, with QMetaObject::invokeMethod
-        emitCreateFinished( changer, id, newItem, resultCode, errorString );
-      }
+      void emitCompletionSignal();
 
       Akonadi::Collection mUsedCol1lection;
   };
@@ -177,10 +148,7 @@ namespace Akonadi {
       }
 
       /**reimp*/
-      void emitCompletionSignal()
-      {
-        emitDeleteFinished( changer, id, mItemIds, resultCode, errorString );
-      }
+      void emitCompletionSignal();
 
       QVector<Akonadi::Item::Id> mItemIds;
   };
