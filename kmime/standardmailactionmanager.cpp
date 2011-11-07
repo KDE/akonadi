@@ -302,40 +302,52 @@ class StandardMailActionManager::Private
       bool enableMarkAllAsRead = false;
       bool enableMarkAllAsUnread = false;
       bool canDeleteItem = true;
+      bool isSystemFolder = false;
       if ( collectionIsSelected ) {
-        const Collection collection = selectedCollections.first();
-        if ( collection.isValid() ) {
-          const Akonadi::CollectionStatistics stats = collection.statistics();
-          enableMarkAllAsRead = (stats.unreadCount() > 0);
-          enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
-          canDeleteItem = collection.rights() & Akonadi::Collection::CanDeleteItem;
-          const bool isSystemFolder = (collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
-                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
-                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
-                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Trash ) ||
-                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts ) ||
-                                       collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates ));
-
-          if ( isSystemFolder ) {
-            if ( mGenericManager->action( StandardActionManager::DeleteCollections ) ) {
-              mGenericManager->action( StandardActionManager::DeleteCollections )->setEnabled( false );
+        foreach( const Collection collection, selectedCollections )
+        {
+          if ( collection.isValid() ) {
+            const Akonadi::CollectionStatistics stats = collection.statistics();
+            if ( !enableMarkAllAsRead )
+              enableMarkAllAsRead = (stats.unreadCount() > 0);
+            if ( !enableMarkAllAsUnread )
+              enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
+            if ( canDeleteItem )
+              canDeleteItem = collection.rights() & Akonadi::Collection::CanDeleteItem;
+            if ( !isSystemFolder ) {
+              isSystemFolder = (collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
+                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
+                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
+                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Trash ) ||
+                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts ) ||
+                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates ));
             }
+            //We will not change after that.
+            if ( enableMarkAllAsRead && enableMarkAllAsUnread && !canDeleteItem && isSystemFolder )
+              break;
           }
         }
       }
-
+      if ( isSystemFolder ) {
+        if ( mGenericManager->action( StandardActionManager::DeleteCollections ) ) {
+          mGenericManager->action( StandardActionManager::DeleteCollections )->setEnabled( false );
+        }
+      }
+        
       if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) )
         mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected && canDeleteItem );
       if ( mActions.contains( Akonadi::StandardMailActionManager::RemoveDuplicates ) )
         mActions.value( Akonadi::StandardMailActionManager::RemoveDuplicates )->setEnabled( canDeleteItem );
 
       QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
-      if ( action )
+      if ( action ) {
         action->setEnabled( enableMarkAllAsRead );
+      }
 
       action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsUnread );
-      if ( action )
+      if ( action ) {
         action->setEnabled( enableMarkAllAsUnread );
+      }
 
       emit mParent->actionStateUpdated();
     }
