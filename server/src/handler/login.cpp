@@ -18,8 +18,6 @@
  ***************************************************************************/
 #include "login.h"
 
-#include <QtCore/QDebug>
-
 #include "response.h"
 #include "akonadiconnection.h"
 #include "imapstreamparser.h"
@@ -30,25 +28,17 @@ Login::Login(): Handler()
 {
 }
 
-
-Login::~Login()
-{
-}
-
-
 bool Login::parseStream()
 {
-  QByteArray sessionId = m_streamParser->readString();
+  const QByteArray sessionId = m_streamParser->readString();
   if ( sessionId.isEmpty() )
     return failureResponse( "Missing session identifier." );
   connection()->setSessionId( sessionId );
 
-  Response response;
-  response.setTag( tag() );
-  response.setSuccess();
-  response.setString( "User logged in" );
+  // ignore anything that follows, for Roundcube compatibility
+  m_streamParser->readUntilCommandEnd();
 
-  emit responseAvailable( response );
+  successResponse( "User logged in" );
   emit connectionStateChange( Authenticated );
   return true;
 }
