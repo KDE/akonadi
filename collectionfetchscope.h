@@ -34,22 +34,24 @@ class CollectionFetchScopePrivate;
 /**
  * @short Specifies which parts of a collection should be fetched from the Akonadi storage.
  *
- * When collections are fetched from server either by using CollectionFetchJob explicitly or
- * when it is being used internally by other classes, e.g. Akonadi::Monitor, the scope
- * of the fetch operation can be tailored to the application's current needs.
+ * When collections are fetched from the server either by using CollectionFetchJob
+ * explicitly or when it is being used internally by other classes, e.g. Akonadi::Monitor,
+ * the scope of the fetch operation can be tailored to the application's current needs.
+ *
+ * Note that CollectionFetchScope always includes fetching collection attributes.
  *
  * There are two supported ways of changing the currently active CollectionFetchScope
  * of classes:
  * - in-place: modify the CollectionFetchScope object the other class holds as a member
  * - replace: replace the other class' member with a new scope object
  *
- * Example: modifying an CollectionFetchJob's scope @c in-place
+ * Example: modifying a CollectionFetchJob's scope @c in-place
  * @code
  * Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( collection );
  * job->fetchScope().setIncludeUnsubscribed( true );
  * @endcode
  *
- * Example: @c replacing an CollectionFetchJob's scope
+ * Example: @c replacing a CollectionFetchJob's scope
  * @code
  * Akonadi::CollectionFetchScope scope;
  * scope.setIncludeUnsubscribed( true );
