@@ -33,10 +33,7 @@ class Select : public Handler
 {
   Q_OBJECT
   public:
-    Select( Scope::SelectionScope scope );
-
-    ~Select();
-
+    explicit Select( Scope::SelectionScope scope );
     bool parseStream();
 
   private:

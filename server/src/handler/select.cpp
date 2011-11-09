@@ -38,12 +38,6 @@ Select::Select( Scope::SelectionScope scope ) :
 {
 }
 
-
-Select::~Select()
-{
-}
-
-
 bool Select::parseStream()
 {
   // as per rfc, even if the following select fails, we need to reset
@@ -92,7 +86,7 @@ bool Select::parseStream()
   Response response;
   if ( !silent ) {
     response.setUntagged();
-    response.setString( Flag::joinByName<Flag>( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() );
+    response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() + ")" );
     emit responseAvailable( response );
 
     const int itemCount = HandlerHelper::itemCount( col );
