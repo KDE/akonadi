@@ -60,6 +60,11 @@ class AkApplication : public QObject
     void init();
     QScopedPointer<QCoreApplication> mApp;
 
+  private:
+    /** Change instane identifier, for unit tests only. */
+    static void setInstanceIdentifier( const QString& instanceId );
+    friend void akTestSetInstanceIdentifier(const QString&);
+
   private slots:
     void pollSessionBus() const;
 

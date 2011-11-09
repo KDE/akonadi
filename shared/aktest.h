@@ -31,4 +31,9 @@ int main(int argc, char **argv) \
   return QTest::qExec(&tc, argc, argv); \
 }
 
+inline void akTestSetInstanceIdentifier( const QString &instanceId )
+{
+  AkApplication::setInstanceIdentifier( instanceId );
+}
+
 #endif

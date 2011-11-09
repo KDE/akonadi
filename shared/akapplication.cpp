@@ -134,5 +134,11 @@ int AkApplication::exec()
   return mApp->exec();
 }
 
+void AkApplication::setInstanceIdentifier(const QString& instanceId)
+{
+  Q_ASSERT(sInstance);
+  sInstance->mInstanceId = instanceId;
+}
+
 
 #include "akapplication.moc"
