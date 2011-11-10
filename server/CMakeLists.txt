@@ -201,12 +201,6 @@ if(NOT WINCE)
 endif(NOT WINCE)
 
 
-set_target_properties( akonadiprivate PROPERTIES
-                        VERSION ${AKONADI_VERSION}
-                        SOVERSION ${AKONADI_VERSION_MAJOR}
-                        DEFINE_SYMBOL MAKE_AKONADIPRIVATE_LIB
-                      )
-
 set( akonadiserver_bin_SRCS src/main.cpp )
 
 if (AKONADI_STATIC_SQLITE)
