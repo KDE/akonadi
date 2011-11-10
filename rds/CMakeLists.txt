@@ -13,7 +13,7 @@ set( akonadi_rds_srcs
 
 automoc4_add_executable(akonadi_rds ${akonadi_rds_srcs})
 
-target_link_libraries(akonadi_rds ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} akonadi_shared ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(akonadi_rds akonadi_shared ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 
 install(TARGETS akonadi_rds DESTINATION ${BIN_INSTALL_DIR})
 
