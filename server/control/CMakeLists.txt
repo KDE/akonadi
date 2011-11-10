@@ -46,7 +46,7 @@ if (WIN32)
   target_link_libraries(akonadi_control ${QT_QTMAIN_LIBRARY})
 endif (WIN32)
 
-target_link_libraries(akonadi_control ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${AKONADI_SYSTEM_LIBS} akonadi_shared)
+target_link_libraries(akonadi_control akonadi_shared ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${AKONADI_SYSTEM_LIBS})
 
 if(NOT WINCE)
     target_link_libraries(akonadi_control ${Boost_PROGRAM_OPTIONS_LIBRARY})

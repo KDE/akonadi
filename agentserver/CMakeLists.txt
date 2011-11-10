@@ -17,11 +17,11 @@ automoc4_add_library(akonadi_agent_server ${akonadi_agent_server_srcs})
 endif(NOT WINCE)
 
 target_link_libraries(akonadi_agent_server
+  akonadi_shared
   ${QT_QTGUI_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${AKONADI_SYSTEM_LIBS}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
-  akonadi_shared
 )
 
 if(NOT WINCE)
@@ -36,10 +36,10 @@ if(NOT WINCE)
 
   automoc4_add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
   target_link_libraries(akonadi_agent_launcher
+    akonadi_shared
     ${QT_QTGUI_LIBRARY}
     ${AKONADI_SYSTEM_LIBS}
     ${AKONADI_PROTOCOLINTERNALS_LIBS}
-    akonadi_shared
   )
 
   if (Q_WS_MAC)

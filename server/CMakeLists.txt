@@ -184,6 +184,7 @@ endif(NOT WINCE)
 automoc4_add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
 
 target_link_libraries( akonadiprivate
+  akonadi_shared
   ${QT_QTCORE_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${QT_QTSQL_LIBRARY}
@@ -191,7 +192,6 @@ target_link_libraries( akonadiprivate
   ${QT_QTXML_LIBRARY}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
-  akonadi_shared
 )
 if(Soprano_FOUND)
   target_link_libraries(akonadiprivate ${SOPRANO_LIBRARIES})
@@ -209,7 +209,7 @@ endif (AKONADI_STATIC_SQLITE)
 
 add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
 set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
-target_link_libraries( akonadiserver_bin akonadiprivate ${QT_QTCORE_LIBRARY} akonadi_shared )
+target_link_libraries( akonadiserver_bin akonadi_shared akonadiprivate ${QT_QTCORE_LIBRARY})
 if (AKONADI_STATIC_SQLITE)
 target_link_libraries( akonadiserver_bin qsqlite3 )
 endif (AKONADI_STATIC_SQLITE)
