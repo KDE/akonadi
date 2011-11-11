@@ -71,6 +71,7 @@ class CollectionComboBox::Private
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
       mParent->setModel( mRightsFilterModel );
+      mParent->model()->sort( mParent->modelColumn() );
 
       mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
       mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
