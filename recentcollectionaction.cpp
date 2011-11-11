@@ -55,9 +55,9 @@ void RecentCollectionAction::fillRecentCollection()
     mRecentAction->setEnabled( false );
     return;
   }
-  
+
   QMenu* popup = new QMenu;
-  mRecentAction->setMenu( popup ); 
+  mRecentAction->setMenu( popup );
 
   const int numberOfRecentCollection(mListRecentCollection.count());
   for ( int i=0; i < numberOfRecentCollection; ++i )
@@ -90,11 +90,12 @@ QString RecentCollectionAction::actionName(QModelIndex index)
     return QString::fromLatin1( "%1 - %2" ).arg( name ).arg( topLevelName );
   }
 }
-  
-void RecentCollectionAction::addRecentCollection( Akonadi::Collection::Id id)
+
+void RecentCollectionAction::addRecentCollection( Akonadi::Collection::Id id )
 {
   const QString newCollectionID = QString::number( id );
-  if ( !mListRecentCollection.contains( newCollectionID ) ) {
+  if ( mListRecentCollection.isEmpty() ||
+       !mListRecentCollection.contains( newCollectionID ) ) {
     if ( mListRecentCollection.count() == s_maximumRecentCollection )
       mListRecentCollection.removeFirst();
     mListRecentCollection.append( newCollectionID );
@@ -109,7 +110,7 @@ void RecentCollectionAction::writeConfig()
   group.writeEntry( "Collections", mListRecentCollection );
   group.sync();
 }
-   
+
 void RecentCollectionAction::cleanRecentCollection()
 {
   mListRecentCollection.clear();

@@ -32,6 +32,7 @@ class KActionCollection;
 class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;
+class QMenu;
 
 namespace Akonadi {
 
@@ -322,6 +323,12 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      */
     void setCollectionPropertiesPageNames( const QStringList &names );
 
+    /**
+     * Create a popup menu.
+     * @since 4.8
+     */
+    void createActionFolderMenu(QMenu *menu, Type type);
+  
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.

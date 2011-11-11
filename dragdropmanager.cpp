@@ -96,7 +96,7 @@ bool DragDropManager::hasAncestor( const QModelIndex &_index, Collection::Id par
   return false;
 }
 
-bool DragDropManager::processDropEvent( QDropEvent *event, bool dropOnItem )
+bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, bool dropOnItem )
 {
   const Collection targetCollection = currentDropTarget( event );
   if ( !targetCollection.isValid() )
@@ -210,8 +210,8 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool dropOnItem )
   popup.addAction( KIcon( QString::fromLatin1( "process-stop" ) ), i18n( "C&ancel" ) + QLatin1Char( '\t' ) + QKeySequence( Qt::Key_Escape ).toString() );
 
   QAction *activatedAction = popup.exec( QCursor::pos() );
-
   if ( !activatedAction ) {
+    menuCanceled = true;
     return false;
   } else if ( activatedAction == moveDropAction ) {
     event->setDropAction( Qt::MoveAction );
@@ -220,9 +220,9 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool dropOnItem )
   } else if ( activatedAction == linkAction ) {
     event->setDropAction( Qt::LinkAction );
   } else {
+    menuCanceled = true;
     return false;
   }
-
   return true;
 }
 
