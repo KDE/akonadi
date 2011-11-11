@@ -38,11 +38,6 @@ class HandlerHelper
 {
   public:
     /**
-      Removes leading and trailing delimiters.
-    */
-    static QByteArray normalizeCollectionName( const QByteArray &name );
-
-    /**
       Returns the collection identified by the given id or path.
     */
     static Collection collectionFromIdOrName( const QByteArray &id );

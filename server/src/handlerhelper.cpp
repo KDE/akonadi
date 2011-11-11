@@ -30,16 +30,6 @@
 
 using namespace Akonadi;
 
-QByteArray Akonadi::HandlerHelper::normalizeCollectionName(const QByteArray &name)
-{
-  QByteArray collectionByteArray = name;
-  if ( collectionByteArray.startsWith( '/' )  )
-    collectionByteArray = collectionByteArray.right( collectionByteArray.length() - 1 );
-  if ( collectionByteArray.endsWith( '/' ) )
-    collectionByteArray = collectionByteArray.left( collectionByteArray.length() - 1 );
-  return collectionByteArray;
-}
-
 Collection HandlerHelper::collectionFromIdOrName(const QByteArray & id)
 {
   // id is a number
@@ -49,9 +39,9 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray & id)
     return Collection::retrieveById( collectionId );
 
   // id is a path
-  QString path = QString::fromUtf8( normalizeCollectionName( id ) ); // ### should be UTF-7 for real IMAP compatibility
+  QString path = QString::fromUtf8( id ); // ### should be UTF-7 for real IMAP compatibility
 
-  const QStringList pathParts = path.split( QLatin1Char('/') );
+  const QStringList pathParts = path.split( QLatin1Char('/'), QString::SkipEmptyParts );
   Collection col;
   foreach ( const QString &part, pathParts ) {
     SelectQueryBuilder<Collection> qb;
