@@ -374,10 +374,18 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
 
 // data retrieval for referenced tables
 <xsl:for-each select="column[@refTable != '']">
-<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:call-template name="method-name-n1"/>() const
+<xsl:variable name="method-name"><xsl:call-template name="method-name-n1"/></xsl:variable>
+<xsl:value-of select="@refTable"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="$method-name"/>() const
 {
   return <xsl:value-of select="@refTable"/>::retrieveById( <xsl:value-of select="@name"/>() );
+}
 
+void <xsl:value-of select="$className"/>::
+    set<xsl:call-template name="uppercase-first"><xsl:with-param name="argument"><xsl:value-of select="$method-name"/></xsl:with-param></xsl:call-template>
+    ( const <xsl:value-of select="@refTable"/> &amp;value )
+{
+  d-&gt;<xsl:value-of select="@name"/> = value.id();
+  d-&gt;<xsl:value-of select="@name"/>_changed = true;
 }
 </xsl:for-each>
 
