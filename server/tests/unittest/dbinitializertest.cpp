@@ -38,6 +38,11 @@ class Debugger : public DebugInterface
     QHash<QString, QString> hash;
 };
 
+void DbInitializerTest::initTestCase()
+{
+  Q_INIT_RESOURCE( akonadidb );
+}
+
 void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier, const QString &pattern )
 {
   QSqlDatabase db = QSqlDatabase::addDatabase( dbIdentifier );
@@ -46,6 +51,7 @@ void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier
   Debugger *debugger = new Debugger;
   initializer->setDebugInterface( debugger );
   initializer->unitTestRun();
+  QVERIFY( initializer->errorMsg().isEmpty() );
 
   QHashIterator<QString, QString> it( debugger->hash );
   while ( it.hasNext() ) {
