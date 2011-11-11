@@ -36,6 +36,7 @@
 #include "handler.h"
 #include "collectionqueryhelper.h"
 #include "akonadischema.h"
+#include "parttypehelper.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -721,7 +722,10 @@ bool DataStore::unhideAllPimItems()
 
   akDebug() << "DataStore::unhideAllPimItems()";
 
-  return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( "ATR:HIDDEN" ) );
+  try {
+    return PartHelper::remove( Part::partTypeIdFullColumnName(), PartTypeHelper::fromName( "ATR", "HIDDEN" ).id() );
+  } catch ( ... ) {} // we can live with this failing
+  return false;
 }
 
 bool DataStore::cleanupPimItems( const PimItem::List &items )
