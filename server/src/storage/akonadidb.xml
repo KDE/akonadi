@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="24"/>
+    <data columns="version" values="25"/>
   </table>
 
   <table name="Resource">
@@ -135,16 +135,26 @@
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
   </table>
 
+ <table name="PartType">
+   <comment>Table containing item part types.</comment>
+   <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+   <column name="name" type="QString" allowNull="false">
+     <comment>Part name, without namespace.</comment>
+   </column>
+   <column name="ns" type="QString" allowNull="false">
+     <comment>Part namespace.</comment>
+   </column>
+ </table>
+
   <table name="Part">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
-    <column name="name" type="QString" allowNull="false"/>
+    <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false"/>
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
-    <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
-    <index name="pimItemNameIndex" columns="name" unique="false"/>
+    <index name="pimItemIdTypeIndex" columns="pimItemId,type" unique="true"/>
   </table>
 
   <table name="CollectionAttribute">
