@@ -75,7 +75,8 @@ void FetchHelper::setStreamParser( ImapStreamParser *parser )
 
 enum PartQueryColumns {
   PartQueryPimIdColumn,
-  PartQueryNameColumn,
+  PartQueryTypeNamespaceColumn,
+  PartQueryTypeNameColumn,
   PartQueryDataColumn,
   PartQueryExternalColumn,
   PartQueryVersionColumn
@@ -87,8 +88,10 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
   QueryBuilder partQuery( PimItem::tableName() );
   if ( !partList.isEmpty() || allPayload || allAttrs ) {
     partQuery.addJoin( QueryBuilder::InnerJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
+    partQuery.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
     partQuery.addColumn( PimItem::idFullColumnName() );
-    partQuery.addColumn( Part::nameFullColumnName() );
+    partQuery.addColumn( PartType::nsFullColumnName() );
+    partQuery.addColumn( PartType::nameFullColumnName() );
     partQuery.addColumn( Part::dataFullColumnName() );
     partQuery.addColumn( Part::externalFullColumnName() );
 
@@ -105,9 +108,9 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
       cond.addValueCondition( Part::nameFullColumnName(), Query::In, partNameList );
     }
     if ( allPayload )
-      cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD:" ) );
     if ( allAttrs )
-      cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "ATR:" ) );
+      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "ATR:" ) );
     partQuery.addCondition( cond );
 
     ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
@@ -314,8 +317,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       } else if ( id < pimItemId ) {
         break;
       }
-      QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
-      QByteArray part = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
+      const QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryTypeNamespaceColumn ) ) + ':' +
+          Utils::variantToByteArray( partQuery.value( PartQueryTypeNameColumn ) );
+      QByteArray part = partName;
       QByteArray data = Utils::variantToByteArray( partQuery.value( PartQueryDataColumn ) );
 
       if ( mCheckCachedPayloadPartsOnly ) {
@@ -330,7 +334,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
           skipItem = true;
           break;
         }
-        bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
+        const bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
         if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
           data = PartHelper::translateData( data, partIsExternal );
         int version = partQuery.value( PartQueryVersionColumn ).toInt();
