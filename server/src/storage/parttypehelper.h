@@ -21,6 +21,7 @@
 #define PARTTYPEHELPER_H
 
 #include "exception.h"
+#include "query.h"
 
 namespace Akonadi {
 
@@ -57,6 +58,28 @@ namespace PartTypeHelper
    * Convenience overload of the above.
    */
   PartType fromName( const char *ns, const char *typeName );
+
+  /**
+   * Returns a query condition that matches the given part.
+   * @param fqName fully-qualified part type name
+   * @throws PartTypeException
+   */
+  Query::Condition conditionFromFqName( const QString &fqName );
+
+  /**
+   * Returns a query condition that mathes the given part type list.
+   * @param fqNames fully qualified part type name list
+   * @throws PartTypeException
+   */
+  Query::Condition conditionFromFqNames( const QStringList &fqNames );
+
+  /**
+   * Parses a fully qualified part type name into namespace/name.
+   * @param fqName fully-qualified part type name
+   * @throws PartTypeException if @p fqName does not match the NS:NAME schema
+   * @internal
+   */
+  QPair<QString, QString> parseFqName( const QString &fqName );
 }
 
 }

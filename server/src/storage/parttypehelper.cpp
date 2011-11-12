@@ -26,12 +26,18 @@
 
 using namespace Akonadi;
 
-PartType PartTypeHelper::fromFqName(const QString& fqName)
+QPair< QString, QString > PartTypeHelper::parseFqName(const QString& fqName)
 {
-  const QStringList name = fqName.split( QLatin1Char(':') );
+  const QStringList name = fqName.split( QLatin1Char(':'), QString::SkipEmptyParts );
   if ( name.size() != 2 )
     throw PartTypeException( "Invalid part type name." );
-  return fromName( name.first(), name.last() );
+  return qMakePair( name.first(), name.last() );
+}
+
+PartType PartTypeHelper::fromFqName(const QString& fqName)
+{
+  const QPair<QString, QString> p = parseFqName( fqName );
+  return fromName( p.first, p.second );
 }
 
 PartType PartTypeHelper::fromFqName(const QByteArray& fqName)
@@ -64,4 +70,24 @@ PartType PartTypeHelper::fromName(const QString& ns, const QString& typeName)
 PartType PartTypeHelper::fromName(const char* ns, const char* typeName)
 {
   return fromName( QLatin1String(ns), QLatin1String(typeName) );
+}
+
+Query::Condition PartTypeHelper::conditionFromFqName(const QString& fqName)
+{
+  const QPair<QString, QString> p = parseFqName( fqName );
+  Query::Condition c;
+  c.setSubQueryMode( Query::And );
+  c.addValueCondition( PartType::nsFullColumnName(), Query::Equals, p.first );
+  c.addValueCondition( PartType::nameFullColumnName(), Query::Equals, p.second );
+  return c;
+}
+
+Query::Condition PartTypeHelper::conditionFromFqNames(const QStringList& fqNames)
+{
+  Query::Condition c;
+  c.setSubQueryMode( Query::Or );
+  Q_FOREACH ( const QString &fqName, fqNames ) {
+    c.addCondition( conditionFromFqName( fqName ) );
+  }
+  return c;
 }
