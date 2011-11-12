@@ -332,12 +332,16 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
 
 bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
 {
-  Part::List existingParts = item.parts();
+  SelectQueryBuilder<Part> qb;
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
+  qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
+  qb.addCondition( PartTypeHelper::conditionFromFqNames( parts ) );
+
+  qb.exec();
+  Part::List existingParts = qb.result();
   Q_FOREACH ( Part part, existingParts ) {
-    if( parts.contains( part.name().toLatin1() ) ) {
-      if ( !PartHelper::remove(&part) )
-        return false;
-    }
+    if ( !PartHelper::remove(&part) )
+      return false;
   }
 
   mNotificationCollector->itemChanged( item, parts.toSet() );

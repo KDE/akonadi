@@ -74,6 +74,11 @@ namespace PartTypeHelper
   Query::Condition conditionFromFqNames( const QStringList &fqNames );
 
   /**
+   * Convenience overload for the above.
+   */
+  Query::Condition conditionFromFqNames( const QList<QByteArray> &fqNames );
+
+  /**
    * Parses a fully qualified part type name into namespace/name.
    * @param fqName fully-qualified part type name
    * @throws PartTypeException if @p fqName does not match the NS:NAME schema
