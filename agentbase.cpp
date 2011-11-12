@@ -609,7 +609,9 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
   if ( d->mNeedsNetwork ) {
     connect( Solid::Networking::notifier()
            , SIGNAL(statusChanged(Solid::Networking::Status))
-           , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status)) );
+           , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status))
+           , Qt::UniqueConnection );
+
   } else {
     disconnect( Solid::Networking::notifier(), 0, 0, 0 );
     setOnline( true );
