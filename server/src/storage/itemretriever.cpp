@@ -27,6 +27,7 @@
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
+#include "storage/parttypehelper.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
@@ -119,7 +120,7 @@ enum QueryColumns {
 
   ResourceColumn,
 
-  PartNameColumn,
+  PartTypeNameColumn,
   PartDatasizeColumn
 };
 
@@ -136,16 +137,18 @@ QSqlQuery ItemRetriever::buildQuery() const
   Query::Condition partJoinCondition;
   partJoinCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
   if ( !mFullPayload && !mParts.isEmpty() ) {
-    partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
+    partJoinCondition.addCondition( PartTypeHelper::conditionFromFqNames( mParts ) );
   }
-  partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  partJoinCondition.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
   qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), partJoinCondition );
+
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
 
   qb.addColumn( PimItem::idFullColumnName() );
   qb.addColumn( PimItem::remoteIdFullColumnName() );
   qb.addColumn( MimeType::nameFullColumnName() );
   qb.addColumn( Resource::nameFullColumnName() );
-  qb.addColumn( Part::nameFullColumnName() );
+  qb.addColumn( PartType::nameFullColumnName() );
   qb.addColumn( Part::datasizeFullColumnName() );
 
   if ( mScope.scope() != Scope::Invalid )
@@ -202,16 +205,15 @@ bool ItemRetriever::exec()
       requests << lastRequest;
     }
 
-    if ( query.value( PartNameColumn ).isNull() ) {
+    if ( query.value( PartTypeNameColumn ).isNull() ) {
       // LEFT JOIN did not find anything, retrieve all parts
       query.next();
       continue;
     }
 
     qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
-    QString partName = Utils::variantToString( query.value( PartNameColumn ) );
-    Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
-    partName = partName.mid( 4 );
+    const QString partName = Utils::variantToString( query.value( PartTypeNameColumn ) );
+    Q_ASSERT( !partName.startsWith( QLatin1String( "PLD:" ) ) );
     if ( datasize <= 0 ) {
       // request update for this part
       if ( mFullPayload && !lastRequest->parts.contains( partName ) )
