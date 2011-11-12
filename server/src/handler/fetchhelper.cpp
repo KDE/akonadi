@@ -32,6 +32,7 @@
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
+#include <storage/parttypehelper.h>
 #include "storage/transaction.h"
 #include "utils.h"
 #include "intervalcheck.h"
@@ -105,8 +106,9 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
       partNameList.reserve( partList.size() );
       Q_FOREACH ( const QByteArray &b, partList )
         partNameList.push_back( QString::fromLatin1( b ) );
-      cond.addValueCondition( Part::nameFullColumnName(), Query::In, partNameList );
+      cond.addCondition( PartTypeHelper::conditionFromFqNames( partNameList ) );
     }
+
     if ( allPayload )
       cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD:" ) );
     if ( allAttrs )

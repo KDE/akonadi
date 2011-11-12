@@ -346,12 +346,13 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
 
 bool DataStore::invalidateItemCache( const PimItem &item )
 {
-  // find all expired item parts
+  // find all payload item parts
   SelectQueryBuilder<Part> qb;
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
   qb.addValueCondition( Part::pimItemIdFullColumnName(), Query::Equals, item.id() );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-  qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  qb.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
   qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
 
   if ( !qb.exec() )
