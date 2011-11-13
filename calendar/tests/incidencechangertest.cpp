@@ -69,8 +69,10 @@ class IncidenceChangerTest : public QObject
       Collection::List collections = job->collections();
       QVERIFY( !collections.isEmpty() );
       mCollection = collections.first();
+      mCollection.setRights( Collection::Rights( Collection::AllRights ) );
 
       QVERIFY( mCollection.isValid() );
+      QVERIFY( ( mCollection.rights() & Akonadi::Collection::CanCreateItem ) );
 
       mChanger = new IncidenceChanger();
       mChanger->setShowDialogsOnError( false );
@@ -97,7 +99,6 @@ class IncidenceChangerTest : public QObject
       QTest::addColumn<bool>( "failureExpected" );
       QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
 
-
       QTest::newRow( "Simple Creation1" ) << false << "SomeUid1" << "Summary1" << mCollection
                                           << Collection() << true
                                           << IncidenceChanger::DestinationPolicyNeverAsk
@@ -122,6 +123,21 @@ class IncidenceChangerTest : public QObject
                                             << mCollection << true
                                             << IncidenceChanger::DestinationPolicyDefault
                                             << false << IncidenceChanger::ResultCodeSuccess;
+
+      Collection collectionWithoutRights = Collection( mCollection.id() );
+      collectionWithoutRights.setRights( Collection::Rights() );
+      Q_ASSERT( ( mCollection.rights() & Akonadi::Collection::CanCreateItem ) );
+
+      QTest::newRow( "No rights" ) << false << "SomeUid6" << "Summary6" << Collection()
+                                   << collectionWithoutRights << true
+                                   << IncidenceChanger::DestinationPolicyNeverAsk
+                                   << false << IncidenceChanger::ResultCodeInvalidDefaultCollection;
+
+      QTest::newRow( "No rights but its ok" ) << false << "SomeUid7" << "Summary7" << Collection()
+                                              << collectionWithoutRights << false
+                                              << IncidenceChanger::DestinationPolicyNeverAsk
+                                              << false
+                                              << IncidenceChanger::ResultCodeSuccess;
     }
 
     void testCreating()
@@ -136,6 +152,7 @@ class IncidenceChangerTest : public QObject
       QFETCH( bool, failureExpected );
 
       Incidence::Ptr incidence;
+
 
       if ( !sendInvalidIncidence ) {
         incidence = Incidence::Ptr( new Event() );
@@ -192,8 +209,8 @@ class IncidenceChangerTest : public QObject
       AKVERIFYEXEC( fetchJob );
       Item::List items = fetchJob->items();
 
-      // 3 Incidences were created in testCreating(). Keep this in sync.
-      QVERIFY( items.count() == 3 );
+      // 5 Incidences were created in testCreating(). Keep this in sync.
+      QVERIFY( items.count() == 4 );
       QTest::newRow( "Simple delete" ) << (Item::List() << items.at( 0 ) ) << true << false
                                        << IncidenceChanger::ResultCodeSuccess;
 
@@ -426,7 +443,7 @@ class IncidenceChangerTest : public QObject
       kDebug() << "Error string is " << errorString;
     }
 
-    QVERIFY( resultCode == mExpectedResult );
+    QCOMPARE( resultCode, mExpectedResult );
     mExpectedResult = IncidenceChanger::ResultCodeSuccess;
     mWaitingForIncidenceChangerSignals = false;
     mChangeToWaitFor = -1;
@@ -446,7 +463,7 @@ class IncidenceChangerTest : public QObject
     else
       kDebug() << "Error string is " << errorString;
 
-    QVERIFY( resultCode == mExpectedResult );
+    QCOMPARE( resultCode, mExpectedResult );
 
     mExpectedResult = IncidenceChanger::ResultCodeSuccess;
     mWaitingForIncidenceChangerSignals = false;
