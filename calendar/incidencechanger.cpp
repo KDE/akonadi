@@ -794,7 +794,7 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
       break;
     case IncidenceChanger::ResultCodeInvalidDefaultCollection:
       errorString = i18n( "Default collection is invalid or doesn't have proper ACLs"
-                          "and DestinationPolicyNeverAsk was used" );
+                          " and DestinationPolicyNeverAsk was used" );
       break;
     default:
       Q_ASSERT( false );
