@@ -63,8 +63,9 @@ set(AKONADI_VERSION_STRING "${AKONADI_VERSION}")
 # If Git is installed and a '.git' directory is found,
 # we append the Git revision to AKONADI_VERSION_STRING
 if(EXISTS "${Akonadi_SOURCE_DIR}/.git")
-  find_package(Git)
-  if(GIT_FOUND)
+  find_program(GIT_EXECUTABLE NAMES git)
+  if(GIT_EXECUTABLE)
+    message(STATUS "Found git: ${GIT_EXECUTABLE}")
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
                     WORKING_DIRECTORY ${Akonadi_SOURCE_DIR}
                     OUTPUT_VARIABLE akonadi_git_revision)
