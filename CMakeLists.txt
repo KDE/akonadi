@@ -108,6 +108,10 @@ set_default_db_backend( ${DATABASE_BACKEND} )
 ############### Find what we need ###############
 
 #### Qt4 ####
+# Don't use absolute path in Mygpo-qtTargets-$buildType.cmake
+# note: this will have no effect with cmake < 2.8
+set(QT_USE_IMPORTED_TARGETS TRUE)
+
 set(QT_MIN_VERSION 4.6.0)
 find_package(Qt4 REQUIRED)
 
