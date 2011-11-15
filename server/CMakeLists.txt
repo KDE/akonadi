@@ -1,10 +1,25 @@
+find_program( MYSQLD_EXECUTABLE NAMES mysqld
+              PATHS /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin /opt/mysql/sbin
+              DOC "The mysqld executable path. ONLY needed at runtime"
+            )
+if( MYSQLD_EXECUTABLE )
+   message( STATUS "MySQL Server found: ${MYSQLD_EXECUTABLE}" )
+else()
+   message( STATUS "MySQL Server wasn't found. it is required to use the MySQL backend." )
+endif()
 
-find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin /opt/mysql/sbin )
-if( MYSQLD_EXECUTABLE)
-   message( STATUS "MySQL Server found." )
-else ( MYSQLD_EXECUTABLE )
-   message( STATUS "MySQL Server wasn't found. it is required to run Akonadi" )
-endif( MYSQLD_EXECUTABLE )
+find_path( POSTGRES_PATH NAMES pg_ctl
+              HINTS /usr/lib${LIB_SUFFIX}/postgresql/8.4/bin
+                    /usr/lib${LIB_SUFFIX}/postgresql/9.0/bin
+                    /usr/lib${LIB_SUFFIX}/postgresql/9.1/bin
+              DOC "The pg_ctl executable path. ONLY needed at runtime by the PostgreSQL backend"
+         )
+
+if( POSTGRES_PATH )
+   message( STATUS "PostgreSQL Server found." )
+else ()
+   message( STATUS "PostgreSQL wasn't found. it is required to use the Postgres backend." )
+endif()
 
 include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${Akonadi_SOURCE_DIR}/libs )
@@ -28,7 +43,11 @@ add_subdirectory( tests )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 if ( MYSQLD_EXECUTABLE )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMYSQLD_EXECUTABLE=\"\\\"${MYSQLD_EXECUTABLE}\\\"\"" )
-endif ( MYSQLD_EXECUTABLE )
+endif()
+
+if ( POSTGRES_PATH )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPOSTGRES_PATH=\"\\\"${POSTGRES_PATH}\\\"\"" )
+endif()
 
 ########### next target ###############
 
