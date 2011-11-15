@@ -220,6 +220,14 @@ class IncidenceChangerTest : public QObject
 
       QTest::newRow( "Delete all others" ) << ( Item::List() << items.at( 1 ) << items.at( 2 ) )
                                            << true << false << IncidenceChanger::ResultCodeSuccess;
+
+      Collection collectionWithoutRights = Collection( mCollection.id() );
+      collectionWithoutRights.setRights( Collection::Rights() );
+      Item item = items.at( 3 );
+      item.setParentCollection( collectionWithoutRights );
+      QTest::newRow( "Delete can't delete" ) << ( Item::List() << item )
+                                             << true << false
+                                             << IncidenceChanger::ResultCodePermissions;
     }
 
     void testDeleting()
@@ -279,6 +287,13 @@ class IncidenceChangerTest : public QObject
 
       QTest::newRow("Change summary") << item << "New Summary" << true << 1 << false
                                       << IncidenceChanger::ResultCodeSuccess;
+
+      Collection collectionWithoutRights = Collection( mCollection.id() );
+      collectionWithoutRights.setRights( Collection::Rights() );
+      item.setParentCollection( collectionWithoutRights );
+
+      QTest::newRow("Can't change") << item << "New Summary" << true << 1 << false
+                                    << IncidenceChanger::ResultCodePermissions;
     }
 
     void testModifying()
