@@ -32,9 +32,9 @@
 namespace Akonadi {
 
 /**
- * @short
- * IncidenceChanger is the prefered way to easily create, modify and delete incidences, hidding the
- * communication with akonadi from the user.
+ * @short IncidenceChanger is the prefered way to easily create, modify and delete incidences.
+ *
+ * It hide the communication with akonadi from the user.
  *
  * It provides the following features that ItemCreateJob, ItemModifyJob and ItemDeleteJob do not:
  * - Sending groupware ( iTip ) messages to attendees and organizers.

@@ -30,8 +30,7 @@
 namespace Akonadi {
   class FetchJobCalendarPrivate;
   /**
-  * @short
-  * A Calendar that gets populated by a one time IncidenceFetchJob.
+  * @short A Calendar that gets populated by a one time IncidenceFetchJob.
   *
   * If you want a persistent calendar ( which monitors Akonadi for changes )
   * use an ETMCalendar.

@@ -31,9 +31,8 @@
 namespace Akonadi {
   class CalendarBasePrivate;
 
-  /**
-  * @short 
-  * CalendarBase is the base class for all akonadi aware calendars.
+ /**
+  * @short CalendarBase is the base class for all akonadi aware calendars.
   *
   * Because it inherits KCalCore::Calendar, it provides seamless integration
   * with the KCalCore and KCalUtils libraries eliminating any need for
