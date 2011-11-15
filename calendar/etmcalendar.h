@@ -24,7 +24,6 @@
 #include "calendarbase.h"
 
 #include <Akonadi/Collection>
-#include <KSystemTimeZones>
 
 class QAbstractItemModel;
 class KCheckableProxyModel;

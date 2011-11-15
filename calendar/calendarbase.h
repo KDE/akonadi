@@ -25,7 +25,7 @@
 #include <Akonadi/Item>
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Incidence>
-
+#include <KSystemTimeZones>
 #include <KDateTime>
 
 namespace Akonadi {
@@ -38,7 +38,6 @@ namespace Akonadi {
   * with the KCalCore and KCalUtils libraries eliminating any need for
   * adapter ( akonadi<->KCalCore ) classes.
   *
-  * CalendarBase can not be instantiated directly.
   * @see ETMCalendar
   * @see FetchJobCalendar
   *
@@ -50,6 +49,11 @@ namespace Akonadi {
   Q_OBJECT
   public:
     typedef QSharedPointer<CalendarBase> Ptr;
+
+    /**
+     * Constructs a CalendarBase object.
+     */
+    explicit CalendarBase( const KDateTime::Spec &timeSpec = KSystemTimeZones::local() );
 
     /**
      * Destroys the calendar.
@@ -185,7 +189,6 @@ namespace Akonadi {
   protected:
     Q_DECLARE_PRIVATE( CalendarBase );
     QScopedPointer<CalendarBasePrivate> d_ptr;
-    explicit CalendarBase( const KDateTime::Spec &timeSpec );
     CalendarBase( CalendarBasePrivate *const d, const KDateTime::Spec &timeSpec );
   };
 }
