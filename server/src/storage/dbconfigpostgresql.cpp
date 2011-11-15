@@ -64,12 +64,18 @@ bool DbConfigPostgresql::init( QSettings &settings )
 
   mInternalServer = settings.value( QLatin1String( "QPSQL/StartServer" ), defaultInternalServer ).toBool();
   if ( mInternalServer ) {
-    const QStringList postgresSearchPath = QStringList()
-      << QLatin1String( "/usr/sbin" )
-      << QLatin1String( "/usr/local/sbin" )
-      << QLatin1String( "/usr/lib/postgresql/8.4/bin" )
-      << QLatin1String( "/usr/lib/postgresql/9.0/bin" )
-      << QLatin1String( "/usr/lib/postgresql/9.1/bin" );
+    QStringList postgresSearchPath;
+
+#ifdef POSTGRES_PATH
+    const QString dir( QLatin1String( POSTGRES_PATH ) );
+    if( QDir( dir ).exists() )
+      postgresSearchPath << QLatin1String( POSTGRES_PATH );
+#endif
+    postgresSearchPath << QLatin1String( "/usr/sbin" )
+                       << QLatin1String( "/usr/local/sbin" )
+                       << QLatin1String( "/usr/lib/postgresql/8.4/bin" )
+                       << QLatin1String( "/usr/lib/postgresql/9.0/bin" )
+                       << QLatin1String( "/usr/lib/postgresql/9.1/bin" );
 
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
