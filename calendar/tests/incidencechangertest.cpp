@@ -74,7 +74,7 @@ class IncidenceChangerTest : public QObject
       QVERIFY( mCollection.isValid() );
       QVERIFY( ( mCollection.rights() & Akonadi::Collection::CanCreateItem ) );
 
-      mChanger = new IncidenceChanger();
+      mChanger = new IncidenceChanger( this );
       mChanger->setShowDialogsOnError( false );
 
       connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
