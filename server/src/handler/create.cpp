@@ -146,7 +146,7 @@ bool Create::parseStream()
   Transaction transaction( db );
 
   if ( !db->appendCollection( collection ) )
-    return failureResponse( "Could not create collection" );
+    return failureResponse( "Could not create collection " + name.toLatin1() + " resourceId: " + QByteArray::number(resourceId));
 
   QStringList effectiveMimeTypes;
   if ( mimeTypesSet ) {
@@ -157,7 +157,7 @@ bool Create::parseStream()
       effectiveMimeTypes << mt.name();
   }
   if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) )
-    return failureResponse( "Unable to append mimetype for collection." );
+    return failureResponse( "Unable to append mimetype for collection " + name.toLatin1() + " resourceId: " + QByteArray::number(resourceId) );
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
