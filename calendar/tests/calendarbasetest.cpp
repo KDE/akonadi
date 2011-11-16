@@ -23,6 +23,7 @@
 #include <QTestEventLoop>
 #include <akonadi/qtest_akonadi.h>
 #include <Akonadi/Collection>
+#include <Akonadi/ItemFetchJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemCreateJob>
@@ -39,6 +40,10 @@ class CalendarBaseTest : public QObject
   CalendarBase *mCalendar;
   bool mExpectedSlotResult;
   QStringList mUids;
+  QString mOneEventUid;
+  QString mOneTodoUid;
+  QString mOneJournalUid;
+  QString mOneIncidenceUid;
 
   private slots:
 
@@ -72,6 +77,7 @@ class CalendarBaseTest : public QObject
         QTestEventLoop::instance().enterLoop( 5 );
         QVERIFY( !QTestEventLoop::instance().timeout() );
       }
+      mOneEventUid = mUids.last();
 
       for( int i=0; i<5; ++i ) {
         Todo::Ptr todo = Todo::Ptr( new Todo() );
@@ -82,6 +88,7 @@ class CalendarBaseTest : public QObject
         QTestEventLoop::instance().enterLoop( 5 );
         QVERIFY( !QTestEventLoop::instance().timeout() );
       }
+      mOneTodoUid = mUids.last();
 
       for( int i=0; i<5; ++i ) {
         Journal::Ptr journal = Journal::Ptr( new Journal() );
@@ -92,6 +99,7 @@ class CalendarBaseTest : public QObject
         QTestEventLoop::instance().enterLoop( 5 );
         QVERIFY( !QTestEventLoop::instance().timeout() );
       }
+      mOneJournalUid = mUids.last();
 
       for( int i=0; i<5; ++i ) {
         Incidence::Ptr incidence = Incidence::Ptr( new Event() );
@@ -102,6 +110,7 @@ class CalendarBaseTest : public QObject
         QTestEventLoop::instance().enterLoop( 5 );
         QVERIFY( !QTestEventLoop::instance().timeout() );
       }
+      mOneIncidenceUid = mUids.last();
     }
 
     void initTestCase()
@@ -134,6 +143,48 @@ class CalendarBaseTest : public QObject
         QCOMPARE( item1.payload<KCalCore::Incidence::Ptr>()->uid(), uid );
         QCOMPARE( item2.payload<KCalCore::Incidence::Ptr>()->uid(), uid );
       }
+    }
+
+    void testDelete()
+    { // No need for _data()
+      const Item event = mCalendar->item( mOneEventUid );
+      QVERIFY( event.isValid() );
+      const Item todo = mCalendar->item( mOneTodoUid );
+      QVERIFY( todo.isValid() );
+      const Item journal = mCalendar->item( mOneJournalUid );
+      QVERIFY( journal.isValid() );
+      const Item incidence = mCalendar->item( mOneIncidenceUid );
+      QVERIFY( incidence.isValid() );
+
+      mExpectedSlotResult = true;
+      QVERIFY( mCalendar->deleteEvent( event.payload<KCalCore::Event::Ptr>() ) );
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+
+      QVERIFY( mCalendar->deleteTodo( todo.payload<KCalCore::Todo::Ptr>() ) );
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+
+      QVERIFY( mCalendar->deleteJournal( journal.payload<KCalCore::Journal::Ptr>() ) );
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+
+      QVERIFY( mCalendar->deleteIncidence( incidence.payload<KCalCore::Incidence::Ptr>() ) );
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+
+      ItemFetchJob *job1 = new ItemFetchJob( event, this );
+      ItemFetchJob *job2 = new ItemFetchJob( todo, this );
+      ItemFetchJob *job3 = new ItemFetchJob( journal, this );
+      ItemFetchJob *job4 = new ItemFetchJob( incidence, this );
+      QVERIFY( !job1->exec() );
+      QVERIFY( !job2->exec() );
+      QVERIFY( !job3->exec() );
+      QVERIFY( !job4->exec() );
+      QVERIFY( mCalendar->item( event.id() ) == Item() );
+      QVERIFY( mCalendar->item( todo.id() ) == Item() );
+      QVERIFY( mCalendar->item( journal.id() ) == Item() );
+      QVERIFY( mCalendar->item( incidence.id() ) == Item() );
     }
 
 public Q_SLOTS:
