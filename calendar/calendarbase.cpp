@@ -91,6 +91,18 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
   }
 }
 
+void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
+{
+  QHash<Item::Id, Item>::iterator i;
+  Item::List incidences;
+  for( i = mItemById.begin(); i != mItemById.end(); ++i ) {
+    if ( i.value().payload<KCalCore::Incidence::Ptr>()->mimeType() == mimeType )
+      incidences.append( i.value() );
+  }
+
+  mIncidenceChanger->deleteIncidences( incidences );
+}
+
 void CalendarBasePrivate::slotDeleteFinished( int changeId,
                                               const QVector<Akonadi::Item::Id> &itemIds,
                                               IncidenceChanger::ResultCode resultCode,
@@ -199,7 +211,8 @@ bool CalendarBase::deleteEvent( const KCalCore::Event::Ptr &event )
 
 void CalendarBase::deleteAllEvents()
 {
-  //TODO
+  Q_D(CalendarBase);
+  d->deleteAllIncidencesOfType( Event::eventMimeType() );
 }
 
 bool CalendarBase::addTodo( const KCalCore::Todo::Ptr &todo )
@@ -214,7 +227,8 @@ bool CalendarBase::deleteTodo( const KCalCore::Todo::Ptr &todo )
 
 void CalendarBase::deleteAllTodos()
 {
-  //TODO
+  Q_D(CalendarBase);
+  d->deleteAllIncidencesOfType( Todo::todoMimeType() );
 }
 
 bool CalendarBase::addJournal( const KCalCore::Journal::Ptr &journal )
@@ -229,7 +243,8 @@ bool CalendarBase::deleteJournal( const KCalCore::Journal::Ptr &journal )
 
 void CalendarBase::deleteAllJournals()
 {
-  //TODO
+  Q_D(CalendarBase);
+  d->deleteAllIncidencesOfType( Journal::journalMimeType() );
 }
 
 bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )

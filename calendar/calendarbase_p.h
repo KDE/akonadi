@@ -40,6 +40,8 @@ class CalendarBasePrivate : public QObject
     void internalInsert( const Akonadi::Item &item );
     void internalRemove( const Akonadi::Item &item );
 
+    void deleteAllIncidencesOfType( const QString &mimeType );
+
   public Q_SLOTS:
     void slotDeleteFinished( int changeId,
                              const QVector<Akonadi::Item::Id> &,
