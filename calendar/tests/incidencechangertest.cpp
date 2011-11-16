@@ -398,7 +398,7 @@ class IncidenceChangerTest : public QObject
 
       int i = 0;
       while ( mWaitingForIncidenceChangerSignals && i++ < 10) { // wait 10 seconds max.
-        QTest::qWait( 1000 );
+        QTest::qWait( 100 );
       }
 
       QVERIFY( !mWaitingForIncidenceChangerSignals );
@@ -412,7 +412,7 @@ class IncidenceChangerTest : public QObject
 
       int i = 0;
       while ( mChangeToWaitFor != -1 && i++ < 10) { // wait 10 seconds max.
-        QTest::qWait( 1000 );
+        QTest::qWait( 100 );
       }
 
       QVERIFY( mChangeToWaitFor == -1 );
