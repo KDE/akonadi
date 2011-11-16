@@ -114,7 +114,6 @@ class CalendarBaseTest : public QObject
 
     void testItem()
     { // No need for _data()
-    return;
       foreach( const QString &uid, mUids ) {
         const Item item1 = mCalendar->item( uid );
         const Item item2 = mCalendar->item( item1.id() );
