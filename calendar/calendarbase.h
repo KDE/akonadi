@@ -131,13 +131,13 @@ namespace Akonadi {
     /**
      * Deletes a Todo from the calendar.
      * It's removed from akonadi in the background @see deleteFinished().
-     */   
+     */
     /**reimp*/ bool deleteTodo( const KCalCore::Todo::Ptr &todo );
 
     /**
      * Deletes all Todos from the calendar.
      * They are removed from akonadi in the background @see deleteFinished().
-     */    
+     */
     /**reimp*/ void deleteAllTodos();
 
     /**
