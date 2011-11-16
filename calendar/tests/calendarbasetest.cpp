@@ -61,35 +61,46 @@ class CalendarBaseTest : public QObject
 
     void createInitialIncidences()
     {
-      KCalCore::Incidence::List incidences;
+      mExpectedSlotResult = true;
+
+      for( int i=0; i<5; ++i ) {
+        Event::Ptr event = Event::Ptr( new Event() );
+        event->setUid( QLatin1String( "event" ) + QString::number( i ) );
+        event->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
+        mUids.append( event->uid() );
+        QVERIFY( mCalendar->addEvent( event ) );
+        QTestEventLoop::instance().enterLoop( 5 );
+        QVERIFY( !QTestEventLoop::instance().timeout() );
+      }
+
+      for( int i=0; i<5; ++i ) {
+        Todo::Ptr todo = Todo::Ptr( new Todo() );
+        todo->setUid( QLatin1String( "todo" ) + QString::number( i ) );
+        todo->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
+        mUids.append( todo->uid() );
+        QVERIFY( mCalendar->addTodo( todo ) );
+        QTestEventLoop::instance().enterLoop( 5 );
+        QVERIFY( !QTestEventLoop::instance().timeout() );
+      }
+
+      for( int i=0; i<5; ++i ) {
+        Journal::Ptr journal = Journal::Ptr( new Journal() );
+        journal->setUid( QLatin1String( "journal" ) + QString::number( i ) );
+        journal->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
+        mUids.append( journal->uid() );
+        QVERIFY( mCalendar->addJournal( journal ) );
+        QTestEventLoop::instance().enterLoop( 5 );
+        QVERIFY( !QTestEventLoop::instance().timeout() );
+      }
 
       for( int i=0; i<5; ++i ) {
         Incidence::Ptr incidence = Incidence::Ptr( new Event() );
-        incidence->setUid( QLatin1String( "event" ) + QString::number( i ) );
+        incidence->setUid( QLatin1String( "incidence" ) + QString::number( i ) );
         incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        incidences.append( incidence );
-      }
-
-      for( int i=0; i<5; ++i ) {
-        Incidence::Ptr incidence = Incidence::Ptr( new Todo() );
-        incidence->setUid( QLatin1String( "todo" ) + QString::number( i ) );
-        incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        incidences.append( incidence );
-      }
-
-      for( int i=0; i<5; ++i ) {
-        Incidence::Ptr incidence = Incidence::Ptr( new Journal() );
-        incidence->setUid( QLatin1String( "journal" ) + QString::number( i ) );
-        incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        incidences.append( incidence );
-      }
-
-      mExpectedSlotResult = true;
-      foreach( const KCalCore::Incidence::Ptr &incidence, incidences ) {
         mUids.append( incidence->uid() );
         QVERIFY( mCalendar->addIncidence( incidence ) );
         QTestEventLoop::instance().enterLoop( 5 );
-        QVERIFY(!QTestEventLoop::instance().timeout());
+        QVERIFY( !QTestEventLoop::instance().timeout() );
       }
     }
 
