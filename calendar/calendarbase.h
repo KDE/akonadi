@@ -30,6 +30,7 @@
 
 namespace Akonadi {
   class CalendarBasePrivate;
+  class IncidenceChanger;
 
  /**
   * @short CalendarBase is the base class for all akonadi aware calendars.
@@ -168,6 +169,12 @@ namespace Akonadi {
      * It's removed from akonadi in the background @see deleteFinished().
      */
     /**reimp*/ bool deleteIncidence( const KCalCore::Incidence::Ptr & );
+
+    /**
+     * Returns the IncidenceChanger used by this calendar to make changes in akonadi.
+     * Use this if you need the defaults used by CalendarBase.
+     */
+    Akonadi::IncidenceChanger *incidenceChanger() const;
 
   Q_SIGNALS:
     /**

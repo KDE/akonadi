@@ -19,6 +19,7 @@
 
 #include "calendarbase.h"
 #include "calendarbase_p.h"
+#include "incidencechanger.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
@@ -42,6 +43,7 @@ CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
 CalendarBasePrivate::~CalendarBasePrivate()
 {
   delete mIncidenceChanger;
+  mIncidenceChanger = 0;
 }
 
 void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
@@ -232,7 +234,6 @@ void CalendarBase::deleteAllJournals()
 
 bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
-  //TODO: Collection 1?
   //TODO: Parent for dialogs
   Q_D(CalendarBase);
   return -1 != d->mIncidenceChanger->createIncidence( incidence, Akonadi::Collection() );
@@ -256,6 +257,12 @@ QWeakPointer<CalendarBase> CalendarBase::weakPointer() const
 {
   Q_D(const CalendarBase);
   return d->mWeakPointer;
+}
+
+IncidenceChanger* CalendarBase::incidenceChanger() const
+{
+  Q_D(const CalendarBase);
+  return d->mIncidenceChanger;
 }
 
 #include "calendarbase.moc"
