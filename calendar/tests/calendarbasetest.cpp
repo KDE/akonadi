@@ -187,6 +187,36 @@ class CalendarBaseTest : public QObject
       QVERIFY( mCalendar->item( incidence.id() ) == Item() );
     }
 
+    void testDeleteAll()
+    { // No need for _data()
+      mCalendar->deleteAllEvents();
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QVERIFY( mCalendar->events().isEmpty() );
+      QVERIFY( !mCalendar->journals().isEmpty() );
+      QVERIFY( !mCalendar->todos().isEmpty() );
+
+      mCalendar->deleteAllTodos();
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QVERIFY( mCalendar->events().isEmpty() );
+      QVERIFY( !mCalendar->journals().isEmpty() );
+      QVERIFY( mCalendar->todos().isEmpty() );
+
+      mCalendar->deleteAllJournals();
+      QTestEventLoop::instance().enterLoop( 5 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QVERIFY( mCalendar->events().isEmpty() );
+      QVERIFY( mCalendar->journals().isEmpty() );
+      QVERIFY( mCalendar->todos().isEmpty() );
+
+      QVERIFY( mCalendar->incidences().isEmpty() );
+
+      foreach( const QString &uid, mUids ) {
+        QCOMPARE( mCalendar->item( uid ), Item() );
+      }
+    }
+
 public Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorString )
     {
