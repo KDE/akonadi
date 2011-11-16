@@ -18,7 +18,9 @@
 */
 
 #include "../calendarbase.h"
+#include "../incidencechanger.h"
 
+#include <QTestEventLoop>
 #include <akonadi/qtest_akonadi.h>
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
@@ -35,8 +37,8 @@ class CalendarBaseTest : public QObject
   Q_OBJECT
   Collection mCollection;
   CalendarBase *mCalendar;
-
-  bool mExpectedResult;
+  bool mExpectedSlotResult;
+  QStringList mUids;
 
   private slots:
 
@@ -59,54 +61,50 @@ class CalendarBaseTest : public QObject
 
     void createInitialIncidences()
     {
-      Item::List items;
+      KCalCore::Incidence::List incidences;
 
       for( int i=0; i<5; ++i ) {
-        Item item;
-        item.setMimeType( Event::eventMimeType() );
         Incidence::Ptr incidence = Incidence::Ptr( new Event() );
         incidence->setUid( QLatin1String( "event" ) + QString::number( i ) );
         incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        item.setPayload<KCalCore::Incidence::Ptr>( incidence );
-        items.append( item );
+        incidences.append( incidence );
       }
 
       for( int i=0; i<5; ++i ) {
-        Item item;
-        item.setMimeType( Todo::todoMimeType() );
         Incidence::Ptr incidence = Incidence::Ptr( new Todo() );
         incidence->setUid( QLatin1String( "todo" ) + QString::number( i ) );
         incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        item.setPayload<KCalCore::Incidence::Ptr>( incidence );
-        items.append( item );
+        incidences.append( incidence );
       }
 
       for( int i=0; i<5; ++i ) {
-        Item item;
-        item.setMimeType( Journal::journalMimeType() );
         Incidence::Ptr incidence = Incidence::Ptr( new Journal() );
         incidence->setUid( QLatin1String( "journal" ) + QString::number( i ) );
         incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
-        item.setPayload<KCalCore::Incidence::Ptr>( incidence );
-        items.append( item );
+        incidences.append( incidence );
       }
-      
-      foreach( const Akonadi::Item &item, items ) {
-        ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
-        AKVERIFYEXEC( job );
+
+      mExpectedSlotResult = true;
+      foreach( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+        mUids.append( incidence->uid() );
+        QVERIFY( mCalendar->addIncidence( incidence ) );
+        QTestEventLoop::instance().enterLoop( 5 );
+        QVERIFY(!QTestEventLoop::instance().timeout());
       }
     }
 
     void initTestCase()
     {
       fetchCollection();
-      createInitialIncidences();
+      qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
       mCalendar = new CalendarBase();
+      mCalendar->incidenceChanger()->setDefaultCollection( mCollection );
       connect( mCalendar, SIGNAL(createFinished(bool,QString)),
                SLOT(handleCreateFinished(bool,QString)) );
 
       connect( mCalendar, SIGNAL(deleteFinished(bool,QString)),
                SLOT(handleDeleteFinished(bool,QString)) );
+      createInitialIncidences();
     }
 
     void cleanupTestCase()
@@ -114,17 +112,35 @@ class CalendarBaseTest : public QObject
       delete mCalendar;
     }
 
+    void testItem()
+    { // No need for _data()
+    return;
+      foreach( const QString &uid, mUids ) {
+        const Item item1 = mCalendar->item( uid );
+        const Item item2 = mCalendar->item( item1.id() );
+        QVERIFY( item1.isValid() );
+        QVERIFY( item2.isValid() );
+        QCOMPARE( item1.id(), item2.id() );
+        QCOMPARE( item1.payload<KCalCore::Incidence::Ptr>()->uid(), uid );
+        QCOMPARE( item2.payload<KCalCore::Incidence::Ptr>()->uid(), uid );
+      }
+    }
+
 public Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorString )
     {
-      Q_UNUSED( success );
-      Q_UNUSED( errorString );
+      if ( !success )
+        qDebug() << "handleCreateFinished(): " << errorString;
+      QCOMPARE( success, mExpectedSlotResult );
+      QTestEventLoop::instance().exitLoop();
     }
 
     void handleDeleteFinished( bool success, const QString &errorString )
     {
-      Q_UNUSED( success );
-      Q_UNUSED( errorString );
+      if ( !success )
+        qDebug() << "handleDeleteFinished(): " << errorString;
+      QCOMPARE( success, mExpectedSlotResult );
+      QTestEventLoop::instance().exitLoop();
     }
 };
 
