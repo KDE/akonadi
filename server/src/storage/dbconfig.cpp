@@ -91,6 +91,8 @@ DbConfig* DbConfig::configuredDatabase()
       akError() << "Available drivers are: " << QSqlDatabase::drivers();
       akFatal();
     }
+
+    s_DbConfigInstance->init( settings );
   }
 
   return s_DbConfigInstance;

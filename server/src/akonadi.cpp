@@ -82,8 +82,6 @@ AkonadiServer::AkonadiServer( QObject* parent )
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
-    DbConfig::configuredDatabase()->init( settings );
-
     if ( DbConfig::configuredDatabase()->useInternalServer() )
       startDatabaseProcess();
     else
