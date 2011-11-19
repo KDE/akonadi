@@ -64,7 +64,7 @@ class ETMCalendarPrivate : public CalendarBasePrivate
     void itemsRemoved( const Akonadi::Item::List &items );
 
     void onRowsInserted( const QModelIndex &index, int start, int end );
-    void onRowsAboutToBeRemoved( const QModelIndex &index, int start, int end );
+    void onRowsRemoved( const QModelIndex &index, int start, int end );
     void onDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
                       const QModelIndex &destinationParent, int destinationRow );

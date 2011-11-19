@@ -84,6 +84,20 @@ namespace Akonadi {
      */
     void collectionChanged( const Akonadi::Collection &, const QSet<QByteArray> &attributeNames );
 
+    /**
+     * This signal is emitted when one or more collections are added to the ETM.
+     *
+     * @param collection non empty list of collections
+     */
+    void collectionsAdded( const Akonadi::Collection::List &collection );
+
+    /**
+     * This signal is emitted when one or more collections are deleted from the ETM.
+     *
+     * @param collection non empty list of collections
+     */
+    void collectionsRemoved( const Akonadi::Collection::List &collection );
+
   private:
     Q_DECLARE_PRIVATE( ETMCalendar );
   };

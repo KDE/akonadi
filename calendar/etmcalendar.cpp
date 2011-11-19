@@ -78,12 +78,12 @@ void ETMCalendarPrivate::init()
 
   connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(onRowsInserted(QModelIndex,int,int)) );
-  connect( mETM, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-           SLOT(onRowsAboutToBeRemoved(QModelIndex,int,int)) );
   connect( mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            SLOT(onDataChanged(QModelIndex,QModelIndex)) );
   connect( mETM, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
            SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)) );
+  connect( mETM, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+           SLOT(onRowsRemoved(QModelIndex,int,int)) );
 
   connect( mFilteredETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
            SLOT(onDataChangedInFilteredModel(QModelIndex,QModelIndex)) );
@@ -181,7 +181,6 @@ Akonadi::Item::List ETMCalendarPrivate::itemsFromModel( const QAbstractItemModel
   return items;
 }
 
-
 Akonadi::Collection::List ETMCalendarPrivate::collectionsFromModel( const QAbstractItemModel *model,
                                                                     const QModelIndex &parentIndex,
                                                                     int start, int end )
@@ -241,16 +240,20 @@ void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
   foreach ( const Akonadi::Collection &collection, collections ) {
     mCollectionMap[collection.id()] = collection;
   }
+
+  if ( !collections.isEmpty() )
+    emit q->collectionsAdded( collections );
 }
 
-void ETMCalendarPrivate::onRowsAboutToBeRemoved( const QModelIndex &index,
-                                                 int start, int end )
+void ETMCalendarPrivate::onRowsRemoved( const QModelIndex &index, int start, int end )
 {
-  Akonadi::Collection::List collections = collectionsFromModel( mETM, index,
-                                                                start, end );
+  Akonadi::Collection::List collections = collectionsFromModel( mETM, index, start, end );
   foreach ( const Akonadi::Collection &collection, collections ) {
     mCollectionMap.remove( collection.id() );
   }
+
+  if ( !collections.isEmpty() )
+    emit q->collectionsRemoved( collections );
 }
 
 void ETMCalendarPrivate::onDataChanged( const QModelIndex &topLeft,
