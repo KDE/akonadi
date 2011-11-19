@@ -29,5 +29,5 @@ endmacro(add_akonadi_isolated_test)
 
 #add_akonadi_isolated_test( incidencechangertest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )
-add_akonadi_isolated_test( fetchjobcalendartest.cpp )
 #add_akonadi_isolated_test( fetchjobcalendartest.cpp )
+add_akonadi_isolated_test( etmcalendartest.cpp )

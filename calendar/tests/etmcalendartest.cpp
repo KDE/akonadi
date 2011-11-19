@@ -18,31 +18,130 @@
 */
 
 #include "../etmcalendar.h"
-
-#include <QTestEventLoop>
+#include <Akonadi/ItemCreateJob>
 #include <akonadi/qtest_akonadi.h>
-
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/CollectionFetchScope>
+#include <KCheckableProxyModel>
+#include <QTestEventLoop>
 
 using namespace Akonadi;
 using namespace KCalCore;
 
-class ETMCalendarTest : public QObject
+class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
 {
   Q_OBJECT
+    ETMCalendar *mCalendar;
+    Collection mCollection;
+    int mIncidencesToAdd;
 
+    void createIncidence( const QString &uid )
+    {
+      Item item;
+      item.setMimeType( Event::eventMimeType() );
+      Incidence::Ptr incidence = Incidence::Ptr( new Event() );
+      incidence->setUid( uid );
+      incidence->setSummary( QLatin1String( "summary" ) );
+      item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+      ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
+      AKVERIFYEXEC( job );
+    }
+
+    void fetchCollection()
+    {
+      CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
+                                                        CollectionFetchJob::Recursive,
+                                                        this );
+      // Get list of collections
+      job->fetchScope().setContentMimeTypes( QStringList() << QLatin1String( "application/x-vnd.akonadi.calendar.event" ) );
+      AKVERIFYEXEC( job );
+
+      // Find our collection
+      Collection::List collections = job->collections();
+      QVERIFY( !collections.isEmpty() );
+      mCollection = collections.first();
+
+      QVERIFY( mCollection.isValid() );
+    }
 
 private Q_SLOTS:
     void initTestCase()
     {
+      fetchCollection();
+      createIncidence( tr( "a" ) );
+      createIncidence( tr( "b" ) );
+      createIncidence( tr( "c" ) );
+      createIncidence( tr( "d" ) );
+      createIncidence( tr( "e" ) );
+      createIncidence( tr( "f" ) );
+      mCalendar = new ETMCalendar();
+      connect( mCalendar, SIGNAL(collectionsAdded(Akonadi::Collection::List)),
+               SLOT(handleCollectionsAdded(Akonadi::Collection::List)) );
+      mIncidencesToAdd = 6;
+      mCalendar->registerObserver( this );
+
+      // Wait for the collection
+      QTestEventLoop::instance().enterLoop( 10 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+
+      KCheckableProxyModel *checkable = mCalendar->checkableProxyModel();
+      const QModelIndex firstIndex = checkable->index( 0, 0 );
+      QVERIFY( firstIndex.isValid() );
+      checkable->setData( firstIndex, Qt::Checked, Qt::CheckStateRole );
+
+      // Now wait for incidences
+      QTestEventLoop::instance().enterLoop( 10 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
     }
 
     void cleanupTestCase()
     {
+      delete mCalendar;
     }
 
+    void testFilteredModel()
+    {
+      QVERIFY( mCalendar->filteredModel() );
+    }
 
+    void testUnfilteredModel()
+    {
+      QVERIFY( mCalendar->unfilteredModel() );
+    }
+
+    void testCheckableProxyModel()
+    {
+        QVERIFY( mCalendar->checkableProxyModel() );
+    }
 
 public Q_SLOTS:
+  /** reimp */
+  void calendarIncidenceAdded( const Incidence::Ptr &incidence )
+  {
+    Q_UNUSED( incidence );
+    Q_ASSERT( false );
+    --mIncidencesToAdd;
+    if ( mIncidencesToAdd == 0 ) {
+      QTestEventLoop::instance().exitLoop();
+    }
+  }
+
+  void handleCollectionsAdded( const Akonadi::Collection::List & )
+  {
+    QTestEventLoop::instance().exitLoop();
+  }
+
+  /** reimp */
+  void calendarIncidenceChanged( const Incidence::Ptr &incidence )
+  {
+    Q_UNUSED( incidence );
+  }
+
+  /** reimp */
+  void calendarIncidenceDeleted( const Incidence::Ptr &incidence )
+  {
+    Q_UNUSED( incidence );
+  }
 
 };
 
