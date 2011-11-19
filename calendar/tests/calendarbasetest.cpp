@@ -24,6 +24,7 @@
 #include <akonadi/qtest_akonadi.h>
 #include <Akonadi/Collection>
 #include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemCreateJob>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/ItemCreateJob>
@@ -32,6 +33,24 @@
 
 using namespace Akonadi;
 using namespace KCalCore;
+
+static bool compareUids( const QStringList &_uids, const Incidence::List &incidences )
+{
+  QStringList uids = _uids;
+
+  foreach( const KCalCore::Incidence::Ptr &incidence, incidences )
+  {
+    if ( uids.contains( incidence->uid() ) )
+      uids.removeAll( incidence->uid() );
+  }
+
+  if ( uids.isEmpty() && _uids.count() == incidences.count() ) {
+    return true;
+  } else {
+    qDebug() << uids.count() << incidences.count();
+    return false;
+  }
+}
 
 class CalendarBaseTest : public QObject
 {
@@ -145,6 +164,32 @@ class CalendarBaseTest : public QObject
       }
     }
 
+    void testChildIncidences_data()
+    {
+      QTest::addColumn<QString>( "parentUid" );
+      QTest::addColumn<Akonadi::Item::Id>( "parentId" );
+      QTest::addColumn<QStringList>( "childrenUids" );
+
+      QTest::newRow( "Invalid parent" ) << "doesnt exist" << Item::Id( 404 ) << QStringList();
+      Item::Id id = createTodo( tr( "parent1" ) );
+      QVERIFY( id > -1 );
+      QVERIFY( createTodo( tr( "child1" ),  tr( "parent1" ) ) > -1 );
+      QVERIFY( createTodo( tr( "child2" ),  tr( "parent1" ) ) > -1 );
+      QTest::newRow( "2 childs" ) << "parent1"
+                                  << id << ( QStringList() <<  tr( "child1" ) << tr( "child2" ) );
+    }
+
+    void testChildIncidences()
+    {
+      QFETCH( QString, parentUid );
+      QFETCH( Akonadi::Item::Id, parentId );
+      QFETCH( QStringList, childrenUids );
+      KCalCore::Incidence::List childs = mCalendar->childIncidences( parentId );
+      QVERIFY( compareUids( childrenUids, childs ) );
+      childs = mCalendar->childIncidences( parentUid );
+      QVERIFY( compareUids( childrenUids, childs ) );
+    }
+
     void testDelete()
     { // No need for _data()
       const Item event = mCalendar->item( mOneEventUid );
@@ -233,6 +278,21 @@ public Q_SLOTS:
       QCOMPARE( success, mExpectedSlotResult );
       QTestEventLoop::instance().exitLoop();
     }
+private:
+  Item::Id createTodo( const QString &uid, const QString &parentUid = QString() )
+  {
+    Todo::Ptr todo = Todo::Ptr( new Todo() );
+    todo->setUid( uid );
+    todo->setSummary( QLatin1String( "summary" ) );
+    if ( !parentUid.isEmpty() ) {
+      todo->setRelatedTo( parentUid );
+    }
+    mCalendar->addTodo( todo );
+    QTestEventLoop::instance().enterLoop( 5 );
+    //QVERIFY( !QTestEventLoop::instance().timeout() );
+
+    return mCalendar->item( uid ).id();
+  }
 };
 
 QTEST_AKONADIMAIN( CalendarBaseTest, GUI )
