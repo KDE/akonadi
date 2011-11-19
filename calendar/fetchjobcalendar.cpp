@@ -42,16 +42,20 @@ FetchJobCalendarPrivate::~FetchJobCalendarPrivate()
 void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
 {
   IncidenceFetchJob *searchJob = static_cast<Akonadi::IncidenceFetchJob*>( job );
+  bool success = true;
+  QString errorMessage;
   if ( searchJob->error() ) {
-    //TODO: Error
+    success = false;
+    errorMessage = searchJob->errorText();
     kWarning() << "Unable to fetch incidences:" << searchJob->errorText();
   } else {
     foreach( const Akonadi::Item &item, searchJob->items() ) {
       internalInsert( item );
     }
   }
-  // emit loaded() in a delayed manner, due to freezes because of execs.
-  QMetaObject::invokeMethod( q, "loaded", Qt::QueuedConnection );
+  // emit loadFinished() in a delayed manner, due to freezes because of execs.
+  QMetaObject::invokeMethod( q, "loadFinished", Qt::QueuedConnection,
+                             Q_ARG( bool, success ), Q_ARG( QString, errorMessage ) );
 }
 
 FetchJobCalendar::FetchJobCalendar( const KDateTime::Spec &timeSpec )
