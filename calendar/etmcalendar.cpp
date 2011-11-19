@@ -96,7 +96,6 @@ void ETMCalendarPrivate::init()
   connect( mFilteredETM, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
            SLOT(onRowsAboutToBeRemovedInFilteredModel(QModelIndex,int,int)) );
 
-  
   loadFromETM();
 }
 
@@ -234,7 +233,7 @@ Akonadi::Collection ETMCalendarPrivate::collectionFromIndex( const QModelIndex &
 }
 
 void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
-                                           int start, int end )
+                                         int start, int end )
 {
   Akonadi::Collection::List collections = collectionsFromModel( mETM, index,
                                                                 start, end );
@@ -245,7 +244,7 @@ void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
 }
 
 void ETMCalendarPrivate::onRowsAboutToBeRemoved( const QModelIndex &index,
-                                                   int start, int end )
+                                                 int start, int end )
 {
   Akonadi::Collection::List collections = collectionsFromModel( mETM, index,
                                                                 start, end );
@@ -255,7 +254,7 @@ void ETMCalendarPrivate::onRowsAboutToBeRemoved( const QModelIndex &index,
 }
 
 void ETMCalendarPrivate::onDataChanged( const QModelIndex &topLeft,
-                                          const QModelIndex &bottomRight )
+                                        const QModelIndex &bottomRight )
 {
   // We only update collections, because items are handled in the filtered model
   Q_ASSERT( topLeft.row() <= bottomRight.row() );

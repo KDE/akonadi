@@ -37,6 +37,9 @@ namespace Akonadi {
   public:
     typedef QSharedPointer<ETMCalendar> Ptr;
 
+    /**
+     * Constructs a new ETMCalendar. Loading begins immediately, asynchronously.
+     */
     explicit ETMCalendar( const KDateTime::Spec &timeSpec = KSystemTimeZones::local() );
 
     /**
@@ -59,12 +62,12 @@ namespace Akonadi {
 
     /**
      * Returns true if @p item can be modified.
-     */    
+     */
     bool hasModifyRights( const Akonadi::Item &item ) const;
 
     /**
      * Returns true if the incidence with @p uid modified.
-     */    
+     */
     bool hasModifyRights( const QString &uid ) const;
 
     QAbstractItemModel *unfilteredModel() const;

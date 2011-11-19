@@ -34,7 +34,7 @@ class KCheckableProxyModel;
 namespace Akonadi {
 
 class EntityMimeTypeFilterModel;
-  
+
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
