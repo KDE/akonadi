@@ -201,6 +201,8 @@ KCalCore::Incidence::List CalendarBase::childIncidences( const QString &parentUi
     Incidence::Ptr child = incidence( uid );
     if ( child )
       children.append( child );
+    else
+      kWarning() << "Invalid child with uid " << uid;
   }
   return children;
 }
