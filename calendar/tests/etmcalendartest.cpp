@@ -22,11 +22,14 @@
 #include <akonadi/qtest_akonadi.h>
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
+#include <Akonadi/CollectionModifyJob>
 #include <KCheckableProxyModel>
 #include <QTestEventLoop>
-
+#include <QSignalSpy>
 using namespace Akonadi;
 using namespace KCalCore;
+
+Q_DECLARE_METATYPE( QSet<QByteArray> )
 
 class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
 {
@@ -67,6 +70,7 @@ class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
 private Q_SLOTS:
     void initTestCase()
     {
+      qRegisterMetaType<QSet<QByteArray> >("QSet<QByteArray>");
       fetchCollection();
       createIncidence( tr( "a" ) );
       createIncidence( tr( "b" ) );
@@ -97,6 +101,30 @@ private Q_SLOTS:
     void cleanupTestCase()
     {
       delete mCalendar;
+    }
+
+    void testCollectionChanged_data()
+    {
+      QTest::addColumn<Akonadi::Collection>( "noRightsCollection" );
+      Collection noRightsCollection = mCollection;
+      noRightsCollection.setRights( Collection::Rights( Collection::CanCreateItem ) );
+      QTest::newRow( "change rights" ) << noRightsCollection;
+    }
+
+    void testCollectionChanged()
+    {
+      QFETCH( Akonadi::Collection, noRightsCollection );
+      CollectionModifyJob *job = new CollectionModifyJob( mCollection, this );
+      QSignalSpy spy( mCalendar, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+      connect( mCalendar, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+               &QTestEventLoop::instance(), SLOT(exitLoop()) );
+      AKVERIFYEXEC(job);
+      QTestEventLoop::instance().enterLoop( 10 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QCOMPARE( spy.count(), 1 );
+      QCOMPARE( spy.at(0).count(), 2 );
+      QCOMPARE( spy.at(0).at(0).value<Akonadi::Collection>(), mCollection );
+      QVERIFY( spy.at(0).at(1).value<QSet<QByteArray> >().contains(QByteArray( "AccessRights" ) ) );
     }
 
     void testFilteredModel()
@@ -142,7 +170,6 @@ public Q_SLOTS:
   {
     Q_UNUSED( incidence );
   }
-
 };
 
 QTEST_AKONADIMAIN( ETMCalendarTest, GUI )
