@@ -176,25 +176,31 @@ Akonadi::Item CalendarBase::item( const QString &uid ) const
   return i;
 }
 
-KCalCore::Incidence::List CalendarBase::childIncidences( const KCalCore::Incidence::Ptr &parent ) const
+KCalCore::Incidence::List CalendarBase::childIncidences( const Akonadi::Item::Id &parentId ) const
 {
-  Q_ASSERT( parent );
-  Akonadi::Item item = this->item( parent->uid() );
-  Q_ASSERT( item.isValid() );
-  return childIncidences( item );
+  Q_D(const CalendarBase);
+  KCalCore::Incidence::List childs;
+
+  if ( d->mItemById.contains( parentId ) ) {
+    const Akonadi::Item item = d->mItemById.value( parentId );
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+
+    childs = childIncidences( item.payload<KCalCore::Incidence::Ptr>()->uid() );
+  }
+
+  return childs;
 }
 
-KCalCore::Incidence::List CalendarBase::childIncidences( const Akonadi::Item &parent ) const
+KCalCore::Incidence::List CalendarBase::childIncidences( const QString &parentUid ) const
 {
   Q_D(const CalendarBase);
   KCalCore::Incidence::List children;
-  const KCalCore::Incidence::Ptr incidence = parent.payload<KCalCore::Incidence::Ptr>();
-  Q_ASSERT( incidence );
-  const QStringList uids = d->mParentUidToChildrenUid.value( incidence->uid() );
+  const QStringList uids = d->mParentUidToChildrenUid.value( parentUid );
   Q_FOREACH( const QString &uid, uids ) {
-    Akonadi::Item item = this->item( uid );
-    Q_ASSERT( item.isValid() );
-    children.append( item.payload<KCalCore::Incidence::Ptr>() );
+    Incidence::Ptr child = incidence( uid );
+    if ( child )
+      children.append( child );
   }
   return children;
 }

@@ -73,16 +73,16 @@ namespace Akonadi {
     Akonadi::Item item( Akonadi::Item::Id ) const;
 
     /**
-     * Returns the child incidences of @p parent.
+     * Returns the child incidences of the parent identified by @p parentUid.
      * Only the direct childs are returned
      */
-    KCalCore::Incidence::List childIncidences( const KCalCore::Incidence::Ptr &parent ) const;
+    KCalCore::Incidence::List childIncidences( const QString &parentUid ) const;
 
     /**
-     * Returns the child incidences of @p parent.
+     * Returns the child incidences of the parent identified by @p parentId.
      * Only the direct childs are returned
      */
-    KCalCore::Incidence::List childIncidences( const Akonadi::Item &parent ) const;
+    KCalCore::Incidence::List childIncidences( const Akonadi::Item::Id &parentId ) const;
 
     /**
      * Sets the weak pointer that's associated with this instance.
