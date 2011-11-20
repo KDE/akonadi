@@ -23,6 +23,7 @@
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/CollectionModifyJob>
+#include <Akonadi/ItemDeleteJob>
 #include <KCheckableProxyModel>
 #include <QTestEventLoop>
 #include <QSignalSpy>
@@ -37,6 +38,9 @@ class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
     ETMCalendar *mCalendar;
     Collection mCollection;
     int mIncidencesToAdd;
+    int mIncidencesToChange;
+    int mIncidencesToDelete;
+    QString mLastDeletedUid;
 
     void createIncidence( const QString &uid )
     {
@@ -127,6 +131,32 @@ private Q_SLOTS:
       QVERIFY( spy.at(0).at(1).value<QSet<QByteArray> >().contains(QByteArray( "AccessRights" ) ) );
     }
 
+    void testIncidencesAdded()
+    {
+      // Already tested above.
+    }
+
+    void testIncidencesModified()
+    {
+
+    }
+
+    void testIncidencesDeleted()
+    {
+      Event::List incidences = mCalendar->events();
+      QCOMPARE( incidences.count(), 6 );
+      const Item item = mCalendar->item( tr( "a" ) );
+      QVERIFY( item.isValid() );
+      QVERIFY( item.hasPayload() );
+      ItemDeleteJob *job = new ItemDeleteJob( item );
+      AKVERIFYEXEC(job);
+      mIncidencesToDelete = 1;
+      QTestEventLoop::instance().enterLoop( 10 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QCOMPARE( mLastDeletedUid, tr( "a" ) );
+      QVERIFY( !mCalendar->item( tr( "a" ) ).isValid() );
+    }
+
     void testFilteredModel()
     {
       QVERIFY( mCalendar->filteredModel() );
@@ -163,12 +193,20 @@ public Q_SLOTS:
   void calendarIncidenceChanged( const Incidence::Ptr &incidence )
   {
     Q_UNUSED( incidence );
+    --mIncidencesToChange;
+    if ( mIncidencesToChange == 0 ) {
+      QTestEventLoop::instance().exitLoop();
+    }
   }
 
   /** reimp */
   void calendarIncidenceDeleted( const Incidence::Ptr &incidence )
   {
-    Q_UNUSED( incidence );
+    --mIncidencesToDelete;
+    mLastDeletedUid = incidence->uid();
+    if ( mIncidencesToDelete == 0 ) {
+      QTestEventLoop::instance().exitLoop();
+    }
   }
 };
 
