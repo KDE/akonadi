@@ -48,6 +48,7 @@
 #include <akonadi/servermanager.h>
 
 #include <kdebug.h>
+#include <QApplication>
 
 /// comment this out to track time spent on jobs created by the ETM
 // #define DBG_TRACK_JOB_TIMES
@@ -1196,12 +1197,14 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
 
 void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 {
+  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
+
   if ( job->error() ) {
     kWarning() << "Job error: " << job->errorString() << endl;
+    KMessageBox::error(qApp->activeWindow(), i18n("Fetch Job Error"), job->errorString());
+    m_pendingCollectionRetrieveJobs.remove( collectionId );
     return; // let's be safe, otherwise emitting dataChanged will get us into loops
   }
-
-  const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
 #ifdef DBG_TRACK_JOB_TIMES
     kDebug() << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
