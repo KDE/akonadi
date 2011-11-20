@@ -26,8 +26,10 @@
 #include <Akonadi/ItemDeleteJob>
 #include <Akonadi/ItemModifyJob>
 #include <KCheckableProxyModel>
+
 #include <QTestEventLoop>
 #include <QSignalSpy>
+
 using namespace Akonadi;
 using namespace KCalCore;
 
@@ -183,6 +185,39 @@ private Q_SLOTS:
     void testCheckableProxyModel()
     {
         QVERIFY( mCalendar->checkableProxyModel() );
+    }
+
+    void testUnselectCollection()
+    {
+      mIncidencesToAdd = mIncidencesToDelete = mCalendar->incidences().count();
+      const int originalToDelete = mIncidencesToDelete;
+      KCheckableProxyModel *checkable = mCalendar->checkableProxyModel();
+      const QModelIndex firstIndex = checkable->index( 0, 0 );
+      QVERIFY( firstIndex.isValid() );
+      checkable->setData( firstIndex, Qt::Unchecked, Qt::CheckStateRole );
+
+      if ( mIncidencesToDelete > 0 ) { // Actually they probably where deleted already
+        //doesn't need the event loop, but just in case
+        QTestEventLoop::instance().enterLoop( 10 );
+
+        if ( QTestEventLoop::instance().timeout() ) {
+          qDebug() << originalToDelete << mIncidencesToDelete;
+          QVERIFY( false );
+        }
+      }
+    }
+
+    void testSelectCollection()
+    {
+      KCheckableProxyModel *checkable = mCalendar->checkableProxyModel();
+      const QModelIndex firstIndex = checkable->index( 0, 0 );
+      QVERIFY( firstIndex.isValid() );
+      checkable->setData( firstIndex, Qt::Checked, Qt::CheckStateRole );
+
+      if ( mIncidencesToDelete > 0 ) {
+        QTestEventLoop::instance().enterLoop( 10 );
+        QVERIFY( !QTestEventLoop::instance().timeout() );
+      }
     }
 
 public Q_SLOTS:
