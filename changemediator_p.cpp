@@ -50,7 +50,9 @@ ChangeMediator* ChangeMediator::instance()
 ChangeMediator::ChangeMediator(QObject *parent)
   : QObject(parent)
 {
-  this->moveToThread(qApp->thread());
+  if ( qApp ) {
+    this->moveToThread(qApp->thread());
+  }
   QTimer::singleShot(0, this, SLOT(init()));
 }
 
