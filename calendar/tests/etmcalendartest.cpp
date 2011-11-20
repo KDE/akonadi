@@ -24,6 +24,7 @@
 #include <Akonadi/CollectionFetchScope>
 #include <Akonadi/CollectionModifyJob>
 #include <Akonadi/ItemDeleteJob>
+#include <Akonadi/ItemModifyJob>
 #include <KCheckableProxyModel>
 #include <QTestEventLoop>
 #include <QSignalSpy>
@@ -41,6 +42,7 @@ class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
     int mIncidencesToChange;
     int mIncidencesToDelete;
     QString mLastDeletedUid;
+    QString mLastModifiedUid;
 
     void createIncidence( const QString &uid )
     {
@@ -138,7 +140,18 @@ private Q_SLOTS:
 
     void testIncidencesModified()
     {
-
+      const QString uid = tr( "d" );
+      const Item item = mCalendar->item( uid );
+      QVERIFY( item.isValid() );
+      QVERIFY( item.hasPayload() );
+      item.payload<KCalCore::Incidence::Ptr>()->setSummary( tr( "foo33" ) );
+      ItemModifyJob *job = new ItemModifyJob( item );
+      AKVERIFYEXEC(job);
+      mIncidencesToChange = 1;
+      QTestEventLoop::instance().enterLoop( 10 );
+      QVERIFY( !QTestEventLoop::instance().timeout() );
+      QCOMPARE( mLastModifiedUid, uid );
+      QCOMPARE( mCalendar->incidence( uid )->summary(), tr( "foo33" ) );
     }
 
     void testIncidencesDeleted()
@@ -192,8 +205,8 @@ public Q_SLOTS:
   /** reimp */
   void calendarIncidenceChanged( const Incidence::Ptr &incidence )
   {
-    Q_UNUSED( incidence );
     --mIncidencesToChange;
+    mLastModifiedUid = incidence->uid();
     if ( mIncidencesToChange == 0 ) {
       QTestEventLoop::instance().exitLoop();
     }
