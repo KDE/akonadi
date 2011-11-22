@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #ifndef AKONADI_AGENTACTIONMANAGER_H
@@ -28,6 +28,7 @@
 
 class KAction;
 class KActionCollection;
+class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;
 
@@ -100,7 +101,7 @@ class AKONADI_EXPORT AgentActionManager : public QObject
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
      */
-    KAction* createAction( Type type );
+    KAction *createAction( Type type );
 
     /**
      * Convenience method to create all standard actions.
@@ -111,7 +112,7 @@ class AKONADI_EXPORT AgentActionManager : public QObject
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
      */
-    KAction* action( Type type ) const;
+    KAction *action( Type type ) const;
 
     /**
      * Sets whether the default implementation for the given action @p type
@@ -139,6 +140,13 @@ class AKONADI_EXPORT AgentActionManager : public QObject
      */
     void setContextText( Type type, TextContext context, const QString &text );
 
+    /**
+     * Sets the @p text of the action @p type for the given @p context.
+     *
+     * @since 4.8
+     */
+    void setContextText( Type type, TextContext context, const KLocalizedString &text );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.
@@ -150,7 +158,7 @@ class AKONADI_EXPORT AgentActionManager : public QObject
   private:
     //@cond PRIVATE
     class Private;
-    Private* const d;
+    Private *const d;
 
     Q_PRIVATE_SLOT( d, void updateActions() )
 

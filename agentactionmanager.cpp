@@ -1,20 +1,20 @@
 /*
-    Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-    This library is distributed in the hope that it will be useful, but WITHOUT
-    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-    License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to the
-    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-    02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
 #include "agentactionmanager.h"
@@ -46,11 +46,17 @@ static const struct {
   const char *label;
   const char *icon;
   int shortcut;
-  const char* slot;
+  const char *slot;
 } agentActionData[] = {
-  { "akonadi_agentinstance_create", I18N_NOOP( "&New Agent Instance..." ), "folder-new", 0, SLOT(slotCreateAgentInstance()) },
-  { "akonadi_agentinstance_delete", I18N_NOOP( "&Delete Agent Instance" ), "edit-delete", 0, SLOT(slotDeleteAgentInstance()) },
-  { "akonadi_agentinstance_configure", I18N_NOOP( "&Configure Agent Instance" ), "configure", 0, SLOT(slotConfigureAgentInstance()) }
+  { "akonadi_agentinstance_create", I18N_NOOP( "&New Agent Instance..." ),
+    "folder-new", 0, SLOT(slotCreateAgentInstance())
+  },
+  { "akonadi_agentinstance_delete", I18N_NOOP( "&Delete Agent Instance" ),
+    "edit-delete", 0, SLOT(slotDeleteAgentInstance())
+  },
+  { "akonadi_agentinstance_configure", I18N_NOOP( "&Configure Agent Instance" ),
+    "configure", 0, SLOT(slotConfigureAgentInstance())
+  }
 };
 static const int numAgentActionData = sizeof agentActionData / sizeof *agentActionData;
 
@@ -68,24 +74,33 @@ class AgentActionManager::Private
     {
       mActions.fill( 0, AgentActionManager::LastType );
 
-      setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
+      setContextText( AgentActionManager::CreateAgentInstance,
+                      AgentActionManager::DialogTitle,
                       i18nc( "@title:window", "New Agent Instance" ) );
-      setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText,
+
+      setContextText( AgentActionManager::CreateAgentInstance,
+                      AgentActionManager::ErrorMessageText,
                       ki18n( "Could not create agent instance: %1" ) );
-      setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle,
+
+      setContextText( AgentActionManager::CreateAgentInstance,
+                      AgentActionManager::ErrorMessageTitle,
                       i18n( "Agent instance creation failed" ) );
 
-      setContextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle,
+      setContextText( AgentActionManager::DeleteAgentInstance,
+                      AgentActionManager::MessageBoxTitle,
                       i18nc( "@title:window", "Delete Agent Instance?" ) );
-      setContextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText,
+
+      setContextText( AgentActionManager::DeleteAgentInstance,
+                      AgentActionManager::MessageBoxText,
                       i18n( "Do you really want to delete the selected agent instance?" ) );
     }
 
     void enableAction( AgentActionManager::Type type, bool enable )
     {
       Q_ASSERT( type >= 0 && type < AgentActionManager::LastType );
-      if ( mActions[ type ] )
+      if ( mActions[ type ] ) {
         mActions[ type ]->setEnabled( enable );
+      }
     }
 
     void updateActions()
@@ -103,8 +118,9 @@ class AgentActionManager::Private
 
       if ( instances.count() == 1 ) {
         const AgentInstance instance = instances.first();
-        if ( instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) )
+        if ( instance.type().capabilities().contains( QLatin1String( "NoConfig" ) ) ) {
           configureActionEnabled = false;
+        }
       }
 
       enableAction( CreateAgentInstance, createActionEnabled );
@@ -118,13 +134,16 @@ class AgentActionManager::Private
     {
       AgentInstance::List instances;
 
-      if ( !mSelectionModel )
+      if ( !mSelectionModel ) {
         return instances;
+      }
 
       foreach ( const QModelIndex &index, mSelectionModel->selectedRows() ) {
-        const AgentInstance instance = index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
-        if ( instance.isValid() )
+        const AgentInstance instance =
+          index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+        if ( instance.isValid() ) {
           instances << instance;
+        }
       }
 
       return instances;
@@ -133,13 +152,16 @@ class AgentActionManager::Private
     void slotCreateAgentInstance()
     {
       Akonadi::AgentTypeDialog dlg( mParentWidget );
-      dlg.setCaption( contextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle ) );
+      dlg.setCaption( contextText( AgentActionManager::CreateAgentInstance,
+                                   AgentActionManager::DialogTitle ) );
 
-      foreach ( const QString &mimeType, mMimeTypeFilter )
+      foreach ( const QString &mimeType, mMimeTypeFilter ) {
         dlg.agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+      }
 
-      foreach ( const QString &capability, mCapabilityFilter )
+      foreach ( const QString &capability, mCapabilityFilter ) {
         dlg.agentFilterProxyModel()->addCapabilityFilter( capability );
+      }
 
       if ( dlg.exec() ) {
         const AgentType agentType = dlg.agentType();
@@ -157,17 +179,20 @@ class AgentActionManager::Private
     {
       const AgentInstance::List instances = selectedAgentInstances();
       if ( !instances.isEmpty() ) {
-        if ( KMessageBox::questionYesNo( mParentWidget,
-                                         contextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxText ),
-                                         contextText( AgentActionManager::DeleteAgentInstance, AgentActionManager::MessageBoxTitle ),
-                                         KStandardGuiItem::del(),
-                                         KStandardGuiItem::cancel(),
-                                         QString(),
-                                         KMessageBox::Dangerous )
-          == KMessageBox::Yes ) {
+        if ( KMessageBox::questionYesNo(
+               mParentWidget,
+               contextText( AgentActionManager::DeleteAgentInstance,
+                            AgentActionManager::MessageBoxText ),
+               contextText( AgentActionManager::DeleteAgentInstance,
+                            AgentActionManager::MessageBoxTitle ),
+               KStandardGuiItem::del(),
+               KStandardGuiItem::cancel(),
+               QString(),
+               KMessageBox::Dangerous ) == KMessageBox::Yes ) {
 
-          foreach ( const AgentInstance &instance, instances )
+          foreach ( const AgentInstance &instance, instances ) {
             AgentManager::self()->removeInstance( instance );
+          }
         }
       }
     }
@@ -175,8 +200,9 @@ class AgentActionManager::Private
     void slotConfigureAgentInstance()
     {
       AgentInstance::List instances = selectedAgentInstances();
-      if ( instances.isEmpty() )
+      if ( instances.isEmpty() ) {
         return;
+      }
 
       instances.first().configure( mParentWidget );
     }
@@ -184,24 +210,30 @@ class AgentActionManager::Private
     void slotAgentInstanceCreationResult( KJob *job )
     {
       if ( job->error() ) {
-        KMessageBox::error( mParentWidget,
-                            contextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText ).arg( job->errorString() ),
-                            contextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle ) );
+        KMessageBox::error(
+          mParentWidget,
+          contextText( AgentActionManager::CreateAgentInstance,
+                       AgentActionManager::ErrorMessageText ).arg( job->errorString() ),
+          contextText( AgentActionManager::CreateAgentInstance,
+                       AgentActionManager::ErrorMessageTitle ) );
       }
     }
 
-    void setContextText( AgentActionManager::Type type, AgentActionManager::TextContext context, const QString &data )
+    void setContextText( AgentActionManager::Type type,
+                         AgentActionManager::TextContext context, const QString &data )
     {
       mContextTexts[ type ].insert( context, data );
     }
 
-    void setContextText( AgentActionManager::Type type, AgentActionManager::TextContext context, const KLocalizedString &data )
+    void setContextText( AgentActionManager::Type type,
+                         AgentActionManager::TextContext context, const KLocalizedString &data )
     {
 
       mContextTexts[ type ].insert( context, data.toString() );
     }
 
-    QString contextText( AgentActionManager::Type type, AgentActionManager::TextContext context ) const
+    QString contextText( AgentActionManager::Type type,
+                         AgentActionManager::TextContext context ) const
     {
       return mContextTexts[ type ].value( context );
     }
@@ -220,7 +252,7 @@ class AgentActionManager::Private
 
 //@endcond
 
-AgentActionManager::AgentActionManager( KActionCollection * actionCollection, QWidget * parent)
+AgentActionManager::AgentActionManager( KActionCollection *actionCollection, QWidget *parent )
   : QObject( parent ),
     d( new Private( this ) )
 {
@@ -250,25 +282,28 @@ void AgentActionManager::setCapabilityFilter( const QStringList &capabilities )
   d->mCapabilityFilter = capabilities;
 }
 
-KAction* AgentActionManager::createAction( Type type )
+KAction *AgentActionManager::createAction( Type type )
 {
   Q_ASSERT( type >= 0 && type < LastType );
   Q_ASSERT( agentActionData[ type ].name );
-  if ( d->mActions[ type ] )
+  if ( d->mActions[ type ] ) {
     return d->mActions[ type ];
+  }
 
   KAction *action = new KAction( d->mParentWidget );
   action->setText( i18n( agentActionData[ type ].label ) );
 
-  if ( agentActionData[ type ].icon )
+  if ( agentActionData[ type ].icon ) {
     action->setIcon( KIcon( QString::fromLatin1( agentActionData[ type ].icon ) ) );
+  }
 
   action->setShortcut( agentActionData[ type ].shortcut );
 
-  if ( agentActionData[ type ].slot )
+  if ( agentActionData[ type ].slot ) {
     connect( action, SIGNAL(triggered()), agentActionData[ type ].slot );
+  }
 
-  d->mActionCollection->addAction( QString::fromLatin1( agentActionData[ type ].name), action );
+  d->mActionCollection->addAction( QString::fromLatin1( agentActionData[ type ].name ), action );
   d->mActions[ type ] = action;
   d->updateActions();
 
@@ -277,8 +312,9 @@ KAction* AgentActionManager::createAction( Type type )
 
 void AgentActionManager::createAllActions()
 {
-  for ( int type = 0; type < LastType; ++type )
+  for ( int type = 0; type < LastType; ++type ) {
     createAction( (Type)type );
+  }
 }
 
 KAction * AgentActionManager::action( Type type ) const
@@ -293,13 +329,15 @@ void AgentActionManager::interceptAction( Type type, bool intercept )
 
   const KAction *action = d->mActions[ type ];
 
-  if ( !action )
+  if ( !action ) {
     return;
+  }
 
-  if ( intercept )
+  if ( intercept ) {
     disconnect( action, SIGNAL(triggered()), this, agentActionData[ type ].slot );
-  else
+  } else {
     connect( action, SIGNAL(triggered()), agentActionData[ type ].slot );
+  }
 }
 
 AgentInstance::List AgentActionManager::selectedAgentInstances() const
@@ -308,6 +346,12 @@ AgentInstance::List AgentActionManager::selectedAgentInstances() const
 }
 
 void AgentActionManager::setContextText( Type type, TextContext context, const QString &text )
+{
+  d->setContextText( type, context, text );
+}
+
+void AgentActionManager::setContextText( Type type, TextContext context,
+                                         const KLocalizedString &text )
 {
   d->setContextText( type, context, text );
 }
