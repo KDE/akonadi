@@ -90,8 +90,8 @@ class StandardCalendarActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis(
         i18n( "Delete the selected events from the calendar." ) );
 
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np(
-                                        "Cut Event", "Cut %1 Events" ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                      ki18np( "Cut Event", "Cut %1 Events" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis(
         i18n( "Cut the selected events from the calendar." ) );
 
@@ -136,7 +136,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create calendar folder: %1" ) );
+        ki18n( "Could not create calendar folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
@@ -153,7 +153,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete calendar folder: %1" ) );
+        ki18n( "Could not delete calendar folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
@@ -161,7 +161,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-        i18nc( "@title:window", "Properties of Calendar Folder %1" ) );
+        ki18nc( "@title:window", "Properties of Calendar Folder %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
@@ -174,7 +174,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete event: %1" ) );
+        ki18n( "Could not delete event: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
@@ -186,7 +186,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create calendar: %1" ) );
+        ki18n( "Could not create calendar: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
@@ -203,7 +203,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-        i18n( "Could not paste event: %1" ) );
+        ki18n( "Could not paste event: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,

@@ -132,7 +132,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create address book folder: %1" ) );
+        ki18n( "Could not create address book folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
@@ -148,7 +148,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete address book folder: %1" ) );
+        ki18n( "Could not delete address book folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
@@ -156,7 +156,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-        i18nc( "@title:window", "Properties of Address Book Folder %1" ) );
+        ki18nc( "@title:window", "Properties of Address Book Folder %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
@@ -169,7 +169,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete contact: %1" ) );
+        ki18n( "Could not delete contact: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
@@ -181,7 +181,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create address book: %1" ) );
+        ki18n( "Could not create address book: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
@@ -198,7 +198,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-        i18n( "Could not paste contact: %1" ) );
+        ki18n( "Could not paste contact: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,

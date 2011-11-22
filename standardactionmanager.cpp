@@ -218,7 +218,7 @@ class StandardActionManager::Private
       setContextText( StandardActionManager::CreateCollection, StandardActionManager::DialogText,
                       i18nc( "@label:textbox name of a thing", "Name" ) );
       setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-                      i18n( "Could not create folder: %1" ) );
+                      ki18n( "Could not create folder: %1" ) );
       setContextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
                       i18n( "Folder creation failed" ) );
 
@@ -228,12 +228,12 @@ class StandardActionManager::Private
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete folder?", "Delete folders?" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-                      i18n( "Could not delete folder: %1" ) );
+                      ki18n( "Could not delete folder: %1" ) );
       setContextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
                       i18n( "Folder deletion failed" ) );
 
       setContextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-                      i18nc( "@title:window", "Properties of Folder %1" ) );
+                      ki18nc( "@title:window", "Properties of Folder %1" ) );
 
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
                       ki18np( "Do you really want to delete the selected item?",
@@ -241,7 +241,7 @@ class StandardActionManager::Private
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::MessageBoxTitle,
                       ki18ncp( "@title:window", "Delete item?", "Delete items?" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-                      i18n( "Could not delete item: %1" ) );
+                      ki18n( "Could not delete item: %1" ) );
       setContextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
                       i18n( "Item deletion failed" ) );
 
@@ -253,7 +253,7 @@ class StandardActionManager::Private
       setContextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle,
                       i18nc( "@title:window", "New Resource" ) );
       setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-                      i18n( "Could not create resource: %1" ) );
+                      ki18n( "Could not create resource: %1" ) );
       setContextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
                       i18n( "Resource creation failed" ) );
 
@@ -264,7 +264,7 @@ class StandardActionManager::Private
                       ki18ncp( "@title:window", "Delete Resource?", "Delete Resources?" ) );
 
       setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-                      i18n( "Could not paste data: %1" ) );
+                      ki18n( "Could not paste data: %1" ) );
       setContextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                       i18n( "Paste failed" ) );
 
@@ -299,7 +299,7 @@ class StandardActionManager::Private
         actionMenu->setMenu( menu );
       }
     }
-  
+
     void aboutToShowMenu()
     {
       QMenu *menu = qobject_cast<QMenu*>( q->sender() );
@@ -313,7 +313,7 @@ class StandardActionManager::Private
       QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
       mRecentCollectionsMenu.insert( type, recentCollection );
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
-      fillFoldersMenu( mimeTypes, 
+      fillFoldersMenu( mimeTypes,
                        type,
                        menu,
                        collectionSelectionModel->model(),
@@ -330,7 +330,7 @@ class StandardActionManager::Private
 
         QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
         const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
-        fillFoldersMenu( mimeTypes, 
+        fillFoldersMenu( mimeTypes,
                          type,
                          menu,
                          collectionSelectionModel->model(),
@@ -338,7 +338,7 @@ class StandardActionManager::Private
       }
     }
 
-  
+
     void updateAlternatingAction( int type )
     {
       updateAlternatingAction( static_cast<StandardActionManager::Type>( type ) );
@@ -1105,7 +1105,7 @@ class StandardActionManager::Private
         item.value()->addRecentCollection( id );
       }
     }
-  
+
     void collectionCreationResult( KJob *job )
     {
       if ( job->error() ) {
@@ -1612,7 +1612,7 @@ void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
 {
   d->createActionFolderMenu( menu, type );
 }
-  
+
 
 
 #include "standardactionmanager.moc"

@@ -141,7 +141,8 @@ QVariant EmailAddressSelectionProxyModel::leafData( const QModelIndex &index, in
     } else if ( item.hasPayload<KABC::ContactGroup>() ) {
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
       if ( row >= 0 && row < (int)group.dataCount() )
-        return i18nc( "Name and email address of a contact", "%1 <%2>", group.data( row ).name(), group.data( row ).email() ); //krazy:exclude=i18ncheckarg
+        return i18nc( "Name and email address of a contact", "%1 <%2>",
+                      group.data( row ).name(), group.data( row ).email() );
     }
   } else if ( role == NameRole ) {
     const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();

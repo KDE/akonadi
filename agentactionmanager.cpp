@@ -71,7 +71,7 @@ class AgentActionManager::Private
       setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::DialogTitle,
                       i18nc( "@title:window", "New Agent Instance" ) );
       setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageText,
-                      i18n( "Could not create agent instance: %1" ) );
+                      ki18n( "Could not create agent instance: %1" ) );
       setContextText( AgentActionManager::CreateAgentInstance, AgentActionManager::ErrorMessageTitle,
                       i18n( "Agent instance creation failed" ) );
 
@@ -193,6 +193,12 @@ class AgentActionManager::Private
     void setContextText( AgentActionManager::Type type, AgentActionManager::TextContext context, const QString &data )
     {
       mContextTexts[ type ].insert( context, data );
+    }
+
+    void setContextText( AgentActionManager::Type type, AgentActionManager::TextContext context, const KLocalizedString &data )
+    {
+
+      mContextTexts[ type ].insert( context, data.toString() );
     }
 
     QString contextText( AgentActionManager::Type type, AgentActionManager::TextContext context ) const
