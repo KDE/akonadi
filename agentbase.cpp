@@ -622,6 +622,11 @@ void AgentBase::setOnline( bool state )
 {
   Q_D( AgentBase );
   d->mOnline = state;
+
+  const QString newMessage = d->defaultReadyMessage();
+  if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken )
+    emit status( d->mStatusCode, newMessage );
+
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
   doSetOnline( state );
   emit onlineChanged( state );
