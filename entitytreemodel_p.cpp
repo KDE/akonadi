@@ -1070,7 +1070,7 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
                                                  const Akonadi::Collection& sourceCollection,
                                                  const Akonadi::Collection& destCollection )
 {
-  Q_Q( EntityTreeModel );
+  // Q_Q( EntityTreeModel );
 
   if ( isHidden( item ) )
     return;
