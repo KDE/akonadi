@@ -200,6 +200,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   Q_D( const CollectionStatisticsDelegate );
   PainterStateSaver stateSaver( painter );
 
+  const QColor backgroundColor = index.data( Qt::ForegroundRole ).value<QColor>();
   // First, paint the basic, but without the text. We remove the text
   // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
   QStyledItemDelegate::paint( painter, option, index );
@@ -215,6 +216,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   const QWidget *widget = option4.widget;
   const QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
   const QRect iconRect = s->subElementRect( QStyle::SE_ItemViewItemDecoration, &option4, widget );
+  if ( backgroundColor.isValid() ) {
+    painter->fillRect( textRect, backgroundColor );
+  }
 
    // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
