@@ -166,6 +166,11 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     }
 
   public Q_SLOTS:
+    Q_SCRIPTABLE QString dumpToString()
+    {
+      return scheduler->dumpToString();
+    }
+
     Q_SCRIPTABLE void dump()
     {
       scheduler->dump();

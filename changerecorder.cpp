@@ -59,6 +59,7 @@ void ChangeRecorder::replayNext()
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.head();
+    // TODO kDebug() << msg;
     if ( d->ensureDataAvailable( msg ) )
       d->emitNotification( msg );
     else if ( !d->translateAndCompress( d->pipeline, msg ) ) {
