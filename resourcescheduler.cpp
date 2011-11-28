@@ -444,15 +444,27 @@ ResourceScheduler::TaskList& ResourceScheduler::queueForTaskType( TaskType type 
 
 void ResourceScheduler::dump()
 {
-  kDebug() << "ResourceScheduler: Online:" << mOnline;
-  kDebug() << " current task:" << mCurrentTask;
+  kDebug() << dumpToString();
+}
+
+QString ResourceScheduler::dumpToString() const
+{
+  QString ret;
+  QTextStream str( &ret );
+  str << "ResourceScheduler: " << (mOnline?"Online":"Offline") << endl;
+  str << " current task: " << mCurrentTask << endl;
   for ( int i = 0; i < NQueueCount; ++i ) {
     const TaskList& queue = mTaskList[i];
-    kDebug() << " queue" << i << queue.size() << "tasks:";
-    for ( QList<Task>::const_iterator it = queue.begin(); it != queue.end(); ++it ) {
-      kDebug() << "  " << (*it);
+    if (queue.isEmpty()) {
+      str << " queue " << i << " is empty" << endl;
+    } else {
+      str << " queue " << i << " " << queue.size() << " tasks:" << endl;
+      for ( QList<Task>::const_iterator it = queue.begin(); it != queue.end(); ++it ) {
+        str << "  " << (*it) << endl;
+      }
     }
   }
+  return ret;
 }
 
 void ResourceScheduler::clear()
@@ -482,7 +494,7 @@ void Akonadi::ResourceScheduler::cancelQueues()
 }
 
 static const char s_taskTypes[][27] = {
-      "Invalid",
+      "Invalid (no task)",
       "SyncAll",
       "SyncCollectionTree",
       "SyncCollection",
@@ -496,17 +508,26 @@ static const char s_taskTypes[][27] = {
       "Custom"
 };
 
-QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
+QTextStream& Akonadi::operator<<( QTextStream& d, const ResourceScheduler::Task& task )
 {
-  d << task.serial << s_taskTypes[task.type];
+  d << task.serial << " " << s_taskTypes[task.type] << " ";
   if ( task.type != ResourceScheduler::Invalid ) {
     if ( task.collection.isValid() )
-      d << "collection" << task.collection.id();
+      d << "collection " << task.collection.id() << " ";
     if ( task.item.id() != -1 )
-      d << "item" << task.item.id();
+      d << "item " << task.item.id() << " ";
     if ( !task.methodName.isEmpty() )
-      d << task.methodName << task.argument;
+      d << task.methodName << " " << task.argument.toString();
   }
+  return d;
+}
+
+QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
+{
+  QString s;
+  QTextStream str( &s );
+  str << task;
+  d << s;
   return d;
 }
 

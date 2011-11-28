@@ -200,6 +200,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   Q_D( const CollectionStatisticsDelegate );
   PainterStateSaver stateSaver( painter );
 
+  const QColor textColor = index.data( Qt::ForegroundRole ).value<QColor>();
   // First, paint the basic, but without the text. We remove the text
   // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
   QStyledItemDelegate::paint( painter, option, index );
@@ -223,7 +224,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   bool expanded = treeView && treeView->isExpanded( firstColumn );
 
   if ( option.state & QStyle::State_Selected ) {
-    painter->setPen( option.palette.highlightedText().color() );
+    painter->setPen( textColor.isValid() ? textColor : option.palette.highlightedText().color() );
   }
 
   Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -279,6 +280,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       QRect unreadRect = textRect;
       folderRect.setRight( textRect.left() + folderWidth );
       unreadRect.setLeft( folderRect.right() );
+      if ( textColor.isValid() )
+        painter->setPen( textColor );
 
       // Draw folder name and unread count
       painter->drawText( folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName );

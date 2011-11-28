@@ -67,6 +67,7 @@ class ActionStateManager
     virtual bool isSpecialCollection( const Collection &collection ) const;
     virtual bool isFavoriteCollection( const Collection &collection ) const;
     virtual bool hasResourceCapability( const Collection &collection, const QString &capability ) const;
+    virtual bool collectionCanHaveItems( const Collection &collection ) const;
 
     virtual void enableAction( int action, bool state );
     virtual void updatePluralLabel( int action, int count );

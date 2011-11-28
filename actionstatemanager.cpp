@@ -182,6 +182,14 @@ void ActionStateManager::updateState( const Collection::List &collections, const
     }
   }
 
+  bool atLeastOneCollectionCanHaveItems = false;
+  foreach ( const Collection &collection, collections ) {
+    if ( collectionCanHaveItems( collection ) ) {
+      atLeastOneCollectionCanHaveItems = true;
+      break;
+    }
+  }
+
   const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
   // collection specific actions
@@ -209,8 +217,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::CollectionProperties, singleCollectionSelected && // we can only configure one collection at a time
                                                              !isRootCollection( collection ) ); // we can not configure the root collection
 
-  enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionSelected &&
-                                                               collectionsAreFolders ); // it must be a valid folder collection
+  enableAction( StandardActionManager::SynchronizeCollections, atLeastOneCollectionCanHaveItems ); // it must be a valid folder collection
 
   enableAction( StandardActionManager::SynchronizeCollectionsRecursive, atLeastOneCollectionSelected &&
                                                                collectionsAreFolders ); // it must be a valid folder collection
@@ -372,6 +379,12 @@ bool ActionStateManager::hasResourceCapability( const Collection &collection, co
   const Akonadi::AgentInstance instance = AgentManager::self()->instance( collection.resource() );
 
   return instance.type().capabilities().contains( capability );
+}
+
+bool ActionStateManager::collectionCanHaveItems( const Collection &collection ) const
+{
+  return !( collection.contentMimeTypes() == ( QStringList() << QLatin1String( "inode/directory" ) ) ||
+            CollectionUtils::isStructural( collection ) );
 }
 
 void ActionStateManager::enableAction( int action, bool state )

@@ -169,6 +169,10 @@ class ResourceScheduler : public QObject
        Print debug output showing the state of the scheduler.
     */
     void dump();
+    /**
+       Print debug output showing the state of the scheduler.
+    */
+    QString dumpToString() const;
 
     /**
        Clear the state of the scheduler. Warning: this is intended to be
@@ -255,6 +259,7 @@ class ResourceScheduler : public QObject
 };
 
 QDebug operator<<( QDebug, const ResourceScheduler::Task& task );
+QTextStream& operator<<( QTextStream&, const ResourceScheduler::Task& task );
 
 //@endcond
 

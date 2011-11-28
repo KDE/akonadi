@@ -37,6 +37,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 
+#include <QtGui/QApplication>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>
@@ -53,6 +54,7 @@ CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionD
 {
   // setup GUI
   mView = new QDeclarativeView( mParent );
+  mView->setResizeMode( QDeclarativeView::SizeRootObjectToView );
 
   mParent->setMainWidget( mView );
   mParent->setButtons( KDialog::None );

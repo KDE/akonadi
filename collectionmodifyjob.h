@@ -40,7 +40,40 @@ class CollectionModifyJobPrivate;
  * Akonadi::Collection collection = ...
  *
  * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection );
- * connect( job, SIGNAL( result( KJob* ) ), this, SLOT( modifyResult( KJob* ) ) );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
+ *
+ * @endcode
+ *
+ * If the collection has attributes, it is recommended only to supply values for
+ * any attributes whose values are to be updated. This will help to avoid
+ * potential clashes with other resources or applications which may happen to
+ * update the collection simultaneously. To avoid supplying attribute values which
+ * are not needed, create a new instance of the collection and explicitly set
+ * attributes to be updated, e.g.
+ *
+ * @code
+ *
+ * // Update the 'MyAttribute' attribute of 'collection'.
+ * Akonadi::Collection c( collection.id() );
+ * MyAttribute *attribute = c.attribute<MyAttribute>( Entity::AddIfMissing );
+ * if ( collection.hasAttribute<MyAttribute>() ) {
+ *     *attribute = *collection.attribute<MyAttribute>();
+ * }
+ * // Update the value of 'attribute' ...
+ * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( c );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
+ *
+ * @endcode
+ *
+ * To update only the collection, and not change any attributes:
+ *
+ * @code
+ *
+ * // Update the cache policy for 'collection' to 'newPolicy'.
+ * Akonadi::Collection c( collection.id() );
+ * c.setCachePolicy( newPolicy );
+ * Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( c );
+ * connect( job, SIGNAL(result(KJob*)), this, SLOT(modifyResult(KJob*)) );
  *
  * @endcode
  *

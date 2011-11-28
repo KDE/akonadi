@@ -46,6 +46,8 @@
 #include <ktextedit.h>
 #include <kurlrequester.h>
 
+#include <Nepomuk/ResourceManager>
+
 #include <QtCore/QDirIterator>
 #include <QtCore/QPluginLoader>
 #include <QtGui/QGroupBox>
@@ -250,11 +252,14 @@ void ContactEditorWidget::Private::initGuiContactTab()
   phonesLayout->setRowStretch( 1, 1 );
 
   // setup categories section
+  const bool nepomukInitialized(Nepomuk::ResourceManager::instance()->initialized());
   QHBoxLayout *categoriesLayout = new QHBoxLayout;
   label = new QLabel( i18nc( "@label The categories of a contact", "Categories:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
+  label->setVisible(nepomukInitialized);
 
   mCategoriesWidget = new CategoriesEditWidget;
+  mCategoriesWidget->setVisible(nepomukInitialized);
   label->setBuddy( mCategoriesWidget );
 
   categoriesLayout->addWidget( label );

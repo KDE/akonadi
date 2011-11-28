@@ -88,7 +88,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
         i18n( "Update the content of the selected folders." ) );
-      
+
       mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections,
                                       ki18np( "Cut Folder", "Cut %1 Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis(
@@ -150,7 +150,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create folder: %1" ) );
+        ki18n( "Could not create folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle,
@@ -167,7 +167,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete folder: %1" ) );
+        ki18n( "Could not delete folder: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
@@ -175,7 +175,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,
-        i18nc( "@title:window", "Properties of Folder %1" ) );
+        ki18nc( "@title:window", "Properties of Folder %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::MessageBoxText,
@@ -188,7 +188,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,
-        i18n( "Could not delete email: %1" ) );
+        ki18n( "Could not delete email: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle,
@@ -200,7 +200,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,
-        i18n( "Could not create account: %1" ) );
+        ki18n( "Could not create account: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle,
@@ -217,7 +217,7 @@ class StandardMailActionManager::Private
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageText,
-        i18n( "Could not paste email: %1" ) );
+        ki18n( "Could not paste email: %1" ) );
 
       mGenericManager->setContextText(
         StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
@@ -304,7 +304,7 @@ class StandardMailActionManager::Private
       bool canDeleteItem = true;
       bool isSystemFolder = false;
       if ( collectionIsSelected ) {
-        foreach( const Collection collection, selectedCollections )
+        foreach( const Collection &collection, selectedCollections )
         {
           if ( collection.isValid() ) {
             const Akonadi::CollectionStatistics stats = collection.statistics();
@@ -333,7 +333,7 @@ class StandardMailActionManager::Private
           mGenericManager->action( StandardActionManager::DeleteCollections )->setEnabled( false );
         }
       }
-        
+
       if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) )
         mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected && canDeleteItem );
       if ( mActions.contains( Akonadi::StandardMailActionManager::RemoveDuplicates ) )

@@ -609,7 +609,9 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
   if ( d->mNeedsNetwork ) {
     connect( Solid::Networking::notifier()
            , SIGNAL(statusChanged(Solid::Networking::Status))
-           , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status)) );
+           , this, SLOT(slotNetworkStatusChange(Solid::Networking::Status))
+           , Qt::UniqueConnection );
+
   } else {
     disconnect( Solid::Networking::notifier(), 0, 0, 0 );
     setOnline( true );
@@ -620,6 +622,11 @@ void AgentBase::setOnline( bool state )
 {
   Q_D( AgentBase );
   d->mOnline = state;
+
+  const QString newMessage = d->defaultReadyMessage();
+  if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken )
+    emit status( d->mStatusCode, newMessage );
+
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
   doSetOnline( state );
   emit onlineChanged( state );
