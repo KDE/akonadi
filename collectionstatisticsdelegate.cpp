@@ -321,6 +321,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     return;
   }
 
+  if ( textColor.isValid() )
+    painter->setPen( textColor );
   painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, text );
 }
 
