@@ -35,6 +35,7 @@ class AgentInstance::Private : public QSharedData
 {
   public:
     Private()
+      : mIsOnline(false)
     {
     }
 
