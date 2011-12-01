@@ -68,18 +68,19 @@ class CollectionStatisticsDelegatePrivate
     void getCountRecursive( const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount ) const
     {
       Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
-      Q_ASSERT( collection.isValid() );
-      CollectionStatistics statistics = collection.statistics();
-      totalCount += qMax( 0LL, statistics.count() );
-      unreadCount += qMax( 0LL, statistics.unreadCount() );
+      // Do not assert on invalid collections, since a collection may be deleted
+      // in the meantime and deleted collections are invalid.
+      if ( collection.isValid() ) {
+        CollectionStatistics statistics = collection.statistics();
+        totalCount += qMax( 0LL, statistics.count() );
+        unreadCount += qMax( 0LL, statistics.unreadCount() );
 
-      if ( index.model()->hasChildren( index ) )
-      {
-        const int rowCount = index.model()->rowCount( index );
-        for ( int row = 0; row < rowCount; row++ )
-        {
-          static const int column = 0;
-          getCountRecursive( index.model()->index( row, column, index ), totalCount, unreadCount );
+        if ( index.model()->hasChildren( index ) ) {
+          const int rowCount = index.model()->rowCount( index );
+          for ( int row = 0; row < rowCount; row++ ) {
+            static const int column = 0;
+            getCountRecursive( index.model()->index( row, column, index ), totalCount, unreadCount );
+          }
         }
       }
     }
@@ -321,6 +322,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     return;
   }
 
+  if ( textColor.isValid() )
+    painter->setPen( textColor );
   painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, text );
 }
 
