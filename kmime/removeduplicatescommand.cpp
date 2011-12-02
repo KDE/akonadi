@@ -102,7 +102,6 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
       mDuplicateItems.append( items[*dupIt] );
     }
   }
-
   if ( mJobCount > 0 ) {
     fetchItem();
   } else {
@@ -114,8 +113,18 @@ void RemoveDuplicatesCommand::slotFetchDone( KJob* job )
     else
     {
       Akonadi::ItemDeleteJob *delCmd = new Akonadi::ItemDeleteJob( mDuplicateItems, parent() );
-      connect( delCmd, SIGNAL(result(Result)), this, SLOT(emitResult(Result)) );
+      connect( delCmd, SIGNAL(result(KJob*)), this, SLOT(slotDeleteItemJobDone(KJob*)) );
     }
   }
 }
 
+void RemoveDuplicatesCommand::slotDeleteItemJobDone(KJob* job)
+{
+  if ( job->error() ) {
+    // handle errors
+    Util::showJobError(job);
+    emitResult( Failed );
+    return;
+  }
+  emitResult( OK );
+}

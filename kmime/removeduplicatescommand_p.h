@@ -38,6 +38,7 @@ public:
 
 private Q_SLOTS:
     void slotFetchDone( KJob* job );
+    void slotDeleteItemJobDone(KJob* job );
 private:
     void fetchItem();
     Akonadi::Collection::List mFolders;
