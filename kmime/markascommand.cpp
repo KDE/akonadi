@@ -53,7 +53,7 @@ void MarkAsCommand::slotFetchDone(KJob* job)
 
   Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
   Q_ASSERT( fjob );
-
+  mMessages.clear();
   foreach( const Akonadi::Item &item, fjob->items() ) {
     Akonadi::MessageStatus status;
     status.setStatusFromFlags( item.flags() );
@@ -68,12 +68,13 @@ void MarkAsCommand::slotFetchDone(KJob* job)
       }
   }
   if ( mMessages.empty() ) {
-    emitResult( OK );
-    return;
+    if( mFolderListJobCount == 0 ) { 
+      emitResult( OK );
+      return;
+    }
+  } else {
+    markMessages();
   }
-
-  markMessages();
-
   if ( mFolderListJobCount > 0 ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mFolders[mFolderListJobCount - 1], parent() );
     job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
@@ -103,7 +104,6 @@ void MarkAsCommand::markMessages()
 
   Q_ASSERT( mTargetStatus.statusFlags().size() == 1 );
   const Akonadi::Item::Flag flag = *(mTargetStatus.statusFlags().begin());
-
   Akonadi::Item::List itemsToModify;
   foreach( const Akonadi::Item &it, mMessages ) {
     Akonadi::Item item( it );
