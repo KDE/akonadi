@@ -39,6 +39,7 @@ public:
 private Q_SLOTS:
     void slotFetchDone( KJob* job );
 private:
+    void fetchItem();
     Akonadi::Collection::List mFolders;
     Akonadi::Item::List mDuplicateItems;
     int mJobCount;
