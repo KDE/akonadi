@@ -142,7 +142,7 @@ void DbConfigSqlite::setup()
               << mDatabaseName
               << " with driver "
               << driverName()
-              << " for initalization";
+              << " for initialization";
     db.close();
     return;
   }

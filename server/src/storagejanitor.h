@@ -84,7 +84,7 @@ class StorageJanitor : public QObject
     void findOrphanedParts();
 
     /**
-     * Look for parts refering to the same external file.
+     * Look for parts referring to the same external file.
      */
     void findOverlappingParts();
 

@@ -191,7 +191,7 @@ class AgentManager : public QObject, protected QDBusContext
 
     /**
       Trigger a synchronization of the given collection by its owning resource agent.
-      @param recursive set it true to have sub-collection syncronized as well
+      @param recursive set it true to have sub-collection synchronized as well
     */
     void agentInstanceSynchronizeCollection( const QString &identifier, qint64 collection, bool recursive );
 
