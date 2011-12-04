@@ -40,6 +40,7 @@ if(NOT WINCE)
     ${QT_QTGUI_LIBRARY}
     ${AKONADI_SYSTEM_LIBS}
     ${AKONADI_PROTOCOLINTERNALS_LIBS}
+    ${Boost_PROGRAM_OPTIONS_LIBRARY}
   )
 
   if (Q_WS_MAC)
@@ -48,7 +49,6 @@ if(NOT WINCE)
     set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Akonadi Agent Launcher")
   endif (Q_WS_MAC)
 
-  target_link_libraries(akonadi_agent_launcher ${Boost_PROGRAM_OPTIONS_LIBRARY})
 endif(NOT WINCE)
 
 # Install both helper apps.
