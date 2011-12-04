@@ -163,6 +163,11 @@ bool IncidenceChanger::Private::hasRights( const Collection &collection,
   return !collection.isValid() || !mRespectsCollectionRights || result;
 }
 
+Akonadi::Job* IncidenceChanger::Private::parentJob() const
+{
+  return mBatchOperationInProgress ? mAtomicOperations[mLatestAtomicOperationId]->transaction : 0;
+}
+
 void IncidenceChanger::Private::queueModification( Change::Ptr change )
 {
   // If there's already a change queued we just discard it
@@ -472,13 +477,12 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
   item.setPayload<Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
 
-  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse );
+  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse, d->parentJob() );
   d->mChangeForJob.insert( createJob, change );
 
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[d->mLatestAtomicOperationId];
     ++atomic->numChanges;
-    createJob->setParent( atomic->transaction );
   }
 
   // QueuedConnection because of possible sync exec calls.
@@ -557,14 +561,13 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     return changeId;
   }
 
-  ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete );
+  ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob() );
   d->mChangeForJob.insert( deleteJob, change );
   d->mChangeById.insert( changeId, change );
 
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[atomicOperationId];
     ++atomic->numChanges;
-    deleteJob->setParent( atomic->transaction );
   }
 
   foreach( const Item &item, itemsToDelete ) {
@@ -683,14 +686,13 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     // Let's wait for it to end.
     queueModification( change );
   } else {
-    ItemModifyJob *modifyJob = new ItemModifyJob( newItem );
+    ItemModifyJob *modifyJob = new ItemModifyJob( newItem, parentJob() );
     mChangeForJob.insert( modifyJob, change );
     mDirtyFieldsByJob.insert( modifyJob, incidence->dirtyFields() );
 
     if ( hasAtomicOperationId ) {
       AtomicOperation *atomic = mAtomicOperations[atomicOperationId];
       atomic->numChanges++;
-      modifyJob->setParent( atomic->transaction );
     }
 
     mModificationsInProgress[newItem.id()] = change;

@@ -212,6 +212,7 @@ class IncidenceChanger::Private : public QObject
     void queueModification( Change::Ptr );
     void performModification( Change::Ptr );
     bool atomicOperationIsValid( uint atomicOperationId ) const;
+    Akonadi::Job* parentJob() const;
 
   public Q_SLOTS:
     void handleCreateJobResult( KJob* );
