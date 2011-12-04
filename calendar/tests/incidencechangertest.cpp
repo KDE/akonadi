@@ -52,6 +52,15 @@ static Akonadi::Item item()
   return item;
 }
 
+static Akonadi::Item createItem( const Akonadi::Collection &collection )
+{
+  Item i = item();
+  ItemCreateJob *createJob = new ItemCreateJob( i, collection );
+
+  createJob->exec();
+  return createJob->item();
+}
+
 class IncidenceChangerTest : public QObject
 {
   Q_OBJECT
@@ -432,7 +441,18 @@ class IncidenceChangerTest : public QObject
         QTest::newRow( "create two - success " ) << items << changeTypes << failureExpectedList
                                                  << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeModify;
+        items.clear();
+        items << createItem( mCollection ) << createItem( mCollection );
+
+        QTest::newRow( "modify two - success " ) << items << changeTypes << failureExpectedList
+                                                 << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeDelete;
+        QTest::newRow( "delete two - success " ) << items << changeTypes << failureExpectedList
+                                                 << expectedResults << rights;
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
       }
@@ -474,6 +494,8 @@ class IncidenceChangerTest : public QObject
             break;
             case IncidenceChanger::ChangeTypeModify:
               QVERIFY( item.isValid() );
+              QVERIFY( item.hasPayload<KCalCore::Incidence::Ptr>() );
+              item.payload<KCalCore::Incidence::Ptr>()->setSummary( QLatin1String( "Changed" ) );
               changeId = mChanger->modifyIncidence( item );
               if ( changeId != -1 )
                 ++mIncidencesToModify;
@@ -517,15 +539,16 @@ class IncidenceChangerTest : public QObject
             case IncidenceChanger::ChangeTypeDelete:
               if ( expectedSuccess ) {
                 ItemFetchJob *fJob = new ItemFetchJob( Item( item.id() ) );
-                QVERIFY( !fJob );
+                QVERIFY( !fJob->exec() );
               }
             break;
             case IncidenceChanger::ChangeTypeModify:
               if ( expectedSuccess ) {
                 ItemFetchJob *fJob = new ItemFetchJob( Item( item.id() ) );
+                fJob->fetchScope().fetchFullPayload();
                 AKVERIFYEXEC( fJob );
-                QCOMPARE( item.payload<KCalCore::Incidence::Ptr>(),
-                          fJob->items().first().payload<KCalCore::Incidence::Ptr>() );
+                QCOMPARE( item.payload<KCalCore::Incidence::Ptr>()->summary(),
+                          fJob->items().first().payload<KCalCore::Incidence::Ptr>()->summary() );
               }
             break;
             default:
@@ -622,6 +645,10 @@ class IncidenceChangerTest : public QObject
       QVERIFY( item.isValid() );
     else
       kDebug() << "Error string is " << errorString;
+
+    if ( resultCode != mExpectedResult ) {
+      qDebug() << "Expected " << mExpectedResult << " got " << resultCode << " for id=" << item.id();
+    }
 
     QCOMPARE( resultCode, mExpectedResult );
 
