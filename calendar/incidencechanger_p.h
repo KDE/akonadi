@@ -178,7 +178,7 @@ namespace Akonadi {
     {
       Q_ASSERT( id != 0 );
       transaction = new Akonadi::TransactionSequence;
-      transaction->setAutomaticCommittingEnabled( false );
+      transaction->setAutomaticCommittingEnabled( true );
     }
 
     ~AtomicOperation()
