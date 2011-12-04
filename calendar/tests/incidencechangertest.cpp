@@ -42,6 +42,16 @@ Q_DECLARE_METATYPE( QList<bool> )
 Q_DECLARE_METATYPE( QList<Akonadi::Collection::Right> )
 Q_DECLARE_METATYPE( QList<Akonadi::IncidenceChanger::ResultCode> )
 
+static Akonadi::Item item()
+{
+  Item item;
+  Incidence::Ptr incidence = Incidence::Ptr( new Event() );
+  incidence->setSummary( QLatin1String( "random summary" ) );
+  item.setMimeType( incidence->mimeType() );
+  item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+  return item;
+}
+
 class IncidenceChangerTest : public QObject
 {
   Q_OBJECT
@@ -54,8 +64,8 @@ class IncidenceChangerTest : public QObject
   int mIncidencesToAdd;
   int mIncidencesToModify;
 
-  QSet<int> mKnownChangeIds;
   QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
+  QHash<QString,Akonadi::Item::Id> mItemIdByUid;
   int mChangeToWaitFor;
 
   private slots:
@@ -179,8 +189,8 @@ class IncidenceChangerTest : public QObject
 
       if ( !failureExpected ) {
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
-        mKnownChangeIds.insert( changeId );
         mIncidencesToAdd = 1;
+
         waitForSignals( expectedResultCode );
 
         if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess && !failureExpected ) {
@@ -201,7 +211,6 @@ class IncidenceChangerTest : public QObject
           QCOMPARE( incidence->uid(), uid );
         }
       }
-      mKnownChangeIds.clear();
       mItemIdByChangeId.clear();
     }
 
@@ -253,7 +262,6 @@ class IncidenceChangerTest : public QObject
       QVERIFY( failureExpected ^ ( changeId != -1 ) );
 
       if ( !failureExpected ) {
-        mKnownChangeIds.insert( changeId );
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
         mIncidencesToDelete = 1;
         waitForSignals( expectedResultCode );
@@ -269,7 +277,6 @@ class IncidenceChangerTest : public QObject
             delete fetchJob;
           }
         }
-        mKnownChangeIds.clear();
       }
     }
 
@@ -322,8 +329,9 @@ class IncidenceChangerTest : public QObject
 
       if ( !failureExpected ) {
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
-        mKnownChangeIds.insert( changeId );
+
         mIncidencesToModify = 1;
+
         waitForSignals( expectedResultCode );
         ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
         fetchJob->fetchScope().fetchFullPayload();
@@ -335,7 +343,6 @@ class IncidenceChangerTest : public QObject
         Incidence::Ptr incidence = fetchedItem.payload<KCalCore::Incidence::Ptr>();
         QCOMPARE( incidence->summary(), newSummary );
         QCOMPARE( incidence->revision(), expectedRevision );
-        mKnownChangeIds.clear();
         delete fetchJob;
       }
     }
@@ -375,7 +382,6 @@ class IncidenceChangerTest : public QObject
         incidence->setSummary( QString::number( i ) );
         changeId = mChanger->modifyIncidence( item );
         QVERIFY( changeId != -1 );
-        mKnownChangeIds.insert( changeId );
 
         if ( waitForPreviousJob ) {
           mIncidencesToModify = 1;
@@ -399,8 +405,6 @@ class IncidenceChangerTest : public QObject
         QCOMPARE( fetchJob->items().first().payload<KCalCore::Incidence::Ptr>()->summary(),
                   QString::number( numberOfModifications-1 ) );
       }
-
-      mKnownChangeIds.clear();
     }
 
       void testAtomicOperations_data()
@@ -410,11 +414,31 @@ class IncidenceChangerTest : public QObject
         QTest::addColumn<QList<bool> >( "failureExpectedList" );
         QTest::addColumn<QList<Akonadi::IncidenceChanger::ResultCode> >( "expectedResults" );
         QTest::addColumn<QList<Akonadi::Collection::Right> >( "rights" );
+
+        Akonadi::Item::List items;
+        QList<Akonadi::IncidenceChanger::ChangeType> changeTypes;
+        QList<bool> failureExpectedList;
+        QList<Akonadi::IncidenceChanger::ResultCode> expectedResults;
+        QList<Akonadi::Collection::Right> rights;
+        const Collection::Right allRights = Collection::AllRights;
+        //------------------------------------------------------------------------------------------
+        // Create two incidences, should succeed
+        items << item() << item() ;
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        failureExpectedList << false << false;
+        expectedResults << IncidenceChanger::ResultCodeSuccess << IncidenceChanger::ResultCodeSuccess;
+        rights << allRights << allRights;
+
+        QTest::newRow( "create two - success " ) << items << changeTypes << failureExpectedList
+                                                 << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
       }
 
       void testAtomicOperations()
       {
-        return;
         QFETCH( Akonadi::Item::List, items );
         QFETCH( QList<Akonadi::IncidenceChanger::ChangeType>, changeTypes );
         QFETCH( QList<bool>, failureExpectedList );
@@ -430,10 +454,12 @@ class IncidenceChangerTest : public QObject
         mChanger->setRespectsCollectionRights( true );
         mChanger->setDestinationPolicy( IncidenceChanger::DestinationPolicyNeverAsk );
         mChanger->startAtomicOperation();
+        mIncidencesToAdd = 0;
+        mIncidencesToModify = 0;
+        mIncidencesToDelete = 0;
         for( int i=0; i<items.count(); ++i ) {
           mCollection.setRights( rights[i] );
           const Akonadi::Item item = items[i];
-          QVERIFY( item.isValid() );
           int changeId = -1;
           switch( changeTypes[i] ) {
             case IncidenceChanger::ChangeTypeCreate:
@@ -447,6 +473,7 @@ class IncidenceChangerTest : public QObject
                 ++mIncidencesToDelete;
             break;
             case IncidenceChanger::ChangeTypeModify:
+              QVERIFY( item.isValid() );
               changeId = mChanger->modifyIncidence( item );
               if ( changeId != -1 )
                 ++mIncidencesToModify;
@@ -465,13 +492,24 @@ class IncidenceChangerTest : public QObject
         for( int i=0; i<items.count(); ++i ) {
           const bool expectedSuccess = ( expectedResults[i] == IncidenceChanger::ResultCodeSuccess );
           mCollection.setRights( rights[i] );
-          const Akonadi::Item item = items[i];
-          QVERIFY( item.isValid() );
+
+          Akonadi::Item item = items[i];
+
           switch( changeTypes[i] ) {
             case IncidenceChanger::ChangeTypeCreate:
               if ( expectedSuccess ) {
-                ItemFetchJob *fJob = new ItemFetchJob( Item( item.id() ) );
+                QVERIFY( item.hasPayload<KCalCore::Incidence::Ptr>() );
+                Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+                QVERIFY( incidence );
+                QVERIFY( !incidence->uid().isEmpty() );
+                QVERIFY( mItemIdByUid.contains( incidence->uid() ) );
+                ItemFetchJob *fJob = new ItemFetchJob( Item( mItemIdByUid.value( incidence->uid() ) ) );
+                fJob->fetchScope().fetchFullPayload();
                 AKVERIFYEXEC( fJob );
+                QCOMPARE( fJob->items().count(), 1 );
+                QVERIFY( fJob->items().first().isValid() );
+                QVERIFY( fJob->items().first().hasPayload() );
+                QVERIFY( fJob->items().first().hasPayload<KCalCore::Incidence::Ptr>() );
                 QCOMPARE( item.payload<KCalCore::Incidence::Ptr>()->uid(),
                           fJob->items().first().payload<KCalCore::Incidence::Ptr>()->uid() );
               }
@@ -525,7 +563,6 @@ class IncidenceChangerTest : public QObject
                        Akonadi::IncidenceChanger::ResultCode resultCode,
                        const QString &errorMessage )
   {
-    QVERIFY( mKnownChangeIds.contains( changeId ) );
     QVERIFY( changeId != -1 );
 
     if ( resultCode != IncidenceChanger::ResultCodeSuccess ) {
@@ -551,13 +588,15 @@ class IncidenceChangerTest : public QObject
                        Akonadi::IncidenceChanger::ResultCode resultCode,
                        const QString &errorString )
   {
-    QVERIFY( mKnownChangeIds.contains( changeId ) );
     QVERIFY( changeId != -1 );
 
     if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
       QVERIFY( item.isValid() );
       QVERIFY( item.parentCollection().isValid() );
       mItemIdByChangeId.insert( changeId, item.id() );
+      QVERIFY( item.hasPayload() );
+      Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+      mItemIdByUid.insert( incidence->uid(), item.id() );
     } else {
       kDebug() << "Error string is " << errorString;
     }
@@ -577,7 +616,6 @@ class IncidenceChangerTest : public QObject
                        const QString &errorString )
   {
     Q_UNUSED( item );
-    QVERIFY( mKnownChangeIds.contains( changeId ) );
     QVERIFY( changeId != -1 );
 
     if ( resultCode == IncidenceChanger::ResultCodeSuccess )
