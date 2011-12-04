@@ -171,6 +171,10 @@ set(XSLTPROC_EXECUTABLE "${HOST_BINDIR}/xsltproc.exe")
 endif(WINCE)
 
 #### Boost ####
+# In CMake >= 2.8.6, FindBoost.cmake tries to find BoostConfig.cmake which is
+# not compatible with CMake's FindBoost. Disable this function.
+set (Boost_NO_BOOST_CMAKE TRUE)
+
 if(MSVC)
   set (_ENABLE_EXCEPTIONS -EHsc)
 endif(MSVC)
