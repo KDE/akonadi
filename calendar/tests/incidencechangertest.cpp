@@ -465,10 +465,10 @@ class IncidenceChangerTest : public QObject
         QFETCH( QList<Akonadi::IncidenceChanger::ResultCode>, expectedResults );
         QFETCH( QList<Akonadi::Collection::Right>, rights );
 
-        QVERIFY( items.count() == changeTypes.count() );
-        QVERIFY( items.count() == failureExpectedList.count() );
-        QVERIFY( items.count() == expectedResults.count() );
-        QVERIFY( items.count() == rights.count() );
+        QCOMPARE( items.count(), changeTypes.count() );
+        QCOMPARE( items.count(), failureExpectedList.count() );
+        QCOMPARE( items.count(), expectedResults.count() );
+        QCOMPARE( items.count(), rights.count() );
 
         mChanger->setDefaultCollection( mCollection );
         mChanger->setRespectsCollectionRights( true );
