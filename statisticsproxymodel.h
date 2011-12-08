@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <kidentityproxymodel.h>
 
 namespace Akonadi {
 
@@ -47,7 +47,7 @@ namespace Akonadi {
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADI_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
+class AKONADI_EXPORT StatisticsProxyModel : public KIdentityProxyModel
 {
   Q_OBJECT
 
