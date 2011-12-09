@@ -738,7 +738,9 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   if ( !m_collections.contains( parent.id() ) ) {
     // The collection we're interested in is contained in a collection we're not interested in.
     // We download the ancestors of the collection we're interested in to complete the tree.
-    retrieveAncestors( collection );
+    if ( collection != m_rootCollection ) {
+      retrieveAncestors( collection );
+    }
     return;
   }
 
