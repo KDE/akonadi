@@ -1102,7 +1102,9 @@ class StandardActionManager::Private
       QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
       while (item.hasNext()) {
         item.next();
-        item.value()->addRecentCollection( id );
+        if ( item.value() ) {
+          item.value()->addRecentCollection( id );
+        }
       }
     }
 
