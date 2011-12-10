@@ -40,6 +40,7 @@ using namespace KCalCore;
 Q_DECLARE_METATYPE( QList<Akonadi::IncidenceChanger::ChangeType> )
 Q_DECLARE_METATYPE( QList<bool> )
 Q_DECLARE_METATYPE( QList<Akonadi::Collection::Right> )
+Q_DECLARE_METATYPE( QList<Akonadi::Collection::Rights> )
 Q_DECLARE_METATYPE( QList<Akonadi::IncidenceChanger::ResultCode> )
 
 static Akonadi::Item item()
@@ -425,14 +426,15 @@ class IncidenceChangerTest : public QObject
         QTest::addColumn<QList<Akonadi::IncidenceChanger::ChangeType> >( "changeTypes" );
         QTest::addColumn<QList<bool> >( "failureExpectedList" );
         QTest::addColumn<QList<Akonadi::IncidenceChanger::ResultCode> >( "expectedResults" );
-        QTest::addColumn<QList<Akonadi::Collection::Right> >( "rights" );
+        QTest::addColumn<QList<Akonadi::Collection::Rights> >( "rights" );
 
         Akonadi::Item::List items;
         QList<Akonadi::IncidenceChanger::ChangeType> changeTypes;
         QList<bool> failureExpectedList;
         QList<Akonadi::IncidenceChanger::ResultCode> expectedResults;
-        QList<Akonadi::Collection::Right> rights;
-        const Collection::Right allRights = Collection::AllRights;
+        QList<Akonadi::Collection::Rights> rights;
+        const Collection::Rights allRights = Collection::AllRights;
+        const Collection::Rights noRights = Collection::Rights();
         //------------------------------------------------------------------------------------------
         // Create two incidences, should succeed
         items << item() << item() ;
@@ -521,7 +523,37 @@ class IncidenceChangerTest : public QObject
         QTest::newRow( "try delete,create v2" ) << items << changeTypes << failureExpectedList
                                                 << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        // deletion doesn't succeed, but creation does ( NO ACL case )
+        items.clear();
+        items << createItem( mCollection ) << item();
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeCreate;
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << noRights << allRights;
+
+        QTest::newRow( "try delete(ACL),create" ) << items << changeTypes << failureExpectedList
+                                                  << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        //Creation succeeds but deletion doesnt ( NO ACL case )
+        items.clear();
+        items << item() << createItem( mCollection );
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeDelete;
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodePermissions;
+        rights.clear();
+        rights << allRights << noRights;
+
+        QTest::newRow( "create,try delete(ACL)" ) << items << changeTypes << failureExpectedList
+                                                  << expectedResults << rights;
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
       }
@@ -532,7 +564,7 @@ class IncidenceChangerTest : public QObject
         QFETCH( QList<Akonadi::IncidenceChanger::ChangeType>, changeTypes );
         QFETCH( QList<bool>, failureExpectedList );
         QFETCH( QList<Akonadi::IncidenceChanger::ResultCode>, expectedResults );
-        QFETCH( QList<Akonadi::Collection::Right>, rights );
+        QFETCH( QList<Akonadi::Collection::Rights>, rights );
 
         QCOMPARE( items.count(), changeTypes.count() );
         QCOMPARE( items.count(), failureExpectedList.count() );
@@ -548,6 +580,7 @@ class IncidenceChangerTest : public QObject
         mIncidencesToDelete = 0;
         for( int i=0; i<items.count(); ++i ) {
           mCollection.setRights( rights[i] );
+          mChanger->setDefaultCollection( mCollection );
           const Akonadi::Item item = items[i];
           int changeId = -1;
           switch( changeTypes[i] ) {
