@@ -295,6 +295,7 @@ install( FILES
   collectionstatisticsmodel.h
   collectionstatistics.h
   collectionstatisticsjob.h
+  collectionutils_p.h
   collectionview.h
   conflicthandling/abstractdifferencesreporter.h
   conflicthandling/differencesalgorithminterface.h
