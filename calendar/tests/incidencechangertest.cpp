@@ -66,7 +66,7 @@ class IncidenceChangerTest : public QObject
   Q_OBJECT
   Collection mCollection;
 
-  IncidenceChanger::ResultCode mExpectedResult;
+  QHash<int,IncidenceChanger::ResultCode> mExpectedResultByChangeId;
   IncidenceChanger *mChanger;
 
   int mIncidencesToDelete;
@@ -85,7 +85,6 @@ class IncidenceChangerTest : public QObject
       mIncidencesToModify = 0;
 
       mChangeToWaitFor = -1;
-      mExpectedResult = IncidenceChanger::ResultCodeSuccess;
       //Control::start(); //TODO: uncomment when using testrunner
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
       qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >( "QList<Akonadi::IncidenceChanger::ChangeType>" );
@@ -200,7 +199,8 @@ class IncidenceChangerTest : public QObject
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
         mIncidencesToAdd = 1;
 
-        waitForSignals( expectedResultCode );
+        mExpectedResultByChangeId.insert( changeId, expectedResultCode );
+        waitForSignals();
 
         if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess && !failureExpected ) {
           Item item;
@@ -273,7 +273,8 @@ class IncidenceChangerTest : public QObject
       if ( !failureExpected ) {
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
         mIncidencesToDelete = 1;
-        waitForSignals( expectedResultCode );
+        mExpectedResultByChangeId.insert( changeId, expectedResultCode );
+        waitForSignals();
 
         if ( expectedResultCode == IncidenceChanger::ResultCodeSuccess ) {
           // Check that the incidence was really deleted
@@ -340,8 +341,8 @@ class IncidenceChangerTest : public QObject
         QFETCH( Akonadi::IncidenceChanger::ResultCode, expectedResultCode );
 
         mIncidencesToModify = 1;
-
-        waitForSignals( expectedResultCode );
+        mExpectedResultByChangeId.insert( changeId, expectedResultCode );
+        waitForSignals();
         ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
         fetchJob->fetchScope().fetchFullPayload();
         AKVERIFYEXEC( fetchJob );
@@ -394,7 +395,8 @@ class IncidenceChangerTest : public QObject
 
         if ( waitForPreviousJob ) {
           mIncidencesToModify = 1;
-          waitForSignals( IncidenceChanger::ResultCodeSuccess );
+          mExpectedResultByChangeId.insert( changeId, IncidenceChanger::ResultCodeSuccess );
+          waitForSignals();
           ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
           fetchJob->fetchScope().fetchFullPayload();
           AKVERIFYEXEC( fetchJob );
@@ -406,7 +408,8 @@ class IncidenceChangerTest : public QObject
 
       if ( !waitForPreviousJob ) {
         // Wait for the last one only.
-        waitForChange( changeId, IncidenceChanger::ResultCodeSuccess );
+        mExpectedResultByChangeId.insert( changeId, IncidenceChanger::ResultCodeSuccess );
+        waitForChange( changeId );
         ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
         fetchJob->fetchScope().fetchFullPayload();
         AKVERIFYEXEC( fetchJob );
@@ -453,6 +456,72 @@ class IncidenceChangerTest : public QObject
         changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeDelete;
         QTest::newRow( "delete two - success " ) << items << changeTypes << failureExpectedList
                                                  << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // Creation succeeds but deletion doesnt ( invalid item case )
+        items.clear();
+        items << item() << Item(); // Invalid item on purpose
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeDelete;
+        failureExpectedList.clear();
+        failureExpectedList << false << true;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "create,try delete" ) << items << changeTypes << failureExpectedList
+                                             << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // deletion doesn't succeed, but creation does ( invalid item case )
+        items.clear();
+        items << Item() << item(); // Invalid item on purpose
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeCreate;
+        failureExpectedList.clear();
+        failureExpectedList << true << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "try delete,create" ) << items << changeTypes << failureExpectedList
+                                            << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // Creation succeeds but deletion doesnt ( valid, inexistant item case )
+        items.clear();
+        items << item() << Item(10101010);
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeDelete;
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeJobError;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "create,try delete v2" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // deletion doesn't succeed, but creation does ( valid, inexistant item case )
+        items.clear();
+        items << Item(10101010) << item();
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeCreate;
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeJobError
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "try delete,create v2" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
       }
@@ -504,11 +573,13 @@ class IncidenceChangerTest : public QObject
               QVERIFY( false );
           }
           QVERIFY( !( ( changeId == -1 ) ^ failureExpectedList[i] ) );
+          if ( changeId != -1 ) {
+            mExpectedResultByChangeId.insert( changeId, expectedResults[i] );
+          }
         }
         mChanger->endAtomicOperation();
 
-        QTestEventLoop::instance().enterLoop( 10 );
-        QVERIFY( !QTestEventLoop::instance().timeout() );
+        waitForSignals();
 
         //Validate:
         for( int i=0; i<items.count(); ++i ) {
@@ -560,18 +631,18 @@ class IncidenceChangerTest : public QObject
 
   public Q_SLOTS:
 
-    void waitForSignals( Akonadi::IncidenceChanger::ResultCode expectedResultCode )
+    void waitForSignals()
     {
-      mExpectedResult = expectedResultCode;
+
+      kDebug() << "Remaining: " << mIncidencesToAdd << mIncidencesToDelete << mIncidencesToModify;
       QTestEventLoop::instance().enterLoop( 10 );
       QVERIFY( !QTestEventLoop::instance().timeout() );
     }
 
     // Waits for a specific change
-    void waitForChange( int changeId, Akonadi::IncidenceChanger::ResultCode expectedResultCode )
+    void waitForChange( int changeId )
     {
       mChangeToWaitFor = changeId;
-      mExpectedResult = expectedResultCode;
 
       int i = 0;
       while ( mChangeToWaitFor != -1 && i++ < 10) { // wait 10 seconds max.
@@ -597,13 +668,15 @@ class IncidenceChangerTest : public QObject
       }
     }
 
-    QVERIFY( resultCode == mExpectedResult );
-    mExpectedResult = IncidenceChanger::ResultCodeSuccess;
+    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
+      qDebug() << "deleteFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode
+               << ( deletedIds.isEmpty() ? -1 : deletedIds.first() );
+    }
+    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
     mChangeToWaitFor = -1;
 
     --mIncidencesToDelete;
-    if ( mIncidencesToDelete == 0 )
-      QTestEventLoop::instance().exitLoop();
+    maybeQuitEventLoop();
   }
 
   void createFinished( int changeId,
@@ -624,13 +697,15 @@ class IncidenceChangerTest : public QObject
       kDebug() << "Error string is " << errorString;
     }
 
-    QCOMPARE( resultCode, mExpectedResult );
-    mExpectedResult = IncidenceChanger::ResultCodeSuccess;
+    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
+      qDebug() << "createFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode << " for id=" << item.id();
+    }
+    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
     mChangeToWaitFor = -1;
 
     --mIncidencesToAdd;
-    if ( mIncidencesToAdd == 0 )
-      QTestEventLoop::instance().exitLoop();
+    qDebug() << "Createfinished " << mIncidencesToAdd;
+    maybeQuitEventLoop();
   }
 
   void modifyFinished( int changeId,
@@ -646,17 +721,21 @@ class IncidenceChangerTest : public QObject
     else
       kDebug() << "Error string is " << errorString;
 
-    if ( resultCode != mExpectedResult ) {
-      qDebug() << "Expected " << mExpectedResult << " got " << resultCode << " for id=" << item.id();
+    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
+      qDebug() << "modifyFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode << " for id=" << item.id();
     }
 
-    QCOMPARE( resultCode, mExpectedResult );
+    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
 
-    mExpectedResult = IncidenceChanger::ResultCodeSuccess;
     mChangeToWaitFor = -1;
     --mIncidencesToModify;
-    if ( mIncidencesToModify == 0 )
-      QTestEventLoop::instance().exitLoop();
+    maybeQuitEventLoop();
+  }
+
+  void maybeQuitEventLoop()
+  {
+      if ( mIncidencesToDelete == 0 && mIncidencesToAdd == 0 && mIncidencesToModify == 0 )
+        QTestEventLoop::instance().exitLoop();
   }
 
   void testDefaultCollection()
