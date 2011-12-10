@@ -442,6 +442,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
         if ( dialogCode != QDialog::Accepted ) {
           kDebug() << "User canceled collection choosing";
           change->resultCode = ResultCodeUserCanceled;
+          d->cancelTransaction();
           return changeId;
         }
 
@@ -450,6 +451,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
           const QString errorMessage = d->showErrorDialog( ResultCodePermissions, parent );
           change->resultCode = ResultCodePermissions;
           change->errorString = errorMessage;
+          d->cancelTransaction();
           return changeId;
         }
 
@@ -459,6 +461,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
           change->resultCode = ResultCodeInvalidUserCollection;
           const QString errorString = d->showErrorDialog( ResultCodeInvalidUserCollection, parent );
           change->errorString = errorString;
+          d->cancelTransaction();
           return changeId;
         }
       }
@@ -473,6 +476,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
           kError() << errorString << "; rights are " << rights;
           change->resultCode = ResultCodeInvalidDefaultCollection;
           change->errorString = errorString;
+          d->cancelTransaction();
           return changeId;
         }
       }
@@ -541,8 +545,9 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
       const QString errorString = d->showErrorDialog( ResultCodePermissions, parent );
       change->resultCode = ResultCodePermissions;
       change->errorString = errorString;
+      d->cancelTransaction();
       return changeId;
-    }    
+    }
   }
 
   Item::List itemsToDelete;
@@ -575,6 +580,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     // Queued emit because return must be executed first, otherwise caller won't know this workId
     change->resultCode = ResultCodeAlreadyDeleted;
     change->errorString = errorMessage;
+    d->cancelTransaction();
     return changeId;
   }
 
@@ -614,6 +620,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     const int changeId = ++d->mLatestChangeId;
     const QString errorString = d->showErrorDialog( ResultCodePermissions, parent );
     emitModifyFinished( this, changeId, changedItem, ResultCodePermissions, errorString );
+    d->cancelTransaction();
     return changeId;
   }
 
