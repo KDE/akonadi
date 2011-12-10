@@ -236,7 +236,7 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
   // to the layoutChanged so that it can have the QPersistentModelIndexes uptodate in time.
   disconnect(this, SIGNAL(layoutChanged()), this, SLOT(sourceLayoutChanged()));
   connect(this, SIGNAL(layoutChanged()), SLOT(sourceLayoutChanged()));
-  KIdentityProxyModel::setSourceModel(sourceModel);
+  QSortFilterProxyModel::setSourceModel(sourceModel);
   // This one should come *after* any downstream handlers of layoutAboutToBeChanged.
   // The connectNotify stuff below ensures that it remains the last one.
   disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
@@ -247,17 +247,17 @@ void StatisticsProxyModel::connectNotify(const char *signal)
 {
   static bool ignore = false;
   if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
-    return KIdentityProxyModel::connectNotify(signal);
+    return QSortFilterProxyModel::connectNotify(signal);
   ignore = true;
   disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
   connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
   ignore = false;
-  KIdentityProxyModel::connectNotify(signal);
+  QSortFilterProxyModel::connectNotify(signal);
 }
 
 
 StatisticsProxyModel::StatisticsProxyModel( QObject *parent )
-  : KIdentityProxyModel( parent ),
+  : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
   connect( this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -301,7 +301,7 @@ QModelIndex Akonadi::StatisticsProxyModel::index( int row, int column, const QMo
       sourceColumn = 0;
     }
 
-    QModelIndex i = KIdentityProxyModel::index( row, sourceColumn, parent );
+    QModelIndex i = QSortFilterProxyModel::index( row, sourceColumn, parent );
     return createIndex( i.row(), column, i.internalPointer() );
 }
 
@@ -368,18 +368,18 @@ QVariant StatisticsProxyModel::headerData( int section, Qt::Orientation orientat
     }
   }
 
-  return KIdentityProxyModel::headerData( section, orientation, role );
+  return QSortFilterProxyModel::headerData( section, orientation, role );
 }
 
 Qt::ItemFlags StatisticsProxyModel::flags( const QModelIndex & index ) const
 {
   if ( index.column()>=d->sourceColumnCount( index.parent() ) ) {
-    return KIdentityProxyModel::flags( index.sibling( index.row(), 0 ) )
+    return QSortFilterProxyModel::flags( index.sibling( index.row(), 0 ) )
          & ( Qt::ItemIsSelectable | Qt::ItemIsDragEnabled // Allowed flags
            | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled );
   }
 
-  return KIdentityProxyModel::flags( index );
+  return QSortFilterProxyModel::flags( index );
 }
 
 int StatisticsProxyModel::columnCount( const QModelIndex & parent ) const
@@ -396,7 +396,7 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
                                              int hits, Qt::MatchFlags flags ) const
 {
   if ( role < Qt::UserRole )
-    return KIdentityProxyModel::match( start, role, value, hits, flags );
+    return QSortFilterProxyModel::match( start, role, value, hits, flags );
 
   QModelIndexList list;
   QModelIndex proxyIndex;
