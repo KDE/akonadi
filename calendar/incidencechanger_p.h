@@ -52,6 +52,7 @@ namespace Akonadi {
                                 , parentWidget( parent )
                                 , atomicOperationId( operationId )
                                 , resultCode( Akonadi::IncidenceChanger::ResultCodeSuccess )
+                                , completed( false )
                                 , changer( incidenceChanger )
       {
       }
@@ -84,6 +85,7 @@ namespace Akonadi {
 
       QString errorString;
       IncidenceChanger::ResultCode resultCode;
+      bool completed;
   protected:
     IncidenceChanger *const changer;
   };
@@ -119,6 +121,7 @@ namespace Akonadi {
 
       ~CreationChange()
       {
+        //kDebug() << "CreationChange::~ will emit signal with " << resultCode;
         if ( !parentChange )
           emitCompletionSignal();
       }
@@ -140,6 +143,7 @@ namespace Akonadi {
 
       ~DeletionChange()
       {
+        //kDebug() << "DeletionChange::~ will emit signal with " << resultCode;
         if ( !parentChange )
           emitCompletionSignal();
       }
@@ -156,25 +160,20 @@ namespace Akonadi {
     // After endAtomicOperation() is called we don't accept more changes
     bool endCalled;
 
-    // Number of changes this atomic operation is composed of
-    uint numChanges;
-
     // Number of completed changes(jobs)
-    uint numCompletedChanges;
-
-    bool rolledback;
-
+    int numCompletedChanges;
     Akonadi::TransactionSequence *transaction;
-
+    QVector<Change::Ptr> changes;
     QString description;
+    bool transactionCompleted;
 
     AtomicOperation( uint ident ) :
              id ( ident ),
              endCalled( false ),
-             numChanges( 0 ),
              numCompletedChanges( 0 ),
-             rolledback( false ),
-             transaction( 0 )
+             transaction( 0 ),
+             transactionCompleted(false),
+             wasRolledback( false )
     {
       Q_ASSERT( id != 0 );
       transaction = new Akonadi::TransactionSequence;
@@ -183,13 +182,41 @@ namespace Akonadi {
 
     ~AtomicOperation()
     {
+      //kDebug() << "AtomicOperation::~ " << wasRolledback << changes.count();
+      if ( wasRolledback ) {
+        for ( int i=0; i<changes.count(); ++i ) {
+          // When a job that can finish successfully is aborted because the transaction failed
+          // because of some other job, akonadi is returning an Unknown error
+          // which isnt very specific
+          if ( changes[i]->completed &&
+               ( changes[i]->resultCode == IncidenceChanger::ResultCodeSuccess ||
+                 ( changes[i]->resultCode == IncidenceChanger::ResultCodeJobError &&
+                   changes[i]->errorString == QLatin1String( "Unknown error." ) ) ) ) {
+            changes[i]->resultCode = IncidenceChanger::ResultCodeRolledback;
+          }
+        }
+      }
     }
 
     // Did all jobs return ?
     bool pendingJobs() const
     {
-        return numChanges > numCompletedChanges;
+        return changes.count() > numCompletedChanges;
     }
+
+    void setRolledback()
+    {
+      //kDebug() << "AtomicOperation::setRolledBack()";
+      wasRolledback = true;
+      transaction->rollback();
+    }
+
+    bool rolledback() const
+    {
+      return wasRolledback;
+    }
+  private:
+    bool wasRolledback;
   };
 
 class IncidenceChanger::Private : public QObject
@@ -213,6 +240,8 @@ class IncidenceChanger::Private : public QObject
     void performModification( Change::Ptr );
     bool atomicOperationIsValid( uint atomicOperationId ) const;
     Akonadi::Job* parentJob() const;
+    void cancelTransaction();
+    void cleanupTransaction();
 
   public Q_SLOTS:
     void handleCreateJobResult( KJob* );

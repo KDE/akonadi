@@ -193,17 +193,20 @@ void IncidenceChanger::Private::performNextModification( Akonadi::Item::Id id )
 
 void IncidenceChanger::Private::handleTransactionJobResult( KJob *job )
 {
+  //kDebug();
   TransactionSequence *transaction = qobject_cast<TransactionSequence*>( job );
   Q_ASSERT( transaction );
   Q_ASSERT( mAtomicOperationByTransaction.contains( transaction ) );
 
   const uint atomicOperationId = mAtomicOperationByTransaction.take( transaction );
 
+  Q_ASSERT( mAtomicOperations.contains(atomicOperationId) );
   AtomicOperation *operation = mAtomicOperations[atomicOperationId];
+  Q_ASSERT( operation );
   Q_ASSERT( operation->id == atomicOperationId );
-
   if ( job->error() ) {
-    operation->rolledback = true;
+    if ( !operation->rolledback() )
+      operation->setRolledback();
     kError() << "Transaction failed, everything was rolledback. "
              << job->errorString();
   } else {
@@ -214,13 +217,14 @@ void IncidenceChanger::Private::handleTransactionJobResult( KJob *job )
   if ( !operation->pendingJobs() && operation->endCalled ) {
     delete mAtomicOperations.take( atomicOperationId );
     mBatchOperationInProgress = false;
+  } else {
+    operation->transactionCompleted = true;
   }
-  //TODO: será possivel que umas chegam com sucesso, nos emitimos, e depois ha uma que rollbaca?
-  // Só deviamos emitir tudo qdo a transacao chegar.
 }
 
 void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
 {
+  //kDebug();
   QString errorString;
   ResultCode resultCode = ResultCodeSuccess;
 
@@ -244,23 +248,25 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
   } else {
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-
-    QString description;
-    if ( change->atomicOperationId != 0 ) {
-      AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-      a->numCompletedChanges++;
-      description = a->description;
-    }
-
-    change->newItem     = item;
-    change->errorString = errorString;
-    change->resultCode  = resultCode;
-    // puff, change finally goes out of scope, and emits the incidenceCreated signal.
+    change->newItem = item;
   }
+
+  //QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    //description = a->description;
+  }
+
+  change->errorString = errorString;
+  change->resultCode  = resultCode;
+  // puff, change finally goes out of scope, and emits the incidenceCreated signal.
 }
 
 void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
 {
+  //kDebug();
   QString errorString;
   ResultCode resultCode = ResultCodeSuccess;
 
@@ -292,17 +298,17 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
       mDeletedItemIds.remove( item.id() );
     }
   } else { // success
-
     foreach( const Item &item, items ) {
       mLatestRevisionByItemId.remove( item.id() );
-
-      QString description;
-      if ( change->atomicOperationId != 0 ) {
-        AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-        a->numCompletedChanges++;
-        description = a->description;
-      }
     }
+  }
+
+  //QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    //description = a->description;
   }
 
   change->errorString = errorString;
@@ -342,14 +348,15 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   } else { // success
 
     mLatestRevisionByItemId[item.id()] = item.revision();
-
-    QString description;
-    if ( change->atomicOperationId != 0 ) {
-      AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-      a->numCompletedChanges++;
-      description = a->description;
-    }
     change->newItem = item;
+  }
+
+  //QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    //description = a->description;
   }
 
   change->errorString = errorString;
@@ -380,8 +387,10 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
                                        const Collection &collection,
                                        QWidget *parent )
 {
+  //kDebug();
   if ( !incidence ) {
     kWarning() << "An invalid payload is not allowed.";
+    d->cancelTransaction();
     return -1;
   }
 
@@ -393,14 +402,16 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
 
   const int changeId = change->id;
   Q_ASSERT( !( d->mBatchOperationInProgress && !d->mAtomicOperations.contains( atomicOperationId ) ) );
-  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback ) {
+  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
     // rollback is in progress, no more changes allowed.
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
+    kWarning() << errorMessage;
 
     change->resultCode = ResultCodeRolledback;
     change->errorString = errorMessage;
+    d->cleanupTransaction();
     return changeId;
   }
 
@@ -469,6 +480,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
     default:
       // Never happens
       Q_ASSERT_X( false, "createIncidence()", "unknown destination policy" );
+      d->cancelTransaction();
       return -1;
     }
   }
@@ -482,7 +494,8 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
 
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[d->mLatestAtomicOperationId];
-    ++atomic->numChanges;
+    Q_ASSERT( atomic );
+    atomic->changes.append( change );
   }
 
   // QueuedConnection because of possible sync exec calls.
@@ -503,14 +516,17 @@ int IncidenceChanger::deleteIncidence( const Item &item, QWidget *parent )
 
 int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent )
 {
+  //kDebug();
   if ( items.isEmpty() ) {
     kError() << "Delete what?";
+    d->cancelTransaction();
     return -1;
   }
 
   foreach( const Item &item, items ) {
     if ( !item.isValid() ) {
       kError() << "Items must be valid!";
+      d->cancelTransaction();
       return -1;
     }
   }
@@ -539,13 +555,14 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     }
   }
 
-  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback ) {
+  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
     // rollback is in progress, no more changes allowed.
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
     change->resultCode = ResultCodeRolledback;
     change->errorString = errorMessage;
+    d->cleanupTransaction();
     return changeId;
   }
 
@@ -567,7 +584,8 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
 
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[atomicOperationId];
-    ++atomic->numChanges;
+    Q_ASSERT( atomic );
+    atomic->changes.append( change );
   }
 
   foreach( const Item &item, itemsToDelete ) {
@@ -587,6 +605,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
 {
   if ( !changedItem.isValid() || !changedItem.hasPayload<Incidence::Ptr>() ) {
     kWarning() << "An invalid item or payload is not allowed.";
+    d->cancelTransaction();
     return -1;
   }
 
@@ -613,12 +632,12 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
   modificationChange->newItem = changedItem;
   d->mChangeById.insert( changeId, change );
 
-  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback ) {
+  if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
     // rollback is in progress, no more changes allowed.
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
-
+    d->cleanupTransaction();
     emitModifyFinished( this, changeId, changedItem, ResultCodeRolledback, errorMessage );
   } else {
     d->performModification( change );
@@ -649,7 +668,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
   const uint atomicOperationId = change->atomicOperationId;
   const bool hasAtomicOperationId = atomicOperationId != 0;
   if ( hasAtomicOperationId &&
-       mAtomicOperations[atomicOperationId]->rolledback ) {
+       mAtomicOperations[atomicOperationId]->rolledback() ) {
     // rollback is in progress, no more changes allowed.
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
@@ -692,7 +711,8 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
 
     if ( hasAtomicOperationId ) {
       AtomicOperation *atomic = mAtomicOperations[atomicOperationId];
-      atomic->numChanges++;
+      Q_ASSERT( atomic );
+      atomic->changes.append( change );
     }
 
     mModificationsInProgress[newItem.id()] = change;
@@ -704,6 +724,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
 
 void IncidenceChanger::startAtomicOperation( const QString &operationDescription )
 {
+  //kDebug();
   ++d->mLatestAtomicOperationId;
   Q_ASSERT_X( !d->mBatchOperationInProgress, "IncidenceChanger::startAtomicOperation()",
               "Call endAtomicOperation() first." );
@@ -711,17 +732,18 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
 
   AtomicOperation *atomicOperation = new AtomicOperation( d->mLatestAtomicOperationId );
   atomicOperation->description = operationDescription;
-
   d->mAtomicOperations.insert( d->mLatestAtomicOperationId, atomicOperation );
   d->mAtomicOperationByTransaction.insert( atomicOperation->transaction, d->mLatestAtomicOperationId );
 
   // TODO: rename transaction
   d->connect( atomicOperation->transaction, SIGNAL(result(KJob*)),
-              d, SLOT(handleTransactionJobResult(KJob*)), Qt::QueuedConnection );
+              d, SLOT(handleTransactionJobResult(KJob*)) );
 }
 
 void IncidenceChanger::endAtomicOperation()
 {
+  //kDebug();
+
   Q_ASSERT_X( d->mLatestAtomicOperationId != 0,
               "IncidenceChanger::endAtomicOperation()",
               "Call startAtomicOperation() first." );
@@ -729,19 +751,22 @@ void IncidenceChanger::endAtomicOperation()
   Q_ASSERT_X( d->mBatchOperationInProgress, "IncidenceChanger::endAtomicOperation()",
               "Call startAtomicOperation() first." );
 
+  Q_ASSERT( d->mAtomicOperations.contains(d->mLatestAtomicOperationId) );
   AtomicOperation *atomicOperation = d->mAtomicOperations[d->mLatestAtomicOperationId];
+  Q_ASSERT( atomicOperation );
   atomicOperation->endCalled = true;
 
   const bool allJobsCompleted = !atomicOperation->pendingJobs();
 
-  if ( allJobsCompleted && atomicOperation->rolledback ) {
+  if ( allJobsCompleted && atomicOperation->rolledback() &&
+       atomicOperation->transactionCompleted ) {
     // The transaction job already completed, we can cleanup:
     delete d->mAtomicOperations.take( d->mLatestAtomicOperationId );
     d->mBatchOperationInProgress = false;
-  } else if ( allJobsCompleted ) {
+  }/* else if ( allJobsCompleted ) {
     Q_ASSERT( atomicOperation->transaction );
-    atomicOperation->transaction->commit();
-  }
+    atomicOperation->transaction->commit(); we using autocommit now
+  }*/
 }
 
 void IncidenceChanger::setShowDialogsOnError( bool enable )
@@ -810,6 +835,25 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
   return errorString;
 }
 
+void IncidenceChanger::Private::cancelTransaction()
+{
+  if ( mBatchOperationInProgress ) {
+    mAtomicOperations[mLatestAtomicOperationId]->setRolledback();
+  }
+}
+
+void IncidenceChanger::Private::cleanupTransaction()
+{
+  Q_ASSERT( mAtomicOperations.contains(mLatestAtomicOperationId) );
+  AtomicOperation *operation = mAtomicOperations[mLatestAtomicOperationId];
+  Q_ASSERT( operation );
+  Q_ASSERT( operation->rolledback() );
+  if ( !operation->pendingJobs() && operation->endCalled && operation->transactionCompleted ) {
+    delete mAtomicOperations.take(mLatestAtomicOperationId);
+    mBatchOperationInProgress = false;
+  }
+}
+
 /**reimp*/
 void ModificationChange::emitCompletionSignal()
 {
@@ -828,4 +872,3 @@ void DeletionChange::emitCompletionSignal()
 {
   emitDeleteFinished( changer, id, mItemIds, resultCode, errorString );
 }
-
