@@ -3,7 +3,7 @@ macro(add_akonadi_isolated_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test})
   target_link_libraries(${_name}
-    akonadi-kde akonadi-calendar ${QT_QTTEST_LIBRARY}
+    akonadi-kde akonadi-calendar kcalcore ${QT_QTTEST_LIBRARY}
     ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS}
   )
  
