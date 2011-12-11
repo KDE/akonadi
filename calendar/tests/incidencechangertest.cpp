@@ -555,6 +555,74 @@ class IncidenceChangerTest : public QObject
         QTest::newRow( "create,try delete(ACL)" ) << items << changeTypes << failureExpectedList
                                                   << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        // 1 successfull modification, 1 failed creation
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << createItem( mCollection ) << Item();
+        failureExpectedList.clear();
+        failureExpectedList << false << true;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "modify,try create" ) << items << changeTypes << failureExpectedList
+                                             << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // 1 successfull modification, 1 failed creation
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << createItem( mCollection ) << item();
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodePermissions;
+        rights.clear();
+        rights << allRights << noRights;
+
+        QTest::newRow( "modify,try create v2" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // 1 failed creation, 1 successfull modification
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeModify;
+        items.clear();
+        items << Item() << createItem( mCollection );
+        failureExpectedList.clear();
+        failureExpectedList << true << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << allRights;
+
+        QTest::newRow( "try create,modify" ) << items << changeTypes << failureExpectedList
+                                             << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // 1 failed creation, 1 successfull modification
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeModify;
+        items.clear();
+        items << item() << createItem( mCollection );
+        failureExpectedList.clear();
+        failureExpectedList << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << noRights << allRights;
+
+        QTest::newRow( "try create,modify v2" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
+        //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
       }
 
@@ -585,7 +653,7 @@ class IncidenceChangerTest : public QObject
           int changeId = -1;
           switch( changeTypes[i] ) {
             case IncidenceChanger::ChangeTypeCreate:
-              changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>() );
+              changeId = mChanger->createIncidence( item.hasPayload() ? item.payload<KCalCore::Incidence::Ptr>() : Incidence::Ptr() );
               if ( changeId != -1 )
                 ++mIncidencesToAdd;
             break;
