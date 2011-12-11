@@ -468,13 +468,14 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
       break;
       case DestinationPolicyNeverAsk:
       {
-        const bool rights = d->hasRights( d->mDefaultCollection, ChangeTypeCreate );
-        if ( d->mDefaultCollection.isValid() && rights ) {
+        const bool hasRights = d->hasRights( d->mDefaultCollection, ChangeTypeCreate );
+        if ( d->mDefaultCollection.isValid() && hasRights ) {
           collectionToUse = d->mDefaultCollection;
         } else {
           const QString errorString = d->showErrorDialog( ResultCodeInvalidDefaultCollection, parent );
-          kError() << errorString << "; rights are " << rights;
-          change->resultCode = ResultCodeInvalidDefaultCollection;
+          kError() << errorString << "; rights are " << hasRights;
+          change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
+                                           ResultCodePermissions;
           change->errorString = errorString;
           d->cancelTransaction();
           return changeId;
