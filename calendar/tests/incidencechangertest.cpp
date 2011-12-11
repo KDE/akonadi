@@ -619,6 +619,62 @@ class IncidenceChangerTest : public QObject
         QTest::newRow( "try create,modify v2" ) << items << changeTypes << failureExpectedList
                                                 << expectedResults << rights;
         //------------------------------------------------------------------------------------------
+        // 4 creations, last one fails
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate
+                    << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << item() << item() << item() << item();
+        failureExpectedList.clear();
+        failureExpectedList << false << false << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodePermissions;
+        rights.clear();
+        rights << allRights << allRights << allRights << noRights;
+
+        QTest::newRow( "create 4, last fails" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // 4 creations, first one fails
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate
+                    << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << item() << item() << item() << item();
+        failureExpectedList.clear();
+        failureExpectedList << false << false << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << noRights << allRights << allRights << allRights;
+
+        QTest::newRow( "create 4, first fails" ) << items << changeTypes << failureExpectedList
+                                                << expectedResults << rights;
+        //------------------------------------------------------------------------------------------
+        // 4 creations, second one fails
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate
+                    << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << item() << item() << item() << item();
+        failureExpectedList.clear();
+        failureExpectedList << false << false << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodeRolledback
+                        << IncidenceChanger::ResultCodeRolledback;
+        rights.clear();
+        rights << allRights << noRights << allRights << allRights;
+
+        QTest::newRow( "create 4, second fails" ) << items << changeTypes << failureExpectedList
+                                                  << expectedResults << rights;
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
