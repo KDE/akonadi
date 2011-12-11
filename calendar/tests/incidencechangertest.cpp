@@ -77,6 +77,7 @@ class IncidenceChangerTest : public QObject
   QHash<int,Akonadi::Item::Id> mItemIdByChangeId;
   QHash<QString,Akonadi::Item::Id> mItemIdByUid;
   int mChangeToWaitFor;
+  bool mPermissionsOrRollback;
 
   private slots:
     void initTestCase()
@@ -84,6 +85,7 @@ class IncidenceChangerTest : public QObject
       mIncidencesToDelete = 0;
       mIncidencesToAdd    = 0;
       mIncidencesToModify = 0;
+      mPermissionsOrRollback = false;
 
       mChangeToWaitFor = -1;
       //Control::start(); //TODO: uncomment when using testrunner
@@ -427,6 +429,7 @@ class IncidenceChangerTest : public QObject
         QTest::addColumn<QList<bool> >( "failureExpectedList" );
         QTest::addColumn<QList<Akonadi::IncidenceChanger::ResultCode> >( "expectedResults" );
         QTest::addColumn<QList<Akonadi::Collection::Rights> >( "rights" );
+        QTest::addColumn<bool>( "permissionsOrRollback" );
 
         Akonadi::Item::List items;
         QList<Akonadi::IncidenceChanger::ChangeType> changeTypes;
@@ -444,7 +447,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "create two - success " ) << items << changeTypes << failureExpectedList
-                                                 << expectedResults << rights;
+                                                 << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         changeTypes.clear();
         changeTypes << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeModify;
@@ -452,12 +455,12 @@ class IncidenceChangerTest : public QObject
         items << createItem( mCollection ) << createItem( mCollection );
 
         QTest::newRow( "modify two - success " ) << items << changeTypes << failureExpectedList
-                                                 << expectedResults << rights;
+                                                 << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         changeTypes.clear();
         changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeDelete;
         QTest::newRow( "delete two - success " ) << items << changeTypes << failureExpectedList
-                                                 << expectedResults << rights;
+                                                 << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // Creation succeeds but deletion doesnt ( invalid item case )
         items.clear();
@@ -473,7 +476,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "create,try delete" ) << items << changeTypes << failureExpectedList
-                                             << expectedResults << rights;
+                                             << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // deletion doesn't succeed, but creation does ( invalid item case )
         items.clear();
@@ -489,7 +492,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "try delete,create" ) << items << changeTypes << failureExpectedList
-                                            << expectedResults << rights;
+                                            << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // Creation succeeds but deletion doesnt ( valid, inexistant item case )
         items.clear();
@@ -505,7 +508,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "create,try delete v2" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // deletion doesn't succeed, but creation does ( valid, inexistant item case )
         items.clear();
@@ -521,7 +524,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "try delete,create v2" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // deletion doesn't succeed, but creation does ( NO ACL case )
         items.clear();
@@ -537,7 +540,7 @@ class IncidenceChangerTest : public QObject
         rights << noRights << allRights;
 
         QTest::newRow( "try delete(ACL),create" ) << items << changeTypes << failureExpectedList
-                                                  << expectedResults << rights;
+                                                  << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         //Creation succeeds but deletion doesnt ( NO ACL case )
         items.clear();
@@ -553,7 +556,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << noRights;
 
         QTest::newRow( "create,try delete(ACL)" ) << items << changeTypes << failureExpectedList
-                                                  << expectedResults << rights;
+                                                  << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 1 successfull modification, 1 failed creation
         changeTypes.clear();
@@ -569,7 +572,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "modify,try create" ) << items << changeTypes << failureExpectedList
-                                             << expectedResults << rights;
+                                             << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 1 successfull modification, 1 failed creation
         changeTypes.clear();
@@ -585,7 +588,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << noRights;
 
         QTest::newRow( "modify,try create v2" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 1 failed creation, 1 successfull modification
         changeTypes.clear();
@@ -601,7 +604,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights;
 
         QTest::newRow( "try create,modify" ) << items << changeTypes << failureExpectedList
-                                             << expectedResults << rights;
+                                             << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 1 failed creation, 1 successfull modification
         changeTypes.clear();
@@ -617,7 +620,7 @@ class IncidenceChangerTest : public QObject
         rights << noRights << allRights;
 
         QTest::newRow( "try create,modify v2" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 4 creations, last one fails
         changeTypes.clear();
@@ -636,7 +639,7 @@ class IncidenceChangerTest : public QObject
         rights << allRights << allRights << allRights << noRights;
 
         QTest::newRow( "create 4, last fails" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 4 creations, first one fails
         changeTypes.clear();
@@ -655,7 +658,7 @@ class IncidenceChangerTest : public QObject
         rights << noRights << allRights << allRights << allRights;
 
         QTest::newRow( "create 4, first fails" ) << items << changeTypes << failureExpectedList
-                                                << expectedResults << rights;
+                                                << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
         // 4 creations, second one fails
         changeTypes.clear();
@@ -674,8 +677,26 @@ class IncidenceChangerTest : public QObject
         rights << allRights << noRights << allRights << allRights;
 
         QTest::newRow( "create 4, second fails" ) << items << changeTypes << failureExpectedList
-                                                  << expectedResults << rights;
+                                                  << expectedResults << rights << false;
         //------------------------------------------------------------------------------------------
+        // 4 fails
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate
+                    << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        items.clear();
+        items << item() << item() << item() << item();
+        failureExpectedList.clear();
+        failureExpectedList << false << false << false << false;
+        expectedResults.clear();
+        expectedResults << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodePermissions
+                        << IncidenceChanger::ResultCodePermissions;
+        rights.clear();
+        rights << noRights << noRights << noRights << noRights;
+
+        QTest::newRow( "create 4, all fail" ) << items << changeTypes << failureExpectedList
+                                              << expectedResults << rights << true;
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
         //------------------------------------------------------------------------------------------
@@ -689,12 +710,14 @@ class IncidenceChangerTest : public QObject
         QFETCH( QList<bool>, failureExpectedList );
         QFETCH( QList<Akonadi::IncidenceChanger::ResultCode>, expectedResults );
         QFETCH( QList<Akonadi::Collection::Rights>, rights );
+        QFETCH( bool, permissionsOrRollback );
 
         QCOMPARE( items.count(), changeTypes.count() );
         QCOMPARE( items.count(), failureExpectedList.count() );
         QCOMPARE( items.count(), expectedResults.count() );
         QCOMPARE( items.count(), rights.count() );
 
+        mPermissionsOrRollback = permissionsOrRollback;
         mChanger->setDefaultCollection( mCollection );
         mChanger->setRespectsCollectionRights( true );
         mChanger->setDestinationPolicy( IncidenceChanger::DestinationPolicyNeverAsk );
@@ -825,11 +848,9 @@ class IncidenceChangerTest : public QObject
       }
     }
 
-    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
-      qDebug() << "deleteFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode
-               << ( deletedIds.isEmpty() ? -1 : deletedIds.first() );
-    }
-    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
+    compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
+                           QLatin1String( "createFinished" ) );
+
     mChangeToWaitFor = -1;
 
     --mIncidencesToDelete;
@@ -854,10 +875,9 @@ class IncidenceChangerTest : public QObject
       kDebug() << "Error string is " << errorString;
     }
 
-    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
-      qDebug() << "createFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode << " for id=" << item.id();
-    }
-    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
+    compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
+                           QLatin1String( "createFinished" ) );
+
     mChangeToWaitFor = -1;
 
     --mIncidencesToAdd;
@@ -878,11 +898,8 @@ class IncidenceChangerTest : public QObject
     else
       kDebug() << "Error string is " << errorString;
 
-    if ( resultCode != mExpectedResultByChangeId[changeId] ) {
-      qDebug() << "modifyFinished: Expected " << mExpectedResultByChangeId[changeId] << " got " << resultCode << " for id=" << item.id();
-    }
-
-    QCOMPARE( resultCode, mExpectedResultByChangeId[changeId] );
+    compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
+                           QLatin1String( "modifyFinished" ) );
 
     mChangeToWaitFor = -1;
     --mIncidencesToModify;
@@ -926,6 +943,23 @@ class IncidenceChangerTest : public QObject
     QCOMPARE( changer.respectsCollectionRights(), true );
     changer.setRespectsCollectionRights( false );
     QCOMPARE( changer.respectsCollectionRights(), false );
+  }
+
+  void compareExpectedResult( bool result, bool expected, const QLatin1String &str )
+  {
+    if ( mPermissionsOrRollback ) {
+      if ( expected == IncidenceChanger::ResultCodePermissions )
+        expected = IncidenceChanger::ResultCodeRolledback;
+
+      if ( result == IncidenceChanger::ResultCodePermissions )
+        result = IncidenceChanger::ResultCodeRolledback;
+    }
+
+    if ( result != expected ) {
+      qDebug() << str << "Expected " << expected << " got " << result;
+    }
+
+    QCOMPARE( result, expected );
   }
 };
 
