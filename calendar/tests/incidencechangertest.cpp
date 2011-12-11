@@ -806,7 +806,7 @@ class IncidenceChangerTest : public QObject
               QVERIFY( false );
           }
         }
-        qDebug() << "testAtomicOperations END";
+        mPermissionsOrRollback = false;
       }
 
   public Q_SLOTS:
