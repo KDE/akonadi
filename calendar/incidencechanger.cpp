@@ -163,9 +163,10 @@ bool IncidenceChanger::Private::hasRights( const Collection &collection,
   return !collection.isValid() || !mRespectsCollectionRights || result;
 }
 
-Akonadi::Job* IncidenceChanger::Private::parentJob() const
+Akonadi::Job* IncidenceChanger::Private::parentJob( const Change::Ptr &change ) const
 {
-  return mBatchOperationInProgress ? mAtomicOperations[mLatestAtomicOperationId]->transaction : 0;
+  return (mBatchOperationInProgress && !change->queuedModification) ?
+                                       mAtomicOperations[mLatestAtomicOperationId]->transaction : 0;
 }
 
 void IncidenceChanger::Private::queueModification( Change::Ptr change )
@@ -177,7 +178,7 @@ void IncidenceChanger::Private::queueModification( Change::Ptr change )
   if ( mQueuedModifications.contains( id ) ) {
     mQueuedModifications.take( id );
   }
-
+  change->queuedModification = true;
   mQueuedModifications[id] = change;
 }
 
@@ -494,7 +495,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
   item.setPayload<Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
 
-  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse, d->parentJob() );
+  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse, d->parentJob( change ) );
   d->mChangeForJob.insert( createJob, change );
 
   if ( d->mBatchOperationInProgress ) {
@@ -585,7 +586,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     return changeId;
   }
 
-  ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob() );
+  ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob( change ) );
   d->mChangeForJob.insert( deleteJob, change );
   d->mChangeById.insert( changeId, change );
 
@@ -713,7 +714,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     // Let's wait for it to end.
     queueModification( change );
   } else {
-    ItemModifyJob *modifyJob = new ItemModifyJob( newItem, parentJob() );
+    ItemModifyJob *modifyJob = new ItemModifyJob( newItem, parentJob( change ) );
     mChangeForJob.insert( modifyJob, change );
     mDirtyFieldsByJob.insert( modifyJob, incidence->dirtyFields() );
 

@@ -53,6 +53,7 @@ namespace Akonadi {
                                 , atomicOperationId( operationId )
                                 , resultCode( Akonadi::IncidenceChanger::ResultCodeSuccess )
                                 , completed( false )
+                                , queuedModification( false )
                                 , changer( incidenceChanger )
       {
       }
@@ -86,6 +87,7 @@ namespace Akonadi {
       QString errorString;
       IncidenceChanger::ResultCode resultCode;
       bool completed;
+      bool queuedModification;
   protected:
     IncidenceChanger *const changer;
   };
@@ -239,7 +241,7 @@ class IncidenceChanger::Private : public QObject
     void queueModification( Change::Ptr );
     void performModification( Change::Ptr );
     bool atomicOperationIsValid( uint atomicOperationId ) const;
-    Akonadi::Job* parentJob() const;
+    Akonadi::Job* parentJob( const Change::Ptr & ) const;
     void cancelTransaction();
     void cleanupTransaction();
 
