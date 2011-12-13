@@ -166,7 +166,7 @@ class IncidenceChangerTest : public QObject
       QTest::newRow( "No rights" ) << false << "SomeUid6" << "Summary6" << Collection()
                                    << collectionWithoutRights << true
                                    << IncidenceChanger::DestinationPolicyNeverAsk
-                                   << false << IncidenceChanger::ResultCodeInvalidDefaultCollection;
+                                   << false << IncidenceChanger::ResultCodePermissions;
 
       QTest::newRow( "No rights but its ok" ) << false << "SomeUid7" << "Summary7" << Collection()
                                               << collectionWithoutRights << false
