@@ -93,7 +93,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
       ResultCodeRolledback, ///< One change belonging to an atomic operation failed. All other changes were rollbacked.
       ResultCodePermissions, ///< The parent collection doesn't have ACLs for this operation
       ResultCodeUserCanceled, ///< User canceled the operation
-      ResultCodeInvalidUserCollection ///< User somehow chose an invalid collection in the collection dialog ( should not happen )
+      ResultCodeInvalidUserCollection, ///< User somehow chose an invalid collection in the collection dialog ( should not happen )
+      ResultCodeModificationDiscarded ///< A new modification came in, no use in performing this one
     };
 
     /**

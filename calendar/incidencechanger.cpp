@@ -176,8 +176,12 @@ void IncidenceChanger::Private::queueModification( Change::Ptr change )
   // previous modifications
   const Akonadi::Item::Id id = change->newItem.id();
   if ( mQueuedModifications.contains( id ) ) {
-    mQueuedModifications.take( id );
+    Change::Ptr toBeDiscarded = mQueuedModifications.take( id );
+    toBeDiscarded->resultCode = ResultCodeModificationDiscarded;
+    toBeDiscarded->completed  = true;
+    mChangeById.remove( toBeDiscarded->id );
   }
+
   change->queuedModification = true;
   mQueuedModifications[id] = change;
 }
@@ -187,7 +191,7 @@ void IncidenceChanger::Private::performNextModification( Akonadi::Item::Id id )
   mModificationsInProgress.remove( id );
 
   if ( mQueuedModifications.contains( id ) ) {
-    Change::Ptr change = mQueuedModifications[id];
+    const Change::Ptr change = mQueuedModifications.take( id );
     performModification( change );
   }
 }
