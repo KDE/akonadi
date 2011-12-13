@@ -78,6 +78,7 @@ class IncidenceChangerTest : public QObject
   QHash<QString,Akonadi::Item::Id> mItemIdByUid;
   int mChangeToWaitFor;
   bool mPermissionsOrRollback;
+  bool mDiscardedEqualsSuccess;
 
   private slots:
     void initTestCase()
@@ -86,6 +87,7 @@ class IncidenceChangerTest : public QObject
       mIncidencesToAdd    = 0;
       mIncidencesToModify = 0;
       mPermissionsOrRollback = false;
+      mDiscardedEqualsSuccess = false;
 
       mChangeToWaitFor = -1;
       //Control::start(); //TODO: uncomment when using testrunner
@@ -386,8 +388,14 @@ class IncidenceChangerTest : public QObject
       QFETCH( Akonadi::Item, item );
       QFETCH( bool, waitForPreviousJob );
       QFETCH( int, numberOfModifications );
+      mDiscardedEqualsSuccess = true;
 
       Q_ASSERT( numberOfModifications > 0 );
+
+      if ( !waitForPreviousJob ) {
+        mIncidencesToModify = numberOfModifications;
+      }
+
       int changeId = -1;
       for( int i=0; i<numberOfModifications; ++i ) {
         Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
@@ -410,7 +418,8 @@ class IncidenceChangerTest : public QObject
       }
 
       if ( !waitForPreviousJob ) {
-        // Wait for the last one only.
+        mIncidencesToModify = numberOfModifications;
+        // Wait for the last one
         mExpectedResultByChangeId.insert( changeId, IncidenceChanger::ResultCodeSuccess );
         waitForChange( changeId );
         ItemFetchJob *fetchJob = new ItemFetchJob( item, this );
@@ -419,7 +428,11 @@ class IncidenceChangerTest : public QObject
         QVERIFY( fetchJob->items().count() == 1 );
         QCOMPARE( fetchJob->items().first().payload<KCalCore::Incidence::Ptr>()->summary(),
                   QString::number( numberOfModifications-1 ) );
+        if ( mIncidencesToModify > 0 )
+          waitForSignals();
       }
+
+      mDiscardedEqualsSuccess = false;
     }
 
       void testAtomicOperations_data()
@@ -813,9 +826,11 @@ class IncidenceChangerTest : public QObject
 
     void waitForSignals()
     {
-
-      kDebug() << "Remaining: " << mIncidencesToAdd << mIncidencesToDelete << mIncidencesToModify;
       QTestEventLoop::instance().enterLoop( 10 );
+
+      if ( QTestEventLoop::instance().timeout() ) {
+        qDebug() << "Remaining: " << mIncidencesToAdd << mIncidencesToDelete << mIncidencesToModify;
+      }
       QVERIFY( !QTestEventLoop::instance().timeout() );
     }
 
@@ -838,6 +853,8 @@ class IncidenceChangerTest : public QObject
                        const QString &errorMessage )
   {
     QVERIFY( changeId != -1 );
+    mChangeToWaitFor = -1;
+    --mIncidencesToDelete;
 
     if ( resultCode != IncidenceChanger::ResultCodeSuccess ) {
       kDebug() << "Error string is " << errorMessage;
@@ -851,9 +868,6 @@ class IncidenceChangerTest : public QObject
     compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
                            QLatin1String( "createFinished" ) );
 
-    mChangeToWaitFor = -1;
-
-    --mIncidencesToDelete;
     maybeQuitEventLoop();
   }
 
@@ -863,6 +877,8 @@ class IncidenceChangerTest : public QObject
                        const QString &errorString )
   {
     QVERIFY( changeId != -1 );
+    mChangeToWaitFor = -1;
+    --mIncidencesToAdd;
 
     if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
       QVERIFY( item.isValid() );
@@ -878,9 +894,6 @@ class IncidenceChangerTest : public QObject
     compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
                            QLatin1String( "createFinished" ) );
 
-    mChangeToWaitFor = -1;
-
-    --mIncidencesToAdd;
     qDebug() << "Createfinished " << mIncidencesToAdd;
     maybeQuitEventLoop();
   }
@@ -890,7 +903,8 @@ class IncidenceChangerTest : public QObject
                        Akonadi::IncidenceChanger::ResultCode resultCode,
                        const QString &errorString )
   {
-    Q_UNUSED( item );
+    mChangeToWaitFor = -1;
+    --mIncidencesToModify;
     QVERIFY( changeId != -1 );
 
     if ( resultCode == IncidenceChanger::ResultCodeSuccess )
@@ -901,8 +915,6 @@ class IncidenceChangerTest : public QObject
     compareExpectedResult( resultCode, mExpectedResultByChangeId[changeId],
                            QLatin1String( "modifyFinished" ) );
 
-    mChangeToWaitFor = -1;
-    --mIncidencesToModify;
     maybeQuitEventLoop();
   }
 
@@ -945,7 +957,8 @@ class IncidenceChangerTest : public QObject
     QCOMPARE( changer.respectsCollectionRights(), false );
   }
 
-  void compareExpectedResult( bool result, bool expected, const QLatin1String &str )
+  void compareExpectedResult( IncidenceChanger::ResultCode result,
+                              IncidenceChanger::ResultCode expected, const QLatin1String &str )
   {
     if ( mPermissionsOrRollback ) {
       if ( expected == IncidenceChanger::ResultCodePermissions )
@@ -953,6 +966,14 @@ class IncidenceChangerTest : public QObject
 
       if ( result == IncidenceChanger::ResultCodePermissions )
         result = IncidenceChanger::ResultCodeRolledback;
+    }
+
+    if ( mDiscardedEqualsSuccess ) {
+      if ( expected == IncidenceChanger::ResultCodeModificationDiscarded )
+        expected = IncidenceChanger::ResultCodeSuccess;
+
+      if ( result == IncidenceChanger::ResultCodeModificationDiscarded )
+        result = IncidenceChanger::ResultCodeSuccess;
     }
 
     if ( result != expected ) {
