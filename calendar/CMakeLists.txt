@@ -13,6 +13,7 @@ set(akonadicalendar_LIB_SRC
   calendarmodel.cpp
   collectionselection.cpp
   etmcalendar.cpp
+  history.cpp
   incidencefetchjob.cpp
   incidencechanger.cpp
   kcolumnfilterproxymodel.cpp
@@ -27,6 +28,7 @@ target_link_libraries(akonadi-calendar
                       akonadi-kde
                       kpimutils
                       kcalcore
+		      kcalutils
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDE4_PHONON_LIBS})
@@ -43,6 +45,7 @@ install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGE
 install( FILES
   calendarbase.h
   etmcalendar.h
+  history.h
   incidencechanger.h
   fetchjobcalendar.h
   freebusyproviderbase.h

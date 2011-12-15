@@ -76,6 +76,8 @@ namespace Akonadi {
  * @since 4.9
  */
 
+class History;
+
 class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
 {
   Q_OBJECT
@@ -114,7 +116,7 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
     enum ChangeType {
       ChangeTypeCreate,   ///> Represents an incidence creation.
       ChangeTypeModify,   ///> Represents an incidence modification.
-      ChangeTypeDelete    ///> Represents an incidence deletion.
+      ChangeTypeDelete,    ///> Represents an incidence deletion.
     };
 
     /**
@@ -150,6 +152,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * Deletes an incidence. If it's recurring, all occurrences are deleted.
      *
      * @param item Item to delete. Item must be valid.
+     * @param recordToHistory If true, this deletion is recorded into the undo stack,
+     *                        and can be undone.
      * @param parent Parent to be used in dialogs.
      *
      * @return Returns an integer which identifies this deletion. This identifier is useful
@@ -165,7 +169,6 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      *
      * @param items List of items do delete. They must be valid.
      * @param parent Parent to be used in dialogs.
-     *
      * @return Returns an integer which identifies this deletion. This identifier is useful
      *         to correlate this operation with the IncidenceChanger::deleteFinished() signal.
      *
@@ -282,8 +285,32 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      */    
     bool respectsCollectionRights() const;
 
-Q_SIGNALS:
+    /**
+     * Enable or disable history.
+     * With history enabled all changes are recored into the undo/redo stack.
+     *
+     * @see history()
+     * @see historyEnabled()
+     */
+    void setHistoryEnabled( bool enable );
 
+    /**
+     * Returns true if changes are added into the undo stack.
+     * Default is true.
+     *
+     * @see history()
+     * @see historyEnabled()
+     */
+    bool historyEnabled() const;
+
+    /**
+     * Returns a pointer to the history object.
+     * It's always valid.
+     * Ownership remains with IncidenceChanger.
+     */
+    History* history() const;
+
+Q_SIGNALS:
     /**
      * Emitted when IncidenceChanger creates an Incidence in akonadi.
      *

@@ -25,6 +25,7 @@
 #define AKONADI_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
+#include "history.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
@@ -49,6 +50,7 @@ namespace Akonadi {
               IncidenceChanger::ChangeType changeType, uint operationId,
               QWidget *parent ) : id( changeId )
                                 , type( changeType )
+                                , recordToHistory( incidenceChanger->historyEnabled() )
                                 , parentWidget( parent )
                                 , atomicOperationId( operationId )
                                 , resultCode( Akonadi::IncidenceChanger::ResultCodeSuccess )
@@ -74,6 +76,7 @@ namespace Akonadi {
 
       const int id;
       const IncidenceChanger::ChangeType type;
+      const bool recordToHistory;
       const QPointer<QWidget> parentWidget;
       uint atomicOperationId;
 
@@ -139,7 +142,7 @@ namespace Akonadi {
     public:
       DeletionChange( IncidenceChanger *changer, int id, uint atomicOperationId,
                       QWidget *parent ) : Change( changer, id, IncidenceChanger::ChangeTypeDelete,
-                                                   atomicOperationId, parent )
+                                                  atomicOperationId, parent )
       {
       }
 
@@ -229,7 +232,8 @@ class IncidenceChanger::Private : public QObject
     ~Private();
 
     /**
-       Returns true if, for a specific item, an ItemDeleteJob is already running, or if one already run successfully.
+       Returns true if, for a specific item, an ItemDeleteJob is already running,
+       or if one already run successfully.
     */
     bool deleteAlreadyCalled( Akonadi::Item::Id id ) const;
 
@@ -260,12 +264,16 @@ class IncidenceChanger::Private : public QObject
     DestinationPolicy mDestinationPolicy;
     QSet<Akonadi::Item::Id> mDeletedItemIds;
 
-    /** Queue modifications by ID. We can only send a modification to akonadi when the previous
-        one ended.
+    History *mHistory;
+    bool mUseHistory;
 
-        The container doesn't look like a queue because of an optimization: if there's a modification
-        A in progress, a modification B waiting (queued), and then a new one C comes in, we just discard
-        B, and queue C. The queue always has 1 element max.
+    /**
+      Queue modifications by ID. We can only send a modification to akonadi when the previous
+      one ended.
+
+      The container doesn't look like a queue because of an optimization: if there's a modification
+      A in progress, a modification B waiting (queued), and then a new one C comes in,
+      we just discard B, and queue C. The queue always has 1 element max.
     */
     QHash<Akonadi::Item::Id,Change::Ptr> mQueuedModifications;
 
@@ -287,7 +295,6 @@ class IncidenceChanger::Private : public QObject
     QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
 
     QHash<Akonadi::TransactionSequence*, uint> mAtomicOperationByTransaction;
-
 
     uint mLatestAtomicOperationId;
     bool mBatchOperationInProgress;

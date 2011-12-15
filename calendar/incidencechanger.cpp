@@ -105,7 +105,7 @@ namespace Akonadi {
                               Q_ARG( int, changeId ),
                               Q_ARG( QVector<Akonadi::Item::Id>, itemIdList ),
                               Q_ARG( Akonadi::IncidenceChanger::ResultCode, resultCode ),
-                              Q_ARG( QString, errorString ) );
+                               Q_ARG( QString, errorString ) );
   }
 }
 
@@ -113,6 +113,8 @@ IncidenceChanger::Private::Private( IncidenceChanger *qq ) : q( qq )
 {
   mLatestChangeId = 0;
   mShowDialogsOnError = true;
+  mHistory = new History( q );
+  mUseHistory = true;
   mDestinationPolicy = DestinationPolicyDefault;
   mRespectsCollectionRights = false;
   mLatestAtomicOperationId = 0;
@@ -240,6 +242,14 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
   Q_ASSERT( j );
   Akonadi::Item item = j->item();
 
+  QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    description = a->description;
+  }
+
   if ( j->error() ) {
     item = change->newItem;
     resultCode = ResultCodeJobError;
@@ -254,14 +264,10 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     change->newItem = item;
-  }
-
-  //QString description;
-  if ( change->atomicOperationId != 0 ) {
-    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
-    change->completed = true;
-    //description = a->description;
+    // for user undo/redo
+    if ( change->recordToHistory ) {
+      mHistory->recordCreation( item, description, change->atomicOperationId );
+    }
   }
 
   change->errorString = errorString;
@@ -286,7 +292,13 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
   foreach( const Akonadi::Item &item, items ) {
     deletionChange->mItemIds.append( item.id() );
   }
-
+  QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    description = a->description;
+  }
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
     errorString = j->errorString();
@@ -305,15 +317,12 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
   } else { // success
     foreach( const Item &item, items ) {
       mLatestRevisionByItemId.remove( item.id() );
+      if ( change->recordToHistory && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        //TODO: check return value
+        //TODO: make History support a list of items
+        mHistory->recordDeletion( item, description, change->atomicOperationId );
+      }
     }
-  }
-
-  //QString description;
-  if ( change->atomicOperationId != 0 ) {
-    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
-    change->completed = true;
-    //description = a->description;
   }
 
   change->errorString = errorString;
@@ -333,6 +342,13 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   Q_ASSERT( mDirtyFieldsByJob.contains( job ) );
   item.payload<KCalCore::Incidence::Ptr>()->setDirtyFields( mDirtyFieldsByJob.value( job ) );
   const QSet<KCalCore::IncidenceBase::Field> dirtyFields = mDirtyFieldsByJob.value( job );
+  QString description;
+  if ( change->atomicOperationId != 0 ) {
+    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
+    a->numCompletedChanges++;
+    change->completed = true;
+    description = a->description;
+  }
   if ( j->error() ) {
     if ( deleteAlreadyCalled( item.id() ) ) {
       // User deleted the item almost at the same time he changed it. We could just return success
@@ -347,21 +363,17 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
       kError() << errorString;
     }
     if ( mShowDialogsOnError ) {
-      KMessageBox::sorry( change->parentWidget, i18n( "Error while trying to modify calendar item. Error was: %1",
-                                                 errorString ) );
+      KMessageBox::sorry( change->parentWidget,
+                          i18n( "Error while trying to modify calendar item. Error was: %1",
+                          errorString ) );
     }
   } else { // success
-
     mLatestRevisionByItemId[item.id()] = item.revision();
     change->newItem = item;
-  }
-
-  //QString description;
-  if ( change->atomicOperationId != 0 ) {
-    AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
-    change->completed = true;
-    //description = a->description;
+    if ( change->recordToHistory && change->originalItem.isValid() ) {
+      mHistory->recordModification( change->originalItem, item,
+                                    description, change->atomicOperationId );
+    }
   }
 
   change->errorString = errorString;
@@ -822,7 +834,23 @@ Collection IncidenceChanger::defaultCollection() const
   return d->mDefaultCollection;
 }
 
-QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode resultCode, QWidget *parent )
+bool IncidenceChanger::historyEnabled() const
+{
+  return d->mUseHistory;
+}
+
+void IncidenceChanger::setHistoryEnabled( bool enable )
+{
+  d->mUseHistory = enable;
+}
+
+History* IncidenceChanger::history() const
+{
+  return d->mHistory;
+}
+
+QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode resultCode,
+                                                    QWidget *parent )
 {
   QString errorString;
   switch( resultCode ) {
