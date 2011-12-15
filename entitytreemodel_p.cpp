@@ -1205,7 +1205,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
   if ( job->error() ) {
-    kWarning() << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
     KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Fetch Job Error"));
     m_pendingCollectionRetrieveJobs.remove( collectionId );
     return; // let's be safe, otherwise emitting dataChanged will get us into loops
