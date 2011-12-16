@@ -86,6 +86,7 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
 
   protected:
     /* reimp */ bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    /* reimp */ int columnCount( const QModelIndex& index ) const;
 
   protected:
     RecursiveCollectionFilterProxyModelPrivate * const d_ptr;
