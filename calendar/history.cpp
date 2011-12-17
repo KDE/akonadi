@@ -33,6 +33,7 @@ History::History( IncidenceChanger *changer ) : QObject(), d( new Private( this 
   d->mChanger->setObjectName( "changer" ); // for auto-connects
   d->mOperationTypeInProgress = TypeNone;
   d->mEnabled = true;
+  d->mUndoAllInProgress = false;
 }
 
 History::~History()
@@ -134,7 +135,7 @@ void History::undo( QWidget *parent )
 
 void History::redo( QWidget *parent )
 {
-  d->undoOrRedo( TypeUndo, parent );
+  d->undoOrRedo( TypeRedo, parent );
 }
 
 void History::undoAll( QWidget *parent )
