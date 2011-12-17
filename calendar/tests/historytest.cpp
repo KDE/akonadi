@@ -41,6 +41,18 @@ enum SignalType {
   NumSignals
 };
 
+static bool confirmExists( Akonadi::Item item )
+{
+  ItemFetchJob *job = new ItemFetchJob( item );
+  return job->exec() != 0;
+}
+
+static bool confirmDoesntExists( Akonadi::Item item )
+{
+  ItemFetchJob *job = new ItemFetchJob( item );
+  return job->exec() == 0;
+}
+
 class HistoryTest : public QObject
 {
   Q_OBJECT
@@ -140,8 +152,7 @@ private Q_SLOTS:
       waitForSignals();
 
       // Check that it was created
-      ItemFetchJob *job = new ItemFetchJob( mItemByChangeId.value( changeId ) );
-      AKVERIFYEXEC( job );
+      QVERIFY( confirmExists( mItemByChangeId.value( changeId ) ) );
 
       QCOMPARE( mHistory->redoCount(), 0 );
       QCOMPARE( mHistory->undoCount(), 1 );
@@ -151,8 +162,20 @@ private Q_SLOTS:
       mHistory->undo();
       waitForSignals();
 
+      // Check that it doesn't exist anymore
+      QVERIFY( confirmDoesntExists( mItemByChangeId.value( changeId ) ) );
+
       QCOMPARE( mHistory->redoCount(), 1 );
       QCOMPARE( mHistory->undoCount(), 0 );
+
+      mPendingSignals[RedoSignal] = 1;
+      mHistory->redo();
+      waitForSignals();
+
+      // Undo again just for fun
+      mPendingSignals[UndoSignal] = 1;
+      mHistory->undo();
+      waitForSignals();
 
       mHistory->clear();
       QCOMPARE( mHistory->redoCount(), 0 );
