@@ -53,6 +53,25 @@ static bool confirmDoesntExists( Akonadi::Item item )
   return job->exec() == 0;
 }
 
+static Akonadi::Item item()
+{
+  Item item;
+  Incidence::Ptr incidence = Incidence::Ptr( new Event() );
+  incidence->setSummary( QLatin1String( "random summary" ) );
+  item.setMimeType( incidence->mimeType() );
+  item.setPayload<KCalCore::Incidence::Ptr>( incidence );
+  return item;
+}
+
+static Akonadi::Item createItem( const Akonadi::Collection &collection )
+{
+  Item i = item();
+  ItemCreateJob *createJob = new ItemCreateJob( i, collection );
+
+  Q_ASSERT( createJob->exec() );
+  return createJob->item();
+}
+
 class HistoryTest : public QObject
 {
   Q_OBJECT
@@ -180,6 +199,37 @@ private Q_SLOTS:
       mHistory->clear();
       QCOMPARE( mHistory->redoCount(), 0 );
       QCOMPARE( mHistory->undoCount(), 0 );
+    }
+
+    void testUndoDeletion_data()
+    {
+      QTest::addColumn<Akonadi::Item>( "item" );
+      QTest::newRow("item1") << createItem( mCollection );
+    }
+
+    void testUndoDeletion()
+    {
+      QFETCH( Akonadi::Item, item );
+      mPendingSignals[DeletionSignal] = 1;
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+      QVERIFY( item.hasPayload() );
+      const int changeId = mChanger->deleteIncidence( item );
+      QVERIFY( changeId > 0 );
+      mKnownChangeIds << changeId;
+      waitForSignals();
+
+      // Check that it doesn't exist anymore
+      QVERIFY( confirmDoesntExists( item ) );
+
+      // Undo again just for fun
+      mPendingSignals[UndoSignal] = 1;
+      mHistory->undo();
+      waitForSignals();
+
+      mPendingSignals[RedoSignal] = 1;
+      mHistory->redo();
+      waitForSignals();
     }
 
 private:
