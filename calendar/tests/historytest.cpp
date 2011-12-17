@@ -24,6 +24,7 @@
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/CollectionFetchScope>
 #include <akonadi/qtest_akonadi.h>
+#include <akonadi/itemfetchscope.h>
 
 #include <KCalCore/Event>
 
@@ -41,16 +42,34 @@ enum SignalType {
   NumSignals
 };
 
-static bool confirmExists( Akonadi::Item item )
+static bool confirmExists( const Akonadi::Item &item )
 {
   ItemFetchJob *job = new ItemFetchJob( item );
   return job->exec() != 0;
 }
 
-static bool confirmDoesntExists( Akonadi::Item item )
+static bool confirmDoesntExists( const Akonadi::Item &item )
 {
   ItemFetchJob *job = new ItemFetchJob( item );
   return job->exec() == 0;
+}
+
+static bool checkSummary( const Akonadi::Item &item, const QString &expected )
+{
+  ItemFetchJob *job = new ItemFetchJob( item );
+  job->fetchScope().fetchFullPayload();
+  Q_ASSERT( job->exec() );
+  Q_ASSERT( !job->items().isEmpty() );
+  Item it = job->items().first();
+  Q_ASSERT( it.hasPayload() );
+
+  if ( it.payload<KCalCore::Incidence::Ptr>()->summary() == expected ) {
+    return true;
+  } else {
+      qDebug() << "Got " << it.payload<KCalCore::Incidence::Ptr>()->summary()
+               << "Expected " << expected;
+      return false;
+  }
 }
 
 static Akonadi::Item item()
@@ -152,13 +171,13 @@ private Q_SLOTS:
                SLOT(handleRedone(Akonadi::History::ResultCode)));
     }
 
-    void testUndoCreation_data()
+    void testCreation_data()
     {
       QTest::addColumn<Akonadi::Item>( "item" );
       QTest::newRow("item1") << item();
     }
 
-    void testUndoCreation()
+    void testCreation()
     {
       QFETCH( Akonadi::Item, item );
       mPendingSignals[CreationSignal] = 1;
@@ -201,13 +220,13 @@ private Q_SLOTS:
       QCOMPARE( mHistory->undoCount(), 0 );
     }
 
-    void testUndoDeletion_data()
+    void testDeletion_data()
     {
       QTest::addColumn<Akonadi::Item>( "item" );
       QTest::newRow("item1") << createItem( mCollection );
     }
 
-    void testUndoDeletion()
+    void testDeletion()
     {
       QFETCH( Akonadi::Item, item );
       mPendingSignals[DeletionSignal] = 1;
@@ -222,7 +241,6 @@ private Q_SLOTS:
       // Check that it doesn't exist anymore
       QVERIFY( confirmDoesntExists( item ) );
 
-      // Undo again just for fun
       mPendingSignals[UndoSignal] = 1;
       mHistory->undo();
       waitForSignals();
@@ -230,6 +248,73 @@ private Q_SLOTS:
       mPendingSignals[RedoSignal] = 1;
       mHistory->redo();
       waitForSignals();
+
+      mHistory->clear();
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+    }
+
+    void testModification_data()
+    {
+      QTest::addColumn<Akonadi::Item>( "item" );
+      QTest::addColumn<QString>( "oldSummary" );
+      QTest::addColumn<QString>( "newSummary" );
+      Item item1 = createItem( mCollection );
+      const QString oldSummary( QLatin1String( "old" ) );
+      const QString newSummary( QLatin1String( "new" ) );
+      item1.payload<KCalCore::Incidence::Ptr>()->setSummary( oldSummary );
+      QTest::newRow("item1") << item1 << oldSummary << newSummary;
+    }
+
+    void testModification()
+    {
+      QFETCH( Akonadi::Item, item );
+      QFETCH( QString, oldSummary );
+      QFETCH( QString, newSummary );
+      QVERIFY( item.hasPayload() );
+      Incidence::Ptr originalPayload = Incidence::Ptr( item.payload<KCalCore::Incidence::Ptr>()->clone() );
+
+      item.payload<KCalCore::Incidence::Ptr>()->setSummary( newSummary );
+      mPendingSignals[ModificationSignal] = 1;
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+
+      const int changeId = mChanger->modifyIncidence( item, originalPayload );
+      QVERIFY( changeId > 0 );
+      mKnownChangeIds << changeId;
+      waitForSignals();
+
+      QVERIFY( checkSummary( item, newSummary ) );
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 1 );
+
+      mPendingSignals[UndoSignal] = 1;
+      mHistory->undo();
+      waitForSignals();
+      QVERIFY( checkSummary( item, oldSummary ) );
+      QCOMPARE( mHistory->redoCount(), 1 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+
+      mPendingSignals[RedoSignal] = 1;
+      mHistory->redo();
+      waitForSignals();
+      QVERIFY( checkSummary( item, newSummary ) );
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 1 );
+
+      mHistory->clear();
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+
+      // Test that it isn't recorded to history when history is disabled
+      mChanger->setHistoryEnabled( false );
+      const int changeId2 = mChanger->modifyIncidence( item, originalPayload );
+      mChanger->setHistoryEnabled( false );
+      QVERIFY( changeId > 0 );
+      mKnownChangeIds << changeId2;
+      waitForSignals();
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
     }
 
 private:
