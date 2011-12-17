@@ -303,7 +303,7 @@ namespace Akonadi {
       bool undo()
       {
        Item oldItem = mItem;
-       mItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
+       oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
        mWaitingForChangeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(),
                                                        currentParent() );
         return mWaitingForChangeId != -1;
