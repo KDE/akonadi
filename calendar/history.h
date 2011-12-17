@@ -35,16 +35,13 @@ namespace Akonadi {
 class IncidenceChanger;
 
 /**
-   @short History class for implementing undo/redo in your application.
+   @short History class for implementing undo/redo of calendar incidences
 
-   Keeps a stack of all changes ( incidence adds, edits and deletes ) and
-   will fire Item{Modify|Add|Delete}Jobs when undo() and redo() slots are
-   called.
+   Whenever you use IncidenceChanger to create, delete or modify incidences, this class is used
+   to recorded those changes in a stack, so they can be undone/redone.
 
-   Doesn't really use Item*Jobs directly, it uses IncidenceChanger, so invitation
-   e-mails are sent.
-
-   TODO: Talk about atomic operations.
+   If needed, froupware invitations will be sent to attendees and organizers when using this class
+   to undo/redo changes.
 
    @code
       TODO:
@@ -187,7 +184,24 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      */
     int redoCount() const;
 
+    /**
+     * Returns the description of the next undo.
+     *
+     * This is the description that was passed when calling recordCreation(), recordDeletion()
+     * or recordModification().
+     *
+     * @see descriptionOfNextRedo()
+     */
     QString descriptionOfNextUndo() const;
+
+    /**
+     * Returns the description of the next redo.
+     *
+     * This is the description that was passed when calling recordCreation(), recordDeletion()
+     * or recordModification().
+     *
+     * @see descriptionOfNextUndo()
+     */
     QString descriptionOfNextRedo() const;
 
   public Q_SLOTS:
