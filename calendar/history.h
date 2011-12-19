@@ -238,7 +238,7 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      */
     friend class IncidenceChanger;
     friend class Entry;
-    explicit History( IncidenceChanger *changer );
+    explicit History( QObject *parent = 0 );
     // Used by unit-tests
     Akonadi::IncidenceChanger* incidenceChanger() const;
 

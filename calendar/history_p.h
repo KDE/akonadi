@@ -60,7 +60,6 @@ namespace Akonadi {
       virtual bool undo() = 0;
       virtual bool redo() = 0;
       QWidget* currentParent() const;
-      QSet<int> mChangeIdsToWaitFor;
       IncidenceChanger *mChanger;
       QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
       History *q;
@@ -157,9 +156,6 @@ namespace Akonadi {
 
   void Entry::doIt( OperationType type )
   {
-    // We don't want incidence changer to re-record this stuff
-    const bool oldHistoryEnabled = mChanger->historyEnabled();
-    mChanger->setHistoryEnabled( false );
     mNewIdByOldId.clear();
 
     bool result = false;
@@ -172,8 +168,6 @@ namespace Akonadi {
 
     if ( !result )
       emit finished( IncidenceChanger::ResultCodeJobError, i18n( "General error" ) );
-
-    mChanger->setHistoryEnabled( oldHistoryEnabled );
   }
 
   class CreationEntry : public Entry {
@@ -199,7 +193,6 @@ namespace Akonadi {
       bool undo()
       {
         const int changeId = mChanger->deleteIncidence( mItems.first(), currentParent() );
-        mChangeIdsToWaitFor << changeId;
         return changeId != -1;
       }
 
@@ -211,7 +204,6 @@ namespace Akonadi {
         const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
                                                         Collection(),
                                                         currentParent() );
-        mChangeIdsToWaitFor << changeId;
         return changeId != -1;
       }
 
@@ -220,30 +212,26 @@ namespace Akonadi {
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
-          if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            Q_ASSERT( deletedIds.count() == 1 );
-            mLatestRevisionByItemId.remove( deletedIds.first() ); // TODO
-          }
-          mChangeIdsToWaitFor.remove( changeId );
-          emit finished( resultCode, errorString );
+        Q_UNUSED( changeId );
+        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+          Q_ASSERT( deletedIds.count() == 1 );
+          mLatestRevisionByItemId.remove( deletedIds.first() ); // TODO
         }
+        emit finished( resultCode, errorString );
       }
 
       void onCreateFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
-          if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            mLatestRevisionByItemId.insert( item.id(), item.revision() );
-            mNewIdByOldId.clear();
-            Q_ASSERT( mItems.count() == 1 );
-            mNewIdByOldId.insert( mItems.first().id(), item.id() );
-          }
-          mChangeIdsToWaitFor.remove( changeId );
-          emit finished( resultCode, errorString );
+        Q_UNUSED( changeId );
+        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+          mLatestRevisionByItemId.insert( item.id(), item.revision() );
+          mNewIdByOldId.clear();
+          Q_ASSERT( mItems.count() == 1 );
+          mNewIdByOldId.insert( mItems.first().id(), item.id() );
         }
+        emit finished( resultCode, errorString );
       }
     private:
       Q_DISABLE_COPY(CreationEntry)
@@ -285,10 +273,9 @@ namespace Akonadi {
           if ( useAtomicOperation )
             mChanger->endAtomicOperation();
 
-          mChangeIdsToWaitFor << changeId;
           mOldIdByChangeId.insert( changeId, item.id() );
         }
-
+        mNumPendingCreations = mItems.count();
         return success;
       }
 
@@ -296,7 +283,6 @@ namespace Akonadi {
       bool redo()
       {
         const int changeId = mChanger->deleteIncidences( mItems, currentParent() );
-        mChangeIdsToWaitFor << changeId;
         return changeId != -1;
       }
     private Q_SLOTS:
@@ -304,38 +290,36 @@ namespace Akonadi {
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
-          if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            foreach( Akonadi::Item::Id id, deletedIds )
-              mLatestRevisionByItemId.remove( id ); // TODO
-          }
-          mChangeIdsToWaitFor.remove( changeId );
-          emit finished( resultCode, errorString );
+        Q_UNUSED( changeId );
+        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+          foreach( Akonadi::Item::Id id, deletedIds )
+            mLatestRevisionByItemId.remove( id ); // TODO
         }
+        emit finished( resultCode, errorString );
       }
 
       void onCreateFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
-          if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            mNewIdByOldId.insert( mOldIdByChangeId.value( changeId ), item.id() );
-            mLatestRevisionByItemId.insert( item.id(), item.revision() );
-          } else {
-            mResultCode = resultCode;
-            mErrorString = errorString;
-          }
-          mChangeIdsToWaitFor.remove( changeId );
-          mOldIdByChangeId.remove( changeId );
-          if ( mChangeIdsToWaitFor.isEmpty() )
-            emit finished( mResultCode, mErrorString );
+        Q_UNUSED( changeId );
+        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+          mNewIdByOldId.insert( mOldIdByChangeId.value( changeId ), item.id() );
+          mLatestRevisionByItemId.insert( item.id(), item.revision() );
+        } else {
+          mResultCode = resultCode;
+          mErrorString = errorString;
         }
+        --mNumPendingCreations;
+        mOldIdByChangeId.remove( changeId );
+        if ( mNumPendingCreations == 0 )
+          emit finished( mResultCode, mErrorString );
       }
     private:
       IncidenceChanger::ResultCode mResultCode;
       QString mErrorString;
       QHash<int,Akonadi::Item::Id> mOldIdByChangeId;
+      int mNumPendingCreations;
       Q_DISABLE_COPY(DeletionEntry)
   };
 
@@ -362,7 +346,6 @@ namespace Akonadi {
         Item oldItem = mItems.first();
         oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
         const int changeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(), currentParent() );
-        mChangeIdsToWaitFor << changeId;
         return changeId != -1;
       }
 
@@ -371,7 +354,6 @@ namespace Akonadi {
       {
         const int changeId = mChanger->modifyIncidence( mItems.first(), mOriginalPayload,
                                                         currentParent() );
-        mChangeIdsToWaitFor << changeId;
         return changeId != -1;
       }
     private Q_SLOTS:
@@ -379,13 +361,11 @@ namespace Akonadi {
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
-          if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            mLatestRevisionByItemId.insert( item.id(), item.revision() );
-          }
-          mChangeIdsToWaitFor.remove( changeId );
-          emit finished( resultCode, errorString );
+        Q_UNUSED( changeId );
+        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+          mLatestRevisionByItemId.insert( item.id(), item.revision() );
         }
+        emit finished( resultCode, errorString );
       }
     private:
       Q_DISABLE_COPY(ModificationEntry)

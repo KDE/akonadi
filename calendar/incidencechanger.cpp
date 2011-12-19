@@ -102,19 +102,19 @@ namespace Akonadi {
                                   const QString &errorString )
   {
     QMetaObject::invokeMethod( changer, "deleteFinished", Qt::QueuedConnection,
-                              Q_ARG( int, changeId ),
-                              Q_ARG( QVector<Akonadi::Item::Id>, itemIdList ),
-                              Q_ARG( Akonadi::IncidenceChanger::ResultCode, resultCode ),
+                               Q_ARG( int, changeId ),
+                               Q_ARG( QVector<Akonadi::Item::Id>, itemIdList ),
+                               Q_ARG( Akonadi::IncidenceChanger::ResultCode, resultCode ),
                                Q_ARG( QString, errorString ) );
   }
 }
 
-IncidenceChanger::Private::Private( IncidenceChanger *qq ) : q( qq )
+IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) : q( qq )
 {
   mLatestChangeId = 0;
   mShowDialogsOnError = true;
-  mHistory = new History( q );
-  mUseHistory = true;
+  mHistory = enableHistory ? new History( this ) : 0;
+  mUseHistory = enableHistory;
   mDestinationPolicy = DestinationPolicyDefault;
   mRespectsCollectionRights = false;
   mLatestAtomicOperationId = 0;
@@ -391,7 +391,12 @@ bool IncidenceChanger::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) cons
 }
 
 IncidenceChanger::IncidenceChanger( QObject *parent ) : QObject( parent )
-                                                      , d( new Private( this ) )
+                                                      , d( new Private( /**history=*/true, this ) )
+{
+}
+
+IncidenceChanger::IncidenceChanger( bool enableHistory, QObject *parent ) : QObject( parent )
+                                                      , d( new Private( enableHistory, this ) )
 {
 }
 
@@ -841,7 +846,11 @@ bool IncidenceChanger::historyEnabled() const
 
 void IncidenceChanger::setHistoryEnabled( bool enable )
 {
-  d->mUseHistory = enable;
+  if ( d->mUseHistory != enable ) {
+    d->mUseHistory = enable;
+    if ( enable && !d->mHistory )
+      d->mHistory = new History( this );
+  }
 }
 
 History* IncidenceChanger::history() const

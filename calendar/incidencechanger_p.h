@@ -206,7 +206,7 @@ namespace Akonadi {
     // Did all jobs return ?
     bool pendingJobs() const
     {
-        return changes.count() > numCompletedChanges;
+      return changes.count() > numCompletedChanges;
     }
 
     void setRolledback()
@@ -228,7 +228,7 @@ class IncidenceChanger::Private : public QObject
 {
   Q_OBJECT
   public:
-    explicit Private( IncidenceChanger *mIncidenceChanger );
+    explicit Private( bool enableHistory, IncidenceChanger *mIncidenceChanger );
     ~Private();
 
     /**

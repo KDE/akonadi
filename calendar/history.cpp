@@ -25,11 +25,9 @@
 using namespace KCalCore;
 using namespace Akonadi;
 
-History::History( IncidenceChanger *changer ) : QObject(), d( new Private( this ) )
+History::History( QObject *parent ) : QObject( parent ), d( new Private( this ) )
 {
-  Q_ASSERT( changer );
-
-  d->mChanger = changer;
+  d->mChanger = new IncidenceChanger( /*history=*/false, this );
   d->mChanger->setObjectName( "changer" ); // for auto-connects
   d->mOperationTypeInProgress = TypeNone;
   d->mEnabled = true;
