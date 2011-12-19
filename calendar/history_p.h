@@ -75,7 +75,7 @@ namespace Akonadi {
       Private( History *qq );
       ~Private(){}
       void doIt( OperationType );
-      void stackEntry( const Entry::Ptr &entry );
+      void stackEntry( const Entry::Ptr &entry, uint atomicOperationId );
       void updateIds( Item::Id oldId, Item::Id newId );
       void finishOperation( int changeId, History::ResultCode, const QString &errorString );
       QStack<Entry::Ptr>& destinationStack();
@@ -376,8 +376,12 @@ namespace Akonadi {
   class MultiEntry : public Entry {
     Q_OBJECT
     public:
-      MultiEntry( const QString &description, History *q ) : Entry( Item(), description, q )
-                                                           , mOperationInProgress( TypeNone )
+      typedef QSharedPointer<MultiEntry> Ptr;
+      MultiEntry( int id, const QString &description,
+                  History *q ) : Entry( Item(), description, q )
+                               , mAtomicOperationId( id )
+                               , mOperationInProgress( TypeNone )
+
       {
       }
 
@@ -427,6 +431,8 @@ namespace Akonadi {
           }
         }
       }
+    public:
+      const uint mAtomicOperationId;
     private:
       Entry::List mEntries;
       int mIndexInProgress;

@@ -56,8 +56,7 @@ void History::recordCreation( const Akonadi::Item &item,
 
   Entry::Ptr entry( new CreationEntry( item, description, this ) );
 
-  // entry.atomicOperationId = atomicOperationId; TODO
-  d->stackEntry( entry );
+  d->stackEntry( entry, atomicOperationId );
 }
 
 void History::recordModification( const Akonadi::Item &oldItem,
@@ -74,10 +73,10 @@ void History::recordModification( const Akonadi::Item &oldItem,
 
   Entry::Ptr entry( new ModificationEntry( newItem, oldItem.payload<KCalCore::Incidence::Ptr>(),
                                            description, this ) );
-  //entry.atomicOperationId = atomicOperationId; TODO
+
   Q_ASSERT( newItem.revision() >= oldItem.revision() );
 
-  d->stackEntry( entry );
+  d->stackEntry( entry, atomicOperationId );
 }
 
 void History::recordDeletion( const Akonadi::Item &item,
@@ -94,9 +93,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
                                const QString &description,
                                const uint atomicOperationId )
 {
-  //TODO
   Entry::Ptr entry( new DeletionEntry( items, description, this ) );
-  //entry.atomicOperationId = atomicOperationId;
 
   foreach( const Akonadi::Item &item, items ) {
     Q_ASSERT_X( item.isValid(),
@@ -105,7 +102,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
                 "History::recordDeletion()", "Item must have an Incidence::Ptr payload." );
   }
 
-  d->stackEntry( entry );
+  d->stackEntry( entry, atomicOperationId );
 }
 
 QString History::descriptionOfNextUndo() const
@@ -215,7 +212,6 @@ void History::Private::doIt( OperationType type )
            SLOT(handleFinished(Akonadi::IncidenceChanger::ResultCode,QString)),
            Qt::UniqueConnection);
   mEntryInProgress->doIt( type );
-
 }
 
 void History::Private::handleFinished( IncidenceChanger::ResultCode changerResult,
@@ -259,13 +255,45 @@ void History::Private::handleFinished( IncidenceChanger::ResultCode changerResul
   mOperationTypeInProgress = TypeNone;
 }
 
-void History::Private::stackEntry( const Entry::Ptr &entry )
+void History::Private::stackEntry( const Entry::Ptr &entry, uint atomicOperationId )
 {
+  const bool useMultiEntry = ( atomicOperationId > 0 );
+
+  Entry::Ptr entryToPush;
+
+  if ( useMultiEntry ) {
+    Entry::Ptr topEntry = ( mOperationTypeInProgress == TypeNone )                           ?
+                                ( mUndoStack.isEmpty() ? Entry::Ptr() : mUndoStack.top() )   :
+                                ( mQueuedEntries.isEmpty() ? Entry::Ptr() : mQueuedEntries.last() );
+
+    const bool topIsMultiEntry = qobject_cast<MultiEntry*>( topEntry.data() );
+
+    if ( topIsMultiEntry ) {
+      MultiEntry::Ptr multiEntry = topEntry.staticCast<MultiEntry>();
+      if ( multiEntry->mAtomicOperationId != atomicOperationId ) {
+        multiEntry = MultiEntry::Ptr( new MultiEntry( atomicOperationId, entry->mDescription, q ) );
+        entryToPush = multiEntry;
+      }
+      multiEntry->addEntry( entry );
+    } else {
+      MultiEntry::Ptr multiEntry = MultiEntry::Ptr( new MultiEntry( atomicOperationId,
+                                                                    entry->mDescription, q ) );
+      multiEntry->addEntry( entry );
+      entryToPush = multiEntry;
+    }
+  } else {
+    entryToPush = entry;
+  }
+
   if ( mOperationTypeInProgress == TypeNone ) {
-    mUndoStack.push( entry );
+    if ( entryToPush ) {
+      mUndoStack.push( entry );
+    }
     mRedoStack.clear();
   } else {
-    mQueuedEntries.append( entry );
+    if ( entryToPush ) {
+      mQueuedEntries.append( entryToPush );
+    }
   }
 }
 
