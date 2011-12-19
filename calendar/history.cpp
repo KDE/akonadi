@@ -97,7 +97,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
                                const uint atomicOperationId )
 {
   //TODO
-  Entry::Ptr entry( new DeletionEntry( items.first(), description, this ) );
+  Entry::Ptr entry( new DeletionEntry( items, description, this ) );
   //entry.atomicOperationId = atomicOperationId;
 
   foreach( const Akonadi::Item &item, items ) {
@@ -231,15 +231,16 @@ void History::Private::handleFinished( IncidenceChanger::ResultCode changerResul
                                                    History::ResultCodeError;
 
   if ( success ) {
-    mLastErrorString = QString();
+    mLastErrorString.clear();
     destinationStack().push( mEntryInProgress );
 
-    if ( mEntryInProgress->mNewId != -1 ) {
-      // When creating and deleting the same item, the item will get a new id when it's created
-      updateIds( mEntryInProgress->mItem.id() /*old*/, mEntryInProgress->mNewId /*new*/ );
+    if ( !mEntryInProgress->mNewIdByOldId.isEmpty() ) {
+      foreach( Akonadi::Item::Id id, mEntryInProgress->mNewIdByOldId.keys() ) {
+        // When creating and deleting the same item, the item will get a new id when it's created
+        updateIds( id /*old*/, mEntryInProgress->mNewIdByOldId.value( id ) /*new*/ );
+      }
     }
   } else {
-    mLastErrorString = errorString;
     mLastErrorString = errorString;
     stack().push( mEntryInProgress );
   }

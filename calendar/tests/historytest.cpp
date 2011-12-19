@@ -19,6 +19,7 @@
 
 #include "../history.h"
 #include "../incidencechanger.h"
+
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/CollectionFetchJob>
@@ -222,24 +223,39 @@ private Q_SLOTS:
 
     void testDeletion_data()
     {
-      QTest::addColumn<Akonadi::Item>( "item" );
-      QTest::newRow("item1") << createItem( mCollection );
+      QTest::addColumn<Akonadi::Item::List>( "items" );
+      Akonadi::Item::List items;
+      items << createItem( mCollection );
+      QTest::newRow("one item") << items;
+
+      items.clear();
+      items << createItem( mCollection ) << createItem( mCollection );
+      QTest::newRow("two items") << items;
+
+      items.clear();
+      items << createItem( mCollection ) << createItem( mCollection ) << createItem( mCollection )
+            << createItem( mCollection );
+      QTest::newRow("four items") << items;
+
     }
 
     void testDeletion()
     {
-      QFETCH( Akonadi::Item, item );
+      QFETCH( Akonadi::Item::List, items );
       mPendingSignals[DeletionSignal] = 1;
       QCOMPARE( mHistory->redoCount(), 0 );
       QCOMPARE( mHistory->undoCount(), 0 );
-      QVERIFY( item.hasPayload() );
-      const int changeId = mChanger->deleteIncidence( item );
+
+      const int changeId = ( items.count() == 1 ) ? mChanger->deleteIncidence( items.first() ) :
+                                                    mChanger->deleteIncidences( items );
       QVERIFY( changeId > 0 );
       mKnownChangeIds << changeId;
       waitForSignals();
 
       // Check that it doesn't exist anymore
-      QVERIFY( confirmDoesntExists( item ) );
+      foreach( const Akonadi::Item &item, items ) {
+        QVERIFY( confirmDoesntExists( item ) );
+      }
 
       mPendingSignals[UndoSignal] = 1;
       mHistory->undo();

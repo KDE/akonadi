@@ -47,23 +47,25 @@ namespace Akonadi {
     public:
       typedef QSharedPointer<Entry> Ptr;
       Entry( const Akonadi::Item &item, const QString &description, History *qq );
+      Entry( const Akonadi::Item::List &items, const QString &description, History *qq );
       virtual void updateIds( Item::Id oldId, Item::Id newId );
       void doIt( OperationType );
 
-      Item::Id mNewId; // The change might result in a new id.
+      Akonadi::Item::List mItems;
+      QHash<Item::Id, Item::Id> mNewIdByOldId; // The change might result in a new ids
       QString mDescription;
-      Akonadi::Item mItem;
     Q_SIGNALS:
       void finished( Akonadi::IncidenceChanger::ResultCode, const QString &errorString );
     protected:
       virtual bool undo() = 0;
       virtual bool redo() = 0;
       QWidget* currentParent() const;
-      int mWaitingForChangeId;
+      QSet<int> mChangeIdsToWaitFor;
       IncidenceChanger *mChanger;
       QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
       History *q;
     private:
+      void init( const QString &description, History *qq );
       Q_DISABLE_COPY(Entry);
   };
 
@@ -113,16 +115,26 @@ namespace Akonadi {
       History *q;
   };
 
-  Entry::Entry( const Akonadi::Item &item, const QString &description,
+  Entry::Entry( const Akonadi::Item &item,
+                const QString &description,
                 History *qq ) : QObject()
-                              , mNewId( -1 )
-                              , mDescription( description )
-                              , mItem( item )
-                              , mWaitingForChangeId( -1 )
-                              , mChanger( qq->d->mChanger )
-                              , q( qq )
   {
-    QMetaObject::connectSlotsByName( this );
+    mItems << item;
+    init( description, qq );
+  }
+
+  Entry::Entry( const Akonadi::Item::List &items,
+                const QString &description,
+                History *qq ) : QObject(), mItems( items )
+  {
+    init( description, qq );
+  }
+
+  void Entry::init( const QString &description, History *qq )
+  {
+    mDescription = description;
+    q = qq;
+    mChanger = qq->d->mChanger;
   }
 
   QWidget* Entry::currentParent() const
@@ -133,8 +145,14 @@ namespace Akonadi {
   void Entry::updateIds( Item::Id oldId, Item::Id newId )
   {
     Q_ASSERT( newId != -1 );
-    if ( mItem.id() == oldId )
-      mItem.setId( newId );
+    Q_ASSERT( oldId != newId );
+
+    Akonadi::Item::List::iterator it = mItems.begin();
+    while ( it != mItems.end() ) {
+      if ( (*it).id() == oldId )
+        (*it).setId( newId );
+      ++it;
+    }
   }
 
   void Entry::doIt( OperationType type )
@@ -142,7 +160,7 @@ namespace Akonadi {
     // We don't want incidence changer to re-record this stuff
     const bool oldHistoryEnabled = mChanger->historyEnabled();
     mChanger->setHistoryEnabled( false );
-    mNewId = -1;
+    mNewIdByOldId.clear();
 
     bool result = false;
     if ( type == TypeRedo )
@@ -167,7 +185,8 @@ namespace Akonadi {
       {
         QMetaObject::connectSlotsByName( this );
         mLatestRevisionByItemId.insert( item.id(), item.revision() );
-        const Incidence::Ptr incidence = mItem.payload<KCalCore::Incidence::Ptr>();
+        Q_ASSERT( mItems.count() == 1 );
+        const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
         mDescription =  i18n( "%1 creation",
                               KCalUtils::Stringify::incidenceType( incidence->type() ) );
         connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
@@ -179,18 +198,21 @@ namespace Akonadi {
       /**reimp*/
       bool undo()
       {
-        mWaitingForChangeId = mChanger->deleteIncidence( mItem, currentParent() );
-        return mWaitingForChangeId != -1;
+        const int changeId = mChanger->deleteIncidence( mItems.first(), currentParent() );
+        mChangeIdsToWaitFor << changeId;
+        return changeId != -1;
       }
 
       bool redo()
       {
         // TODO: pass mCollection
-        Q_ASSERT( mItem.hasPayload<KCalCore::Incidence::Ptr>() );
-        mWaitingForChangeId = mChanger->createIncidence( mItem.payload<KCalCore::Incidence::Ptr>(),
-                                                         Collection(),
-                                                         currentParent() );
-        return mWaitingForChangeId != -1;
+        Akonadi::Item item = mItems.first();
+        Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+        const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
+                                                        Collection(),
+                                                        currentParent() );
+        mChangeIdsToWaitFor << changeId;
+        return changeId != -1;
       }
 
     private Q_SLOTS:
@@ -198,10 +220,12 @@ namespace Akonadi {
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( changeId == mWaitingForChangeId ) {
+        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
           if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+            Q_ASSERT( deletedIds.count() == 1 );
             mLatestRevisionByItemId.remove( deletedIds.first() ); // TODO
           }
+          mChangeIdsToWaitFor.remove( changeId );
           emit finished( resultCode, errorString );
         }
       }
@@ -210,11 +234,14 @@ namespace Akonadi {
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( changeId == mWaitingForChangeId ) {
+        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
           if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
             mLatestRevisionByItemId.insert( item.id(), item.revision() );
-            mNewId = item.id();
+            mNewIdByOldId.clear();
+            Q_ASSERT( mItems.count() == 1 );
+            mNewIdByOldId.insert( mItems.first().id(), item.id() );
           }
+          mChangeIdsToWaitFor.remove( changeId );
           emit finished( resultCode, errorString );
         }
       }
@@ -225,10 +252,11 @@ namespace Akonadi {
   class DeletionEntry : public Entry {
     Q_OBJECT
     public:
-      DeletionEntry( const Akonadi::Item &item, const QString &description,
-                     History *q ) : Entry( item, description, q )
+      DeletionEntry( const Akonadi::Item::List &items, const QString &description,
+                     History *q ) : Entry( items, description, q )
       {
-        const Incidence::Ptr incidence = mItem.payload<KCalCore::Incidence::Ptr>();
+        const Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
+        //TODO i18n
         mDescription =  i18n( "%1 deletion",
                               KCalUtils::Stringify::incidenceType( incidence->type() ) );
         connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
@@ -241,44 +269,73 @@ namespace Akonadi {
       bool undo()
       {
         // TODO: pass mCollection
-        Q_ASSERT( mItem.hasPayload<KCalCore::Incidence::Ptr>() );
-        mWaitingForChangeId = mChanger->createIncidence( mItem.payload<KCalCore::Incidence::Ptr>(),
-                                                         Collection(),
-                                                         currentParent() );
-        return mWaitingForChangeId != -1;
+        mResultCode = IncidenceChanger::ResultCodeSuccess;
+        mErrorString.clear();
+        const bool useAtomicOperation = mItems.count() > 1 ;
+        bool success = true;
+        foreach( const Akonadi::Item &item, mItems ) {
+          if ( useAtomicOperation )
+            mChanger->startAtomicOperation();
+
+          Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+          const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
+                                                          Collection(),
+                                                          currentParent() );
+          success = ( changeId != -1 ) && success;
+          if ( useAtomicOperation )
+            mChanger->endAtomicOperation();
+
+          mChangeIdsToWaitFor << changeId;
+          mOldIdByChangeId.insert( changeId, item.id() );
+        }
+
+        return success;
       }
 
       /**reimp*/
       bool redo()
       {
-        mWaitingForChangeId = mChanger->deleteIncidence( mItem, currentParent() );
-        return mWaitingForChangeId != -1;
+        const int changeId = mChanger->deleteIncidences( mItems, currentParent() );
+        mChangeIdsToWaitFor << changeId;
+        return changeId != -1;
       }
     private Q_SLOTS:
       void onDeleteFinished( int changeId, const QVector<Akonadi::Item::Id> &deletedIds,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( changeId == mWaitingForChangeId ) {
+        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
           if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            mLatestRevisionByItemId.remove( deletedIds.first() ); // TODO
+            foreach( Akonadi::Item::Id id, deletedIds )
+              mLatestRevisionByItemId.remove( id ); // TODO
           }
+          mChangeIdsToWaitFor.remove( changeId );
           emit finished( resultCode, errorString );
         }
       }
+
       void onCreateFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( changeId == mWaitingForChangeId ) {
+        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
           if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-            mNewId = item.id();
+            mNewIdByOldId.insert( mOldIdByChangeId.value( changeId ), item.id() );
             mLatestRevisionByItemId.insert( item.id(), item.revision() );
+          } else {
+            mResultCode = resultCode;
+            mErrorString = errorString;
           }
-          emit finished( resultCode, errorString );
+          mChangeIdsToWaitFor.remove( changeId );
+          mOldIdByChangeId.remove( changeId );
+          if ( mChangeIdsToWaitFor.isEmpty() )
+            emit finished( mResultCode, mErrorString );
         }
       }
     private:
+      IncidenceChanger::ResultCode mResultCode;
+      QString mErrorString;
+      QHash<int,Akonadi::Item::Id> mOldIdByChangeId;
       Q_DISABLE_COPY(DeletionEntry)
   };
 
@@ -291,7 +348,7 @@ namespace Akonadi {
                          History *q ) : Entry( item, description, q )
                                       , mOriginalPayload( originalPayload )
       {
-        const Incidence::Ptr incidence = mItem.payload<KCalCore::Incidence::Ptr>();
+        const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
         mDescription =  i18n( "%1 deletion",
                               KCalUtils::Stringify::incidenceType( incidence->type() ) );
 
@@ -302,29 +359,31 @@ namespace Akonadi {
       /**reimp*/
       bool undo()
       {
-       Item oldItem = mItem;
-       oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
-       mWaitingForChangeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(),
-                                                       currentParent() );
-        return mWaitingForChangeId != -1;
+        Item oldItem = mItems.first();
+        oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
+        const int changeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(), currentParent() );
+        mChangeIdsToWaitFor << changeId;
+        return changeId != -1;
       }
 
       /**reimp*/
       bool redo()
       {
-        mWaitingForChangeId = mChanger->modifyIncidence( mItem, mOriginalPayload,
-                                                         currentParent() );
-        return mWaitingForChangeId != -1;
+        const int changeId = mChanger->modifyIncidence( mItems.first(), mOriginalPayload,
+                                                        currentParent() );
+        mChangeIdsToWaitFor << changeId;
+        return changeId != -1;
       }
     private Q_SLOTS:
       void onModifyFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
                              const QString &errorString )
       {
-        if ( changeId == mWaitingForChangeId ) {
+        if ( mChangeIdsToWaitFor.contains( changeId ) ) {
           if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
             mLatestRevisionByItemId.insert( item.id(), item.revision() );
           }
+          mChangeIdsToWaitFor.remove( changeId );
           emit finished( resultCode, errorString );
         }
       }
