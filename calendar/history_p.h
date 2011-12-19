@@ -202,7 +202,7 @@ namespace Akonadi {
         Akonadi::Item item = mItems.first();
         Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
         const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
-                                                        Collection(),
+                                                        Collection( item.storageCollectionId() ),
                                                         currentParent() );
         return changeId != -1;
       }
@@ -267,7 +267,7 @@ namespace Akonadi {
 
           Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
           const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
-                                                          Collection(),
+                                                          Collection( item.storageCollectionId() ),
                                                           currentParent() );
           success = ( changeId != -1 ) && success;
           if ( useAtomicOperation )
