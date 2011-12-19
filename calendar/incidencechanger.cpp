@@ -755,9 +755,12 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
 void IncidenceChanger::startAtomicOperation( const QString &operationDescription )
 {
   //kDebug();
+  if ( d->mBatchOperationInProgress ) {
+    kDebug() << "An atomic operation is already in progress.";
+    return;
+  }
+
   ++d->mLatestAtomicOperationId;
-  Q_ASSERT_X( !d->mBatchOperationInProgress, "IncidenceChanger::startAtomicOperation()",
-              "Call endAtomicOperation() first." );
   d->mBatchOperationInProgress = true;
 
   AtomicOperation *atomicOperation = new AtomicOperation( d->mLatestAtomicOperationId );
@@ -773,12 +776,13 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
 void IncidenceChanger::endAtomicOperation()
 {
   //kDebug();
+  if ( !d->mBatchOperationInProgress ) {
+    kDebug() << "No atomic operation is in progress.";
+    return;
+  }
 
   Q_ASSERT_X( d->mLatestAtomicOperationId != 0,
               "IncidenceChanger::endAtomicOperation()",
-              "Call startAtomicOperation() first." );
-
-  Q_ASSERT_X( d->mBatchOperationInProgress, "IncidenceChanger::endAtomicOperation()",
               "Call startAtomicOperation() first." );
 
   Q_ASSERT( d->mAtomicOperations.contains(d->mLatestAtomicOperationId) );
