@@ -46,6 +46,7 @@ namespace Akonadi {
     Q_OBJECT
     public:
       typedef QSharedPointer<Entry> Ptr;
+      typedef QVector<Entry::Ptr> List;
       Entry( const Akonadi::Item &item, const QString &description, History *qq );
       Entry( const Akonadi::Item::List &items, const QString &description, History *qq );
       virtual void updateIds( Item::Id oldId, Item::Id newId );
@@ -370,6 +371,67 @@ namespace Akonadi {
     private:
       Q_DISABLE_COPY(ModificationEntry)
       Incidence::Ptr mOriginalPayload;
+  };
+
+  class MultiEntry : public Entry {
+    Q_OBJECT
+    public:
+      MultiEntry( const QString &description, History *q ) : Entry( Item(), description, q )
+                                                           , mOperationInProgress( TypeNone )
+      {
+      }
+
+      void addEntry( const Entry::Ptr &entry )
+      {
+        Q_ASSERT( mOperationInProgress == TypeNone );
+        mEntries.append( entry );
+        connect( entry.data(), SIGNAL(finished(Akonadi::IncidenceChanger::ResultCode,QString)),
+                 SLOT(onEntryFinished(Akonadi::IncidenceChanger::ResultCode,QString)) );
+      }
+
+    protected:
+      /**reimp*/
+      bool undo()
+      {
+        mOperationInProgress = TypeUndo;
+        Q_ASSERT( !mEntries.isEmpty() );
+        mIndexInProgress = 0;
+        mEntries.first()->doIt( TypeUndo );
+        return true;
+      }
+
+      /**reimp*/
+      bool redo()
+      {
+        mOperationInProgress = TypeRedo;
+        Q_ASSERT( !mEntries.isEmpty() );
+        mIndexInProgress = 0;
+        mEntries.first()->doIt( TypeRedo );
+        return true;
+      }
+
+    private Q_SLOTS:
+      void onEntryFinished( Akonadi::IncidenceChanger::ResultCode resultCode,
+                            const QString &errorString )
+      {
+        if ( mIndexInProgress == mEntries.count()-1 ||
+             resultCode != IncidenceChanger::ResultCodeSuccess ) {
+          mOperationInProgress = TypeNone;
+          emit finished( resultCode, errorString );
+        } else {
+          ++mIndexInProgress;
+          if ( mOperationInProgress != TypeNone ) {
+            mEntries.at(mIndexInProgress)->doIt( mOperationInProgress );
+          } else {
+            Q_ASSERT( false );
+          }
+        }
+      }
+    private:
+      Entry::List mEntries;
+      int mIndexInProgress;
+      OperationType mOperationInProgress;
+      Q_DISABLE_COPY(MultiEntry)
   };
 }
 
