@@ -397,6 +397,7 @@ namespace Akonadi {
       /**reimp*/
       bool undo()
       {
+        mChanger->startAtomicOperation();
         mOperationInProgress = TypeUndo;
         Q_ASSERT( !mEntries.isEmpty() );
         mIndexInProgress = 0;
@@ -407,6 +408,7 @@ namespace Akonadi {
       /**reimp*/
       bool redo()
       {
+        mChanger->startAtomicOperation();
         mOperationInProgress = TypeRedo;
         Q_ASSERT( !mEntries.isEmpty() );
         mIndexInProgress = 0;
@@ -422,6 +424,7 @@ namespace Akonadi {
              resultCode != IncidenceChanger::ResultCodeSuccess ) {
           mOperationInProgress = TypeNone;
           emit finished( resultCode, errorString );
+          mChanger->endAtomicOperation();
         } else {
           ++mIndexInProgress;
           if ( mOperationInProgress != TypeNone ) {
