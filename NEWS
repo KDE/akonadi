@@ -1,3 +1,13 @@
+1.6.90                       20-December-2011
+---------------------------------------------
+- Support for PostgreSQL >= 9.
+- Improve RFC 3501 compatibility in LOGIN and non-silent SELECT commands.
+- Add support for running multiple instance concurrently in the same user session.
+- Update agent interface to include collectionTreeSynchronized signal.
+- Add consistency checker system.
+- Add support for database vacuuming.
+- Various optimizations to reduce the number of SQL queries.
+
 1.6.2                         03-October-2011
 ---------------------------------------------
 - Do not update item revision if only the RID or RREV changed.
