@@ -975,7 +975,9 @@ void EntityTreeModelPrivate::monitoredCollectionStatisticsChanged( Akonadi::Coll
     return;
 
   const QModelIndex index = indexForCollection( m_collections[ id ] );
-  dataChanged( index, index );
+  if ( index.isValid() ) {
+    dataChanged( index, index );
+  }
 }
 
 void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, const Akonadi::Collection& collection )
@@ -1043,10 +1045,16 @@ void EntityTreeModelPrivate::monitoredItemRemoved( const Akonadi::Item &item )
   Q_ASSERT( row >= 0 );
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
+  if ( !parentIndex.isValid() ) {
+    return;
+  }
 
   q->beginRemoveRows( parentIndex, row, row );
   m_items.remove( item.id() );
-  delete m_childEntities[ collection.id() ].takeAt( row );
+  QList<Node*> lst = m_childEntities[ collection.id() ];
+  if ( !lst.isEmpty() ) {
+    delete lst.takeAt( row );
+  }
   q->endRemoveRows();
 }
 
@@ -1194,9 +1202,15 @@ void EntityTreeModelPrivate::monitoredItemUnlinked( const Akonadi::Item& item, c
   const int row = indexOf<Node::Item>( m_childEntities.value( collection.id() ), item.id() );
 
   const QModelIndex parentIndex = indexForCollection( m_collections.value( collection.id() ) );
+  if ( !parentIndex.isValid() ) {
+    return;
+  }
 
   q->beginRemoveRows( parentIndex, row, row );
-  delete m_childEntities[ collection.id() ].takeAt( row );
+  QList<Node*> lst = m_childEntities[ collection.id() ];
+  if ( !lst.isEmpty() ) {
+    delete lst.takeAt( row );
+  }
   q->endRemoveRows();
 }
 
@@ -1287,8 +1301,11 @@ void EntityTreeModelPrivate::updateJobDone( KJob *job )
     m_items[ item.id() ].apply( item );
     const QModelIndexList list = indexesForItem( item );
 
-    foreach ( const QModelIndex &index, list )
-      dataChanged( index, index );
+    foreach ( const QModelIndex &index, list ) {
+      if ( index.isValid() ) {
+        dataChanged( index, index );
+      }
+    }
 
     // TODO: Is this trying to do the job of collectionstatisticschanged?
 //     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
@@ -1559,19 +1576,29 @@ void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIn
 {
   Q_Q( EntityTreeModel );
 
-  QModelIndex rightIndex;
-
-  Node* node = reinterpret_cast<Node*>( bottom.internalPointer() );
-
-  if ( !node )
+  if ( !top.isValid() || !bottom.isValid() ) {
     return;
+  }
 
-  if ( node->type == Node::Collection )
-    rightIndex = bottom.sibling( bottom.row(), q->entityColumnCount( EntityTreeModel::CollectionTreeHeaders ) - 1 );
-  if ( node->type == Node::Item )
-    rightIndex = bottom.sibling( bottom.row(), q->entityColumnCount( EntityTreeModel::ItemListHeaders ) - 1 );
+  Node *node = reinterpret_cast<Node*>( bottom.internalPointer() );
+  if ( !node ) {
+    return;
+  }
 
-  emit q->dataChanged( top, rightIndex );
+  QModelIndex rightIndex;
+  if ( node->type == Node::Collection ) {
+    rightIndex =
+      bottom.sibling( bottom.row(),
+                      q->entityColumnCount( EntityTreeModel::CollectionTreeHeaders ) - 1 );
+  }
+  if ( node->type == Node::Item ) {
+    rightIndex =
+      bottom.sibling( bottom.row(),
+                      q->entityColumnCount( EntityTreeModel::ItemListHeaders ) - 1 );
+  }
+  if ( rightIndex.isValid() ) {
+    emit q->dataChanged( top, rightIndex );
+  }
 }
 
 QModelIndex EntityTreeModelPrivate::indexForCollection( const Collection &collection ) const
@@ -1626,6 +1653,9 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem( const Item &item ) const
 {
   Q_Q( const EntityTreeModel );
   QModelIndexList indexes;
+  if ( m_childEntities.isEmpty() ) {
+    return indexes;
+  }
 
   if ( m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ) {
     Q_ASSERT( m_childEntities.contains( m_rootCollection.id() ) );
