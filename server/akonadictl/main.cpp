@@ -31,6 +31,7 @@
 
 #include <akapplication.h>
 #include <akdbus.h>
+#include <akdebug.h>
 #include "protocol_p.h"
 
 #include "controlmanagerinterface.h"
@@ -49,7 +50,7 @@ static bool startServer()
   #undef interface
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) )
        || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) ) ) {
-    qDebug() << "Akonadi is already running.";
+    qWarning() << "Akonadi is already running.";
     return false;
   }
   AkonadiStarter starter;
@@ -62,7 +63,7 @@ static bool stopServer()
                                                    QLatin1String("/ControlManager"),
                                                    QDBusConnection::sessionBus(), 0 );
   if ( !iface.isValid() ) {
-    qDebug( "Akonadi is not running." );
+    qWarning() << "Akonadi is not running.";
     return false;
   }
 
@@ -74,10 +75,10 @@ static bool stopServer()
 static bool statusServer()
 {
   bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) );
-  qDebug( "Akonadi Control: %s", registered ? "running" : "stopped" );
+  fprintf( stderr, "Akonadi Control: %s\n", registered ? "running" : "stopped" );
 
   registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) );
-  qDebug( "Akonadi Server: %s", registered ? "running" : "stopped" );
+  fprintf( stderr, "Akonadi Server: %s\n", registered ? "running" : "stopped" );
 
   registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
   if ( registered ) {
@@ -97,9 +98,9 @@ static bool statusServer()
         backend = QLatin1String( "Virtuoso" );
     }
 
-    qDebug( "Akonadi Server Search Support: available (backend: %s)", qPrintable( backend ) );
+    fprintf( stderr, "Akonadi Server Search Support: available (backend: %s)\n", qPrintable( backend ) );
   } else {
-    qDebug( "Akonadi Server Search Support: not available" );
+    fprintf( stderr, "Akonadi Server Search Support: not available\n" );
   }
 
   return true;
@@ -162,7 +163,7 @@ int main( int argc, char **argv )
     if ( !startServer() )
       return 3;
   } else if ( arguments[ 1 ] == QLatin1String( "stop" ) ) {
-    if ( !stopServer() ) 
+    if ( !stopServer() )
       return 4;
     else {
     //Block until akonadi is shut down

@@ -21,6 +21,7 @@
 
 #include <akapplication.h>
 #include <akdbus.h>
+#include <akdebug.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -43,7 +44,7 @@ AkonadiStarter::AkonadiStarter(QObject * parent) :
 
 bool AkonadiStarter::start()
 {
-  qDebug( "Starting Akonadi Server..." );
+  akDebug() << "Starting Akonadi Server...";
 
   QStringList serverArgs;
   if ( !AkApplication::instanceIdentifier().isEmpty() )
@@ -51,7 +52,7 @@ bool AkonadiStarter::start()
   
   const bool ok = QProcess::startDetached( QLatin1String("akonadi_control"), serverArgs );
   if ( !ok ) {
-    qDebug( "Error: unable to execute binary akonadi_control" );
+    akError() << "Error: unable to execute binary akonadi_control";
     return false;
   }
 
@@ -61,12 +62,12 @@ bool AkonadiStarter::start()
   QCoreApplication::instance()->exec();
 
   if ( !mRegistered ) {
-    qDebug( "Error: akonadi_control was started but didn't register at D-Bus session bus." );
-    qDebug( "Make sure your system is set up correctly!" );
+    akError() << "Error: akonadi_control was started but didn't register at D-Bus session bus.";
+    akError() << "Make sure your system is set up correctly!";
     return false;
   }
 
-  qDebug( "   done." );
+  akDebug() << "   done.";
   return true;
 }
 
