@@ -220,12 +220,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   const Node *node = reinterpret_cast<Node *>( index.internalPointer() );
 
   if ( ParentCollectionRole == role && d->m_collectionFetchStrategy != FetchNoCollections ) {
-    if ( !d->m_collections.isEmpty() ) {
-      const Collection parentCollection = d->m_collections.value( node->parent );
-      Q_ASSERT( parentCollection.isValid() );
+    const Collection parentCollection = d->m_collections.value( node->parent );
+    Q_ASSERT( parentCollection.isValid() );
 
-      return QVariant::fromValue( parentCollection );
-    }
+    return QVariant::fromValue( parentCollection );
   }
 
   if ( Node::Collection == node->type ) {
