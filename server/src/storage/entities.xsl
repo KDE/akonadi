@@ -39,6 +39,7 @@
 #define AKONADI_ENTITIES_H
 #include &lt;storage/entity.h&gt;
 
+#include &lt;akdebug.h&gt;
 #include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;
 #include &lt;QtCore/QString&gt;
