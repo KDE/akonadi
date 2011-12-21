@@ -36,7 +36,11 @@ QDebug akError();
 /**
  * Writes a debug message to stdout/err.
  */
+#ifndef QT_NO_DEBUG_STREAM
 QDebug akDebug();
+#else
+inline QNoDebug akDebug() { return QNoDebug(); }
+#endif
 
 /**
  * Init and rotate error logs.

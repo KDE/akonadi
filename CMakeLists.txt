@@ -132,6 +132,12 @@ endif(NOT QT_QTSQL_FOUND)
 # properly set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...)
 include(${QT_USE_FILE})
 
+# Missing in FindQt4.cmake until Dec 2011: setting QT_NO_DEBUG_OUTPUT
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
+if (NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
+   add_definitions(-DQT_NO_DEBUG_OUTPUT)
+endif()
+
 if(WINCE)
     find_package(Wcecompat REQUIRED)
     SET(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)

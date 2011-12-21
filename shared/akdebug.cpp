@@ -101,8 +101,10 @@ class DebugPrivate
     QDebug stream( QtMsgType type )
     {
       QMutexLocker locker( &mutex );
+#ifndef QT_NO_DEBUG_OUTPUT
       if ( type == QtDebugMsg )
         return qDebug();
+#endif
       fileStream->setType( type );
       return QDebug( fileStream );
     }
@@ -131,10 +133,12 @@ QDebug akError()
   return sInstance()->stream( QtCriticalMsg );
 }
 
+#ifndef QT_NO_DEBUG_OUTPUT
 QDebug akDebug()
 {
   return sInstance()->stream( QtDebugMsg );
 }
+#endif
 
 void akInit( const QString &appName )
 {
