@@ -347,7 +347,7 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
   statement.append( tableName() );
   query.prepare( statement );
   if ( !query.exec() ) {
-    qDebug() &lt;&lt; "Error during selection of all records from table" &lt;&lt; tableName()
+    akDebug() &lt;&lt; "Error during selection of all records from table" &lt;&lt; tableName()
       &lt;&lt; query.lastError().text();
     return QVector&lt;<xsl:value-of select="$className"/>&gt;();
   }
@@ -366,7 +366,7 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
   else
     qb.addValueCondition( key, Query::Equals, value );
   if ( !qb.exec() ) {
-    qDebug() &lt;&lt; "Error during selection of records from table" &lt;&lt; tableName()
+    akDebug() &lt;&lt; "Error during selection of records from table" &lt;&lt; tableName()
       &lt;&lt; "filtered by" &lt;&lt; key &lt;&lt; "=" &lt;&lt; value
       &lt;&lt; qb.query().lastError().text();
     return QVector&lt;<xsl:value-of select="$className"/>&gt;();
@@ -420,7 +420,7 @@ QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$c
   query.prepare( statement );
   query.bindValue( QLatin1String(":key"), id() );
   if ( !query.exec() ) {
-    qDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
+    akDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
       &lt;&lt; query.lastError().text();
     return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
   }
@@ -504,7 +504,7 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
   </xsl:for-each>
 
   if ( !qb.exec() ) {
-    qDebug() &lt;&lt; "Error during insertion into table" &lt;&lt; tableName()
+    akDebug() &lt;&lt; "Error during insertion into table" &lt;&lt; tableName()
       &lt;&lt; qb.query().lastError().text();
     return false;
   }
@@ -563,7 +563,7 @@ bool <xsl:value-of select="$className"/>::update()
   query.bindValue( QLatin1String(":id"), id() );
   </xsl:if>
   if ( !query.exec() ) {
-    qDebug() &lt;&lt; "Error during updating record with id" &lt;&lt; id()
+    akDebug() &lt;&lt; "Error during updating record with id" &lt;&lt; id()
              &lt;&lt; " in table" &lt;&lt; tableName() &lt;&lt; query.lastError().text();
     return false;
   }

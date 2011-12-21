@@ -298,7 +298,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
   preProcessorManager.unregisterInstance( instance->identifier() );
 
   if ( instance->hasAgentInterface() ) {
-    qDebug() << "AgentManager::removeAgentInstance: calling instance->quit()";
+    akDebug() << "AgentManager::removeAgentInstance: calling instance->quit()";
     instance->quit();
   } else {
     akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
@@ -476,8 +476,8 @@ void AgentManager::readPluginInfos()
 void AgentManager::readPluginInfos( const QDir &directory )
 {
   const QStringList files = directory.entryList();
-  qDebug() << "PLUGINS: " << directory.canonicalPath();
-  qDebug() << "PLUGINS: " << files;
+  akDebug() << "PLUGINS: " << directory.canonicalPath();
+  akDebug() << "PLUGINS: " << files;
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 
@@ -490,7 +490,7 @@ void AgentManager::readPluginInfos( const QDir &directory )
 
       const QString disableAutostart = getEnv( "AKONADI_DISABLE_AGENT_AUTOSTART" );
       if ( !disableAutostart.isEmpty() ) {
-        qDebug() << "Autostarting of agents is disabled.";
+        akDebug() << "Autostarting of agents is disabled.";
         agentInfo.capabilities.removeOne( AgentType::CapabilityAutostart );
       }
 
@@ -509,7 +509,7 @@ void AgentManager::readPluginInfos( const QDir &directory )
 #endif
       }
 
-      qDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
+      akDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
       mAgents.insert( agentInfo.identifier, agentInfo );
     }
   }
@@ -588,7 +588,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
   // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
   // and this is where we "hook up" our different Agent interfaces.
 
-  //qDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
+  //akDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
   if ( (name == AkDBus::serviceName(AkDBus::Server) || name == AkDBus::serviceName(AkDBus::AgentServer)) && !newOwner.isEmpty() ) {
     if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) )
@@ -649,10 +649,10 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
       // The order of interface deletions depends on Qt but we handle both cases.
 
       // Check if we "know" about it.
-      qDebug() << "Preprocessor " << agentIdentifier << " is going up or down...";
+      akDebug() << "Preprocessor " << agentIdentifier << " is going up or down...";
 
       if ( !mAgentInstances.contains( agentIdentifier ) ) {
-        qDebug() << "But it isn't registered as agent... not mine (anymore?)";
+        akDebug() << "But it isn't registered as agent... not mine (anymore?)";
         return; // not our agent (?)
       }
 
@@ -678,13 +678,13 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
           if ( !mAgentInstances.value( agentIdentifier )->obtainPreprocessorInterface() ) {
             // Hm.. couldn't hook up its preprocessor interface..
             // Make sure we don't have it in the preprocessor chain
-            qWarning() << "Couldn't obtain preprocessor interface for instance " << agentIdentifier;
+            qWarning() << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
 
             preProcessorManager.unregisterInstance( agentIdentifier );
             return;
           }
 
-          qDebug() << "Registering preprocessor instance " << agentIdentifier;
+          akDebug() << "Registering preprocessor instance" << agentIdentifier;
 
           // Add to the preprocessor chain
           preProcessorManager.registerInstance( agentIdentifier );
@@ -798,7 +798,7 @@ void AgentManager::registerAgentAtServer( const QString &agentIdentifier, const 
 
 void AgentManager::addSearch( const QString &query, const QString &queryLanguage, qint64 resultCollectionId )
 {
-  qDebug() << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
+  akDebug() << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
   foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     const AgentType type = mAgents.value( instance->agentType() );
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
@@ -808,7 +808,7 @@ void AgentManager::addSearch( const QString &query, const QString &queryLanguage
 
 void AgentManager::removeSearch( quint64 resultCollectionId )
 {
-  qDebug() << "AgentManager::removeSearch" << resultCollectionId;
+  akDebug() << "AgentManager::removeSearch" << resultCollectionId;
   foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     const AgentType type = mAgents.value( instance->agentType() );
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
@@ -818,7 +818,7 @@ void AgentManager::removeSearch( quint64 resultCollectionId )
 
 void AgentManager::agentServerFailure()
 {
-  qDebug() << "Failed to start AgentServer!";
+  akError() << "Failed to start AgentServer!";
   // if ( requiresAgentServer )
   //   QCoreApplication::instance()->exit( 255 );
 }

@@ -141,7 +141,7 @@ bool Append::commit()
     // If we have active preprocessors then we also set the hidden attribute
     // for the UI and we enqueue the item for preprocessing.
     bool doPreprocessing = PreprocessorManager::instance()->isActive();
-    //qDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
+    //akDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
     if ( doPreprocessing )
     {
       Part hiddenAttribute;

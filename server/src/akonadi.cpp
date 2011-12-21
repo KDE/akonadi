@@ -239,7 +239,7 @@ void AkonadiServer::quit()
       return;
     mAlreadyShutdown = true;
 
-    qDebug() << "terminating service threads";
+    akDebug() << "terminating service threads";
     quitThread( mCacheCleaner );
     quitThread( mIntervalChecker );
     quitThread( mStorageJanitor );
@@ -248,7 +248,7 @@ void AkonadiServer::quit()
     delete mSearchManager;
     mSearchManager = 0;
 
-    qDebug() << "terminating connection threads";
+    akDebug() << "terminating connection threads";
     for ( int i = 0; i < mConnections.count(); ++i )
       quitThread( mConnections[ i ] );
     mConnections.clear();
@@ -259,7 +259,7 @@ void AkonadiServer::quit()
     DataStore::self()->close();
     Q_ASSERT( QSqlDatabase::connectionNames().isEmpty() );
 
-    qDebug() << "stopping db process";
+    akDebug() << "stopping db process";
     stopDatabaseProcess();
 
     QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );

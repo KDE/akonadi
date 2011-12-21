@@ -19,6 +19,7 @@
 */
 
 #include "notificationmanager.h"
+#include <akdebug.h>
 #include "notificationmanageradaptor.h"
 #include "notificationsource.h"
 #include "tracer.h"
@@ -106,7 +107,7 @@ QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
   NotificationSource *source = mNotificationSources.value( identifier );
   if ( source ) {
     // :TODO: Should this really be a warning?
-    qDebug() << "Known subscriber" << identifier << "subscribes again";
+    akDebug() << "Known subscriber" << identifier << "subscribes again";
     source->addClientServiceName( message().service() );
   } else {
     source = new NotificationSource( identifier, message().service(), this );
@@ -123,7 +124,7 @@ void NotificationManager::unsubscribe( const QString &identifier )
   if ( source ) {
     source->deleteLater();
   } else {
-    qDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
+    akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
   }
 }
 

@@ -94,7 +94,7 @@ void DataStore::open()
   if ( !m_dbOpened )
     debugLastDbError( "Cannot open database." );
   else
-    qDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
+    akDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
 }
 
 void Akonadi::DataStore::close()
@@ -399,7 +399,7 @@ void DataStore::activeCachePolicy(Collection & col)
 bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 {
   if ( MimeType::exists( mimetype ) ) {
-    qDebug() << "Cannot insert mimetype " << mimetype
+    akDebug() << "Cannot insert mimetype " << mimetype
              << " because it already exists.";
     return false;
   }
@@ -446,13 +446,13 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
       if ( (*it).datasize() < (*it).data().size() )
         (*it).setDatasize( (*it).data().size() );
 
-//       qDebug() << "Insert from DataStore::appendPimItem";
+//       akDebug() << "Insert from DataStore::appendPimItem";
       if( !PartHelper::insert(&(*it)) )
         return false;
     }
   }
 
-//   qDebug() << "appendPimItem: " << pimItem;
+//   akDebug() << "appendPimItem: " << pimItem;
 
   mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
   return true;
@@ -463,7 +463,7 @@ bool DataStore::unhidePimItem( PimItem &pimItem )
   if ( !m_dbOpened )
     return false;
 
-  qDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
+  akDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
 
   // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
   QList< QByteArray > parts;
@@ -477,7 +477,7 @@ bool DataStore::unhideAllPimItems()
   if ( !m_dbOpened )
     return false;
 
-  qDebug() << "DataStore::unhideAllPimItems()";
+  akDebug() << "DataStore::unhideAllPimItems()";
 
   return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( "ATR:HIDDEN" ) );
 }
@@ -512,7 +512,7 @@ bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray 
     return false;
 
   if ( qb.result().count() > 0 ) {
-    qDebug() << "Attribute" << key << "already exists for collection" << col.id();
+    akDebug() << "Attribute" << key << "already exists for collection" << col.id();
     return false;
   }
 

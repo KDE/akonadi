@@ -18,6 +18,7 @@
 */
 
 #include "xesamsearchengine.h"
+#include <akdebug.h>
 
 #include "entities.h"
 #include "notificationmanager.h"
@@ -110,7 +111,7 @@ qint64 XesamSearchEngine::searchToCollectionId( const QString& search )
 
 void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 {
-  qDebug() << "hits added: " << search << count;
+  akDebug() << "hits added: " << search << count;
   const qint64 collectionId = searchToCollectionId( search );
 
   if ( collectionId <= 0 || count <= 0 )
@@ -118,10 +119,10 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 
   const Collection collection = Collection::retrieveById( collectionId );
 
-  qDebug() << "calling GetHits";
+  akDebug() << "calling GetHits";
 
   const QVector<QList<QVariant> > results = mInterface->GetHits( search, count );
-  qDebug() << "GetHits returned:" << results.count();
+  akDebug() << "GetHits returned:" << results.count();
 
   typedef QList<QVariant> VariantList;
   foreach ( const VariantList &list, results ) {
@@ -138,7 +139,7 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
       Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
       mCollector->itemLinked( item, collection );
     } else {
-      qDebug() << "Non-existing item referenced in XESAM search. Discarding id:" << itemId;
+      akDebug() << "Non-existing item referenced in XESAM search. Discarding id:" << itemId;
     }
   }
 
@@ -147,7 +148,7 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
 
 void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint> &hits )
 {
-  qDebug() << "hits removed: " << search << hits;
+  akDebug() << "hits removed: " << search << hits;
   const qint64 collectionId = searchToCollectionId( search );
 
   if ( collectionId <= 0 )
@@ -174,7 +175,7 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
 
 void XesamSearchEngine::slotHitsModified( const QString &search, const QList<uint> &hits )
 {
-  qDebug() << "hits modified: " << search << hits;
+  akDebug() << "hits modified: " << search << hits;
 }
 
 void XesamSearchEngine::reloadSearches()
@@ -190,11 +191,11 @@ void XesamSearchEngine::reloadSearches()
     mMutex.lock();
     if ( mInvSearchMap.contains( collection.id() ) ) {
       mMutex.unlock();
-      qDebug() << "updating search" << collection.name();
+      akDebug() << "updating search" << collection.name();
       removeSearch( collection.id() );
     } else  {
       mMutex.unlock();
-      qDebug() << "adding search" << collection.name();
+      akDebug() << "adding search" << collection.name();
     }
     addSearch( collection );
   }
@@ -212,7 +213,7 @@ void XesamSearchEngine::addSearch( const Collection &collection )
   if ( searchString.isEmpty() )
     return;
   const QString searchId = mInterface->NewSearch( mSession, searchString );
-  qDebug() << "XesamSearchEngine::addSearch" << collection.name() << searchId << searchString;
+  akDebug() << "XesamSearchEngine::addSearch" << collection.name() << searchId << searchString;
 
   mMutex.lock();
   mSearchMap.insert( searchId, collection.id() );
@@ -253,7 +254,7 @@ void XesamSearchEngine::stopSearches()
   }
 
   Q_FOREACH ( const Collection &collection, qb.result() ) {
-    qDebug() << "removing search" << collection.name();
+    akDebug() << "removing search" << collection.name();
     removeSearch( collection.id() );
   }
 }
@@ -263,7 +264,7 @@ void XesamSearchEngine::slotSearchDone(const QString &search)
   // If we get a search done signal, this is not a live search
   // so we can stop monitoring it. This is to avoid getting
   // spurious hits for already finished searches.
-  qDebug() << "search done" << search;
+  akDebug() << "search done" << search;
   if ( mSearchMap.contains( search ) )
     mInterface->CloseSearch( search );
 }

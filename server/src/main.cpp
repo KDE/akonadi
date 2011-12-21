@@ -45,7 +45,7 @@ namespace po = boost::program_options;
 
 void shutdownHandler( int )
 {
-  qDebug( "Shutting down AkonadiServer..." );
+  akDebug() << "Shutting down AkonadiServer...";
 
   Akonadi::AkonadiServer::instance()->quit();
 
@@ -70,7 +70,7 @@ int main( int argc, char ** argv )
 #endif
 
     app.parseCommandLine();
-    
+
     //Needed for wince build
     #undef interface
 

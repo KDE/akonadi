@@ -178,7 +178,7 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   query.prepare( statement );
   query.bindValue( QLatin1String(":key"), <xsl:value-of select="$key"/> );
   if ( !query.exec() ) {
-    qDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
+    akDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
       &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()
       &lt;&lt; query.lastError().text();
     return <xsl:value-of select="$className"/>();

@@ -26,6 +26,7 @@
 #include <storage/transaction.h>
 #include <storage/collectionqueryhelper.h>
 #include <storage/selectquerybuilder.h>
+#include <akdebug.h>
 
 namespace Akonadi {
 
@@ -51,7 +52,7 @@ bool ColMove::parseStream()
 
   Scope destScope( m_scope.scope() );
   destScope.parseScope( m_streamParser );
-  qDebug() << destScope.uidSet().toImapSequenceSet();
+  akDebug() << destScope.uidSet().toImapSequenceSet();
   const Collection target = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
 
   if ( source.parentId() == target.id() )

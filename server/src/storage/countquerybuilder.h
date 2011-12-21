@@ -21,6 +21,7 @@
 #define AKONADI_COUNTQUERYBUILDER_H
 
 #include "storage/querybuilder.h"
+#include "akdebug.h"
 
 #include <QDebug>
 #include <QSqlError>
@@ -69,7 +70,7 @@ class CountQueryBuilder : public QueryBuilder
     inline int result()
     {
       if ( !query().next() ) {
-        qDebug() << "Error during retrieving result of query:" << query().lastError().text();
+        akDebug() << "Error during retrieving result of query:" << query().lastError().text();
         return -1;
       }
       return query().value( 0 ).toInt();

@@ -81,7 +81,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const
   const QString resourceId = AkDBus::parseAgentServiceName( serviceName, type );
   if ( resourceId.isEmpty() || type != AkDBus::Resource )
     return;
-  qDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
+  akDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
   mResourceInterfaces.remove( resourceId );
 }
 
@@ -99,7 +99,7 @@ OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(
   iface = new OrgFreedesktopAkonadiResourceInterface( AkDBus::agentServiceName( id, AkDBus::Resource ),
                                                       QLatin1String("/"), mDBusConnection, this );
   if ( !iface || !iface->isValid() ) {
-    qDebug() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
+    akError() << QString::fromLatin1( "Cannot connect to agent instance with identifier '%1', error message: '%2'" )
                                     .arg( id, iface ? iface->lastError().message() : QString() );
     delete iface;
     return 0;
@@ -125,7 +125,7 @@ void ItemRetrievalManager::requestItemDelivery( qint64 uid, const QByteArray& re
 void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
 {
   mLock->lockForWrite();
-  qDebug() << "posting retrieval request for item" << req->id << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ req->resourceId ].size() << " items in mine";
+  akDebug() << "posting retrieval request for item" << req->id << " there are " << mPendingRequests.size() << " queues and " << mPendingRequests[ req->resourceId ].size() << " items in mine";
   mPendingRequests[ req->resourceId ].append( req );
   mLock->unlock();
 
@@ -133,23 +133,23 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
 
   mLock->lockForRead();
   forever {
-    //qDebug() << "checking if request for item" << req->id << "has been processed...";
+    //akDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       boost::scoped_ptr<ItemRetrievalRequest> reqDeleter( req );
       Q_ASSERT( !mPendingRequests[ req->resourceId ].contains( req ) );
       const QString errorMsg = req->errorMsg;
       mLock->unlock();
       if ( errorMsg.isEmpty() ) {
-        qDebug() << "request for item" << req->id << "succeeded";
+        akDebug() << "request for item" << req->id << "succeeded";
         return;
       } else {
-        qDebug() << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
+        akDebug() << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
         throw ItemRetrieverException( errorMsg );
       }
     } else {
-      qDebug() << "request for item" << req->id << "still pending - waiting";
+      akDebug() << "request for item" << req->id << "still pending - waiting";
       mWaitCondition->wait( mLock );
-      qDebug() << "continuing";
+      akDebug() << "continuing";
     }
   }
 
@@ -203,7 +203,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
   // TODO check if (*it)->parts is a subset of currentRequest->parts
   for ( QList<ItemRetrievalRequest*>::Iterator it = mPendingRequests[ request->resourceId ].begin(); it != mPendingRequests[ request->resourceId ].end(); ) {
     if ( (*it)->id == request->id ) {
-      qDebug() << "someone else requested item" << request->id << "as well, marking as processed";
+      akDebug() << "someone else requested item" << request->id << "as well, marking as processed";
       (*it)->errorMsg = errorMsg;
       (*it)->processed = true;
       it = mPendingRequests[ request->resourceId ].erase( it );

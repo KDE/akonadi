@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "store.h"
+#include <akdebug.h>
 
 #include "akonadi.h"
 #include "akonadiconnection.h"
@@ -88,7 +89,7 @@ bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags, bool&
   DataStore *store = connection()->storageBackend();
 
   if ( !store->appendItemFlags( item, flagList, flagsChanged ) ) {
-    qDebug( "Store::addFlags: Unable to add new item flags" );
+    akDebug() << "Store::addFlags: Unable to add new item flags";
     return false;
   }
   return true;
@@ -109,7 +110,7 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
   }
 
   if ( !store->removeItemFlags( item, flagList ) ) {
-    qDebug( "Store::deleteFlags: Unable to remove item flags" );
+    akDebug() << "Store::deleteFlags: Unable to remove item flags";
     return false;
   }
   return true;
@@ -171,7 +172,7 @@ bool Store::parseStream()
       command.chop( 7 );
       silent = true;
     }
-//     qDebug() << "STORE: handling command: " << command;
+//     akDebug() << "STORE: handling command: " << command;
 
 
     // handle commands that can be applied to more than one item
@@ -284,12 +285,12 @@ bool Store::parseStream()
           // this will give us a proper filename to stream the rest of the parts contents into
           // NOTE: we have to set the correct size (== dataSize) directly
           value = m_streamParser->readLiteralPart();
-         // qDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
+         // akDebug() << Q_FUNC_INFO << "VALUE in STORE: " << value << value.size() << dataSize;
 
           if ( part.isValid() ) {
             PartHelper::update( &part, value, dataSize );
           } else {
-//             qDebug() << "insert from Store::handleLine";
+//             akDebug() << "insert from Store::handleLine";
             part.setData( value );
             part.setDatasize( dataSize );
             if ( !PartHelper::insert( &part ) )
@@ -331,7 +332,7 @@ bool Store::parseStream()
         if ( part.isValid() ) {
           PartHelper::update( &part, value, value.size() );
         } else {
-//           qDebug() << "insert from Store::handleLine: " << value.left(100);
+//           akDebug() << "insert from Store::handleLine: " << value.left(100);
           part.setData( value );
           part.setDatasize( value.size() );
           if ( !PartHelper::insert( &part ) )

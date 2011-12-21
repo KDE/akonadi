@@ -83,7 +83,7 @@ DbInitializer::~DbInitializer()
 
 bool DbInitializer::run()
 {
-  qDebug() << "DbInitializer::run()";
+  akDebug() << "DbInitializer::run()";
 
   QFile file( mTemplateFile );
   if ( !file.open( QIODevice::ReadOnly ) ) {
@@ -123,7 +123,7 @@ bool DbInitializer::run()
     tableElement = tableElement.nextSiblingElement();
   }
 
-  qDebug() << "DbInitializer::run() done";
+  akDebug() << "DbInitializer::run() done";
   return true;
 }
 
@@ -204,7 +204,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 {
   const QString tableName = element.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
 
-  qDebug() << "checking table " << tableName;
+  akDebug() << "checking table " << tableName;
 
   // Parse the abstract table description from XML file
   const TableDescription tableDescription = parseTableDescription( element );
@@ -215,7 +215,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   QSqlQuery query( mDatabase );
 
   if ( !hasTable( tableName ) ) {
-    qDebug() << createTableStatement;
+    akDebug() << createTableStatement;
 
     // We have to create the entire table.
     if ( !query.exec( createTableStatement ) ) {
@@ -243,7 +243,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
-        qDebug() << statement;
+        akDebug() << statement;
 
         if ( !query.exec( statement ) ) {
           mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableName );
@@ -265,7 +265,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
 
       QSqlQuery query( mDatabase );
-      qDebug() << "adding index" << statement;
+      akDebug() << "adding index" << statement;
       if ( !query.exec( statement ) ) {
         mErrorMsg = QLatin1String( "Unable to create index.\n" );
         mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
@@ -289,7 +289,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     foreach ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
       const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );
-      qDebug() << statement;
+      akDebug() << statement;
 
       if ( !query.exec( statement ) ) {
         mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableName );
@@ -311,11 +311,11 @@ bool DbInitializer::checkRelation( const QDomElement &element )
                                     relationDescription.secondTable +
                                     QLatin1String( "Relation" );
 
-  qDebug() << "checking relation " << relationTableName;
+  akDebug() << "checking relation " << relationTableName;
 
   if ( !hasTable( relationTableName ) ) {
     const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
-    qDebug() << statement;
+    akDebug() << statement;
 
     QSqlQuery query( mDatabase );
     if ( !query.exec( statement ) ) {

@@ -24,6 +24,7 @@
 #include <QtCore/QUrl>
 #include <QMetaObject>
 
+#include <akdebug.h>
 #include "src/nepomuk/result.h"
 
 #include "entities.h"
@@ -66,7 +67,7 @@ NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
     reloadSearches();
   } else {
     // FIXME: try to start the nepomuk server
-    qDebug() << "Nepomuk Query Server not available";
+    akError() << "Nepomuk Query Server not available";
   }
 }
 
@@ -117,7 +118,7 @@ void NepomukSearchEngine::removeSearch( qint64 collectionId )
 
 void NepomukSearchEngine::reloadSearches()
 {
-  qDebug() << this << sender();
+  akDebug() << this << sender();
   SelectQueryBuilder<Collection> qb;
   qb.addValueCondition( Collection::queryLanguageFullColumnName(), Query::Equals, QLatin1String( "SPARQL" ) );
   if ( !qb.exec() ) {
@@ -129,11 +130,11 @@ void NepomukSearchEngine::reloadSearches()
     mMutex.lock();
     if ( mQueryInvMap.contains( collection.id() ) ) {
       mMutex.unlock();
-      qDebug() << "updating search" << collection.name();
+      akDebug() << "updating search" << collection.name();
       removeSearch( collection.id() );
     } else  {
       mMutex.unlock();
-      qDebug() << "adding search" << collection.name();
+      akDebug() << "adding search" << collection.name();
     }
     addSearch( collection );
   }
@@ -149,7 +150,7 @@ void NepomukSearchEngine::stopSearches()
   }
 
   Q_FOREACH ( const Collection &collection, qb.result() ) {
-    qDebug() << "removing search" << collection.name();
+    akDebug() << "removing search" << collection.name();
     removeSearch( collection.id() );
   }
 }

@@ -18,6 +18,7 @@
 */
 
 #include "notificationsource.h"
+#include <akdebug.h>
 
 #include "notificationsourceadaptor.h"
 
@@ -79,7 +80,7 @@ QString NotificationSource::identifier() const
 
 void NotificationSource::unsubscribe()
 {
-  qDebug() << Q_FUNC_INFO << mIdentifier;
+  akDebug() << Q_FUNC_INFO << mIdentifier;
   mManager->unsubscribe( mIdentifier );
 }
 
@@ -88,13 +89,13 @@ void NotificationSource::addClientServiceName(const QString& clientServiceName)
   if ( mClientWatcher->watchedServices().contains( clientServiceName ) )
     return;
   mClientWatcher->addWatchedService( clientServiceName );
-  qDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+  akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
 }
 
 void NotificationSource::serviceUnregistered(const QString& serviceName)
 {
   mClientWatcher->removeWatchedService( serviceName );
-  qDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+  akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
   if ( mClientWatcher->watchedServices().isEmpty() )
     unsubscribe();
 }

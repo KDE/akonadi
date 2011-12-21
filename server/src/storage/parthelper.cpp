@@ -19,6 +19,7 @@
  ***************************************************************************/
 
 #include "parthelper.h"
+#include <akdebug.h>
 #include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
@@ -128,14 +129,14 @@ bool PartHelper::insert( Part *part, qint64* insertId )
         part->setData( fileName.toLocal8Bit() );
         result = part->update();
       } else {
-        qDebug() << "Insert: payload file " << fileName << " could not be written to!";
-        qDebug() << "Error: " << file.errorString();
+        akError() << "Insert: payload file " << fileName << " could not be written to!";
+        akError() << "Error: " << file.errorString();
         return false;
       }
       file.close();
     } else {
-      qDebug() << "Insert: payload file " << fileName << " could not be open for writing!";
-      qDebug() << "Error: " << file.errorString();
+      akError() << "Insert: payload file " << fileName << " could not be open for writing!";
+      akError() << "Error: " << file.errorString();
       return false;
     }
   }
@@ -148,7 +149,7 @@ bool PartHelper::remove( Akonadi::Part *part )
     return false;
 
   if ( part->external() ) {
-    // qDebug() << "remove part file " << part->data();
+    // akDebug() << "remove part file " << part->data();
     const QString fileName = QString::fromUtf8( part->data() );
     QFile::remove( fileName );
   }
@@ -162,7 +163,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   builder.addValueCondition( Part::externalColumn(), Query::Equals, true );
   builder.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   if ( !builder.exec() ) {
-//      qDebug() << "Error selecting records to be deleted from table"
+//      akDebug() << "Error selecting records to be deleted from table"
 //          << Part::tableName() << builder.query().lastError().text();
     return false;
   }
@@ -172,7 +173,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   for ( ; it != end; ++it )
   {
     const QString fileName = QString::fromUtf8( (*it).data() );
-    // qDebug() << "remove part file " << fileName;
+    // akDebug() << "remove part file " << fileName;
     QFile::remove( fileName );
   }
   return Part::remove( column, value );
@@ -188,8 +189,8 @@ QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
       file.close();
       return payload;
     } else {
-      qDebug() << "Payload file " << fileName << " could not be open for reading!";
-      qDebug() << "Error: " << file.errorString();
+      akError() << "Payload file " << fileName << " could not be open for reading!";
+      akError() << "Error: " << file.errorString();
       return QByteArray();
     }
   } else {

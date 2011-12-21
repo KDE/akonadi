@@ -88,7 +88,7 @@ bool HandlerHelper::itemStatistics(const Akonadi::Collection& col, qint64& count
   if ( !qb.exec() )
     return false;
   if ( !qb.query().next() ) {
-    qDebug() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
+    akError() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
     return false;
   }
   count = qb.query().value( 0 ).toLongLong();

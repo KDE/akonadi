@@ -17,6 +17,7 @@
 */
 
 #include "queryserviceclient.h"
+#include <akdebug.h>
 #include "dbusoperators.h"
 #include "result.h"
 #include "queryserviceinterface.h"
@@ -133,7 +134,7 @@ bool Nepomuk::Query::QueryServiceClient::Private::handleQueryReply( QDBusReply<Q
         return true;
     }
     else {
-        qDebug() << "Query failed:" << r.error().message();
+        akError() << "Query failed:" << r.error().message();
         return false;
     }
 }
@@ -170,7 +171,7 @@ bool Nepomuk::Query::QueryServiceClient::query( const QString& query )
         return d->handleQueryReply( d->queryServiceInterface->sparqlQuery( query, QHash<QString, QString>() ) );
     }
     else {
-        qDebug() << "Could not contact query service.";
+        akDebug() << "Could not contact query service.";
         return false;
     }
 }
@@ -194,7 +195,7 @@ bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q )
 void Nepomuk::Query::QueryServiceClient::close()
 {
     if ( d->queryInterface ) {
-        qDebug() << Q_FUNC_INFO;
+        akDebug() << Q_FUNC_INFO;
         d->queryInterface->close();
         delete d->queryInterface;
         d->queryInterface = 0;

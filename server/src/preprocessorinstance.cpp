@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include "preprocessorinstance.h"
+#include <akdebug.h>
 #include "preprocessorinterface.h"
 #include "preprocessormanager.h"
 
@@ -89,7 +90,7 @@ bool PreprocessorInstance::init()
 
 void PreprocessorInstance::enqueueItem( qint64 itemId )
 {
-  qDebug() << "PreprocessorInstance::enqueueItem(" << itemId << ")";
+  akDebug() << "PreprocessorInstance::enqueueItem(" << itemId << ")";
 
   mItemQueue.push_back( itemId );
 
@@ -140,7 +141,7 @@ void PreprocessorInstance::processHeadItem()
 
   // Ok.. got a valid item to process: collection and mimetype is known.
 
-  qDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
+  akDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
 
   mBusy = true;
 
@@ -149,7 +150,7 @@ void PreprocessorInstance::processHeadItem()
   // The beginProcessItem() D-Bus call is asynchronous (marked with NoReply attribute)
   mInterface->beginProcessItem( itemId, actualItem.collectionId(), actualItem.mimeType().name() );
 
-  qDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
+  akDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
 
 }
 
@@ -221,7 +222,7 @@ bool PreprocessorInstance::invokeRestart()
 
 void PreprocessorInstance::itemProcessed( qlonglong id )
 {
-  qDebug() << "PreprocessorInstance::itemProcessed(" << id << ")";
+  akDebug() << "PreprocessorInstance::itemProcessed(" << id << ")";
 
   // We shouldn't be called if there are no items in the queue
   if( mItemQueue.empty() )

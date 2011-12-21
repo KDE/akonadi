@@ -23,6 +23,7 @@
  *****************************************************************************/
 
 #include "preprocessormanager.h"
+#include <akdebug.h>
 
 #include "entities.h" // Akonadi::PimItem
 #include "storage/datastore.h"
@@ -135,7 +136,7 @@ void PreprocessorManager::registerInstance( const QString &id )
 {
   QMutexLocker locker( mMutex );
 
-  qDebug() << "PreprocessorManager::registerInstance(" << id << ")";
+  akDebug() << "PreprocessorManager::registerInstance(" << id << ")";
 
   PreprocessorInstance * instance = lockedFindInstance( id );
   if( instance )
@@ -157,7 +158,7 @@ void PreprocessorManager::registerInstance( const QString &id )
     return;
   }
 
-  qDebug() << "Registering preprocessor instance " << id;
+  akDebug() << "Registering preprocessor instance " << id;
 
   mPreprocessorChain.append( instance );
 }
@@ -166,7 +167,7 @@ void PreprocessorManager::unregisterInstance( const QString &id )
 {
   QMutexLocker locker( mMutex );
 
-  qDebug() << "PreprocessorManager::unregisterInstance(" << id << ")";
+  akDebug() << "PreprocessorManager::unregisterInstance(" << id << ")";
 
   lockedUnregisterInstance( id );
 }
@@ -240,7 +241,7 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
 
   if( dataStore->inTransaction() )
   {
-    qDebug() << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
+    akDebug() << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
 
     // The calling thread data store is in a transaction: push the item into a wait queue
     std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
@@ -302,14 +303,14 @@ void PreprocessorManager::lockedKillWaitQueue( const DataStore * dataStore, bool
   QObject::disconnect( dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()) );
   QObject::disconnect( dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()) );
   QObject::disconnect( dataStore, SIGNAL(transactionRolledBack()), this, SLOT(dataStoreTransactionRolledBack()) );
-  
+
 }
 
 void PreprocessorManager::dataStoreDestroyed()
 {
   QMutexLocker locker( mMutex );
 
-  qDebug() << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
+  akDebug() << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
 
   const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
   if( !dataStore )
@@ -325,7 +326,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 {
   QMutexLocker locker( mMutex );
 
-  qDebug() << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
+  akDebug() << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
 
 
   const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
@@ -359,7 +360,7 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 {
   QMutexLocker locker( mMutex );
 
-  qDebug() << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
+  akDebug() << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
 
   const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
   if( !dataStore )
@@ -403,7 +404,7 @@ void PreprocessorManager::lockedEndHandleItem( qint64 itemId )
     // HUM... the preprocessor killed the item ?
     // ... or retrieveById() failed ?
     // Well.. if the preprocessor killed the item then this might be actually OK (spam?).
-    qDebug() << "Invalid PIM item id '" << itemId << "' passed to preprocessing chain termination function";
+    akDebug() << "Invalid PIM item id '" << itemId << "' passed to preprocessing chain termination function";
     return;
   }
 
@@ -411,7 +412,7 @@ void PreprocessorManager::lockedEndHandleItem( qint64 itemId )
   if ( !item.hidden() )
   {
     // HUM... the item was already unhidden for some reason: we have nothing more to do here.
-    qDebug() << "The PIM item with id '" << itemId << "' reached the preprocessing chain termination function in unhidden state";
+    akDebug() << "The PIM item with id '" << itemId << "' reached the preprocessing chain termination function in unhidden state";
     return;
   }
 #endif

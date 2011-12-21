@@ -18,6 +18,7 @@
 */
 
 #include "cachecleaner.h"
+#include <akdebug.h>
 #include "storage/parthelper.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
@@ -83,12 +84,12 @@ void CacheCleaner::cleanCache()
     const Part::List parts = qb.result();
     if ( parts.isEmpty() )
       continue;
-    qDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
+    akDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
 
     // clear data field
     foreach ( Part part, parts ) {
       if ( !PartHelper::truncate( part ) )
-        qDebug() << "failed to update item part" << part.id();
+        akDebug() << "failed to update item part" << part.id();
     }
     loopsWithExpiredItem++;
   }

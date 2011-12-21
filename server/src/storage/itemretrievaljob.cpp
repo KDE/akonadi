@@ -18,6 +18,7 @@
 */
 
 #include "itemretrievaljob.h"
+#include <akdebug.h>
 #include "itemretrievalrequest.h"
 
 #include <qdbusabstractinterface.h>
@@ -33,7 +34,7 @@ ItemRetrievalJob::~ItemRetrievalJob()
 void ItemRetrievalJob::start(QDBusAbstractInterface* interface)
 {
   Q_ASSERT( m_request );
-  qDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+  akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
 
   // call the resource
   if ( interface ) {
