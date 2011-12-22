@@ -287,7 +287,7 @@ void History::Private::stackEntry( const Entry::Ptr &entry, uint atomicOperation
 
   if ( mOperationTypeInProgress == TypeNone ) {
     if ( entryToPush ) {
-      mUndoStack.push( entry );
+      mUndoStack.push( entryToPush );
     }
     mRedoStack.clear();
   } else {
