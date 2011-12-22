@@ -471,6 +471,7 @@ bool <xsl:value-of select="$className"/>::clear<xsl:value-of select="@table2"/>s
 
 </xsl:for-each>
 
+#ifndef QT_NO_DEBUG_STREAM
 // debug stream operator
 QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$className"/>&amp; entity )
 {
@@ -482,6 +483,7 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
     &lt;&lt; "]";
   return d;
 }
+#endif
 
 // inserting new data
 bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
