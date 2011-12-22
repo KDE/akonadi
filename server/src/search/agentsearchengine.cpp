@@ -25,6 +25,7 @@
 #include "libs/protocol_p.h"
 
 #include <QDBusInterface>
+#include <QDBusError>
 
 void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection)
 {
@@ -40,7 +41,7 @@ void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection
     return;
   }
 
-  akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
+  akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
 void Akonadi::AgentSearchEngine::removeSearch(qint64 id)
@@ -55,5 +56,5 @@ void Akonadi::AgentSearchEngine::removeSearch(qint64 id)
     return;
   }
 
-  akError() << "Failed to connect to agent manager: " << agentMgr.lastError();
+  akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }

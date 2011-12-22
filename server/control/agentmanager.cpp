@@ -664,7 +664,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
         );
 
       if ( !preProcessorManager.isValid() ) {
-        akError() << Q_FUNC_INFO <<"Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError();
+        akError() << Q_FUNC_INFO <<"Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
       } else {
         if ( newOwner.isEmpty() ) {
           // The preprocessor went down. Unregister it on server side.
