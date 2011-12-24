@@ -96,7 +96,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
       ResultCodePermissions, ///< The parent collection doesn't have ACLs for this operation
       ResultCodeUserCanceled, ///< User canceled the operation
       ResultCodeInvalidUserCollection, ///< User somehow chose an invalid collection in the collection dialog ( should not happen )
-      ResultCodeModificationDiscarded ///< A new modification came in, no use in performing this one
+      ResultCodeModificationDiscarded, ///< A new modification came in, no use in performing this one
+      ResultCodeDuplicateId ///< Duplicate Akonadi::Item::Ids must be unique in group operations
     };
 
     /**

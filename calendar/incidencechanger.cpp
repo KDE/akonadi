@@ -522,7 +522,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[d->mLatestAtomicOperationId];
     Q_ASSERT( atomic );
-    atomic->changes.append( change );
+    atomic->addChange( change );
   }
 
   // QueuedConnection because of possible sync exec calls.
@@ -573,6 +573,14 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     }
   }
 
+  if ( !d->allowAtomicOperation( atomicOperationId, change ) ) {
+    const QString errorString = d->showErrorDialog( ResultCodeDuplicateId, parent );
+    change->resultCode = ResultCodeDuplicateId;
+    change->errorString = errorString;
+    d->cancelTransaction();
+    return changeId;
+  }
+
   Item::List itemsToDelete;
   foreach( const Item &item, items ) {
     if ( d->deleteAlreadyCalled( item.id() ) ) {
@@ -614,7 +622,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
   if ( d->mBatchOperationInProgress ) {
     AtomicOperation *atomic = d->mAtomicOperations[atomicOperationId];
     Q_ASSERT( atomic );
-    atomic->changes.append( change );
+    atomic->addChange( change );
   }
 
   foreach( const Item &item, itemsToDelete ) {
@@ -661,6 +669,14 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
   modificationChange->originalItem = originalItem;
   modificationChange->newItem = changedItem;
   d->mChangeById.insert( changeId, change );
+
+  if ( !d->allowAtomicOperation( atomicOperationId, change ) ) {
+    const QString errorString = d->showErrorDialog( ResultCodeDuplicateId, parent );
+    change->resultCode = ResultCodeDuplicateId;
+    change->errorString = errorString;
+    d->cancelTransaction();
+    return changeId;
+  }
 
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
     // rollback is in progress, no more changes allowed.
@@ -742,7 +758,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     if ( hasAtomicOperationId ) {
       AtomicOperation *atomic = mAtomicOperations[atomicOperationId];
       Q_ASSERT( atomic );
-      atomic->changes.append( change );
+      atomic->addChange( change );
     }
 
     mModificationsInProgress[newItem.id()] = change;
@@ -878,8 +894,11 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
                           " and DestinationPolicyNeverAsk was used" );
       break;
     default:
-      Q_ASSERT( false );
-      return QString( i18n( "Unknown error" ) );
+    case IncidenceChanger::ResultCodeDuplicateId:
+      errorString = i18n( "Duplicate item id in a group operation");
+      break;
+    Q_ASSERT( false );
+    return QString( i18n( "Unknown error" ) );
   }
 
   if ( mShowDialogsOnError ) {
@@ -906,6 +925,37 @@ void IncidenceChanger::Private::cleanupTransaction()
     delete mAtomicOperations.take(mLatestAtomicOperationId);
     mBatchOperationInProgress = false;
   }
+}
+
+bool IncidenceChanger::Private::allowAtomicOperation( int atomicOperationId,
+                                                      const Change::Ptr &change ) const
+{
+  bool allow = true;
+  if ( atomicOperationId > 0 ) {
+    Q_ASSERT( mAtomicOperations.contains( atomicOperationId ) );
+    AtomicOperation *operation = mAtomicOperations.value( atomicOperationId );
+
+    if ( change->type == ChangeTypeCreate ) {
+      allow = true;
+    } else if ( change->type == ChangeTypeModify ) {
+      allow = !operation->mItemIdsInOperation.contains( change->newItem.id() );
+    } else if ( change->type == ChangeTypeDelete ) {
+      DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
+      foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
+        if ( operation->mItemIdsInOperation.contains( id ) ) {
+          allow = false;
+          break;
+        }
+      }
+    }
+  }
+
+  if ( !allow ) {
+    kWarning() << "Each change belonging to a group operation"
+               << "must have a different Akonadi::Item::Id";
+  }
+
+  return allow;
 }
 
 /**reimp*/

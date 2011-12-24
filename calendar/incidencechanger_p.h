@@ -98,6 +98,7 @@ namespace Akonadi {
   class ModificationChange : public Change
   {
     public:
+      typedef QSharedPointer<ModificationChange> Ptr;
       ModificationChange( IncidenceChanger *changer, int id, uint atomicOperationId,
                           QWidget *parent ) : Change( changer, id,
                                                       IncidenceChanger::ChangeTypeModify,
@@ -118,6 +119,7 @@ namespace Akonadi {
   class CreationChange : public Change
   {
     public:
+      typedef QSharedPointer<CreationChange> Ptr;
       CreationChange( IncidenceChanger *changer, int id, uint atomicOperationId,
                       QWidget *parent ) : Change( changer, id, IncidenceChanger::ChangeTypeCreate,
                                                   atomicOperationId, parent )
@@ -140,6 +142,7 @@ namespace Akonadi {
   class DeletionChange : public Change
   {
     public:
+      typedef QSharedPointer<DeletionChange> Ptr;
       DeletionChange( IncidenceChanger *changer, int id, uint atomicOperationId,
                       QWidget *parent ) : Change( changer, id, IncidenceChanger::ChangeTypeDelete,
                                                   atomicOperationId, parent )
@@ -162,13 +165,15 @@ namespace Akonadi {
   struct AtomicOperation {
     uint id;
 
+    // To make sure they are not repeated
+    QSet<Akonadi::Item::Id> mItemIdsInOperation;
+
     // After endAtomicOperation() is called we don't accept more changes
     bool endCalled;
 
     // Number of completed changes(jobs)
     int numCompletedChanges;
     Akonadi::TransactionSequence *transaction;
-    QVector<Change::Ptr> changes;
     QString description;
     bool transactionCompleted;
 
@@ -220,7 +225,25 @@ namespace Akonadi {
     {
       return wasRolledback;
     }
+
+    void addChange( const Change::Ptr &change )
+    {
+      if ( change->type == IncidenceChanger::ChangeTypeDelete ) {
+        DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
+        foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
+          Q_ASSERT( !mItemIdsInOperation.contains( id ) );
+          mItemIdsInOperation.insert( id );
+        }
+      } else if ( change->type == IncidenceChanger::ChangeTypeModify ) {
+        Q_ASSERT( !mItemIdsInOperation.contains( change->newItem.id() ) );
+        mItemIdsInOperation.insert( change->newItem.id() );
+      }
+
+      changes << change;
+    }
+
   private:
+    QVector<Change::Ptr> changes;
     bool wasRolledback;
   };
 
@@ -248,6 +271,7 @@ class IncidenceChanger::Private : public QObject
     Akonadi::Job* parentJob( const Change::Ptr & ) const;
     void cancelTransaction();
     void cleanupTransaction();
+    bool allowAtomicOperation( int atomicOperationId, const Change::Ptr &change ) const;
 
   public Q_SLOTS:
     void handleCreateJobResult( KJob* );
