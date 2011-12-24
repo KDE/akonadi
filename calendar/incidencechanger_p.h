@@ -301,9 +301,6 @@ class IncidenceChanger::Private : public QObject
 
     QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
 
-    // Vector of changeIds. List of change ids for which we must emit a recurringModifyFinished()
-    // signal
-    QVector<int> mPendingRecurModifyEmits;
   private:
     IncidenceChanger *q;
 };
