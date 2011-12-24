@@ -400,8 +400,10 @@ namespace Akonadi {
         mChanger->startAtomicOperation();
         mOperationInProgress = TypeUndo;
         Q_ASSERT( !mEntries.isEmpty() );
-        mIndexInProgress = 0;
-        mEntries.first()->doIt( TypeUndo );
+        mFinishedEntries = 0;
+        foreach( const Entry::Ptr &entry, mEntries )
+          entry->doIt( TypeUndo );
+        mChanger->endAtomicOperation();
         return true;
       }
 
@@ -411,8 +413,10 @@ namespace Akonadi {
         mChanger->startAtomicOperation();
         mOperationInProgress = TypeRedo;
         Q_ASSERT( !mEntries.isEmpty() );
-        mIndexInProgress = 0;
-        mEntries.first()->doIt( TypeRedo );
+        mFinishedEntries = 0;
+        foreach( const Entry::Ptr &entry, mEntries )
+          entry->doIt( TypeRedo );
+        mChanger->endAtomicOperation();
         return true;
       }
 
@@ -420,25 +424,19 @@ namespace Akonadi {
       void onEntryFinished( Akonadi::IncidenceChanger::ResultCode resultCode,
                             const QString &errorString )
       {
-        if ( mIndexInProgress == mEntries.count()-1 ||
+        ++mFinishedEntries;
+        if ( mFinishedEntries == mEntries.count() ||
              resultCode != IncidenceChanger::ResultCodeSuccess ) {
           mOperationInProgress = TypeNone;
+          mFinishedEntries = mEntries.count(); // we're done
           emit finished( resultCode, errorString );
-          mChanger->endAtomicOperation();
-        } else {
-          ++mIndexInProgress;
-          if ( mOperationInProgress != TypeNone ) {
-            mEntries.at(mIndexInProgress)->doIt( mOperationInProgress );
-          } else {
-            Q_ASSERT( false );
-          }
         }
       }
     public:
       const uint mAtomicOperationId;
     private:
       Entry::List mEntries;
-      int mIndexInProgress;
+      int mFinishedEntries;
       OperationType mOperationInProgress;
       Q_DISABLE_COPY(MultiEntry)
   };
