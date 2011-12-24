@@ -413,7 +413,7 @@ class CollectionSync::Private
 
     /**
       Deletes the given collection list.
-      @todo optimite delete job to support batch operations
+      @todo optimize delete job to support batch operations
     */
     void deleteLocalCollections( const Collection::List &cols )
     {
