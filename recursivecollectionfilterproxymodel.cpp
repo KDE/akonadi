@@ -104,3 +104,9 @@ QStringList RecursiveCollectionFilterProxyModel::contentMimeTypeInclusionFilters
   Q_D(const RecursiveCollectionFilterProxyModel);
   return d->includedMimeTypes.toList();
 }
+
+int Akonadi::RecursiveCollectionFilterProxyModel::columnCount( const QModelIndex& index ) const
+{
+  // Optimization: we know that we're not changing the number of columns, so skip QSortFilterProxyModel
+  return sourceModel()->columnCount( mapToSource( index ) );
+}

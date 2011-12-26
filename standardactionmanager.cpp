@@ -58,7 +58,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 #include <QtGui/QItemSelectionModel>
-#include <QPointer>
+#include <QWeakPointer>
 
 #include <boost/static_assert.hpp>
 
@@ -310,7 +310,7 @@ class StandardActionManager::Private
         return;
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
-      QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+      QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
       mRecentCollectionsMenu.insert( type, recentCollection );
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
       fillFoldersMenu( mimeTypes,
@@ -328,7 +328,7 @@ class StandardActionManager::Private
            type ==MoveCollectionToMenu )
       {
 
-        QPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+        QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
         const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
         fillFoldersMenu( mimeTypes,
                          type,
@@ -1099,11 +1099,11 @@ class StandardActionManager::Private
 
     void addRecentCollection( Akonadi::Collection::Id id )
     {
-      QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
+      QMapIterator<StandardActionManager::Type, QWeakPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
       while (item.hasNext()) {
         item.next();
-        if ( item.value() ) {
-          item.value()->addRecentCollection( id );
+        if ( item.value().data() ) {
+          item.value().data()->addRecentCollection( id );
         }
       }
     }
@@ -1384,7 +1384,7 @@ class StandardActionManager::Private
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;
     QStringList mCollectionPropertiesPageNames;
-    QMap<StandardActionManager::Type, QPointer<RecentCollectionAction> > mRecentCollectionsMenu;
+    QMap<StandardActionManager::Type, QWeakPointer<RecentCollectionAction> > mRecentCollectionsMenu;
 };
 
 //@endcond

@@ -37,7 +37,7 @@ MarkAsCommand::MarkAsCommand(const Akonadi::MessageStatus &targetStatus, const A
   mInvertMark = invert;
   mFolders = folders;
   mTargetStatus = targetStatus;
-  mFolderListJobCount = mFolders.size();  
+  mFolderListJobCount = mFolders.size();
 }
 
 void MarkAsCommand::slotFetchDone(KJob* job)
@@ -60,15 +60,15 @@ void MarkAsCommand::slotFetchDone(KJob* job)
     if ( mInvertMark ) {
       if ( status & mTargetStatus ) {
         mMessages.append( item );
-      }      
-    } else 
+      }
+    } else
       if (! (status & mTargetStatus) )
       {
         mMessages.append( item );
       }
   }
   if ( mMessages.empty() ) {
-    if( mFolderListJobCount == 0 ) { 
+    if( mFolderListJobCount == 0 ) {
       emitResult( OK );
       return;
     }
@@ -102,8 +102,9 @@ void MarkAsCommand::markMessages()
 {
   mMarkJobCount = 0;
 
-  Q_ASSERT( mTargetStatus.statusFlags().size() == 1 );
-  const Akonadi::Item::Flag flag = *(mTargetStatus.statusFlags().begin());
+  QSet<QByteArray> flags = mTargetStatus.statusFlags();
+  Q_ASSERT( flags.size() == 1 );
+  const Akonadi::Item::Flag flag = *(flags.begin());
   Akonadi::Item::List itemsToModify;
   foreach( const Akonadi::Item &it, mMessages ) {
     Akonadi::Item item( it );

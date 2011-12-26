@@ -631,6 +631,9 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
     parentCollection = parentCollection.parentCollection();
   }
   Q_ASSERT( parentCollection.isValid() );
+  if ( parentCollection == m_rootCollection ) {
+    return;
+  }
 
   if ( !ancestors.isEmpty() ) {
     // Fetch the real ancestors
@@ -643,7 +646,7 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
                 q, SLOT(fetchJobDone(KJob*)) );
   }
 
-  Q_ASSERT( parentCollection != m_rootCollection );
+//  Q_ASSERT( parentCollection != m_rootCollection );
   const QModelIndex parent = indexForCollection( parentCollection );
 
   // Still prepending all collections for now.
@@ -738,7 +741,7 @@ void EntityTreeModelPrivate::monitoredCollectionAdded( const Akonadi::Collection
   if ( !m_collections.contains( parent.id() ) ) {
     // The collection we're interested in is contained in a collection we're not interested in.
     // We download the ancestors of the collection we're interested in to complete the tree.
-    if ( collection != m_rootCollection ) {
+    if ( collection != Collection::root() ) {
       retrieveAncestors( collection );
     }
     return;
@@ -1202,7 +1205,7 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
   const Collection::Id collectionId = job->property( FetchCollectionId() ).value<Collection::Id>();
 
   if ( job->error() ) {
-    kWarning() << "Job error: " << job->errorString() << endl;
+    kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
     KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Fetch Job Error"));
     m_pendingCollectionRetrieveJobs.remove( collectionId );
     return; // let's be safe, otherwise emitting dataChanged will get us into loops
