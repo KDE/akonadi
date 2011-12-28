@@ -43,6 +43,8 @@ enum SignalType {
   NumSignals
 };
 
+Q_DECLARE_METATYPE( QList<Akonadi::IncidenceChanger::ChangeType> )
+
 static bool confirmExists( const Akonadi::Item &item )
 {
   ItemFetchJob *job = new ItemFetchJob( item );
@@ -89,6 +91,7 @@ static Akonadi::Item createItem( const Akonadi::Collection &collection )
   ItemCreateJob *createJob = new ItemCreateJob( i, collection );
 
   Q_ASSERT( createJob->exec() );
+  Q_ASSERT( createJob->item().isValid() );
   return createJob->item();
 }
 
@@ -236,7 +239,6 @@ private Q_SLOTS:
       items << createItem( mCollection ) << createItem( mCollection ) << createItem( mCollection )
             << createItem( mCollection );
       QTest::newRow("four items") << items;
-
     }
 
     void testDeletion()
@@ -325,10 +327,128 @@ private Q_SLOTS:
       // Test that it isn't recorded to history when history is disabled
       mChanger->setHistoryEnabled( false );
       const int changeId2 = mChanger->modifyIncidence( item, originalPayload );
-      mChanger->setHistoryEnabled( false );
+      mChanger->setHistoryEnabled( true );
       QVERIFY( changeId > 0 );
       mKnownChangeIds << changeId2;
       waitForSignals();
+      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE( mHistory->undoCount(), 0 );
+    }
+
+    void testAtomicOperations_data()
+    {
+      QTest::addColumn<Akonadi::Item::List>( "items" );
+      QTest::addColumn<QList<Akonadi::IncidenceChanger::ChangeType> >( "changeTypes" );
+
+      Akonadi::Item::List items;
+      QList<Akonadi::IncidenceChanger::ChangeType> changeTypes;
+      //------------------------------------------------------------------------------------------
+      // Create two incidences, should succeed
+      items << item() << item() ;
+      changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+
+      QTest::newRow( "create two - success " ) << items << changeTypes;
+      //------------------------------------------------------------------------------------------
+      changeTypes.clear();
+      changeTypes << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeModify;
+      items.clear();
+      items << createItem( mCollection ) << createItem( mCollection );
+
+      QTest::newRow( "modify two - success " ) << items << changeTypes;
+      //------------------------------------------------------------------------------------------
+      changeTypes.clear();
+      changeTypes << IncidenceChanger::ChangeTypeDelete << IncidenceChanger::ChangeTypeDelete;
+      QTest::newRow( "delete two - success " ) << items << changeTypes;
+    }
+
+    void testAtomicOperations()
+    {
+      mHistory->clear();
+      QFETCH( Akonadi::Item::List, items );
+      QFETCH( QList<Akonadi::IncidenceChanger::ChangeType>, changeTypes );
+      mChanger->setDefaultCollection( mCollection );
+      mChanger->setRespectsCollectionRights( false );
+      mChanger->setDestinationPolicy( IncidenceChanger::DestinationPolicyNeverAsk );
+      mChanger->startAtomicOperation();
+
+      for( int i=0; i<items.count(); ++i ) {
+        const Akonadi::Item item = items[i];
+        int changeId = -1;
+        switch( changeTypes[i] ) {
+          case IncidenceChanger::ChangeTypeCreate:
+            changeId = mChanger->createIncidence( item.hasPayload()                           ?
+                                                    item.payload<KCalCore::Incidence::Ptr>()  :
+                                                    Incidence::Ptr() );
+            QVERIFY( changeId != -1 );
+            mKnownChangeIds << changeId;
+            ++mPendingSignals[CreationSignal];
+          break;
+          case IncidenceChanger::ChangeTypeDelete:
+            changeId = mChanger->deleteIncidence( item );
+            QVERIFY( changeId != -1 );
+            mKnownChangeIds << changeId;
+            ++mPendingSignals[DeletionSignal];
+          break;
+          case IncidenceChanger::ChangeTypeModify:
+          {
+            QVERIFY( item.isValid() );
+            QVERIFY( item.hasPayload<KCalCore::Incidence::Ptr>() );
+            Incidence::Ptr originalPayload = Incidence::Ptr( item.payload<KCalCore::Incidence::Ptr>()->clone() );
+            item.payload<KCalCore::Incidence::Ptr>()->setSummary( QLatin1String( "Changed" ) );
+            changeId = mChanger->modifyIncidence( item, originalPayload );
+            QVERIFY( changeId != -1 );
+            mKnownChangeIds << changeId;
+            ++mPendingSignals[ModificationSignal];
+          }
+          break;
+          default:
+            QVERIFY( false );
+        }
+      }
+
+      mChanger->endAtomicOperation();
+      waitForSignals();
+
+      QCOMPARE( mHistory->undoCount(), 1 );
+      QCOMPARE( mHistory->redoCount(), 0 );
+
+      mPendingSignals[UndoSignal] = 1;
+      mHistory->undo();
+      waitForSignals();
+      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE( mHistory->redoCount(), 1 );
+
+      // Verify that it got undone
+      for( int i=0; i<items.count(); ++i ) {
+        const Akonadi::Item item = items[i];
+        switch( changeTypes[i] ) {
+          case IncidenceChanger::ChangeTypeCreate:
+            // It changed id, have no way to verify
+          break;
+          case IncidenceChanger::ChangeTypeDelete:
+            QVERIFY( confirmDoesntExists( item ) );
+          break;
+          case IncidenceChanger::ChangeTypeModify:
+            QVERIFY( checkSummary( item, QLatin1String( "random summary" ) ) );
+          break;
+          default:
+            QVERIFY( false );
+        }
+      }
+
+      mPendingSignals[RedoSignal] = 1;
+      mHistory->redo();
+      waitForSignals();
+      QCOMPARE( mHistory->undoCount(), 1 );
+      QCOMPARE( mHistory->redoCount(), 0 );
+
+      mPendingSignals[UndoSignal] = 1;
+      mHistory->undo();
+      waitForSignals();
+      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE( mHistory->redoCount(), 1 );
+
+      mHistory->clear();
       QCOMPARE( mHistory->redoCount(), 0 );
       QCOMPARE( mHistory->undoCount(), 0 );
     }
