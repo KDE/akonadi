@@ -14,6 +14,7 @@ set(akonadicalendar_LIB_SRC
   collectionselection.cpp
   etmcalendar.cpp
   history.cpp
+  history_p.cpp
   incidencefetchjob.cpp
   incidencechanger.cpp
   kcolumnfilterproxymodel.cpp

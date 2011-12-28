@@ -21,6 +21,7 @@
 #include "history_p.h"
 
 #include <KCalUtils/Stringify>
+#include <KLocale>
 
 using namespace KCalCore;
 using namespace Akonadi;
@@ -195,6 +196,8 @@ bool History::Private::isRedoAvailable() const
 
 void History::Private::updateIds( Item::Id oldId, Item::Id newId )
 {
+  mEntryInProgress->updateIds( oldId, newId );
+
   foreach( const Entry::Ptr &entry, mUndoStack )
     entry->updateIds( oldId, newId );
 
@@ -227,13 +230,6 @@ void History::Private::handleFinished( IncidenceChanger::ResultCode changerResul
   if ( success ) {
     mLastErrorString.clear();
     destinationStack().push( mEntryInProgress );
-
-    if ( !mEntryInProgress->mNewIdByOldId.isEmpty() ) {
-      foreach( Akonadi::Item::Id id, mEntryInProgress->mNewIdByOldId.keys() ) {
-        // When creating and deleting the same item, the item will get a new id when it's created
-        updateIds( id /*old*/, mEntryInProgress->mNewIdByOldId.value( id ) /*new*/ );
-      }
-    }
   } else {
     mLastErrorString = errorString;
     stack().push( mEntryInProgress );

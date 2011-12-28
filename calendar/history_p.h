@@ -23,11 +23,11 @@
 #include "history.h"
 #include "incidencechanger.h"
 #include <KCalCore/Incidence>
-#include <KCalUtils/Stringify>
 #include <Akonadi/Collection>
-#include <KLocale>
+
 #include <QPointer>
 #include <QStack>
+#include <QVector>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -53,17 +53,18 @@ namespace Akonadi {
       void doIt( OperationType );
 
       Akonadi::Item::List mItems;
-      QHash<Item::Id, Item::Id> mNewIdByOldId; // The change might result in a new ids
       QString mDescription;
     Q_SIGNALS:
       void finished( Akonadi::IncidenceChanger::ResultCode, const QString &errorString );
     protected:
       virtual bool undo() = 0;
       virtual bool redo() = 0;
+      void updateIdsGlobaly(Item::Id oldId, Item::Id newId);
       QWidget* currentParent() const;
       IncidenceChanger *mChanger;
       QHash<Akonadi::Item::Id,int> mLatestRevisionByItemId;
       History *q;
+      QVector<int> mChangeIds;
     private:
       void init( const QString &description, History *qq );
       Q_DISABLE_COPY(Entry);
@@ -115,125 +116,26 @@ namespace Akonadi {
       History *q;
   };
 
-  Entry::Entry( const Akonadi::Item &item,
-                const QString &description,
-                History *qq ) : QObject()
-  {
-    mItems << item;
-    init( description, qq );
-  }
-
-  Entry::Entry( const Akonadi::Item::List &items,
-                const QString &description,
-                History *qq ) : QObject(), mItems( items )
-  {
-    init( description, qq );
-  }
-
-  void Entry::init( const QString &description, History *qq )
-  {
-    mDescription = description;
-    q = qq;
-    mChanger = qq->d->mChanger;
-  }
-
-  QWidget* Entry::currentParent() const
-  {
-    return q->d->mCurrentParent;
-  }
-
-  void Entry::updateIds( Item::Id oldId, Item::Id newId )
-  {
-    Q_ASSERT( newId != -1 );
-    Q_ASSERT( oldId != newId );
-
-    Akonadi::Item::List::iterator it = mItems.begin();
-    while ( it != mItems.end() ) {
-      if ( (*it).id() == oldId )
-        (*it).setId( newId );
-      ++it;
-    }
-  }
-
-  void Entry::doIt( OperationType type )
-  {
-    mNewIdByOldId.clear();
-
-    bool result = false;
-    if ( type == TypeRedo )
-      result = redo();
-    else if ( type == TypeUndo )
-      result = undo();
-    else
-      Q_ASSERT( false );
-
-    if ( !result )
-      emit finished( IncidenceChanger::ResultCodeJobError, i18n( "General error" ) );
-  }
-
   class CreationEntry : public Entry {
     Q_OBJECT
     public:
       typedef QSharedPointer<CreationEntry> Ptr;
-      CreationEntry( const Akonadi::Item &item, const QString &description,
-                     History *q ) : Entry( item, description, q )
-      {
-        QMetaObject::connectSlotsByName( this );
-        mLatestRevisionByItemId.insert( item.id(), item.revision() );
-        Q_ASSERT( mItems.count() == 1 );
-        const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
-        mDescription =  i18n( "%1 creation",
-                              KCalUtils::Stringify::incidenceType( incidence->type() ) );
-        connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
-        connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
-      }
+      CreationEntry( const Akonadi::Item &item, const QString &description, History *q );
 
       /**reimp*/
-      bool undo()
-      {
-        const int changeId = mChanger->deleteIncidence( mItems.first(), currentParent() );
-        return changeId != -1;
-      }
+      bool undo();
 
-      bool redo()
-      {
-        // TODO: pass mCollection
-        Akonadi::Item item = mItems.first();
-        Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-        const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
-                                                        Collection( item.storageCollectionId() ),
-                                                        currentParent() );
-        return changeId != -1;
-      }
+      /** reimp */
+      bool redo();
 
     private Q_SLOTS:
       void onDeleteFinished( int changeId, const QVector<Akonadi::Item::Id> &deletedIds,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
-                             const QString &errorString )
-      {
-        Q_UNUSED( changeId );
-        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-          Q_ASSERT( deletedIds.count() == 1 );
-          mLatestRevisionByItemId.remove( deletedIds.first() ); // TODO
-        }
-        emit finished( resultCode, errorString );
-      }
+                             const QString &errorString );
 
       void onCreateFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
-                             const QString &errorString )
-      {
-        Q_UNUSED( changeId );
-        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-          mLatestRevisionByItemId.insert( item.id(), item.revision() );
-          mNewIdByOldId.clear();
-          Q_ASSERT( mItems.count() == 1 );
-          mNewIdByOldId.insert( mItems.first().id(), item.id() );
-        }
-        emit finished( resultCode, errorString );
-      }
+                             const QString &errorString );
     private:
       Q_DISABLE_COPY(CreationEntry)
   };
@@ -241,81 +143,21 @@ namespace Akonadi {
   class DeletionEntry : public Entry {
     Q_OBJECT
     public:
-      DeletionEntry( const Akonadi::Item::List &items, const QString &description,
-                     History *q ) : Entry( items, description, q )
-      {
-        const Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
-        //TODO i18n
-        mDescription =  i18n( "%1 deletion",
-                              KCalUtils::Stringify::incidenceType( incidence->type() ) );
-        connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
-        connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
-      }
+      DeletionEntry( const Akonadi::Item::List &items, const QString &description, History *q );
 
       /**reimp*/
-      bool undo()
-      {
-        // TODO: pass mCollection
-        mResultCode = IncidenceChanger::ResultCodeSuccess;
-        mErrorString.clear();
-        const bool useAtomicOperation = mItems.count() > 1 ;
-        bool success = true;
-        foreach( const Akonadi::Item &item, mItems ) {
-          if ( useAtomicOperation )
-            mChanger->startAtomicOperation();
-
-          Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-          const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>(),
-                                                          Collection( item.storageCollectionId() ),
-                                                          currentParent() );
-          success = ( changeId != -1 ) && success;
-          if ( useAtomicOperation )
-            mChanger->endAtomicOperation();
-
-          mOldIdByChangeId.insert( changeId, item.id() );
-        }
-        mNumPendingCreations = mItems.count();
-        return success;
-      }
+      bool undo();
 
       /**reimp*/
-      bool redo()
-      {
-        const int changeId = mChanger->deleteIncidences( mItems, currentParent() );
-        return changeId != -1;
-      }
+      bool redo();
     private Q_SLOTS:
       void onDeleteFinished( int changeId, const QVector<Akonadi::Item::Id> &deletedIds,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
-                             const QString &errorString )
-      {
-        Q_UNUSED( changeId );
-        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-          foreach( Akonadi::Item::Id id, deletedIds )
-            mLatestRevisionByItemId.remove( id ); // TODO
-        }
-        emit finished( resultCode, errorString );
-      }
+                             const QString &errorString );
 
       void onCreateFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
-                             const QString &errorString )
-      {
-        Q_UNUSED( changeId );
-        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-          mNewIdByOldId.insert( mOldIdByChangeId.value( changeId ), item.id() );
-          mLatestRevisionByItemId.insert( item.id(), item.revision() );
-        } else {
-          mResultCode = resultCode;
-          mErrorString = errorString;
-        }
-        --mNumPendingCreations;
-        mOldIdByChangeId.remove( changeId );
-        if ( mNumPendingCreations == 0 )
-          emit finished( mResultCode, mErrorString );
-      }
+                             const QString &errorString );
     private:
       IncidenceChanger::ResultCode mResultCode;
       QString mErrorString;
@@ -330,44 +172,17 @@ namespace Akonadi {
       ModificationEntry( const Akonadi::Item &item,
                          const Incidence::Ptr &originalPayload,
                          const QString &description,
-                         History *q ) : Entry( item, description, q )
-                                      , mOriginalPayload( originalPayload )
-      {
-        const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
-        mDescription =  i18n( "%1 deletion",
-                              KCalUtils::Stringify::incidenceType( incidence->type() ) );
-
-        connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
-      }
+                         History *q );
 
       /**reimp*/
-      bool undo()
-      {
-        Item oldItem = mItems.first();
-        oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
-        const int changeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(), currentParent() );
-        return changeId != -1;
-      }
+      bool undo();
 
       /**reimp*/
-      bool redo()
-      {
-        const int changeId = mChanger->modifyIncidence( mItems.first(), mOriginalPayload,
-                                                        currentParent() );
-        return changeId != -1;
-      }
+      bool redo();
     private Q_SLOTS:
       void onModifyFinished( int changeId, const Akonadi::Item &item,
                              Akonadi::IncidenceChanger::ResultCode resultCode,
-                             const QString &errorString )
-      {
-        Q_UNUSED( changeId );
-        if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-          mLatestRevisionByItemId.insert( item.id(), item.revision() );
-        }
-        emit finished( resultCode, errorString );
-      }
+                             const QString &errorString );
     private:
       Q_DISABLE_COPY(ModificationEntry)
       Incidence::Ptr mOriginalPayload;
@@ -377,61 +192,23 @@ namespace Akonadi {
     Q_OBJECT
     public:
       typedef QSharedPointer<MultiEntry> Ptr;
-      MultiEntry( int id, const QString &description,
-                  History *q ) : Entry( Item(), description, q )
-                               , mAtomicOperationId( id )
-                               , mOperationInProgress( TypeNone )
+      MultiEntry( int id, const QString &description, History *q );
 
-      {
-      }
+      void addEntry( const Entry::Ptr &entry );
 
-      void addEntry( const Entry::Ptr &entry )
-      {
-        Q_ASSERT( mOperationInProgress == TypeNone );
-        mEntries.append( entry );
-        connect( entry.data(), SIGNAL(finished(Akonadi::IncidenceChanger::ResultCode,QString)),
-                 SLOT(onEntryFinished(Akonadi::IncidenceChanger::ResultCode,QString)) );
-      }
+      /** reimp */
+      void updateIds( Item::Id oldId, Item::Id newId );
 
     protected:
       /**reimp*/
-      bool undo()
-      {
-        mChanger->startAtomicOperation();
-        mOperationInProgress = TypeUndo;
-        Q_ASSERT( !mEntries.isEmpty() );
-        mFinishedEntries = 0;
-        foreach( const Entry::Ptr &entry, mEntries )
-          entry->doIt( TypeUndo );
-        mChanger->endAtomicOperation();
-        return true;
-      }
+      bool undo();
 
       /**reimp*/
-      bool redo()
-      {
-        mChanger->startAtomicOperation();
-        mOperationInProgress = TypeRedo;
-        Q_ASSERT( !mEntries.isEmpty() );
-        mFinishedEntries = 0;
-        foreach( const Entry::Ptr &entry, mEntries )
-          entry->doIt( TypeRedo );
-        mChanger->endAtomicOperation();
-        return true;
-      }
+      bool redo();
 
     private Q_SLOTS:
       void onEntryFinished( Akonadi::IncidenceChanger::ResultCode resultCode,
-                            const QString &errorString )
-      {
-        ++mFinishedEntries;
-        if ( mFinishedEntries == mEntries.count() ||
-             resultCode != IncidenceChanger::ResultCodeSuccess ) {
-          mOperationInProgress = TypeNone;
-          mFinishedEntries = mEntries.count(); // we're done
-          emit finished( resultCode, errorString );
-        }
-      }
+                            const QString &errorString );
     public:
       const uint mAtomicOperationId;
     private:
