@@ -68,15 +68,18 @@ EntityTreeModel::EntityTreeModel( ChangeRecorder *monitor,
   : QAbstractItemModel( parent ),
     d_ptr( d )
 {
-  d->init(monitor );
+  d->init( monitor );
 }
 
 EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
 
-  foreach ( const QList<Node*> &list, d->m_childEntities )
-    qDeleteAll( list );
+  foreach ( const QList<Node*> &list, d->m_childEntities ) {
+    while ( !list.isEmpty() ) {
+      delete list.first();
+    }
+  }
   d->m_rootNode = 0;
 
   delete d_ptr;
