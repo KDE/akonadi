@@ -76,10 +76,13 @@ EntityTreeModel::~EntityTreeModel()
   Q_D( EntityTreeModel );
 
   foreach ( const QList<Node*> &list, d->m_childEntities ) {
-    while ( !list.isEmpty() ) {
-      delete list.first();
+    QList<Node*>::const_iterator it = list.constBegin();
+    const QList<Node*>::const_iterator end = list.constEnd();
+    for ( ; it != end; ++it ) {
+      delete *it;
     }
   }
+
   d->m_rootNode = 0;
 
   delete d_ptr;
