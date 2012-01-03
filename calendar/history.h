@@ -38,17 +38,19 @@ class IncidenceChanger;
    @short History class for implementing undo/redo of calendar incidences
 
    Whenever you use IncidenceChanger to create, delete or modify incidences, this class is used
-   to recorded those changes in a stack, so they can be undone/redone.
+   to record those changes in a stack, so they can be undone/redone.
 
-   If needed, froupware invitations will be sent to attendees and organizers when using this class
+   If needed, groupware invitations will be sent to attendees and organizers when using this class
    to undo/redo changes.
 
    @code
-      TODO:
+      Akonadi::IncidenceChanger *myIncidenceChanger = new Akonadi::IncidenceChanger();
+      connect( undoAction, SIGNAL(triggered()), myIncidenceChanger->history(), SLOT(undo()) );
+      connect( redoAction, SIGNAL(triggered()), myIncidenceChanger->history(), SLOT(redo()) );
    @endcode
 
    @author Sérgio Martins <iamsergio@gmail.com>
-   @since
+   @since 4.9
 */
 
 class AKONADI_CALENDAR_EXPORT History : public QObject {
