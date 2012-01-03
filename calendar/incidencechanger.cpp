@@ -109,6 +109,34 @@ namespace Akonadi {
   }
 }
 
+class ConflictPreventerPrivate;
+class ConflictPreventer {
+  friend class ConflictPreventerPrivate;
+public:
+  static ConflictPreventer* self();
+
+  // To avoid conflicts when the two modifications came from within the same application
+  QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
+
+  //TODO: Make mLatestRevisionByItemId private and write some setters, so we can remove
+  //some conflict logic from the rest of the code.
+private:
+  ConflictPreventer() {}
+  ~ConflictPreventer() {}
+};
+
+class ConflictPreventerPrivate {
+public:
+  ConflictPreventer instance;
+};
+
+K_GLOBAL_STATIC( ConflictPreventerPrivate, sConflictPreventerPrivate );
+
+ConflictPreventer* ConflictPreventer::self()
+{
+  return &sConflictPreventerPrivate->instance;
+}
+
 IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) : q( qq )
 {
   mLatestChangeId = 0;
@@ -316,7 +344,7 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
     }
   } else { // success
     foreach( const Item &item, items ) {
-      mLatestRevisionByItemId.remove( item.id() );
+      ConflictPreventer::self()->mLatestRevisionByItemId.remove( item.id() );
       if ( change->recordToHistory && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
         //TODO: check return value
         //TODO: make History support a list of items
@@ -368,7 +396,7 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
                           errorString ) );
     }
   } else { // success
-    mLatestRevisionByItemId[item.id()] = item.revision();
+    ConflictPreventer::self()->mLatestRevisionByItemId[item.id()] = item.revision();
     change->newItem = item;
     if ( change->recordToHistory && change->originalItem.isValid() ) {
       mHistory->recordModification( change->originalItem, item,
@@ -724,16 +752,18 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     return;
   }
 
-  if ( mLatestRevisionByItemId.contains( id ) &&
-       mLatestRevisionByItemId[id] > newItem.revision() ) {
+  QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
+                                                 ConflictPreventer::self()->mLatestRevisionByItemId;
+  if ( latestRevisionByItemId.contains( id ) &&
+       latestRevisionByItemId[id] > newItem.revision() ) {
     /* When a ItemModifyJob ends, the application can still modify the old items if the user
      * is quick because the ETM wasn't updated yet, and we'll get a STORE error, because
      * we are not modifying the latest revision.
      *
-     * When a job ends, we keep the new revision in m_latestVersionByItemId
+     * When a job ends, we keep the new revision in mLatestRevisionByItemId
      * so we can update the item's revision
      */
-    newItem.setRevision( mLatestRevisionByItemId[id] );
+    newItem.setRevision( latestRevisionByItemId[id] );
   }
 
   Incidence::Ptr incidence = newItem.payload<Incidence::Ptr>();

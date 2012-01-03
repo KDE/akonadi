@@ -315,9 +315,6 @@ class IncidenceChanger::Private : public QObject
 
     bool mRespectsCollectionRights;
 
-    // To avoid conflicts
-    QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
-
     QHash<Akonadi::TransactionSequence*, uint> mAtomicOperationByTransaction;
 
     uint mLatestAtomicOperationId;
