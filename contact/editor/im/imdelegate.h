@@ -19,8 +19,8 @@
   02110-1301, USA.
 */
 
-#ifndef IMDELEGATE_H
-#define IMDELEGATE_H
+#ifndef AKONADI_CONTACT_IMDELEGATE_H
+#define AKONADI_CONTACT_IMDELEGATE_H
 
 #include <QtGui/QStyledItemDelegate>
 

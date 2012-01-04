@@ -20,8 +20,8 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMEDITORDIALOG_H
-#define IMEDITORDIALOG_H
+#ifndef AKONADI_CONTACT_IMEDITORDIALOG_H
+#define AKONADI_CONTACT_IMEDITORDIALOG_H
 
 #include <kdialog.h>
 
