@@ -1,7 +1,7 @@
 /*
-IM address editor widget for KDE PIM
+IM address item editor widget for KDE PIM
 
-Copyright 2004,2010 Will Stephenson <wstephenson@kde.org>
+Copyright 2012 Jonathan Marten <jjm@keelhaul.me.uk>
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -20,42 +20,33 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMEDITORDIALOG_H
-#define IMEDITORDIALOG_H
+#ifndef IMITEMDIALOG_H
+#define IMITEMDIALOG_H
 
 #include <kdialog.h>
 
 #include "immodel.h"
 
-class QPushButton;
-class QTreeView;
+class QComboBox;
+class KLineEdit;
 
-class IMEditorDialog : public KDialog
+class IMItemDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    IMEditorDialog( QWidget *parent );
-    ~IMEditorDialog() {}
+    IMItemDialog( QWidget *parent );
+    ~IMItemDialog() {}
 
-    void setAddresses( const IMAddress::List &addresses );
-    IMAddress::List addresses() const;
+    void setAddress(const IMAddress &address);
+    IMAddress address() const;
 
   private Q_SLOTS:
-    void slotAdd();
-    void slotEdit();
-    void slotRemove();
-    void slotSetStandard();
     void slotUpdateButtons();
 
   private:
-    QTreeView *mView;
-    QPushButton *mAddButton;
-    QPushButton *mEditButton;
-    QPushButton *mRemoveButton;
-    QPushButton *mStandardButton;
-
-    IMModel *mModel;
+    QComboBox *mProtocolCombo;
+    KLineEdit *mNameEdit;
 };
 
 #endif

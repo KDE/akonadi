@@ -74,6 +74,7 @@ set(akonadicontact_editor_SRCS
   editor/im/imeditordialog.cpp
   editor/im/immodel.cpp
   editor/im/improtocols.cpp
+  editor/im/imitemdialog.cpp
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/kdatepickerpopup.cpp

@@ -22,11 +22,6 @@
 #include "imdelegate.h"
 
 #include "immodel.h"
-#include "improtocols.h"
-
-#include <kcombobox.h>
-#include <kicon.h>
-#include <klocale.h>
 
 IMDelegate::IMDelegate( QObject *parent )
   : QStyledItemDelegate( parent )
@@ -39,59 +34,16 @@ IMDelegate::~IMDelegate()
 
 QWidget* IMDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &item, const QModelIndex &index ) const
 {
-  if ( index.column() == 0 ) {
-    KComboBox *comboBox = new KComboBox( parent );
-    comboBox->setFrame( false );
-    comboBox->setAutoFillBackground( true );
-
-    const QStringList protocols = IMProtocols::self()->protocols();
-    foreach ( const QString &protocol, protocols ) {
-      comboBox->addItem( KIcon( IMProtocols::self()->icon( protocol ) ),
-                         IMProtocols::self()->name( protocol ),
-                         protocol );
-    }
-
-    return comboBox;
-  } else {
-    return QStyledItemDelegate::createEditor( parent, item, index );
-  }
-}
-
-void IMDelegate::setEditorData( QWidget *editor, const QModelIndex &index ) const
-{
-  if ( index.column() == 0 ) {
-    KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
-    if ( !comboBox )
-      return;
-
-    const QString protocol = index.data( IMModel::ProtocolRole ).toString();
-    comboBox->setCurrentIndex( comboBox->findData( protocol ) );
-  } else {
-    QStyledItemDelegate::setEditorData( editor, index );
-  }
-}
-
-void IMDelegate::setModelData( QWidget *editor, QAbstractItemModel *model, const QModelIndex &index ) const
-{
-  if ( index.column() == 0 ) {
-    KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
-    if ( !comboBox )
-      return;
-
-    model->setData( index, comboBox->itemData( comboBox->currentIndex() ), IMModel::ProtocolRole );
-  } else {
-    QStyledItemDelegate::setModelData( editor, model, index );
-  }
+  return 0;
 }
 
 void IMDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
+  QStyleOptionViewItem newOption( option );
   if ( index.data( IMModel::IsPreferredRole ).toBool() ) {
-    QStyleOptionViewItem newOption( option );
     newOption.font.setBold( true );
+  }
 
-    QStyledItemDelegate::paint( painter, newOption, index );
-  } else
-    QStyledItemDelegate::paint( painter, option, index );
+  QStyledItemDelegate::paint( painter, newOption, index );
 }
 
