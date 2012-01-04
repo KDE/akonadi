@@ -36,7 +36,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 IMEditorDialog::IMEditorDialog( QWidget *parent )
   : KDialog( parent )
 {
-  setCaption( i18n( "Edit Instant Messaging Addresses" ) );
+  setCaption( i18nc( "@title:window", "Edit Instant Messaging Addresses" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
 
@@ -45,10 +45,10 @@ IMEditorDialog::IMEditorDialog( QWidget *parent )
 
   QGridLayout *layout = new QGridLayout( widget );
 
-  mAddButton = new QPushButton( i18n( "Add..." ) );
-  mEditButton = new QPushButton( i18n( "Edit..." ) );
-  mRemoveButton = new QPushButton( i18n( "Remove" ) );
-  mStandardButton = new QPushButton( i18n( "Set as Standard" ) );
+  mAddButton = new QPushButton( i18nc( "@action:button", "Add..." ) );
+  mEditButton = new QPushButton( i18nc( "@action:button", "Edit..." ) );
+  mRemoveButton = new QPushButton( i18nc( "@action:button", "Remove" ) );
+  mStandardButton = new QPushButton( i18nc( "@action:button", "Set as Standard" ) );
 
   mView = new QTreeView;
   mView->setRootIsDecorated( false );
@@ -90,7 +90,7 @@ IMAddress::List IMEditorDialog::addresses() const
 void IMEditorDialog::slotAdd()
 {
   IMItemDialog d( this );
-  d.setCaption( i18nc( "@window:title", "Add IM Address" ) );
+  d.setCaption( i18nc( "@title:window", "Add IM Address" ) );
   if ( d.exec() ) {
     IMAddress newAddress = d.address();
     int addedRow = mModel->rowCount();
@@ -108,7 +108,7 @@ void IMEditorDialog::slotEdit()
     return;
 
   IMItemDialog d( this );
-  d.setCaption( i18nc( "@window:title", "Edit IM Address" ) );
+  d.setCaption( i18nc( "@title:window", "Edit IM Address" ) );
   d.setAddress( mModel->addresses().at( currentRow ));
 
   if ( d.exec() ) {
@@ -124,11 +124,13 @@ void IMEditorDialog::slotRemove()
   if (currentRow<0)
     return;
 
-  if ( KMessageBox::warningContinueCancel( this,
-                                           i18nc( "Instant messaging", "Do you really want to delete the selected <resource>%1</resource> address?",
-                                                  mModel->data( mModel->index( currentRow, 0 ), Qt::DisplayRole ).toString() ),
-                                           i18nc( "@window:title", "Confirm Delete" ),
-                                           KStandardGuiItem::del() ) != KMessageBox::Continue ) {
+  if ( KMessageBox::warningContinueCancel(
+         this,
+         i18nc( "@info Instant messaging",
+                "Do you really want to delete the selected <resource>%1</resource> address?",
+                mModel->data( mModel->index( currentRow, 0 ), Qt::DisplayRole ).toString() ),
+         i18nc( "@title:window", "Confirm Delete Resource" ),
+         KStandardGuiItem::del() ) != KMessageBox::Continue ) {
     return;
   }
 

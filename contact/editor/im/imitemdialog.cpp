@@ -43,7 +43,8 @@ IMItemDialog::IMItemDialog( QWidget *parent )
   QFormLayout *layout = new QFormLayout( widget );
 
   mProtocolCombo = new KComboBox;
-  mProtocolCombo->addItem( i18nc( "@item:inlistbox", "Select..." ) );
+  mProtocolCombo->addItem( i18nc( "@item:inlistbox select from a list of IM protocols",
+                                  "Select..." ) );
   layout->addRow( i18nc( "@label:listbox", "Protocol:" ), mProtocolCombo );
 
   const QStringList protocols = IMProtocols::self()->protocols();
@@ -54,7 +55,7 @@ IMItemDialog::IMItemDialog( QWidget *parent )
   }
 
   mNameEdit = new KLineEdit;
-  layout->addRow( i18nc( "@label:textbox", "Address:" ), mNameEdit );
+  layout->addRow( i18nc( "@label:textbox IM address", "Address:" ), mNameEdit );
 
   connect( mProtocolCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateButtons()) );
   connect( mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons()) );
