@@ -57,7 +57,7 @@ IMItemDialog::IMItemDialog( QWidget *parent )
   layout->addRow( i18nc( "@label:textbox", "Address:" ), mNameEdit );
 
   connect( mProtocolCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotUpdateButtons()) );
-  connect( mNameEdit, SIGNAL(textChanged(const QString &)), SLOT(slotUpdateButtons()) );
+  connect( mNameEdit, SIGNAL(textChanged(QString)), SLOT(slotUpdateButtons()) );
 
   slotUpdateButtons();
 }
