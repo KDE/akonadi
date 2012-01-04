@@ -50,25 +50,15 @@ namespace Akonadi {
     Akonadi::Collection collection( Akonadi::Collection::Id ) const;
 
     /**
-     * Returns true if @p item can be deleted from it's collection.
+     * Returns true if the collection owning incidence @p has righ @p right
      */
-    bool hasDeleteRights( const Akonadi::Item &item ) const; //TODO
+    bool hasRight( const Akonadi::Item &item, Akonadi::Collection::Right right ) const;
 
     /**
-     * Returns true if the incidence with @p uid can be
-     * deleted from it's collection.
+     * This is an overloaded function.
+     * @see hasRight()
      */
-    bool hasDeleteRights( const QString &uid ) const;
-
-    /**
-     * Returns true if @p item can be modified.
-     */
-    bool hasModifyRights( const Akonadi::Item &item ) const;
-
-    /**
-     * Returns true if the incidence with @p uid modified.
-     */
-    bool hasModifyRights( const QString &uid ) const;
+    bool hasRight( const QString &uid, Akonadi::Collection::Right right ) const;
 
     QAbstractItemModel *unfilteredModel() const;
     QAbstractItemModel *filteredModel() const;

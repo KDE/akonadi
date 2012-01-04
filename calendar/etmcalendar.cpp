@@ -355,32 +355,18 @@ Akonadi::Collection ETMCalendar::collection( Akonadi::Collection::Id id ) const
   return d->mCollectionMap.value( id );
 }
 
-bool ETMCalendar::hasModifyRights( const QString &uid ) const
+bool ETMCalendar::hasRight( const QString &uid, Akonadi::Collection::Right right ) const
 {
-  return hasModifyRights( item( uid ) );
+  return hasRight( item( uid ), right );
 }
 
-bool ETMCalendar::hasDeleteRights( const QString &uid ) const
-{
-  return hasDeleteRights( item( uid ) );
-}
-
-bool ETMCalendar::hasModifyRights( const Akonadi::Item &item ) const
+bool ETMCalendar::hasRight( const Akonadi::Item &item, Akonadi::Collection::Right right ) const
 {
   // if the users changes the rights, item.parentCollection()
   // can still have the old rights, so we use call collection()
   // which returns the updated one
   const Akonadi::Collection col = collection( item.storageCollectionId() );
-  return col.rights() & Akonadi::Collection::CanChangeItem;
-}
-
-bool ETMCalendar::hasDeleteRights( const Akonadi::Item &item ) const
-{
-  // if the users changes the rights, item.parentCollection()
-  // can still have the old rights, so we use call collection()
-  // which returns the updated one
-  const Akonadi::Collection col = collection( item.storageCollectionId() );
-  return col.rights() & Akonadi::Collection::CanDeleteItem;
+  return col.rights() & right;
 }
 
 QAbstractItemModel *ETMCalendar::filteredModel() const
@@ -388,7 +374,6 @@ QAbstractItemModel *ETMCalendar::filteredModel() const
   Q_D( const ETMCalendar );
   return d->mFilteredETM;
 }
-
 
 QAbstractItemModel *ETMCalendar::unfilteredModel() const
 {
