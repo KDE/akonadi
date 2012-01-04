@@ -27,7 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "immodel.h"
 
-class QComboBox;
+class KComboBox;
 class KLineEdit;
 
 class IMItemDialog : public KDialog
@@ -45,7 +45,7 @@ class IMItemDialog : public KDialog
     void slotUpdateButtons();
 
   private:
-    QComboBox *mProtocolCombo;
+    KComboBox *mProtocolCombo;
     KLineEdit *mNameEdit;
 };
 

@@ -25,9 +25,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "immodel.h"
 #include "improtocols.h"
 
-#include <QtGui/QComboBox>
 #include <QtGui/QFormLayout>
 
+#include <kcombobox.h>
 #include <klineedit.h>
 #include <klocale.h>
 
@@ -42,7 +42,7 @@ IMItemDialog::IMItemDialog( QWidget *parent )
 
   QFormLayout *layout = new QFormLayout( widget );
 
-  mProtocolCombo = new QComboBox;
+  mProtocolCombo = new KComboBox;
   mProtocolCombo->addItem( i18nc( "@item:inlistbox", "Select..." ) );
   layout->addRow( i18nc( "@label:listbox", "Protocol:" ), mProtocolCombo );
 
