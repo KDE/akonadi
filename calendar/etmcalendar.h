@@ -40,7 +40,7 @@ namespace Akonadi {
     /**
      * Constructs a new ETMCalendar. Loading begins immediately, asynchronously.
      */
-    explicit ETMCalendar( const KDateTime::Spec &timeSpec = KSystemTimeZones::local() );
+    explicit ETMCalendar();
 
     /**
      * Destroys this ETMCalendar.

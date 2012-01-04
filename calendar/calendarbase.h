@@ -25,7 +25,6 @@
 #include <Akonadi/Item>
 #include <KCalCore/MemoryCalendar>
 #include <KCalCore/Incidence>
-#include <KSystemTimeZones>
 #include <KDateTime>
 
 namespace Akonadi {
@@ -54,7 +53,7 @@ namespace Akonadi {
     /**
      * Constructs a CalendarBase object.
      */
-    explicit CalendarBase( const KDateTime::Spec &timeSpec = KSystemTimeZones::local() );
+    explicit CalendarBase();
 
     /**
      * Destroys the calendar.
@@ -196,7 +195,7 @@ namespace Akonadi {
   protected:
     Q_DECLARE_PRIVATE( CalendarBase );
     QScopedPointer<CalendarBasePrivate> d_ptr;
-    CalendarBase( CalendarBasePrivate *const d, const KDateTime::Spec &timeSpec );
+    CalendarBase( CalendarBasePrivate *const d );
   };
 }
 

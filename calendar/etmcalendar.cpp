@@ -337,8 +337,7 @@ void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel( const QModelInde
   itemsRemoved( itemsFromModel( mFilteredETM, index, start, end ) );
 }
 
-ETMCalendar::ETMCalendar( const KDateTime::Spec &timeSpec )
-            : CalendarBase( new ETMCalendarPrivate( this ), timeSpec )
+ETMCalendar::ETMCalendar() : CalendarBase( new ETMCalendarPrivate( this ) )
 {
   Q_D( ETMCalendar );
   d->init();

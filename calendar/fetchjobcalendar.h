@@ -50,8 +50,8 @@ namespace Akonadi {
     /**
      * Creates a new FetchJobCalendar. Loading begins asynchronously.
      * @see loadFinished()
-     *///TODO: timeSpec
-    explicit FetchJobCalendar( const KDateTime::Spec &timeSpec = KSystemTimeZones::local());
+     */
+    explicit FetchJobCalendar();
 
     /**
      * Destroys this FetchJobCalendar.

@@ -58,8 +58,7 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
                              Q_ARG( bool, success ), Q_ARG( QString, errorMessage ) );
 }
 
-FetchJobCalendar::FetchJobCalendar( const KDateTime::Spec &timeSpec )
-                 : CalendarBase( new FetchJobCalendarPrivate( this ), timeSpec )
+FetchJobCalendar::FetchJobCalendar() : CalendarBase( new FetchJobCalendarPrivate( this ) )
 {
 }
 

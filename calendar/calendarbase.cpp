@@ -24,6 +24,8 @@
 #include <Akonadi/Item>
 #include <Akonadi/Collection>
 
+#include <KSystemTimeZones>
+
 using namespace Akonadi;
 using namespace KCalCore;
 
@@ -131,14 +133,13 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-CalendarBase::CalendarBase( const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
-                                                              , d_ptr( new CalendarBasePrivate( this ) )
+CalendarBase::CalendarBase() : MemoryCalendar( KSystemTimeZones::local() )
+                             , d_ptr( new CalendarBasePrivate( this ) )
 {
 }
 
-CalendarBase::CalendarBase( CalendarBasePrivate *const dd,
-                            const KDateTime::Spec &timeSpec ) : MemoryCalendar( timeSpec )
-                                                              , d_ptr( dd )
+CalendarBase::CalendarBase( CalendarBasePrivate *const dd ) : MemoryCalendar( KSystemTimeZones::local() )
+                                                            , d_ptr( dd )
 {
 }
 
