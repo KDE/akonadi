@@ -34,6 +34,9 @@ IMDelegate::~IMDelegate()
 
 QWidget* IMDelegate::createEditor( QWidget *parent, const QStyleOptionViewItem &item, const QModelIndex &index ) const
 {
+  Q_UNUSED( parent );
+  Q_UNUSED( item );
+  Q_UNUSED( index );
   return 0;
 }
 
