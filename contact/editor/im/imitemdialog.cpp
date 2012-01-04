@@ -65,7 +65,9 @@ IMItemDialog::IMItemDialog( QWidget *parent )
 
 void IMItemDialog::setAddress( const IMAddress &address )
 {
-  mProtocolCombo->setCurrentIndex( IMProtocols::self()->protocols().indexOf( address.protocol()) + 1 );
+  mProtocolCombo->setCurrentIndex(
+    IMProtocols::self()->protocols().indexOf( address.protocol() ) + 1 );
+
   mNameEdit->setText( address.name() );
   slotUpdateButtons();
 }
@@ -75,7 +77,6 @@ IMAddress IMItemDialog::address() const
   return IMAddress( mProtocolCombo->itemData( mProtocolCombo->currentIndex() ).toString(),
                     mNameEdit->text(), false );
 }
-
 
 void IMItemDialog::slotUpdateButtons()
 {

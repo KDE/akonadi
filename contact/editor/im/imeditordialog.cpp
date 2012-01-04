@@ -104,25 +104,29 @@ void IMEditorDialog::slotAdd()
 void IMEditorDialog::slotEdit()
 {
   const int currentRow = mView->currentIndex().row();
-  if (currentRow<0)
+  if ( currentRow < 0 ) {
     return;
+  }
 
   IMItemDialog d( this );
   d.setCaption( i18nc( "@title:window", "Edit IM Address" ) );
-  d.setAddress( mModel->addresses().at( currentRow ));
+  d.setAddress( mModel->addresses().at( currentRow ) );
 
   if ( d.exec() ) {
     IMAddress editedAddress = d.address();
-    mModel->setData( mModel->index( currentRow, 0 ), editedAddress.protocol(), IMModel::ProtocolRole );
-    mModel->setData( mModel->index( currentRow, 1 ), editedAddress.name(), Qt::EditRole );
+    mModel->setData( mModel->index( currentRow, 0 ), editedAddress.protocol(),
+                     IMModel::ProtocolRole );
+    mModel->setData( mModel->index( currentRow, 1 ), editedAddress.name(),
+                     Qt::EditRole );
   }
 }
 
 void IMEditorDialog::slotRemove()
 {
   const int currentRow = mView->currentIndex().row();
-  if (currentRow<0)
+  if ( currentRow < 0 ) {
     return;
+  }
 
   if ( KMessageBox::warningContinueCancel(
          this,
@@ -140,13 +144,14 @@ void IMEditorDialog::slotRemove()
 void IMEditorDialog::slotSetStandard()
 {
   const int currentRow = mView->currentIndex().row();
-  if ( currentRow < 0 )
+  if ( currentRow < 0 ) {
     return;
+  }
 
   // set current index as preferred and all other as non-preferred
   for ( int i = 0; i < mModel->rowCount(); ++i ) {
     const QModelIndex index = mModel->index( i, 0 );
-    mModel->setData( index, (index.row() == currentRow), IMModel::IsPreferredRole );
+    mModel->setData( index, ( index.row() == currentRow ), IMModel::IsPreferredRole );
   }
 }
 

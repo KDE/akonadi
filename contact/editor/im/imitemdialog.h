@@ -38,7 +38,7 @@ class IMItemDialog : public KDialog
     IMItemDialog( QWidget *parent );
     ~IMItemDialog() {}
 
-    void setAddress(const IMAddress &address);
+    void setAddress( const IMAddress &address );
     IMAddress address() const;
 
   private Q_SLOTS:
