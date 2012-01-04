@@ -20,16 +20,20 @@ set(akonadicalendar_LIB_SRC
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusyproviderbase.cpp
+  mailclient_p.cpp
   standardcalendaractionmanager.cpp
 )
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
 kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 
 target_link_libraries(akonadi-calendar
+                      akonadi-kmime
                       akonadi-kde
                       kpimutils
                       kcalcore
 		      kcalutils
+		      kmime
+		      mailtransport
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDE4_PHONON_LIBS})
