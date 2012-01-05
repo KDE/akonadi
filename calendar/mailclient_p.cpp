@@ -154,7 +154,8 @@ void MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
     subject = i18n( "Free Busy Message" );
   }
 
-  QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence,
+                                                                   KSystemTimeZones::local() );
 
   send( identity, from, to, QString(), subject, body, false, bccMe, attachment, mailTransport );
 }
@@ -173,8 +174,9 @@ void MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
   } else {
     subject = i18n( "Free Busy Message" );
   }
-  const QString body =
-    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+
+  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence,
+                                                                   KSystemTimeZones::local() );
 
   send( identity, from, recipients, QString(), subject, body, false,
         bccMe, attachment, mailTransport );
@@ -350,7 +352,6 @@ void MailClient::handleQueueJobFinished( KJob *job )
     emit finished( /**success=*/false, i18n( "Error queuing message in outbox: %1",
                                              job->errorText() ) );
   } else {
-
     emit finished( /**success=*/true, QString() );
   }
 }
