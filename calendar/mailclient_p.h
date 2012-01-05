@@ -32,6 +32,8 @@ namespace KPIMIdentities {
   class Identity;
 }
 
+class KJob;
+
 namespace Akonadi {
 
 class MailClient : public QObject
@@ -41,19 +43,19 @@ class MailClient : public QObject
     explicit MailClient( QObject *parent = 0 );
     ~MailClient();
 
-    bool mailAttendees( const KCalCore::IncidenceBase::Ptr &,
+    void mailAttendees( const KCalCore::IncidenceBase::Ptr &,
                         const KPIMIdentities::Identity &identity,
                         bool bccMe, const QString &attachment=QString(),
                         const QString &mailTransport = QString() );
 
-    bool mailOrganizer( const KCalCore::IncidenceBase::Ptr &,
+    void mailOrganizer( const KCalCore::IncidenceBase::Ptr &,
                         const KPIMIdentities::Identity &identity,
                         const QString &from, bool bccMe,
                         const QString &attachment=QString(),
                         const QString &sub=QString(),
                         const QString &mailTransport = QString() );
 
-    bool mailTo( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
+    void mailTo( const KCalCore::IncidenceBase::Ptr &, const KPIMIdentities::Identity &identity,
                  const QString &from, bool bccMe, const QString &recipients,
                  const QString &attachment=QString(), const QString &mailTransport = QString() );
 
@@ -74,10 +76,16 @@ class MailClient : public QObject
       @param mailTransport defines the mail transport method. See here the
       kdepimlibs/mailtransport library.
     */
-    bool send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
+    void send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
                const QString &cc, const QString &subject, const QString &body,
                bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
                const QString &mailTransport = QString() );
+
+  private Q_SLOTS:
+    void handleQueueJobFinished( KJob* job );
+
+  Q_SIGNALS:
+    void finished( bool success, const QString &errorString );
 };
 
 }

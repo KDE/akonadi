@@ -44,6 +44,7 @@
 
 #include <KDebug>
 #include <KLocale>
+#include <KJob>
 #include <KProtocolManager>
 #include <KSystemTimeZone>
 
@@ -57,7 +58,7 @@ MailClient::~MailClient()
 {
 }
 
-bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
+void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
                                 const KPIMIdentities::Identity &identity,
                                 bool bccMe, const QString &attachment,
                                 const QString &mailTransport )
@@ -65,7 +66,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   KCalCore::Attendee::List attendees = incidence->attendees();
   if ( attendees.isEmpty() ) {
     kWarning() << "There are no attendees to e-mail";
-    return false;
+    emit finished( /**success=*/false, i18n( "There are no attendees to e-mail" ) );
+    return;
   }
 
   const QString from = incidence->organizer()->fullName();
@@ -108,7 +110,8 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   if( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
-    return false;
+    emit finished( /**success=*/false, i18n( "There are no attendees to e-mail" ) );
+    return;
   }
   QString to;
   if ( !toList.isEmpty() ) {
@@ -130,11 +133,10 @@ bool MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   const QString body =
     KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
-  return send( identity, from, to, cc, subject, body, false,
-               bccMe, attachment, mailTransport );
+  send( identity, from, to, cc, subject, body, false, bccMe, attachment, mailTransport );
 }
 
-bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
+void MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
                                 const KPIMIdentities::Identity &identity,
                                 const QString &from, bool bccMe,
                                 const QString &attachment,
@@ -154,11 +156,10 @@ bool MailClient::mailOrganizer( const KCalCore::IncidenceBase::Ptr &incidence,
 
   QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
-  return send( identity, from, to, QString(), subject, body, false,
-               bccMe, attachment, mailTransport );
+  send( identity, from, to, QString(), subject, body, false, bccMe, attachment, mailTransport );
 }
 
-bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
+void MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
                          const KPIMIdentities::Identity &identity,
                          const QString &from, bool bccMe,
                          const QString &recipients, const QString &attachment,
@@ -175,11 +176,11 @@ bool MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
   const QString body =
     KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
-  return send( identity, from, recipients, QString(), subject, body, false,
-               bccMe, attachment, mailTransport );
+  send( identity, from, recipients, QString(), subject, body, false,
+        bccMe, attachment, mailTransport );
 }
 
-bool MailClient::send( const KPIMIdentities::Identity &identity,
+void MailClient::send( const KPIMIdentities::Identity &identity,
                        const QString &from, const QString &_to,
                        const QString &cc, const QString &subject,
                        const QString &body, bool hidden, bool bccMe,
@@ -190,7 +191,8 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
          0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-    return false;
+    emit finished( /**success=*/ false,  i18n( "Error while creating transport" ) );
+    return;
   }
 
   // We must have a recipients list for most MUAs. Thus, if the 'to' list
@@ -219,11 +221,11 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
   }
 
   if ( !transport ) {
-    // TODO: we need better error handling. Currently korganizer says "Error sending invitation".
-    // Using a boolean for errors isn't granular enough.
     kError() << "Error fetching transport; mailTransport"
              << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
-    return false;
+    emit finished( /**success=*/ false,
+                   i18n( "Error fetching transport. Unable to send invitations" ) );
+    return;
   }
 
   const int transportId = transport->id();
@@ -339,13 +341,16 @@ bool MailClient::send( const KPIMIdentities::Identity &identity,
     qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
   }
   qjob->setMessage( message );
-  if ( !qjob->exec() ) {
-    kWarning() << "Error queuing message in outbox:" << qjob->errorText();
-    return false;
-  }
-
-  // Everything done successful now.
-  kDebug() << "Send mail finished. Time elapsed in ms:" << timer.elapsed();
-  return true;
+  connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
 }
 
+void MailClient::handleQueueJobFinished( KJob *job )
+{
+  if ( job->error() ) {
+    emit finished( /**success=*/false, i18n( "Error queuing message in outbox: %1",
+                                             job->errorText() ) );
+  } else {
+
+    emit finished( /**success=*/true, QString() );
+  }
+}
