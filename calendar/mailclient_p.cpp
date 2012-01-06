@@ -233,7 +233,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   const int transportId = transport->id();
 
   // gather config values
-  KConfig config( "mailviewerrc" );
+  KConfig config( QLatin1String( "mailviewerrc" ) );
 
   KConfigGroup configGroup( &config, QLatin1String( "Invitations" ) );
   const bool outlookConformInvitation = configGroup.readEntry( "LegacyBodyInvites",
