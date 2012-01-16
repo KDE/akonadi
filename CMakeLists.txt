@@ -15,23 +15,23 @@ option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." F
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
 
-if (NOT DEFINED DATABASE_BACKEND)
+if(NOT DEFINED DATABASE_BACKEND)
   set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
 endif()
 
-if (AKONADI_BUILD_TESTS)
+if(AKONADI_BUILD_TESTS)
   enable_testing()
-endif (AKONADI_BUILD_TESTS)
+endif()
 
-if (AKONADI_USE_STRIGI_SEARCH)
+if(AKONADI_USE_STRIGI_SEARCH)
   set(AKONADI_DEFINITIONS "-DAKONADI_USE_STRIGI_SEARCH")
   add_definitions(${AKONADI_DEFINITIONS})
   set(SOPRANO_REQUIRED FALSE)
 else()
   set(SOPRANO_REQUIRED TRUE)
-endif (AKONADI_USE_STRIGI_SEARCH)
+endif()
 
-if (CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
+if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
    set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline" CACHE STRING
        "Flags used by the C++ compiler during debugfull builds." FORCE)
 
@@ -88,32 +88,32 @@ endif()
 ############### Macros ###############
 
 macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-   if (IS_ABSOLUTE "${in}")
+   if(IS_ABSOLUTE "${in}")
       set(${out} "${in}")
-   else (IS_ABSOLUTE "${in}")
+   else()
       set(${out} "\${AKONADI_INSTALL_DIR}/${in}")
-   endif (IS_ABSOLUTE "${in}")
-endmacro(MAKE_INSTALL_PATH_ABSOLUTE out in)
+   endif()
+endmacro()
 
 
 macro(SET_DEFAULT_DB_BACKEND)
-    set ( _backend ${ARGV0} )
-    if ( "${_backend}" STREQUAL "SQLITE" )
+    set(_backend ${ARGV0})
+    if("${_backend}" STREQUAL "SQLITE")
         set(AKONADI_DATABASE_BACKEND QSQLITE3)
         set(AKONADI_BUILD_QSQLITE TRUE)
     else()
-        if ( "${_backend}" STREQUAL "POSTGRES" )
+        if("${_backend}" STREQUAL "POSTGRES")
           set(AKONADI_DATABASE_BACKEND QPSQL)
         else()
           set(AKONADI_DATABASE_BACKEND QMYSQL)
-        endif ()
+        endif()
     endif()
 
-    message( STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}" )
-endmacro(SET_DEFAULT_DB_BACKEND)
+    message(STATUS "Using default db backend ${AKONADI_DATABASE_BACKEND}")
+endmacro()
 
 #### DB BACKEND DEFAULT ####
-set_default_db_backend( ${DATABASE_BACKEND} )
+set_default_db_backend(${DATABASE_BACKEND})
 
 
 ############### Find what we need ###############
@@ -133,42 +133,43 @@ include(AkonadiMacros)
 # We need QtDBus and QtSql
 set(QT_USE_QTDBUS TRUE)
 set(QT_USE_QTSQL TRUE)
-if (NOT QT_QTDBUS_FOUND)
-   message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
-endif(NOT QT_QTDBUS_FOUND)
-if (NOT QT_QTSQL_FOUND)
-   message(FATAL_ERROR  "Akonadi requires Qt4 with QtSql module in order to built.")
-endif(NOT QT_QTSQL_FOUND)
+if(NOT QT_QTDBUS_FOUND)
+  message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
+endif()
+if(NOT QT_QTSQL_FOUND)
+  message(FATAL_ERROR  "Akonadi requires Qt4 with QtSql module in order to built.")
+endif()
 # properly set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...)
 include(${QT_USE_FILE})
 
 # Missing in FindQt4.cmake until Dec 2011: setting QT_NO_DEBUG_OUTPUT
-if (CMAKE_BUILD_TYPE)
+if(CMAKE_BUILD_TYPE)
   string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_TOLOWER)
 endif()
-if (NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
+
+if(NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
    add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
 if(WINCE)
     find_package(Wcecompat REQUIRED)
-    SET(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
-    SET(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
+    set(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
+    set(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
     set(STATIC_LIBRARY ON)
-endif(WINCE)
+endif()
 
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
   set(AKONADI_STATIC_LIBS ON)
   message(STATUS "Building Akonadi as a static library")
-else(STATIC_LIBRARY)
+else()
   set(LIBRARY_TYPE SHARED)
-endif(STATIC_LIBRARY)
+endif()
 
 #### Soprano ####
-if (NOT WINCE)
+if(NOT WINCE)
   find_package(Soprano)
-endif(NOT WINCE)
+endif()
 
 macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "" "Soprano is needed for the Nepomuk search backend")
 
@@ -183,38 +184,39 @@ find_package(SharedMimeInfo REQUIRED)
 find_program(XSLTPROC_EXECUTABLE xsltproc)
 if(NOT XSLTPROC_EXECUTABLE)
   message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
-endif(NOT XSLTPROC_EXECUTABLE)
+endif()
+
 if(WINCE)
-set(XSLTPROC_EXECUTABLE "${HOST_BINDIR}/xsltproc.exe")
-endif(WINCE)
+  set(XSLTPROC_EXECUTABLE "${HOST_BINDIR}/xsltproc.exe")
+endif()
 
 #### Boost ####
 # In CMake >= 2.8.6, FindBoost.cmake tries to find BoostConfig.cmake which is
 # not compatible with CMake's FindBoost. Disable this function.
-set (Boost_NO_BOOST_CMAKE TRUE)
+set(Boost_NO_BOOST_CMAKE TRUE)
 
 if(MSVC)
-  set (_ENABLE_EXCEPTIONS -EHsc)
-endif(MSVC)
+  set(_ENABLE_EXCEPTIONS -EHsc)
+endif()
 
 if(NOT WINCE)
     find_package(Boost COMPONENTS program_options)
     macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries (program_options).")
-endif(NOT WINCE)
+endif()
 
 # should be handled by FindBoost.cmake ->  cmake bug #8335
 if(WIN32 AND NOT Boost_USE_STATIC_LIBS)
   add_definitions(-DBOOST_DYN_LINK)
   add_definitions(-DBOOST_PROGRAM_OPTIONS_DYN_LINK)
-endif(WIN32 AND NOT Boost_USE_STATIC_LIBS)
+endif()
 
 
 #### Sqlite ####
 # If Sqlite is the default backend, it cannot be optional.
-if ("${DATABASE_BACKEND}" STREQUAL "SQLITE")
-  set (SQLITE_REQUIRED "TRUE")
+if("${DATABASE_BACKEND}" STREQUAL "SQLITE")
+  set(SQLITE_REQUIRED "TRUE")
 else()
-  set (SQLITE_REQUIRED "FALSE")
+  set(SQLITE_REQUIRED "FALSE")
 endif()
 
 if(AKONADI_BUILD_QSQLITE)
@@ -226,14 +228,14 @@ endif()
 ############### Compilers flags ###############
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
-if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
-  set (_ENABLE_EXCEPTIONS -fexceptions)
-  set (CMAKE_C_FLAGS    "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
-  set (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
+  set(_ENABLE_EXCEPTIONS -fexceptions)
+  set(CMAKE_C_FLAGS    "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
+  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
   if(CMAKE_COMPILE_GCOV)
-    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-  endif(CMAKE_COMPILE_GCOV)
-endif (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
+  endif()
+endif()
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
@@ -241,28 +243,28 @@ add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 ############### Configure checks ###############
 
-set (AKONADI_SYSTEM_LIBS)
+set(AKONADI_SYSTEM_LIBS)
 
 check_include_files(execinfo.h HAVE_EXECINFO_H)
-if (HAVE_EXECINFO_H)
+if(HAVE_EXECINFO_H)
   check_function_exists(backtrace BACKTRACE_IN_LIBC)
-  if (NOT BACKTRACE_IN_LIBC)
-    find_library (EXECINFO_LIBRARY NAMES execinfo)
-    if (EXECINFO_LIBRARY)
-      set (AKONADI_SYSTEM_LIBS ${AKONADI_SYSTEM_LIBS} ${EXECINFO_LIBRARY})
-    endif (EXECINFO_LIBRARY)
-  endif (NOT BACKTRACE_IN_LIBC)
-endif (HAVE_EXECINFO_H)
+  if(NOT BACKTRACE_IN_LIBC)
+    find_library(EXECINFO_LIBRARY NAMES execinfo)
+    if(EXECINFO_LIBRARY)
+      set(AKONADI_SYSTEM_LIBS ${AKONADI_SYSTEM_LIBS} ${EXECINFO_LIBRARY})
+    endif()
+  endif()
+endif()
 
 check_include_files(unistd.h HAVE_UNISTD_H)
 
 # set the output paths
-set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-if (WIN32)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
+if(WIN32)
   set(LIBRARY_OUTPUT_PATH   ${EXECUTABLE_OUTPUT_PATH})
-else (WIN32)
+else()
   set(LIBRARY_OUTPUT_PATH   ${CMAKE_BINARY_DIR}/lib)
-endif (WIN32)
+endif()
 
 # Set up RPATH handling, so the libs are found if they are installed to a non-standard location.
 # By default cmake builds the targets with full RPATH to everything in the build directory,
@@ -277,14 +279,14 @@ if("${_isSystemLibDir}" STREQUAL "-1")
   set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 endif("${_isSystemLibDir}" STREQUAL "-1")
 
-if (NOT DEFINED AKONADI_BUNDLE_PATH)
+if(NOT DEFINED AKONADI_BUNDLE_PATH)
   set(AKONADI_BUNDLE_PATH "/Applications/KDE4")
-endif (NOT DEFINED AKONADI_BUNDLE_PATH)
+endif()
 
 if(APPLE)
    message(STATUS "MacOS Bundle Path: ${AKONADI_BUNDLE_PATH}")
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
-endif(APPLE)
+endif()
 
 ############### Prepare AkonadiConfig.cmake ###############
 
@@ -303,16 +305,16 @@ make_install_path_absolute(AKONADI_XDG_MIME_DIR        ${XDG_MIME_INSTALL_DIR})
 # Used in configure_file() and install(EXPORT). Must be set before setting the AkonadiConfig.cmake vars.
 set(AKONADI_TARGET_PREFIX Akonadi__)
 
-if (Soprano_FOUND)
+if(Soprano_FOUND)
   set(HAVE_SOPRANO TRUE)
-endif (Soprano_FOUND)
+endif()
 configure_file(akonadi-prefix.h.cmake ${Akonadi_BINARY_DIR}/akonadi-prefix.h)
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 configure_file(AkonadiConfig.cmake.in "${Akonadi_BINARY_DIR}/AkonadiConfig.cmake" @ONLY)
 
-if (NOT WIN32)
+if(NOT WIN32)
   configure_file(${Akonadi_SOURCE_DIR}/akonadi.pc.cmake ${Akonadi_BINARY_DIR}/akonadi.pc @ONLY)
-endif (NOT WIN32)
+endif()
 
 # this file is used by to check if the installed version can be used.
 macro_write_basic_cmake_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
@@ -324,33 +326,33 @@ include_directories(${Akonadi_SOURCE_DIR} ${Akonadi_BINARY_DIR} ${QT_INCLUDES} $
 
 add_subdirectory(interfaces)
 add_subdirectory(libs)
-set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
+set(AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
 
 add_subdirectory(shared)
 add_subdirectory(agentserver)
 
-if (XSLTPROC_EXECUTABLE)
-   add_subdirectory(server)
-endif (XSLTPROC_EXECUTABLE)
+if(XSLTPROC_EXECUTABLE)
+  add_subdirectory(server)
+endif()
 
 add_subdirectory(rds)
-if (SQLITE_FOUND)
+if(SQLITE_FOUND)
   option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
   add_subdirectory(qsqlite)
-endif (SQLITE_FOUND)
+endif()
 
 ############### install stuff ###############
 
 install(FILES ${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
               ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake
-        DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi )
+        DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi)
 
 install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
 update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 
 if(NOT WIN32)
   install(FILES ${Akonadi_BINARY_DIR}/akonadi.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
-endif(NOT WIN32)
+endif()
 
 ############### CPack setup ##################
 
@@ -372,4 +374,4 @@ macro_display_feature_log()
 install(EXPORT akonadiLibraryTargets
         NAMESPACE ${AKONADI_TARGET_PREFIX}
         DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi
-        FILE AkonadiTargetsWithPrefix.cmake )
+        FILE AkonadiTargetsWithPrefix.cmake)
