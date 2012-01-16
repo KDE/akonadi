@@ -32,8 +32,18 @@ else()
 endif (AKONADI_USE_STRIGI_SEARCH)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
+   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline" CACHE STRING
+       "Flags used by the C++ compiler during debugfull builds." FORCE)
+
+   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline" CACHE STRING
+       "Flags used by the C compiler during debugfull builds." FORCE)
+
+   mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
+
+   # Update the documentation string of CMAKE_BUILD_TYPE for ccache & cmake-gui
+   set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
+       "Choose the type of build, options are: None debugfull Debug Release RelWithDebInfo MinSizeRel."
+       FORCE)
 endif()
 
 ############### CMake Macros ###############
