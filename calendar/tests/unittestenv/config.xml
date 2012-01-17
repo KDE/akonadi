@@ -9,6 +9,8 @@
   <datahome>xdgdata</datahome>
   <!-- load resources of the specified types -->
   <agent synchronize="true">akonadi_ical_resource</agent>
+  <agent synchronize="true">akonadi_maildir_resource</agent>
+  <agent synchronize="true">akonadi_mailtransport_dummy_resource</agent>
   <!-- set environment variables -->
   <envvar name="AKONADI_DISABLE_AGENT_AUTOSTART">true</envvar>
 </config>
