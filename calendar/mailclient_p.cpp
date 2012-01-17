@@ -327,23 +327,39 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->sentBehaviourAttribute().setSentBehaviour(
            MailTransport::SentBehaviourAttribute::MoveToDefaultSentCollection );
 
-  if ( transport && transport->specifySenderOverwriteAddress() ) {
-    qjob->addressAttribute().setFrom(
-      KPIMUtils::extractEmailAddress(
-        KPIMUtils::normalizeAddressesAndEncodeIdn( transport->senderOverwriteAddress() ) ) );
-  } else {
-    qjob->addressAttribute().setFrom(
-      KPIMUtils::extractEmailAddress(
-        KPIMUtils::normalizeAddressesAndEncodeIdn( from ) ) );
-  }
+  const QString unormalizedFrom = ( transport && transport->specifySenderOverwriteAddress() ) ?
+                                                         transport->senderOverwriteAddress() : from;
 
-  qjob->addressAttribute().setTo( KPIMUtils::splitAddressList( to ) );
-  qjob->addressAttribute().setCc( KPIMUtils::splitAddressList( cc ) );
+
+  const QString normalizedFrom = KPIMUtils::extractEmailAddress(
+                                     KPIMUtils::normalizeAddressesAndEncodeIdn( unormalizedFrom ) );
+
+  const QString finalFrom = KPIMUtils::extractEmailAddress( normalizedFrom );
+  qjob->addressAttribute().setFrom( finalFrom );
+
+  const QStringList toStringList = KPIMUtils::splitAddressList( to );
+  const QStringList ccStringList = KPIMUtils::splitAddressList( cc );
+  QStringList bccStringList;
+
+  qjob->addressAttribute().setTo( toStringList );
+  qjob->addressAttribute().setCc( ccStringList );
   if ( bccMe ) {
-    qjob->addressAttribute().setBcc( KPIMUtils::splitAddressList( from ) );
+    bccStringList = KPIMUtils::splitAddressList( from );
+    qjob->addressAttribute().setBcc( bccStringList );
   }
   qjob->setMessage( message );
   connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
+
+
+#ifdef MAILCLIENTTEST_UNITTEST
+  mUnitTestResult.message            = message;
+  mUnitTestResult.from               = finalFrom;
+  mUnitTestResult.to                 = toStringList;
+  mUnitTestResult.cc                 = ccStringList;
+  mUnitTestResult.bcc                = bccStringList;
+  mUnitTestResult.transportId        = transportId;
+#endif
+
 }
 
 void MailClient::handleQueueJobFinished( KJob *job )

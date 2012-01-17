@@ -28,6 +28,18 @@
 
 #include <QObject>
 
+#ifdef MAILCLIENTTEST_UNITTEST
+#include <KMime/Message>
+  struct UnitTestResult {
+    QString from;
+    QStringList to;
+    QStringList cc;
+    QStringList bcc;
+    int transportId;
+    KMime::Message::Ptr message;
+  };
+#endif
+
 namespace KPIMIdentities {
   class Identity;
 }
@@ -86,6 +98,11 @@ class MailClient : public QObject
 
   Q_SIGNALS:
     void finished( bool success, const QString &errorString );
+
+  #ifdef MAILCLIENTTEST_UNITTEST
+    public:
+      UnitTestResult mUnitTestResult; // So unit-tests can check the result without having to check the mail the transport sent
+  #endif
 };
 
 }
