@@ -38,9 +38,9 @@
 
 #include <KPIMUtils/Email>
 
-#include <Mailtransport/MessageQueueJob>
-#include <Mailtransport/Transport>
-#include <Mailtransport/TransportManager>
+#include <mailtransport/messagequeuejob.h>
+#include <mailtransport/transport.h>
+#include <mailtransport/transportmanager.h>
 
 #include <KDebug>
 #include <KLocale>
@@ -191,6 +191,15 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 {
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
+
+#ifdef MAILCLIENTTEST_UNITTEST
+  mUnitTestResult.message = KMime::Message::Ptr();
+  mUnitTestResult.from.clear();
+  mUnitTestResult.to.clear();
+  mUnitTestResult.cc.clear();
+  mUnitTestResult.bcc.clear();
+  mUnitTestResult.transportId = -1;
+#endif
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
          0, MailTransport::TransportManager::IfNoTransportExists ) ) {
@@ -350,6 +359,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   }
   qjob->setMessage( message );
   connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
+  qjob->start();
 
 
 #ifdef MAILCLIENTTEST_UNITTEST
@@ -366,6 +376,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 void MailClient::handleQueueJobFinished( KJob *job )
 {
   if ( job->error() ) {
+    kError() << "Error queueing message:" << job->errorText();
     emit finished( ResultQueueJobError, i18n( "Error queuing message in outbox: %1",
                                              job->errorText() ) );
   } else {

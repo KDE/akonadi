@@ -69,6 +69,11 @@ private slots:
     QTest::addColumn<QString>("attachment");
     QTest::addColumn<QString>("transport");
     QTest::addColumn<MailClient::Result>("expectedResult");
+    QTest::addColumn<int>("expectedTransportId");
+    QTest::addColumn<QString>("expectedFrom");
+    QTest::addColumn<QStringList>("expectedToList");
+    QTest::addColumn<QStringList>("expectedCcList");
+    QTest::addColumn<QStringList>("expectedBccList");
 
     KCalCore::Incidence::Ptr incidence( new KCalCore::Event() );
     KPIMIdentities::Identity identity;
@@ -76,10 +81,19 @@ private slots:
     QString attachment;
     QString transport;
     MailClient::Result expectedResult = MailClient::ResultNoAttendees;
+    const int expectedTransportId = 69372773; // from tests/unittestenv/kdehome/share/config/mailtransports
+    const QString expectedFrom = QLatin1String( "unittests@dev.nul" ); // from tests/unittestenv/kdehome/share/config/emailidentities
+    KCalCore::Person::Ptr organizer( new KCalCore::Person( QLatin1String( "Organizer" ),
+                                                           QLatin1String( "unittests@dev.nul" ) ) );
+
+    QStringList toList;
+    QStringList toCcList;
+    QStringList toBccList;
 
     //----------------------------------------------------------------------------------------------
     QTest::newRow("No attendees") << incidence << identity << bccMe << attachment << transport
-                                  << expectedResult;
+                                  << expectedResult << -1 << QString()
+                                  << toList << toCcList << toBccList;
     //----------------------------------------------------------------------------------------------
     // One attendee, but without e-mail
     KCalCore::Attendee::Ptr attendee( new KCalCore::Attendee( QLatin1String( "name1" ),
@@ -88,16 +102,78 @@ private slots:
     incidence->addAttendee( attendee );
     expectedResult = MailClient::ResultReallyNoAttendees;
     QTest::newRow("No attendees with email") << incidence << identity << bccMe << attachment << transport
-                                             << expectedResult;
+                                             << expectedResult << -1 << QString()
+                                             << toList << toCcList << toBccList;
     //----------------------------------------------------------------------------------------------
     // One valid attendee
     attendee = KCalCore::Attendee::Ptr ( new KCalCore::Attendee( QLatin1String( "name1" ),
                                                                  QLatin1String( "test@foo.org" ) ) );
     incidence = KCalCore::Incidence::Ptr( new KCalCore::Event() );
     incidence->addAttendee( attendee );
-    expectedResult = MailClient::ResultReallyNoAttendees;
-    QTest::newRow("On attendees") << incidence << identity << bccMe << attachment << transport
-                                  << expectedResult;
+    incidence->setOrganizer( organizer );
+    expectedResult = MailClient::ResultSuccess;
+    toList << QLatin1String( "name1 <test@foo.org>" );
+    QTest::newRow("One attendee") << incidence << identity << bccMe << attachment << transport
+                                  << expectedResult << expectedTransportId << expectedFrom
+                                  << toList << toCcList << toBccList;
+    //----------------------------------------------------------------------------------------------
+    // One valid attendee
+    attendee = KCalCore::Attendee::Ptr ( new KCalCore::Attendee( QLatin1String( "name1" ),
+                                                                 QLatin1String( "test@foo.org" ) ) );
+    incidence = KCalCore::Incidence::Ptr( new KCalCore::Event() );
+    incidence->setOrganizer( organizer );
+    incidence->addAttendee( attendee );
+    QString invalidTransport = QLatin1String( "foo" );
+    expectedResult = MailClient::ResultSuccess;
+    // Should default to the default transport
+    QTest::newRow("Invalid transport") << incidence << identity << bccMe << attachment
+                                       << invalidTransport  << expectedResult
+                                       << expectedTransportId << expectedFrom
+                                       << toList << toCcList << toBccList;
+    //----------------------------------------------------------------------------------------------
+    // One valid attendee, and bcc me
+    attendee = KCalCore::Attendee::Ptr ( new KCalCore::Attendee( QLatin1String( "name1" ),
+                                                                 QLatin1String( "test@foo.org" ) ) );
+    incidence = KCalCore::Incidence::Ptr( new KCalCore::Event() );
+    incidence->setOrganizer( organizer );
+    incidence->addAttendee( attendee );
+    expectedResult = MailClient::ResultSuccess;
+    // Should default to the default transport
+    toBccList.clear();
+    toBccList << QLatin1String( "Organizer <unittests@dev.nul>" );
+    QTest::newRow("Invalid transport") << incidence << identity << /*bccMe*/true << attachment
+                                       << transport  << expectedResult
+                                       << expectedTransportId << expectedFrom
+                                       << toList << toCcList << toBccList;
+    //----------------------------------------------------------------------------------------------
+    // Test CC list
+    attendee = KCalCore::Attendee::Ptr ( new KCalCore::Attendee( QLatin1String( "name1" ),
+                                                                 QLatin1String( "test@foo.org" ) ) );
+    KCalCore::Attendee::Ptr optionalAttendee =
+                            KCalCore::Attendee::Ptr( new KCalCore::Attendee( QLatin1String( "opt" ),
+                                                     QLatin1String( "optional@foo.org" ) ) );
+    KCalCore::Attendee::Ptr nonParticipant =
+                            KCalCore::Attendee::Ptr( new KCalCore::Attendee( QLatin1String( "non" ),
+                                                     QLatin1String( "non@foo.org" ) ) );
+    optionalAttendee->setRole( KCalCore::Attendee::OptParticipant );
+    nonParticipant->setRole( KCalCore::Attendee::NonParticipant );
+    incidence = KCalCore::Incidence::Ptr( new KCalCore::Event() );
+    incidence->setOrganizer( organizer );
+    incidence->addAttendee( attendee );
+    incidence->addAttendee( optionalAttendee );
+    incidence->addAttendee( nonParticipant );
+    expectedResult = MailClient::ResultSuccess;
+    // Should default to the default transport
+    toBccList.clear();
+    toBccList << QLatin1String( "Organizer <unittests@dev.nul>" );
+
+    toCcList.clear();
+    toCcList << QLatin1String( "opt <optional@foo.org>" )
+             << QLatin1String( "non <non@foo.org>" );
+    QTest::newRow("Invalid transport") << incidence << identity << /*bccMe*/true << attachment
+                                       << transport  << expectedResult
+                                       << expectedTransportId << expectedFrom
+                                       << toList << toCcList << toBccList;
   }
 
   void testMailAttendees()
@@ -108,11 +184,23 @@ private slots:
     QFETCH( QString, attachment );
     QFETCH( QString, transport );
     QFETCH( MailClient::Result, expectedResult );
+    QFETCH( int, expectedTransportId );
+    QFETCH( QString, expectedFrom );
+    QFETCH( QStringList, expectedToList  );
+    QFETCH( QStringList, expectedCcList  );
+    QFETCH( QStringList, expectedBccList );
 
     mPendingSignals = 1;
     mMailClient->mailAttendees( incidence, identity, bccMe, attachment, transport );
     waitForSignals();
     QCOMPARE( mLastResult, expectedResult );
+    if ( expectedTransportId != -1 )
+      QCOMPARE( mMailClient->mUnitTestResult.transportId, expectedTransportId );
+
+    QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
+    QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
+    QCOMPARE( mMailClient->mUnitTestResult.cc, expectedCcList );
+    QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
   }
 
   void testMailOrganizer()
@@ -136,6 +224,7 @@ private slots:
   {
     if ( mPendingSignals > 0 ) {
       QTestEventLoop::instance().enterLoop( 5 ); // 5 seconds is enough
+      QVERIFY( !QTestEventLoop::instance().timeout() );
     }
   }
 
