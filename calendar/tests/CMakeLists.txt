@@ -7,6 +7,7 @@ macro(add_akonadi_isolated_test _source)
     akonadi-kmime
     kmime
     mailtransport
+    kpimidentities
     kpimutils
     kcalutils
     kcalcore

@@ -34,7 +34,7 @@
 
 #include <KMime/Message>
 
-#include <KPIMIdentities/Identity>
+#include <kpimidentities/identity.h>
 
 #include <KPIMUtils/Email>
 
@@ -63,10 +63,11 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
                                 bool bccMe, const QString &attachment,
                                 const QString &mailTransport )
 {
+  Q_ASSERT( incidence );
   KCalCore::Attendee::List attendees = incidence->attendees();
   if ( attendees.isEmpty() ) {
     kWarning() << "There are no attendees to e-mail";
-    emit finished( /**success=*/false, i18n( "There are no attendees to e-mail" ) );
+    emit finished( ResultNoAttendees, i18n( "There are no attendees to e-mail" ) );
     return;
   }
 
@@ -110,7 +111,7 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
   if( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
-    emit finished( /**success=*/false, i18n( "There are no attendees to e-mail" ) );
+    emit finished( ResultReallyNoAttendees, i18n( "There are no attendees to e-mail" ) );
     return;
   }
   QString to;
@@ -130,8 +131,8 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
     subject = i18n( "Free Busy Object" );
   }
 
-  const QString body =
-    KCalUtils::IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
+  const QString body = KCalUtils::IncidenceFormatter::mailBodyStr( incidence,
+                                                                   KSystemTimeZones::local() );
 
   send( identity, from, to, cc, subject, body, false, bccMe, attachment, mailTransport );
 }
@@ -193,7 +194,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
          0, MailTransport::TransportManager::IfNoTransportExists ) ) {
-    emit finished( /**success=*/ false,  i18n( "Error while creating transport" ) );
+    emit finished( ResultErrorCreatingTransport, i18n( "Error while creating transport" ) );
     return;
   }
 
@@ -225,7 +226,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   if ( !transport ) {
     kError() << "Error fetching transport; mailTransport"
              << mailTransport << MailTransport::TransportManager::self()->defaultTransportName();
-    emit finished( /**success=*/ false,
+    emit finished( ResultErrorFetchingTransport,
                    i18n( "Error fetching transport. Unable to send invitations" ) );
     return;
   }
@@ -365,9 +366,9 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 void MailClient::handleQueueJobFinished( KJob *job )
 {
   if ( job->error() ) {
-    emit finished( /**success=*/false, i18n( "Error queuing message in outbox: %1",
+    emit finished( ResultQueueJobError, i18n( "Error queuing message in outbox: %1",
                                              job->errorText() ) );
   } else {
-    emit finished( /**success=*/true, QString() );
+    emit finished( ResultSuccess, QString() );
   }
 }

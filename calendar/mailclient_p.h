@@ -52,6 +52,16 @@ class MailClient : public QObject
 {
   Q_OBJECT
   public:
+
+    enum Result {
+      ResultSuccess,
+      ResultNoAttendees,
+      ResultReallyNoAttendees,
+      ResultErrorCreatingTransport,
+      ResultErrorFetchingTransport,
+      ResultQueueJobError
+    };
+
     explicit MailClient( QObject *parent = 0 );
     ~MailClient();
 
@@ -97,7 +107,7 @@ class MailClient : public QObject
     void handleQueueJobFinished( KJob* job );
 
   Q_SIGNALS:
-    void finished( bool success, const QString &errorString );
+    void finished( Akonadi::MailClient::Result result, const QString &errorString );
 
   #ifdef MAILCLIENTTEST_UNITTEST
     public:
@@ -106,5 +116,7 @@ class MailClient : public QObject
 };
 
 }
+
+Q_DECLARE_METATYPE( Akonadi::MailClient::Result );
 
 #endif

@@ -29,17 +29,18 @@ kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 target_link_libraries(akonadi-calendar
                       akonadi-kmime
                       akonadi-kde
+                      kpimidentities
                       kpimutils
                       kcalcore
-		      kcalutils
-		      kmime
-		      mailtransport
+                      kcalutils
+                      kmime
+                      mailtransport
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDE4_PHONON_LIBS})
 
 if(NOT WINCE)
-target_link_libraries(akonadi-calendar 
+target_link_libraries(akonadi-calendar
                                       ${NEPOMUK_LIBRARIES})
 endif(NOT WINCE)
 
