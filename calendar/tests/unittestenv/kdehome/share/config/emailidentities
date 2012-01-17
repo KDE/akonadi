@@ -1,0 +1,19 @@
+[$Version]
+update_info=kmail.upd:3.3-move-identities-to-own-file,kmail.upd:3.3-aegypten-emailidentities-split-sign-encr-keys
+
+[General]
+Default Identity=1319040445
+
+[Identity #0]
+Dictionary=English (United States of America)
+Email Address=unittests@dev.nul
+Email Aliases=
+Identity=UnitTestUser
+Image Location=
+Inline Signature=
+Name=Unit Test User
+Organization=KDE
+Preferred Crypto Message Format=auto
+Signature Type=disabled
+X-FaceEnabled=false
+uoid=1319040445
