@@ -24,6 +24,7 @@
 #include "../moc_mailclient_p.cpp"
 
 #include <KCalCore/Incidence>
+#include <KCalCore/FreeBusy>
 #include <Mailtransport/MessageQueueJob>
 
 
@@ -36,6 +37,7 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE( KPIMIdentities::Identity );
 Q_DECLARE_METATYPE( KCalCore::Incidence::Ptr );
+Q_DECLARE_METATYPE( KCalCore::IncidenceBase::Ptr );
 
 class MailClientTest : public QObject
 {
@@ -89,7 +91,6 @@ private slots:
     QStringList toList;
     QStringList toCcList;
     QStringList toBccList;
-
     //----------------------------------------------------------------------------------------------
     QTest::newRow("No attendees") << incidence << identity << bccMe << attachment << transport
                                   << expectedResult << -1 << QString()
@@ -203,8 +204,81 @@ private slots:
     QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
   }
 
+  void testMailOrganizer_data()
+  {
+    QTest::addColumn<KCalCore::IncidenceBase::Ptr>("incidence");
+    QTest::addColumn<KPIMIdentities::Identity>("identity");
+    QTest::addColumn<QString>("from");
+    QTest::addColumn<bool>("bccMe");
+    QTest::addColumn<QString>("attachment");
+    QTest::addColumn<QString>("subject");
+    QTest::addColumn<QString>("transport");
+    QTest::addColumn<MailClient::Result>("expectedResult");
+    QTest::addColumn<int>("expectedTransportId");
+    QTest::addColumn<QString>("expectedFrom");
+    QTest::addColumn<QStringList>("expectedToList");
+    QTest::addColumn<QStringList>("expectedBccList");
+    QTest::addColumn<QString>("expectedSubject");
+
+    KCalCore::IncidenceBase::Ptr incidence( new KCalCore::Event() );
+    KPIMIdentities::Identity identity;
+    const QString from = QLatin1String( "from@kde.org" );
+    bool bccMe;
+    QString attachment;
+    QString subject = QLatin1String( "subject1" );
+    QString transport;
+    MailClient::Result expectedResult = MailClient::ResultSuccess;
+    const int expectedTransportId = 69372773; // from tests/unittestenv/kdehome/share/config/mailtransports
+    QString expectedFrom = from; // from tests/unittestenv/kdehome/share/config/emailidentities
+    KCalCore::Person::Ptr organizer( new KCalCore::Person( QLatin1String( "Organizer" ),
+                                                           QLatin1String( "unittests@dev.nul" ) ) );
+    incidence->setOrganizer( organizer );
+
+    QStringList toList;
+    toList << QLatin1String( "Organizer <unittests@dev.nul>" );
+    QStringList toBccList;
+    QString expectedSubject;
+    //----------------------------------------------------------------------------------------------
+    expectedSubject = subject;
+    QTest::newRow("test1") << incidence << identity << from << bccMe << attachment << subject
+                           << transport << expectedResult << expectedTransportId << expectedFrom
+                           << toList << toBccList << expectedSubject;
+    //----------------------------------------------------------------------------------------------
+    expectedSubject = QLatin1String( "Free Busy Message" );
+    incidence = KCalCore::IncidenceBase::Ptr( new KCalCore::FreeBusy() );
+    incidence->setOrganizer( organizer );
+    QTest::newRow("FreeBusy") << incidence << identity << from << bccMe << attachment << subject
+                              << transport << expectedResult << expectedTransportId << expectedFrom
+                              << toList << toBccList << expectedSubject;
+  }
+
   void testMailOrganizer()
   {
+    QFETCH( KCalCore::IncidenceBase::Ptr, incidence );
+    QFETCH( KPIMIdentities::Identity, identity );
+    QFETCH( QString, from );
+    QFETCH( bool, bccMe );
+    QFETCH( QString, attachment );
+    QFETCH( QString, subject );
+    QFETCH( QString, transport );
+    QFETCH( MailClient::Result, expectedResult );
+    QFETCH( int, expectedTransportId );
+    QFETCH( QString, expectedFrom );
+    QFETCH( QStringList, expectedToList  );
+    QFETCH( QStringList, expectedBccList );
+    QFETCH( QString, expectedSubject );
+
+    mPendingSignals = 1;
+    mMailClient->mailOrganizer( incidence, identity, from, bccMe, attachment, subject, transport );
+    waitForSignals();
+    QCOMPARE( mLastResult, expectedResult );
+    if ( expectedTransportId != -1 )
+      QCOMPARE( mMailClient->mUnitTestResult.transportId, expectedTransportId );
+
+    QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
+    QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
+    QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
+    QCOMPARE( mMailClient->mUnitTestResult.message->subject()->asUnicodeString(), expectedSubject );
   }
 
   void testMailTo()
