@@ -159,7 +159,7 @@ QVariant LeafExtensionProxyModel::data( const QModelIndex &index, int role ) con
 Qt::ItemFlags LeafExtensionProxyModel::flags( const QModelIndex &index ) const
 {
   if ( d->mOwnIndexes.contains( index ) )
-    return Qt::ItemIsEnabled|Qt::ItemIsSelectable;
+    return Qt::ItemFlags( Qt::ItemIsEnabled|Qt::ItemIsSelectable );
 
   return QSortFilterProxyModel::flags( index );
 }

@@ -132,6 +132,7 @@ FavoriteCollectionsModel::FavoriteCollectionsModel( QAbstractItemModel *source, 
   d->loadConfig();
   connect( source, SIGNAL(modelReset()), this, SLOT(clearAndUpdateSelection()) );
   connect( source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(updateSelection()) );
+  d->updateSelection();
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()

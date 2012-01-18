@@ -53,6 +53,10 @@ class AgentType;
  *
  * @endcode
  *
+ * @note To find the collections belonging to an AgentInstance, use
+ * CollectionFetchJob and supply AgentInstance::identifier() as the parameter
+ * to CollectionFetchScope::setResource().
+ *
  * @author Tobias Koenig <tokoe@kde.org>
  */
 class AKONADI_EXPORT AgentInstance

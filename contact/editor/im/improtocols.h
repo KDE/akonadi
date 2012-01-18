@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef IMPROTOCOLS_H
-#define IMPROTOCOLS_H
+#ifndef AKONADI_CONTACT_IMPROTOCOLS_H
+#define AKONADI_CONTACT_IMPROTOCOLS_H
 
 #include <kplugininfo.h>
 

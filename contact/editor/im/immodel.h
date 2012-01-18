@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef IMMODEL_H
-#define IMMODEL_H
+#ifndef AKONADI_CONTACT_IMMODEL_H
+#define AKONADI_CONTACT_IMMODEL_H
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QVector>
