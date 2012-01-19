@@ -63,6 +63,11 @@ class StorageJanitor : public QObject
     void inform( const QString &msg );
 
     /**
+     * Look for resources in the DB not existing in reality.
+     */
+    void findOrphanedResources();
+
+    /**
      * Look for collections belonging to non-existent resources.
      */
     void findOrphanedCollections();
