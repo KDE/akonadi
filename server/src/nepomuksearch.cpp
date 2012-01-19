@@ -27,25 +27,25 @@
 
 using namespace Akonadi;
 
-static qint64 uriToItemId( const QUrl &url )
+static qint64 resultToId( const Nepomuk::Query::Result &result )
 {
-  bool ok = false;
-
-  const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
-
-  // We don't want attachments
-  ok = ok && !url.hasFragment();
-
-  if ( !ok )
+  const Soprano::Node &property = result.requestProperty(QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ));
+  if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
+    qWarning() << "Failed to get requested akonadiItemId property";
+    qDebug() << "AkonadiItemId missing in query results!" << result.resourceUri() << property.isValid() << property.isLiteral() << property.literal().isString() << property.literal().type() << result.requestProperties().size();
+    qDebug() << result.requestProperties().values().first().toString();
     return -1;
-  else
-    return id;
+  }
+  return property.literal().toString().toLongLong();
 }
 
 NepomukSearch::NepomukSearch( QObject* parent )
   : QObject( parent ), mSearchService( 0 )
 {
   mSearchService = new Nepomuk::Query::QueryServiceClient( this );
+  connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(idHitsAdded(QList<Nepomuk::Query::Result>)) );
+  mIdSearchService = new Nepomuk::Query::QueryServiceClient( this );
   connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
            this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
 }
@@ -81,13 +81,26 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
   }
 
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
-    const qint64 itemId = uriToItemId( result.resourceUri() );
+    QHash<QString, QString> encodedRps;
+    //We do another query to get the akonadiItemId attribute (since it may not have been added to the original query)
+    encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
+    mIdSearchService->blockingQuery(QString::fromLatin1("SELECT DISTINCT ?r ?reqProp1 WHERE { %1 a ?v2 . %1 <http://akonadi-project.org/ontologies/aneo#akonadiItemId> ?reqProp1 . } LIMIT 1").arg(result.resourceUri().toString()), encodedRps);
+  }
+}
+
+void NepomukSearch::idHitsAdded(const QList< Nepomuk::Query::Result >& entries)
+{
+
+  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+    const qint64 itemId = resultToId( result );
 
     if ( itemId == -1 )
       continue;
 
     mMatchingUIDs.insert( QString::number( itemId ) );
   }
+
 }
+
 
 #include "nepomuksearch.moc"

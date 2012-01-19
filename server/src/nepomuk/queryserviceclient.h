@@ -20,6 +20,7 @@
 #define _NEPOMUK_QUERY_SERVICE_CLIENT_H_
 
 #include <QtCore/QObject>
+#include <QtCore/QHash>
 
 class QUrl;
 
@@ -77,7 +78,7 @@ namespace Nepomuk {
              *
              * \sa QueryParser
              */
-            bool query( const QString& query );
+            bool query( const QString& query, const QHash<QString, QString> &encodedRps = QHash<QString, QString>() );
 
             /**
              * Start a query using the Nepomuk user query language.
@@ -95,7 +96,7 @@ namespace Nepomuk {
              * 
              * \sa query(const QString&), close()
              */
-            bool blockingQuery( const QString& query );
+            bool blockingQuery( const QString& query, const QHash<QString, QString> &encodedRps = QHash<QString, QString>() );
 
             /**
              * Close the client, thus stop to monitor the query
@@ -118,7 +119,7 @@ namespace Nepomuk {
              * \param entries A list of resource URIs identifying the resources
              * that dropped out of the query results.
              */
-            void entriesRemoved( const QList<QUrl>& entries );
+            void entriesRemoved( const QList<Nepomuk::Query::Result>& entries );
 
             /**
              * Emitted when the initial listing has been finished, ie. if all 
@@ -131,7 +132,6 @@ namespace Nepomuk {
             class Private;
             Private* const d;
 
-            Q_PRIVATE_SLOT( d, void _k_entriesRemoved( const QStringList& ) )
             Q_PRIVATE_SLOT( d, void _k_finishedListing() )
         };
     }
