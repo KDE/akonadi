@@ -101,7 +101,7 @@ class MailClient : public QObject
     void send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
                const QString &cc, const QString &subject, const QString &body,
                bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
-               const QString &mailTransport = QString() );
+               const QString &mailTransport = QString() ); // TODO move to private
 
   private Q_SLOTS:
     void handleQueueJobFinished( KJob* job );

@@ -21,6 +21,8 @@ set(akonadicalendar_LIB_SRC
   fetchjobcalendar.cpp
   freebusyproviderbase.cpp
   mailclient_p.cpp
+  # mailscheduler_p.cpp
+  scheduler_p.cpp
   standardcalendaractionmanager.cpp
 )
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )

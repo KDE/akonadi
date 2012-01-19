@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -20,11 +21,12 @@
 #define AKONADI_CALENDAR_SCHEDULER_H
 
 #include "akonadi-calendar_export.h"
+#include "calendarbase.h"
 
 #include <kcalcore/schedulemessage.h>
 #include <kcalcore/incidencebase.h>
-#include <kcalcore/calendar.h>
 
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QList>
 
@@ -39,13 +41,26 @@ namespace Akonadi {
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class AKONADI_CALENDAR_EXPORT Scheduler
+class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
 {
+  Q_OBJECT
   public:
+
+    enum Result {
+      ResultSuccess,
+      ResultAssigningDifferentTypes,
+      ResultOutatedUpdate,
+      ResultErrorDelete,
+      ResultIncidenceToDeleteNotFound,
+      ResultGenericError,
+      ResultNoFreeBusyCache,
+      ResultErrorSavingFreeBusy
+    };
+
     /**
       Creates a scheduler for calendar specified as argument.
     */
-    explicit Scheduler( const  KCalCore::Calendar::Ptr &calendar );
+    explicit Scheduler( const Akonadi::CalendarBase::Ptr &calendar, QObject *parent = 0 );
     virtual ~Scheduler();
 
     /**
@@ -91,8 +106,10 @@ class AKONADI_CALENDAR_EXPORT Scheduler
       @param status scheduling status.
       @param email the email address of the person for whom this
       transaction is to be performed.
+
+      Listen to the acceptTransactionFinished() signal to know the success.
     */
-    bool acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+    void acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
                             KCalCore::iTIPMethod method,
                             KCalCore::ScheduleMessage::Status status,
                             const QString &email = QString() );
@@ -115,38 +132,41 @@ class AKONADI_CALENDAR_EXPORT Scheduler
     KCalCore::FreeBusyCache *freeBusyCache() const;
 
   protected:
-    bool acceptPublish( const KCalCore::IncidenceBase::Ptr &,
+    void acceptPublish( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status,
                         KCalCore::iTIPMethod method );
 
-    bool acceptRequest( const KCalCore::IncidenceBase::Ptr &,
+    void acceptRequest( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status,
                         const QString &email );
 
-    bool acceptAdd( const KCalCore::IncidenceBase::Ptr &,
+    void acceptAdd( const KCalCore::IncidenceBase::Ptr &,
                     KCalCore::ScheduleMessage::Status status );
 
-    bool acceptCancel( const KCalCore::IncidenceBase::Ptr &,
+    void acceptCancel( const KCalCore::IncidenceBase::Ptr &,
                        KCalCore::ScheduleMessage::Status status,
                        const QString &attendee );
 
-    bool acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
+    void acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
                                KCalCore::ScheduleMessage::Status status );
 
-    bool acceptReply( const KCalCore::IncidenceBase::Ptr &,
+    void acceptReply( const KCalCore::IncidenceBase::Ptr &,
                       KCalCore::ScheduleMessage::Status status,
                       KCalCore::iTIPMethod method );
 
-    bool acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
+    void acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status );
 
-    bool acceptCounter( const KCalCore::IncidenceBase::Ptr &,
+    void acceptCounter( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status );
 
-    bool acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
+    void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
 
-    KCalCore::Calendar::Ptr mCalendar;
+    Akonadi::CalendarBase::Ptr mCalendar;
     KCalCore::ICalFormat *mFormat;
+
+  Q_SIGNALS:
+    void acceptTransactionFinished ( Akonadi::Scheduler::Result, const QString &errorMessage );
 
   private:
     Q_DISABLE_COPY( Scheduler )
