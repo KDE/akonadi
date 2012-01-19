@@ -50,7 +50,7 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
   private Q_SLOTS:
     void reloadSearches();
     void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
-    void hitsRemoved( const QList<QUrl> &entries );
+    void hitsRemoved( const QList<Nepomuk::Query::Result>& entries );
 
   private:
     QMutex mMutex;

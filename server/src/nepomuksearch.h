@@ -40,10 +40,12 @@ class NepomukSearch : public QObject
 
   private Q_SLOTS:
     void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
+    void idHitsAdded( const QList<Nepomuk::Query::Result>& entries );
 
   private:
     QSet<QString> mMatchingUIDs;
     Nepomuk::Query::QueryServiceClient* mSearchService;
+    Nepomuk::Query::QueryServiceClient* mIdSearchService;
 };
 
 }

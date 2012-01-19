@@ -36,19 +36,16 @@
 
 using namespace Akonadi;
 
-static qint64 uriToItemId( const QUrl &url )
+static qint64 resultToId( const Nepomuk::Query::Result &result )
 {
-  bool ok = false;
-
-  const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
-
-  // We don't want attachments
-  ok = ok && !url.hasFragment();
-
-  if ( !ok )
+  const Soprano::Node &property = result.requestProperty(QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ));
+  if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
+    qWarning() << "Failed to get requested akonadiItemId property";
+    qDebug() << "AkonadiItemId missing in query results!" << result.resourceUri() << property.isValid() << property.isLiteral() << property.literal().isString() << property.literal().type() << result.requestProperties().size();
+    qDebug() << result.requestProperties().values().first().toString();
     return -1;
-  else
-    return id;
+  }
+  return property.literal().toString().toLongLong();
 }
 
 NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
@@ -80,21 +77,31 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
 {
   if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) )
     return;
+  const QString &q = collection.queryString();
+
+  //FIXME the requested property must be passed to here from the calling code
+  //Ideally the Query is passed as object so we can check here for the akonadiItemId property, and add it if missing
+  if (!q.contains(QString::fromLatin1("reqProp1")) || !q.contains(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId"))) {
+    qWarning() << "The query MUST contain exactly one required property (http://akonadi-project.org/ontologies/aneo#akonadiItemId), if another property is additionally requested or the akonadiItemId is missing the search will fail (due to this hack)";
+    qWarning() << q;
+    return;
+  }
 
   Nepomuk::Query::QueryServiceClient *query = new Nepomuk::Query::QueryServiceClient( this );
 
   connect( query, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
            this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
-  connect( query, SIGNAL(entriesRemoved(QList<QUrl>)),
-           this, SLOT(hitsRemoved(QList<QUrl>)) );
+  connect( query, SIGNAL(entriesRemoved(QList<Nepomuk::Query::Result>)),
+           this, SLOT(hitsRemoved(QList<Nepomuk::Query::Result>)) );
 
   mMutex.lock();
   mQueryMap.insert( query, collection.id() );
   mQueryInvMap.insert( collection.id(), query ); // needed for fast lookup in removeSearch()
   mMutex.unlock();
 
-  // query with SPARQL statement
-  query->query( collection.queryString() );
+  QHash<QString, QString> encodedRps;
+  encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() ); //FIXME hack because the reqProp is not passed to here by the caller
+  query->query( collection.queryString(), encodedRps );
 }
 
 void NepomukSearchEngine::removeSearch( qint64 collectionId )
@@ -169,7 +176,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   const Collection collection = Collection::retrieveById( collectionId );
 
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
-    const qint64 itemId = uriToItemId( result.resourceUri() );
+    const qint64 itemId = resultToId( result );
 
     if ( itemId == -1 )
       continue;
@@ -181,7 +188,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   mCollector->dispatchNotifications();
 }
 
-void NepomukSearchEngine::hitsRemoved( const QList<QUrl> &entries )
+void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entries )
 {
   Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
   if ( !query ) {
@@ -193,9 +200,8 @@ void NepomukSearchEngine::hitsRemoved( const QList<QUrl> &entries )
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
   const Collection collection = Collection::retrieveById( collectionId );
-
-  Q_FOREACH( const QUrl &uri, entries ) {
-    const qint64 itemId = uriToItemId( uri );
+  Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+    const qint64 itemId = resultToId( result );
 
     if ( itemId == -1 )
       continue;

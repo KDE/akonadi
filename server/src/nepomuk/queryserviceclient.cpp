@@ -30,6 +30,7 @@
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
+#include <KDE/KUrl>
 
 namespace {
 
@@ -83,7 +84,6 @@ public:
           loop( 0 ) {
     }
 
-    void _k_entriesRemoved( const QStringList& );
     void _k_finishedListing();
     bool handleQueryReply( QDBusReply<QDBusObjectPath> reply );
 
@@ -96,17 +96,6 @@ public:
 
     QEventLoop* loop;
 };
-
-
-void Nepomuk::Query::QueryServiceClient::Private::_k_entriesRemoved( const QStringList& uris )
-{
-    QList<QUrl> ul;
-    foreach( const QString& s, uris ) {
-        ul.append( QUrl( s ) );
-    }
-    emit q->entriesRemoved( ul );
-}
-
 
 void Nepomuk::Query::QueryServiceClient::Private::_k_finishedListing()
 {
@@ -124,8 +113,8 @@ bool Nepomuk::Query::QueryServiceClient::Private::handleQueryReply( QDBusReply<Q
                                                        dbusConnection  );
         connect( queryInterface, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
                  q, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)) );
-        connect( queryInterface, SIGNAL(entriesRemoved(QStringList)),
-                 q, SLOT(_k_entriesRemoved(QStringList)) );
+        connect( queryInterface, SIGNAL(entriesRemoved(QList<Nepomuk::Query::Result>)),
+                 q, SIGNAL(entriesRemoved(QList<Nepomuk::Query::Result>)) );
         connect( queryInterface, SIGNAL(finishedListing()),
                  q, SLOT(_k_finishedListing()) );
         // run the listing async in case the event loop below is the only one we have
@@ -163,12 +152,12 @@ Nepomuk::Query::QueryServiceClient::~QueryServiceClient()
 }
 
 
-bool Nepomuk::Query::QueryServiceClient::query( const QString& query )
+bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHash<QString, QString> &encodedRps )
 {
     close();
 
     if ( d->queryServiceInterface->isValid() ) {
-        return d->handleQueryReply( d->queryServiceInterface->sparqlQuery( query, QHash<QString, QString>() ) );
+        return d->handleQueryReply( d->queryServiceInterface->sparqlQuery( query, encodedRps ) );
     }
     else {
         akDebug() << "Could not contact query service.";
@@ -177,9 +166,9 @@ bool Nepomuk::Query::QueryServiceClient::query( const QString& query )
 }
 
 
-bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q )
+bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const QHash<QString, QString> &encodedRps )
 {
-    if( query( q ) ) {
+    if( query( q, encodedRps ) ) {
         QEventLoop loop;
         d->loop = &loop;
         loop.exec();
