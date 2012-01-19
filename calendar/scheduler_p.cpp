@@ -57,7 +57,7 @@ struct Akonadi::Scheduler::Private
 
 Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
                       QObject *parent ) : QObject( parent )
-                                        ,  d( new Akonadi::Scheduler::Private( this ) )
+                                        , d( new Akonadi::Scheduler::Private( this ) )
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
@@ -152,10 +152,8 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
             kError() << errorString;
           } else {
             //TODO akonadi, make it async
-            IncidenceBase *ci = calInc.data();
-            IncidenceBase *ni = newInc.data();
-            *ci = *ni;
-            calInc->setSchedulingID( newInc->uid(), oldUid );
+            newInc->setSchedulingID( newInc->uid(), oldUid );
+            mCalendar->modifyIncidence( newInc );
           }
         }
       }
@@ -247,10 +245,8 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           result = ResultAssigningDifferentTypes;
           errorString = i18n( "Error: Assigning different incidence types." );
         } else {
-          IncidenceBase *existingIncidenceBase = existingIncidence.data();
-          IncidenceBase *incBase = inc.data();
-          *existingIncidenceBase = *incBase;
-          existingIncidence->setSchedulingID( inc->uid(), oldUid );
+          inc->setSchedulingID( inc->uid(), oldUid );
+          mCalendar->modifyIncidence( inc );
           //TODO:AKONADI
         }
         d->finishAccept( incidence, result, errorString );
