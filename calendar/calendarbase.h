@@ -175,6 +175,13 @@ namespace Akonadi {
      */
     Akonadi::IncidenceChanger *incidenceChanger() const;
 
+    /**
+     * Modifies an incidence.
+     * The incidence with the same uid as @p newIncidence will be updated with the contents of
+     * @p newIncidence.
+     */
+    bool modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence );
+
   Q_SIGNALS:
     /**
      * This signal is emitted when an incidence is created in akonadi through
@@ -191,6 +198,14 @@ namespace Akonadi {
      * @param errorMessage if @p success is false, contains the error message
      */
     void deleteFinished( bool success, const QString &errorMessage );
+
+    /**
+     * This signal is emitted when an incidence is modified in akonadi through
+     * modifyIncidence().
+     * @param success the success of the operation
+     * @param errorMessage if @p success is false, contains the error message
+     */
+    void modifyFinished( bool success, const QString &errorMessage );
 
   protected:
     Q_DECLARE_PRIVATE( CalendarBase );

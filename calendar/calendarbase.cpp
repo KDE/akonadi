@@ -40,6 +40,10 @@ CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
   connect( mIncidenceChanger,
            SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
            SLOT(slotDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
+
+  connect( mIncidenceChanger,
+           SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+           SLOT(slotModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
 CalendarBasePrivate::~CalendarBasePrivate()
@@ -131,6 +135,23 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
     internalInsert( item );
   }
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
+}
+
+//TODO: unit-test this
+void CalendarBasePrivate::slotModifyFinished( int changeId,
+                                              const Akonadi::Item &item,
+                                              IncidenceChanger::ResultCode resultCode,
+                                              const QString &errorMessage )
+{
+  Q_UNUSED( changeId );
+  Q_UNUSED( item );
+  if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+    KCalCore::IncidenceBase::Ptr incidence = item.payload<KCalCore::IncidenceBase::Ptr>();
+    Q_ASSERT( incidence );
+    //update our local one
+    *(static_cast<IncidenceBase*>(q->incidence( incidence->uid() ).data() ) ) = *(incidence.data());
+  }
+  emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
 CalendarBase::CalendarBase() : MemoryCalendar( KSystemTimeZones::local() )
@@ -269,6 +290,14 @@ bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
   Q_ASSERT( incidence );
   Akonadi::Item item_ = item( incidence->uid() );
   return -1 != d->mIncidenceChanger->deleteIncidence( item_ );
+}
+
+bool CalendarBase::modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence )
+{
+  Q_D(CalendarBase);
+  Q_ASSERT( newIncidence );
+  const Akonadi::Item item_ = item( newIncidence->uid() );
+  return -1 != d->mIncidenceChanger->modifyIncidence( item_ );
 }
 
 void CalendarBase::setWeakPointer( const QWeakPointer<CalendarBase> &pointer )

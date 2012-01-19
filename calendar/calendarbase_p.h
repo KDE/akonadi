@@ -52,7 +52,12 @@ class CalendarBasePrivate : public QObject
                              const Akonadi::Item &,
                              Akonadi::IncidenceChanger::ResultCode,
                              const QString &errorMessage );
-    
+
+    void slotModifyFinished( int changeId,
+                             const Akonadi::Item &,
+                             Akonadi::IncidenceChanger::ResultCode,
+                             const QString &errorMessage );
+
   public:
     QHash<QString,Akonadi::Item::Id> mItemIdByUid;
     QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
