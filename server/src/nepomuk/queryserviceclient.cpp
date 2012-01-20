@@ -29,7 +29,6 @@
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
-#include <KDE/KUrl>
 
 namespace {
 
