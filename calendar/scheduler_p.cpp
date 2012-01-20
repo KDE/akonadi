@@ -62,6 +62,12 @@ Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
   mCalendar = calendar;
   mFormat = new ICalFormat();
   mFormat->setTimeSpec( calendar->timeSpec() );
+  connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
+           SLOT(handleCreateFinished(bool,QString)) );
+  connect( mCalendar.data(), SIGNAL(modifyFinished(bool,QString)),
+           SLOT(handleModifyFinished(bool,QString)) );
+  connect( mCalendar.data(), SIGNAL(deleteFinished(bool,QString)),
+           SLOT(handleDeleteFinished(bool,QString)) );
 }
 
 Scheduler::~Scheduler()
@@ -151,9 +157,9 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
             errorString = i18n( "Error: Assigning different incidence types." );
             kError() << errorString;
           } else {
-            //TODO akonadi, make it async
             newInc->setSchedulingID( newInc->uid(), oldUid );
             mCalendar->modifyIncidence( newInc );
+            return; // signal will be emited in the handleModifyFinished() slot
           }
         }
       }
@@ -244,12 +250,12 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           kError() << "assigning different incidence types";
           result = ResultAssigningDifferentTypes;
           errorString = i18n( "Error: Assigning different incidence types." );
+          d->finishAccept( incidence, result, errorString );
         } else {
           inc->setSchedulingID( inc->uid(), oldUid );
           mCalendar->modifyIncidence( inc );
-          //TODO:AKONADI
+          //handleModifyFinished() will emit the final signal.
         }
-        d->finishAccept( incidence, result, errorString );
         return;
       }
     } else {
@@ -283,9 +289,8 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   }
   kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
            << " and uid=" << inc->uid();
-  mCalendar->addIncidence( inc ); // TODO akonadi
 
-  d->finishAccept( incidence, result, errorString );
+  mCalendar->addIncidence( inc ); // The slot will emit the result
 }
 
 void Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
@@ -361,8 +366,9 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
         Todo::Ptr todo = mCalendar->todo( i->uid() );
         result = ( todo && mCalendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
       }
-      // TODO: AKONADI
-      d->finishAccept( incidence, result, errorString );
+      if ( result != ResultSuccess )
+        d->finishAccept( incidence, result, errorString );
+      // The success case will be handled in handleDeleteFinished()
       return;
     }
   }
@@ -599,3 +605,19 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
     d->finishAccept( incidence, ResultNoFreeBusyCache );
   }
 }
+
+void Scheduler::handleCreateFinished( bool success, const QString &errorMessage )
+{
+  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultCreatingError, errorMessage );
+}
+
+void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
+{
+  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultModifyingError, errorMessage );
+}
+
+void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage )
+{
+  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultDeletingError, errorMessage );
+}
+

@@ -54,7 +54,10 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
       ResultIncidenceToDeleteNotFound,
       ResultGenericError,
       ResultNoFreeBusyCache,
-      ResultErrorSavingFreeBusy
+      ResultErrorSavingFreeBusy,
+      ResultCreatingError,
+      ResultModifyingError,
+      ResultDeletingError
     };
 
     /**
@@ -167,6 +170,10 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
 
   Q_SIGNALS:
     void acceptTransactionFinished ( Akonadi::Scheduler::Result, const QString &errorMessage );
+  private Q_SLOTS:
+    void handleCreateFinished( bool success, const QString &errorMessage );
+    void handleModifyFinished( bool success, const QString &errorMessage );
+    void handleDeleteFinished( bool success, const QString &errorMessage );
 
   private:
     Q_DISABLE_COPY( Scheduler )
