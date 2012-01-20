@@ -405,34 +405,28 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMe
   Result result = ResultGenericError;
   QString errorString = i18n( "Generic Error" );
 
-  Event::Ptr ev = mCalendar->event( incidenceBase->uid() );
-  Todo::Ptr to = mCalendar->todo( incidenceBase->uid() );
+  Incidence::Ptr incidence = mCalendar->incidence( incidenceBase->uid() );
 
   // try harder to find the correct incidence
-  if ( !ev && !to ) {
+  if ( !incidence ) {
     const Incidence::List list = mCalendar->incidences();
     for ( Incidence::List::ConstIterator it=list.constBegin(), end=list.constEnd();
           it != end; ++it ) {
       if ( (*it)->schedulingID() == incidenceBase->uid() ) {
-        ev =  ( *it ).dynamicCast<Event>();
-        to = ( *it ).dynamicCast<Todo>();
+        incidence = ( *it ).dynamicCast<Incidence>();
         break;
       }
     }
   }
 
-  if ( ev || to ) {
+  if ( incidence ) {
     //get matching attendee in calendar
     kDebug() << "match found!";
     Attendee::List attendeesIn = incidenceBase->attendees();
     Attendee::List attendeesEv;
     Attendee::List attendeesNew;
-    if ( ev ) {
-      attendeesEv = ev->attendees();
-    }
-    if ( to ) {
-      attendeesEv = to->attendees();
-    }
+
+    attendeesEv = incidence->attendees();
     Attendee::List::ConstIterator inIt;
     Attendee::List::ConstIterator evIt;
     for ( inIt = attendeesIn.constBegin(); inIt != attendeesIn.constEnd(); ++inIt ) {
@@ -462,23 +456,18 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMe
       Attendee::Ptr attNew = *it;
       QString msg =
         i18nc( "@info", "%1 wants to attend %2 but was not invited.",
-               attNew->fullName(),
-               ( ev ? ev->summary() : to->summary() ) );
+               attNew->fullName(), incidence->summary() );
       if ( !attNew->delegator().isEmpty() ) {
         msg = i18nc( "@info", "%1 wants to attend %2 on behalf of %3.",
-                     attNew->fullName(),
-                     ( ev ? ev->summary() : to->summary() ), attNew->delegator() );
+                     attNew->fullName(), incidence->summary() , attNew->delegator() );
       }
       if ( KMessageBox::questionYesNo(
              0, msg, i18nc( "@title", "Uninvited attendee" ),
              KGuiItem( i18nc( "@option", "Accept Attendance" ) ),
              KGuiItem( i18nc( "@option", "Reject Attendance" ) ) ) != KMessageBox::Yes ) {
-        Incidence::Ptr cancel = incidenceBase.dynamicCast<Incidence>();
-        if ( cancel ) {
-          cancel->addComment(
-            i18nc( "@info",
-                   "The organizer rejected your attendance at this meeting." ) );
-        }
+        Incidence::Ptr cancel = incidence;
+        cancel->addComment( i18nc( "@info",
+                                   "The organizer rejected your attendance at this meeting." ) );
         performTransaction( incidenceBase, iTIPCancel, attNew->fullName() );
         // ### can't delete cancel here because it is aliased to incidence which
         // is accessed in the next loop iteration (CID 4232)
@@ -491,11 +480,8 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMe
 
       a->setDelegate( attNew->delegate() );
       a->setDelegator( attNew->delegator() );
-      if ( ev ) {
-        ev->addAttendee( a );
-      } else if ( to ) {
-        to->addAttendee( a );
-      }
+      incidence->addAttendee( a );
+
       result = ResultSuccess;
       errorString.clear();
       attendeeAdded = true;
@@ -504,51 +490,45 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMe
     // send update about new participants
     if ( attendeeAdded ) {
       bool sendMail = false;
-      if ( ev || to ) {
-        if ( KMessageBox::questionYesNo(
-               0,
-               i18nc( "@info",
-                      "An attendee was added to the incidence. "
-                      "Do you want to email the attendees an update message?" ),
-               i18nc( "@title", "Attendee Added" ),
-               KGuiItem( i18nc( "@option", "Send Messages" ) ),
-               KGuiItem( i18nc( "@option", "Do Not Send" ) ) ) == KMessageBox::Yes ) {
-          sendMail = true;
-        }
+      if ( KMessageBox::questionYesNo(
+              0,
+              i18nc( "@info",
+                    "An attendee was added to the incidence. "
+                    "Do you want to email the attendees an update message?" ),
+              i18nc( "@title", "Attendee Added" ),
+              KGuiItem( i18nc( "@option", "Send Messages" ) ),
+              KGuiItem( i18nc( "@option", "Do Not Send" ) ) ) == KMessageBox::Yes ) {
+        sendMail = true;
       }
 
-      if ( ev ) {
-        ev->setRevision( ev->revision() + 1 );
-        if ( sendMail ) {
-          performTransaction( ev, iTIPRequest );
-        }
+      incidence->setRevision( incidence->revision() + 1 );
+      if ( sendMail ) {
+        performTransaction( incidence, iTIPRequest );
       }
-      if ( to ) {
-        to->setRevision( to->revision() + 1 );
-        if ( sendMail ) {
-          performTransaction( to, iTIPRequest );
-        }
+    }
+
+    if ( incidence->type() == Incidence::TypeTodo ) {
+      // for VTODO a REPLY can be used to update the completion status of
+      // a to-do. see RFC2446 3.4.3
+      Todo::Ptr update = incidenceBase.dynamicCast<Todo>();
+      Todo::Ptr calendarTodo = incidence.staticCast<Todo>();
+      Q_ASSERT( update );
+      if ( update && ( calendarTodo->percentComplete() != update->percentComplete() ) ) {
+        calendarTodo->setPercentComplete( update->percentComplete() );
+        calendarTodo->updated();
+        mCalendar->modifyIncidence( calendarTodo );
+        // success will be emitted in the handleModifyFinished() slot
+        return;
       }
     }
 
     if ( result == ResultSuccess ) {
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
-      if ( ev ) {
-        ev->updated();
-      } else if ( to ) {
-        to->updated();
-      }
-    }
-    if ( to ) {
-      // for VTODO a REPLY can be used to update the completion status of
-      // a to-do. see RFC2446 3.4.3
-      Todo::Ptr update = incidenceBase.dynamicCast<Todo>();
-      Q_ASSERT( update );
-      if ( update && ( to->percentComplete() != update->percentComplete() ) ) {
-        to->setPercentComplete( update->percentComplete() );
-        to->updated();
-      }
+      incidence->updated();
+      mCalendar->modifyIncidence( incidence );
+      // success will be emitted in the handleModifyFinished() slot
+      return;
     }
   } else {
     result = ResultSuccess;
