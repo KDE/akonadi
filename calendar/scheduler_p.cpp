@@ -469,9 +469,6 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMe
         cancel->addComment( i18nc( "@info",
                                    "The organizer rejected your attendance at this meeting." ) );
         performTransaction( incidenceBase, iTIPCancel, attNew->fullName() );
-        // ### can't delete cancel here because it is aliased to incidence which
-        // is accessed in the next loop iteration (CID 4232)
-        // delete cancel;
         continue;
       }
 
