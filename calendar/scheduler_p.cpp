@@ -393,27 +393,27 @@ void Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &incidence,
   d->finishAccept( incidence, ResultGenericError, i18n( "Generic Error" ) );
 }
 
-void Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessage::Status status,
+void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMessage::Status status,
                              iTIPMethod method )
 {
   Q_UNUSED( status );
-  if ( incidence->type() == IncidenceBase::TypeFreeBusy ) {
-    acceptFreeBusy( incidence, method );
+  if ( incidenceBase->type() == IncidenceBase::TypeFreeBusy ) {
+    acceptFreeBusy( incidenceBase, method );
     return;
   }
 
   Result result = ResultGenericError;
   QString errorString = i18n( "Generic Error" );
 
-  Event::Ptr ev = mCalendar->event( incidence->uid() );
-  Todo::Ptr to = mCalendar->todo( incidence->uid() );
+  Event::Ptr ev = mCalendar->event( incidenceBase->uid() );
+  Todo::Ptr to = mCalendar->todo( incidenceBase->uid() );
 
   // try harder to find the correct incidence
   if ( !ev && !to ) {
     const Incidence::List list = mCalendar->incidences();
     for ( Incidence::List::ConstIterator it=list.constBegin(), end=list.constEnd();
           it != end; ++it ) {
-      if ( (*it)->schedulingID() == incidence->uid() ) {
+      if ( (*it)->schedulingID() == incidenceBase->uid() ) {
         ev =  ( *it ).dynamicCast<Event>();
         to = ( *it ).dynamicCast<Todo>();
         break;
@@ -424,7 +424,7 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessag
   if ( ev || to ) {
     //get matching attendee in calendar
     kDebug() << "match found!";
-    Attendee::List attendeesIn = incidence->attendees();
+    Attendee::List attendeesIn = incidenceBase->attendees();
     Attendee::List attendeesEv;
     Attendee::List attendeesNew;
     if ( ev ) {
@@ -473,13 +473,13 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessag
              0, msg, i18nc( "@title", "Uninvited attendee" ),
              KGuiItem( i18nc( "@option", "Accept Attendance" ) ),
              KGuiItem( i18nc( "@option", "Reject Attendance" ) ) ) != KMessageBox::Yes ) {
-        Incidence::Ptr cancel = incidence.dynamicCast<Incidence>();
+        Incidence::Ptr cancel = incidenceBase.dynamicCast<Incidence>();
         if ( cancel ) {
           cancel->addComment(
             i18nc( "@info",
                    "The organizer rejected your attendance at this meeting." ) );
         }
-        performTransaction( incidence, iTIPCancel, attNew->fullName() );
+        performTransaction( incidenceBase, iTIPCancel, attNew->fullName() );
         // ### can't delete cancel here because it is aliased to incidence which
         // is accessed in the next loop iteration (CID 4232)
         // delete cancel;
@@ -543,7 +543,7 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessag
     if ( to ) {
       // for VTODO a REPLY can be used to update the completion status of
       // a to-do. see RFC2446 3.4.3
-      Todo::Ptr update = incidence.dynamicCast<Todo>();
+      Todo::Ptr update = incidenceBase.dynamicCast<Todo>();
       Q_ASSERT( update );
       if ( update && ( to->percentComplete() != update->percentComplete() ) ) {
         to->setPercentComplete( update->percentComplete() );
@@ -557,7 +557,7 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidence, ScheduleMessag
   }
 
   if ( result == ResultSuccess ) {
-    deleteTransaction( incidence );
+    deleteTransaction( incidenceBase );
   }
   d->finishAccept( /*incidence=*/IncidenceBase::Ptr(), result, errorString );
 }
