@@ -385,9 +385,11 @@ Item ItemModel::itemForIndex( const QModelIndex & index ) const
     return Akonadi::Item();
 
   Item item = d->items.at( index.row() )->item;
-  Q_ASSERT( item.isValid() );
-
-  return item;
+  if ( item.isValid() ) {
+    return item;
+  } else {
+    return Akonadi::Item();
+  }
 }
 
 Qt::ItemFlags ItemModel::flags( const QModelIndex &index ) const
