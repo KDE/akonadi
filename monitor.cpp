@@ -186,7 +186,11 @@ Akonadi::Collection::List Monitor::collectionsMonitored() const
 QList<Item::Id> Monitor::itemsMonitored() const
 {
   Q_D( const Monitor );
-  return d->items.toList();
+  if ( !d->items.isEmpty() ) {
+    return d->items.toList();
+  } else {
+    return QList<Item::Id>();
+  }
 }
 
 QVector<Item::Id> Monitor::itemsMonitoredEx() const
@@ -201,7 +205,11 @@ QVector<Item::Id> Monitor::itemsMonitoredEx() const
 QStringList Monitor::mimeTypesMonitored() const
 {
   Q_D( const Monitor );
-  return d->mimetypes.toList();
+  if ( !d->mimetypes.isEmpty() ) {
+    return d->mimetypes.toList();
+  } else {
+    return QStringList();
+  }
 }
 
 QList<QByteArray> Monitor::resourcesMonitored() const
