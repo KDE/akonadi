@@ -42,7 +42,7 @@ static qint64 resultToId( const Nepomuk::Query::Result &result )
   if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
     qWarning() << "Failed to get requested akonadiItemId property";
     qDebug() << "AkonadiItemId missing in query results!" << result.resourceUri() << property.isValid() << property.isLiteral() << property.literal().isString() << property.literal().type() << result.requestProperties().size();
-    qDebug() << result.requestProperties().values().first().toString();
+//    qDebug() << result.requestProperties().values().first().toString();
     return -1;
   }
   return property.literal().toString().toLongLong();
