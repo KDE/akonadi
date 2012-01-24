@@ -104,11 +104,16 @@ class StatisticsProxyModel::Private
         ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
 
 
-      QString iconName = CollectionUtils::defaultIconName( collection );
+     QString iconName = CollectionUtils::defaultIconName( collection );
       if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-           !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
-        iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
+         !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
+         if ( !collection.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && collection.statistics().unreadCount()> 0) {
+           iconName = collection.attribute<EntityDisplayAttribute>()->activeIconName();
+         }
+         else
+           iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
       }
+
 
       int iconSizes[] = { 32, 22 };
       int icon_size_found = 32;
