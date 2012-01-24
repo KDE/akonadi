@@ -216,7 +216,6 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   QStyle *s = d->parent->style();
   const QWidget *widget = option4.widget;
   const QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
-  const QRect iconRect = s->subElementRect( QStyle::SE_ItemViewItemDecoration, &option4, widget );
 
    // When checking if the item is expanded, we need to check that for the first
   // column, as Qt only recogises the index as expanded for the first column
@@ -292,6 +291,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       if ( unreadCount > 0 ) {
         // draw over the icon
         painter->setPen( unreadColor );
+        const QRect iconRect = s->subElementRect( QStyle::SE_ItemViewItemDecoration, &option4, widget );
         painter->drawText( iconRect, Qt::AlignCenter, QString::number( unreadCount ) );
       }
     }
