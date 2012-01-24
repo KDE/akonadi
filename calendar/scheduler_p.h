@@ -60,6 +60,8 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
       ResultDeletingError
     };
 
+    typedef int TransactionId;
+
     /**
       Creates a scheduler for calendar specified as argument.
     */
@@ -78,8 +80,8 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
       @param incidence the incidence for the transaction.
       @param method the iTIP transaction method to use.
     */
-    virtual bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method ) = 0;
+    virtual TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                              KCalCore::iTIPMethod method ) = 0;
 
     /**
       Performs iTIP transaction on incidence to specified recipient(s).
@@ -169,7 +171,9 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
     KCalCore::ICalFormat *mFormat;
 
   Q_SIGNALS:
-    void acceptTransactionFinished ( Akonadi::Scheduler::Result, const QString &errorMessage );
+    void acceptTransactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
+    TransactionId performTransactionFinished( TransactionId id, Akonadi::Scheduler::Result,
+                                              const QString &errorMessage );
   private Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorMessage );
     void handleModifyFinished( bool success, const QString &errorMessage );
