@@ -210,7 +210,7 @@ For communication within the Akonadi server infrastructure and for communication
 
 There are various possbilities to interact with %Akonadi.
 
-\section akonadi_server_interaction_client_libraray Akoandi Client Libraries
+\section akonadi_server_interaction_client_libraray Akonadi Client Libraries
 
 Accessing the %Akonadi server using the ASAP and D-Bus interfaces directly is cumbersome.
 Therefore you'd usually use a client library implementing the low-level protocol handling
