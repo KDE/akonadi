@@ -739,7 +739,7 @@ class StandardActionManager::Private
     {
       Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       if ( !instance.isOnline() ) {
-        if ( KMessageBox::questionYesNo( parentWidget, i18n( "Before to sync folder \"%1\" it's necessary to have resource online. Do you want to make it online ?" , collection.name()  ), i18n( "Account \"%1\" is offline", instance.name() ) ) != KMessageBox::Yes )
+        if ( KMessageBox::questionYesNo( parentWidget, i18n( "Before to sync folder \"%1\" it's necessary to have resource online. Do you want to make it online?" , collection.name()  ), i18n( "Account \"%1\" is offline", instance.name() ) ) != KMessageBox::Yes )
           return false;
         instance.setIsOnline( true );
       }
