@@ -800,10 +800,11 @@ void ResourceBase::cancelTask()
         d->scheduler->taskDone();
       break;
     case ResourceScheduler::SyncCollection:
-      if ( d->mItemSyncer )
+      if ( d->mItemSyncer ) {
         d->mItemSyncer->rollback();
-      else
+      } else {
         d->scheduler->taskDone();
+      }
       break;
     default:
       d->scheduler->taskDone();
@@ -884,28 +885,37 @@ void ResourceBase::setTotalItems( int amount )
   kDebug() << amount;
   Q_D( ResourceBase );
   setItemStreamingEnabled( true );
-  d->mItemSyncer->setTotalItems( amount );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setTotalItems( amount );
+  }
 }
 
 void ResourceBase::setItemStreamingEnabled( bool enable )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setStreamingEnabled( enable );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setStreamingEnabled( enable );
+  }
 }
 
 void ResourceBase::itemsRetrieved( const Item::List &items )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setFullSyncItems( items );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setFullSyncItems( items );
+  }
 }
 
-void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems, const Item::List &removedItems )
+void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems,
+                                              const Item::List &removedItems )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
+  }
 }
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
