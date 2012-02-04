@@ -41,6 +41,7 @@ public:
   }
 
   QSet<QString> includedMimeTypes;
+  Akonadi::MimeTypeChecker checker;
 };
 
 }
@@ -64,17 +65,14 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
   const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
     return false;
-
-  Akonadi::MimeTypeChecker checker;
-  checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
-
-  return checker.isWantedCollection( collection );
+  return d->checker.isWantedCollection( collection );
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes << mimeType;
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
@@ -82,6 +80,7 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(con
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes.unite(mimeTypes.toSet());
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
@@ -89,6 +88,7 @@ void RecursiveCollectionFilterProxyModel::clearFilters()
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes.clear();
+  d->checker.setWantedMimeTypes( QStringList() );
   invalidateFilter();
 }
 
@@ -96,6 +96,7 @@ void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(con
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes = mimeTypes.toSet();
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
