@@ -60,13 +60,13 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
 {
   Q_D( const RecursiveCollectionFilterProxyModel );
 
-  Akonadi::MimeTypeChecker checker;
-  checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
-
   const QModelIndex rowIndex = sourceModel()->index( sourceRow, 0, sourceParent );
   const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
     return false;
+
+  Akonadi::MimeTypeChecker checker;
+  checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
 
   return checker.isWantedCollection( collection );
 }
