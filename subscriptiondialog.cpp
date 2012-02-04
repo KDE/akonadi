@@ -151,6 +151,7 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   filterBarLayout->addWidget( new QLabel( i18n( "Search:" ) ) );
 
   KLineEdit *lineEdit = new KLineEdit( mainWidget );
+  lineEdit->setClearButtonShown(true);
   connect( lineEdit, SIGNAL(textChanged(QString)),
            filterTreeViewModel, SLOT(setFilterFixedString(QString)) );
   filterBarLayout->addWidget( lineEdit );
