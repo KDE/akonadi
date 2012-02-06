@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -42,6 +43,7 @@ public:
 
   QSet<QString> includedMimeTypes;
   Akonadi::MimeTypeChecker checker;
+  QString pattern;
 };
 
 }
@@ -65,7 +67,15 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
   const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
     return false;
-  return d->checker.isWantedCollection( collection );
+  const bool collectionWanted =  d->checker.isWantedCollection( collection );
+  if ( collectionWanted )
+  {
+    if (  !d->pattern.isEmpty() ) {
+      const QString text = rowIndex.data(Qt::DisplayRole).toString();
+      return text.contains( d->pattern, Qt::CaseInsensitive );
+    }
+  }
+  return collectionWanted;
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
@@ -110,4 +120,11 @@ int Akonadi::RecursiveCollectionFilterProxyModel::columnCount( const QModelIndex
 {
   // Optimization: we know that we're not changing the number of columns, so skip QSortFilterProxyModel
   return sourceModel()->columnCount( mapToSource( index ) );
+}
+
+void Akonadi::RecursiveCollectionFilterProxyModel::setSearchPattern( const QString &pattern )
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->pattern = pattern;
+  invalidate();
 }

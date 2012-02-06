@@ -91,7 +91,10 @@ class SubscriptionDialog::Private
 #endif
       q->enableButtonOk( true );
     }
-
+    void slotSetPattern(const QString &text)
+    {
+      filterRecursiveCollectionFilter->setSearchPattern( text );
+    }
     SubscriptionDialog* q;
 #ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
@@ -99,6 +102,8 @@ class SubscriptionDialog::Private
     QListView *collectionView;
 #endif
     SubscriptionModel* model;
+    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
+
 };
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
@@ -127,24 +132,20 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   d->model = new SubscriptionModel( this );
 
 #ifndef KDEPIM_MOBILE_UI
-  KRecursiveFilterProxyModel *filterTreeViewModel = new KRecursiveFilterProxyModel( this );
-  filterTreeViewModel->setDynamicSortFilter( true );
-  filterTreeViewModel->setSourceModel( d->model );
-  filterTreeViewModel->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  d->filterRecursiveCollectionFilter
+      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
+  d->filterRecursiveCollectionFilter->setDynamicSortFilter( true );
+  d->filterRecursiveCollectionFilter->setSourceModel( d->model );
+  d->filterRecursiveCollectionFilter->setFilterCaseSensitivity( Qt::CaseInsensitive );
+  if ( !mimetypes.isEmpty() ) {
+    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
+  }
 
   d->collectionView = new QTreeView( mainWidget );
   d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->collectionView->header()->hide();
+  d->collectionView->setModel( d->filterRecursiveCollectionFilter );
 
-  if ( !mimetypes.isEmpty() ) {
-    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
-      = new Akonadi::RecursiveCollectionFilterProxyModel( this );
-    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
-    filterRecursiveCollectionFilter->setSourceModel( filterTreeViewModel );
-    d->collectionView->setModel( filterRecursiveCollectionFilter );
-  } else {
-    d->collectionView->setModel( filterTreeViewModel );
-  }
 
   QHBoxLayout *filterBarLayout = new QHBoxLayout;
 
@@ -153,23 +154,23 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   KLineEdit *lineEdit = new KLineEdit( mainWidget );
   lineEdit->setClearButtonShown(true);
   connect( lineEdit, SIGNAL(textChanged(QString)),
-           filterTreeViewModel, SLOT(setFilterFixedString(QString)) );
+           this, SLOT(slotSetPattern(QString)) );
   filterBarLayout->addWidget( lineEdit );
   mainLayout->addLayout( filterBarLayout );
   mainLayout->addWidget( d->collectionView );
 #else
 
-  RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter
+  d->filterRecursiveCollectionFilter
       = new Akonadi::RecursiveCollectionFilterProxyModel( this );
   if ( !mimetypes.isEmpty() )
-    filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
+    d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
 
-  filterRecursiveCollectionFilter->setSourceModel( d->model );
+  d->filterRecursiveCollectionFilter->setSourceModel( d->model );
 
   KDescendantsProxyModel *flatModel = new KDescendantsProxyModel( this );
   flatModel->setDisplayAncestorData( true );
   flatModel->setAncestorSeparator( QLatin1String( "/" ) );
-  flatModel->setSourceModel( filterRecursiveCollectionFilter );
+  flatModel->setSourceModel( d->filterRecursiveCollectionFilter );
 
   CheckableFilterProxyModel *checkableModel = new CheckableFilterProxyModel( this );
   checkableModel->setSourceModel( flatModel );
@@ -190,5 +191,6 @@ SubscriptionDialog::~ SubscriptionDialog()
 {
   delete d;
 }
+
 
 #include "subscriptiondialog_p.moc"
