@@ -153,6 +153,7 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
 
   KLineEdit *lineEdit = new KLineEdit( mainWidget );
   lineEdit->setClearButtonShown(true);
+  lineEdit->setFocus();
   connect( lineEdit, SIGNAL(textChanged(QString)),
            this, SLOT(slotSetPattern(QString)) );
   filterBarLayout->addWidget( lineEdit );
