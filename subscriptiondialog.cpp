@@ -36,6 +36,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
+#include <QtGui/QCheckBox>
 #else
 #include <kdescendantsproxymodel.h>
 #include <QtGui/QListView>
@@ -95,6 +96,11 @@ class SubscriptionDialog::Private
     {
       filterRecursiveCollectionFilter->setSearchPattern( text );
     }
+    void slotSetIncludeCheckedOnly(bool checked)
+    {
+      filterRecursiveCollectionFilter->setIncludeCheckedOnly( checked );
+    }
+
     SubscriptionDialog* q;
 #ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
@@ -157,6 +163,11 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   connect( lineEdit, SIGNAL(textChanged(QString)),
            this, SLOT(slotSetPattern(QString)) );
   filterBarLayout->addWidget( lineEdit );
+  QCheckBox *checkBox = new QCheckBox( i18n("Subscribed only"), mainWidget );
+  connect( checkBox, SIGNAL(clicked(bool)),
+           this, SLOT(slotSetIncludeCheckedOnly(bool)) );
+  filterBarLayout->addWidget( checkBox );
+
   mainLayout->addLayout( filterBarLayout );
   mainLayout->addWidget( d->collectionView );
 #else

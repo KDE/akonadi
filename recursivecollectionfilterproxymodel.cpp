@@ -36,7 +36,7 @@ class RecursiveCollectionFilterProxyModelPrivate
   RecursiveCollectionFilterProxyModel *q_ptr;
 public:
   RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
-      : q_ptr(model)
+      : q_ptr(model), checkOnlyChecked( false )
   {
 
   }
@@ -44,6 +44,7 @@ public:
   QSet<QString> includedMimeTypes;
   Akonadi::MimeTypeChecker checker;
   QString pattern;
+  bool checkOnlyChecked;
 };
 
 }
@@ -67,6 +68,11 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
   const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
     return false;
+  const bool checked = ( rowIndex.data(Qt::CheckStateRole).toInt()==Qt::Checked );
+  if ( d->checkOnlyChecked && !checked ) {
+    return false;
+  }
+
   const bool collectionWanted =  d->checker.isWantedCollection( collection );
   if ( collectionWanted )
   {
@@ -126,5 +132,12 @@ void Akonadi::RecursiveCollectionFilterProxyModel::setSearchPattern( const QStri
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->pattern = pattern;
+  invalidate();
+}
+
+void Akonadi::RecursiveCollectionFilterProxyModel::setIncludeCheckedOnly( bool checked )
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->checkOnlyChecked = checked;
   invalidate();
 }

@@ -91,6 +91,12 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
      */
     void setSearchPattern( const QString &pattern );
 
+    /**
+     * Show only checked item
+     * @since 4.9
+     */    
+    void setIncludeCheckedOnly( bool checked );
+
   protected:
     /* reimp */ bool acceptRow( int sourceRow, const QModelIndex &sourceParent ) const;
     /* reimp */ int columnCount( const QModelIndex& index ) const;
