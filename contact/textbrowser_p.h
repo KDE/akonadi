@@ -24,6 +24,7 @@
 
 #include <kicontheme.h>
 #include <ktextbrowser.h>
+#include <klocalizedstring.h>
 
 #include <QtGui/QAction>
 #include <QtGui/QContextMenuEvent>
@@ -54,9 +55,13 @@ class TextBrowser : public KTextBrowser
         // inherited from KTextBrowser
         KIconTheme::assignIconsToContextMenu( KIconTheme::ReadOnlyText, actions );
 
-        // hide the 'Copy Link Location' action
-        actions[ 1 ]->setVisible( false );
-
+        // hide the 'Copy Link Location' action if not an e-mail address
+        if ( anchorAt( event->pos() ).left( 7 ) != i18n( "mailto:" ) ) {	
+          actions[ 1 ]->setVisible( false );
+        }
+        else {
+          actions[ 1 ]->setText( i18n( "Copy e-mail address" ) );
+        }
         popup->exec( event->globalPos() );
         delete popup;
       }
