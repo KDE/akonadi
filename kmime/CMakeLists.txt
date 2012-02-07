@@ -65,7 +65,7 @@ set( kmimeakonadi_LIB_SRC
   ${kmimeakonadi_LIB_SRC}
   specialmailcollectionstesting.cpp
 )
-endif (KDE4_BUILD_TESTS)
+endif()
 
 kde4_add_kcfg_files( kmimeakonadi_LIB_SRC specialmailcollectionssettings.kcfgc )
 install( FILES specialmailcollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
