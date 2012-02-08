@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2008 Thomas McGuire <thomas.mcguire@gmx.net>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,6 +23,7 @@
 
 #include <kcolorscheme.h>
 #include <kdebug.h>
+#include <kio/global.h>
 
 #include <QtGui/QPainter>
 #include <QtGui/QStyle>
@@ -65,7 +67,7 @@ class CollectionStatisticsDelegatePrivate
                                            .foreground( KColorScheme::LinkText ).color();
     }
 
-    void getCountRecursive( const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount ) const
+    void getCountRecursive( const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount, qint64 &totalSize ) const
     {
       Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
       // Do not assert on invalid collections, since a collection may be deleted
@@ -74,12 +76,12 @@ class CollectionStatisticsDelegatePrivate
         CollectionStatistics statistics = collection.statistics();
         totalCount += qMax( 0LL, statistics.count() );
         unreadCount += qMax( 0LL, statistics.unreadCount() );
-
+        totalSize += qMax( 0LL, statistics.size() );
         if ( index.model()->hasChildren( index ) ) {
           const int rowCount = index.model()->rowCount( index );
           for ( int row = 0; row < rowCount; row++ ) {
             static const int column = 0;
-            getCountRecursive( index.model()->index( row, column, index ), totalCount, unreadCount );
+            getCountRecursive( index.model()->index( row, column, index ), totalCount, unreadCount, totalSize );
           }
         }
       }
@@ -236,7 +238,8 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   qint64 unreadCount = qMax( 0LL, statistics.unreadCount() );
   qint64 totalRecursiveCount = 0;
   qint64 unreadRecursiveCount = 0;
-  d->getCountRecursive( index.sibling( index.row(), 0 ), totalRecursiveCount, unreadRecursiveCount );
+  qint64 totalSize = 0;
+  d->getCountRecursive( index.sibling( index.row(), 0 ), totalRecursiveCount, unreadRecursiveCount, totalSize );
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
@@ -321,6 +324,14 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
     painter->drawText( textRect, Qt::AlignRight | Qt::AlignVCenter, sumText );
     painter->setFont( savedFont );
+    return;
+  }
+
+  //total size
+  if ( index.column() == 3 && !expanded ) {
+    if ( textColor.isValid() )
+      painter->setPen( textColor );
+    painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize( (KIO::filesize_t)totalSize ) );
     return;
   }
 
