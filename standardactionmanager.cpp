@@ -308,12 +308,15 @@ class StandardActionManager::Private
 
       if ( !menu->isEmpty() )
         return;
+      // collect all selected collections
+      const Akonadi::Collection::List selectedCollectionsList = selectedCollections();
       const StandardActionManager::Type type = static_cast<StandardActionManager::Type>( menu->property( "actionType" ).toInt() );
 
       QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
       mRecentCollectionsMenu.insert( type, recentCollection );
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
-      fillFoldersMenu( mimeTypes,
+      fillFoldersMenu( selectedCollectionsList,
+                       mimeTypes,
                        type,
                        menu,
                        collectionSelectionModel->model(),
@@ -329,8 +332,10 @@ class StandardActionManager::Private
       {
 
         QWeakPointer<RecentCollectionAction> recentCollection = new RecentCollectionAction( collectionSelectionModel->model(), menu );
+        Collection::List selectedCollectionsList = selectedCollections();
         const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
-        fillFoldersMenu( mimeTypes,
+        fillFoldersMenu( selectedCollectionsList,
+                         mimeTypes,
                          type,
                          menu,
                          collectionSelectionModel->model(),
@@ -427,7 +432,7 @@ class StandardActionManager::Private
     void updateActions()
     {
       // collect all selected collections
-      Collection::List selectedCollections;
+      Collection::List selectedCollectionsList;
       if ( collectionSelectionModel ) {
         const QModelIndexList rows = collectionSelectionModel->selectedRows();
         foreach ( const QModelIndex &index, rows ) {
@@ -438,7 +443,7 @@ class StandardActionManager::Private
           const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
           collection.setParentCollection( parentCollection );
 
-          selectedCollections << collection;
+          selectedCollectionsList << collection;
         }
       }
 
@@ -458,7 +463,7 @@ class StandardActionManager::Private
         }
       }
 
-      mActionStateManager.updateState( selectedCollections, selectedItems );
+      mActionStateManager.updateState( selectedCollectionsList, selectedItems );
 
       emit q->actionStateUpdated();
     }
@@ -575,7 +580,7 @@ class StandardActionManager::Private
       encodeToClipboard( collectionSelectionModel, true );
     }
 
-    Collection::List selectedCollections() const
+    Collection::List selectedCollections()
     {
       Collection::List collections;
 
@@ -1240,7 +1245,7 @@ class StandardActionManager::Private
       return !(CollectionUtils::isStructural( collection ) || isReadOnlyForItems || isReadOnlyForCollections);
     }
 
-    void fillFoldersMenu( const QSet<QString>& mimeTypes,  StandardActionManager::Type type, QMenu *menu,
+    void fillFoldersMenu( const Akonadi::Collection::List& selectedCollectionsList, const QSet<QString>& mimeTypes,  StandardActionManager::Type type, QMenu *menu,
                           const QAbstractItemModel *model, QModelIndex parentIndex )
     {
       const int rowCount = model->rowCount( parentIndex );
@@ -1253,6 +1258,7 @@ class StandardActionManager::Private
           continue;
 
         const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );
+        const bool collectionIsSelected = selectedCollectionsList.contains( collection );
 
         QString label = model->data( index ).toString();
         label.replace( QLatin1String( "&" ), QLatin1String( "&&" ) );
@@ -1267,7 +1273,7 @@ class StandardActionManager::Private
           popup->setTitle( label );
           popup->setIcon( icon );
 
-          fillFoldersMenu( mimeTypes, type, popup, model, index );
+          fillFoldersMenu( selectedCollectionsList, mimeTypes, type, popup, model, index );
 
           if ( !readOnly ) {
             popup->addSeparator();
@@ -1282,7 +1288,7 @@ class StandardActionManager::Private
           // insert an item
           QAction* action = menu->addAction( icon, label );
           action->setData( QVariant::fromValue<QModelIndex>( index ) );
-          action->setEnabled( !readOnly );
+          action->setEnabled( !readOnly && !collectionIsSelected );
         }
       }
     }
