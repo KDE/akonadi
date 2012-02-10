@@ -140,10 +140,8 @@ void Entity::addAttribute(Attribute * attr)
 
 void Entity::removeAttribute( const QByteArray &type )
 {
-  if ( d_ptr->mAttributes.contains( type ) ) {
-    d_ptr->mDeletedAttributes.insert( type );
-    delete d_ptr->mAttributes.take( type );
-  }
+  d_ptr->mDeletedAttributes.insert( type );
+  delete d_ptr->mAttributes.take( type );
 }
 
 bool Entity::hasAttribute(const QByteArray & type) const
