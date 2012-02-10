@@ -159,6 +159,29 @@ static bool workOffline()
   return group.readEntry( "WorkOffline", false );
 }
 
+static QModelIndexList safeSelectedRows( QItemSelectionModel *selectionModel )
+{
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+  if (!selectedRows.isEmpty())
+    return selectedRows;
+
+  // try harder for selected rows that don't span the full row for some reason (e.g. due to buggy column adding proxy models etc)
+  foreach ( const QItemSelectionRange &range, selectionModel->selection() ) {
+    if ( !range.isValid() || range.isEmpty() )
+      continue;
+    const QModelIndex parent = range.parent();
+    for ( int row = range.top(); row <= range.bottom(); ++row ) {
+      const QModelIndex index = range.model()->index( row, range.left(), parent );
+      const Qt::ItemFlags flags = range.model()->flags( index );
+      if ( (flags & Qt::ItemIsSelectable) && (flags & Qt::ItemIsEnabled) )
+        selectedRows.push_back( index );
+    }
+  }
+
+  return selectedRows;
+}
+
+
 /**
  * @internal
  */
@@ -414,17 +437,17 @@ class StandardActionManager::Private
     void encodeToClipboard( QItemSelectionModel* selectionModel, bool cut = false )
     {
       Q_ASSERT( selectionModel );
-      if ( selectionModel->selectedRows().count() <= 0 )
+      if ( safeSelectedRows( selectionModel ).count() <= 0 )
         return;
 
 #ifndef QT_NO_CLIPBOARD
-      QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
+      QMimeData *mimeData = selectionModel->model()->mimeData( safeSelectedRows( selectionModel ) );
       markCutAction( mimeData, cut );
       QApplication::clipboard()->setMimeData( mimeData );
 
       QAbstractItemModel *model = const_cast<QAbstractItemModel *>( selectionModel->model() );
 
-      foreach ( const QModelIndex &index, selectionModel->selectedRows() )
+      foreach ( const QModelIndex &index, safeSelectedRows( selectionModel ) )
         model->setData( index, true, EntityTreeModel::PendingCutRole );
 #endif
     }
@@ -434,7 +457,7 @@ class StandardActionManager::Private
       // collect all selected collections
       Collection::List selectedCollectionsList;
       if ( collectionSelectionModel ) {
-        const QModelIndexList rows = collectionSelectionModel->selectedRows();
+        const QModelIndexList rows = safeSelectedRows( collectionSelectionModel );
         foreach ( const QModelIndex &index, rows ) {
           Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
           if ( !collection.isValid() )
@@ -450,7 +473,7 @@ class StandardActionManager::Private
       // collect all selected items
       Item::List selectedItems;
       if ( itemSelectionModel ) {
-        const QModelIndexList rows = itemSelectionModel->selectedRows();
+        const QModelIndexList rows = safeSelectedRows( itemSelectionModel );
         foreach ( const QModelIndex &index, rows ) {
           Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
           if ( !item.isValid() )
@@ -586,7 +609,7 @@ class StandardActionManager::Private
 
       Q_ASSERT( collectionSelectionModel );
 
-      foreach ( const QModelIndex &index, collectionSelectionModel->selectedRows() ) {
+      foreach ( const QModelIndex &index, safeSelectedRows( collectionSelectionModel ) ) {
         Q_ASSERT( index.isValid() );
         const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
         Q_ASSERT( collection.isValid() );
@@ -649,7 +672,7 @@ class StandardActionManager::Private
 
       Q_ASSERT( itemSelectionModel );
 
-      foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
+      foreach ( const QModelIndex &index, safeSelectedRows( itemSelectionModel ) ) {
         Q_ASSERT( index.isValid() );
         const Item item = index.data( ItemModel::ItemRole ).value<Item>();
         Q_ASSERT( item.isValid() );
@@ -725,7 +748,7 @@ class StandardActionManager::Private
     void slotSynchronizeCollection()
     {
       Q_ASSERT( collectionSelectionModel );
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -754,7 +777,7 @@ class StandardActionManager::Private
     void slotSynchronizeCollectionRecursive()
     {
       Q_ASSERT( collectionSelectionModel );
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -771,7 +794,7 @@ class StandardActionManager::Private
 
     void slotCollectionProperties()
     {
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -803,7 +826,7 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
 
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -825,7 +848,7 @@ class StandardActionManager::Private
       Q_ASSERT( itemSelectionModel );
 
       Item::List items;
-      foreach ( const QModelIndex &index, itemSelectionModel->selectedRows() ) {
+      foreach ( const QModelIndex &index, safeSelectedRows( itemSelectionModel ) ) {
         bool ok;
         const qlonglong id = index.data( ItemModel::IdRole ).toLongLong( &ok );
         Q_ASSERT( ok );
@@ -865,7 +888,7 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -884,7 +907,7 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
 
@@ -903,7 +926,7 @@ class StandardActionManager::Private
     {
       Q_ASSERT( collectionSelectionModel );
       Q_ASSERT( favoritesModel );
-      const QModelIndexList list = collectionSelectionModel->selectedRows();
+      const QModelIndexList list = safeSelectedRows( collectionSelectionModel );
       if ( list.isEmpty() )
         return;
       const QModelIndex index = list.first();
@@ -1091,7 +1114,7 @@ class StandardActionManager::Private
         if ( !index.isValid() )
           return;
 
-        const QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
+        const QMimeData *mimeData = selectionModel->model()->mimeData( safeSelectedRows( selectionModel ) );
 
         QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
         model->dropMimeData( mimeData, dropAction, -1, -1, index );
@@ -1103,7 +1126,7 @@ class StandardActionManager::Private
       Q_ASSERT( selectionModel );
       Q_ASSERT( action );
 
-      if ( selectionModel->selectedRows().count() <= 0 )
+      if ( safeSelectedRows( selectionModel ).count() <= 0 )
         return;
 
       const QMimeData *mimeData = selectionModel->model()->mimeData( selectionModel->selectedRows() );
@@ -1203,13 +1226,13 @@ class StandardActionManager::Private
       const bool isCollectionAction = ( type == CopyCollectionToMenu || type == MoveCollectionToMenu );
 
       if ( isItemAction ) {
-        list = itemSelectionModel->selectedRows();
+        list = safeSelectedRows( itemSelectionModel );
         foreach ( const QModelIndex &index, list )
           mimeTypes << index.data( EntityTreeModel::MimeTypeRole ).toString();
       }
 
       if ( isCollectionAction ) {
-        list = collectionSelectionModel->selectedRows();
+        list = safeSelectedRows( collectionSelectionModel );
         foreach ( const QModelIndex &index, list ) {
           const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
@@ -1581,7 +1604,7 @@ Akonadi::Collection::List StandardActionManager::selectedCollections() const
   if ( !d->collectionSelectionModel )
     return collections;
 
-  foreach ( const QModelIndex &index, d->collectionSelectionModel->selectedRows() ) {
+  foreach ( const QModelIndex &index, safeSelectedRows( d->collectionSelectionModel ) ) {
     const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
     if ( collection.isValid() )
       collections << collection;
@@ -1597,7 +1620,7 @@ Item::List StandardActionManager::selectedItems() const
   if ( !d->itemSelectionModel )
     return items;
 
-  foreach ( const QModelIndex &index, d->itemSelectionModel->selectedRows() ) {
+  foreach ( const QModelIndex &index, safeSelectedRows( d->itemSelectionModel ) ) {
     const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
     if ( item.isValid() )
       items << item;
