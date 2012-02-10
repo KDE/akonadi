@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_BINARY_DIR}/kabc
     ${CMAKE_SOURCE_DIR}/kabc
     ${NEPOMUK_CORE_INCLUDE_DIR}
+    ${kcalcore_BINARY_DIR}
 )
 
 if (Soprano_FOUND)
