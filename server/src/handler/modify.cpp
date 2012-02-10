@@ -172,9 +172,8 @@ bool Modify::parseStream()
       // custom attribute
       if ( type.startsWith( '-' ) ) {
         type = type.mid( 1 );
-        if ( !db->removeCollectionAttribute( collection, type ) )
-          return failureResponse( "Unable to remove custom collection attribute" );
-        changes.append( type );
+        if ( db->removeCollectionAttribute( collection, type ) )
+          changes.append( type );
       } else {
         QByteArray value;
         pos = ImapParser::parseString( line, value, pos );

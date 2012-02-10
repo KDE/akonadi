@@ -183,6 +183,11 @@ class DataStore : public QObject
 
     /* --- Collection attributes ------------------------------------------ */
     bool addCollectionAttribute( const Collection &col, const QByteArray &key, const QByteArray &value );
+    /**
+     * Removes the given collection attribute for @p col.
+     * @throws HandlerException on database errors
+     * @returns @c true if the attribute existed, @c false otherwise
+     */
     bool removeCollectionAttribute( const Collection &col, const QByteArray &key );
 
     /* --- Helper functions ---------------------------------------------- */

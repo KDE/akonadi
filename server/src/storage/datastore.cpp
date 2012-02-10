@@ -33,6 +33,7 @@
 #include "akdebug.h"
 #include "parthelper.h"
 #include "libs/protocol_p.h"
+#include "handler.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -534,15 +535,19 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
   qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, key );
   if ( !qb.exec() )
-    return false;
+    throw HandlerException( "Unable to query for collection attribute" );
 
-  foreach ( CollectionAttribute attr, qb.result() ) {
+  const QVector<CollectionAttribute> result = qb.result();
+  foreach ( CollectionAttribute attr, result ) {
     if ( !attr.remove() )
-      return false;
+      throw HandlerException( "Unable to remove collection attribute" );
   }
 
-  mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
-  return true;
+  if (!result.isEmpty()) {
+    mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
+    return true;
+  }
+  return false;
 }
 
 
