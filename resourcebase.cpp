@@ -151,21 +151,18 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void createItemSyncInstanceIfMissing()
     {
       Q_Q( ResourceBase );
-      if ( scheduler->currentTask().type == ResourceScheduler::SyncCollection ) {
-        if ( !mItemSyncer ) {
-          mItemSyncer = new ItemSync( q->currentCollection() );
-          mItemSyncer->setTransactionMode( mItemTransactionMode );
-          if ( mItemSyncFetchScope ) {
-            mItemSyncer->setFetchScope( *mItemSyncFetchScope );
-          }
-          mItemSyncer->setProperty( "collection", QVariant::fromValue( q->currentCollection() ) );
-          connect( mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)) );
-          connect( mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)) );
-        }
-        Q_ASSERT( mItemSyncer );
-      } else {
-        kWarning() << "Calling items retrieval methods although no item retrieval is in progress";
+      Q_ASSERT_X( scheduler->currentTask().type == ResourceScheduler::SyncCollection,
+                  "createItemSyncInstance", "Calling items retrieval methods although no item retrieval is in progress" );
+      if ( !mItemSyncer ) {
+        mItemSyncer = new ItemSync( q->currentCollection() );
+        mItemSyncer->setTransactionMode( mItemTransactionMode );
+        if ( mItemSyncFetchScope )
+          mItemSyncer->setFetchScope( *mItemSyncFetchScope );
+        mItemSyncer->setProperty( "collection", QVariant::fromValue( q->currentCollection() ) );
+        connect( mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)) );
+        connect( mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)) );
       }
+      Q_ASSERT( mItemSyncer );
     }
 
   public Q_SLOTS:
