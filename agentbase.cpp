@@ -155,9 +155,9 @@ void AgentBase::ObserverV2::collectionMoved( const Akonadi::Collection &collecti
     sAgentBase->d_ptr->changeProcessed();
 }
 
-void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
+void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes )
 {
-  Q_UNUSED( partIdentifiers );
+  Q_UNUSED( changedAttributes );
   collectionChanged( collection );
 }
 
@@ -383,11 +383,11 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection 
     mObserver->collectionChanged( collection );
 }
 
-void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers )
+void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( observer2 != 0 )
-    observer2->collectionChanged( collection, partIdentifiers );
+    observer2->collectionChanged( collection, changedAttributes );
 }
 
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
