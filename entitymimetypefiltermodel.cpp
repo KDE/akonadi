@@ -97,6 +97,13 @@ void EntityMimeTypeFilterModel::addMimeTypeExclusionFilter(const QString &type)
   invalidateFilter();
 }
 
+bool EntityMimeTypeFilterModel::filterAcceptsColumn( int sourceColumn, const QModelIndex &sourceParent ) const
+{
+    if (sourceColumn >= columnCount(mapFromSource(sourceParent)))
+        return false;
+    return QSortFilterProxyModel::filterAcceptsColumn( sourceColumn, sourceParent );
+}
+
 bool EntityMimeTypeFilterModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
   Q_D(const EntityMimeTypeFilterModel);
