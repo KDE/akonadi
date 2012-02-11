@@ -243,6 +243,7 @@ class StandardMailActionManager::Private
       if ( itemIsSelected ) {
         bool allMarkedAsImportant = true;
         bool allMarkedAsRead = true;
+        bool allMarkedAsUnread = true;
         bool allMarkedAsActionItem = true;
 
         foreach ( const Akonadi::Item &item, selectedItems ) {
@@ -252,6 +253,8 @@ class StandardMailActionManager::Private
             allMarkedAsImportant = false;
           if ( !status.isRead() )
             allMarkedAsRead= false;
+	  else 
+	    allMarkedAsUnread = false;
           if ( !status.isToAct() )
             allMarkedAsActionItem = false;
         }
@@ -260,10 +263,18 @@ class StandardMailActionManager::Private
         if ( action ) {
           updateMarkAction( action, allMarkedAsRead );
           if ( allMarkedAsRead )
-            action->setText( i18n( "&Mark Mail as Unread" ) );
+            action->setEnabled(false);
           else
-            action->setText( i18n( "&Mark Mail as Read" ) );
-          action->setEnabled( true );
+            action->setEnabled( true );
+        }
+
+        action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsUnread );
+        if ( action ) {
+          updateMarkAction( action, allMarkedAsUnread );
+          if ( allMarkedAsUnread )
+            action->setEnabled(false);
+          else
+            action->setEnabled( true );
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );

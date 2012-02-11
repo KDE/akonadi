@@ -109,7 +109,7 @@ class AgentBasePrivate : public QObject
 
     virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     virtual void collectionChanged( const Akonadi::Collection &collection );
-    virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers );
+    virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );
     virtual void collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination );
     virtual void collectionRemoved( const Akonadi::Collection &collection );
     void collectionSubscribed( const Akonadi::Collection &collection, const Akonadi::Collection &parent );

@@ -616,7 +616,12 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   contact.setNote( d->mNotesWidget->toPlainText() );
 
   // dates group
-  contact.setBirthday( QDateTime( d->mBirthdateWidget->date(), QTime(), contact.birthday().timeSpec() ) );
+  QDateTime birthday = QDateTime( d->mBirthdateWidget->date(), QTime(), contact.birthday().timeSpec() );
+  // This is needed because the constructor above sets the time component
+  // of the QDateTime to midnight.  We want it to stay invalid.
+  birthday.setTime( QTime() );
+
+  contact.setBirthday( birthday );
   d->storeCustom( contact, QLatin1String( "X-Anniversary" ), d->mAnniversaryWidget->date().toString( Qt::ISODate ) );
 
   // family group

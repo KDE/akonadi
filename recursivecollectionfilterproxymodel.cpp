@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -35,12 +36,15 @@ class RecursiveCollectionFilterProxyModelPrivate
   RecursiveCollectionFilterProxyModel *q_ptr;
 public:
   RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
-      : q_ptr(model)
+      : q_ptr(model), checkOnlyChecked( false )
   {
 
   }
 
   QSet<QString> includedMimeTypes;
+  Akonadi::MimeTypeChecker checker;
+  QString pattern;
+  bool checkOnlyChecked;
 };
 
 }
@@ -60,21 +64,31 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
 {
   Q_D( const RecursiveCollectionFilterProxyModel );
 
-  Akonadi::MimeTypeChecker checker;
-  checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
-
   const QModelIndex rowIndex = sourceModel()->index( sourceRow, 0, sourceParent );
   const Akonadi::Collection collection = rowIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
   if ( !collection.isValid() )
     return false;
+  const bool checked = ( rowIndex.data(Qt::CheckStateRole).toInt()==Qt::Checked );
+  if ( d->checkOnlyChecked && !checked ) {
+    return false;
+  }
 
-  return checker.isWantedCollection( collection );
+  const bool collectionWanted =  d->checker.isWantedCollection( collection );
+  if ( collectionWanted )
+  {
+    if (  !d->pattern.isEmpty() ) {
+      const QString text = rowIndex.data(Qt::DisplayRole).toString();
+      return text.contains( d->pattern, Qt::CaseInsensitive );
+    }
+  }
+  return collectionWanted;
 }
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString& mimeType)
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes << mimeType;
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
@@ -82,6 +96,7 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(con
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes.unite(mimeTypes.toSet());
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
@@ -89,6 +104,7 @@ void RecursiveCollectionFilterProxyModel::clearFilters()
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes.clear();
+  d->checker.setWantedMimeTypes( QStringList() );
   invalidateFilter();
 }
 
@@ -96,6 +112,7 @@ void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(con
 {
   Q_D(RecursiveCollectionFilterProxyModel);
   d->includedMimeTypes = mimeTypes.toSet();
+  d->checker.setWantedMimeTypes( d->includedMimeTypes.toList() );
   invalidateFilter();
 }
 
@@ -109,4 +126,18 @@ int Akonadi::RecursiveCollectionFilterProxyModel::columnCount( const QModelIndex
 {
   // Optimization: we know that we're not changing the number of columns, so skip QSortFilterProxyModel
   return sourceModel()->columnCount( mapToSource( index ) );
+}
+
+void Akonadi::RecursiveCollectionFilterProxyModel::setSearchPattern( const QString &pattern )
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->pattern = pattern;
+  invalidate();
+}
+
+void Akonadi::RecursiveCollectionFilterProxyModel::setIncludeCheckedOnly( bool checked )
+{
+  Q_D(RecursiveCollectionFilterProxyModel);
+  d->checkOnlyChecked = checked;
+  invalidate();
 }

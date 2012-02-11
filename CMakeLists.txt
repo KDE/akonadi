@@ -5,13 +5,13 @@ add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5250 )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 if(CMAKE_COMPILE_GCOV)
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-endif(CMAKE_COMPILE_GCOV)
+endif()
 
 if (KDE4_BUILD_TESTS)
    # only with this macro the AKONADI_TESTS_EXPORT macro will do something
    add_definitions(-DCOMPILING_TESTS)
 add_subdirectory( tests )
-endif (KDE4_BUILD_TESTS)
+endif()
 
 add_definitions( ${AKONADI_DEFINITIONS} )
 add_definitions( -DQT_NO_CAST_FROM_ASCII )
@@ -179,11 +179,11 @@ if (KDEPIM_MOBILE_UI)
   set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
        collectiondialog_mobile.cpp
   )
-else (KDEPIM_MOBILE_UI)
+else()
   set( akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
        collectiondialog_desktop.cpp
   )
-endif (KDEPIM_MOBILE_UI)
+endif()
 
 if (NOT WINCE)
   set(akonadikde_LIB_SRC ${akonadikde_LIB_SRC}
@@ -195,7 +195,7 @@ if (NOT WINCE)
   entitytreeviewstatesaver.cpp
   itemview.cpp
   )
-endif (NOT WINCE)
+endif()
 
 # DBus interfaces and adaptors
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
@@ -231,11 +231,11 @@ if (KDEPIM_MOBILE_UI)
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage_mobile.ui
   )
-else(KDEPIM_MOBILE_UI)
+else()
   kde4_add_ui_files( akonadikde_LIB_SRC
     collectiongeneralpropertiespage.ui
   )
-endif(KDEPIM_MOBILE_UI)
+endif()
 
 kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
@@ -244,7 +244,7 @@ set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRAR
 
 if (KDEPIM_MOBILE_UI)
 target_link_libraries( akonadi-kde ${QT_QTDECLARATIVE_LIBRARY} )
-endif(KDEPIM_MOBILE_UI)
+endif()
 
 target_link_libraries( akonadi-kde LINK_INTERFACE_LIBRARIES ${AKONADI_KDE_DEPS})
 
@@ -379,4 +379,4 @@ install( FILES
   CollectionDialogMobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde/qml
 )
-endif(KDEPIM_MOBILE_UI)
+endif()

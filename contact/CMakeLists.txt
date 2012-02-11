@@ -11,28 +11,28 @@ if (Soprano_FOUND)
   include_directories(
       ${SOPRANO_INCLUDE_DIR}
   )
-endif (Soprano_FOUND)
+endif()
 
 macro_optional_find_package(Prison QUIET)
 macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
 if (PRISON_FOUND)
     add_definitions(-DHAVE_PRISON)
     include_directories(${PRISON_INCLUDE_DIR})
-endif (PRISON_FOUND)
+endif()
 
 if (WINCE)
   set( AKONADI_PHONE_DIAL_DEFAULT "UseWinCE" )
   set( AKONADI_SEND_SMS_DEFAULT "UseWinCESms" )
-else (WINCE)
+else()
   set( AKONADI_PHONE_DIAL_DEFAULT "UseSkype" )
   set( AKONADI_SEND_SMS_DEFAULT  "UseSkypeSms" )
-endif (WINCE)
+endif()
 
 add_subdirectory(tests)
 #We dont have kcms under wince so dont build them
 if(NOT WINCE)
   add_subdirectory(kcm)
-endif(NOT WINCE)
+endif()
 add_subdirectory(editor/im)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")
@@ -52,7 +52,7 @@ if (WINCE)
   set( akonadicontact_actions_SRCS ${akonadicontact_actions_SRCS}
     actions/qwincedialer.cpp
   )
-endif (WINCE)
+endif()
 
 configure_file( actions/contactactionssettings.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/contactactionssettings.kcfg @ONLY)
 kde4_add_kcfg_files(akonadicontact_actions_SRCS actions/contactactionssettings.kcfgc)
@@ -133,9 +133,9 @@ set(akonadicontact_LIB_SRC
     ${akonadicontact_LIB_SRC}
     ${akonadicontact_editor_SRCS}
 )
-else(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
+else()
 add_definitions(-DDISABLE_EDITOR_WIDGETS)
-endif(NOT KDE_PLATFORM_PROFILE STREQUAL "Mobile")
+endif()
 
 qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
@@ -152,11 +152,11 @@ target_link_libraries(akonadi-contact akonadi-kde
 if(NOT WINCE)
 target_link_libraries(akonadi-contact akonadi-kde
                                       ${NEPOMUK_LIBRARIES})
-endif(NOT WINCE)
+endif()
 
 if(PRISON_FOUND) 
 target_link_libraries(akonadi-contact ${PRISON_LIBRARIES})
-endif(PRISON_FOUND)
+endif()
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc
@@ -170,7 +170,7 @@ target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
 if (NOT WINCE)
 target_link_libraries(akonadi-contact ${KDE4_PHONON_LIBS})
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES ${KDE4_PHONON_LIBS})
-endif (NOT WINCE)
+endif()
 
 set_target_properties(akonadi-contact PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

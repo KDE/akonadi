@@ -166,7 +166,14 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     }
 
   public Q_SLOTS:
-    Q_SCRIPTABLE QString dumpToString()
+    // Dump the contents of the current ChangeReplay
+    Q_SCRIPTABLE QString dumpNotificationListToString() const
+    {
+      return mChangeRecorder->dumpNotificationListToString();
+    }
+
+    // Dump the state of the scheduler
+    Q_SCRIPTABLE QString dumpToString() const
     {
       return scheduler->dumpToString();
     }
@@ -797,10 +804,11 @@ void ResourceBase::cancelTask()
         d->scheduler->taskDone();
       break;
     case ResourceScheduler::SyncCollection:
-      if ( d->mItemSyncer )
+      if ( d->mItemSyncer ) {
         d->mItemSyncer->rollback();
-      else
+      } else {
         d->scheduler->taskDone();
+      }
       break;
     default:
       d->scheduler->taskDone();
@@ -881,28 +889,37 @@ void ResourceBase::setTotalItems( int amount )
   kDebug() << amount;
   Q_D( ResourceBase );
   setItemStreamingEnabled( true );
-  d->mItemSyncer->setTotalItems( amount );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setTotalItems( amount );
+  }
 }
 
 void ResourceBase::setItemStreamingEnabled( bool enable )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setStreamingEnabled( enable );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setStreamingEnabled( enable );
+  }
 }
 
 void ResourceBase::itemsRetrieved( const Item::List &items )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setFullSyncItems( items );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setFullSyncItems( items );
+  }
 }
 
-void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems, const Item::List &removedItems )
+void ResourceBase::itemsRetrievedIncremental( const Item::List &changedItems,
+                                              const Item::List &removedItems )
 {
   Q_D( ResourceBase );
   d->createItemSyncInstanceIfMissing();
-  d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
+  if ( d->mItemSyncer ) {
+    d->mItemSyncer->setIncrementalSyncItems( changedItems, removedItems );
+  }
 }
 
 void ResourceBasePrivate::slotItemSyncDone( KJob *job )
@@ -998,6 +1015,18 @@ void ResourceBase::setAutomaticProgressReporting( bool enabled )
 {
   Q_D( ResourceBase );
   d->mAutomaticProgressReporting = enabled;
+}
+
+QString ResourceBase::dumpNotificationListToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpNotificationListToString();
+}
+
+QString ResourceBase::dumpSchedulerToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpToString();
 }
 
 #include "resourcebase.moc"

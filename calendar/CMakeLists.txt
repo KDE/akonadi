@@ -44,7 +44,7 @@ target_link_libraries(akonadi-calendar
 if(NOT WINCE)
 target_link_libraries(akonadi-calendar
                                       ${NEPOMUK_LIBRARIES})
-endif(NOT WINCE)
+endif()
 
 set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

@@ -32,7 +32,7 @@
 namespace Akonadi {
 
 class AgentFactoryBasePrivate;
- 
+
 /**
  * @short A factory base class for in-process agents.
  *
@@ -53,6 +53,8 @@ class AKONADI_EXPORT AgentFactoryBase : public QObject
      * @param parent The parent object.
      */
     explicit AgentFactoryBase( const char *catalogName, QObject *parent = 0 );
+
+    virtual ~AgentFactoryBase();
 
   public Q_SLOTS:
     /**
@@ -98,7 +100,7 @@ class AgentFactory : public AgentFactoryBase
       return instance;
     }
 };
-  
+
 }
 
 #ifndef AKONADI_AGENT_FACTORY

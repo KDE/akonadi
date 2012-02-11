@@ -598,6 +598,18 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     void taskDone();
 
+    /**
+     * Dump the contents of the current ChangeReplay
+     * @since 4.8.1
+     */
+    QString dumpNotificationListToString() const;
+
+    /**
+     * Dump the state of the scheduler
+     * @since 4.8.1
+     */
+    QString dumpSchedulerToString() const;
+
   private:
     static QString parseArguments( int, char** );
     static int init( ResourceBase *r );

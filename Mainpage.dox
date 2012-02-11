@@ -19,7 +19,7 @@ Functionality provided by libakonadi:
 
 Additional information about Akonadi:
 
-- <a href="http://api.kde.org/kdesupport-api/kdesupport-apidocs/akonadi/html/">Akonadi Server documentation</a>
+- <a href="http://api.kde.org/kdesupport-api/akonadi-apidocs/">Akonadi Server documentation</a>
 - \ref akonadi_history
 - <a href="http://www.akonadi-project.org">Website</a>
 - <a href="http://techbase.kde.org/index.php?title=Projects/PIM/Akonadi">Wiki</a>

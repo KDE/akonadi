@@ -128,14 +128,18 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
 
+  // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
+  // the current agent types and instances
+  // this ensures the invariant of AgentManager reporting a consistent state if ServerManager::state() == Running
+  // that's the case with direct connections as well, but only after you enter the event loop once
   connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
+           this, SLOT(serviceOwnerChanged(QString,QString,QString)), Qt::QueuedConnection );
 
   // AgentManager is dangerous to use for agents themselves
   if ( Internal::clientType() != Internal::User )
     return;
-  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
-  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()) );
+  connect( AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection );
+  connect( AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection );
 }
 
 ServerManager * Akonadi::ServerManager::self()

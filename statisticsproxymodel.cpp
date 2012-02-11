@@ -53,6 +53,25 @@ class StatisticsProxyModel::Private
       return mParent->sourceModel()->columnCount( mParent->mapToSource( parent ) );
     }
 
+    void getCountRecursive( const QModelIndex &index, qint64 &totalSize ) const
+    {
+      Collection collection = qvariant_cast<Collection>( index.data( EntityTreeModel::CollectionRole ) );
+      // Do not assert on invalid collections, since a collection may be deleted
+      // in the meantime and deleted collections are invalid.
+      if ( collection.isValid() ) {
+        CollectionStatistics statistics = collection.statistics();
+        totalSize += qMax( 0LL, statistics.size() );
+        if ( index.model()->hasChildren( index ) ) {
+          const int rowCount = index.model()->rowCount( index );
+          for ( int row = 0; row < rowCount; row++ ) {
+            static const int column = 0;
+            getCountRecursive( index.model()->index( row, column, index ),  totalSize );
+          }
+        }
+      }
+    }
+
+
     QString toolTipForCollection( const QModelIndex &index, const Collection &collection )
     {
       QString bckColor = QApplication::palette().color( QPalette::ToolTipBase ).name();
@@ -99,16 +118,32 @@ class StatisticsProxyModel::Private
         }
       }
 
+      qint64 currentFolderSize( collection.statistics().size() );
       tipInfo += QString::fromLatin1(
         "      <strong>%1</strong>: %2<br>\n"
-        ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( collection.statistics().size() ) ) );
+        ).arg( i18n( "Storage Size" ) ).arg( KIO::convertSize( (KIO::filesize_t)( currentFolderSize ) ) );
 
 
-      QString iconName = CollectionUtils::defaultIconName( collection );
-      if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-           !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
-        iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
+      qint64 totalSize = 0;
+      getCountRecursive( index, totalSize );
+      totalSize -= currentFolderSize;
+      if (totalSize > 0 ) {
+        tipInfo += QString::fromLatin1(
+          "<strong>%1</strong>: %2<br>"
+          ).arg( i18n("Subfolder Storage Size") ).arg( KIO::convertSize( (KIO::filesize_t)( totalSize ) ) );
       }
+
+
+     QString iconName = CollectionUtils::defaultIconName( collection );
+      if ( collection.hasAttribute<EntityDisplayAttribute>() &&
+         !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
+         if ( !collection.attribute<EntityDisplayAttribute>()->activeIconName().isEmpty() && collection.statistics().unreadCount()> 0) {
+           iconName = collection.attribute<EntityDisplayAttribute>()->activeIconName();
+         }
+         else
+           iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
+      }
+
 
       int iconSizes[] = { 32, 22 };
       int icon_size_found = 32;

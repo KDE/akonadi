@@ -31,4 +31,4 @@ install( FILES
   incidencemimetypevisitor.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kcal COMPONENT Devel
 )
-endif (NOT KDEPIM_NO_KCAL)
+endif()
