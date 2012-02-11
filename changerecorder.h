@@ -84,7 +84,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
     /**
      * Debugging: dump current list of notifications, as saved on disk.
      */
-    QString dumpNotificationListToString();
+    QString dumpNotificationListToString() const;
 
   public Q_SLOTS:
     /**

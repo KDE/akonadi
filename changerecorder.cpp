@@ -108,9 +108,9 @@ void ChangeRecorder::setChangeRecordingEnabled( bool enable )
     d->dispatchNotifications();
 }
 
-QString Akonadi::ChangeRecorder::dumpNotificationListToString()
+QString Akonadi::ChangeRecorder::dumpNotificationListToString() const
 {
-  Q_D( ChangeRecorder );
+  Q_D( const ChangeRecorder );
   return d->dumpNotificationListToString();
 }
 
