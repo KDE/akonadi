@@ -37,7 +37,6 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE( KPIMIdentities::Identity );
 Q_DECLARE_METATYPE( KCalCore::Incidence::Ptr );
-Q_DECLARE_METATYPE( KCalCore::IncidenceBase::Ptr );
 
 class MailClientTest : public QObject
 {
