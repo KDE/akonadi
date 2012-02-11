@@ -167,13 +167,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
   public Q_SLOTS:
     // Dump the contents of the current ChangeReplay
-    Q_SCRIPTABLE QString dumpNotificationListToString()
+    Q_SCRIPTABLE QString dumpNotificationListToString() const
     {
       return mChangeRecorder->dumpNotificationListToString();
     }
 
     // Dump the state of the scheduler
-    Q_SCRIPTABLE QString dumpToString()
+    Q_SCRIPTABLE QString dumpToString() const
     {
       return scheduler->dumpToString();
     }
@@ -1015,6 +1015,18 @@ void ResourceBase::setAutomaticProgressReporting( bool enabled )
 {
   Q_D( ResourceBase );
   d->mAutomaticProgressReporting = enabled;
+}
+
+QString ResourceBase::dumpNotificationListToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpNotificationListToString();
+}
+
+QString ResourceBase::dumpSchedulerToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpToString();
 }
 
 #include "resourcebase.moc"
