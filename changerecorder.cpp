@@ -108,4 +108,10 @@ void ChangeRecorder::setChangeRecordingEnabled( bool enable )
     d->dispatchNotifications();
 }
 
+QString Akonadi::ChangeRecorder::dumpNotificationListToString()
+{
+  Q_D( ChangeRecorder );
+  return d->dumpNotificationListToString();
+}
+
 #include "changerecorder.moc"

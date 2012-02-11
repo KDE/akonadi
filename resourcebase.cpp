@@ -169,6 +169,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     }
 
   public Q_SLOTS:
+    // Dump the contents of the current ChangeReplay
+    Q_SCRIPTABLE QString dumpNotificationListToString()
+    {
+      return mChangeRecorder->dumpNotificationListToString();
+    }
+
+    // Dump the state of the scheduler
     Q_SCRIPTABLE QString dumpToString()
     {
       return scheduler->dumpToString();

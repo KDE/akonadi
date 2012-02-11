@@ -81,6 +81,11 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      */
     void setChangeRecordingEnabled( bool enable );
 
+    /**
+     * Debugging: dump current list of notifications, as saved on disk.
+     */
+    QString dumpNotificationListToString();
+
   public Q_SLOTS:
     /**
      * Replay the next change notification and erase the previous one from the record.
