@@ -65,6 +65,13 @@ class DbConfig
     virtual void apply( QSqlDatabase &database ) = 0;
 
     /**
+     * Do session setup/initialization work on @p database.
+     * An example would be to run some SQL commands on every new session,
+     * typically stuff like setting encodings, transaction isolation levels, etc.
+     */
+    virtual void initSession( const QSqlDatabase& database );
+
+    /**
      * Returns whether an internal server needs to be used.
      */
     virtual bool useInternalServer() const = 0;
