@@ -350,6 +350,8 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
       }
     }
 
+    conf.call( QLatin1String( "writeConfig" ) );
+
     agent.reconfigure();
   }
 

@@ -265,6 +265,8 @@ void Firstrun::instanceCreated( KJob *job )
       kError() << "Setting " << setting << " failed for agent " << instance.identifier();
   }
 
+  iface->call( QLatin1String( "writeConfig" ) );
+
   instance.reconfigure();
   instance.synchronize();
   delete iface;
