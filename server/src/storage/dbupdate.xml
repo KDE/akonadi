@@ -173,11 +173,12 @@
 
   <!-- adapt to new part type table layout
     (1) populate part type table
-    (2) TODO populate part type reference in the part table
+    (2) populate part type reference in the part table
     (3) drop the old part name column in the part table
   -->
   <update version="25" abortOnFailure="true">
     <raw-sql backends="mysql,psql,sqlite,odbc">INSERT INTO PartTypeTable (ns, name) SELECT DISTINCT substr(name, 1, 3), substr(name, 5) FROM PartTable</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PartTable SET partTypeId = (SELECT PartTypeTable.id FROM PartTypeTable WHERE substr(PartTable.name, 1, 3) = ns AND substr(PartTable.name, 5) = PartTypeTable.name)</raw-sql>
 <!--    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PartTable DROP COLUMN name;</raw-sql>-->
   </update>
 </updates>
