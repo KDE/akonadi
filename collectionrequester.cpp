@@ -65,7 +65,9 @@ void CollectionRequester::Private::init()
 
   edit = new KLineEdit( q );
   edit->setReadOnly( true );
+  edit->setClickMessage( i18n( "No Folder" ) );
   edit->setClearButtonShown( false );
+  edit->setFocusPolicy( Qt::NoFocus );
 
   button = new KPushButton( q );
   button->setIcon( KIcon( QLatin1String( "document-open" ) ) );
@@ -76,7 +78,7 @@ void CollectionRequester::Private::init()
   q->setSpacing( -1 );
 
   edit->installEventFilter( q );
-  q->setFocusProxy( edit );
+  q->setFocusProxy( button );
   q->setFocusPolicy( Qt::StrongFocus );
 
   q->connect( button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()) );
@@ -134,7 +136,7 @@ Collection CollectionRequester::collection() const
 void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
-  d->edit->setText( collection.isValid() ? collection.name() : i18n( "No Folder" ) );
+  d->edit->setText( collection.isValid() ? collection.name() : QString() );
   emit collectionChanged( collection );
 }
 
