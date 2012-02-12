@@ -342,6 +342,10 @@ AgentManager* AgentManagerPrivate::mSelf = 0;
 AgentManager::AgentManager()
   : QObject( 0 ), d( new AgentManagerPrivate( this ) )
 {
+  // needed for queued connections on our signals
+  qRegisterMetaType<Akonadi::AgentType>();
+  qRegisterMetaType<Akonadi::AgentInstance>();
+
   d->createDBusInterface();
 
   QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
