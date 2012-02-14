@@ -26,7 +26,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusError>
-#include <QtGui/QApplication>
+#include <QApplication>
 
 #ifndef _WIN32_WCE
 int main( int argc, char ** argv )

@@ -22,7 +22,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QPluginLoader>
-#include <QtGui/QWidget> // Needed for WId
+#include <QWidget> // Needed for WId
 
 #include <shared/akdebug.h>
 #include <qmetaobject.h>

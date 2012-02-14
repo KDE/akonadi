@@ -21,7 +21,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
-#include <QtGui/QApplication>
+#include <QApplication>
 
 int main( int argc, char *argv[] )
 {
