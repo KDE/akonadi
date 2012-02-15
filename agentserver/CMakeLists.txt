@@ -54,10 +54,17 @@ endif(NOT WINCE)
 # Install both helper apps.
 
 if (NOT WINCE)
-install(TARGETS akonadi_agent_server akonadi_agent_launcher
-        DESTINATION ${BIN_INSTALL_DIR}
-)
+    if (Q_WS_MAC)
+        install(TARGETS akonadi_agent_launcher
+                DESTINATION ${AKONADI_BUNDLE_PATH})
+    else (Q_WS_MAC)
+        install(TARGETS akonadi_agent_launcher
+                DESTINATION ${BIN_INSTALL_DIR})
+    endif (Q_WS_MAC)
+
+    install(TARGETS akonadi_agent_server
+            DESTINATION ${BIN_INSTALL_DIR})
 else(NOT WINCE)
-install(TARGETS akonadi_agent_server
-        DESTINATION ${LIB_INSTALL_DIR})
+    install(TARGETS akonadi_agent_server
+            DESTINATION ${LIB_INSTALL_DIR})
 endif(NOT WINCE)
