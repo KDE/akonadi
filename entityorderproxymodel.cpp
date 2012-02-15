@@ -59,6 +59,7 @@ EntityOrderProxyModel::EntityOrderProxyModel( QObject* parent )
   : QSortFilterProxyModel(parent), d_ptr( new EntityOrderProxyModelPrivate( this ) )
 {
   setDynamicSortFilter(true);
+  //setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
 EntityOrderProxyModel::~EntityOrderProxyModel()
@@ -74,13 +75,18 @@ void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
   layoutChanged();
 }
 
+static bool compareName( const QString& name1, const QString& name2 )
+{
+  return ( name1.toLower() <name2.toLower() );
+}
+
 bool EntityOrderProxyModel::lessThan( const QModelIndex& left, const QModelIndex& right ) const
 {
   Q_D( const EntityOrderProxyModel );
 
-  if ( !d->m_orderConfig.isValid() )
+  if ( !d->m_orderConfig.isValid() ) {
     return QSortFilterProxyModel::lessThan( left, right );
-
+  }
   Collection col = left.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
 
   if ( !d->m_orderConfig.hasKey( QString::number( col.id() ) ) )
@@ -117,7 +123,7 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
     return QSortFilterProxyModel::dropMimeData( data, action, row, column, parent );
 
   bool containsMove = false;
-
+ 
   const KUrl::List urls = KUrl::List::fromMimeData( data );
 
   Collection parentCol;
@@ -170,10 +176,17 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
   } else {
     const QModelIndex sourceIndex = mapToSource( parent );
     const int rowCount = sourceModel()->rowCount( sourceIndex );
+    QMap<QString, QString> orderList;
     for (int row = 0; row < rowCount; ++row) {
       static const int column = 0;
       const QModelIndex idx = sourceModel()->index( row, column, sourceIndex );
-      existingList.append( configString( idx ) );
+      orderList.insert( idx.data().toString(), configString( idx ) );
+    }
+    QStringList l = orderList.keys();
+    qSort( l.begin(),l.end(), compareName );
+    const int numberOfElement( l.count() );
+    for ( int i= 0; i < numberOfElement; i++ ) {
+      existingList.append( orderList.value( l.at( i ) ) );
     }
   }
   const int numberOfDroppedElement( droppedList.size() );
