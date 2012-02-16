@@ -64,11 +64,19 @@ class DragDropManager
      */
     bool showDropActionMenu() const;
 
+    bool isManualSortingActive() const;
+
+    /**
+     * Set true if we automatic sorting
+     */    
+    void setManualSortingActive(bool active);
+
   private:
     Collection currentDropTarget( QDropEvent* event ) const;
 
     bool hasAncestor( const QModelIndex& index, Collection::Id parentId ) const;
     bool mShowDropActionMenu;
+    bool mIsManualSortingActive;
     QAbstractItemView *m_view;
 };
 

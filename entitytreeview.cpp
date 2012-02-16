@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -306,5 +307,22 @@ bool EntityTreeView::isDropActionMenuEnabled() const
   return false;
 #endif
 }
+
+void EntityTreeView::setManualSortingActive(bool active)
+{
+#ifndef QT_NO_DRAGANDDROP
+  d->mDragDropManager->setManualSortingActive( active );
+#endif 
+}
+
+bool EntityTreeView::isManualSortingActive() const
+{
+#ifndef QT_NO_DRAGANDDROP
+  return d->mDragDropManager->isManualSortingActive();
+#else
+  return false;
+#endif 
+}
+
 
 #include "entitytreeview.moc"

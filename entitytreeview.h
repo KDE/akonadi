@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -124,6 +125,21 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      */
     bool isDropActionMenuEnabled() const;
 
+    /**
+     * Return true if we use an manual sorting
+     * Necessary to fix dnd menu
+     * We must show just move when we move item between two items
+     * When automatic no show dnd menu between two items.
+     * @since 4.8.1
+     */
+    bool isManualSortingActive() const;
+
+    /**
+     * Set true if we automatic sorting
+     * @since 4.8.1
+     */    
+    void setManualSortingActive(bool active);
+  
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
