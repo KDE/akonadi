@@ -75,11 +75,6 @@ void EntityOrderProxyModel::setOrderConfig( KConfigGroup& configGroup )
   layoutChanged();
 }
 
-static bool compareName( const QString& name1, const QString& name2 )
-{
-  return ( name1.toLower() <name2.toLower() );
-}
-
 bool EntityOrderProxyModel::lessThan( const QModelIndex& left, const QModelIndex& right ) const
 {
   Q_D( const EntityOrderProxyModel );
@@ -174,19 +169,12 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
   if ( d->m_orderConfig.hasKey( QString::number( parentCol.id() ) ) ) {
     existingList = d->m_orderConfig.readEntry( QString::number( parentCol.id() ), QStringList() );
   } else {
-    const QModelIndex sourceIndex = mapToSource( parent );
-    const int rowCount = sourceModel()->rowCount( sourceIndex );
+    const int rowCount = this->rowCount( parent );
     QMap<QString, QString> orderList;
     for (int row = 0; row < rowCount; ++row) {
       static const int column = 0;
-      const QModelIndex idx = sourceModel()->index( row, column, sourceIndex );
-      orderList.insert( idx.data().toString(), configString( idx ) );
-    }
-    QStringList l = orderList.keys();
-    qSort( l.begin(),l.end(), compareName );
-    const int numberOfElement( l.count() );
-    for ( int i= 0; i < numberOfElement; i++ ) {
-      existingList.append( orderList.value( l.at( i ) ) );
+      const QModelIndex idx = this->index( row, column, parent );
+      existingList.append(configString( idx ));
     }
   }
   const int numberOfDroppedElement( droppedList.size() );
