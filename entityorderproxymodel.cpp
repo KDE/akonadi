@@ -170,7 +170,6 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
     existingList = d->m_orderConfig.readEntry( QString::number( parentCol.id() ), QStringList() );
   } else {
     const int rowCount = this->rowCount( parent );
-    QMap<QString, QString> orderList;
     for (int row = 0; row < rowCount; ++row) {
       static const int column = 0;
       const QModelIndex idx = this->index( row, column, parent );
