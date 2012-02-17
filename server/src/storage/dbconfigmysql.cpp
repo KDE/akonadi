@@ -345,3 +345,9 @@ void DbConfigMysql::stopInternalServer()
   if ( !result )
     mDatabaseProcess->kill();
 }
+
+void DbConfigMysql::initSession(const QSqlDatabase& database)
+{
+  QSqlQuery query( database );
+  query.exec( QLatin1String("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED") );
+}

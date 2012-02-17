@@ -95,6 +95,8 @@ void DataStore::open()
     debugLastDbError( "Cannot open database." );
   else
     qDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
+
+  DbConfig::configuredDatabase()->initSession( m_database );
 }
 
 void Akonadi::DataStore::close()

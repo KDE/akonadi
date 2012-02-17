@@ -125,3 +125,7 @@ QString DbConfig::defaultDatabaseName()
   return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier();
 }
 
+void DbConfig::initSession(const QSqlDatabase& database)
+{
+  Q_UNUSED(database);
+}
