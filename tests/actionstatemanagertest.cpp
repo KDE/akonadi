@@ -116,6 +116,8 @@ class ActionStateManagerTest : public QObject
 
     void updatePluralLabel( int type, int count )
     {
+      Q_UNUSED( type );
+      Q_UNUSED( count );
     }
 
     bool isFavoriteCollection( const Akonadi::Collection &collection )
@@ -123,7 +125,10 @@ class ActionStateManagerTest : public QObject
       return mFavoriteCollectionMap.contains( collection.id() );
     }
 
-      void updateAlternatingAction( int action ) {}
+    void updateAlternatingAction( int action )
+    {
+      Q_UNUSED( action );
+    }
 
 
   private Q_SLOTS:
