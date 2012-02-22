@@ -162,7 +162,7 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
       proc.start( QLatin1String( "kde4-config" ), args );
       if ( proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0 ) {
         proc.setReadChannel( QProcess::StandardOutput );
-        foreach ( const QString &basePath, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
+        Q_FOREACH ( const QString &basePath, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
           const QString path = basePath + QDir::separator() + QLatin1String( "share" );
           if ( !dataDirs.contains( path ) )
             dataDirs << path;
@@ -229,7 +229,7 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
 
   const QStringList pathList = systemPathList( resource );
 
-  foreach ( const QString &path, pathList ) {
+  Q_FOREACH ( const QString &path, pathList ) {
     fileInfo = QFileInfo( path + QLatin1Char('/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable() ) {
       return fileInfo.absoluteFilePath();
@@ -316,7 +316,7 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     QStringList pluginDirs = instance()->systemPathList( "QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt4/plugins/:" AKONADILIB "/kde4/:" AKONADILIB "/kde4/plugins/:/usr/lib/qt4/plugins/" );
 
     if ( QCoreApplication::instance() != 0 ) {
-      foreach ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
+      Q_FOREACH ( const QString &libraryPath, QCoreApplication::instance()->libraryPaths() ) {
         if ( !pluginDirs.contains( libraryPath ) ) {
           pluginDirs << libraryPath;
         }
@@ -332,7 +332,7 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     proc.start( QLatin1String( "kde4-config" ), args );
     if ( proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0 ) {
       proc.setReadChannel( QProcess::StandardOutput );
-      foreach ( const QString &path, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
+      Q_FOREACH ( const QString &path, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
         if ( !pluginDirs.contains( path ) )
           pluginDirs.append( path );
       }
@@ -348,7 +348,7 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
   const QString pluginName = relPath + QLatin1String( ".so" );
 #endif
 
-  foreach ( const QString &path, instance()->mPluginDirs ) {
+  Q_FOREACH ( const QString &path, instance()->mPluginDirs ) {
     const QFileInfo fileInfo( path + QDir::separator() + pluginName );
 
     // resolve symlinks, happens eg. with Maemo optify
@@ -373,7 +373,7 @@ QString XdgBaseDirs::findResourceDir( const char *resource, const QString &relPa
     return fullPath;
   }
 
-  foreach ( const QString &path, systemPathList( resource ) ) {
+  Q_FOREACH ( const QString &path, systemPathList( resource ) ) {
     fileInfo = QFileInfo( path + QLatin1Char( '/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
       return fileInfo.absoluteFilePath();
@@ -394,7 +394,7 @@ QStringList XdgBaseDirs::findAllResourceDirs( const char *resource, const QStrin
     resultList << fileInfo.absoluteFilePath();
   }
 
-  foreach ( const QString &path, systemPathList( resource ) ) {
+  Q_FOREACH ( const QString &path, systemPathList( resource ) ) {
     fileInfo = QFileInfo( path + QLatin1Char( '/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable() ) {
       const QString absPath = fileInfo.absoluteFilePath();

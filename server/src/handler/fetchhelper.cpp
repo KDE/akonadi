@@ -196,7 +196,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
   // retrieve missing parts
   QStringList partList, payloadList;
-  foreach( const QByteArray &b, mRequestedParts ) {
+  Q_FOREACH( const QByteArray &b, mRequestedParts ) {
     // filter out non-part attributes
     if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
       continue;
@@ -347,7 +347,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     attr += ImapParser::join( attributes, " " ) + ')';
     response.setUntagged();
     response.setString( attr );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
 
     itemQuery.next();
   }
@@ -393,7 +393,7 @@ void FetchHelper::triggerOnDemandFetch()
 void FetchHelper::parseCommandStream()
 {
   // macro vs. attribute list
-  forever {
+  Q_FOREVER {
     if ( mStreamParser->atCommandEnd() )
       break;
     if ( mStreamParser->hasList() ) {

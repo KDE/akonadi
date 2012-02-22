@@ -30,7 +30,7 @@ Q_DECLARE_METATYPE( QStack<Akonadi::Collection> )
 class HandlerHelperTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testCachePolicyToByteArray_data()
     {
       QTest::addColumn<Collection>( "collection" );

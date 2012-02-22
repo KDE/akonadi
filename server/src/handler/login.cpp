@@ -39,7 +39,7 @@ bool Login::parseStream()
   m_streamParser->readUntilCommandEnd();
 
   successResponse( "User logged in" );
-  emit connectionStateChange( Authenticated );
+  Q_EMIT connectionStateChange( Authenticated );
   return true;
 }
 

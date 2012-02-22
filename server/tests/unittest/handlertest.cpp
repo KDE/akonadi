@@ -84,7 +84,7 @@ class HandlerTest : public QObject
     {
       MAKE_CMD_ROW(UNKNOWN, UnknownCommandHandler)
     }
-  private slots:
+  private Q_SLOTS:
     void testFindAuthenticatedCommand_data()
     {
       setupTestData();

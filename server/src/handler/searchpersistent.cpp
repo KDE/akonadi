@@ -92,7 +92,7 @@ bool SearchPersistent::parseStream()
 
   // work around the fact that we have no clue what might be in there
   MimeType::List mts = MimeType::retrieveAll();
-  foreach ( const MimeType &mt, mts ) {
+  Q_FOREACH ( const MimeType &mt, mts ) {
     if ( mt.name() == QLatin1String( "inode/directory" ) )
       continue;
     col.addMimeType( mt );
@@ -109,7 +109,7 @@ bool SearchPersistent::parseStream()
   Response colResponse;
   colResponse.setUntagged();
   colResponse.setString( b );
-  emit responseAvailable( colResponse );
+  Q_EMIT responseAvailable( colResponse );
 
   return successResponse( "SEARCH_STORE completed" );
 }

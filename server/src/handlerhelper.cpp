@@ -43,7 +43,7 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray & id)
 
   const QStringList pathParts = path.split( QLatin1Char('/'), QString::SkipEmptyParts );
   Collection col;
-  foreach ( const QString &part, pathParts ) {
+  Q_FOREACH ( const QString &part, pathParts ) {
     SelectQueryBuilder<Collection> qb;
     qb.addValueCondition( Collection::nameColumn(), Query::Equals, part );
     if ( col.isValid() )
@@ -105,7 +105,7 @@ int HandlerHelper::itemWithFlagsCount(const Akonadi::Collection& col, const QStr
               Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
   Query::Condition cond( Query::Or );
-  foreach ( const QString &flag, flags )
+  Q_FOREACH ( const QString &flag, flags )
     cond.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
   qb.addCondition( cond );
   if ( !qb.exec() )
@@ -153,7 +153,7 @@ int HandlerHelper::parseCachePolicy(const QByteArray & data, Collection & col, i
       QList<QByteArray> tmp;
       QStringList partsList;
       Akonadi::ImapParser::parseParenthesizedList( value, tmp );
-      foreach ( const QByteArray &ba, tmp )
+      Q_FOREACH ( const QByteArray &ba, tmp )
         partsList << QString::fromLatin1( ba );
       const QString parts = partsList.join( QLatin1String( " " ) );
       somethingElseChanged = somethingElseChanged || col.cachePolicyLocalParts() != parts;
@@ -271,7 +271,7 @@ int HandlerHelper::parseDepth( const QByteArray &depth )
 Akonadi::Flag::List Akonadi::HandlerHelper::resolveFlags(const QList< QByteArray >& flagNames)
 {
   Flag::List flagList;
-  foreach ( const QByteArray &flagName, flagNames ) {
+  Q_FOREACH ( const QByteArray &flagName, flagNames ) {
     Flag flag = Flag::retrieveByName( QString::fromUtf8( flagName ) );
     if ( !flag.isValid() ) {
       flag = Flag( QString::fromUtf8( flagName ) );

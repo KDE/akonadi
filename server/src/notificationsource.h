@@ -91,7 +91,7 @@ class NotificationSource : public QObject
 
       Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
 
-    private slots:
+    private Q_SLOTS:
       void serviceUnregistered( const QString &serviceName );
 
     private:

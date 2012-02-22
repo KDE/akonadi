@@ -61,7 +61,7 @@ bool Akonadi::AkAppend::commit()
     QString remote_id;
     QString remote_revision;
     QList<QByteArray> flags;
-    foreach( const QByteArray &flag, m_flags ) {
+    Q_FOREACH( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
@@ -135,11 +135,11 @@ bool Akonadi::AkAppend::commit()
     response.setTag( tag() );
     response.setUserDefined();
     response.setString( "[UIDNEXT " + QByteArray::number( item.id() ) + ']' );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
 
     response.setSuccess();
     response.setString( "Append completed" );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
     return true;
 }
 
@@ -218,7 +218,7 @@ bool AkAppend::parseStream()
   // chop up literal data in parts
   int pos = 0; // traverse through part data now
   QPair<QByteArray, QPair<qint64, int> > partSpec;
-  foreach( partSpec, partSpecs ) {
+  Q_FOREACH( partSpec, partSpecs ) {
     // wrap data into a part
     Part part;
     part.setName( QLatin1String( partSpec.first ) );

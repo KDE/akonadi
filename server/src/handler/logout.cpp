@@ -39,13 +39,13 @@ bool Logout::parseStream()
   response.setBye();
   response.setString( "Akonadi server logging out" );
   response.setUntagged();
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "Logout completed" );
-  emit responseAvailable( response );
-  emit connectionStateChange( LoggingOut );
+  Q_EMIT responseAvailable( response );
+  Q_EMIT connectionStateChange( LoggingOut );
   return true;
 }
 

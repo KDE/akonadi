@@ -50,12 +50,12 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
   if ( !db->appendCollection( col ) )
     return false;
 
-  foreach ( const MimeType &mt, source.mimeTypes() ) {
+  Q_FOREACH ( const MimeType &mt, source.mimeTypes() ) {
     if ( !col.addMimeType( mt ) )
       return false;
   }
 
-  foreach ( const CollectionAttribute &attr, source.attributes() ) {
+  Q_FOREACH ( const CollectionAttribute &attr, source.attributes() ) {
     CollectionAttribute newAttr = attr;
     newAttr.setId( -1 );
     newAttr.setCollectionId( col.id() );
@@ -64,13 +64,13 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
   }
 
   // copy sub-collections
-  foreach ( const Collection &child, source.children() ) {
+  Q_FOREACH ( const Collection &child, source.children() ) {
     if ( !copyCollection( child, col ) )
       return false;
   }
 
   // copy items
-  foreach ( const PimItem &item, source.items() ) {
+  Q_FOREACH ( const PimItem &item, source.items() ) {
     if ( !copyItem( item, col ) )
       return false;
   }

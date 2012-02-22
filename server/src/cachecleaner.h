@@ -43,7 +43,7 @@ class CacheCleaner : public QThread
   protected:
     virtual void run();
 
-  private slots:
+  private Q_SLOTS:
     void cleanCache();
 
   private:

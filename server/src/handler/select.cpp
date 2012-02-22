@@ -87,25 +87,25 @@ bool Select::parseStream()
   if ( !silent ) {
     response.setUntagged();
     response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() + ")" );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
 
     const int itemCount = HandlerHelper::itemCount( col );
     if ( itemCount < 0 )
       return failureResponse( "Unable to determine item count" );
     response.setString( QByteArray::number( itemCount ) + " EXISTS" );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
 
     int readCount = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) );
     if ( readCount < 0 || itemCount < readCount )
       return failureResponse( "Unable to retrieve unseen count" );
     response.setString( "OK [UNSEEN " + QByteArray::number( itemCount - readCount ) + "] Message 0 is first unseen" );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
   }
 
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "Completed" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   connection()->setSelectedCollection( col.id() );
   return true;

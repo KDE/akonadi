@@ -31,7 +31,7 @@ Q_DECLARE_METATYPE( Scope::SelectionScope )
 class ScopeTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testUidSet()
     {
       Scope scope( Scope::Uid );

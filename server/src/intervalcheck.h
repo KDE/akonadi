@@ -53,7 +53,7 @@ class IntervalCheck : public QThread
   protected:
     void run();
 
-  private slots:
+  private Q_SLOTS:
     void doIntervalCheck();
 
   private:

@@ -125,7 +125,7 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
   akDebug() << "GetHits returned:" << results.count();
 
   typedef QList<QVariant> VariantList;
-  foreach ( const VariantList &list, results ) {
+  Q_FOREACH ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
 
@@ -158,7 +158,7 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
 
   const QVector<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String( "uri" ) ) );
   typedef QList<QVariant> VariantList;
-  foreach ( const VariantList &list, results ) {
+  Q_FOREACH ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
 

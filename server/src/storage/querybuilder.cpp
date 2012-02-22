@@ -158,7 +158,7 @@ bool QueryBuilder::exec()
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
       statement += mTable;
-      foreach ( const QString& joinedTable, mJoinedTables ) {
+      Q_FOREACH ( const QString& joinedTable, mJoinedTables ) {
         const QPair< JoinType, Query::Condition >& join = mJoins.value( joinedTable );
         switch ( join.first ) {
           case LeftJoin:
@@ -180,7 +180,7 @@ bool QueryBuilder::exec()
       statement += QLatin1String(" (");
       typedef QPair<QString,QVariant> StringVariantPair;
       QStringList cols, vals;
-      foreach ( const StringVariantPair &p, mColumnValues ) {
+      Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
         cols.append( p.first );
         vals.append( bindValue( p.second ) );
       }
@@ -196,7 +196,7 @@ bool QueryBuilder::exec()
     {
       ///TODO: fix joined Update tables for SQLite by using subqueries
       // put the ON condition into the WHERE part of the UPDATE query
-      foreach ( const QString& table, mJoinedTables ) {
+      Q_FOREACH ( const QString& table, mJoinedTables ) {
         QPair< JoinType, Query::Condition > join = mJoins.value( table );
         Q_ASSERT( join.first == InnerJoin );
         whereCondition.addCondition( join.second );
@@ -215,7 +215,7 @@ bool QueryBuilder::exec()
       Q_ASSERT_X( mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
       typedef QPair<QString,QVariant> StringVariantPair;
       QStringList updStmts;
-      foreach ( const StringVariantPair &p, mColumnValues ) {
+      Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
         QString updStmt = p.first;
         updStmt += QLatin1String( " = " );
         updStmt += bindValue( p.second );
@@ -259,7 +259,7 @@ bool QueryBuilder::exec()
     Q_ASSERT_X( mType == Select, "QueryBuilder::exec()", "Order statements are only valid for SELECT queries" );
     QStringList orderStmts;
     typedef QPair<QString, Query::SortOrder> SortColumnInfo;
-    foreach ( const SortColumnInfo &order, mSortColumns ) {
+    Q_FOREACH ( const SortColumnInfo &order, mSortColumns ) {
       QString orderStmt;
       orderStmt += order.first;
       orderStmt += sortOrderToString( order.second );
@@ -321,7 +321,7 @@ QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
 {
   if ( !cond.isEmpty() ) {
     QStringList conds;
-    foreach ( const Query::Condition &c, cond.subConditions() ) {
+    Q_FOREACH ( const Query::Condition &c, cond.subConditions() ) {
       conds << buildWhereCondition( c );
     }
     return QLatin1String( "( " ) + conds.join( logicOperatorToString( cond.mCombineOp ) ) + QLatin1String( " )" );
@@ -335,7 +335,7 @@ QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
           QStringList entries;
           Q_ASSERT_X( !cond.mComparedValue.toStringList().isEmpty(),
                       "QueryBuilder::buildWhereCondition()", "No values given for IN condition." );
-          foreach ( const QString &entry, cond.mComparedValue.toStringList() ) {
+          Q_FOREACH ( const QString &entry, cond.mComparedValue.toStringList() ) {
             entries << bindValue( entry );
           }
           stmt += entries.join( QLatin1String( ", " ) );

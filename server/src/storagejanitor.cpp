@@ -226,7 +226,7 @@ void StorageJanitor::verifyExternalParts()
   const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
   if ( !unreferencedFiles.isEmpty() ) {
     const QString lfDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_lost+found" ) );
-    foreach ( const QString &file, unreferencedFiles ) {
+    Q_FOREACH ( const QString &file, unreferencedFiles ) {
       inform( QLatin1Literal( "Found unreferenced external file: " ) + file );
       const QFileInfo f( file );
       QFile::rename( file, lfDir + QDir::separator() + f.fileName() );
@@ -245,7 +245,7 @@ void StorageJanitor::findDirtyObjects()
   cqb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString() );
   cqb.exec();
   const Collection::List ridLessCols = cqb.result();
-  foreach ( const Collection &col, ridLessCols )
+  Q_FOREACH ( const Collection &col, ridLessCols )
     inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
           + QLatin1Literal( ") has no RID." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessCols.size() ) + QLatin1Literal( " collections without RID." ) );
@@ -256,7 +256,7 @@ void StorageJanitor::findDirtyObjects()
   iqb1.addValueCondition( PimItem::remoteIdColumn(), Query::Equals, QString() );
   iqb1.exec();
   const PimItem::List ridLessItems = iqb1.result();
-  foreach ( const PimItem &item, ridLessItems )
+  Q_FOREACH ( const PimItem &item, ridLessItems )
     inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has no RID." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessItems.size() ) + QLatin1Literal( " items without RID." ) );
 
@@ -266,7 +266,7 @@ void StorageJanitor::findDirtyObjects()
   iqb2.addSortColumn( PimItem::idFullColumnName() );
   iqb2.exec();
   const PimItem::List dirtyItems = iqb2.result();
-  foreach ( const PimItem &item, dirtyItems )
+  Q_FOREACH ( const PimItem &item, dirtyItems )
     inform( QLatin1Literal( "Item \"" ) + QString::number( item.id()  ) + QLatin1Literal( "\" has RID and is dirty." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( dirtyItems.size() ) + QLatin1Literal( " dirty items." ) );
 }
@@ -276,7 +276,7 @@ void StorageJanitor::vacuum()
   const QString driverName = DataStore::self()->database().driverName();
   if( ( driverName == QLatin1String( "QMYSQL" ) ) || ( driverName == QLatin1String( "QPSQL" ) ) ) {
     inform( "vacuuming database, that'll take some time and require a lot of temporary disk space..." );
-    foreach ( const QString &table, Akonadi::allDatabaseTables() ) {
+    Q_FOREACH ( const QString &table, Akonadi::allDatabaseTables() ) {
       inform( QString::fromLatin1( "optimizing table %1..." ).arg( table ) );
 
       QString queryStr;
@@ -304,6 +304,6 @@ void StorageJanitor::inform(const char* msg)
 void StorageJanitor::inform(const QString& msg)
 {
   akDebug() << msg;
-  emit information( msg );
+  Q_EMIT information( msg );
 }
 

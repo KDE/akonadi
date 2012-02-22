@@ -46,7 +46,7 @@ void ItemRetrievalJob::start(QDBusAbstractInterface* interface)
               << m_request->parts;
     interface->callWithCallback( QLatin1String( "requestItemDelivery" ), arguments, this, SLOT(callFinished(bool)), SLOT(callFailed(QDBusError)) );
   } else {
-    emit requestCompleted( m_request, QString::fromLatin1( "Unable to contact resource" ) );
+    Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to contact resource" ) );
     deleteLater();
   }
 }
@@ -54,7 +54,7 @@ void ItemRetrievalJob::start(QDBusAbstractInterface* interface)
 void ItemRetrievalJob::kill()
 {
   m_active = false;
-  emit requestCompleted( m_request, QLatin1String( "Request cancelled" ) );
+  Q_EMIT requestCompleted( m_request, QLatin1String( "Request cancelled" ) );
 }
 
 void ItemRetrievalJob::callFinished(bool returnValue)
@@ -62,9 +62,9 @@ void ItemRetrievalJob::callFinished(bool returnValue)
   if ( m_active ) {
     m_active = false;
     if ( !returnValue )
-      emit requestCompleted( m_request, QString::fromLatin1( "Resource was unable to deliver item" ) );
+      Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Resource was unable to deliver item" ) );
     else
-      emit requestCompleted( m_request, QString() );
+      Q_EMIT requestCompleted( m_request, QString() );
   }
   deleteLater();
 }
@@ -73,7 +73,7 @@ void ItemRetrievalJob::callFailed(const QDBusError& error)
 {
   if ( m_active ) {
     m_active = false;
-    emit requestCompleted( m_request, QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( error.message() ) );
+    Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( error.message() ) );
   }
   deleteLater();
 }

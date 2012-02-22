@@ -28,7 +28,7 @@ Q_DECLARE_METATYPE( AkDBus::AgentType )
 class AkDBusTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testServiceName()
     {
       akTestSetInstanceIdentifier( QString() );

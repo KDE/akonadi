@@ -106,12 +106,12 @@ void AgentInstance::statusChanged(int status, const QString & statusMsg)
     return;
   mStatus = status;
   mStatusMessage = statusMsg;
-  emit mManager->agentInstanceStatusChanged( mIdentifier, mStatus, mStatusMessage );
+  Q_EMIT mManager->agentInstanceStatusChanged( mIdentifier, mStatus, mStatusMessage );
 }
 
 void AgentInstance::advancedStatusChanged( const QVariantMap &status )
 {
-  emit mManager->agentInstanceAdvancedStatusChanged( mIdentifier, status );
+  Q_EMIT mManager->agentInstanceAdvancedStatusChanged( mIdentifier, status );
 }
 
 void AgentInstance::statusStateChanged(int status)
@@ -129,17 +129,17 @@ void AgentInstance::percentChanged(int percent)
   if ( mPercent == percent )
     return;
   mPercent = percent;
-  emit mManager->agentInstanceProgressChanged( mIdentifier, mPercent, QString() );
+  Q_EMIT mManager->agentInstanceProgressChanged( mIdentifier, mPercent, QString() );
 }
 
 void AgentInstance::warning(const QString & msg)
 {
-  emit mManager->agentInstanceWarning( mIdentifier, msg );
+  Q_EMIT mManager->agentInstanceWarning( mIdentifier, msg );
 }
 
 void AgentInstance::error(const QString & msg)
 {
-  emit mManager->agentInstanceError( mIdentifier, msg );
+  Q_EMIT mManager->agentInstanceError( mIdentifier, msg );
 }
 
 void AgentInstance::onlineChanged(bool state)
@@ -147,7 +147,7 @@ void AgentInstance::onlineChanged(bool state)
   if ( mOnline == state )
     return;
   mOnline = state;
-  emit mManager->agentInstanceOnlineChanged( mIdentifier, state );
+  Q_EMIT mManager->agentInstanceOnlineChanged( mIdentifier, state );
 }
 
 void AgentInstance::resourceNameChanged(const QString & name)
@@ -155,7 +155,7 @@ void AgentInstance::resourceNameChanged(const QString & name)
   if ( name == mResourceName )
     return;
   mResourceName = name;
-  emit mManager->agentInstanceNameChanged( mIdentifier, name );
+  Q_EMIT mManager->agentInstanceNameChanged( mIdentifier, name );
 }
 
 void AgentInstance::refreshAgentStatus()

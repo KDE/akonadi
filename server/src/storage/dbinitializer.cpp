@@ -227,7 +227,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     // Check for every column whether it exists.
     const QSqlRecord table = mDatabase.record( tableName );
 
-    foreach ( const ColumnDescription &columnDescription, tableDescription.columns ) {
+    Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
       bool found = false;
       for ( int i = 0; i < table.count(); ++i ) {
         const QSqlField column = table.field( i );
@@ -257,7 +257,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   }
 
   // Add indices
-  foreach ( const IndexDescription &indexDescription, tableDescription.indexes ) {
+  Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
     // sqlite3 needs unique index identifiers per db
     const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( indexDescription.name );
     if ( !hasIndex( tableName, indexName ) ) {
@@ -286,7 +286,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   query = queryBuilder.query();
   if ( query.size() == 0  || !query.first() ) { // table is empty
-    foreach ( const DataDescription &dataDescription, tableDescription.data ) {
+    Q_FOREACH ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
       const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );
       akDebug() << statement;

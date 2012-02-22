@@ -65,7 +65,7 @@ class AkApplication : public QObject
     static void setInstanceIdentifier( const QString& instanceId );
     friend void akTestSetInstanceIdentifier(const QString&);
 
-  private slots:
+  private Q_SLOTS:
     void pollSessionBus() const;
 
   private:

@@ -73,7 +73,7 @@ void Akonadi::ResourceManager::removeResourceInstance(const QString & name)
 QStringList ResourceManager::resourceInstances() const
 {
   QStringList result;
-  foreach ( const Resource &res, Resource::retrieveAll() )
+  Q_FOREACH ( const Resource &res, Resource::retrieveAll() )
     result.append( res.name() );
   return result;
 }

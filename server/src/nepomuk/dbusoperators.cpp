@@ -59,7 +59,7 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
     // additional bindings
     arg.beginMap( QVariant::String, qMetaTypeId<Soprano::Node>() );
     const Soprano::BindingSet additionalBindings; // = result.additionalBindings();
-    foreach( const QString& binding, additionalBindings.bindingNames() ) {
+    Q_FOREACH( const QString& binding, additionalBindings.bindingNames() ) {
         arg.beginMapEntry();
         arg << binding << additionalBindings[binding];
         arg.endMapEntry();

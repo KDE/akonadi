@@ -71,7 +71,7 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
     QStringList localParts;
-    foreach ( const QString &partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
+    Q_FOREACH ( const QString &partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
       if ( partName.startsWith( QLatin1String( "PLD:" ) ) )
         localParts.append( partName );
       else
@@ -87,7 +87,7 @@ void CacheCleaner::cleanCache()
     akDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
 
     // clear data field
-    foreach ( Part part, parts ) {
+    Q_FOREACH ( Part part, parts ) {
       if ( !PartHelper::truncate( part ) )
         akDebug() << "failed to update item part" << part.id();
     }

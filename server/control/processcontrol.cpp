@@ -111,7 +111,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
       if ( !mFailedToStart && mCrashCount <= s_maxCrashCount ) {
         qWarning( "Application '%s' crashed! %d restarts left.", qPrintable( mApplication ), s_maxCrashCount - mCrashCount );
         start();
-        emit restarted();
+        Q_EMIT restarted();
       } else {
         if ( mFailedToStart ) {
           qWarning( "Application '%s' failed to start!", qPrintable( mApplication ) );
@@ -119,7 +119,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
           qWarning( "Application '%s' crashed too often. Giving up!", qPrintable( mApplication ) );
         }
         mPolicy = StopOnCrash;
-        emit unableToStart();
+        Q_EMIT unableToStart();
         return;
       }
     } else {
@@ -152,14 +152,14 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
         if ( mCrashCount > s_maxCrashCount ) {
           qWarning() << mApplication << "crashed too often and will not be restarted!";
           mPolicy = StopOnCrash;
-          emit unableToStart();
+          Q_EMIT unableToStart();
           return;
         }
         ++mCrashCount;
         QTimer::singleShot( 60000, this, SLOT(resetCrashCount()) );
         if ( !mFailedToStart ) { // don't try to start an unstartable application
           start();
-          emit restarted();
+          Q_EMIT restarted();
         }
       }
     } else {
@@ -176,7 +176,7 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 
 static bool listContains( const QStringList &list, const QString &pattern )
 {
-  foreach ( const QString &s, list ) {
+  Q_FOREACH ( const QString &s, list ) {
     if ( s.contains( pattern ) )
       return true;
   }
@@ -216,7 +216,7 @@ void ProcessControl::start()
   if ( !mProcess.waitForStarted( ) ) {
     qWarning( "ProcessControl: Unable to start application '%s' (%s)",
             qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
-    emit unableToStart();
+    Q_EMIT unableToStart();
     return;
   }
 

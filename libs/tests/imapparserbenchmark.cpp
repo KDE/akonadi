@@ -27,7 +27,7 @@ Q_DECLARE_METATYPE( QList<QByteArray> )
 class ImapParserBenchmark : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void quote_data()
     {
       QTest::addColumn<QByteArray>( "input" );

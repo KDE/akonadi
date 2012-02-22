@@ -187,7 +187,7 @@ bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
   response.setTag( tag() );
   response.setFailure();
   response.setString( failureMessage );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return false;
 }
 
@@ -202,7 +202,7 @@ bool Handler::successResponse(const QByteArray &successMessage)
   response.setTag( tag() );
   response.setSuccess();
   response.setString( successMessage );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 
@@ -233,7 +233,7 @@ bool UnknownCommandHandler::parseStream()
     response.setString( "Unrecognized command: "  + mCommand );
   m_streamParser->readUntilCommandEnd();
 
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

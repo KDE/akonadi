@@ -38,12 +38,12 @@ bool Capability::parseStream()
   Response response;
   response.setString( "CAPABILITY IMAP4 IMAP4rev1" );
   response.setUntagged();
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "CAPABILITY completed" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

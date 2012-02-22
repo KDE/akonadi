@@ -56,13 +56,13 @@ class ItemRetrievalManager : public QObject
 
     static ItemRetrievalManager* instance();
 
-  signals:
+  Q_SIGNALS:
     void requestAdded();
 
   private:
     OrgFreedesktopAkonadiResourceInterface* resourceInterface( const QString &id );
 
-  private slots:
+  private Q_SLOTS:
     void serviceOwnerChanged( const QString &serviceName, const QString &oldOwner, const QString &newOwner );
     void processRequest();
     void triggerCollectionSync( const QString &resource, qint64 colId );

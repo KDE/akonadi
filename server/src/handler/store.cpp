@@ -48,7 +48,7 @@ using namespace Akonadi;
 
 static bool payloadChanged( const QSet<QByteArray> &changes )
 {
-  foreach ( const QByteArray &change, changes ) {
+  Q_FOREACH ( const QByteArray &change, changes ) {
     if ( change.startsWith( "PLD:" ) )
       return true;
   }
@@ -401,7 +401,7 @@ bool Store::parseStream()
   response.setSuccess();
   response.setString( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) + " STORE completed" );
 
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 
@@ -438,7 +438,7 @@ void Store::sendPimItemResponse( const PimItem &pimItem )
   Response response;
   response.setUntagged();
   response.setString( result );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 }
 
 #include "store.moc"

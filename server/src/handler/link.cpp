@@ -58,7 +58,7 @@ bool Link::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  foreach ( const PimItem &item, items ) {
+  Q_FOREACH ( const PimItem &item, items ) {
     const bool alreadyLinked = collection.relatesToPimItem( item );
     bool result = true;
     if ( mCreateLinks && !alreadyLinked ) {

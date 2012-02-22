@@ -65,7 +65,7 @@ bool Move::parseStream()
     const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
-    foreach ( /*sic!*/ PimItem item, items ) {
+    Q_FOREACH ( /*sic!*/ PimItem item, items ) {
       if ( !item.isValid() )
         throw HandlerException( "Invalid item in result set!?" );
       Q_ASSERT( item.collectionId() != destination.id() );

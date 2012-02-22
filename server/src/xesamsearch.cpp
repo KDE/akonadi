@@ -91,7 +91,7 @@ void XesamSearch::hitsAdded( const QString &search, uint count )
   const QVector<QList<QVariant> > results = mInterface->GetHits( search, count );
 
   typedef QList<QVariant> VariantList;
-  foreach ( const VariantList &list, results ) {
+  Q_FOREACH ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
 

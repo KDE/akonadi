@@ -123,7 +123,7 @@ bool PreprocessorManager::isActive()
 
 PreprocessorInstance * PreprocessorManager::lockedFindInstance( const QString &id )
 {
-  foreach( PreprocessorInstance * instance, mPreprocessorChain )
+  Q_FOREACH( PreprocessorInstance * instance, mPreprocessorChain )
   {
     if( instance->id() == id )
       return instance;
@@ -193,11 +193,11 @@ void PreprocessorManager::lockedUnregisterInstance( const QString &id )
     Q_ASSERT( nextPreprocessor );
     Q_ASSERT( nextPreprocessor != instance );
 
-    foreach( qint64 itemId, *itemList )
+    Q_FOREACH( qint64 itemId, *itemList )
       nextPreprocessor->enqueueItem( itemId );
   } else {
     // This was the last preprocessor: end handling the items
-    foreach( qint64 itemId, *itemList )
+    Q_FOREACH( qint64 itemId, *itemList )
       lockedEndHandleItem( itemId );
   }
 
@@ -346,10 +346,10 @@ void PreprocessorManager::dataStoreTransactionCommitted()
   if( !mEnabled || mPreprocessorChain.isEmpty() )
   {
     // Preprocessing has been disabled in the meantime or all the preprocessors died
-    foreach( qint64 id, *waitQueue )
+    Q_FOREACH( qint64 id, *waitQueue )
       lockedEndHandleItem( id );
   } else {
-    foreach( qint64 id, *waitQueue )
+    Q_FOREACH( qint64 id, *waitQueue )
       lockedActivateFirstPreprocessor( id );
   }
 
@@ -437,7 +437,7 @@ void PreprocessorManager::heartbeat()
 
   PreprocessorInstance * instance;
 
-  foreach( instance, mPreprocessorChain )
+  Q_FOREACH( instance, mPreprocessorChain )
   {
     // In this loop we check for "stuck" preprocessors.
 
@@ -498,7 +498,7 @@ void PreprocessorManager::heartbeat()
   }
 
   // Kill the fired preprocessors, if any.
-  foreach( instance, firedPreprocessors )
+  Q_FOREACH( instance, firedPreprocessors )
     lockedUnregisterInstance( instance->id() );
 }
 

@@ -86,11 +86,11 @@ bool Modify::parseStream()
       QList<QByteArray> mimeTypes;
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       QStringList mts;
-      foreach ( const QByteArray &ba, mimeTypes )
+      Q_FOREACH ( const QByteArray &ba, mimeTypes )
         mts << QString::fromLatin1(ba);
       MimeType::List currentMts = collection.mimeTypes();
       bool equal = true;
-      foreach ( const MimeType &currentMt, currentMts ) {
+      Q_FOREACH ( const MimeType &currentMt, currentMts ) {
         if ( mts.contains( currentMt.name() ) ) {
           mts.removeAll( currentMt.name() );
           continue;
@@ -219,7 +219,7 @@ bool Modify::parseStream()
   Response response;
   response.setTag( tag() );
   response.setString( "MODIFY done" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

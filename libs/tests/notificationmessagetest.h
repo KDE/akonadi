@@ -25,7 +25,7 @@
 class NotificationMessageTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testCompress();
     void testCompress2();
     void testCompress3();

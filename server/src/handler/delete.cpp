@@ -45,7 +45,7 @@ Delete::Delete( Scope scope ) :
 bool Delete::deleteRecursive(Collection & col)
 {
   Collection::List children = col.children();
-  foreach ( Collection child, children ) {
+  Q_FOREACH ( Collection child, children ) {
     if ( !deleteRecursive( child ) )
       return false;
   }
@@ -93,7 +93,7 @@ bool Delete::parseStream()
   Response response;
   response.setTag( tag() );
   response.setString( "DELETE completed" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

@@ -40,7 +40,7 @@ class AgentProcessInstance : public AgentInstance
     virtual void restartWhenIdle();
     virtual void configure(qlonglong windowId);
 
-  private slots:
+  private Q_SLOTS:
     void failedToStart();
 
   private:

@@ -38,7 +38,7 @@ using namespace Akonadi;
 template <typename T>
 static bool intersect( const QVector<typename T::Id> &l1, const QVector<T> &l2 )
 {
-  foreach ( const T& e2, l2 ) {
+  Q_FOREACH ( const T& e2, l2 ) {
     if ( l1.contains( e2.id() ) )
       return true;
   }
@@ -76,7 +76,7 @@ bool List::listCollection(const Collection & root, int depth, const QStack<Colle
     Collection::List children = root.children();
     QStack<Collection> ancestorsAndMe( ancestors );
     ancestorsAndMe.push( root );
-    foreach ( const Collection &col, children ) {
+    Q_FOREACH ( const Collection &col, children ) {
       if ( listCollection( col, depth - 1, ancestorsAndMe ) )
         childrenFound = true;
     }
@@ -101,7 +101,7 @@ bool List::listCollection(const Collection & root, int depth, const QStack<Colle
   Response response;
   response.setUntagged();
   response.setString( b );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   return true;
 }
@@ -217,14 +217,14 @@ bool List::parseStream()
     --depth;
   }
 
-  foreach ( const Collection &col, collections )
+  Q_FOREACH ( const Collection &col, collections )
     listCollection( col, depth, ancestors );
 
   Response response;
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "List completed" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

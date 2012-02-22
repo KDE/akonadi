@@ -50,7 +50,7 @@ bool Expunge::parseStream()
     response.setError();
     response.setString( "\\DELETED flag unknown" );
 
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
     return true;
   }
 
@@ -61,19 +61,19 @@ bool Expunge::parseStream()
 
   if ( qb.exec() ) {
     const QVector<PimItem> items = qb.result();
-    foreach ( const PimItem &item, items ) {
+    Q_FOREACH ( const PimItem &item, items ) {
       if ( store->cleanupPimItem( item ) ) {
         response.setUntagged();
         // IMAP protocol violation: should actually be the sequence number
         response.setString( QByteArray::number( item.id() ) + " EXPUNGE" );
 
-        emit responseAvailable( response );
+        Q_EMIT responseAvailable( response );
       } else {
         response.setTag( tag() );
         response.setError();
         response.setString( "internal error" );
 
-        emit responseAvailable( response );
+        Q_EMIT responseAvailable( response );
         return true;
       }
     }
@@ -88,7 +88,7 @@ bool Expunge::parseStream()
   response.setSuccess();
   response.setString( "EXPUNGE completed" );
 
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

@@ -33,7 +33,7 @@ class DebugInterface : public QObject
   public:
     explicit DebugInterface( QObject *parent = 0 );
 
-  public slots:
+  public Q_SLOTS:
     Q_SCRIPTABLE QString tracer() const;
     Q_SCRIPTABLE void setTracer( const QString &tracer );
 

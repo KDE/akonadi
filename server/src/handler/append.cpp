@@ -97,7 +97,7 @@ bool Append::commit()
     QString remote_id;
     QString remote_revision;
     QList<QByteArray> flags;
-    foreach( const QByteArray &flag, m_flags ) {
+    Q_FOREACH( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
@@ -200,11 +200,11 @@ bool Append::commit()
     response.setTag( tag() );
     response.setUserDefined();
     response.setString( res );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
 
     response.setSuccess();
     response.setString( "Append completed" );
-    emit responseAvailable( response );
+    Q_EMIT responseAvailable( response );
     return true;
 }
 

@@ -106,13 +106,13 @@ void AgentManager::continueStartup()
   first = false;
 
   readPluginInfos();
-  foreach ( const AgentType &info, mAgents )
-    emit agentTypeAdded( info.identifier );
+  Q_FOREACH ( const AgentType &info, mAgents )
+    Q_EMIT agentTypeAdded( info.identifier );
 
   const QStringList pathList = pluginInfoPathList();
 
 #ifndef QT_NO_DEBUG
-  foreach ( const QString &path, pathList ) {
+  Q_FOREACH ( const QString &path, pathList ) {
     QFileSystemWatcher *watcher = new QFileSystemWatcher( this );
     watcher->addPath( path );
 
@@ -122,7 +122,7 @@ void AgentManager::continueStartup()
 #endif
 
   load();
-  foreach ( const AgentType &info, mAgents )
+  Q_FOREACH ( const AgentType &info, mAgents )
     ensureAutoStart( info );
 
   // register the real service name once everything is up an running
@@ -141,7 +141,7 @@ AgentManager::~AgentManager()
 
 void AgentManager::cleanup()
 {
-  foreach ( const AgentInstance::Ptr &instance, mAgentInstances )
+  Q_FOREACH ( const AgentInstance::Ptr &instance, mAgentInstances )
     instance->quit();
 
   mAgentInstances.clear();
@@ -304,7 +304,7 @@ void AgentManager::removeAgentInstance( const QString &identifier )
     akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
   }
 
-  emit agentInstanceRemoved( identifier );
+  Q_EMIT agentInstanceRemoved( identifier );
 }
 
 QString AgentManager::agentInstanceType( const QString &identifier )
@@ -444,14 +444,14 @@ void AgentManager::updatePluginInfos()
   const QHash<QString, AgentType> oldInfos = mAgents;
   readPluginInfos();
 
-  foreach ( const AgentType &oldInfo, oldInfos ) {
+  Q_FOREACH ( const AgentType &oldInfo, oldInfos ) {
     if ( !mAgents.contains( oldInfo.identifier ) )
-      emit agentTypeRemoved( oldInfo.identifier );
+      Q_EMIT agentTypeRemoved( oldInfo.identifier );
   }
 
-  foreach ( const AgentType &newInfo, mAgents ) {
+  Q_FOREACH ( const AgentType &newInfo, mAgents ) {
     if ( !oldInfos.contains( newInfo.identifier ) ) {
-      emit agentTypeAdded( newInfo.identifier );
+      Q_EMIT agentTypeAdded( newInfo.identifier );
       ensureAutoStart( newInfo );
     }
   }
@@ -467,7 +467,7 @@ void AgentManager::readPluginInfos()
 
   const QStringList pathList = pluginInfoPathList();
 
-  foreach ( const QString &path, pathList ) {
+  Q_FOREACH ( const QString &path, pathList ) {
       const QDir directory( path, QLatin1String("*.desktop") );
       readPluginInfos( directory );
   }
@@ -567,12 +567,12 @@ void AgentManager::save()
 {
   QSettings file( AkStandardDirs::agentConfigFile( Akonadi::XdgBaseDirs::WriteOnly ), QSettings::IniFormat );
 
-  foreach ( const AgentType &info, mAgents )
+  Q_FOREACH ( const AgentType &info, mAgents )
     info.save( &file );
 
   file.beginGroup( QLatin1String("Instances") );
   file.remove( QString() );
-  foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+  Q_FOREACH ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     file.beginGroup( instance->identifier() );
     file.setValue( QLatin1String("AgentType"), instance->agentType() );
     file.endGroup();
@@ -617,7 +617,7 @@ void AgentManager::serviceOwnerChanged( const QString &name, const QString&, con
         return;
 
       if ( !restarting )
-        emit agentInstanceAdded( agentIdentifier );
+        Q_EMIT agentInstanceAdded( agentIdentifier );
 
       break;
     }
@@ -774,9 +774,9 @@ void AgentManager::agentExeChanged( const QString &fileName )
   if ( !QFile::exists( fileName ) )
     return;
 
-  foreach ( const AgentType &type, mAgents ) {
+  Q_FOREACH ( const AgentType &type, mAgents ) {
     if ( fileName.endsWith( type.exec ) ) {
-      foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+      Q_FOREACH ( const AgentInstance::Ptr &instance, mAgentInstances ) {
         if ( instance->agentType() == type.identifier )
           instance->restartWhenIdle();
       }
@@ -799,7 +799,7 @@ void AgentManager::registerAgentAtServer( const QString &agentIdentifier, const 
 void AgentManager::addSearch( const QString &query, const QString &queryLanguage, qint64 resultCollectionId )
 {
   akDebug() << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
-  foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+  Q_FOREACH ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     const AgentType type = mAgents.value( instance->agentType() );
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
       instance->searchInterface()->addSearch( query, queryLanguage, resultCollectionId );
@@ -809,7 +809,7 @@ void AgentManager::addSearch( const QString &query, const QString &queryLanguage
 void AgentManager::removeSearch( quint64 resultCollectionId )
 {
   akDebug() << "AgentManager::removeSearch" << resultCollectionId;
-  foreach ( const AgentInstance::Ptr &instance, mAgentInstances ) {
+  Q_FOREACH ( const AgentInstance::Ptr &instance, mAgentInstances ) {
     const AgentType type = mAgents.value( instance->agentType() );
     if ( type.capabilities.contains( AgentType::CapabilitySearch ) && instance->searchInterface() )
       instance->searchInterface()->removeSearch( resultCollectionId );

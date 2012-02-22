@@ -36,37 +36,37 @@ DBusTracer::~DBusTracer()
 
 void DBusTracer::beginConnection( const QString &identifier, const QString &msg )
 {
-  emit connectionStarted( identifier, msg );
+  Q_EMIT connectionStarted( identifier, msg );
 }
 
 void DBusTracer::endConnection( const QString &identifier, const QString &msg )
 {
-  emit connectionEnded( identifier, msg );
+  Q_EMIT connectionEnded( identifier, msg );
 }
 
 void DBusTracer::connectionInput( const QString &identifier, const QByteArray &msg )
 {
-  emit connectionDataInput( identifier, QString::fromUtf8( msg ) );
+  Q_EMIT connectionDataInput( identifier, QString::fromUtf8( msg ) );
 }
 
 void DBusTracer::connectionOutput( const QString &identifier, const QByteArray &msg )
 {
-  emit connectionDataOutput( identifier, QString::fromUtf8( msg ) );
+  Q_EMIT connectionDataOutput( identifier, QString::fromUtf8( msg ) );
 }
 
 void DBusTracer::signal( const QString &signalName, const QString &msg )
 {
-  emit signalEmitted( signalName, msg );
+  Q_EMIT signalEmitted( signalName, msg );
 }
 
 void DBusTracer::warning( const QString &componentName, const QString &msg )
 {
-  emit warningEmitted( componentName, msg );
+  Q_EMIT warningEmitted( componentName, msg );
 }
 
 void DBusTracer::error( const QString &componentName, const QString &msg )
 {
-  emit errorEmitted( componentName, msg );
+  Q_EMIT errorEmitted( componentName, msg );
 }
 
 #include "dbustracer.moc"

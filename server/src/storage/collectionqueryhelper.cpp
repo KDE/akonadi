@@ -83,7 +83,7 @@ bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const C
 {
   if ( _parent.isValid() ) {
     Collection parent = _parent;
-    forever {
+    Q_FOREVER {
       if ( parent.id() == collection.id() )
         return false; // target is child of source
       if ( parent.parentId() == 0 )

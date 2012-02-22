@@ -48,13 +48,13 @@ class StorageJanitor : public QObject
     explicit StorageJanitor(QObject* parent = 0);
     ~StorageJanitor();
 
-  public slots:
+  public Q_SLOTS:
     /** Triggers a consistency check of the internal storage. */
     Q_SCRIPTABLE Q_NOREPLY void check();
     /** Triggers a vacuuming of the database, that is compacting of unused space. */
     Q_SCRIPTABLE Q_NOREPLY void vacuum();
 
-  signals:
+  Q_SIGNALS:
     /** Sends informational messages to a possible UI for this. */
     Q_SCRIPTABLE void information( const QString &msg );
 

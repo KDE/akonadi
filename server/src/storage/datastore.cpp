@@ -211,7 +211,7 @@ bool DataStore::removeItemFlags( const PimItem &item, const QVector<Flag> &flags
 bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &parts )
 {
   Part::List existingParts = item.parts();
-  foreach ( Part part, existingParts ) {
+  Q_FOREACH ( Part part, existingParts ) {
     if( parts.contains( part.name().toLatin1() ) ) {
       if ( !PartHelper::remove(&part) )
         return false;
@@ -237,7 +237,7 @@ bool DataStore::invalidateItemCache( const PimItem &item )
 
   const Part::List parts = qb.result();
   // clear data field
-  foreach ( Part part, parts ) {
+  Q_FOREACH ( Part part, parts ) {
     if ( !PartHelper::truncate( part ) )
       return false;
   }
@@ -262,7 +262,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   // delete the content
   const PimItem::List items = collection.items();
   const QByteArray resource = collection.resource().name().toLatin1();
-  foreach ( const PimItem &item, items ) {
+  Q_FOREACH ( const PimItem &item, items ) {
 
     // generate the notification before actually removing the data
     mNotificationCollector->itemRemoved( item, collection, QString(), resource ); // TODO: make mimetype available as part as an item bulk query
@@ -283,7 +283,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   Collection::clearPimItems( collection.id() );
 
   // delete attributes
-  foreach ( CollectionAttribute attr, collection.attributes() )
+  Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
     if ( !attr.remove() )
       return false;
 
@@ -304,7 +304,7 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
 
   transaction.commit();
 
-  foreach ( const Collection &col, collection.children() ) {
+  Q_FOREACH ( const Collection &col, collection.children() ) {
     if ( !recursiveSetResourceId( col, resourceId ) )
       return false;
   }
@@ -353,7 +353,7 @@ bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringL
     return false;
   QStringList missingMimeTypes = mimeTypes;
 
-  foreach ( const MimeType &mt, qb.result() ) {
+  Q_FOREACH ( const MimeType &mt, qb.result() ) {
     // unique index on n:m relation prevents duplicates, ie. this will fail
     // if this mimetype is already set
     if ( !Collection::addMimeType( collectionId, mt.id() ) )
@@ -362,7 +362,7 @@ bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringL
   }
 
   // the MIME type doesn't exist, so we have to add it to the db
-  foreach ( const QString &mtName, missingMimeTypes ) {
+  Q_FOREACH ( const QString &mtName, missingMimeTypes ) {
     qint64 mimeTypeId;
     if ( !appendMimeType( mtName, &mimeTypeId ) )
       return false;
@@ -540,7 +540,7 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
     throw HandlerException( "Unable to query for collection attribute" );
 
   const QVector<CollectionAttribute> result = qb.result();
-  foreach ( CollectionAttribute attr, result ) {
+  Q_FOREACH ( CollectionAttribute attr, result ) {
     if ( !attr.remove() )
       throw HandlerException( "Unable to remove collection attribute" );
   }
@@ -631,7 +631,7 @@ bool Akonadi::DataStore::rollbackTransaction()
 
   if ( m_transactionLevel == 0 ) {
     QSqlDriver *driver = m_database.driver();
-    emit transactionRolledBack();
+    Q_EMIT transactionRolledBack();
     if ( !driver->rollbackTransaction() ) {
       TRANSACTION_MUTEX_UNLOCK;
       debugLastDbError( "DataStore::rollbackTransaction" );
@@ -662,7 +662,7 @@ bool Akonadi::DataStore::commitTransaction()
       return false;
     } else {
       TRANSACTION_MUTEX_UNLOCK;
-      emit transactionCommitted();
+      Q_EMIT transactionCommitted();
     }
   }
 

@@ -350,7 +350,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
     // encode destination resource in parts, as a backward compat hack
     itemParts.push_back( QString::fromLatin1( msg.destinationResource() ) );
   } else {
-    foreach ( const QByteArray &itemPart, msg.itemParts() )
+    Q_FOREACH ( const QByteArray &itemPart, msg.itemParts() )
       itemParts.append( QString::fromLatin1( itemPart ) );
   }
 
@@ -392,7 +392,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &
     // decode destination resource, which is stored in parts as a backward compat hack
     msg.setDestinationResource( l.first().toLatin1() );
   } else {
-    foreach ( const QString &itemPart, l )
+    Q_FOREACH ( const QString &itemPart, l )
       itemParts.insert( itemPart.toLatin1() );
   }
 

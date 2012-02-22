@@ -46,7 +46,7 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
   QStringList columns;
   QStringList references;
 
-  foreach ( const ColumnDescription &columnDescription, tableDescription.columns ) {
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
     columns.append( buildColumnStatement( columnDescription ) );
 
     if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
@@ -127,7 +127,7 @@ QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &
 {
   QStringList columns;
 
-  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
     columns.append( buildColumnStatement( columnDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
@@ -213,7 +213,7 @@ QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescripti
 {
   QStringList columns;
 
-  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
     columns.append( buildColumnStatement( columnDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
@@ -337,7 +337,7 @@ QString DbInitializerVirtuoso::buildCreateTableStatement( const TableDescription
 {
   QStringList columns;
 
-  foreach ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
     columns.append( buildColumnStatement( columnDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );

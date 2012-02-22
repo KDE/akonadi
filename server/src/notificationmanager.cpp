@@ -76,7 +76,7 @@ void NotificationManager::connectNotificationCollector(NotificationCollector* co
 
 void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &msgs)
 {
-  foreach ( const NotificationMessage &msg, msgs )
+  Q_FOREACH ( const NotificationMessage &msg, msgs )
     NotificationMessage::appendAndCompress( mNotifications, msg );
   if ( !mTimer.isActive() )
     mTimer.start();
@@ -86,7 +86,7 @@ void NotificationManager::emitPendingNotifications()
 {
   if ( mNotifications.isEmpty() )
     return;
-  foreach ( const NotificationMessage &msg, mNotifications ) {
+  Q_FOREACH ( const NotificationMessage &msg, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
 
@@ -95,7 +95,7 @@ void NotificationManager::emitPendingNotifications()
   }
 
   // backward compatibility with the old non-subcription interface
-  emit notify( mNotifications );
+  Q_EMIT notify( mNotifications );
 
   mNotifications.clear();
 }

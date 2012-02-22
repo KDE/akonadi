@@ -68,7 +68,7 @@ class SearchManager : public QObject
      */
     void updateSearch( const Collection &collection, NotificationCollector* collector );
 
-  private slots:
+  private Q_SLOTS:
     void addSearchInternal( const Collection &collection );
     void removeSearchInternal( qint64 id );
 

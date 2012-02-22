@@ -93,7 +93,7 @@ bool Create::parseStream()
     // check if parent can contain a sub-folder
     parentContentTypes = parent.mimeTypes();
     bool found = false;
-    foreach ( const MimeType &mt, parentContentTypes ) {
+    Q_FOREACH ( const MimeType &mt, parentContentTypes ) {
       if ( mt.name() == QLatin1String( "inode/directory" ) ) {
         found = true;
         break;
@@ -150,10 +150,10 @@ bool Create::parseStream()
 
   QStringList effectiveMimeTypes;
   if ( mimeTypesSet ) {
-    foreach ( const QByteArray &b, mimeTypes )
+    Q_FOREACH ( const QByteArray &b, mimeTypes )
       effectiveMimeTypes << QString::fromUtf8( b );
   } else {
-    foreach ( const MimeType &mt, parentContentTypes )
+    Q_FOREACH ( const MimeType &mt, parentContentTypes )
       effectiveMimeTypes << mt.name();
   }
   if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) )
@@ -161,7 +161,7 @@ bool Create::parseStream()
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
-  foreach ( const QByteArrayPair &attr, userDefAttrs ) {
+  Q_FOREACH ( const QByteArrayPair &attr, userDefAttrs ) {
     if ( !db->addCollectionAttribute( collection, attr.first, attr.second ) )
       return failureResponse( "Unable to add collection attribute." );
   }
@@ -173,7 +173,7 @@ bool Create::parseStream()
   db->activeCachePolicy( collection );
   const QByteArray b = HandlerHelper::collectionToByteArray( collection );
   response.setString( b );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   if ( !transaction.commit() )
     return failureResponse( "Unable to commit transaction." );

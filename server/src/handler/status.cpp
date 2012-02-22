@@ -95,12 +95,12 @@ bool Status::parseStream()
   Response response;
   response.setUntagged();
   response.setString( "STATUS \"" + HandlerHelper::pathForCollection( col ).toUtf8() + "\" (" + statusResponse + ')' );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
 
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "STATUS completed" );
-  emit responseAvailable( response );
+  Q_EMIT responseAvailable( response );
   return true;
 }
 

@@ -41,7 +41,7 @@ SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent 
   qRegisterMetaType<Collection>();
 
   m_engines.reserve( searchEngines.size() );
-  foreach ( const QString &engineName, searchEngines ) {
+  Q_FOREACH ( const QString &engineName, searchEngines ) {
     if ( engineName == QLatin1String( "Nepomuk" ) ) {
 #ifdef HAVE_SOPRANO
       m_engines.append( new NepomukSearchEngine );
@@ -81,7 +81,7 @@ bool SearchManager::addSearch(const Collection& collection)
 
 void SearchManager::addSearchInternal(const Collection& collection)
 {
-  foreach ( AbstractSearchEngine* engine, m_engines )
+  Q_FOREACH ( AbstractSearchEngine* engine, m_engines )
     engine->addSearch( collection );
 }
 
@@ -94,14 +94,14 @@ bool SearchManager::removeSearch(qint64 id)
 
 void SearchManager::removeSearchInternal(qint64 id)
 {
-  foreach ( AbstractSearchEngine* engine, m_engines )
+  Q_FOREACH ( AbstractSearchEngine* engine, m_engines )
     engine->removeSearch( id );
 }
 
 void SearchManager::updateSearch(const Akonadi::Collection& collection, NotificationCollector* collector)
 {
   removeSearch( collection.id() );
-  foreach ( const PimItem &item, collection.pimItems() )
+  Q_FOREACH ( const PimItem &item, collection.pimItems() )
     collector->itemUnlinked( item, collection );
   collection.clearPimItems();
   addSearch( collection );

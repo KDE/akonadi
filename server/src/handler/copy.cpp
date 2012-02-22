@@ -47,7 +47,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   newItem.setRemoteRevision( QString() );
   newItem.setCollectionId( target.id() );
   Part::List parts;
-  foreach ( const Part &part, item.parts() ) {
+  Q_FOREACH ( const Part &part, item.parts() ) {
     Part newPart( part );
     newPart.setData(PartHelper::translateData( newPart.data(), part.external() ) );
     newPart.setPimItemId( -1 );
@@ -57,7 +57,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   DataStore *store = connection()->storageBackend();
   if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), newItem ) )
     return false;
-  foreach ( const Flag &flag, item.flags() ) {
+  Q_FOREACH ( const Flag &flag, item.flags() ) {
     if ( !newItem.addFlag( flag ) )
       return false;
   }
@@ -90,7 +90,7 @@ bool Copy::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  foreach ( const PimItem &item, items ) {
+  Q_FOREACH ( const PimItem &item, items ) {
     if ( !copyItem( item, targetCollection ) )
       return failureResponse( "Unable to copy item" );
   }

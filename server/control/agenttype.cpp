@@ -44,7 +44,7 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
   QSettings file( fileName, QSettings::IniFormat );
   file.beginGroup( QLatin1String("Desktop Entry") );
 
-  foreach(const QString& key, file.allKeys() ) {
+  Q_FOREACH(const QString& key, file.allKeys() ) {
     if ( key.startsWith( QLatin1String("Name[") ) ) {
       QString lang = key.mid( 5, key.length()-6);
       name.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() ) );

@@ -98,7 +98,7 @@ public:
 
 void Nepomuk::Query::QueryServiceClient::Private::_k_finishedListing()
 {
-    emit q->finishedListing();
+    Q_EMIT q->finishedListing();
     if( loop ) {
         q->close();
     }

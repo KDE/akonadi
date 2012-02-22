@@ -36,10 +36,10 @@ class ItemRetrievalJob : public QObject
     void start( QDBusAbstractInterface* interface );
     void kill();
 
-  signals:
+  Q_SIGNALS:
     void requestCompleted( ItemRetrievalRequest *req, const QString &errorMsg );
 
-  private slots:
+  private Q_SLOTS:
     void callFinished( bool returnValue );
     void callFailed( const QDBusError &error );
 

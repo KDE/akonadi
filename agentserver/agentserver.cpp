@@ -66,7 +66,7 @@ void AgentServer::startAgent( const QString &identifier, const QString &typeIden
   akDebug() << Q_FUNC_INFO << identifier << typeIdentifier << fileName;
 
   //First try to load it staticly
-  foreach ( QObject *plugin, QPluginLoader::staticInstances() ) {
+  Q_FOREACH ( QObject *plugin, QPluginLoader::staticInstances() ) {
     if ( plugin->objectName() == fileName ) {
       AgentThread* thread = new AgentThread( identifier, plugin, this );
       m_agents.insert( identifier, thread );

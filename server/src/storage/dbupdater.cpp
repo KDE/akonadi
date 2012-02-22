@@ -50,7 +50,7 @@ bool DbUpdater::run()
 
     bool success = m_database.transaction();
     if ( success ) {
-      foreach ( const QString &statement, it.value().statements ) {
+      Q_FOREACH ( const QString &statement, it.value().statements ) {
         QSqlQuery query( m_database );
         success = query.exec( statement );
         if ( !success ) {

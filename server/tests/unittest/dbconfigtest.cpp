@@ -33,7 +33,7 @@ using namespace Akonadi;
 class DbConfigTest : public QObject
 {
   Q_OBJECT
-  private slots:
+  private Q_SLOTS:
     void testDbConfig()
     {
       // doesn't work, DbConfig has an internal singleton-like cache...

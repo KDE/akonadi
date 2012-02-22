@@ -227,13 +227,13 @@ void NotificationCollector::dispatchNotification(const NotificationMessage & msg
   } else {
     NotificationMessage::List l;
     l << msg;
-    emit notify( l );
+    Q_EMIT notify( l );
   }
 }
 
 void NotificationCollector::dispatchNotifications()
 {
-  emit notify( mNotifications );
+  Q_EMIT notify( mNotifications );
   clear();
 }
 

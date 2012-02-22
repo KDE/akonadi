@@ -85,7 +85,7 @@ class AgentInstance : public QObject
     bool obtainResourceInterface();
     bool obtainPreprocessorInterface();
 
-  protected slots:
+  protected Q_SLOTS:
     void statusChanged( int status, const QString &statusMsg );
     void advancedStatusChanged( const QVariantMap &status );
     void statusStateChanged( int status );

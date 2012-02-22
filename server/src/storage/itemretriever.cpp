@@ -179,7 +179,7 @@ bool ItemRetriever::exec()
   QList<ItemRetrievalRequest*> requests;
 
   QStringList parts;
-  foreach ( const QString &part, mParts ) {
+  Q_FOREACH ( const QString &part, mParts ) {
     if ( part.startsWith( QLatin1String( "PLD:" ) ) ) {
       parts << part.mid(4);
     }
@@ -226,7 +226,7 @@ bool ItemRetriever::exec()
 
   query.finish();
 
-  foreach ( ItemRetrievalRequest* request, requests ) {
+  Q_FOREACH ( ItemRetrievalRequest* request, requests ) {
     Q_ASSERT( !request->parts.isEmpty() );
     // TODO: how should we handle retrieval errors here? so far they have been ignored,
     // which makes sense in some cases, do we need a command parameter for this?
@@ -240,7 +240,7 @@ bool ItemRetriever::exec()
 
   // retrieve items in child collections if requested
   if ( mRecursive && mCollection.isValid() ) {
-    foreach ( const Collection &col, mCollection.children() ) {
+    Q_FOREACH ( const Collection &col, mCollection.children() ) {
       ItemRetriever retriever( mConnection );
       retriever.setCollection( col, mRecursive );
       retriever.setRetrieveParts( mParts );

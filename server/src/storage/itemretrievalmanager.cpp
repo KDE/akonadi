@@ -129,10 +129,10 @@ void ItemRetrievalManager::requestItemDelivery( ItemRetrievalRequest *req )
   mPendingRequests[ req->resourceId ].append( req );
   mLock->unlock();
 
-  emit requestAdded();
+  Q_EMIT requestAdded();
 
   mLock->lockForRead();
-  forever {
+  Q_FOREVER {
     //akDebug() << "checking if request for item" << req->id << "has been processed...";
     if ( req->processed ) {
       boost::scoped_ptr<ItemRetrievalRequest> reqDeleter( req );
@@ -213,7 +213,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
   }
   mWaitCondition->wakeAll();
   mLock->unlock();
-  emit requestAdded(); // trigger processRequest() again, in case there is more in the queues
+  Q_EMIT requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
 void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64 colId)
