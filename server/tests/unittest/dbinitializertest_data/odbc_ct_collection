@@ -10,5 +10,5 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
                               cachePolicySyncOnDemand CHAR NOT NULL DEFAULT 0,
                               cachePolicyLocalParts VARCHAR(255),
-                              queryString VARCHAR(255),
+                              queryString VARCHAR(1024),
                               queryLanguage VARCHAR(255))
