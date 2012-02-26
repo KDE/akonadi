@@ -28,7 +28,7 @@ class DbInitializerMySql : public DbInitializer
   public:
     DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile);
   protected:
-    QString sqlType(const QString& type) const;
+    QString sqlType(const QString& type, int size) const;
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
@@ -53,7 +53,7 @@ class DbInitializerPostgreSql : public DbInitializer
   public:
     DbInitializerPostgreSql(const QSqlDatabase& database, const QString& templateFile);
   protected:
-    QString sqlType(const QString& type) const;
+    QString sqlType(const QString& type, int size) const;
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
@@ -67,7 +67,7 @@ class DbInitializerVirtuoso : public DbInitializer
   public:
     DbInitializerVirtuoso(const QSqlDatabase& database, const QString& templateFile);
   protected:
-    QString sqlType(const QString& type) const;
+    QString sqlType(const QString& type, int size) const;
     QString sqlValue(const QString& type, const QString& value) const;
     bool hasIndex(const QString& tableName, const QString& indexName);
 

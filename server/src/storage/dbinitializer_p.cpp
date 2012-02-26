@@ -27,12 +27,12 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database, const QStri
 {
 }
 
-QString DbInitializerMySql::sqlType(const QString & type) const
+QString DbInitializerMySql::sqlType(const QString & type, int size) const
 {
   if ( type == QLatin1String( "QString" ) )
-    return QLatin1String( "VARBINARY(255)" );
+    return QLatin1Literal("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
   else
-    return DbInitializer::sqlType( type );
+    return DbInitializer::sqlType( type, size );
 }
 
 QString DbInitializerMySql::hasIndexQuery(const QString& tableName, const QString& indexName)
@@ -68,7 +68,7 @@ QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &colum
 {
   QString column = columnDescription.name;
 
-  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type, columnDescription.size );
 
   if ( !columnDescription.allowNull )
     column += QLatin1String( " NOT NULL" );
@@ -140,7 +140,7 @@ QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &colu
   if ( columnDescription.isAutoIncrement )
     column += QLatin1String( "INTEGER" );
   else
-    column += sqlType( columnDescription.type );
+    column += sqlType( columnDescription.type, columnDescription.size );
 
   if ( columnDescription.isPrimaryKey )
     column += QLatin1String( " PRIMARY KEY" );
@@ -190,7 +190,7 @@ DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database, c
 {
 }
 
-QString DbInitializerPostgreSql::sqlType(const QString& type) const
+QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
 {
   if ( type == QLatin1String("qint64") )
     return QLatin1String( "int8" );
@@ -198,7 +198,7 @@ QString DbInitializerPostgreSql::sqlType(const QString& type) const
     return QLatin1String("BYTEA");
   if ( type == QLatin1String("QString") )
     return QLatin1String("BYTEA");
-  return DbInitializer::sqlType( type );
+  return DbInitializer::sqlType( type, size );
 }
 
 QString DbInitializerPostgreSql::hasIndexQuery(const QString& tableName, const QString& indexName)
@@ -226,7 +226,7 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
   if ( columnDescription.isAutoIncrement )
     column += QLatin1String( "SERIAL" );
   else
-    column += sqlType( columnDescription.type );
+    column += sqlType( columnDescription.type, columnDescription.size );
 
   if ( columnDescription.isPrimaryKey )
     column += QLatin1String( " PRIMARY KEY" );
@@ -307,15 +307,15 @@ DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database, const
 {
 }
 
-QString DbInitializerVirtuoso::sqlType(const QString& type) const
+QString DbInitializerVirtuoso::sqlType(const QString& type, int size) const
 {
   if ( type == QLatin1String("QString") )
-    return QLatin1String( "VARCHAR(255)" );
+    return QLatin1Literal("VARCHAR(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
   if (type == QLatin1String("QByteArray") )
     return QLatin1String("LONG VARCHAR");
   if ( type == QLatin1String( "bool" ) )
     return QLatin1String("CHAR");
-  return DbInitializer::sqlType( type );
+  return DbInitializer::sqlType( type, size );
 }
 
 QString DbInitializerVirtuoso::sqlValue(const QString& type, const QString& value) const
@@ -347,7 +347,7 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
 {
   QString column = columnDescription.name;
 
-  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type );
+  column += QLatin1Char( ' ' ) + sqlType( columnDescription.type, columnDescription.size );
 
   if ( !columnDescription.allowNull )
     column += QLatin1String( " NOT NULL" );
