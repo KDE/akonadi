@@ -82,6 +82,7 @@ class DbInitializer
 
         QString name;
         QString type;
+        int size;
         bool allowNull;
         bool isAutoIncrement;
         bool isPrimaryKey;
@@ -156,8 +157,12 @@ class DbInitializer
      */
     DbInitializer( const QSqlDatabase &database, const QString &templateFile );
 
-    /** Overwrite in backend-specific sub-classes to return the SQL type for a given C++ type. */
-    virtual QString sqlType( const QString &type ) const;
+    /**
+     * Overwrite in backend-specific sub-classes to return the SQL type for a given C++ type.
+     * @param type Name of the C++ type.
+     * @param size Optional size hint for the column, if -1 use the default SQL type for @p type.
+     */
+    virtual QString sqlType( const QString &type, int size ) const;
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
     virtual QString sqlValue( const QString &type, const QString &value ) const;
 

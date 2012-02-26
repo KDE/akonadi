@@ -37,7 +37,7 @@
 using namespace Akonadi;
 
 DbInitializer::ColumnDescription::ColumnDescription()
-  : allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false )
+  : size( -1 ), allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false )
 {
 }
 
@@ -140,6 +140,9 @@ DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDom
 
       columnDescription.name = childElement.attribute( QLatin1String( "name" ) );
       columnDescription.type = childElement.attribute( QLatin1String( "type" ) );
+
+      if ( childElement.hasAttribute( QLatin1String("size") ) )
+        columnDescription.size = childElement.attribute( QLatin1String("size") ).toInt();
 
       if ( childElement.hasAttribute( QLatin1String( "allowNull" ) ) )
         columnDescription.allowNull = (childElement.attribute( QLatin1String( "allowNull" ) ) == QLatin1String( "true" ));
@@ -333,8 +336,9 @@ QString DbInitializer::errorMsg() const
   return mErrorMsg;
 }
 
-QString DbInitializer::sqlType(const QString & type) const
+QString DbInitializer::sqlType(const QString & type, int size) const
 {
+  Q_UNUSED(size);
   if ( type == QLatin1String("int") )
     return QLatin1String("INTEGER");
   if ( type == QLatin1String("qint64") )
