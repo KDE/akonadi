@@ -145,4 +145,9 @@
     <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE PimItemFlagRelation SET Flag_id=(SELECT id FROM FlagTable WHERE name='\\SEEN') WHERE Flag_id=(SELECT id FROM FlagTable WHERE name='\\Seen');</raw-sql>
     <raw-sql backends="mysql,psql,sqlite,odbc">DELETE FROM FlagTable WHERE name='\\Seen';</raw-sql>
   </update>
+
+  <!-- wider query column (only affects MySQL) -->
+  <update version="20" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARBINARY(1024);</raw-sql>
+  </update>
 </updates>
