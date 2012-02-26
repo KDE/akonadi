@@ -35,7 +35,6 @@
   Column attributes:
   - name: The column name, will be also used as accessor name in the entity class.
   - type: The C++ type of this column, the SQL type will be derived from that.
-  - sqltype: The SQL type (optional), overwrites types derived from the C++ type.
   - default: Default value for entity class constructor.
   - refTable, refColumn: foreign key, also used to generate accessor methods for 1:n relations
   - methodName: method name to access referred records, the table name is used if not given
