@@ -140,6 +140,25 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      */    
     void setManualSortingActive(bool active);
   
+    /**
+     * Set the name of the default popup menu (retrieved from the
+     * application's XMLGUI file).
+     *
+     * This menu is used as a fallback if the context of the menu request
+     * is neither an item nor a collection, e.g. the click is on an empty
+     * area inside the view.  If the click is over an entry in the view,
+     * the menu which is applicable to the clicked entry (either an Item
+     * or a Collection) is used.
+     *
+     * @param name The name of the popup menu
+     *
+     * @since 4.9
+     * @note For backwards compatibility, the default is the standard
+     * collection popup menu, "akonadi_collectionview_contextmenu".
+     * @see KXMLGUIClient, KXMLGUIFactory::container()
+     */
+    void setDefaultPopupMenu( const QString &name );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the user has clicked
