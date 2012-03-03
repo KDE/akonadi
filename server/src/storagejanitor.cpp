@@ -138,11 +138,11 @@ void StorageJanitor::findOrphanedResources()
   const Resource::List orphanResources = qbres.result();
   if ( orphanResources.size() > 0 ) {
     QStringList resourceNames;
-    foreach ( const Resource& resource, orphanResources ) {
+    Q_FOREACH ( const Resource& resource, orphanResources ) {
         resourceNames.append(resource.name());
     }
     inform( QString::fromLatin1( "Found %1 orphan resources: %2" ).arg( orphanResources.size() ). arg( resourceNames.join(QLatin1String(",")) ) );
-    foreach ( const QString& resourceName, resourceNames ) {
+    Q_FOREACH ( const QString& resourceName, resourceNames ) {
         inform( QString::fromLatin1( "Removing resource %1" ).arg( resourceName ) );
         ResourceManager::self()->removeResourceInstance( resourceName );
     }
