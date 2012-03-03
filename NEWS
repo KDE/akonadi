@@ -1,3 +1,9 @@
+1.7.1                           03-March-2012
+---------------------------------------------
+- Don't truncate SPARQL queries in virtual collections.
+- Optimize change notifications for deleted collection attributes.
+- Fix possible data loss during item copy/move operations.
+
 1.7.0                         23-January-2012
 ---------------------------------------------
 - Fix search result retrieval from Nepomuk.
