@@ -205,8 +205,6 @@ class CollectionSync::Private
     */
     LocalNode* findMatchingLocalNode( const Collection &collection )
     {
-      Q_ASSERT( !collection.remoteId().isEmpty() );
-
       if ( !hierarchicalRIDs ) {
         if ( localRidMap.contains( collection.remoteId() ) )
           return localRidMap.value( collection.remoteId() );
@@ -245,8 +243,6 @@ class CollectionSync::Private
     */
     LocalNode* findBestLocalAncestor( const Collection &collection, bool *exactMatch = 0 )
     {
-      Q_ASSERT( !collection.remoteId().isEmpty() );
-
       if ( !hierarchicalRIDs )
         return localRoot;
       if ( collection == Collection::root() ) {
