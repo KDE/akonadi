@@ -111,12 +111,10 @@ class CollectionSync::Private
     /** Create a local node from the given local collection and integrate it into the local tree structure. */
     LocalNode* createLocalNode( const Collection &col )
     {
-      if ( col.remoteId().isEmpty() ) // no remote id here means it hasn't been added to the resource yet, so we exclude it from the sync
-        return 0;
       LocalNode *node = new LocalNode( col );
       Q_ASSERT( !localUidMap.contains( col.id() ) );
       localUidMap.insert( node->collection.id(), node );
-      if ( !hierarchicalRIDs )
+      if ( !hierarchicalRIDs && !col.remoteId().isEmpty() )
         localRidMap.insert( node->collection.remoteId(), node );
 
       // add already existing children
@@ -126,7 +124,8 @@ class CollectionSync::Private
           Q_ASSERT( localUidMap.contains( childId ) );
           LocalNode *childNode = localUidMap.value( childId );
           node->childNodes.append( childNode );
-          node->childRidMap.insert( childNode->collection.remoteId(), childNode );
+          if ( !childNode->collection.remoteId().isEmpty() )
+            node->childRidMap.insert( childNode->collection.remoteId(), childNode );
         }
       }
 
@@ -134,7 +133,8 @@ class CollectionSync::Private
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
         LocalNode* parentNode = localUidMap.value( col.parentCollection().id() );
         parentNode->childNodes.append( node );
-        parentNode->childRidMap.insert( node->collection.remoteId(), node );
+        if ( !node->collection.remoteId().isEmpty() )
+          parentNode->childRidMap.insert( node->collection.remoteId(), node );
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
