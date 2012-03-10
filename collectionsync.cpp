@@ -179,6 +179,27 @@ class CollectionSync::Private
     }
 
     /**
+     * Find a child node with matching collection name.
+     * @note This is used as a fallback if the resource lost the RID update somehow.
+     * This can be used because the Akonadi server enforces unique child collection names inside the hierarchy
+     */
+    LocalNode* findLocalChildNodeByName( LocalNode *localParentNode, const QString &name )
+    {
+      if ( name.isEmpty() ) // shouldn't happen...
+        return 0;
+
+      if ( localParentNode == localRoot ) // possibly non-unique names on top-level
+        return 0;
+
+      foreach ( LocalNode *childNode, localParentNode->childNodes ) {
+        // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
+        if ( childNode->collection.name() == name && childNode->collection.remoteId().isEmpty() )
+          return childNode;
+      }
+      return 0;
+    }
+
+    /**
       Find the local node that matches the given remote collection, returns 0
       if that doesn't exist (yet).
     */
@@ -203,8 +224,16 @@ class CollectionSync::Private
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
 
-        if ( localParent && localParent->childRidMap.contains( collection.remoteId() ) )
-          return localParent->childRidMap.value( collection.remoteId() );
+        if ( localParent ) {
+          if ( localParent->childRidMap.contains( collection.remoteId() ) )
+            return localParent->childRidMap.value( collection.remoteId() );
+          // check if we have a local folder with a matching name and no RID, if so let's use that one
+          // we would get an error if we don't do this anyway, as we'd try to create two sibling nodes with the same name
+          if ( LocalNode *recoveredLocalNode = findLocalChildNodeByName( localParent, collection.name() ) ) {
+            kDebug() << "Recovering collection with lost RID:" << collection << recoveredLocalNode->collection;
+            return recoveredLocalNode;
+          }
+        }
         return 0;
       }
     }
