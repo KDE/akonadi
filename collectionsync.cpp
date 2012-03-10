@@ -392,15 +392,21 @@ class CollectionSync::Private
     Collection::List findUnprocessedLocalCollections( LocalNode *localNode ) const
     {
       Collection::List rv;
-      if ( !localNode->processed && hasProcessedChildren( localNode ) ) {
-        kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
-        kWarning() << localNode->collection;
-        return rv;
-      }
       if ( !localNode->processed ) {
+        if ( hasProcessedChildren( localNode ) ) {
+          kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
+          kWarning() << localNode->collection;
+          return rv;
+        }
+        if ( localNode->collection.remoteId().isEmpty() ) {
+          kWarning() << "Found unprocessed local node without remoteId, excluding from deletion";
+          kWarning() << localNode->collection;
+          return rv;
+        }
         rv.append( localNode->collection );
         return rv;
       }
+
       foreach ( LocalNode *child, localNode->childNodes )
         rv.append( findUnprocessedLocalCollections( child ) );
       return rv;
