@@ -44,10 +44,10 @@ NepomukSearch::NepomukSearch( QObject* parent )
 {
   mSearchService = new Nepomuk::Query::QueryServiceClient( this );
   connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
-           this, SLOT(idHitsAdded(QList<Nepomuk::Query::Result>)) );
-  mIdSearchService = new Nepomuk::Query::QueryServiceClient( this );
-  connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
            this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
+  mIdSearchService = new Nepomuk::Query::QueryServiceClient( this );
+  connect( mIdSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+           this, SLOT(idHitsAdded(QList<Nepomuk::Query::Result>)) );
 }
 
 NepomukSearch::~NepomukSearch()
@@ -84,7 +84,7 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
     QHash<QString, QString> encodedRps;
     //We do another query to get the akonadiItemId attribute (since it may not have been added to the original query)
     encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
-    mIdSearchService->blockingQuery(QString::fromLatin1("SELECT DISTINCT ?r ?reqProp1 WHERE { %1 a ?v2 . %1 <http://akonadi-project.org/ontologies/aneo#akonadiItemId> ?reqProp1 . } LIMIT 1").arg(result.resourceUri().toString()), encodedRps);
+    mIdSearchService->blockingQuery(QString::fromLatin1("SELECT DISTINCT ?r ?reqProp1 WHERE { <%1> a ?v2 . <%1> <http://akonadi-project.org/ontologies/aneo#akonadiItemId> ?reqProp1 . } LIMIT 1").arg(result.resourceUri().toString()), encodedRps);
   }
 }
 
