@@ -95,7 +95,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -123,7 +123,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -152,7 +152,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -194,7 +194,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -229,7 +229,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -259,7 +259,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -288,7 +288,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -318,7 +318,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -361,7 +361,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -400,7 +400,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -431,7 +431,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -460,7 +460,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -490,7 +490,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -533,7 +533,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
@@ -572,7 +572,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?itemId "
           "WHERE { "
           "  graph ?g { "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
