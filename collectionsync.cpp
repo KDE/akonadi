@@ -184,6 +184,8 @@ class CollectionSync::Private
     */
     LocalNode* findMatchingLocalNode( const Collection &collection )
     {
+      Q_ASSERT( !collection.remoteId().isEmpty() );
+
       if ( !hierarchicalRIDs ) {
         if ( localRidMap.contains( collection.remoteId() ) )
           return localRidMap.value( collection.remoteId() );
@@ -214,6 +216,8 @@ class CollectionSync::Private
     */
     LocalNode* findBestLocalAncestor( const Collection &collection, bool *exactMatch = 0 )
     {
+      Q_ASSERT( !collection.remoteId().isEmpty() );
+
       if ( !hierarchicalRIDs )
         return localRoot;
       if ( collection == Collection::root() ) {
@@ -287,6 +291,7 @@ class CollectionSync::Private
     void updateLocalCollection( LocalNode *localNode, RemoteNode *remoteNode )
     {
       Collection upd( remoteNode->collection );
+      Q_ASSERT( !upd.remoteId().isEmpty() );
       upd.setId( localNode->collection.id() );
       {
         // ### HACK to work around the implicit move attempts of CollectionModifyJob
@@ -334,6 +339,7 @@ class CollectionSync::Private
       foreach ( RemoteNode *remoteNode, remoteNodes ) {
         ++pendingJobs;
         Collection col( remoteNode->collection );
+        Q_ASSERT( !col.remoteId().isEmpty() );
         col.setParentCollection( localParent->collection );
         CollectionCreateJob *create = new CollectionCreateJob( col, q );
         create->setProperty( LOCAL_NODE, QVariant::fromValue( localParent ) );
@@ -419,6 +425,8 @@ class CollectionSync::Private
     {
       q->setTotalAmount( KJob::Bytes, q->totalAmount( KJob::Bytes ) + cols.size() );
       foreach ( const Collection &col, cols ) {
+        Q_ASSERT( !col.remoteId().isEmpty() ); // empty RID -> stuff we haven't even written to the remote side yet
+
         ++pendingJobs;
         CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
         connect( job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)) );
