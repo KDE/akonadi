@@ -60,17 +60,34 @@ NepomukSearch::~NepomukSearch()
 
 QStringList NepomukSearch::search( const QString &query )
 {
+  //qDebug() << Q_FUNC_INFO << query;
   if ( !mSearchService ) {
     qWarning() << "Nepomuk search service not available!";
     return QStringList();
   }
 
-  if ( !mSearchService->blockingQuery( query ) ) {
+  // Insert a property request for the item Id. This should
+  // be part of the query already and extracted from that,
+  // but that doesn't seem to work at the moment, so be explicit.
+  QHash<QString, QString> encodedRps;
+  encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
+
+  if ( !mSearchService->blockingQuery( query, encodedRps ) ) {
     qWarning() << Q_FUNC_INFO << "Calling blockingQuery() failed!";
     return QStringList();
   }
 
   return mMatchingUIDs.toList();
+}
+
+void NepomukSearch::addHit(const Nepomuk::Query::Result& result)
+{
+  const qint64 itemId = resultToId( result );
+
+  if ( itemId == -1 )
+    return;
+
+  mMatchingUIDs.insert( QString::number( itemId ) );
 }
 
 void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
@@ -80,7 +97,21 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
     return;
   }
 
+  QList<Nepomuk::Query::Result> resultsWithoutIdProperty;
+
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
+    const Soprano::Node &property = result.requestProperty(QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ));
+    if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
+      resultsWithoutIdProperty << result;
+    } else {
+      // for those results that already have a proper akonadi item id property,
+      // we can add matches right away
+      addHit(result);
+    }
+  }
+
+  // go fetch the akonadi item id property for those results that don't have them
+  Q_FOREACH( const Nepomuk::Query::Result &result, resultsWithoutIdProperty ) {
     QHash<QString, QString> encodedRps;
     //We do another query to get the akonadiItemId attribute (since it may not have been added to the original query)
     encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
@@ -90,16 +121,9 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
 
 void NepomukSearch::idHitsAdded(const QList< Nepomuk::Query::Result >& entries)
 {
-
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
-    const qint64 itemId = resultToId( result );
-
-    if ( itemId == -1 )
-      continue;
-
-    mMatchingUIDs.insert( QString::number( itemId ) );
+    addHit(result);
   }
-
 }
 
 

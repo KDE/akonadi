@@ -43,6 +43,7 @@ class NepomukSearch : public QObject
     void idHitsAdded( const QList<Nepomuk::Query::Result>& entries );
 
   private:
+    void addHit(const Nepomuk::Query::Result& result);
     QSet<QString> mMatchingUIDs;
     Nepomuk::Query::QueryServiceClient* mSearchService;
     Nepomuk::Query::QueryServiceClient* mIdSearchService;
