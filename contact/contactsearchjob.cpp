@@ -73,7 +73,7 @@ static QString containsQueryString( bool doWholeWordSearch, bool matchWordBounda
     return QString::fromLatin1( "?v bif:contains \"'%1'\" . " );
   else
     return QString::fromLatin1("FILTER regex(str(?v), \"%1\", \"i\")" )
-        .arg( matchWordBoundary? "\\\\b%1" : "%1" );
+        .arg( matchWordBoundary? QLatin1String("\\\\b%1") : QLatin1String("%1") );
 }
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
