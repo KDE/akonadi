@@ -1,3 +1,7 @@
+1.7.2                           31-March-2012
+---------------------------------------------
+- Fix and optimize searching via Nepomuk.
+
 1.7.1                           03-March-2012
 ---------------------------------------------
 - Don't truncate SPARQL queries in virtual collections.
