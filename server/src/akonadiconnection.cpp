@@ -294,7 +294,7 @@ void AkonadiConnection::setResourceContext(const Resource& res)
 
 bool AkonadiConnection::isOwnerResource(const PimItem& item) const
 {
-  if ( resourceContext().isValid() )
+  if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() )
     return true;
   // fallback for older resources
   if ( sessionId() == item.collection().resource().name().toUtf8() )
@@ -304,7 +304,7 @@ bool AkonadiConnection::isOwnerResource(const PimItem& item) const
 
 bool AkonadiConnection::isOwnerResource(const Collection &collection) const
 {
-  if ( resourceContext().isValid() )
+  if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() )
     return true;
   if ( sessionId() == collection.resource().name().toUtf8() )
     return true;
