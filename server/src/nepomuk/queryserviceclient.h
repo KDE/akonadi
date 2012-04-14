@@ -78,7 +78,7 @@ namespace Nepomuk {
              *
              * \sa QueryParser
              */
-            bool query( const QString& query, const QHash<QString, QString> &encodedRps = QHash<QString, QString>() );
+            bool query(const QString& query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
 
             /**
              * Start a query using the Nepomuk user query language.
@@ -96,7 +96,7 @@ namespace Nepomuk {
              * 
              * \sa query(const QString&), close()
              */
-            bool blockingQuery( const QString& query, const QHash<QString, QString> &encodedRps = QHash<QString, QString>() );
+            bool blockingQuery( const QString& query, const QHash<QString, QString> &encodedRps = ( QHash<QString, QString>() ) );
 
             /**
              * Close the client, thus stop to monitor the query
