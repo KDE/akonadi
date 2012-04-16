@@ -34,6 +34,7 @@
 
 #include <KLocale>
 #include <KInputDialog>
+#include <KUrl>
 #include <KMessageBox>
 #include <KStandardDirs>
 

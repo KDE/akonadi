@@ -26,6 +26,7 @@
 #include <kconfiggroup.h>
 #include <klocale.h>
 #include <KJob>
+#include <KUrl>
 
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
