@@ -21,7 +21,6 @@
 #include "entity_p.h"
 #include "collection.h"
 
-#include <kglobal.h>
 
 using namespace Akonadi;
 

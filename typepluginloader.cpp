@@ -27,7 +27,6 @@
 // KDE core
 #include <kdebug.h>
 #include <kmimetype.h>
-#include <kglobal.h>
 
 // Qt
 #include <QtCore/QHash>

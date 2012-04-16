@@ -25,7 +25,6 @@
 #include <akonadi/item.h>
 #include <kabc/addressee.h>
 #include <kcolorscheme.h>
-#include <kglobal.h>
 #include <klocalizedstring.h>
 #include <kstringhandler.h>
 
