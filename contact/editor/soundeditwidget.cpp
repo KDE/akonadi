@@ -190,7 +190,7 @@ void SoundEditWidget::playSound()
 
 void SoundEditWidget::changeSound()
 {
-  const KUrl url = KFileDialog::getOpenUrl( QString(), QLatin1String( "*.wav" ), this );
+  const KUrl url = KFileDialog::getOpenUrl( QUrl(), QLatin1String( "*.wav" ), this );
   if ( url.isValid() ) {
     bool ok = false;
     const QByteArray sound = soundLoader()->loadSound( url, &ok );
