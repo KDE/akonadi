@@ -13,7 +13,7 @@ kde4_add_library(akonadi-notes ${LIBRARY_TYPE} ${akonadinotes_LIB_SRC})
 
 target_link_libraries(akonadi-notes
                       akonadi-kde
-                      kmime)
+                      kmime ${QT_QTXML_LIBRARY})
 
 set_target_properties(akonadi-notes PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
@@ -24,3 +24,5 @@ install( FILES
   akonadi-notes_export.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/notes COMPONENT Devel
 )
+
+add_subdirectory(tests)
