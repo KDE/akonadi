@@ -171,6 +171,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     blacklistedKeys.insert( QLatin1String( "SMIMEFP" ) );
     blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
     blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "MailPreferedFormatting" ) );
+    blacklistedKeys.insert( QLatin1String( "MailAllowToRemoteContent") );
   }
 
   if ( !rawContact.customs().empty() ) {
