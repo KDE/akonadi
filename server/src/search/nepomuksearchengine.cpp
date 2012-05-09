@@ -79,6 +79,11 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
     return;
   const QString &q = collection.queryString();
 
+  if ( q.size() >= 32768 ) {
+    qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+    return;
+  }
+
   //FIXME the requested property must be passed to here from the calling code
   //Ideally the Query is passed as object so we can check here for the akonadiItemId property, and add it if missing
   if (!q.contains(QString::fromLatin1("reqProp1")) || !q.contains(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId"))) {

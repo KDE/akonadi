@@ -10,7 +10,7 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
                               cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
                               cachePolicyLocalParts VARBINARY(255),
-                              queryString VARBINARY(1024),
+                              queryString VARBINARY(32768),
                               queryLanguage VARBINARY(255),
                               FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON DELETE CASCADE ON UPDATE CASCADE)

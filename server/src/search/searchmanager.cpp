@@ -71,6 +71,10 @@ SearchManager* SearchManager::instance()
 
 bool SearchManager::addSearch(const Collection& collection)
 {
+  if ( collection.queryString().size() >= 32768 ) {
+    qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+    return false;
+  }
   if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() )
     return false;
 

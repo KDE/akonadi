@@ -57,7 +57,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
   QVERIFY( updateSets.contains( 17 ) );
   QVERIFY( updateSets.contains( 18 ) );
   QVERIFY( updateSets.contains( 19 ) );
-  QCOMPARE( updateSets.count(), 14 );
+  QCOMPARE( updateSets.count(), 15 );
 
   updateSets.clear();
   QVERIFY( updater.parseUpdateSets( 13, updateSets ) );
@@ -74,7 +74,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
   QVERIFY( updateSets.contains( 17 ) );
   QVERIFY( updateSets.contains( 18 ) );
   QVERIFY( updateSets.contains( 19 ) );
-  QCOMPARE( updateSets.count(), 7 );
+  QCOMPARE( updateSets.count(), 8 );
 
   QCOMPARE( updateSets.value( 14 ).statements.count(), 2 );
   QCOMPARE( updateSets.value( 16 ).statements.count(), 11 );
@@ -100,7 +100,7 @@ void DbUpdaterTest::testPsqlUpdateStatements()
   QVERIFY( updateSets.contains( 17 ) );
   QVERIFY( updateSets.contains( 18 ) );
   QVERIFY( updateSets.contains( 19 ) );
-  QCOMPARE( updateSets.count(), 14 );
+  QCOMPARE( updateSets.count(), 15 );
 
   updateSets.clear();
   QVERIFY( updater.parseUpdateSets( 13, updateSets ) );
@@ -117,7 +117,7 @@ void DbUpdaterTest::testPsqlUpdateStatements()
   QVERIFY( updateSets.contains( 17 ) );
   QVERIFY( updateSets.contains( 18 ) );
   QVERIFY( updateSets.contains( 19 ) );
-  QCOMPARE( updateSets.count(), 7 );
+  QCOMPARE( updateSets.count(), 8 );
 
   QCOMPARE( updateSets.value( 14 ).statements.count(), 2 );
   QCOMPARE( updateSets.value( 16 ).statements.count(), 11 );

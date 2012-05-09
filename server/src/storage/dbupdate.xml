@@ -150,4 +150,9 @@
   <update version="20" abortOnFailure="false">
     <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARBINARY(1024);</raw-sql>
   </update>
+
+  <!-- even wider query column (only affects MySQL) -->
+  <update version="21" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARBINARY(32768);</raw-sql>
+  </update>
 </updates>
