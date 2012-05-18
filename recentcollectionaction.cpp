@@ -19,7 +19,7 @@
 #include "recentcollectionaction_p.h"
 #include "metatypes.h"
 #include <akonadi/entitytreemodel.h>
-#include <Akonadi/CollectionModel>
+#include <akonadi/collectionmodel.h>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocale>
