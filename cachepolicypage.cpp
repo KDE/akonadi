@@ -119,6 +119,8 @@ void CachePolicyPage::load( const Collection &collection )
 
   //done explicitly to disable/enabled widgets
   d->mUi->retrieveOnlyHeaders->setChecked( !fetchBodies );
+  d->mUi->label->setEnabled(!fetchBodies);
+  d->mUi->localCacheTimeout->setEnabled(!fetchBodies);
 }
 
 void CachePolicyPage::save( Collection &collection )
