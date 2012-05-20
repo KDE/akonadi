@@ -260,7 +260,7 @@ KMime::Content* NoteMessageWrapper::NoteMessageWrapperPrivate::createCustomPart(
   QDomDocument document = createXMLDocument();
   QDomElement element = document.createElement( "custom" );
   element.setAttribute( "version", "1.0" );
-  for ( QMap <QString, QString >::const_iterator it = custom.begin(); it != custom.end(); it++ ) {
+  for ( QMap <QString, QString >::const_iterator it = custom.begin(); it != custom.end(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( it.key() );
     QDomText t = element.ownerDocument().createTextNode( it.value() );
     e.appendChild( t );
