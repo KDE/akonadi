@@ -59,8 +59,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   QString rowFmtStr = QString::fromLatin1(
         "<tr>"
-        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>\n"
-        "<td align=\"left\" valign=\"top\" width=\"70%\"><font size=\"-1\">%2</font></td>\n"
+        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
+        "<td align=\"left\" valign=\"top\" width=\"70%\"><font>%2</font></td>\n"
         "</tr>\n"
         );
 
