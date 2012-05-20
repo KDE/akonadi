@@ -711,7 +711,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   // widgets from categories section
   d->mCategoriesWidget->setReadOnly( readOnly );
 
-  // Prefered Mail formatting option
+  // Preferred Mail formatting option
   d->mMailPreferFormatting->setEnabled( !readOnly );
   d->mAllowRemoteContent->setEnabled( !readOnly );
 
