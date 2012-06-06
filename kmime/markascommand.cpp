@@ -104,7 +104,10 @@ void MarkAsCommand::markMessages()
 
   QSet<QByteArray> flags = mTargetStatus.statusFlags();
   Q_ASSERT( flags.size() == 1 );
-  const Akonadi::Item::Flag flag = *(flags.begin());
+  Akonadi::Item::Flag flag;
+  if(!flags.isEmpty()) 
+    flag = *(flags.begin());
+
   Akonadi::Item::List itemsToModify;
   foreach( const Akonadi::Item &it, mMessages ) {
     Akonadi::Item item( it );
