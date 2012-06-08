@@ -1,3 +1,9 @@
+1.7.90                           08-June-2012
+---------------------------------------------
+- Fix handling of large SPARQL queries.
+- Support cleanup of orphaned resources in the consistency checker.
+- Support compilation with Clang.
+
 1.7.2                           31-March-2012
 ---------------------------------------------
 - Fix and optimize searching via Nepomuk.
