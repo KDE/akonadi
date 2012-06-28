@@ -167,11 +167,12 @@ else()
 endif()
 
 #### Soprano ####
+set(SOPRANO_MIN_VERSION 2.7.56)
 if(NOT WINCE)
   find_package(Soprano)
 endif()
 
-macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "" "Soprano is needed for the Nepomuk search backend")
+macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "${SOPRANO_MIN_VERSION}" "Soprano is needed for the Nepomuk search backend")
 
 #### Automoc ####
 find_package(Automoc4 REQUIRED)
