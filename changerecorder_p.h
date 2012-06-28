@@ -169,6 +169,8 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 
     QString dumpNotificationListToString() const
     {
+      if ( !settings )
+        return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
       QString result;
       const QString changesFileName = notificationsFileName();
       QFile file( changesFileName );
