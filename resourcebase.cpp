@@ -175,7 +175,10 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     // Dump the state of the scheduler
     Q_SCRIPTABLE QString dumpToString() const
     {
-      return scheduler->dumpToString();
+      Q_Q( const ResourceBase );
+      QString retVal;
+      QMetaObject::invokeMethod( const_cast<ResourceBase *>(q), "dumpResourceToString", Qt::DirectConnection, Q_RETURN_ARG(QString, retVal) );
+      return scheduler->dumpToString() + QLatin1Char('\n') + retVal;
     }
 
     Q_SCRIPTABLE void dump()
