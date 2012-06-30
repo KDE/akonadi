@@ -62,8 +62,7 @@ void MarkAsCommand::slotFetchDone(KJob* job)
         mMessages.append( item );
       }
     } else
-      if (! (status & mTargetStatus) )
-      {
+      if ( !( status & mTargetStatus ) ) {
         mMessages.append( item );
       }
   }
@@ -105,8 +104,8 @@ void MarkAsCommand::markMessages()
   QSet<QByteArray> flags = mTargetStatus.statusFlags();
   Q_ASSERT( flags.size() == 1 );
   Akonadi::Item::Flag flag;
-  if(!flags.isEmpty()) 
-    flag = *(flags.begin());
+  if ( !flags.isEmpty() )
+    flag = *( flags.begin() );
 
   Akonadi::Item::List itemsToModify;
   foreach( const Akonadi::Item &it, mMessages ) {
