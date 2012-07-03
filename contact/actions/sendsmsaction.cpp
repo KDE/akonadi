@@ -81,6 +81,7 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
   command = command.replace( QLatin1String( "%N" ), phoneNumber.number() );
   command = command.replace( QLatin1String( "%n" ), strippedSmsNumber( number ) );
   command = command.replace( QLatin1String( "%t" ), dlg.message() );
-
+  //Bug: 293232 In KDE3 We used %F to replace text
+  command = command.replace( QLatin1String( "%F" ), dlg.message() );
   KRun::runCommand( command, 0 );
 }
