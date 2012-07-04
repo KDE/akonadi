@@ -302,6 +302,19 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   if ( !qb.exec() )
     return false;
 
+  // this is a cross-resource move, so also reset any resource-specific data (RID, RREV, etc)
+  // as well as mark the items dirty to prevent cache purging before they have been written back
+  qb = QueryBuilder( PimItem::tableName(), QueryBuilder::Update );
+  qb.addValueCondition( PimItem::collectionIdColumn(), Query::Equals, collection.id() );
+  qb.setColumnValue( PimItem::remoteIdColumn(), QVariant() );
+  qb.setColumnValue( PimItem::remoteRevisionColumn(), QVariant() );
+  const QDateTime now = QDateTime::currentDateTime();
+  qb.setColumnValue( PimItem::datetimeColumn(), now );
+  qb.setColumnValue( PimItem::atimeColumn(), now );
+  qb.setColumnValue( PimItem::dirtyColumn(), true );
+  if ( !qb.exec() )
+    return false;
+
   transaction.commit();
 
   Q_FOREACH ( const Collection &col, collection.children() ) {
