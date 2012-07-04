@@ -193,10 +193,10 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
         }
 
         // blog is handled separated
-        if ( key == QLatin1String( "BlogFeed" ) )
+        else if ( key == QLatin1String( "BlogFeed" ) )
           continue;
 
-        if ( blacklistedKeys.contains( key ) )
+	else if ( blacklistedKeys.contains( key ) )
           continue;
 
         // check whether we have a mapping for the title
@@ -302,3 +302,4 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   return document;
 }
+
