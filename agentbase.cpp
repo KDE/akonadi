@@ -393,30 +393,15 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection,
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( mObserver ) {
-    // inter-resource moves, requires we know which resources the source and destination are in though
-    if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
-      if ( source.resource() != dest.resource() ) {
-        if ( source.resource() == q_ptr->identifier() ) // moved away from us
-          mObserver->collectionRemoved( collection );
-        else if ( dest.resource() == q_ptr->identifier() ) // moved to us
-          mObserver->collectionAdded( collection, dest );
-        else if ( observer2 )
-          observer2->collectionMoved( collection, source, dest );
-        else // not for us, not sure if we should get here at all
-          changeProcessed();
-        return;
-      }
-    }
-    // intra-resource move
-    if ( observer2 ) {
-      observer2->collectionMoved( collection, source, dest );
-    } else {
-      // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
-      // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
-      // without using ObserverV2
-      mObserver->collectionAdded( collection, dest );
-    }
+  if ( observer2 ) {
+    observer2->collectionMoved( collection, source, dest );
+  } else if ( mObserver ) {
+    // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
+    // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
+    // without using ObserverV2
+    mObserver->collectionAdded( collection, dest );
+  } else {
+    changeProcessed();
   }
 }
 

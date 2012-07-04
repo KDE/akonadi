@@ -261,13 +261,24 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::collectionChanged( collection, partIdentifiers );
     }
 
-    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
     void collectionMoved(const Akonadi::Collection& collection, const Akonadi::Collection& source, const Akonadi::Collection& destination)
     {
       if ( collection.remoteId().isEmpty() || destination.remoteId().isEmpty() || source == destination ) {
         changeProcessed();
         return;
       }
+
+      // inter-resource moves, requires we know which resources the source and destination are in though
+      if ( !source.resource().isEmpty() && !destination.resource().isEmpty() && source.resource() != destination.resource() ) {
+        if ( source.resource() == q_ptr->identifier() ) { // moved away from us
+          AgentBasePrivate::collectionRemoved( collection );
+        } else if ( destination.resource() == q_ptr->identifier() ) { // moved to us
+          // TODO expand recursively
+          AgentBasePrivate::collectionAdded( collection, destination );
+        }
+      }
+
+      // intra-resource move, ie. something we can handle internally
       AgentBasePrivate::collectionMoved( collection, source, destination );
     }
 
