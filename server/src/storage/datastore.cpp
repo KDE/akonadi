@@ -299,6 +299,8 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   QueryBuilder qb( Collection::tableName(), QueryBuilder::Update );
   qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, collection.id() );
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
+  qb.setColumnValue( Collection::remoteIdColumn(), QVariant() );
+  qb.setColumnValue( Collection::remoteRevisionColumn(), QVariant() );
   if ( !qb.exec() )
     return false;
 
@@ -344,6 +346,8 @@ bool Akonadi::DataStore::moveCollection( Collection & collection, const Collecti
   collection.setParentId( newParent.id() );
   if ( collection.resourceId() != resourceId ) {
     collection.setResourceId( resourceId );
+    collection.setRemoteId( QString() );
+    collection.setRemoteRevision( QString() );
     if ( !recursiveSetResourceId( collection, resourceId ) )
       return false;
   }
