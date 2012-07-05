@@ -214,10 +214,6 @@ bool ItemRetriever::exec()
     } else {
       // data available, don't request update
       lastRequest->parts.removeAll( partName );
-      if ( lastRequest->parts.isEmpty() ) {
-        delete requests.takeLast();
-        lastRequest = 0;
-      }
     }
     query.next();
   }
@@ -227,7 +223,10 @@ bool ItemRetriever::exec()
   query.finish();
 
   Q_FOREACH ( ItemRetrievalRequest* request, requests ) {
-    Q_ASSERT( !request->parts.isEmpty() );
+    if ( request->parts.isEmpty() ) {
+        delete request;
+        continue;
+    }
     // TODO: how should we handle retrieval errors here? so far they have been ignored,
     // which makes sense in some cases, do we need a command parameter for this?
     try {
