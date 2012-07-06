@@ -315,6 +315,15 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     Session* session() const;
 
+    /**
+     * Allows to enable/disable collection move translation. If enabled (the default), move
+     * notifications are auotmatically translated into add/remove notifications if the source/destination
+     * is outside of the monitored collection hierarchy.
+     *
+     * @since 4.9
+     */
+    void setCollectionMoveTranslationEnabled( bool enabled );
+
   Q_SIGNALS:
     /**
      * This signal is emitted if a monitored item has changed, e.g. item parts have been modified.

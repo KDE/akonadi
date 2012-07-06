@@ -237,4 +237,10 @@ Session* Monitor::session() const
   return d->session;
 }
 
+void Monitor::setCollectionMoveTranslationEnabled(bool enabled)
+{
+  Q_D( Monitor );
+  d->collectionMoveTranslationEnabled = enabled;
+}
+
 #include "monitor.moc"

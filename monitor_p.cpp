@@ -48,6 +48,7 @@ MonitorPrivate::MonitorPrivate( ChangeNotificationDependenciesFactory *dependenc
   itemCache( 0 ),
   fetchCollection( false ),
   fetchCollectionStatistics( false ),
+  collectionMoveTranslationEnabled( true ),
   useRefCounting( false )
 {
 }
@@ -369,7 +370,7 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
   if ( !sourceWatched && !destWatched )
     return false;
 
-  if ( sourceWatched && destWatched ) {
+  if ( sourceWatched && destWatched || (!collectionMoveTranslationEnabled && msg.type() == NotificationMessage::Collection) ) {
     bool appended = false;
     NotificationMessage::appendAndCompress( notificationQueue, msg, &appended );
     return appended;
