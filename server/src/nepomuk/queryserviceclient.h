@@ -163,12 +163,21 @@ namespace Nepomuk {
              */
             void error( const QString& errorMessage );
 
+            /**
+             * Emitted when the availability of the query service changes
+             *
+             * \since 4.8
+             */
+            void serviceAvailabilityChanged( bool running );
+
         private:
             class Private;
             Private* const d;
 
             Q_PRIVATE_SLOT( d, void _k_finishedListing() )
             Q_PRIVATE_SLOT( d, void _k_handleQueryReply(QDBusPendingCallWatcher*) )
+            Q_PRIVATE_SLOT( d, void _k_serviceRegistered( const QString& ) )
+            Q_PRIVATE_SLOT( d, void _k_serviceUnregistered( const QString& ) )
         };
     }
 }
