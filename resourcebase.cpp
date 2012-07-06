@@ -317,6 +317,7 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler = new ResourceScheduler( this );
 
   d->mChangeRecorder->setChangeRecordingEnabled( true );
+  d->mChangeRecorder->setCollectionMoveTranslationEnabled( false ); // we deal with this ourselves
   connect( d->mChangeRecorder, SIGNAL(changesAdded()),
            d->scheduler, SLOT(scheduleChangeReplay()) );
 
