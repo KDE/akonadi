@@ -161,6 +161,7 @@ if (Soprano_FOUND)
     src/search/nepomuksearchengine.cpp
     src/nepomuk/dbusoperators.cpp
     src/nepomuk/queryserviceclient.cpp
+    src/nepomuk/dbusconnectionpool.cpp
     src/nepomuk/result.cpp
   )
 

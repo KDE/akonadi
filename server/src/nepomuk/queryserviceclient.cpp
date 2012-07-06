@@ -1,19 +1,21 @@
 /*
-   Copyright (c) 2008 Sebastian Trueg <trueg@kde.org>
+   Copyright (c) 2008-2009 Sebastian Trueg <trueg@kde.org>
 
    This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License version 2 as published by the Free Software Foundation.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) version 3, or any
+   later version accepted by the membership of KDE e.V. (or its
+   successor approved by the membership of KDE e.V.), which shall
+   act as a proxy defined in Section 6 of version 3 of the license.
 
    This library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "queryserviceclient.h"
@@ -22,6 +24,7 @@
 #include "result.h"
 #include "queryserviceinterface.h"
 #include "queryinterface.h"
+#include <dbusconnectionpool.h>
 
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>
@@ -31,85 +34,60 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>
 
-namespace {
-
-    QAtomicInt s_connectionCounter;
-    /**
-     * Each thread needs its own QDBusConnection. We do it the very easy
-     * way and just create a new connection for each client
-     * Why does Qt not handle this automatically?
-     */
-    class QDBusConnectionPerThreadHelper
-    {
-    public:
-        QDBusConnectionPerThreadHelper()
-            : m_connection( QDBusConnection::connectToBus(
-                                QDBusConnection::SessionBus,
-                                QString::fromLatin1("NepomukQueryServiceConnection%1").arg(newNumber()) ) )
-        {
-        }
-        ~QDBusConnectionPerThreadHelper() {
-            QDBusConnection::disconnectFromBus( m_connection.name() );
-        }
-
-        static QDBusConnection threadConnection();
-
-    private:
-        static int newNumber() {
-            return s_connectionCounter.fetchAndAddAcquire(1);
-        }
-        QDBusConnection m_connection;
-    };
-
-    QThreadStorage<QDBusConnectionPerThreadHelper *> s_perThreadConnection;
-
-    QDBusConnection QDBusConnectionPerThreadHelper::threadConnection()
-    {
-        if (!s_perThreadConnection.hasLocalData()) {
-            s_perThreadConnection.setLocalData(new QDBusConnectionPerThreadHelper);
-        }
-        return s_perThreadConnection.localData()->m_connection;
-    }
-}
-
-
 class Nepomuk::Query::QueryServiceClient::Private
 {
 public:
     Private()
         : queryServiceInterface( 0 ),
           queryInterface( 0 ),
-          dbusConnection( QDBusConnectionPerThreadHelper::threadConnection() ),
+          dbusConnection( DBusConnectionPool::threadConnection() ),
+          m_queryActive( false ),
           loop( 0 ) {
     }
 
     void _k_finishedListing();
-    bool handleQueryReply( QDBusReply<QDBusObjectPath> reply );
+    void _k_handleQueryReply(QDBusPendingCallWatcher*);
 
     org::kde::nepomuk::QueryService* queryServiceInterface;
     org::kde::nepomuk::Query* queryInterface;
 
     QueryServiceClient* q;
 
+    QPointer<QDBusPendingCallWatcher> m_pendingCallWatcher;
+
     QDBusConnection dbusConnection;
 
+    bool m_queryActive;
     QEventLoop* loop;
+    QString m_errorMessage;
 };
 
 void Nepomuk::Query::QueryServiceClient::Private::_k_finishedListing()
 {
+    m_queryActive = false;
     Q_EMIT q->finishedListing();
     if( loop ) {
         q->close();
     }
 }
 
-bool Nepomuk::Query::QueryServiceClient::Private::handleQueryReply( QDBusReply<QDBusObjectPath> r )
+
+void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply(QDBusPendingCallWatcher* watcher)
 {
-    if ( r.isValid() ) {
+    QDBusPendingReply<QDBusObjectPath> reply = *watcher;
+    if(reply.isError()) {
+        akDebug() << reply.error();
+        m_errorMessage = reply.error().message();
+        m_queryActive = false;
+        Q_EMIT q->error(m_errorMessage);
+        if( loop ) {
+            loop->exit();
+        }
+    }
+    else {
         queryInterface = new org::kde::nepomuk::Query( queryServiceInterface->service(),
-                                                       r.value().path(),
-                                                       dbusConnection  );
+                                                       reply.value().path(),
+                                                       dbusConnection );
         connect( queryInterface, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
                  q, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)) );
         connect( queryInterface, SIGNAL(entriesRemoved(QList<Nepomuk::Query::Result>)),
@@ -119,13 +97,11 @@ bool Nepomuk::Query::QueryServiceClient::Private::handleQueryReply( QDBusReply<Q
         // run the listing async in case the event loop below is the only one we have
         // and we need it to handle the signals and list returns results immediately
         QTimer::singleShot( 0, queryInterface, SLOT(list()) );
-        return true;
     }
-    else {
-        akError() << "Query failed:" << r.error().message();
-        return false;
-    }
+
+    delete watcher;
 }
+
 
 
 Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject* parent )
@@ -145,8 +121,8 @@ Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject* parent )
 
 Nepomuk::Query::QueryServiceClient::~QueryServiceClient()
 {
-    delete d->queryServiceInterface;
     close();
+    delete d->queryServiceInterface;
     delete d;
 }
 
@@ -156,13 +132,21 @@ bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHas
     close();
 
     if ( d->queryServiceInterface->isValid() ) {
-        return d->handleQueryReply( d->queryServiceInterface->sparqlQuery( query, encodedRps ) );
+        d->m_queryActive = true;
+        d->m_pendingCallWatcher = new QDBusPendingCallWatcher(d->queryServiceInterface->asyncCall(QLatin1String("sparqlQuery"),
+                                                                                                  query,
+                                                                                                  QVariant::fromValue(encodedRps)),
+                                                              this);
+        connect(d->m_pendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
+                this, SLOT(_k_handleQueryReply(QDBusPendingCallWatcher*)));
+        return true;
     }
     else {
-        akDebug() << "Could not contact query service.";
+        akDebug() << "Could not contact nepomuk query service.";
         return false;
     }
 }
+
 
 
 bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const QHash<QString, QString> &encodedRps )
@@ -172,6 +156,7 @@ bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const 
         d->loop = &loop;
         loop.exec();
         d->loop = 0;
+        close();
         return true;
     }
     else {
@@ -182,20 +167,40 @@ bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const 
 
 void Nepomuk::Query::QueryServiceClient::close()
 {
+    // drop pending query calls
+    // TODO: This could lead to dangling queries in the service when close is called before the pending call has returned!!!
+    //       We could also use a stack of pending calls or something like that.
+    delete d->m_pendingCallWatcher;
+
+    d->m_errorMessage.truncate(0);
+
     if ( d->queryInterface ) {
         akDebug() << Q_FUNC_INFO;
         d->queryInterface->close();
         delete d->queryInterface;
         d->queryInterface = 0;
+        d->m_queryActive = false;
         if( d->loop )
             d->loop->exit();
     }
 }
 
 
+bool Nepomuk::Query::QueryServiceClient::isListingFinished() const
+{
+    return !d->m_queryActive;
+}
+
+
 bool Nepomuk::Query::QueryServiceClient::serviceAvailable()
 {
     return QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
+}
+
+
+QString Nepomuk::Query::QueryServiceClient::errorMessage() const
+{
+    return d->m_errorMessage;
 }
 
 #include "queryserviceclient.moc"
