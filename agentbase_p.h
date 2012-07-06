@@ -99,7 +99,7 @@ class AgentBasePrivate : public QObject
 
     AgentBase::Observer *mObserver;
 
-  protected Q_SLOTS:
+  public Q_SLOTS:
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
     virtual void itemMoved( const Akonadi::Item &, const Akonadi::Collection &source, const Akonadi::Collection &destination );

@@ -141,6 +141,7 @@ set( akonadikde_LIB_SRC
   progressspinnerdelegate.cpp
   recursivecollectionfilterproxymodel.cpp
   recursiveitemfetchjob.cpp
+  recursivemover.cpp
   resourcebase.cpp
   resourcescheduler.cpp
   resourceselectjob.cpp
