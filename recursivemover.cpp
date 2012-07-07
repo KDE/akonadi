@@ -92,6 +92,7 @@ void RecursiveMover::collectionFetchResult(KJob *job)
   CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
   if ( fetchJob->collections().size() == 1 ) {
     m_currentCollection = fetchJob->collections().first();
+    m_currentCollection.setParentCollection( m_collections.value( m_currentCollection.parentCollection().id() ) );
     m_collections.insert( m_currentCollection.id(), m_currentCollection );
   } else {
     // already deleted, move on
