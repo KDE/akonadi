@@ -40,9 +40,11 @@ void RecursiveMover::start()
   ++m_runningJobs;
 }
 
-void RecursiveMover::setCollection( const Akonadi::Collection &collection )
+void RecursiveMover::setCollection( const Collection& collection, const Collection& parentCollection )
 {
   m_movedCollection = collection;
+  m_collections.insert( collection.id(), m_movedCollection );
+  m_collections.insert( parentCollection.id(), parentCollection );
 }
 
 void RecursiveMover::collectionListResult(KJob* job)
@@ -54,10 +56,12 @@ void RecursiveMover::collectionListResult(KJob* job)
     return; // errror handling is in the base class
 
   // build a parent -> children map for the following topological sorting
+  // while we are iterating anyway, also fill m_collections here
   CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
   QHash<Collection::Id, Collection::List> colTree;
   foreach ( const Collection &col, fetchJob->collections() ) {
     colTree[col.parentCollection().id()] << col;
+    m_collections.insert( col.id(), col );
   }
 
   // topological sort; BFS traversal of the tree
@@ -87,7 +91,8 @@ void RecursiveMover::collectionFetchResult(KJob *job)
 
   CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
   if ( fetchJob->collections().size() == 1 ) {
-    m_currentCollection = fetchJob->collections().first(); // TODO update inside tree
+    m_currentCollection = fetchJob->collections().first();
+    m_collections.insert( m_currentCollection.id(), m_currentCollection );
   } else {
     // already deleted, move on
   }
@@ -146,7 +151,7 @@ void RecursiveMover::replayNextCollection()
     if ( m_currentCollection.remoteId().isEmpty() ) {
       Q_ASSERT( m_currentAction == None );
       m_currentAction = AddCollection;
-      m_agentBase->collectionAdded( m_currentCollection, m_currentCollection.parentCollection() ); // TODO real full parents
+      m_agentBase->collectionAdded( m_currentCollection, m_collections.value( m_currentCollection.parentCollection().id() ) );
       return;
     } else {
       //replayNextItem(); - but waiting for the fetch job to finish first
