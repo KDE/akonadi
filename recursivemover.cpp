@@ -113,8 +113,6 @@ void RecursiveMover::itemListResult(KJob* job)
       m_pendingItems.push_back( item );
   }
 
-  if ( m_currentAction == None ) // we did not need to replay the collection, so continue with the items here
-    replayNextItem();
   if ( !m_runningJobs && m_pendingReplay )
     replayNext();
 }
@@ -155,6 +153,7 @@ void RecursiveMover::replayNextCollection()
       return;
     } else {
       //replayNextItem(); - but waiting for the fetch job to finish first
+      m_pendingReplay = true;
       return;
     }
   } else {
