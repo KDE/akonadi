@@ -286,7 +286,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         } else if ( destination.resource() == q_ptr->identifier() ) { // moved to us
           scheduler->taskDone(); // stop change replay for now
           RecursiveMover *mover = new RecursiveMover( this );
-          mover->setCollection( collection );
+          mover->setCollection( collection, destination );
           scheduler->scheduleMoveReplay( collection, mover );
           scheduler->scheduleChangeReplay(); // continue with the remaining change replay
         }

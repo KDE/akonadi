@@ -41,7 +41,7 @@ class RecursiveMover : public KCompositeJob
     explicit RecursiveMover(AgentBasePrivate* parent);
 
     /// Set the collection that is actually moved.
-    void setCollection( const Akonadi::Collection &collection );
+    void setCollection( const Akonadi::Collection &collection, const Akonadi::Collection &parentCollection );
 
     virtual void start();
 
@@ -67,6 +67,8 @@ class RecursiveMover : public KCompositeJob
     Collection m_movedCollection;
     /// sorted queue of collections still to be processed
     Collection::List m_pendingCollections;
+    /// holds up-to-date full collection objects, used for e.g. having proper parent collections for collectionAdded
+    QHash<Collection::Id, Collection> m_collections;
     Item::List m_pendingItems;
 
     Collection m_currentCollection;
