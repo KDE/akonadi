@@ -65,6 +65,7 @@ class RecursiveMover : public KCompositeJob
   private:
     AgentBasePrivate* m_agentBase;
     Collection m_movedCollection;
+    /// sorted queue of collections still to be processed
     Collection::List m_pendingCollections;
     Item::List m_pendingItems;
 
