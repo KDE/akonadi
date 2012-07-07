@@ -288,7 +288,6 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
           RecursiveMover *mover = new RecursiveMover( this );
           mover->setCollection( collection, destination );
           scheduler->scheduleMoveReplay( collection, mover );
-          scheduler->scheduleChangeReplay(); // continue with the remaining change replay
         }
         return;
       }
