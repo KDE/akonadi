@@ -53,9 +53,26 @@ void RecursiveMover::collectionListResult(KJob* job)
   if ( job->error() )
     return; // errror handling is in the base class
 
+  // build a parent -> children map for the following topological sorting
+  CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
+  QHash<Collection::Id, Collection::List> colTree;
+  foreach ( const Collection &col, fetchJob->collections() ) {
+    colTree[col.parentCollection().id()] << col;
+  }
+
+  // topological sort; BFS traversal of the tree
   m_pendingCollections.push_back( m_movedCollection );
-  // TODO: topological sort
-  m_pendingCollections.append( m_pendingCollections );
+  QQueue<Collection> toBeProcessed;
+  toBeProcessed.enqueue( m_movedCollection );
+  while ( !toBeProcessed.isEmpty() ) {
+    const Collection col = toBeProcessed.dequeue();
+    const Collection::List kids = colTree.value( col.id() );
+    if ( kids.isEmpty() )
+      continue;
+    m_pendingCollections.append( kids );
+    foreach ( const Collection &kid, kids )
+      toBeProcessed.enqueue( kid );
+  }
 
   replayNextCollection();
 }
