@@ -204,6 +204,8 @@ void RecursiveMover::replayNext()
     return;
   }
 
+  m_pendingReplay = false;
+
   if ( m_currentCollection.isValid() )
     replayNextItem();
   else
