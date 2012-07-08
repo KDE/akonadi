@@ -53,7 +53,7 @@ void RecursiveMover::collectionListResult( KJob *job )
   --m_runningJobs;
 
   if ( job->error() )
-    return; // errror handling is in the base class
+    return; // error handling is in the base class
 
   // build a parent -> children map for the following topological sorting
   // while we are iterating anyway, also fill m_collections here
@@ -107,7 +107,7 @@ void RecursiveMover::itemListResult( KJob *job )
   --m_runningJobs;
 
   if ( job->error() )
-    return; // errror handling is in the base class
+    return; // error handling is in the base class
 
   foreach ( const Item &item, qobject_cast<ItemFetchJob*>( job )->items() ) {
     if ( item.remoteId().isEmpty() )
@@ -124,7 +124,7 @@ void RecursiveMover::itemFetchResult( KJob *job )
   --m_runningJobs;
 
   if ( job->error() )
-    return; // errror handling is in the base class
+    return; // error handling is in the base class
 
   ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( fetchJob->items().size() == 1 ) {
