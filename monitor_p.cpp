@@ -370,7 +370,7 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
   if ( !sourceWatched && !destWatched )
     return false;
 
-  if ( sourceWatched && destWatched || (!collectionMoveTranslationEnabled && msg.type() == NotificationMessage::Collection) ) {
+  if ( ( sourceWatched && destWatched ) || ( !collectionMoveTranslationEnabled && msg.type() == NotificationMessage::Collection ) ) {
     bool appended = false;
     NotificationMessage::appendAndCompress( notificationQueue, msg, &appended );
     return appended;

@@ -148,8 +148,8 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void changeCommittedResult( KJob* job );
 
-    void slotRecursiveMoveReplay( RecursiveMover* mover );
-    void slotRecursiveMoveReplayResult( KJob* job );
+    void slotRecursiveMoveReplay( RecursiveMover *mover );
+    void slotRecursiveMoveReplayResult( KJob *job );
 
     void slotSessionReconnected()
     {
@@ -776,7 +776,7 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )
     q->cancelTask();
 }
 
-void ResourceBasePrivate::slotRecursiveMoveReplay(RecursiveMover* mover)
+void ResourceBasePrivate::slotRecursiveMoveReplay( RecursiveMover *mover )
 {
   Q_Q( ResourceBase );
   Q_ASSERT( mover );
@@ -786,7 +786,7 @@ void ResourceBasePrivate::slotRecursiveMoveReplay(RecursiveMover* mover)
   mover->start();
 }
 
-void ResourceBasePrivate::slotRecursiveMoveReplayResult(KJob* job)
+void ResourceBasePrivate::slotRecursiveMoveReplayResult( KJob *job )
 {
   Q_Q( ResourceBase );
   m_recursiveMover = 0;

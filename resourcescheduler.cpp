@@ -161,13 +161,13 @@ void ResourceScheduler::scheduleChangeReplay()
   scheduleNext();
 }
 
-void ResourceScheduler::scheduleMoveReplay( const Collection &movedCollection, RecursiveMover* mover )
+void ResourceScheduler::scheduleMoveReplay( const Collection &movedCollection, RecursiveMover *mover )
 {
   Task t;
   t.type = RecursiveMoveReplay;
   t.collection = movedCollection;
   t.argument = QVariant::fromValue( mover );
-  TaskList& queue = queueForTaskType( t.type );
+  TaskList &queue = queueForTaskType( t.type );
 
   if ( queue.contains( t ) || mCurrentTask == t )
     return;

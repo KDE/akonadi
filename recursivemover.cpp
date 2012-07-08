@@ -34,22 +34,22 @@ void RecursiveMover::start()
 {
   Q_ASSERT( receivers(SIGNAL(result(KJob*))) );
 
-  CollectionFetchJob* job = new CollectionFetchJob( m_movedCollection, CollectionFetchJob::Recursive, this );
+  CollectionFetchJob *job = new CollectionFetchJob( m_movedCollection, CollectionFetchJob::Recursive, this );
   connect( job, SIGNAL(finished(KJob*)), SLOT(collectionListResult(KJob*)) );
   addSubjob( job );
   ++m_runningJobs;
 }
 
-void RecursiveMover::setCollection( const Collection& collection, const Collection& parentCollection )
+void RecursiveMover::setCollection( const Collection &collection, const Collection &parentCollection )
 {
   m_movedCollection = collection;
   m_collections.insert( collection.id(), m_movedCollection );
   m_collections.insert( parentCollection.id(), parentCollection );
 }
 
-void RecursiveMover::collectionListResult(KJob* job)
+void RecursiveMover::collectionListResult( KJob *job )
 {
-  Q_ASSERT(m_pendingCollections.isEmpty());
+  Q_ASSERT( m_pendingCollections.isEmpty() );
   --m_runningJobs;
 
   if ( job->error() )
@@ -57,7 +57,7 @@ void RecursiveMover::collectionListResult(KJob* job)
 
   // build a parent -> children map for the following topological sorting
   // while we are iterating anyway, also fill m_collections here
-  CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
+  CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
   QHash<Collection::Id, Collection::List> colTree;
   foreach ( const Collection &col, fetchJob->collections() ) {
     colTree[col.parentCollection().id()] << col;
@@ -70,18 +70,18 @@ void RecursiveMover::collectionListResult(KJob* job)
   toBeProcessed.enqueue( m_movedCollection );
   while ( !toBeProcessed.isEmpty() ) {
     const Collection col = toBeProcessed.dequeue();
-    const Collection::List kids = colTree.value( col.id() );
-    if ( kids.isEmpty() )
+    const Collection::List children = colTree.value( col.id() );
+    if ( children.isEmpty() )
       continue;
-    m_pendingCollections.append( kids );
-    foreach ( const Collection &kid, kids )
-      toBeProcessed.enqueue( kid );
+    m_pendingCollections.append( children );
+    foreach ( const Collection &child, children )
+      toBeProcessed.enqueue( child );
   }
 
   replayNextCollection();
 }
 
-void RecursiveMover::collectionFetchResult(KJob *job)
+void RecursiveMover::collectionFetchResult( KJob *job )
 {
   Q_ASSERT( m_currentCollection.isValid() );
   --m_runningJobs;
@@ -89,7 +89,7 @@ void RecursiveMover::collectionFetchResult(KJob *job)
   if ( job->error() )
     return; // error handling is in the base class
 
-  CollectionFetchJob* fetchJob = qobject_cast<CollectionFetchJob*>( job );
+  CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
   if ( fetchJob->collections().size() == 1 ) {
     m_currentCollection = fetchJob->collections().first();
     m_currentCollection.setParentCollection( m_collections.value( m_currentCollection.parentCollection().id() ) );
@@ -102,7 +102,7 @@ void RecursiveMover::collectionFetchResult(KJob *job)
     replayNext();
 }
 
-void RecursiveMover::itemListResult(KJob* job)
+void RecursiveMover::itemListResult( KJob *job )
 {
   --m_runningJobs;
 
@@ -118,7 +118,7 @@ void RecursiveMover::itemListResult(KJob* job)
     replayNext();
 }
 
-void RecursiveMover::itemFetchResult(KJob* job)
+void RecursiveMover::itemFetchResult( KJob *job )
 {
   Q_ASSERT( m_currentAction == None );
   --m_runningJobs;
@@ -126,7 +126,7 @@ void RecursiveMover::itemFetchResult(KJob* job)
   if ( job->error() )
     return; // errror handling is in the base class
 
-  ItemFetchJob* fetchJob = qobject_cast<ItemFetchJob*>( job );
+  ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
   if ( fetchJob->items().size() == 1 ) {
     m_currentAction = AddItem;
     m_agentBase->itemAdded( fetchJob->items().first(), m_currentCollection );
@@ -142,7 +142,7 @@ void RecursiveMover::replayNextCollection()
   if ( !m_pendingCollections.isEmpty() ) {
 
     m_currentCollection = m_pendingCollections.takeFirst();
-    ItemFetchJob* job = new ItemFetchJob( m_currentCollection, this );
+    ItemFetchJob *job = new ItemFetchJob( m_currentCollection, this );
     connect( job, SIGNAL(result(KJob*)), SLOT(itemListResult(KJob*)));
     addSubjob( job );
     ++m_runningJobs;
@@ -172,7 +172,7 @@ void RecursiveMover::replayNextItem()
   } else {
     Q_ASSERT( m_currentAction == None );
     m_currentItem = m_pendingItems.takeFirst();
-    ItemFetchJob* job = new ItemFetchJob( m_currentItem, this );
+    ItemFetchJob *job = new ItemFetchJob( m_currentItem, this );
     job->fetchScope().fetchFullPayload();
     connect( job, SIGNAL(result(KJob*)), SLOT(itemFetchResult(KJob*)) );
     addSubjob( job );
