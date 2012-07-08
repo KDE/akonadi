@@ -156,7 +156,7 @@ class ResourceScheduler : public QObject
     /**
      * Schedule a recursive move replay.
      */
-    void scheduleMoveReplay( const Collection &movedCollection, RecursiveMover* mover );
+    void scheduleMoveReplay( const Collection &movedCollection, RecursiveMover *mover );
 
     /**
       Returns true if no tasks are running or in the queue.

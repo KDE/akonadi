@@ -48,7 +48,7 @@ class RecursiveMover : public KCompositeJob
     /// Call once the last replayed change has been processed.
     void changeProcessed();
 
-  public slots:
+  public Q_SLOTS:
     /// Trigger the next change replay, will call emitResult() once everything has been replayed
     void replayNext();
 
@@ -56,14 +56,14 @@ class RecursiveMover : public KCompositeJob
     void replayNextCollection();
     void replayNextItem();
 
-  private slots:
-    void collectionListResult(KJob* job);
-    void collectionFetchResult(KJob* job);
-    void itemListResult(KJob* job);
-    void itemFetchResult(KJob* job);
+  private Q_SLOTS:
+    void collectionListResult( KJob *job );
+    void collectionFetchResult( KJob *job );
+    void itemListResult( KJob *job );
+    void itemFetchResult( KJob *job );
 
   private:
-    AgentBasePrivate* m_agentBase;
+    AgentBasePrivate *m_agentBase;
     Collection m_movedCollection;
     /// sorted queue of collections still to be processed
     Collection::List m_pendingCollections;
