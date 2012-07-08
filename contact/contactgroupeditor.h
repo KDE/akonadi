@@ -120,6 +120,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
+    void groupNameIsValid(bool isValid);
+
   public Q_SLOTS:
     /**
      * Loads the contact @p group into the editor.

@@ -46,7 +46,9 @@ class ContactGroupEditorDialog::Private
 
     void slotGroupNameChanged( const QString& name )
     {
-      q->button( Ok )->setEnabled( !name.isEmpty() );
+      bool isValid = !(name.contains(QLatin1Char('@')) || name.contains(QLatin1Char('.')));
+      q->button( Ok )->setEnabled( !name.isEmpty() && isValid );
+      mEditor->groupNameIsValid(isValid);
     }
 
     ContactGroupEditorDialog *q;
