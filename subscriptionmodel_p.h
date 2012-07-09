@@ -58,6 +58,11 @@ class SubscriptionModel : public CollectionModel
     Collection::List subscribed() const;
     Collection::List unsubscribed() const;
 
+    /**
+     * @since: 4.9
+     */
+    void showHiddenCollection(bool showHidden);
+
   signals:
     /**
       Emitted when the collection model is fully loaded.

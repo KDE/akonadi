@@ -60,6 +60,11 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
      */
     ~SubscriptionDialog();
 
+    /**
+     * @since 4.9
+     */
+    void showHiddenCollection(bool showHidden);
+
   private:
     class Private;
     Private* const d;
