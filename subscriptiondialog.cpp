@@ -126,6 +126,11 @@ SubscriptionDialog::SubscriptionDialog(const QStringList& mimetypes, QWidget * p
   init( mimetypes );
 }
 
+void SubscriptionDialog::showHiddenCollection(bool showHidden)
+{
+  d->model->showHiddenCollection(showHidden);
+}
+
 void SubscriptionDialog::init( const QStringList &mimetypes )
 {
   enableButtonOk( false );

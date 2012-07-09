@@ -882,6 +882,7 @@ class StandardActionManager::Private
     void slotLocalSubscription()
     {
       SubscriptionDialog* dlg = new SubscriptionDialog( mMimeTypeFilter, parentWidget );
+      dlg->showHiddenCollection(true);
       dlg->show();
     }
 

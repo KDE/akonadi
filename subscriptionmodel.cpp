@@ -37,10 +37,11 @@ using namespace Akonadi;
 class SubscriptionModel::Private
 {
   public:
-    Private( SubscriptionModel* parent ) : q( parent ) {}
+    Private( SubscriptionModel* parent ) : q( parent ), showHiddenCollection(false) {}
     SubscriptionModel* q;
     QHash<Collection::Id, bool> subscriptions;
     QSet<Collection::Id> changes;
+    bool showHiddenCollection;
 
     Collection::List changedSubscriptions( bool subscribed )
     {
@@ -129,7 +130,15 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
   } else {
     const Collection::Id collectionId = index.data( CollectionIdRole ).toLongLong();
     const Collection collection = collectionForId( collectionId );
-    return collection.hasAttribute<EntityHiddenAttribute>() ? QVariant() : CollectionModel::data( index, role );
+    if( collection.hasAttribute<EntityHiddenAttribute>() ) {
+      if(d->showHiddenCollection) {
+        return CollectionModel::data( index, role );
+      } else {
+        return QVariant();
+      }
+    } else {
+      return CollectionModel::data( index, role );
+    }
   }
 }
 
@@ -166,6 +175,11 @@ Akonadi::Collection::List SubscriptionModel::subscribed() const
 Akonadi::Collection::List SubscriptionModel::unsubscribed() const
 {
   return d->changedSubscriptions( false );
+}
+
+void SubscriptionModel::showHiddenCollection(bool showHidden)
+{
+  d->showHiddenCollection = showHidden;
 }
 
 #include "subscriptionmodel_p.moc"
