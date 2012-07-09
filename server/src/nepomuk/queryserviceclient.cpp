@@ -123,6 +123,7 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_serviceRegistered(const QSt
 void Nepomuk::Query::QueryServiceClient::Private::_k_serviceUnregistered(const QString &service)
 {
     if (service == QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")) {
+        q->close();
         Q_EMIT q->serviceAvailabilityChanged(false);
     }
 }
