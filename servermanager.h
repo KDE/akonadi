@@ -93,6 +93,38 @@ class AKONADI_EXPORT ServerManager : public QObject
      */
     static State state();
 
+    /** Instance identifier in case of using multiple Akonadi instances in the same
+    * user session, empty string otherwise.
+    */
+    static QString instanceIdentifier();
+
+    /** Returns @c true if we are running in multi-instance mode. */
+    static bool hasInstanceIdentifier();
+
+    enum ServiceType {
+      Server,
+      Control,
+      ControlLock
+    };
+
+    /** Returns the multi-instance aware D-Bus service name for @p serviceType. */
+    static QString serviceName( ServiceType serviceType );
+
+    enum ServiceAgentType {
+      Agent,
+      Resource,
+      Preprocessor
+    };
+
+    /** Returns the multi-instance aware D-Bus service name for @p agentType with @p identifier. */
+    static QString agentServiceName( ServiceAgentType agentType, const QString &identifier );
+
+    /**
+     * Appends the multi-instance namespace if required (with '_' as separator).
+     * Use whenever a multi-instance safe name is required (configfiles, identifiers, ...).
+     */
+    static QString addNamespace( const QString &string );
+
     /**
      * Returns the singleton instance of this class, for connecting to its
      * signals

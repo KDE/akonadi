@@ -22,6 +22,7 @@
 
 #include "dbusconnectionpool.h"
 #include "preprocessoradaptor.h"
+#include "servermanager.h"
 
 #include <akonadi/itemfetchjob.h>
 
@@ -37,7 +38,7 @@ PreprocessorBasePrivate::PreprocessorBasePrivate( PreprocessorBase *parent )
 
 void PreprocessorBasePrivate::delayedInit()
 {
-  if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName( "Preprocessor" ) ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( ServerManager::agentServiceName( ServerManager::Preprocessor, mId ) ) )
     kFatal() << "Unable to register service at D-Bus: " << DBusConnectionPool::threadConnection().lastError().message();
   AgentBasePrivate::delayedInit();
 }

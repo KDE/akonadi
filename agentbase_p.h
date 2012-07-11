@@ -99,9 +99,6 @@ class AgentBasePrivate : public QObject
 
     AgentBase::Observer *mObserver;
 
-    /** Returns the D-Bus service name supposed to be used by this agent. */
-    QString agentServiceName( const char* agentType ) const;
-
   public Q_SLOTS:
     virtual void itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection );
     virtual void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );

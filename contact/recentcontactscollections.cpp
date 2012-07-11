@@ -26,6 +26,7 @@
 #include <KGlobal>
 
 #include "akonadi/agentinstance.h"
+#include "akonadi/servermanager.h"
 
 using namespace Akonadi;
 
@@ -54,8 +55,14 @@ RecentContactsCollectionsPrivate::~RecentContactsCollectionsPrivate()
   delete mInstance;
 }
 
+static KCoreConfigSkeleton *getConfig( const QString &filename)
+{
+  Settings::instance( ServerManager::addNamespace(filename) );
+  return Settings::self();
+}
+
 RecentContactsCollections::RecentContactsCollections( RecentContactsCollectionsPrivate *dd )
-  : SpecialCollections( Settings::self() ),
+  : SpecialCollections( getConfig(QLatin1String("recentcontactscollectionsrc")) ),
     d( dd )
 {
 }

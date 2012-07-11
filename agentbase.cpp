@@ -198,7 +198,7 @@ void AgentBasePrivate::init()
     Q_ASSERT( mDBusConnection.isConnected() );
   }
 
-  mTracer = new org::freedesktop::Akonadi::Tracer( Internal::serviceName(Internal::Server),
+  mTracer = new org::freedesktop::Akonadi::Tracer( ServerManager::serviceName( ServerManager::Server ),
                                                    QLatin1String( "/tracing" ),
                                                    DBusConnectionPool::threadConnection(), q );
 
@@ -283,7 +283,7 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName("Agent") ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( ServerManager::agentServiceName( ServerManager::Agent, mId ) ) )
     kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
 }
@@ -486,15 +486,6 @@ void AgentBasePrivate::slotResumedFromSuspend()
     slotNetworkStatusChange( Solid::Networking::status() );
 }
 
-QString AgentBasePrivate::agentServiceName( const char *agentType ) const
-{
-  Q_ASSERT( agentType );
-  QString serviceName = QLatin1String( "org.freedesktop.Akonadi." ) + QLatin1String(agentType) + QLatin1Char('.') + mId;
-  if ( Internal::hasInstanceIdentifier() )
-    serviceName += QLatin1Char('.' ) + Internal::instanceIdentifier();
-  return serviceName;
-}
-
 AgentBase::AgentBase( const QString & id )
   : d_ptr( new AgentBasePrivate( this ) )
 {
@@ -538,7 +529,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
   // strip off full path and possible .exe suffix
   const QByteArray catalog = fi.baseName().toLatin1();
 
-  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog, ki18n( "Akonadi Agent" ), KDEPIMLIBS_VERSION,
+  KCmdLineArgs::init( argc, argv, ServerManager::addNamespace( identifier ).toLatin1(), catalog, ki18n( "Akonadi Agent" ), KDEPIMLIBS_VERSION,
                       ki18n( "Akonadi Agent" ) );
 
   KCmdLineOptions options;

@@ -93,7 +93,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !DBusConnectionPool::threadConnection().registerService( agentServiceName("Resource") ) ) {
+      if ( !DBusConnectionPool::threadConnection().registerService( ServerManager::agentServiceName( ServerManager::Resource, mId ) ) ) {
         QString reason = DBusConnectionPool::threadConnection().lastError().message();
         if ( reason.isEmpty() ) {
           reason = QString::fromLatin1( "this service is probably running already." );
@@ -431,7 +431,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   // strip off full path and possible .exe suffix
   const QByteArray catalog = fi.baseName().toLatin1();
 
-  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
+  KCmdLineArgs::init( argc, argv, ServerManager::addNamespace( identifier ).toLatin1(), catalog,
                       ki18nc( "@title application name", "Akonadi Resource" ), KDEPIMLIBS_VERSION,
                       ki18nc( "@title application description", "Akonadi Resource" ) );
 

@@ -23,6 +23,7 @@
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
 #include "monitor_p.h" // For friend ref/deref
+#include "servermanager.h"
 
 #include <KDE/KLocale>
 #include <KDE/KMessageBox>
@@ -76,7 +77,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
   qRegisterMetaType<Collection>();
 
   org::freedesktop::Akonadi::AgentManager *manager =
-           new org::freedesktop::Akonadi::AgentManager( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+           new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( Akonadi::ServerManager::Control ),
                                                         QLatin1String( "/AgentManager" ),
                                                         DBusConnectionPool::threadConnection(), q_ptr );
 

@@ -37,27 +37,11 @@ namespace Internal {
   ClientType clientType();
   void setClientType( ClientType type );
 
-  /** Instance identifier in case of using multiple Akonadi instances in the same
-   * user session, empty string otherwise.
-   */
-  QString instanceIdentifier();
-
-  /** Returns @c true if we are running in multi-instance mode. */
-  bool hasInstanceIdentifier();
-
-  enum ServiceType {
-    Server,
-    Control,
-    ControlLock
-  };
-
-  /** Returns the multi-instance aware D-Bus service name for @p serviceType. */
-  QString serviceName( ServiceType serviceType );
-
   /** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
-   * @note: Does not need to include the "akonadi/" in @p relPath.
-   */
+  * @note: Does not need to include the "akonadi/" in @p relPath.
+  */
   QString xdgSaveDir( const char* resource, const QString &relPath = QString() );
+
 }
 
 }

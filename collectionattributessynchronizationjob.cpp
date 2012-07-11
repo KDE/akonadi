@@ -18,6 +18,7 @@
 #include "collectionattributessynchronizationjob.h"
 #include "dbusconnectionpool.h"
 #include "kjobprivatebase_p.h"
+#include "servermanager.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
@@ -98,7 +99,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     return;
   }
 
-  interface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1" ).arg( instance.identifier() ),
+  interface = new QDBusInterface( ServerManager::agentServiceName( ServerManager::Resource, instance.identifier() ),
                                   QString::fromLatin1( "/" ),
                                   QString::fromLatin1( "org.freedesktop.Akonadi.Resource" ),
                                   DBusConnectionPool::threadConnection(), this );

@@ -21,6 +21,7 @@
 #include "util_p.h"
 #include "../dbusconnectionpool.h"
 #include "imapsettings.h"
+#include "akonadi/servermanager.h"
 
 #include <assert.h>
 #include <kio/jobclasses.h>
@@ -45,7 +46,7 @@ void showJobError( KJob* job )
 OrgKdeAkonadiImapSettingsInterface *createImapSettingsInterface( const QString &ident )
 {
   //NOTE(Andras): from kmail/util.cpp
-  return new OrgKdeAkonadiImapSettingsInterface( QString::fromLatin1("org.freedesktop.Akonadi.Resource.") + ident,
+  return new OrgKdeAkonadiImapSettingsInterface( Akonadi::ServerManager::agentServiceName( Akonadi::ServerManager::Resource, ident ),
                                                  QString::fromLatin1("/Settings"),
                                                  Akonadi::DBusConnectionPool::threadConnection() );
 }
