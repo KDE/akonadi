@@ -127,6 +127,9 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
      */
     Akonadi::Collection defaultCollection( Type type ) const;
 
+    void verifyI18nDefaultCollection( Type type );
+private Q_SLOTS:
+    void slotCollectionModified(KJob*);
   private:
     //@cond PRIVATE
     friend class SpecialMailCollectionsPrivate;
