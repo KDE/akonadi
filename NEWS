@@ -1,3 +1,10 @@
+1.7.95                           11-July-2012
+---------------------------------------------
+- Fix Nepomuk queries getting stuck if Nepomuk service crashes.
+- Fix unecessary remote retrieval of already cached item parts.
+- Reset RID/RREV during cross-resource collection moves.
+- Increase timeout for remote item retrieval.
+
 1.7.90                           08-June-2012
 ---------------------------------------------
 - Fix handling of large SPARQL queries.
