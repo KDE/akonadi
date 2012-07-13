@@ -342,16 +342,14 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
   if ( !db.isOpen() )
     return QVector&lt;<xsl:value-of select="$className"/>&gt;();
 
-  QSqlQuery query( db );
-  QString statement = QLatin1String( "SELECT <xsl:call-template name="column-list"/> FROM " );
-  statement.append( tableName() );
-  query.prepare( statement );
-  if ( !query.exec() ) {
+  QueryBuilder qb( tableName(), QueryBuilder::Select );
+  qb.addColumns( columnNames() );
+  if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of all records from table" &lt;&lt; tableName()
-      &lt;&lt; query.lastError().text();
+      &lt;&lt; qb.query().lastError().text() &lt;&lt; qb.query().lastQuery();
     return QVector&lt;<xsl:value-of select="$className"/>&gt;();
   }
-  return extractResult( query );
+  return extractResult( qb.query() );
 }
 
 QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$className"/>::retrieveFiltered( const QString &amp;key, const QVariant &amp;value )
