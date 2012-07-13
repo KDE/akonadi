@@ -526,40 +526,27 @@ bool <xsl:value-of select="$className"/>::update()
   if ( !db.isOpen() )
     return false;
 
-  QString statement = QLatin1String( "UPDATE " );
-  statement += tableName();
-  statement += QLatin1String( " SET " );
+  QueryBuilder qb( tableName(), QueryBuilder::Update );
 
-  QStringList cols;
-  <xsl:for-each select="column[@name != 'id']">
-    if ( d-&gt;<xsl:value-of select="@name"/>_changed )
-      cols.append( <xsl:value-of select="@name"/>Column() + QLatin1String( " = :<xsl:value-of select="@name"/>" ) );;
-  </xsl:for-each>
-  statement += cols.join( QLatin1String( ", " ) );
-  <xsl:if test="column[@name = 'id']">
-  statement += QLatin1String( " WHERE id = :id" );
-  </xsl:if>
-
-  QSqlQuery query( db );
-  query.prepare( statement );
   <xsl:for-each select="column[@name != 'id']">
     <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
     if ( d-&gt;<xsl:value-of select="@name"/>_changed ) {
       <xsl:if test="$refColumn = 'id'">
       if ( d-&gt;<xsl:value-of select="@name"/> &lt;= 0 )
-        query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), QVariant() );
+        qb.setColumnValue( <xsl:value-of select="@name"/>Column(), QVariant() );
       else
       </xsl:if>
-        query.bindValue( QLatin1String(":<xsl:value-of select="@name"/>"), this-&gt;<xsl:value-of select="@name"/>() );
+      qb.setColumnValue( <xsl:value-of select="@name"/>Column(), this-&gt;<xsl:value-of select="@name"/>() );
     }
   </xsl:for-each>
 
   <xsl:if test="column[@name = 'id']">
-  query.bindValue( QLatin1String(":id"), id() );
+  qb.addValueCondition( QLatin1String("id"), Query::Equals, id() );
   </xsl:if>
-  if ( !query.exec() ) {
+
+  if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during updating record with id" &lt;&lt; id()
-             &lt;&lt; " in table" &lt;&lt; tableName() &lt;&lt; query.lastError().text();
+             &lt;&lt; " in table" &lt;&lt; tableName() &lt;&lt; qb.query().lastError().text();
     return false;
   }
   return true;
