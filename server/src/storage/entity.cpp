@@ -123,22 +123,13 @@ bool Entity::addToRelationImpl( const QString & tableName, const QString & leftC
   if ( !db.isOpen() )
     return false;
 
-  QString statement = QLatin1String("INSERT INTO ");
-  statement.append( tableName );
-  statement.append( QLatin1String(" ( ") );
-  statement.append( leftColumn );
-  statement.append( QLatin1String(" , ") );
-  statement.append( rightColumn );
-  statement.append( QLatin1String(" ) VALUES ( :left, :right )") );
+  QueryBuilder qb( tableName, QueryBuilder::Insert );
+  qb.setColumnValue( leftColumn, leftId );
+  qb.setColumnValue( rightColumn, rightId );
 
-  QSqlQuery query( db );
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":left"), leftId );
-  query.bindValue( QLatin1String(":right"), rightId );
-
-  if ( !query.exec() ) {
+  if ( !qb.exec() ) {
     akDebug() << "Error during adding a record to table" << tableName
-             << query.lastError().text();
+             << qb.query().lastError().text();
     return false;
   }
 
