@@ -22,6 +22,7 @@
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
+#include "storage/querycache.h"
 #endif
 
 #include <QSqlRecord>
@@ -274,7 +275,13 @@ bool QueryBuilder::exec()
   }
 
 #ifndef QUERYBUILDER_UNITTEST
-  mQuery.prepare( statement );
+  if ( QueryCache::contains( statement ) ) {
+    mQuery = QueryCache::query( statement );
+  } else {
+    mQuery.prepare( statement );
+    QueryCache::insert( statement, mQuery );
+  }
+
   //too heavy debug info but worths to have from time to time
 //   akDebug() << "Executing query" << statement;
   for ( int i = 0; i < mBindValues.count(); ++i )
