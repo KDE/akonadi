@@ -583,7 +583,9 @@ class StandardActionManager::Private
       }
       if ( name.startsWith( QLatin1Char('.') ) ||
            name.endsWith( QLatin1Char('.') ) ) {
-          kDebug()<<" We can not add \".\" at begin or end of folder name ";
+        KMessageBox::error( parentWidget,
+                            i18n( "We can not add \".\" at begin or end of folder name." ),
+                            i18n( "Create new folder error" ) );
         return;
       }
 
