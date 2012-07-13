@@ -403,27 +403,22 @@ QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt; <xsl:value-of select="$c
   if ( !db.isOpen() )
     return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
 
-  QSqlQuery query( db );
-  QString statement = QLatin1String( "SELECT " );
+  QueryBuilder qb( QLatin1String("<xsl:value-of select="$rightSideTable"/>"), QueryBuilder::Select );
   <xsl:for-each select="/database/table[@name = $rightSideEntity]/column">
-    statement.append( QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@name"/>" ) );
-    <xsl:if test="position() != last()">
-    statement.append( QLatin1String(", ") );
-    </xsl:if>
+    qb.addColumn( QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@name"/>" ) );
   </xsl:for-each>
-  statement.append( QLatin1String(" FROM <xsl:value-of select="$rightSideTable"/>, <xsl:value-of select="$relationName"/>") );
-  statement.append( QLatin1String(" WHERE <xsl:value-of select="$relationName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/> = :key") );
-  statement.append( QLatin1String(" AND <xsl:value-of select="$relationName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/> = <xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@column2"/>") );
+  qb.addJoin( QueryBuilder::InnerJoin, QLatin1String("<xsl:value-of select="$relationName"/>"),
+              QLatin1String("<xsl:value-of select="$relationName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>"),
+              QLatin1String("<xsl:value-of select="$rightSideTable"/>.<xsl:value-of select="@column2"/>") );
+  qb.addValueCondition( QLatin1String("<xsl:value-of select="$relationName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>"), Query::Equals, id() );
 
-  query.prepare( statement );
-  query.bindValue( QLatin1String(":key"), id() );
-  if ( !query.exec() ) {
+  if ( !qb.exec() ) {
     akDebug() &lt;&lt; "Error during selection of records from table <xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation"
-      &lt;&lt; query.lastError().text();
+      &lt;&lt; qb.query().lastError().text();
     return QVector&lt;<xsl:value-of select="$rightSideClass"/>&gt;();
   }
 
-  return <xsl:value-of select="$rightSideClass"/>::extractResult( query );
+  return <xsl:value-of select="$rightSideClass"/>::extractResult( qb.query() );
 }
 
 // manipulate n:m relations
