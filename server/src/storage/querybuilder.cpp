@@ -154,7 +154,7 @@ bool QueryBuilder::exec()
       if ( mDistinct )
         statement += QLatin1String( "DISTINCT " );
       if ( mDatabaseType == Virtuoso && mLimit > 0 )
-        statement += QString::fromLatin1( "TOP %1 " ).arg( mLimit );
+        statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
       Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
       statement += QLatin1String(" FROM ");
@@ -271,7 +271,7 @@ bool QueryBuilder::exec()
   }
 
   if ( mLimit > 0 && mDatabaseType != Virtuoso ) {
-    statement += QString::fromLatin1( " LIMIT %1" ).arg( mLimit );
+    statement += QLatin1Literal( " LIMIT " ) + QString::number( mLimit );
   }
 
 #ifndef QUERYBUILDER_UNITTEST
@@ -286,7 +286,7 @@ bool QueryBuilder::exec()
 //   akDebug() << "Executing query" << statement;
   for ( int i = 0; i < mBindValues.count(); ++i )
   {
-    mQuery.bindValue( QString::fromLatin1( ":%1" ).arg( i ), mBindValues[i] );
+    mQuery.bindValue( QLatin1Char( ':' ) + QString::number( i ), mBindValues[i] );
 //     akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
   if ( !mQuery.exec() ) {
@@ -321,7 +321,7 @@ void QueryBuilder::addAggregation(const QString& col, const QString& aggregate)
 QString QueryBuilder::bindValue(const QVariant & value)
 {
   mBindValues << value;
-  return QString::fromLatin1( ":%1" ). arg( mBindValues.count() - 1 );
+  return QLatin1Char( ':' ) + QString::number( mBindValues.count() - 1 );
 }
 
 QString QueryBuilder::buildWhereCondition(const Query::Condition & cond)
