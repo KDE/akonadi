@@ -250,8 +250,3 @@ bool ItemRetriever::exec()
 
   return true;
 }
-
-QString ItemRetriever::driverName()
-{
-  return mConnection->storageBackend()->database().driverName();
-}

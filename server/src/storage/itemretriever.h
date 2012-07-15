@@ -65,9 +65,6 @@ class ItemRetriever
     bool exec();
 
   private:
-    /** Convenience method which returns the database driver name */
-    QString driverName();
-
     QSqlQuery buildQuery() const;
 
     ImapSet mItemSet;
