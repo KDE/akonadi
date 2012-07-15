@@ -47,9 +47,9 @@ bool AkonadiStarter::start()
   akDebug() << "Starting Akonadi Server...";
 
   QStringList serverArgs;
-  if ( !AkApplication::instanceIdentifier().isEmpty() )
+  if ( AkApplication::hasInstanceIdentifier() )
     serverArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
-  
+
   const bool ok = QProcess::startDetached( QLatin1String("akonadi_control"), serverArgs );
   if ( !ok ) {
     akError() << "Error: unable to execute binary akonadi_control";

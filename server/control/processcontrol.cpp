@@ -49,7 +49,7 @@ ProcessControl::ProcessControl( QObject *parent )
            this, SLOT(slotFinished(int,QProcess::ExitStatus)) );
   mProcess.setProcessChannelMode( QProcess::ForwardedChannels );
 
-  if ( !AkApplication::instanceIdentifier().isEmpty() ) {
+  if ( AkApplication::hasInstanceIdentifier() ) {
     QProcessEnvironment env = mProcess.processEnvironment();
     if ( env.isEmpty() )
       env = QProcessEnvironment::systemEnvironment();

@@ -78,7 +78,7 @@ AgentManager::AgentManager( QObject *parent )
   mAgentServerEnabled = settings.value( QLatin1String("AgentServer/Enabled"), enableAgentServerDefault ).toBool();
 
   QStringList serviceArgs;
-  if ( !AkApplication::instanceIdentifier().isEmpty() )
+  if ( AkApplication::hasInstanceIdentifier() )
     serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
 
   mStorageController = new Akonadi::ProcessControl;

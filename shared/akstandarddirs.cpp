@@ -35,7 +35,7 @@ QString AkStandardDirs::configFile(const QString& configFile, Akonadi::XdgBaseDi
 
   QString path = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/") + configFile );
   // HACK: when using instance namespaces, ignore the non-namespaced file
-  if ( !AkApplication::instanceIdentifier().isEmpty() && path.startsWith( XdgBaseDirs::homePath("config") ) )
+  if ( AkApplication::hasInstanceIdentifier() && path.startsWith( XdgBaseDirs::homePath("config") ) )
     path.clear();
 
   if ( path.isEmpty() ) {
@@ -71,7 +71,7 @@ QString AkStandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
 QString AkStandardDirs::saveDir(const char* resource, const QString& relPath)
 {
   QString fullRelPath = QLatin1String("akonadi");
-  if ( !AkApplication::instanceIdentifier().isEmpty() )
+  if ( AkApplication::hasInstanceIdentifier() )
     fullRelPath += QLatin1String("/instance/") + AkApplication::instanceIdentifier();
   if ( !relPath.isEmpty() )
     fullRelPath += QLatin1Char('/') + relPath;

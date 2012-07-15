@@ -120,7 +120,7 @@ qint64 DbConfig::sizeThreshold() const
 
 QString DbConfig::defaultDatabaseName()
 {
-  if (AkApplication::instanceIdentifier().isEmpty())
+  if ( !AkApplication::hasInstanceIdentifier() )
     return QLatin1String("akonadi");
   return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier();
 }
