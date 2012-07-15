@@ -93,35 +93,59 @@ class AKONADI_EXPORT ServerManager : public QObject
      */
     static State state();
 
-    /** Instance identifier in case of using multiple Akonadi instances in the same
-    * user session, empty string otherwise.
-    */
+    /**
+     * Returns the identifier of the Akonadi instance we are connected to. This is usually
+     * an empty string (representing the default instance), unless you have explicitly set
+     * the AKONADI_INSTANCE environment variable to connect to a different one.
+     * @since 4.10
+     */
     static QString instanceIdentifier();
 
-    /** Returns @c true if we are running in multi-instance mode. */
+    /**
+     * Returns @c true if we are connected to a non-default Akonadi server instance.
+     * @since 4.10
+     */
     static bool hasInstanceIdentifier();
 
+    /**
+     * Types of known D-Bus services.
+     * @since 4.10
+     */
     enum ServiceType {
       Server,
       Control,
       ControlLock
     };
 
-    /** Returns the multi-instance aware D-Bus service name for @p serviceType. */
+    /**
+     * Returns the namespaced D-Bus service name for @p serviceType.
+     * Use this rather the raw service name strings in order to support usage of a non-default
+     * instance of the Akonadi server.
+     * @since 4.10
+     */
     static QString serviceName( ServiceType serviceType );
 
+    /**
+     * Known agent types.
+     * @since 4.10
+     */
     enum ServiceAgentType {
       Agent,
       Resource,
       Preprocessor
     };
 
-    /** Returns the multi-instance aware D-Bus service name for @p agentType with @p identifier. */
+    /**
+     * Returns the namespaced D-Bus service name for an agent of type @p agentType with agent
+     * identifier @p identifier.
+     * @since 4.10
+     */
     static QString agentServiceName( ServiceAgentType agentType, const QString &identifier );
 
     /**
-     * Appends the multi-instance namespace if required (with '_' as separator).
+     * Adds the multi-instance namespace to @p string if required (with '_' as separator).
      * Use whenever a multi-instance safe name is required (configfiles, identifiers, ...).
+     * @since 4.10
      */
     static QString addNamespace( const QString &string );
 
