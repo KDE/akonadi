@@ -60,14 +60,16 @@ DbInitializer::RelationDescription::RelationDescription()
 
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
-  if ( database.driverName().startsWith( QLatin1String( "QMYSQL" ) ) )
-    return boost::shared_ptr<DbInitializer>( new DbInitializerMySql( database, templateFile ) );
-  if ( database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) )
-    return boost::shared_ptr<DbInitializer>( new DbInitializerSqlite( database, templateFile ) );
-  if ( database.driverName().startsWith( QLatin1String( "QPSQL" ) ) )
-    return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
-  if ( database.driverName().startsWith( QLatin1String( "QODBC" ) ) )
-    return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
+  switch ( DbType::type( database ) ) {
+    case DbType::MySQL:
+      return boost::shared_ptr<DbInitializer>( new DbInitializerMySql( database, templateFile ) );
+    case DbType::Sqlite:
+      return boost::shared_ptr<DbInitializer>( new DbInitializerSqlite( database, templateFile ) );
+    case DbType::PostgreSQL:
+      return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
+    case DbType::Virtuoso:
+      return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
+  }
   akFatal() << database.driverName() << "backend  not supported";
   return boost::shared_ptr<DbInitializer>();
 }

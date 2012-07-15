@@ -127,6 +127,7 @@ set(libakonadiprivate_SRCS
   src/storage/dbinitializer.cpp
   src/storage/dbinitializer_p.cpp
   src/storage/dbupdater.cpp
+  src/storage/dbtype.cpp
   src/storage/itemqueryhelper.cpp
   src/storage/itemretriever.cpp
   src/storage/itemretrievalmanager.cpp

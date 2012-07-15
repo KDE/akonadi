@@ -21,6 +21,7 @@
 #define AKONADI_QUERYBUILDER_H
 
 #include "query.h"
+#include "dbtype.h"
 
 #include <QtCore/QPair>
 #include <QtCore/QString>
@@ -46,14 +47,6 @@ class QueryBuilder
       Insert,
       Update,
       Delete
-    };
-
-    enum DatabaseType {
-      Unknown,
-      Sqlite,
-      MySQL,
-      PostgreSQL,
-      Virtuoso
     };
 
     /**
@@ -90,7 +83,7 @@ class QueryBuilder
       Sets the database which should execute the query. Unfortunately the SQL "standard"
       is not interpreted in the same way everywhere...
     */
-    void setDatabaseType( DatabaseType type );
+    void setDatabaseType( DbType::Type type );
 
     /**
       Join a table to the query.
@@ -227,18 +220,13 @@ class QueryBuilder
     */
     qint64 insertId();
 
-    /**
-      Converts Qt database driver names into database types.
-    */
-    static DatabaseType qsqlDriverNameToDatabaseType( const QString &driverName );
-
   private:
     QString bindValue( const QVariant &value );
     QString buildWhereCondition( const Query::Condition &cond );
 
   private:
     QString mTable;
-    DatabaseType mDatabaseType;
+    DbType::Type mDatabaseType;
     QHash<ConditionType, Query::Condition> mRootCondition;
     QSqlQuery mQuery;
     QueryType mType;

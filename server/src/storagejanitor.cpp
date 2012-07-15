@@ -316,24 +316,26 @@ void StorageJanitor::findDirtyObjects()
 
 void StorageJanitor::vacuum()
 {
-  const QString driverName = DataStore::self()->database().driverName();
-  if( ( driverName == QLatin1String( "QMYSQL" ) ) || ( driverName == QLatin1String( "QPSQL" ) ) ) {
+  const DbType::Type dbType = DbType::type( DataStore::self()->database() );
+  if( dbType == DbType::MySQL || dbType == DbType::PostgreSQL ) {
     inform( "vacuuming database, that'll take some time and require a lot of temporary disk space..." );
     Q_FOREACH ( const QString &table, Akonadi::allDatabaseTables() ) {
       inform( QString::fromLatin1( "optimizing table %1..." ).arg( table ) );
 
       QString queryStr;
-      if ( driverName == QLatin1String( "QMYSQL" ) ) {
+      if ( dbType == DbType::MySQL ) {
         queryStr = QLatin1Literal( "OPTIMIZE TABLE " ) + table;
-      } else {
+      } else if ( dbType == DbType::PostgreSQL ) {
         queryStr = QLatin1Literal( "VACUUM FULL ANALYZE " ) + table;
+      } else {
+        continue;
       }
       QSqlQuery q( DataStore::self()->database() );
       if ( !q.exec( queryStr ) ) {
         akError() << "failed to optimize table" << table << ":" << q.lastError().text();
       }
     }
-      inform( "vacuum done" );
+    inform( "vacuum done" );
   } else {
     inform( "Vacuum not supported for this database backend." );
   }

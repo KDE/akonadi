@@ -18,6 +18,7 @@
 */
 
 #include "dbupdater.h"
+#include "dbtype.h"
 #include "entities.h"
 #include "akdebug.h"
 
@@ -149,14 +150,16 @@ bool DbUpdater::updateApplicable( const QString &backends ) const
   const QStringList matchingBackends = backends.split( QLatin1Char( ',' ) );
 
   QString currentBackend;
-  if ( m_database.driverName() == QLatin1String( "QMYSQL" ) )
-    currentBackend = QLatin1String( "mysql" );
-  else if ( m_database.driverName() == QLatin1String( "QPSQL" ) )
-    currentBackend = QLatin1String( "psql" );
-  else if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) // QSQLITE or QSQLITE3
-    currentBackend = QLatin1String( "sqlite" );
-  else if ( m_database.driverName() == QLatin1String( "QODBC" ) )
-    currentBackend = QLatin1String( "odbc" );
+  switch ( DbType::type( m_database ) ) {
+    case DbType::MySQL:
+      currentBackend = QLatin1String( "mysql" ); break;
+    case DbType::PostgreSQL:
+      currentBackend = QLatin1String( "psql" ); break;
+    case DbType::Sqlite:
+      currentBackend = QLatin1String( "sqlite" ); break;
+    case DbType::Virtuoso:
+      currentBackend = QLatin1String( "odbc" ); break;
+  }
 
   return matchingBackends.contains( currentBackend );
 }

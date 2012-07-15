@@ -94,14 +94,14 @@ void QueryBuilderTest::testQueryBuilder_data()
   QTest::newRow( "where in" ) << mBuilders.count() << QString( "SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2 ) )" ) << bindVals;
 
   qb = QueryBuilder( "table", QueryBuilder::Select );
-  qb.setDatabaseType( QueryBuilder::MySQL );
+  qb.setDatabaseType( DbType::MySQL );
   qb.addColumn( "col1" );
   qb.setLimit( 1 );
   mBuilders << qb;
   QTest::newRow( "SELECT with LIMIT" ) << mBuilders.count() << QString( "SELECT col1 FROM table LIMIT 1" ) << QList<QVariant>();
 
   qb = QueryBuilder( "table", QueryBuilder::Select );
-  qb.setDatabaseType( QueryBuilder::Virtuoso );
+  qb.setDatabaseType( DbType::Virtuoso );
   qb.addColumn( "col1" );
   qb.setLimit( 1 );
   mBuilders << qb;
@@ -115,7 +115,7 @@ void QueryBuilderTest::testQueryBuilder_data()
   QTest::newRow( "update" ) << mBuilders.count() << QString( "UPDATE table SET col1 = :0" ) << bindVals;
 
   qb = QueryBuilder( "table1", QueryBuilder::Update );
-  qb.setDatabaseType( QueryBuilder::MySQL );
+  qb.setDatabaseType( DbType::MySQL );
   qb.addJoin( QueryBuilder::InnerJoin, "table2", "table1.id", "table2.id" );
   qb.addJoin( QueryBuilder::InnerJoin, "table3", "table1.id", "table3.id" );
   qb.setColumnValue( "col1", QString( "bla" ) );
@@ -126,7 +126,7 @@ void QueryBuilderTest::testQueryBuilder_data()
       << bindVals;
 
   qb = QueryBuilder( "table1", QueryBuilder::Update );
-  qb.setDatabaseType( QueryBuilder::PostgreSQL );
+  qb.setDatabaseType( DbType::PostgreSQL );
   qb.addJoin( QueryBuilder::InnerJoin, "table2", "table1.id", "table2.id" );
   qb.addJoin( QueryBuilder::InnerJoin, "table3", "table1.id", "table3.id" );
   qb.setColumnValue( "col1", QString( "bla" ) );
@@ -148,7 +148,7 @@ void QueryBuilderTest::testQueryBuilder_data()
   QTest::newRow( "insert multi column" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1)" ) << bindVals;
 
   qb = QueryBuilder( "table", QueryBuilder::Insert );
-  qb.setDatabaseType( QueryBuilder::PostgreSQL );
+  qb.setDatabaseType( DbType::PostgreSQL );
   qb.setColumnValue( "col1", QString( "bla" ) );
   qb.setColumnValue( "col2", 5 );
   mBuilders << qb;
@@ -188,7 +188,7 @@ void QueryBuilderTest::testQueryBuilder_data()
   {
     /// SELECT with JOINS
     QueryBuilder qbTpl = QueryBuilder( "table1", QueryBuilder::Select );
-    qbTpl.setDatabaseType( QueryBuilder::MySQL );
+    qbTpl.setDatabaseType( DbType::MySQL );
     qbTpl.addColumn( "col" );
     bindVals.clear();
 
@@ -226,19 +226,19 @@ void QueryBuilderTest::testQueryBuilder_data()
     bindVals << QVariant( 42 ) << QVariant( "foo" );
 
     qb = qbTpl;
-    qb.setDatabaseType( QueryBuilder::MySQL );
+    qb.setDatabaseType( DbType::MySQL );
     mBuilders << qb;
     QTest::newRow( "update inner join MySQL" ) << mBuilders.count()
         << QString( "UPDATE table1, table2 SET col = :0 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
 
     qb = qbTpl;
-    qb.setDatabaseType( QueryBuilder::PostgreSQL );
+    qb.setDatabaseType( DbType::PostgreSQL );
     mBuilders << qb;
     QTest::newRow( "update inner join PSQL" ) << mBuilders.count()
         << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( table2.answer <> ( :1 ) AND ( table2.t1_id = table1.id ) )" ) << bindVals;
 
     qb = qbTpl;
-    qb.setDatabaseType( QueryBuilder::Sqlite );
+    qb.setDatabaseType( DbType::Sqlite );
     mBuilders << qb;
     QTest::newRow( "update inner join SQLite" ) << mBuilders.count()
         << QString( "UPDATE table1 SET col = :0 FROM table2 WHERE ( ( SELECT table2.answer WHERE table2.t1_id = table1.id ) <> ( :2 ) )" ) << bindVals;

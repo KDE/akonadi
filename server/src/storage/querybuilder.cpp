@@ -85,10 +85,10 @@ static QString sortOrderToString( Query::SortOrder order )
 QueryBuilder::QueryBuilder( const QString& table, QueryBuilder::QueryType type ) :
     mTable( table ),
 #ifndef QUERYBUILDER_UNITTEST
-    mDatabaseType( qsqlDriverNameToDatabaseType( DataStore::self()->database().driverName() ) ),
+    mDatabaseType( DbType::type( DataStore::self()->database() ) ),
     mQuery( DataStore::self()->database() ),
 #else
-    mDatabaseType( Unknown ),
+    mDatabaseType( DbType::Unknown ),
 #endif
     mType( type ),
     mLimit( -1 ),
@@ -96,7 +96,7 @@ QueryBuilder::QueryBuilder( const QString& table, QueryBuilder::QueryType type )
 {
 }
 
-void QueryBuilder::setDatabaseType( DatabaseType type )
+void QueryBuilder::setDatabaseType( DbType::Type type )
 {
   mDatabaseType = type;
 }
@@ -153,7 +153,7 @@ bool QueryBuilder::exec()
       statement += QLatin1String( "SELECT " );
       if ( mDistinct )
         statement += QLatin1String( "DISTINCT " );
-      if ( mDatabaseType == Virtuoso && mLimit > 0 )
+      if ( mDatabaseType == DbType::Virtuoso && mLimit > 0 )
         statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
       Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
       statement += mColumns.join( QLatin1String( ", " ) );
@@ -189,7 +189,7 @@ bool QueryBuilder::exec()
       statement += QLatin1String(") VALUES (");
       statement += vals.join( QLatin1String( ", " ) );
       statement += QLatin1Char(')');
-      if ( mDatabaseType == PostgreSQL )
+      if ( mDatabaseType == DbType::PostgreSQL )
         statement += QLatin1String( " RETURNING id" );
       break;
     }
@@ -206,7 +206,7 @@ bool QueryBuilder::exec()
       statement += QLatin1String( "UPDATE " );
       statement += mTable;
 
-      if ( mDatabaseType == MySQL && !mJoinedTables.isEmpty() ) {
+      if ( mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty() ) {
         // for mysql we list all tables directly
         statement += QLatin1String( ", " );
         statement += mJoinedTables.join( QLatin1String( ", " ) );
@@ -224,7 +224,7 @@ bool QueryBuilder::exec()
       }
       statement += updStmts.join( QLatin1String( ", " ) );
 
-      if ( mDatabaseType == PostgreSQL && !mJoinedTables.isEmpty() ) {
+      if ( mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty() ) {
         // PSQL have this syntax
         // FROM t1 JOIN t2 JOIN ...
         statement += QLatin1String( " FROM " );
@@ -270,7 +270,7 @@ bool QueryBuilder::exec()
     statement += orderStmts.join( QLatin1String( ", " ) );
   }
 
-  if ( mLimit > 0 && mDatabaseType != Virtuoso ) {
+  if ( mLimit > 0 && mDatabaseType != DbType::Virtuoso ) {
     statement += QLatin1Literal( " LIMIT " ) + QString::number( mLimit );
   }
 
@@ -406,7 +406,7 @@ void QueryBuilder::setLimit(int limit)
 
 qint64 QueryBuilder::insertId()
 {
-  if ( mDatabaseType == PostgreSQL ) {
+  if ( mDatabaseType == DbType::PostgreSQL ) {
     query().next();
     return query().record().value( QLatin1String("id") ).toLongLong();
   } else {
@@ -418,17 +418,4 @@ qint64 QueryBuilder::insertId()
     return insertId;
   }
   return -1;
-}
-
-QueryBuilder::DatabaseType QueryBuilder::qsqlDriverNameToDatabaseType (const QString & driverName)
-{
-  if ( driverName.startsWith( QLatin1String( "QMYSQL" ) ) )
-    return MySQL;
-  if ( driverName == QLatin1String( "QPSQL" ) )
-    return PostgreSQL;
-  if ( driverName.startsWith( QLatin1String( "QSQLITE" ) ) )
-    return Sqlite;
-  if ( driverName.startsWith( QLatin1String( "QODBC" ) ) )
-    return Virtuoso;
-  return Unknown;
 }

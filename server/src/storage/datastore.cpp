@@ -55,8 +55,8 @@
 using namespace Akonadi;
 
 static QMutex sTransactionMutex;
-#define TRANSACTION_MUTEX_LOCK if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) sTransactionMutex.lock()
-#define TRANSACTION_MUTEX_UNLOCK if ( m_database.driverName().startsWith( QLatin1String( "QSQLITE" ) ) ) sTransactionMutex.unlock()
+#define TRANSACTION_MUTEX_LOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.lock()
+#define TRANSACTION_MUTEX_UNLOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.unlock()
 
 /***************************************************************************
  *   DataStore                                                           *
