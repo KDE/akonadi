@@ -284,8 +284,9 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
-    kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
+  const QString serviceId = QLatin1String(  "org.freedesktop.Akonadi.Agent." ) + mId;
+  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) )
+    kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
 }
 
