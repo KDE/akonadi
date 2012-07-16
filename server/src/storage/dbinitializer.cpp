@@ -69,6 +69,8 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, c
       return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
     case DbType::Virtuoso:
       return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
+    case DbType::Unknown:
+      break;
   }
   akFatal() << database.driverName() << "backend  not supported";
   return boost::shared_ptr<DbInitializer>();
