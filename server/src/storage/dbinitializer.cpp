@@ -209,19 +209,15 @@ DbInitializer::RelationDescription DbInitializer::parseRelationDescription( cons
 
 bool DbInitializer::checkTable( const QDomElement &element )
 {
-  const QString tableName = element.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
-
-  akDebug() << "checking table " << tableName;
-
   // Parse the abstract table description from XML file
   const TableDescription tableDescription = parseTableDescription( element );
-
-  // Get the CREATE TABLE statement for the specific SQL dialect
-  const QString createTableStatement = buildCreateTableStatement( tableDescription );
+  akDebug() << "checking table " << tableDescription.name;
 
   QSqlQuery query( mDatabase );
 
-  if ( !hasTable( tableName ) ) {
+  if ( !hasTable( tableDescription.name ) ) {
+    // Get the CREATE TABLE statement for the specific SQL dialect
+    const QString createTableStatement = buildCreateTableStatement( tableDescription );
     akDebug() << createTableStatement;
 
     // We have to create the entire table.
@@ -232,7 +228,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
   } else {
     // Check for every column whether it exists.
-    const QSqlRecord table = mDatabase.record( tableName );
+    const QSqlRecord table = mDatabase.record( tableDescription.name );
 
     Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
       bool found = false;
@@ -253,7 +249,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
         akDebug() << statement;
 
         if ( !query.exec( statement ) ) {
-          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableName );
+          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableDescription.name );
           mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
           return false;
         }
@@ -266,8 +262,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
   // Add indices
   Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
     // sqlite3 needs unique index identifiers per db
-    const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableName ).arg( indexDescription.name );
-    if ( !hasIndex( tableName, indexName ) ) {
+    const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableDescription.name ).arg( indexDescription.name );
+    if ( !hasIndex( tableDescription.name, indexName ) ) {
       // Get the CREATE INDEX statement for the specific SQL dialect
       const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
 
@@ -281,12 +277,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
   }
 
+  if ( tableDescription.data.isEmpty() )
+    return true;
+
   // Add initial data if table is empty
-  QueryBuilder queryBuilder( tableName, QueryBuilder::Select );
+  QueryBuilder queryBuilder( tableDescription.name, QueryBuilder::Select );
   queryBuilder.addColumn( QLatin1String( "*" ) );
   queryBuilder.setLimit( 1 );
   if ( !queryBuilder.exec() ) {
-    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableName );
+    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableDescription.name );
     mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( queryBuilder.query().lastError().text() );
     return false;
   }
@@ -299,7 +298,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
       akDebug() << statement;
 
       if ( !query.exec( statement ) ) {
-        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableName );
+        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableDescription.name );
         mErrorMsg += QString::fromLatin1( "Query error: '%1'\n" ).arg( query.lastError().text() );
         mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( statement );
         return false;
