@@ -45,9 +45,6 @@ NepomukSearch::NepomukSearch( QObject* parent )
   mSearchService = new Nepomuk::Query::QueryServiceClient( this );
   connect( mSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
            this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
-  mIdSearchService = new Nepomuk::Query::QueryServiceClient( this );
-  connect( mIdSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
-           this, SLOT(idHitsAdded(QList<Nepomuk::Query::Result>)) );
 }
 
 NepomukSearch::~NepomukSearch()
@@ -77,6 +74,26 @@ QStringList NepomukSearch::search( const QString &query )
     return QStringList();
   }
 
+  // retrieve IDs for query results without ID:
+  // retrieving must happen after previous blocking query is finished to avoid that in case
+  // of multiple retrieved IDs after one result the wrong blocking thread is invoked
+  if ( !mResultsWithoutIdProperty.isEmpty() ) {
+    Nepomuk::Query::QueryServiceClient idSearchService( this );
+    connect( &idSearchService, SIGNAL(newEntries(QList<Nepomuk::Query::Result>)),
+            this, SLOT(idHitsAdded(QList<Nepomuk::Query::Result>)) );
+
+    // go fetch the akonadi item id property for those results that don't have them
+    Q_FOREACH( const Nepomuk::Query::Result &result, mResultsWithoutIdProperty ) {
+      qDebug() << "NepomukSearch::hitsAdded() search for IDs for results without ids: " << result.resourceUri().toString();
+      QHash<QString, QString> encodedRps;
+      // We do another query to get the akonadiItemId attribute (since it may not have been added to the original query)
+      encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
+
+      idSearchService.blockingQuery(QString::fromLatin1("SELECT DISTINCT ?r ?reqProp1 WHERE { <%1> a ?v2 . <%1> <http://akonadi-project.org/ontologies/aneo#akonadiItemId> ?reqProp1 . } LIMIT 1").arg(result.resourceUri().toString()), encodedRps);
+    }
+    mResultsWithoutIdProperty.clear();
+  }
+
   return mMatchingUIDs.toList();
 }
 
@@ -97,25 +114,15 @@ void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
     return;
   }
 
-  QList<Nepomuk::Query::Result> resultsWithoutIdProperty;
-
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const Soprano::Node &property = result.requestProperty(QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) ));
     if (!(property.isValid() && property.isLiteral() && property.literal().isString())) {
-      resultsWithoutIdProperty << result;
+      mResultsWithoutIdProperty << result;
     } else {
       // for those results that already have a proper akonadi item id property,
       // we can add matches right away
       addHit(result);
     }
-  }
-
-  // go fetch the akonadi item id property for those results that don't have them
-  Q_FOREACH( const Nepomuk::Query::Result &result, resultsWithoutIdProperty ) {
-    QHash<QString, QString> encodedRps;
-    //We do another query to get the akonadiItemId attribute (since it may not have been added to the original query)
-    encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
-    mIdSearchService->blockingQuery(QString::fromLatin1("SELECT DISTINCT ?r ?reqProp1 WHERE { <%1> a ?v2 . <%1> <http://akonadi-project.org/ontologies/aneo#akonadiItemId> ?reqProp1 . } LIMIT 1").arg(result.resourceUri().toString()), encodedRps);
   }
 }
 
