@@ -106,7 +106,6 @@ QDBusObjectPath NotificationManager::subscribe( const QString &identifier )
 {
   NotificationSource *source = mNotificationSources.value( identifier );
   if ( source ) {
-    // :TODO: Should this really be a warning?
     akDebug() << "Known subscriber" << identifier << "subscribes again";
     source->addClientServiceName( message().service() );
   } else {
