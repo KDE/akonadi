@@ -126,6 +126,8 @@ set(libakonadiprivate_SRCS
   src/storage/dbconfigvirtuoso.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbinitializer_p.cpp
+  src/storage/dbintrospector.cpp
+  src/storage/dbintrospector_impl.cpp
   src/storage/dbupdater.cpp
   src/storage/dbtype.cpp
   src/storage/itemqueryhelper.cpp

@@ -1,0 +1,59 @@
+/*
+    Copyright (c) 2012 Volker Krause <vkrause@kde.org>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#include <QObject>
+#include <QtTest/QTest>
+
+#include <aktest.h>
+#include <storage/dbintrospector.h>
+
+#define QL1S(x) QLatin1String(x)
+
+class DbIntrospectorTest : public QObject
+{
+  Q_OBJECT
+  private Q_SLOTS:
+    void testHasIndexQuery_data()
+    {
+      QTest::addColumn<QString>( "driverName" );
+      QTest::addColumn<QString>( "indexQuery" );
+
+      QTest::newRow( "mysql" ) << "QMYSQL" << "SHOW INDEXES FROM myTable WHERE `Key_name` = 'myIndex'";
+      QTest::newRow( "sqlite" ) << "QSQLITE" << "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='myTable' AND name='myIndex';";
+      QTest::newRow( "psql" ) << "QPSQL" << "SELECT indexname FROM pg_catalog.pg_indexes WHERE tablename ilike 'myTable' AND  indexname ilike 'myIndex';";
+      //QTest::newRow( "virtuoso" ) << "QODBC" << ""; not implemented, will assert
+    }
+
+    void testHasIndexQuery()
+    {
+      QFETCH( QString, driverName );
+      QFETCH( QString, indexQuery );
+
+      if ( QSqlDatabase::drivers().contains( driverName ) ) {
+        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
+        DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
+        QVERIFY( introspector );
+        QCOMPARE( introspector->hasIndexQuery( QL1S("myTable"), QL1S("myIndex") ), indexQuery );
+      }
+    }
+};
+
+AKTEST_MAIN( DbIntrospectorTest )
+
+#include "dbintrospectortest.moc"
