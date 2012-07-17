@@ -35,12 +35,6 @@ QString DbInitializerMySql::sqlType(const QString & type, int size) const
     return DbInitializer::sqlType( type, size );
 }
 
-QString DbInitializerMySql::hasIndexQuery(const QString& tableName, const QString& indexName)
-{
-  return QString::fromLatin1( "SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'" )
-      .arg( tableName ).arg( indexName );
-}
-
 QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &tableDescription ) const
 {
   QStringList columns;
@@ -116,11 +110,6 @@ QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &
 DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database, const QString& templateFile):
   DbInitializer(database, templateFile)
 {
-}
-
-QString DbInitializerSqlite::hasIndexQuery(const QString& tableName, const QString& indexName)
-{
-  return QString::fromLatin1( "SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';" ).arg( tableName ).arg( indexName );
 }
 
 QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &tableDescription ) const
@@ -199,14 +188,6 @@ QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
   if ( type == QLatin1String("QString") )
     return QLatin1String("BYTEA");
   return DbInitializer::sqlType( type, size );
-}
-
-QString DbInitializerPostgreSql::hasIndexQuery(const QString& tableName, const QString& indexName)
-{
-  QString query = QLatin1String( "SELECT indexname FROM pg_catalog.pg_indexes" );
-  query += QString::fromLatin1( " WHERE tablename ilike '%1'" ).arg( tableName );
-  query += QString::fromLatin1( " AND  indexname ilike '%1';" ).arg( indexName );
-  return query;
 }
 
 QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescription &tableDescription ) const
@@ -325,12 +306,6 @@ QString DbInitializerVirtuoso::sqlValue(const QString& type, const QString& valu
     if ( value == QLatin1String( "true" ) ) return QLatin1String( "1" );
   }
   return DbInitializer::sqlValue( type, value );
-}
-
-bool DbInitializerVirtuoso::hasIndex(const QString& tableName, const QString& indexName)
-{
-  // TODO: Implement index checking for Virtuoso!
-  return true;
 }
 
 QString DbInitializerVirtuoso::buildCreateTableStatement( const TableDescription &tableDescription ) const

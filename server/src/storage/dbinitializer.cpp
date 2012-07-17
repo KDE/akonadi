@@ -20,6 +20,7 @@
 #include "dbinitializer.h"
 #include "dbinitializer_p.h"
 #include "querybuilder.h"
+#include "dbexception.h"
 #include "shared/akdebug.h"
 
 #include <QtCore/QDebug>
@@ -79,6 +80,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, c
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
   : mDatabase( database ), mTemplateFile( templateFile ), mDebugInterface( 0 )
 {
+  m_introspector = DbIntrospector::createInstance( mDatabase );
 }
 
 DbInitializer::~DbInitializer()
@@ -87,48 +89,53 @@ DbInitializer::~DbInitializer()
 
 bool DbInitializer::run()
 {
-  akDebug() << "DbInitializer::run()";
+  try {
+    akDebug() << "DbInitializer::run()";
 
-  QFile file( mTemplateFile );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
-    return false;
-  }
-
-  QDomDocument document;
-
-  QString errorMsg;
-  int line, column;
-  if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
-                       .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
-    return false;
-  }
-
-  const QDomElement documentElement = document.documentElement();
-  if ( documentElement.tagName() != QLatin1String( "database" ) ) {
-    mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
-    return false;
-  }
-
-  QDomElement tableElement = documentElement.firstChildElement();
-  while ( !tableElement.isNull() ) {
-    if ( tableElement.tagName() == QLatin1String( "table" ) ) {
-      if ( !checkTable( tableElement ) )
-        return false;
-    } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
-      if ( !checkRelation( tableElement ) )
-        return false;
-    } else {
-      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
+    QFile file( mTemplateFile );
+    if ( !file.open( QIODevice::ReadOnly ) ) {
+      mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
       return false;
     }
 
-    tableElement = tableElement.nextSiblingElement();
-  }
+    QDomDocument document;
 
-  akDebug() << "DbInitializer::run() done";
-  return true;
+    QString errorMsg;
+    int line, column;
+    if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
+      mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
+                        .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
+      return false;
+    }
+
+    const QDomElement documentElement = document.documentElement();
+    if ( documentElement.tagName() != QLatin1String( "database" ) ) {
+      mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
+      return false;
+    }
+
+    QDomElement tableElement = documentElement.firstChildElement();
+    while ( !tableElement.isNull() ) {
+      if ( tableElement.tagName() == QLatin1String( "table" ) ) {
+        if ( !checkTable( tableElement ) )
+          return false;
+      } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
+        if ( !checkRelation( tableElement ) )
+          return false;
+      } else {
+        mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
+        return false;
+      }
+
+      tableElement = tableElement.nextSiblingElement();
+    }
+
+    akDebug() << "DbInitializer::run() done";
+    return true;
+  } catch ( const DbException &e ) {
+    mErrorMsg = QString::fromUtf8( e.what() );
+  }
+  return false;
 }
 
 DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
@@ -215,7 +222,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
 
   QSqlQuery query( mDatabase );
 
-  if ( !hasTable( tableDescription.name ) ) {
+  if ( !m_introspector->hasTable( tableDescription.name ) ) {
     // Get the CREATE TABLE statement for the specific SQL dialect
     const QString createTableStatement = buildCreateTableStatement( tableDescription );
     akDebug() << createTableStatement;
@@ -263,7 +270,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
   Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
     // sqlite3 needs unique index identifiers per db
     const QString indexName = QString::fromLatin1( "%1_%2" ).arg( tableDescription.name ).arg( indexDescription.name );
-    if ( !hasIndex( tableDescription.name, indexName ) ) {
+    if ( !m_introspector->hasIndex( tableDescription.name, indexName ) ) {
       // Get the CREATE INDEX statement for the specific SQL dialect
       const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
 
@@ -319,7 +326,7 @@ bool DbInitializer::checkRelation( const QDomElement &element )
 
   akDebug() << "checking relation " << relationTableName;
 
-  if ( !hasTable( relationTableName ) ) {
+  if ( !m_introspector->hasTable( relationTableName ) ) {
     const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
     akDebug() << statement;
 
@@ -364,30 +371,6 @@ QString DbInitializer::sqlValue( const QString &type, const QString &value ) con
     return QLatin1String( "CURRENT_TIMESTAMP" );
 
   return value;
-}
-
-bool DbInitializer::hasTable(const QString & tableName)
-{
-   return mDatabase.tables().contains( tableName, Qt::CaseInsensitive );
-}
-
-bool DbInitializer::hasIndex(const QString& tableName, const QString& indexName)
-{
-  QSqlQuery query( mDatabase );
-  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1.\n" ).arg( tableName );
-    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-    return false;
-  }
-  return query.next();
-}
-
-QString DbInitializer::hasIndexQuery(const QString& tableName, const QString& indexName)
-{
-  Q_UNUSED( tableName );
-  Q_UNUSED( indexName );
-  qFatal( "Implement index support for your database!" );
-  return QString();
 }
 
 QString DbInitializer::buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const

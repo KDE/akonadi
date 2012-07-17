@@ -29,7 +29,6 @@ class DbInitializerMySql : public DbInitializer
     DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile);
   protected:
     QString sqlType(const QString& type, int size) const;
-    QString hasIndexQuery(const QString& tableName, const QString& indexName);
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
@@ -41,8 +40,6 @@ class DbInitializerSqlite : public DbInitializer
   public:
     DbInitializerSqlite( const QSqlDatabase& database, const QString& templateFile);
   protected:
-    QString hasIndexQuery(const QString& tableName, const QString& indexName);
-
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
@@ -54,7 +51,6 @@ class DbInitializerPostgreSql : public DbInitializer
     DbInitializerPostgreSql(const QSqlDatabase& database, const QString& templateFile);
   protected:
     QString sqlType(const QString& type, int size) const;
-    QString hasIndexQuery(const QString& tableName, const QString& indexName);
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
@@ -69,7 +65,6 @@ class DbInitializerVirtuoso : public DbInitializer
   protected:
     QString sqlType(const QString& type, int size) const;
     QString sqlValue(const QString& type, const QString& value) const;
-    bool hasIndex(const QString& tableName, const QString& indexName);
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;

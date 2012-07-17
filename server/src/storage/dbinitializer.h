@@ -20,6 +20,8 @@
 #ifndef DBINITIALIZER_H
 #define DBINITIALIZER_H
 
+#include "dbintrospector.h"
+
 #include <QtCore/QHash>
 #include <QtCore/QPair>
 #include <QtCore/QVector>
@@ -166,15 +168,6 @@ class DbInitializer
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
     virtual QString sqlValue( const QString &type, const QString &value ) const;
 
-    /** Returns true of the given table has an index with the given name on it. */
-    virtual bool hasIndex( const QString &tableName, const QString &indexName );
-    /** Returns a query string to determine if @p tableName has an index @p indexName.
-        The query is expected to have one boolean result row/column.
-        This is used by the default implementation of hasIndex() only, thus reimplmentation
-        is not necessary if you reimplement hasIndex()
-    */
-    virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
-
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const = 0;
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
@@ -201,8 +194,6 @@ class DbInitializer
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );
 
-    bool hasTable( const QString &tableName );
-
     TableDescription parseTableDescription( const QDomElement& ) const;
     RelationDescription parseRelationDescription( const QDomElement& ) const;
 
@@ -210,6 +201,7 @@ class DbInitializer
     QString mTemplateFile;
     QString mErrorMsg;
     DebugInterface *mDebugInterface;
+    DbIntrospector::Ptr m_introspector;
 };
 
 #endif
