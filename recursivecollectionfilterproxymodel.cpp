@@ -69,7 +69,8 @@ bool RecursiveCollectionFilterProxyModel::acceptRow( int sourceRow, const QModel
   if ( !collection.isValid() )
     return false;
   const bool checked = ( rowIndex.data(Qt::CheckStateRole).toInt()==Qt::Checked );
-  if ( d->checkOnlyChecked && !checked ) {
+  const bool isCheckable = sourceModel()->flags( rowIndex ) & Qt::ItemIsUserCheckable;
+  if ( isCheckable && (d->checkOnlyChecked && !checked) ) {
     return false;
   }
 

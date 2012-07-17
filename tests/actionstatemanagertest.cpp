@@ -116,6 +116,8 @@ class ActionStateManagerTest : public QObject
 
     void updatePluralLabel( int type, int count )
     {
+      Q_UNUSED( type );
+      Q_UNUSED( count );
     }
 
     bool isFavoriteCollection( const Akonadi::Collection &collection )
@@ -123,7 +125,10 @@ class ActionStateManagerTest : public QObject
       return mFavoriteCollectionMap.contains( collection.id() );
     }
 
-      void updateAlternatingAction( int action ) {}
+    void updateAlternatingAction( int action )
+    {
+      Q_UNUSED( action );
+    }
 
 
   private Q_SLOTS:
@@ -473,7 +478,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::CreateCollection, false ); // content mimetype is missing
         map.insert( StandardActionManager::CopyCollections, true );
         map.insert( StandardActionManager::DeleteCollections, true );
-        map.insert( StandardActionManager::SynchronizeCollections, true );
+        map.insert( StandardActionManager::SynchronizeCollections, false );
         map.insert( StandardActionManager::CollectionProperties, true );
         map.insert( StandardActionManager::CopyItems, false );
         map.insert( StandardActionManager::Paste, false );
@@ -515,7 +520,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::CreateCollection, false );
         map.insert( StandardActionManager::CopyCollections, false );
         map.insert( StandardActionManager::DeleteCollections, false );
-        map.insert( StandardActionManager::SynchronizeCollections, false );
+        map.insert( StandardActionManager::SynchronizeCollections, true );
         map.insert( StandardActionManager::CollectionProperties, false );
         map.insert( StandardActionManager::CopyItems, false );
         map.insert( StandardActionManager::Paste, false );

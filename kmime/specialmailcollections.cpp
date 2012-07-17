@@ -18,12 +18,14 @@
 */
 
 #include "specialmailcollections.h"
-
+#include "akonadi/entitydisplayattribute.h"
+#include "akonadi/collectionmodifyjob.h"
 #include "specialmailcollectionssettings.h"
 
 #include <KGlobal>
-
+#include <KLocale>
 #include "akonadi/agentinstance.h"
+#include "akonadi/servermanager.h"
 
 using namespace Akonadi;
 
@@ -65,8 +67,14 @@ SpecialMailCollectionsPrivate::~SpecialMailCollectionsPrivate()
   delete mInstance;
 }
 
+static KCoreConfigSkeleton *getConfig( const QString &filename)
+{
+  Settings::instance( ServerManager::addNamespace(filename) );
+  return Settings::self();
+}
+
 SpecialMailCollections::SpecialMailCollections( SpecialMailCollectionsPrivate *dd )
-  : SpecialCollections( Settings::self() ),
+  : SpecialCollections( getConfig(QLatin1String("specialmailcollectionsrc")) ),
     d( dd )
 {
 }
@@ -99,6 +107,52 @@ bool SpecialMailCollections::hasDefaultCollection( Type type ) const
 Collection SpecialMailCollections::defaultCollection( Type type ) const
 {
   return SpecialCollections::defaultCollection( enumToType( type ) );
+}
+
+void SpecialMailCollections::verifyI18nDefaultCollection( Type type )
+{
+  Collection collection = defaultCollection( type );
+  QString defaultI18n;
+
+  switch ( type ) {
+  case SpecialMailCollections::Inbox:
+    defaultI18n = i18nc( "local mail folder", "inbox" );
+    break;
+  case SpecialMailCollections::Outbox:
+    defaultI18n = i18nc( "local mail folder", "outbox" );
+    break;
+  case SpecialMailCollections::SentMail:
+    defaultI18n = i18nc( "local mail folder", "sent-mail" );
+    break;
+  case SpecialMailCollections::Trash:
+     defaultI18n = i18nc( "local mail folder", "trash" );
+     break;
+  case SpecialMailCollections::Drafts:
+     defaultI18n = i18nc( "local mail folder", "drafts" );
+     break;
+  case SpecialMailCollections::Templates:
+     defaultI18n = i18nc( "local mail folder", "templates" );
+     break;
+  default:
+     break;
+  }
+  if(!defaultI18n.isEmpty()) {
+    if(collection.hasAttribute<Akonadi::EntityDisplayAttribute>()) {
+      if( collection.attribute<Akonadi::EntityDisplayAttribute>()->displayName() != defaultI18n) {
+          collection.attribute<Akonadi::EntityDisplayAttribute>()->setDisplayName( defaultI18n );
+          Akonadi::CollectionModifyJob *job = new Akonadi::CollectionModifyJob( collection, this );
+          connect( job, SIGNAL(result(KJob*)), this, SLOT(slotCollectionModified(KJob*)) );
+      }
+    }
+  }
+}
+
+void SpecialMailCollections::slotCollectionModified(KJob*job)
+{
+  if ( job->error() ) {
+    kDebug()<<" Error when we modified collection";
+    return;
+  }
 }
 
 #include "specialmailcollections.moc"

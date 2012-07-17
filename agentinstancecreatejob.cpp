@@ -25,6 +25,7 @@
 #include "controlinterface.h"
 #include "dbusconnectionpool.h"
 #include "kjobprivatebase_p.h"
+#include "servermanager.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -79,7 +80,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
     void doConfigure()
     {
       org::freedesktop::Akonadi::Agent::Control *agentControlIface =
-        new org::freedesktop::Akonadi::Agent::Control( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + agentInstance.identifier(),
+        new org::freedesktop::Akonadi::Agent::Control( ServerManager::agentServiceName( ServerManager::Agent, agentInstance.identifier() ),
                                                        QLatin1String( "/" ), DBusConnectionPool::threadConnection(), q );
       if ( !agentControlIface || !agentControlIface->isValid() ) {
         delete agentControlIface;

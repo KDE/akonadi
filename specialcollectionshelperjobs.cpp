@@ -22,6 +22,7 @@
 #include "dbusconnectionpool.h"
 #include "specialcollectionattribute_p.h"
 #include "specialcollections.h"
+#include "servermanager.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -44,7 +45,6 @@
 #include <QtCore/QTime>
 #include <QtCore/QTimer>
 
-#define DBUS_SERVICE_NAME QLatin1String( "org.kde.pim.SpecialCollections" )
 #define LOCK_WAIT_TIMEOUT_SECONDS 10
 
 using namespace Akonadi;
@@ -62,6 +62,14 @@ static QString defaultResourceId( KCoreConfigSkeleton *settings )
   const KConfigSkeletonItem *item = settings->findItem( QLatin1String( "DefaultResourceId" ) );
   Q_ASSERT( item );
   return item->property().toString();
+}
+
+static QString dbusServiceName()
+{
+  QString service = QString::fromLatin1("org.kde.pim.SpecialCollections");
+  if (ServerManager::hasInstanceIdentifier())
+    return service + ServerManager::instanceIdentifier();
+  return service;
 }
 
 static QVariant::Type argumentType( const QMetaObject *mo, const QString &method )
@@ -350,6 +358,8 @@ void DefaultResourceJobPrivate::resourceCreateResult( KJob *job )
       }
     }
 
+    conf.call( QLatin1String( "writeConfig" ) );
+
     agent.reconfigure();
   }
 
@@ -568,14 +578,14 @@ void GetLockJob::Private::doStart()
   // since we may *already* own the name, and then registerService() returns true.
 
   QDBusConnection bus = DBusConnectionPool::threadConnection();
-  const bool alreadyLocked = bus.interface()->isServiceRegistered( DBUS_SERVICE_NAME );
-  const bool gotIt = bus.registerService( DBUS_SERVICE_NAME );
+  const bool alreadyLocked = bus.interface()->isServiceRegistered( dbusServiceName() );
+  const bool gotIt = bus.registerService( dbusServiceName() );
 
   if ( gotIt && !alreadyLocked ) {
     //kDebug() << "Got lock immediately.";
     q->emitResult();
   } else {
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( DBUS_SERVICE_NAME, DBusConnectionPool::threadConnection(),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( dbusServiceName(), DBusConnectionPool::threadConnection(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, q );
     //kDebug() << "Waiting for lock.";
     connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
@@ -592,7 +602,7 @@ void GetLockJob::Private::doStart()
 void GetLockJob::Private::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
   if ( newOwner.isEmpty() ) {
-    const bool gotIt = DBusConnectionPool::threadConnection().registerService( DBUS_SERVICE_NAME );
+    const bool gotIt = DBusConnectionPool::threadConnection().registerService( dbusServiceName() );
     if ( gotIt ) {
       mSafetyTimer->stop();
       q->emitResult();
@@ -602,7 +612,7 @@ void GetLockJob::Private::serviceOwnerChanged( const QString&, const QString&, c
 
 void GetLockJob::Private::timeout()
 {
-  kWarning() << "Timeout trying to get lock. Check who has acquired the name" << DBUS_SERVICE_NAME << "on DBus, using qdbus or qdbusviewer.";
+  kWarning() << "Timeout trying to get lock. Check who has acquired the name" << dbusServiceName() << "on DBus, using qdbus or qdbusviewer.";
   q->setError( Job::Unknown );
   q->setErrorText( i18n( "Timeout trying to get lock." ) );
   q->emitResult();
@@ -645,7 +655,7 @@ void Akonadi::setCollectionAttributes( Akonadi::Collection &collection, const QB
 
 bool Akonadi::releaseLock()
 {
-  return DBusConnectionPool::threadConnection().unregisterService( DBUS_SERVICE_NAME );
+  return DBusConnectionPool::threadConnection().unregisterService( dbusServiceName() );
 }
 
 #include "specialcollectionshelperjobs_p.moc"

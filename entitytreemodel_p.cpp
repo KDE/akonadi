@@ -23,6 +23,7 @@
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
 #include "monitor_p.h" // For friend ref/deref
+#include "servermanager.h"
 
 #include <KDE/KLocale>
 #include <KDE/KMessageBox>
@@ -76,7 +77,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
   qRegisterMetaType<Collection>();
 
   org::freedesktop::Akonadi::AgentManager *manager =
-           new org::freedesktop::Akonadi::AgentManager( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+           new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( Akonadi::ServerManager::Control ),
                                                         QLatin1String( "/AgentManager" ),
                                                         DBusConnectionPool::threadConnection(), q_ptr );
 
@@ -906,7 +907,6 @@ void EntityTreeModelPrivate::monitoredCollectionMoved( const Akonadi::Collection
   const QModelIndex srcParentIndex = indexForCollection( sourceCollection );
   const QModelIndex destParentIndex = indexForCollection( destCollection );
 
-  Q_ASSERT( sourceCollection.resource() == destCollection.resource() );
   Q_ASSERT( collection.parentCollection().isValid() );
   Q_ASSERT( destCollection.isValid() );
   Q_ASSERT( collection.parentCollection() == destCollection );
@@ -1075,7 +1075,6 @@ void EntityTreeModelPrivate::monitoredItemMoved( const Akonadi::Item& item,
                                                  const Akonadi::Collection& sourceCollection,
                                                  const Akonadi::Collection& destCollection )
 {
-  // Q_Q( EntityTreeModel );
 
   if ( isHidden( item ) )
     return;

@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -59,6 +60,7 @@ public:
       , mDragDropManager( new DragDropManager( mParent ) )
 #endif
       , mXmlGuiClient( 0 )
+      , mDefaultPopupMenu( QLatin1String( "akonadi_collectionview_contextmenu" ) )
   {
   }
 
@@ -73,6 +75,7 @@ public:
   QBasicTimer mDragExpandTimer;
   DragDropManager *mDragDropManager;
   KXMLGUIClient *mXmlGuiClient;
+  QString mDefaultPopupMenu;
 };
 
 void EntityTreeView::Private::init()
@@ -262,17 +265,17 @@ void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
     return;
 
   const QModelIndex index = indexAt( event->pos() );
+  QString popupName = d->mDefaultPopupMenu;
 
-  QMenu *popup = 0;
+  if ( index.isValid() ) {				// popup not over empty space
+    // check whether the index under the cursor is a collection or item
+    const Item item = model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
+    popupName = ( item.isValid() ? QLatin1String( "akonadi_itemview_contextmenu" ) :
+                                   QLatin1String( "akonadi_collectionview_contextmenu" ) );
+  }
 
-  // check if the index under the cursor is a collection or item
-  const Item item = model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-  if ( item.isValid() )
-    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_itemview_contextmenu" ), d->mXmlGuiClient ) );
-  else
-    popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
-                                 QLatin1String( "akonadi_collectionview_contextmenu" ), d->mXmlGuiClient ) );
+  QMenu *popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container( popupName,
+                                                                              d->mXmlGuiClient ) );
   if ( popup )
     popup->exec( event->globalPos() );
 }
@@ -306,5 +309,27 @@ bool EntityTreeView::isDropActionMenuEnabled() const
   return false;
 #endif
 }
+
+void EntityTreeView::setManualSortingActive(bool active)
+{
+#ifndef QT_NO_DRAGANDDROP
+  d->mDragDropManager->setManualSortingActive( active );
+#endif 
+}
+
+bool EntityTreeView::isManualSortingActive() const
+{
+#ifndef QT_NO_DRAGANDDROP
+  return d->mDragDropManager->isManualSortingActive();
+#else
+  return false;
+#endif 
+}
+
+void EntityTreeView::setDefaultPopupMenu( const QString &name )
+{
+  d->mDefaultPopupMenu = name;
+}
+
 
 #include "entitytreeview.moc"

@@ -22,6 +22,7 @@
 
 #include "agentmanager.h"
 #include "agentmanager_p.h"
+#include "servermanager.h"
 
 #include <KDebug>
 
@@ -130,7 +131,7 @@ bool AgentInstance::operator==( const AgentInstance &other ) const
 
 void AgentInstance::abortCurrentTask() const
 {
-  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( identifier() ),
+  QDBusInterface iface( ServerManager::agentServiceName( ServerManager::Agent, identifier() ),
                         QString::fromLatin1( "/" ),
                         QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
   if ( iface.isValid() ) {
@@ -145,7 +146,7 @@ void AgentInstance::abortCurrentTask() const
 
 void AgentInstance::reconfigure() const
 {
-  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Agent.%1" ).arg( identifier() ),
+  QDBusInterface iface( ServerManager::agentServiceName( ServerManager::Agent, identifier() ),
                         QString::fromLatin1( "/" ),
                         QString::fromLatin1( "org.freedesktop.Akonadi.Agent.Control" ) );
   if ( iface.isValid() ) {
@@ -160,7 +161,7 @@ void AgentInstance::reconfigure() const
 
 void Akonadi::AgentInstance::restart() const
 {
-  QDBusInterface iface( QString::fromLatin1( "org.freedesktop.Akonadi.Control" ),
+  QDBusInterface iface( ServerManager::serviceName( Akonadi::ServerManager::Control ),
                         QString::fromLatin1( "/AgentManager" ),
                         QString::fromLatin1( "org.freedesktop.Akonadi.AgentManager" ) );
   if ( iface.isValid() ) {

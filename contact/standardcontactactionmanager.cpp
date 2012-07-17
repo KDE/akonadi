@@ -535,4 +535,9 @@ Akonadi::Item::List StandardContactActionManager::selectedItems() const
   return d->mGenericManager->selectedItems();
 }
 
+
+void StandardContactActionManager::setCollectionPropertiesPageNames( const QStringList &names )
+{
+  d->mGenericManager->setCollectionPropertiesPageNames( names );
+}
 #include "standardcontactactionmanager.moc"

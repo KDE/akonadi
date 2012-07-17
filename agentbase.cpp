@@ -34,7 +34,6 @@
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
-#include "xdgbasedirs_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -199,7 +198,7 @@ void AgentBasePrivate::init()
     Q_ASSERT( mDBusConnection.isConnected() );
   }
 
-  mTracer = new org::freedesktop::Akonadi::Tracer( QLatin1String( "org.freedesktop.Akonadi" ),
+  mTracer = new org::freedesktop::Akonadi::Tracer( ServerManager::serviceName( ServerManager::Server ),
                                                    QLatin1String( "/tracing" ),
                                                    DBusConnectionPool::threadConnection(), q );
 
@@ -208,7 +207,7 @@ void AgentBasePrivate::init()
   if ( !DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
     q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( DBusConnectionPool::threadConnection().lastError().message() ) );
 
-  mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( XdgBaseDirs::saveDir( "config", QLatin1String( "akonadi" ) ), mId ), QSettings::IniFormat );
+  mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( Internal::xdgSaveDir( "config" ), mId ), QSettings::IniFormat );
 
   mChangeRecorder = new ChangeRecorder( q );
   mChangeRecorder->ignoreSession( Session::defaultSession() );
@@ -284,8 +283,9 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
-  if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Agent." ) + mId ) )
-    kFatal() << "Unable to register service at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
+  const QString serviceId = ServerManager::agentServiceName( ServerManager::Agent, mId );
+  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) )
+    kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
   q->setOnline( mOnline );
 }
 
@@ -393,30 +393,15 @@ void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection,
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( mObserver ) {
-    // inter-resource moves, requires we know which resources the source and destination are in though
-    if ( !source.resource().isEmpty() && !dest.resource().isEmpty() ) {
-      if ( source.resource() != dest.resource() ) {
-        if ( source.resource() == q_ptr->identifier() ) // moved away from us
-          mObserver->collectionRemoved( collection );
-        else if ( dest.resource() == q_ptr->identifier() ) // moved to us
-          mObserver->collectionAdded( collection, dest );
-        else if ( observer2 )
-          observer2->collectionMoved( collection, source, dest );
-        else // not for us, not sure if we should get here at all
-          changeProcessed();
-        return;
-      }
-    }
-    // intra-resource move
-    if ( observer2 ) {
-      observer2->collectionMoved( collection, source, dest );
-    } else {
-      // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
-      // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
-      // without using ObserverV2
-      mObserver->collectionAdded( collection, dest );
-    }
+  if ( observer2 ) {
+    observer2->collectionMoved( collection, source, dest );
+  } else if ( mObserver ) {
+    // ### we cannot just call collectionRemoved here as this will already trigger changeProcessed()
+    // so, just collectionAdded() is good enough as no resource can have implemented intra-resource moves anyway
+    // without using ObserverV2
+    mObserver->collectionAdded( collection, dest );
+  } else {
+    changeProcessed();
   }
 }
 
@@ -545,7 +530,7 @@ QString AgentBase::parseArguments( int argc, char **argv )
   // strip off full path and possible .exe suffix
   const QByteArray catalog = fi.baseName().toLatin1();
 
-  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog, ki18n( "Akonadi Agent" ), KDEPIMLIBS_VERSION,
+  KCmdLineArgs::init( argc, argv, ServerManager::addNamespace( identifier ).toLatin1(), catalog, ki18n( "Akonadi Agent" ), KDEPIMLIBS_VERSION,
                       ki18n( "Akonadi Agent" ) );
 
   KCmdLineOptions options;

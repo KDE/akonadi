@@ -39,6 +39,8 @@
 #include <klocale.h>
 #include <klineedit.h>
 #include <kmessagebox.h>
+#include <KColorScheme>
+
 
 #include <QtCore/QTimer>
 #include <QtGui/QGridLayout>
@@ -301,6 +303,20 @@ void ContactGroupEditor::setContactGroupTemplate( const KABC::ContactGroup &grou
 void ContactGroupEditor::setDefaultAddressBook( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
+}
+
+void ContactGroupEditor::groupNameIsValid(bool isValid)
+{
+#ifndef QT_NO_STYLE_STYLESHEET
+  QString styleSheet;
+  if ( !isValid ) {
+    const KColorScheme::BackgroundRole bgColorScheme( KColorScheme::NegativeBackground );
+    KStatefulBrush bgBrush( KColorScheme::View, bgColorScheme );
+    styleSheet = QString::fromLatin1( "QLineEdit{ background-color:%1 }" ).
+           arg( bgBrush.brush( this ).color().name() );
+  }
+  d->mGui.groupName->setStyleSheet(styleSheet);
+#endif
 }
 
 #include "contactgroupeditor.moc"

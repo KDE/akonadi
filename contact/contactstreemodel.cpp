@@ -102,7 +102,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
           return contact.givenName();
           break;
         case Birthday:
-          if ( contact.birthday().isValid() )
+          if ( contact.birthday().date().isValid() )
             return KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
           break;
         case HomeAddress:

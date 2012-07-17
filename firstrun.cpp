@@ -19,6 +19,7 @@
 
 #include "firstrun_p.h"
 #include "dbusconnectionpool.h"
+#include "servermanager.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -45,10 +46,16 @@ using namespace Akonadi;
 
 Firstrun::Firstrun( QObject *parent )
   : QObject( parent ),
-    mConfig( new KConfig( QLatin1String( "akonadi-firstrunrc" ) ) ),
+    mConfig( new KConfig( ServerManager::addNamespace( QLatin1String( "akonadi-firstrunrc" ) ) ) ),
     mCurrentDefault( 0 ),
     mProcess( 0 )
 {
+  //The code in firstrun is not safe in multi-instance mode
+  Q_ASSERT(!ServerManager::hasInstanceIdentifier());
+  if (!ServerManager::hasInstanceIdentifier()) {
+    deleteLater();
+    return;
+  }
   kDebug();
   if ( DBusConnectionPool::threadConnection().registerService( QLatin1String( FIRSTRUN_DBUSLOCK ) ) ) {
     findPendingDefaults();
@@ -264,6 +271,8 @@ void Firstrun::instanceCreated( KJob *job )
     if ( !reply.isValid() )
       kError() << "Setting " << setting << " failed for agent " << instance.identifier();
   }
+
+  iface->call( QLatin1String( "writeConfig" ) );
 
   instance.reconfigure();
   instance.synchronize();

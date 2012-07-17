@@ -47,8 +47,8 @@ class AgentFilterProxyModel;
  *   mAgentInstanceWidget = new Akonadi::AgentInstanceWidget( this );
  *   layout->addWidget( mAgentInstanceWidget );
  *
- *   connect( mAgentInstanceWidget, SIGNAL( doubleClicked( Akonadi::AgentInstance& ) ),
- *            this, SLOT( slotInstanceSelected( Akonadi::AgentInstance& ) ) );
+ *   connect( mAgentInstanceWidget, SIGNAL( doubleClicked( Akonadi::AgentInstance ) ),
+ *            this, SLOT( slotInstanceSelected( Akonadi::AgentInstance ) ) );
  * }
  *
  * ...

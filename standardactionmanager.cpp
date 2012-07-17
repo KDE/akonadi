@@ -487,7 +487,8 @@ class StandardActionManager::Private
       }
 
       mActionStateManager.updateState( selectedCollectionsList, selectedItems );
-
+      if( favoritesModel)
+        enableAction( StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
       emit q->actionStateUpdated();
     }
 
@@ -567,9 +568,10 @@ class StandardActionManager::Private
       if ( !canCreateCollection( parentCollection ) )
         return;
 
-      const QString name = KInputDialog::getText( contextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle ),
+      QString name = KInputDialog::getText( contextText( StandardActionManager::CreateCollection, StandardActionManager::DialogTitle ),
                                                   contextText( StandardActionManager::CreateCollection, StandardActionManager::DialogText ),
                                                   QString(), 0, parentWidget );
+      name = name.trimmed();
       if ( name.isEmpty() )
         return;
 
@@ -577,7 +579,13 @@ class StandardActionManager::Private
         KMessageBox::error( parentWidget,
                             i18n( "We can not add \"/\" in folder name." ),
                             i18n( "Create new folder error" ) );
-
+        return;
+      }
+      if ( name.startsWith( QLatin1Char('.') ) ||
+           name.endsWith( QLatin1Char('.') ) ) {
+        KMessageBox::error( parentWidget,
+                            i18n( "We can not add \".\" at begin or end of folder name." ),
+                            i18n( "Create new folder error" ) );
         return;
       }
 
@@ -881,6 +889,7 @@ class StandardActionManager::Private
     void slotLocalSubscription()
     {
       SubscriptionDialog* dlg = new SubscriptionDialog( mMimeTypeFilter, parentWidget );
+      dlg->showHiddenCollection(true);
       dlg->show();
     }
 

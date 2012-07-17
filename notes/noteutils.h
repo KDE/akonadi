@@ -21,6 +21,8 @@
 #define NOTEUTILS_H
 
 #include "akonadi-notes_export.h"
+
+#include <QtCore/QUrl>
 #include <QtGui/QTextEdit>
 
 class KDateTime;
@@ -50,9 +52,73 @@ AKONADI_NOTES_EXPORT QString noteMimeType();
 AKONADI_NOTES_EXPORT QString noteIconName();
 
 /**
+* An attachment for a note
+* @since 4.9
+*/
+class AKONADI_NOTES_EXPORT Attachment
+{
+public:
+  /**
+   * Create an attachment referencing a url only
+   */
+  Attachment( const QUrl &url, const QString &mimetype );
+  /**
+   * Create an attachment with the content stored inline
+   */
+  Attachment( const QByteArray &data, const QString &mimetype );
+  Attachment( const Attachment & );
+  ~Attachment();
+
+  bool operator==( const Attachment & ) const;
+  void operator=( const Attachment & );
+
+  /**
+   * Returns the url for url-only attachments
+   */
+  QUrl url() const;
+
+  /**
+   * Returns the date for inline attachments
+   */
+  QByteArray data() const;
+
+  /**
+   * Returns the mimetype
+   */
+  QString mimetype() const;
+
+  /**
+   * Sets the label to be presented to the user
+   */
+  void setLabel( const QString &label );
+
+  /**
+   * Returns the label of the attachment
+   */
+  QString label() const;
+private:
+  //@cond PRIVATE
+  class AttachmentPrivate;
+  AttachmentPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE( Attachment )
+  //@endcond
+};
+
+/**
 * A convenience wrapper around KMime::Message::Ptr for notes
 *
 * This is the format used by the Akonotes Resource
+*
+* A note has the following properties:
+* uid: globally unique identifier (generated if empty)
+* creationDate: timestamp when the note was created (generated if empty)
+* lastModified: lastModified (generated if empty)
+* classification: one of private, confidential, public. This is only meant as an indication to the user.
+* title: title of the note
+* text: textual content
+* from: author (generated if empty)
+* attachments: inline or url only
+* custom: key value pair for custom values
 *
 * Reading a note from an Akonotes akonadi item:
 * @code
@@ -82,6 +148,33 @@ public:
   NoteMessageWrapper();
   explicit NoteMessageWrapper( const KMime::MessagePtr & );
   ~NoteMessageWrapper();
+
+   /**
+     * Set the uid of the note
+     * @param uid should be globally unique
+     */
+  void setUid( const QString &uid );
+
+  /**
+    * Returns the uid of the note
+    */
+  QString uid() const;
+
+  enum Classification {
+    Public,
+    Private,
+    Confidential
+  };
+
+  /**
+    * Set the classification of the note
+    */
+  void setClassification( Classification );
+
+  /**
+    * Returns the classification of the note
+    */
+  Classification classification() const;
 
   /**
     * Set the title of the note
@@ -126,8 +219,19 @@ public:
   KDateTime creationDate() const;
 
   /**
+    * Set the lastModified-date of the note
+    */
+  void setLastModifiedDate( const KDateTime &lastModifiedDate );
+
+  /**
+    * Returns the lastModified-date of the note
+    */
+  KDateTime lastModifiedDate() const;
+
+  /**
     * Set the origin (creator) of the note (stored in the mime header)
     * This is usually the application creating the note.
+    * @param from must be an address in the style of foo@kde.org.
     */
   void setFrom( const QString &from );
 
@@ -135,6 +239,17 @@ public:
     * Returns the origin (creator) of the note
     */
   QString from() const;
+
+  /**
+    * Returns a reference to the list of attachments of the note
+    */
+  QList<Attachment> &attachments();
+
+  /**
+    * Returns a reference to the custom-value map
+    * @return key-value map containing all custom values
+    */
+  QMap<QString, QString> &custom();
 
   /**
     * Assemble a KMime message with the given values

@@ -77,6 +77,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     QQueue<NotificationMessage> pipeline;
     bool fetchCollection;
     bool fetchCollectionStatistics;
+    bool collectionMoveTranslationEnabled;
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();

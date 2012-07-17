@@ -23,8 +23,7 @@
 #include "agenttype_p.h"
 #include "agentinstance_p.h"
 #include "dbusconnectionpool.h"
-
-#include <akonadi/private/protocol_p.h>
+#include "servermanager.h"
 
 #include "collection.h"
 
@@ -292,7 +291,7 @@ void AgentManagerPrivate::createDBusInterface()
   mInstances.clear();
   delete mManager;
 
-  mManager = new org::freedesktop::Akonadi::AgentManager( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+  mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName(ServerManager::Control),
                                                           QLatin1String( "/AgentManager" ),
                                                           DBusConnectionPool::threadConnection(), mParent );
 
@@ -342,9 +341,13 @@ AgentManager* AgentManagerPrivate::mSelf = 0;
 AgentManager::AgentManager()
   : QObject( 0 ), d( new AgentManagerPrivate( this ) )
 {
+  // needed for queued connections on our signals
+  qRegisterMetaType<Akonadi::AgentType>();
+  qRegisterMetaType<Akonadi::AgentInstance>();
+
   d->createDBusInterface();
 
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( QLatin1String( AKONADI_DBUS_CONTROL_SERVICE ),
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName(ServerManager::Control),
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),

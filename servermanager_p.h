@@ -20,6 +20,8 @@
 #ifndef AKONADI_SERVERMANAGER_P_H
 #define AKONADI_SERVERMANAGER_P_H
 
+class QString;
+
 namespace Akonadi {
 
 namespace Internal {
@@ -34,6 +36,12 @@ namespace Internal {
   };
   ClientType clientType();
   void setClientType( ClientType type );
+
+  /** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
+  * @note: Does not need to include the "akonadi/" in @p relPath.
+  */
+  QString xdgSaveDir( const char* resource, const QString &relPath = QString() );
+
 }
 
 }

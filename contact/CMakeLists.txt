@@ -29,7 +29,7 @@ else()
 endif()
 
 add_subdirectory(tests)
-#We dont have kcms under wince so dont build them
+#We don't have kcms under wince so don't build them
 if(NOT WINCE)
   add_subdirectory(kcm)
 endif()

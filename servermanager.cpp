@@ -34,13 +34,13 @@
 #include <KGlobal>
 #include <KLocale>
 
+#include <akonadi/private/protocol_p.h>
+#include <akonadi/private/xdgbasedirs_p.h>
+
 #include <QtDBus>
 #include <QTimer>
 
 #include <boost/scoped_ptr.hpp>
-
-#define AKONADI_CONTROL_SERVICE QLatin1String( "org.freedesktop.Akonadi.Control" )
-#define AKONADI_SERVER_SERVICE QLatin1String( "org.freedesktop.Akonadi" )
 
 using namespace Akonadi;
 
@@ -58,7 +58,7 @@ class Akonadi::ServerManagerPrivate
       mSafetyTimer->setInterval( 30000 );
       QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
       KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
-      if ( mState == ServerManager::Running && Internal::clientType() == Internal::User )
+      if ( mState == ServerManager::Running && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier() )
         mFirstRunner = new Firstrun( instance );
     }
 
@@ -86,7 +86,7 @@ class Akonadi::ServerManagerPrivate
         emit instance->stateChanged( state );
         if ( state == ServerManager::Running ) {
           emit instance->started();
-          if ( !mFirstRunner && Internal::clientType() == Internal::User )
+          if ( !mFirstRunner && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier() )
             mFirstRunner = new Firstrun( instance );
         } else if ( state == ServerManager::NotRunning || state == ServerManager::Broken ) {
           emit instance->stopped();
@@ -123,10 +123,10 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
 {
   qRegisterMetaType<Akonadi::ServerManager::State>();
 
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AKONADI_SERVER_SERVICE,
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName(ServerManager::Server),
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
-  watcher->addWatchedService( AKONADI_CONTROL_SERVICE );
+  watcher->addWatchedService( ServerManager::serviceName(ServerManager::Control) );
 
   // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
   // the current agent types and instances
@@ -149,13 +149,12 @@ ServerManager * Akonadi::ServerManager::self()
 
 bool ServerManager::start()
 {
-  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::Control) );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::Server) );
   if (  controlRegistered && serverRegistered )
     return true;
 
-  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::ControlLock) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     sInstance->setState( Starting );
@@ -166,7 +165,7 @@ bool ServerManager::start()
   const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
-    QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( AKONADI_CONTROL_SERVICE );
+    QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( ServerManager::serviceName(ServerManager::Control) );
     if ( !reply.isValid() ) {
       kDebug() << "Akonadi server could not be started via D-Bus either: "
                << reply.error().message();
@@ -179,7 +178,7 @@ bool ServerManager::start()
 
 bool ServerManager::stop()
 {
-  QDBusInterface iface( AKONADI_CONTROL_SERVICE,
+  QDBusInterface iface( ServerManager::serviceName(ServerManager::Control),
                         QString::fromLatin1( "/ControlManager" ),
                         QString::fromLatin1( "org.freedesktop.Akonadi.ControlManager" ) );
   if ( !iface.isValid() )
@@ -209,8 +208,8 @@ ServerManager::State ServerManager::state()
   if ( sInstance.exists() ) // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
     previousState = sInstance->mState;
 
-  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE );
-  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_SERVER_SERVICE );
+  const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::Control) );
+  const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::Server) );
   if (  controlRegistered && serverRegistered ) {
     // check if the server protocol is recent enough
     if ( sInstance.exists() ) {
@@ -233,8 +232,7 @@ ServerManager::State ServerManager::state()
     }
   }
 
-  // TODO: use AKONADI_CONTROL_SERVICE_LOCK instead once we depend on a recent enough Akonadi server
-  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( AKONADI_CONTROL_SERVICE + QLatin1String( ".lock" ) );
+  const bool controlLockRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName(ServerManager::ControlLock) );
   if ( controlLockRegistered || controlRegistered ) {
     kDebug() << "Akonadi server is already starting up";
     if ( previousState == Running )
@@ -250,6 +248,55 @@ ServerManager::State ServerManager::state()
   if ( previousState == Starting || previousState == Broken ) // valid cases where nothing might be running (yet)
     return previousState;
   return NotRunning;
+}
+
+QString ServerManager::instanceIdentifier()
+{
+  return QLatin1String( qgetenv("AKONADI_INSTANCE") );
+}
+
+bool ServerManager::hasInstanceIdentifier()
+{
+  return !instanceIdentifier().isEmpty();
+}
+
+static QString makeServiceName( const char* base, const QString &name = QString() )
+{
+  if (ServerManager::instanceIdentifier().isEmpty())
+    return QLatin1String(base) % name;
+  return QLatin1String(base) % name % QLatin1Literal(".") % ServerManager::instanceIdentifier();
+}
+
+QString ServerManager::serviceName( ServerManager::ServiceType serviceType )
+{
+  switch(serviceType) {
+    case Server: return makeServiceName(AKONADI_DBUS_SERVER_SERVICE);
+    case Control: return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE);
+    case ControlLock: return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE_LOCK);
+  }
+  Q_ASSERT(!"WTF?");
+  return QString();
+}
+
+QString ServerManager::agentServiceName( ServiceAgentType agentType, const QString &identifier )
+{
+  switch(agentType) {
+    case Agent:
+      return makeServiceName( AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Agent.%1").arg(identifier) );
+    case Resource:
+      return makeServiceName( AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Resource.%1").arg(identifier) );
+    case Preprocessor:
+      return makeServiceName( AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Preprocessor.%1").arg(identifier) );
+  }
+  Q_ASSERT(!"WTF?");
+  return QString();
+}
+
+QString ServerManager::addNamespace(const QString& string)
+{
+  if (ServerManager::hasInstanceIdentifier())
+    return string % QLatin1Char('_') % ServerManager::instanceIdentifier();
+  return string;
 }
 
 int Internal::serverProtocolVersion()
@@ -273,5 +320,16 @@ void Internal::setClientType( ClientType type )
 {
   ServerManagerPrivate::clientType = type;
 }
+
+QString Internal::xdgSaveDir( const char *resource, const QString &relPath )
+{
+  QString fullRelPath = QLatin1String("akonadi");
+  if ( !ServerManager::instanceIdentifier().isEmpty() )
+    fullRelPath += QLatin1String("/instance/") + ServerManager::instanceIdentifier();
+  if ( !relPath.isEmpty() )
+    fullRelPath += QLatin1Char('/') + relPath;
+  return XdgBaseDirs::saveDir( resource, fullRelPath );
+}
+
 
 #include "servermanager.moc"

@@ -114,7 +114,8 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
     {
       ExactMatch,      ///< The result must match exactly the pattern (case sensitive).
       StartsWithMatch, ///< The result must start with the pattern (case insensitive).
-      ContainsMatch    ///< The result must contain the pattern (case insensitive).
+      ContainsMatch,    ///< The result must contain the pattern (case insensitive).
+      ContainsWordBoundaryMatch ///< The result must contain a word starting with the pattern (case insensitive).
     };
 
     /**

@@ -84,7 +84,7 @@ QString StandardContactGroupFormatter::toHtml( HtmlForm form ) const
     const KABC::ContactGroup::Data data = group.data( i );
 
     if ( data.email().isEmpty() ) {
-      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
+      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font color=\"grey\">%1</font></b></td>"
                                             "<td width=\"50%\"></td></tr>" )
                      .arg( data.name() ) );
     } else {
@@ -94,16 +94,16 @@ QString StandardContactGroupFormatter::toHtml( HtmlForm form ) const
 
       const QString fullEmail = QLatin1String( "<a href=\"mailto:" ) + QString::fromLatin1( KUrl::toPercentEncoding( contact.fullEmail() ) ) + QString::fromLatin1( "\">%1</a>" ).arg( contact.preferredEmail() );
 
-      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                            "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">&lt;%2&gt;</font></td></tr>" )
+      strGroup.append( QString::fromLatin1( "<tr><td align=\"right\" width=\"50%\"><b><font color=\"grey\">%1</font></b></td>"
+                                            "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font>&lt;%2&gt;</font></td></tr>" )
                      .arg( contact.realName() )
                      .arg( fullEmail ) );
     }
   }
 
   foreach ( const QVariantMap &map, additionalFields() ) {
-    strGroup.append( QString::fromLatin1( "<tr><td colspan=\"2\">&nbsp;</td></tr><tr><td align=\"right\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>"
-                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font size=\"-1\">%2</font></td></tr>" )
+    strGroup.append( QString::fromLatin1( "<tr><td colspan=\"2\">&nbsp;</td></tr><tr><td align=\"right\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>"
+                                          "<td valign=\"bottom\" align=\"left\" width=\"50%\"><font>%2</font></td></tr>" )
                    .arg( map.value( QLatin1String( "title" ) ).toString() )
                    .arg( map.value( QLatin1String( "value" ) ).toString() ) );
   }

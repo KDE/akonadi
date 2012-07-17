@@ -59,6 +59,7 @@ EntityOrderProxyModel::EntityOrderProxyModel( QObject* parent )
   : QSortFilterProxyModel(parent), d_ptr( new EntityOrderProxyModelPrivate( this ) )
 {
   setDynamicSortFilter(true);
+  //setSortCaseSensitivity( Qt::CaseInsensitive );
 }
 
 EntityOrderProxyModel::~EntityOrderProxyModel()
@@ -78,9 +79,9 @@ bool EntityOrderProxyModel::lessThan( const QModelIndex& left, const QModelIndex
 {
   Q_D( const EntityOrderProxyModel );
 
-  if ( !d->m_orderConfig.isValid() )
+  if ( !d->m_orderConfig.isValid() ) {
     return QSortFilterProxyModel::lessThan( left, right );
-
+  }
   Collection col = left.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
 
   if ( !d->m_orderConfig.hasKey( QString::number( col.id() ) ) )
@@ -117,7 +118,7 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
     return QSortFilterProxyModel::dropMimeData( data, action, row, column, parent );
 
   bool containsMove = false;
-
+ 
   const KUrl::List urls = KUrl::List::fromMimeData( data );
 
   Collection parentCol;
@@ -168,12 +169,11 @@ bool EntityOrderProxyModel::dropMimeData( const QMimeData* data, Qt::DropAction 
   if ( d->m_orderConfig.hasKey( QString::number( parentCol.id() ) ) ) {
     existingList = d->m_orderConfig.readEntry( QString::number( parentCol.id() ), QStringList() );
   } else {
-    const QModelIndex sourceIndex = mapToSource( parent );
-    const int rowCount = sourceModel()->rowCount( sourceIndex );
+    const int rowCount = this->rowCount( parent );
     for (int row = 0; row < rowCount; ++row) {
       static const int column = 0;
-      const QModelIndex idx = sourceModel()->index( row, column, sourceIndex );
-      existingList.append( configString( idx ) );
+      const QModelIndex idx = this->index( row, column, parent );
+      existingList.append(configString( idx ));
     }
   }
   const int numberOfDroppedElement( droppedList.size() );

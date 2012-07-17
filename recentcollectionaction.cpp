@@ -19,6 +19,7 @@
 #include "recentcollectionaction_p.h"
 #include "metatypes.h"
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/collectionmodel.h>
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocale>
@@ -63,11 +64,14 @@ void RecentCollectionAction::fillRecentCollection()
   for ( int i=0; i < numberOfRecentCollection; ++i )
   {
     const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mModel, Akonadi::Collection( mListRecentCollection.at( i ).toLongLong() ) );
+    const Akonadi::Collection collection = mModel->data( index, Akonadi::CollectionModel::CollectionRole ).value<Akonadi::Collection>();
     if ( index.isValid() ) {
+      const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
       QAction *action = popup->addAction( actionName( index ) );
       const QIcon icon = mModel->data( index, Qt::DecorationRole ).value<QIcon>();
       action->setIcon( icon );
       action->setData( QVariant::fromValue<QModelIndex>( index ) );
+      action->setEnabled(canCreateNewItems);
     }
   }
 }

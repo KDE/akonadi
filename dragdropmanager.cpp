@@ -35,7 +35,7 @@
 using namespace Akonadi;
 
 DragDropManager::DragDropManager( QAbstractItemView *view )
-    : mShowDropActionMenu( true ), m_view( view )
+  : mShowDropActionMenu( true ), mIsManualSortingActive( false ), m_view( view )
 {
 }
 
@@ -102,6 +102,11 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
   if ( !targetCollection.isValid() )
     return false;
 
+  if ( !mIsManualSortingActive && !dropOnItem )
+  {
+    return false;
+  }
+
   const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
   
   const QMimeData *data = event->mimeData();
@@ -114,7 +119,7 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
       }
     }
   } 
-  
+    
   int actionCount = 0;
   Qt::DropAction defaultAction;
   // TODO check if the source supports moving
@@ -135,6 +140,12 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
     linkAllowed = true;
   }
 
+  if ( mIsManualSortingActive && !dropOnItem ) {
+    moveAllowed = true;
+    copyAllowed = false;
+    linkAllowed = false;
+  }
+    
   if ( !moveAllowed && !copyAllowed && !linkAllowed ) {
     kDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
     return false;
@@ -291,3 +302,14 @@ void DragDropManager::setShowDropActionMenu( bool show )
 {
   mShowDropActionMenu = show;
 }
+
+bool DragDropManager::isManualSortingActive() const
+{
+  return mIsManualSortingActive;
+}
+
+void DragDropManager::setManualSortingActive(bool active)
+{
+  mIsManualSortingActive = active;
+}
+

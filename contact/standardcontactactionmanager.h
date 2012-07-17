@@ -158,6 +158,11 @@ class AKONADI_CONTACT_EXPORT StandardContactActionManager : public QObject
      */
     Akonadi::Item::List selectedItems() const;
 
+  /**
+   * @since 4.8.2
+   */
+    void setCollectionPropertiesPageNames( const QStringList &names );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.

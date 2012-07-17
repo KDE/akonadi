@@ -65,10 +65,24 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
   setQuery( criterion, value, ExactMatch );
 }
 
+// helper method, returns the SPARQL sub-expression to be used for finding
+// string either as a whole word, the start of a word, or anywhere in a word
+static QString containsQueryString( bool doWholeWordSearch, bool matchWordBoundary )
+{
+  if ( doWholeWordSearch )
+    return QString::fromLatin1( "?v bif:contains \"'%1'\" . " );
+  else
+    return QString::fromLatin1("FILTER regex(str(?v), \"%1\", \"i\")" )
+        .arg( matchWordBoundary? QLatin1String("\\\\b%1") : QLatin1String("%1") );
+}
+
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
   if ( match == StartsWithMatch && value.size() < 4 )
     match = ExactMatch;
+
+  const bool doWholeWordSearch = value.size() < 3;
+  const bool matchWordBoundary = match == ContainsWordBoundaryMatch;
 
   QString query;
 
@@ -95,10 +109,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
           "  } "
@@ -123,10 +137,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?person a nco:PersonContact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
@@ -152,10 +166,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  } "
@@ -194,10 +208,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    { ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. } "
           "    UNION "
@@ -229,10 +243,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
           "  } "
@@ -259,10 +273,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:fullname ?v . "
           "    ?v bif:contains \"'%1*'\" . "
@@ -288,14 +302,14 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?person a nco:PersonContact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
-          "    ?v bif:contains \"'%1*'\" . "
+          "    FILTER regex(str(?v), \"^%1\", \"i\") "
           "  } "
           "}"
 #endif
@@ -318,13 +332,13 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:nickname ?v . "
-          "    ?v bif:contains \"'%1*'\" . "
+          "    FILTER regex(str(?v), \"^%1\", \"i\") "
           "  } "
           "}"
 #endif
@@ -361,23 +375,23 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    { ?r nco:fullname ?v . "
-          "      ?v bif:contains \"'%1*'\" . } "
+          "      FILTER regex(str(?v), \"^%1\", \"i\") } "
           "    UNION "
           "    { ?r nco:nameGiven ?v . "
-          "      ?v bif:contains \"'%1*'\" . } "
+          "      FILTER regex(str(?v), \"^%1\", \"i\") } "
           "    UNION "
           "    { ?r nco:nameFamily ?v . "
-          "      ?v bif:contains \"'%1*'\" . } "
+          "      FILTER regex(str(?v), \"^%1\", \"i\") } "
           "    UNION "
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
-          "      ?v bif:contains \"'%1*'\" . } "
+          "      FILTER regex(str(?v), \"^%1\", \"i\") } "
           "  } "
           "}"
 #endif
@@ -400,10 +414,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1*'\" . "
@@ -412,7 +426,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #endif
       );
     } 
-  } else if ( match == ContainsMatch ) {
+  } else if ( match == ContainsMatch || match == ContainsWordBoundaryMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -431,17 +445,18 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:fullname ?v . "
-          "    ?v bif:contains \"'%1'\" . "
+          "%1"
           "  } "
           "} "
 #endif
       );
+      query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == Email ) {
       query += QString::fromLatin1(
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -460,18 +475,19 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?person "
+          "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?person a nco:PersonContact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
-          "    ?v bif:contains \"'%1'\" . "
+          "%1"
           "  } "
           "}"
 #endif
       );
+      query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NickName ) {
       query += QString::fromLatin1(
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -490,17 +506,18 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:nickname ?v . "
-          "    ?v bif:contains \"'%1'\" . "
+          "%1"
           "  } "
           "}"
 #endif
       );
+      query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == NameOrEmail ) {
       query += QString::fromLatin1(
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -533,27 +550,28 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    { ?r nco:fullname ?v . "
-          "      ?v bif:contains \"'%1'\" . } "
+          "%1 }"
           "    UNION "
           "    { ?r nco:nameGiven ?v . "
-          "      ?v bif:contains \"'%1'\" . } "
+          "%1 }"
           "    UNION "
           "    { ?r nco:nameFamily ?v . "
-          "      ?v bif:contains \"'%1'\" . } "
+          "%1 }"
           "    UNION "
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
-          "      ?v bif:contains \"'%1'\" . } "
+          "%1 }"
           "  } "
           "}"
 #endif
       );
+      query = query.arg( containsQueryString( doWholeWordSearch, matchWordBoundary ) );
     } else if ( criterion == ContactUid ) {
       query += QString::fromLatin1(
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -572,10 +590,10 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "  </query>"
           "</request>"
 #else
-          "SELECT DISTINCT ?r "
+          "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
           "  graph ?g { "
-          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?itemId . "
+          "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    ?r a nco:PersonContact . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1'\" . "

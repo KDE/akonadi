@@ -1,6 +1,7 @@
 /*
     Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -123,6 +124,40 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
      * @since 4.5
      */
     bool isDropActionMenuEnabled() const;
+
+    /**
+     * Return true if we use an manual sorting
+     * Necessary to fix dnd menu
+     * We must show just move when we move item between two items
+     * When automatic no show dnd menu between two items.
+     * @since 4.8.1
+     */
+    bool isManualSortingActive() const;
+
+    /**
+     * Set true if we automatic sorting
+     * @since 4.8.1
+     */    
+    void setManualSortingActive(bool active);
+  
+    /**
+     * Set the name of the default popup menu (retrieved from the
+     * application's XMLGUI file).
+     *
+     * This menu is used as a fallback if the context of the menu request
+     * is neither an item nor a collection, e.g. the click is on an empty
+     * area inside the view.  If the click is over an entry in the view,
+     * the menu which is applicable to the clicked entry (either an Item
+     * or a Collection) is used.
+     *
+     * @param name The name of the popup menu
+     *
+     * @since 4.9
+     * @note For backwards compatibility, the default is the standard
+     * collection popup menu, "akonadi_collectionview_contextmenu".
+     * @see KXMLGUIClient, KXMLGUIFactory::container()
+     */
+    void setDefaultPopupMenu( const QString &name );
 
   Q_SIGNALS:
     /**

@@ -53,6 +53,7 @@
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
+#include <QtGui/QCheckBox>
 
 class ContactEditorWidget::Private
 {
@@ -95,6 +96,10 @@ class ContactEditorWidget::Private
     PhoneEditWidget *mPhonesWidget;
 
     CategoriesEditWidget *mCategoriesWidget;
+
+    KComboBox* mMailPreferFormatting;
+    QCheckBox *mAllowRemoteContent;
+
 
     // widgets from addresses group
     AddressEditWidget *mAddressesWidget;
@@ -163,7 +168,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
 
   layout->addWidget( nameGroupBox, 0, 0 );
   layout->addWidget( internetGroupBox, 0, 1 );
-  layout->addWidget( phonesGroupBox, 1, 0, 2, 1 );
+  layout->addWidget( phonesGroupBox, 1, 0, 4, 1 );
 
   QGridLayout *nameLayout = new QGridLayout( nameGroupBox );
   QGridLayout *internetLayout = new QGridLayout( internetGroupBox );
@@ -266,7 +271,22 @@ void ContactEditorWidget::Private::initGuiContactTab()
   categoriesLayout->addWidget( mCategoriesWidget );
 
   layout->addLayout( categoriesLayout, 1, 1 );
-  layout->setRowStretch( 2, 1 );
+
+  QHBoxLayout *mailPreferFormattingLayout = new QHBoxLayout;
+  label = new QLabel( i18n( "Prefers to receive messages formatted as:" ) );
+  label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
+  mMailPreferFormatting = new KComboBox;
+  QStringList listFormat;
+  listFormat<<i18n( "Unknown" ) <<i18n( "Plain Text" ) << i18n( "HTML" );
+  mMailPreferFormatting->addItems( listFormat );
+  mailPreferFormattingLayout->addWidget( label );
+  mailPreferFormattingLayout->addWidget( mMailPreferFormatting );
+  layout->addLayout( mailPreferFormattingLayout, 2, 1 );
+
+  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content." ) );
+  layout->addWidget( mAllowRemoteContent, 3,1 );
+
+  layout->setRowStretch( 4,1 );
 }
 
 void ContactEditorWidget::Private::initGuiLocationTab()
@@ -531,6 +551,20 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   // categories section
   d->mCategoriesWidget->loadContact( contact );
 
+
+  const QString mailPreferedFormatting = d->loadCustom( contact, QLatin1String( "MailPreferedFormatting" ) );
+  if ( mailPreferedFormatting.isEmpty() )
+    d->mMailPreferFormatting->setCurrentIndex( 0 );
+  else if ( mailPreferedFormatting == QLatin1String( "TEXT" ) )
+    d->mMailPreferFormatting->setCurrentIndex( 1 );
+  else if ( mailPreferedFormatting == QLatin1String( "HTML" ) )
+    d->mMailPreferFormatting->setCurrentIndex( 2 );
+  else
+    d->mMailPreferFormatting->setCurrentIndex( 0 );
+
+  const QString mailAllowToRemoteContent = d->loadCustom( contact, QLatin1String( "MailAllowToRemoteContent" ) );
+  d->mAllowRemoteContent->setChecked( mailAllowToRemoteContent == QLatin1String( "TRUE" ) );
+
   // address group
   d->mAddressesWidget->loadContact( contact );
 
@@ -592,6 +626,24 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
 
   // categories section
   d->mCategoriesWidget->storeContact( contact );
+
+
+
+  QString mailPreferedFormatting;
+  const int index = d->mMailPreferFormatting->currentIndex();
+  if ( index == 0 ) {
+    //Nothing => remove custom variable
+  } else if ( index == 1 ) {
+    mailPreferedFormatting = QLatin1String( "TEXT" );
+  } else if ( index == 2 ) {
+    mailPreferedFormatting = QLatin1String( "HTML" );
+  }
+  d->storeCustom( contact, QLatin1String( "MailPreferedFormatting" ), mailPreferedFormatting );
+
+  QString mailAllowToRemoteContent;
+  if ( d->mAllowRemoteContent->isChecked() )
+    mailAllowToRemoteContent = QLatin1String( "TRUE" );
+  d->storeCustom( contact, QLatin1String( "MailAllowToRemoteContent" ), mailAllowToRemoteContent );
 
   // address group
   d->mAddressesWidget->storeContact( contact );
@@ -658,6 +710,10 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
 
   // widgets from categories section
   d->mCategoriesWidget->setReadOnly( readOnly );
+
+  // Preferred Mail formatting option
+  d->mMailPreferFormatting->setEnabled( !readOnly );
+  d->mAllowRemoteContent->setEnabled( !readOnly );
 
   // widgets from addresses group
   d->mAddressesWidget->setReadOnly( readOnly );

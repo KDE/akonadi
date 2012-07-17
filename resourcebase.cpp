@@ -44,6 +44,7 @@
 #include "resourceselectjob_p.h"
 #include "monitor_p.h"
 #include "servermanager_p.h"
+#include "recursivemover_p.h"
 
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -92,12 +93,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void delayedInit()
     {
-      if ( !DBusConnectionPool::threadConnection().registerService( QLatin1String( "org.freedesktop.Akonadi.Resource." ) + mId ) ) {
+      const QString serviceId = ServerManager::agentServiceName( ServerManager::Resource, mId );
+      if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) ) {
         QString reason = DBusConnectionPool::threadConnection().lastError().message();
         if ( reason.isEmpty() ) {
           reason = QString::fromLatin1( "this service is probably running already." );
         }
-        kError() << "Unable to register service at D-Bus: " << reason;
+        kError() << "Unable to register service" << serviceId << "at D-Bus:" << reason;
 
         if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
           QCoreApplication::instance()->exit(1);
@@ -109,6 +111,12 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     virtual void changeProcessed()
     {
+      if ( m_recursiveMover ) {
+        m_recursiveMover->changeProcessed();
+        QTimer::singleShot( 0, m_recursiveMover, SLOT(replayNext()) );
+        return;
+      }
+
       mChangeRecorder->changeProcessed();
       if ( !mChangeRecorder->isEmpty() )
         scheduler->scheduleChangeReplay();
@@ -140,6 +148,9 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     void slotPrepareItemRetrievalResult( KJob* job );
 
     void changeCommittedResult( KJob* job );
+
+    void slotRecursiveMoveReplay( RecursiveMover *mover );
+    void slotRecursiveMoveReplayResult( KJob *job );
 
     void slotSessionReconnected()
     {
@@ -175,7 +186,10 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     // Dump the state of the scheduler
     Q_SCRIPTABLE QString dumpToString() const
     {
-      return scheduler->dumpToString();
+      Q_Q( const ResourceBase );
+      QString retVal;
+      QMetaObject::invokeMethod( const_cast<ResourceBase *>(q), "dumpResourceToString", Qt::DirectConnection, Q_RETURN_ARG(QString, retVal) );
+      return scheduler->dumpToString() + QLatin1Char('\n') + retVal;
     }
 
     Q_SCRIPTABLE void dump()
@@ -258,13 +272,34 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::collectionChanged( collection, partIdentifiers );
     }
 
-    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
     void collectionMoved(const Akonadi::Collection& collection, const Akonadi::Collection& source, const Akonadi::Collection& destination)
     {
-      if ( collection.remoteId().isEmpty() || destination.remoteId().isEmpty() || source == destination ) {
+      // unknown destination or source == destination means we can't do/don't have to do anything
+      if ( destination.remoteId().isEmpty() || source == destination ) {
         changeProcessed();
         return;
       }
+
+      // inter-resource moves, requires we know which resources the source and destination are in though
+      if ( !source.resource().isEmpty() && !destination.resource().isEmpty() && source.resource() != destination.resource() ) {
+        if ( source.resource() == q_ptr->identifier() ) { // moved away from us
+          AgentBasePrivate::collectionRemoved( collection );
+        } else if ( destination.resource() == q_ptr->identifier() ) { // moved to us
+          scheduler->taskDone(); // stop change replay for now
+          RecursiveMover *mover = new RecursiveMover( this );
+          mover->setCollection( collection, destination );
+          scheduler->scheduleMoveReplay( collection, mover );
+        }
+        return;
+      }
+
+      // intra-resource move, requires the moved collection to have a valid id though
+      if ( collection.remoteId().isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      // intra-resource move, ie. something we can handle internally
       AgentBasePrivate::collectionMoved( collection, source, destination );
     }
 
@@ -291,6 +326,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     int mUnemittedProgress;
     QMap<Akonadi::Collection::Id, QVariantMap> mUnemittedAdvancedStatus;
     bool mAutomaticProgressReporting;
+    QPointer<RecursiveMover> m_recursiveMover;
 };
 
 ResourceBase::ResourceBase( const QString & id )
@@ -303,6 +339,7 @@ ResourceBase::ResourceBase( const QString & id )
   d->scheduler = new ResourceScheduler( this );
 
   d->mChangeRecorder->setChangeRecordingEnabled( true );
+  d->mChangeRecorder->setCollectionMoveTranslationEnabled( false ); // we deal with this ourselves
   connect( d->mChangeRecorder, SIGNAL(changesAdded()),
            d->scheduler, SLOT(scheduleChangeReplay()) );
 
@@ -327,6 +364,8 @@ ResourceBase::ResourceBase( const QString & id )
            SIGNAL(status(int,QString)) );
   connect( d->scheduler, SIGNAL(executeChangeReplay()),
            d->mChangeRecorder, SLOT(replayNext()) );
+  connect( d->scheduler, SIGNAL(executeRecursiveMoveReplay(RecursiveMover*)),
+           SLOT(slotRecursiveMoveReplay(RecursiveMover*)) );
   connect( d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()) );
   connect( d->scheduler, SIGNAL(collectionTreeSyncComplete()), SIGNAL(collectionTreeSynchronized()) );
   connect( d->mChangeRecorder, SIGNAL(nothingToReplay()), d->scheduler, SLOT(taskDone()) );
@@ -393,7 +432,7 @@ QString ResourceBase::parseArguments( int argc, char **argv )
   // strip off full path and possible .exe suffix
   const QByteArray catalog = fi.baseName().toLatin1();
 
-  KCmdLineArgs::init( argc, argv, identifier.toLatin1(), catalog,
+  KCmdLineArgs::init( argc, argv, ServerManager::addNamespace( identifier ).toLatin1(), catalog,
                       ki18nc( "@title application name", "Akonadi Resource" ), KDEPIMLIBS_VERSION,
                       ki18nc( "@title application description", "Akonadi Resource" ) );
 
@@ -736,6 +775,29 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult( KJob* job )
   const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
   if ( !q->retrieveItem( item, parts ) )
     q->cancelTask();
+}
+
+void ResourceBasePrivate::slotRecursiveMoveReplay( RecursiveMover *mover )
+{
+  Q_Q( ResourceBase );
+  Q_ASSERT( mover );
+  Q_ASSERT( !m_recursiveMover );
+  m_recursiveMover = mover;
+  connect( mover, SIGNAL(result(KJob*)), q, SLOT(slotRecursiveMoveReplayResult(KJob*)) );
+  mover->start();
+}
+
+void ResourceBasePrivate::slotRecursiveMoveReplayResult( KJob *job )
+{
+  Q_Q( ResourceBase );
+  m_recursiveMover = 0;
+
+  if ( job->error() ) {
+    q->deferTask();
+    return;
+  }
+
+  changeProcessed();
 }
 
 void ResourceBase::itemsRetrievalDone()

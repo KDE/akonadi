@@ -31,6 +31,8 @@
 
 namespace Akonadi {
 
+class RecursiveMover;
+
 //@cond PRIVATE
 
 /**
@@ -54,6 +56,7 @@ class ResourceScheduler : public QObject
       SyncCollectionAttributes,
       FetchItem,
       ChangeReplay,
+      RecursiveMoveReplay,
       DeleteResourceCollection,
       InvalideCacheForCollection,
       SyncAllDone,
@@ -151,6 +154,11 @@ class ResourceScheduler : public QObject
     void scheduleCustomTask( QObject *receiver, const char *methodName, const QVariant &argument, ResourceBase::SchedulePriority priority = ResourceBase::Append );
 
     /**
+     * Schedule a recursive move replay.
+     */
+    void scheduleMoveReplay( const Collection &movedCollection, RecursiveMover *mover );
+
+    /**
       Returns true if no tasks are running or in the queue.
     */
     bool isEmpty();
@@ -218,6 +226,7 @@ class ResourceScheduler : public QObject
     void executeResourceCollectionDeletion();
     void executeCacheInvalidation( const Akonadi::Collection &collection );
     void executeChangeReplay();
+    void executeRecursiveMoveReplay( RecursiveMover *mover );
     void collectionTreeSyncComplete();
     void fullSyncComplete();
     void status( int status, const QString &message = QString() );

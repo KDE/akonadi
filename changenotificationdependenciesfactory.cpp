@@ -22,6 +22,7 @@
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
 #include "changemediator_p.h"
+#include "servermanager.h"
 
 #include <KComponentData>
 #include <KGlobal>
@@ -32,7 +33,7 @@ using namespace Akonadi;
 QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
   org::freedesktop::Akonadi::NotificationManager manager(
-          QLatin1String( "org.freedesktop.Akonadi" ),
+          ServerManager::serviceName( Akonadi::ServerManager::Server ),
           QLatin1String( "/notifications" ),
           DBusConnectionPool::threadConnection() );
 
@@ -43,7 +44,7 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
   }
 
   org::freedesktop::Akonadi::NotificationSource *notificationSource = new org::freedesktop::Akonadi::NotificationSource(
-              QLatin1String( "org.freedesktop.Akonadi" ),
+              ServerManager::serviceName( Akonadi::ServerManager::Server ),
               p.path(),
               DBusConnectionPool::threadConnection(), parent );
 

@@ -137,6 +137,7 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent ) const;
+    virtual bool filterAcceptsColumn(int sourceColumn, const QModelIndex& sourceParent) const;
 
   private:
     //@cond PRIVATE

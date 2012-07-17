@@ -20,6 +20,7 @@
 #include "resourcescheduler_p.h"
 
 #include "dbusconnectionpool.h"
+#include "recursivemover_p.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -157,6 +158,22 @@ void ResourceScheduler::scheduleChangeReplay()
     return;
   queue << t;
   signalTaskToTracker( t, "ChangeReplay" );
+  scheduleNext();
+}
+
+void ResourceScheduler::scheduleMoveReplay( const Collection &movedCollection, RecursiveMover *mover )
+{
+  Task t;
+  t.type = RecursiveMoveReplay;
+  t.collection = movedCollection;
+  t.argument = QVariant::fromValue( mover );
+  TaskList &queue = queueForTaskType( t.type );
+
+  if ( queue.contains( t ) || mCurrentTask == t )
+    return;
+
+  queue << t;
+  signalTaskToTracker( t, "RecursiveMoveReplay" );
   scheduleNext();
 }
 
@@ -313,6 +330,9 @@ void ResourceScheduler::executeNext()
     case ChangeReplay:
       emit executeChangeReplay();
       break;
+    case RecursiveMoveReplay:
+      emit executeRecursiveMoveReplay( mCurrentTask.argument.value<RecursiveMover*>() );
+      break;
     case SyncAllDone:
       emit fullSyncComplete();
       break;
@@ -428,6 +448,7 @@ ResourceScheduler::QueueType ResourceScheduler::queueTypeForTaskType( TaskType t
 {
   switch( type ) {
   case ChangeReplay:
+  case RecursiveMoveReplay:
     return ChangeReplayQueue;
   case FetchItem:
     return ItemFetchQueue;
@@ -501,6 +522,7 @@ static const char s_taskTypes[][27] = {
       "SyncCollectionAttributes",
       "FetchItem",
       "ChangeReplay",
+      "RecursiveMoveReplay",
       "DeleteResourceCollection",
       "InvalideCacheForCollection",
       "SyncAllDone",

@@ -111,12 +111,10 @@ class CollectionSync::Private
     /** Create a local node from the given local collection and integrate it into the local tree structure. */
     LocalNode* createLocalNode( const Collection &col )
     {
-      if ( col.remoteId().isEmpty() ) // no remote id here means it hasn't been added to the resource yet, so we exclude it from the sync
-        return 0;
       LocalNode *node = new LocalNode( col );
       Q_ASSERT( !localUidMap.contains( col.id() ) );
       localUidMap.insert( node->collection.id(), node );
-      if ( !hierarchicalRIDs )
+      if ( !hierarchicalRIDs && !col.remoteId().isEmpty() )
         localRidMap.insert( node->collection.remoteId(), node );
 
       // add already existing children
@@ -126,7 +124,8 @@ class CollectionSync::Private
           Q_ASSERT( localUidMap.contains( childId ) );
           LocalNode *childNode = localUidMap.value( childId );
           node->childNodes.append( childNode );
-          node->childRidMap.insert( childNode->collection.remoteId(), childNode );
+          if ( !childNode->collection.remoteId().isEmpty() )
+            node->childRidMap.insert( childNode->collection.remoteId(), childNode );
         }
       }
 
@@ -134,7 +133,8 @@ class CollectionSync::Private
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
         LocalNode* parentNode = localUidMap.value( col.parentCollection().id() );
         parentNode->childNodes.append( node );
-        parentNode->childRidMap.insert( node->collection.remoteId(), node );
+        if ( !node->collection.remoteId().isEmpty() )
+          parentNode->childRidMap.insert( node->collection.remoteId(), node );
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
@@ -179,6 +179,27 @@ class CollectionSync::Private
     }
 
     /**
+     * Find a child node with matching collection name.
+     * @note This is used as a fallback if the resource lost the RID update somehow.
+     * This can be used because the Akonadi server enforces unique child collection names inside the hierarchy
+     */
+    LocalNode* findLocalChildNodeByName( LocalNode *localParentNode, const QString &name )
+    {
+      if ( name.isEmpty() ) // shouldn't happen...
+        return 0;
+
+      if ( localParentNode == localRoot ) // possibly non-unique names on top-level
+        return 0;
+
+      foreach ( LocalNode *childNode, localParentNode->childNodes ) {
+        // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
+        if ( childNode->collection.name() == name && childNode->collection.remoteId().isEmpty() )
+          return childNode;
+      }
+      return 0;
+    }
+
+    /**
       Find the local node that matches the given remote collection, returns 0
       if that doesn't exist (yet).
     */
@@ -201,8 +222,16 @@ class CollectionSync::Private
         else
           localParent = findMatchingLocalNode( collection.parentCollection() );
 
-        if ( localParent && localParent->childRidMap.contains( collection.remoteId() ) )
-          return localParent->childRidMap.value( collection.remoteId() );
+        if ( localParent ) {
+          if ( localParent->childRidMap.contains( collection.remoteId() ) )
+            return localParent->childRidMap.value( collection.remoteId() );
+          // check if we have a local folder with a matching name and no RID, if so let's use that one
+          // we would get an error if we don't do this anyway, as we'd try to create two sibling nodes with the same name
+          if ( LocalNode *recoveredLocalNode = findLocalChildNodeByName( localParent, collection.name() ) ) {
+            kDebug() << "Recovering collection with lost RID:" << collection << recoveredLocalNode->collection;
+            return recoveredLocalNode;
+          }
+        }
         return 0;
       }
     }
@@ -287,6 +316,7 @@ class CollectionSync::Private
     void updateLocalCollection( LocalNode *localNode, RemoteNode *remoteNode )
     {
       Collection upd( remoteNode->collection );
+      Q_ASSERT( !upd.remoteId().isEmpty() );
       upd.setId( localNode->collection.id() );
       {
         // ### HACK to work around the implicit move attempts of CollectionModifyJob
@@ -334,6 +364,7 @@ class CollectionSync::Private
       foreach ( RemoteNode *remoteNode, remoteNodes ) {
         ++pendingJobs;
         Collection col( remoteNode->collection );
+        Q_ASSERT( !col.remoteId().isEmpty() );
         col.setParentCollection( localParent->collection );
         CollectionCreateJob *create = new CollectionCreateJob( col, q );
         create->setProperty( LOCAL_NODE, QVariant::fromValue( localParent ) );
@@ -386,15 +417,21 @@ class CollectionSync::Private
     Collection::List findUnprocessedLocalCollections( LocalNode *localNode ) const
     {
       Collection::List rv;
-      if ( !localNode->processed && hasProcessedChildren( localNode ) ) {
-        kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
-        kWarning() << localNode->collection;
-        return rv;
-      }
       if ( !localNode->processed ) {
+        if ( hasProcessedChildren( localNode ) ) {
+          kWarning() << "Found unprocessed local node with processed children, excluding from deletion";
+          kWarning() << localNode->collection;
+          return rv;
+        }
+        if ( localNode->collection.remoteId().isEmpty() ) {
+          kWarning() << "Found unprocessed local node without remoteId, excluding from deletion";
+          kWarning() << localNode->collection;
+          return rv;
+        }
         rv.append( localNode->collection );
         return rv;
       }
+
       foreach ( LocalNode *child, localNode->childNodes )
         rv.append( findUnprocessedLocalCollections( child ) );
       return rv;
@@ -419,6 +456,8 @@ class CollectionSync::Private
     {
       q->setTotalAmount( KJob::Bytes, q->totalAmount( KJob::Bytes ) + cols.size() );
       foreach ( const Collection &col, cols ) {
+        Q_ASSERT( !col.remoteId().isEmpty() ); // empty RID -> stuff we haven't even written to the remote side yet
+
         ++pendingJobs;
         CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
         connect( job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)) );

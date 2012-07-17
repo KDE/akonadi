@@ -289,6 +289,7 @@ QString Job::errorString() const
       str = i18n( "User canceled operation." );
       break;
     case Unknown:
+      return errorText();
     default:
       str = i18n( "Unknown error." );
       break;

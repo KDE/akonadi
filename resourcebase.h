@@ -297,6 +297,14 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     //       in order to simulate polymorphism
     void abortActivity();
 
+    /**
+     * Dump resource internals, for debugging.
+     * @since 4.9
+     */
+    // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
+    //       in order to simulate polymorphism
+    QString dumpResourceToString() const { return QString(); }
+
   protected:
     /**
      * Creates a base resource.
@@ -642,6 +650,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     Q_PRIVATE_SLOT( d_func(), void slotPrepareItemRetrievalResult( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void changeCommittedResult( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void slotSessionReconnected() )
+    Q_PRIVATE_SLOT( d_func(), void slotRecursiveMoveReplay( RecursiveMover* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotRecursiveMoveReplayResult( KJob* ) )
 };
 
 }

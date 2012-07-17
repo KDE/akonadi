@@ -59,8 +59,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   QString rowFmtStr = QString::fromLatin1(
         "<tr>"
-        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font size=\"-1\" color=\"grey\">%1</font></b></td>\n"
-        "<td align=\"left\" valign=\"top\" width=\"70%\"><font size=\"-1\">%2</font></td>\n"
+        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
+        "<td align=\"left\" valign=\"top\" width=\"70%\"><font>%2</font></td>\n"
         "</tr>\n"
         );
 
@@ -171,6 +171,8 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     blacklistedKeys.insert( QLatin1String( "SMIMEFP" ) );
     blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
     blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
+    blacklistedKeys.insert( QLatin1String( "MailPreferedFormatting" ) );
+    blacklistedKeys.insert( QLatin1String( "MailAllowToRemoteContent") );
   }
 
   if ( !rawContact.customs().empty() ) {
@@ -191,10 +193,10 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
         }
 
         // blog is handled separated
-        if ( key == QLatin1String( "BlogFeed" ) )
+        else if ( key == QLatin1String( "BlogFeed" ) )
           continue;
 
-        if ( blacklistedKeys.contains( key ) )
+	else if ( blacklistedKeys.contains( key ) )
           continue;
 
         // check whether we have a mapping for the title
@@ -300,3 +302,4 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   return document;
 }
+

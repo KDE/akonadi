@@ -34,8 +34,10 @@ namespace Akonadi
 class AgentInstance::Private : public QSharedData
 {
   public:
-    Private()
-      : mIsOnline(false)
+    Private() :
+      mStatus(0),
+      mProgress(0),
+      mIsOnline(false)
     {
     }
 

@@ -103,14 +103,17 @@ bool ContactsFilterProxyModel::lessThan( const QModelIndex &leftIndex, const QMo
 {
   const QDate leftDate = leftIndex.data( ContactsTreeModel::DateRole ).toDate();
   const QDate rightDate = rightIndex.data( ContactsTreeModel::DateRole ).toDate();
-
   if ( leftDate.isValid() && rightDate.isValid() ) {
-    if ( leftDate.month() < rightDate.month() )
+    if(leftDate.year() < rightDate.year() )
       return true;
-    else if ( leftDate.month() == rightDate.month() )
-      return (leftDate.day() < rightDate.day());
+    else if(leftDate.year() == rightDate.year()) {
+       if ( leftDate.month() < rightDate.month() )
+         return true;
+       else if ( leftDate.month() == rightDate.month() )
+         return (leftDate.day() < rightDate.day());
+    }
     else
-      return false;
+     return false;
   }
 
   return QSortFilterProxyModel::lessThan( leftIndex, rightIndex );
