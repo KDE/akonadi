@@ -39,7 +39,7 @@ class Exception : public std::exception
     virtual ~Exception() throw() {}
     const char* what() const throw() { return mWhat.constData(); }
     virtual const char* type() const throw() { return "General Exception"; }
-  private:
+  protected:
     QByteArray mWhat;
 };
 

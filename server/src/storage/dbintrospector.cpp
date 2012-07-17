@@ -21,6 +21,7 @@
 #include "dbintrospector.h"
 #include "dbintrospector_impl.h"
 #include "dbtype.h"
+#include "dbexception.h"
 
 #include <akdebug.h>
 
@@ -61,11 +62,8 @@ bool DbIntrospector::hasTable(const QString& tableName)
 bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName)
 {
   QSqlQuery query( m_database );
-  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
-//     mErrorMsg = QString::fromLatin1( "Unable to list index information for table %1.\n" ).arg( tableName );
-//     mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-    return false;
-  }
+  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) )
+    throw DbException( "Failed to query index.", query );
   return query.next();
 }
 

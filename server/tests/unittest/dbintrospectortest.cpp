@@ -19,9 +19,11 @@
 
 #include <QObject>
 #include <QtTest/QTest>
+#include <QDebug>
 
 #include <aktest.h>
 #include <storage/dbintrospector.h>
+#include <storage/dbexception.h>
 
 #define QL1S(x) QLatin1String(x)
 
@@ -52,6 +54,40 @@ class DbIntrospectorTest : public QObject
         QCOMPARE( introspector->hasIndexQuery( QL1S("myTable"), QL1S("myIndex") ), indexQuery );
       }
     }
+
+
+    void testHasIndex_data()
+    {
+      QTest::addColumn<QString>( "driverName" );
+      QTest::addColumn<bool>( "shouldThrow" );
+
+      QTest::newRow( "mysql" ) << "QMYSQL" << true;
+      QTest::newRow( "sqlite" ) << "QSQLITE" << true;
+      QTest::newRow( "psql" ) << "QPSQL" << true;
+      QTest::newRow( "virtuoso" ) << "QODBC" << false;
+    }
+
+    void testHasIndex()
+    {
+      QFETCH( QString, driverName );
+      QFETCH( bool, shouldThrow );
+
+      if ( QSqlDatabase::drivers().contains( driverName ) ) {
+        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName + QL1S("hasIndex") );
+        DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
+        QVERIFY( introspector );
+
+        bool didThrow = false;
+        try {
+          QVERIFY( introspector->hasIndex( QL1S("myTable"), QL1S("myIndex") ) );
+        } catch ( const DbException &e ) {
+          didThrow = true;
+          qDebug() << Q_FUNC_INFO << e.what();
+        }
+        QCOMPARE( didThrow, shouldThrow );
+      }
+    }
+
 };
 
 AKTEST_MAIN( DbIntrospectorTest )

@@ -124,6 +124,7 @@ set(libakonadiprivate_SRCS
   src/storage/dbconfigpostgresql.cpp
   src/storage/dbconfigsqlite.cpp
   src/storage/dbconfigvirtuoso.cpp
+  src/storage/dbexception.cpp
   src/storage/dbinitializer.cpp
   src/storage/dbinitializer_p.cpp
   src/storage/dbintrospector.cpp
