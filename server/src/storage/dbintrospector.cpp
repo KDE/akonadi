@@ -63,7 +63,7 @@ bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName
 {
   QSqlQuery query( m_database );
   if ( !query.exec( hasIndexQuery( tableName, indexName ) ) )
-    throw DbException( "Failed to query index.", query );
+    throw DbException( query, "Failed to query index" );
   return query.next();
 }
 

@@ -190,6 +190,11 @@ class DbInitializer
      */
     void unitTestRun();
 
+    /** Helper method for executing a query.
+     * If a debug interface is set for testing, that gets the queries instead.
+     * @throws DbException if something went wrong.
+     */
+    void execQuery( const QString &queryString );
 
     bool checkTable( const QDomElement& );
     bool checkRelation( const QDomElement &element );

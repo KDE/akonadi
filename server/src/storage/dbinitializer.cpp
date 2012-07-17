@@ -220,21 +220,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
   const TableDescription tableDescription = parseTableDescription( element );
   akDebug() << "checking table " << tableDescription.name;
 
-  QSqlQuery query( mDatabase );
-
   if ( !m_introspector->hasTable( tableDescription.name ) ) {
     // Get the CREATE TABLE statement for the specific SQL dialect
     const QString createTableStatement = buildCreateTableStatement( tableDescription );
     akDebug() << createTableStatement;
-
-    // We have to create the entire table.
-    if ( !query.exec( createTableStatement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
-      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-      return false;
-    }
+    execQuery( createTableStatement );
   } else {
-    // Check for every column whether it exists.
+    // Check for every column whether it exists, and add the missing ones
     const QSqlRecord table = mDatabase.record( tableDescription.name );
 
     Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
@@ -249,21 +241,15 @@ bool DbInitializer::checkTable( const QDomElement &element )
       }
 
       if ( !found ) {
-        // Add missing column to table.
-
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
         akDebug() << statement;
-
-        if ( !query.exec( statement ) ) {
-          mErrorMsg = QString::fromLatin1( "Unable to add column '%1' to table '%2'.\n" ).arg( columnDescription.name, tableDescription.name );
-          mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-          return false;
-        }
+        execQuery( statement );
       }
     }
 
-    // TODO: remove obsolete columns (when sqlite will support it) and adapt column type modifications
+    // NOTE: we do intentionally not delete any columns here, we defer that to the updater,
+    // very likely previous columns contain data that needs to be moved to a new column first.
   }
 
   // Add indices
@@ -273,14 +259,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
     if ( !m_introspector->hasIndex( tableDescription.name, indexName ) ) {
       // Get the CREATE INDEX statement for the specific SQL dialect
       const QString statement = buildCreateIndexStatement( tableDescription, indexDescription );
-
-      QSqlQuery query( mDatabase );
       akDebug() << "adding index" << statement;
-      if ( !query.exec( statement ) ) {
-        mErrorMsg = QLatin1String( "Unable to create index.\n" );
-        mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-        return false;
-      }
+      execQuery( statement );
     }
   }
 
@@ -297,19 +277,13 @@ bool DbInitializer::checkTable( const QDomElement &element )
     return false;
   }
 
-  query = queryBuilder.query();
+  QSqlQuery query = queryBuilder.query();
   if ( query.size() == 0  || !query.first() ) { // table is empty
     Q_FOREACH ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
       const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );
       akDebug() << statement;
-
-      if ( !query.exec( statement ) ) {
-        mErrorMsg = QString::fromLatin1( "Unable to add initial data to table '%1'.\n" ).arg( tableDescription.name );
-        mErrorMsg += QString::fromLatin1( "Query error: '%1'\n" ).arg( query.lastError().text() );
-        mErrorMsg += QString::fromLatin1( "Query was: %1" ).arg( statement );
-        return false;
-      }
+      execQuery( statement );
     }
   }
 
@@ -329,13 +303,7 @@ bool DbInitializer::checkRelation( const QDomElement &element )
   if ( !m_introspector->hasTable( relationTableName ) ) {
     const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
     akDebug() << statement;
-
-    QSqlQuery query( mDatabase );
-    if ( !query.exec( statement ) ) {
-      mErrorMsg = QLatin1String( "Unable to create entire table.\n" );
-      mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( query.lastError().text() );
-      return false;
-    }
+    execQuery( statement );
   }
 
   return true;
@@ -412,6 +380,19 @@ QString DbInitializer::buildCreateRelationTableStatement( const QString &tableNa
 
   return statement;
 }
+
+void DbInitializer::execQuery(const QString& queryString)
+{
+  if ( Q_UNLIKELY( mDebugInterface ) ) {
+    // TODO report to debug interface here
+    return;
+  }
+
+  QSqlQuery query( mDatabase );
+  if ( !query.exec( queryString ) )
+    throw DbException( query );
+}
+
 
 void DbInitializer::setDebugInterface( DebugInterface *interface )
 {
