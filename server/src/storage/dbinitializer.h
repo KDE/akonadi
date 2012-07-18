@@ -32,10 +32,11 @@
 
 class QDomElement;
 
-class DebugInterface
+class TestInterface
 {
   public:
-    virtual ~DebugInterface() {};
+    virtual ~TestInterface() {};
+    virtual void execStatement( const QString &statement ) = 0;
     virtual void createTableStatement( const QString &tableName, const QString &statement ) = 0;
 };
 
@@ -181,7 +182,7 @@ class DbInitializer
     /**
      * Sets the debug @p interface that shall be used on unit test run.
      */
-    void setDebugInterface( DebugInterface *interface );
+    void setTestInterface( TestInterface *interface );
 
     /**
      * Runs the DbInitializer in unit test mode.
@@ -205,7 +206,7 @@ class DbInitializer
     QSqlDatabase mDatabase;
     QString mTemplateFile;
     QString mErrorMsg;
-    DebugInterface *mDebugInterface;
+    TestInterface *mTestInterface;
     DbIntrospector::Ptr m_introspector;
 };
 

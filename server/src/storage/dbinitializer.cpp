@@ -78,7 +78,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, c
 }
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
-  : mDatabase( database ), mTemplateFile( templateFile ), mDebugInterface( 0 )
+  : mDatabase( database ), mTemplateFile( templateFile ), mTestInterface( 0 )
 {
   m_introspector = DbIntrospector::createInstance( mDatabase );
 }
@@ -383,8 +383,8 @@ QString DbInitializer::buildCreateRelationTableStatement( const QString &tableNa
 
 void DbInitializer::execQuery(const QString& queryString)
 {
-  if ( Q_UNLIKELY( mDebugInterface ) ) {
-    // TODO report to debug interface here
+  if ( Q_UNLIKELY( mTestInterface ) ) {
+    mTestInterface->execStatement( queryString );
     return;
   }
 
@@ -394,9 +394,9 @@ void DbInitializer::execQuery(const QString& queryString)
 }
 
 
-void DbInitializer::setDebugInterface( DebugInterface *interface )
+void DbInitializer::setTestInterface( TestInterface *interface )
 {
-  mDebugInterface = interface;
+  mTestInterface = interface;
 }
 
 void DbInitializer::unitTestRun()
@@ -429,8 +429,8 @@ void DbInitializer::unitTestRun()
       const QString tableName = tableElement.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
       const TableDescription tableDescription = parseTableDescription( tableElement );
       const QString createTableStatement = buildCreateTableStatement( tableDescription );
-      if ( mDebugInterface )
-        mDebugInterface->createTableStatement( tableName, createTableStatement );
+      if ( mTestInterface )
+        mTestInterface->createTableStatement( tableName, createTableStatement );
     } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
     } else {
       mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );

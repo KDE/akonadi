@@ -27,7 +27,7 @@
 
 QTEST_MAIN( DbInitializerTest )
 
-class Debugger : public DebugInterface
+class StatementCollector : public TestInterface
 {
   public:
     virtual void createTableStatement( const QString &tableName, const QString &statement )
@@ -35,7 +35,13 @@ class Debugger : public DebugInterface
       hash.insert( tableName, statement.simplified() );
     }
 
+    virtual void execStatement(const QString& statement)
+    {
+      statements.push_back(statement);
+    }
+
     QHash<QString, QString> hash;
+    QStringList statements;
 };
 
 void DbInitializerTest::initTestCase()
@@ -48,12 +54,12 @@ void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier
   QSqlDatabase db = QSqlDatabase::addDatabase( dbIdentifier );
   DbInitializer::Ptr initializer = DbInitializer::createInstance( db, QLatin1String(":akonadidb.xml") );
 
-  Debugger *debugger = new Debugger;
-  initializer->setDebugInterface( debugger );
+  StatementCollector collector;
+  initializer->setTestInterface( &collector );
   initializer->unitTestRun();
   QVERIFY( initializer->errorMsg().isEmpty() );
 
-  QHashIterator<QString, QString> it( debugger->hash );
+  QHashIterator<QString, QString> it( collector.hash );
   while ( it.hasNext() ) {
     it.next();
 
@@ -72,7 +78,6 @@ void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier
     QCOMPARE( output, data );
   }
 
-  delete debugger;
   QSqlDatabase::removeDatabase( db.databaseName() );
 }
 
