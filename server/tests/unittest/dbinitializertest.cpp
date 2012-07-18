@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2012 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,27 +22,38 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
-#include <QBuffer>
 
 #include "storage/dbinitializer.h"
+#include <aktest.h>
 
-QTEST_MAIN( DbInitializerTest )
+AKTEST_MAIN( DbInitializerTest )
 
 class StatementCollector : public TestInterface
 {
   public:
-    virtual void createTableStatement( const QString &tableName, const QString &statement )
-    {
-      hash.insert( tableName, statement.simplified() );
-    }
-
     virtual void execStatement(const QString& statement)
     {
       statements.push_back(statement);
     }
 
-    QHash<QString, QString> hash;
     QStringList statements;
+};
+
+class DbFakeIntrospector : public DbIntrospector
+{
+  public:
+    DbFakeIntrospector(const QSqlDatabase& database) : DbIntrospector(database) {}
+    virtual bool hasTable(const QString& tableName)
+    {
+      Q_UNUSED( tableName );
+      return false;
+    }
+    virtual bool hasIndex(const QString& tableName, const QString& indexName)
+    {
+      Q_UNUSED( tableName );
+      Q_UNUSED( indexName );
+      return false;
+    }
 };
 
 void DbInitializerTest::initTestCase()
@@ -49,56 +61,61 @@ void DbInitializerTest::initTestCase()
   Q_INIT_RESOURCE( akonadidb );
 }
 
-void DbInitializerTest::runCreateTableStatementTest( const QString &dbIdentifier, const QString &pattern )
+void DbInitializerTest::testRun_data()
 {
-  QSqlDatabase db = QSqlDatabase::addDatabase( dbIdentifier );
-  DbInitializer::Ptr initializer = DbInitializer::createInstance( db, QLatin1String(":akonadidb.xml") );
+  QTest::addColumn<QString>( "driverName" );
+  QTest::addColumn<QString>( "filename" );
 
-  StatementCollector collector;
-  initializer->setTestInterface( &collector );
-  initializer->unitTestRun();
-  QVERIFY( initializer->errorMsg().isEmpty() );
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql";
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite";
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql";
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc";
+}
 
-  QHashIterator<QString, QString> it( collector.hash );
-  while ( it.hasNext() ) {
-    it.next();
+void DbInitializerTest::testRun()
+{
+  QFETCH( QString, driverName );
+  QFETCH( QString, filename );
 
-    const QString fileName = pattern + it.key().toLower().remove( QLatin1String( "table" ) );
-    QFile file( fileName );
+  QFile file( filename );
+  QVERIFY( file.open( QFile::ReadOnly ) );
 
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-      QVERIFY( false );
-      return;
+  if ( QSqlDatabase::drivers().contains( driverName ) ) {
+    QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
+    DbInitializer::Ptr initializer = DbInitializer::createInstance( db, QLatin1String(":akonadidb.xml") );
+    QVERIFY( initializer );
+
+    StatementCollector collector;
+    initializer->setTestInterface( &collector );
+    DbIntrospector::Ptr introspector( new DbFakeIntrospector( db ) );
+    initializer->setIntrospector( introspector );
+
+    QVERIFY( initializer->run() );
+    QVERIFY( !collector.statements.isEmpty() );
+
+    Q_FOREACH ( const QString &statement, collector.statements ) {
+      const QString expected = readNextStatement( &file ).simplified();
+
+      QString normalized = statement.simplified();
+      normalized.replace( QLatin1String(" ,"), QLatin1String(",") );
+      normalized.replace( QLatin1String(" )"), QLatin1String(")") );
+      QCOMPARE( normalized, expected );
     }
 
-    const QString data = QString::fromUtf8( file.readAll() ).simplified();
-    QString output = it.value();
-    output.replace( QLatin1String(" ,"), QLatin1String(",") );
-    output.replace( QLatin1String(" )"), QLatin1String(")") );
-    QCOMPARE( output, data );
+  }
+}
+
+QString DbInitializerTest::readNextStatement(QIODevice* io)
+{
+  QString statement;
+  while ( !io->atEnd() ) {
+    const QString line = QString::fromUtf8( io->readLine() );
+    if ( line.trimmed().isEmpty() && !statement.isEmpty() )
+      return statement;
+    statement += line;
   }
 
-  QSqlDatabase::removeDatabase( db.databaseName() );
-}
-
-void DbInitializerTest::testMysqlCreateTableStatement()
-{
-  runCreateTableStatementTest( QLatin1String( "QMYSQL" ), QLatin1String( ":mysql_ct_" ) );
-}
-
-void DbInitializerTest::testPsqlCreateTableStatement()
-{
-  runCreateTableStatementTest( QLatin1String( "QPSQL" ), QLatin1String( ":psql_ct_" ) );
-}
-
-void DbInitializerTest::testSqliteCreateTableStatement()
-{
-  runCreateTableStatementTest( QLatin1String( "QSQLITE3" ), QLatin1String( ":sqlite_ct_" ) );
-}
-
-void DbInitializerTest::testOdbcCreateTableStatement()
-{
-  runCreateTableStatementTest( QLatin1String( "QODBC" ), QLatin1String( ":odbc_ct_" ) );
+  return statement;
 }
 
 #include "dbinitializertest.moc"

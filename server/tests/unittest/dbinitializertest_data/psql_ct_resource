@@ -1,3 +1,0 @@
-CREATE TABLE ResourceTable (id SERIAL PRIMARY KEY,
-                            name BYTEA UNIQUE NOT NULL,
-                            isVirtual BOOL DEFAULT false)

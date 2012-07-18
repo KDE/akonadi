@@ -37,7 +37,6 @@ class TestInterface
   public:
     virtual ~TestInterface() {};
     virtual void execStatement( const QString &statement ) = 0;
-    virtual void createTableStatement( const QString &tableName, const QString &statement ) = 0;
 };
 
 /**
@@ -185,11 +184,10 @@ class DbInitializer
     void setTestInterface( TestInterface *interface );
 
     /**
-     * Runs the DbInitializer in unit test mode.
-     * This won't change anything in the database, only calls the code
-     * to generate SQL statements.
+     * Sets a different DbIntrospector. This allows unit tests to simulate certain
+     * states of the database.
      */
-    void unitTestRun();
+    void setIntrospector( const DbIntrospector::Ptr &introspector );
 
     /** Helper method for executing a query.
      * If a debug interface is set for testing, that gets the queries instead.

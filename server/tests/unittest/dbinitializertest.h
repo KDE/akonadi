@@ -29,13 +29,12 @@ class DbInitializerTest : public QObject
 
   private Q_SLOTS:
     void initTestCase();
-    void testMysqlCreateTableStatement();
-    void testPsqlCreateTableStatement();
-    void testSqliteCreateTableStatement();
-    void testOdbcCreateTableStatement();
+
+    void testRun_data();
+    void testRun();
 
   private:
-    void runCreateTableStatementTest( const QString&, const QString& );
+    static QString readNextStatement( QIODevice *io );
 };
 
 #endif

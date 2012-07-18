@@ -1,3 +1,0 @@
-CREATE TABLE ResourceTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
-                            name VARCHAR(255) NOT NULL UNIQUE,
-                            isVirtual CHAR DEFAULT 0)

@@ -264,7 +264,7 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
   }
 
-  if ( tableDescription.data.isEmpty() )
+  if ( tableDescription.data.isEmpty() || mTestInterface ) // TODO move the select query below in to the introspector, then we can continue here with the unit test
     return true;
 
   // Add initial data if table is empty
@@ -399,44 +399,7 @@ void DbInitializer::setTestInterface( TestInterface *interface )
   mTestInterface = interface;
 }
 
-void DbInitializer::unitTestRun()
+void DbInitializer::setIntrospector(const DbIntrospector::Ptr& introspector)
 {
-  QFile file( mTemplateFile );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
-    return;
-  }
-
-  QDomDocument document;
-
-  QString errorMsg;
-  int line, column;
-  if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
-    mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
-                       .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
-    return;
-  }
-
-  const QDomElement documentElement = document.documentElement();
-  if ( documentElement.tagName() != QLatin1String( "database" ) ) {
-    mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
-    return;
-  }
-
-  QDomElement tableElement = documentElement.firstChildElement();
-  while ( !tableElement.isNull() ) {
-    if ( tableElement.tagName() == QLatin1String( "table" ) ) {
-      const QString tableName = tableElement.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
-      const TableDescription tableDescription = parseTableDescription( tableElement );
-      const QString createTableStatement = buildCreateTableStatement( tableDescription );
-      if ( mTestInterface )
-        mTestInterface->createTableStatement( tableName, createTableStatement );
-    } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
-    } else {
-      mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
-      return;
-    }
-
-    tableElement = tableElement.nextSiblingElement();
-  }
+  m_introspector = introspector;
 }

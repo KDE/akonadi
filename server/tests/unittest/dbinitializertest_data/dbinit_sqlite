@@ -1,0 +1,69 @@
+CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
+
+CREATE TABLE ResourceTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                            name TEXT UNIQUE NOT NULL,
+                            isVirtual BOOL DEFAULT false)
+
+CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                              remoteId TEXT,
+                              remoteRevision TEXT,
+                              name TEXT NOT NULL,
+                              parentId BIGINT,
+                              resourceId BIGINT NOT NULL,
+                              subscribed BOOL NOT NULL DEFAULT true,
+                              cachePolicyInherit BOOL NOT NULL DEFAULT true,
+                              cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
+                              cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
+                              cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
+                              cachePolicyLocalParts TEXT,
+                              queryString TEXT,
+                              queryLanguage TEXT)
+
+CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
+
+CREATE TABLE MimeTypeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                            name TEXT UNIQUE NOT NULL)
+
+CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                           rev INTEGER NOT NULL DEFAULT 0,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
+                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           atime TIMESTAMP,
+                           dirty BOOL,
+                           size BIGINT NOT NULL DEFAULT 0)
+
+CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
+
+CREATE TABLE FlagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT UNIQUE NOT NULL)
+
+CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        pimItemId BIGINT NOT NULL,
+                        name TEXT NOT NULL,
+                        data LONGBLOB,
+                        datasize BIGINT NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        external BOOL DEFAULT false)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+
+CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+
+CREATE TABLE CollectionAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                                       collectionId BIGINT NOT NULL,
+                                       type LONGBLOB NOT NULL,
+                                       value LONGBLOB)
+
+CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
+
+CREATE TABLE PimItemFlagRelation (PimItem_id INTEGER REFERENCES PimItemTable(id),
+                                  Flag_id INTEGER REFERENCES FlagTable(id), PRIMARY KEY (PimItem_id, Flag_id))
+
+CREATE TABLE CollectionMimeTypeRelation (Collection_id INTEGER REFERENCES CollectionTable(id),
+                                         MimeType_id INTEGER REFERENCES MimeTypeTable(id), PRIMARY KEY (Collection_id, MimeType_id))
+
+CREATE TABLE CollectionPimItemRelation (Collection_id INTEGER REFERENCES CollectionTable(id),
+                                        PimItem_id INTEGER REFERENCES PimItemTable(id), PRIMARY KEY (Collection_id, PimItem_id))
