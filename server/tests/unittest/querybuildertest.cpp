@@ -154,6 +154,10 @@ void QueryBuilderTest::testQueryBuilder_data()
   mBuilders << qb;
   QTest::newRow( "insert multi column PSQL" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1) RETURNING id" ) << bindVals;
 
+  qb.setIdentificationColumn( QString() );
+  mBuilders << qb;
+  QTest::newRow( "insert multi column PSQL without id" ) << mBuilders.count() << QString( "INSERT INTO table (col1, col2) VALUES (:0, :1)" ) << bindVals;
+
   // test GROUP BY foo
   bindVals.clear();
   qb = QueryBuilder( "table", QueryBuilder::Select );

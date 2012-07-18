@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 - 2012 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -91,6 +91,7 @@ QueryBuilder::QueryBuilder( const QString& table, QueryBuilder::QueryType type )
     mDatabaseType( DbType::Unknown ),
 #endif
     mType( type ),
+    mIdentificationColumn( QLatin1String("id") ),
     mLimit( -1 ),
     mDistinct( false )
 {
@@ -189,8 +190,8 @@ bool QueryBuilder::exec()
       statement += QLatin1String(") VALUES (");
       statement += vals.join( QLatin1String( ", " ) );
       statement += QLatin1Char(')');
-      if ( mDatabaseType == DbType::PostgreSQL )
-        statement += QLatin1String( " RETURNING id" );
+      if ( mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty() )
+        statement += QLatin1String( " RETURNING " ) + mIdentificationColumn;
       break;
     }
     case Update:
@@ -404,11 +405,17 @@ void QueryBuilder::setLimit(int limit)
   mLimit = limit;
 }
 
+void QueryBuilder::setIdentificationColumn(const QString& column)
+{
+  mIdentificationColumn = column;
+}
+
 qint64 QueryBuilder::insertId()
 {
   if ( mDatabaseType == DbType::PostgreSQL ) {
+    Q_ASSERT( !mIdentificationColumn.isEmpty() );
     query().next();
-    return query().record().value( QLatin1String("id") ).toLongLong();
+    return query().record().value( mIdentificationColumn ).toLongLong();
   } else {
     const QVariant v = query().lastInsertId();
     if ( !v.isValid() ) return -1;

@@ -126,6 +126,7 @@ bool Entity::addToRelationImpl( const QString & tableName, const QString & leftC
   QueryBuilder qb( tableName, QueryBuilder::Insert );
   qb.setColumnValue( leftColumn, leftId );
   qb.setColumnValue( rightColumn, rightId );
+  qb.setIdentificationColumn( QString() );
 
   if ( !qb.exec() ) {
     akDebug() << "Error during adding a record to table" << tableName

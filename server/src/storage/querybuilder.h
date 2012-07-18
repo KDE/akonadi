@@ -205,6 +205,16 @@ class QueryBuilder
     void setLimit( int limit );
 
     /**
+     * Sets the column used for identification in an INSERT statement.
+     * The default is "id", only change this on tables without such a column
+     * (usually n:m helper tables).
+     * @param column Name of the identification column, empty string to disable this.
+     * @note This only affects PostgreSQL.
+     * @see insertId()
+     */
+    void setIdentificationColumn( const QString &column );
+
+    /**
       Returns the query, only valid after exec().
     */
     QSqlQuery& query();
@@ -216,6 +226,8 @@ class QueryBuilder
 
     /**
       Returns the ID of the newly created record (only valid for INSERT queries)
+      @note This will assert when being used with setIdentificationColumn() called
+      with an empty string.
       @returns -1 if invalid
     */
     qint64 insertId();
@@ -235,6 +247,7 @@ class QueryBuilder
     QVector<QPair<QString, Query::SortOrder> > mSortColumns;
     QStringList mGroupColumns;
     QVector<QPair<QString, QVariant> > mColumnValues;
+    QString mIdentificationColumn;
 
     // we must make sure that the tables are joined in the correct order
     // QMap sorts by key which might invalidate the queries
