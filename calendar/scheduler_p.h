@@ -43,8 +43,8 @@ namespace Akonadi {
 */
 class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
 {
-  Q_OBJECT
-  public:
+    Q_OBJECT
+public:
 
     enum Result {
       ResultSuccess,
@@ -135,7 +135,7 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
     */
     KCalCore::FreeBusyCache *freeBusyCache() const;
 
-  protected:
+protected:
     void acceptPublish( const KCalCore::IncidenceBase::Ptr &,
                         KCalCore::ScheduleMessage::Status status,
                         KCalCore::iTIPMethod method );
@@ -169,12 +169,12 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
     Akonadi::CalendarBase::Ptr mCalendar;
     KCalCore::ICalFormat *mFormat;
 
-  Q_SIGNALS:
+Q_SIGNALS:
     void acceptTransactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
     Akonadi::Scheduler::TransactionId performTransactionFinished( Akonadi::Scheduler::TransactionId id,
                                                                   Akonadi::Scheduler::Result,
                                                                   const QString &errorMessage );
-  private Q_SLOTS:
+private Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorMessage );
     void handleModifyFinished( bool success, const QString &errorMessage );
     void handleDeleteFinished( bool success, const QString &errorMessage );
