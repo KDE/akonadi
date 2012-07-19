@@ -252,21 +252,10 @@ bool DbInitializer::checkTable( const QDomElement &element )
     }
   }
 
-  if ( tableDescription.data.isEmpty() || mTestInterface ) // TODO move the select query below in to the introspector, then we can continue here with the unit test
-    return true;
-
   // Add initial data if table is empty
-  QueryBuilder queryBuilder( tableDescription.name, QueryBuilder::Select );
-  queryBuilder.addColumn( QLatin1String( "*" ) );
-  queryBuilder.setLimit( 1 );
-  if ( !queryBuilder.exec() ) {
-    mErrorMsg = QString::fromLatin1( "Unable to retrieve data from table '%1'.\n" ).arg( tableDescription.name );
-    mErrorMsg += QString::fromLatin1( "Query error: '%1'" ).arg( queryBuilder.query().lastError().text() );
-    return false;
-  }
-
-  QSqlQuery query = queryBuilder.query();
-  if ( query.size() == 0  || !query.first() ) { // table is empty
+  if ( tableDescription.data.isEmpty() )
+    return true;
+  if ( m_introspector->isTableEmpty( tableDescription.name ) ) {
     Q_FOREACH ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
       const QString statement = buildInsertValuesStatement( tableDescription, dataDescription );

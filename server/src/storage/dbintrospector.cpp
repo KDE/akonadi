@@ -22,6 +22,7 @@
 #include "dbintrospector_impl.h"
 #include "dbtype.h"
 #include "dbexception.h"
+#include "querybuilder.h"
 
 #include <akdebug.h>
 
@@ -29,6 +30,8 @@
 #include <QSqlField>
 #include <QSqlRecord>
 #include <QSqlQuery>
+
+using namespace Akonadi;
 
 DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase& database)
 {
@@ -84,6 +87,20 @@ bool DbIntrospector::hasColumn(const QString& tableName, const QString& columnNa
   }
 
   return columns.contains( columnName.toLower() );
+}
+
+bool DbIntrospector::isTableEmpty(const QString& tableName)
+{
+  QueryBuilder queryBuilder( tableName, QueryBuilder::Select );
+  queryBuilder.addColumn( QLatin1String( "*" ) );
+  queryBuilder.setLimit( 1 );
+  if ( !queryBuilder.exec() )
+    throw DbException( queryBuilder.query(), "Unable to retrieve data from table." );
+
+  QSqlQuery query = queryBuilder.query();
+  if ( query.size() == 0  || !query.first() ) // table is empty
+    return true;
+  return false;
 }
 
 QString DbIntrospector::hasIndexQuery(const QString& tableName, const QString& indexName)

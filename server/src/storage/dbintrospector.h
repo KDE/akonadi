@@ -52,6 +52,7 @@ class DbIntrospector
      * Returns @c true of the given table has an index with the given name.
      * The default implementation performs the query returned by hasIndexQuery().
      * @see hasIndexQuery()
+     * @throws DbException on database errors.
      */
     virtual bool hasIndex( const QString &tableName, const QString &indexName );
 
@@ -60,6 +61,13 @@ class DbIntrospector
      * The default implemention should work with all backends.
      */
     virtual bool hasColumn( const QString &tableName, const QString &columnName );
+
+    /**
+     * Check whether table @p tableName is empty, ie. does not contain any rows.
+     * The default implementation should work for all backends.
+     * @throws DbException on database errors.
+     */
+    virtual bool isTableEmpty( const QString &tableName );
 
     // TODO: introspection for foreign key constraints on a given column
 
