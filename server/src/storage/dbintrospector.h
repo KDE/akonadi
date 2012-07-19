@@ -20,8 +20,10 @@
 #ifndef DBINTROSPECTOR_H
 #define DBINTROSPECTOR_H
 
+#include <QHash>
 #include <QSharedPointer>
 #include <QSqlDatabase>
+#include <QStringList>
 
 /**
  * Methods for introspecting the current state of a database schema.
@@ -53,6 +55,12 @@ class DbIntrospector
      */
     virtual bool hasIndex( const QString &tableName, const QString &indexName );
 
+    /**
+     * Check whether table @p tableName has a column named @p columnName.
+     * The default implemention should work with all backends.
+     */
+    virtual bool hasColumn( const QString &tableName, const QString &columnName );
+
     // TODO: introspection for foreign key constraints on a given column
 
   protected:
@@ -75,6 +83,7 @@ class DbIntrospector
   private:
     friend class DbIntrospectorTest;
     QSqlDatabase m_database;
+    QHash<QString, QStringList> m_columnCache; // avoids extra db roundtrips
 };
 
 #endif // DBINTROSPECTOR_H

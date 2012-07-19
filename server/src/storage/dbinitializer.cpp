@@ -227,20 +227,8 @@ bool DbInitializer::checkTable( const QDomElement &element )
     execQuery( createTableStatement );
   } else {
     // Check for every column whether it exists, and add the missing ones
-    const QSqlRecord table = mDatabase.record( tableDescription.name );
-
     Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
-      bool found = false;
-      for ( int i = 0; i < table.count(); ++i ) {
-        const QSqlField column = table.field( i );
-
-        if ( columnDescription.name.toLower() == column.name().toLower() ) {
-          found = true;
-          break;
-        }
-      }
-
-      if ( !found ) {
+      if ( !m_introspector->hasColumn( tableDescription.name, columnDescription.name ) ) {
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
         akDebug() << statement;

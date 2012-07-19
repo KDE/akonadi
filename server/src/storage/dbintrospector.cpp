@@ -26,6 +26,8 @@
 #include <akdebug.h>
 
 #include <QStringList>
+#include <QSqlField>
+#include <QSqlRecord>
 #include <QSqlQuery>
 
 DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase& database)
@@ -65,6 +67,23 @@ bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName
   if ( !query.exec( hasIndexQuery( tableName, indexName ) ) )
     throw DbException( query, "Failed to query index" );
   return query.next();
+}
+
+bool DbIntrospector::hasColumn(const QString& tableName, const QString& columnName)
+{
+  QStringList columns = m_columnCache.value( tableName );
+
+  if ( columns.isEmpty() ) {
+    const QSqlRecord table = m_database.record( tableName );
+    for ( int i = 0; i < table.count(); ++i ) {
+      const QSqlField column = table.field( i );
+      columns.push_back( column.name().toLower() );
+    }
+
+    m_columnCache.insert( tableName, columns );
+  }
+
+  return columns.contains( columnName.toLower() );
 }
 
 QString DbIntrospector::hasIndexQuery(const QString& tableName, const QString& indexName)
