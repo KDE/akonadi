@@ -36,7 +36,6 @@ struct Akonadi::Scheduler::Private
 {
   public:
     Private( Scheduler *qq ) : mFreeBusyCache( 0 )
-                             , mCurrentTransactionId( 0 )
                              , q( qq )
     {
     }

@@ -171,8 +171,9 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
 
   Q_SIGNALS:
     void acceptTransactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
-    TransactionId performTransactionFinished( TransactionId id, Akonadi::Scheduler::Result,
-                                              const QString &errorMessage );
+    Akonadi::Scheduler::TransactionId performTransactionFinished( Akonadi::Scheduler::TransactionId id,
+                                                                  Akonadi::Scheduler::Result,
+                                                                  const QString &errorMessage );
   private Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorMessage );
     void handleModifyFinished( bool success, const QString &errorMessage );
