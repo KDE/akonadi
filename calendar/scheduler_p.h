@@ -123,7 +123,7 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
     /**
       Returns the directory where the free-busy information is stored.
     */
-    virtual QString freeBusyDir() = 0;
+    virtual QString freeBusyDir() const = 0;
 
     /**
       Sets the free/busy cache used to store free/busy information.
