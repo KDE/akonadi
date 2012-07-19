@@ -66,7 +66,7 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
       Creates a scheduler for calendar specified as argument.
     */
     explicit Scheduler( const Akonadi::CalendarBase::Ptr &calendar, QObject *parent = 0 );
-    virtual ~Scheduler();
+    ~Scheduler();
 
     /**
       iTIP publish action
