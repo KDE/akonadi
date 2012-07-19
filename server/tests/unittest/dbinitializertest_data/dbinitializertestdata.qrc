@@ -4,5 +4,10 @@
  <file>dbinit_psql</file>
  <file>dbinit_sqlite</file>
  <file>dbinit_odbc</file>
+
+ <file>dbinit_mysql_incremental</file>
+ <file>dbinit_psql_incremental</file>
+ <file>dbinit_sqlite_incremental</file>
+ <file>dbinit_odbc_incremental</file>
 </qresource>
 </RCC>

@@ -42,18 +42,21 @@ class StatementCollector : public TestInterface
 class DbFakeIntrospector : public DbIntrospector
 {
   public:
-    DbFakeIntrospector(const QSqlDatabase& database) : DbIntrospector(database) {}
+    DbFakeIntrospector(const QSqlDatabase& database) : DbIntrospector(database), m_hasTable(false), m_hasIndex(false) {}
     virtual bool hasTable(const QString& tableName)
     {
       Q_UNUSED( tableName );
-      return false;
+      return m_hasTable;
     }
     virtual bool hasIndex(const QString& tableName, const QString& indexName)
     {
       Q_UNUSED( tableName );
       Q_UNUSED( indexName );
-      return false;
+      return m_hasIndex;
     }
+
+    bool m_hasTable;
+    bool m_hasIndex;
 };
 
 void DbInitializerTest::initTestCase()
@@ -65,17 +68,24 @@ void DbInitializerTest::testRun_data()
 {
   QTest::addColumn<QString>( "driverName" );
   QTest::addColumn<QString>( "filename" );
+  QTest::addColumn<bool>( "hasTable" );
 
-  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql";
-  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite";
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql";
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc";
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false;
+
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true;
 }
 
 void DbInitializerTest::testRun()
 {
   QFETCH( QString, driverName );
   QFETCH( QString, filename );
+  QFETCH( bool, hasTable );
 
   QFile file( filename );
   QVERIFY( file.open( QFile::ReadOnly ) );
@@ -87,8 +97,10 @@ void DbInitializerTest::testRun()
 
     StatementCollector collector;
     initializer->setTestInterface( &collector );
-    DbIntrospector::Ptr introspector( new DbFakeIntrospector( db ) );
-    initializer->setIntrospector( introspector );
+    DbFakeIntrospector* introspector = new DbFakeIntrospector( db );
+    introspector->m_hasTable = hasTable;
+    introspector->m_hasIndex = hasTable;
+    initializer->setIntrospector( DbIntrospector::Ptr( introspector ) );
 
     QVERIFY( initializer->run() );
     QVERIFY( !collector.statements.isEmpty() );
