@@ -97,8 +97,7 @@ class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
     /**
       Retrieves incoming iTIP transactions.
     */
-     //KDAB_TODO PTR
-    virtual QList<KCalCore::ScheduleMessage*> retrieveTransactions() = 0;
+    virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0;
 
     /**
       Accepts the transaction. The incidence argument specifies the iCal
