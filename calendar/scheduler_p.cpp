@@ -139,7 +139,8 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
   QString errorString;
   Result result = ResultSuccess;
 
-  kDebug() << "status=" << KCalUtils::Stringify::scheduleMessageStatus( status ); //krazy:exclude=kdebug
+  kDebug() << "status="
+           << KCalUtils::Stringify::scheduleMessageStatus( status ); //krazy:exclude=kdebug
 
   Incidence::Ptr newInc = newIncBase.staticCast<Incidence>() ;
   Incidence::Ptr calInc = mCalendar->incidence( newIncBase->uid() );
@@ -394,7 +395,8 @@ void Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &incidence,
   d->finishAccept( incidence, ResultGenericError, i18n( "Generic Error" ) );
 }
 
-void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase, ScheduleMessage::Status status,
+void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
+                             ScheduleMessage::Status status,
                              iTIPMethod method )
 {
   Q_UNUSED( status );
@@ -578,7 +580,8 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
   }
 
   if ( !d->mFreeBusyCache->saveFreeBusy( freebusy, from ) ) {
-    d->finishAccept( IncidenceBase::Ptr(), ResultErrorSavingFreeBusy, i18n( "Error saving freebusy object" ) );
+    d->finishAccept( IncidenceBase::Ptr(), ResultErrorSavingFreeBusy,
+                     i18n( "Error saving freebusy object" ) );
   } else {
     d->finishAccept( incidence, ResultNoFreeBusyCache );
   }
@@ -586,16 +589,22 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
 
 void Scheduler::handleCreateFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultCreatingError, errorMessage );
+  d->finishAccept( IncidenceBase::Ptr(),
+                   success ? ResultSuccess : ResultCreatingError,
+                   errorMessage );
 }
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultModifyingError, errorMessage );
+  d->finishAccept( IncidenceBase::Ptr(),
+                   success ? ResultSuccess : ResultModifyingError,
+                   errorMessage );
 }
 
 void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(), success ? ResultSuccess : ResultDeletingError, errorMessage );
+  d->finishAccept( IncidenceBase::Ptr(),
+                   success ? ResultSuccess : ResultDeletingError,
+                   errorMessage );
 }
 
