@@ -71,8 +71,8 @@ public:
     /**
       iTIP publish action
     */
-    virtual bool publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                          const QString &recipients ) = 0;
+    virtual TransactionId publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                                   const QString &recipients ) = 0;
     /**
       Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
@@ -91,8 +91,9 @@ public:
       @param method the iTIP transaction method to use.
       @param recipients the receipients of the transaction.
     */
-    virtual bool performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method, const QString &recipients ) = 0;
+    virtual TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                              KCalCore::iTIPMethod method,
+                                              const QString &recipients ) = 0;
 
     /**
       Retrieves incoming iTIP transactions.
@@ -165,6 +166,8 @@ protected:
                         KCalCore::ScheduleMessage::Status status );
 
     void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
+
+    TransactionId nextTransactionId();
 
     Akonadi::CalendarBase::Ptr mCalendar;
     KCalCore::ICalFormat *mFormat;
