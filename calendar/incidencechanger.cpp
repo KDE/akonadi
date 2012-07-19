@@ -117,9 +117,6 @@ public:
 
   // To avoid conflicts when the two modifications came from within the same application
   QHash<Akonadi::Item::Id, int> mLatestRevisionByItemId;
-
-  //TODO: Make mLatestRevisionByItemId private and write some setters, so we can remove
-  //some conflict logic from the rest of the code.
 private:
   ConflictPreventer() {}
   ~ConflictPreventer() {}

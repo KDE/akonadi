@@ -247,7 +247,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 
   KConfigGroup configGroup( &config, QLatin1String( "Invitations" ) );
   const bool outlookConformInvitation = configGroup.readEntry( "LegacyBodyInvites",
-#ifdef KDEPIM_ENTERPRISE_BUILD
+#ifdef KDEPIM_ENTERPRISE_BUILD // TODO
                                                                true
 #else
                                                                false
@@ -360,7 +360,6 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->setMessage( message );
   connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
   qjob->start();
-
 
 #ifdef MAILCLIENTTEST_UNITTEST
   mUnitTestResult.message            = message;
