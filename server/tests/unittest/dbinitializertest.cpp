@@ -54,6 +54,10 @@ class DbFakeIntrospector : public DbIntrospector
       Q_UNUSED( indexName );
       return m_hasIndex;
     }
+    virtual bool hasColumn(const QString& tableName, const QString& columnName)
+    {
+      return false;
+    }
 
     bool m_hasTable;
     bool m_hasIndex;
