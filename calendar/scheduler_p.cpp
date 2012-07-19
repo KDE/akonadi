@@ -607,4 +607,3 @@ void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage 
                    success ? ResultSuccess : ResultDeletingError,
                    errorMessage );
 }
-
