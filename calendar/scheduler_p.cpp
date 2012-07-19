@@ -63,7 +63,13 @@ Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
 {
   mCalendar = calendar;
   mFormat = new ICalFormat();
-  mFormat->setTimeSpec( calendar->timeSpec() );
+
+  if ( mCalendar ) {
+    d->mFormat->setTimeSpec( calendar->timeSpec() );
+  } else {
+    d->mFormat->setTimeSpec( KSystemTimeZones::local() );
+  }
+
   connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
            SLOT(handleCreateFinished(bool,QString)) );
   connect( mCalendar.data(), SIGNAL(modifyFinished(bool,QString)),
