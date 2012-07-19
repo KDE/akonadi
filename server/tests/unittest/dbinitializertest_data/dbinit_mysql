@@ -1,10 +1,14 @@
 CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
                                 COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
+INSERT INTO SchemaVersionTable (version) VALUES (21)
+
 CREATE TABLE ResourceTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARBINARY(255) NOT NULL UNIQUE,
                             isVirtual BOOL DEFAULT false)
                             COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+INSERT INTO ResourceTable (name,isVirtual) VALUES ('akonadi_search_resource',true)
 
 CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               remoteId VARBINARY(255),
@@ -26,9 +30,21 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
+INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
+
 CREATE TABLE MimeTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARBINARY(255) NOT NULL UNIQUE)
                             COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+INSERT INTO MimeTypeTable (name) VALUES ('application/octet-stream')
+
+INSERT INTO MimeTypeTable (name) VALUES ('message/rfc822')
+
+INSERT INTO MimeTypeTable (name) VALUES ('text/calendar')
+
+INSERT INTO MimeTypeTable (name) VALUES ('text/vcard')
+
+INSERT INTO MimeTypeTable (name) VALUES ('inode/directory')
 
 CREATE TABLE PimItemTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
@@ -49,6 +65,22 @@ CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 CREATE TABLE FlagTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         name VARBINARY(255) NOT NULL UNIQUE)
                         COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+INSERT INTO FlagTable (name) VALUES ('important')
+
+INSERT INTO FlagTable (name) VALUES ('has_attachment')
+
+INSERT INTO FlagTable (name) VALUES ('spam')
+
+INSERT INTO FlagTable (name) VALUES ('\\ANSWERED')
+
+INSERT INTO FlagTable (name) VALUES ('\\FLAGGED')
+
+INSERT INTO FlagTable (name) VALUES ('\\DELETED')
+
+INSERT INTO FlagTable (name) VALUES ('\\SEEN')
+
+INSERT INTO FlagTable (name) VALUES ('\\DRAFT')
 
 CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         pimItemId BIGINT NOT NULL,

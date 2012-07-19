@@ -42,7 +42,7 @@ class StatementCollector : public TestInterface
 class DbFakeIntrospector : public DbIntrospector
 {
   public:
-    DbFakeIntrospector(const QSqlDatabase& database) : DbIntrospector(database), m_hasTable(false), m_hasIndex(false) {}
+    DbFakeIntrospector(const QSqlDatabase& database) : DbIntrospector(database), m_hasTable(false), m_hasIndex(false), m_tableEmpty(true) {}
     virtual bool hasTable(const QString& tableName)
     {
       Q_UNUSED( tableName );
@@ -58,9 +58,15 @@ class DbFakeIntrospector : public DbIntrospector
     {
       return false;
     }
+    virtual bool isTableEmpty(const QString& tableName)
+    {
+      Q_UNUSED( tableName );
+      return m_tableEmpty;
+    }
 
     bool m_hasTable;
     bool m_hasIndex;
+    bool m_tableEmpty;
 };
 
 void DbInitializerTest::initTestCase()
@@ -104,6 +110,7 @@ void DbInitializerTest::testRun()
     DbFakeIntrospector* introspector = new DbFakeIntrospector( db );
     introspector->m_hasTable = hasTable;
     introspector->m_hasIndex = hasTable;
+    introspector->m_tableEmpty = !hasTable;
     initializer->setIntrospector( DbIntrospector::Ptr( introspector ) );
 
     QVERIFY( initializer->run() );

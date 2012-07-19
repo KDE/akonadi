@@ -1,8 +1,12 @@
 CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
 
+INSERT INTO SchemaVersionTable (version) VALUES (21)
+
 CREATE TABLE ResourceTable (id SERIAL PRIMARY KEY,
                             name BYTEA UNIQUE NOT NULL,
                             isVirtual BOOL DEFAULT false)
+
+INSERT INTO ResourceTable (name,isVirtual) VALUES ('akonadi_search_resource',true)
 
 CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               remoteId BYTEA,
@@ -21,8 +25,20 @@ CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
+INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
+
 CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
                             name BYTEA UNIQUE NOT NULL)
+
+INSERT INTO MimeTypeTable (name) VALUES ('application/octet-stream')
+
+INSERT INTO MimeTypeTable (name) VALUES ('message/rfc822')
+
+INSERT INTO MimeTypeTable (name) VALUES ('text/calendar')
+
+INSERT INTO MimeTypeTable (name) VALUES ('text/vcard')
+
+INSERT INTO MimeTypeTable (name) VALUES ('inode/directory')
 
 CREATE TABLE PimItemTable (id SERIAL PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
@@ -39,6 +55,22 @@ CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
 CREATE TABLE FlagTable (id SERIAL PRIMARY KEY,
                         name BYTEA UNIQUE NOT NULL)
+
+INSERT INTO FlagTable (name) VALUES ('important')
+
+INSERT INTO FlagTable (name) VALUES ('has_attachment')
+
+INSERT INTO FlagTable (name) VALUES ('spam')
+
+INSERT INTO FlagTable (name) VALUES ('\\ANSWERED')
+
+INSERT INTO FlagTable (name) VALUES ('\\FLAGGED')
+
+INSERT INTO FlagTable (name) VALUES ('\\DELETED')
+
+INSERT INTO FlagTable (name) VALUES ('\\SEEN')
+
+INSERT INTO FlagTable (name) VALUES ('\\DRAFT')
 
 CREATE TABLE PartTable (id SERIAL PRIMARY KEY,
                         pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
