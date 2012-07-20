@@ -49,7 +49,6 @@
 #include <akonadi/servermanager.h>
 
 #include <kdebug.h>
-#include <QApplication>
 
 /// comment this out to track time spent on jobs created by the ETM
 // #define DBG_TRACK_JOB_TIMES
@@ -1205,8 +1204,6 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
 
   if ( job->error() ) {
     kWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
-    KMessageBox::error(qApp->activeWindow(), job->errorString(), i18n("Fetch Job Error"));
-    m_pendingCollectionRetrieveJobs.remove( collectionId );
     return; // let's be safe, otherwise emitting dataChanged will get us into loops
   }
 
