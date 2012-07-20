@@ -12,8 +12,8 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                               remoteId VARCHAR(255),
                               remoteRevision VARCHAR(255),
                               name VARCHAR(255) NOT NULL,
-                              parentId BIGINT REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                              resourceId BIGINT NOT NULL REFERENCES ResourceTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                              parentId BIGINT REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                              resourceId BIGINT NOT NULL REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               subscribed CHAR NOT NULL DEFAULT 1,
                               cachePolicyInherit CHAR NOT NULL DEFAULT 1,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
@@ -44,8 +44,8 @@ CREATE TABLE PimItemTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId VARCHAR(255),
                            remoteRevision VARCHAR(255),
-                           collectionId BIGINT REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                           mimeTypeId BIGINT REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                           collectionId BIGINT REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                           mimeTypeId BIGINT REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                            datetime TIMESTAMP,
                            atime TIMESTAMP,
                            dirty CHAR,
@@ -73,7 +73,7 @@ INSERT INTO FlagTable (name) VALUES ('\SEEN')
 INSERT INTO FlagTable (name) VALUES ('\DRAFT')
 
 CREATE TABLE PartTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
-                        pimItemId BIGINT NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                        pimItemId BIGINT NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                         name VARCHAR(255) NOT NULL,
                         data LONG VARCHAR,
                         datasize BIGINT NOT NULL,
@@ -85,7 +85,7 @@ CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
 CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
 
 CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL IDENTITY PRIMARY KEY,
-                                       collectionId BIGINT NOT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                       collectionId BIGINT NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                        type LONG VARCHAR NOT NULL,
                                        value LONG VARCHAR)
 

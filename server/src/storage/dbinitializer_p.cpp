@@ -44,10 +44,11 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
     columns.append( buildColumnStatement( columnDescription ) );
 
     if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
-      references << QString::fromLatin1( "FOREIGN KEY (%1) REFERENCES %2Table(%3) ON DELETE CASCADE ON UPDATE CASCADE" )
+      references << QString::fromLatin1( "FOREIGN KEY (%1) REFERENCES %2Table(%3) " )
                                        .arg( columnDescription.name )
                                        .arg( columnDescription.refTable )
-                                       .arg( columnDescription.refColumn );
+                                       .arg( columnDescription.refColumn )
+                    + buildReferentialAction( columnDescription.onUpdate, columnDescription.onDelete );
     }
   }
 
@@ -218,9 +219,10 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
     column += QLatin1String( " NOT NULL" );
 
   if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
-    column += QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
+    column += QString::fromLatin1( " REFERENCES %1Table(%2) " )
                                  .arg( columnDescription.refTable )
-                                 .arg( columnDescription.refColumn );
+                                 .arg( columnDescription.refColumn )
+           +  buildReferentialAction( columnDescription.onUpdate, columnDescription.onDelete );
   }
 
   if ( !columnDescription.defaultValue.isEmpty() ) {
@@ -250,7 +252,7 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescript
 
 QString DbInitializerPostgreSql::buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const
 {
-  const QString columnOptions = QLatin1String( " ON DELETE CASCADE ON UPDATE CASCADE" );
+  const QString columnOptions = buildReferentialAction( ColumnDescription::Cascade, ColumnDescription::Cascade );
 
   QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
 
@@ -337,9 +339,8 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
     column += QLatin1String( " UNIQUE" );
 
   if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
-    column += QString::fromLatin1( " REFERENCES %1Table(%2) ON DELETE CASCADE ON UPDATE CASCADE" )
-                                 .arg( columnDescription.refTable )
-                                 .arg( columnDescription.refColumn );
+    column += QLatin1Literal( " REFERENCES " ) + columnDescription.refTable + QLatin1Literal( "Table(" )
+           +  columnDescription.refColumn + QLatin1Literal( ") " ) + buildReferentialAction( columnDescription.onUpdate, columnDescription.onDelete );
   }
 
   if ( !columnDescription.defaultValue.isEmpty() ) {

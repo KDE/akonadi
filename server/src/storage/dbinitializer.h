@@ -82,6 +82,12 @@ class DbInitializer
       public:
         ColumnDescription();
 
+        enum ReferentialAction {
+          Cascade,
+          Restrict,
+          SetNull
+        };
+
         QString name;
         QString type;
         int size;
@@ -92,6 +98,8 @@ class DbInitializer
         QString refTable;
         QString refColumn;
         QString defaultValue;
+        ReferentialAction onUpdate;
+        ReferentialAction onDelete;
     };
 
     /**
@@ -174,6 +182,7 @@ class DbInitializer
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
     virtual QString buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const;
+    static QString buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete );
 
   private:
     friend class DbInitializerTest;
@@ -200,6 +209,9 @@ class DbInitializer
 
     TableDescription parseTableDescription( const QDomElement& ) const;
     RelationDescription parseRelationDescription( const QDomElement& ) const;
+    static ColumnDescription::ReferentialAction parseReferentialAction( const QString &refAction );
+
+    static QString referentialActionToString( ColumnDescription::ReferentialAction action );
 
     QSqlDatabase mDatabase;
     QString mTemplateFile;

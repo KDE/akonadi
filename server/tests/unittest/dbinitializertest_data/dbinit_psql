@@ -12,8 +12,8 @@ CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               remoteId BYTEA,
                               remoteRevision BYTEA,
                               name BYTEA NOT NULL,
-                              parentId int8 REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                              resourceId int8 NOT NULL REFERENCES ResourceTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                              parentId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                              resourceId int8 NOT NULL REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               subscribed BOOL NOT NULL DEFAULT true,
                               cachePolicyInherit BOOL NOT NULL DEFAULT true,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
@@ -44,8 +44,8 @@ CREATE TABLE PimItemTable (id SERIAL PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId BYTEA,
                            remoteRevision BYTEA,
-                           collectionId int8 REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                           mimeTypeId int8 REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                           collectionId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                           mimeTypeId int8 REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            atime TIMESTAMP,
                            dirty BOOL,
@@ -73,7 +73,7 @@ INSERT INTO FlagTable (name) VALUES ('\\SEEN')
 INSERT INTO FlagTable (name) VALUES ('\\DRAFT')
 
 CREATE TABLE PartTable (id SERIAL PRIMARY KEY,
-                        pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                        pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                         name BYTEA NOT NULL,
                         data BYTEA,
                         datasize int8 NOT NULL,
@@ -85,18 +85,18 @@ CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
 CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
 
 CREATE TABLE CollectionAttributeTable (id SERIAL PRIMARY KEY,
-                                       collectionId int8 NOT NULL REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+                                       collectionId int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                        type BYTEA NOT NULL,
                                        value BYTEA)
 
 CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
 
-CREATE TABLE PimItemFlagRelation (PimItem_id INTEGER REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                                  Flag_id INTEGER REFERENCES FlagTable(id) ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY (PimItem_id, Flag_id))
+CREATE TABLE PimItemFlagRelation (PimItem_id INTEGER REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                  Flag_id INTEGER REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE, PRIMARY KEY (PimItem_id, Flag_id))
 
-CREATE TABLE CollectionMimeTypeRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                                         MimeType_id INTEGER REFERENCES MimeTypeTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
+CREATE TABLE CollectionMimeTypeRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                         MimeType_id INTEGER REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                          PRIMARY KEY (Collection_id, MimeType_id))
 
-CREATE TABLE CollectionPimItemRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON DELETE CASCADE ON UPDATE CASCADE,
-                                        PimItem_id INTEGER REFERENCES PimItemTable(id) ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY (Collection_id, PimItem_id))
+CREATE TABLE CollectionPimItemRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                        PimItem_id INTEGER REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE, PRIMARY KEY (Collection_id, PimItem_id))

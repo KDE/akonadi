@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>                   *
+ *   Copyright (C) 2012 by Volker Krause <vkrause@kde.org>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -38,7 +39,7 @@
 using namespace Akonadi;
 
 DbInitializer::ColumnDescription::ColumnDescription()
-  : size( -1 ), allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false )
+  : size( -1 ), allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false ), onUpdate( Cascade ), onDelete( Cascade )
 {
 }
 
@@ -138,6 +139,19 @@ bool DbInitializer::run()
   return false;
 }
 
+DbInitializer::ColumnDescription::ReferentialAction DbInitializer::parseReferentialAction(const QString& refAction)
+{
+  if ( refAction.isEmpty() || refAction.toLower() == QLatin1String( "cascade" ) )
+    return DbInitializer::ColumnDescription::Cascade;
+  if ( refAction.toLower() == QLatin1String( "restrict" ) )
+    return DbInitializer::ColumnDescription::Restrict;
+  if ( refAction.toLower() == QLatin1String( "setnull" ) )
+    return DbInitializer::ColumnDescription::SetNull;
+
+  Q_ASSERT( !"format error" );
+  return DbInitializer::ColumnDescription::Cascade;
+}
+
 DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
 {
   TableDescription tableDescription;
@@ -170,6 +184,9 @@ DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDom
       columnDescription.refTable = childElement.attribute( QLatin1String( "refTable" ) );
       columnDescription.refColumn = childElement.attribute( QLatin1String( "refColumn" ) );
       columnDescription.defaultValue = childElement.attribute( QLatin1String( "default" ) );
+
+      columnDescription.onUpdate = parseReferentialAction( childElement.attribute( QLatin1String( "onUpdate" ) ) );
+      columnDescription.onDelete = parseReferentialAction( childElement.attribute( QLatin1String( "onDelete") ) );
 
       tableDescription.columns.append( columnDescription );
     } else if ( childElement.tagName() == QLatin1String( "index" ) ) {
@@ -356,6 +373,24 @@ QString DbInitializer::buildCreateRelationTableStatement( const QString &tableNa
       .arg( relationDescription.secondColumn );
 
   return statement;
+}
+
+QString DbInitializer::buildReferentialAction(DbInitializer::ColumnDescription::ReferentialAction onUpdate, DbInitializer::ColumnDescription::ReferentialAction onDelete)
+{
+  return QLatin1Literal( "ON UPDATE " ) + referentialActionToString( onUpdate )
+       + QLatin1Literal( " ON DELETE ") + referentialActionToString( onDelete );
+}
+
+QString DbInitializer::referentialActionToString(DbInitializer::ColumnDescription::ReferentialAction action)
+{
+  switch ( action ) {
+    case ColumnDescription::Cascade: return QLatin1String( "CASCADE" );
+    case ColumnDescription::Restrict: return QLatin1String( "RESTRICT" );
+    case ColumnDescription::SetNull: return QLatin1String( "SET NULL" );
+  }
+
+  Q_ASSERT( !"invalid referential action enum!" );
+  return QString();
 }
 
 void DbInitializer::execQuery(const QString& queryString)

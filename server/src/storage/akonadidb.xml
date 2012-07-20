@@ -39,6 +39,7 @@
   - default: Default value for entity class constructor.
   - refTable, refColumn: foreign key, also used to generate accessor methods for 1:n relations
   - methodName: method name to access referred records, the table name is used if not given
+  - onUpdate, onDelete: referential actions for foreign keys
 
   Indices:
   - name: The name of the index
@@ -115,7 +116,7 @@
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
-    <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id"/>
+    <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" onDelete="Restrict"/>
     <column name="datetime" type="QDateTime" default="QDateTime::currentDateTime()">
       <comment>create/modified time</comment>
     </column>

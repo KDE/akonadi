@@ -2,7 +2,7 @@
 
 <!--
 
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2006 - 2012 Volker Krause <vkrause@kde.org>
     Copyright (C) 2006 by Tobias Koenig <tokoe@kde.org>
     Copyright (C) 2007 by Christian Schaarschmidt <schaarsc@gmx.de>
     Copyright (C) 2007 by Robert Zwerus <arzie@dds.nl>
@@ -70,7 +70,8 @@
     <xsd:attribute name="refTable"    type="xsd:string"/>
     <xsd:attribute name="refColumn"   type="xsd:string"/>
     <xsd:attribute name="methodName"  type="xsd:string"/>
-    <xsd:attribute name="properties"  type="xsd:string"/>
+    <xsd:attribute name="onUpdate"    type="xsd:string"/>
+    <xsd:attribute name="onDelete"    type="xsd:string"/>
   </xsd:complexType>
 
   <xsd:complexType name="indexType">
