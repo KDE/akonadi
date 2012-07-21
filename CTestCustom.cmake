@@ -19,4 +19,4 @@ set(CTEST_CUSTOM_ERROR_EXCEPTION
   )
 
 # No coverage for these files (auto-generated, unit tests, etc)
-set(CTEST_CUSTOM_COVERAGE_EXCLUDE ".moc$" "moc_" "ui_" "/libs/tests" "/server/tests" "qrc_" "adaptor.h$" "adaptor.cpp$")
+set(CTEST_CUSTOM_COVERAGE_EXCLUDE ".moc$" "moc_" "ui_" "/libs/tests" "/server/tests" "qrc_" "adaptor.h$" "adaptor.cpp$" "/server/[^/]+interface\\.")
