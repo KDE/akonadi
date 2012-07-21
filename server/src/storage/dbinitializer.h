@@ -153,10 +153,8 @@ class DbInitializer
         RelationDescription();
 
         QString firstTable;
-        QString firstTableName;
         QString firstColumn;
         QString secondTable;
-        QString secondTableName;
         QString secondColumn;
     };
 
@@ -182,7 +180,6 @@ class DbInitializer
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
-    virtual QString buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const;
     static QString buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete );
     /// Use for multi-column primary keys during table creation
     static QString buildPrimaryKeyStatement( const TableDescription &table );

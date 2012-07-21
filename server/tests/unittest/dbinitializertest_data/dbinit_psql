@@ -91,12 +91,14 @@ CREATE TABLE CollectionAttributeTable (id SERIAL PRIMARY KEY,
 
 CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
 
-CREATE TABLE PimItemFlagRelation (PimItem_id INTEGER REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
-                                  Flag_id INTEGER REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE, PRIMARY KEY (PimItem_id, Flag_id))
+CREATE TABLE PimItemFlagRelation (PimItem_id int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                  Flag_id int8 NOT NULL REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                  PRIMARY KEY (PimItem_id, Flag_id))
 
-CREATE TABLE CollectionMimeTypeRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
-                                         MimeType_id INTEGER REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+CREATE TABLE CollectionMimeTypeRelation (Collection_id int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                         MimeType_id int8 NOT NULL REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                          PRIMARY KEY (Collection_id, MimeType_id))
 
-CREATE TABLE CollectionPimItemRelation (Collection_id INTEGER REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
-                                        PimItem_id INTEGER REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE, PRIMARY KEY (Collection_id, PimItem_id))
+CREATE TABLE CollectionPimItemRelation (Collection_id int8 NOT NULL REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                        PimItem_id int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                        PRIMARY KEY (Collection_id, PimItem_id))

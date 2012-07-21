@@ -126,7 +126,7 @@ bool DbInitializer::run()
     QDomElement tableElement = documentElement.firstChildElement();
     while ( !tableElement.isNull() ) {
       if ( tableElement.tagName() == QLatin1String( "table" ) ) {
-        if ( !checkTable( tableElement ) )
+        if ( !checkTable( parseTableDescription( tableElement ) ) )
           return false;
       } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
         if ( !checkRelation( tableElement ) )
@@ -229,20 +229,16 @@ DbInitializer::RelationDescription DbInitializer::parseRelationDescription( cons
   RelationDescription relationDescription;
 
   relationDescription.firstTable = element.attribute( QLatin1String( "table1" ) );
-  relationDescription.firstTableName = element.attribute( QLatin1String( "table1" ) ) + QLatin1String( "Table" );
   relationDescription.firstColumn = element.attribute( QLatin1String( "column1" ) );
 
   relationDescription.secondTable = element.attribute( QLatin1String( "table2" ) );
-  relationDescription.secondTableName = element.attribute( QLatin1String( "table2" ) ) + QLatin1String( "Table" );
   relationDescription.secondColumn = element.attribute( QLatin1String( "column2" ) );
 
   return relationDescription;
 }
 
-bool DbInitializer::checkTable( const QDomElement &element )
+bool DbInitializer::checkTable( const TableDescription &tableDescription )
 {
-  // Parse the abstract table description from XML file
-  const TableDescription tableDescription = parseTableDescription( element );
   akDebug() << "checking table " << tableDescription.name;
 
   if ( !m_introspector->hasTable( tableDescription.name ) ) {
@@ -300,15 +296,27 @@ bool DbInitializer::checkRelation( const QDomElement &element )
                                     relationDescription.secondTable +
                                     QLatin1String( "Relation" );
 
-  akDebug() << "checking relation " << relationTableName;
+  // translate into a regular table and let checkTable() handle it
+  TableDescription table;
+  table.name = relationTableName;
 
-  if ( !m_introspector->hasTable( relationTableName ) ) {
-    const QString statement = buildCreateRelationTableStatement( relationTableName, relationDescription );
-    akDebug() << statement;
-    execQuery( statement );
-  }
+  ColumnDescription column;
+  column.type = QLatin1String( "qint64" );
+  column.allowNull = false;
+  column.isPrimaryKey = true;
+  column.onUpdate = ColumnDescription::Cascade;
+  column.onDelete = ColumnDescription::Cascade;
+  column.name = relationDescription.firstTable + QLatin1Char( '_' ) + relationDescription.firstColumn;
+  column.refTable = relationDescription.firstTable;
+  column.refColumn = relationDescription.firstColumn;
+  table.columns.push_back( column );
 
-  return true;
+  column.name = relationDescription.secondTable + QLatin1Char( '_' ) + relationDescription.secondColumn;
+  column.refTable = relationDescription.secondTable;
+  column.refColumn = relationDescription.secondColumn;
+  table.columns.push_back( column );
+
+  return checkTable( table );
 }
 
 QString DbInitializer::errorMsg() const
@@ -356,31 +364,6 @@ QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableD
                             .arg( indexName )
                             .arg( tableDescription.name )
                             .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
-}
-
-QString DbInitializer::buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const
-{
-  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-
-  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
-      .arg( relationDescription.firstTable )
-      .arg( relationDescription.firstColumn )
-      .arg( relationDescription.firstTableName )
-      .arg( relationDescription.firstColumn );
-
-  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4), " )
-      .arg( relationDescription.secondTable )
-      .arg( relationDescription.secondColumn )
-      .arg( relationDescription.secondTableName )
-      .arg( relationDescription.secondColumn );
-
-  statement += QString::fromLatin1( "PRIMARY KEY (%1_%2, %3_%4))" )
-      .arg( relationDescription.firstTable )
-      .arg( relationDescription.firstColumn )
-      .arg( relationDescription.secondTable )
-      .arg( relationDescription.secondColumn );
-
-  return statement;
 }
 
 QString DbInitializer::buildReferentialAction(DbInitializer::ColumnDescription::ReferentialAction onUpdate, DbInitializer::ColumnDescription::ReferentialAction onDelete)

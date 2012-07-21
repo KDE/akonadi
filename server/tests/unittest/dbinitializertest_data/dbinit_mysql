@@ -105,13 +105,20 @@ CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY
 
 CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
 
-CREATE TABLE PimItemFlagRelation (PimItem_id INTEGER REFERENCES PimItemTable(id),
-                                  Flag_id INTEGER REFERENCES FlagTable(id),
-                                  PRIMARY KEY (PimItem_id, Flag_id))
+CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
+                                  Flag_id BIGINT NOT NULL,
+                                  PRIMARY KEY (PimItem_id, Flag_id),
+                                  FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                  FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-CREATE TABLE CollectionMimeTypeRelation (Collection_id INTEGER REFERENCES CollectionTable(id),
-                                         MimeType_id INTEGER REFERENCES MimeTypeTable(id),
-                                         PRIMARY KEY (Collection_id, MimeType_id))
+CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
+                                         MimeType_id BIGINT NOT NULL,
+                                         PRIMARY KEY (Collection_id, MimeType_id),
+                                         FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                         FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-CREATE TABLE CollectionPimItemRelation (Collection_id INTEGER REFERENCES CollectionTable(id),
-                                        PimItem_id INTEGER REFERENCES PimItemTable(id), PRIMARY KEY (Collection_id, PimItem_id))
+CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
+                                        PimItem_id BIGINT NOT NULL,
+                                        PRIMARY KEY (Collection_id, PimItem_id),
+                                        FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                        FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8

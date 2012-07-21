@@ -258,35 +258,6 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescript
                             .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
 
-QString DbInitializerPostgreSql::buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const
-{
-  const QString columnOptions = buildReferentialAction( ColumnDescription::Cascade, ColumnDescription::Cascade );
-
-  QString statement = QString::fromLatin1( "CREATE TABLE %1 (" ).arg( tableName );
-
-  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-      .arg( relationDescription.firstTable )
-      .arg( relationDescription.firstColumn )
-      .arg( relationDescription.firstTableName )
-      .arg( relationDescription.firstColumn )
-      .arg( columnOptions );
-
-  statement += QString::fromLatin1( "%1_%2 INTEGER REFERENCES %3(%4) %5, " )
-      .arg( relationDescription.secondTable )
-      .arg( relationDescription.secondColumn )
-      .arg( relationDescription.secondTableName )
-      .arg( relationDescription.secondColumn )
-      .arg( columnOptions );
-
-  statement += QString::fromLatin1( "PRIMARY KEY (%1_%2, %3_%4))" )
-      .arg( relationDescription.firstTable )
-      .arg( relationDescription.firstColumn )
-      .arg( relationDescription.secondTable )
-      .arg( relationDescription.secondColumn );
-
-  return statement;
-}
-
 //END PostgreSQL
 
 

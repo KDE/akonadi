@@ -83,3 +83,15 @@ ALTER TABLE CollectionAttributeTable ADD COLUMN collectionId BIGINT NOT NULL
 ALTER TABLE CollectionAttributeTable ADD COLUMN type LONGBLOB NOT NULL
 
 ALTER TABLE CollectionAttributeTable ADD COLUMN value LONGBLOB
+
+ALTER TABLE PimItemFlagRelation ADD COLUMN PimItem_id BIGINT NOT NULL
+
+ALTER TABLE PimItemFlagRelation ADD COLUMN Flag_id BIGINT NOT NULL
+
+ALTER TABLE CollectionMimeTypeRelation ADD COLUMN Collection_id BIGINT NOT NULL
+
+ALTER TABLE CollectionMimeTypeRelation ADD COLUMN MimeType_id BIGINT NOT NULL
+
+ALTER TABLE CollectionPimItemRelation ADD COLUMN Collection_id BIGINT NOT NULL
+
+ALTER TABLE CollectionPimItemRelation ADD COLUMN PimItem_id BIGINT NOT NULL
