@@ -31,7 +31,7 @@ class DbInitializerMySql : public DbInitializer
     QString sqlType(const QString& type, int size) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
@@ -41,7 +41,7 @@ class DbInitializerSqlite : public DbInitializer
     DbInitializerSqlite( const QSqlDatabase& database, const QString& templateFile);
   protected:
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 
@@ -53,7 +53,7 @@ class DbInitializerPostgreSql : public DbInitializer
     QString sqlType(const QString& type, int size) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
     virtual QString buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const;
 };
@@ -67,7 +67,7 @@ class DbInitializerVirtuoso : public DbInitializer
     QString sqlValue(const QString& type, const QString& value) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
 };
 

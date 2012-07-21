@@ -36,6 +36,9 @@
 #include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
 
+#include <boost/bind.hpp>
+#include <algorithm>
+
 using namespace Akonadi;
 
 DbInitializer::ColumnDescription::ColumnDescription()
@@ -54,6 +57,11 @@ DbInitializer::DataDescription::DataDescription()
 
 DbInitializer::TableDescription::TableDescription()
 {
+}
+
+int DbInitializer::TableDescription::primaryKeyColumnCount() const
+{
+  return std::count_if( columns.constBegin(), columns.constEnd(), boost::bind<bool>( &ColumnDescription::isPrimaryKey, _1 ) );
 }
 
 DbInitializer::RelationDescription::RelationDescription()
@@ -337,7 +345,7 @@ QString DbInitializer::sqlValue( const QString &type, const QString &value ) con
 
 QString DbInitializer::buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const
 {
-  return QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2" ).arg( tableDescription.name, buildColumnStatement( columnDescription ) );
+  return QString::fromLatin1( "ALTER TABLE %1 ADD COLUMN %2" ).arg( tableDescription.name, buildColumnStatement( columnDescription, tableDescription ) );
 }
 
 QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const
@@ -391,6 +399,16 @@ QString DbInitializer::referentialActionToString(DbInitializer::ColumnDescriptio
 
   Q_ASSERT( !"invalid referential action enum!" );
   return QString();
+}
+
+QString DbInitializer::buildPrimaryKeyStatement(const DbInitializer::TableDescription& table)
+{
+  QStringList cols;
+  Q_FOREACH( const ColumnDescription &column, table.columns ) {
+    if ( column.isPrimaryKey )
+      cols.push_back( column.name );
+  }
+  return QLatin1Literal( "PRIMARY KEY (" ) + cols.join( QLatin1String( ", " ) ) + QLatin1Char( ')' );
 }
 
 void DbInitializer::execQuery(const QString& queryString)

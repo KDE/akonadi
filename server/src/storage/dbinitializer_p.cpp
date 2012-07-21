@@ -41,7 +41,7 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
   QStringList references;
 
   Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
-    columns.append( buildColumnStatement( columnDescription ) );
+    columns.append( buildColumnStatement( columnDescription, tableDescription ) );
 
     if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
       references << QString::fromLatin1( "FOREIGN KEY (%1) REFERENCES %2Table(%3) " )
@@ -52,6 +52,8 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
     }
   }
 
+  if ( tableDescription.primaryKeyColumnCount() > 1 )
+    columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
   columns << references;
 
   const QString tableProperties = QLatin1String( " COLLATE=utf8_general_ci DEFAULT CHARSET=utf8" );
@@ -59,7 +61,7 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
   return QString::fromLatin1( "CREATE TABLE %1 (%2) %3" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ), tableProperties );
 }
 
-QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &columnDescription ) const
+QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const
 {
   QString column = columnDescription.name;
 
@@ -71,7 +73,7 @@ QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &colum
   if ( columnDescription.isAutoIncrement )
     column += QLatin1String( " AUTO_INCREMENT" );
 
-  if ( columnDescription.isPrimaryKey )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
     column += QLatin1String( " PRIMARY KEY" );
 
   if ( columnDescription.isUnique )
@@ -118,12 +120,15 @@ QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &
   QStringList columns;
 
   Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
-    columns.append( buildColumnStatement( columnDescription ) );
+    columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+
+  if ( tableDescription.primaryKeyColumnCount() > 1 )
+    columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
 
-QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &columnDescription ) const
+QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const
 {
   QString column = columnDescription.name + QLatin1Char( ' ' );
 
@@ -132,7 +137,7 @@ QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &colu
   else
     column += sqlType( columnDescription.type, columnDescription.size );
 
-  if ( columnDescription.isPrimaryKey )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
     column += QLatin1String( " PRIMARY KEY" );
   else if ( columnDescription.isUnique )
     column += QLatin1String( " UNIQUE" );
@@ -196,12 +201,15 @@ QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescripti
   QStringList columns;
 
   Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
-    columns.append( buildColumnStatement( columnDescription ) );
+    columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+
+  if ( tableDescription.primaryKeyColumnCount() > 1 )
+    columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
 
-QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &columnDescription ) const
+QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const
 {
   QString column = columnDescription.name + QLatin1Char( ' ' );
 
@@ -210,12 +218,12 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
   else
     column += sqlType( columnDescription.type, columnDescription.size );
 
-  if ( columnDescription.isPrimaryKey )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
     column += QLatin1String( " PRIMARY KEY" );
   else if ( columnDescription.isUnique )
     column += QLatin1String( " UNIQUE" );
 
-  if ( !columnDescription.allowNull && !columnDescription.isPrimaryKey )
+  if ( !columnDescription.allowNull && !( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) )
     column += QLatin1String( " NOT NULL" );
 
   if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
@@ -315,12 +323,15 @@ QString DbInitializerVirtuoso::buildCreateTableStatement( const TableDescription
   QStringList columns;
 
   Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
-    columns.append( buildColumnStatement( columnDescription ) );
+    columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+
+  if ( tableDescription.primaryKeyColumnCount() > 1 )
+    columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
 
-QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &columnDescription ) const
+QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const
 {
   QString column = columnDescription.name;
 
@@ -332,7 +343,7 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
   if ( columnDescription.isAutoIncrement )
     column += QLatin1String( " IDENTITY" );
 
-  if ( columnDescription.isPrimaryKey )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
     column += QLatin1String( " PRIMARY KEY" );
 
   if ( columnDescription.isUnique )

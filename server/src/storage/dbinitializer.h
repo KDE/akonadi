@@ -136,6 +136,7 @@ class DbInitializer
     {
       public:
         TableDescription();
+        int primaryKeyColumnCount() const;
 
         QString name;
         QVector<ColumnDescription> columns;
@@ -177,12 +178,14 @@ class DbInitializer
     virtual QString sqlValue( const QString &type, const QString &value ) const;
 
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const = 0;
-    virtual QString buildColumnStatement( const ColumnDescription &columnDescription ) const = 0;
+    virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const = 0;
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
     virtual QString buildCreateRelationTableStatement( const QString &tableName, const RelationDescription &relationDescription ) const;
     static QString buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete );
+    /// Use for multi-column primary keys during table creation
+    static QString buildPrimaryKeyStatement( const TableDescription &table );
 
   private:
     friend class DbInitializerTest;
@@ -204,7 +207,7 @@ class DbInitializer
      */
     void execQuery( const QString &queryString );
 
-    bool checkTable( const QDomElement& );
+    bool checkTable( const DbInitializer::TableDescription& tableDescription );
     bool checkRelation( const QDomElement &element );
 
     TableDescription parseTableDescription( const QDomElement& ) const;
