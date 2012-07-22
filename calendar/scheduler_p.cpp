@@ -27,6 +27,7 @@
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KSystemTimeZones>
 
 using namespace KCalCore;
 using namespace Akonadi;
@@ -65,9 +66,9 @@ Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
   mFormat = new ICalFormat();
 
   if ( mCalendar ) {
-    d->mFormat->setTimeSpec( calendar->timeSpec() );
+    mFormat->setTimeSpec( calendar->timeSpec() );
   } else {
-    d->mFormat->setTimeSpec( KSystemTimeZones::local() );
+    mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
 
   connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
@@ -615,7 +616,7 @@ void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage 
                    errorMessage );
 }
 
-TransactionId Scheduler::nextTransactionId()
+Scheduler::TransactionId Scheduler::nextTransactionId()
 {
     return d->mNextTransactionId++;
 }

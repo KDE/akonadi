@@ -1,32 +1,26 @@
 /*
-  Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
-  Copyright (c) 2010 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2010,2012 Sérgio Martins <iamsergio@gmail.com>
 
-  This program is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
+  This library is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Library General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or (at your
+  option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
+  This library is distributed in the hope that it will be useful, but WITHOUT
+  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+  License for more details.
 
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-  As a special exception, permission is given to link this program
-  with any edition of Qt, and distribute the resulting executable,
-  without including the source code for Qt in the source distribution.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to the
+  Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+  02110-1301, USA.
 */
 
-#include "mailscheduler2.h"
-#include "kcalprefs.h"
-#include "identitymanager.h"
-#include "mailclient.h"
-#include "utils.h"
-#include "incidencechanger.h"
+#include "mailscheduler_p.h"
+
+#include "mailclient_p.h"
 #include "fetchjobcalendar.h"
 
 #include <Akonadi/Item>
@@ -34,174 +28,149 @@
 #include <KCalCore/ICalFormat>
 #include <KCalCore/Incidence>
 #include <KCalCore/ScheduleMessage>
-
 #include <KCalUtils/Scheduler>
+#include <KPIMIdentities/IdentityManager>
 
 #include <KStandardDirs>
 #include <KSystemTimeZone>
+#include <KLocale>
 
 #include <QDir>
 
-using namespace CalendarSupport;
+using namespace Akonadi;
+using namespace KPIMIdentities;
 
-class MailScheduler2::Private {
-  public:
-    Private()
-    {
-      mFormat = new KCalCore::ICalFormat();
-    }
-
-   ~Private()
-    {
-      delete mFormat;
-    }
-
-    QHash<int, CallId> mCallIdByChangeId;
-    KCalCore::ICalFormat *mFormat;
-};
-
-
-MailScheduler2::MailScheduler2( const CalendarSupport::FetchJobCalendar::Ptr &cal )
-  : Scheduler( cal, new IncidenceChanger() ), d( new Private )
+MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
+                              const QString &email,
+                              bool  bcc,
+                              const QString &mailTransport,
+                              QObject *parent ) : Scheduler( calendar, parent )
+                                                , m_email( email )
+                                                , m_bccMe( bcc )
+                                                , m_transport( mailTransport )
+                                                , m_identityManager( new IdentityManager( /*ro=*/ true, this ) )
 {
-  if ( calendar() ) {
-    d->mFormat->setTimeSpec( cal->timeSpec() );
-  } else {
-    d->mFormat->setTimeSpec( KSystemTimeZones::local() );
-  }
-
-  connect( changer(), SIGNAL(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger::ResultCode,QString)),
-          SLOT(createFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger::ResultCode,QString)) );
-
-  connect( changer(),SIGNAL(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger::ResultCode,QString)),
-          SLOT(modifyFinished(int,Akonadi::Item,CalendarSupport::IncidenceChanger::ResultCode,QString)) );
 }
 
-MailScheduler2::~MailScheduler2()
+MailScheduler::~MailScheduler()
 {
-  delete d;
 }
 
-CallId MailScheduler2::publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                                const QString &recipients )
+Scheduler::TransactionId MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                                                 const QString &recipients )
 {
   if ( !incidence ) {
     return -1;
   }
 
-  const QString from = KCalPrefs::instance()->email();
-  const bool bccMe = KCalPrefs::instance()->mBcc;
-  const QString messageText = d->mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
+  const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
 
   MailClient mailer;
-  // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
-  // TODO: Refactor MailClient, currently it execs()
-  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
-                                     from, bccMe, recipients, messageText,
-                                     KCalPrefs::instance()->mailTransport() );
 
-  ResultCode resultCode = ResultCodeSuccess;
+  // TODO: Catch the signal.
+  mailer.mailTo( incidence,
+                 m_identityManager->identityForAddress( m_email ),
+                 m_email, m_bccMe, recipients, messageText,
+                 m_transport );
+
+  Scheduler::Result resultCode = Scheduler::ResultSuccess;
   QString errorMessage;
-  if ( !result ) {
+  /*if ( !result ) { // TODO
     errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultCodeErrorSendingEmail;
-  }
-  const CallId callId = nextCallId();
-  emitOperationFinished( callId, resultCode, errorMessage );
-  return callId;
+    resultCode = ResultGenericError;
+  }*/
+
+  const TransactionId tid = nextTransactionId();
+  emit performTransactionFinished( tid, resultCode, errorMessage );
+  return tid;
 }
 
-CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                           KCalCore::iTIPMethod method,
-                                           const QString &recipients )
+Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                                            KCalCore::iTIPMethod method,
+                                                            const QString &recipients )
 {
   if ( !incidence ) {
     return -1;
   }
 
-  const QString from = KCalPrefs::instance()->email();
-  const bool bccMe = KCalPrefs::instance()->mBcc;
-  const QString messageText = d->mFormat->createScheduleMessage( incidence, method );
+  const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
-  // TODO: Why doesn't MailClient return an error message too?, a bool is not enough.
-  // TODO: Refactor MailClient, currently it execs()
-  const bool result = mailer.mailTo( incidence, CalendarSupport::identityManager()->identityForAddress( from ),
-                                     from, bccMe, recipients, messageText,
-                                     KCalPrefs::instance()->mailTransport() );
+  // TODO: Catch signal
+  mailer.mailTo( incidence,
+                 m_identityManager->identityForAddress( m_email ),
+                 m_email, m_bccMe, recipients, messageText,
+                 m_transport );
 
-  ResultCode resultCode = ResultCodeSuccess;
+  Scheduler::Result resultCode = ResultSuccess;
   QString errorMessage;
-  if ( !result ) {
+  /*if ( !result ) { // TODO
     errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultCodeErrorSendingEmail;
-  }
-  const CallId callId = nextCallId();
-  emitOperationFinished( callId, resultCode, errorMessage );
-  return callId;
+    resultCode = ResultGenericError;
+  }*/
+  const TransactionId tid = nextTransactionId();
+  emit performTransactionFinished( tid, resultCode, errorMessage );
+  return tid;
 }
 
-CallId MailScheduler2::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                           KCalCore::iTIPMethod method )
+Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                                            KCalCore::iTIPMethod method )
 {
   if ( !incidence ) {
     return -1;
   }
 
-  const QString from = KCalPrefs::instance()->email();
-  const bool bccMe = KCalPrefs::instance()->mBcc;
-  const QString messageText = d->mFormat->createScheduleMessage( incidence, method );
+  const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
-  bool status;
   if ( method == KCalCore::iTIPRequest ||
        method == KCalCore::iTIPCancel ||
        method == KCalCore::iTIPAdd ||
        method == KCalCore::iTIPDeclineCounter ) {
-    status = mailer.mailAttendees(
+    mailer.mailAttendees( // TODO handle error
       incidence,
-      CalendarSupport::identityManager()->identityForAddress( from ),
-      bccMe, messageText, KCalPrefs::instance()->mailTransport() );
+      m_identityManager->identityForAddress( m_email ),
+      m_bccMe, messageText, m_transport );
   } else {
     QString subject;
     KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
     if ( inc && method == KCalCore::iTIPCounter ) {
       subject = i18n( "Counter proposal: %1", inc->summary() );
     }
-    status = mailer.mailOrganizer(
+    mailer.mailOrganizer( // TODO: handle error
       incidence,
-      CalendarSupport::identityManager()->identityForAddress( from ),
-      from, bccMe, messageText, subject, KCalPrefs::instance()->mailTransport() );
+      m_identityManager->identityForAddress( m_email ),
+      m_email, m_bccMe, messageText, subject, m_transport );
   }
 
-  ResultCode resultCode = ResultCodeSuccess;
+  Scheduler::Result resultCode = ResultSuccess;
   QString errorMessage;
-  if ( !status ) {
+  /*if ( !status ) {
     errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultCodeErrorSendingEmail;
-  }
-  const CallId callId = nextCallId();
-  emitOperationFinished( callId, resultCode, errorMessage );
-  return callId;
+    resultCode = ResultGenericError;
+  }*/
+  const TransactionId tid = nextTransactionId();
+  emit performTransactionFinished( tid, resultCode, errorMessage );
+  return tid;
 }
 
-QString MailScheduler2::freeBusyDir() const
+QString MailScheduler::freeBusyDir() const
 {
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
-//AKONADI_PORT review following code
-CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
+//TODO: AKONADI_PORT review following code
+Scheduler::TransactionId MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !incidence ) {
     return -1;
   }
 
-  Akonadi::Item exInc = calendar()->item( incidence->uid() );
+  Akonadi::Item exInc = mCalendar->item( incidence->uid() );
   if ( !exInc.isValid() ) {
-    KCalCore::Incidence::Ptr exIncidence = calendar()->incidenceFromSchedulingID( incidence->uid() );
+    KCalCore::Incidence::Ptr exIncidence = mCalendar->incidenceFromSchedulingID( incidence->uid() );
     if ( exIncidence ) {
-      exInc = calendar()->item( exIncidence->uid() );
+      exInc = mCalendar->item( exIncidence->uid() );
     }
     //exInc = exIncItem.isValid() && exIncItem.hasPayload<KCalCore::Incidence::Ptr>() ?
     //        exIncItem.payload<KCalCore::Incidence::Ptr>() : KCalCore::Incidence::Ptr();
@@ -209,8 +178,8 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
 
   incidence->setRevision( incidence->revision() + 1 );
   int changeId;
-  ResultCode inCaseOfError;
-  const CallId callId = nextCallId();
+  Result result = ResultSuccess;
+
   if ( exInc.isValid() && exInc.hasPayload<KCalCore::Incidence::Ptr>() ) {
     KCalCore::Incidence::Ptr exIncPtr = exInc.payload<KCalCore::Incidence::Ptr>();
     incidence->setRevision( qMax( incidence->revision(), exIncPtr->revision() + 1 ) );
@@ -229,49 +198,19 @@ CallId MailScheduler2::acceptCounterProposal( const KCalCore::Incidence::Ptr &in
 
     exIncPtr->updated();
 
-    changeId = changer()->modifyIncidence( exInc );
-    d->mCallIdByChangeId.insert( changeId, callId );
-    inCaseOfError = ResultCodeErrorUpdatingIncidence;
+    changeId = mCalendar->modifyIncidence( exIncPtr );
+    result = ResultModifyingError;
   } else {
-    changeId = changer()->createIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
-    inCaseOfError = ResultCodeErrorCreatingIncidence;
+    changeId = mCalendar->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
+    result = ResultCreatingError;
   }
+
+  const Scheduler::TransactionId tid = nextTransactionId();
 
   if ( changeId > 0 ) {
-    d->mCallIdByChangeId.insert( changeId, callId );
   } else {
-    emitOperationFinished( callId, inCaseOfError, QLatin1String( "Error creating job" ) );
+      emit performTransactionFinished( tid, result, QLatin1String( "Error creating job" ) );
   }
 
-  return callId;
-}
-
-void MailScheduler2::modifyFinished( int changeId,
-                                    const Akonadi::Item &item,
-                                    IncidenceChanger::ResultCode changerResultCode,
-                                    const QString &errorMessage )
-{
-  if ( d->mCallIdByChangeId.contains( changeId ) ) {
-    const ResultCode resultCode = ( changerResultCode == IncidenceChanger::ResultCodeSuccess ) ? ResultCodeSuccess :
-                                                                                                  ResultCodeErrorUpdatingIncidence;
-    emitOperationFinished( changeId, resultCode, errorMessage );
-    d->mCallIdByChangeId.remove( changeId );
-  }
-
-  Q_UNUSED( item );
-}
-
-void MailScheduler2::createFinished( int changeId,
-                                     const Akonadi::Item &item,
-                                     IncidenceChanger::ResultCode changerResultCode,
-                                     const QString &errorMessage )
-{
-  if ( d->mCallIdByChangeId.contains( changeId ) ) {
-    const ResultCode resultCode = ( changerResultCode == IncidenceChanger::ResultCodeSuccess ) ? ResultCodeSuccess :
-                                                                                                  ResultCodeErrorCreatingIncidence;
-    emitOperationFinished( changeId, resultCode, errorMessage );
-    d->mCallIdByChangeId.remove( changeId );
-  }
-
-  Q_UNUSED( item );
+  return tid;
 }
