@@ -68,8 +68,9 @@ class AgentTypeWidget::Private
 
     void typeActivated( const QModelIndex &index )
     {
-      if ( index.flags() & (Qt::ItemIsSelectable | Qt::ItemIsEnabled) )
+      if ( index.flags() & ( Qt::ItemIsSelectable | Qt::ItemIsEnabled ) ) {
         emit mParent->activated();
+      }
     }
 
     AgentTypeWidget *mParent;
@@ -81,12 +82,14 @@ class AgentTypeWidget::Private
 void AgentTypeWidget::Private::currentAgentTypeChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   AgentType currentType;
-  if ( currentIndex.isValid() )
+  if ( currentIndex.isValid() ) {
     currentType = currentIndex.data( AgentTypeModel::TypeRole ).value<AgentType>();
+  }
 
   AgentType previousType;
-  if ( previousIndex.isValid() )
+  if ( previousIndex.isValid() ) {
     previousType = previousIndex.data( AgentTypeModel::TypeRole ).value<AgentType>();
+  }
 
   emit mParent->currentChanged( currentType, previousType );
 }
@@ -125,12 +128,14 @@ AgentTypeWidget::~AgentTypeWidget()
 AgentType AgentTypeWidget::currentAgentType() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
-  if ( !selectionModel )
+  if ( !selectionModel ) {
     return AgentType();
+  }
 
   QModelIndex index = selectionModel->currentIndex();
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return AgentType();
+  }
 
   return index.data( AgentTypeModel::TypeRole ).value<AgentType>();
 }
@@ -151,8 +156,9 @@ AgentTypeWidgetDelegate::AgentTypeWidgetDelegate( QObject *parent )
 
 void AgentTypeWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   painter->setRenderHint( QPainter::Antialiasing );
 
@@ -162,8 +168,9 @@ void AgentTypeWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewIt
   const QVariant data = index.model()->data( index, Qt::DecorationRole );
 
   QPixmap pixmap;
-  if ( data.isValid() && data.type() == QVariant::Icon )
+  if ( data.isValid() && data.type() == QVariant::Icon ) {
     pixmap = qvariant_cast<QIcon>( data ).pixmap( 64, 64 );
+  }
 
   const QFont oldFont = painter->font();
   QFont boldFont( oldFont );
@@ -179,43 +186,47 @@ void AgentTypeWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewIt
   int wc = fm.boundingRect( 0, 0, 0, 0, Qt::AlignLeft, comment ).width();
   int wp = pixmap.width();
 
-  QStyleOptionViewItemV4 opt(option);
+  QStyleOptionViewItemV4 opt( option );
   opt.showDecorationSelected = true;
   QApplication::style()->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
 
   QPen pen = painter->pen();
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled
                             ? QPalette::Normal : QPalette::Disabled;
-  if (cg == QPalette::Normal && !(option.state & QStyle::State_Active))
+  if ( cg == QPalette::Normal && !( option.state & QStyle::State_Active ) ) {
     cg = QPalette::Inactive;
-  if (option.state & QStyle::State_Selected) {
-    painter->setPen(option.palette.color(cg, QPalette::HighlightedText));
+  }
+  if ( option.state & QStyle::State_Selected ) {
+    painter->setPen( option.palette.color( cg, QPalette::HighlightedText ) );
   } else {
-    painter->setPen(option.palette.color(cg, QPalette::Text));
+    painter->setPen( option.palette.color( cg, QPalette::Text ) );
   }
 
   QFont font = painter->font();
-  painter->setFont(option.font);
+  painter->setFont( option.font );
 
   painter->drawPixmap( option.rect.x() + 5, option.rect.y() + 5, pixmap );
 
-  painter->setFont(boldFont);
-  if ( !name.isEmpty() )
+  painter->setFont( boldFont );
+  if ( !name.isEmpty() ) {
     painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7, wn, hn, Qt::AlignLeft, name );
-  painter->setFont(oldFont);
+  }
+  painter->setFont( oldFont );
 
-  if ( !comment.isEmpty() )
+  if ( !comment.isEmpty() ) {
     painter->drawText( option.rect.x() + 5 + wp + 5, option.rect.y() + 7 + hn, wc, hc, Qt::AlignLeft, comment );
+  }
 
-  painter->setPen(pen);
+  painter->setPen( pen );
 
   drawFocus( painter, option, option.rect );
 }
 
 QSize AgentTypeWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QSize( 0, 0 );
+  }
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
   const QString comment = index.model()->data( index, AgentTypeModel::DescriptionRole ).toString();
@@ -247,16 +258,16 @@ QSize AgentTypeWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, con
 
 void AgentTypeWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
 {
-  if (option.state & QStyle::State_HasFocus) {
+  if ( option.state & QStyle::State_HasFocus ) {
     QStyleOptionFocusRect o;
-    o.QStyleOption::operator=(option);
+    o.QStyleOption::operator=( option );
     o.rect = rect;
     o.state |= QStyle::State_KeyboardFocusChange;
-    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
+    QPalette::ColorGroup cg = ( option.state & QStyle::State_Enabled )
                               ? QPalette::Normal : QPalette::Disabled;
-    o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
-                                             ? QPalette::Highlight : QPalette::Background);
-    QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
+    o.backgroundColor = option.palette.color( cg, ( option.state & QStyle::State_Selected )
+                                             ? QPalette::Highlight : QPalette::Background );
+    QApplication::style()->drawPrimitive( QStyle::PE_FrameFocusRect, &o, painter );
   }
 }
 

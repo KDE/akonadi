@@ -50,13 +50,14 @@ class ContactEditor::Private
     Private( ContactEditor::Mode mode, AbstractContactEditorWidget *editorWidget, ContactEditor *parent )
       : mParent( parent ), mMode( mode ), mMonitor( 0 ), mReadOnly( false )
     {
-      if ( editorWidget )
+      if ( editorWidget ) {
         mEditorWidget = editorWidget;
 #ifndef DISABLE_EDITOR_WIDGETS
-      else
+      } else {
         mEditorWidget = new ContactEditorWidget();
 #endif
-        
+      }
+
       QVBoxLayout *layout = new QVBoxLayout( mParent );
       layout->setMargin( 0 );
       layout->setSpacing( 0 );
@@ -89,15 +90,18 @@ class ContactEditor::Private
 
 void ContactEditor::Private::itemFetchDone( KJob *job )
 {
-  if ( job->error() != KJob::NoError )
+  if ( job->error() != KJob::NoError ) {
     return;
+  }
 
   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
-  if ( !fetchJob )
+  if ( !fetchJob ) {
     return;
+  }
 
-  if ( fetchJob->items().isEmpty() )
+  if ( fetchJob->items().isEmpty() ) {
     return;
+  }
 
   mItem = fetchJob->items().first();
 
@@ -120,16 +124,19 @@ void ContactEditor::Private::itemFetchDone( KJob *job )
 
 void ContactEditor::Private::parentCollectionFetchDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     return;
+  }
 
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-  if ( !fetchJob )
+  if ( !fetchJob ) {
     return;
+  }
 
   const Akonadi::Collection parentCollection = fetchJob->collections().first();
-  if ( parentCollection.isValid() )
-    mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
+  if ( parentCollection.isValid() ) {
+    mReadOnly = !( parentCollection.rights() & Collection::CanChangeItem );
+  }
 
   mEditorWidget->setReadOnly( mReadOnly );
 
@@ -145,10 +152,11 @@ void ContactEditor::Private::storeDone( KJob *job )
     return;
   }
 
-  if ( mMode == EditMode )
+  if ( mMode == EditMode ) {
     emit mParent->contactStored( mItem );
-  else if ( mMode == CreateMode )
+  } else if ( mMode == CreateMode ) {
     emit mParent->contactStored( static_cast<Akonadi::ItemCreateJob*>( job )->item() );
+  }
 }
 
 void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
@@ -209,8 +217,9 @@ ContactEditor::~ContactEditor()
 
 void ContactEditor::loadContact( const Akonadi::Item &item )
 {
-  if ( d->mMode == CreateMode )
+  if ( d->mMode == CreateMode ) {
     Q_ASSERT_X( false, "ContactEditor::loadContact", "You are calling loadContact in CreateMode!" );
+  }
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
@@ -226,11 +235,13 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
 bool ContactEditor::saveContact()
 {
   if ( d->mMode == EditMode ) {
-    if ( !d->mItem.isValid() )
+    if ( !d->mItem.isValid() ) {
       return true;
+    }
 
-    if ( d->mReadOnly )
+    if ( d->mReadOnly ) {
       return true;
+    }
 
     KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();
 
@@ -251,10 +262,11 @@ bool ContactEditor::saveContact()
       dlg->setAccessRightsFilter( Collection::CanCreateItem );
       dlg->setCaption( i18n( "Select Address Book" ) );
       dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
-      if ( dlg->exec() == KDialog::Accepted )
+      if ( dlg->exec() == KDialog::Accepted ) {
         setDefaultAddressBook( dlg->selectedCollection() );
-      else
+      } else {
         return false;
+      }
     }
 
     KABC::Addressee addr;

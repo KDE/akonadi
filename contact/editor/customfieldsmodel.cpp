@@ -64,21 +64,24 @@ QModelIndex CustomFieldsModel::parent( const QModelIndex& ) const
 
 QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.row() < 0 || index.row() >= mCustomFields.count() )
+  if ( index.row() < 0 || index.row() >= mCustomFields.count() ) {
     return QVariant();
+  }
 
-  if ( index.column() < 0 || index.column() > 2 )
+  if ( index.column() < 0 || index.column() > 2 ) {
     return QVariant();
+  }
 
   const CustomField &customField = mCustomFields[ index.row() ];
 
   if ( role == Qt::DisplayRole ) {
-    if ( index.column() == 0 )
+    if ( index.column() == 0 ) {
       return customField.title();
-    else if ( index.column() == 1 ) {
+    } else if ( index.column() == 1 ) {
       switch ( customField.type() ) {
         case CustomField::TextType:
         case CustomField::NumericType:
@@ -107,56 +110,64 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
           break;
       }
       return customField.value();
-    } else
+    } else {
       return customField.key();
+    }
   }
 
   if ( role == Qt::CheckStateRole ) {
     if ( index.column() == 1 ) {
       if ( customField.type() == CustomField::BooleanType ) {
-        return (customField.value() == QLatin1String( "true" ) ? Qt::Checked : Qt::Unchecked);
+        return ( customField.value() == QLatin1String( "true" ) ? Qt::Checked : Qt::Unchecked );
       }
     }
   }
 
   if ( role == Qt::EditRole ) {
-    if ( index.column() == 0 )
+    if ( index.column() == 0 ) {
       return customField.title();
-    else if ( index.column() == 1 )
+    } else if ( index.column() == 1 ) {
       return customField.value();
-    else
+    } else {
       return customField.key();
+    }
   }
 
-  if ( role == TypeRole )
+  if ( role == TypeRole ) {
     return customField.type();
+  }
 
-  if ( role == ScopeRole )
+  if ( role == ScopeRole ) {
     return customField.scope();
+  }
 
   return QVariant();
 }
 
 bool CustomFieldsModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return false;
+  }
 
-  if ( index.row() < 0 || index.row() >= mCustomFields.count() )
+  if ( index.row() < 0 || index.row() >= mCustomFields.count() ) {
     return false;
+  }
 
-  if ( index.column() < 0 || index.column() > 2 )
+  if ( index.column() < 0 || index.column() > 2 ) {
     return false;
+  }
 
   CustomField &customField = mCustomFields[ index.row() ];
 
   if ( role == Qt::EditRole ) {
-    if ( index.column() == 0 )
+    if ( index.column() == 0 ) {
       customField.setTitle( value.toString() );
-    else if ( index.column() == 1 )
+    } else if ( index.column() == 1 ) {
       customField.setValue( value.toString() );
-    else
+    } else {
       customField.setKey( value.toString() );
+    }
 
     emit dataChanged( index, index );
     return true;
@@ -190,59 +201,69 @@ bool CustomFieldsModel::setData( const QModelIndex &index, const QVariant &value
 
 QVariant CustomFieldsModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( section < 0 || section > 1 )
+  if ( section < 0 || section > 1 ) {
     return QVariant();
+  }
 
-  if ( orientation != Qt::Horizontal )
+  if ( orientation != Qt::Horizontal ) {
     return QVariant();
+  }
 
-  if ( role != Qt::DisplayRole )
+  if ( role != Qt::DisplayRole ) {
     return QVariant();
+  }
 
-  if ( section == 0 )
+  if ( section == 0 ) {
     return i18nc( "custom field title", "Title" );
-  else
+  } else {
     return i18nc( "custom field value", "Value" );
+  }
 }
 
 Qt::ItemFlags CustomFieldsModel::flags( const QModelIndex &index ) const
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= mCustomFields.count() )
+  if ( !index.isValid() || index.row() < 0 || index.row() >= mCustomFields.count() ) {
     return QAbstractItemModel::flags( index );
+  }
 
   const CustomField &customField = mCustomFields[ index.row() ];
 
   const Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
-  if ( (customField.type() == CustomField::BooleanType) && (index.column() == 1) )
-    return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable);
-  else
-    return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+  if ( ( customField.type() == CustomField::BooleanType ) && ( index.column() == 1 ) ) {
+    return ( parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsUserCheckable );
+  } else {
+    return ( parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable );
+  }
 }
 
 int CustomFieldsModel::columnCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return 3;
-  else
+  } else {
     return 0;
+  }
 }
 
 int CustomFieldsModel::rowCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return mCustomFields.count();
-  else
+  } else {
     return 0;
+  }
 }
 
 bool CustomFieldsModel::insertRows( int row, int count, const QModelIndex &parent )
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return false;
+  }
 
   beginInsertRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i )
+  for ( int i = 0; i < count; ++i ) {
     mCustomFields.insert( row, CustomField() );
+  }
   endInsertRows();
 
   return true;
@@ -250,12 +271,14 @@ bool CustomFieldsModel::insertRows( int row, int count, const QModelIndex &paren
 
 bool CustomFieldsModel::removeRows( int row, int count, const QModelIndex &parent )
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return false;
+  }
 
   beginRemoveRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i )
+  for ( int i = 0; i < count; ++i ) {
     mCustomFields.remove( row );
+  }
   endRemoveRows();
 
   return true;

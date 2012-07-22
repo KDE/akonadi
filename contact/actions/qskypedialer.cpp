@@ -38,12 +38,14 @@ static bool isSkypeServiceRegistered()
   const QLatin1String service( "com.Skype.API" );
 
   QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
-  if ( interface->isServiceRegistered( service ) )
+  if ( interface->isServiceRegistered( service ) ) {
     return true;
+  }
 
   interface = Akonadi::DBusConnectionPool::threadConnection().interface();
-  if ( interface->isServiceRegistered( service ) )
+  if ( interface->isServiceRegistered( service ) ) {
     return true;
+  }
 
   return false;
 }
@@ -74,8 +76,9 @@ QSkypeDialer::~QSkypeDialer()
 
 bool QSkypeDialer::initializeSkype()
 {
-  if ( mInterface && mInterface->isValid() )
+  if ( mInterface && mInterface->isValid() ) {
     return true;
+  }
 
   // first check whether dbus interface is available yet
   if ( !isSkypeServiceRegistered() ) {
@@ -88,10 +91,11 @@ bool QSkypeDialer::initializeSkype()
 
     const int runs = 100;
     for ( int i = 0; i < runs; ++i ) {
-      if ( !isSkypeServiceRegistered() )
+      if ( !isSkypeServiceRegistered() ) {
         ::sleep( 2 );
-      else
+      } else {
         break;
+      }
     }
   }
 
@@ -130,8 +134,9 @@ bool QSkypeDialer::initializeSkype()
 
 bool QSkypeDialer::dialNumber( const QString &number )
 {
-  if ( !initializeSkype() )
+  if ( !initializeSkype() ) {
     return false;
+  }
 
   QDBusReply<QString> reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "CALL %1" ).arg( number ) );
 
@@ -140,8 +145,9 @@ bool QSkypeDialer::dialNumber( const QString &number )
 
 bool QSkypeDialer::sendSms( const QString &number, const QString &text )
 {
-  if ( !initializeSkype() )
+  if ( !initializeSkype() ) {
     return false;
+  }
 
   // First we create a new SMS object that gets an ID. We need that ID later...
   QDBusReply<QString> reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "CREATE SMS OUTGOING %1" ).arg( number ) );

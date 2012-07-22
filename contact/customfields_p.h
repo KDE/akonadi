@@ -49,8 +49,7 @@ class CustomField
   public:
     typedef QVector<CustomField> List;
 
-    enum Type
-    {
+    enum Type {
       TextType,
       NumericType,
       BooleanType,
@@ -59,8 +58,7 @@ class CustomField
       DateTimeType
     };
 
-    enum Scope
-    {
+    enum Scope {
       LocalScope,   ///< Field has been defined by user for one contact
       GlobalScope,  ///< Field has been defined by user for all contacts
       ExternalScope ///< Field has been defined by the external data source (e.g. vCard)

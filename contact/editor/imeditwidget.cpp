@@ -69,8 +69,9 @@ void IMEditWidget::loadContact( const KABC::Addressee &contact )
         const QString protocol = app;
         const QStringList names = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
 
-        foreach ( const QString &name, names )
-          mIMAddresses << IMAddress( protocol, name, (name == mIMEdit->text()) );
+        foreach ( const QString &name, names ) {
+          mIMAddresses << IMAddress( protocol, name, ( name == mIMEdit->text() ) );
+        }
       }
     }
   }
@@ -78,21 +79,24 @@ void IMEditWidget::loadContact( const KABC::Addressee &contact )
 
 void IMEditWidget::storeContact( KABC::Addressee &contact ) const
 {
-  if ( !mIMEdit->text().isEmpty() )
+  if ( !mIMEdit->text().isEmpty() ) {
     contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ), mIMEdit->text() );
-  else
+  } else {
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-IMAddress" ) );
+  }
 
   // create a map with protocol as key and list of names for that protocol as value
   QMap<QString, QStringList> protocolMap;
 
   // fill map with all known protocols
-  foreach ( const QString &protocol, IMProtocols::self()->protocols() )
+  foreach ( const QString &protocol, IMProtocols::self()->protocols() ) {
     protocolMap.insert( protocol, QStringList() );
+  }
 
   // add the configured addresses
-  foreach ( const IMAddress &address, mIMAddresses )
+  foreach ( const IMAddress &address, mIMAddresses ) {
     protocolMap[ address.protocol() ].append( address.name() );
+  }
 
   // iterate over this list and modify the contact according
   QMapIterator<QString, QStringList> it( protocolMap );

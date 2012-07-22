@@ -30,10 +30,11 @@ class EmailAddressSelectionDialog::Private
     Private( EmailAddressSelectionDialog *qq, QAbstractItemModel *model )
       : q( qq )
     {
-      if ( model )
+      if ( model ) {
         mView = new EmailAddressSelectionWidget( model, q );
-      else
+      } else {
         mView = new EmailAddressSelectionWidget( q );
+      }
 
       q->setButtons( Ok | Cancel );
       q->setMainWidget( mView );

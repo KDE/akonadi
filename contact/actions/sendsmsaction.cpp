@@ -17,7 +17,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
-*/ 
+*/
 
 #include "sendsmsaction.h"
 
@@ -36,8 +36,9 @@ static QString strippedSmsNumber( const QString &number )
 
   for ( int i = 0; i < number.length(); ++i ) {
     const QChar character = number.at( i );
-    if ( character.isDigit() || (character == QLatin1Char( '+' ) && i == 0) )
+    if ( character.isDigit() || ( character == QLatin1Char( '+' ) && i == 0 ) ) {
       result += character;
+    }
   }
 
   return result;
@@ -48,8 +49,9 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
   const QString number = phoneNumber.number().trimmed();
 
   SmsDialog dlg( number );
-  if ( !dlg.exec() ) // the cancel button has been clicked
+  if ( !dlg.exec() ) { // the cancel button has been clicked
     return;
+  }
 
   // synchronize
   ContactActionsSettings::self()->readConfig();

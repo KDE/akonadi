@@ -43,20 +43,20 @@ bool QWinCEDialer::dialNumber(const QString &number)
   WCHAR wnumber[TAPIMAXDESTADDRESSSIZE];
   long retval = -1;
 
-  int numchars = number.toWCharArray(wnumber);
+  int numchars = number.toWCharArray( wnumber );
   wnumber[numchars] = '\0';
 
-  memset(&phonecallinfo, 0, sizeof(phonecallinfo));
-  phonecallinfo.cbSize = sizeof(phonecallinfo);
+  memset( &phonecallinfo, 0, sizeof( phonecallinfo ) );
+  phonecallinfo.cbSize = sizeof( phonecallinfo );
   phonecallinfo.dwFlags = PMCF_PROMPTBEFORECALLING;
   phonecallinfo.pszDestAddress = wnumber;
   phonecallinfo.pszAppName = NULL;
   phonecallinfo.pszCalledParty = NULL;
   phonecallinfo.pszComment = NULL;
 
-  retval = PhoneMakeCall(&phonecallinfo);
+  retval = PhoneMakeCall( &phonecallinfo );
   if ( retval != 0 ) {
-    mErrorMessage = i18n("Could not call phone number %1", number);
+    mErrorMessage = i18n( "Could not call phone number %1", number );
     return false;
   }
   return true;
@@ -66,7 +66,7 @@ bool QWinCEDialer::dialNumber(const QString &number)
 bool QWinCEDialer::sendSms(const QString &number, const QString &text)
 {
     //TODO: see http://msdn.microsoft.com/en-us/library/aa921968.aspx
-    mErrorMessage = i18n("Sending an SMS is currently not supported on WinCE");
+    mErrorMessage = i18n( "Sending an SMS is currently not supported on WinCE" );
     return false;
 }
 

@@ -77,20 +77,23 @@ CollectionStatisticsModel::CollectionStatisticsModel( QObject * parent ) :
 
 int CollectionStatisticsModel::columnCount( const QModelIndex & parent ) const
 {
-  if ( parent.isValid() && parent.column() != 0 )
+  if ( parent.isValid() && parent.column() != 0 ) {
     return 0;
+  }
   return 4;
 }
 
 QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) const
 {
   Q_D( const CollectionStatisticsModel );
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
   Collection col = collectionForId( CollectionModel::data( index, CollectionIdRole ).toLongLong() );
-  if ( !col.isValid() )
+  if ( !col.isValid() ) {
     return QVariant();
+  }
   CollectionStatistics statistics = col.statistics();
 
   qint64 total = statistics.count();
@@ -103,19 +106,19 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
   qint64 sizeRecursive = d->countRecursive( col.id(),
                                             CollectionStatisticsModelPrivate::Size );
 
-  if ( role == TotalRole )
+  if ( role == TotalRole ) {
     return total;
-  else if ( role == UnreadRole )
+  } else if ( role == UnreadRole ) {
     return unread;
-  else if ( role == SizeRole )
+  } else if ( role == SizeRole ) {
     return size;
-  else if ( role == RecursiveUnreadRole )
+  } else if ( role == RecursiveUnreadRole ) {
     return unreadRecursive;
-  else if ( role == RecursiveTotalRole )
+  } else if ( role == RecursiveTotalRole ) {
     return totalRecursive;
-  else if ( role == RecursiveSizeRole )
+  } else if ( role == RecursiveSizeRole ) {
     return sizeRecursive;
-  else if ( role == StatisticsRole ) {
+  } else if ( role == StatisticsRole ) {
     QVariant var;
     var.setValue( statistics );
     return var;
@@ -134,30 +137,33 @@ QVariant CollectionStatisticsModel::data( const QModelIndex & index, int role ) 
       case 2 : value = total; break;
       case 3 : value = size; break;
     }
-    if ( value < 0 )
+    if ( value < 0 ) {
       return QString();
-    else if ( value == 0 )
+    } else if ( value == 0 ) {
       return QLatin1String( "-" );
-    else if ( index.column() == 3 )
+    } else if ( index.column() == 3 ) {
       return KGlobal::locale()->formatByteSize( value );
-    else
+    } else {
       return QString::number( value );
+    }
   }
 
-  if ( role == Qt::TextAlignmentRole && ( index.column() == 1 || index.column() == 2 || index.column() == 3 ) )
+  if ( role == Qt::TextAlignmentRole && ( index.column() == 1 || index.column() == 2 || index.column() == 3 ) ) {
     return Qt::AlignRight;
+  }
 
   return CollectionModel::data( index, role );
 }
 
 QVariant CollectionStatisticsModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole )
+  if ( orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     switch ( section ) {
       case 1: return i18nc( "@title:column, number of unread messages", "Unread" );
       case 2: return i18nc( "@title:column, total number of messages", "Total" );
       case 3: return i18nc( "@title:column, total size (in bytes) of the collection", "Size" );
     }
+  }
 
   return CollectionModel::headerData( section, orientation, role );
 }

@@ -180,12 +180,13 @@ void AgentInstanceCreateJob::start()
 
 void AgentInstanceCreateJobPrivate::doStart()
 {
-  if ( !agentType.isValid() && !agentTypeId.isEmpty() )
+  if ( !agentType.isValid() && !agentTypeId.isEmpty() ) {
     agentType = AgentManager::self()->type( agentTypeId );
+  }
 
   if ( !agentType.isValid() ) {
     q->setError( KJob::UserDefinedError );
-    q->setErrorText( i18n( "Unable to obtain agent type '%1'.", agentTypeId) );
+    q->setErrorText( i18n( "Unable to obtain agent type '%1'.", agentTypeId ) );
     QTimer::singleShot( 0, q, SLOT(emitResult()) );
     return;
   }
@@ -200,8 +201,9 @@ void AgentInstanceCreateJobPrivate::doStart()
 #ifdef Q_OS_UNIX
     // Increate the timeout when valgrinding the agent, because that slows down things a log.
     QString agentValgrind = QString::fromLocal8Bit( qgetenv( "AKONADI_VALGRIND" ) );
-    if ( !agentValgrind.isEmpty() && agentType.identifier().contains( agentValgrind ) )
+    if ( !agentValgrind.isEmpty() && agentType.identifier().contains( agentValgrind ) ) {
       timeout *= 15;
+    }
 
     // change the timeout when debugging the agent, because we need time to start the debugger
     const QString agentDebugging = QString::fromLocal8Bit( qgetenv( "AKONADI_DEBUG_WAIT" ) );

@@ -91,8 +91,9 @@ bool CollectionView::Private::hasParent( const QModelIndex& idx, Collection::Id 
 {
   QModelIndex idx2 = idx;
   while ( idx2.isValid() ) {
-    if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole).toLongLong() == parentId )
+    if ( mParent->model()->data( idx2, CollectionModel::CollectionIdRole ).toLongLong() == parentId ) {
       return true;
+    }
 
     idx2 = idx2.parent();
   }
@@ -107,24 +108,28 @@ void CollectionView::Private::dragExpand()
 
 void CollectionView::Private::itemClicked( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
-  if ( !collection.isValid() )
+  if ( !collection.isValid() ) {
     return;
+  }
 
   emit mParent->clicked( collection );
 }
 
 void CollectionView::Private::itemCurrentChanged( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Collection collection = index.model()->data( index, CollectionModel::CollectionRole ).value<Collection>();
-  if ( !collection.isValid() )
+  if ( !collection.isValid() ) {
     return;
+  }
 
   emit mParent->currentChanged( collection );
 }
@@ -185,16 +190,19 @@ void CollectionView::dragMoveEvent( QDragMoveEvent * event )
 
     const Collection collection = Collection::fromUrl( url );
     if ( collection.isValid() ) {
-      if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
+      if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) ) {
         break;
+      }
 
       // Check if we don't try to drop on one of the children
-      if ( d->hasParent( index, collection.id() ) )
+      if ( d->hasParent( index, collection.id() ) ) {
         break;
+      }
     } else {
       const QString type = url.queryItems()[ QString::fromLatin1( "type" ) ];
-      if ( !supportedContentTypes.contains( type ) )
+      if ( !supportedContentTypes.contains( type ) ) {
         break;
+      }
     }
 
     QTreeView::dragMoveEvent( event );
@@ -238,12 +246,14 @@ void CollectionView::dropEvent( QDropEvent * event )
 
 void CollectionView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->xmlGuiClient )
+  if ( !d->xmlGuiClient ) {
     return;
+  }
   QMenu *popup = static_cast<QMenu*>( d->xmlGuiClient->factory()->container(
                                       QLatin1String( "akonadi_collectionview_contextmenu" ), d->xmlGuiClient ) );
-  if ( popup )
+  if ( popup ) {
     popup->exec( event->globalPos() );
+  }
 }
 
 void CollectionView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )

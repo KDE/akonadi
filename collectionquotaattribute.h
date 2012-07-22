@@ -72,14 +72,14 @@ class AKONADI_EXPORT CollectionQuotaAttribute : public Akonadi::Attribute
      * Sets the current quota @p value for the collection.
      *
      * @param value The current quota value in bytes.
-     */ 
+     */
     void setCurrentValue( qint64 value );
 
     /**
      * Sets the maximum quota @p value for the collection.
      *
      * @param value The maximum quota value in bytes.
-     */ 
+     */
     void setMaximumValue( qint64 value );
 
     /**

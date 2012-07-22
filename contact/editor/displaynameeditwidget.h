@@ -42,8 +42,7 @@ class DisplayNameEditWidget : public QWidget
     /**
      * Describes what the display name should look like.
      */
-    enum DisplayType
-    {
+    enum DisplayType {
       SimpleName,           ///< A name of the form: givenName familyName
       FullName,             ///< A name of the form: prefix givenName additionalName familyName suffix
       ReverseNameWithComma, ///< A name of the form: familyName, givenName

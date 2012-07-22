@@ -124,8 +124,9 @@ bool CollectionStatisticsDelegate::unreadCountShown() const
 void CollectionStatisticsDelegate::setProgressAnimationEnabled( bool enable )
 {
   Q_D( CollectionStatisticsDelegate );
-  if ( enable == ( d->animator != 0 ) )
+  if ( enable == ( d->animator != 0 ) ) {
       return;
+  }
   if ( enable ) {
     Q_ASSERT( !d->animator );
     Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator( d->parent );
@@ -156,24 +157,22 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
 
   if ( d->animator ) {
 
-    const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
-    if (!collection.isValid())
-    {
-      d->animator->pop(index);
+    if ( !collection.isValid() ) {
+      d->animator->pop( index );
       return;
     }
 
-    if (index.data(Akonadi::EntityTreeModel::FetchStateRole).toInt() != Akonadi::EntityTreeModel::FetchingState)
-    {
-      d->animator->pop(index);
+    if ( index.data( Akonadi::EntityTreeModel::FetchStateRole ).toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+      d->animator->pop( index );
       return;
     }
 
-    d->animator->push(index);
+    d->animator->push( index );
 
-    if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
-      v4->icon = d->animator->sequenceFrame(index);
+    if ( QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>( option ) ) {
+      v4->icon = d->animator->sequenceFrame( index );
     }
   }
 }
@@ -231,7 +230,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
 
-  Q_ASSERT(collection.isValid());
+  Q_ASSERT( collection.isValid() );
 
   CollectionStatistics statistics = collection.statistics();
 
@@ -247,13 +246,14 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     // unread count)
     QString unread;
 //     qDebug() << expanded << unreadCount << unreadRecursiveCount;
-    if ( expanded && unreadCount > 0 )
+    if ( expanded && unreadCount > 0 ) {
       unread = QString::fromLatin1( " (%1)" ).arg( unreadCount );
-    else if ( !expanded ) {
-      if ( unreadCount != unreadRecursiveCount )
+    } else if ( !expanded ) {
+      if ( unreadCount != unreadRecursiveCount ) {
         unread = QString::fromLatin1( " (%1 + %2)" ).arg( unreadCount ).arg( unreadRecursiveCount - unreadCount );
-      else if ( unreadCount > 0 )
+      } else if ( unreadCount > 0 ) {
         unread = QString::fromLatin1( " (%1)" ).arg( unreadCount );
+      }
     }
 
     PainterStateSaver stateSaver( painter );
@@ -264,11 +264,11 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       painter->setFont( font );
     }
 
-    const QColor unreadColor = (option.state & QStyle::State_Selected) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
+    const QColor unreadColor = ( option.state & QStyle::State_Selected ) ? d->mSelectedUnreadColor : d->mDeselectedUnreadColor;
     const QRect iconRect = s->subElementRect( QStyle::SE_ItemViewItemDecoration, &option4, widget );
 
-    if ( option.decorationPosition == QStyleOptionViewItem::Left
-         || option.decorationPosition == QStyleOptionViewItem::Right ) {
+    if ( option.decorationPosition == QStyleOptionViewItem::Left ||
+         option.decorationPosition == QStyleOptionViewItem::Right ) {
       // Squeeze the folder text if it is to big and calculate the rectangles
       // where the folder text and the unread count will be drawn to
       QString folderName = text;
@@ -277,7 +277,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       int folderWidth( fm.width( folderName ) );
       const bool enoughPlaceForText = ( option.rect.width() > ( folderWidth + unreadWidth + iconRect.width() ) );
 
-       if ( !enoughPlaceForText && ( folderWidth + unreadWidth > textRect.width() )) {
+       if ( !enoughPlaceForText && ( folderWidth + unreadWidth > textRect.width() ) ) {
         folderName = fm.elidedText( folderName, Qt::ElideRight,
                                     option.rect.width() - unreadWidth - iconRect.width() );
         folderWidth = fm.width( folderName );
@@ -286,8 +286,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
       QRect unreadRect = textRect;
       folderRect.setRight( textRect.left() + folderWidth );
       unreadRect = QRect( folderRect.right(), folderRect.top(), unreadRect.width(), unreadRect.height() );
-      if ( textColor.isValid() )
+      if ( textColor.isValid() ) {
         painter->setPen( textColor );
+      }
 
       // Draw folder name and unread count
       painter->drawText( folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName );
@@ -317,7 +318,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     } else {
 
       qint64 totalCount = statistics.count();
-      if (index.column() == 2 && ( ( !expanded && totalRecursiveCount > 0 ) || ( expanded && totalCount > 0 ) ) ) {
+      if ( index.column() == 2 && ( ( !expanded && totalRecursiveCount > 0 ) || ( expanded && totalCount > 0 ) ) ) {
         sumText = QString::number( expanded ? totalCount : totalRecursiveCount );
       }
     }
@@ -329,14 +330,16 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   //total size
   if ( index.column() == 3 && !expanded ) {
-    if ( textColor.isValid() )
+    if ( textColor.isValid() ) {
       painter->setPen( textColor );
-    painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize( (KIO::filesize_t)totalSize ) );
+    }
+    painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, KIO::convertSize( ( KIO::filesize_t)totalSize ) );
     return;
   }
 
-  if ( textColor.isValid() )
+  if ( textColor.isValid() ) {
     painter->setPen( textColor );
+  }
   painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, text );
 }
 

@@ -96,8 +96,9 @@ void CollectionRequester::Private::_k_slotOpenDialog()
 {
   CollectionDialog *dlg = collectionDialog;
 
-  if ( dlg->exec() != QDialog::Accepted )
+  if ( dlg->exec() != QDialog::Accepted ) {
     return;
+  }
 
   const Akonadi::Collection collection = dlg->selectedCollection();
   q->setCollection( collection );
@@ -142,36 +143,41 @@ void CollectionRequester::setCollection( const Collection& collection )
 
 void CollectionRequester::setMimeTypeFilter( const QStringList &mimeTypes )
 {
-  if ( d->collectionDialog )
+  if ( d->collectionDialog ) {
     d->collectionDialog->setMimeTypeFilter( mimeTypes );
+  }
 }
 
 QStringList CollectionRequester::mimeTypeFilter() const
 {
-  if ( d->collectionDialog )
+  if ( d->collectionDialog ) {
     return d->collectionDialog->mimeTypeFilter();
-  else
+  } else {
     return QStringList();
+  }
 }
 
 void CollectionRequester::setAccessRightsFilter( Collection::Rights rights )
 {
-  if ( d->collectionDialog )
+  if ( d->collectionDialog ) {
     d->collectionDialog->setAccessRightsFilter( rights );
+  }
 }
 
 Collection::Rights CollectionRequester::accessRightsFilter() const
 {
-  if ( d->collectionDialog )
+  if ( d->collectionDialog ) {
     return d->collectionDialog->accessRightsFilter();
-  else
+  } else {
     return Akonadi::Collection::ReadOnly;
+  }
 }
 
 void CollectionRequester::changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options )
 {
-  if ( d->collectionDialog )
+  if ( d->collectionDialog ) {
     d->collectionDialog->changeCollectionDialogOptions( options );
+  }
 }
 
 #include "collectionrequester.moc"

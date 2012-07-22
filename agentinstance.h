@@ -73,8 +73,7 @@ class AKONADI_EXPORT AgentInstance
     /**
      * Describes the status of the agent instance.
      */
-    enum Status
-    {
+    enum Status {
       Idle = 0, ///< The agent instance does currently nothing.
       Running,  ///< The agent instance is working on something.
       Broken    ///< The agent instance encountered an error state.

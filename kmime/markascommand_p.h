@@ -43,7 +43,7 @@ private Q_SLOTS:
 
 private:
   void markMessages();
- 
+
   Akonadi::Collection::List mFolders;
   QList<Akonadi::Item> mMessages;
   Akonadi::MessageStatus mTargetStatus;

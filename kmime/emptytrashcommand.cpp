@@ -32,10 +32,10 @@
 #include "akonadi/itemdeletejob.h"
 #include "akonadi/agentmanager.h"
 #include "kmime/kmime_message.h"
- 
+
 EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent)
   : CommandBase( parent ),
-    mModel( model ), 
+    mModel( model ),
     the_trashCollectionFolder( -1 ),
     mNumberOfTrashToEmpty( 0 )
 {
@@ -43,7 +43,7 @@ EmptyTrashCommand::EmptyTrashCommand(const QAbstractItemModel* model, QObject* p
 
 EmptyTrashCommand::EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent)
   : CommandBase( parent ),
-    mModel( 0 ), 
+    mModel( 0 ),
     the_trashCollectionFolder( -1 ),
     mFolder( folder ),
     mNumberOfTrashToEmpty( 0 )
@@ -97,9 +97,9 @@ void EmptyTrashCommand::execute()
       mNumberOfTrashToEmpty++;
       expunge( mFolder );
     } else {
-      emitResult( OK ); 
+      emitResult( OK );
     }
-    
+
   }
 }
 
@@ -110,7 +110,7 @@ void EmptyTrashCommand::expunge( const Akonadi::Collection & col )
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotExpungeJob(KJob*)) );
   } else {
     kDebug()<<" Try to expunge an invalid collection :"<<col;
-    emitResult( Failed ); 
+    emitResult( Failed );
   }
 }
 

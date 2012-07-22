@@ -68,21 +68,24 @@ bool ContactsFilterProxyModel::filterAcceptsRow( int row, const QModelIndex &par
 {
   const QModelIndex index = sourceModel()->index( row, 0, parent );
   if ( d->mExcludeVirtualCollections ) {
-    const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-    if ( collection.isValid() && collection.isVirtual())
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( collection.isValid() && collection.isVirtual() ) {
       return false;
+    }
   }
-    
-  if ( ( d->mFilter.isEmpty() ) && ( !( d->flags & ContactsFilterProxyModel::HasEmail ) ))
+
+  if ( ( d->mFilter.isEmpty() ) && ( !( d->flags & ContactsFilterProxyModel::HasEmail ) ) ) {
     return true;
+  }
 
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    if ( d->flags & ContactsFilterProxyModel::HasEmail ){
-      if ( contact.emails().isEmpty() )
+    if ( d->flags & ContactsFilterProxyModel::HasEmail ) {
+      if ( contact.emails().isEmpty() ) {
         return false;
+      }
     }
     if ( !d->mFilter.isEmpty() ) {
         return contactMatchesFilter( contact, d->mFilter );
@@ -104,16 +107,17 @@ bool ContactsFilterProxyModel::lessThan( const QModelIndex &leftIndex, const QMo
   const QDate leftDate = leftIndex.data( ContactsTreeModel::DateRole ).toDate();
   const QDate rightDate = rightIndex.data( ContactsTreeModel::DateRole ).toDate();
   if ( leftDate.isValid() && rightDate.isValid() ) {
-    if(leftDate.year() < rightDate.year() )
+    if ( leftDate.year() < rightDate.year() ) {
       return true;
-    else if(leftDate.year() == rightDate.year()) {
-       if ( leftDate.month() < rightDate.month() )
-         return true;
-       else if ( leftDate.month() == rightDate.month() )
-         return (leftDate.day() < rightDate.day());
+    } else if ( leftDate.year() == rightDate.year() ) {
+      if ( leftDate.month() < rightDate.month() ) {
+        return true;
+      } else if ( leftDate.month() == rightDate.month() ) {
+        return ( leftDate.day() < rightDate.day() );
+      }
+    } else {
+      return false;
     }
-    else
-     return false;
   }
 
   return QSortFilterProxyModel::lessThan( leftIndex, rightIndex );
@@ -138,9 +142,8 @@ Qt::ItemFlags ContactsFilterProxyModel::flags( const QModelIndex& index ) const
     // Don't crash
     return 0;
   }
-  const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-  if ( collection.isValid() )
-  {
+  const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( collection.isValid() ) {
     return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable );
   }
   return QSortFilterProxyModel::flags( index );
@@ -148,98 +151,121 @@ Qt::ItemFlags ContactsFilterProxyModel::flags( const QModelIndex& index ) const
 
 static bool addressMatchesFilter( const KABC::Address &address, const QString &filterString )
 {
-  if ( address.street().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.street().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.locality().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.locality().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.region().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.region().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.postalCode().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.postalCode().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.country().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.country().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.label().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.label().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( address.postOfficeBox().contains( filterString, Qt::CaseInsensitive ) )
+  if ( address.postOfficeBox().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
   return false;
 }
 
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString )
 {
-  if ( contact.assembledName().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.assembledName().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.formattedName().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.formattedName().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.nickName().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.nickName().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.birthday().toString().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.birthday().toString().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
   const KABC::Address::List addresses = contact.addresses();
   int count = addresses.count();
   for ( int i = 0; i < count; ++i ) {
-    if ( addressMatchesFilter( addresses.at( i ), filterString ) )
+    if ( addressMatchesFilter( addresses.at( i ), filterString ) ) {
       return true;
+    }
   }
 
   const KABC::PhoneNumber::List phoneNumbers = contact.phoneNumbers();
   count = phoneNumbers.count();
   for ( int i = 0; i < count; ++i ) {
-    if ( phoneNumbers.at( i ).number().contains( filterString, Qt::CaseInsensitive ) )
+    if ( phoneNumbers.at( i ).number().contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
+    }
   }
 
   const QStringList emails = contact.emails();
   count = emails.count();
   for ( int i = 0; i < count; ++i ) {
-    if ( emails.at( i ).contains( filterString, Qt::CaseInsensitive ) )
+    if ( emails.at( i ).contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
+    }
   }
 
   const QStringList categories = contact.categories();
   count = categories.count();
   for ( int i = 0; i < count; ++i ) {
-    if ( categories.at( i ).contains( filterString, Qt::CaseInsensitive ) )
+    if ( categories.at( i ).contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
+    }
   }
 
-  if ( contact.mailer().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.mailer().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.title().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.title().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.role().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.role().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.organization().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.organization().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.department().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.department().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.note().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.note().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
-  if ( contact.url().url().contains( filterString, Qt::CaseInsensitive ) )
+  if ( contact.url().url().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
   const QStringList customs = contact.customs();
   count = customs.count();
   for ( int i = 0; i < count; ++i ) {
-    if ( customs.at( i ).contains( filterString, Qt::CaseInsensitive ) )
+    if ( customs.at( i ).contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
+    }
   }
 
   return false;
@@ -247,15 +273,18 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
 
 bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString )
 {
-  if ( group.name().contains( filterString, Qt::CaseInsensitive ) )
+  if ( group.name().contains( filterString, Qt::CaseInsensitive ) ) {
     return true;
+  }
 
   const int count = group.dataCount();
   for ( int i = 0; i < count; ++i ) {
-    if ( group.data( i ).name().contains( filterString, Qt::CaseInsensitive ) )
+    if ( group.data( i ).name().contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
-    if ( group.data( i ).email().contains( filterString, Qt::CaseInsensitive ) )
+    }
+    if ( group.data( i ).email().contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
+    }
   }
 
   return false;

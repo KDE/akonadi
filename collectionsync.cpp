@@ -99,8 +99,9 @@ class CollectionSync::Private
       localRoot = new LocalNode( Collection::root() );
       localRoot->processed = true; // never try to delete that one
       localUidMap.insert( localRoot->collection.id(), localRoot );
-      if ( !hierarchicalRIDs )
+      if ( !hierarchicalRIDs ) {
         localRidMap.insert( QString(), localRoot );
+      }
     }
 
     ~Private()
@@ -114,8 +115,9 @@ class CollectionSync::Private
       LocalNode *node = new LocalNode( col );
       Q_ASSERT( !localUidMap.contains( col.id() ) );
       localUidMap.insert( node->collection.id(), node );
-      if ( !hierarchicalRIDs && !col.remoteId().isEmpty() )
+      if ( !hierarchicalRIDs && !col.remoteId().isEmpty() ) {
         localRidMap.insert( node->collection.remoteId(), node );
+      }
 
       // add already existing children
       if ( localPendingCollections.contains( col.id() ) ) {
@@ -124,8 +126,9 @@ class CollectionSync::Private
           Q_ASSERT( localUidMap.contains( childId ) );
           LocalNode *childNode = localUidMap.value( childId );
           node->childNodes.append( childNode );
-          if ( !childNode->collection.remoteId().isEmpty() )
+          if ( !childNode->collection.remoteId().isEmpty() ) {
             node->childRidMap.insert( childNode->collection.remoteId(), childNode );
+          }
         }
       }
 
@@ -133,8 +136,9 @@ class CollectionSync::Private
       if ( localUidMap.contains( col.parentCollection().id() ) ) {
         LocalNode* parentNode = localUidMap.value( col.parentCollection().id() );
         parentNode->childNodes.append( node );
-        if ( !node->collection.remoteId().isEmpty() )
+        if ( !node->collection.remoteId().isEmpty() ) {
           parentNode->childRidMap.insert( node->collection.remoteId(), node );
+        }
       } else {
         localPendingCollections[ col.parentCollection().id() ].append( col.id() );
       }
@@ -163,8 +167,9 @@ class CollectionSync::Private
     /** Once the local collection listing finished we can continue with the interesting stuff. */
     void localCollectionFetchResult( KJob *job )
     {
-      if ( job->error() )
+      if ( job->error() ) {
         return; // handled by the base class
+      }
 
       // safety check: the local tree has to be connected
       if ( !localPendingCollections.isEmpty() ) {
@@ -185,16 +190,19 @@ class CollectionSync::Private
      */
     LocalNode* findLocalChildNodeByName( LocalNode *localParentNode, const QString &name )
     {
-      if ( name.isEmpty() ) // shouldn't happen...
+      if ( name.isEmpty() ) { // shouldn't happen...
         return 0;
+      }
 
-      if ( localParentNode == localRoot ) // possibly non-unique names on top-level
+      if ( localParentNode == localRoot ) { // possibly non-unique names on top-level
         return 0;
+      }
 
       foreach ( LocalNode *childNode, localParentNode->childNodes ) {
         // the restriction on empty RIDs can possibly removed, but for now I only understand the implication for this case
-        if ( childNode->collection.name() == name && childNode->collection.remoteId().isEmpty() )
+        if ( childNode->collection.name() == name && childNode->collection.remoteId().isEmpty() ) {
           return childNode;
+        }
       }
       return 0;
     }
@@ -206,25 +214,29 @@ class CollectionSync::Private
     LocalNode* findMatchingLocalNode( const Collection &collection )
     {
       if ( !hierarchicalRIDs ) {
-        if ( localRidMap.contains( collection.remoteId() ) )
+        if ( localRidMap.contains( collection.remoteId() ) ) {
           return localRidMap.value( collection.remoteId() );
+        }
         return 0;
       } else {
-        if ( collection.id() == Collection::root().id() || collection.remoteId() == Collection::root().remoteId() )
+        if ( collection.id() == Collection::root().id() || collection.remoteId() == Collection::root().remoteId() ) {
           return localRoot;
+        }
         LocalNode *localParent = 0;
         if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
           kWarning() << "Remote collection without valid parent found: " << collection;
           return 0;
         }
-        if ( collection.parentCollection().id() == Collection::root().id() || collection.parentCollection().remoteId() == Collection::root().remoteId() )
+        if ( collection.parentCollection().id() == Collection::root().id() || collection.parentCollection().remoteId() == Collection::root().remoteId() ) {
           localParent = localRoot;
-        else
+        } else {
           localParent = findMatchingLocalNode( collection.parentCollection() );
+        }
 
         if ( localParent ) {
-          if ( localParent->childRidMap.contains( collection.remoteId() ) )
+          if ( localParent->childRidMap.contains( collection.remoteId() ) ) {
             return localParent->childRidMap.value( collection.remoteId() );
+          }
           // check if we have a local folder with a matching name and no RID, if so let's use that one
           // we would get an error if we don't do this anyway, as we'd try to create two sibling nodes with the same name
           if ( LocalNode *recoveredLocalNode = findLocalChildNodeByName( localParent, collection.name() ) ) {
@@ -243,10 +255,13 @@ class CollectionSync::Private
     */
     LocalNode* findBestLocalAncestor( const Collection &collection, bool *exactMatch = 0 )
     {
-      if ( !hierarchicalRIDs )
+      if ( !hierarchicalRIDs ) {
         return localRoot;
+      }
       if ( collection == Collection::root() ) {
-        if ( exactMatch ) *exactMatch = true;
+        if ( exactMatch ) {
+          *exactMatch = true;
+        }
         return localRoot;
       }
       if ( collection.parentCollection().id() < 0 && collection.parentCollection().remoteId().isEmpty() ) {
@@ -256,14 +271,20 @@ class CollectionSync::Private
       bool parentIsExact = false;
       LocalNode *localParent = findBestLocalAncestor( collection.parentCollection(), &parentIsExact );
       if ( !parentIsExact ) {
-        if ( exactMatch ) *exactMatch = false;
+        if ( exactMatch ) {
+          *exactMatch = false;
+        }
         return localParent;
       }
       if ( localParent->childRidMap.contains( collection.remoteId() ) ) {
-        if ( exactMatch ) *exactMatch = true;
+        if ( exactMatch ) {
+          *exactMatch = true;
+        }
         return localParent->childRidMap.value( collection.remoteId() );
       }
-      if ( exactMatch ) *exactMatch = false;
+      if ( exactMatch ) {
+        *exactMatch = false;
+      }
       return localParent;
     }
 
@@ -304,8 +325,7 @@ class CollectionSync::Private
 
       // process the now possible collection creations
       for ( QHash<LocalNode*, QList<RemoteNode*> >::const_iterator it = pendingCreations.constBegin();
-            it != pendingCreations.constEnd(); ++it )
-      {
+            it != pendingCreations.constEnd(); ++it ) {
         createLocalCollections( it.key(), it.value() );
       }
     }
@@ -348,10 +368,12 @@ class CollectionSync::Private
     void updateLocalCollectionResult( KJob* job )
     {
       --pendingJobs;
-      if ( job->error() )
+      if ( job->error() ) {
         return; // handled by the base class
-      if ( qobject_cast<CollectionModifyJob*>( job ) )
+      }
+      if ( qobject_cast<CollectionModifyJob*>( job ) ) {
         ++progress;
+      }
       checkDone();
     }
 
@@ -376,22 +398,24 @@ class CollectionSync::Private
     void createLocalCollectionResult( KJob* job )
     {
       --pendingJobs;
-      if ( job->error() )
+      if ( job->error() ) {
         return; // handled by the base class
+      }
 
       const Collection newLocal = static_cast<CollectionCreateJob*>( job )->collection();
-      LocalNode* localNode = createLocalNode( newLocal );
+      LocalNode *localNode = createLocalNode( newLocal );
       localNode->processed = true;
 
-      LocalNode* localParent = job->property( LOCAL_NODE ).value<LocalNode*>();
+      LocalNode *localParent = job->property( LOCAL_NODE ).value<LocalNode*>();
       Q_ASSERT( localParent->childNodes.contains( localNode ) );
-      RemoteNode* remoteNode = job->property( REMOTE_NODE ).value<RemoteNode*>();
+      RemoteNode *remoteNode = job->property( REMOTE_NODE ).value<RemoteNode*>();
       delete remoteNode;
       ++progress;
 
       processPendingRemoteNodes( localParent );
-      if ( !hierarchicalRIDs )
+      if ( !hierarchicalRIDs ) {
         processPendingRemoteNodes( localRoot );
+      }
 
       checkDone();
     }
@@ -401,11 +425,13 @@ class CollectionSync::Private
     */
     bool hasProcessedChildren( LocalNode *localNode ) const
     {
-      if ( localNode->processed )
+      if ( localNode->processed ) {
         return true;
+      }
       foreach ( LocalNode *child, localNode->childNodes ) {
-        if ( hasProcessedChildren( child ) )
+        if ( hasProcessedChildren( child ) ) {
           return true;
+        }
       }
       return false;
     }
@@ -432,8 +458,9 @@ class CollectionSync::Private
         return rv;
       }
 
-      foreach ( LocalNode *child, localNode->childNodes )
+      foreach ( LocalNode *child, localNode->childNodes ) {
         rv.append( findUnprocessedLocalCollections( child ) );
+      }
       return rv;
     }
 
@@ -442,8 +469,9 @@ class CollectionSync::Private
     */
     void deleteUnprocessedLocalNodes()
     {
-      if ( incremental )
+      if ( incremental ) {
         return;
+      }
       const Collection::List cols = findUnprocessedLocalCollections( localRoot );
       deleteLocalCollections( cols );
     }
@@ -484,13 +512,15 @@ class CollectionSync::Private
     void execute()
     {
       kDebug() << Q_FUNC_INFO << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
-      if ( !localListDone )
+      if ( !localListDone ) {
         return;
+      }
 
       processPendingRemoteNodes( localRoot );
 
-      if ( !incremental && deliveryDone )
+      if ( !incremental && deliveryDone ) {
         deleteUnprocessedLocalNodes();
+      }
 
       if ( !hierarchicalRIDs ) {
         deleteLocalCollections( removedRemoteCollections );
@@ -498,8 +528,9 @@ class CollectionSync::Private
         Collection::List localCols;
         foreach ( const Collection &c, removedRemoteCollections ) {
           LocalNode *node = findMatchingLocalNode( c );
-          if ( node )
+          if ( node ) {
             localCols.append( node->collection );
+          }
         }
         deleteLocalCollections( localCols );
       }
@@ -515,8 +546,9 @@ class CollectionSync::Private
     {
       QList<RemoteNode*> rv;
       rv.append( localNode->pendingRemoteNodes );
-      foreach ( LocalNode *child, localNode->childNodes )
+      foreach ( LocalNode *child, localNode->childNodes ) {
         rv.append( findPendingRemoteNodes( child ) );
+      }
       return rv;
     }
 
@@ -529,16 +561,18 @@ class CollectionSync::Private
       q->setProcessedAmount( KJob::Bytes, progress );
 
       // still running jobs or not fully delivered local/remote state
-      if ( !deliveryDone || pendingJobs > 0 || !localListDone )
+      if ( !deliveryDone || pendingJobs > 0 || !localListDone ) {
         return;
+      }
 
       // safety check: there must be no pending remote nodes anymore
       QList<RemoteNode*> orphans = findPendingRemoteNodes( localRoot );
       if ( !orphans.isEmpty() ) {
         q->setError( Unknown );
         q->setErrorText( i18n( "Found unresolved orphan collections" ) );
-        foreach ( RemoteNode* orphan, orphans )
+        foreach ( RemoteNode* orphan, orphans ) {
           kDebug() << "found orphan collection:" << orphan->collection;
+        }
         q->emitResult();
         return;
       }
@@ -588,11 +622,13 @@ CollectionSync::~CollectionSync()
 void CollectionSync::setRemoteCollections(const Collection::List & remoteCollections)
 {
   setTotalAmount( KJob::Bytes, totalAmount( KJob::Bytes ) + remoteCollections.count() );
-  foreach ( const Collection &c, remoteCollections )
+  foreach ( const Collection &c, remoteCollections ) {
     d->createRemoteNode( c );
+  }
 
-  if ( !d->streaming )
+  if ( !d->streaming ) {
     d->deliveryDone = true;
+  }
   d->execute();
 }
 
@@ -600,12 +636,14 @@ void CollectionSync::setRemoteCollections(const Collection::List & changedCollec
 {
   setTotalAmount( KJob::Bytes, totalAmount( KJob::Bytes ) + changedCollections.count() );
   d->incremental = true;
-  foreach ( const Collection &c, changedCollections )
+  foreach ( const Collection &c, changedCollections ) {
     d->createRemoteNode( c );
+  }
   d->removedRemoteCollections += removedCollections;
 
-  if ( !d->streaming )
+  if ( !d->streaming ) {
     d->deliveryDone = true;
+  }
   d->execute();
 }
 

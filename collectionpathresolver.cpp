@@ -42,21 +42,23 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 
     QStringList splitPath( const QString &path )
     {
-      if ( path.isEmpty() ) // path is normalized, so non-empty means at least one hit
+      if ( path.isEmpty() ) { // path is normalized, so non-empty means at least one hit
         return QStringList();
+      }
 
       QStringList rv;
       int begin = 0;
       const int pathSize( path.size() );
       for ( int i = 0; i < pathSize; ++i ) {
-        if ( path[i] == QLatin1Char('/') ) {
+        if ( path[i] == QLatin1Char( '/' ) ) {
           QString pathElement = path.mid( begin, i - begin );
           pathElement = pathElement.replace( QLatin1String( "\\/" ), QLatin1String( "/" ) );
           rv.append( pathElement );
           begin = i + 1;
         }
-        if ( i < path.size() - 2 && path[i] == QLatin1Char('\\') && path[i + 1] == QLatin1Char('/') )
+        if ( i < path.size() - 2 && path[i] == QLatin1Char( '\\' ) && path[i + 1] == QLatin1Char( '/' ) ) {
           ++i;
+        }
       }
       QString pathElement = path.mid( begin );
       pathElement = pathElement.replace( QLatin1String( "\\/" ), QLatin1String( "/" ) );
@@ -75,8 +77,9 @@ class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 
 void CollectionPathResolverPrivate::jobResult(KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     return;
+  }
 
   Q_Q( CollectionPathResolver );
 
@@ -132,10 +135,12 @@ CollectionPathResolver::CollectionPathResolver(const QString & path, QObject * p
 
   d->mPathToId = true;
   d->mPath = path;
-  if ( d->mPath.startsWith( pathDelimiter() )  )
+  if ( d->mPath.startsWith( pathDelimiter() )  ) {
     d->mPath = d->mPath.right( d->mPath.length() - pathDelimiter().length() );
-  if ( d->mPath.endsWith( pathDelimiter() )  )
+  }
+  if ( d->mPath.endsWith( pathDelimiter() )  ) {
     d->mPath = d->mPath.left( d->mPath.length() - pathDelimiter().length() );
+  }
 
   d->mPathParts = d->splitPath( d->mPath );
   d->mCurrentNode = Collection::root();
@@ -166,8 +171,9 @@ QString CollectionPathResolver::path() const
 {
   Q_D( const CollectionPathResolver );
 
-  if ( d->mPathToId )
+  if ( d->mPathToId ) {
     return d->mPath;
+  }
   return d->mPathParts.join( pathDelimiter() );
 }
 

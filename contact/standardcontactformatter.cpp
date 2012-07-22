@@ -46,13 +46,15 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 {
   KABC::Addressee rawContact;
   const Akonadi::Item localItem = item();
-  if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() )
+  if ( localItem.isValid() && localItem.hasPayload<KABC::Addressee>() ) {
     rawContact = localItem.payload<KABC::Addressee>();
-  else
+  } else {
     rawContact = contact();
+  }
 
-  if ( rawContact.isEmpty() )
+  if ( rawContact.isEmpty() ) {
     return QString();
+  }
 
   // We'll be building a table to display the vCard in.
   // Each row of the table will be built using this string for its HTML.
@@ -69,23 +71,25 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Birthday
   const QDate date = rawContact.birthday().date();
-  const int years = (date.daysTo( QDate::currentDate() ) / 365);
+  const int years = ( date.daysTo( QDate::currentDate() ) / 365 );
 
-  if ( date.isValid() )
+  if ( date.isValid() ) {
     dynamicPart += rowFmtStr
       .arg( KABC::Addressee::birthdayLabel() )
       .arg( KGlobal::locale()->formatDate( date ) +
             QLatin1String( "&nbsp;&nbsp;" ) + i18np( "(One year old)", "(%1 years old)", years ) );
+  }
 
   // Phone Numbers
   int counter = 0;
   foreach ( const KABC::PhoneNumber &number, rawContact.phoneNumbers() ) {
 
       QString url;
-      if ( number.type() & KABC::PhoneNumber::Cell )
+      if ( number.type() & KABC::PhoneNumber::Cell ) {
         url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a> (<a href=\"sms:?index=%1\">SMS</a>)" ).arg( counter ).arg( number.number() );
-      else
+      } else {
         url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
+      }
 
       counter++;
 
@@ -108,8 +112,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   // Homepage
   if ( rawContact.url().isValid() ) {
     QString url = rawContact.url().url();
-    if ( !url.startsWith( QLatin1String( "http://" ) ) && !url.startsWith( QLatin1String( "https://" ) ) )
+    if ( !url.startsWith( QLatin1String( "http://" ) ) && !url.startsWith( QLatin1String( "https://" ) ) ) {
       url = QLatin1String( "http://" ) + url;
+    }
 
     url = KStringHandler::tagUrls( url );
     dynamicPart += rowFmtStr.arg( i18n( "Homepage" ) ).arg( url );
@@ -117,8 +122,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Blog Feed
   const QString blog = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
-  if ( !blog.isEmpty() )
+  if ( !blog.isEmpty() ) {
     dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( blog ) );
+  }
 
   // Addresses
   counter = 0;
@@ -146,8 +152,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Note
   QString notes;
-  if ( !rawContact.note().isEmpty() )
+  if ( !rawContact.note().isEmpty() ) {
     notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
+  }
 
   // Custom Data
   QString customData;
@@ -172,7 +179,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     blacklistedKeys.insert( QLatin1String( "CRYPTOSIGNPREF" ) );
     blacklistedKeys.insert( QLatin1String( "CRYPTOENCRYPTPREF" ) );
     blacklistedKeys.insert( QLatin1String( "MailPreferedFormatting" ) );
-    blacklistedKeys.insert( QLatin1String( "MailAllowToRemoteContent") );
+    blacklistedKeys.insert( QLatin1String( "MailAllowToRemoteContent" ) );
   }
 
   if ( !rawContact.customs().empty() ) {
@@ -190,14 +197,11 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
         if ( key == QLatin1String( "Anniversary" ) ) {
           const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
           value = KGlobal::locale()->formatDate( dateTime.date() );
+        } else if ( key == QLatin1String( "BlogFeed" ) ) {  // blog is handled separated
+          continue;
+        } else if ( blacklistedKeys.contains( key ) ) {
+          continue;
         }
-
-        // blog is handled separated
-        else if ( key == QLatin1String( "BlogFeed" ) )
-          continue;
-
-	else if ( blacklistedKeys.contains( key ) )
-          continue;
 
         // check whether we have a mapping for the title
         const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
@@ -209,10 +213,11 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
             if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
               key = description.value( QLatin1String( "title" ) ).toString();
               if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "boolean" ) ) {
-                if ( value == QLatin1String( "true" ) )
+                if ( value == QLatin1String( "true" ) ) {
                   value = i18nc( "Boolean value", "yes" );
-                else
+                } else {
                   value = i18nc( "Boolean value", "no" );
+                }
               } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "date" ) ) {
                 const QDate date = QDate::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
@@ -235,10 +240,12 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Assemble all parts
   QString role = rawContact.title();
-  if ( role.isEmpty() )
+  if ( role.isEmpty() ) {
     role = rawContact.role();
-  if ( role.isEmpty() )
+  }
+  if ( role.isEmpty() ) {
     role = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Profession" ) );
+  }
 
   QString strAddr = QString::fromLatin1(
     "<div align=\"center\">"
@@ -282,8 +289,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   strAddr.append( QString::fromLatin1( "</div>\n" ) );
 
-  if ( form == EmbeddableForm )
+  if ( form == EmbeddableForm ) {
     return strAddr;
+  }
 
   const QString document = QString::fromLatin1(
     "<html>"

@@ -73,7 +73,7 @@ void CustomFieldEditorDialog::setCustomField( const CustomField &field )
   mKey->setText( mCustomField.key() );
   mTitle->setText( mCustomField.title() );
   mType->setCurrentIndex( mType->findData( mCustomField.type() ) );
-  mScope->setChecked( (mCustomField.scope() == CustomField::GlobalScope) );
+  mScope->setChecked( ( mCustomField.scope() == CustomField::GlobalScope ) );
 }
 
 CustomField CustomFieldEditorDialog::customField() const

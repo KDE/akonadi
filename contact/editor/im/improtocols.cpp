@@ -54,8 +54,9 @@ IMProtocols::~IMProtocols()
 
 IMProtocols* IMProtocols::self()
 {
-  if ( !mSelf )
+  if ( !mSelf ) {
     mSelf = new IMProtocols;
+  }
 
   return mSelf;
 }
@@ -67,16 +68,18 @@ QStringList IMProtocols::protocols() const
 
 QString IMProtocols::name( const QString &protocol ) const
 {
-  if ( !mPluginInfos.contains( protocol ) )
+  if ( !mPluginInfos.contains( protocol ) ) {
     return QString();
+  }
 
   return mPluginInfos.value( protocol ).name();
 }
 
 QString IMProtocols::icon( const QString &protocol ) const
 {
-  if ( !mPluginInfos.contains( protocol ) )
+  if ( !mPluginInfos.contains( protocol ) ) {
     return QString();
+  }
 
   return mPluginInfos.value( protocol ).icon();
 }

@@ -68,7 +68,7 @@ class DragDropManager
 
     /**
      * Set true if we automatic sorting
-     */    
+     */
     void setManualSortingActive(bool active);
 
   private:

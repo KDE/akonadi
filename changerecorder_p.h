@@ -39,8 +39,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 
     virtual int pipelineSize() const
     {
-      if ( enableChangeRecording )
+      if ( enableChangeRecording ) {
         return 0; // we fill the pipeline ourselves when using change recording
+      }
       return MonitorPrivate::pipelineSize();
     }
 
@@ -58,8 +59,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
     virtual bool emitNotification(const Akonadi::NotificationMessage& msg)
     {
       const bool someoneWasListening = MonitorPrivate::emitNotification( msg );
-      if ( !someoneWasListening && enableChangeRecording )
+      if ( !someoneWasListening && enableChangeRecording ) {
         QMetaObject::invokeMethod( q_ptr, "replayNext", Qt::QueuedConnection ); // skip notifications no one was listening to
+      }
       return someoneWasListening;
     }
 
@@ -99,8 +101,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
           msg.setMimeType( settings->value( QLatin1String( "mimeType" ) ).toString() );
           list = settings->value( QLatin1String( "itemParts" ) ).toStringList();
           QSet<QByteArray> itemParts;
-          Q_FOREACH( const QString &entry, list )
+          Q_FOREACH ( const QString &entry, list ) {
             itemParts.insert( entry.toLatin1() );
+          }
           msg.setItemParts( itemParts );
           pendingNotifications << msg;
         }
@@ -118,8 +121,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       }
 
       QFile file( changesFileName );
-      if ( !file.open( QIODevice::ReadOnly ) )
+      if ( !file.open( QIODevice::ReadOnly ) ) {
         return;
+      }
       pendingNotifications = loadFrom( &file );
     }
 
@@ -169,8 +173,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 
     QString dumpNotificationListToString() const
     {
-      if ( !settings )
+      if ( !settings ) {
         return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
+      }
       QString result;
       const QString changesFileName = notificationsFileName();
       QFile file( changesFileName );
@@ -245,10 +250,11 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
           };
 
           QStringList itemPartsList;
-          foreach( const QByteArray &b, itemParts )
+          foreach ( const QByteArray &b, itemParts ) {
             itemPartsList.push_back( QString::fromLatin1(b) );
+          }
 
-          const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+          const QString entry = QString::fromLatin1( "session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10" )
                                 .arg( QString::fromLatin1( sessionId ) )
                                 .arg( typeString )
                                 .arg( operationString )
@@ -258,11 +264,10 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
                                 .arg( parentCollection )
                                 .arg( parentDestCollection )
                                 .arg( mimeType )
-                                .arg( itemPartsList.join(QLatin1String(", " )) );
+                                .arg( itemPartsList.join( QLatin1String( ", " ) ) );
 
-          result += entry + QLatin1Char('\n');
+          result += entry + QLatin1Char( '\n' );
         }
-
       }
       return result;
     }
@@ -283,8 +288,9 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
 
     void saveNotifications()
     {
-      if ( !settings )
+      if ( !settings ) {
         return;
+      }
 
       QFile file( notificationsFileName() );
       QFileInfo info( file );
@@ -296,7 +302,7 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
         qWarning() << "could not save notifications to file " << file.fileName();
         return;
       }
-      saveTo(&file);
+      saveTo( &file );
     }
 
     void saveTo( QIODevice *device )

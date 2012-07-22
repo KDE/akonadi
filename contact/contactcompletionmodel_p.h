@@ -31,8 +31,7 @@ class ContactCompletionModel : public EntityTreeModel
   Q_OBJECT
 
   public:
-    enum Columns
-    {
+    enum Columns {
       NameColumn,         ///< The name of the contact.
       NameAndEmailColumn, ///< The name and the email of the contact.
       EmailColumn         ///< The preferred email of the contact.

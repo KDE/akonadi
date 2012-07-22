@@ -100,8 +100,9 @@ CollectionDialog::Private::Private( QAbstractItemModel *customModel, CollectionD
   mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
                     SLOT(slotCollectionAvailable(QModelIndex)) );
 
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String( "imports" ) ) )
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", QLatin1String( "imports" ) ) ) {
     mView->engine()->addImportPath( importPath );
+  }
 
   mView->rootContext()->setContextProperty( QLatin1String( "dialogController" ), this );
   mView->rootContext()->setContextProperty( QLatin1String( "collectionModel" ), mFilterModel );
@@ -138,9 +139,9 @@ void CollectionDialog::Private::slotSelectionChanged()
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
     const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
 
-    mCreateButtonEnabled = (canCreateChildCollections && !isVirtual);
+    mCreateButtonEnabled = ( canCreateChildCollections && !isVirtual );
     if ( parentCollection.isValid() ) {
-      const bool canCreateItems = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
+      const bool canCreateItems = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
       mOkButtonEnabled = canCreateItems;
     }
   }
@@ -156,15 +157,17 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
 
 bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &parentCollection ) const
 {
-  if ( !parentCollection.isValid() )
+  if ( !parentCollection.isValid() ) {
     return false;
+  }
 
   if ( ( parentCollection.rights() & Akonadi::Collection::CanCreateCollection ) ) {
     const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
     const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
     Q_FOREACH ( const QString& mimetype, dialogMimeTypeFilter ) {
-      if ( parentCollectionMimeTypes.contains( mimetype ) )
+      if ( parentCollectionMimeTypes.contains( mimetype ) ) {
         return true;
+      }
     }
     return true;
   }
@@ -178,8 +181,9 @@ void CollectionDialog::Private::slotAddChildCollection()
     const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
                                                 i18nc( "@label:textbox, name of a thing", "Name" ),
                                                 QString(), 0, mParent );
-    if ( name.isEmpty() )
+    if ( name.isEmpty() ) {
       return;
+    }
 
     Akonadi::Collection collection;
     collection.setName( name );
@@ -256,8 +260,9 @@ void CollectionDialog::Private::setFilterText( const QString &text )
 
 void CollectionDialog::Private::selectionChanged( const QItemSelection &selection, const QItemSelection& )
 {
-  if ( selection.isEmpty() )
+  if ( selection.isEmpty() ) {
     return;
+  }
 
   emit selectionChanged( selection.indexes().first().row() );
 }
@@ -287,18 +292,20 @@ CollectionDialog::~CollectionDialog()
 
 Akonadi::Collection CollectionDialog::selectedCollection() const
 {
-  if ( !d->mSelectionModel->hasSelection() )
+  if ( !d->mSelectionModel->hasSelection() ) {
     return Akonadi::Collection();
+  }
 
   return d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 }
 
 Akonadi::Collection::List CollectionDialog::selectedCollections() const
 {
-  if ( !d->mSelectionModel->hasSelection() )
+  if ( !d->mSelectionModel->hasSelection() ) {
     return Akonadi::Collection::List();
+  }
 
-  return (Akonadi::Collection::List() << d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>());
+  return ( Akonadi::Collection::List() << d->mSelectionModel->selectedRows().first().data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>() );
 }
 
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )

@@ -36,13 +36,16 @@ void sigHandler( int signal )
   kDebug() << "Received signal" << signal;
   static int sigCounter = 0;
   if ( sigCounter == 0 ) { // try clean shutdown
-    if ( runner )
+    if ( runner ) {
       runner->terminate();
-    if ( setup )
+    }
+    if ( setup ) {
       setup->shutdown();
+    }
   } else if ( sigCounter == 1 ) { // force shutdown
-    if ( setup )
+    if ( setup ) {
       setup->shutdownHarder();
+    }
   } else { // give up and just exit
     exit( 255 );
   }
@@ -63,7 +66,7 @@ int main( int argc, char **argv )
   KCmdLineOptions options;
   options.add( "c" ).add( "config <configfile>", ki18n( "Configuration file to open" ), "config.xml" );
   options.add( "!+[test]", ki18n( "Test to run automatically, interactive if none specified" ) );
-  options.add("testenv <path>", ki18n("Path where testenvironment would be saved"));
+  options.add( "testenv <path>", ki18n( "Path where testenvironment would be saved" ) );
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;
@@ -71,8 +74,9 @@ int main( int argc, char **argv )
 
   const KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  if ( args->isSet( "config" ) )
+  if ( args->isSet( "config" ) ) {
     Config::instance( args->getOption( "config" ) );
+  }
 
 #ifdef Q_OS_UNIX
   signal( SIGINT, sigHandler );
@@ -85,18 +89,20 @@ int main( int argc, char **argv )
       delete setup;
       return 1;
   }
-  
+
   ShellScript *sh = new ShellScript();
 
-  if( args->isSet("testenv"))
-    sh->makeShellScript( args->getOption("testenv"));
-  else
+  if ( args->isSet( "testenv" ) ) {
+    sh->makeShellScript( args->getOption( "testenv" ) );
+  } else {
     sh->makeShellScript( setup->basePath() + "testenvironment.sh" );
+  }
 
   if ( args->count() > 0 ) {
     QStringList testArgs;
-    for ( int i = 0; i < args->count(); ++i )
+    for ( int i = 0; i < args->count(); ++i ) {
       testArgs << args->arg( i );
+    }
     runner = new TestRunner( testArgs );
     QObject::connect( setup, SIGNAL(setupDone()), runner, SLOT(run()) );
     QObject::connect( setup, SIGNAL(serverExited(int)), runner, SLOT(triggerTermination(int)) );

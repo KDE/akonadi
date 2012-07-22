@@ -44,13 +44,15 @@ QString StandardContactGroupFormatter::toHtml( HtmlForm form ) const
 {
   KABC::ContactGroup group;
   const Akonadi::Item localItem = item();
-  if ( localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>() )
+  if ( localItem.isValid() && localItem.hasPayload<KABC::ContactGroup>() ) {
     group = localItem.payload<KABC::ContactGroup>();
-  else
+  } else {
     group = contactGroup();
+  }
 
-  if ( group.name().isEmpty() && group.count() == 0 ) // empty group
+  if ( group.name().isEmpty() && group.count() == 0 ) { // empty group
     return QString();
+  }
 
   if ( group.contactReferenceCount() != 0 ) {
     // we got a contact group with unresolved references -> we have to resolve it ourself
@@ -112,8 +114,9 @@ QString StandardContactGroupFormatter::toHtml( HtmlForm form ) const
 
   QString document = QString::fromLatin1( "<div align=\"center\">%1</div>" ).arg( strGroup );
 
-  if ( form == EmbeddableForm )
+  if ( form == EmbeddableForm ) {
     return document;
+  }
 
   document = QString::fromLatin1(
     "<html>"

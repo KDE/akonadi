@@ -70,23 +70,32 @@ void CollectionModifyJob::doStart()
   QByteArray changes;
   if ( d->mCollection.d_func()->contentTypesChanged ) {
     QList<QByteArray> bList;
-    foreach ( const QString &s, d->mCollection.contentMimeTypes() ) bList << s.toLatin1();
+    foreach ( const QString &s, d->mCollection.contentMimeTypes() ) {
+      bList << s.toLatin1();
+    }
     changes += " MIMETYPE (" + ImapParser::join( bList, " " ) + ')';
   }
-  if ( d->mCollection.parentCollection().id() >= 0 )
+  if ( d->mCollection.parentCollection().id() >= 0 ) {
     changes += " PARENT " + QByteArray::number( d->mCollection.parentCollection().id() );
-  if ( !d->mCollection.name().isEmpty() )
+  }
+  if ( !d->mCollection.name().isEmpty() ) {
     changes += " NAME " + ImapParser::quote( d->mCollection.name().toUtf8() );
-  if ( !d->mCollection.remoteId().isNull() )
+  }
+  if ( !d->mCollection.remoteId().isNull() ) {
     changes += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
-  if ( !d->mCollection.remoteRevision().isNull() )
+  }
+  if ( !d->mCollection.remoteRevision().isNull() ) {
     changes += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
-  if ( d->mCollection.d_func()->cachePolicyChanged )
+  }
+  if ( d->mCollection.d_func()->cachePolicyChanged ) {
     changes += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
-  if ( d->mCollection.attributes().count() > 0 )
+  }
+  if ( d->mCollection.attributes().count() > 0 ) {
     changes += ' ' + ProtocolHelper::attributesToByteArray( d->mCollection );
-  foreach ( const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes )
+  }
+  foreach ( const QByteArray &b, d->mCollection.d_func()->mDeletedAttributes ) {
     changes += " -" + b;
+  }
   if ( changes.isEmpty() ) {
     emitResult();
     return;

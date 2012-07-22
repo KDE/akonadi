@@ -118,15 +118,16 @@ void AgentInstance::synchronizeCollectionTree()
 
 AgentInstance& AgentInstance::operator=( const AgentInstance &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
 
 bool AgentInstance::operator==( const AgentInstance &other ) const
 {
-  return (d->mIdentifier == other.d->mIdentifier);
+  return ( d->mIdentifier == other.d->mIdentifier );
 }
 
 void AgentInstance::abortCurrentTask() const

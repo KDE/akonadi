@@ -70,8 +70,9 @@ class ContactGroupViewer::Private
 
       KABC::ContactGroup group;
       group.setName( mCurrentGroupName );
-      foreach ( const KABC::Addressee &contact, mCurrentContacts )
+      foreach ( const KABC::Addressee &contact, mCurrentContacts ) {
         group.append( KABC::ContactGroup::Data( contact.realName(), contact.preferredEmail() ) );
+      }
 
       mContactGroupFormatter->setContactGroup( group );
 
@@ -129,10 +130,11 @@ class ContactGroupViewer::Private
         CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
           const Collection collection = fetchJob->collections().first();
-          if ( collection.hasAttribute<EntityDisplayAttribute>() )
+          if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
             mCurrentAddressBookName = collection.attribute<EntityDisplayAttribute>()->displayName();
-          else
+          } else {
             mCurrentAddressBookName = collection.name();
+          }
         }
       }
 
@@ -186,16 +188,18 @@ void ContactGroupViewer::setContactGroup( const Akonadi::Item &group )
 
 void ContactGroupViewer::setContactGroupFormatter( AbstractContactGroupFormatter *formatter )
 {
-  if ( formatter == 0 )
+  if ( formatter == 0 ) {
     d->mContactGroupFormatter = d->mStandardContactGroupFormatter;
-  else
+  } else {
     d->mContactGroupFormatter = formatter;
+  }
 }
 
 void ContactGroupViewer::itemChanged( const Item &item )
 {
-  if ( !item.hasPayload<KABC::ContactGroup>() )
+  if ( !item.hasPayload<KABC::ContactGroup>() ) {
     return;
+  }
 
   const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
   d->mCurrentGroupName = group.name();

@@ -54,8 +54,9 @@ EmailAddressSelection::EmailAddressSelection( const EmailAddressSelection &other
 
 EmailAddressSelection& EmailAddressSelection::operator=( const EmailAddressSelection &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
@@ -82,8 +83,9 @@ QString EmailAddressSelection::email() const
 QString EmailAddressSelection::quotedEmail() const
 {
   if ( d->mItem.hasPayload<KABC::ContactGroup>() ) {
-    if ( d->mEmailAddress == d->mName )
+    if ( d->mEmailAddress == d->mName ) {
       return d->mName;
+    }
   }
 
   KMime::Types::Mailbox mailbox;

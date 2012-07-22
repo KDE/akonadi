@@ -153,9 +153,9 @@ void CollectionDialog::Private::slotSelectionChanged()
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
     const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
 
-    mParent->enableButton( KDialog::User1, (canCreateChildCollections && !isVirtual) );
+    mParent->enableButton( KDialog::User1, ( canCreateChildCollections && !isVirtual ) );
     if ( parentCollection.isValid() ) {
-      const bool canCreateItems = (parentCollection.rights() & Akonadi::Collection::CanCreateItem);
+      const bool canCreateItems = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
       mParent->enableButton( KDialog::Ok, canCreateItems );
     }
   }
@@ -177,15 +177,17 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
 
 bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &parentCollection ) const
 {
-  if ( !parentCollection.isValid() )
+  if ( !parentCollection.isValid() ) {
     return false;
+  }
 
   if ( ( parentCollection.rights() & Akonadi::Collection::CanCreateCollection ) ) {
     const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
     const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
     Q_FOREACH ( const QString& mimetype, dialogMimeTypeFilter ) {
-      if ( parentCollectionMimeTypes.contains( mimetype ) )
+      if ( parentCollectionMimeTypes.contains( mimetype ) ) {
         return true;
+      }
     }
     return true;
   }
@@ -200,8 +202,9 @@ void CollectionDialog::Private::slotAddChildCollection()
     const QString name = KInputDialog::getText( i18nc( "@title:window", "New Folder" ),
                                                 i18nc( "@label:textbox, name of a thing", "Name" ),
                                                 QString(), 0, mParent );
-    if ( name.isEmpty() )
+    if ( name.isEmpty() ) {
       return;
+    }
 
     Akonadi::Collection collection;
     collection.setName( name );
@@ -249,8 +252,9 @@ Akonadi::Collection CollectionDialog::selectedCollection() const
 {
   if ( selectionMode() == QAbstractItemView::SingleSelection ) {
     const QModelIndex index = d->mView->currentIndex();
-    if ( index.isValid() )
+    if ( index.isValid() ) {
       return index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
+    }
   }
 
   return Collection();
@@ -264,8 +268,9 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
   foreach ( const QModelIndex &index, selectedIndexes ) {
     if ( index.isValid() ) {
       const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
-      if ( collection.isValid() )
+      if ( collection.isValid() ) {
         collections.append( collection );
+      }
     }
   }
 
@@ -277,9 +282,11 @@ void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
   d->mMimeTypeFilterModel->clearFilters();
   d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
 
-  if ( d->mMonitor )
-    foreach ( const QString &mimetype, mimeTypes )
+  if ( d->mMonitor ) {
+    foreach ( const QString &mimetype, mimeTypes ) {
       d->mMonitor->setMimeTypeMonitored( mimetype );
+    }
+  }
 }
 
 QStringList CollectionDialog::mimeTypeFilter() const

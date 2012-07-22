@@ -102,57 +102,68 @@ QModelIndex IMModel::parent( const QModelIndex& ) const
 
 QVariant IMModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.row() < 0 || index.row() >= mAddresses.count() )
+  if ( index.row() < 0 || index.row() >= mAddresses.count() ) {
     return QVariant();
+  }
 
-  if ( index.column() < 0 || index.column() > 1 )
+  if ( index.column() < 0 || index.column() > 1 ) {
     return QVariant();
+  }
 
   const IMAddress &address = mAddresses[ index.row() ];
 
   if ( role == Qt::DisplayRole ) {
-    if ( index.column() == 0 )
+    if ( index.column() == 0 ) {
       return IMProtocols::self()->name( address.protocol() );
-    else
+    } else {
       return address.name();
+    }
   }
 
   if ( role == Qt::DecorationRole ) {
-    if ( index.column() == 1 )
+    if ( index.column() == 1 ) {
       return QVariant();
+    }
 
     return KIcon( IMProtocols::self()->icon( address.protocol() ) );
   }
 
   if ( role == Qt::EditRole ) {
-    if ( index.column() == 0 )
+    if ( index.column() == 0 ) {
       return address.protocol();
-    else
+    } else {
       return address.name();
+    }
   }
 
-  if ( role == ProtocolRole )
+  if ( role == ProtocolRole ) {
     return address.protocol();
+  }
 
-  if ( role == IsPreferredRole )
+  if ( role == IsPreferredRole ) {
     return address.preferred();
+  }
 
   return QVariant();
 }
 
 bool IMModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return false;
+  }
 
-  if ( index.row() < 0 || index.row() >= mAddresses.count() )
+  if ( index.row() < 0 || index.row() >= mAddresses.count() ) {
     return false;
+  }
 
-  if ( index.column() < 0 || index.column() > 1 )
+  if ( index.column() < 0 || index.column() > 1 ) {
     return false;
+  }
 
   IMAddress &address = mAddresses[ index.row() ];
 
@@ -181,54 +192,63 @@ bool IMModel::setData( const QModelIndex &index, const QVariant &value, int role
 
 QVariant IMModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( section < 0 || section > 1 )
+  if ( section < 0 || section > 1 ) {
     return QVariant();
+  }
 
-  if ( orientation != Qt::Horizontal )
+  if ( orientation != Qt::Horizontal ) {
     return QVariant();
+  }
 
-  if ( role != Qt::DisplayRole )
+  if ( role != Qt::DisplayRole ) {
     return QVariant();
+  }
 
-  if ( section == 0 )
+  if ( section == 0 ) {
     return i18nc( "instant messaging protocol", "Protocol" );
-  else
+  } else {
     return i18nc( "instant messaging address", "Address" );
+  }
 }
 
 Qt::ItemFlags IMModel::flags( const QModelIndex &index ) const
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= mAddresses.count() )
+  if ( !index.isValid() || index.row() < 0 || index.row() >= mAddresses.count() ) {
     return QAbstractItemModel::flags( index );
+  }
 
   const Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
-  return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+  return ( parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable );
 }
 
 int IMModel::columnCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return 2;
-  else
+  } else {
     return 0;
+  }
 }
 
 int IMModel::rowCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return mAddresses.count();
-  else
+  } else {
     return 0;
+  }
 }
 
 bool IMModel::insertRows( int row, int count, const QModelIndex &parent )
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return false;
+  }
 
   beginInsertRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i )
+  for ( int i = 0; i < count; ++i ) {
     mAddresses.insert( row, IMAddress() );
+  }
   endInsertRows();
 
   return true;
@@ -236,12 +256,14 @@ bool IMModel::insertRows( int row, int count, const QModelIndex &parent )
 
 bool IMModel::removeRows( int row, int count, const QModelIndex &parent )
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return false;
+  }
 
   beginRemoveRows( parent, row, row + count - 1 );
-  for ( int i = 0; i < count; ++i )
+  for ( int i = 0; i < count; ++i ) {
     mAddresses.remove( row );
+  }
   endRemoveRows();
 
   return true;

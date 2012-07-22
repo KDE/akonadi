@@ -61,24 +61,28 @@ void CollectionCreateJob::doStart( )
   }
 
   QByteArray command = d->newTag();
-  if ( d->mCollection.parentCollection().id() < 0 )
+  if ( d->mCollection.parentCollection().id() < 0 ) {
     command += " RID";
+  }
   command += " CREATE " + ImapParser::quote( d->mCollection.name().toUtf8() ) + ' ';
-  if ( d->mCollection.parentCollection().id() >= 0 )
+  if ( d->mCollection.parentCollection().id() >= 0 ) {
     command += QByteArray::number( d->mCollection.parentCollection().id() );
-  else
+  } else {
     command += ImapParser::quote( d->mCollection.parentCollection().remoteId().toUtf8() );
+  }
   command += " (";
-  if ( !d->mCollection.contentMimeTypes().isEmpty() )
-  {
+  if ( !d->mCollection.contentMimeTypes().isEmpty() ) {
     QList<QByteArray> cList;
-    foreach ( const QString &s, d->mCollection.contentMimeTypes() ) cList << s.toLatin1();
+    foreach ( const QString &s, d->mCollection.contentMimeTypes() ) {
+      cList << s.toLatin1();
+    }
     command += "MIMETYPE (" + ImapParser::join( cList, QByteArray(" ") ) + ')';
   }
   command += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
   command += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
-  foreach ( Attribute* attr, d->mCollection.attributes() )
+  foreach ( Attribute *attr, d->mCollection.attributes() ) {
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
+  }
   command += ' ' + ProtocolHelper::cachePolicyToByteArray( d->mCollection.cachePolicy() );
   command += ")\n";
   d->writeData( command );
@@ -99,8 +103,9 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
   if ( tag == "*" ) {
     Collection col;
     ProtocolHelper::parseCollection( data, col );
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       return;
+    }
 
     col.setParentCollection( d->mCollection.parentCollection() );
     col.setName( d->mCollection.name() );

@@ -249,65 +249,75 @@ class StandardMailActionManager::Private
         foreach ( const Akonadi::Item &item, selectedItems ) {
           Akonadi::MessageStatus status;
           status.setStatusFromFlags( item.flags() );
-          if ( !status.isImportant() )
+          if ( !status.isImportant() ) {
             allMarkedAsImportant = false;
-          if ( !status.isRead() )
+          }
+          if ( !status.isRead() ) {
             allMarkedAsRead= false;
-	  else 
+          } else {
 	    allMarkedAsUnread = false;
-          if ( !status.isToAct() )
+          }
+          if ( !status.isToAct() ) {
             allMarkedAsActionItem = false;
+          }
         }
 
         QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
         if ( action ) {
           updateMarkAction( action, allMarkedAsRead );
-          if ( allMarkedAsRead )
-            action->setEnabled(false);
-          else
+          if ( allMarkedAsRead ) {
+            action->setEnabled( false );
+          } else {
             action->setEnabled( true );
+          }
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsUnread );
         if ( action ) {
           updateMarkAction( action, allMarkedAsUnread );
-          if ( allMarkedAsUnread )
-            action->setEnabled(false);
-          else
+          if ( allMarkedAsUnread ) {
+            action->setEnabled( false );
+          } else {
             action->setEnabled( true );
+          }
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
         if ( action ) {
           updateMarkAction( action, allMarkedAsImportant );
-          if ( allMarkedAsImportant )
+          if ( allMarkedAsImportant ) {
             action->setText( i18n( "Remove Important Mark" ) );
-          else
+          } else {
             action->setText( i18n( "&Mark Mail as Important" ) );
+          }
           action->setEnabled( true );
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
         if ( action ) {
           updateMarkAction( action, allMarkedAsActionItem );
-          if ( allMarkedAsActionItem )
+          if ( allMarkedAsActionItem ) {
             action->setText( i18n( "Remove Action Item Mark" ) );
-          else
+          } else {
             action->setText( i18n( "&Mark Mail as Action Item" ) );
+          }
           action->setEnabled( true );
         }
      } else {
         QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsRead );
-        if ( action )
+        if ( action ) {
           action->setEnabled( false );
+        }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
-        if ( action )
+        if ( action ) {
           action->setEnabled( false );
+        }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
-        if ( action )
+        if ( action ) {
           action->setEnabled( false );
+        }
      }
 
       bool enableMarkAllAsRead = false;
@@ -315,27 +325,30 @@ class StandardMailActionManager::Private
       bool canDeleteItem = true;
       bool isSystemFolder = false;
       if ( collectionIsSelected ) {
-        foreach( const Collection &collection, selectedCollections )
-        {
+        foreach ( const Collection &collection, selectedCollections ) {
           if ( collection.isValid() ) {
             const Akonadi::CollectionStatistics stats = collection.statistics();
-            if ( !enableMarkAllAsRead )
-              enableMarkAllAsRead = (stats.unreadCount() > 0);
-            if ( !enableMarkAllAsUnread )
-              enableMarkAllAsUnread = (stats.count() != stats.unreadCount());
-            if ( canDeleteItem )
+            if ( !enableMarkAllAsRead ) {
+              enableMarkAllAsRead = ( stats.unreadCount() > 0 );
+            }
+            if ( !enableMarkAllAsUnread ) {
+              enableMarkAllAsUnread = ( stats.count() != stats.unreadCount() );
+            }
+            if ( canDeleteItem ) {
               canDeleteItem = collection.rights() & Akonadi::Collection::CanDeleteItem;
+            }
             if ( !isSystemFolder ) {
-              isSystemFolder = (collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
-                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
-                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
-                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Trash ) ||
-                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts ) ||
-                                collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates ));
+              isSystemFolder = ( collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Inbox ) ||
+                                 collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox ) ||
+                                 collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::SentMail ) ||
+                                 collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Trash ) ||
+                                 collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Drafts ) ||
+                                 collection == SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Templates ) );
             }
             //We will not change after that.
-            if ( enableMarkAllAsRead && enableMarkAllAsUnread && !canDeleteItem && isSystemFolder )
+            if ( enableMarkAllAsRead && enableMarkAllAsUnread && !canDeleteItem && isSystemFolder ) {
               break;
+            }
           }
         }
       }
@@ -345,10 +358,12 @@ class StandardMailActionManager::Private
         }
       }
 
-      if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) )
+      if ( mActions.contains( Akonadi::StandardMailActionManager::MoveToTrash ) ) {
         mActions.value( Akonadi::StandardMailActionManager::MoveToTrash )->setEnabled( itemIsSelected && canDeleteItem );
-      if ( mActions.contains( Akonadi::StandardMailActionManager::RemoveDuplicates ) )
+      }
+      if ( mActions.contains( Akonadi::StandardMailActionManager::RemoveDuplicates ) ) {
         mActions.value( Akonadi::StandardMailActionManager::RemoveDuplicates )->setEnabled( canDeleteItem );
+      }
 
       QAction *action = mActions.value( Akonadi::StandardMailActionManager::MarkAllMailAsRead );
       if ( action ) {
@@ -367,11 +382,13 @@ class StandardMailActionManager::Private
     {
       QByteArray data = action->data().toByteArray();
       if ( allMarked ) {
-        if ( !data.startsWith( '!' ) )
+        if ( !data.startsWith( '!' ) ) {
           data.prepend( '!' );
+        }
       } else {
-        if ( data.startsWith( '!' ) )
+        if ( data.startsWith( '!' ) ) {
           data = data.mid( 1 );
+        }
       }
       action->setData( data );
     }
@@ -382,8 +399,9 @@ class StandardMailActionManager::Private
       Q_ASSERT( action );
 
       const Akonadi::Item::List items = mGenericManager->selectedItems();
-      if ( items.isEmpty() )
+      if ( items.isEmpty() ) {
         return;
+      }
 
       QByteArray typeStr = action->data().toByteArray();
       kDebug() << "Mark mail as: " << typeStr;
@@ -402,13 +420,15 @@ class StandardMailActionManager::Private
         type = MarkMailAsUnread;
         targetStatus.setRead( true );
         invert = true;
-      } else if ( typeStr == "K" )
+      } else if ( typeStr == "K" ) {
         type = MarkMailAsActionItem;
-      else if ( typeStr == "G" )
+      } else if ( typeStr == "G" ) {
         type = MarkMailAsImportant;
+      }
 
-      if ( mInterceptedActions.contains( type ) )
+      if ( mInterceptedActions.contains( type ) ) {
         return;
+      }
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, items, invert, mParent );
       command->execute();
@@ -423,8 +443,9 @@ class StandardMailActionManager::Private
       kDebug() << "Mark all as: " << typeStr;
 
       const Akonadi::Collection::List collections = mGenericManager->selectedCollections();
-      if ( collections.isEmpty() )
+      if ( collections.isEmpty() ) {
         return;
+      }
 
       Akonadi::MessageStatus targetStatus;
       targetStatus.setStatusFromStr( QLatin1String( typeStr ) );
@@ -440,13 +461,15 @@ class StandardMailActionManager::Private
         type = MarkAllMailAsUnread;
         targetStatus.setRead( true );
         invert = true;
-      } else if ( typeStr == "K" )
+      } else if ( typeStr == "K" ) {
         type = MarkAllMailAsActionItem;
-      else if ( typeStr == "G" )
+      } else if ( typeStr == "G" ) {
         type = MarkAllMailAsImportant;
+      }
 
-      if ( mInterceptedActions.contains( type ) )
+      if ( mInterceptedActions.contains( type ) ) {
         return;
+      }
 
       MarkAsCommand *command = new MarkAsCommand( targetStatus, collections, invert, mParent );
       command->execute();
@@ -454,15 +477,18 @@ class StandardMailActionManager::Private
 
     void slotMoveToTrash()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::MoveToTrash ) )
+      if ( mInterceptedActions.contains( StandardMailActionManager::MoveToTrash ) ) {
         return;
+      }
 
-      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() ) {
         return;
+      }
 
       const Item::List items = mGenericManager->selectedItems();
-      if ( items.isEmpty() )
+      if ( items.isEmpty() ) {
         return;
+      }
 
       MoveToTrashCommand *command = new MoveToTrashCommand( mCollectionSelectionModel->model(), items, mParent );
       command->execute();
@@ -470,15 +496,18 @@ class StandardMailActionManager::Private
 
     void slotMoveAllToTrash()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::MoveAllToTrash ) )
+      if ( mInterceptedActions.contains( StandardMailActionManager::MoveAllToTrash ) ) {
         return;
+      }
 
-      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() ) {
         return;
+      }
 
       const Collection::List collections = mGenericManager->selectedCollections();
-      if ( collections.isEmpty() )
+      if ( collections.isEmpty() ) {
         return;
+      }
 
       MoveToTrashCommand *command = new MoveToTrashCommand( mCollectionSelectionModel->model(), collections, mParent );
       command->execute();
@@ -486,12 +515,14 @@ class StandardMailActionManager::Private
 
     void slotRemoveDuplicates()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::RemoveDuplicates ) )
+      if ( mInterceptedActions.contains( StandardMailActionManager::RemoveDuplicates ) ) {
         return;
+      }
 
       const Collection::List collections = mGenericManager->selectedCollections();
-      if ( collections.isEmpty() )
+      if ( collections.isEmpty() ) {
         return;
+      }
 
       RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( mCollectionSelectionModel->model(), collections, mParent );
       command->execute();
@@ -499,8 +530,9 @@ class StandardMailActionManager::Private
 
     void slotEmptyAllTrash()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyAllTrash ) )
+      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyAllTrash ) ) {
         return;
+      }
 
       EmptyTrashCommand *command = new EmptyTrashCommand( const_cast<QAbstractItemModel*>( mCollectionSelectionModel->model() ), mParent );
       command->execute();
@@ -508,15 +540,18 @@ class StandardMailActionManager::Private
 
     void slotEmptyTrash()
     {
-      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyTrash ) )
+      if ( mInterceptedActions.contains( StandardMailActionManager::EmptyTrash ) ) {
         return;
+      }
 
-      if ( mCollectionSelectionModel->selection().indexes().isEmpty() )
+      if ( mCollectionSelectionModel->selection().indexes().isEmpty() ) {
         return;
+      }
 
       const Collection::List collections = mGenericManager->selectedCollections();
-      if ( collections.count() != 1 )
+      if ( collections.count() != 1 ) {
         return;
+      }
 
       EmptyTrashCommand *command = new EmptyTrashCommand( collections.first(), mParent );
       command->execute();
@@ -575,8 +610,9 @@ void StandardMailActionManager::setItemSelectionModel( QItemSelectionModel* sele
 
 KAction* StandardMailActionManager::createAction( Type type )
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   KAction *action = 0;
 
@@ -660,7 +696,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       action->setIcon( KIcon( QLatin1String( "mail-mark-task" ) ) );
       d->mActions.insert( MarkAllMailAsActionItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_all_as_action_item" ), action );
-      action->setData( QByteArray("K") );
+      action->setData( QByteArray( "K" ) );
       connect( action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAllAs()) );
       break;
     case MoveToTrash:
@@ -739,8 +775,9 @@ void StandardMailActionManager::createAllActions()
 
 KAction* StandardMailActionManager::action( Type type ) const
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   return 0;
 }
@@ -757,10 +794,11 @@ void StandardMailActionManager::setActionText( StandardActionManager::Type type,
 
 void StandardMailActionManager::interceptAction( Type type, bool intercept )
 {
-  if ( intercept )
+  if ( intercept ) {
     d->mInterceptedActions.insert( type );
-  else
+  } else {
     d->mInterceptedActions.remove( type );
+  }
 }
 
 void StandardMailActionManager::interceptAction( StandardActionManager::Type type, bool intercept )
@@ -797,6 +835,5 @@ Akonadi::StandardActionManager* StandardMailActionManager::standardActionManager
 {
   return d->mGenericManager;
 }
-
 
 #include "standardmailactionmanager.moc"

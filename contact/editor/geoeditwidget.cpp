@@ -76,8 +76,8 @@ class GeoMapWidget : public QWidget
         const double latOffset = ( mCoordinates.latitude() * latMid ) / 90;
         const double longOffset = ( mCoordinates.longitude() * longMid ) / 180;
 
-        const int x = (int)(longMid + longOffset);
-        const int y = (int)(latMid - latOffset);
+        const int x = (int)( longMid + longOffset );
+        const int y = (int)( latMid - latOffset );
         p.drawEllipse( x, y, 4, 4 );
       }
 
@@ -196,10 +196,11 @@ static double calculateCoordinate( const QString &coordinate )
       break;
   }
 
-  if ( neg )
+  if ( neg ) {
     return - ( d + m / 60.0 + s / 3600.0 );
-  else
+  } else {
     return d + m / 60.0 + s / 3600.0;
+  }
 }
 
 GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
@@ -213,7 +214,7 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
   showButtonSeparator( true );
   setModal( true );
 
-  QFrame *page = new QFrame(this);
+  QFrame *page = new QFrame( this );
   setMainWidget( page );
 
   QVBoxLayout *layout = new QVBoxLayout( page );
@@ -433,17 +434,18 @@ void GeoDialog::updateInputs( ExceptType type )
     mLongDirection->setCurrentIndex( mLongitude < 0 ? 1 : 0 );
   }
 
-  if ( !(type & ExceptDecimal) ) {
+  if ( !( type & ExceptDecimal ) ) {
     mLatitude->setValue( mCoordinates.latitude() );
     mLongitude->setValue( mCoordinates.longitude() );
   }
 
-  if ( !(type & ExceptCity) ) {
+  if ( !( type & ExceptCity ) ) {
     const int index = nearestCity( mCoordinates.longitude(), mCoordinates.latitude() );
-    if ( index != -1 )
+    if ( index != -1 ) {
       mCityCombo->setCurrentIndex( index + 1 );
-    else
+    } else {
       mCityCombo->setCurrentIndex( 0 );
+    }
   }
 
   mCityCombo->blockSignals( false );
@@ -476,24 +478,27 @@ void GeoDialog::loadCityList()
 
     while ( !s.atEnd() ) {
       line = s.readLine().trimmed();
-      if ( line.isEmpty() || line[ 0 ] == QLatin1Char( '#' ) )
+      if ( line.isEmpty() || line[ 0 ] == QLatin1Char( '#' ) ) {
         continue;
+      }
 
       country = line.left( 2 );
       QString c, n;
       pos = coord.indexIn( line, 0 );
-      if ( pos >= 0 )
+      if ( pos >= 0 ) {
         c = line.mid( pos, coord.matchedLength() );
+      }
 
-      pos = name.indexIn(line, pos);
+      pos = name.indexIn( line, pos );
       if ( pos > 0 ) {
         n = line.mid( pos, name.matchedLength() ).trimmed();
       }
 
       if ( !c.isEmpty() && !n.isEmpty() ) {
         pos = c.indexOf( QLatin1Char( '+' ), 1 );
-        if ( pos < 0 )
+        if ( pos < 0 ) {
           pos = c.indexOf( QLatin1Char( '-' ), 1 );
+        }
         if ( pos > 0 ) {
           GeoData geoData;
           geoData.latitude = calculateCoordinate( c.left( pos ) );
@@ -520,8 +525,9 @@ int GeoDialog::nearestCity( double x, double y ) const
   for ( it = mGeoDataMap.begin(); it != mGeoDataMap.end(); ++it, ++pos ) {
     double dist = ( (*it).longitude - x ) * ( (*it).longitude - x ) +
                   ( (*it).latitude - y ) * ( (*it).latitude - y );
-    if ( dist < 0.0005 )
+    if ( dist < 0.0005 ) {
       return pos;
+    }
   }
 
   return -1;

@@ -63,23 +63,24 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
   QImage image;
   QString tempFile;
 
-  if ( url.isEmpty() )
+  if ( url.isEmpty() ) {
     return image;
+  }
 
-  (*ok) = false;
+  ( *ok ) = false;
 
   if ( url.isLocalFile() ) {
     if ( image.load( url.toLocalFile() ) ) {
-      (*ok) = true;
+      ( *ok ) = true;
     }
   } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
     if ( image.load( tempFile ) ) {
-      (*ok) = true;
+      ( *ok ) = true;
     }
     KIO::NetAccess::removeTempFile( tempFile );
   }
 
-  if ( !(*ok) ) {
+  if ( !( *ok ) ) {
     // image does not exist (any more)
     KMessageBox::sorry( mParent, i18n( "This contact's image cannot be found." ) );
     return image;
@@ -89,18 +90,19 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 100, mParent );
   if ( image.isNull() ) {
-    (*ok) = false;
+    ( *ok ) = false;
     return image;
   }
 
   if ( image.height() != 140 || image.width() != 100 ) {
-    if ( image.height() > image.width() )
+    if ( image.height() > image.width() ) {
       image = image.scaledToHeight( 140 );
-    else
+    } else {
       image = image.scaledToWidth( 100 );
+    }
   }
 
-  (*ok) = true;
+  ( *ok ) = true;
 
   return image;
 }
@@ -122,10 +124,11 @@ ImageWidget::ImageWidget( Type type, QWidget *parent )
 
   connect( this, SIGNAL(clicked()), SLOT(changeImage()) );
 
-  if ( mType == Photo )
+  if ( mType == Photo ) {
     setToolTip( i18n( "The photo of the contact (click to change)" ) );
-  else
+  } else {
     setToolTip( i18n( "The logo of the company (click to change)" ) );
+  }
 
   updateView();
 }
@@ -137,7 +140,7 @@ ImageWidget::~ImageWidget()
 
 void ImageWidget::loadContact( const KABC::Addressee &contact )
 {
-  const KABC::Picture picture = (mType == Photo ? contact.photo() : contact.logo());
+  const KABC::Picture picture = ( mType == Photo ? contact.photo() : contact.logo() );
   if ( picture.isIntern() && !picture.data().isNull() ) {
     mHasImage = true;
     mImage = picture.data();
@@ -148,10 +151,11 @@ void ImageWidget::loadContact( const KABC::Addressee &contact )
 
 void ImageWidget::storeContact( KABC::Addressee &contact ) const
 {
-  if ( mType == Photo )
+  if ( mType == Photo ) {
     contact.setPhoto( mImage );
-  else
+  } else {
     contact.setLogo( mImage );
+  }
 }
 
 void ImageWidget::setReadOnly( bool readOnly )
@@ -164,10 +168,11 @@ void ImageWidget::updateView()
   if ( mHasImage ) {
     setIcon( QPixmap::fromImage( mImage ) );
   } else {
-    if ( mType == Photo )
+    if ( mType == Photo ) {
       setIcon( KIcon( QLatin1String( "user-identity" ) ) );
-    else
+    } else {
       setIcon( KIcon( QLatin1String( "image-x-generic" ) ) );
+    }
   }
 }
 
@@ -179,12 +184,13 @@ void ImageWidget::dragEnterEvent( QDragEnterEvent *event )
 
 void ImageWidget::dropEvent( QDropEvent *event )
 {
-  if ( mReadOnly )
+  if ( mReadOnly ) {
     return;
+  }
 
   const QMimeData *mimeData = event->mimeData();
   if ( mimeData->hasImage() ) {
-    mImage = qvariant_cast<QImage>(mimeData->imageData());
+    mImage = qvariant_cast<QImage>( mimeData->imageData() );
     mHasImage = true;
     updateView();
   }
@@ -211,8 +217,8 @@ void ImageWidget::mousePressEvent( QMouseEvent *event )
 
 void ImageWidget::mouseMoveEvent( QMouseEvent *event )
 {
-  if ( (event->buttons() & Qt::LeftButton) &&
-       (event->pos() - mDragStartPos).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+  if ( ( event->buttons() & Qt::LeftButton ) &&
+       ( event->pos() - mDragStartPos ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
 
     if ( mHasImage ) {
       QDrag *drag = new QDrag( this );
@@ -228,24 +234,28 @@ void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
   QMenu menu;
 
   if ( mType == Photo ) {
-    if ( !mReadOnly )
+    if ( !mReadOnly ) {
       menu.addAction( i18n( "Change photo..." ), this, SLOT(changeImage()) );
+    }
 
     if ( mHasImage ) {
       menu.addAction( i18n( "Save photo..." ), this, SLOT(saveImage()) );
 
-      if ( !mReadOnly )
+      if ( !mReadOnly ) {
         menu.addAction( i18n( "Remove photo" ), this, SLOT(deleteImage()) );
+      }
     }
   } else {
-    if ( !mReadOnly )
+    if ( !mReadOnly ) {
       menu.addAction( i18n( "Change logo..." ), this, SLOT(changeImage()) );
+    }
 
     if ( mHasImage ) {
       menu.addAction( i18n( "Save logo..." ), this, SLOT(saveImage()) );
 
-      if ( !mReadOnly )
+      if ( !mReadOnly ) {
         menu.addAction( i18n( "Remove logo" ), this, SLOT(deleteImage()) );
+      }
     }
   }
 
@@ -254,8 +264,9 @@ void ImageWidget::contextMenuEvent( QContextMenuEvent *event )
 
 void ImageWidget::changeImage()
 {
-  if ( mReadOnly )
+  if ( mReadOnly ) {
     return;
+  }
 
   const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
@@ -272,8 +283,9 @@ void ImageWidget::changeImage()
 void ImageWidget::saveImage()
 {
   const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), this );
-  if ( !fileName.isEmpty() )
+  if ( !fileName.isEmpty() ) {
     mImage.save( fileName );
+  }
 }
 
 void ImageWidget::deleteImage()
@@ -285,8 +297,9 @@ void ImageWidget::deleteImage()
 
 ImageLoader* ImageWidget::imageLoader()
 {
-  if ( !mImageLoader )
+  if ( !mImageLoader ) {
     mImageLoader = new ImageLoader;
+  }
 
   return mImageLoader;
 }

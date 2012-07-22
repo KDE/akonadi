@@ -94,8 +94,9 @@ class Control::Private
 
     void setupProgressIndicator( const QString &msg, QWidget *parent = 0 )
     {
-      if ( !mProgressIndicator )
+      if ( !mProgressIndicator ) {
         mProgressIndicator = new Internal::ControlProgressIndicator( parent );
+      }
 
       mProgressIndicator->setMessage( msg );
     }
@@ -103,9 +104,11 @@ class Control::Private
     void createErrorOverlays()
     {
 #ifndef Q_OS_WINCE
-      foreach ( QWidget* widget, mPendingOverlays )
-        if ( widget )
+      foreach ( QWidget *widget, mPendingOverlays ) {
+        if ( widget ) {
           new ErrorOverlay( widget );
+        }
+      }
 #endif
       mPendingOverlays.clear();
     }
@@ -130,8 +133,9 @@ class Control::Private
 
 bool Control::Private::exec()
 {
-  if ( mProgressIndicator )
+  if ( mProgressIndicator ) {
     mProgressIndicator->show();
+  }
 
   kDebug() << "Starting/Stopping Akonadi (using an event loop).";
   mEventLoop = new QEventLoop( mParent );
@@ -146,8 +150,9 @@ bool Control::Private::exec()
       QPointer<SelfTestDialog> dlg = new SelfTestDialog( mProgressIndicator->parentWidget() );
       dlg->exec();
       delete dlg;
-      if ( !mParent )
+      if ( !mParent ) {
         return false;
+      }
     }
 #endif
   }
@@ -167,7 +172,7 @@ void Control::Private::serverStateChanged(ServerManager::State state)
   kDebug() << state;
   if ( mEventLoop && mEventLoop->isRunning() ) {
     mEventLoop->quit();
-    mSuccess = (mStarting && state == ServerManager::Running) || (mStopping && state == ServerManager::NotRunning);
+    mSuccess = ( mStarting && state == ServerManager::Running ) || ( mStopping && state == ServerManager::NotRunning );
   }
 }
 
@@ -178,8 +183,9 @@ Control::Control()
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
   // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
   // Otherwise we get a crash in QCursor code with Qt-4.5
-  if ( QCoreApplication::instance() )
+  if ( QCoreApplication::instance() ) {
     connect( QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()) );
+  }
 }
 
 Control::~Control()
@@ -207,21 +213,25 @@ bool Control::start()
 
 bool Control::stop()
 {
-  if ( ServerManager::state() == ServerManager::Starting )
+  if ( ServerManager::state() == ServerManager::Starting ) {
     return false;
-  if ( !ServerManager::isRunning() || s_instance->d->mEventLoop )
+  }
+  if ( !ServerManager::isRunning() || s_instance->d->mEventLoop ) {
     return true;
+  }
   s_instance->d->mStopping = true;
-  if ( !ServerManager::stop() )
+  if ( !ServerManager::stop() ) {
     return false;
+  }
   return s_instance->d->exec();
 }
 
 bool Control::restart()
 {
   if ( ServerManager::isRunning() ) {
-    if ( !stop() )
+    if ( !stop() ) {
       return false;
+    }
   }
   return start();
 }
@@ -241,8 +251,9 @@ bool Control::stop(QWidget * parent)
 bool Control::restart(QWidget * parent)
 {
   if ( ServerManager::isRunning() ) {
-    if ( !stop( parent ) )
+    if ( !stop( parent ) ) {
       return false;
+    }
   }
   return start( parent );
 }

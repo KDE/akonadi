@@ -57,7 +57,7 @@ RecentContactsCollectionsPrivate::~RecentContactsCollectionsPrivate()
 
 static KCoreConfigSkeleton *getConfig( const QString &filename)
 {
-  Settings::instance( ServerManager::addNamespace(filename) );
+  Settings::instance( ServerManager::addNamespace( filename ) );
   return Settings::self();
 }
 

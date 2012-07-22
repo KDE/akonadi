@@ -83,8 +83,7 @@ class AKONADI_CONTACT_EXPORT ContactsTreeModel : public EntityTreeModel
     /**
      * Describes the columns that can be shown by the model.
      */
-    enum Column
-    {
+    enum Column {
       /**
        * Shows the formatted name or, if empty, the assembled name.
        */
@@ -159,8 +158,7 @@ class AKONADI_CONTACT_EXPORT ContactsTreeModel : public EntityTreeModel
     /**
      * Describes the role for contacts and contact groups.
      */
-    enum Roles
-    {
+    enum Roles {
       DateRole = EntityTreeModel::UserRole + 1,   ///< The QDate object for the current index.
       UserRole = DateRole + 42
     };

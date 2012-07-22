@@ -62,8 +62,9 @@ class SearchLineEdit : public KLineEdit
   protected:
     virtual void keyPressEvent( QKeyEvent *event )
     {
-      if ( event->key() == Qt::Key_Down )
+      if ( event->key() == Qt::Key_Down ) {
         QMetaObject::invokeMethod( mReceiver, "setFocus" );
+      }
 
       KLineEdit::keyPressEvent( event );
     }
@@ -195,8 +196,9 @@ EmailAddressSelection::List EmailAddressSelectionWidget::selectedAddresses() con
 {
   EmailAddressSelection::List selections;
 
-  if ( !d->mView->selectionModel() )
+  if ( !d->mView->selectionModel() ) {
     return selections;
+  }
 
   const QModelIndexList selectedRows = d->mView->selectionModel()->selectedRows( 0 );
   foreach ( const QModelIndex &index, selectedRows ) {
@@ -205,8 +207,9 @@ EmailAddressSelection::List EmailAddressSelectionWidget::selectedAddresses() con
     selection.d->mEmailAddress = index.data( EmailAddressSelectionProxyModel::EmailAddressRole ).toString();
     selection.d->mItem = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
 
-    if ( !selection.d->mEmailAddress.isEmpty() )
+    if ( !selection.d->mEmailAddress.isEmpty() ) {
       selections << selection;
+    }
   }
 
   return selections;

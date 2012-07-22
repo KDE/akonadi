@@ -56,10 +56,9 @@ class TextBrowser : public KTextBrowser
         KIconTheme::assignIconsToContextMenu( KIconTheme::ReadOnlyText, actions );
 
         // hide the 'Copy Link Location' action if not an e-mail address
-        if ( anchorAt( event->pos() ).left( 7 ) != QLatin1String( "mailto:" ) ) {	
+        if ( anchorAt( event->pos() ).left( 7 ) != QLatin1String( "mailto:" ) ) {
           actions[ 1 ]->setVisible( false );
-        }
-        else {
+        } else {
           actions[ 1 ]->setText( i18n( "Copy e-mail address" ) );
         }
         popup->exec( event->globalPos() );

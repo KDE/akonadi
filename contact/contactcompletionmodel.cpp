@@ -34,8 +34,9 @@ QAbstractItemModel* ContactCompletionModel::mSelf = 0;
 
 QAbstractItemModel* ContactCompletionModel::self()
 {
-  if ( mSelf )
+  if ( mSelf ) {
     return mSelf;
+  }
 
   ChangeRecorder *monitor = new ChangeRecorder;
   monitor->fetchCollection( true );
@@ -69,8 +70,9 @@ QVariant ContactCompletionModel::entityData( const Item &item, int column, int r
 {
   if ( !item.hasPayload<KABC::Addressee>() ) {
     // Pass modeltest
-    if ( role == Qt::DisplayRole )
+    if ( role == Qt::DisplayRole ) {
       return item.remoteId();
+    }
 
     return QVariant();
   }
@@ -80,23 +82,27 @@ QVariant ContactCompletionModel::entityData( const Item &item, int column, int r
 
     switch ( column ) {
       case NameColumn:
-        if ( !contact.formattedName().isEmpty() )
+        if ( !contact.formattedName().isEmpty() ) {
           return contact.formattedName();
-        else
+        } else {
           return contact.assembledName();
+        }
         break;
       case NameAndEmailColumn:
         {
           QString name = QString::fromLatin1( "%1 %2" ).arg( contact.givenName() )
                                                        .arg( contact.familyName() ).simplified();
-          if ( name.isEmpty() )
+          if ( name.isEmpty() ) {
             name = contact.organization().simplified();
-          if ( name.isEmpty() )
+          }
+          if ( name.isEmpty() ) {
             return QString();
+          }
 
           const QString email = contact.preferredEmail().simplified();
-          if ( email.isEmpty() )
+          if ( email.isEmpty() ) {
             return QString();
+          }
 
           return QString::fromLatin1( "%1 <%2>" ).arg( name ).arg( email );
         }
@@ -117,10 +123,11 @@ QVariant ContactCompletionModel::entityData( const Collection &collection, int c
 
 int ContactCompletionModel::columnCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return 3;
-  else
+  } else {
     return 0;
+  }
 }
 
 int ContactCompletionModel::entityColumnCount( HeaderGroup ) const

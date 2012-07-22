@@ -81,7 +81,7 @@ class StandardContactActionManager::Private
 
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText(
         i18n( "Folder Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setWhatsThis(
         i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
 
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
@@ -227,12 +227,14 @@ class StandardContactActionManager::Private
       }
 
       const QAbstractItemModel *model = index.model();
-      if ( !model )
+      if ( !model ) {
         return false;
+      }
 
       for ( int row = 0; row < model->rowCount( index ); ++row ) {
-        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) )
+        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) ) {
           return true;
+        }
       }
 
       return false;
@@ -240,13 +242,15 @@ class StandardContactActionManager::Private
 
     bool hasWritableCollection( const QString &mimeType ) const
     {
-      if ( !mCollectionSelectionModel )
+      if ( !mCollectionSelectionModel ) {
         return false;
+      }
 
       const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
       for ( int row = 0; row < collectionModel->rowCount(); ++row ) {
-        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) )
+        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) ) {
           return true;
+        }
       }
 
       return false;
@@ -272,8 +276,9 @@ class StandardContactActionManager::Private
                                               ki18np( "Cut Contact", "Cut %1 Contacts" ) );
               mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Contact To" ) );
               mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
-              if ( mActions.contains( StandardContactActionManager::EditItem ) )
+              if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
                 mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
+              }
             } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
               mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                               ki18np( "Copy Group", "Copy %1 Groups" ) );
@@ -285,31 +290,35 @@ class StandardContactActionManager::Private
                                               ki18np( "Cut Group", "Cut %1 Groups" ) );
               mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Group To" ) );
               mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Group To" ) );
-              if ( mActions.contains( StandardContactActionManager::EditItem ) )
+              if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
                 mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Group..." ) );
+              }
             }
           }
         }
       }
 
-      if ( mActions.contains( StandardContactActionManager::CreateContact ) )
+      if ( mActions.contains( StandardContactActionManager::CreateContact ) ) {
         mActions[ StandardContactActionManager::CreateContact ]->setEnabled( hasWritableCollection( KABC::Addressee::mimeType() ) );
-      if ( mActions.contains( StandardContactActionManager::CreateContactGroup ) )
+      }
+      if ( mActions.contains( StandardContactActionManager::CreateContactGroup ) ) {
         mActions[ StandardContactActionManager::CreateContactGroup ]->setEnabled( hasWritableCollection( KABC::ContactGroup::mimeType() ) );
+      }
 
       if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
         bool canEditItem = true;
 
         // only one selected item can be edited
-        canEditItem = canEditItem && (itemCount == 1);
+        canEditItem = canEditItem && ( itemCount == 1 );
 
         // check whether parent collection allows changing the item
         const QModelIndexList rows = mItemSelectionModel->selectedRows();
         if ( rows.count() == 1 ) {
           const QModelIndex index = rows.first();
           const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
-          if ( parentCollection.isValid() )
-            canEditItem = canEditItem && (parentCollection.rights() & Collection::CanChangeItem);
+          if ( parentCollection.isValid() ) {
+            canEditItem = canEditItem && ( parentCollection.rights() & Collection::CanChangeItem );
+          }
         }
 
         mActions.value( StandardContactActionManager::EditItem )->setEnabled( canEditItem );
@@ -320,23 +329,27 @@ class StandardContactActionManager::Private
 
     Collection selectedCollection() const
     {
-      if ( !mCollectionSelectionModel )
+      if ( !mCollectionSelectionModel ) {
         return Collection();
+      }
 
-      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() )
+      if ( mCollectionSelectionModel->selectedIndexes().isEmpty() ) {
         return Collection();
+      }
 
       const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
+      if ( !index.isValid() ) {
         return Collection();
+      }
 
       return index.data( EntityTreeModel::CollectionRole).value<Collection>();
     }
 
     void slotCreateContact()
     {
-      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContact ) )
+      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContact ) ) {
         return;
+      }
 
       Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
       dlg.setDefaultAddressBook( selectedCollection() );
@@ -346,8 +359,9 @@ class StandardContactActionManager::Private
 
     void slotCreateContactGroup()
     {
-      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContactGroup ) )
+      if ( mInterceptedActions.contains( StandardContactActionManager::CreateContactGroup ) ) {
         return;
+      }
 
       Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg.setDefaultAddressBook( selectedCollection() );
@@ -357,29 +371,33 @@ class StandardContactActionManager::Private
 
     void slotEditItem()
     {
-      if ( mInterceptedActions.contains( StandardContactActionManager::EditItem ) )
+      if ( mInterceptedActions.contains( StandardContactActionManager::EditItem ) ) {
         return;
+      }
 
-      if ( !mItemSelectionModel )
+      if ( !mItemSelectionModel ) {
         return;
+      }
 
-      if ( mItemSelectionModel->selectedIndexes().isEmpty() )
+      if ( mItemSelectionModel->selectedIndexes().isEmpty() ) {
         return;
+      }
 
       const QModelIndex index = mItemSelectionModel->selectedIndexes().first();
-      if ( !index.isValid() )
+      if ( !index.isValid() ) {
         return;
+      }
 
       const Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
-      if ( !item.isValid() )
+      if ( !item.isValid() ) {
         return;
+      }
 
       if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
         Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mParentWidget );
         dlg.setContact( item );
         dlg.exec();
-      }
-      else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
+      } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
         Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
         dlg.setContactGroup( item );
         dlg.exec();
@@ -434,8 +452,9 @@ void StandardContactActionManager::setItemSelectionModel( QItemSelectionModel* s
 
 KAction* StandardContactActionManager::createAction( Type type )
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   KAction *action = 0;
 
@@ -496,8 +515,9 @@ void StandardContactActionManager::createAllActions()
 
 KAction* StandardContactActionManager::action( Type type ) const
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   return 0;
 }
@@ -514,10 +534,11 @@ void StandardContactActionManager::setActionText( StandardActionManager::Type ty
 
 void StandardContactActionManager::interceptAction( Type type, bool intercept )
 {
-  if ( intercept )
+  if ( intercept ) {
     d->mInterceptedActions.insert( type );
-  else
+  } else {
     d->mInterceptedActions.remove( type );
+  }
 }
 
 void StandardContactActionManager::interceptAction( StandardActionManager::Type type, bool intercept )

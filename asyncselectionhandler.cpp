@@ -56,8 +56,9 @@ bool AsyncSelectionHandler::scanSubTree( const QModelIndex &index, bool searchFo
 
   for ( int row = 0; row < mModel->rowCount( index ); ++row ) {
     const QModelIndex childIndex = mModel->index( row, 0, index );
-    if ( scanSubTree( childIndex, searchForItem ) )
+    if ( scanSubTree( childIndex, searchForItem ) ) {
       return true;
+    }
   }
 
   return false;

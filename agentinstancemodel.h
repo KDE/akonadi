@@ -55,8 +55,7 @@ class AKONADI_EXPORT AgentInstanceModel : public QAbstractItemModel
     /**
      * Describes the roles of this model.
      */
-    enum Roles
-    {
+    enum Roles {
       TypeRole = Qt::UserRole + 1,             ///< The agent type itself
       TypeIdentifierRole,                      ///< The identifier of the agent type
       DescriptionRole,                         ///< A description of the agent type

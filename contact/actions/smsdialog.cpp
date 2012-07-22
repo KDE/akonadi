@@ -17,7 +17,7 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
-*/ 
+*/
 
 #include "smsdialog.h"
 
@@ -72,7 +72,7 @@ void SmsDialog::initUI()
 
   connect( mSmsTextEdit, SIGNAL(textChanged()), SLOT(updateCounter()) );
 
-  mLengthLabel = new QLabel( QLatin1String("-") , page );
+  mLengthLabel = new QLabel( QLatin1String( "-" ) , page );
   topLayout->addWidget( mLengthLabel );
 
   mSmsTextEdit->setFocus();
@@ -86,8 +86,7 @@ void SmsDialog::updateCounter()
 
   bool noLatin1Char = false;
   const int size = mText.length();
-  for ( int i = 0; i <size; ++i )
-  {
+  for ( int i = 0; i <size; ++i ) {
     if ( mText[i].row() > 0 ) {
       noLatin1Char = true;
       messageSize = 70;

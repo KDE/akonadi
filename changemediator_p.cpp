@@ -41,17 +41,18 @@ K_GLOBAL_STATIC(ChangeMediator, s_globalChangeMediator)
 
 ChangeMediator* ChangeMediator::instance()
 {
-  if (s_globalChangeMediator.isDestroyed())
+  if ( s_globalChangeMediator.isDestroyed() ) {
     return 0;
-  else
+  } else {
     return s_globalChangeMediator;
+  }
 }
 
 ChangeMediator::ChangeMediator(QObject *parent)
   : QObject(parent)
 {
   if ( qApp ) {
-    this->moveToThread(qApp->thread());
+    this->moveToThread( qApp->thread() );
   }
   QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -60,10 +61,11 @@ void ChangeMediator::init()
 {
   ChangeNotificationDependenciesFactory dependenciesFactory;
 
-  m_notificationSource = dependenciesFactory.createNotificationSource(this);
+  m_notificationSource = dependenciesFactory.createNotificationSource( this );
 
-  if (!m_notificationSource)
+  if ( !m_notificationSource ) {
     return;
+  }
 
   QObject::connect( m_notificationSource, SIGNAL(notify(Akonadi::NotificationMessage::List)),
                     this, SLOT(processAkonadiNotifications(Akonadi::NotificationMessage::List)) );
@@ -72,25 +74,25 @@ void ChangeMediator::init()
 /* static */
 void ChangeMediator::registerMonitor(QObject *monitor)
 {
-  QMetaObject::invokeMethod(instance(), "do_registerMonitor", Q_ARG(QObject* ,monitor));
+  QMetaObject::invokeMethod( instance(), "do_registerMonitor", Q_ARG( QObject*, monitor ) );
 }
 
 /* static */
 void ChangeMediator::unregisterMonitor(QObject *monitor)
 {
-  QMetaObject::invokeMethod(instance(), "do_unregisterMonitor", Q_ARG(QObject*, monitor));
+  QMetaObject::invokeMethod( instance(), "do_unregisterMonitor", Q_ARG( QObject*, monitor ) );
 }
 
 /* static */
 void ChangeMediator::invalidateCollection(const Akonadi::Collection& collection)
 {
-  QMetaObject::invokeMethod(instance(), "do_invalidateCollection", Q_ARG(Akonadi::Collection, collection));
+  QMetaObject::invokeMethod( instance(), "do_invalidateCollection", Q_ARG( Akonadi::Collection, collection ) );
 }
 
 /* static */
 void ChangeMediator::invalidateItem(const Akonadi::Item& item)
 {
-  QMetaObject::invokeMethod(instance(), "do_invalidateItem", Q_ARG(Akonadi::Item, item));
+  QMetaObject::invokeMethod( instance(), "do_invalidateItem", Q_ARG( Akonadi::Item, item ) );
 }
 
 void ChangeMediator::do_registerMonitor( QObject *monitor )
@@ -105,74 +107,81 @@ void ChangeMediator::do_unregisterMonitor( QObject *monitor )
 
 void ChangeMediator::do_invalidateCollection( const Akonadi::Collection &collection )
 {
-  foreach ( QObject *monitor, m_monitors )
+  foreach ( QObject *monitor, m_monitors ) {
     QMetaObject::invokeMethod( monitor, "invalidateCollectionCache", Qt::AutoConnection, Q_ARG( qint64, collection.id() ) );
+  }
 }
 
 void ChangeMediator::do_invalidateItem( const Akonadi::Item &item )
 {
-  foreach ( QObject *monitor, m_monitors )
+  foreach ( QObject *monitor, m_monitors ) {
     QMetaObject::invokeMethod( monitor, "invalidateItemCache", Qt::AutoConnection, Q_ARG( qint64, item.id() ) );
+  }
 }
 
 /* static */
 void ChangeMediator::registerSession( const QByteArray &id )
 {
-  if (id != "MediatorSession")
-    QMetaObject::invokeMethod(instance(), "do_registerSession", Qt::AutoConnection, Q_ARG(QByteArray, id) );
+  if ( id != "MediatorSession" ) {
+    QMetaObject::invokeMethod( instance(), "do_registerSession", Qt::AutoConnection, Q_ARG( QByteArray, id ) );
+  }
 }
 
 /* static */
 void ChangeMediator::unregisterSession( const QByteArray &id )
 {
-  if (id != "MediatorSession")
-    QMetaObject::invokeMethod(instance(), "do_unregisterSession", Qt::AutoConnection, Q_ARG(QByteArray, id) );
+  if ( id != "MediatorSession" ) {
+    QMetaObject::invokeMethod( instance(), "do_unregisterSession", Qt::AutoConnection, Q_ARG( QByteArray, id ) );
+  }
 }
 
 /* static */
 void ChangeMediator::beginMoveItems( JobPrivate *movePrivate, const QByteArray &id )
 {
-  QMetaObject::invokeMethod(instance(), "do_beginMoveItems", Qt::AutoConnection, Q_ARG(JobPrivate*, movePrivate), Q_ARG(QByteArray, id) );
+  QMetaObject::invokeMethod( instance(), "do_beginMoveItems", Qt::AutoConnection, Q_ARG( JobPrivate*, movePrivate ), Q_ARG( QByteArray, id ) );
 }
 
 /* static */
 void ChangeMediator::itemsMoved( const Item::List &items, const Collection &sourceParent, const QByteArray &id )
 {
-  QMetaObject::invokeMethod(instance(), "do_itemsMoved", Qt::AutoConnection, Q_ARG(Item::List, items), Q_ARG(Collection, sourceParent), Q_ARG(QByteArray, id) );
+  QMetaObject::invokeMethod( instance(), "do_itemsMoved", Qt::AutoConnection, Q_ARG( Item::List, items ), Q_ARG( Collection, sourceParent ), Q_ARG( QByteArray, id ) );
 }
 
 void ChangeMediator::do_registerSession(const QByteArray &id)
 {
-  Q_ASSERT(!id.isEmpty());
+  Q_ASSERT( !id.isEmpty() );
   m_sessions.insert( id );
 }
 
 void ChangeMediator::do_unregisterSession(const QByteArray &id)
 {
-  Q_ASSERT(!id.isEmpty());
+  Q_ASSERT( !id.isEmpty() );
   m_sessions.remove( id );
 }
 
 void ChangeMediator::do_beginMoveItems( JobPrivate *movePrivate, const QByteArray &id )
 {
-  if (!m_sessions.contains(id))
+  if ( !m_sessions.contains( id ) ) {
     return;
+  }
 
-  Q_ASSERT(movePrivate->q_ptr->inherits("Akonadi::ItemMoveJob"));
+  Q_ASSERT( movePrivate->q_ptr->inherits( "Akonadi::ItemMoveJob" ) );
   MoveJobImpl<Item, ItemMoveJob> *itemMoveJob = static_cast<MoveJobImpl<Item, ItemMoveJob>*>(movePrivate);
 
   Item::List itemsDataAvailable;
   Item::List itemsDataNotAvailable;
 
-  foreach (const Item &item, itemMoveJob->objectsToMove) {
-    if (item.parentCollection().isValid())
-      itemsDataAvailable.append(item);
-    else
-      itemsDataNotAvailable.append(item);
+  foreach ( const Item &item, itemMoveJob->objectsToMove ) {
+    if ( item.parentCollection().isValid() ) {
+      itemsDataAvailable.append( item );
+    } else {
+      itemsDataNotAvailable.append( item );
+    }
   }
 
-  if (itemsDataNotAvailable.isEmpty())
+  if ( itemsDataNotAvailable.isEmpty() ) {
     return;
+  }
 
 //   if (itemsDataAvailable.isEmpty())
 
@@ -186,9 +195,10 @@ void ChangeMediator::do_itemsMoved( const Item::List &items, const Collection &s
 void ChangeMediator::processAkonadiNotifications(const Akonadi::NotificationMessage::List& messages)
 {
   QVector<ObjectNotificationMessage> objectMessages;
-  Q_FOREACH(const Akonadi::NotificationMessage &message, messages) {
-    if (!m_sessions.contains(message.sessionId()))
-      ObjectNotificationMessage::appendAndCompress(objectMessages, message);
+  Q_FOREACH ( const Akonadi::NotificationMessage &message, messages ) {
+    if ( !m_sessions.contains( message.sessionId() ) ) {
+      ObjectNotificationMessage::appendAndCompress( objectMessages, message );
+    }
   }
-  emit notify(objectMessages);
+  emit notify( objectMessages );
 }

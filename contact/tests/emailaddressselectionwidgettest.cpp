@@ -62,8 +62,9 @@ void MainWidget::showSelection()
   mInfo->append( QLatin1String( "===========================\n" ) );
   mInfo->append( QLatin1String( "Current selection:\n" ) );
 
-  foreach ( const Akonadi::EmailAddressSelection &selection, mAddressesWidget->selectedAddresses() )
+  foreach ( const Akonadi::EmailAddressSelection &selection, mAddressesWidget->selectedAddresses() ) {
     mInfo->append( QString::fromLatin1( "%1: %2\n" ).arg( selection.name() ).arg( selection.email() ) );
+  }
 }
 
 int main( int argc, char **argv )

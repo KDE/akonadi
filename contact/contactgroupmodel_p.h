@@ -34,8 +34,7 @@ class ContactGroupModel : public QAbstractItemModel
   Q_OBJECT
 
   public:
-    enum Role
-    {
+    enum Role {
       IsReferenceRole = Qt::UserRole,
       AllEmailsRole
     };

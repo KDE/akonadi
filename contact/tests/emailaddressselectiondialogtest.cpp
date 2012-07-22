@@ -33,7 +33,8 @@ int main( int argc, char **argv )
 
   Akonadi::EmailAddressSelectionDialog dlg;
   if ( dlg.exec() ) {
-    foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() )
+    foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() ) {
       qDebug( "%s: %s", qPrintable( selection.name() ), qPrintable( selection.email() ) );
+    }
   }
 }

@@ -68,8 +68,9 @@ class StaticAttributeFactory : public AttributeFactory
   public:
     StaticAttributeFactory() : AttributeFactory(), initialized( false ) {}
     void init() {
-      if ( initialized )
+      if ( initialized ) {
         return;
+      }
       initialized = true;
 
       // Register built-in attributes
@@ -120,7 +121,7 @@ AttributeFactory::~ AttributeFactory()
 void AttributeFactory::registerAttribute(Attribute *attr)
 {
   Q_ASSERT( attr );
-  Q_ASSERT( !attr->type().contains(' ') && !attr->type().contains('\'') && !attr->type().contains('"') );
+  Q_ASSERT( !attr->type().contains( ' ' ) && !attr->type().contains( '\'' ) && !attr->type().contains( '"' ) );
   QHash<QByteArray, Attribute*>::Iterator it = d->attributes.find( attr->type() );
   if ( it != d->attributes.end() ) {
     delete *it;
@@ -131,9 +132,10 @@ void AttributeFactory::registerAttribute(Attribute *attr)
 
 Attribute* AttributeFactory::createAttribute(const QByteArray &type)
 {
-  Attribute* attr = self()->d->attributes.value( type );
-  if ( attr )
+  Attribute *attr = self()->d->attributes.value( type );
+  if ( attr ) {
     return attr->clone();
+  }
   return new Internal::DefaultAttribute( type );
 }
 

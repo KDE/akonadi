@@ -72,8 +72,9 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
     if ( !item.hasPayload<KABC::Addressee>() ) {
 
       // Pass modeltest
-      if ( role == Qt::DisplayRole )
+      if ( role == Qt::DisplayRole ) {
         return item.remoteId();
+      }
 
       return QVariant();
     }
@@ -90,7 +91,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
         }
       }
       return QVariant();
-    } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
+    } else if ( ( role == Qt::DisplayRole ) || ( role == Qt::EditRole ) ) {
       switch ( d->mColumns.at( column ) ) {
         case FullName:
           return contact.realName();
@@ -102,21 +103,24 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
           return contact.givenName();
           break;
         case Birthday:
-          if ( contact.birthday().date().isValid() )
+          if ( contact.birthday().date().isValid() ) {
             return KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
+          }
           break;
         case HomeAddress:
           {
             const KABC::Address address = contact.address( KABC::Address::Home );
-            if ( !address.isEmpty() )
+            if ( !address.isEmpty() ) {
               return address.formattedAddress();
+            }
           }
           break;
         case BusinessAddress:
           {
             const KABC::Address address = contact.address( KABC::Address::Work );
-            if ( !address.isEmpty() )
+            if ( !address.isEmpty() ) {
               return address.formattedAddress();
+            }
           }
           break;
         case PhoneNumbers:
@@ -124,8 +128,9 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
             QStringList values;
 
             const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
-            foreach ( const KABC::PhoneNumber &number, numbers )
+            foreach ( const KABC::PhoneNumber &number, numbers ) {
               values += number.number();
+            }
 
             return values.join( QLatin1String( "\n" ) );
           }
@@ -150,27 +155,30 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
           break;
       }
     } else if ( role == DateRole ) {
-      if ( d->mColumns.at( column ) == Birthday )
+      if ( d->mColumns.at( column ) == Birthday ) {
         return contact.birthday();
-      else
+      } else {
         return QDate();
+      }
     }
   } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
     if ( !item.hasPayload<KABC::ContactGroup>() ) {
 
       // Pass modeltest
-      if ( role == Qt::DisplayRole )
+      if ( role == Qt::DisplayRole ) {
         return item.remoteId();
+      }
 
       return QVariant();
     }
 
     if ( role == Qt::DecorationRole ) {
-      if ( column == 0 )
+      if ( column == 0 ) {
         return KIcon( QLatin1String( "x-mail-distribution-list" ) );
-      else
+      } else {
         return QVariant();
-    } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
+      }
+    } else if ( ( role == Qt::DisplayRole ) || ( role == Qt::EditRole ) ) {
       switch ( d->mColumns.at( column ) ) {
         case FullName:
           {
@@ -219,8 +227,9 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
     if ( orientation == Qt::Horizontal ) {
       if ( headerGroup == EntityTreeModel::CollectionTreeHeaders ) {
 
-        if ( section >= 1 )
+        if ( section >= 1 ) {
           return QVariant();
+        }
 
         switch ( section ) {
           case 0:
@@ -228,8 +237,9 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
             break;
         }
       } else if ( headerGroup == EntityTreeModel::ItemListHeaders ) {
-        if ( section < 0 || section >= d->mColumns.count() )
+        if ( section < 0 || section >= d->mColumns.count() ) {
           return QVariant();
+        }
 
         switch ( d->mColumns.at( section ) ) {
           case FullName:

@@ -40,8 +40,9 @@ SecrecyEditWidget::SecrecyEditWidget( QWidget *parent )
   KABC::Secrecy::TypeList::ConstIterator it;
 
   // (*it) is the type enum, which is also used as the index in the combo
-  for ( it = list.begin(); it != list.end(); ++it )
+  for ( it = list.begin(); it != list.end(); ++it ) {
     mSecrecyCombo->insertItem( *it, KABC::Secrecy::typeLabel( *it ) );
+  }
 }
 
 SecrecyEditWidget::~SecrecyEditWidget()
@@ -55,8 +56,9 @@ void SecrecyEditWidget::setReadOnly( bool readOnly )
 
 void SecrecyEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  if ( contact.secrecy().type() != KABC::Secrecy::Invalid )
+  if ( contact.secrecy().type() != KABC::Secrecy::Invalid ) {
     mSecrecyCombo->setCurrentIndex( contact.secrecy().type() );
+  }
 }
 
 void SecrecyEditWidget::storeContact( KABC::Addressee &contact ) const

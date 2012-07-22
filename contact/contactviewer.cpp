@@ -98,25 +98,26 @@ class ContactViewer::Private
       KConfigGroup group( &config, QLatin1String( "View" ) );
       if ( group.readEntry( "QRCodes", true ) ) {
         KABC::VCardConverter converter;
-        KABC::Addressee addr(mCurrentContact);
-        addr.setPhoto(KABC::Picture());
-        addr.setLogo(KABC::Picture());
+        KABC::Addressee addr( mCurrentContact );
+        addr.setPhoto( KABC::Picture() );
+        addr.setLogo( KABC::Picture() );
         const QString data = QString::fromUtf8( converter.createVCard( addr ) );
         mQRCode->setData( data );
         mDataMatrix->setData( data );
         mBrowser->document()->addResource( QTextDocument::ImageResource,
                                            QUrl( QLatin1String( "qrcode" ) ),
-                                           mQRCode->toImage( QSizeF(50,50) ) );
+                                           mQRCode->toImage( QSizeF( 50, 50 ) ) );
         mBrowser->document()->addResource( QTextDocument::ImageResource,
-                                         QUrl( QLatin1String( "datamatrix" ) ),
-                                           mDataMatrix->toImage( QSizeF(50,50) ) );
+                                           QUrl( QLatin1String( "datamatrix" ) ),
+                                           mDataMatrix->toImage( QSizeF( 50, 50 ) ) );
       }
 #endif // HAVE_PRISON
 
       // merge local and global custom field descriptions
       QList<QVariantMap> customFieldDescriptions;
-      foreach ( const QVariant &entry, localCustomFieldDescriptions )
+      foreach ( const QVariant &entry, localCustomFieldDescriptions ) {
         customFieldDescriptions << entry.toMap();
+      }
 
       const CustomField::List globalCustomFields = CustomFieldManager::globalCustomFieldDescriptions();
       foreach ( const CustomField &field, globalCustomFields ) {
@@ -189,10 +190,11 @@ class ContactViewer::Private
         CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
           const Collection collection = fetchJob->collections().first();
-          if ( collection.hasAttribute<EntityDisplayAttribute>() )
+          if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
             addressBookName = collection.attribute<EntityDisplayAttribute>()->displayName();
-          else
+          } else {
             addressBookName = collection.name();
+          }
         }
       }
 
@@ -255,10 +257,11 @@ KABC::Addressee ContactViewer::rawContact() const
 
 void ContactViewer::setContactFormatter( AbstractContactFormatter *formatter )
 {
-  if ( formatter == 0 )
+  if ( formatter == 0 ) {
     d->mContactFormatter = d->mStandardContactFormatter;
-  else
+  } else {
     d->mContactFormatter = formatter;
+  }
 }
 
 void ContactViewer::setContact( const Akonadi::Item &contact )
@@ -275,8 +278,9 @@ void ContactViewer::setRawContact( const KABC::Addressee &contact )
 
 void ContactViewer::itemChanged( const Item &contactItem )
 {
-  if ( !contactItem.hasPayload<KABC::Addressee>() )
+  if ( !contactItem.hasPayload<KABC::Addressee>() ) {
     return;
+  }
 
   d->mCurrentItem = contactItem;
   d->mCurrentContact = contactItem.payload<KABC::Addressee>();

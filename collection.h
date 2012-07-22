@@ -93,10 +93,10 @@ class AKONADI_EXPORT Collection : public Entity
       CanDeleteCollection = 0x20,       ///< Can delete this collection
       CanLinkItem = 0x40,               ///< Can create links to existing items in this virtual collection @since 4.4
       CanUnlinkItem = 0x80,             ///< Can remove links to items in this virtual collection @since 4.4
-      AllRights = (CanChangeItem | CanCreateItem | CanDeleteItem |
-                   CanChangeCollection | CanCreateCollection | CanDeleteCollection) ///< Has all rights on this storage collection
+      AllRights = ( CanChangeItem | CanCreateItem | CanDeleteItem |
+                   CanChangeCollection | CanCreateCollection | CanDeleteCollection ) ///< Has all rights on this storage collection
     };
-    Q_DECLARE_FLAGS(Rights, Right)
+    Q_DECLARE_FLAGS( Rights, Right )
 
     /**
      * Creates an invalid collection.
@@ -242,8 +242,7 @@ class AKONADI_EXPORT Collection : public Entity
      *
      * @since 4.7
      */
-    enum UrlType
-    {
+    enum UrlType {
       UrlShort = 0,     ///< A short url which contains the identifier only (equivalent to url())
       UrlWithName = 1   ///< A url with identifier and name
     };

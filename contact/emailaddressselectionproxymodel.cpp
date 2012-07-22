@@ -41,7 +41,7 @@ static QString createToolTip( const KABC::ContactGroup &group )
     txt += group.data( i ).name() + QLatin1Char( ' ' );
     txt += QLatin1String( "<em>" );
     txt += group.data( i ).email();
-    txt += QLatin1String("</em></li>" );
+    txt += QLatin1String( "</em></li>" );
   }
   txt += QLatin1String( "</ul>" );
   txt += QLatin1String( "</qt>" );
@@ -107,10 +107,11 @@ int EmailAddressSelectionProxyModel::leafRowCount( const QModelIndex &index ) co
   const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    if ( contact.emails().count() == 1 )
+    if ( contact.emails().count() == 1 ) {
       return 0;
-    else
+    } else {
       return contact.emails().count();
+    }
   } else if ( item.hasPayload<KABC::ContactGroup>() ) {
     const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
     return group.dataCount();
@@ -122,12 +123,13 @@ int EmailAddressSelectionProxyModel::leafRowCount( const QModelIndex &index ) co
 int EmailAddressSelectionProxyModel::leafColumnCount( const QModelIndex &index ) const
 {
   const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( item.hasPayload<KABC::Addressee>() )
+  if ( item.hasPayload<KABC::Addressee>() ) {
     return 1;
-  else if ( item.hasPayload<KABC::ContactGroup>() )
+  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
     return 1;
-  else
+  } else {
     return 0;
+  }
 }
 
 QVariant EmailAddressSelectionProxyModel::leafData( const QModelIndex &index, int row, int, int role ) const
@@ -136,13 +138,15 @@ QVariant EmailAddressSelectionProxyModel::leafData( const QModelIndex &index, in
     const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( item.hasPayload<KABC::Addressee>() ) {
       const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      if ( row >= 0 && row < contact.emails().count() )
+      if ( row >= 0 && row < contact.emails().count() ) {
         return contact.emails().at( row );
+      }
     } else if ( item.hasPayload<KABC::ContactGroup>() ) {
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-      if ( row >= 0 && row < (int)group.dataCount() )
+      if ( row >= 0 && row < (int)group.dataCount() ) {
         return i18nc( "Name and email address of a contact", "%1 <%2>",
                       group.data( row ).name(), group.data( row ).email() );
+      }
     }
   } else if ( role == NameRole ) {
     const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
@@ -151,30 +155,35 @@ QVariant EmailAddressSelectionProxyModel::leafData( const QModelIndex &index, in
       return contact.realName();
     } else if ( item.hasPayload<KABC::ContactGroup>() ) {
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-      if ( row >= 0 && row < (int)group.dataCount() )
+      if ( row >= 0 && row < (int)group.dataCount() ) {
         return group.data( row ).name();
+      }
     }
   } else if ( role == EmailAddressRole ) {
     const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( item.hasPayload<KABC::Addressee>() ) {
       const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      if ( row >= 0 && row < contact.emails().count() )
+      if ( row >= 0 && row < contact.emails().count() ) {
         return contact.emails().at( row );
+      }
     } else if ( item.hasPayload<KABC::ContactGroup>() ) {
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-      if ( row >= 0 && row < (int)group.dataCount() )
+      if ( row >= 0 && row < (int)group.dataCount() ) {
         return group.data( row ).email();
+      }
     }
   } else if ( role == Qt::ToolTipRole ) {
     const Akonadi::Item item = index.data( ContactsTreeModel::ItemRole ).value<Akonadi::Item>();
     if ( item.hasPayload<KABC::Addressee>() ) {
       const KABC::Addressee contact = item.payload<KABC::Addressee>();
-      if ( row >= 0 && row < contact.emails().count() )
+      if ( row >= 0 && row < contact.emails().count() ) {
         return createToolTip( contact.realName(), contact.emails().at( row ) );
+      }
     } else if ( item.hasPayload<KABC::ContactGroup>() ) {
       const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-      if ( row >= 0 && row < (int)group.dataCount() )
+      if ( row >= 0 && row < (int)group.dataCount() ) {
         return createToolTip( group.data( row ).name(), group.data( row ).email() );
+      }
     }
   } else
     return index.data( role );

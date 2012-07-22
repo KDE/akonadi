@@ -122,10 +122,11 @@ void EmailEditWidget::loadContact( const KABC::Addressee &contact )
 {
   mEmailList = contact.emails();
 
-  if ( !mEmailList.isEmpty() )
+  if ( !mEmailList.isEmpty() ) {
     mEmailEdit->setText( mEmailList.first() );
-  else
+  } else {
     mEmailEdit->setText( QString() );
+  }
 }
 
 void EmailEditWidget::storeContact( KABC::Addressee &contact ) const
@@ -133,12 +134,14 @@ void EmailEditWidget::storeContact( KABC::Addressee &contact ) const
   QStringList emails( mEmailList );
 
   // the preferred address is always the first one, remove it...
-  if ( !emails.isEmpty() )
+  if ( !emails.isEmpty() ) {
     emails.removeFirst();
+  }
 
   // ... and prepend the one from the line edit
-  if ( !mEmailEdit->text().isEmpty() )
+  if ( !mEmailEdit->text().isEmpty() ) {
     emails.prepend( mEmailEdit->text() );
+  }
 
   contact.setEmails( emails );
 }
@@ -150,18 +153,20 @@ void EmailEditWidget::edit()
   if ( dlg->exec() ) {
     if ( dlg->changed() ) {
       mEmailList = dlg->emails();
-      if ( !mEmailList.isEmpty() )
+      if ( !mEmailList.isEmpty() ) {
         mEmailEdit->setText( mEmailList.first() );
-      else
+      } else {
         mEmailEdit->setText( QString() );
+      }
     }
   }
 }
 
 void EmailEditWidget::textChanged( const QString &text )
 {
-  if ( !mEmailList.isEmpty() )
+  if ( !mEmailList.isEmpty() ) {
     mEmailList.removeFirst();
+  }
 
   mEmailList.prepend( text );
 }
@@ -174,7 +179,7 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   setButtons( KDialog::Ok | KDialog::Cancel );
   setDefaultButton( KDialog::Cancel );
 
-  QWidget *page = new QWidget( this);
+  QWidget *page = new QWidget( this );
   setMainWidget( page );
 
   QGridLayout *topLayout = new QGridLayout( page );
@@ -214,10 +219,11 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   topLayout->setRowStretch( 4, 1 );
 
   QStringList items = list;
-  if ( items.removeAll( QLatin1String( "" ) ) > 0 )
+  if ( items.removeAll( QLatin1String( "" ) ) > 0 ) {
     mChanged = true;
-  else
+  } else {
     mChanged = false;
+  }
 
   QStringList::ConstIterator it;
   bool preferred = true;
@@ -242,10 +248,11 @@ QStringList EmailEditDialog::emails() const
 
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
-    if ( item->preferred() )
+    if ( item->preferred() ) {
       emails.prepend( item->text() );
-    else
+    } else {
       emails.append( item->text() );
+    }
   }
 
   return emails;
@@ -258,18 +265,20 @@ void EmailEditDialog::add()
   QString email = KInputDialog::getText( i18n( "Add Email" ), i18n( "New Email:" ),
                                          QString(), &ok, this );
 
-  if ( !ok )
+  if ( !ok ) {
     return;
+  }
 
   email = KPIMUtils::extractEmailAddress( email );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
-    if ( mEmailListBox->item( i )->text() == email )
+    if ( mEmailListBox->item( i )->text() == email ) {
       return;
+    }
   }
 
-  new EmailItem( email, mEmailListBox, (mEmailListBox->count() == 0) );
+  new EmailItem( email, mEmailListBox, ( mEmailListBox->count() == 0 ) );
 
   mChanged = true;
 }
@@ -284,15 +293,17 @@ void EmailEditDialog::edit()
                                          i18nc( "@label:textbox Inputfield for an email address", "Email:" ),
                                          item->text(), &ok, this );
 
-  if ( !ok )
+  if ( !ok ) {
     return;
+  }
 
   email = KPIMUtils::extractEmailAddress( email );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
-    if ( mEmailListBox->item( i )->text() == email )
+    if ( mEmailListBox->item( i )->text() == email ) {
       return;
+    }
   }
 
   EmailItem *eitem = static_cast<EmailItem*>( item );
@@ -315,8 +326,9 @@ void EmailEditDialog::remove()
     mEmailListBox->takeItem( mEmailListBox->currentRow() );
     if ( preferred ) {
       item = dynamic_cast<EmailItem*>( mEmailListBox->item( 0 ) );
-      if ( item )
+      if ( item ) {
         item->setPreferred( true );
+      }
     }
 
     mChanged = true;
@@ -332,10 +344,11 @@ void EmailEditDialog::standard()
 {
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
     EmailItem *item = static_cast<EmailItem*>( mEmailListBox->item( i ) );
-    if ( i == mEmailListBox->currentRow() )
+    if ( i == mEmailListBox->currentRow() ) {
       item->setPreferred( true );
-    else
+    } else {
       item->setPreferred( false );
+    }
   }
 
   mChanged = true;

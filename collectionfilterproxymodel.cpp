@@ -55,11 +55,13 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   // Retrieve supported mimetypes
   const Collection collection = mParent->sourceModel()->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-  if ( !collection.isValid() )
+  if ( !collection.isValid() ) {
     return false;
+  }
 
-  if ( collection.isVirtual() && mExcludeVirtualCollections )
+  if ( collection.isVirtual() && mExcludeVirtualCollections ) {
     return false;
+  }
 
   // If this collection directly contains one valid mimetype, it is accepted
   if ( mimeChecker.isWantedCollection( collection ) ) {
@@ -83,8 +85,9 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
     }
 
     // Keep track of all the resources that are visible.
-    if ( !index.parent().isValid() )
+    if ( !index.parent().isValid() ) {
       acceptedResources.append( index );
+    }
 
     return true;
   }
@@ -95,8 +98,9 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
     if ( collectionAccepted( childIndex, false /* don't check visibility of the parent, as we are checking the child now */ ) ) {
 
       // Keep track of all the resources that are visible.
-      if ( !index.parent().isValid())
+      if ( !index.parent().isValid() ) {
         acceptedResources.append( index );
+      }
 
       return true;
     }
@@ -162,14 +166,15 @@ Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) cons
     // Don't crash
     return 0;
   }
-  
+
   const Collection collection = sourceModel()->data( mapToSource( index ), CollectionModel::CollectionRole ).value<Collection>();
 
   // If this collection directly contains one valid mimetype, it is accepted
-  if ( d->mimeChecker.isWantedCollection( collection ) )
+  if ( d->mimeChecker.isWantedCollection( collection ) ) {
     return QSortFilterProxyModel::flags( index );
-  else
+  } else {
     return QSortFilterProxyModel::flags( index ) & ~( Qt::ItemIsSelectable );
+  }
 }
 
 #include "collectionfilterproxymodel.moc"

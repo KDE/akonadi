@@ -68,25 +68,29 @@ CollectionModel::~CollectionModel()
 
 int CollectionModel::columnCount( const QModelIndex & parent ) const
 {
-  if (parent.isValid() && parent.column() != 0)
+  if ( parent.isValid() && parent.column() != 0 ) {
     return 0;
+  }
   return 1;
 }
 
 QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 {
   Q_D( const CollectionModel );
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
   const Collection col = d->collections.value( index.internalId() );
-  if ( !col.isValid() )
+  if ( !col.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
+  if ( index.column() == 0 && ( role == Qt::DisplayRole || role == Qt::EditRole ) ) {
     if ( col.hasAttribute<EntityDisplayAttribute>() &&
-         !col.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+         !col.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
       return col.attribute<EntityDisplayAttribute>()->displayName();
+    }
     return col.name();
   }
 
@@ -94,8 +98,9 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
     case Qt::DecorationRole:
       if ( index.column() == 0 ) {
         if ( col.hasAttribute<EntityDisplayAttribute>() &&
-             !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
+             !col.attribute<EntityDisplayAttribute>()->iconName().isEmpty() ) {
           return col.attribute<EntityDisplayAttribute>()->icon();
+        }
         return KIcon( CollectionUtils::defaultIconName( col ) );
       }
       break;
@@ -112,47 +117,53 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
 QModelIndex CollectionModel::index( int row, int column, const QModelIndex & parent ) const
 {
   Q_D( const CollectionModel );
-  if (column >= columnCount() || column < 0) return QModelIndex();
+  if ( column >= columnCount() || column < 0 ) {
+    return QModelIndex();
+  }
 
   QVector<Collection::Id> list;
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     list = d->childCollections.value( Collection::root().id() );
-  else
-  {
-    if (parent.column() > 0)
+  } else {
+    if ( parent.column() > 0 ) {
        return QModelIndex();
+    }
     list = d->childCollections.value( parent.internalId() );
   }
 
-  if ( row < 0 || row >= list.size() )
+  if ( row < 0 || row >= list.size() ) {
     return QModelIndex();
-  if ( !d->collections.contains( list.at(row) ) )
+  }
+  if ( !d->collections.contains( list.at( row ) ) ) {
     return QModelIndex();
+  }
   return createIndex( row, column, reinterpret_cast<void*>( d->collections.value( list.at(row) ).id() ) );
 }
 
 QModelIndex CollectionModel::parent( const QModelIndex & index ) const
 {
   Q_D( const CollectionModel );
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QModelIndex();
+  }
 
   Collection col = d->collections.value( index.internalId() );
-  if ( !col.isValid() )
+  if ( !col.isValid() ) {
     return QModelIndex();
+  }
 
 
   Collection parentCol = d->collections.value( col.parentCollection().id() );
-  if ( !parentCol.isValid() )
-  {
+  if ( !parentCol.isValid() ) {
     return QModelIndex();
   }
   QVector<Collection::Id> list;
   list = d->childCollections.value( parentCol.parentCollection().id() );
 
   int parentRow = list.indexOf( parentCol.id() );
-  if ( parentRow < 0 )
+  if ( parentRow < 0 ) {
     return QModelIndex();
+  }
 
   return createIndex( parentRow, 0, reinterpret_cast<void*>( parentCol.id() ) );
 }
@@ -161,10 +172,11 @@ int CollectionModel::rowCount( const QModelIndex & parent ) const
 {
   const  Q_D( CollectionModel );
   QVector<Collection::Id> list;
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     list = d->childCollections.value( parent.internalId() );
-  else
+  } else {
     list = d->childCollections.value( Collection::root().id() );
+  }
 
   return list.size();
 }
@@ -173,8 +185,9 @@ QVariant CollectionModel::headerData( int section, Qt::Orientation orientation, 
 {
   const  Q_D( CollectionModel );
 
-  if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole )
+  if ( section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole ) {
     return d->headerContent;
+  }
   return QAbstractItemModel::headerData( section, orientation, role );
 }
 
@@ -196,8 +209,9 @@ bool CollectionModel::setData( const QModelIndex & index, const QVariant & value
   if ( index.column() == 0 && role == Qt::EditRole ) {
     // rename collection
     Collection col = d->collections.value( index.internalId() );
-    if ( !col.isValid() || value.toString().isEmpty() )
+    if ( !col.isValid() || value.toString().isEmpty() ) {
       return false;
+    }
     col.setName( value.toString() );
     CollectionModifyJob *job = new CollectionModifyJob( col, d->session );
     connect( job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)) );
@@ -212,8 +226,9 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
 
   // Pass modeltest.
   // http://labs.trolltech.com/forums/topic/79
-  if (!index.isValid())
+  if ( !index.isValid() ) {
     return 0;
+  }
 
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
@@ -223,18 +238,18 @@ Qt::ItemFlags CollectionModel::flags( const QModelIndex & index ) const
   if ( index.isValid() ) {
     col = d->collections.value( index.internalId() );
     Q_ASSERT( col.isValid() );
-  }
-  else
+  } else {
     return flags | Qt::ItemIsDropEnabled; // HACK Workaround for a probable bug in Qt
+  }
 
   if ( col.isValid() ) {
-    if ( col.rights() & (Collection::CanChangeCollection |
-                         Collection::CanCreateCollection |
-                         Collection::CanDeleteCollection |
-                         Collection::CanCreateItem) )  {
-      if ( index.column() == 0 )
+    if ( col.rights() & ( Collection::CanChangeCollection |
+                          Collection::CanCreateCollection |
+                          Collection::CanDeleteCollection |
+                          Collection::CanCreateItem ) )  {
+      if ( index.column() == 0 ) {
         flags = flags | Qt::ItemIsEditable;
-
+      }
       flags = flags | Qt::ItemIsDropEnabled;
     }
   }
@@ -257,8 +272,9 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *data = new QMimeData();
     KUrl::List urls;
     foreach ( const QModelIndex &index, indexes ) {
-        if ( index.column() != 0 )
+        if ( index.column() != 0 ) {
           continue;
+        }
 
         urls << Collection( index.internalId() ).url();
     }
@@ -270,22 +286,26 @@ QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
 bool CollectionModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent)
 {
   Q_D( CollectionModel );
-  if ( !(action & supportedDropActions()) )
+  if ( !( action & supportedDropActions() ) ) {
     return false;
+  }
 
   // handle drops onto items as well as drops between items
   QModelIndex idx;
-  if ( row >= 0 && column >= 0 )
+  if ( row >= 0 && column >= 0 ) {
     idx = index( row, column, parent );
-  else
+  } else {
     idx = parent;
+  }
 
-  if ( !idx.isValid() )
+  if ( !idx.isValid() ) {
     return false;
+  }
 
   const Collection parentCol = d->collections.value( idx.internalId() );
-  if (!parentCol.isValid())
+  if ( !parentCol.isValid() ) {
     return false;
+  }
 
   KJob *job = PasteHelper::paste( data, parentCol, action != Qt::MoveAction );
   connect( job, SIGNAL(result(KJob*)), SLOT(dropResult(KJob*)) );

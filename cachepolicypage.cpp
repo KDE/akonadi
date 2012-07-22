@@ -101,12 +101,14 @@ void CachePolicyPage::load( const Collection &collection )
   const CachePolicy policy = collection.cachePolicy();
 
   int interval = policy.intervalCheckTime();
-  if ( interval == -1 )
+  if ( interval == -1 ) {
     interval = 0;
+  }
 
   int cache = policy.cacheTimeout();
-  if ( cache == -1 )
+  if ( cache == -1 ) {
     cache = 0;
+  }
 
   d->mUi->inherit->setChecked( policy.inheritFromParent() );
   d->mUi->checkInterval->setValue( interval );
@@ -119,19 +121,21 @@ void CachePolicyPage::load( const Collection &collection )
 
   //done explicitly to disable/enabled widgets
   d->mUi->retrieveOnlyHeaders->setChecked( !fetchBodies );
-  d->mUi->label->setEnabled(!fetchBodies);
-  d->mUi->localCacheTimeout->setEnabled(!fetchBodies);
+  d->mUi->label->setEnabled( !fetchBodies );
+  d->mUi->localCacheTimeout->setEnabled( !fetchBodies );
 }
 
 void CachePolicyPage::save( Collection &collection )
 {
   int interval = d->mUi->checkInterval->value();
-  if ( interval == 0 )
+  if ( interval == 0 ) {
     interval = -1;
+  }
 
   int cache = d->mUi->localCacheTimeout->value();
-  if ( cache == 0 )
+  if ( cache == 0 ) {
     cache = -1;
+  }
 
   CachePolicy policy = collection.cachePolicy();
   policy.setInheritFromParent( d->mUi->inherit->isChecked() );
@@ -146,11 +150,11 @@ void CachePolicyPage::save( Collection &collection )
   // it otherwise. In "raw" mode we simple use the values from the list
   // view.
   if ( d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage ) {
-    if ( d->mUi->retrieveFullMessages->isChecked()
-         && !localParts.contains( QLatin1String( "RFC822" ) ) ) {
-        localParts.append( QLatin1String( "RFC822" ) );
-    } else if ( !d->mUi->retrieveFullMessages->isChecked()
-         && localParts.contains( QLatin1String( "RFC822" ) ) ) {
+    if ( d->mUi->retrieveFullMessages->isChecked() &&
+         !localParts.contains( QLatin1String( "RFC822" ) ) ) {
+      localParts.append( QLatin1String( "RFC822" ) );
+    } else if ( !d->mUi->retrieveFullMessages->isChecked() &&
+                localParts.contains( QLatin1String( "RFC822" ) ) ) {
       localParts.removeAll( QLatin1String( "RFC822" )  );
     }
   }
