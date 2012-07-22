@@ -259,6 +259,9 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
 
     // NOTE: we do intentionally not delete any columns here, we defer that to the updater,
     // very likely previous columns contain data that needs to be moved to a new column first.
+
+    // Make sure the foreign key constraints are all there
+    checkForeignKeys( tableDescription );
   }
 
   // Add indices
@@ -287,6 +290,55 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
 
   return true;
 }
+
+void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tableDescription)
+{
+  try {
+    const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints( tableDescription.name );
+    Q_FOREACH ( const ColumnDescription &column, tableDescription.columns ) {
+      DbIntrospector::ForeignKey existingForeignKey;
+      Q_FOREACH ( const DbIntrospector::ForeignKey &fk, existingForeignKeys ) {
+        if ( QString::compare( fk.column, column.name, Qt::CaseInsensitive ) == 0 ) {
+          existingForeignKey = fk;
+          break;
+        }
+      }
+
+      if ( !column.refTable.isEmpty() && !column.refColumn.isEmpty() ) {
+        if ( !existingForeignKey.column.isEmpty() ) {
+          // there's a constraint on this column, check if it's the correct one
+          if ( QString::compare( existingForeignKey.refTable, column.refTable + QLatin1Literal( "table" ), Qt::CaseInsensitive ) == 0
+            && QString::compare( existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive ) == 0 )
+            // TODO also compare referential actions here
+          {
+            continue; // all good
+          }
+
+          akDebug() << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
+                    << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
+          // TODO remove this constraint
+        }
+
+        const QString statement = buildAddForeignKeyConstraintStatement( tableDescription, column );
+        if ( statement.isEmpty() ) // no supported
+          continue;
+        akDebug() << "Adding missing foreign key constraint:" << statement;
+        execQuery( statement );
+
+      } else if ( !existingForeignKey.column.isEmpty() ) {
+        // constraint exists but we don't want one here
+        akDebug() << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
+                  << existingForeignKey.refTable << existingForeignKey.refColumn;
+        // TODO remove it?
+      }
+    }
+  } catch ( const DbException &e ) {
+    akDebug() << "Fixing foreign key constraints failed:" << e.what();
+    // we ignore this since foreign keys are only used for optimizations (not all backends support them anyway)
+    // TODO: we need to record this though, for said (yet to be implemented) optimizations
+  }
+}
+
 
 bool DbInitializer::checkRelation( const QDomElement &element )
 {
@@ -364,6 +416,13 @@ QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableD
                             .arg( indexName )
                             .arg( tableDescription.name )
                             .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
+}
+
+QString DbInitializer::buildAddForeignKeyConstraintStatement(const DbInitializer::TableDescription& table, const DbInitializer::ColumnDescription& column) const
+{
+  Q_UNUSED( table );
+  Q_UNUSED( column );
+  return QString();
 }
 
 QString DbInitializer::buildReferentialAction(DbInitializer::ColumnDescription::ReferentialAction onUpdate, DbInitializer::ColumnDescription::ReferentialAction onDelete)

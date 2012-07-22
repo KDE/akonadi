@@ -104,6 +104,13 @@ QString DbInitializerMySql::buildInsertValuesStatement( const TableDescription &
                             .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
 
+QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const DbInitializer::TableDescription& table, const DbInitializer::ColumnDescription& column) const
+{
+  return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " ADD FOREIGN KEY (" ) + column.name
+       + QLatin1Literal( ") REFERENCES " ) + column.refTable + QLatin1Literal( "Table(" ) + column.refColumn
+       + QLatin1Literal( ") " ) + buildReferentialAction( column.onUpdate, column.onDelete );
+}
+
 //END MySQL
 
 
