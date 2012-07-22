@@ -20,7 +20,6 @@
 #ifndef AKONADI_CALENDAR_SCHEDULER_H
 #define AKONADI_CALENDAR_SCHEDULER_H
 
-#include "akonadi-calendar_export.h"
 #include "calendarbase.h"
 
 #include <kcalcore/schedulemessage.h>
@@ -41,7 +40,7 @@ namespace Akonadi {
   It is an abstract base class for inheritance by implementations of the
   iTIP scheme like iMIP or iRIP.
 */
-class AKONADI_CALENDAR_EXPORT Scheduler : public QObject
+class Scheduler : public QObject
 {
     Q_OBJECT
 public:
