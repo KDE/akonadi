@@ -27,6 +27,7 @@ class DbIntrospectorMySql : public DbIntrospector
 {
   public:
     DbIntrospectorMySql( const QSqlDatabase& database );
+    virtual QVector<ForeignKey> foreignKeyConstraints(const QString& tableName);
     virtual QString hasIndexQuery(const QString& tableName, const QString& indexName);
 };
 

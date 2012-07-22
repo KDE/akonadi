@@ -19,6 +19,13 @@
 */
 
 #include "dbintrospector_impl.h"
+#include "dbexception.h"
+#include "querybuilder.h"
+
+#include <QDebug>
+#include <QSqlQuery>
+
+using namespace Akonadi;
 
 //BEGIN MySql
 
@@ -30,6 +37,40 @@ QString DbIntrospectorMySql::hasIndexQuery(const QString& tableName, const QStri
 {
   return QString::fromLatin1( "SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'" )
       .arg( tableName ).arg( indexName );
+}
+
+QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints(const QString& tableName)
+{
+  QueryBuilder qb( QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS" ), QueryBuilder::Select );
+  qb.addJoin( QueryBuilder::InnerJoin, QLatin1String( "information_schema.KEY_COLUMN_USAGE" ),
+              QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME" ),
+              QLatin1String( "information_schema.KEY_COLUMN_USAGE.CONSTRAINT_NAME" ) );
+  qb.addColumn( QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS.CONSTRAINT_NAME" ) );
+  qb.addColumn( QLatin1String( "information_schema.KEY_COLUMN_USAGE.COLUMN_NAME" ) );
+  qb.addColumn( QLatin1String( "information_schema.KEY_COLUMN_USAGE.REFERENCED_TABLE_NAME" ) );
+  qb.addColumn( QLatin1String( "information_schema.KEY_COLUMN_USAGE.REFERENCED_COLUMN_NAME" ) );
+  qb.addColumn( QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS.UPDATE_RULE" ) );
+  qb.addColumn( QLatin1String( "information_schema.REFERENTIAL_CONSTRAINTS.DELETE_RULE" ) );
+
+  qb.addValueCondition( QLatin1String( "information_schema.KEY_COLUMN_USAGE.TABLE_SCHEMA" ), Query::Equals, m_database.databaseName() );
+  qb.addValueCondition( QLatin1String( "information_schema.KEY_COLUMN_USAGE.TABLE_NAME" ), Query::Equals, tableName );
+
+  if ( !qb.exec() )
+    throw DbException( qb.query() );
+
+  QVector<ForeignKey> result;
+  while ( qb.query().next() ) {
+    ForeignKey fk;
+    fk.name = qb.query().value( 0 ).toString();
+    fk.column = qb.query().value( 1 ).toString();
+    fk.refTable = qb.query().value( 2 ).toString();
+    fk.refColumn = qb.query().value( 3 ).toString();
+    fk.onUpdate = qb.query().value( 4 ).toString();
+    fk.onDelete = qb.query().value( 5 ).toString();
+    result.push_back( fk );
+  }
+
+  return result;
 }
 
 //END MySql

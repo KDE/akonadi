@@ -34,6 +34,18 @@ class DbIntrospector
   public:
     typedef QSharedPointer<DbIntrospector> Ptr;
 
+    /** A structure describing an existing foreign key. */
+    class ForeignKey
+    {
+      public:
+        QString name;
+        QString column;
+        QString refTable;
+        QString refColumn;
+        QString onUpdate; // TODO use same enum as DbInitializer
+        QString onDelete; // dito
+    };
+
     /**
      * Returns an introspector instance for a given database.
      */
@@ -69,7 +81,12 @@ class DbIntrospector
      */
     virtual bool isTableEmpty( const QString &tableName );
 
-    // TODO: introspection for foreign key constraints on a given column
+    /**
+     * Returns the foreign key constraints on table @p tableName.
+     * The default implmentation returns an empty list, so any backend supporting
+     * referential integrity should reimplment this.
+     */
+    virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
 
   protected:
     /**
@@ -88,9 +105,11 @@ class DbIntrospector
      */
     virtual QString hasIndexQuery( const QString &tableName, const QString &indexName );
 
+    /** The database connection we are introspecting. */
+    QSqlDatabase m_database;
+
   private:
     friend class DbIntrospectorTest;
-    QSqlDatabase m_database;
     QHash<QString, QStringList> m_columnCache; // avoids extra db roundtrips
 };
 
