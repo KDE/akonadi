@@ -111,6 +111,11 @@ QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const DbInitia
        + QLatin1Literal( ") " ) + buildReferentialAction( column.onUpdate, column.onDelete );
 }
 
+QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const DbInitializer::TableDescription& table) const
+{
+  return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " DROP FOREIGN KEY " ) + fk.name;
+}
+
 //END MySQL
 
 

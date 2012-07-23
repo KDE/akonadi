@@ -34,6 +34,7 @@ class DbInitializerMySql : public DbInitializer
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const;
     virtual QString buildAddForeignKeyConstraintStatement(const TableDescription& table, const ColumnDescription& column) const;
+    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const;
 };
 
 class DbInitializerSqlite : public DbInitializer

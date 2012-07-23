@@ -314,9 +314,13 @@ void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tabl
             continue; // all good
           }
 
-          akDebug() << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
-                    << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
-          // TODO remove this constraint
+          const QString statement = buildRemoveForeignKeyConstraintStatement( existingForeignKey, tableDescription );
+          if ( !statement.isEmpty() ) {
+            akDebug() << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
+                      << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
+            akDebug() << statement;
+            execQuery( statement );
+          }
         }
 
         const QString statement = buildAddForeignKeyConstraintStatement( tableDescription, column );
@@ -327,9 +331,13 @@ void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tabl
 
       } else if ( !existingForeignKey.column.isEmpty() ) {
         // constraint exists but we don't want one here
-        akDebug() << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
-                  << existingForeignKey.refTable << existingForeignKey.refColumn;
-        // TODO remove it?
+        const QString statement = buildRemoveForeignKeyConstraintStatement( existingForeignKey, tableDescription );
+        if ( !statement.isEmpty() ) {
+          akDebug() << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
+                    << existingForeignKey.refTable << existingForeignKey.refColumn;
+          akDebug() << statement;
+          execQuery( statement );
+        }
       }
     }
   } catch ( const DbException &e ) {
@@ -422,6 +430,13 @@ QString DbInitializer::buildAddForeignKeyConstraintStatement(const DbInitializer
 {
   Q_UNUSED( table );
   Q_UNUSED( column );
+  return QString();
+}
+
+QString DbInitializer::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const DbInitializer::TableDescription& table) const
+{
+  Q_UNUSED( fk );
+  Q_UNUSED( table );
   return QString();
 }
 

@@ -180,12 +180,21 @@ class DbInitializer
     virtual QString buildAddColumnStatement( const TableDescription &tableDescription, const ColumnDescription &columnDescription ) const;
     virtual QString buildCreateIndexStatement( const TableDescription &tableDescription, const IndexDescription &indexDescription ) const;
     virtual QString buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const = 0;
+
     /**
      * Returns an SQL statement to add a foreign key constraint to an existing column @p column.
      * The default implementation returns an empty string, so any backend supporting foreign key constraints
      * must reimplement this.
      */
     virtual QString buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const;
+
+    /**
+     * Returns an SQL statement to remove the foreign key constraint @p fk from table @p table.
+     * The default implementation returns an empty string, so any backend supporting foreign key constraints
+     * must reimplement this.
+     */
+    virtual QString buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const;
+
     static QString buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete );
     /// Use for multi-column primary keys during table creation
     static QString buildPrimaryKeyStatement( const TableDescription &table );
