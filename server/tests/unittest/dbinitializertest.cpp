@@ -26,7 +26,11 @@
 #include "storage/dbinitializer.h"
 #include <aktest.h>
 
+#define QL1S(x) QLatin1String(x)
+
 AKTEST_MAIN( DbInitializerTest )
+
+Q_DECLARE_METATYPE( QVector<DbIntrospector::ForeignKey> )
 
 class StatementCollector : public TestInterface
 {
@@ -63,7 +67,12 @@ class DbFakeIntrospector : public DbIntrospector
       Q_UNUSED( tableName );
       return m_tableEmpty;
     }
+    virtual QVector< ForeignKey > foreignKeyConstraints(const QString& tableName)
+    {
+      return m_foreignKeys;
+    }
 
+    QVector<ForeignKey> m_foreignKeys;
     bool m_hasTable;
     bool m_hasIndex;
     bool m_tableEmpty;
@@ -79,16 +88,28 @@ void DbInitializerTest::testRun_data()
   QTest::addColumn<QString>( "driverName" );
   QTest::addColumn<QString>( "filename" );
   QTest::addColumn<bool>( "hasTable" );
+  QTest::addColumn<QVector<DbIntrospector::ForeignKey> >( "fks" );
 
-  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false;
-  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false;
+  QVector<DbIntrospector::ForeignKey> fks;
 
-  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true;
-  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true;
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false << fks;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false << fks;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false << fks;
+
+  DbIntrospector::ForeignKey fk;
+  fk.name = QL1S( "myForeignKeyIdentifier" );
+  fk.column = QL1S( "collectionId" );
+  fk.refTable = QL1S( "CollectionTable" );
+  fk.refColumn = QL1S( "id" );
+  fk.onUpdate = QL1S( "RESTRICT" );
+  fk.onDelete = QL1S( "CASCADE" );
+  fks.push_back( fk );
+
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true << fks;
 }
 
 void DbInitializerTest::testRun()
@@ -96,6 +117,7 @@ void DbInitializerTest::testRun()
   QFETCH( QString, driverName );
   QFETCH( QString, filename );
   QFETCH( bool, hasTable );
+  QFETCH( QVector<DbIntrospector::ForeignKey>, fks );
 
   QFile file( filename );
   QVERIFY( file.open( QFile::ReadOnly ) );
@@ -111,6 +133,7 @@ void DbInitializerTest::testRun()
     introspector->m_hasTable = hasTable;
     introspector->m_hasIndex = hasTable;
     introspector->m_tableEmpty = !hasTable;
+    introspector->m_foreignKeys = fks;
     initializer->setIntrospector( DbIntrospector::Ptr( introspector ) );
 
     QVERIFY( initializer->run() );
