@@ -308,8 +308,9 @@ void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tabl
         if ( !existingForeignKey.column.isEmpty() ) {
           // there's a constraint on this column, check if it's the correct one
           if ( QString::compare( existingForeignKey.refTable, column.refTable + QLatin1Literal( "table" ), Qt::CaseInsensitive ) == 0
-            && QString::compare( existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive ) == 0 )
-            // TODO also compare referential actions here
+            && QString::compare( existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive ) == 0
+            && QString::compare( existingForeignKey.onUpdate, referentialActionToString( column.onUpdate ), Qt::CaseInsensitive ) == 0
+            && QString::compare( existingForeignKey.onDelete, referentialActionToString( column.onDelete ), Qt::CaseInsensitive ) == 0 )
           {
             continue; // all good
           }
