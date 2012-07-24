@@ -155,4 +155,14 @@
   <update version="21" abortOnFailure="false">
     <raw-sql backends="mysql">ALTER TABLE CollectionTable CHANGE queryString queryString VARBINARY(32768);</raw-sql>
   </update>
+
+  <!-- fix previously wrongly used 32bit column type on n:m helper tables (TODO: also needed for the other backends) -->
+  <update version="22" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE PimItemFlagRelation CHANGE PimItem_id PimItem_id BIGINT NOT NULL</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemFlagRelation CHANGE Flag_id Flag_id BIGINT NOT NULL</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionMimeTypeRelation CHANGE Collection_id Collection_id BIGINT NOT NULL</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionMimeTypeRelation CHANGE MimeType_id MimeType_id BIGINT NOT NULL</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE Collection_id Collection_id BIGINT NOT NULL</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE PimItem_id PimItem_id BIGINT NOT NULL</raw-sql>
+  </update>
 </updates>
