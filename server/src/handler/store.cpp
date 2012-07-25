@@ -136,9 +136,13 @@ bool Store::parseStream()
   for ( int i = 0; i < pimItems.size(); ++i ) {
     if ( mCheckRevision ) {
       // check for conflicts if a resources tries to overwrite an item with dirty payload
-      if ( connection()->isOwnerResource( pimItems.at( i ) ) ) {
-        if ( pimItems.at( i ).dirty() )
-          throw HandlerException( "[LRCONFLICT] Resource tries to modify item with dirty payload, aborting STORE." );
+      const PimItem& pimItem = pimItems.at( i );
+      if ( connection()->isOwnerResource( pimItem ) ) {
+        if ( pimItem.dirty() ) {
+          const QString error = QString::fromLatin1( "[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE." );
+          throw HandlerException( error.arg( pimItem.collection().resource().name() ).arg( pimItem.id() )
+                                       .arg( pimItem.remoteId() ).arg( pimItem.collectionId() ) );
+        }
       }
 
       // check and update revisions
