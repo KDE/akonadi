@@ -1,3 +1,7 @@
+1.8.0                            25-July-2012
+---------------------------------------------
+- Fix deadlock in ad-hoc Nepomuk searches.
+
 1.7.95                           11-July-2012
 ---------------------------------------------
 - Fix Nepomuk queries getting stuck if Nepomuk service crashes.
