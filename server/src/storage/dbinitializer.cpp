@@ -87,7 +87,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, c
 }
 
 DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
-  : mDatabase( database ), mTemplateFile( templateFile ), mTestInterface( 0 )
+  : mDatabase( database ), mTemplateFile( templateFile ), mTestInterface( 0 ), m_noForeignKeyContraints( false )
 {
   m_introspector = DbIntrospector::createInstance( mDatabase );
 }
@@ -259,10 +259,10 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
 
     // NOTE: we do intentionally not delete any columns here, we defer that to the updater,
     // very likely previous columns contain data that needs to be moved to a new column first.
-
-    // Make sure the foreign key constraints are all there
-    checkForeignKeys( tableDescription );
   }
+
+  // Make sure the foreign key constraints are all there
+  checkForeignKeys( tableDescription );
 
   // Add indices
   Q_FOREACH ( const IndexDescription &indexDescription, tableDescription.indexes ) {
@@ -325,8 +325,10 @@ void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tabl
         }
 
         const QString statement = buildAddForeignKeyConstraintStatement( tableDescription, column );
-        if ( statement.isEmpty() ) // no supported
-          continue;
+        if ( statement.isEmpty() ) { // not supported
+          m_noForeignKeyContraints = true;
+          return;
+        }
         akDebug() << "Adding missing foreign key constraint:" << statement;
         execQuery( statement );
 
@@ -344,7 +346,7 @@ void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tabl
   } catch ( const DbException &e ) {
     akDebug() << "Fixing foreign key constraints failed:" << e.what();
     // we ignore this since foreign keys are only used for optimizations (not all backends support them anyway)
-    // TODO: we need to record this though, for said (yet to be implemented) optimizations
+    m_noForeignKeyContraints = true;
   }
 }
 
@@ -383,6 +385,11 @@ bool DbInitializer::checkRelation( const QDomElement &element )
 QString DbInitializer::errorMsg() const
 {
   return mErrorMsg;
+}
+
+bool DbInitializer::hasForeignKeyConstraints() const
+{
+  return !m_noForeignKeyContraints;
 }
 
 QString DbInitializer::sqlType(const QString & type, int size) const

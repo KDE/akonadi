@@ -73,6 +73,13 @@ class DbInitializer
      */
     QString errorMsg() const;
 
+    /**
+     * Returns whether the database has working and complete foreign keys.
+     * This information can be used for query optimizations.
+     * @note Result is invalid before run() has been called.
+     */
+    bool hasForeignKeyConstraints() const;
+
   protected:
     /**
      * @short A helper class that describes a column of a table for the DbInitializer
@@ -237,6 +244,7 @@ class DbInitializer
     QString mErrorMsg;
     TestInterface *mTestInterface;
     DbIntrospector::Ptr m_introspector;
+    bool m_noForeignKeyContraints;
 };
 
 #endif

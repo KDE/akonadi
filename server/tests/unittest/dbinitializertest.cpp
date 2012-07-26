@@ -89,13 +89,14 @@ void DbInitializerTest::testRun_data()
   QTest::addColumn<QString>( "filename" );
   QTest::addColumn<bool>( "hasTable" );
   QTest::addColumn<QVector<DbIntrospector::ForeignKey> >( "fks" );
+  QTest::addColumn<bool>( "hasFks" );
 
   QVector<DbIntrospector::ForeignKey> fks;
 
-  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false << fks;
-  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false << fks;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false << fks;
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql" << false << fks << true;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite" << false << fks << false;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql" << false << fks << false;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc" << false << fks << false;
 
   DbIntrospector::ForeignKey fk;
   fk.name = QL1S( "myForeignKeyIdentifier" );
@@ -106,10 +107,10 @@ void DbInitializerTest::testRun_data()
   fk.onDelete = QL1S( "CASCADE" );
   fks.push_back( fk );
 
-  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks;
-  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks;
-  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks;
-  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true << fks;
+  QTest::newRow( "mysql" ) << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
+  QTest::newRow( "sqlite" ) << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << false;
+  QTest::newRow( "psql" ) << "QPSQL" << ":dbinit_psql_incremental" << true << fks << false;
+  QTest::newRow( "virtuoso" ) << "QODBC" << ":dbinit_odbc_incremental" << true << fks << false;
 }
 
 void DbInitializerTest::testRun()
@@ -118,6 +119,7 @@ void DbInitializerTest::testRun()
   QFETCH( QString, filename );
   QFETCH( bool, hasTable );
   QFETCH( QVector<DbIntrospector::ForeignKey>, fks );
+  QFETCH( bool, hasFks );
 
   QFile file( filename );
   QVERIFY( file.open( QFile::ReadOnly ) );
@@ -148,6 +150,8 @@ void DbInitializerTest::testRun()
       QCOMPARE( normalized, expected );
     }
 
+    QVERIFY( initializer->errorMsg().isEmpty() );
+    QCOMPARE( initializer->hasForeignKeyConstraints(), hasFks );
   }
 }
 
