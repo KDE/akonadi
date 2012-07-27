@@ -60,6 +60,8 @@ class DbFakeIntrospector : public DbIntrospector
     }
     virtual bool hasColumn(const QString& tableName, const QString& columnName)
     {
+      Q_UNUSED( tableName );
+      Q_UNUSED( columnName );
       return false;
     }
     virtual bool isTableEmpty(const QString& tableName)
@@ -69,6 +71,7 @@ class DbFakeIntrospector : public DbIntrospector
     }
     virtual QVector< ForeignKey > foreignKeyConstraints(const QString& tableName)
     {
+      Q_UNUSED( tableName );
       return m_foreignKeys;
     }
 
