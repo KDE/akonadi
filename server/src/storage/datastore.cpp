@@ -270,25 +270,30 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
     // generate the notification before actually removing the data
     mNotificationCollector->itemRemoved( item, collection, QString(), resource ); // TODO: make mimetype available as part as an item bulk query
 
-    if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
+    if ( !s_hasForeignKeyConstraints && !item.clearFlags() ) // TODO: move out of loop and use only a single query
       return false;
     if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) // TODO: reduce to single query
       return false;
-    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
-      return false;
 
-    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
-      return false;
+    if ( !s_hasForeignKeyConstraints ) { // db will clean up automatically otherwise
+      if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
+        return false;
+
+      if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
+        return false;
+    }
   }
 
-  // delete collection mimetypes
-  collection.clearMimeTypes();
-  Collection::clearPimItems( collection.id() );
+  if ( !s_hasForeignKeyConstraints ) { // db will clean this up automatically otherwise
+    // delete collection mimetypes
+    collection.clearMimeTypes();
+    Collection::clearPimItems( collection.id() );
 
-  // delete attributes
-  Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
-    if ( !attr.remove() )
-      return false;
+    // delete attributes
+    Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
+      if ( !attr.remove() )
+        return false;
+  }
 
   // delete the collection itself
   mNotificationCollector->collectionRemoved( collection );
