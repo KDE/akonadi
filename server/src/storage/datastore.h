@@ -274,6 +274,7 @@ private:
     uint m_transactionLevel;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
+    static bool s_hasForeignKeyConstraints;
 };
 
 }

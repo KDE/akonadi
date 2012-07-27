@@ -55,6 +55,8 @@
 using namespace Akonadi;
 
 static QMutex sTransactionMutex;
+bool DataStore::s_hasForeignKeyConstraints = false;
+
 #define TRANSACTION_MUTEX_LOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.lock()
 #define TRANSACTION_MUTEX_UNLOCK if ( DbType::type( m_database ) == DbType::Sqlite ) sTransactionMutex.unlock()
 
@@ -131,6 +133,7 @@ bool Akonadi::DataStore::init()
     akError() << initializer->errorMsg();
     return false;
   }
+  s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
   DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
   if ( !updater.run() )
