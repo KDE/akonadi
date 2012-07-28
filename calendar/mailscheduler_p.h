@@ -53,7 +53,6 @@ class MailScheduler : public Akonadi::Scheduler
      */
     MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
                    bool bccMe,
-                   const QString &mailTransport,
                    QObject *parent = 0 );
     ~MailScheduler();
 

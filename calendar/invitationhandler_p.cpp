@@ -230,7 +230,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     }
 
     // Send the mail
-    MailScheduler scheduler( mCalendar, m_bccMe, QString(), mParent ); // TODO mailtransport
+    MailScheduler scheduler( mCalendar, m_bccMe, mParent );
     scheduler.performTransaction( _incidence, method ); // TODO catch signal
 
     const QString question( i18n( "Sending group scheduling email failed." ) );
@@ -330,7 +330,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     return;
   }
 
-  MailScheduler scheduler( d->mCalendar, d->m_bccMe, QString(), d->mParent ); // TODO transport
+  MailScheduler scheduler( d->mCalendar, d->m_bccMe, d->mParent );
   if ( action.startsWith( QLatin1String( "accepted" ) ) ||
        action.startsWith( QLatin1String( "tentative" ) ) ||
        action.startsWith( QLatin1String( "delegated" ) ) ||
