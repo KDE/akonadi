@@ -157,7 +157,6 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
   }
 
   incidence->setRevision( incidence->revision() + 1 );
-  int changeId;
   Result result = ResultSuccess;
 
   if ( exInc.isValid() && exInc.hasPayload<KCalCore::Incidence::Ptr>() ) {
@@ -178,16 +177,17 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
 
     exIncPtr->updated();
 
-    changeId = mCalendar->modifyIncidence( exIncPtr );
-    result = ResultModifyingError;
+    if ( !mCalendar->modifyIncidence( exIncPtr ) )
+      result = ResultModifyingError;
   } else {
-    changeId = mCalendar->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) );
-    result = ResultCreatingError;
+      if ( !mCalendar->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) ) )
+        result = ResultCreatingError;
   }
 
-  if ( changeId > 0 ) {
-  } else {
+  if ( result != ResultSuccess ) {
       emit transactionFinished( result, QLatin1String( "Error creating job" ) );
+  } else {
+      // Nothing to do here. Signal will be emitted when we hear back from the calendar.
   }
 }
 
