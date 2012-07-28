@@ -55,23 +55,23 @@ class MailScheduler : public Akonadi::Scheduler
     ~MailScheduler();
 
     /** reimp */
-    TransactionId publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                           const QString &recipients );
+    void publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                  const QString &recipients );
 
     /** reimp */
-    TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                      KCalCore::iTIPMethod method );
+    void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                             KCalCore::iTIPMethod method );
 
     /** reimp */
-    TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                      KCalCore::iTIPMethod method,
-                                      const QString &recipients );
+    void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                             KCalCore::iTIPMethod method,
+                             const QString &recipients );
 
     /** Returns the directory where the free-busy information is stored */
     /** reimp*/ QString freeBusyDir() const;
 
     /** Accepts a counter proposal */
-    TransactionId acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+    void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
 private:
     bool m_bccMe;

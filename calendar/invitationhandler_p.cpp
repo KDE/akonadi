@@ -230,9 +230,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 
     // Send the mail
     MailScheduler scheduler( mCalendar, m_bccMe, QString(), mParent ); // TODO mailtransport
-    if ( scheduler.performTransaction( _incidence, method ) ) {
-      return InvitationHandler::ResultSuccess;
-    }
+    scheduler.performTransaction( _incidence, method ); // TODO catch signal
 
     const QString question( i18n( "Sending group scheduling email failed." ) );
     messageBoxReturnCode = askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );

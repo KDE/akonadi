@@ -59,8 +59,6 @@ public:
       ResultDeletingError
     };
 
-    typedef int TransactionId;
-
     /**
       Creates a scheduler for calendar specified as argument.
     */
@@ -70,8 +68,8 @@ public:
     /**
       iTIP publish action
     */
-    virtual TransactionId publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                                   const QString &recipients ) = 0;
+    virtual void publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                          const QString &recipients ) = 0;
     /**
       Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
@@ -79,8 +77,8 @@ public:
       @param incidence the incidence for the transaction.
       @param method the iTIP transaction method to use.
     */
-    virtual TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                              KCalCore::iTIPMethod method ) = 0;
+    virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                     KCalCore::iTIPMethod method ) = 0;
 
     /**
       Performs iTIP transaction on incidence to specified recipient(s).
@@ -90,9 +88,9 @@ public:
       @param method the iTIP transaction method to use.
       @param recipients the receipients of the transaction.
     */
-    virtual TransactionId performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                              KCalCore::iTIPMethod method,
-                                              const QString &recipients ) = 0;
+    virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                     KCalCore::iTIPMethod method,
+                                     const QString &recipients ) = 0;
 
     /**
       Retrieves incoming iTIP transactions.
@@ -166,16 +164,13 @@ protected:
 
     void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
 
-    TransactionId nextTransactionId();
-
     Akonadi::CalendarBase::Ptr mCalendar;
     KCalCore::ICalFormat *mFormat;
 
 Q_SIGNALS:
     void acceptTransactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
-    Akonadi::Scheduler::TransactionId performTransactionFinished( Akonadi::Scheduler::TransactionId id,
-                                                                  Akonadi::Scheduler::Result,
-                                                                  const QString &errorMessage );
+    void performTransactionFinished( Akonadi::Scheduler::Result,
+                                     const QString &errorMessage );
 private Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorMessage );
     void handleModifyFinished( bool success, const QString &errorMessage );

@@ -36,8 +36,7 @@ using namespace Akonadi;
 struct Akonadi::Scheduler::Private
 {
   public:
-    Private( Scheduler *qq ) : mNextTransactionId( 1 )
-                             , mFreeBusyCache( 0 )
+    Private( Scheduler *qq ) : mFreeBusyCache( 0 )
                              , q( qq )
     {
     }
@@ -52,7 +51,6 @@ struct Akonadi::Scheduler::Private
       emit q->acceptTransactionFinished( result, errorString );
     }
 
-    TransactionId mNextTransactionId;
     FreeBusyCache *mFreeBusyCache;
     Scheduler *q;
 };
@@ -614,9 +612,4 @@ void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage 
   d->finishAccept( IncidenceBase::Ptr(),
                    success ? ResultSuccess : ResultDeletingError,
                    errorMessage );
-}
-
-Scheduler::TransactionId Scheduler::nextTransactionId()
-{
-    return d->mNextTransactionId++;
 }

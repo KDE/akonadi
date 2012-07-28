@@ -61,13 +61,10 @@ MailScheduler::~MailScheduler()
 {
 }
 
-Scheduler::TransactionId MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                                                 const QString &recipients )
+void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                             const QString &recipients )
 {
-  if ( !incidence ) {
-    return -1;
-  }
-
+  Q_ASSERT( incidence );
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
 
   MailClient mailer;
@@ -85,19 +82,14 @@ Scheduler::TransactionId MailScheduler::publish( const KCalCore::IncidenceBase::
     resultCode = ResultGenericError;
   }*/
 
-  const TransactionId tid = nextTransactionId();
-  emit performTransactionFinished( tid, resultCode, errorMessage );
-  return tid;
+  emit performTransactionFinished( resultCode, errorMessage );
 }
 
-Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                                            KCalCore::iTIPMethod method,
-                                                            const QString &recipients )
+void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                        KCalCore::iTIPMethod method,
+                                        const QString &recipients )
 {
-  if ( !incidence ) {
-    return -1;
-  }
-
+  Q_ASSERT( incidence );
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
@@ -113,18 +105,14 @@ Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::Inci
     errorMessage = QLatin1String( "Error sending e-mail" );
     resultCode = ResultGenericError;
   }*/
-  const TransactionId tid = nextTransactionId();
-  emit performTransactionFinished( tid, resultCode, errorMessage );
-  return tid;
+
+  emit performTransactionFinished( resultCode, errorMessage );
 }
 
-Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                                            KCalCore::iTIPMethod method )
+void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                        KCalCore::iTIPMethod method )
 {
-  if ( !incidence ) {
-    return -1;
-  }
-
+  Q_ASSERT( incidence );
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
@@ -154,9 +142,8 @@ Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::Inci
     errorMessage = QLatin1String( "Error sending e-mail" );
     resultCode = ResultGenericError;
   }*/
-  const TransactionId tid = nextTransactionId();
-  emit performTransactionFinished( tid, resultCode, errorMessage );
-  return tid;
+
+  emit performTransactionFinished( resultCode, errorMessage );
 }
 
 QString MailScheduler::freeBusyDir() const
@@ -165,12 +152,9 @@ QString MailScheduler::freeBusyDir() const
 }
 
 //TODO: AKONADI_PORT review following code
-Scheduler::TransactionId MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
+void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( !incidence ) {
-    return -1;
-  }
-
+  Q_ASSERT( incidence );
   Akonadi::Item exInc = mCalendar->item( incidence->uid() );
   if ( !exInc.isValid() ) {
     KCalCore::Incidence::Ptr exIncidence = mCalendar->incidenceFromSchedulingID( incidence->uid() );
@@ -210,12 +194,8 @@ Scheduler::TransactionId MailScheduler::acceptCounterProposal( const KCalCore::I
     result = ResultCreatingError;
   }
 
-  const Scheduler::TransactionId tid = nextTransactionId();
-
   if ( changeId > 0 ) {
   } else {
-      emit performTransactionFinished( tid, result, QLatin1String( "Error creating job" ) );
+      emit performTransactionFinished( result, QLatin1String( "Error creating job" ) );
   }
-
-  return tid;
 }
