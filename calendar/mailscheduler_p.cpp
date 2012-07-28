@@ -60,6 +60,8 @@ MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
                                                 , d( new Private() )
 
 {
+  Q_ASSERT( calendar );
+  Q_ASSERT( calendar->isLoaded() );
   d->m_bccMe = bccMe;
   d->m_transport = mailTransport;
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );

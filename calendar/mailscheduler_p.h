@@ -47,9 +47,12 @@ namespace Akonadi {
 class MailScheduler : public Akonadi::Scheduler
 {
   public:
-    // TODO: protect against invalid calendars
-    MailScheduler( const Akonadi::FetchJobCalendar::Ptr &,
-                   bool bcc,
+
+    /**
+     * @param calendar Must be a valid and loaded calendar.
+     */
+    MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
+                   bool bccMe,
                    const QString &mailTransport,
                    QObject *parent = 0 );
     ~MailScheduler();
