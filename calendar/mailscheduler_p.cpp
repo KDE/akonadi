@@ -65,6 +65,9 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
                              const QString &recipients )
 {
   Q_ASSERT( incidence );
+  if ( !incidence )
+    return;
+
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
 
   MailClient mailer;
@@ -90,6 +93,8 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                                         const QString &recipients )
 {
   Q_ASSERT( incidence );
+  if ( !incidence )
+    return;
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
@@ -113,6 +118,9 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                                         KCalCore::iTIPMethod method )
 {
   Q_ASSERT( incidence );
+  if ( !incidence )
+    return;
+
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
@@ -155,6 +163,9 @@ QString MailScheduler::freeBusyDir() const
 void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
+  if ( !incidence )
+    return;
+
   Akonadi::Item exInc = mCalendar->item( incidence->uid() );
   if ( !exInc.isValid() ) {
     KCalCore::Incidence::Ptr exIncidence = mCalendar->incidenceFromSchedulingID( incidence->uid() );
