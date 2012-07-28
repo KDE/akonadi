@@ -24,7 +24,6 @@
 #include "fetchjobcalendar.h"
 
 #include <KCalCore/Incidence>
-#include <KCalCore/ScheduleMessage>
 
 #include <Akonadi/Item>
 
