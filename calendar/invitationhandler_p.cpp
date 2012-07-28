@@ -52,8 +52,9 @@ struct Invitation {
   QString receiver;
 };
 
-struct InvitationHandler::Private
+class InvitationHandler::Private
 {
+public:
   FetchJobCalendar::Ptr mCalendar;
   InvitationHandler::Action mDefaultAction;
   QWidget *mParent;

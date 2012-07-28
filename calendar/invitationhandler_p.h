@@ -38,7 +38,6 @@ class QWidget;
 namespace Akonadi {
 
 
-//TODO: document
 class GroupwareUiDelegate
 {
   public:
@@ -92,9 +91,9 @@ class InvitationHandler : public QObject
       ActionDontSendMessage
     };
 
-    void  handleInvitation( const QString &receiver,
-                            const QString &iCal,
-                            const QString &type );
+    void handleInvitation( const QString &receiver,
+                           const QString &iCal,
+                           const QString &type );
 
     /**
       When an Incidence is created/modified/deleted the user can choose to send
@@ -176,7 +175,7 @@ class InvitationHandler : public QObject
     void handleInvitationFinished( bool success, const QString &errorMessage );
 
   private:
-    struct Private;
+    class Private;
     Private *const d;
     Q_DISABLE_COPY( InvitationHandler )
 };
