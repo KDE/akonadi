@@ -172,7 +172,7 @@ class InvitationHandler : public QObject
      */
     void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
-    void handleInvitationFinished( bool success, const QString &errorMessage );
+    void finished( bool success, const QString &errorMessage );
 
   private:
     class Private;

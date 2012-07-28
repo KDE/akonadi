@@ -317,7 +317,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     KMessageBox::detailedError( d->mParent,
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
-    emit handleInvitationFinished( false/*error*/, errorMessage );
+    emit finished( false/*error*/, errorMessage );
     return;
   }
 
@@ -325,8 +325,8 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    emit handleInvitationFinished( false/*error*/,
-                                   QLatin1String( "Invalid incidence" ) );
+    emit finished( false/*error*/,
+                   QLatin1String( "Invalid incidence" ) );
     return;
   }
 
@@ -376,7 +376,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
   }
 
-  emit handleInvitationFinished( true/*success*/, QString() );
+  emit finished( true/*success*/, QString() );
 }
 
 void InvitationHandler::setDefaultAction( Action action )
@@ -596,7 +596,7 @@ InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent
 void InvitationHandler::calendarJobFinished( bool success, const QString &errorString )
 {  
   // TODO: fix signal name
-  emit handleInvitationFinished( success, errorString );
+  emit finished( success, errorString );
 }
 
 void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
