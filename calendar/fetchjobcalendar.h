@@ -58,6 +58,12 @@ namespace Akonadi {
      */
     ~FetchJobCalendar();
 
+    /**
+     * Returns if the calendar already finished loading.
+     * This is an alternative to listening for the loadFinished() signal.
+     */
+    bool isLoaded() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted when the IncidenceFetchJob finishes.

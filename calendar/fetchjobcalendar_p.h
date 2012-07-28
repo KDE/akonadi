@@ -40,6 +40,9 @@ class FetchJobCalendarPrivate : public CalendarBasePrivate
   public Q_SLOTS:
     void slotSearchJobFinished( KJob *job );
 
+  public:
+    bool m_isLoaded;
+
   private:
     FetchJobCalendar *const q;
 };

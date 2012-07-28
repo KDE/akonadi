@@ -28,6 +28,7 @@ using namespace Akonadi;
 using namespace KCalCore;
 
 FetchJobCalendarPrivate::FetchJobCalendarPrivate( FetchJobCalendar *qq ) : CalendarBasePrivate( qq )
+                                                                         , m_isLoaded( false )
                                                                          , q( qq )
 {
   IncidenceFetchJob *job = new IncidenceFetchJob();
@@ -53,6 +54,7 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
       internalInsert( item );
     }
   }
+  m_isLoaded = true;
   // emit loadFinished() in a delayed manner, due to freezes because of execs.
   QMetaObject::invokeMethod( q, "loadFinished", Qt::QueuedConnection,
                              Q_ARG( bool, success ), Q_ARG( QString, errorMessage ) );
@@ -64,6 +66,12 @@ FetchJobCalendar::FetchJobCalendar() : CalendarBase( new FetchJobCalendarPrivate
 
 FetchJobCalendar::~FetchJobCalendar()
 {
+}
+
+bool FetchJobCalendar::isLoaded() const
+{
+   FetchJobCalendarPrivate *d = static_cast<FetchJobCalendarPrivate*>( d_ptr.data() );
+   return d->m_isLoaded;
 }
 
 #include "fetchjobcalendar.moc"
