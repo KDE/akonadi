@@ -74,9 +74,11 @@ class MailScheduler : public Akonadi::Scheduler
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
 private:
-    bool m_bccMe;
-    QString m_transport;
-    KPIMIdentities::IdentityManager *m_identityManager;
+    //@cond PRIVATE
+    Q_DISABLE_COPY( MailScheduler )
+    class Private;
+    Private *const d;
+    //@endcond
 };
 
 }
