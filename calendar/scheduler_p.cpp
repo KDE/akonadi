@@ -32,7 +32,6 @@
 using namespace KCalCore;
 using namespace Akonadi;
 
-//@cond PRIVATE
 struct Akonadi::Scheduler::Private
 {
   public:
@@ -54,7 +53,6 @@ struct Akonadi::Scheduler::Private
     FreeBusyCache *mFreeBusyCache;
     Scheduler *q;
 };
-//@endcond
 
 Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
                       QObject *parent ) : QObject( parent )

@@ -22,6 +22,7 @@
 
 #include "scheduler_p.h"
 #include "fetchjobcalendar.h"
+#include "mailclient_p.h"
 
 #include <KCalCore/Incidence>
 
@@ -71,6 +72,14 @@ class MailScheduler : public Akonadi::Scheduler
 
     /** Accepts a counter proposal */
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+
+private Q_SLOTS:
+    /**
+     * @brief onMailerFinished Handles the result of the MailClient operation.
+     * @param result Error code.
+     * @param errorMsg Error message if @p result is not success.
+     */
+    void onMailerFinished( Akonadi::MailClient::Result result, const QString &errorMsg );
 
 private:
     //@cond PRIVATE

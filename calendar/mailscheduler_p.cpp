@@ -19,8 +19,6 @@
 */
 
 #include "mailscheduler_p.h"
-
-#include "mailclient_p.h"
 #include "fetchjobcalendar.h"
 
 #include <Akonadi/Item>
@@ -66,6 +64,8 @@ MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
   d->m_transport = mailTransport;
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );
   d->m_mailer = new MailClient();
+  connect( d->m_mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
+           SLOT(onMailerFinished(Akonadi::MailClient::Result,QString)) );
 }
 
 MailScheduler::~MailScheduler()
@@ -82,21 +82,10 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
     return;
 
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
-
-  // TODO: Catch the signal.
   d->m_mailer->mailTo( incidence,
                        d->m_identityManager->identityForAddress( email() ),
                        email(), d->m_bccMe, recipients, messageText,
                        d->m_transport );
-
-  Scheduler::Result resultCode = Scheduler::ResultSuccess;
-  QString errorMessage;
-  /*if ( !result ) { // TODO
-    errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultGenericError;
-  }*/
-
-  emit performTransactionFinished( resultCode, errorMessage );
 }
 
 void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -113,15 +102,6 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                        d->m_identityManager->identityForAddress( email() ),
                        email(), d->m_bccMe, recipients, messageText,
                        d->m_transport );
-
-  Scheduler::Result resultCode = ResultSuccess;
-  QString errorMessage;
-  /*if ( !result ) { // TODO
-    errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultGenericError;
-  }*/
-
-  emit performTransactionFinished( resultCode, errorMessage );
 }
 
 void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -152,15 +132,6 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                                 d->m_identityManager->identityForAddress( email() ),
                                 email(), d->m_bccMe, messageText, subject, d->m_transport );
   }
-
-  Scheduler::Result resultCode = ResultSuccess;
-  QString errorMessage;
-  /*if ( !status ) {
-    errorMessage = QLatin1String( "Error sending e-mail" );
-    resultCode = ResultGenericError;
-  }*/
-
-  emit performTransactionFinished( resultCode, errorMessage );
 }
 
 QString MailScheduler::freeBusyDir() const
@@ -217,5 +188,16 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
   if ( changeId > 0 ) {
   } else {
       emit performTransactionFinished( result, QLatin1String( "Error creating job" ) );
+  }
+}
+
+void MailScheduler::onMailerFinished( Akonadi::MailClient::Result result,
+                                      const QString &errorMsg )
+{
+  if ( result == MailClient::ResultSuccess ) {
+      emit performTransactionFinished( ResultSuccess, QString() );
+  } else {
+      const QString message = i18n( "Error sending e-mail: ") + errorMsg;
+      emit performTransactionFinished( ResultGenericError, message );
   }
 }
