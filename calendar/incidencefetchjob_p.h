@@ -18,8 +18,8 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef AKONADI_INCIDENCEFETCHJOB_H
-#define AKONADI_INCIDENCEFETCHJOB_H
+#ifndef AKONADI_INCIDENCEFETCHJOB_P_H
+#define AKONADI_INCIDENCEFETCHJOB_P_H
 
 #include <KCalCore/Incidence>
 #include <akonadi/job.h>

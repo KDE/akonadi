@@ -19,7 +19,7 @@
 
 #include "fetchjobcalendar.h"
 #include "fetchjobcalendar_p.h"
-#include "incidencefetchjob.h"
+#include "incidencefetchjob_p.h"
 
 #include <Akonadi/Item>
 #include <Akonadi/Collection>

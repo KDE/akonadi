@@ -18,7 +18,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "incidencefetchjob.h" // TODO: rename to _p
+#include "incidencefetchjob_p.h"
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <Akonadi/ItemFetchJob>
@@ -81,4 +81,4 @@ void Akonadi::IncidenceFetchJob::itemFetchResult(KJob* job)
     emitResult();
 }
 
-#include "incidencefetchjob.moc"
+#include "incidencefetchjob_p.moc"

@@ -15,7 +15,7 @@ set(akonadicalendar_LIB_SRC
   etmcalendar.cpp
   history.cpp
   history_p.cpp
-  incidencefetchjob.cpp
+  incidencefetchjob_p.cpp
   incidencechanger.cpp
   invitationhandler_p.cpp
   kcolumnfilterproxymodel.cpp

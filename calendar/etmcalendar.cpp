@@ -19,7 +19,7 @@
 
 #include "etmcalendar.h"
 #include "etmcalendar_p.h"
-#include "incidencefetchjob.h"
+#include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
 #include "collectionselection_p.h"
 #include "kcolumnfilterproxymodel_p.h"
