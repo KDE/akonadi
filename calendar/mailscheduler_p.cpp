@@ -46,6 +46,7 @@ public:
   bool m_bccMe;
   QString m_transport;
   KPIMIdentities::IdentityManager *m_identityManager;
+  MailClient *m_mailer;
 };
 
 static QString email()
@@ -64,10 +65,12 @@ MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
   d->m_bccMe = bccMe;
   d->m_transport = mailTransport;
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );
+  d->m_mailer = new MailClient();
 }
 
 MailScheduler::~MailScheduler()
 {
+  delete d->m_mailer;
   delete d;
 }
 
@@ -80,13 +83,11 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
 
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
 
-  MailClient mailer;
-
   // TODO: Catch the signal.
-  mailer.mailTo( incidence,
-                 d->m_identityManager->identityForAddress( email() ),
-                 email(), d->m_bccMe, recipients, messageText,
-                 d->m_transport );
+  d->m_mailer->mailTo( incidence,
+                       d->m_identityManager->identityForAddress( email() ),
+                       email(), d->m_bccMe, recipients, messageText,
+                       d->m_transport );
 
   Scheduler::Result resultCode = Scheduler::ResultSuccess;
   QString errorMessage;
@@ -107,12 +108,11 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     return;
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
-  MailClient mailer;
   // TODO: Catch signal
-  mailer.mailTo( incidence,
-                 d->m_identityManager->identityForAddress( email() ),
-                 email(), d->m_bccMe, recipients, messageText,
-                 d->m_transport );
+  d->m_mailer->mailTo( incidence,
+                       d->m_identityManager->identityForAddress( email() ),
+                       email(), d->m_bccMe, recipients, messageText,
+                       d->m_transport );
 
   Scheduler::Result resultCode = ResultSuccess;
   QString errorMessage;
@@ -133,25 +133,24 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
 
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
-  MailClient mailer;
   if ( method == KCalCore::iTIPRequest ||
        method == KCalCore::iTIPCancel ||
        method == KCalCore::iTIPAdd ||
        method == KCalCore::iTIPDeclineCounter ) {
-    mailer.mailAttendees( // TODO handle error
-      incidence,
-      d->m_identityManager->identityForAddress( email() ),
-      d->m_bccMe, messageText, d->m_transport );
+       // TODO handle error
+    d->m_mailer->mailAttendees( incidence,
+                                d->m_identityManager->identityForAddress( email() ),
+                                d->m_bccMe, messageText, d->m_transport );
   } else {
     QString subject;
     KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
     if ( inc && method == KCalCore::iTIPCounter ) {
       subject = i18n( "Counter proposal: %1", inc->summary() );
     }
-    mailer.mailOrganizer( // TODO: handle error
-      incidence,
-      d->m_identityManager->identityForAddress( email() ),
-      email(), d->m_bccMe, messageText, subject, d->m_transport );
+    // TODO: handle error
+    d->m_mailer->mailOrganizer( incidence,
+                                d->m_identityManager->identityForAddress( email() ),
+                                email(), d->m_bccMe, messageText, subject, d->m_transport );
   }
 
   Scheduler::Result resultCode = ResultSuccess;
