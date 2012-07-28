@@ -55,14 +55,6 @@ struct Invitation {
 class InvitationHandler::Private
 {
 public:
-  FetchJobCalendar::Ptr mCalendar;
-  InvitationHandler::Action mDefaultAction;
-  QWidget *mParent;
-  bool mOutlookCompatCounterProposals;
-  KPIMIdentities::IdentityManager *m_identityManager;
-  bool m_bccMe;
-
-  /// Methods
   Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent );
   bool thatIsMe( const QString &_email ) const;
   QStringList allEmails() const;
@@ -89,6 +81,13 @@ public:
     mail.
    */
   bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
+
+  FetchJobCalendar::Ptr mCalendar;
+  InvitationHandler::Action mDefaultAction;
+  QWidget *mParent;
+  bool mOutlookCompatCounterProposals;
+  KPIMIdentities::IdentityManager *m_identityManager;
+  bool m_bccMe;
 };
 
 }
