@@ -187,7 +187,7 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
 
   if ( changeId > 0 ) {
   } else {
-      emit performTransactionFinished( result, QLatin1String( "Error creating job" ) );
+      emit transactionFinished( result, QLatin1String( "Error creating job" ) );
   }
 }
 
@@ -195,9 +195,9 @@ void MailScheduler::onMailerFinished( Akonadi::MailClient::Result result,
                                       const QString &errorMsg )
 {
   if ( result == MailClient::ResultSuccess ) {
-      emit performTransactionFinished( ResultSuccess, QString() );
+      emit transactionFinished( ResultSuccess, QString() );
   } else {
       const QString message = i18n( "Error sending e-mail: ") + errorMsg;
-      emit performTransactionFinished( ResultGenericError, message );
+      emit transactionFinished( ResultGenericError, message );
   }
 }

@@ -169,9 +169,7 @@ protected:
     KCalCore::ICalFormat *mFormat;
 
 Q_SIGNALS:
-    void acceptTransactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
-    void performTransactionFinished( Akonadi::Scheduler::Result,
-                                     const QString &errorMessage );
+    void transactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
 private Q_SLOTS:
     void handleCreateFinished( bool success, const QString &errorMessage );
     void handleModifyFinished( bool success, const QString &errorMessage );

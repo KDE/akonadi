@@ -47,7 +47,7 @@ struct Akonadi::Scheduler::Private
       if ( incidence )
         q->deleteTransaction( incidence );
 
-      emit q->acceptTransactionFinished( result, errorString );
+      emit q->transactionFinished( result, errorString );
     }
 
     FreeBusyCache *mFreeBusyCache;
