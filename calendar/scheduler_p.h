@@ -67,6 +67,7 @@ public:
 
     /**
       iTIP publish action
+      @param incidence. Must a valid incidence.
     */
     virtual void publish( const KCalCore::IncidenceBase::Ptr &incidence,
                           const QString &recipients ) = 0;
@@ -74,7 +75,7 @@ public:
       Performs iTIP transaction on incidence. The method is specified as the
       method argument and can be any valid iTIP method.
 
-      @param incidence the incidence for the transaction.
+      @param incidence the incidence for the transaction. Must be valid.
       @param method the iTIP transaction method to use.
     */
     virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -84,7 +85,7 @@ public:
       Performs iTIP transaction on incidence to specified recipient(s).
       The method is specified as the method argumanet and can be any valid iTIP method.
 
-      @param incidence the incidence for the transaction.
+      @param incidence the incidence for the transaction. Must be valid.
       @param method the iTIP transaction method to use.
       @param recipients the receipients of the transaction.
     */
@@ -103,7 +104,7 @@ public:
       processing a iTIP message with the current calendar and specifies the
       action to be taken for this incidence.
 
-      @param incidence the incidence for the transaction.
+      @param incidence the incidence for the transaction. Must be valid.
       @param method iTIP transaction method to check.
       @param status scheduling status.
       @param email the email address of the person for whom this
