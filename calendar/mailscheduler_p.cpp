@@ -97,7 +97,6 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     return;
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
-  // TODO: Catch signal
   d->m_mailer->mailTo( incidence,
                        d->m_identityManager->identityForAddress( email() ),
                        email(), d->m_bccMe, recipients, messageText,
@@ -117,7 +116,6 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
        method == KCalCore::iTIPCancel ||
        method == KCalCore::iTIPAdd ||
        method == KCalCore::iTIPDeclineCounter ) {
-       // TODO handle error
     d->m_mailer->mailAttendees( incidence,
                                 d->m_identityManager->identityForAddress( email() ),
                                 d->m_bccMe, messageText, d->m_transport );
@@ -127,7 +125,7 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     if ( inc && method == KCalCore::iTIPCounter ) {
       subject = i18n( "Counter proposal: %1", inc->summary() );
     }
-    // TODO: handle error
+
     d->m_mailer->mailOrganizer( incidence,
                                 d->m_identityManager->identityForAddress( email() ),
                                 email(), d->m_bccMe, messageText, subject, d->m_transport );
