@@ -34,19 +34,24 @@
 #include <KStandardDirs>
 #include <KSystemTimeZone>
 #include <KLocale>
+#include <KEMailSettings>
 
 #include <QDir>
 
 using namespace Akonadi;
 using namespace KPIMIdentities;
 
+static QString email()
+{
+  KEMailSettings emailSettings;
+  return emailSettings.getSetting( KEMailSettings::EmailAddress );
+}
+
 MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
-                              const QString &email,
-                              bool  bcc,
+                              bool bccMe,
                               const QString &mailTransport,
                               QObject *parent ) : Scheduler( calendar, parent )
-                                                , m_email( email )
-                                                , m_bccMe( bcc )
+                                                , m_bccMe( bccMe )
                                                 , m_transport( mailTransport )
                                                 , m_identityManager( new IdentityManager( /*ro=*/ true, this ) )
 {
@@ -69,8 +74,8 @@ Scheduler::TransactionId MailScheduler::publish( const KCalCore::IncidenceBase::
 
   // TODO: Catch the signal.
   mailer.mailTo( incidence,
-                 m_identityManager->identityForAddress( m_email ),
-                 m_email, m_bccMe, recipients, messageText,
+                 m_identityManager->identityForAddress( email() ),
+                 email(), m_bccMe, recipients, messageText,
                  m_transport );
 
   Scheduler::Result resultCode = Scheduler::ResultSuccess;
@@ -98,8 +103,8 @@ Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::Inci
   MailClient mailer;
   // TODO: Catch signal
   mailer.mailTo( incidence,
-                 m_identityManager->identityForAddress( m_email ),
-                 m_email, m_bccMe, recipients, messageText,
+                 m_identityManager->identityForAddress( email() ),
+                 email(), m_bccMe, recipients, messageText,
                  m_transport );
 
   Scheduler::Result resultCode = ResultSuccess;
@@ -129,7 +134,7 @@ Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::Inci
        method == KCalCore::iTIPDeclineCounter ) {
     mailer.mailAttendees( // TODO handle error
       incidence,
-      m_identityManager->identityForAddress( m_email ),
+      m_identityManager->identityForAddress( email() ),
       m_bccMe, messageText, m_transport );
   } else {
     QString subject;
@@ -139,8 +144,8 @@ Scheduler::TransactionId MailScheduler::performTransaction( const KCalCore::Inci
     }
     mailer.mailOrganizer( // TODO: handle error
       incidence,
-      m_identityManager->identityForAddress( m_email ),
-      m_email, m_bccMe, messageText, subject, m_transport );
+      m_identityManager->identityForAddress( email() ),
+      email(), m_bccMe, messageText, subject, m_transport );
   }
 
   Scheduler::Result resultCode = ResultSuccess;

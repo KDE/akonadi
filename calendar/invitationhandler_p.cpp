@@ -21,25 +21,26 @@
   02110-1301, USA.
 */
 
-#include "invitationhandler.h"
-#include "kcalprefs.h"
-#include "mailscheduler2.h"
-#include "nepomukcalendar.h"
+#include "invitationhandler_p.h"
+#include "mailscheduler_p.h"
+#include "fetchjobcalendar.h"
 
 #include <KCalCore/Calendar>
 #include <KCalCore/ICalFormat>
 #include <KCalUtils/IncidenceFormatter>
 #include <KCalUtils/Stringify>
-
+#include <KPIMIdentities/IdentityManager>
+#include <KPIMIdentities/Identity>
+#include <KMime/HeaderParsing>
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
+#include <KEMailSettings>
 
-using namespace CalendarSupport;
+using namespace Akonadi;
+using namespace KPIMIdentities;
 
-/// Private
-
-namespace CalendarSupport {
+namespace Akonadi {
 
 GroupwareUiDelegate::~GroupwareUiDelegate()
 {
@@ -53,14 +54,17 @@ struct Invitation {
 
 struct InvitationHandler::Private
 {
-  /// Members
   FetchJobCalendar::Ptr mCalendar;
   InvitationHandler::Action mDefaultAction;
   QWidget *mParent;
-  QHash<NepomukCalendar::Ptr,Invitation*> mInvitationByCalendar;
+  bool mOutlookCompatCounterProposals;
+  KPIMIdentities::IdentityManager *m_identityManager;
+  bool m_bccMe;
 
   /// Methods
   Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent );
+  bool thatIsMe( const QString &_email ) const;
+  QStringList allEmails() const;
 
   InvitationHandler::SendResult sentInvitation( int messageBoxReturnCode,
                                                 const KCalCore::Incidence::Ptr &incidence,
@@ -117,8 +121,24 @@ QString proposalComment( const KCalCore::Incidence::Ptr &incidence )
 }
 
 InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent )
-  : mCalendar( calendar ), mDefaultAction( InvitationHandler::ActionAsk ), mParent( parent )
-{ }
+  : mCalendar( calendar )
+  , mDefaultAction( InvitationHandler::ActionAsk )
+  , mParent( parent )
+  , mOutlookCompatCounterProposals( false )
+  , m_identityManager( new IdentityManager( /*ro=*/ true, parent ) )
+  , m_bccMe( false )
+{
+
+}
+
+QStringList InvitationHandler::Private::allEmails() const
+{
+  // Grab emails from the email identities
+  QStringList lst = m_identityManager->allEmails();
+
+  // Warning, this list could contain duplicates.
+  return lst;
+}
 
 int InvitationHandler::Private::askUserIfNeeded( const QString &question,
                                                  bool ignoreDefaultAction,
@@ -139,6 +159,52 @@ int InvitationHandler::Private::askUserIfNeeded( const QString &question,
     Q_ASSERT( false );
     return 0;
   }
+}
+
+bool InvitationHandler::Private::thatIsMe( const QString &_email ) const
+{
+  // Method copied from kdepim/calendarsupport/kcalprefs.cpp
+
+
+  // NOTE: this method is called for every created agenda view item,
+  // so we need to keep performance in mind
+
+  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
+     _email in a way which is unnecessarily complex for what we can have here,
+     so we do that ourselves. This makes sense since this
+
+  if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
+    return true;
+  }
+  */
+
+  // in case email contains a full name, strip it out.
+  // the below is the simpler but slower version of the following code:
+  // const QString email = KPIM::getEmailAddress( _email );
+  const QByteArray tmp = _email.toUtf8();
+  const char *cursor = tmp.constData();
+  const char *end = tmp.data() + tmp.length();
+  KMime::Types::Mailbox mbox;
+  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
+  const QString email = mbox.addrSpec().asString();
+
+  KEMailSettings emailSettings;
+  const QString myEmail = emailSettings.getSetting( KEMailSettings::EmailAddress );
+
+  if ( myEmail == email ) {
+    return true;
+  }
+
+  IdentityManager::ConstIterator it;
+  for ( it = m_identityManager->begin();
+        it != m_identityManager->end(); ++it ) {
+    if ( (*it).matchesEmailAddress( email ) ) {
+      return true;
+    }
+  }
+
+  // TODO: Remove the additional e-mails stuff from korganizer and test e-mail aliases
+  return false;
 }
 
 InvitationHandler::SendResult
@@ -163,7 +229,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     }
 
     // Send the mail
-    MailScheduler2 scheduler( mCalendar );
+    MailScheduler scheduler( mCalendar, m_bccMe, QString(), mParent ); // TODO mailtransport
     if ( scheduler.performTransaction( _incidence, method ) ) {
       return InvitationHandler::ResultSuccess;
     }
@@ -187,9 +253,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
   const QString email = incidence->organizer()->email();
-  return KCalPrefs::instance()->thatIsMe( email ) ||
-         email.isEmpty() ||
-         email == QLatin1String( "invalid@email.address" );
+  return thatIsMe( email ) || email.isEmpty() || email == QLatin1String( "invalid@email.address" );
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
@@ -197,7 +261,7 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence."
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return false;
   }
@@ -212,11 +276,19 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
     incidence->attendees().first()->email() != incidence->organizer()->email();
 }
 
-/// InvitationSender
-
 InvitationHandler::InvitationHandler( const FetchJobCalendar::Ptr &calendar, QWidget *widget )
   : d ( new InvitationHandler::Private( calendar, widget ) )
-{ }
+{
+    // TODO connect to the loading signal
+    connect( calendar.data(), SIGNAL(addFinished(bool,QString)),
+             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+
+    connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),
+             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+
+    connect( calendar.data(), SIGNAL(changeFinished(bool,QString)),
+             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+}
 
 InvitationHandler::~InvitationHandler()
 {
@@ -228,39 +300,10 @@ void InvitationHandler::setDialogParent( QWidget *parent )
   d->mParent = parent;
 }
 
-
 void InvitationHandler::handleInvitation( const QString &receiver,
                                           const QString &iCal,
-                                          const QString &type )
+                                          const QString &action )
 {
-  NepomukCalendar::Ptr calendar = NepomukCalendar::create();
-  connect( calendar.data(), SIGNAL(loadFinished(bool,QString)),
-           SLOT(finishHandlingInvitation()) );
-
-  Invitation *invitation = new Invitation();
-  invitation->receiver = receiver;
-  invitation->iCal = iCal;
-  invitation->type = type;
-  d->mInvitationByCalendar.insert( calendar, invitation );
-}
-
-void InvitationHandler::finishHandlingInvitation()
-{
-  QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
-  NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
-
-  connect( calendar.data(), SIGNAL(addFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
-  connect( calendar.data(), SIGNAL(changeFinished(bool,QString) ),SLOT(calendarJobFinished(bool,QString) ), Qt::QueuedConnection );
-
-  Invitation *invitation = d->mInvitationByCalendar.value( calendar );
-
-  kDebug() << "Calendar has " << calendar->incidences().count();
-
-  const QString iCal = invitation->iCal;
-  const QString receiver = invitation->receiver;
-  const QString action = invitation->type;
-
   KCalCore::ICalFormat mFormat;
   KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( d->mCalendar, iCal );
 
@@ -275,7 +318,6 @@ void InvitationHandler::finishHandlingInvitation()
     KMessageBox::detailedError( d->mParent,
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
-    delete d->mInvitationByCalendar.take( calendar );
     emit handleInvitationFinished( false/*error*/, errorMessage );
     return;
   }
@@ -284,13 +326,12 @@ void InvitationHandler::finishHandlingInvitation()
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    delete d->mInvitationByCalendar.take( calendar );
     emit handleInvitationFinished( false/*error*/,
                                    QLatin1String( "Invalid incidence" ) );
     return;
   }
 
-  MailScheduler2 scheduler( d->mCalendar );
+  MailScheduler scheduler( d->mCalendar, d->m_bccMe, QString(), d->mParent ); // TODO transport
   if ( action.startsWith( QLatin1String( "accepted" ) ) ||
        action.startsWith( QLatin1String( "tentative" ) ) ||
        action.startsWith( QLatin1String( "delegated" ) ) ||
@@ -304,7 +345,7 @@ void InvitationHandler::finishHandlingInvitation()
           attendee->setStatus( KCalCore::Attendee::Accepted );
         } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( KCalPrefs::instance()->outlookCompatCounterProposals() &&
+        } else if ( d->mOutlookCompatCounterProposals &&
                     action.startsWith( QLatin1String( "counter" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
         } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
@@ -313,8 +354,7 @@ void InvitationHandler::finishHandlingInvitation()
         break;
       }
     }
-    if ( KCalPrefs::instance()->outlookCompatCounterProposals() ||
-         !action.startsWith( QLatin1String( "counter" ) ) ) {
+    if ( d->mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
       scheduler.acceptTransaction( incidence, method, status, receiver );
     }
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
@@ -337,10 +377,7 @@ void InvitationHandler::finishHandlingInvitation()
     emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
   }
 
-  if ( !calendar->jobsInProgress() ) {
-    delete d->mInvitationByCalendar.take( calendar );
-    emit handleInvitationFinished( true/*success*/, QString() );
-  } // else it will be finished in calendarJobFinished() slot.
+  emit handleInvitationFinished( true/*success*/, QString() );
 }
 
 void InvitationHandler::setDefaultAction( Action action )
@@ -357,7 +394,7 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   if ( !d->weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence!"
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << KCalPrefs::instance()->thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << d->thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return InvitationHandler::ResultFailAbortUpdate;
   }
@@ -508,7 +545,7 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
-    const QStringList myEmails = KCalPrefs::instance()->allEmails();
+    const QStringList myEmails = d->allEmails();
     bool incidenceAcceptedBefore = false;
     foreach ( const QString &email, myEmails ) {
       KCalCore::Attendee::Ptr me = incidence->attendeeByMail( email );
@@ -541,12 +578,10 @@ InvitationHandler::SendResult
 InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent,
                                         const KCalCore::Incidence::Ptr &newEvent ) const
 {
-  if ( !oldEvent || !newEvent || *oldEvent == *newEvent ||
-       !KCalPrefs::instance()->mUseGroupwareCommunication ) {
+  if ( !oldEvent || !newEvent || *oldEvent == *newEvent )
     return InvitationHandler::ResultNoSendingNeeded;
-  }
 
-  if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
+  if ( d->mOutlookCompatCounterProposals ) {
     KCalCore::Incidence::Ptr tmp( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
@@ -560,14 +595,19 @@ InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent
 }
 
 void InvitationHandler::calendarJobFinished( bool success, const QString &errorString )
-{
-  QWeakPointer<NepomukCalendar> weakPtr = qobject_cast<NepomukCalendar*>( sender() )->weakPointer();
-  NepomukCalendar::Ptr calendar( weakPtr.toStrongRef() );
-
-  if ( !calendar->jobsInProgress() ) {
-    delete d->mInvitationByCalendar.take( calendar );
-    emit handleInvitationFinished( success, errorString );
-  }
+{  
+  // TODO: fix signal name
+  emit handleInvitationFinished( success, errorString );
 }
 
-#include "invitationhandler.moc"
+void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
+{
+  d->mOutlookCompatCounterProposals = enable;
+}
+
+void InvitationHandler::setBccMe( bool enable )
+{
+    d->m_bccMe = enable;
+}
+
+#include "invitationhandler_p.moc"

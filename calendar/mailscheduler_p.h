@@ -49,7 +49,6 @@ class MailScheduler : public Akonadi::Scheduler
   public:
     // TODO: protect against invalid calendars
     MailScheduler( const Akonadi::FetchJobCalendar::Ptr &,
-                   const QString &email,
                    bool bcc,
                    const QString &mailTransport,
                    QObject *parent = 0 );
@@ -75,7 +74,6 @@ class MailScheduler : public Akonadi::Scheduler
     TransactionId acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
 private:
-    QString m_email;
     bool m_bccMe;
     QString m_transport;
     KPIMIdentities::IdentityManager *m_identityManager;

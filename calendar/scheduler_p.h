@@ -97,7 +97,7 @@ public:
     /**
       Retrieves incoming iTIP transactions.
     */
-    virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0;
+    //virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0; // TODO
 
     /**
       Accepts the transaction. The incidence argument specifies the iCal

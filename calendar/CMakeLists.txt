@@ -17,11 +17,12 @@ set(akonadicalendar_LIB_SRC
   history_p.cpp
   incidencefetchjob.cpp
   incidencechanger.cpp
+  invitationhandler_p.cpp
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusyproviderbase.cpp
   mailclient_p.cpp
-  # mailscheduler_p.cpp
+  mailscheduler_p.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
 )

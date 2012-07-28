@@ -21,10 +21,9 @@
   02110-1301, USA.
 */
 
-#ifndef CALENDARSUPPORT_INVITATIONHANDLER_H
-#define CALENDARSUPPORT_INVITATIONHANDLER_H
+#ifndef AKONADI_CALENDAR_INVITATIONHANDLER_H
+#define AKONADI_CALENDAR_INVITATIONHANDLER_H
 
-#include "../calendarsupport_export.h"
 #include "fetchjobcalendar.h"
 
 #include "etmcalendar.h"
@@ -36,18 +35,17 @@
 
 class QWidget;
 
-namespace CalendarSupport {
+namespace Akonadi {
 
-class Calendar;
 
 //TODO: document
-class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
+class GroupwareUiDelegate
 {
   public:
     virtual ~GroupwareUiDelegate();
     virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
 
-    virtual void setCalendar( const CalendarSupport::ETMCalendar::Ptr &calendar ) = 0;
+    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar ) = 0;
     virtual void createCalendar() = 0;
 };
 
@@ -70,11 +68,11 @@ class CALENDARSUPPORT_EXPORT GroupwareUiDelegate
   NOTE: Currently only events and todos are support, meaning Incidence::type()
         should either return "Event" or "Todo"
  */
-class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
+class InvitationHandler : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationHandler( const CalendarSupport::FetchJobCalendar::Ptr & = CalendarSupport::FetchJobCalendar::Ptr(),
+    explicit InvitationHandler( const Akonadi::FetchJobCalendar::Ptr & = Akonadi::FetchJobCalendar::Ptr(),
                                 QWidget *parent = 0 );
     ~InvitationHandler();
 
@@ -161,8 +159,9 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
     SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                     const KCalCore::Incidence::Ptr &newIncidence ) const;
 
-  private Q_SLOTS:
-    void finishHandlingInvitation();
+    void setOutlookCompatibleCounterProposals( bool enable );
+
+    void setBccMe( bool enable );
 
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
@@ -174,7 +173,6 @@ class CALENDARSUPPORT_EXPORT InvitationHandler : public QObject
      */
     void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
-    //TODO: document
     void handleInvitationFinished( bool success, const QString &errorMessage );
 
   private:
