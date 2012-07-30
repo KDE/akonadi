@@ -129,6 +129,8 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWid
   , m_scheduler( new MailScheduler( calendar, parent ) )
 {
     m_scheduler->setBccMe( false );
+    connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailClient::Result,QString)),
+             SLOT(onSchedulerFinished(Akonadi::MailClient::Result,QString)) );
 }
 
 QStringList InvitationHandler::Private::allEmails() const
@@ -303,17 +305,14 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( d->mCalendar, iCal );
 
   if ( !message ) {
-    QString errorMessage = i18n( "Unknown error while parsing iCal invitation" );
-    if ( mFormat.exception() ) {
-      errorMessage = i18n( "Error message: %1",
-                           KCalUtils::Stringify::errorMessage( *mFormat.exception() ) );
-    }
+    const QString errorMessage = mFormat.exception() ? i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *mFormat.exception() ) )
+                                                     : i18n( "Unknown error while parsing iCal invitation" );
 
-    kDebug() << "Error parsing" << errorMessage;
+    kError() << "Error parsing" << errorMessage;
     KMessageBox::detailedError( d->mParent,
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
-    emit finished( false/*error*/, errorMessage );
+    emit finished( /*success=*/false, errorMessage );
     return;
   }
 
@@ -321,7 +320,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    emit finished( false/*error*/, QLatin1String( "Invalid incidence" ) );
+    emit finished( /*success=*/false, QLatin1String( "Invalid incidence" ) );
     return;
   }
 
@@ -349,10 +348,12 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     }
     if ( d->mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
       d->m_scheduler->acceptTransaction( incidence, method, status, receiver );
+      return; // signal emitted in onSchedulerFinished().
     }
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
     d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
+    return; // signal emitted in onSchedulerFinished().
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( method != KCalCore::iTIPCounter ) {
       d->m_scheduler->acceptTransaction( incidence, method, status, QString() );
@@ -362,15 +363,15 @@ void InvitationHandler::handleInvitation( const QString &receiver,
       sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                     KCalCore::Incidence::Ptr( incidence->clone() ), false );
     }
+    return; // signal emitted in onSchedulerFinished().
   } else {
     kError() << "Unknown incoming action" << action;
+    emit finished( /*success=*/false, i18n( "Invalid action: %1", action ) );
   }
 
   if ( action.startsWith( QLatin1String( "counter" ) ) ) {
     emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
   }
-
-  emit finished( true/*success*/, QString() );
 }
 
 void InvitationHandler::setDefaultAction( Action action )
@@ -600,6 +601,12 @@ void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
 void InvitationHandler::setBccMe( bool enable )
 {
   d->m_scheduler->setBccMe( enable );
+}
+
+void InvitationHandler::onSchedulerFinished( MailClient::Result result, const QString &errorMsg )
+{
+  const bool success = result == MailClient::ResultSuccess;
+  emit finished( success, i18n( "Mail scheduler error: %1", errorMsg ) );
 }
 
 #include "invitationhandler_p.moc"
