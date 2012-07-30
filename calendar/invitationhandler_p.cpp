@@ -134,10 +134,8 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWid
 QStringList InvitationHandler::Private::allEmails() const
 {
   // Grab emails from the email identities
-  QStringList lst = m_identityManager->allEmails();
-
   // Warning, this list could contain duplicates.
-  return lst;
+  return m_identityManager->allEmails();
 }
 
 int InvitationHandler::Private::askUserIfNeeded( const QString &question,
@@ -591,7 +589,6 @@ InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent
 
 void InvitationHandler::calendarJobFinished( bool success, const QString &errorString )
 {  
-  // TODO: fix signal name
   emit finished( success, errorString );
 }
 
