@@ -54,14 +54,13 @@ static QString email()
 }
 
 MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
-                              bool bccMe,
                               QObject *parent ) : Scheduler( calendar, parent )
                                                 , d( new Private() )
 
 {
   Q_ASSERT( calendar );
   Q_ASSERT( calendar->isLoaded() );
-  d->m_bccMe = bccMe;
+  d->m_bccMe = false;
   //d->m_transport = ; TODO
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );
   d->m_mailer = new MailClient();
@@ -199,4 +198,9 @@ void MailScheduler::onMailerFinished( Akonadi::MailClient::Result result,
       const QString message = i18n( "Error sending e-mail: ") + errorMsg;
       emit transactionFinished( ResultGenericError, message );
   }
+}
+
+void MailScheduler::setBccMe( bool enable )
+{
+  d->m_bccMe = enable;
 }

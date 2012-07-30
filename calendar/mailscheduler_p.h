@@ -52,7 +52,6 @@ class MailScheduler : public Akonadi::Scheduler
      * @param calendar Must be a valid and loaded calendar.
      */
     MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
-                   bool bccMe,
                    QObject *parent = 0 );
     ~MailScheduler();
 
@@ -74,6 +73,8 @@ class MailScheduler : public Akonadi::Scheduler
 
     /** Accepts a counter proposal */
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+
+    void setBccMe( bool enable );
 
 private Q_SLOTS:
     /**

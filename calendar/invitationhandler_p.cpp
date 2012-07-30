@@ -87,7 +87,7 @@ public:
   QWidget *mParent;
   bool mOutlookCompatCounterProposals;
   KPIMIdentities::IdentityManager *m_identityManager;
-  bool m_bccMe;
+  MailScheduler *m_scheduler;
 };
 
 }
@@ -126,9 +126,9 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWid
   , mParent( parent )
   , mOutlookCompatCounterProposals( false )
   , m_identityManager( new IdentityManager( /*ro=*/ true, parent ) )
-  , m_bccMe( false )
+  , m_scheduler( new MailScheduler( calendar, parent ) )
 {
-
+    m_scheduler->setBccMe( false );
 }
 
 QStringList InvitationHandler::Private::allEmails() const
@@ -229,8 +229,7 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     }
 
     // Send the mail
-    MailScheduler scheduler( mCalendar, m_bccMe, mParent );
-    scheduler.performTransaction( _incidence, method ); // TODO catch signal
+    m_scheduler->performTransaction( _incidence, method ); // TODO catch signal
 
     const QString question( i18n( "Sending group scheduling email failed." ) );
     messageBoxReturnCode = askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
@@ -324,12 +323,10 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    emit finished( false/*error*/,
-                   QLatin1String( "Invalid incidence" ) );
+    emit finished( false/*error*/, QLatin1String( "Invalid incidence" ) );
     return;
   }
 
-  MailScheduler scheduler( d->mCalendar, d->m_bccMe, d->mParent );
   if ( action.startsWith( QLatin1String( "accepted" ) ) ||
        action.startsWith( QLatin1String( "tentative" ) ) ||
        action.startsWith( QLatin1String( "delegated" ) ) ||
@@ -353,16 +350,16 @@ void InvitationHandler::handleInvitation( const QString &receiver,
       }
     }
     if ( d->mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
-      scheduler.acceptTransaction( incidence, method, status, receiver );
+      d->m_scheduler->acceptTransaction( incidence, method, status, receiver );
     }
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    scheduler.acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
+    d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( method != KCalCore::iTIPCounter ) {
-      scheduler.acceptTransaction( incidence, method, status, QString() );
+      d->m_scheduler->acceptTransaction( incidence, method, status, QString() );
     } else {
-      scheduler.acceptCounterProposal( incidence );
+      d->m_scheduler->acceptCounterProposal( incidence );
       // send update to all attendees
       sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                     KCalCore::Incidence::Ptr( incidence->clone() ), false );
@@ -605,7 +602,7 @@ void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
 
 void InvitationHandler::setBccMe( bool enable )
 {
-    d->m_bccMe = enable;
+  d->m_scheduler->setBccMe( enable );
 }
 
 #include "invitationhandler_p.moc"
