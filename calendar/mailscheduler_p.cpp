@@ -195,8 +195,8 @@ void MailScheduler::onMailerFinished( Akonadi::MailClient::Result result,
   if ( result == MailClient::ResultSuccess ) {
       emit transactionFinished( ResultSuccess, QString() );
   } else {
-      const QString message = i18n( "Error sending e-mail: ") + errorMsg;
-      emit transactionFinished( ResultGenericError, message );
+    const QString message = i18n( "Error sending e-mail: ") + errorMsg;
+    emit transactionFinished( ResultGenericError, message );
   }
 }
 

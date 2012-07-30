@@ -22,7 +22,6 @@
 */
 
 #include "invitationhandler_p.h"
-#include "mailscheduler_p.h"
 #include "fetchjobcalendar.h"
 
 #include <KCalCore/Calendar>
@@ -50,6 +49,12 @@ struct Invitation {
   QString type;
   QString iCal;
   QString receiver;
+};
+
+enum Status {
+    StatusNone,
+    StatusAcceptingCounterProposal,
+    StatusSendingInvitation
 };
 
 class InvitationHandler::Private
@@ -88,6 +93,8 @@ public:
   bool mOutlookCompatCounterProposals;
   KPIMIdentities::IdentityManager *m_identityManager;
   MailScheduler *m_scheduler;
+  Status m_status;
+  KCalCore::Incidence::Ptr m_incidence;
 };
 
 }
@@ -127,10 +134,9 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWid
   , mOutlookCompatCounterProposals( false )
   , m_identityManager( new IdentityManager( /*ro=*/ true, parent ) )
   , m_scheduler( new MailScheduler( calendar, parent ) )
+  , m_status( StatusNone )
 {
     m_scheduler->setBccMe( false );
-    connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailClient::Result,QString)),
-             SLOT(onSchedulerFinished(Akonadi::MailClient::Result,QString)) );
 }
 
 QStringList InvitationHandler::Private::allEmails() const
@@ -229,15 +235,9 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     }
 
     // Send the mail
-    m_scheduler->performTransaction( _incidence, method ); // TODO catch signal
-
-    const QString question( i18n( "Sending group scheduling email failed." ) );
-    messageBoxReturnCode = askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
-    if ( messageBoxReturnCode == KMessageBox::Yes ) {
-      return InvitationHandler::ResultFailAbortUpdate;
-    } else {
-      return InvitationHandler::ResultFailKeepUpdate;
-    }
+    m_status = StatusSendingInvitation;
+    m_scheduler->performTransaction( _incidence, method );
+    return InvitationHandler::ResultSuccess;
 
   } else if ( messageBoxReturnCode == KMessageBox::No ) {
     return InvitationHandler::ResultCanceled;
@@ -276,15 +276,8 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
 InvitationHandler::InvitationHandler( const FetchJobCalendar::Ptr &calendar, QWidget *widget )
   : d ( new InvitationHandler::Private( calendar, widget ) )
 {
-    // TODO connect to the loading signal
-    connect( calendar.data(), SIGNAL(addFinished(bool,QString)),
-             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
-
-    connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),
-             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
-
-    connect( calendar.data(), SIGNAL(changeFinished(bool,QString)),
-             SLOT(calendarJobFinished(bool,QString)), Qt::QueuedConnection );
+  connect( d->m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
+           SLOT(onSchedulerFinished(Akonadi::MailScheduler::Result,QString)) );
 }
 
 InvitationHandler::~InvitationHandler()
@@ -312,7 +305,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     KMessageBox::detailedError( d->mParent,
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
-    emit finished( /*success=*/false, errorMessage );
+    emit finished( ResultError, errorMessage );
     return;
   }
 
@@ -320,7 +313,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    emit finished( /*success=*/false, QLatin1String( "Invalid incidence" ) );
+    emit finished( ResultError, QLatin1String( "Invalid incidence" ) );
     return;
   }
 
@@ -358,15 +351,14 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     if ( method != KCalCore::iTIPCounter ) {
       d->m_scheduler->acceptTransaction( incidence, method, status, QString() );
     } else {
+      d->m_status = StatusAcceptingCounterProposal;
+      d->m_incidence = incidence; // so we can access it in the slot
       d->m_scheduler->acceptCounterProposal( incidence );
-      // send update to all attendees
-      sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                    KCalCore::Incidence::Ptr( incidence->clone() ), false );
     }
     return; // signal emitted in onSchedulerFinished().
   } else {
     kError() << "Unknown incoming action" << action;
-    emit finished( /*success=*/false, i18n( "Invalid action: %1", action ) );
+    emit finished( ResultError, i18n( "Invalid action: %1", action ) );
   }
 
   if ( action.startsWith( QLatin1String( "counter" ) ) ) {
@@ -460,7 +452,6 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
 
       const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
       return d->sentInvitation( messageBoxReturnCode, incidence, method );
-
     } else {
       return ResultNoSendingNeeded;
     }
@@ -572,6 +563,9 @@ InvitationHandler::SendResult
 InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent,
                                         const KCalCore::Incidence::Ptr &newEvent ) const
 {
+  Q_ASSERT( oldEvent );
+  Q_ASSERT( newEvent );
+
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent )
     return InvitationHandler::ResultNoSendingNeeded;
 
@@ -581,16 +575,10 @@ InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent
     tmp->setDescription( newEvent->description() );
     tmp->addComment( proposalComment( newEvent ) );
 
-    // TODO: Shouldn't we ask here?
     return d->sentInvitation( KMessageBox::Yes, tmp, KCalCore::iTIPReply );
   } else {
     return d->sentInvitation( KMessageBox::Yes, newEvent, KCalCore::iTIPCounter );
   }
-}
-
-void InvitationHandler::calendarJobFinished( bool success, const QString &errorString )
-{  
-  emit finished( success, errorString );
 }
 
 void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
@@ -603,10 +591,47 @@ void InvitationHandler::setBccMe( bool enable )
   d->m_scheduler->setBccMe( enable );
 }
 
-void InvitationHandler::onSchedulerFinished( MailClient::Result result, const QString &errorMsg )
+void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const QString &errorMsg )
 {
-  const bool success = result == MailClient::ResultSuccess;
-  emit finished( success, i18n( "Mail scheduler error: %1", errorMsg ) );
+  const bool success = result == MailScheduler::ResultSuccess;
+
+  if ( d->m_status == StatusAcceptingCounterProposal ) {
+    if ( success ) {
+      d->m_status = StatusNone;
+      // send update to all attendees
+      Q_ASSERT( d->m_incidence );
+      SendResult sendResult = sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                            KCalCore::Incidence::Ptr( d->m_incidence->clone() ),
+                                                            false );
+      d->m_incidence.clear();
+      if ( sendResult == ResultNoSendingNeeded ||
+           sendResult == InvitationHandler::ResultCanceled ) {
+        emit finished( sendResult, QString() );
+      } else {
+        // MailScheduler is working hard and this slot will be called again
+        return;
+      }
+    } else {
+      //fall through
+    }
+  } else if ( d->m_status == StatusSendingInvitation ) {
+    d->m_status = StatusNone;
+    if ( !success ) {
+      const QString question( i18n( "Sending group scheduling email failed." ) );
+      const int code = d->askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
+      if ( code == KMessageBox::Yes ) {
+        emit finished( ResultFailAbortUpdate, QString() );
+      } else {
+        emit finished( ResultFailKeepUpdate, QString() );
+      }
+      return;
+    } else {
+      //fall through
+    }
+  }
+
+  emit finished( success ? ResultSuccess : ResultError,
+                 success ? QString() : i18n( "Error: %1", errorMsg ) );
 }
 
 #include "invitationhandler_p.moc"

@@ -25,7 +25,7 @@
 #define AKONADI_CALENDAR_INVITATIONHANDLER_H
 
 #include "fetchjobcalendar.h"
-
+#include "mailscheduler_p.h"
 #include "etmcalendar.h"
 
 #include <KCalCore/Incidence>
@@ -82,6 +82,7 @@ class InvitationHandler : public QObject
       ResultFailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
       ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
                                 (e.g. when we are the only attendee) */
+      ResultError,           /**< An unexpected error occured */
       ResultSuccess          /**< The invitation was sent to all attendees. */
     };
 
@@ -118,8 +119,8 @@ class InvitationHandler : public QObject
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
-                                            const KCalCore::Incidence::Ptr &incidence );
+    InvitationHandler::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+                                                               const KCalCore::Incidence::Ptr &incidence );
 
 
     /**
@@ -139,24 +140,24 @@ class InvitationHandler : public QObject
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
-                                             const KCalCore::Incidence::Ptr &incidence,
-                                             bool attendeeStatusChanged );
+    InvitationHandler::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+                                                                const KCalCore::Incidence::Ptr &incidence,
+                                                                bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
-                                            const KCalCore::Incidence::Ptr &incidence );
+    InvitationHandler::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+                                                               const KCalCore::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
-                                    const KCalCore::Incidence::Ptr &newIncidence ) const;
+    InvitationHandler::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
+                                                       const KCalCore::Incidence::Ptr &newIncidence ) const;
 
     void setOutlookCompatibleCounterProposals( bool enable );
 
@@ -172,7 +173,10 @@ class InvitationHandler : public QObject
      */
     void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
-    void finished( bool success, const QString &errorMessage );
+    void finished( Akonadi::InvitationHandler::SendResult result, const QString &errorMessage );
+
+  private Q_SLOTS:
+    void onSchedulerFinished( Akonadi::MailScheduler::Result result, const QString &errorMsg );
 
   private:
     class Private;
