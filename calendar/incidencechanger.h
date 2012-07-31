@@ -311,6 +311,9 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      */
     History* history() const;
 
+    void setGroupwareCommuniation( bool enabled );
+    bool groupwareCommunication() const;
+
 Q_SIGNALS:
     /**
      * Emitted when IncidenceChanger creates an Incidence in akonadi.

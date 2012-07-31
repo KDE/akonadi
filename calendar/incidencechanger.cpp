@@ -19,6 +19,7 @@
 */
 #include "incidencechanger.h"
 #include "incidencechanger_p.h"
+#include "mailscheduler_p.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemModifyJob>
@@ -34,6 +35,26 @@
 
 using namespace Akonadi;
 using namespace KCalCore;
+
+InvitationHandler::Action actionFromStatus( InvitationHandler::SendResult result )
+{
+  //enum SendResult {
+  //      Canceled,        /**< Sending was canceled by the user, meaning there are
+  //                          local changes of which other attendees are not aware. */
+  //      FailKeepUpdate,  /**< Sending failed, the changes to the incidence must be kept. */
+  //      FailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
+  //      NoSendingNeeded, /**< In some cases it is not needed to send an invitation
+  //                          (e.g. when we are the only attendee) */
+  //      Success
+  switch ( result ) {
+  case InvitationHandler::ResultCanceled:
+    return InvitationHandler::ActionDontSendMessage;
+  case InvitationHandler::ResultSuccess:
+    return InvitationHandler::ActionSendMessage;
+  default:
+    return InvitationHandler::ActionAsk;
+  }
+}
 
 namespace Akonadi {
   static Akonadi::Collection selectCollection( QWidget *parent,
@@ -142,6 +163,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mUseHistory = enableHistory;
   mDestinationPolicy = DestinationPolicyDefault;
   mRespectsCollectionRights = false;
+  mGroupwareCommunication = false;
   mLatestAtomicOperationId = 0;
   mBatchOperationInProgress = false;
 
@@ -413,6 +435,147 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
 bool IncidenceChanger::Private::deleteAlreadyCalled( Akonadi::Item::Id id ) const
 {
   return mDeletedItemIds.contains( id );
+}
+
+bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr &change )
+{
+  bool result = true;
+  if ( mGroupwareCommunication ) {
+    InvitationHandler handler( FetchJobCalendar::Ptr(), change->parentWidget );  // TODO make async
+    if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+      handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+    }
+
+    switch( change->type ) {
+      case IncidenceChanger::ChangeTypeCreate:
+        // nothing needs to be done
+      break;
+      case IncidenceChanger::ChangeTypeDelete:
+      {
+        InvitationHandler::SendResult status;
+
+        Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+        status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
+        if ( change->atomicOperationId ) {
+          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+        }
+        result = status != InvitationHandler::ResultFailAbortUpdate;
+      }
+      break;
+      case IncidenceChanger::ChangeTypeModify:
+      {
+        Incidence::Ptr oldIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+        Incidence::Ptr newIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+
+        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+        if ( !modify ) {
+          if ( newIncidence->type() == oldIncidence->type() ) {
+            IncidenceBase *i1 = newIncidence.data();
+            IncidenceBase *i2 = oldIncidence.data();
+            *i1 = *i2;
+          }
+          result = false;
+        }
+      }
+      break;
+      default:
+        Q_ASSERT( false );
+        result = false;
+    }
+  }
+  return result;
+}
+
+bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr &change )
+{
+  if ( mGroupwareCommunication ) {
+    InvitationHandler handler( FetchJobCalendar::Ptr(), change->parentWidget ); // TODO make async
+    switch( change->type ) {
+      case IncidenceChanger::ChangeTypeCreate:
+      {
+        Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+        const InvitationHandler::SendResult status =
+          handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
+
+        if ( status == InvitationHandler::ResultFailAbortUpdate ) {
+          kError() << "Sending invitations failed, but did not delete the incidence";
+        }
+
+        const uint atomicOperationId = change->atomicOperationId;
+        if ( atomicOperationId != 0 ) {
+          mInvitationStatusByAtomicOperation.insert( atomicOperationId, status );
+        }
+      }
+      break;
+      case IncidenceChanger::ChangeTypeDelete:
+      {
+        Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+        Q_ASSERT( incidence );
+        if ( !handler.thatIsMe( incidence->organizer()->email() ) ) {
+          const QStringList myEmails = handler.allEmails();
+          bool notifyOrganizer = false;
+          for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+            const QString email = *it;
+            KCalCore::Attendee::Ptr me( incidence->attendeeByMail( email ) );
+            if ( me ) {
+              if ( me->status() == KCalCore::Attendee::Accepted ||
+                   me->status() == KCalCore::Attendee::Delegated ) {
+                notifyOrganizer = true;
+              }
+              KCalCore::Attendee::Ptr newMe( new KCalCore::Attendee( *me ) );
+              newMe->setStatus( KCalCore::Attendee::Declined );
+              incidence->clearAttendees();
+              incidence->addAttendee( newMe );
+              break;
+            }
+          }
+
+          if ( notifyOrganizer ) {
+            FetchJobCalendar::Ptr invalidPtr;
+            MailScheduler scheduler( invalidPtr ); // TODO make async
+            scheduler.performTransaction( incidence, KCalCore::iTIPReply );
+          }
+        }
+      }
+      break;
+      case IncidenceChanger::ChangeTypeModify:
+      {
+        Incidence::Ptr oldIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+        Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+        if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+          handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+        }
+        const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                    oldIncidence,
+                                                                    handler.allEmails() );
+        InvitationHandler::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                     newIncidence,
+                                                                                     attendeeStatusChanged );
+
+        if ( change->atomicOperationId != 0 ) {
+          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+        }
+      }
+      break;
+      default:
+        Q_ASSERT( false );
+        return false;
+    }
+  }
+  return true;
+}
+
+/** static */
+bool IncidenceChanger::Private::myAttendeeStatusChanged( const Incidence::Ptr &newInc,
+                                                         const Incidence::Ptr &oldInc,
+                                                         const QStringList &myEmails )
+{
+  Q_ASSERT( newInc );
+  Q_ASSERT( oldInc );
+  const Attendee::Ptr oldMe = oldInc->attendeeByMails( myEmails );
+  const Attendee::Ptr newMe = newInc->attendeeByMails( myEmails );
+
+  return oldMe && newMe && oldMe->status() != newMe->status();
 }
 
 IncidenceChanger::IncidenceChanger( QObject *parent ) : QObject( parent )
@@ -903,6 +1066,16 @@ void IncidenceChanger::setHistoryEnabled( bool enable )
 History* IncidenceChanger::history() const
 {
   return d->mHistory;
+}
+
+void IncidenceChanger::setGroupwareCommuniation( bool enabled )
+{
+  d->mGroupwareCommunication = enabled;
+}
+
+bool IncidenceChanger::groupwareCommunication() const
+{
+  return d->mGroupwareCommunication;
 }
 
 QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode resultCode,

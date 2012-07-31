@@ -166,6 +166,9 @@ class InvitationHandler : public QObject
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
 
+    QStringList allEmails() const;
+    bool thatIsMe( const QString &email ) const;
+
   Q_SIGNALS:
     /**
       This signal is emitted when an invitation for a counter proposal is sent.

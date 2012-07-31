@@ -25,6 +25,7 @@
 #define AKONADI_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
+#include "invitationhandler_p.h"
 #include "history.h"
 
 #include <Akonadi/Item>
@@ -273,6 +274,12 @@ class IncidenceChanger::Private : public QObject
     void cleanupTransaction();
     bool allowAtomicOperation( int atomicOperationId, const Change::Ptr &change ) const;
 
+    bool handleInvitationsBeforeChange( const Change::Ptr &change );
+    bool handleInvitationsAfterChange( const Change::Ptr &change );
+    static bool myAttendeeStatusChanged( const KCalCore::Incidence::Ptr &newIncidence,
+                                         const KCalCore::Incidence::Ptr &oldIncidence,
+                                         const QStringList &myEmails );
+
   public Q_SLOTS:
     void handleCreateJobResult( KJob* );
     void handleModifyJobResult( KJob* );
@@ -314,8 +321,10 @@ class IncidenceChanger::Private : public QObject
     QHash<uint,AtomicOperation*> mAtomicOperations;
 
     bool mRespectsCollectionRights;
+    bool mGroupwareCommunication;
 
     QHash<Akonadi::TransactionSequence*, uint> mAtomicOperationByTransaction;
+    QHash<uint,InvitationHandler::SendResult> mInvitationStatusByAtomicOperation;
 
     uint mLatestAtomicOperationId;
     bool mBatchOperationInProgress;

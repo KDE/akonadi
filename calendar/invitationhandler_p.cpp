@@ -634,4 +634,14 @@ void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const
                  success ? QString() : i18n( "Error: %1", errorMsg ) );
 }
 
+QStringList InvitationHandler::allEmails() const
+{
+  return d->allEmails();
+}
+
+bool InvitationHandler::thatIsMe( const QString &email ) const
+{
+  return d->thatIsMe( email );
+}
+
 #include "invitationhandler_p.moc"
