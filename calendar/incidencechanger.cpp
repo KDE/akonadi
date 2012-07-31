@@ -311,6 +311,7 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     change->newItem = item;
+    handleInvitationsAfterChange( change );
     // for user undo/redo
     if ( change->recordToHistory ) {
       mHistory->recordCreation( item, description, change->atomicOperationId );
@@ -625,6 +626,8 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
     return changeId;
   }
 
+  d->handleInvitationsBeforeChange( change );
+
   if ( collection.isValid() && d->hasRights( collection, ChangeTypeCreate ) ) {
     // The collection passed always has priority
     collectionToUse = collection;
@@ -769,6 +772,8 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     return changeId;
   }
 
+  d->handleInvitationsBeforeChange( change );
+
   Item::List itemsToDelete;
   foreach( const Item &item, items ) {
     if ( d->deleteAlreadyCalled( item.id() ) ) {
@@ -911,6 +916,8 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     emitModifyFinished( q, changeId, newItem, ResultCodeRolledback, errorMessage );
     return;
   }
+
+  handleInvitationsBeforeChange( change );
 
   QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
                                                  ConflictPreventer::self()->mLatestRevisionByItemId;
