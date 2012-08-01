@@ -56,7 +56,6 @@ class IncidenceChanger;
 class AKONADI_CALENDAR_EXPORT History : public QObject {
   Q_OBJECT
   public:
-
     /**
      * This enum describes the possible result codes (success/error values)
      * for an undo or redo operation.
@@ -141,34 +140,6 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     QString lastErrorString() const;
 
     /**
-     * Reverts the change that's ontop of the undo stack.
-     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
-     * Can be called if the stack is empty, in this case, nothing happens.
-     * This function is async, listen to signal undone() to know when the operation finishes.
-     *
-     * @param parent will be passed to dialogs created by IncidenceChanger, for example
-     *        those which ask if you want to send invitations.
-     *
-     * @see redo()
-     * @see undone()
-     */
-    void undo( QWidget *parent = 0 );
-
-    /**
-     * Reverts the change that's ontop of the redo stack.
-     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
-     * Can be called if the stack is empty, in this case, nothing happens.
-     * This function is async, listen to signal redone() to know when the operation finishes.
-     *
-     * @param parent will be passed to dialogs created by IncidenceChanger, for example
-     *        those which ask if you want to send invitations.
-     *
-     * @see undo()
-     * @see redone()
-     */
-    void redo( QWidget *parent = 0 );
-
-    /**
      * Reverts every change in the undostack.
      *
      * @param parent will be passed to dialogs created by IncidenceChanger, for example
@@ -214,6 +185,34 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      * @return true if the stacks were cleared, false if there was a job running
      */
     bool clear();
+
+    /**
+     * Reverts the change that's ontop of the undo stack.
+     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
+     * Can be called if the stack is empty, in this case, nothing happens.
+     * This function is async, listen to signal undone() to know when the operation finishes.
+     *
+     * @param parent will be passed to dialogs created by IncidenceChanger, for example
+     *        those which ask if you want to send invitations.
+     *
+     * @see redo()
+     * @see undone()
+     */
+    void undo( QWidget *parent = 0 );
+
+    /**
+     * Reverts the change that's ontop of the redo stack.
+     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
+     * Can be called if the stack is empty, in this case, nothing happens.
+     * This function is async, listen to signal redone() to know when the operation finishes.
+     *
+     * @param parent will be passed to dialogs created by IncidenceChanger, for example
+     *        those which ask if you want to send invitations.
+     *
+     * @see undo()
+     * @see redone()
+     */
+    void redo( QWidget *parent = 0 );
 
   Q_SIGNALS:
     /**
