@@ -47,7 +47,7 @@ namespace Akonadi {
  * In the context of this API, "change", means "creation", "deletion" or incidence "modification".
  * 
  * @code
- * IncidenceChanger *changer = new IncidenceChanger();
+ * IncidenceChanger *changer = new IncidenceChanger( parent );
  * connect( changer,
  *          SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
  *          SLOT(slotCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
@@ -57,7 +57,7 @@ namespace Akonadi {
  *          SLOT(slotDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
  *
  * connect( changer,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
- *          SLOT(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+ *          SLOT(slotModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
  *
  * changer->setDestinationPolicy( IncidenceChanger::DestinationPolicyAsk );
  *
