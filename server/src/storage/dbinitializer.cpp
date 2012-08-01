@@ -478,7 +478,8 @@ QString DbInitializer::buildPrimaryKeyStatement(const DbInitializer::TableDescri
 
 void DbInitializer::execQuery(const QString& queryString)
 {
-  if ( Q_UNLIKELY( mTestInterface ) ) {
+  // if ( Q_UNLIKELY( mTestInterface ) ) { Qt 4.7 has no Q_UNLIKELY yet
+  if ( mTestInterface ) {
     mTestInterface->execStatement( queryString );
     return;
   }
