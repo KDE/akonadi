@@ -25,8 +25,9 @@
 #include <QObject>
 #include <QtTest/QTest>
 #include <QDebug>
+#include <QDir>
 
-#define QL1S(x) QLatin1String(x)
+#define QL1S(x) QString::fromLatin1(x)
 
 using namespace Akonadi;
 
@@ -50,6 +51,62 @@ class PartHelperTest : public QObject
       fileName = PartHelper::fileNameForPart( &p );
       QVERIFY( fileName.endsWith( QL1S("/.local-unit-test/share/akonadi/instance/foo/file_db_data/42") ) );
       QVERIFY( fileName.startsWith( QL1S("/") ) );
+    }
+
+    void testRemoveFile_data()
+    {
+      QTest::addColumn<QString>( "instance" );
+      QTest::newRow("main") << QString();
+      QTest::newRow("multi-instance") << QL1S("foo");
+    }
+
+    void testRemoveFile()
+    {
+      QFETCH( QString, instance );
+      akTestSetInstanceIdentifier( instance );
+
+      Part p;
+      p.setId(23);
+      const QString validFileName = PartHelper::fileNameForPart( &p );
+      PartHelper::removeFile( validFileName ); // no throw
+    }
+
+    void testInvalidRemoveFile_data()
+    {
+      QTest::addColumn<QString>( "fileName" );
+      QTest::newRow("empty") << QString();
+      QTest::newRow("relative") << QL1S("foo");
+      QTest::newRow("absolute") << QL1S("/foo");
+
+      akTestSetInstanceIdentifier( QL1S("foo") );
+      Part p;
+      p.setId(23);
+      QTest::newRow("wrong instance") << PartHelper::fileNameForPart( &p );
+    }
+
+    void testInvalidRemoveFile()
+    {
+      QFETCH( QString, fileName );
+      akTestSetInstanceIdentifier( QString() );
+      try {
+        PartHelper::removeFile( fileName );
+      } catch ( const PartHelperException &e ) {
+        return; // all good
+      }
+      QVERIFY( false ); // didn't throw
+    }
+
+    void testStorageLocation()
+    {
+      akTestSetInstanceIdentifier( QString() );
+      const QString mainLocation = PartHelper::storagePath();
+      QVERIFY( mainLocation.endsWith( QDir::separator() ) );
+      QVERIFY( mainLocation.startsWith( QDir::separator() ) );
+
+      akTestSetInstanceIdentifier( QL1S("foo") );
+      QVERIFY( PartHelper::storagePath().endsWith( QDir::separator() ) );
+      QVERIFY( PartHelper::storagePath().startsWith( QDir::separator() ) );
+      QVERIFY( mainLocation != PartHelper::storagePath() );
     }
 };
 

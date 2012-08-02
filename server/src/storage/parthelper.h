@@ -61,6 +61,12 @@ namespace PartHelper
   bool remove( Part *part );
   /** Deletes all parts which match the given constraint, including all corresponding filesystem data. */
   bool remove( const QString &column, const QVariant &value );
+
+  /** Deletes @p fileName, after verifying it's actually one of ours.
+   * @throws PartHelperException if this file is not in our data directory.
+   */
+  void removeFile( const QString &fileName );
+
   /** Returns the payload data. */
   QByteArray translateData( const QByteArray &data, bool isExternal  );
   /** Convenience overload of the above. */
@@ -77,6 +83,11 @@ namespace PartHelper
    * This does not yet include the revision part.
    */
   QString fileNameForPart( Part *part );
+
+  /**
+   * Retruns the base path for storing external payloads.
+   */
+  QString storagePath();
 }
 
 }

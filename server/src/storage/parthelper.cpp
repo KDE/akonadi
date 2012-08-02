@@ -37,9 +37,7 @@ using namespace Akonadi;
 QString PartHelper::fileNameForPart( Part *part )
 {
   Q_ASSERT( part->id() >= 0 );
-  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) ) + QDir::separator();
-  Q_ASSERT( dataDir != QDir::separator() );
-  return dataDir + QString::number( part->id() );
+  return storagePath() + QString::number( part->id() );
 }
 
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
@@ -95,7 +93,7 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     throw PartHelperException( "Failed to update database record" );
   // everything worked, remove the old file
   if ( !origFileName.isEmpty() )
-    QFile::remove( origFileName );
+    removeFile( origFileName );
 }
 
 bool PartHelper::insert( Part *part, qint64* insertId )
@@ -151,7 +149,7 @@ bool PartHelper::remove( Akonadi::Part *part )
   if ( part->external() ) {
     // akDebug() << "remove part file " << part->data();
     const QString fileName = QString::fromUtf8( part->data() );
-    QFile::remove( fileName );
+    removeFile( fileName );
   }
   return part->remove();
 }
@@ -174,9 +172,16 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   {
     const QString fileName = QString::fromUtf8( (*it).data() );
     // akDebug() << "remove part file " << fileName;
-    QFile::remove( fileName );
+    removeFile( fileName );
   }
   return Part::remove( column, value );
+}
+
+void PartHelper::removeFile(const QString& fileName)
+{
+  if ( !fileName.startsWith( storagePath() ) )
+    throw PartHelperException( "Attempting to delete a file not in our prefix." );
+  QFile::remove( fileName );
 }
 
 QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
@@ -208,10 +213,17 @@ bool Akonadi::PartHelper::truncate(Part& part)
 {
   if ( part.external() ) {
     const QString fileName = QString::fromUtf8( part.data() );
-    QFile::remove( fileName );
+    removeFile( fileName );
   }
 
   part.setData( QByteArray() );
   part.setDatasize( 0 );
   return part.update();
+}
+
+QString PartHelper::storagePath()
+{
+  const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) ) + QDir::separator();
+  Q_ASSERT( dataDir != QDir::separator() );
+  return dataDir;
 }
