@@ -34,7 +34,7 @@
 
 using namespace Akonadi;
 
-static QString fileNameForPart( Part *part )
+QString PartHelper::fileNameForPart( Part *part )
 {
   Q_ASSERT( part->id() >= 0 );
   const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) ) + QDir::separator();

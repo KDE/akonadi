@@ -69,6 +69,14 @@ namespace PartHelper
    *  This is more efficient than using update since it does not require the data to be loaded.
    */
   bool truncate( Part &part );
+
+
+// private: for unit testing only
+  /**
+   * Returns a file base name for storing the given item part.
+   * This does not yet include the revision part.
+   */
+  QString fileNameForPart( Part *part );
 }
 
 }
