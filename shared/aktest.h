@@ -25,6 +25,8 @@
 #define AKTEST_MAIN( TestObject ) \
 int main(int argc, char **argv) \
 { \
+  qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
+  qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
   AkCoreApplication app(argc, argv); \
   app.parseCommandLine(); \
   TestObject tc; \
