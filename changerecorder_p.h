@@ -138,7 +138,7 @@ class AKONADI_TESTS_EXPORT Akonadi::ChangeRecorderPrivate : public Akonadi::Moni
       QQueue<NotificationMessage> list;
 
       stream >> size;
-      for ( qulonglong i = 0; i < size; ++i ) {
+      for ( qulonglong i = 0; i < size && !stream.atEnd(); ++i ) {
         NotificationMessage msg;
 
         stream >> sessionId;
