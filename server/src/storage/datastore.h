@@ -128,8 +128,12 @@ class DataStore : public QObject
 
     /* --- Collection ------------------------------------------------------ */
     bool appendCollection( Collection &collection );
+
     /// removes the given collection and all its content
     bool cleanupCollection( Collection &collection );
+    /// same as the above but for database backends without working referential actions on foreign keys
+    bool cleanupCollection_slow( Collection &collection );
+
     /// moves the collection @p collection to @p newParent.
     bool moveCollection( Akonadi::Collection& collection, const Akonadi::Collection& newParent );
 

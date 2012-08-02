@@ -262,38 +262,77 @@ bool DataStore::appendCollection( Collection &collection )
 
 bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 {
+  if ( !s_hasForeignKeyConstraints )
+    return cleanupCollection_slow( collection );
+
+  // db will do most of the work for us, we just deal with notifications and external payload parts here
+  Q_ASSERT( s_hasForeignKeyConstraints );
+
+  // collect item deletion notifications
+  const PimItem::List items = collection.items();
+  const QByteArray resource = collection.resource().name().toLatin1();
+  Q_FOREACH ( const PimItem &item, items ) {
+
+    // generate the notification before actually removing the data
+    // TODO: we should try to get rid of this, requires client side changes to resources and Monitor though
+    mNotificationCollector->itemRemoved( item, collection, QString(), resource );
+  }
+
+  // remove all external payload parts
+  QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
+  qb.addColumn( Part::dataFullColumnName() );
+  qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
+  qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+  if ( !qb.exec() )
+    return false;
+
+  try {
+    while ( qb.query().next() )
+      PartHelper::removeFile( QString::fromUtf8( qb.query().value( 0 ).value<QByteArray>() ) );
+  } catch ( const PartHelperException &e ) {
+    akDebug() << e.what();
+    return false;
+  }
+
+  // delete the collection itself, referential actions will do the rest
+  mNotificationCollector->collectionRemoved( collection );
+  return collection.remove();
+}
+
+bool DataStore::cleanupCollection_slow(Collection& collection)
+{
+  Q_ASSERT( !s_hasForeignKeyConstraints );
+
   // delete the content
   const PimItem::List items = collection.items();
   const QByteArray resource = collection.resource().name().toLatin1();
   Q_FOREACH ( const PimItem &item, items ) {
 
     // generate the notification before actually removing the data
-    mNotificationCollector->itemRemoved( item, collection, QString(), resource ); // TODO: make mimetype available as part as an item bulk query
+    mNotificationCollector->itemRemoved( item, collection, QString(), resource );
 
-    if ( !s_hasForeignKeyConstraints && !item.clearFlags() ) // TODO: move out of loop and use only a single query
+    if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
       return false;
     if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) // TODO: reduce to single query
       return false;
 
-    if ( !s_hasForeignKeyConstraints ) { // db will clean up automatically otherwise
-      if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
-        return false;
+    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
+      return false;
 
-      if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
-        return false;
-    }
+    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
+      return false;
   }
 
-  if ( !s_hasForeignKeyConstraints ) { // db will clean this up automatically otherwise
-    // delete collection mimetypes
-    collection.clearMimeTypes();
-    Collection::clearPimItems( collection.id() );
+  // delete collection mimetypes
+  collection.clearMimeTypes();
+  Collection::clearPimItems( collection.id() );
 
-    // delete attributes
-    Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
-      if ( !attr.remove() )
-        return false;
-  }
+  // delete attributes
+  Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
+    if ( !attr.remove() )
+      return false;
 
   // delete the collection itself
   mNotificationCollector->collectionRemoved( collection );
