@@ -72,9 +72,14 @@ namespace Akonadi {
     Akonadi::Item item( Akonadi::Item::Id ) const;
 
     /**
+     * Returns the item list that corresponds to the @p incidenceList.
+     */
+    Akonadi::Item::List itemList( const KCalCore::Incidence::List &incidenceList ) const;
+
+    /**
      * Returns the child incidences of the parent identified by @p parentUid.
      * Only the direct childs are returned
-     */
+     */ //TODO: unit-test
     KCalCore::Incidence::List childIncidences( const QString &parentUid ) const;
 
     /**

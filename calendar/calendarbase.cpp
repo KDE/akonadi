@@ -198,6 +198,21 @@ Akonadi::Item CalendarBase::item( const QString &uid ) const
   return i;
 }
 
+Akonadi::Item::List CalendarBase::itemList( const KCalCore::Incidence::List &incidences ) const
+{
+  Akonadi::Item::List items;
+
+  foreach( const KCalCore::Incidence::Ptr &incidence, incidences ) {
+    if ( incidence ) {
+      items << item( incidence->uid() );
+    } else {
+      items << Akonadi::Item();
+    }
+  }
+
+  return items;
+}
+
 KCalCore::Incidence::List CalendarBase::childIncidences( const Akonadi::Item::Id &parentId ) const
 {
   Q_D(const CalendarBase);
