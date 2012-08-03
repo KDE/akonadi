@@ -311,6 +311,20 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      */
     History* history() const;
 
+    /**
+     * For performance reasons, IncidenceChanger internaly caches the ids of the last deleted items,
+     * to avoid creating useless delete jobs.
+     *
+     * This function exposes that functionality so it can be used in other scenarios.
+     * One popular scenario is when you're using an ETM and the user is deleting items very fast,
+     * ETM doesn't know about the deletions immediately, so it can happen that some items are
+     * deleted more than once, resulting in an error.
+     *
+     * @return true if the item was deleted recently, false otherwise.
+     */
+    bool deletedRecently( Akonadi::Item::Id ) const;
+
+    //TODO: documentation
     void setGroupwareCommuniation( bool enabled );
     bool groupwareCommunication() const;
 

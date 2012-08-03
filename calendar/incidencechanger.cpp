@@ -1075,6 +1075,11 @@ History* IncidenceChanger::history() const
   return d->mHistory;
 }
 
+bool IncidenceChanger::deletedRecently( Akonadi::Item::Id id ) const
+{
+  return d->deleteAlreadyCalled( id );
+}
+
 void IncidenceChanger::setGroupwareCommuniation( bool enabled )
 {
   d->mGroupwareCommunication = enabled;
