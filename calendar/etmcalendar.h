@@ -65,6 +65,19 @@ namespace Akonadi {
     KCheckableProxyModel *checkableProxyModel() const;
     Akonadi::CollectionSelection *collectionSelection() const;
 
+    /**
+     * Returns all alarms occuring in a specified time interval.
+     * @param from start date of interval
+     * @param to end data of interval
+     * @param exludeBlockedAlarms if true, alarms belonging to blocked collections aren't returned.
+     * TODO_KDE5: introduce this overload in KCalCore::Calendar, MemoryCalendar, etc. all the way
+     * up the hierarchy
+     */
+    using KCalCore::MemoryCalendar::alarms;
+    KCalCore::Alarm::List alarms( const KDateTime &from,
+                                  const KDateTime &to,
+                                  bool excludeBlockedAlarms ) const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted if a collection has been changed (properties or attributes).

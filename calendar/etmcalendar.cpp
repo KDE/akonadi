@@ -17,6 +17,7 @@
    02110-1301, USA.
 */
 
+#include "blockalarmsattribute.h"
 #include "etmcalendar.h"
 #include "etmcalendar_p.h"
 #include "incidencefetchjob_p.h"
@@ -390,6 +391,44 @@ Akonadi::CollectionSelection* ETMCalendar::collectionSelection() const
 {
   Q_D( const ETMCalendar );
   return d->mCollectionSelection;
+}
+
+KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
+                                           const KDateTime &to,
+                                           bool excludeBlockedAlarms ) const
+{
+  Q_D( const ETMCalendar );
+  KCalCore::Alarm::List alarmList;
+  QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->mItemById );
+  while ( i.hasNext() ) {
+    const Akonadi::Item item = i.next().value();
+
+    if ( excludeBlockedAlarms ) {
+      // take the collection from m_collectionMap, because we need the up-to-date collection attrs
+      Akonadi::Collection parentCollection = d->mCollectionMap.value( item.storageCollectionId() );
+      if ( parentCollection.isValid() && parentCollection.hasAttribute<BlockAlarmsAttribute>() ) {
+        continue;
+      }
+    }
+
+    KCalCore::Incidence::Ptr incidence;
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+      incidence = item.payload<KCalCore::Incidence::Ptr>();
+    } else {
+      continue;
+    }
+
+    if ( !incidence ) {
+      continue;
+    }
+
+    if ( incidence->recurs() ) {
+      appendRecurringAlarms( alarmList, incidence, from, to );
+    } else {
+      appendAlarms( alarmList, incidence, from, to );
+    }
+  }
+  return alarmList;
 }
 
 #include "etmcalendar.moc"
