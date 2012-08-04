@@ -51,6 +51,7 @@
 #include <QTimerEvent>
 
 using namespace Akonadi;
+using namespace KCalCore;
 
 /// Free helper functions
 

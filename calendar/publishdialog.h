@@ -24,8 +24,6 @@
 #include <KCalCore/Attendee>
 #include <KDialog>
 
-using namespace KCalCore;
-
 class PublishDialog_base;
 
 class PublishDialog : public KDialog
@@ -35,7 +33,7 @@ class PublishDialog : public KDialog
     explicit PublishDialog( QWidget *parent=0 );
     ~PublishDialog();
 
-    void addAttendee( const Attendee::Ptr &attendee );
+    void addAttendee( const KCalCore::Attendee::Ptr &attendee );
     QString addresses() const;
 
   signals:

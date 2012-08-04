@@ -36,6 +36,8 @@
 
 #include <QTreeView>
 
+using namespace KCalCore;
+
 PublishDialog::PublishDialog( QWidget *parent )
   : KDialog( parent )
 {
