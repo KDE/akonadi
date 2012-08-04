@@ -70,4 +70,19 @@
     </entry>
   </group>
 
+<!-- Options currently not visible in the GUI -->
+  <group name="Hidden Options">
+    <entry name="OutlookCompatCounterProposals" type="Bool">
+      <label>Send Outlook-like pseudo counter proposals</label>
+      <default>false</default>
+    </entry>
+
+    <entry type="Bool" name="FreeBusyCheckHostname">
+      <label>Check whether hostname and retrieval email address match</label>
+      <whatsthis>With this setting you can configure whether the domain part of the free/busy URL has to match the domain part of the user ID you are looking for. For example, if this option is set, then looking for the free/busy data of joe@mydomain.com on the server www.yourdomain.com will fail.</whatsthis>
+      <default>false</default>
+    </entry>
+
+  </group>
+
 </kcfg>
