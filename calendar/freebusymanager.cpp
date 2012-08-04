@@ -18,15 +18,17 @@
   02110-1301, USA.
 */
 
+#include "freebusymanager.h"
 #include "freebusymanager_p.h"
 #include "freebusydownloadjob_p.h"
 #include "mailscheduler_p.h"
 #include "publishdialog.h"
+#include "calendarsettings.h"
+#include "utils_p.h"
 
 #include <Akonadi/AgentInstance>
 #include <Akonadi/AgentManager>
 #include <Akonadi/Contact/ContactSearchJob>
-#include <akonadi/calendar/etmcalendar.h>
 
 #include <KCalCore/Event>
 #include <KCalCore/FreeBusy>
@@ -48,7 +50,7 @@
 #include <QTimer>
 #include <QTimerEvent>
 
-using namespace CalendarSupport;
+using namespace Akonadi;
 
 /// Free helper functions
 
@@ -146,7 +148,6 @@ FreeBusyManagerPrivate::FreeBusyProvidersRequestsQueue::FreeBusyProvidersRequest
 FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
   : QObject(),
     q_ptr( q ),
-    mCalendar( 0 ),
     mTimerID( 0 ),
     mUploadingFreeBusy( false ),
     mBrokenUrl( false ),
@@ -156,15 +157,15 @@ FreeBusyManagerPrivate::FreeBusyManagerPrivate( FreeBusyManager *q )
            SLOT(finishProcessRetrieveQueue(QString,KUrl)) );
 }
 
-void FreeBusyManagerPrivate::checkFreeBusyUrl()
-{
-  KUrl targetURL( KCalPrefs::instance()->freeBusyPublishUrl() );
-  mBrokenUrl = targetURL.isEmpty() || !targetURL.isValid();
-}
-
 QString FreeBusyManagerPrivate::freeBusyDir() const
 {
   return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
+}
+
+void FreeBusyManagerPrivate::checkFreeBusyUrl()
+{
+  KUrl targetURL( CalendarSettings::self()->freeBusyPublishUrl() );
+  mBrokenUrl = targetURL.isEmpty() || !targetURL.isValid();
 }
 
 void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
@@ -178,9 +179,9 @@ void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
   if ( !url.isEmpty() ) {
     kDebug() << "Found cached url:" << url;
     KUrl cachedUrl( url );
-    if ( KCalPrefs::instance()->thatIsMe( email ) ) {
-      cachedUrl.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-      cachedUrl.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    if ( Akonadi::Calendar::thatIsMe( email ) ) {
+      cachedUrl.setUser( CalendarSettings::self()->freeBusyRetrieveUser() );
+      cachedUrl.setPass( CalendarSettings::self()->freeBusyRetrievePassword() );
     }
     emit freeBusyUrlRetrieved( email, replaceVariablesUrl( cachedUrl, email ) );
     return;
@@ -227,7 +228,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
     }
   }
   // None found. Check if we do automatic FB retrieving then
-  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
+  if ( !CalendarSettings::self()->freeBusyRetrieveAuto() ) {
     // No, so no FB list here
     kDebug() << "No automatic retrieving";
     emit freeBusyUrlRetrieved( email, KUrl() );
@@ -246,10 +247,10 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   const QString emailHost = email.mid( emailpos + 1 );
 
   // Build the URL
-  if ( KCalPrefs::instance()->mFreeBusyCheckHostname ) {
+  if ( CalendarSettings::self()->freeBusyCheckHostname() ) {
     // Don't try to fetch free/busy data for users not on the specified servers
     // This tests if the hostnames match, or one is a subset of the other
-    const QString hostDomain = KUrl( KCalPrefs::instance()->mFreeBusyRetrieveUrl ).host();
+    const QString hostDomain = KUrl( CalendarSettings::self()->freeBusyRetrieveUrl() ).host();
     if ( hostDomain != emailHost &&
          !hostDomain.endsWith( QLatin1Char( '.' ) + emailHost ) &&
          !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
@@ -260,15 +261,15 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
     }
   }
 
-  if ( KCalPrefs::instance()->mFreeBusyRetrieveUrl.contains( QRegExp( "\\.[xiv]fb$" ) ) ) {
+  if ( CalendarSettings::self()->freeBusyRetrieveUrl().contains( QRegExp( "\\.[xiv]fb$" ) ) ) {
     // user specified a fullpath
     // do variable string replacements to the URL (MS Outlook style)
-    const KUrl sourceUrl( KCalPrefs::instance()->mFreeBusyRetrieveUrl );
+    const KUrl sourceUrl( CalendarSettings::self()->freeBusyRetrieveUrl() );
     KUrl fullpathURL = replaceVariablesUrl( sourceUrl, email );
 
     // set the User and Password part of the URL
-    fullpathURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-    fullpathURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    fullpathURL.setUser( CalendarSettings::self()->freeBusyRetrieveUser() );
+    fullpathURL.setPass( CalendarSettings::self()->freeBusyRetrievePassword() );
 
     // no need to cache this URL as this is pretty fast to get from the config value.
     // return the fullpath URL
@@ -282,17 +283,17 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   QStringList::ConstIterator ext;
   for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
     // build a url for this extension
-    const KUrl sourceUrl = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
+    const KUrl sourceUrl = CalendarSettings::self()->freeBusyRetrieveUrl();
     KUrl dirURL = replaceVariablesUrl( sourceUrl, email );
-    if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
+    if ( CalendarSettings::self()->freeBusyFullDomainRetrieval() ) {
       dirURL.addPath( email + '.' + (*ext) );
     } else {
       // Cut off everything left of the @ sign to get the user name.
       const QString emailName = email.left( emailpos );
       dirURL.addPath( emailName + '.' + (*ext ) );
     }
-    dirURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
-    dirURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
+    dirURL.setUser( CalendarSettings::self()->freeBusyRetrieveUser() );
+    dirURL.setPass( CalendarSettings::self()->freeBusyRetrievePassword() );
     if ( fbExists( dirURL ) ) {
       // write the URL to the cache
       KConfigGroup group = cfg.group( email );
@@ -328,13 +329,13 @@ KCalCore::FreeBusy::Ptr FreeBusyManagerPrivate::iCalToFreeBusy( const QByteArray
 KCalCore::FreeBusy::Ptr FreeBusyManagerPrivate::ownerFreeBusy()
 {
   KDateTime start = KDateTime::currentUtcDateTime();
-  KDateTime end = start.addDays( KCalPrefs::instance()->mFreeBusyPublishDays );
+  KDateTime end = start.addDays( CalendarSettings::self()->freeBusyPublishDays() );
 
   KCalCore::Event::List events = mCalendar ? mCalendar->rawEvents( start.date(), end.date() ) : KCalCore::Event::List();
   KCalCore::FreeBusy::Ptr freebusy ( new KCalCore::FreeBusy( events, start, end ) );
   freebusy->setOrganizer( KCalCore::Person::Ptr(
-                            new KCalCore::Person( KCalPrefs::instance()->fullName(),
-                                                  KCalPrefs::instance()->email() ) ) );
+                            new KCalCore::Person( Akonadi::Calendar::fullName(),
+                                                  Akonadi::Calendar::email() ) ) );
   return freebusy;
 }
 
@@ -451,8 +452,7 @@ void FreeBusyManagerPrivate::finishProcessRetrieveQueue( const QString &email,
 
   mFreeBusyUrlEmailMap.insert( freeBusyUrlForEmail, email );
 
-  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail,
-                                                      mParentWidgetForRetrieval );
+  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( freeBusyUrlForEmail, mParentWidgetForRetrieval );
   q->connect( job, SIGNAL(result(KJob*)), SLOT(processFreeBusyDownloadResult(KJob*)) );
   job->start();
 }
@@ -462,8 +462,8 @@ void FreeBusyManagerPrivate::uploadFreeBusy()
   Q_Q( FreeBusyManager );
 
   // user has automatic uploading disabled, bail out
-  if ( !KCalPrefs::instance()->freeBusyPublishAuto() ||
-       KCalPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
+  if ( !CalendarSettings::self()->freeBusyPublishAuto() ||
+       CalendarSettings::self()->freeBusyPublishUrl().isEmpty() ) {
      return;
   }
 
@@ -596,6 +596,23 @@ void FreeBusyManagerPrivate::onHandlesFreeBusy( const QString &email, bool handl
   }
 }
 
+void FreeBusyManagerPrivate::processMailSchedulerResult( Akonadi::Scheduler::Result result,
+                                                         const QString &errorMsg )
+{
+  if ( result == Scheduler::ResultSuccess ) {
+    KMessageBox::information(
+        mParentWidgetForMailling,
+        i18n( "The free/busy information was successfully sent." ),
+        i18n( "Sending Free/Busy" ),
+        "FreeBusyPublishSuccess" );
+  } else {
+    KMessageBox::error( mParentWidgetForMailling,
+                        i18n( "Unable to publish the free/busy data: %1", errorMsg ) );
+  }
+
+  sender()->deleteLater();
+}
+
 void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
                                                   const QString &freeBusy,
                                                   bool success,
@@ -653,7 +670,7 @@ void FreeBusyManagerPrivate::onFreeBusyRetrieved( const QString &email,
 
 /// FreeBusyManager::Singleton
 
-namespace CalendarSupport {
+namespace Akonadi {
 
 struct FreeBusyManagerStatic
 {
@@ -664,14 +681,10 @@ struct FreeBusyManagerStatic
 
 K_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance )
 
-/// FreeBusyManager
-
-FreeBusyManager::FreeBusyManager()
-  : d_ptr( new FreeBusyManagerPrivate( this ) )
+FreeBusyManager::FreeBusyManager() : d_ptr( new FreeBusyManagerPrivate( this ) )
 {
   setObjectName( QLatin1String( "FreeBusyManager" ) );
-  connect( KCalPrefs::instance(), SIGNAL(configChanged()),
-           SLOT(checkFreeBusyUrl()) );
+  connect( CalendarSettings::self(), SIGNAL(configChanged()), SLOT(checkFreeBusyUrl()) );
 }
 
 FreeBusyManager::~FreeBusyManager()
@@ -684,12 +697,12 @@ FreeBusyManager *FreeBusyManager::self()
   return &sManagerInstance->instance;
 }
 
-void FreeBusyManager::setCalendar(const Akonadi::ETMCalendar::Ptr &c )
+void FreeBusyManager::setCalendar( const Akonadi::ETMCalendar::Ptr &c )
 {
   Q_D( FreeBusyManager );
 
   if ( d->mCalendar ) {
-    disconnect( d->mCalendar->data(), SIGNAL(calendarChanged()) );
+    disconnect( d->mCalendar.data(), SIGNAL(calendarChanged()) );
   }
 
   d->mCalendar = c;
@@ -697,7 +710,7 @@ void FreeBusyManager::setCalendar(const Akonadi::ETMCalendar::Ptr &c )
     d->mFormat.setTimeSpec( d->mCalendar->timeSpec() );
   }
 
-  connect( d->mCalendar->data(), SIGNAL(calendarChanged()), SLOT(uploadFreeBusy()) );
+  connect( d->mCalendar.data(), SIGNAL(calendarChanged()), SLOT(uploadFreeBusy()) );
 
   // Lets see if we need to update our published
   QTimer::singleShot( 0, this, SLOT(uploadFreeBusy()) );
@@ -721,7 +734,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
     return;
   }
 
-  KUrl targetURL( KCalPrefs::instance()->freeBusyPublishUrl() );
+  KUrl targetURL( CalendarSettings::self()->freeBusyPublishUrl() );
   if ( targetURL.isEmpty() )  {
     KMessageBox::sorry(
       parentWidget,
@@ -746,8 +759,8 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
     d->mBrokenUrl = true;
     return;
   }
-  targetURL.setUser( KCalPrefs::instance()->mFreeBusyPublishUser );
-  targetURL.setPass( KCalPrefs::instance()->mFreeBusyPublishPassword );
+  targetURL.setUser( CalendarSettings::self()->freeBusyPublishUser() );
+  targetURL.setPass( CalendarSettings::self()->freeBusyPublishPassword() );
 
   d->mUploadingFreeBusy = true;
 
@@ -759,9 +772,9 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
   // Save the time of the next free/busy uploading
   d->mNextUploadTime = QDateTime::currentDateTime();
-  if ( KCalPrefs::instance()->mFreeBusyPublishDelay > 0 ) {
+  if ( CalendarSettings::self()->freeBusyPublishDelay() > 0 ) {
     d->mNextUploadTime =
-      d->mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
+      d->mNextUploadTime.addSecs( CalendarSettings::self()->freeBusyPublishDelay() * 60 );
   }
 
   QString messageText = d->ownerFreeBusyAsString();
@@ -785,32 +798,32 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
     // Put target string together
     KUrl targetURL;
-    if( KCalPrefs::instance()->mPublishKolab ) {
+    if( CalendarSettings::self()->publishKolab() ) {
       // we use Kolab
       QString server;
-      if ( KCalPrefs::instance()->mPublishKolabServer == QLatin1String( "%SERVER%" ) ||
-           KCalPrefs::instance()->mPublishKolabServer.isEmpty() ) {
+      if ( CalendarSettings::self()->publishKolabServer() == QLatin1String( "%SERVER%" ) ||
+           CalendarSettings::self()->publishKolabServer().isEmpty() ) {
         server = emailHost;
       } else {
-        server = KCalPrefs::instance()->mPublishKolabServer;
+        server = CalendarSettings::self()->publishKolabServer();
       }
 
       targetURL.setProtocol( "webdavs" );
       targetURL.setHost( server );
 
-      QString fbname = KCalPrefs::instance()->mPublishUserName;
+      QString fbname = CalendarSettings::self()->publishUserName();
       int at = fbname.indexOf( '@' );
       if ( at > 1 && fbname.length() > (uint)at ) {
         fbname = fbname.left(at);
       }
       targetURL.setPath( "/freebusy/" + fbname + ".ifb" );
-      targetURL.setUser( KCalPrefs::instance()->mPublishUserName );
-      targetURL.setPass( KCalPrefs::instance()->mPublishPassword );
+      targetURL.setUser( CalendarSettings::self()->publishUserName() );
+      targetURL.setPass( CalendarSettings::self()->publishPassword() );
     } else {
       // we use something else
-      targetURL = KCalPrefs::instance()->mPublishAnyURL.replace( "%SERVER%", emailHost );
-      targetURL.setUser( KCalPrefs::instance()->mPublishUserName );
-      targetURL.setPass( KCalPrefs::instance()->mPublishPassword );
+      targetURL = CalendarSettings::self()->+publishAnyURL().replace( "%SERVER%", emailHost );
+      targetURL.setUser( CalendarSettings::self()->publishUserName() );
+      targetURL.setPass( CalendarSettings::self()->publishPassword() );
     }
 #endif
 
@@ -829,8 +842,8 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
 void FreeBusyManager::mailFreeBusy( int daysToPublish, QWidget *parentWidget )
 {
-   Q_D( FreeBusyManager );
- // No calendar set yet?
+  Q_D( FreeBusyManager );
+  // No calendar set yet?
   if ( !d->mCalendar ) {
     return;
   }
@@ -842,24 +855,18 @@ void FreeBusyManager::mailFreeBusy( int daysToPublish, QWidget *parentWidget )
 
   FreeBusy::Ptr freebusy( new FreeBusy( events, start, end ) );
   freebusy->setOrganizer( Person::Ptr(
-                            new Person( CalendarSupport::KCalPrefs::instance()->fullName(),
-                                        CalendarSupport::KCalPrefs::instance()->email() ) ) );
+                            new Person( Akonadi::Calendar::fullName(),
+                                        Akonadi::Calendar::email() ) ) );
 
   QPointer<PublishDialog> publishdlg = new PublishDialog();
   if ( publishdlg->exec() == QDialog::Accepted ) {
     // Send the mail
-    CalendarSupport::MailScheduler scheduler( d->mCalendar );
-    if ( scheduler.publish( freebusy, publishdlg->addresses() ) ) {
-      KMessageBox::information(
-        parentWidget,
-        i18n( "The free/busy information was successfully sent." ),
-        i18n( "Sending Free/Busy" ),
-        "FreeBusyPublishSuccess" );
-    } else {
-      KMessageBox::error(
-        parentWidget,
-        i18n( "Unable to publish the free/busy data." ) );
-    }
+    MailScheduler *scheduler = new MailScheduler( Akonadi::FetchJobCalendar::Ptr() );
+    connect( scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString))
+             , d, SLOT(processMailSchedulerResult(Akonadi::Scheduler::Result,QString)) );
+    d->mParentWidgetForMailling = parentWidget;
+
+    scheduler->publish( freebusy, publishdlg->addresses() );
   }
   delete publishdlg;
 }
@@ -877,7 +884,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   d->mParentWidgetForRetrieval = parentWidget;
 
-  if ( KCalPrefs::instance()->thatIsMe( email ) ) {
+  if ( Akonadi::Calendar::thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
     kDebug() << "freebusy of owner, not downloading";
     emit freeBusyRetrieved( d->ownerFreeBusy(), email );
@@ -893,7 +900,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   }
 
   // Don't download free/busy if the user does not want it.
-  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto && !forceDownload ) {
+  if ( !CalendarSettings::self()->freeBusyRetrieveAuto() && !forceDownload ) {
     kDebug() << "Not downloading freebusy";
     return false;
   }

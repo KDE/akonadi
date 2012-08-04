@@ -23,21 +23,18 @@
 
 #include "invitationhandler_p.h"
 #include "fetchjobcalendar.h"
+#include "utils_p.h"
 
 #include <KCalCore/Calendar>
 #include <KCalCore/ICalFormat>
 #include <KCalUtils/IncidenceFormatter>
 #include <KCalUtils/Stringify>
-#include <KPIMIdentities/IdentityManager>
-#include <KPIMIdentities/Identity>
-#include <KMime/HeaderParsing>
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KEMailSettings>
 
 using namespace Akonadi;
-using namespace KPIMIdentities;
 
 namespace Akonadi {
 
@@ -61,8 +58,6 @@ class InvitationHandler::Private
 {
 public:
   Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent );
-  bool thatIsMe( const QString &_email ) const;
-  QStringList allEmails() const;
 
   InvitationHandler::SendResult sentInvitation( int messageBoxReturnCode,
                                                 const KCalCore::Incidence::Ptr &incidence,
@@ -91,7 +86,6 @@ public:
   InvitationHandler::Action mDefaultAction;
   QWidget *mParent;
   bool mOutlookCompatCounterProposals;
-  KPIMIdentities::IdentityManager *m_identityManager;
   MailScheduler *m_scheduler;
   Status m_status;
   KCalCore::Incidence::Ptr m_incidence;
@@ -132,18 +126,10 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWid
   , mDefaultAction( InvitationHandler::ActionAsk )
   , mParent( parent )
   , mOutlookCompatCounterProposals( false )
-  , m_identityManager( new IdentityManager( /*ro=*/ true, parent ) )
   , m_scheduler( new MailScheduler( calendar, parent ) )
   , m_status( StatusNone )
 {
     m_scheduler->setBccMe( false );
-}
-
-QStringList InvitationHandler::Private::allEmails() const
-{
-  // Grab emails from the email identities
-  // Warning, this list could contain duplicates.
-  return m_identityManager->allEmails();
 }
 
 int InvitationHandler::Private::askUserIfNeeded( const QString &question,
@@ -165,52 +151,6 @@ int InvitationHandler::Private::askUserIfNeeded( const QString &question,
     Q_ASSERT( false );
     return 0;
   }
-}
-
-bool InvitationHandler::Private::thatIsMe( const QString &_email ) const
-{
-  // Method copied from kdepim/calendarsupport/kcalprefs.cpp
-
-
-  // NOTE: this method is called for every created agenda view item,
-  // so we need to keep performance in mind
-
-  /* identityManager()->thatIsMe() is quite expensive since it does parsing of
-     _email in a way which is unnecessarily complex for what we can have here,
-     so we do that ourselves. This makes sense since this
-
-  if ( Akonadi::identityManager()->thatIsMe( _email ) ) {
-    return true;
-  }
-  */
-
-  // in case email contains a full name, strip it out.
-  // the below is the simpler but slower version of the following code:
-  // const QString email = KPIM::getEmailAddress( _email );
-  const QByteArray tmp = _email.toUtf8();
-  const char *cursor = tmp.constData();
-  const char *end = tmp.data() + tmp.length();
-  KMime::Types::Mailbox mbox;
-  KMime::HeaderParsing::parseMailbox( cursor, end, mbox );
-  const QString email = mbox.addrSpec().asString();
-
-  KEMailSettings emailSettings;
-  const QString myEmail = emailSettings.getSetting( KEMailSettings::EmailAddress );
-
-  if ( myEmail == email ) {
-    return true;
-  }
-
-  IdentityManager::ConstIterator it;
-  for ( it = m_identityManager->begin();
-        it != m_identityManager->end(); ++it ) {
-    if ( (*it).matchesEmailAddress( email ) ) {
-      return true;
-    }
-  }
-
-  // TODO: Remove the additional e-mails stuff from korganizer and test e-mail aliases
-  return false;
 }
 
 InvitationHandler::SendResult
@@ -250,7 +190,8 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
 bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
   const QString email = incidence->organizer()->email();
-  return thatIsMe( email ) || email.isEmpty() || email == QLatin1String( "invalid@email.address" );
+  return Akonadi::Calendar::thatIsMe( email ) || email.isEmpty()
+         || email == QLatin1String( "invalid@email.address" );
 }
 
 bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
@@ -258,7 +199,7 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence."
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << Akonadi::Calendar::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return false;
   }
@@ -380,7 +321,7 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   if ( !d->weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence!"
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << d->thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << Akonadi::Calendar::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return InvitationHandler::ResultFailAbortUpdate;
   }
@@ -530,7 +471,7 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
     return d->sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
-    const QStringList myEmails = d->allEmails();
+    const QStringList myEmails = Akonadi::Calendar::allEmails();
     bool incidenceAcceptedBefore = false;
     foreach ( const QString &email, myEmails ) {
       KCalCore::Attendee::Ptr me = incidence->attendeeByMail( email );
@@ -632,16 +573,6 @@ void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const
 
   emit finished( success ? ResultSuccess : ResultError,
                  success ? QString() : i18n( "Error: %1", errorMsg ) );
-}
-
-QStringList InvitationHandler::allEmails() const
-{
-  return d->allEmails();
-}
-
-bool InvitationHandler::thatIsMe( const QString &email ) const
-{
-  return d->thatIsMe( email );
 }
 
 #include "invitationhandler_p.moc"

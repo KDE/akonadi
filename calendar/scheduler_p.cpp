@@ -67,12 +67,14 @@ Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
     mFormat->setTimeSpec( KSystemTimeZones::local() );
   }
 
-  connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
-           SLOT(handleCreateFinished(bool,QString)) );
-  connect( mCalendar.data(), SIGNAL(modifyFinished(bool,QString)),
-           SLOT(handleModifyFinished(bool,QString)) );
-  connect( mCalendar.data(), SIGNAL(deleteFinished(bool,QString)),
-           SLOT(handleDeleteFinished(bool,QString)) );
+  if ( mCalendar ) {
+    connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
+             SLOT(handleCreateFinished(bool,QString)) );
+    connect( mCalendar.data(), SIGNAL(modifyFinished(bool,QString)),
+             SLOT(handleModifyFinished(bool,QString)) );
+    connect( mCalendar.data(), SIGNAL(deleteFinished(bool,QString)),
+             SLOT(handleDeleteFinished(bool,QString)) );
+  }
 }
 
 Scheduler::~Scheduler()

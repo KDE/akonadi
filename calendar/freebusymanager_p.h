@@ -29,8 +29,11 @@
   your version.
 */
 
-#ifndef CALENDARSUPPORT_FREEBUSYMANAGER_P_H
-#define CALENDARSUPPORT_FREEBUSYMANAGER_P_H
+#ifndef AKONADI_FREEBUSYMANAGER_P_H
+#define AKONADI_FREEBUSYMANAGER_P_H
+
+#include "etmcalendar.h"
+#include "mailscheduler_p.h"
 
 #include <KCalCore/FreeBusy>
 #include <KCalCore/ICalFormat>
@@ -42,10 +45,6 @@
 class KJob;
 
 namespace Akonadi {
-  class ETMCalendar;
-}
-
-namespace CalendarSupport {
 
 class FreeBusyManager;
 
@@ -86,8 +85,8 @@ class FreeBusyManagerPrivate : public QObject
       KCalCore::FreeBusy::Ptr mResultingFreeBusy;
     };
 
-  public: /// Members
-    Akonadi::ETMCalendar *mCalendar;
+  public:
+    Akonadi::ETMCalendar::Ptr mCalendar; //TODO_SERGIO: check if we can use CalendarBase instead
     KCalCore::ICalFormat mFormat;
 
     QStringList mRetrieveQueue;
@@ -99,6 +98,8 @@ class FreeBusyManagerPrivate : public QObject
     int mTimerID;
     bool mUploadingFreeBusy;
     bool mBrokenUrl;
+
+    QPointer<QWidget > mParentWidgetForMailling;
 
     // the parentWidget to use while doing our "recursive" retrieval
     QPointer<QWidget>  mParentWidgetForRetrieval;
@@ -127,6 +128,7 @@ class FreeBusyManagerPrivate : public QObject
     void onHandlesFreeBusy( const QString &email, bool handles );
     void onFreeBusyRetrieved( const QString &email, const QString &freeBusy,
                               bool success, const QString &errorText );
+    void processMailSchedulerResult( Akonadi::Scheduler::Result result, const QString &errorMsg );
 
   signals:
     void freeBusyUrlRetrieved( const QString &email, const KUrl &url );

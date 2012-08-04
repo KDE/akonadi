@@ -22,13 +22,14 @@ set(akonadicalendar_LIB_SRC
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusydownloadjob_p.cpp
-  #freebusymanager.cpp
+  freebusymanager.cpp
   freebusyproviderbase.cpp
   mailclient_p.cpp
   mailscheduler_p.cpp
   publishdialog.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
+  utils_p.cpp
 )
 
 kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)

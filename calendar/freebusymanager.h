@@ -144,7 +144,7 @@ class AKONADI_CALENDAR_EXPORT FreeBusyManager : public QObject, public KCalCore:
     virtual bool saveFreeBusy( const KCalCore::FreeBusy::Ptr &freebusy,
                                const KCalCore::Person::Ptr &person );
 
-  signals:
+  signals: //TODO_SERGIO: Q_SIGNALS everywhere
     /**
       This signal is emitted to return results of free/busy requests.
     */

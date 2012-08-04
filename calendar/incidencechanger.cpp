@@ -20,6 +20,7 @@
 #include "incidencechanger.h"
 #include "incidencechanger_p.h"
 #include "mailscheduler_p.h"
+#include "utils_p.h"
 
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/ItemModifyJob>
@@ -512,8 +513,8 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       {
         Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
         Q_ASSERT( incidence );
-        if ( !handler.thatIsMe( incidence->organizer()->email() ) ) {
-          const QStringList myEmails = handler.allEmails();
+        if ( !Akonadi::Calendar::thatIsMe( incidence->organizer()->email() ) ) {
+          const QStringList myEmails = Akonadi::Calendar::allEmails();
           bool notifyOrganizer = false;
           for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
             const QString email = *it;
@@ -548,7 +549,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
         }
         const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                     oldIncidence,
-                                                                    handler.allEmails() );
+                                                                    Akonadi::Calendar::allEmails() );
         InvitationHandler::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                                                                      newIncidence,
                                                                                      attendeeStatusChanged );

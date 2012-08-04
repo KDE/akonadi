@@ -39,7 +39,6 @@ namespace KPIMIdentities {
 }
 
 namespace Akonadi {
-  class Calendar;
 /*
   This class implements the iTIP interface using the email interface specified
   as Mail.
