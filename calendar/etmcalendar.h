@@ -101,6 +101,11 @@ namespace Akonadi {
      */
     void collectionsRemoved( const Akonadi::Collection::List &collection );
 
+    /**
+     * Emitted whenever an Item is inserted, removed or modified.
+     */
+    void calendarChanged();
+
   private:
     Q_DECLARE_PRIVATE( ETMCalendar );
   };
