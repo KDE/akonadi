@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="akonadi-calendarrc"/>
+
+<!-- Free/Busy Publish -->
+  <group name="FreeBusy Publish">
+    <entry type="Bool" name="FreeBusyPublishAuto">
+      <default>false</default>
+    </entry>
+
+    <entry type="Int" name="FreeBusyPublishDelay">
+      <default>5</default>
+    </entry>
+
+    <entry type="Int" key="FreeBusyPublishDays">
+      <default>60</default>
+    </entry>
+
+    <entry type="String" name="FreeBusyPublishUrl">
+      <label>Free/Busy Publish URL</label>
+      <whatsthis>URL for publishing free/busy information</whatsthis>
+    </entry>
+
+    <entry type="String" name="FreeBusyPublishUser">
+      <label>Free/Busy Publish Username</label>
+      <whatsthis>Username for publishing free/busy information</whatsthis>
+    </entry>
+
+    <entry type="Password" name="FreeBusyPublishPassword">
+      <label>Free/Busy Publish Password</label>
+      <whatsthis>Password for publishing free/busy information</whatsthis>
+    </entry>
+
+    <entry type="Bool" name="FreeBusyPublishSavePassword">
+      <default>false</default>
+    </entry>
+  </group>
+
+<!-- Free/Busy Retrieve -->
+  <group name="FreeBusy Retrieve">
+    <entry type="Bool" name="FreeBusyRetrieveAuto">
+      <label>Enable Automatic Free/Busy Retrieval</label>
+      <default>false</default>
+    </entry>
+
+    <entry type="Bool" name="FreeBusyFullDomainRetrieval">
+      <label>Use full email address for retrieval</label>
+      <whatsthis>With this setting, you can change the filename that will be fetched from the server. With this checked, it will download a free/busy file called user@domain.ifb, for example nn@kde.org.ifb. Without this set, it will download user.ifb, for example nn.ifb.</whatsthis>
+      <default>false</default>
+    </entry>
+
+    <entry type="String" name="FreeBusyRetrieveUrl">
+      <label>Free/Busy Retrieval URL</label>
+    </entry>
+
+    <entry type="String" name="FreeBusyRetrieveUser">
+      <label>Free/Busy Retrieval Username</label>
+    </entry>
+
+    <entry type="Password" name="FreeBusyRetrievePassword">
+      <label>Free/Busy Retrieval Password</label>
+      <whatsthis>Password for retrieving free/busy information</whatsthis>
+    </entry>
+
+    <entry type="Bool" name="FreeBusyRetrieveSavePassword">
+      <default>false</default>
+    </entry>
+  </group>
+
+</kcfg>

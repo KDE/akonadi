@@ -21,8 +21,9 @@ set(akonadicalendar_LIB_SRC
   invitationhandler_p.cpp
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
-  freebusyproviderbase.cpp
   freebusydownloadjob_p.cpp
+  #freebusymanager.cpp
+  freebusyproviderbase.cpp
   mailclient_p.cpp
   mailscheduler_p.cpp
   publishdialog.cpp
@@ -30,6 +31,7 @@ set(akonadicalendar_LIB_SRC
   standardcalendaractionmanager.cpp
 )
 
+kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)
 kde4_add_ui_files(akonadicalendar_LIB_SRC publishdialog_base.ui)
 
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
@@ -65,8 +67,10 @@ install( FILES
   history.h
   incidencechanger.h
   fetchjobcalendar.h
+  freebusymanager.h
   freebusyproviderbase.h
   publishdialog.h
   standardcalendaractionmanager.h
+  ${CMAKE_CURRENT_BINARY_DIR}/calendarsesettings.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/calendar COMPONENT Devel
 )
