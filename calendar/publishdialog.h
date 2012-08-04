@@ -19,6 +19,7 @@
 #ifndef AKONADI_PUBLISHDIALOG_H
 #define AKONADI_PUBLISHDIALOG_H
 
+#include "akonadi-calendar_export.h"
 #include "ui_publishdialog_base.h"
 
 #include <KCalCore/Attendee>
@@ -26,7 +27,10 @@
 
 class PublishDialog_base;
 
-class PublishDialog : public KDialog
+// Uses akonadi-contact, so don't move this class to KCalUtils.
+namespace Akonadi {
+
+class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -49,5 +53,7 @@ class PublishDialog : public KDialog
   protected:
     Ui::PublishDialog_base mUI;
 };
+
+}
 
 #endif
