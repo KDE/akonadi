@@ -22,15 +22,21 @@ set(akonadicalendar_LIB_SRC
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusyproviderbase.cpp
+  freebusydownloadjob_p.cpp
   mailclient_p.cpp
   mailscheduler_p.cpp
+  publishdialog.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
 )
+
+kde4_add_ui_files(akonadicalendar_LIB_SRC publishdialog_base.ui)
+
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
 kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 
 target_link_libraries(akonadi-calendar
+                      akonadi-contact
                       akonadi-kmime
                       akonadi-kde
                       kpimidentities
@@ -53,13 +59,14 @@ set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
+  akonadi-calendar_export.h
   calendarbase.h
   etmcalendar.h
   history.h
   incidencechanger.h
   fetchjobcalendar.h
   freebusyproviderbase.h
+  publishdialog.h
   standardcalendaractionmanager.h
-  akonadi-calendar_export.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/calendar COMPONENT Devel
 )
