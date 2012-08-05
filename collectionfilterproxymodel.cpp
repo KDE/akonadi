@@ -70,8 +70,9 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
 
       // find the resource
       QModelIndex resource = index;
-      while ( resource.parent().isValid() )
+      while ( resource.parent().isValid() ) {
         resource = resource.parent();
+      }
 
       // See if that resource is visible, if not, invalidate the filter.
       if ( resource != index && !acceptedResources.contains( resource ) ) {

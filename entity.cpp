@@ -165,8 +165,9 @@ void Akonadi::Entity::clearAttributes()
 
 Attribute * Entity::attribute(const QByteArray & type) const
 {
-  if ( d_ptr->mAttributes.contains( type ) )
+  if ( d_ptr->mAttributes.contains( type ) ) {
     return d_ptr->mAttributes.value( type );
+  }
   return 0;
 }
 
@@ -177,17 +178,19 @@ uint qHash( const Akonadi::Entity &entity )
 
 Collection& Entity::parentCollection()
 {
-  if ( !d_ptr->mParent )
+  if ( !d_ptr->mParent ) {
     d_ptr->mParent = new Collection();
-  return *(d_ptr->mParent);
+  }
+  return *( d_ptr->mParent );
 }
 
 Collection Entity::parentCollection() const
 {
-  if ( !d_ptr->mParent )
-    return *(s_defaultParentCollection);
-  else
-    return *(d_ptr->mParent);
+  if ( !d_ptr->mParent ) {
+    return *( s_defaultParentCollection );
+  } else {
+    return *( d_ptr->mParent );
+  }
 }
 
 void Entity::setParentCollection( const Collection &parent )

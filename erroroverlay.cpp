@@ -64,21 +64,21 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   // check existing overlays to detect cascading
   for ( QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
         it != sInstanceOverlay->baseWidgets.end(); ) {
-    if ( (*it).first == 0 || (*it).second == 0 ) {
+    if ( ( *it ).first == 0 || ( *it ).second == 0 ) {
       // garbage collection
       it = sInstanceOverlay->baseWidgets.erase( it );
       continue;
     }
-    if ( isParentOf( (*it).first, baseWidget ) ) {
+    if ( isParentOf( ( *it ).first, baseWidget ) ) {
       // parent already has an overlay, kill ourselves
       mBaseWidget = 0;
       hide();
       deleteLater();
       return;
     }
-    if ( isParentOf( baseWidget, (*it).first ) ) {
+    if ( isParentOf( baseWidget, ( *it ).first ) ) {
       // child already has overlay, kill that one
-      delete (*it).second;
+      delete ( *it ).second;
       it = sInstanceOverlay->baseWidgets.erase( it );
       continue;
     }

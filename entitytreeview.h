@@ -137,9 +137,9 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
     /**
      * Set true if we automatic sorting
      * @since 4.8.1
-     */    
+     */
     void setManualSortingActive(bool active);
-  
+
     /**
      * Set the name of the default popup menu (retrieved from the
      * application's XMLGUI file).
@@ -219,7 +219,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 #ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent *event );
 #endif
-    
+
 
   private:
     //@cond PRIVATE

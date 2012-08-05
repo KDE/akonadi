@@ -44,7 +44,7 @@ struct ProtocolHelperValuePool
   MimeTypePool mimeTypePool;
   QHash<Collection::Id, Collection> ancestorCollections;
 };
-  
+
 /**
   @internal
   Helper methods for converting between libakonadi objects and their protocol

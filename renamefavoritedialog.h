@@ -34,7 +34,7 @@ public:
   ~RenameFavoriteDialog();
 
   QString newName() const;
-  
+
 protected:
 
 protected Q_SLOTS:

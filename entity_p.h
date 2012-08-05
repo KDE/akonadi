@@ -58,11 +58,13 @@ class EntityPrivate : public QSharedData
       mId = other.mId;
       mRemoteId = other.mRemoteId;
       mRemoteRevision = other.mRemoteRevision;
-      foreach ( Attribute* attr, other.mAttributes )
+      foreach ( Attribute *attr, other.mAttributes ) {
         mAttributes.insert( attr->type(), attr->clone() );
+      }
       mDeletedAttributes = other.mDeletedAttributes;
-      if ( other.mParent )
-        mParent = new Collection( *(other.mParent) );
+      if ( other.mParent ) {
+        mParent = new Collection( *( other.mParent ) );
+      }
     }
 
     virtual void resetChangeLog()

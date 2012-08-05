@@ -41,8 +41,9 @@ using namespace Akonadi;
 
 bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & collection )
 {
-  if ( !mimeData || !collection.isValid() )
+  if ( !mimeData || !collection.isValid() ) {
     return false;
+  }
 
   // check that the target collection has the rights to
   // create the pasted items resp. collections
@@ -57,16 +58,18 @@ bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & colle
       }
     }
 
-    if ( (collection.rights() & neededRights) == 0 )
+    if ( ( collection.rights() & neededRights ) == 0 ) {
       return false;
+    }
 
     // check that the target collection supports the mime types of the
     // items/collections that shall be pasted
     bool supportsMimeTypes = true;
     foreach ( const KUrl &url, urls ) {
       // collections do not provide mimetype information, so ignore this check
-      if ( url.hasQueryItem( QLatin1String( "collection" ) ) )
+      if ( url.hasQueryItem( QLatin1String( "collection" ) ) ) {
         continue;
+      }
 
       const QString mimeType = url.queryItemValue( QLatin1String( "type" ) );
       if ( !collection.contentMimeTypes().contains( mimeType ) ) {
@@ -75,8 +78,9 @@ bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & colle
       }
     }
 
-    if ( !supportsMimeTypes )
+    if ( !supportsMimeTypes ) {
       return false;
+    }
 
     return true;
   }
@@ -86,19 +90,22 @@ bool PasteHelper::canPaste( const QMimeData * mimeData, const Collection & colle
 
 KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collection, bool copy, Session *session )
 {
-  if ( !canPaste( mimeData, collection ) )
+  if ( !canPaste( mimeData, collection ) ) {
     return 0;
+  }
 
   // we try to drop data not coming with the akonadi:// url
   // find a type the target collection supports
   foreach ( const QString &type, mimeData->formats() ) {
-    if ( !collection.contentMimeTypes().contains( type ) )
+    if ( !collection.contentMimeTypes().contains( type ) ) {
       continue;
+    }
 
     QByteArray item = mimeData->data( type );
     // HACK for some unknown reason the data is sometimes 0-terminated...
-    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 )
+    if ( !item.isEmpty() && item.at( item.size() - 1 ) == 0 ) {
       item.resize( item.size() - 1 );
+    }
 
     Item it;
     it.setMimeType( type );
@@ -108,8 +115,9 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
     return job;
   }
 
-  if ( !KUrl::List::canDecode( mimeData ) )
+  if ( !KUrl::List::canDecode( mimeData ) ) {
     return 0;
+  }
 
   // data contains an url list
   return pasteUriList( mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction, session );
@@ -117,22 +125,26 @@ KJob* PasteHelper::paste(const QMimeData * mimeData, const Collection & collecti
 
 KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &destination, Qt::DropAction action, Session *session )
 {
-  if ( !KUrl::List::canDecode( mimeData ) )
+  if ( !KUrl::List::canDecode( mimeData ) ) {
     return 0;
+  }
 
-  if ( !canPaste( mimeData, destination ) )
+  if ( !canPaste( mimeData, destination ) ) {
     return 0;
+  }
 
   const KUrl::List urls = KUrl::List::fromMimeData( mimeData );
   Collection::List collections;
   Item::List items;
   foreach ( const KUrl &url, urls ) {
     const Collection collection = Collection::fromUrl( url );
-    if ( collection.isValid() )
+    if ( collection.isValid() ) {
       collections.append( collection );
+    }
     const Item item = Item::fromUrl( url );
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       items.append( item );
+    }
     // TODO: handle non Akonadi URLs?
   }
 
@@ -142,19 +154,23 @@ KJob* PasteHelper::pasteUriList( const QMimeData* mimeData, const Collection &de
   //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
   //Remove once this is fixed properly, see the other FIXME comments.
   transaction->setProperty( "transactionsDisabled", true );
-  
+
   switch ( action ) {
     case Qt::CopyAction:
-      if ( !items.isEmpty() )
+      if ( !items.isEmpty() ) {
         new ItemCopyJob( items, destination, transaction );
-      foreach ( const Collection &col, collections ) // FIXME: remove once we have a batch job for collections as well
+      }
+      foreach ( const Collection &col, collections ) { // FIXME: remove once we have a batch job for collections as well
         new CollectionCopyJob( col, destination, transaction );
+      }
       break;
     case Qt::MoveAction:
-      if ( !items.isEmpty() )
+      if ( !items.isEmpty() ) {
         new ItemMoveJob( items, destination, transaction );
-      foreach ( const Collection &col, collections ) // FIXME: remove once we have a batch job for collections as well
+      }
+      foreach ( const Collection &col, collections ) { // FIXME: remove once we have a batch job for collections as well
         new CollectionMoveJob( col, destination, transaction );
+      }
       break;
     case Qt::LinkAction:
       new LinkJob( destination, items, transaction );

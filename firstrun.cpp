@@ -51,8 +51,8 @@ Firstrun::Firstrun( QObject *parent )
     mProcess( 0 )
 {
   //The code in firstrun is not safe in multi-instance mode
-  Q_ASSERT(!ServerManager::hasInstanceIdentifier());
-  if (!ServerManager::hasInstanceIdentifier()) {
+  Q_ASSERT( !ServerManager::hasInstanceIdentifier() );
+  if ( !ServerManager::hasInstanceIdentifier() ) {
     deleteLater();
     return;
   }
@@ -87,25 +87,28 @@ void Firstrun::findPendingDefaults()
         kWarning() << "Found invalid default configuration in " << fullName;
         continue;
       }
-      if ( cfg.hasKey( id ) )
+      if ( cfg.hasKey( id ) ) {
         continue;
+      }
       mPendingDefaults << dirName + fileName;
     }
   }
 
 #ifndef KDEPIM_NO_KRESOURCES
   // always check legacy kres for migration, their migrator might have changed again
-  mPendingKres << QLatin1String("contact") << QLatin1String("calendar");
+  mPendingKres << QLatin1String( "contact" ) << QLatin1String( "calendar" );
 #endif
 }
 
 #ifndef KDEPIM_NO_KRESOURCES
 static QString resourceTypeForMimetype( const QStringList &mimeTypes )
 {
-  if ( mimeTypes.contains( QLatin1String( "text/directory" ) ) )
+  if ( mimeTypes.contains( QLatin1String( "text/directory" ) ) ) {
     return QString::fromLatin1( "contact" );
-  if ( mimeTypes.contains( QLatin1String( "text/calendar" ) ) )
+  }
+  if ( mimeTypes.contains( QLatin1String( "text/calendar" ) ) ) {
     return QString::fromLatin1( "calendar" );
+  }
   // TODO notes
   return QString();
 }

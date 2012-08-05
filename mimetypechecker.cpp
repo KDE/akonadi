@@ -65,7 +65,7 @@ void MimeTypeChecker::addWantedMimeType( const QString &mimeType )
 
 void MimeTypeChecker::removeWantedMimeType(const QString &mimeType )
 {
-  d->mWantedMimeTypes.remove( mimeType ); 
+  d->mWantedMimeTypes.remove( mimeType );
 }
 
 bool MimeTypeChecker::isWantedItem( const Item &item ) const

@@ -199,8 +199,7 @@ class AKONADI_EXPORT Entity
     /**
      * Describes the options that can be passed to access attributes.
      */
-    enum CreateOption
-    {
+    enum CreateOption {
       AddIfMissing    ///< Creates the attribute if it is missing
     };
 
@@ -218,8 +217,9 @@ class AKONADI_EXPORT Entity
       const T dummy;
       if ( hasAttribute( dummy.type() ) ) {
         T* attr = dynamic_cast<T*>( attribute( dummy.type() ) );
-        if ( attr )
+        if ( attr ) {
           return attr;
+        }
         kWarning( 5250 ) << "Found attribute of unknown type" << dummy.type()
           << ". Did you forget to call AttributeFactory::registerAttribute()?";
       }

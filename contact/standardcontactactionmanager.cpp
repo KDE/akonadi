@@ -342,7 +342,7 @@ class StandardContactActionManager::Private
         return Collection();
       }
 
-      return index.data( EntityTreeModel::CollectionRole).value<Collection>();
+      return index.data( EntityTreeModel::CollectionRole ).value<Collection>();
     }
 
     void slotCreateContact()

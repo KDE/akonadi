@@ -62,10 +62,11 @@ class FavoriteCollectionsModel::Private
         idx = idx.parent();
       }
 
-      if ( accountName.isEmpty() )
+      if ( accountName.isEmpty() ) {
         return nameOfCollection;
-      else
+      } else {
         return nameOfCollection + QLatin1String( " (" ) + accountName + QLatin1Char( ')' );
+      }
     }
 
     void clearAndUpdateSelection()
@@ -77,9 +78,10 @@ class FavoriteCollectionsModel::Private
     void updateSelectionId( const Collection::Id &collectionId )
     {
       const QModelIndex index = EntityTreeModel::modelIndexForCollection( q->sourceModel(), Collection( collectionId ) );
-      
-      if ( index.isValid() )
+
+      if ( index.isValid() ) {
         q->selectionModel()->select( index, QItemSelectionModel::Select );
+      }
     }
 
     void updateSelection()
@@ -143,7 +145,7 @@ FavoriteCollectionsModel::~FavoriteCollectionsModel()
 void FavoriteCollectionsModel::setCollections( const Collection::List &collections )
 {
   d->collectionIds.clear();
-  foreach(const Collection &col, collections) {
+  foreach ( const Collection &col, collections ) {
     d->collectionIds << col.id();
   }
   d->labelMap.clear();
@@ -154,7 +156,7 @@ void FavoriteCollectionsModel::setCollections( const Collection::List &collectio
 void FavoriteCollectionsModel::addCollection( const Collection &collection )
 {
   d->collectionIds << collection.id();
-  d->updateSelectionId(collection.id());
+  d->updateSelectionId( collection.id() );
   d->saveConfig();
 }
 
@@ -165,8 +167,9 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 
   const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), collection );
 
-  if ( !idx.isValid() )
+  if ( !idx.isValid() ) {
     return;
+  }
 
   selectionModel()->select( idx,
                             QItemSelectionModel::Deselect );
@@ -178,8 +181,8 @@ void FavoriteCollectionsModel::removeCollection( const Collection &collection )
 Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
   Collection::List cols;
-  foreach (const Collection::Id &colId, d->collectionIds) {
-    const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), Collection(colId) );
+  foreach ( const Collection::Id &colId, d->collectionIds ) {
+    const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), Collection( colId ) );
     const Collection collection = sourceModel()->data( idx, EntityTreeModel::CollectionRole ).value<Collection>();
     cols << collection;
   }
@@ -199,8 +202,9 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &coll
 
   const QModelIndex idx = EntityTreeModel::modelIndexForCollection( sourceModel(), collection );
 
-  if ( !idx.isValid() )
+  if ( !idx.isValid() ) {
     return;
+  }
 
   const QModelIndex index = mapFromSource( idx );
   emit dataChanged( index, index );
@@ -208,7 +212,9 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel( const Collection &coll
 
 QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int role ) const
 {
-  if ( index.column() == 0 && (role == Qt::DisplayRole || role == Qt::EditRole) ) {
+  if ( index.column() == 0 &&
+       ( role == Qt::DisplayRole ||
+         role == Qt::EditRole ) ) {
     const QModelIndex sourceIndex = mapToSource( index );
     const Collection::Id collectionId = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionIdRole ).toLongLong();
 
@@ -220,30 +226,33 @@ QVariant Akonadi::FavoriteCollectionsModel::data( const QModelIndex &index, int 
 
 bool FavoriteCollectionsModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-  if ( index.isValid() && index.column() == 0 && role == Qt::EditRole ) {
+  if ( index.isValid() && index.column() == 0 &&
+       role == Qt::EditRole ) {
     const QString newLabel = value.toString();
-    if ( newLabel.isEmpty() )
+    if ( newLabel.isEmpty() ) {
       return false;
+    }
     const QModelIndex sourceIndex = mapToSource( index );
     const Collection collection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
     setFavoriteLabel( collection, newLabel );
     return true;
   }
-  return Akonadi::SelectionProxyModel::setData(index, value, role);
+  return Akonadi::SelectionProxyModel::setData( index, value, role );
 }
 
 QString Akonadi::FavoriteCollectionsModel::favoriteLabel( const Akonadi::Collection & collection )
 {
-  if ( !collection.isValid() )
+  if ( !collection.isValid() ) {
     return QString();
+  }
   return d->labelForCollection( collection.id() );
 }
 
 QVariant FavoriteCollectionsModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( section == 0
-    && orientation == Qt::Horizontal
-    && role == Qt::DisplayRole ) {
+  if ( section == 0 &&
+       orientation == Qt::Horizontal &&
+       role == Qt::DisplayRole ) {
     return i18n( "Favorite Folders" );
   } else {
     return KSelectionProxyModel::headerData( section, orientation, role );
@@ -260,38 +269,39 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropActio
 
     const QModelIndex sourceIndex = mapToSource( parent );
     const Collection destCollection = sourceModel()->data( sourceIndex, EntityTreeModel::CollectionRole ).value<Collection>();
-    
+
     MimeTypeChecker mimeChecker;
     mimeChecker.setWantedMimeTypes( destCollection.contentMimeTypes() );
-    
+
     foreach ( const KUrl &url, urls ) {
       const Collection col = Collection::fromUrl( url );
       if ( col.isValid() ) {
         addCollection( col );
       } else {
         const Item item = Item::fromUrl( url );
-        if ( item.isValid() )
-        {
-          if ( item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction ) {
+        if ( item.isValid() ) {
+          if ( item.parentCollection().id() == destCollection.id() &&
+               action != Qt::CopyAction ) {
             kDebug() << "Error: source and destination of move are the same.";
             return false;
           }
-#if 0                   
+#if 0
           if ( !mimeChecker.isWantedItem( item ) ) {
             kDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
             return false;
           }
-#endif          
+#endif
           KJob *job = PasteHelper::pasteUriList( data, destCollection, action );
-          if ( !job )
+          if ( !job ) {
             return false;
-          connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );          
+          }
+          connect( job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)) );
           // Accept the event so that it doesn't propagate.
           return true;
-         
+
         }
       }
-        
+
     }
     return true;
   }
@@ -301,23 +311,25 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData* data, Qt::DropActio
 QStringList FavoriteCollectionsModel::mimeTypes() const
 {
   QStringList mts = Akonadi::SelectionProxyModel::mimeTypes();
-  if ( !mts.contains( QLatin1String( "text/uri-list" ) ) )
+  if ( !mts.contains( QLatin1String( "text/uri-list" ) ) ) {
     mts.append( QLatin1String( "text/uri-list" ) );
+  }
   return mts;
 }
 
 Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex& index) const
 {
   Qt::ItemFlags fs = Akonadi::SelectionProxyModel::flags( index );
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     fs |= Qt::ItemIsDropEnabled;
+  }
   return fs;
 }
 
 void FavoriteCollectionsModel::pasteJobDone( KJob *job )
 {
   if ( job->error() ) {
-    kDebug()<< job->errorString();
+    kDebug() << job->errorString();
   }
 }
 

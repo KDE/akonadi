@@ -93,8 +93,7 @@ QByteArray EntityDisplayAttribute::serialized() const
   l << ImapParser::quote( d->icon.toUtf8() );
   l << ImapParser::quote( d->activeIcon.toUtf8() );
   QList<QByteArray> components;
-  if ( d->backgroundColor.isValid() )
-  {
+  if ( d->backgroundColor.isValid() ) {
     components = QList<QByteArray>() << QByteArray::number( d->backgroundColor.red() )
                                      << QByteArray::number( d->backgroundColor.green() )
                                      << QByteArray::number( d->backgroundColor.blue() )
@@ -115,22 +114,21 @@ void EntityDisplayAttribute::deserialize(const QByteArray &data)
   if ( size >= 3 ) {
     d->activeIcon = QString::fromUtf8( l[2] );
   }
-  if ( size >= 4 )
-  {
-    if ( !l[3].isEmpty() )
-    {
+  if ( size >= 4 ) {
+    if ( !l[3].isEmpty() ) {
       QList<QByteArray> componentData;
       ImapParser::parseParenthesizedList( l[3], componentData );
-      if ( componentData.size() != 4 )
+      if ( componentData.size() != 4 ) {
         return;
+      }
       QList<int> components;
 
       bool ok;
-      for ( int i = 0; i <= 3; ++i )
-      {
+      for ( int i = 0; i <= 3; ++i ) {
         components << componentData.at( i ).toInt( &ok );
-        if ( !ok )
+        if ( !ok ) {
           return;
+        }
       }
       d->backgroundColor = QColor( components.at( 0 ), components.at( 1 ), components.at( 2 ), components.at( 3 ) );
     }
