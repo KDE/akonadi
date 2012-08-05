@@ -89,6 +89,18 @@ namespace Akonadi {
     KCalCore::Incidence::List childIncidences( const Akonadi::Item::Id &parentId ) const;
 
     /**
+     * Returns the child items of the parent identified by @p parentUid.
+     * Only the direct childs are returned
+     */
+    Akonadi::Item::List childItems( const QString &parentUid ) const;
+
+    /**
+     * Returns the child items of the parent identified by @p parentId.
+     * Only the direct childs are returned
+     */
+    Akonadi::Item::List childItems( const Akonadi::Item::Id &parentId ) const;
+
+    /**
      * Sets the weak pointer that's associated with this instance.
      * Use this if later on you need to cast sender() into a QSharedPointer
      *

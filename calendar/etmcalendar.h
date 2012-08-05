@@ -35,6 +35,12 @@ namespace Akonadi {
   {
   Q_OBJECT
   public:
+
+    enum CollectionColumn {
+      CollectionTitle=0,
+      CollectionColumnCount
+    };
+
     typedef QSharedPointer<ETMCalendar> Ptr;
 
     /**

@@ -244,6 +244,37 @@ KCalCore::Incidence::List CalendarBase::childIncidences( const QString &parentUi
   return children;
 }
 
+Akonadi::Item::List CalendarBase::childItems( const Akonadi::Item::Id &parentId ) const
+{
+  Q_D(const CalendarBase);
+  Akonadi::Item::List childs;
+
+  if ( d->mItemById.contains( parentId ) ) {
+    const Akonadi::Item item = d->mItemById.value( parentId );
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+
+    childs = childItems( item.payload<KCalCore::Incidence::Ptr>()->uid() );
+  }
+
+  return childs;
+}
+
+Akonadi::Item::List CalendarBase::childItems( const QString &parentUid ) const
+{
+  Q_D(const CalendarBase);
+  Akonadi::Item::List children;
+  const QStringList uids = d->mParentUidToChildrenUid.value( parentUid );
+  Q_FOREACH( const QString &uid, uids ) {
+    Akonadi::Item child = item( uid );
+    if ( child.isValid() && child.hasPayload<KCalCore::Incidence::Ptr>() )
+      children.append( child );
+    else
+      kWarning() << "Invalid child with uid " << uid;
+  }
+  return children;
+}
+
 bool CalendarBase::addEvent( const KCalCore::Event::Ptr &event )
 {
   return addIncidence( event );
