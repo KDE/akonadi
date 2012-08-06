@@ -1,5 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
+ <file>unittest_schema.xml</file>
+
  <file>dbinit_mysql</file>
  <file>dbinit_psql</file>
  <file>dbinit_sqlite</file>
