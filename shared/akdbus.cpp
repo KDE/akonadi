@@ -42,6 +42,7 @@ QString AkDBus::serviceName(AkDBus::ServiceType serviceType)
     case ControlLock: return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE_LOCK);
     case AgentServer: return makeServiceName(AKONADI_DBUS_AGENTSERVER_SERVICE);
     case StorageJanitor: return makeServiceName(AKONADI_DBUS_STORAGEJANITOR_SERVICE);
+    case UpgradeIndicator: return makeServiceName(AKONADI_DBUS_SERVER_SERVICE_UPGRADING);
   }
   Q_ASSERT(!"WTF?");
   return QString();

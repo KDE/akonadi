@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2007 - 2012 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,9 +21,13 @@
 #include "dbtype.h"
 #include "entities.h"
 #include "akdebug.h"
+#include "akdbus.h"
 
+#include <QCoreApplication>
+#include <QDBusConnection>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QThread>
 
 #include <QDomDocument>
 #include <QFile>
@@ -36,6 +40,8 @@ DbUpdater::DbUpdater( const QSqlDatabase & database, const QString & filename )
 
 bool DbUpdater::run()
 {
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+
   // TODO error handling
   Akonadi::SchemaVersion currentVersion = Akonadi::SchemaVersion::retrieveAll().first();
 
@@ -43,6 +49,12 @@ bool DbUpdater::run()
 
   if ( !parseUpdateSets( currentVersion.version(), updates ) )
     return false;
+
+  if ( updates.isEmpty() )
+    return true;
+  // indicate clients this might take a while
+  // we can ignore unregistration in error cases, that'll kill the server anyway
+  QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::UpgradeIndicator) );
 
   // QMap is sorted, so we should be replaying the changes in correct order
   for ( QMap<int, UpdateSet>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it ) {
@@ -75,6 +87,7 @@ bool DbUpdater::run()
     }
   }
 
+  QDBusConnection::sessionBus().unregisterService( AkDBus::serviceName(AkDBus::UpgradeIndicator) );
   return true;
 }
 

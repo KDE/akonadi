@@ -35,7 +35,8 @@ namespace AkDBus
     Control,
     ControlLock,
     AgentServer,
-    StorageJanitor
+    StorageJanitor,
+    UpgradeIndicator
   };
   
   /**

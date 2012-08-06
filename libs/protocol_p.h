@@ -34,6 +34,7 @@
 #define AKONADI_DBUS_CONTROL_SERVICE_LOCK "org.freedesktop.Akonadi.Control.lock"
 #define AKONADI_DBUS_AGENTSERVER_SERVICE "org.freedesktop.Akonadi.AgentServer"
 #define AKONADI_DBUS_STORAGEJANITOR_SERVICE "org.freedesktop.Akonadi.Janitor"
+#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
 
 #define AKONADI_DBUS_AGENTMANAGER_PATH "/AgentManager"
 #define AKONADI_DBUS_AGENTSERVER_PATH "/AgentServer"

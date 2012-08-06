@@ -34,6 +34,7 @@
 #include "parthelper.h"
 #include "libs/protocol_p.h"
 #include "handler.h"
+#include "collectionqueryhelper.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -50,7 +51,6 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
-#include "collectionqueryhelper.h"
 
 using namespace Akonadi;
 
@@ -123,6 +123,8 @@ void Akonadi::DataStore::close()
 
 bool Akonadi::DataStore::init()
 {
+  Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+
   QString dbtemplate = QLatin1String(":akonadidb.xml");
 #ifdef Q_OS_WINCE
   dbtemplate = QLatin1String(":akonadidb-mobile.xml");
