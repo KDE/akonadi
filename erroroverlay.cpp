@@ -226,6 +226,13 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
         ui->progressDescription->setText( i18n( "Personal information management service is shutting down..." ) );
         ui->stackWidget->setCurrentWidget( ui->progressPage );
         break;
+      case ServerManager::Upgrading:
+        ui->progressPage->setToolTip( i18n( "Personal information management service is performing a database upgrade." ) );
+        ui->progressDescription->setText( i18n( "Personal information management service is performing a database upgrade. "
+                                                "This happens after a software update and is necessary to optimize performance. "
+                                                "Depending on the amount of personal information, this might take a few minutes.") );
+        ui->stackWidget->setCurrentWidget( ui->progressPage );
+        break;
       case ServerManager::Running:
         break;
     }

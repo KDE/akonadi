@@ -52,7 +52,8 @@ class AKONADI_EXPORT ServerManager : public QObject
       Starting, ///< Server was started but is not yet running.
       Running, ///< Server is running and operational.
       Stopping, ///< Server is shutting down.
-      Broken ///< Server is not operational and an error has been detected.
+      Broken, ///< Server is not operational and an error has been detected.
+      Upgrading ///< Server is performing a database upgrade as part of a new startup.
     };
 
     /**
@@ -114,7 +115,8 @@ class AKONADI_EXPORT ServerManager : public QObject
     enum ServiceType {
       Server,
       Control,
-      ControlLock
+      ControlLock,
+      UpgradeIndicator
     };
 
     /**

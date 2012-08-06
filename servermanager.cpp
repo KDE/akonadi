@@ -131,6 +131,7 @@ ServerManager::ServerManager(ServerManagerPrivate * dd ) :
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   watcher->addWatchedService( ServerManager::serviceName( ServerManager::Control ) );
+  watcher->addWatchedService( ServerManager::serviceName( ServerManager::UpgradeIndicator ) );
 
   // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
   // the current agent types and instances
@@ -216,9 +217,13 @@ ServerManager::State ServerManager::state()
     previousState = sInstance->mState;
   }
 
+  const bool serverUpgrading = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName( ServerManager::UpgradeIndicator ) );
+  if ( serverUpgrading )
+    return Upgrading;
+
   const bool controlRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName( ServerManager::Control ) );
   const bool serverRegistered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName( ServerManager::Server ) );
-  if (  controlRegistered && serverRegistered ) {
+  if ( controlRegistered && serverRegistered ) {
     // check if the server protocol is recent enough
     if ( sInstance.exists() ) {
       if ( Internal::serverProtocolVersion() >= 0 &&
@@ -280,12 +285,18 @@ static QString makeServiceName( const char* base, const QString &name = QString(
   return QLatin1String( base ) % name % QLatin1Literal( "." ) % ServerManager::instanceIdentifier();
 }
 
+// remove once we require Akonadi 1.9
+#ifndef AKONADI_DBUS_SERVER_SERVICE_UPGRADING
+#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
+#endif
+
 QString ServerManager::serviceName( ServerManager::ServiceType serviceType )
 {
   switch ( serviceType ) {
     case Server: return makeServiceName( AKONADI_DBUS_SERVER_SERVICE );
     case Control: return makeServiceName( AKONADI_DBUS_CONTROL_SERVICE );
     case ControlLock: return makeServiceName( AKONADI_DBUS_CONTROL_SERVICE_LOCK );
+    case UpgradeIndicator: return makeServiceName( AKONADI_DBUS_SERVER_SERVICE_UPGRADING );
   }
   Q_ASSERT( !"WTF?" );
   return QString();
