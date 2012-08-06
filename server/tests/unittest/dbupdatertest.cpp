@@ -40,7 +40,7 @@ void DbUpdaterTest::initTestCase()
 void DbUpdaterTest::testMysqlUpdateStatements()
 {
   const QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ) );
-  DbUpdater updater( db, QLatin1String( ":dbupdate.xml" ) );
+  DbUpdater updater( db, QLatin1String( ":unittest_dbupdate.xml" ) );
 
   UpdateSet::Map updateSets;
   QVERIFY( updater.parseUpdateSets( 1, updateSets ) );
@@ -86,7 +86,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
 void DbUpdaterTest::testPsqlUpdateStatements()
 {
   const QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QPSQL" ) );
-  DbUpdater updater( db, QLatin1String( ":dbupdate.xml" ) );
+  DbUpdater updater( db, QLatin1String( ":unittest_dbupdate.xml" ) );
 
   UpdateSet::Map updateSets;
   QVERIFY( updater.parseUpdateSets( 1, updateSets ) );
