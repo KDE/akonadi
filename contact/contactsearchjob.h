@@ -96,8 +96,7 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
     /**
      * Describes the criteria that can be searched for.
      */
-    enum Criterion
-    {
+    enum Criterion {
       Name,       ///< The name of the contact.
       Email,      ///< The email address of the contact.
       NickName,   ///< The nickname of the contact.
@@ -110,8 +109,7 @@ class AKONADI_CONTACT_EXPORT ContactSearchJob : public ItemSearchJob
      *
      * @since 4.5
      */
-    enum Match
-    {
+    enum Match {
       ExactMatch,      ///< The result must match exactly the pattern (case sensitive).
       StartsWithMatch, ///< The result must start with the pattern (case insensitive).
       ContainsMatch,    ///< The result must contain the pattern (case insensitive).

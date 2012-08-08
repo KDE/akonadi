@@ -90,8 +90,9 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
   const QModelIndex index = sourceModel()->index( row, 0 );
 
   // First see if the name matches a set regexp filter.
-  if ( !filterRegExp().isEmpty() && !index.data().toString().contains( filterRegExp() ) )
+  if ( !filterRegExp().isEmpty() && !index.data().toString().contains( filterRegExp() ) ) {
     return false;
+  }
 
   if ( !d->mimeTypes.isEmpty() ) {
     bool found = false;
@@ -102,7 +103,7 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
         KMimeType::Ptr mimeTypePtr = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
         if ( !mimeTypePtr.isNull() ) {
           foreach ( const QString &type, d->mimeTypes ) {
-            if ( mimeTypePtr->is( type )) {
+            if ( mimeTypePtr->is( type ) ) {
               found = true;
               break;
             }
@@ -110,12 +111,14 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
         }
       }
 
-      if ( found )
+      if ( found ) {
         break;
+      }
     }
 
-    if ( !found )
+    if ( !found ) {
       return false;
+    }
   }
 
   if ( !d->capabilities.isEmpty() ) {
@@ -127,8 +130,9 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
       }
     }
 
-    if ( !found )
+    if ( !found ) {
       return false;
+    }
 
     if ( found && !d->excludeCapabilities.isEmpty() ) {
       foreach ( const QString &capability, index.data( AgentTypeModel::CapabilitiesRole ).toStringList() ) {
@@ -138,8 +142,9 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
         }
       }
 
-      if ( !found )
+      if ( !found ) {
         return false;
+      }
     }
   }
 

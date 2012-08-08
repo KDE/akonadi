@@ -46,12 +46,12 @@ public:
    * Destroys the collection recent action.
    */
   ~RecentCollectionAction();
-  
+
   /**
    * Add new collection. Will create a new item.
    */
   void addRecentCollection( Akonadi::Collection::Id id);
-  
+
   void cleanRecentCollection();
 
 private:

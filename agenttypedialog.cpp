@@ -42,7 +42,7 @@ AgentTypeDialog::AgentTypeDialog( QWidget *parent )
 {
   setButtons( Ok | Cancel );
   QVBoxLayout *layout = new QVBoxLayout( mainWidget() );
-  layout->setMargin(0);
+  layout->setMargin( 0 );
 
   d->Widget = new Akonadi::AgentTypeWidget( mainWidget() );
   connect( d->Widget, SIGNAL(activated()), this, SLOT(accept()) );
@@ -67,10 +67,11 @@ AgentTypeDialog::~AgentTypeDialog()
 
 void AgentTypeDialog::done( int result )
 {
-  if ( result == Accepted )
+  if ( result == Accepted ) {
     d->agentType = d->Widget->currentAgentType();
-  else
+  } else {
     d->agentType = AgentType();
+  }
 
   KDialog::done( result );
 }

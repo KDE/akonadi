@@ -34,8 +34,7 @@ class EmailAddressSelectionProxyModel : public Akonadi::LeafExtensionProxyModel
   Q_OBJECT
 
   public:
-    enum Role
-    {
+    enum Role {
       NameRole = ContactsTreeModel::DateRole + 1,
       EmailAddressRole
     };

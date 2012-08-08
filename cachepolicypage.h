@@ -47,8 +47,7 @@ class AKONADI_EXPORT CachePolicyPage : public CollectionPropertiesPage
     /**
      * Describes the mode of the cache policy page.
      */
-    enum GuiMode
-    {
+    enum GuiMode {
       UserMode,     ///< A simplified UI for end-users will be provided.
       AdvancedMode  ///< An advanced UI for debugging will be provided.
     };

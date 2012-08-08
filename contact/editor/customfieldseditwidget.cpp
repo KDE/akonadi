@@ -98,8 +98,9 @@ void CustomFieldsEditWidget::loadContact( const KABC::Addressee &contact )
     splitCustomField( custom, app, name, value );
 
     // skip all well-known fields that have separated editor widgets
-    if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) // IM addresses
+    if ( custom.startsWith( QLatin1String( "messaging/" ) ) ) { // IM addresses
       continue;
+    }
 
     if ( app == QLatin1String( "KADDRESSBOOK" ) ) {
       static QSet<QString> blacklist;
@@ -113,12 +114,13 @@ void CustomFieldsEditWidget::loadContact( const KABC::Addressee &contact )
                   << QLatin1String( "X-Anniversary" )
                   << QLatin1String( "X-SpousesName" )
                   << QLatin1String( "X-Profession" )
-		  << QLatin1String( "MailPreferedFormatting")
-		  << QLatin1String( "MailAllowToRemoteContent");
+		  << QLatin1String( "MailPreferedFormatting" )
+		  << QLatin1String( "MailAllowToRemoteContent" );
       }
 
-      if ( blacklist.contains( name ) ) // several KAddressBook specific fields
+      if ( blacklist.contains( name ) ) { // several KAddressBook specific fields
         continue;
+      }
     }
 
     // check whether it correspond to a local custom field
@@ -170,10 +172,11 @@ void CustomFieldsEditWidget::storeContact( KABC::Addressee &contact ) const
   foreach ( const CustomField &customField, customFields ) {
     // write back values for local and global scope, leave external untouched
     if ( customField.scope() != CustomField::ExternalScope ) {
-      if ( !customField.value().isEmpty() )
+      if ( !customField.value().isEmpty() ) {
         contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), customField.key(), customField.value() );
-      else
+      } else {
         contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), customField.key() );
+      }
     }
   }
 
@@ -193,8 +196,9 @@ void CustomFieldsEditWidget::storeContact( KABC::Addressee &contact ) const
         }
       }
 
-      if ( !fieldStillExists )
+      if ( !fieldStillExists ) {
         contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), oldCustomField.key() );
+      }
     }
   }
 
@@ -222,8 +226,9 @@ void CustomFieldsEditWidget::setLocalCustomFieldDescriptions( const QVariantList
 {
   mLocalCustomFields.clear();
 
-  foreach ( const QVariant &description, descriptions )
+  foreach ( const QVariant &description, descriptions ) {
     mLocalCustomFields.append( CustomField::fromVariantMap( description.toMap(), CustomField::LocalScope ) );
+  }
 }
 
 QVariantList CustomFieldsEditWidget::localCustomFieldDescriptions() const
@@ -232,8 +237,9 @@ QVariantList CustomFieldsEditWidget::localCustomFieldDescriptions() const
 
   QVariantList descriptions;
   foreach ( const CustomField &field, customFields ) {
-    if ( field.scope() == CustomField::LocalScope )
+    if ( field.scope() == CustomField::LocalScope ) {
       descriptions.append( field.toVariantMap() );
+    }
   }
 
   return descriptions;
@@ -273,8 +279,9 @@ void CustomFieldsEditWidget::slotAdd()
 void CustomFieldsEditWidget::slotEdit()
 {
   const QModelIndex currentIndex = mView->currentIndex();
-  if ( !currentIndex.isValid() )
+  if ( !currentIndex.isValid() ) {
     return;
+  }
 
   CustomField field;
   field.setKey( mModel->index( currentIndex.row(), 2 ).data( Qt::DisplayRole ).toString() );
@@ -299,8 +306,9 @@ void CustomFieldsEditWidget::slotEdit()
 void CustomFieldsEditWidget::slotRemove()
 {
   const QModelIndex currentIndex = mView->currentIndex();
-  if ( !currentIndex.isValid() )
+  if ( !currentIndex.isValid() ) {
     return;
+  }
 
   if ( KMessageBox::warningContinueCancel( this,
                                            i18nc( "Custom Fields", "Do you really want to delete the selected custom field?" ),
@@ -314,8 +322,8 @@ void CustomFieldsEditWidget::slotRemove()
 void CustomFieldsEditWidget::slotUpdateButtons()
 {
   const bool hasCurrent = mView->currentIndex().isValid();
-  const bool isExternal = (hasCurrent && 
-                           (static_cast<CustomField::Scope>( mView->currentIndex().data( CustomFieldsModel::ScopeRole ).toInt() ) == CustomField::ExternalScope) );
+  const bool isExternal = ( hasCurrent &&
+                            ( static_cast<CustomField::Scope>( mView->currentIndex().data( CustomFieldsModel::ScopeRole ).toInt() ) == CustomField::ExternalScope ) );
 
   mAddButton->setEnabled( !mReadOnly );
   mEditButton->setEnabled( !mReadOnly && hasCurrent && !isExternal );

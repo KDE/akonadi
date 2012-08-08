@@ -43,8 +43,9 @@ DateView::DateView( QWidget *parent )
 
 void DateView::contextMenuEvent( QContextMenuEvent *event )
 {
-  if ( text().isEmpty() )
+  if ( text().isEmpty() ) {
     return;
+  }
 
   QMenu menu;
   menu.addAction( i18n( "Remove" ), this, SLOT(emitSignal()) );
@@ -67,10 +68,11 @@ DateEditWidget::DateEditWidget( Type type, QWidget *parent )
   layout->addWidget( mView );
 
   mClearButton = new QToolButton;
-  if ( layoutDirection() == Qt::LeftToRight )
+  if ( layoutDirection() == Qt::LeftToRight ) {
     mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-rtl" ) ) );
-  else
+  } else {
     mClearButton->setIcon( KIcon( QLatin1String( "edit-clear-locationbar-ltr" ) ) );
+  }
   layout->addWidget( mClearButton );
 
   mSelectButton = new QToolButton;

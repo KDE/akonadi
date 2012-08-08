@@ -101,18 +101,24 @@ QVariantMap CustomField::toVariantMap() const
 
 CustomField::Type CustomField::stringToType( const QString &type )
 {
-  if ( type == QLatin1String( "text" ) )
+  if ( type == QLatin1String( "text" ) ) {
     return CustomField::TextType;
-  if ( type == QLatin1String( "numeric" ) )
+  }
+  if ( type == QLatin1String( "numeric" ) ) {
     return CustomField::NumericType;
-  if ( type == QLatin1String( "boolean" ) )
+  }
+  if ( type == QLatin1String( "boolean" ) ) {
     return CustomField::BooleanType;
-  if ( type == QLatin1String( "date" ) )
+  }
+  if ( type == QLatin1String( "date" ) ) {
     return CustomField::DateType;
-  if ( type == QLatin1String( "time" ) )
+  }
+  if ( type == QLatin1String( "time" ) ) {
     return CustomField::TimeType;
-  if ( type == QLatin1String( "datetime" ) )
+  }
+  if ( type == QLatin1String( "datetime" ) ) {
     return CustomField::DateTimeType;
+  }
 
   return CustomField::TextType;
 }

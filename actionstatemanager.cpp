@@ -34,23 +34,27 @@ using namespace Akonadi;
 
 static bool canCreateSubCollection( const Collection &collection )
 {
-  if ( !( collection.rights() & Collection::CanCreateCollection ) )
+  if ( !( collection.rights() & Collection::CanCreateCollection ) ) {
     return false;
+  }
 
-  if ( !collection.contentMimeTypes().contains( Collection::mimeType() ) )
+  if ( !collection.contentMimeTypes().contains( Collection::mimeType() ) ) {
     return false;
+  }
 
   return true;
 }
 
 static inline bool canContainItems( const Collection &collection )
 {
-  if ( collection.contentMimeTypes().isEmpty() )
+  if ( collection.contentMimeTypes().isEmpty() ) {
     return false;
+  }
 
-  if ( (collection.contentMimeTypes().count() == 1) &&
-       (collection.contentMimeTypes().first() == Collection::mimeType()) )
+  if ( ( collection.contentMimeTypes().count() == 1 ) &&
+       ( collection.contentMimeTypes().first() == Collection::mimeType() ) ) {
     return false;
+  }
 
   return true;
 }
@@ -72,22 +76,21 @@ void ActionStateManager::setReceiver( QObject *object )
 void ActionStateManager::updateState( const Collection::List &collections, const Item::List &items )
 {
   const int collectionCount = collections.count();
-  const bool singleCollectionSelected = (collectionCount == 1);
-  const bool multipleCollectionsSelected = (collectionCount > 1);
-  const bool atLeastOneCollectionSelected = (singleCollectionSelected || multipleCollectionsSelected);
+  const bool singleCollectionSelected = ( collectionCount == 1 );
+  const bool multipleCollectionsSelected = ( collectionCount > 1 );
+  const bool atLeastOneCollectionSelected = ( singleCollectionSelected || multipleCollectionsSelected );
 
   const int itemCount = items.count();
-  const bool singleItemSelected = (itemCount == 1);
-  const bool multipleItemsSelected = (itemCount > 1);
-  const bool atLeastOneItemSelected = (singleItemSelected || multipleItemsSelected);
+  const bool singleItemSelected = ( itemCount == 1 );
+  const bool multipleItemsSelected = ( itemCount > 1 );
+  const bool atLeastOneItemSelected = ( singleItemSelected || multipleItemsSelected );
 
   const bool listOfCollectionNotEmpty = collections.isEmpty() ? false : true;
   bool canDeleteCollections = listOfCollectionNotEmpty;
-  if ( canDeleteCollections )
-  {
+  if ( canDeleteCollections ) {
     foreach ( const Collection &collection, collections ) {
       // do we have the necessary rights?
-      if ( !(collection.rights() & Collection::CanDeleteCollection) ) {
+      if ( !( collection.rights() & Collection::CanDeleteCollection ) ) {
         canDeleteCollections = false;
         break;
       }
@@ -190,7 +193,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
     }
   }
 
-  const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
+  const Collection collection = ( !collections.isEmpty() ? collections.first() : Collection() );
 
   // collection specific actions
   enableAction( StandardActionManager::CreateCollection, singleCollectionSelected && // we can create only inside one collection
@@ -246,9 +249,9 @@ void ActionStateManager::updateState( const Collection::List &collections, const
       resourceCollectionCount++;
 
       // check that the 'NoConfig' flag is not set for the resource
-      if ( hasResourceCapability( collection, QLatin1String( "NoConfig" ) ) )
+      if ( hasResourceCapability( collection, QLatin1String( "NoConfig" ) ) ) {
         canConfigureResource = false;
-
+      }
     } else {
       // we selected a non-resource collection
       canDeleteResources = false;
@@ -269,7 +272,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::ResourceProperties, canConfigureResource );
   enableAction( StandardActionManager::SynchronizeResources, canSynchronizeResources );
 
-  if (collectionsAreInTrash) {
+  if ( collectionsAreInTrash ) {
     updateAlternatingAction( StandardActionManager::MoveToTrashRestoreCollectionAlternative );
     //updatePluralLabel( StandardActionManager::MoveToTrashRestoreCollectionAlternative, collectionCount );
   } else {
@@ -278,13 +281,14 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::MoveToTrashRestoreCollection, atLeastOneCollectionSelected && canMoveCollections );
 
   // item specific actions
-  bool canDeleteItems = (items.count() > 0); //TODO: fixme
+  bool canDeleteItems = ( items.count() > 0 ); //TODO: fixme
   foreach ( const Item &item, items ) {
     const Collection parentCollection = item.parentCollection();
-    if ( !parentCollection.isValid() )
+    if ( !parentCollection.isValid() ) {
       continue;
+    }
 
-    canDeleteItems = canDeleteItems && (parentCollection.rights() & Collection::CanDeleteItem);
+    canDeleteItems = canDeleteItems && ( parentCollection.rights() & Collection::CanDeleteItem );
   }
 
   bool itemsAreInTrash = false;
@@ -317,7 +321,7 @@ void ActionStateManager::updateState( const Collection::List &collections, const
   enableAction( StandardActionManager::MoveItemToDialog, atLeastOneItemSelected && // we need items to work with
                                                        canDeleteItems ); // we need the necessary rights
 
-  if (itemsAreInTrash) {
+  if ( itemsAreInTrash ) {
     updateAlternatingAction( StandardActionManager::MoveToTrashRestoreItemAlternative );
     //updatePluralLabel( StandardActionManager::MoveToTrashRestoreItemAlternative, itemCount );
   } else {
@@ -352,9 +356,9 @@ bool ActionStateManager::isResourceCollection( const Collection &collection ) co
 
 bool ActionStateManager::isFolderCollection( const Collection &collection ) const
 {
-  return (CollectionUtils::isFolder( collection ) ||
-          CollectionUtils::isResource( collection ) ||
-          CollectionUtils::isStructural( collection ));
+  return ( CollectionUtils::isFolder( collection ) ||
+           CollectionUtils::isResource( collection ) ||
+           CollectionUtils::isStructural( collection ) );
 }
 
 bool ActionStateManager::isSpecialCollection( const Collection &collection ) const
@@ -364,8 +368,9 @@ bool ActionStateManager::isSpecialCollection( const Collection &collection ) con
 
 bool ActionStateManager::isFavoriteCollection( const Collection &collection ) const
 {
-  if ( !mReceiver )
+  if ( !mReceiver ) {
     return false;
+  }
 
   bool result = false;
   QMetaObject::invokeMethod( mReceiver, "isFavoriteCollection", Qt::DirectConnection,
@@ -389,24 +394,27 @@ bool ActionStateManager::collectionCanHaveItems( const Collection &collection ) 
 
 void ActionStateManager::enableAction( int action, bool state )
 {
-  if ( !mReceiver )
+  if ( !mReceiver ) {
     return;
+  }
 
   QMetaObject::invokeMethod( mReceiver, "enableAction", Qt::DirectConnection, Q_ARG( int, action ), Q_ARG( bool, state ) );
 }
 
 void ActionStateManager::updatePluralLabel( int action, int count )
 {
-  if ( !mReceiver )
+  if ( !mReceiver ) {
     return;
+  }
 
   QMetaObject::invokeMethod( mReceiver, "updatePluralLabel", Qt::DirectConnection, Q_ARG( int, action ), Q_ARG( int, count ) );
 }
 
 void ActionStateManager::updateAlternatingAction( int action )
 {
-  if ( !mReceiver )
+  if ( !mReceiver ) {
     return;
+  }
 
-  QMetaObject::invokeMethod( mReceiver, "updateAlternatingAction", Qt::DirectConnection, Q_ARG( int, action ));
+  QMetaObject::invokeMethod( mReceiver, "updateAlternatingAction", Qt::DirectConnection, Q_ARG( int, action ) );
 }

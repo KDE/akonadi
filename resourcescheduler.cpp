@@ -446,7 +446,7 @@ void ResourceScheduler::Task::sendDBusReplies( bool success )
 
 ResourceScheduler::QueueType ResourceScheduler::queueTypeForTaskType( TaskType type )
 {
-  switch( type ) {
+  switch ( type ) {
   case ChangeReplay:
   case RecursiveMoveReplay:
     return ChangeReplayQueue;

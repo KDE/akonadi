@@ -117,14 +117,16 @@ void EntityDeletedAttribute::deserialize( const QByteArray &data )
   if ( !l[1].isEmpty() ) {
     QList<QByteArray> componentData;
     ImapParser::parseParenthesizedList( l[1], componentData );
-    if ( componentData.size() != 1 )
+    if ( componentData.size() != 1 ) {
       return;
+    }
     QList<int> components;
     bool ok;
     for ( int i = 0; i < 1; ++i ) {
       components << componentData.at( i ).toInt( &ok );
-      if ( !ok )
+      if ( !ok ) {
         return;
+      }
     }
     d->restoreCollection = Collection( components.at( 0 ) );
   }

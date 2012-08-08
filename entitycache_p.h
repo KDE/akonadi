@@ -107,8 +107,9 @@ class EntityCache : public EntityCacheBase
     virtual T retrieve( typename T::Id id ) const
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
-      if ( node && !node->pending && !node->invalid )
+      if ( node && !node->pending && !node->invalid ) {
         return node->entity;
+      }
       return T();
     }
 
@@ -116,8 +117,9 @@ class EntityCache : public EntityCacheBase
     void invalidate( typename T::Id id )
     {
       EntityCacheNode<T>* node = cacheNodeForId( id );
-      if ( node )
+      if ( node ) {
         node->invalid = true;
+      }
     }
 
     /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
@@ -126,8 +128,9 @@ class EntityCache : public EntityCacheBase
       EntityCacheNode<T>* node = cacheNodeForId( id );
       if ( node ) {
         mCache.removeAll( node );
-        if ( node->pending )
+        if ( node->pending ) {
           request( id, scope );
+        }
         delete node;
       }
     }
@@ -164,10 +167,10 @@ class EntityCache : public EntityCacheBase
     EntityCacheNode<T>* cacheNodeForId( typename T::Id id ) const
     {
       for ( typename QQueue<EntityCacheNode<T>*>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd();
-            it != endIt; ++it )
-      {
-        if ( (*it)->entity.id() == id )
+            it != endIt; ++it ) {
+        if ( ( *it )->entity.id() == id ) {
           return *it;
+        }
       }
       return 0;
     }
@@ -177,8 +180,9 @@ class EntityCache : public EntityCacheBase
       // Error handling?
       typename T::Id id = job->property( "EntityCacheNode" ).template value<typename T::Id>();
       EntityCacheNode<T> *node = cacheNodeForId( id );
-      if ( !node )
+      if ( !node ) {
         return; // got replaced in the meantime
+      }
 
       node->pending = false;
       extractResult( node, job );
@@ -202,8 +206,9 @@ class EntityCache : public EntityCacheBase
     /** Tries to reduce the cache size until at least one more object fits in. */
     void shrinkCache()
     {
-      while ( mCache.size() >= mCapacity && !mCache.first()->pending )
+      while ( mCache.size() >= mCapacity && !mCache.first()->pending ) {
         delete mCache.dequeue();
+      }
     }
 
   private:
@@ -215,20 +220,22 @@ template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFet
 {
   CollectionFetchJob* fetch = qobject_cast<CollectionFetchJob*>( job );
   Q_ASSERT( fetch );
-  if ( fetch->collections().isEmpty() )
+  if ( fetch->collections().isEmpty() ) {
     node->entity = Collection();
-  else
+  } else {
     node->entity = fetch->collections().first();
+  }
 }
 
 template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult( EntityCacheNode<Item>* node, KJob *job ) const
 {
   ItemFetchJob* fetch = qobject_cast<ItemFetchJob*>( job );
   Q_ASSERT( fetch );
-  if ( fetch->items().isEmpty() )
+  if ( fetch->items().isEmpty() ) {
     node->entity = Item();
-  else
+  } else {
     node->entity = fetch->items().first();
+  }
 }
 
 template<> inline CollectionFetchJob* EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob( Collection::Id id )
@@ -248,28 +255,29 @@ public:
   {
     bool val = true;
 
-    if (lhs_.size() != rhs_.size())
+    if ( lhs_.size() != rhs_.size() ) {
       return false;
+    }
 
     typename T::List lhs = lhs_;
     QList<typename T::Id> rhs = rhs_;
 
-    qSort(lhs);
-    qSort(rhs);
+    qSort( lhs );
+    qSort( rhs );
     return lhs == rhs;
   }
 
   static bool compare(const QList<typename T::Id> &l1, const typename T::List &l2)
   {
-    return compare(l2, l1);
+    return compare( l2, l1 );
   }
 
   static bool compare(const typename T::List &l1, const typename T::List &l2)
   {
     typename T::List l1_ = l1;
     typename T::List l2_ = l2;
-    qSort(l1_);
-    qSort(l2_);
+    qSort( l1_ );
+    qSort( l2_ );
     return l1_ == l2_;
   }
 };
@@ -280,8 +288,9 @@ struct EntityListCacheNode
 {
   EntityListCacheNode( const typename T::List &list ) : entityList( list ), pending( false ), invalid( false ) {}
   EntityListCacheNode( const QList<typename T::Id> &list ) : pending( false ), invalid( false ) {
-    foreach( typename T::Id id, list)
-      entityList.append(T(id));
+    foreach ( typename T::Id id, list ) {
+      entityList.append( T( id ) );
+    }
   }
   typename T::List entityList;
   bool pending;
@@ -309,8 +318,9 @@ public:
   typename T::List retrieve( const QList<TArg> &id ) const
   {
     EntityListCacheNode<T>* node = cacheNodeForId( id );
-    if ( node && !node->pending && !node->invalid )
+    if ( node && !node->pending && !node->invalid ) {
       return node->entityList;
+    }
     return typename T::List();
   }
 
@@ -331,8 +341,9 @@ public:
   void invalidate( const QList<TArg> &id )
   {
     EntityListCacheNode<T>* node = cacheNodeForId( id );
-    if ( node )
+    if ( node ) {
       node->invalid = true;
+    }
   }
 
   /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
@@ -342,8 +353,9 @@ public:
     EntityListCacheNode<T>* node = cacheNodeForId( id );
     if ( node ) {
       mCache.removeAll( node );
-      if ( node->pending )
+      if ( node->pending ) {
         request( id, scope );
+      }
       delete node;
     }
   }
@@ -362,8 +374,9 @@ private:
   typename T::List getTList( const QList<typename T::Id> &id )
   {
     typename T::List ids;
-    foreach(typename T::Id id_, id)
-      ids.append(T(id_));
+    foreach ( typename T::Id id_, id ) {
+      ids.append( T( id_ ) );
+    }
     return ids;
   }
 
@@ -393,8 +406,9 @@ private:
   /** Tries to reduce the cache size until at least one more object fits in. */
   void shrinkCache()
   {
-    while ( mCache.size() >= mCapacity && !mCache.first()->pending )
+    while ( mCache.size() >= mCapacity && !mCache.first()->pending ) {
       delete mCache.dequeue();
+    }
   }
 
   /** Object has been requested but is not yet loaded into the cache or is already available. */
@@ -408,10 +422,10 @@ private:
   EntityListCacheNode<T>* cacheNodeForId( const QList<TArg> &id ) const
   {
     for ( typename QQueue<EntityListCacheNode<T>*>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd();
-          it != endIt; ++it )
-    {
-      if ( Comparator<T>::compare( ( *it )->entityList, id ) )
+          it != endIt; ++it ) {
+      if ( Comparator<T>::compare( ( *it )->entityList, id ) ) {
         return *it;
+      }
     }
     return 0;
   }
@@ -427,8 +441,9 @@ private:
     typename T::List ids = job->property( "EntityListCacheNode" ).template value<typename T::List>();
 
     EntityListCacheNode<T> *node = cacheNodeForId( ids );
-    if ( !node )
+    if ( !node ) {
       return; // got replaced in the meantime
+    }
 
     node->pending = false;
     extractResult( node, job );

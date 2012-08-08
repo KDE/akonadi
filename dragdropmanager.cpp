@@ -45,8 +45,9 @@ Akonadi::Collection DragDropManager::currentDropTarget( QDropEvent *event ) cons
   Collection collection = m_view->model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( !collection.isValid() ) {
     const Item item = m_view->model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       collection = m_view->model()->data( index.parent(), EntityTreeModel::CollectionRole ).value<Collection>();
+    }
   }
 
   return collection;
@@ -64,16 +65,19 @@ bool DragDropManager::dropAllowed( QDragMoveEvent *event ) const
     foreach ( const KUrl &url, urls ) {
       const Collection collection = Collection::fromUrl( url );
       if ( collection.isValid() ) {
-        if ( !supportedContentTypes.contains( Collection::mimeType() ) )
+        if ( !supportedContentTypes.contains( Collection::mimeType() ) ) {
           break;
+        }
 
         // Check if we don't try to drop on one of the children
-        if ( hasAncestor( m_view->indexAt( event->pos() ), collection.id() ) )
+        if ( hasAncestor( m_view->indexAt( event->pos() ), collection.id() ) ) {
           break;
+        }
       } else { // This is an item.
         const QString type = url.queryItems()[ QString::fromLatin1( "type" ) ];
-        if ( !supportedContentTypes.contains( type ) )
+        if ( !supportedContentTypes.contains( type ) ) {
           break;
+        }
       }
 
       return true;
@@ -87,8 +91,9 @@ bool DragDropManager::hasAncestor( const QModelIndex &_index, Collection::Id par
 {
   QModelIndex index( _index );
   while ( index.isValid() ) {
-    if ( m_view->model()->data( index, EntityTreeModel::CollectionIdRole ).toLongLong() == parentId )
+    if ( m_view->model()->data( index, EntityTreeModel::CollectionIdRole ).toLongLong() == parentId ) {
       return true;
+    }
 
     index = index.parent();
   }
@@ -99,27 +104,27 @@ bool DragDropManager::hasAncestor( const QModelIndex &_index, Collection::Id par
 bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, bool dropOnItem )
 {
   const Collection targetCollection = currentDropTarget( event );
-  if ( !targetCollection.isValid() )
+  if ( !targetCollection.isValid() ) {
     return false;
+  }
 
-  if ( !mIsManualSortingActive && !dropOnItem )
-  {
+  if ( !mIsManualSortingActive && !dropOnItem ) {
     return false;
   }
 
   const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
-  
+
   const QMimeData *data = event->mimeData();
   const KUrl::List urls = KUrl::List::fromMimeData( data );
   foreach ( const KUrl &url, urls ) {
     const Collection collection = Collection::fromUrl( url );
-    if( !collection.isValid() ) {
+    if ( !collection.isValid() ) {
       if ( !dropOnItem ) {
         return false;
       }
     }
-  } 
-    
+  }
+
   int actionCount = 0;
   Qt::DropAction defaultAction;
   // TODO check if the source supports moving
@@ -127,16 +132,16 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
   bool moveAllowed, copyAllowed, linkAllowed;
   moveAllowed = copyAllowed = linkAllowed = false;
 
-  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
-       && (event->possibleActions() & Qt::MoveAction) ) {
+  if ( ( targetCollection.rights() & ( Collection::CanCreateCollection | Collection::CanCreateItem ) ) &&
+       ( event->possibleActions() & Qt::MoveAction ) ) {
     moveAllowed = true;
   }
-  if ( (targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem))
-        && (event->possibleActions() & Qt::CopyAction) ) {
+  if ( ( targetCollection.rights() & ( Collection::CanCreateCollection | Collection::CanCreateItem ) ) &&
+       ( event->possibleActions() & Qt::CopyAction ) ) {
     copyAllowed = true;
   }
 
-  if ( (targetCollection.rights() & Collection::CanLinkItem) && (event->possibleActions() & Qt::LinkAction) ) {
+  if ( ( targetCollection.rights() & Collection::CanLinkItem ) && ( event->possibleActions() & Qt::LinkAction ) ) {
     linkAllowed = true;
   }
 
@@ -145,32 +150,35 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
     copyAllowed = false;
     linkAllowed = false;
   }
-    
+
   if ( !moveAllowed && !copyAllowed && !linkAllowed ) {
     kDebug() << "Cannot drop here:" << event->possibleActions() << m_view->model()->supportedDragActions() << m_view->model()->supportedDropActions();
     return false;
   }
 
   // first check whether the user pressed a modifier key to select a specific action
-  if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) &&
-       (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+  if ( ( QApplication::keyboardModifiers() & Qt::ControlModifier ) &&
+       ( QApplication::keyboardModifiers() & Qt::ShiftModifier ) ) {
     if ( linkAllowed ) {
       defaultAction = Qt::LinkAction;
       actionCount = 1;
-    } else
+    } else {
       return false;
-  } else if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) ) {
+    }
+  } else if ( ( QApplication::keyboardModifiers() & Qt::ControlModifier ) ) {
     if ( copyAllowed ) {
       defaultAction = Qt::CopyAction;
       actionCount = 1;
-    } else
+    } else {
       return false;
-  } else if ( (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+    }
+  } else if ( ( QApplication::keyboardModifiers() & Qt::ShiftModifier ) ) {
     if ( moveAllowed ) {
       defaultAction = Qt::MoveAction;
       actionCount = 1;
-    } else
+    } else {
       return false;
+    }
   }
 
   if ( actionCount == 1 ) {
@@ -180,14 +188,15 @@ bool DragDropManager::processDropEvent( QDropEvent *event, bool &menuCanceled, b
   }
 
   if ( !mShowDropActionMenu ) {
-    if ( moveAllowed )
+    if ( moveAllowed ) {
       defaultAction = Qt::MoveAction;
-    else if ( copyAllowed )
+    } else if ( copyAllowed ) {
       defaultAction = Qt::CopyAction;
-    else if ( linkAllowed )
+    } else if ( linkAllowed ) {
       defaultAction = Qt::LinkAction;
-    else
+    } else {
       return false;
+    }
     event->setDropAction( defaultAction );
     return true;
   }
@@ -242,8 +251,9 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
   QModelIndexList indexes;
   bool sourceDeletable = true;
   foreach ( const QModelIndex &index, m_view->selectionModel()->selectedRows() ) {
-    if ( !m_view->model()->flags( index ).testFlag( Qt::ItemIsDragEnabled ) )
+    if ( !m_view->model()->flags( index ).testFlag( Qt::ItemIsDragEnabled ) ) {
       continue;
+    }
 
     if ( sourceDeletable ) {
       Collection source = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -259,12 +269,14 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
     indexes.append( index );
   }
 
-  if ( indexes.isEmpty() )
+  if ( indexes.isEmpty() ) {
     return;
+  }
 
   QMimeData *mimeData = m_view->model()->mimeData( indexes );
-  if ( !mimeData )
+  if ( !mimeData ) {
     return;
+  }
 
   QDrag *drag = new QDrag( m_view );
   drag->setMimeData( mimeData );
@@ -272,21 +284,23 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
     drag->setPixmap( KIcon( QLatin1String( "document-multiple" ) ).pixmap( QSize( 22, 22 ) ) );
   } else {
     QPixmap pixmap = indexes.first().data( Qt::DecorationRole ).value<QIcon>().pixmap( QSize( 22, 22 ) );
-    if ( pixmap.isNull() )
+    if ( pixmap.isNull() ) {
       pixmap = KIcon( QLatin1String( "text-plain" ) ).pixmap( QSize( 22, 22 ) );
+    }
     drag->setPixmap( pixmap );
   }
 
-  if ( !sourceDeletable )
+  if ( !sourceDeletable ) {
     supportedActions &= ~Qt::MoveAction;
+  }
 
   Qt::DropAction defaultAction = Qt::IgnoreAction;
-  if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) &&
-       (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+  if ( ( QApplication::keyboardModifiers() & Qt::ControlModifier ) &&
+       ( QApplication::keyboardModifiers() & Qt::ShiftModifier ) ) {
     defaultAction = Qt::LinkAction;
-  } else if ( (QApplication::keyboardModifiers() & Qt::ControlModifier) ) {
+  } else if ( ( QApplication::keyboardModifiers() & Qt::ControlModifier ) ) {
     defaultAction = Qt::CopyAction;
-  } else if ( (QApplication::keyboardModifiers() & Qt::ShiftModifier) ) {
+  } else if ( ( QApplication::keyboardModifiers() & Qt::ShiftModifier ) ) {
     defaultAction = Qt::MoveAction;
   }
 

@@ -36,18 +36,19 @@
 // Tries to guess the display type that is used for the passed contact
 static DisplayNameEditWidget::DisplayType guessedDisplayType( const KABC::Addressee &contact )
 {
-  if ( contact.formattedName() == (contact.givenName() + QLatin1Char( ' ' ) + contact.familyName()) )
+  if ( contact.formattedName() == ( contact.givenName() + QLatin1Char( ' ' ) + contact.familyName() ) ) {
     return DisplayNameEditWidget::SimpleName;
-  else if ( contact.formattedName() == contact.assembledName() )
+  } else if ( contact.formattedName() == contact.assembledName() ) {
     return DisplayNameEditWidget::FullName;
-  else if ( contact.formattedName() == (contact.familyName() + QLatin1String( ", " ) + contact.givenName()) )
+  } else if ( contact.formattedName() == ( contact.familyName() + QLatin1String( ", " ) + contact.givenName() ) ) {
     return DisplayNameEditWidget::ReverseNameWithComma;
-  else if ( contact.formattedName() == (contact.familyName() + QLatin1Char( ' ' ) + contact.givenName()) )
+  } else if ( contact.formattedName() == ( contact.familyName() + QLatin1Char( ' ' ) + contact.givenName() ) ) {
     return DisplayNameEditWidget::ReverseName;
-  else if ( contact.formattedName() == contact.organization() )
+  } else if ( contact.formattedName() == contact.organization() ) {
     return DisplayNameEditWidget::Organization;
-  else
+  } else {
     return DisplayNameEditWidget::CustomName;
+  }
 }
 
 class DisplayNameDelegate : public QStyledItemDelegate
@@ -66,8 +67,9 @@ class DisplayNameDelegate : public QStyledItemDelegate
       QFont font = view->font();
       font.setStyle( QFont::StyleItalic );
       QFontMetrics metrics( font );
-      foreach ( const QString &description, mDescriptions )
+      foreach ( const QString &description, mDescriptions ) {
         mMaxDescriptionWidth = qMax( mMaxDescriptionWidth, metrics.width( description ) );
+      }
 
       mMaxDescriptionWidth += 3;
     }
@@ -85,10 +87,11 @@ class DisplayNameDelegate : public QStyledItemDelegate
       QFont font( painter->font() );
       font.setStyle( QFont::StyleItalic );
       painter->setFont( font );
-      if ( option.state & QStyle::State_Selected )
+      if ( option.state & QStyle::State_Selected ) {
         painter->setPen( option.palette.color( QPalette::Normal, QPalette::BrightText ) );
-      else
+      } else {
         painter->setPen( option.palette.color( QPalette::Disabled, QPalette::Text ) );
+      }
       painter->drawText( rect, Qt::AlignLeft, mDescriptions.at( index.row() ) );
       painter->restore();
     }
@@ -175,8 +178,9 @@ void DisplayNameEditWidget::changeName( const KABC::Addressee &contact )
   const QString organization = mContact.organization();
   mContact = contact;
   mContact.setOrganization( organization );
-  if ( mDisplayType == CustomName )
+  if ( mDisplayType == CustomName ) {
     mContact.setFormattedName( mView->currentText() );
+  }
 
   updateView();
 }
@@ -204,8 +208,9 @@ bool DisplayNameEditWidget::eventFilter( QObject *object, QEvent *event )
 
       int maxWidth = 0;
       QFontMetrics metrics( mView->font() );
-      for ( int i = 0; i < mView->count(); ++i )
+      for ( int i = 0; i < mView->count(); ++i ) {
         maxWidth = qMax( maxWidth, metrics.width( mView->itemText( i ) ) );
+      }
 
       // resize it to show the complete content
       parentWidget->resize( maxWidth + mAdditionalPopupWidth + 20, parentWidget->height() );

@@ -80,7 +80,7 @@ void ConflictHandler::resolve()
   dlg.exec();
 
   const ResolveStrategy strategy = dlg.resolveStrategy();
-  switch( strategy ) {
+  switch ( strategy ) {
     case UseLocalItem:
       useLocalItem();
       break;

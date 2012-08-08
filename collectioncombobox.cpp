@@ -101,8 +101,9 @@ class CollectionComboBox::Private
 void CollectionComboBox::Private::activated( int index )
 {
   const QModelIndex modelIndex = mParent->model()->index( index, 0 );
-  if ( modelIndex.isValid() )
-    emit mParent->currentChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
+  if ( modelIndex.isValid() ) {
+    emit mParent->currentChanged( modelIndex.data( EntityTreeModel::CollectionRole ).value<Collection>() );
+  }
 }
 
 void CollectionComboBox::Private::activated( const QModelIndex &index )
@@ -179,9 +180,11 @@ void CollectionComboBox::setMimeTypeFilter( const QStringList &contentMimeTypes 
   d->mMimeTypeFilterModel->clearFilters();
   d->mMimeTypeFilterModel->addMimeTypeFilters( contentMimeTypes );
 
-  if ( d->mMonitor )
-    foreach ( const QString &mimeType, contentMimeTypes )
+  if ( d->mMonitor ) {
+    foreach ( const QString &mimeType, contentMimeTypes ) {
       d->mMonitor->setMimeTypeMonitored( mimeType, true );
+    }
+  }
 }
 
 QStringList CollectionComboBox::mimeTypeFilter() const
@@ -207,10 +210,11 @@ void CollectionComboBox::setDefaultCollection( const Collection &collection )
 Akonadi::Collection CollectionComboBox::currentCollection() const
 {
   const QModelIndex modelIndex = model()->index( currentIndex(), 0 );
-  if ( modelIndex.isValid() )
+  if ( modelIndex.isValid() ) {
     return modelIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Collection>();
-  else
+  } else {
     return Akonadi::Collection();
+  }
 }
 
 #include "collectioncombobox.moc"

@@ -49,8 +49,7 @@ class AKONADI_CONTACT_EXPORT AbstractContactGroupFormatter
     /**
      * Describes the form of the HTML that is created.
      */
-    enum HtmlForm
-    {
+    enum HtmlForm {
       SelfcontainedForm,                ///< Creates a complete HTML document
       EmbeddableForm,                   ///< Creates a div HTML element that can be embedded.
       UserForm = SelfcontainedForm + 42 ///< Point for extension

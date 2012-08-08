@@ -43,16 +43,18 @@ FreeBusyEditWidget::~FreeBusyEditWidget()
 
 void FreeBusyEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  if ( contact.preferredEmail().isEmpty() )
+  if ( contact.preferredEmail().isEmpty() ) {
     return;
+  }
 
   mURL->setUrl( KCalCore::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) );
 }
 
 void FreeBusyEditWidget::storeContact( KABC::Addressee &contact ) const
 {
-  if ( contact.preferredEmail().isEmpty() )
+  if ( contact.preferredEmail().isEmpty() ) {
     return;
+  }
 
   KCalCore::FreeBusyUrlStore::self()->writeUrl( contact.preferredEmail(), mURL->url().url() );
   KCalCore::FreeBusyUrlStore::self()->sync();

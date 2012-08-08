@@ -94,13 +94,15 @@ void CollectionQuotaAttribute::deserialize( const QByteArray &data )
 
   const QList<QByteArray> items = data.simplified().split( ' ' );
 
-  if ( items.isEmpty() )
+  if ( items.isEmpty() ) {
     return;
+  }
 
   d->mCurrentValue = items[0].toLongLong();
 
-  if ( items.size() < 2 )
+  if ( items.size() < 2 ) {
     return;
+  }
 
   d->mMaximumValue = items[1].toLongLong();
 }

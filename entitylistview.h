@@ -189,7 +189,7 @@ class AKONADI_EXPORT EntityListView : public QListView
 #ifndef QT_NO_CONTEXTMENU
     virtual void contextMenuEvent( QContextMenuEvent *event );
 #endif
-  
+
   private:
     //@cond PRIVATE
     class Private;

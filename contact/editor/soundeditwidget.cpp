@@ -62,34 +62,35 @@ QByteArray SoundLoader::loadSound( const KUrl &url, bool *ok )
   QByteArray sound;
   QString tempFile;
 
-  if ( url.isEmpty() )
+  if ( url.isEmpty() ) {
     return sound;
+  }
 
-  (*ok) = false;
+  ( *ok ) = false;
 
   if ( url.isLocalFile() ) {
     QFile file( url.toLocalFile() );
     if ( file.open( QIODevice::ReadOnly ) ) {
       sound = file.readAll();
       file.close();
-      (*ok) = true;
+      ( *ok ) = true;
     }
   } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
     QFile file( tempFile );
     if ( file.open( QIODevice::ReadOnly ) ) {
       sound = file.readAll();
       file.close();
-      (*ok) = true;
+      ( *ok ) = true;
     }
     KIO::NetAccess::removeTempFile( tempFile );
   }
 
-  if ( !(*ok) ) {
+  if ( !( *ok ) ) {
     KMessageBox::sorry( mParent, i18n( "This contact's sound cannot be found." ) );
     return sound;
   }
 
-  (*ok) = true;
+  ( *ok ) = true;
 
   return sound;
 }
@@ -151,17 +152,20 @@ void SoundEditWidget::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu menu;
 
-  if ( mHasSound )
+  if ( mHasSound ) {
     menu.addAction( i18n( "Play" ), this, SLOT(playSound()) );
+  }
 
-  if ( !mReadOnly )
+  if ( !mReadOnly ) {
     menu.addAction( i18n( "Change..." ), this, SLOT(changeSound()) );
+  }
 
   if ( mHasSound ) {
     menu.addAction( i18n( "Save..." ), this, SLOT(saveSound()) );
 
-    if ( !mReadOnly )
+    if ( !mReadOnly ) {
       menu.addAction( i18n( "Remove" ), this, SLOT(deleteSound()) );
+    }
   }
 
   menu.exec( event->globalPos() );
@@ -169,8 +173,9 @@ void SoundEditWidget::contextMenuEvent( QContextMenuEvent *event )
 
 void SoundEditWidget::playSound()
 {
-  if ( !mHasSound )
+  if ( !mHasSound ) {
     return;
+  }
 
 #ifndef Q_OS_WINCE
   Phonon::MediaObject* player = Phonon::createPlayer( Phonon::NotificationCategory );
@@ -218,8 +223,9 @@ void SoundEditWidget::deleteSound()
 
 SoundLoader* SoundEditWidget::soundLoader()
 {
-  if ( !mSoundLoader )
+  if ( !mSoundLoader ) {
     mSoundLoader = new SoundLoader;
+  }
 
   return mSoundLoader;
 }

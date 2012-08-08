@@ -91,10 +91,11 @@ void Collection::setName( const QString & name )
 Collection::Rights Collection::rights() const
 {
   CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>();
-  if ( attr )
+  if ( attr ) {
     return attr->rights();
-  else
+  } else {
     return AllRights;
+  }
 }
 
 void Collection::setRights( Rights rights )
@@ -153,25 +154,29 @@ KUrl Collection::url( UrlType type ) const
   url.setProtocol( QString::fromLatin1( "akonadi" ) );
   url.addQueryItem( QLatin1String( "collection" ), QString::number( id() ) );
 
-  if ( type == UrlWithName )
+  if ( type == UrlWithName ) {
     url.addQueryItem( QLatin1String( "name" ), name() );
+  }
 
   return url;
 }
 
 Collection Collection::fromUrl( const KUrl &url )
 {
-  if ( url.protocol() != QLatin1String( "akonadi" ) )
+  if ( url.protocol() != QLatin1String( "akonadi" ) ) {
     return Collection();
+  }
 
   const QString colStr = url.queryItem( QLatin1String( "collection" ) );
   bool ok = false;
   Collection::Id colId = colStr.toLongLong( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return Collection();
+  }
 
-  if ( colId == 0 )
+  if ( colId == 0 ) {
     return Collection::root();
+  }
 
   return Collection( colId );
 }
@@ -242,7 +247,7 @@ void Collection::setCachePolicy(const CachePolicy & cachePolicy)
 bool Collection::isVirtual() const
 {
   // TODO make this a proper flag
-  return ( (resource() == QLatin1String( "akonadi_search_resource" ) || resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
+  return ( ( resource() == QLatin1String( "akonadi_search_resource" ) || resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
 }
 
 AKONADI_DEFINE_PRIVATE( Akonadi::Collection )

@@ -104,12 +104,14 @@ class AgentInstanceWidget::Private
 void AgentInstanceWidget::Private::currentAgentInstanceChanged( const QModelIndex &currentIndex, const QModelIndex &previousIndex )
 {
   AgentInstance currentInstance;
-  if ( currentIndex.isValid() )
+  if ( currentIndex.isValid() ) {
     currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+  }
 
   AgentInstance previousInstance;
-  if ( previousIndex.isValid() )
+  if ( previousIndex.isValid() ) {
     previousInstance = previousIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+  }
 
   emit mParent->currentChanged( currentInstance, previousInstance );
 }
@@ -117,8 +119,9 @@ void AgentInstanceWidget::Private::currentAgentInstanceChanged( const QModelInde
 void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked( const QModelIndex &currentIndex )
 {
   AgentInstance currentInstance;
-  if ( currentIndex.isValid() )
+  if ( currentIndex.isValid() ) {
     currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+  }
 
   emit mParent->doubleClicked( currentInstance );
 }
@@ -160,12 +163,14 @@ AgentInstanceWidget::~AgentInstanceWidget()
 AgentInstance AgentInstanceWidget::currentAgentInstance() const
 {
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
-  if ( !selectionModel )
+  if ( !selectionModel ) {
     return AgentInstance();
+  }
 
   QModelIndex index = selectionModel->currentIndex();
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return AgentInstance();
+  }
 
   return index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
 }
@@ -174,13 +179,13 @@ QList<AgentInstance> AgentInstanceWidget::selectedAgentInstances() const
 {
   QList<AgentInstance> list;
   QItemSelectionModel *selectionModel = d->mView->selectionModel();
-  if ( !selectionModel )
+  if ( !selectionModel ) {
     return list;
+  }
 
   const QModelIndexList indexes = selectionModel->selection().indexes();
 
-  foreach (const QModelIndex &index, indexes )
-  {
+  foreach ( const QModelIndex &index, indexes ) {
     list.append( index.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>() );
   }
 
@@ -198,10 +203,6 @@ AgentFilterProxyModel* AgentInstanceWidget::agentFilterProxyModel() const
   return d->proxy;
 }
 
-
-
-
-
 AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate( QObject *parent )
  : QAbstractItemDelegate( parent )
 {
@@ -209,8 +210,9 @@ AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate( QObject *parent )
 
 QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return 0;
+  }
 
   const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
   int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
@@ -226,19 +228,20 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
                            qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
   }
 
-  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() )
+  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() ) {
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->offlinePixmap );
-  else if ( status == AgentInstance::Idle )
+  } else if ( status == AgentInstance::Idle ) {
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->readyPixmap );
-  else if ( status == AgentInstance::Running )
+  } else if ( status == AgentInstance::Running ) {
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->syncPixmap );
-  else
+  } else {
     document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->errorPixmap );
-
+  }
 
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
-  if ( cg == QPalette::Normal && !(option.state & QStyle::State_Active) )
+  if ( cg == QPalette::Normal && !( option.state & QStyle::State_Active ) ) {
     cg = QPalette::Inactive;
+  }
 
   QColor textColor;
   if ( option.state & QStyle::State_Selected ) {
@@ -254,7 +257,7 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
      "<tr>"
      "<td rowspan=\"2\"><img src=\"agent_icon\">&nbsp;&nbsp;</td>"
      "<td><b>%2</b></td>"
-     "</tr>" ).arg(textColor.name().toUpper()).arg( name )
+     "</tr>" ).arg( textColor.name().toUpper() ).arg( name )
      + QString::fromLatin1(
      "<tr>"
      "<td><img src=\"status_icon\"/> %1 %2</td>"
@@ -268,22 +271,25 @@ QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem
 
 void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   QTextDocument *doc = document( option, index );
-  if ( !doc )
+  if ( !doc ) {
     return;
+  }
 
   painter->setRenderHint( QPainter::Antialiasing );
 
   QPen pen = painter->pen();
 
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
-  if ( cg == QPalette::Normal && !(option.state & QStyle::State_Active) )
+  if ( cg == QPalette::Normal && !( option.state & QStyle::State_Active ) ) {
     cg = QPalette::Inactive;
+  }
 
-  QStyleOptionViewItemV4 opt(option);
+  QStyleOptionViewItemV4 opt( option );
   opt.showDecorationSelected = true;
   QApplication::style()->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
 
@@ -293,19 +299,21 @@ void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionVi
   delete doc;
   painter->restore();
 
-  painter->setPen(pen);
+  painter->setPen( pen );
 
   drawFocus( painter, option, option.rect );
 }
 
 QSize AgentInstanceWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QSize( 0, 0 );
+  }
 
   QTextDocument *doc = document( option, index );
-  if ( !doc )
+  if ( !doc ) {
     return QSize( 0, 0 );
+  }
 
   const QSize size = doc->documentLayout()->documentSize().toSize();
   delete doc;
@@ -320,8 +328,8 @@ void AgentInstanceWidgetDelegate::drawFocus( QPainter *painter, const QStyleOpti
     o.QStyleOption::operator=( option );
     o.rect = rect;
     o.state |= QStyle::State_KeyboardFocusChange;
-    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled) ? QPalette::Normal : QPalette::Disabled;
-    o.backgroundColor = option.palette.color( cg, (option.state & QStyle::State_Selected)
+    QPalette::ColorGroup cg = ( option.state & QStyle::State_Enabled ) ? QPalette::Normal : QPalette::Disabled;
+    o.backgroundColor = option.palette.color( cg, ( option.state & QStyle::State_Selected )
                                                   ? QPalette::Highlight : QPalette::Background );
     QApplication::style()->drawPrimitive( QStyle::PE_FrameFocusRect, &o, painter );
   }

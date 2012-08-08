@@ -72,8 +72,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
   public:
     /* @since 4.6
      */
-    enum CollectionDialogOption
-    {
+    enum CollectionDialogOption {
       None = 0,
       AllowToCreateNewChildCollection = 1
     };

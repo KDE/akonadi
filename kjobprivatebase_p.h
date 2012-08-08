@@ -18,7 +18,7 @@
 */
 
 #ifndef AKONADI_KJOBPRIVATEBASE_P_H
-#define AKONADI_KJOBPRIVATEBASE_P_H 
+#define AKONADI_KJOBPRIVATEBASE_P_H
 
 #include <QtCore/QObject>
 

@@ -88,8 +88,7 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
     /**
      * Describes the mode of the editor.
      */
-    enum Mode
-    {
+    enum Mode {
       CreateMode, ///< Creates a new contact
       EditMode    ///< Edits an existing contact
     };

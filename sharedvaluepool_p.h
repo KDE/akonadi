@@ -46,7 +46,7 @@ class SharedValuePool
 {
   public:
     /** Returns the shared value equal to @p value .*/
-    /*template <typename C> 
+    /*template <typename C>
     typename boost::enable_if_c<container_traits<Container<C> >::isAssociative, C>::type sharedValue( const C &value, const int* = 0 )
     {
       typename Container<T>::const_iterator it = m_pool.constFind( value );

@@ -55,8 +55,9 @@ class AgentBasePrivate : public QObject
 
     QString defaultReadyMessage() const
     {
-      if ( mOnline )
+      if ( mOnline ) {
         return i18nc( "@info:status Application ready for work", "Ready" );
+      }
       return i18nc( "@info:status", "Offline" );
     }
 

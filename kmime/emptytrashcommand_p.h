@@ -37,15 +37,15 @@ public:
     EmptyTrashCommand(const QAbstractItemModel* model, QObject* parent);
     EmptyTrashCommand(const Akonadi::Collection& folder, QObject* parent);
     /*reimp*/ void execute();
-     
+
 private slots:
   void slotExpungeJob( KJob *job );
   void slotDeleteJob( KJob *job );
 
 protected Q_SLOTS:
     void emitResult( Result result );
-  
-private:      
+
+private:
   void expunge( const Akonadi::Collection& );
   Akonadi::AgentInstance::List agentInstances();
   Akonadi::Collection trashCollectionFolder();

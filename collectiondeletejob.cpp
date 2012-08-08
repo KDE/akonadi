@@ -61,10 +61,11 @@ void CollectionDeleteJob::doStart()
     return;
   }
 
-  if ( d->mCollection.isValid() )
+  if ( d->mCollection.isValid() ) {
     d->writeData( d->newTag() + " DELETE " + QByteArray::number( d->mCollection.id() ) + '\n' );
-  else
+  } else {
     d->writeData( d->newTag() + " RID DELETE " + ImapParser::quote( d->mCollection.remoteId().toUtf8() ) + '\n' );
+  }
 }
 
 #include "collectiondeletejob.moc"

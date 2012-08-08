@@ -299,8 +299,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This enum describes the different states the
      * agent can be in.
      */
-    enum Status
-    {
+    enum Status {
       Idle = 0, ///< The agent does currently nothing.
       Running,  ///< The agent is working on something.
       Broken    ///< The agent encountered an error state.
@@ -337,8 +336,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       // check if T also inherits AgentBase::Observer and
       // if it does, automatically register it on itself
       Observer *observer = dynamic_cast<Observer*>( r );
-      if ( observer != 0 )
+      if ( observer != 0 ) {
         r->registerObserver( observer );
+      }
       return init( r );
     }
 

@@ -98,7 +98,7 @@ class ContactGroupModel::Private
       } else {
         for ( int i = 0; i < mMembers.count(); ++i ) {
           const GroupMember &member = mMembers[ i ];
-          if ( !member.isReference && !(i == mMembers.count() - 1) ) {
+          if ( !member.isReference && !( i == mMembers.count() - 1 ) ) {
             if ( member.data.name().isEmpty() && member.data.email().isEmpty() ) {
               needsNormalization = true;
               break;
@@ -107,13 +107,15 @@ class ContactGroupModel::Private
         }
 
         const GroupMember &member = mMembers.last();
-        if ( member.isReference || !(member.data.name().isEmpty() && member.data.email().isEmpty()) )
+        if ( member.isReference || !( member.data.name().isEmpty() && member.data.email().isEmpty() ) ) {
           needsNormalization = true;
+        }
       }
 
       // if not, avoid to update the model and view
-      if ( !needsNormalization )
+      if ( !needsNormalization ) {
         return;
+      }
 
       bool foundEmpty = false;
 
@@ -129,7 +131,7 @@ class ContactGroupModel::Private
         foundEmpty = false;
         for ( int i = 0; i < mMembers.count(); ++i ) {
           const GroupMember &member = mMembers[ i ];
-          if ( !member.isReference && !(i == mMembers.count() - 1) ) {
+          if ( !member.isReference && !( i == mMembers.count() - 1 ) ) {
             if ( member.data.name().isEmpty() && member.data.email().isEmpty() ) {
               mParent->beginRemoveRows( QModelIndex(), i, i );
               mMembers.remove( i );
@@ -197,10 +199,10 @@ bool ContactGroupModel::storeContactGroup( KABC::ContactGroup &group ) const
 
   for ( int i = 0; i < d->mMembers.count(); ++i ) {
     const GroupMember &member = d->mMembers[ i ];
-    if ( member.isReference )
+    if ( member.isReference ) {
       group.append( member.reference );
-    else {
-      if ( i != (d->mMembers.count() - 1) ) {
+    } else {
+      if ( i != ( d->mMembers.count() - 1 ) ) {
         if ( member.data.email().isEmpty() ) {
           d->mLastErrorMessage =
             i18n( "The member with name <b>%1</b> is missing an email address",
@@ -232,51 +234,60 @@ QModelIndex ContactGroupModel::parent( const QModelIndex& ) const
 
 QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.row() < 0 || index.row() >= d->mMembers.count() )
+  if ( index.row() < 0 || index.row() >= d->mMembers.count() ) {
     return QVariant();
+  }
 
-  if ( index.column() < 0 || index.column() > 1 )
+  if ( index.column() < 0 || index.column() > 1 ) {
     return QVariant();
+  }
 
   const GroupMember &member = d->mMembers[ index.row() ];
 
   if ( role == Qt::DisplayRole ) {
     if ( member.loadingError ) {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         return i18n( "Contact does not exist any more" );
-      else
+      } else {
         return QString();
+      }
     }
 
     if ( member.isReference ) {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         return member.referencedContact.realName();
-      else {
-        if ( !member.reference.preferredEmail().isEmpty() )
+      } else {
+        if ( !member.reference.preferredEmail().isEmpty() ) {
           return member.reference.preferredEmail();
-        else
+        } else {
           return member.referencedContact.preferredEmail();
+        }
       }
     } else {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         return member.data.name();
-      else
+      } else {
         return member.data.email();
+      }
     }
   }
 
   if ( role == Qt::DecorationRole ) {
-    if ( index.column() == 1 )
+    if ( index.column() == 1 ) {
       return QVariant();
+    }
 
-    if ( member.loadingError )
+    if ( member.loadingError ) {
       return KIcon( QLatin1String( "emblem-important" ) );
+    }
 
-    if ( index.row() == (d->mMembers.count() - 1) )
+    if ( index.row() == ( d->mMembers.count() - 1 ) ) {
       return KIcon( QLatin1String( "contact-new" ) );
+    }
 
     if ( member.isReference ) {
       return KIcon( QLatin1String( "x-office-contact" ), KIconLoader::global(),
@@ -288,30 +299,34 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
 
   if ( role == Qt::EditRole ) {
     if ( member.isReference ) {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         return member.referencedContact.realName();
-      else {
-        if ( !member.reference.preferredEmail().isEmpty() )
+      } else {
+        if ( !member.reference.preferredEmail().isEmpty() ) {
           return member.reference.preferredEmail();
-        else
+        } else {
           return member.referencedContact.preferredEmail();
+        }
       }
     } else {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         return member.data.name();
-      else
+      } else {
         return member.data.email();
+      }
     }
   }
 
-  if ( role == IsReferenceRole )
+  if ( role == IsReferenceRole ) {
     return member.isReference;
+  }
 
   if ( role == AllEmailsRole ) {
-    if ( member.isReference )
+    if ( member.isReference ) {
       return member.referencedContact.emails();
-    else
+    } else {
       return QStringList();
+    }
   }
 
   return QVariant();
@@ -319,14 +334,17 @@ QVariant ContactGroupModel::data( const QModelIndex &index, int role ) const
 
 bool ContactGroupModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return false;
+  }
 
-  if ( index.row() < 0 || index.row() >= d->mMembers.count() )
+  if ( index.row() < 0 || index.row() >= d->mMembers.count() ) {
     return false;
+  }
 
-  if ( index.column() < 0 || index.column() > 1 )
+  if ( index.column() < 0 || index.column() > 1 ) {
     return false;
+  }
 
   GroupMember &member = d->mMembers[ index.row() ];
 
@@ -345,10 +363,11 @@ bool ContactGroupModel::setData( const QModelIndex &index, const QVariant &value
         }
       }
     } else {
-      if ( index.column() == 0 )
+      if ( index.column() == 0 ) {
         member.data.setName( value.toString() );
-      else
+      } else {
         member.data.setEmail( value.toString() );
+      }
     }
 
     d->normalizeMemberList();
@@ -357,10 +376,10 @@ bool ContactGroupModel::setData( const QModelIndex &index, const QVariant &value
   }
 
   if ( role == IsReferenceRole ) {
-    if ( (value.toBool() == true) && !member.isReference ) {
+    if ( ( value.toBool() == true ) && !member.isReference ) {
       member.isReference = true;
     }
-    if ( (value.toBool() == false) && member.isReference ) {
+    if ( ( value.toBool() == false ) && member.isReference ) {
       member.isReference = false;
       member.data.setName( member.referencedContact.realName() );
       member.data.setEmail( member.referencedContact.preferredEmail() );
@@ -374,57 +393,67 @@ bool ContactGroupModel::setData( const QModelIndex &index, const QVariant &value
 
 QVariant ContactGroupModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( section < 0 || section > 1 )
+  if ( section < 0 || section > 1 ) {
     return QVariant();
+  }
 
-  if ( orientation != Qt::Horizontal )
+  if ( orientation != Qt::Horizontal ) {
     return QVariant();
+  }
 
-  if ( role != Qt::DisplayRole )
+  if ( role != Qt::DisplayRole ) {
     return QVariant();
+  }
 
-  if ( section == 0 )
+  if ( section == 0 ) {
     return i18nc( "contact's name", "Name" );
-  else
+  } else {
     return i18nc( "contact's email address", "EMail" );
+  }
 }
 
 Qt::ItemFlags ContactGroupModel::flags( const QModelIndex &index ) const
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mMembers.count() )
+  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mMembers.count() ) {
     return Qt::ItemIsEnabled;
+  }
 
-  if ( d->mMembers[ index.row() ].loadingError )
+  if ( d->mMembers[ index.row() ].loadingError ) {
     return Qt::ItemFlags( Qt::ItemIsEnabled );
+  }
 
   Qt::ItemFlags parentFlags = QAbstractItemModel::flags( index );
-  return (parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable);
+  return ( parentFlags | Qt::ItemIsEnabled | Qt::ItemIsEditable );
 }
 
 int ContactGroupModel::columnCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return 2;
-  else
+  } else {
     return 0;
+  }
 }
 
 int ContactGroupModel::rowCount( const QModelIndex &parent ) const
 {
-  if ( !parent.isValid() )
+  if ( !parent.isValid() ) {
     return d->mMembers.count();
-  else
+  } else {
     return 0;
+  }
 }
 
 bool ContactGroupModel::removeRows( int row, int count, const QModelIndex &parent )
 {
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     return false;
+  }
 
   beginRemoveRows( QModelIndex(), row, row + count - 1 );
-  for ( int i = 0; i < count; ++i )
+  for ( int i = 0; i < count; ++i ) {
     d->mMembers.remove( row );
+  }
   endRemoveRows();
 
   return true;

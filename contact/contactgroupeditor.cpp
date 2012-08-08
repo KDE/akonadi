@@ -67,15 +67,18 @@ void ContactGroupEditor::Private::adaptHeaderSizes()
 
 void ContactGroupEditor::Private::itemFetchDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     return;
+  }
 
   ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob*>( job );
-  if ( !fetchJob )
+  if ( !fetchJob ) {
     return;
+  }
 
-  if ( fetchJob->items().isEmpty() )
+  if ( fetchJob->items().isEmpty() ) {
     return;
+  }
 
   mItem = fetchJob->items().first();
 
@@ -100,16 +103,19 @@ void ContactGroupEditor::Private::itemFetchDone( KJob *job )
 
 void ContactGroupEditor::Private::parentCollectionFetchDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() ) {
     return;
+  }
 
   Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob*>( job );
-  if ( !fetchJob )
+  if ( !fetchJob ) {
     return;
+  }
 
   const Akonadi::Collection parentCollection = fetchJob->collections().first();
-  if ( parentCollection.isValid() )
-    mReadOnly = !(parentCollection.rights() & Collection::CanChangeItem);
+  if ( parentCollection.isValid() ) {
+    mReadOnly = !( parentCollection.rights() & Collection::CanChangeItem );
+  }
 
   const KABC::ContactGroup group = mItem.payload<KABC::ContactGroup>();
   loadContactGroup( group );
@@ -126,10 +132,11 @@ void ContactGroupEditor::Private::storeDone( KJob *job )
     return;
   }
 
-  if ( mMode == EditMode )
+  if ( mMode == EditMode ) {
     emit mParent->contactGroupStored( mItem );
-  else if ( mMode == CreateMode )
+  } else if ( mMode == CreateMode ) {
     emit mParent->contactGroupStored( static_cast<ItemCreateJob*>( job )->item() );
+  }
 }
 
 void ContactGroupEditor::Private::itemChanged( const Item&, const QSet<QByteArray>& )
@@ -159,8 +166,9 @@ void ContactGroupEditor::Private::loadContactGroup( const KABC::ContactGroup &gr
   const QAbstractItemModel *model = mGui.membersView->model();
   mGui.membersView->setCurrentIndex( model->index( model->rowCount() - 1, 0 ) );
 
-  if ( mMode == EditMode )
+  if ( mMode == EditMode ) {
     mGui.membersView->setFocus();
+  }
 
   mGui.membersView->header()->resizeSections( QHeaderView::Stretch );
 }
@@ -229,8 +237,9 @@ ContactGroupEditor::~ContactGroupEditor()
 
 void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
 {
-  if ( d->mMode == CreateMode )
+  if ( d->mMode == CreateMode ) {
     Q_ASSERT_X( false, "ContactGroupEditor::loadContactGroup", "You are calling loadContactGroup in CreateMode!" );
+  }
 
   ItemFetchJob *job = new ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
@@ -247,16 +256,19 @@ void ContactGroupEditor::loadContactGroup( const Akonadi::Item &item )
 bool ContactGroupEditor::saveContactGroup()
 {
   if ( d->mMode == EditMode ) {
-    if ( !d->mItem.isValid() )
+    if ( !d->mItem.isValid() ) {
       return false;
+    }
 
-    if ( d->mReadOnly )
+    if ( d->mReadOnly ) {
       return true;
+    }
 
     KABC::ContactGroup group = d->mItem.payload<KABC::ContactGroup>();
 
-    if ( !d->storeContactGroup( group ) )
+    if ( !d->storeContactGroup( group ) ) {
       return false;
+    }
 
     d->mItem.setPayload<KABC::ContactGroup>( group );
 
@@ -272,15 +284,17 @@ bool ContactGroupEditor::saveContactGroup()
       dlg->setCaption( i18n( "Select Address Book" ) );
       dlg->setDescription( i18n( "Select the address book the new contact group shall be saved in:" ) );
 
-      if ( dlg->exec() == KDialog::Accepted )
+      if ( dlg->exec() == KDialog::Accepted ) {
         setDefaultAddressBook( dlg->selectedCollection() );
-      else
+      } else {
         return false;
+      }
     }
 
     KABC::ContactGroup group;
-    if ( !d->storeContactGroup( group ) )
+    if ( !d->storeContactGroup( group ) ) {
       return false;
+    }
 
     Item item;
     item.setPayload<KABC::ContactGroup>( group );
@@ -315,7 +329,7 @@ void ContactGroupEditor::groupNameIsValid(bool isValid)
     styleSheet = QString::fromLatin1( "QLineEdit{ background-color:%1 }" ).
            arg( bgBrush.brush( this ).color().name() );
   }
-  d->mGui.groupName->setStyleSheet(styleSheet);
+  d->mGui.groupName->setStyleSheet( styleSheet );
 #endif
 }
 

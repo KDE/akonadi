@@ -43,7 +43,7 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
                                       0, KLocalizedString(), KAboutData::License_LGPL,
                                       ki18n( "(c) 2009 Tobias Koenig" ) );
 
-  about->addAuthor( ki18n("Tobias Koenig"), KLocalizedString(), "tokoe@kde.org" );
+  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
 
   setAboutData( about );
 

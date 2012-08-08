@@ -72,8 +72,9 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 
       mEmitTimer->stop(); // in case we are called by result()
       if ( !mPendingCollections.isEmpty() ) {
-        if ( !q->error() )
+        if ( !q->error() ) {
           emit q->collectionsReceived( mPendingCollections );
+        }
         mPendingCollections.clear();
       }
     }
@@ -81,16 +82,18 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     void subJobCollectionReceived( const Akonadi::Collection::List &collections )
     {
       mPendingCollections += collections;
-      if ( !mEmitTimer->isActive() )
+      if ( !mEmitTimer->isActive() ) {
         mEmitTimer->start();
+      }
     }
 
     void flushIterativeResult()
     {
       Q_Q( CollectionFetchJob );
 
-      if ( mPendingCollections.isEmpty() )
+      if ( mPendingCollections.isEmpty() ) {
         return;
+      }
 
       emit q->collectionsReceived( mPendingCollections );
       mPendingCollections.clear();
@@ -145,10 +148,11 @@ CollectionFetchJob::CollectionFetchJob( const QList<Collection::Id> & cols, Type
 
   Q_ASSERT( !cols.isEmpty() );
   if ( cols.size() == 1 ) {
-    d->mBase = Collection(cols.first());
+    d->mBase = Collection( cols.first() );
   } else {
-    foreach(Collection::Id id, cols)
-      d->mBaseList.append(Collection(id));
+    foreach ( Collection::Id id, cols ) {
+      d->mBaseList.append( Collection( id ) );
+    }
   }
   d->mType = type;
 }
@@ -205,22 +209,25 @@ void CollectionFetchJob::doStart()
 
   QByteArray command = d->newTag();
   if ( !d->mBase.isValid() ) {
-    if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) )
+    if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) ) {
       command += " HRID";
-    else
+    } else {
       command += " " AKONADI_CMD_RID;
+    }
   }
-  if ( d->mScope.includeUnsubscribed() )
+  if ( d->mScope.includeUnsubscribed() ) {
     command += " LIST ";
-  else
+  } else {
     command += " LSUB ";
+  }
 
-  if ( d->mBase.isValid() )
+  if ( d->mBase.isValid() ) {
     command += QByteArray::number( d->mBase.id() );
-  else if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) )
+  } else if ( CollectionUtils::hasValidHierarchicalRID( d->mBase ) ) {
     command += '(' + ProtocolHelper::hierarchicalRidToByteArray( d->mBase ) + ')';
-  else
+  } else {
     command += ImapParser::quote( d->mBase.remoteId().toUtf8() );
+  }
 
   command += ' ';
   switch ( d->mType ) {
@@ -247,9 +254,10 @@ void CollectionFetchJob::doStart()
   if ( !d->mScope.contentMimeTypes().isEmpty() ) {
     filter.append( "MIMETYPE" );
     QList<QByteArray> mts;
-    foreach ( const QString &mt, d->mScope.contentMimeTypes() )
+    foreach ( const QString &mt, d->mScope.contentMimeTypes() ) {
       // FIXME: Does this need to be quoted??
       mts.append( mt.toUtf8() );
+    }
     filter.append( '(' + ImapParser::join( mts, " " ) + ')' );
   }
 
@@ -283,20 +291,23 @@ void CollectionFetchJob::doHandleResponse( const QByteArray & tag, const QByteAr
 {
   Q_D( CollectionFetchJob );
 
-  if ( d->mBasePrefetch || d->mType == NonOverlappingRoots )
+  if ( d->mBasePrefetch || d->mType == NonOverlappingRoots ) {
     return;
+  }
 
   if ( tag == "*" ) {
     Collection collection;
     ProtocolHelper::parseCollection( data, collection );
-    if ( !collection.isValid() )
+    if ( !collection.isValid() ) {
       return;
+    }
 
     collection.d_ptr->resetChangeLog();
     d->mCollections.append( collection );
     d->mPendingCollections.append( collection );
-    if ( !d->mEmitTimer->isActive() )
+    if ( !d->mEmitTimer->isActive() ) {
       d->mEmitTimer->start();
+    }
     return;
   }
   kDebug() << "Unhandled server response" << tag << data;
@@ -314,7 +325,7 @@ static Collection::List filterDescendants( const Collection::List &list )
   Collection::List result;
 
   QVector<QList<Collection::Id> > ids;
-  foreach( const Collection &collection, list ) {
+  foreach ( const Collection &collection, list ) {
     QList<Collection::Id> ancestors;
     Collection parent = collection.parentCollection();
     ancestors << parent.id();
@@ -331,7 +342,7 @@ static Collection::List filterDescendants( const Collection::List &list )
   QSet<Collection::Id> excludeList;
   foreach ( const Collection &collection, list ) {
     int i = 0;
-    foreach( const QList<Collection::Id> &ancestors, ids ) {
+    foreach ( const QList<Collection::Id> &ancestors, ids ) {
       if ( qBinaryFind( ancestors, collection.id() ) != ancestors.end() ) {
         excludeList.insert( list.at( i ).id() );
       }
@@ -340,8 +351,9 @@ static Collection::List filterDescendants( const Collection::List &list )
   }
 
   foreach ( const Collection &collection, list ) {
-    if ( !excludeList.contains( collection.id() ) )
+    if ( !excludeList.contains( collection.id() ) ) {
       result.append( collection );
+    }
   }
 
   return result;
@@ -385,8 +397,9 @@ void CollectionFetchJob::slotResult(KJob * job)
     d->mCollections += list->collections();
     // Pending collections should have already been emitted by listening to (and flushing) the job.
     Job::slotResult( job );
-    if ( !job->error() && !hasSubjobs() )
+    if ( !job->error() && !hasSubjobs() ) {
       emitResult();
+    }
   }
 }
 

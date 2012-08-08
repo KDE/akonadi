@@ -67,7 +67,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
       HasEmail = 0x01 /// Filters out contacts without any email address set.
     };
     Q_DECLARE_FLAGS( FilterFlags, FilterFlag )
-  
+
     /**
      * Creates a new contacts filter proxy model.
      *
@@ -86,7 +86,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
      * @since 4.8
      */
      void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );
-  
+
      virtual Qt::ItemFlags flags( const QModelIndex& index ) const;
 
     /**
@@ -98,7 +98,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
      * @since 4.8
      */
      void setExcludeVirtualCollections( bool exclude );
-  
+
   public Q_SLOTS:
     /**
      * Sets the @p filter that is used to filter for matching contacts

@@ -69,8 +69,9 @@ KABC::ContactGroup::Data ContactGroupLineEdit::contactData() const
   QString fullName, email;
   KABC::Addressee::parseEmailAddress( text(), fullName, email );
 
-  if ( fullName.isEmpty() || email.isEmpty() )
+  if ( fullName.isEmpty() || email.isEmpty() ) {
     return KABC::ContactGroup::Data();
+  }
 
   KABC::ContactGroup::Data groupData( mContactData );
   groupData.setName( fullName );
@@ -96,12 +97,14 @@ KABC::ContactGroup::ContactReference ContactGroupLineEdit::contactReference() co
 
 void ContactGroupLineEdit::autoCompleted( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  if ( !item.isValid() )
+  if ( !item.isValid() ) {
     return;
+  }
 
   disconnect( this, SIGNAL(textChanged(QString)), this, SLOT(invalidateReference()) );
   mContainsReference = true;
@@ -139,28 +142,33 @@ void ContactGroupLineEdit::fetchDone( KJob *job )
 
 void ContactGroupLineEdit::updateView( const Akonadi::Item &item, const QString &preferredEmail )
 {
-  if ( !item.hasPayload<KABC::Addressee>() )
+  if ( !item.hasPayload<KABC::Addressee>() ) {
     return;
+  }
 
   const KABC::Addressee contact = item.payload<KABC::Addressee>();
 
   QString email( preferredEmail );
-  if ( email.isEmpty() )
+  if ( email.isEmpty() ) {
     email = requestPreferredEmail( contact );
+  }
 
   QString name = contact.formattedName();
-  if ( name.isEmpty() )
+  if ( name.isEmpty() ) {
     name = contact.assembledName();
+  }
 
-  if ( email.isEmpty() )
+  if ( email.isEmpty() ) {
     setText( QString::fromLatin1( "%1" ).arg( name ) );
-  else
+  } else {
     setText( QString::fromLatin1( "%1 <%2>" ).arg( name ).arg( email ) );
+  }
 
   mContactReference.setUid( QString::number( item.id() ) );
 
-  if ( contact.preferredEmail() != email )
+  if ( contact.preferredEmail() != email ) {
     mContactReference.setPreferredEmail( email );
+  }
 }
 
 QString ContactGroupLineEdit::requestPreferredEmail( const KABC::Addressee &contact ) const
@@ -172,8 +180,9 @@ QString ContactGroupLineEdit::requestPreferredEmail( const KABC::Addressee &cont
     return QString();
   }
 
-  if ( emails.count() == 1 )
+  if ( emails.count() == 1 ) {
     return emails.first();
+  }
 
   QAction *action = 0;
 
@@ -186,8 +195,9 @@ QString ContactGroupLineEdit::requestPreferredEmail( const KABC::Addressee &cont
   }
 
   action = menu.exec( mapToGlobal( QPoint( x() + width()/2, y() + height()/2 ) ) );
-  if ( !action )
+  if ( !action ) {
     return emails.first(); // use preferred email
+  }
 
   return emails.at( action->data().toInt() );
 }

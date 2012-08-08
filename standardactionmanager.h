@@ -328,7 +328,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * @since 4.8
      */
     void createActionFolderMenu(QMenu *menu, Type type);
-  
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the action state has been updated.

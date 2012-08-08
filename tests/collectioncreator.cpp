@@ -37,10 +37,11 @@ class CollectionCreator : public QObject
     void initTestCase()
     {
       // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
+      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
         agent.setIsOnline( false );
+      }
     }
-    
+
     void createCollections_data()
     {
       QTest::addColumn<int>( "count" );
@@ -48,10 +49,12 @@ class CollectionCreator : public QObject
 
       QList<int> counts = QList<int>() << 1 << 10 << 100 << 1000;
       QList<bool> transactions = QList<bool>() << false << true;
-      foreach( int count, counts )
-        foreach( bool transaction, transactions ) //krazy:exclude=foreach
+      foreach( int count, counts ) {
+        foreach( bool transaction, transactions ) { //krazy:exclude=foreach
           QTest::newRow( QString::fromLatin1( "%1-%2" ).arg( count ).arg( transaction ? "trans" : "notrans" ).toLatin1().constData() )
             << count << transaction;
+        }
+      }
     }
 
     void createCollections()
@@ -66,16 +69,18 @@ class CollectionCreator : public QObject
       Job *lastJob = 0;
       QBENCHMARK
       {
-        if ( useTransaction )
+        if ( useTransaction ) {
           lastJob = new TransactionBeginJob( this );
+        }
         for ( int i = 0; i < count; ++i ) {
           Collection col;
           col.setParentCollection( parent );
-          col.setName( QLatin1String("col") + QString::number( ++index ) );
+          col.setName( QLatin1String( "col" ) + QString::number( ++index ) );
           lastJob = new CollectionCreateJob( col, this );
         }
-        if ( useTransaction )
+        if ( useTransaction ) {
           lastJob = new TransactionCommitJob( this );
+        }
         QTest::kWaitForSignal( lastJob, SIGNAL(result(KJob*)) );
       }
     }

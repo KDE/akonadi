@@ -58,8 +58,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
      * Describes the type of fetch depth.
      */
-    enum Type
-    {
+    enum Type {
       Base,       ///< Only fetch the base collection.
       FirstLevel, ///< Only list direct sub-collections of the base collection.
       Recursive,  ///< List all sub-collections.

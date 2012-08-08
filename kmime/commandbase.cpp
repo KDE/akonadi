@@ -20,7 +20,7 @@
 
 #include "commandbase_p.h"
 
-CommandBase::CommandBase( QObject* parent ) : QObject( parent ) 
+CommandBase::CommandBase( QObject* parent ) : QObject( parent )
 {
 
 }

@@ -46,9 +46,9 @@ class ContactGroupEditorDialog::Private
 
     void slotGroupNameChanged( const QString& name )
     {
-      bool isValid = !(name.contains(QLatin1Char('@')) || name.contains(QLatin1Char('.')));
+      bool isValid = !( name.contains( QLatin1Char( '@' ) ) || name.contains( QLatin1Char( '.' ) ) );
       q->button( Ok )->setEnabled( !name.isEmpty() && isValid );
-      mEditor->groupNameIsValid(isValid);
+      mEditor->groupNameIsValid( isValid );
     }
 
     ContactGroupEditorDialog *q;
@@ -114,8 +114,9 @@ void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
 
 void ContactGroupEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addressbook )
 {
-  if ( d->mMode == EditMode )
+  if ( d->mMode == EditMode ) {
     return;
+  }
 
   d->mAddressBookBox->setDefaultCollection( addressbook );
 }
@@ -128,11 +129,13 @@ ContactGroupEditor* ContactGroupEditorDialog::editor() const
 void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
   if ( button == KDialog::Ok ) {
-    if ( d->mAddressBookBox )
+    if ( d->mAddressBookBox ) {
       d->mEditor->setDefaultAddressBook( d->mAddressBookBox->currentCollection() );
+    }
 
-    if ( d->mEditor->saveContactGroup() )
+    if ( d->mEditor->saveContactGroup() ) {
       accept();
+    }
   } else if ( button == KDialog::Cancel ) {
     reject();
   }

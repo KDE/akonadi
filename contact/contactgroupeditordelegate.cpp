@@ -55,8 +55,9 @@ class ContactsWithEmailFilterModel : public QSortFilterProxyModel
     virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const
     {
       const QModelIndex index = sourceModel()->index( row, Akonadi::ContactCompletionModel::EmailColumn, parent );
-      if ( !index.isValid() )
+      if ( !index.isValid() ) {
         return false;
+      }
 
       return !index.data().toString().isEmpty();
     }
@@ -166,14 +167,16 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
   if ( index.data( ContactGroupModel::IsReferenceRole ).toBool() ) {
     if ( index.column() == 0 ) {
       KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit )
+      if ( !lineEdit ) {
         return;
+      }
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
     } else {
       KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
-      if ( !comboBox )
+      if ( !comboBox ) {
         return;
+      }
 
       const QStringList emails = index.data( ContactGroupModel::AllEmailsRole ).toStringList();
       comboBox->clear();
@@ -184,15 +187,17 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
     if ( index.column() == 0 ) {
 
       KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit )
+      if ( !lineEdit ) {
         return;
+      }
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
 
     } else {
       KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit )
+      if ( !lineEdit ) {
         return;
+      }
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
     }
@@ -209,16 +214,19 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
       const Item item = lineEdit->completedItem();
       model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
       if ( isReference ) {
-        if ( item.isValid() )
+        if ( item.isValid() ) {
           model->setData( index, item.id(), Qt::EditRole );
-      } else
+        }
+      } else {
         model->setData( index, lineEdit->text(), Qt::EditRole );
+      }
     }
 
     if ( index.column() == 1 ) {
       KComboBox *comboBox = qobject_cast<KComboBox*>( editor );
-      if ( !comboBox )
+      if ( !comboBox ) {
         return;
+      }
 
       model->setData( index, comboBox->currentText(), Qt::EditRole );
     }
@@ -230,16 +238,18 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
       const Item item = lineEdit->completedItem();
       model->setData( index, isReference, ContactGroupModel::IsReferenceRole );
       if ( isReference ) {
-        if ( item.isValid() )
+        if ( item.isValid() ) {
           model->setData( index, item.id(), Qt::EditRole );
+        }
       } else
         model->setData( index, lineEdit->text(), Qt::EditRole );
     }
 
     if ( index.column() == 1 ) {
       KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit )
+      if ( !lineEdit ) {
         return;
+      }
 
       model->setData( index, lineEdit->text(), Qt::EditRole );
     }
@@ -248,15 +258,16 @@ void ContactGroupEditorDelegate::setModelData( QWidget *editor, QAbstractItemMod
 
 static bool isLastRow( const QModelIndex &index )
 {
-  return (index.row() == (index.model()->rowCount() - 1));
+  return ( index.row() == ( index.model()->rowCount() - 1 ) );
 }
 
 void ContactGroupEditorDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   QStyledItemDelegate::paint( painter, option, index );
 
-  if ( index.column() == 1 && !isLastRow( index ) )
+  if ( index.column() == 1 && !isLastRow( index ) ) {
     d->mIcon.paint( painter, option.rect, Qt::AlignRight );
+  }
 }
 
 QSize ContactGroupEditorDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
@@ -266,8 +277,9 @@ QSize ContactGroupEditorDelegate::sizeHint( const QStyleOptionViewItem& option, 
   QSize hint = QStyledItemDelegate::sizeHint( option, index );
   hint.setHeight( qMax( hint.height(), d->mButtonSize.height() ) );
 
-  if ( index.column() == 1 )
+  if ( index.column() == 1 ) {
     hint.setWidth( hint.width() + d->mButtonSize.width() );
+  }
 
   return hint;
 }

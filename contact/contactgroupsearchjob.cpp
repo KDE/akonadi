@@ -187,8 +187,9 @@ KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const
   KABC::ContactGroup::List contactGroups;
 
   foreach ( const Item &item, items() ) {
-    if ( item.hasPayload<KABC::ContactGroup>() )
+    if ( item.hasPayload<KABC::ContactGroup>() ) {
       contactGroups.append( item.payload<KABC::ContactGroup>() );
+    }
   }
 
   return contactGroups;

@@ -41,7 +41,7 @@ Config::~Config()
 
 Config *Config::instance(const QString &pathToConfig)
 {
-  if ( !pathToConfig.isEmpty() ) 
+  if ( !pathToConfig.isEmpty() )
     globalConfig()->readConfiguration(pathToConfig);
 
   return globalConfig();

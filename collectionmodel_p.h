@@ -88,10 +88,12 @@ class CollectionModelPrivate
     {
       QStringList l = col.contentMimeTypes();
       for ( QStringList::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
-        if ( (*it) == Collection::mimeType() )
+        if ( ( *it ) == Collection::mimeType() ) {
           continue;
-        if ( !mimeTypes.contains( *it  ) )
+        }
+        if ( !mimeTypes.contains( *it  ) ) {
           mimeTypes << *it;
+        }
       }
     }
 };

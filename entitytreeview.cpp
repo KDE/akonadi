@@ -80,9 +80,9 @@ public:
 
 void EntityTreeView::Private::init()
 {
-  Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator(mParent);
-  Akonadi::ProgressSpinnerDelegate *customDelegate = new Akonadi::ProgressSpinnerDelegate(animator, mParent);
-  mParent->setItemDelegate(customDelegate);
+  Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator( mParent );
+  Akonadi::ProgressSpinnerDelegate *customDelegate = new Akonadi::ProgressSpinnerDelegate( animator, mParent );
+  mParent->setItemDelegate( customDelegate );
 
   mParent->header()->setClickable( true );
   mParent->header()->setStretchLastSection( false );
@@ -139,7 +139,7 @@ void EntityTreeView::Private::itemClicked( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
-  QModelIndex idx = index.sibling( index.row(), 0);
+  QModelIndex idx = index.sibling( index.row(), 0 );
 
   const Collection collection = idx.model()->data( idx, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
@@ -155,7 +155,7 @@ void EntityTreeView::Private::itemDoubleClicked( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
-  QModelIndex idx = index.sibling( index.row(), 0);
+  QModelIndex idx = index.sibling( index.row(), 0 );
   const Collection collection = idx.model()->data( idx, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
     emit mParent->doubleClicked( collection );
@@ -170,7 +170,7 @@ void EntityTreeView::Private::itemCurrentChanged( const QModelIndex &index )
 {
   if ( !index.isValid() )
     return;
-  QModelIndex idx = index.sibling( index.row(), 0);
+  QModelIndex idx = index.sibling( index.row(), 0 );
   const Collection collection = idx.model()->data( idx, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
     emit mParent->currentChanged( collection );
@@ -261,8 +261,9 @@ void EntityTreeView::dropEvent( QDropEvent * event )
 #ifndef QT_NO_CONTEXTMENU
 void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->mXmlGuiClient || !model())
+  if ( !d->mXmlGuiClient || !model() ) {
     return;
+  }
 
   const QModelIndex index = indexAt( event->pos() );
   QString popupName = d->mDefaultPopupMenu;
@@ -314,7 +315,7 @@ void EntityTreeView::setManualSortingActive(bool active)
 {
 #ifndef QT_NO_DRAGANDDROP
   d->mDragDropManager->setManualSortingActive( active );
-#endif 
+#endif
 }
 
 bool EntityTreeView::isManualSortingActive() const
@@ -323,7 +324,7 @@ bool EntityTreeView::isManualSortingActive() const
   return d->mDragDropManager->isManualSortingActive();
 #else
   return false;
-#endif 
+#endif
 }
 
 void EntityTreeView::setDefaultPopupMenu( const QString &name )

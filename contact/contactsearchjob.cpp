@@ -69,17 +69,19 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value )
 // string either as a whole word, the start of a word, or anywhere in a word
 static QString containsQueryString( bool doWholeWordSearch, bool matchWordBoundary )
 {
-  if ( doWholeWordSearch )
+  if ( doWholeWordSearch ) {
     return QString::fromLatin1( "?v bif:contains \"'%1'\" . " );
-  else
-    return QString::fromLatin1("FILTER regex(str(?v), \"%1\", \"i\")" )
-        .arg( matchWordBoundary? QLatin1String("\\\\b%1") : QLatin1String("%1") );
+  } else {
+    return QString::fromLatin1( "FILTER regex(str(?v), \"%1\", \"i\")" )
+        .arg( matchWordBoundary? QLatin1String( "\\\\b%1" ) : QLatin1String( "%1" ) );
+  }
 }
 
 void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
-  if ( match == StartsWithMatch && value.size() < 4 )
+  if ( match == StartsWithMatch && value.size() < 4 ) {
     match = ExactMatch;
+  }
 
   const bool doWholeWordSearch = value.size() < 3;
   const bool matchWordBoundary = match == ContainsWordBoundaryMatch;
@@ -425,7 +427,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "}"
 #endif
       );
-    } 
+    }
   } else if ( match == ContainsMatch || match == ContainsWordBoundaryMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
@@ -624,8 +626,9 @@ KABC::Addressee::List ContactSearchJob::contacts() const
   KABC::Addressee::List contacts;
 
   foreach ( const Item &item, items() ) {
-    if ( item.hasPayload<KABC::Addressee>() )
+    if ( item.hasPayload<KABC::Addressee>() ) {
       contacts.append( item.payload<KABC::Addressee>() );
+    }
   }
 
   return contacts;

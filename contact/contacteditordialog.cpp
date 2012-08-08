@@ -51,10 +51,11 @@ class ContactEditorDialog::Private
 
       QGridLayout *layout = new QGridLayout( mainWidget );
 
-      if ( editorWidget )
+      if ( editorWidget ) {
         mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, editorWidget, q );
-      else
+      } else {
         mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, q );
+      }
 
       if ( mode == ContactEditorDialog::CreateMode ) {
         QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
@@ -81,11 +82,13 @@ class ContactEditorDialog::Private
 
     void slotOkClicked()
     {
-      if ( mAddressBookBox )
+      if ( mAddressBookBox ) {
         mEditor->setDefaultAddressBook( mAddressBookBox->currentCollection() );
+      }
 
-      if ( mEditor->saveContact() )
+      if ( mEditor->saveContact() ) {
         q->accept();
+      }
     }
 
     void slotCancelClicked()
@@ -121,8 +124,9 @@ void ContactEditorDialog::setContact( const Akonadi::Item &contact )
 
 void ContactEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addressbook )
 {
-  if ( d->mMode == EditMode )
+  if ( d->mMode == EditMode ) {
     return;
+  }
 
   d->mAddressBookBox->setDefaultCollection( addressbook );
 }

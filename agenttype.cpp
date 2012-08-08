@@ -80,13 +80,14 @@ QStringList AgentType::capabilities() const
 
 AgentType& AgentType::operator=( const AgentType &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
 
 bool AgentType::operator==( const AgentType &other ) const
 {
-  return (d->mIdentifier == other.d->mIdentifier);
+  return ( d->mIdentifier == other.d->mIdentifier );
 }

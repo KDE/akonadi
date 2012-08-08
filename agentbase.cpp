@@ -71,45 +71,51 @@ void AgentBase::Observer::itemAdded( const Item &item, const Collection &collect
 {
   Q_UNUSED( item );
   Q_UNUSED( collection );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::Observer::itemChanged( const Item &item, const QSet<QByteArray> &partIdentifiers )
 {
   Q_UNUSED( item );
   Q_UNUSED( partIdentifiers );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::Observer::itemRemoved( const Item &item )
 {
   Q_UNUSED( item );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::Observer::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
   Q_UNUSED( collection );
   Q_UNUSED( parent );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::Observer::collectionChanged( const Collection &collection )
 {
   Q_UNUSED( collection );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::Observer::collectionRemoved( const Collection &collection )
 {
   Q_UNUSED( collection );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::ObserverV2::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
@@ -117,8 +123,9 @@ void AgentBase::ObserverV2::itemMoved( const Akonadi::Item &item, const Akonadi:
   Q_UNUSED( item );
   Q_UNUSED( source );
   Q_UNUSED( dest );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::ObserverV2::itemLinked( const Akonadi::Item& item, const Akonadi::Collection& collection )
@@ -150,8 +157,9 @@ void AgentBase::ObserverV2::collectionMoved( const Akonadi::Collection &collecti
   Q_UNUSED( collection );
   Q_UNUSED( source );
   Q_UNUSED( dest );
-  if ( sAgentBase != 0 )
+  if ( sAgentBase != 0 ) {
     sAgentBase->d_ptr->changeProcessed();
+  }
 }
 
 void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes )
@@ -173,7 +181,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mObserver( 0 )
 {
 #ifdef Q_OS_WINCE
-  QThread::currentThread()->setPriority(QThread::LowPriority);
+  QThread::currentThread()->setPriority( QThread::LowPriority );
 #endif
   Internal::setClientType( Internal::Agent );
 }
@@ -205,7 +213,7 @@ void AgentBasePrivate::init()
   new Akonadi__ControlAdaptor( q );
   new Akonadi__StatusAdaptor( q );
   if ( !DBusConnectionPool::threadConnection().registerObject( QLatin1String( "/" ), q, QDBusConnection::ExportAdaptors ) )
-    q->error( QString::fromLatin1( "Unable to register object at dbus: %1" ).arg( DBusConnectionPool::threadConnection().lastError().message() ) );
+    q->error( i18n( "Unable to register object at dbus: %1" ).arg( DBusConnectionPool::threadConnection().lastError().message() ) );
 
   mSettings = new QSettings( QString::fromLatin1( "%1/agent_config_%2" ).arg( Internal::xdgSaveDir( "config" ), mId ), QSettings::IniFormat );
 
@@ -265,16 +273,18 @@ void AgentBasePrivate::init()
   // Use reference counting to allow agents to finish internal jobs when the
   // agent is stopped.
   KGlobal::ref();
-  if ( QThread::currentThread() == QCoreApplication::instance()->thread() )
+  if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
     KGlobal::setAllowQuit( true );
+  }
 
 #ifndef Q_OS_WINCE
   // disable session management
-  if ( KApplication::kApplication() )
+  if ( KApplication::kApplication() ) {
     KApplication::kApplication()->disableSessionManagement();
+  }
 #endif
 
-  mResourceTypeName = AgentManager::self()->instance(mId).type().name();
+  mResourceTypeName = AgentManager::self()->instance( mId ).type().name();
   setProgramName();
 
   QTimer::singleShot( 0, q, SLOT(delayedInit()) );
@@ -284,8 +294,9 @@ void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
   const QString serviceId = ServerManager::agentServiceName( ServerManager::Agent, mId );
-  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) ) {
     kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
+  }
   q->setOnline( mOnline );
 }
 
@@ -301,14 +312,16 @@ void AgentBasePrivate::setProgramName()
 
 void AgentBasePrivate::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  if ( mObserver != 0 )
+  if ( mObserver != 0 ) {
     mObserver->itemAdded( item, collection );
+  }
 }
 
 void AgentBasePrivate::itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers )
 {
-  if ( mObserver != 0 )
+  if ( mObserver != 0 ) {
     mObserver->itemChanged( item, partIdentifiers );
+  }
 }
 
 void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest )
@@ -322,14 +335,14 @@ void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Coll
           Akonadi::Item i( item );
           i.setParentCollection( source );
           mObserver->itemRemoved( i );
-        }
-        else if ( dest.resource() == q_ptr->identifier() ) // moved to us
+        } else if ( dest.resource() == q_ptr->identifier() ) { // moved to us
           mObserver->itemAdded( item, dest );
-        else if ( observer2 )
+        } else if ( observer2 ) {
           observer2->itemMoved( item, source, dest );
-        else
+        } else {
           // not for us, not sure if we should get here at all
           changeProcessed();
+        }
         return;
       }
     }
@@ -348,46 +361,52 @@ void AgentBasePrivate::itemMoved( const Akonadi::Item &item, const Akonadi::Coll
 
 void AgentBasePrivate::itemRemoved( const Akonadi::Item &item )
 {
-  if ( mObserver != 0 )
+  if ( mObserver != 0 ) {
     mObserver->itemRemoved( item );
+  }
 }
 
 void AgentBasePrivate::itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( observer2 )
+  if ( observer2 ) {
     observer2->itemLinked( item, collection );
-  else
+  } else {
     changeProcessed();
+  }
 }
 
 void AgentBasePrivate::itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( observer2 )
+  if ( observer2 ) {
     observer2->itemUnlinked( item, collection );
-  else
+  } else {
     changeProcessed();
+  }
 }
 
 void AgentBasePrivate::collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
 {
-  if ( mObserver != 0 )
+  if ( mObserver != 0 ) {
     mObserver->collectionAdded( collection, parent );
+  }
 }
 
 void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( mObserver != 0 && observer2 == 0 ) // For ObserverV2 we use the variant with the part identifiers
+  if ( mObserver != 0 && observer2 == 0 ) { // For ObserverV2 we use the variant with the part identifiers
     mObserver->collectionChanged( collection );
+  }
 }
 
 void AgentBasePrivate::collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes )
 {
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
-  if ( observer2 != 0 )
+  if ( observer2 != 0 ) {
     observer2->collectionChanged( collection, changedAttributes );
+  }
 }
 
 void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest )
@@ -407,8 +426,9 @@ void AgentBasePrivate::collectionMoved( const Akonadi::Collection &collection, c
 
 void AgentBasePrivate::collectionRemoved( const Akonadi::Collection &collection )
 {
-  if ( mObserver != 0 )
+  if ( mObserver != 0 ) {
     mObserver->collectionRemoved( collection );
+  }
 }
 
 void AgentBasePrivate::collectionSubscribed( const Akonadi::Collection &collection, const Akonadi::Collection &parent )
@@ -437,20 +457,23 @@ void AgentBasePrivate::slotStatus( int status, const QString &message )
 
   switch ( status ) {
     case AgentBase::Idle:
-      if ( mStatusMessage.isEmpty() )
+      if ( mStatusMessage.isEmpty() ) {
         mStatusMessage = defaultReadyMessage();
+      }
 
       mStatusCode = 0;
       break;
     case AgentBase::Running:
-      if ( mStatusMessage.isEmpty() )
+      if ( mStatusMessage.isEmpty() ) {
         mStatusMessage = defaultSyncingMessage();
+      }
 
       mStatusCode = 1;
       break;
     case AgentBase::Broken:
-      if ( mStatusMessage.isEmpty() )
+      if ( mStatusMessage.isEmpty() ) {
         mStatusMessage = defaultErrorMessage();
+      }
 
       mStatusCode = 2;
       break;
@@ -483,8 +506,9 @@ void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
 
 void AgentBasePrivate::slotResumedFromSuspend()
 {
-  if ( mNeedsNetwork )
+  if ( mNeedsNetwork ) {
     slotNetworkStatusChange( Solid::Networking::status() );
+  }
 }
 
 AgentBase::AgentBase( const QString & id )
@@ -517,8 +541,9 @@ QString AgentBase::parseArguments( int argc, char **argv )
   }
 
   for ( int i = 1; i < argc - 1; ++i ) {
-    if ( QLatin1String( argv[ i ] ) == QLatin1String( "--identifier" ) )
+    if ( QLatin1String( argv[ i ] ) == QLatin1String( "--identifier" ) ) {
       identifier = QLatin1String( argv[ i + 1 ] );
+    }
   }
 
   if ( identifier.isEmpty() ) {
@@ -609,8 +634,9 @@ void AgentBase::setOnline( bool state )
   d->mOnline = state;
 
   const QString newMessage = d->defaultReadyMessage();
-  if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken )
+  if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken ) {
     emit status( d->mStatusCode, newMessage );
+  }
 
   d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
   doSetOnline( state );
@@ -638,15 +664,17 @@ void AgentBase::configure( qlonglong windowId )
 WId AgentBase::winIdForDialogs() const
 {
   const bool registered = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( QLatin1String( "org.freedesktop.akonaditray" ) );
-  if ( !registered )
+  if ( !registered ) {
     return 0;
+  }
 
   QDBusInterface dbus( QLatin1String( "org.freedesktop.akonaditray" ), QLatin1String( "/Actions" ),
                        QLatin1String( "org.freedesktop.Akonadi.Tray" ) );
   const QDBusMessage reply = dbus.call( QLatin1String( "getWinId" ) );
 
-  if ( reply.type() == QDBusMessage::ErrorMessage )
+  if ( reply.type() == QDBusMessage::ErrorMessage ) {
     return 0;
+  }
 
   const WId winid = (WId)reply.arguments().at( 0 ).toLongLong();
 
@@ -721,8 +749,9 @@ QString AgentBase::identifier() const
 void AgentBase::setAgentName( const QString &name )
 {
   Q_D( AgentBase );
-  if ( name == d->mName )
+  if ( name == d->mName ) {
     return;
+  }
 
   // TODO: rename collection
   d->mName = name;
@@ -743,10 +772,11 @@ void AgentBase::setAgentName( const QString &name )
 QString AgentBase::agentName() const
 {
   Q_D( const AgentBase );
-  if ( d->mName.isEmpty() )
+  if ( d->mName.isEmpty() ) {
     return d->mId;
-  else
+  } else {
     return d->mName;
+  }
 }
 
 void AgentBase::changeProcessed()
@@ -762,10 +792,11 @@ ChangeRecorder * AgentBase::changeRecorder() const
 
 KSharedConfigPtr AgentBase::config()
 {
-  if ( QCoreApplication::instance()->thread() == QThread::currentThread() )
+  if ( QCoreApplication::instance()->thread() == QThread::currentThread() ) {
     return KGlobal::config();
-  else
+  } else {
     return componentData().config();
+  }
 }
 
 void AgentBase::abort()
@@ -783,14 +814,15 @@ extern QThreadStorage<KComponentData*> s_agentComponentDatas;
 KComponentData AgentBase::componentData()
 {
   if ( QThread::currentThread() == QCoreApplication::instance()->thread() ) {
-    if ( s_agentComponentDatas.hasLocalData() )
-      return *(s_agentComponentDatas.localData());
-    else
+    if ( s_agentComponentDatas.hasLocalData() ) {
+      return *( s_agentComponentDatas.localData() );
+    } else {
       return KGlobal::mainComponent();
+    }
   }
 
   Q_ASSERT( s_agentComponentDatas.hasLocalData() );
-  return *(s_agentComponentDatas.localData());
+  return *( s_agentComponentDatas.localData() );
 }
 
 #include "agentbase.moc"

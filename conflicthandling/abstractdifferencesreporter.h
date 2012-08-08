@@ -95,8 +95,7 @@ class AbstractDifferencesReporter
     /**
      * Describes the property modes.
      */
-    enum Mode
-    {
+    enum Mode {
       NormalMode,         ///< The left and right column show the same property values.
       ConflictMode,       ///< The left and right column show conflicting property values.
       AdditionalLeftMode, ///< The left column contains a property value that is not available in the right column.

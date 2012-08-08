@@ -56,11 +56,12 @@ Q_GLOBAL_STATIC( LegacyMap, typeInfoToMetaTypeIdMap )
 Q_GLOBAL_STATIC_WITH_ARGS( QReadWriteLock, legacyMapLock, ( QReadWriteLock::Recursive ) )
 
 void Item::addToLegacyMappingImpl( const QString & mimeType, int spid, int mtid, std::auto_ptr<PayloadBase> p ) {
-    if ( !p.get() )
+    if ( !p.get() ) {
         return;
+    }
     const boost::shared_ptr<PayloadBase> sp( p );
     const QWriteLocker locker( legacyMapLock() );
-    std::pair<int,int> & item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
+    std::pair<int,int> & item = ( *typeInfoToMetaTypeIdMap() )[mimeType][sp];
     item.first = spid;
     item.second = mtid;
 }
@@ -94,13 +95,15 @@ namespace {
 static shared_ptr<const std::pair<int,int> > lookupLegacyMapping( const QString & mimeType, PayloadBase * p ) {
     MyReadLocker locker( legacyMapLock() );
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind( mimeType );
-    if ( hit == typeInfoToMetaTypeIdMap()->constEnd() )
+    if ( hit == typeInfoToMetaTypeIdMap()->constEnd() ) {
         return shared_ptr<const std::pair<int,int> >();
+    }
     const boost::shared_ptr<PayloadBase> sp( p, nodelete() );
     const LegacyMap::mapped_type::const_iterator it = hit->find( sp );
-    if ( it == hit->end() )
+    if ( it == hit->end() ) {
         return shared_ptr<const std::pair<int,int> >();
-    
+    }
+
     return locker.makeUnlockingPointer( &it->second );
 }
 
@@ -142,10 +145,11 @@ void Item::setFlag( const QByteArray & name )
   Q_D( Item );
   d->mFlags.insert( name );
   if ( !d->mFlagsOverwritten ) {
-    if ( d->mDeletedFlags.contains( name ) )
+    if ( d->mDeletedFlags.contains( name ) ) {
       d->mDeletedFlags.remove( name );
-    else
+    } else {
       d->mAddedFlags.insert( name );
+    }
   }
 }
 
@@ -154,10 +158,11 @@ void Item::clearFlag( const QByteArray & name )
   Q_D( Item );
   d->mFlags.remove( name );
   if ( !d->mFlagsOverwritten ) {
-    if ( d->mAddedFlags.contains( name ) )
+    if ( d->mAddedFlags.contains( name ) ) {
       d->mAddedFlags.remove( name );
-    else
+    } else {
       d->mDeletedFlags.insert( name );
+    }
   }
 }
 
@@ -266,22 +271,25 @@ KUrl Item::url( UrlType type ) const
   url.setProtocol( QString::fromLatin1( "akonadi" ) );
   url.addQueryItem( QLatin1String( "item" ), QString::number( id() ) );
 
-  if ( type == UrlWithMimeType )
+  if ( type == UrlWithMimeType ) {
     url.addQueryItem( QLatin1String( "type" ), mimeType() );
+  }
 
   return url;
 }
 
 Item Item::fromUrl( const KUrl &url )
 {
-  if ( url.protocol() != QLatin1String( "akonadi" ) )
+  if ( url.protocol() != QLatin1String( "akonadi" ) ) {
     return Item();
+  }
 
   const QString itemStr = url.queryItem( QLatin1String( "item" ) );
   bool ok = false;
   Item::Id itemId = itemStr.toLongLong( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return Item();
+  }
 
   return Item( itemId );
 }
@@ -296,18 +304,22 @@ PayloadBase* Item::payloadBase() const
 {
   Q_D( const Item );
   d->tryEnsureLegacyPayload();
-  if ( d->mLegacyPayload )
+  if ( d->mLegacyPayload ) {
     return d->mLegacyPayload.get();
-  else
+  } else {
     return dummyPayload();
+  }
 }
 
 void ItemPrivate::tryEnsureLegacyPayload() const
 {
-  if ( !mLegacyPayload )
-    for ( PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end() ; it != end ; ++it )
-      if ( lookupLegacyMapping( mMimeType, it->payload.get() ) )
+  if ( !mLegacyPayload ) {
+    for ( PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end() ; it != end ; ++it ) {
+      if ( lookupLegacyMapping( mMimeType, it->payload.get() ) ) {
           mLegacyPayload = it->payload; // clones
+      }
+    }
+  }
 }
 
 PayloadBase* Item::payloadBaseV2( int spid, int mtid ) const
@@ -330,23 +342,25 @@ namespace {
         }
     };
 }
-            
 
 bool Item::ensureMetaTypeId( int mtid ) const
 {
   Q_D( const Item );
   // 0. Nothing there - nothing to convert from, either
-  if ( d->mPayloads.empty() )
+  if ( d->mPayloads.empty() ) {
     return false;
+  }
 
   // 1. Look whether we already have one:
-  if ( d->hasMetaTypeId( mtid ) )
+  if ( d->hasMetaTypeId( mtid ) ) {
     return true;
+  }
 
   // recursion detection (shouldn't trigger, but does if the
   // serialiser plugins are acting funky):
-  if ( d->mConversionInProgress )
+  if ( d->mConversionInProgress ) {
       return false;
+  }
 
   // 2. Try to create one by conversion from a different representation:
   try {
@@ -369,30 +383,33 @@ static QString format_type( int spid, int mtid ) {
 
 static QString format_types( const PayloadContainer & c ) {
   QStringList result;
-  for ( PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it )
+  for ( PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it ) {
     result.push_back( format_type( it->sharedPointerId, it->metaTypeId ) );
-  return result.join( QLatin1String(", ") );
+  }
+  return result.join( QLatin1String( ", " ) );
 }
 
 #if 0
 QString Item::payloadExceptionText( int spid, int mtid ) const
 {
   Q_D( const Item );
-  if ( d->mPayloads.empty() )
+  if ( d->mPayloads.empty() ) {
     return QLatin1String( "No payload set" );
-  else
+  } else {
     return QString::fromLatin1( "Wrong payload type (requested: %1; present: %2" )
         .arg( format_type( spid, mtid ), format_types( d->mPayloads ) );
+  }
 }
 #else
 void Item::throwPayloadException( int spid, int mtid ) const
 {
   Q_D( const Item );
-  if ( d->mPayloads.empty() )
+  if ( d->mPayloads.empty() ) {
     throw PayloadException( "No payload set" );
-  else
+  } else {
     throw PayloadException( QString::fromLatin1( "Wrong payload type (requested: %1; present: %2" )
                             .arg( format_type( spid, mtid ), format_types( d->mPayloads ) ) );
+  }
 }
 #endif
 
@@ -405,8 +422,9 @@ void ItemPrivate::setLegacyPayloadBaseImpl( std::auto_ptr<PayloadBase> p )
 {
   if ( const shared_ptr<const std::pair<int,int> > pair = lookupLegacyMapping( mMimeType, p.get() ) ) {
     std::auto_ptr<PayloadBase> clone;
-    if ( p.get() )
+    if ( p.get() ) {
       clone.reset( p->clone() );
+    }
     setPayloadBaseImpl( pair->first, pair->second, p, false );
     mLegacyPayload.reset( clone.release() );
   } else {
@@ -436,8 +454,9 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
   Q_D( const Item );
   result.reserve( d->mPayloads.size() );
   // Stable Insertion Sort - N is typically _very_ low (1 or 2).
-  for ( PayloadContainer::const_iterator it = d->mPayloads.begin(), end = d->mPayloads.end() ; it != end ; ++it )
+  for ( PayloadContainer::const_iterator it = d->mPayloads.begin(), end = d->mPayloads.end() ; it != end ; ++it ) {
       result.insert( std::upper_bound( result.begin(), result.end(), it->metaTypeId ), it->metaTypeId );
+  }
   return result;
 }
 
@@ -459,8 +478,7 @@ void Item::apply( const Item &other )
   setRemoteId( other.remoteId() );
 
   QList<QByteArray> attrs;
-  foreach ( Attribute *attribute, other.attributes() )
-  {
+  foreach ( Attribute *attribute, other.attributes() ) {
     addAttribute( attribute->clone() );
     attrs.append( attribute->type() );
   }

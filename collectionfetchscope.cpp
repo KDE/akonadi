@@ -69,8 +69,9 @@ CollectionFetchScope::~CollectionFetchScope()
 
 CollectionFetchScope &CollectionFetchScope::operator=( const CollectionFetchScope &other )
 {
-  if ( &other != this )
+  if ( &other != this ) {
     d = other.d;
+  }
 
   return *this;
 }

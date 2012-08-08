@@ -257,14 +257,14 @@ void ContactEditorWidget::Private::initGuiContactTab()
   phonesLayout->setRowStretch( 1, 1 );
 
   // setup categories section
-  const bool nepomukInitialized(Nepomuk::ResourceManager::instance()->initialized());
+  const bool nepomukInitialized( Nepomuk::ResourceManager::instance()->initialized() );
   QHBoxLayout *categoriesLayout = new QHBoxLayout;
   label = new QLabel( i18nc( "@label The categories of a contact", "Categories:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
-  label->setVisible(nepomukInitialized);
+  label->setVisible( nepomukInitialized );
 
   mCategoriesWidget = new CategoriesEditWidget;
-  mCategoriesWidget->setVisible(nepomukInitialized);
+  mCategoriesWidget->setVisible( nepomukInitialized );
   label->setBuddy( mCategoriesWidget );
 
   categoriesLayout->addWidget( label );
@@ -277,7 +277,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mMailPreferFormatting = new KComboBox;
   QStringList listFormat;
-  listFormat<<i18n( "Unknown" ) <<i18n( "Plain Text" ) << i18n( "HTML" );
+  listFormat << i18n( "Unknown" ) << i18n( "Plain Text" ) << i18n( "HTML" );
   mMailPreferFormatting->addItems( listFormat );
   mailPreferFormattingLayout->addWidget( label );
   mailPreferFormattingLayout->addWidget( mMailPreferFormatting );
@@ -487,18 +487,21 @@ void ContactEditorWidget::Private::loadCustomPages()
   QDirIterator it( pluginDirectory, QDir::Files );
   while ( it.hasNext() ) {
     QPluginLoader loader( it.next() );
-    if ( !loader.load() )
+    if ( !loader.load() ) {
       continue;
+    }
 
     Akonadi::ContactEditorPagePlugin *plugin = qobject_cast<Akonadi::ContactEditorPagePlugin*>( loader.instance() );
-    if ( !plugin )
+    if ( !plugin ) {
       continue;
+    }
 
     mCustomPages.append( plugin );
   }
 
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, mCustomPages )
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, mCustomPages ) {
     mTabWidget->addTab( plugin, plugin->title() );
+  }
 }
 
 QString ContactEditorWidget::Private::loadCustom( const KABC::Addressee &contact, const QString &key ) const
@@ -508,10 +511,11 @@ QString ContactEditorWidget::Private::loadCustom( const KABC::Addressee &contact
 
 void ContactEditorWidget::Private::storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const
 {
-  if ( value.isEmpty() )
+  if ( value.isEmpty() ) {
     contact.removeCustom( QLatin1String( "KADDRESSBOOK" ), key );
-  else
+  } else {
     contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), key, value );
+  }
 }
 
 ContactEditorWidget::ContactEditorWidget( QWidget* )
@@ -553,14 +557,15 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
 
 
   const QString mailPreferedFormatting = d->loadCustom( contact, QLatin1String( "MailPreferedFormatting" ) );
-  if ( mailPreferedFormatting.isEmpty() )
+  if ( mailPreferedFormatting.isEmpty() ) {
     d->mMailPreferFormatting->setCurrentIndex( 0 );
-  else if ( mailPreferedFormatting == QLatin1String( "TEXT" ) )
+  } else if ( mailPreferedFormatting == QLatin1String( "TEXT" ) ) {
     d->mMailPreferFormatting->setCurrentIndex( 1 );
-  else if ( mailPreferedFormatting == QLatin1String( "HTML" ) )
+  } else if ( mailPreferedFormatting == QLatin1String( "HTML" ) ) {
     d->mMailPreferFormatting->setCurrentIndex( 2 );
-  else
+  } else {
     d->mMailPreferFormatting->setCurrentIndex( 0 );
+  }
 
   const QString mailAllowToRemoteContent = d->loadCustom( contact, QLatin1String( "MailAllowToRemoteContent" ) );
   d->mAllowRemoteContent->setChecked( mailAllowToRemoteContent == QLatin1String( "TRUE" ) );
@@ -602,8 +607,9 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   d->mCustomFieldsWidget->loadContact( contact );
 
   // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
     plugin->loadContact( contact );
+  }
 }
 
 void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData &metaData ) const
@@ -641,8 +647,9 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   d->storeCustom( contact, QLatin1String( "MailPreferedFormatting" ), mailPreferedFormatting );
 
   QString mailAllowToRemoteContent;
-  if ( d->mAllowRemoteContent->isChecked() )
+  if ( d->mAllowRemoteContent->isChecked() ) {
     mailAllowToRemoteContent = QLatin1String( "TRUE" );
+  }
   d->storeCustom( contact, QLatin1String( "MailAllowToRemoteContent" ), mailAllowToRemoteContent );
 
   // address group
@@ -686,8 +693,9 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
 
   // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
     plugin->storeContact( contact );
+  }
 }
 
 void ContactEditorWidget::setReadOnly( bool readOnly )
@@ -748,6 +756,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   d->mCustomFieldsWidget->setReadOnly( readOnly );
 
   // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages )
+  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
     plugin->setReadOnly( readOnly );
+  }
 }

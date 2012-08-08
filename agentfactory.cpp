@@ -43,8 +43,9 @@ AgentFactoryBase::AgentFactoryBase( const char *catalogName, QObject *parent)
   : QObject( parent ), d( new AgentFactoryBasePrivate )
 {
   d->catalogName = QString::fromLatin1( catalogName );
-  if ( !KGlobal::hasMainComponent() )
+  if ( !KGlobal::hasMainComponent() ) {
     new KComponentData( "AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
+  }
 
   KGlobal::locale()->insertCatalog( d->catalogName );
 
@@ -62,10 +63,10 @@ void AgentFactoryBase::createComponentData( const QString& identifier ) const
   Q_ASSERT( !s_agentComponentDatas.hasLocalData() );
 
   if ( QThread::currentThread() != QCoreApplication::instance()->thread() ) {
-    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1(),
+    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace( identifier ).toLatin1(), d->catalogName.toLatin1(),
                                                             KComponentData::SkipMainComponentRegistration ) );
   } else {
-    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace(identifier).toLatin1(), d->catalogName.toLatin1() ) );
+    s_agentComponentDatas.setLocalData( new KComponentData( ServerManager::addNamespace( identifier ).toLatin1(), d->catalogName.toLatin1() ) );
   }
 }
 

@@ -179,7 +179,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
-        
+
         QTest::newRow( "nothing selected" ) << collectionList << map;
       }
 
@@ -220,7 +220,7 @@ class ActionStateManagerTest : public QObject
         map.insert( StandardActionManager::RestoreItemsFromTrash, false );
         map.insert( StandardActionManager::MoveToTrashRestoreCollection, false );
         map.insert( StandardActionManager::MoveToTrashRestoreItem, false );
-        
+
         QTest::newRow( "root collection selected" ) << collectionList << map;
       }
 

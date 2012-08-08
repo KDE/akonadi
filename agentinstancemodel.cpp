@@ -58,8 +58,9 @@ void AgentInstanceModel::Private::instanceAdded( const AgentInstance &instance )
 void AgentInstanceModel::Private::instanceRemoved( const AgentInstance &instance )
 {
   const int index = mInstances.indexOf( instance );
-  if ( index == -1 )
+  if ( index == -1 ) {
     return;
+  }
 
   mParent->beginRemoveRows( QModelIndex(), index, index );
   mInstances.removeAll( instance );
@@ -125,11 +126,13 @@ int AgentInstanceModel::rowCount( const QModelIndex& ) const
 
 QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.row() < 0 || index.row() >= d->mInstances.count() )
+  if ( index.row() < 0 || index.row() >= d->mInstances.count() ) {
     return QVariant();
+  }
 
   const AgentInstance &instance = d->mInstances[ index.row() ];
 
@@ -176,11 +179,13 @@ QVariant AgentInstanceModel::data( const QModelIndex &index, int role ) const
 
 QVariant AgentInstanceModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( orientation == Qt::Vertical )
+  if ( orientation == Qt::Vertical ) {
     return QVariant();
+  }
 
-  if ( role != Qt::DisplayRole )
+  if ( role != Qt::DisplayRole ) {
     return QVariant();
+  }
 
   switch ( section ) {
     case 0:
@@ -194,11 +199,13 @@ QVariant AgentInstanceModel::headerData( int section, Qt::Orientation orientatio
 
 QModelIndex AgentInstanceModel::index( int row, int column, const QModelIndex& ) const
 {
-  if ( row < 0 || row >= d->mInstances.count() )
+  if ( row < 0 || row >= d->mInstances.count() ) {
     return QModelIndex();
+  }
 
-  if ( column != 0 )
+  if ( column != 0 ) {
     return QModelIndex();
+  }
 
   return createIndex( row, column, 0 );
 }
@@ -210,19 +217,22 @@ QModelIndex AgentInstanceModel::parent( const QModelIndex& ) const
 
 Qt::ItemFlags AgentInstanceModel::flags( const QModelIndex & index ) const
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mInstances.count() )
+  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mInstances.count() ) {
     return QAbstractItemModel::flags( index );
+  }
 
   return QAbstractItemModel::flags( index ) | Qt::ItemIsEditable;
 }
 
 bool AgentInstanceModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return false;
+  }
 
-  if ( index.row() < 0 || index.row() >= d->mInstances.count() )
+  if ( index.row() < 0 || index.row() >= d->mInstances.count() ) {
     return false;
+  }
 
   AgentInstance &instance = d->mInstances[ index.row() ];
 

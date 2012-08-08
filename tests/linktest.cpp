@@ -46,16 +46,17 @@ class LinkTest : public QObject
     {
       SearchCreateJob *create = new SearchCreateJob( "linkTestFolder", "dummy query", this );
       QVERIFY( create->exec() );
-      
+
       CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
       QVERIFY( list->exec() );
       Collection col;
       foreach ( const Collection &c, list->collections() ) {
-        if ( c.name() == "linkTestFolder" )
+        if ( c.name() == "linkTestFolder" ) {
           col = c;
+        }
       }
       QVERIFY( col.isValid() );
-      
+
       Item::List items;
       items << Item( 3 ) << Item( 4 ) << Item( 6 );
 
@@ -87,8 +88,9 @@ class LinkTest : public QObject
       ItemFetchJob *fetch = new ItemFetchJob( col );
       QVERIFY( fetch->exec() );
       QCOMPARE( fetch->items().count(), 3 );
-      foreach ( const Item &item, fetch->items() )
+      foreach ( const Item &item, fetch->items() ) {
         QVERIFY( items.contains( item ) );
+      }
 
       UnlinkJob *unlink = new UnlinkJob( col, items, this );
       QVERIFY( unlink->exec() );

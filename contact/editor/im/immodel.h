@@ -51,8 +51,7 @@ class IMAddress
 class IMModel : public QAbstractItemModel
 {
   public:
-    enum Role
-    {
+    enum Role {
       ProtocolRole = Qt::UserRole,
       IsPreferredRole
     };

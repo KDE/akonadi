@@ -44,7 +44,7 @@ class StandardCalendarActionManager::Private
         mItemSelectionModel( 0 ),
         mParent( parent )
     {
-      KGlobal::locale()->insertCatalog(QLatin1String("libakonadi-calendar"));
+      KGlobal::locale()->insertCatalog( QLatin1String( "libakonadi-calendar" ) );
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
       mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
                         mParent, SIGNAL(actionStateUpdated()) );
@@ -77,7 +77,7 @@ class StandardCalendarActionManager::Private
 
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText(
         i18n( "Folder Properties..." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis(
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setWhatsThis(
         i18n( "Open a dialog to edit the properties of the selected calendar folder." ) );
 
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
@@ -230,12 +230,14 @@ class StandardCalendarActionManager::Private
       }
 
       const QAbstractItemModel *model = index.model();
-      if ( !model )
+      if ( !model ) {
         return false;
+      }
 
       for ( int row = 0; row < model->rowCount( index ); ++row ) {
-        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) )
+        if ( hasWritableCollection( model->index( row, 0, index ), mimeType ) ) {
           return true;
+        }
       }
 
       return false;
@@ -243,13 +245,15 @@ class StandardCalendarActionManager::Private
 
     bool hasWritableCollection( const QString &mimeType ) const
     {
-      if ( !mCollectionSelectionModel )
+      if ( !mCollectionSelectionModel ) {
         return false;
+      }
 
       const QAbstractItemModel *collectionModel = mCollectionSelectionModel->model();
       for ( int row = 0; row < collectionModel->rowCount(); ++row ) {
-        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) )
+        if ( hasWritableCollection( collectionModel->index( row, 0, QModelIndex() ), mimeType ) ) {
           return true;
+        }
       }
 
       return false;
@@ -257,8 +261,9 @@ class StandardCalendarActionManager::Private
 
     void updateActions()
     {
-      if ( !mItemSelectionModel )
+      if ( !mItemSelectionModel ) {
         return;
+      }
 
       // update action labels
       const int itemCount = mItemSelectionModel->selectedRows().count();
@@ -277,8 +282,9 @@ class StandardCalendarActionManager::Private
                                             ki18np( "Cut Event", "Cut %1 Events" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Event To" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Event To" ) );
-            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) ) {
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Event..." ) );
+            }
           } else if ( mimeType == KCalCore::Todo::todoMimeType() ) {
             mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                             ki18np( "Copy To-do", "Copy %1 To-dos" ) );
@@ -290,8 +296,9 @@ class StandardCalendarActionManager::Private
                                             ki18np( "Cut To-do", "Cut %1 To-dos" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move To-do To" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move To-do To" ) );
-            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) ) {
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit To-do..." ) );
+            }
           } else if ( mimeType == KCalCore::Journal::journalMimeType() ) {
             mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                             ki18np( "Copy Journal", "Copy %1 Journals" ) );
@@ -303,47 +310,54 @@ class StandardCalendarActionManager::Private
                                             ki18np( "Cut Journal", "Cut %1 Journals" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Journal To" ) );
             mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Journal To" ) );
-            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) )
+            if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) ) {
               mActions.value( StandardCalendarActionManager::EditIncidence )->setText( i18n( "Edit Journal..." ) );
+            }
           }
         }
       }
 
       // update action states
-      if ( mActions.contains( StandardCalendarActionManager::CreateEvent ) )
+      if ( mActions.contains( StandardCalendarActionManager::CreateEvent ) ) {
         mActions[ StandardCalendarActionManager::CreateEvent ]->setEnabled( hasWritableCollection( KCalCore::Event::eventMimeType() ) );
-      if ( mActions.contains( StandardCalendarActionManager::CreateTodo ) )
+      }
+      if ( mActions.contains( StandardCalendarActionManager::CreateTodo ) ) {
         mActions[ StandardCalendarActionManager::CreateTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
-      if ( mActions.contains( StandardCalendarActionManager::CreateJournal ) )
+      }
+      if ( mActions.contains( StandardCalendarActionManager::CreateJournal ) ) {
         mActions[ StandardCalendarActionManager::CreateJournal ]->setEnabled( hasWritableCollection( KCalCore::Journal::journalMimeType() ) );
+      }
 
       if ( mActions.contains( StandardCalendarActionManager::EditIncidence ) ) {
         bool canEditItem = true;
 
         // only one selected item can be edited
-        canEditItem = canEditItem && (itemCount == 1);
+        canEditItem = canEditItem && ( itemCount == 1 );
 
         // check whether parent collection allows changing the item
         const QModelIndexList rows = mItemSelectionModel->selectedRows();
         if ( rows.count() == 1 ) {
           const QModelIndex index = rows.first();
           const Collection parentCollection = index.data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
-          if ( parentCollection.isValid() )
-            canEditItem = canEditItem && (parentCollection.rights() & Collection::CanChangeItem);
+          if ( parentCollection.isValid() ) {
+            canEditItem = canEditItem && ( parentCollection.rights() & Collection::CanChangeItem );
+          }
         }
 
         mActions.value( StandardCalendarActionManager::EditIncidence )->setEnabled( canEditItem );
       }
 
-      if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
+      if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) ) {
         mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( false );
+      }
 
       if ( itemCount == 1 ) {
         const Akonadi::Item item = mGenericManager->selectedItems().first();
 
         if ( item.isValid() && item.hasPayload<KCalCore::Todo::Ptr>() ) {
-          if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) )
+          if ( mActions.contains( StandardCalendarActionManager::CreateSubTodo ) ) {
             mActions[ StandardCalendarActionManager::CreateSubTodo ]->setEnabled( hasWritableCollection( KCalCore::Todo::todoMimeType() ) );
+          }
         }
       }
 
@@ -424,8 +438,9 @@ void StandardCalendarActionManager::setItemSelectionModel( QItemSelectionModel *
 
 KAction* StandardCalendarActionManager::createAction( StandardCalendarActionManager::Type type )
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   KAction *action = 0;
   switch ( type ) {
@@ -500,8 +515,9 @@ void StandardCalendarActionManager::createAllActions()
 
 KAction* StandardCalendarActionManager::action( StandardCalendarActionManager::Type type ) const
 {
-  if ( d->mActions.contains( type ) )
+  if ( d->mActions.contains( type ) ) {
     return d->mActions.value( type );
+  }
 
   return 0;
 }
@@ -518,10 +534,11 @@ void StandardCalendarActionManager::setActionText( StandardActionManager::Type t
 
 void StandardCalendarActionManager::interceptAction( StandardCalendarActionManager::Type type, bool intercept )
 {
-  if ( intercept )
+  if ( intercept ) {
     d->mInterceptedActions.insert( type );
-  else
+  } else {
     d->mInterceptedActions.remove( type );
+  }
 }
 
 void StandardCalendarActionManager::interceptAction( StandardActionManager::Type type, bool intercept )

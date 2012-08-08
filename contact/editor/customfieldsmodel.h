@@ -30,8 +30,7 @@
 class CustomFieldsModel : public QAbstractItemModel
 {
   public:
-    enum Role
-    {
+    enum Role {
       TypeRole = Qt::UserRole,
       ScopeRole
     };

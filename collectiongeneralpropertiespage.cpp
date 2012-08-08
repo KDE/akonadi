@@ -48,16 +48,18 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
     iconName = collection.attribute<EntityDisplayAttribute>()->iconName();
   }
 
-  if ( displayName.isEmpty() )
+  if ( displayName.isEmpty() ) {
     ui.nameEdit->setText( collection.name() );
-  else
+  } else {
     ui.nameEdit->setText( displayName );
+  }
 
 #ifndef KDEPIM_MOBILE_UI
-  if ( iconName.isEmpty() )
+  if ( iconName.isEmpty() ) {
     ui.customIcon->setIcon( CollectionUtils::defaultIconName( collection ) );
-  else
+  } else {
     ui.customIcon->setIcon( iconName );
+  }
   ui.customIconCheckbox->setChecked( !iconName.isEmpty() );
 #endif
 
@@ -73,16 +75,18 @@ void CollectionGeneralPropertiesPage::load(const Collection & collection)
 void CollectionGeneralPropertiesPage::save(Collection & collection)
 {
   if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+       !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
     collection.attribute<EntityDisplayAttribute>()->setDisplayName( ui.nameEdit->text() );
-  else
+  } else {
     collection.setName( ui.nameEdit->text() );
+  }
 
 #ifndef KDEPIM_MOBILE_UI
-  if ( ui.customIconCheckbox->isChecked() )
+  if ( ui.customIconCheckbox->isChecked() ) {
     collection.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setIconName( ui.customIcon->icon() );
-  else if ( collection.hasAttribute<EntityDisplayAttribute>() )
+  } else if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
     collection.attribute<EntityDisplayAttribute>()->setIconName( QString() );
+  }
 #endif
 }
 

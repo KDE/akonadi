@@ -85,11 +85,13 @@ int AgentTypeModel::rowCount( const QModelIndex& ) const
 
 QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return QVariant();
+  }
 
-  if ( index.row() < 0 || index.row() >= d->mTypes.count() )
+  if ( index.row() < 0 || index.row() >= d->mTypes.count() ) {
     return QVariant();
+  }
 
   const AgentType &type = d->mTypes[ index.row() ];
 
@@ -127,11 +129,13 @@ QVariant AgentTypeModel::data( const QModelIndex &index, int role ) const
 
 QModelIndex AgentTypeModel::index( int row, int column, const QModelIndex& ) const
 {
-  if ( row < 0 || row >= d->mTypes.count() )
+  if ( row < 0 || row >= d->mTypes.count() ) {
     return QModelIndex();
+  }
 
-  if ( column != 0 )
+  if ( column != 0 ) {
     return QModelIndex();
+  }
 
   return createIndex( row, column, 0 );
 }
@@ -143,16 +147,16 @@ QModelIndex AgentTypeModel::parent( const QModelIndex& ) const
 
 Qt::ItemFlags AgentTypeModel::flags(const QModelIndex& index) const
 {
-  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mTypes.count() )
+  if ( !index.isValid() || index.row() < 0 || index.row() >= d->mTypes.count() ) {
     return QAbstractItemModel::flags( index );
+  }
 
   const AgentType &type = d->mTypes[ index.row() ];
   if ( type.capabilities().contains( QLatin1String( "Unique" ) ) &&
-       AgentManager::self()->instance( type.identifier() ).isValid() )
-  {
-    return QAbstractItemModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+       AgentManager::self()->instance( type.identifier() ).isValid() ) {
+    return QAbstractItemModel::flags( index ) & ~( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
   }
-  return QAbstractItemModel::flags(index);
+  return QAbstractItemModel::flags( index );
 }
 
 #include "agenttypemodel.moc"

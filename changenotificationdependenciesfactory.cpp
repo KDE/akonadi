@@ -63,10 +63,10 @@ QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* pa
 
 CollectionCache* ChangeNotificationDependenciesFactory::createCollectionCache(int maxCapacity, Session *session)
 {
-  return new CollectionCache(maxCapacity, session);
+  return new CollectionCache( maxCapacity, session );
 }
 
 ItemCache* ChangeNotificationDependenciesFactory::createItemCache(int maxCapacity, Session* session)
 {
-  return new ItemCache(maxCapacity, session);
+  return new ItemCache( maxCapacity, session );
 }

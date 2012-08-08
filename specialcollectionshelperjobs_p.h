@@ -61,7 +61,7 @@ class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
       Returns the resource ID of the resource being scanned.
     */
     QString resourceId() const;
-    
+
     /**
       Sets the resource ID of the resource to scan.
     */

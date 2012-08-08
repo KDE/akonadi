@@ -81,16 +81,18 @@ CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *qq, co
     mCollection( collection ),
     mPageNames( pageNames )
 {
-  if ( s_defaultPage )
+  if ( s_defaultPage ) {
     registerBuiltinPages();
+  }
 }
 
 void CollectionPropertiesDialog::Private::registerBuiltinPages()
 {
   static bool registered = false;
 
-  if ( registered )
+  if ( registered ) {
     return;
+  }
 
   s_pages->append( new CollectionGeneralPropertiesPageFactory() );
   s_pages->append( new CachePolicyPageFactory() );
@@ -164,8 +166,9 @@ CollectionPropertiesDialog::~CollectionPropertiesDialog()
 
 void CollectionPropertiesDialog::registerPage( CollectionPropertiesPageFactory *factory )
 {
-  if ( s_pages->isEmpty() && s_defaultPage )
+  if ( s_pages->isEmpty() && s_defaultPage ) {
     Private::registerBuiltinPages();
+  }
   s_pages->append( factory );
 }
 

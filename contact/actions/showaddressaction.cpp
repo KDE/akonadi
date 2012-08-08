@@ -44,8 +44,9 @@ void ShowAddressAction::showAddress( const KABC::Address &address )
                 replace( QLatin1String( "%n" ), address.country() ).
                 replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
 
-    if ( !urlTemplate.isEmpty() )
+    if ( !urlTemplate.isEmpty() ) {
       KToolInvocation::invokeBrowser( urlTemplate );
+    }
   } else {
     QString commandTemplate = ContactActionsSettings::self()->addressCommand();
 
@@ -56,7 +57,8 @@ void ShowAddressAction::showAddress( const KABC::Address &address )
                     replace( QLatin1String( "%n" ), address.country() ).
                     replace( QLatin1String( "%c" ), address.countryToISO( address.country() ) );
 
-    if ( !commandTemplate.isEmpty() )
+    if ( !commandTemplate.isEmpty() ) {
       KRun::runCommand( commandTemplate, 0 );
+    }
   }
 }

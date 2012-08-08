@@ -27,11 +27,13 @@ static Collection::Rights dataToRights( const QByteArray &data )
 {
   Collection::Rights rights = Collection::ReadOnly;
 
-  if ( data.isEmpty() )
+  if ( data.isEmpty() ) {
     return Collection::ReadOnly;
+  }
 
-  if ( data.at( 0 ) == 'a' )
+  if ( data.at( 0 ) == 'a' ) {
     return Collection::AllRights;
+  }
 
   for ( int i = 0; i < data.count(); ++i ) {
     switch ( data.at( i ) ) {
@@ -51,26 +53,35 @@ static Collection::Rights dataToRights( const QByteArray &data )
 
 static QByteArray rightsToData( Collection::Rights &rights )
 {
-  if ( rights == Collection::AllRights )
+  if ( rights == Collection::AllRights ) {
     return QByteArray( "a" );
+  }
 
   QByteArray data;
-  if ( rights & Collection::CanChangeItem )
+  if ( rights & Collection::CanChangeItem ) {
     data.append( 'w' );
-  if ( rights & Collection::CanCreateItem )
+  }
+  if ( rights & Collection::CanCreateItem ) {
     data.append( 'c' );
-  if ( rights & Collection::CanDeleteItem )
+  }
+  if ( rights & Collection::CanDeleteItem ) {
     data.append( 'd' );
-  if ( rights & Collection::CanChangeCollection )
+  }
+  if ( rights & Collection::CanChangeCollection ) {
     data.append( 'W' );
-  if ( rights & Collection::CanCreateCollection )
+  }
+  if ( rights & Collection::CanCreateCollection ) {
     data.append( 'C' );
-  if ( rights & Collection::CanDeleteCollection )
+  }
+  if ( rights & Collection::CanDeleteCollection ) {
     data.append( 'D' );
-  if ( rights & Collection::CanLinkItem )
+  }
+  if ( rights & Collection::CanLinkItem ) {
     data.append( 'l' );
-  if ( rights & Collection::CanUnlinkItem )
+  }
+  if ( rights & Collection::CanUnlinkItem ) {
     data.append( 'u' );
+  }
 
   return data;
 }

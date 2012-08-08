@@ -59,7 +59,7 @@ public:
       : mParent( parent )
 #ifndef QT_NO_DRAGANDDROP
       , mDragDropManager( new DragDropManager( mParent ) )
-#endif    
+#endif
       , mXmlGuiClient( 0 )
   {
   }
@@ -88,55 +88,61 @@ void EntityListView::Private::init()
   mParent->connect( mParent, SIGNAL(doubleClicked(QModelIndex)),
                     mParent, SLOT(itemDoubleClicked(QModelIndex)) );
 
-  DelegateAnimator *animator = new DelegateAnimator(mParent);
-  ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
-  mParent->setItemDelegate(customDelegate);
+  DelegateAnimator *animator = new DelegateAnimator( mParent );
+  ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate( animator, mParent );
+  mParent->setItemDelegate( customDelegate );
 
   Control::widgetNeedsAkonadi( mParent );
 }
 
 void EntityListView::Private::itemClicked( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
     emit mParent->clicked( collection );
   } else {
     const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       emit mParent->clicked( item );
+    }
   }
 }
 
 void EntityListView::Private::itemDoubleClicked( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
     emit mParent->doubleClicked( collection );
   } else {
     const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       emit mParent->doubleClicked( item );
+    }
   }
 }
 
 void EntityListView::Private::itemCurrentChanged( const QModelIndex &index )
 {
-  if ( !index.isValid() )
+  if ( !index.isValid() ) {
     return;
+  }
 
   const Collection collection = index.model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
   if ( collection.isValid() ) {
     emit mParent->currentChanged( collection );
   } else {
     const Item item = index.model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
-    if ( item.isValid() )
+    if ( item.isValid() ) {
       emit mParent->currentChanged( item );
+    }
   }
 }
 
@@ -178,7 +184,8 @@ void EntityListView::setModel( QAbstractItemModel * model )
 #ifndef QT_NO_DRAGANDDROP
 void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 {
-  if ( d->mDragDropManager->dropAllowed( event ) || qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
+  if ( d->mDragDropManager->dropAllowed( event ) ||
+       qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) ) {
     // All urls are supported. process the event.
     QListView::dragMoveEvent( event );
     return;
@@ -190,13 +197,14 @@ void EntityListView::dragMoveEvent( QDragMoveEvent * event )
 void EntityListView::dropEvent( QDropEvent * event )
 {
   bool menuCanceled = false;
-  if ( d->mDragDropManager->processDropEvent( event, menuCanceled ) && !menuCanceled) {
-    if ( menuCanceled )
+  if ( d->mDragDropManager->processDropEvent( event, menuCanceled ) &&
+       !menuCanceled ) {
+    if ( menuCanceled ) {
       return;
+    }
     QListView::dropEvent( event );
-  }
-  else if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) &&!menuCanceled )
-  {
+  } else if ( qobject_cast<Akonadi::FavoriteCollectionsModel*>( model() ) &&
+              !menuCanceled ) {
     QListView::dropEvent( event );
   }
 }
@@ -205,8 +213,9 @@ void EntityListView::dropEvent( QDropEvent * event )
 #ifndef QT_NO_CONTEXTMENU
 void EntityListView::contextMenuEvent( QContextMenuEvent * event )
 {
-  if ( !d->mXmlGuiClient )
+  if ( !d->mXmlGuiClient ) {
     return;
+  }
 
   const QModelIndex index = indexAt( event->pos() );
 
@@ -219,11 +228,12 @@ void EntityListView::contextMenuEvent( QContextMenuEvent * event )
                                  QLatin1String( "akonadi_favoriteview_contextmenu" ), d->mXmlGuiClient ) );
   } else {
     popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
-                                   QLatin1String( "akonadi_favoriteview_emptyselection_contextmenu" ), d->mXmlGuiClient) );
+                                   QLatin1String( "akonadi_favoriteview_emptyselection_contextmenu" ), d->mXmlGuiClient ) );
   }
 
-  if ( popup )
+  if ( popup ) {
     popup->exec( event->globalPos() );
+  }
 }
 #endif
 

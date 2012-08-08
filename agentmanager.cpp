@@ -40,8 +40,9 @@ using namespace Akonadi;
 AgentInstance AgentManagerPrivate::createInstance( const AgentType &type )
 {
   const QString &identifier = mManager->createAgentInstance( type.identifier() );
-  if ( identifier.isEmpty() )
+  if ( identifier.isEmpty() ) {
     return AgentInstance();
+  }
 
   return fillAgentInstanceLight( identifier );
 }
@@ -50,8 +51,9 @@ void AgentManagerPrivate::agentTypeAdded( const QString &identifier )
 {
   // Ignore agent types we already know about, for example because we called
   // readAgentTypes before.
-  if ( mTypes.contains( identifier ) )
+  if ( mTypes.contains( identifier ) ) {
     return;
+  }
 
   const AgentType type = fillAgentType( identifier );
   if ( type.isValid() ) {
@@ -76,8 +78,9 @@ void AgentManagerPrivate::agentTypeAdded( const QString &identifier )
 
 void AgentManagerPrivate::agentTypeRemoved( const QString &identifier )
 {
-  if ( !mTypes.contains( identifier ) )
+  if ( !mTypes.contains( identifier ) ) {
     return;
+  }
 
   const AgentType type = mTypes.take( identifier );
   emit mParent->typeRemoved( type );
@@ -109,8 +112,9 @@ void AgentManagerPrivate::agentInstanceAdded( const QString &identifier )
 
 void AgentManagerPrivate::agentInstanceRemoved( const QString &identifier )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   const AgentInstance instance = mInstances.take( identifier );
   emit mParent->instanceRemoved( instance );
@@ -118,8 +122,9 @@ void AgentManagerPrivate::agentInstanceRemoved( const QString &identifier )
 
 void AgentManagerPrivate::agentInstanceStatusChanged( const QString &identifier, int status, const QString &msg )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mStatus = status;
@@ -130,21 +135,24 @@ void AgentManagerPrivate::agentInstanceStatusChanged( const QString &identifier,
 
 void AgentManagerPrivate::agentInstanceProgressChanged( const QString &identifier, uint progress, const QString &msg )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mProgress = progress;
-  if ( !msg.isEmpty() )
+  if ( !msg.isEmpty() ) {
     instance.d->mStatusMessage = msg;
+  }
 
   emit mParent->instanceProgressChanged( instance );
 }
 
 void AgentManagerPrivate::agentInstanceWarning( const QString &identifier, const QString &msg )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   emit mParent->instanceWarning( instance, msg );
@@ -152,8 +160,9 @@ void AgentManagerPrivate::agentInstanceWarning( const QString &identifier, const
 
 void AgentManagerPrivate::agentInstanceError( const QString &identifier, const QString &msg )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   emit mParent->instanceError( instance, msg );
@@ -161,8 +170,9 @@ void AgentManagerPrivate::agentInstanceError( const QString &identifier, const Q
 
 void AgentManagerPrivate::agentInstanceOnlineChanged( const QString &identifier, bool state )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mIsOnline = state;
@@ -171,8 +181,9 @@ void AgentManagerPrivate::agentInstanceOnlineChanged( const QString &identifier,
 
 void AgentManagerPrivate::agentInstanceNameChanged( const QString &identifier, const QString &name )
 {
-  if ( !mInstances.contains( identifier ) )
+  if ( !mInstances.contains( identifier ) ) {
     return;
+  }
 
   AgentInstance &instance = mInstances[ identifier ];
   instance.d->mName = name;
@@ -185,8 +196,9 @@ void AgentManagerPrivate::readAgentTypes()
   const QDBusReply<QStringList> types = mManager->agentTypes();
   if ( types.isValid() ) {
     foreach ( const QString &type, types.value() ) {
-      if ( !mTypes.contains( type ) )
+      if ( !mTypes.contains( type ) ) {
         agentTypeAdded( type );
+      }
     }
   }
 }
@@ -229,8 +241,9 @@ void AgentManagerPrivate::setOnline( const AgentInstance &instance, bool state )
 void AgentManagerPrivate::configure( const AgentInstance &instance, QWidget *parent )
 {
   qlonglong winId = 0;
-  if ( parent )
+  if ( parent ) {
     winId = (qlonglong)( parent->window()->winId() );
+  }
 
   mManager->agentInstanceConfigure( instance.identifier(), winId );
 }
@@ -250,8 +263,9 @@ AgentInstance AgentManagerPrivate::fillAgentInstance( const QString &identifier 
   AgentInstance instance;
 
   const QString agentTypeIdentifier = mManager->agentInstanceType( identifier );
-  if ( !mTypes.contains( agentTypeIdentifier ) )
+  if ( !mTypes.contains( agentTypeIdentifier ) ) {
     return instance;
+  }
 
   instance.d->mType = mTypes.value( agentTypeIdentifier );
   instance.d->mIdentifier = identifier;
@@ -291,7 +305,7 @@ void AgentManagerPrivate::createDBusInterface()
   mInstances.clear();
   delete mManager;
 
-  mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName(ServerManager::Control),
+  mManager = new org::freedesktop::Akonadi::AgentManager( ServerManager::serviceName( ServerManager::Control ),
                                                           QLatin1String( "/AgentManager" ),
                                                           DBusConnectionPool::threadConnection(), mParent );
 
@@ -347,7 +361,7 @@ AgentManager::AgentManager()
 
   d->createDBusInterface();
 
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName(ServerManager::Control),
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( ServerManager::serviceName( ServerManager::Control ),
                                                           DBusConnectionPool::threadConnection(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
   connect( watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
@@ -363,8 +377,9 @@ AgentManager::~AgentManager()
 
 AgentManager* AgentManager::self()
 {
-  if ( !AgentManagerPrivate::mSelf )
+  if ( !AgentManagerPrivate::mSelf ) {
     AgentManagerPrivate::mSelf = new AgentManager();
+  }
 
   return AgentManagerPrivate::mSelf;
 }

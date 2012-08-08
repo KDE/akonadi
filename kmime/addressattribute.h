@@ -54,7 +54,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
     */
     virtual ~AddressAttribute();
 
-    
+
     /* reimpl */
     virtual AddressAttribute* clone() const;
     virtual QByteArray type() const;
@@ -75,7 +75,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
       Returns the addresses of the "To:" receivers.
     */
     QStringList to() const;
-    
+
     /**
       Sets the addresses of the "To:" receivers."
     */

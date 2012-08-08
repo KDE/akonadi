@@ -45,8 +45,7 @@ class ConflictHandler : public QObject
      * Describes the type of conflict that should be resolved by
      * the conflict handler.
      */
-    enum ConflictType
-    {
+    enum ConflictType {
       LocalLocalConflict,   ///< Changes of two Akonadi client applications conflict.
       LocalRemoteConflict,  ///< Changes of an Akonadi client application and a resource conflict.
       BackendConflict       ///< Changes of a resource and the backend data conflict.
@@ -55,8 +54,7 @@ class ConflictHandler : public QObject
     /**
      * Describes the strategy that should be used for resolving the conflict.
      */
-    enum ResolveStrategy
-    {
+    enum ResolveStrategy {
       UseLocalItem, ///< The local item overwrites the other item inside the Akonadi storage.
       UseOtherItem, ///< The local item is dropped and the other item from the Akonadi storage is used.
       UseBothItems  ///< Both items are kept in the Akonadi storage.

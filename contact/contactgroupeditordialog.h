@@ -80,8 +80,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
     /**
      * Describes the mode of the contact group editor.
      */
-    enum Mode
-    {
+    enum Mode {
       CreateMode, ///< Creates a new contact group
       EditMode    ///< Edits an existing contact group
     };

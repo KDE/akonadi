@@ -65,8 +65,9 @@ class ContactGroupExpandJob::Private
         mFetchCount++;
       }
 
-      if ( mFetchCount == 0 ) // nothing to fetch, so we can return immediately
+      if ( mFetchCount == 0 ) { // nothing to fetch, so we can return immediately
         mParent->emitResult();
+      }
     }
 
     void searchResult( KJob *job )
@@ -100,8 +101,9 @@ class ContactGroupExpandJob::Private
         const Item item = items.first();
         if ( item.hasPayload<KABC::Addressee>() ) {
           KABC::Addressee contact = item.payload<KABC::Addressee>();
-          if ( !email.isEmpty() )
+          if ( !email.isEmpty() ) {
             contact.insertEmail( email, true );
+          }
 
           mContacts.append( contact );
         } else
@@ -110,8 +112,9 @@ class ContactGroupExpandJob::Private
 
       mFetchCount--;
 
-      if ( mFetchCount == 0 )
+      if ( mFetchCount == 0 ) {
         mParent->emitResult();
+      }
     }
 
     ContactGroupExpandJob *mParent;

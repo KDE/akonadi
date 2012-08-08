@@ -65,19 +65,22 @@ WaitingOverlay::WaitingOverlay( KJob *job, QWidget *baseWidget, QWidget * parent
 
 WaitingOverlay::~ WaitingOverlay()
 {
-  if ( mBaseWidget )
+  if ( mBaseWidget ) {
     mBaseWidget->setEnabled( mPreviousState );
+  }
 }
 
 void WaitingOverlay::reposition()
 {
-  if ( !mBaseWidget )
+  if ( !mBaseWidget ) {
     return;
+  }
 
   // reparent to the current top level widget of the base widget if needed
   // needed eg. in dock widgets
-  if ( parentWidget() != mBaseWidget->window() )
+  if ( parentWidget() != mBaseWidget->window() ) {
     setParent( mBaseWidget->window() );
+  }
 
   // follow base widget visibility
   // needed eg. in tab widgets
@@ -100,9 +103,9 @@ void WaitingOverlay::reposition()
 bool WaitingOverlay::eventFilter(QObject * object, QEvent * event)
 {
   if ( object == mBaseWidget &&
-    ( event->type() == QEvent::Move || event->type() == QEvent::Resize ||
-      event->type() == QEvent::Show || event->type() == QEvent::Hide ||
-      event->type() == QEvent::ParentChange ) ) {
+      ( event->type() == QEvent::Move || event->type() == QEvent::Resize ||
+        event->type() == QEvent::Show || event->type() == QEvent::Hide ||
+        event->type() == QEvent::ParentChange ) ) {
     reposition();
   }
   return QWidget::eventFilter( object, event );

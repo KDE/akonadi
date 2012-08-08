@@ -94,7 +94,7 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
     /**
      * Show only checked item
      * @since 4.9
-     */    
+     */
     void setIncludeCheckedOnly( bool checked );
 
   protected:

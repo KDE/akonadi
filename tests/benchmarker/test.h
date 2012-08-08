@@ -24,7 +24,7 @@
 #include "maketest.h"
 
 class Test {
- 
+
   protected:
     QList<MakeTest *> mListTest;
 
@@ -33,4 +33,4 @@ class Test {
     void runTests();
 };
 
-#endif    
+#endif

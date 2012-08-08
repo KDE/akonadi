@@ -46,16 +46,18 @@ bool CollectionFilterModel::filterAcceptsRow( int row, const QModelIndex &parent
 
   const QModelIndex index = sourceModel()->index( row, 0, parent );
   const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-  if ( !collection.isValid() )
+  if ( !collection.isValid() ) {
     return false;
+  }
 
   if ( !mContentMimeTypes.isEmpty() ) {
     QSet<QString> contentMimeTypes = collection.contentMimeTypes().toSet();
-    accepted = accepted && !(contentMimeTypes.intersect( mContentMimeTypes ).isEmpty());
+    accepted = accepted && !( contentMimeTypes.intersect( mContentMimeTypes ).isEmpty() );
   }
 
-  if ( mRights != Akonadi::Collection::ReadOnly )
-    accepted = accepted && (collection.rights() & mRights);
+  if ( mRights != Akonadi::Collection::ReadOnly ) {
+    accepted = accepted && ( collection.rights() & mRights );
+  }
 
   return accepted;
 }
