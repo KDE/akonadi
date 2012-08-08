@@ -22,13 +22,13 @@
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
-#include <KCalCore/ICalFormat>
-#include <KCalCore/Incidence>
-#include <KCalCore/ScheduleMessage>
-#include <KCalUtils/Scheduler>
-#include <KPIMIdentities/IdentityManager>
+#include <kcalcore/icalformat.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/schedulemessage.h>
+#include <kcalutils/scheduler.h>
+#include <kpimidentities/identitymanager.h>
 
 #include <KStandardDirs>
 #include <KSystemTimeZone>

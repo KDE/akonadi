@@ -24,15 +24,15 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemCreateJob>
+#include <akonadi/item.h>
+#include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchscope.h>
 
-#include <KCalCore/Event>
-#include <KCalCore/Journal>
-#include <KCalCore/Todo>
+#include <kcalcore/event.h>
+#include <kcalcore/journal.h>
+#include <kcalcore/todo.h>
 
 using namespace Akonadi;
 using namespace KCalCore;

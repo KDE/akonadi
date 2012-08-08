@@ -21,8 +21,8 @@
 #include "fetchjobcalendar_p.h"
 #include "incidencefetchjob_p.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
+#include <akonadi/item.h>
+#include <akonadi/collection.h>
 
 using namespace Akonadi;
 using namespace KCalCore;

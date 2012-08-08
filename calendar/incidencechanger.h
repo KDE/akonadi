@@ -22,10 +22,9 @@
 
 #include "akonadi-calendar_export.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
-
-#include <KCalCore/Incidence>
+#include <akonadi/item.h>
+#include <akonadi/collection.h>
+#include <kcalcore/incidence.h>
 
 #include <QWidget>
 

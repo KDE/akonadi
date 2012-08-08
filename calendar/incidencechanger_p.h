@@ -28,9 +28,9 @@
 #include "invitationhandler_p.h"
 #include "history.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
-#include <Akonadi/TransactionSequence>
+#include <akonadi/item.h>
+#include <akonadi/collection.h>
+#include <akonadi/transactionsequence.h>
 
 #include <QSet>
 #include <QObject>

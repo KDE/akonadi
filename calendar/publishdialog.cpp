@@ -24,12 +24,12 @@
 
 #include "publishdialog.h"
 
-#include <Akonadi/Contact/EmailAddressSelectionDialog>
+#include <akonadi/contact/emailaddressselectiondialog.h>
 
-#include <KCalCore/Attendee>
-#include <KCalCore/Person>
+#include <kcalcore/attendee.h>
+#include <kcalcore/person.h>
 
-#include <KPIMUtils/Email>
+#include <kpimutils/email.h>
 
 #include <KLineEdit>
 #include <KLocale>

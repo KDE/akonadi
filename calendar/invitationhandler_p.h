@@ -28,8 +28,8 @@
 #include "mailscheduler_p.h"
 #include "etmcalendar.h"
 
-#include <KCalCore/Incidence>
-#include <KCalCore/ScheduleMessage>
+#include <kcalcore/incidence.h>
+#include <kcalcore/schedulemessage.h>
 
 #include <QObject>
 

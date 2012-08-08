@@ -23,14 +23,13 @@
 #include "../mailclient_p.cpp"
 #include "../moc_mailclient_p.cpp"
 
-#include <KCalCore/Incidence>
-#include <KCalCore/FreeBusy>
-#include <Mailtransport/MessageQueueJob>
+#include <kcalcore/incidence.h>
+#include <kcalcore/freebusy.h>
+#include <mailtransport/messagequeuejob.h>
 
-
-#include <QTestEventLoop>
 #include <akonadi/qtest_akonadi.h>
 
+#include <QTestEventLoop>
 #include <QtCore/QObject>
 
 using namespace Akonadi;

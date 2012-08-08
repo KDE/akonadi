@@ -19,11 +19,12 @@
 */
 
 #include "utils_p.h"
-#include <KPIMUtils/Email>
+#include <kpimutils/email.h>
+#include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identity.h>
+#include <kmime/kmime_header_parsing.h>
+
 #include <KEMailSettings>
-#include <KPIMIdentities/IdentityManager>
-#include <KPIMIdentities/Identity>
-#include <KMime/HeaderParsing>
 
 using namespace Akonadi::Calendar;
 

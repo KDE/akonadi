@@ -21,8 +21,8 @@
 #include "incidencefetchjob_p.h"
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemFetchScope>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <kcalcore/event.h>
 #include <kcalcore/journal.h>
 #include <kcalcore/todo.h>

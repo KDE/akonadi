@@ -19,7 +19,7 @@
 */
 
 #include "collectionselection_p.h"
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/entitytreemodel.h>
 #include <QItemSelectionModel>
 
 using namespace Akonadi;

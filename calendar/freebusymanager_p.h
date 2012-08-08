@@ -35,8 +35,8 @@
 #include "etmcalendar.h"
 #include "mailscheduler_p.h"
 
-#include <KCalCore/FreeBusy>
-#include <KCalCore/ICalFormat>
+#include <kcalcore/freebusy.h>
+#include <kcalcore/icalformat.h>
 
 #include <QtCore/QPointer>
 #include <QtDBus/QDBusContext>

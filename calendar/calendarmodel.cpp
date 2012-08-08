@@ -20,11 +20,11 @@
 
 #include "calendarmodel_p.h"
 
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <KCalCore/Event>
-#include <KCalCore/Todo>
-#include <KCalCore/Journal>
+#include <akonadi/changerecorder.h>
+#include <akonadi/itemfetchscope.h>
+#include <kcalcore/event.h>
+#include <kcalcore/todo.h>
+#include <kcalcore/journal.h>
 
 #include <KDateTime>
 #include <KIconLoader>

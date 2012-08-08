@@ -23,7 +23,7 @@
 #include "akonadi-calendar_export.h"
 #include "calendarbase.h"
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 #include <KDateTime>
 #include <KSystemTimeZones>
 

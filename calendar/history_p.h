@@ -22,8 +22,8 @@
 
 #include "history.h"
 #include "incidencechanger.h"
-#include <KCalCore/Incidence>
-#include <Akonadi/Collection>
+#include <kcalcore/incidence.h>
+#include <akonadi/collection.h>
 
 #include <QPointer>
 #include <QStack>

@@ -26,13 +26,13 @@
 #include "calendarsettings.h"
 #include "utils_p.h"
 
-#include <Akonadi/AgentInstance>
-#include <Akonadi/AgentManager>
-#include <Akonadi/Contact/ContactSearchJob>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/contact/contactsearchjob.h>
 
-#include <KCalCore/Event>
-#include <KCalCore/FreeBusy>
-#include <KCalCore/Person>
+#include <kcalcore/event.h>
+#include <kcalcore/freebusy.h>
+#include <kcalcore/person.h>
 
 #include <KDebug>
 #include <KMessageBox>

@@ -22,9 +22,9 @@
 
 #include "akonadi-calendar_export.h"
 
-#include <Akonadi/Item>
-#include <KCalCore/MemoryCalendar>
-#include <KCalCore/Incidence>
+#include <akonadi/item.h>
+#include <kcalcore/memorycalendar.h>
+#include <kcalcore/incidence.h>
 #include <KDateTime>
 
 namespace Akonadi {

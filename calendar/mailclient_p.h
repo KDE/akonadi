@@ -24,7 +24,7 @@
 #ifndef AKONADI_MAILCLIENT_P_H
 #define AKONADI_MAILCLIENT_P_H
 
-#include <KCalCore/IncidenceBase>
+#include <kcalcore/incidencebase.h>
 
 #include <QObject>
 

@@ -19,7 +19,7 @@
 
 #include "history_p.h"
 
-#include <KCalUtils/Stringify>
+#include <kcalutils/stringify.h>
 #include <KLocale>
 
 Entry::Entry( const Akonadi::Item &item,

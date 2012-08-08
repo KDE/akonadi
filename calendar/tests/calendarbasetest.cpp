@@ -20,15 +20,15 @@
 #include "../calendarbase.h"
 #include "../incidencechanger.h"
 
-#include <QTestEventLoop>
 #include <akonadi/qtest_akonadi.h>
-#include <Akonadi/Collection>
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
-#include <Akonadi/ItemCreateJob>
+#include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
+#include <akonadi/itemcreatejob.h>
 
+#include <QTestEventLoop>
 #include <QtCore/QObject>
 
 using namespace Akonadi;

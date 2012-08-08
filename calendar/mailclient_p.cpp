@@ -24,19 +24,18 @@
 
 #include "mailclient_p.h"
 
-#include <Akonadi/Collection>
+#include <akonadi/collection.h>
 
-#include <KCalCore/Attendee>
-#include <KCalCore/Incidence>
-#include <KCalCore/IncidenceBase>
+#include <kcalcore/attendee.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/incidencebase.h>
 
-#include <KCalUtils/IncidenceFormatter>
+#include <kcalutils/incidenceformatter.h>
 
-#include <KMime/Message>
+#include <kmime/kmime_message.h>
 
 #include <kpimidentities/identity.h>
-
-#include <KPIMUtils/Email>
+#include <kpimutils/email.h>
 
 #include <mailtransport/messagequeuejob.h>
 #include <mailtransport/transport.h>

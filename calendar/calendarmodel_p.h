@@ -21,7 +21,7 @@
 #ifndef AKONADI_CALENDARMODEL_H
 #define AKONADI_CALENDARMODEL_H
 
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/entitytreemodel.h>
 
 namespace Akonadi {
 

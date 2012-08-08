@@ -25,14 +25,14 @@
 #include "collectionselection_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Session>
-#include <Akonadi/Collection>
-#include <Akonadi/ChangeRecorder>
-#include <Akonadi/ItemFetchScope>
-#include <Akonadi/EntityDisplayAttribute>
-#include <Akonadi/EntityMimeTypeFilterModel>
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/item.h>
+#include <akonadi/session.h>
+#include <akonadi/collection.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/entitydisplayattribute.h>
+#include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/entitytreemodel.h>
 #include <KSelectionProxyModel>
 #include <kcheckableproxymodel.h>
 

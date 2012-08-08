@@ -21,8 +21,8 @@
 #include "calendarbase_p.h"
 #include "incidencechanger.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/Collection>
+#include <akonadi/item.h>
+#include <akonadi/collection.h>
 
 #include <KSystemTimeZones>
 

@@ -23,7 +23,7 @@
 
 #include "akonadi-calendar_export.h"
 
-#include <Akonadi/Attribute>
+#include <akonadi/attribute.h>
 
 namespace Akonadi {
 

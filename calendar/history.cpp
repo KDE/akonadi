@@ -20,7 +20,7 @@
 #include "history.h"
 #include "history_p.h"
 
-#include <KCalUtils/Stringify>
+#include <kcalutils/stringify.h>
 #include <KLocale>
 
 using namespace KCalCore;

@@ -25,10 +25,10 @@
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
 
-#include <KCalCore/Calendar>
-#include <KCalCore/ICalFormat>
-#include <KCalUtils/IncidenceFormatter>
-#include <KCalUtils/Stringify>
+#include <kcalcore/calendar.h>
+#include <kcalcore/icalformat.h>
+#include <kcalutils/incidenceformatter.h>
+#include <kcalutils/stringify.h>
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>

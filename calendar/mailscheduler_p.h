@@ -24,9 +24,9 @@
 #include "fetchjobcalendar.h"
 #include "mailclient_p.h"
 
-#include <KCalCore/Incidence>
+#include <kcalcore/incidence.h>
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
 //TODO: include commits done in mailscheduler1
 

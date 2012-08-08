@@ -21,9 +21,8 @@
 #ifndef AKONADI_COLLECTIONSELECTION_H
 #define AKONADI_COLLECTIONSELECTION_H
 
+#include <akonadi/collection.h>
 #include <QObject>
-
-#include <Akonadi/Collection>
 
 class QItemSelection;
 class QItemSelectionModel;

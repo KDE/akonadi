@@ -20,14 +20,14 @@
 #include "../history.h"
 #include "../incidencechanger.h"
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 #include <akonadi/itemfetchscope.h>
 
-#include <KCalCore/Event>
+#include <kcalcore/event.h>
 
 #include <QTestEventLoop>
 

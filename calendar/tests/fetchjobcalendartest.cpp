@@ -18,10 +18,10 @@
 */
 
 #include "../fetchjobcalendar.h"
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemCreateJob>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/CollectionFetchScope>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/collectionfetchJob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 
 #include <QTestEventLoop>

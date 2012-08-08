@@ -24,9 +24,9 @@
 #include "akonadi-calendar_export.h"
 #include "incidencechanger.h"
 
-#include <KCalCore/Incidence>
+#include <kcalcore/incidence.h>
 
-#include <Akonadi/Item>
+#include <akonadi/item.h>
 
 #include <QWidget>
 
