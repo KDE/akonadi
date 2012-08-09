@@ -37,7 +37,7 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-InvitationHandler::Action actionFromStatus( InvitationHandler::SendResult result )
+InvitationHandlerHelper::Action actionFromStatus( InvitationHandlerHelper::SendResult result )
 {
   //enum SendResult {
   //      Canceled,        /**< Sending was canceled by the user, meaning there are
@@ -48,12 +48,12 @@ InvitationHandler::Action actionFromStatus( InvitationHandler::SendResult result
   //                          (e.g. when we are the only attendee) */
   //      Success
   switch ( result ) {
-  case InvitationHandler::ResultCanceled:
-    return InvitationHandler::ActionDontSendMessage;
-  case InvitationHandler::ResultSuccess:
-    return InvitationHandler::ActionSendMessage;
+  case InvitationHandlerHelper::ResultCanceled:
+    return InvitationHandlerHelper::ActionDontSendMessage;
+  case InvitationHandlerHelper::ResultSuccess:
+    return InvitationHandlerHelper::ActionSendMessage;
   default:
-    return InvitationHandler::ActionAsk;
+    return InvitationHandlerHelper::ActionAsk;
   }
 }
 
@@ -443,7 +443,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 {
   bool result = true;
   if ( mGroupwareCommunication ) {
-    InvitationHandler handler( FetchJobCalendar::Ptr(), change->parentWidget );  // TODO make async
+    InvitationHandlerHelper handler( FetchJobCalendar::Ptr(), change->parentWidget );  // TODO make async
     if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
@@ -454,14 +454,14 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       break;
       case IncidenceChanger::ChangeTypeDelete:
       {
-        InvitationHandler::SendResult status;
+        InvitationHandlerHelper::SendResult status;
 
         Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
         status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
         if ( change->atomicOperationId ) {
           mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
         }
-        result = status != InvitationHandler::ResultFailAbortUpdate;
+        result = status != InvitationHandlerHelper::ResultFailAbortUpdate;
       }
       break;
       case IncidenceChanger::ChangeTypeModify:
@@ -491,15 +491,15 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr &change )
 {
   if ( mGroupwareCommunication ) {
-    InvitationHandler handler( FetchJobCalendar::Ptr(), change->parentWidget ); // TODO make async
+    InvitationHandlerHelper handler( FetchJobCalendar::Ptr(), change->parentWidget ); // TODO make async
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
         Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-        const InvitationHandler::SendResult status =
+        const InvitationHandlerHelper::SendResult status =
           handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 
-        if ( status == InvitationHandler::ResultFailAbortUpdate ) {
+        if ( status == InvitationHandlerHelper::ResultFailAbortUpdate ) {
           kError() << "Sending invitations failed, but did not delete the incidence";
         }
 
@@ -550,9 +550,9 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
         const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                     oldIncidence,
                                                                     Akonadi::Calendar::allEmails() );
-        InvitationHandler::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                     newIncidence,
-                                                                                     attendeeStatusChanged );
+        InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                              newIncidence,
+                                                                                              attendeeStatusChanged );
 
         if ( change->atomicOperationId != 0 ) {
           mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );

@@ -21,7 +21,7 @@
   02110-1301, USA.
 */
 
-#include "invitationhandler_p.h"
+#include "invitationhandlerhelper_p.h"
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
 
@@ -34,64 +34,9 @@
 #include <KMessageBox>
 #include <KEMailSettings>
 
+#include <QWidget>
+
 using namespace Akonadi;
-
-namespace Akonadi {
-
-GroupwareUiDelegate::~GroupwareUiDelegate()
-{
-}
-
-struct Invitation {
-  QString type;
-  QString iCal;
-  QString receiver;
-};
-
-enum Status {
-    StatusNone,
-    StatusAcceptingCounterProposal,
-    StatusSendingInvitation
-};
-
-class InvitationHandler::Private
-{
-public:
-  Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent );
-
-  InvitationHandler::SendResult sentInvitation( int messageBoxReturnCode,
-                                                const KCalCore::Incidence::Ptr &incidence,
-                                                KCalCore::iTIPMethod method );
-
-  int askUserIfNeeded( const QString &question,
-                       bool ignoreDefaultAction = true,
-                       const KGuiItem &buttonYes = KGuiItem( i18n( "Send Email" ) ),
-                       const KGuiItem &buttonNo = KGuiItem( i18n( "Do Not Send" ) ) ) const;
-
-  /**
-    We are the organizer. If there is more than one attendee, or if there is
-    only one, and it's not the same as the organizer, ask the user to send
-    mail.
-  */
-  bool weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence );
-
-  /**
-    Assumes that we are the organizer. If there is more than one attendee, or if
-    there is only one, and it's not the same as the organizer, ask the user to send
-    mail.
-   */
-  bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
-
-  FetchJobCalendar::Ptr mCalendar;
-  InvitationHandler::Action mDefaultAction;
-  QWidget *mParent;
-  bool mOutlookCompatCounterProposals;
-  MailScheduler *m_scheduler;
-  Status m_status;
-  KCalCore::Incidence::Ptr m_incidence;
-};
-
-}
 
 QString proposalComment( const KCalCore::Incidence::Ptr &incidence )
 {
@@ -121,31 +66,21 @@ QString proposalComment( const KCalCore::Incidence::Ptr &incidence )
   return comment;
 }
 
-InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, QWidget *parent )
-  : mCalendar( calendar )
-  , mDefaultAction( InvitationHandler::ActionAsk )
-  , mParent( parent )
-  , mOutlookCompatCounterProposals( false )
-  , m_scheduler( new MailScheduler( calendar, parent ) )
-  , m_status( StatusNone )
+int InvitationHandlerHelper::askUserIfNeeded( const QString &question,
+                                              bool ignoreDefaultAction,
+                                              const KGuiItem &buttonYes,
+                                              const KGuiItem &buttonNo ) const
 {
-    m_scheduler->setBccMe( false );
-}
+  Q_ASSERT_X( !question.isEmpty(), "InvitationHandlerHelper::askUser", "ask what?" );
 
-int InvitationHandler::Private::askUserIfNeeded( const QString &question,
-                                                 bool ignoreDefaultAction,
-                                                 const KGuiItem &buttonYes,
-                                                 const KGuiItem &buttonNo ) const
-{
-  Q_ASSERT_X( !question.isEmpty(), "InvitationHandler::askUser", "ask what?" );
-
-  if ( ignoreDefaultAction || mDefaultAction == InvitationHandler::ActionAsk )
-    return KMessageBox::questionYesNo( mParent, question, i18n( "Group Scheduling Email" ), buttonYes, buttonNo );
+  if ( ignoreDefaultAction || mDefaultAction == InvitationHandlerHelper::ActionAsk )
+    return KMessageBox::questionYesNo( mParent, question, i18n( "Group Scheduling Email" ),
+                                       buttonYes, buttonNo );
 
   switch ( mDefaultAction ) {
-  case InvitationHandler::ActionSendMessage:
+  case InvitationHandlerHelper::ActionSendMessage:
     return KMessageBox::Yes;
-  case InvitationHandler::ActionDontSendMessage:
+  case InvitationHandlerHelper::ActionDontSendMessage:
     return KMessageBox::No;
   default:
     Q_ASSERT( false );
@@ -153,10 +88,10 @@ int InvitationHandler::Private::askUserIfNeeded( const QString &question,
   }
 }
 
-InvitationHandler::SendResult
-InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
-                                            const KCalCore::Incidence::Ptr &incidence,
-                                            KCalCore::iTIPMethod method )
+InvitationHandlerHelper::SendResult
+InvitationHandlerHelper::sentInvitation( int messageBoxReturnCode,
+                                         const KCalCore::Incidence::Ptr &incidence,
+                                         KCalCore::iTIPMethod method )
 {
   // The value represented by messageBoxReturnCode is the answer on a question
   // which is a variant of: Do you want to send an email to the attendees?
@@ -177,24 +112,24 @@ InvitationHandler::Private::sentInvitation( int messageBoxReturnCode,
     // Send the mail
     m_status = StatusSendingInvitation;
     m_scheduler->performTransaction( _incidence, method );
-    return InvitationHandler::ResultSuccess;
+    return InvitationHandlerHelper::ResultSuccess;
 
   } else if ( messageBoxReturnCode == KMessageBox::No ) {
-    return InvitationHandler::ResultCanceled;
+    return InvitationHandlerHelper::ResultCanceled;
   } else {
     Q_ASSERT( false ); // TODO: Figure out if/how this can happen (by closing the dialog with x??)
-    return InvitationHandler::ResultCanceled;
+    return InvitationHandlerHelper::ResultCanceled;
   }
 }
 
-bool InvitationHandler::Private::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
+bool InvitationHandlerHelper::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
   const QString email = incidence->organizer()->email();
   return Akonadi::Calendar::thatIsMe( email ) || email.isEmpty()
          || email == QLatin1String( "invalid@email.address" );
 }
 
-bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
+bool InvitationHandlerHelper::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence."
@@ -214,36 +149,43 @@ bool InvitationHandler::Private::weNeedToSendMailFor( const KCalCore::Incidence:
     incidence->attendees().first()->email() != incidence->organizer()->email();
 }
 
-InvitationHandler::InvitationHandler( const FetchJobCalendar::Ptr &calendar, QWidget *widget )
-  : d ( new InvitationHandler::Private( calendar, widget ) )
+InvitationHandlerHelper::InvitationHandlerHelper( const FetchJobCalendar::Ptr &calendar,
+                                                  QWidget *parent )
+    : mCalendar( calendar )
+    , mDefaultAction( InvitationHandlerHelper::ActionAsk )
+    , mParent( parent )
+    , mOutlookCompatCounterProposals( false )
+    , m_scheduler( new MailScheduler( calendar, parent ) )
+    , m_status( StatusNone )
 {
-  connect( d->m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
+  m_scheduler->setBccMe( false );
+
+  connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
            SLOT(onSchedulerFinished(Akonadi::MailScheduler::Result,QString)) );
 }
 
-InvitationHandler::~InvitationHandler()
+InvitationHandlerHelper::~InvitationHandlerHelper()
 {
-  delete d;
 }
 
-void InvitationHandler::setDialogParent( QWidget *parent )
+void InvitationHandlerHelper::setDialogParent( QWidget *parent )
 {
-  d->mParent = parent;
+  mParent = parent;
 }
 
-void InvitationHandler::handleInvitation( const QString &receiver,
-                                          const QString &iCal,
-                                          const QString &action )
+void InvitationHandlerHelper::handleInvitation( const QString &receiver,
+                                                const QString &iCal,
+                                                const QString &action )
 {
   KCalCore::ICalFormat mFormat;
-  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( d->mCalendar, iCal );
+  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( mCalendar, iCal );
 
   if ( !message ) {
     const QString errorMessage = mFormat.exception() ? i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *mFormat.exception() ) )
                                                      : i18n( "Unknown error while parsing iCal invitation" );
 
     kError() << "Error parsing" << errorMessage;
-    KMessageBox::detailedError( d->mParent,
+    KMessageBox::detailedError( mParent,
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
     emit finished( ResultError, errorMessage );
@@ -271,7 +213,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
           attendee->setStatus( KCalCore::Attendee::Accepted );
         } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( d->mOutlookCompatCounterProposals &&
+        } else if ( mOutlookCompatCounterProposals &&
                     action.startsWith( QLatin1String( "counter" ) ) ) {
           attendee->setStatus( KCalCore::Attendee::Tentative );
         } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
@@ -280,21 +222,21 @@ void InvitationHandler::handleInvitation( const QString &receiver,
         break;
       }
     }
-    if ( d->mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
-      d->m_scheduler->acceptTransaction( incidence, method, status, receiver );
+    if ( mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
+      m_scheduler->acceptTransaction( incidence, method, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     }
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
+    m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
     return; // signal emitted in onSchedulerFinished().
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( method != KCalCore::iTIPCounter ) {
-      d->m_scheduler->acceptTransaction( incidence, method, status, QString() );
+      m_scheduler->acceptTransaction( incidence, method, status, QString() );
     } else {
-      d->m_status = StatusAcceptingCounterProposal;
-      d->m_incidence = incidence; // so we can access it in the slot
-      d->m_scheduler->acceptCounterProposal( incidence );
+      m_status = StatusAcceptingCounterProposal;
+      m_incidence = incidence; // so we can access it in the slot
+      m_scheduler->acceptCounterProposal( incidence );
     }
     return; // signal emitted in onSchedulerFinished().
   } else {
@@ -307,27 +249,27 @@ void InvitationHandler::handleInvitation( const QString &receiver,
   }
 }
 
-void InvitationHandler::setDefaultAction( Action action )
+void InvitationHandlerHelper::setDefaultAction( Action action )
 {
-  d->mDefaultAction = action;
+  mDefaultAction = action;
 }
 
-InvitationHandler::SendResult
-InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
-                                                const KCalCore::Incidence::Ptr &incidence )
+InvitationHandlerHelper::SendResult
+InvitationHandlerHelper::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+                                                      const KCalCore::Incidence::Ptr &incidence )
 {
   /// When we created the incidence, we *must* be the organizer.
 
-  if ( !d->weAreOrganizerOf( incidence ) ) {
+  if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence!"
              << "; email= "       << incidence->organizer()->email()
              << "; thatIsMe() = " << Akonadi::Calendar::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
-    return InvitationHandler::ResultFailAbortUpdate;
+    return InvitationHandlerHelper::ResultFailAbortUpdate;
   }
 
-  if ( !d->weNeedToSendMailFor( incidence ) ) {
-    return InvitationHandler::ResultNoSendingNeeded;
+  if ( !weNeedToSendMailFor( incidence ) ) {
+    return InvitationHandlerHelper::ResultNoSendingNeeded;
   }
 
   QString question;
@@ -344,14 +286,14 @@ InvitationHandler::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
                      "Should an email be sent to the attendees?" );
   }
 
-  const int messageBoxReturnCode = d->askUserIfNeeded( question, false );
-  return d->sentInvitation( messageBoxReturnCode, incidence, method );
+  const int messageBoxReturnCode = askUserIfNeeded( question, false );
+  return sentInvitation( messageBoxReturnCode, incidence, method );
 }
 
-bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence )
+bool InvitationHandlerHelper::handleIncidenceAboutToBeModified( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
-  if ( !d->weAreOrganizerOf( incidence ) ) {
+  if ( !weAreOrganizerOf( incidence ) ) {
     switch( incidence->type() ) {
       case KCalCore::Incidence::TypeEvent:
       {
@@ -359,7 +301,7 @@ bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incide
           i18n( "You are not the organizer of this event. Editing it will "
                 "bring your calendar out of sync with the organizer's calendar. "
                 "Do you really want to edit it?" );
-        const int messageBoxReturnCode = KMessageBox::warningYesNo( d->mParent, question );
+        const int messageBoxReturnCode = KMessageBox::warningYesNo( mParent, question );
         return messageBoxReturnCode != KMessageBox::No;
       }
         break;
@@ -370,7 +312,7 @@ bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incide
         break;
       default:
         kError() << "Unknown incidence type: " << incidence->type() << incidence->typeStr();
-        Q_ASSERT_X( false, "InvitationHandler::handleIncidenceAboutToBeModified()",
+        Q_ASSERT_X( false, "InvitationHandlerHelper::handleIncidenceAboutToBeModified()",
                            "Unknown incidence type" );
         return false;
     }
@@ -379,20 +321,20 @@ bool InvitationHandler::handleIncidenceAboutToBeModified( const KCalCore::Incide
   }
 }
 
-InvitationHandler::SendResult
-InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
-                                                 const KCalCore::Incidence::Ptr &incidence,
-                                                 bool attendeeStatusChanged )
+InvitationHandlerHelper::SendResult
+InvitationHandlerHelper::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+                                                       const KCalCore::Incidence::Ptr &incidence,
+                                                       bool attendeeStatusChanged )
 {
   // For a modified incidence, either we are the organizer or someone else.
-  if ( d->weAreOrganizerOf( incidence ) ) {
-    if ( d->weNeedToSendMailFor( incidence ) ) {
+  if ( weAreOrganizerOf( incidence ) ) {
+    if ( weNeedToSendMailFor( incidence ) ) {
       const QString question = i18n( "You changed the invitation \"%1\".\n"
                                      "Do you want to email the attendees an update message?",
                                incidence->summary() );
 
-      const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence, method );
+      const int messageBoxReturnCode = askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      return sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       return ResultNoSendingNeeded;
     }
@@ -406,8 +348,8 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
 
     const QString question = i18n( "Do you want to send a status update to the "
                                    "organizer of this task?" );
-    const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-    return d->sentInvitation( messageBoxReturnCode, incidence, method );
+    const int messageBoxReturnCode = askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+    return sentInvitation( messageBoxReturnCode, incidence, method );
 
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
     if ( attendeeStatusChanged && method == KCalCore::iTIPRequest ) {
@@ -415,24 +357,24 @@ InvitationHandler::sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
       const QString question =
         i18n( "Your status as an attendee of this event changed. "
               "Do you want to send a status update to the event organizer?" );
-      const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence, method );
+      const int messageBoxReturnCode = askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      return sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
-      return d->sentInvitation( KMessageBox::Yes, incidence, method );
+      return sentInvitation( KMessageBox::Yes, incidence, method );
     }
   }
   Q_ASSERT( false ); // Shouldn't happen.
   return ResultNoSendingNeeded;
 }
 
-InvitationHandler::SendResult
-InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
-                                                const KCalCore::Incidence::Ptr &incidence )
+InvitationHandlerHelper::SendResult
+InvitationHandlerHelper::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+                                                      const KCalCore::Incidence::Ptr &incidence )
 {
   Q_ASSERT( incidence );
   // For a modified incidence, either we are the organizer or someone else.
-  if ( d->weAreOrganizerOf( incidence ) ) {
-    if ( d->weNeedToSendMailFor( incidence ) ) {
+  if ( weAreOrganizerOf( incidence ) ) {
+    if ( weNeedToSendMailFor( incidence ) ) {
       QString question;
       if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
         question = i18n( "You removed the invitation \"%1\".\n"
@@ -448,8 +390,8 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                          incidence->summary() );
       }
 
-      const int messageBoxReturnCode = d->askUserIfNeeded( question, false );
-      return d->sentInvitation( messageBoxReturnCode, incidence, method );
+      const int messageBoxReturnCode = askUserIfNeeded( question, false );
+      return sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       return ResultNoSendingNeeded;
     }
@@ -467,8 +409,8 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
                                      i18n( "Do you want to send a status update to the "
                                            "organizer of this journal?" );
 
-    const int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-    return d->sentInvitation( messageBoxReturnCode, incidence, method );
+    const int messageBoxReturnCode = askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+    return sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
     const QStringList myEmails = Akonadi::Calendar::allEmails();
@@ -487,12 +429,12 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
       QString question = i18n( "You had previously accepted an invitation to this event. "
                                "Do you want to send an updated response to the organizer "
                                "declining the invitation?" );
-      int messageBoxReturnCode = d->askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
-      return d->sentInvitation( messageBoxReturnCode, incidence, method );
+      int messageBoxReturnCode = askUserIfNeeded( question, false, KGuiItem( i18n( "Send Update" ) ) );
+      return sentInvitation( messageBoxReturnCode, incidence, method );
     } else {
       // We did not accept the event before and delete it from our calendar agian,
       // so there is no need to notify people.
-      return InvitationHandler::ResultNoSendingNeeded;
+      return InvitationHandlerHelper::ResultNoSendingNeeded;
     }
   }
 
@@ -500,53 +442,54 @@ InvitationHandler::sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
   return ResultNoSendingNeeded;
 }
 
-InvitationHandler::SendResult
-InvitationHandler::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent,
-                                        const KCalCore::Incidence::Ptr &newEvent ) const
+InvitationHandlerHelper::SendResult
+InvitationHandlerHelper::sendCounterProposal( const KCalCore::Incidence::Ptr &oldEvent,
+                                              const KCalCore::Incidence::Ptr &newEvent )
 {
   Q_ASSERT( oldEvent );
   Q_ASSERT( newEvent );
 
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent )
-    return InvitationHandler::ResultNoSendingNeeded;
+    return InvitationHandlerHelper::ResultNoSendingNeeded;
 
-  if ( d->mOutlookCompatCounterProposals ) {
+  if ( mOutlookCompatCounterProposals ) {
     KCalCore::Incidence::Ptr tmp( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
     tmp->addComment( proposalComment( newEvent ) );
 
-    return d->sentInvitation( KMessageBox::Yes, tmp, KCalCore::iTIPReply );
+    return sentInvitation( KMessageBox::Yes, tmp, KCalCore::iTIPReply );
   } else {
-    return d->sentInvitation( KMessageBox::Yes, newEvent, KCalCore::iTIPCounter );
+    return sentInvitation( KMessageBox::Yes, newEvent, KCalCore::iTIPCounter );
   }
 }
 
-void InvitationHandler::setOutlookCompatibleCounterProposals( bool enable )
+void InvitationHandlerHelper::setOutlookCompatibleCounterProposals( bool enable )
 {
-  d->mOutlookCompatCounterProposals = enable;
+  mOutlookCompatCounterProposals = enable;
 }
 
-void InvitationHandler::setBccMe( bool enable )
+void InvitationHandlerHelper::setBccMe( bool enable )
 {
-  d->m_scheduler->setBccMe( enable );
+  m_scheduler->setBccMe( enable );
 }
 
-void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const QString &errorMsg )
+void InvitationHandlerHelper::onSchedulerFinished( MailScheduler::Result result,
+                                                   const QString &errorMsg )
 {
   const bool success = result == MailScheduler::ResultSuccess;
 
-  if ( d->m_status == StatusAcceptingCounterProposal ) {
+  if ( m_status == StatusAcceptingCounterProposal ) {
     if ( success ) {
-      d->m_status = StatusNone;
+      m_status = StatusNone;
       // send update to all attendees
-      Q_ASSERT( d->m_incidence );
+      Q_ASSERT( m_incidence );
       SendResult sendResult = sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                            KCalCore::Incidence::Ptr( d->m_incidence->clone() ),
+                                                            KCalCore::Incidence::Ptr( m_incidence->clone() ),
                                                             false );
-      d->m_incidence.clear();
+      m_incidence.clear();
       if ( sendResult == ResultNoSendingNeeded ||
-           sendResult == InvitationHandler::ResultCanceled ) {
+           sendResult == InvitationHandlerHelper::ResultCanceled ) {
         emit finished( sendResult, QString() );
       } else {
         // MailScheduler is working hard and this slot will be called again
@@ -555,11 +498,11 @@ void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const
     } else {
       //fall through
     }
-  } else if ( d->m_status == StatusSendingInvitation ) {
-    d->m_status = StatusNone;
+  } else if ( m_status == StatusSendingInvitation ) {
+    m_status = StatusNone;
     if ( !success ) {
       const QString question( i18n( "Sending group scheduling email failed." ) );
-      const int code = d->askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
+      const int code = askUserIfNeeded( question, true, KGuiItem( i18n( "Abort Update" ) ) );
       if ( code == KMessageBox::Yes ) {
         emit finished( ResultFailAbortUpdate, QString() );
       } else {
@@ -575,4 +518,4 @@ void InvitationHandler::onSchedulerFinished( MailScheduler::Result result, const
                  success ? QString() : i18n( "Error: %1", errorMsg ) );
 }
 
-#include "invitationhandler_p.moc"
+#include "invitationhandlerhelper_p.moc"

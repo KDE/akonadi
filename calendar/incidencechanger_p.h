@@ -25,7 +25,7 @@
 #define AKONADI_INCIDENCECHANGER_P_H
 
 #include "incidencechanger.h"
-#include "invitationhandler_p.h"
+#include "invitationhandlerhelper_p.h"
 #include "history.h"
 
 #include <akonadi/item.h>
@@ -324,7 +324,7 @@ class IncidenceChanger::Private : public QObject
     bool mGroupwareCommunication;
 
     QHash<Akonadi::TransactionSequence*, uint> mAtomicOperationByTransaction;
-    QHash<uint,InvitationHandler::SendResult> mInvitationStatusByAtomicOperation;
+    QHash<uint,InvitationHandlerHelper::SendResult> mInvitationStatusByAtomicOperation;
 
     uint mLatestAtomicOperationId;
     bool mBatchOperationInProgress;

@@ -21,9 +21,10 @@
   02110-1301, USA.
 */
 
-#ifndef AKONADI_CALENDAR_INVITATIONHANDLER_H
-#define AKONADI_CALENDAR_INVITATIONHANDLER_H
+#ifndef AKONADI_CALENDAR_INVITATIONHANDLER_P_H
+#define AKONADI_CALENDAR_INVITATIONHANDLER_P_H
 
+#include "invitationhandler.h"
 #include "fetchjobcalendar.h"
 #include "mailscheduler_p.h"
 #include "etmcalendar.h"
@@ -31,23 +32,21 @@
 #include <kcalcore/incidence.h>
 #include <kcalcore/schedulemessage.h>
 
+#include <KGuiItem>
+#include <KLocale>
+
 #include <QObject>
 
 class QWidget;
 
 namespace Akonadi {
 
-
-class GroupwareUiDelegate
-{
-  public:
-    virtual ~GroupwareUiDelegate();
-    virtual void requestIncidenceEditor( const Akonadi::Item &item ) = 0;
-
-    virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar ) = 0;
-    virtual void createCalendar() = 0;
+enum Status {
+    StatusNone,
+    StatusAcceptingCounterProposal,
+    StatusSendingInvitation
 };
-
+  
 /**
   This class handles sending of invitations to attendees when Incidences (e.g.
   events or todos) are created/modified/deleted.
@@ -67,13 +66,13 @@ class GroupwareUiDelegate
   NOTE: Currently only events and todos are support, meaning Incidence::type()
         should either return "Event" or "Todo"
  */
-class InvitationHandler : public QObject
+class InvitationHandlerHelper : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationHandler( const Akonadi::FetchJobCalendar::Ptr & = Akonadi::FetchJobCalendar::Ptr(),
-                                QWidget *parent = 0 );
-    ~InvitationHandler();
+    explicit InvitationHandlerHelper( const Akonadi::FetchJobCalendar::Ptr & = Akonadi::FetchJobCalendar::Ptr(),
+                                      QWidget *parent = 0 );
+    ~InvitationHandlerHelper();
 
     enum SendResult {
       ResultCanceled,        /**< Sending was canceled by the user, meaning there are
@@ -119,9 +118,8 @@ class InvitationHandler : public QObject
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    InvitationHandler::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
-                                                               const KCalCore::Incidence::Ptr &incidence );
-
+    InvitationHandlerHelper::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+                                                                        const KCalCore::Incidence::Ptr &incidence );
 
     /**
        Checks if the incidence should really be modified.
@@ -140,24 +138,24 @@ class InvitationHandler : public QObject
       @param incidence The modified incidence.
       @param attendeeSatusChanged ????
      */
-    InvitationHandler::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
-                                                                const KCalCore::Incidence::Ptr &incidence,
-                                                                bool attendeeStatusChanged );
+    InvitationHandlerHelper::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+                                                                      const KCalCore::Incidence::Ptr &incidence,
+                                                                      bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    InvitationHandler::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
-                                                               const KCalCore::Incidence::Ptr &incidence );
+    InvitationHandlerHelper::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+                                                                     const KCalCore::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
       @param oldEvent The original event provided in the invitations.
       @param newEvent The new event as edited by the user.
     */
-    InvitationHandler::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
-                                                       const KCalCore::Incidence::Ptr &newIncidence ) const;
+    InvitationHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
+                                                             const KCalCore::Incidence::Ptr &newIncidence );
 
     void setOutlookCompatibleCounterProposals( bool enable );
 
@@ -176,17 +174,45 @@ class InvitationHandler : public QObject
      */
     void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
-    void finished( Akonadi::InvitationHandler::SendResult result, const QString &errorMessage );
+    void finished( Akonadi::InvitationHandlerHelper::SendResult result,
+                   const QString &errorMessage );
 
   private Q_SLOTS:
     void onSchedulerFinished( Akonadi::MailScheduler::Result result, const QString &errorMsg );
 
   private:
-    class Private;
-    Private *const d;
-    Q_DISABLE_COPY( InvitationHandler )
+    InvitationHandlerHelper::SendResult sentInvitation( int messageBoxReturnCode,
+                                                        const KCalCore::Incidence::Ptr &incidence,
+                                                        KCalCore::iTIPMethod method );
+
+    int askUserIfNeeded( const QString &question,
+                         bool ignoreDefaultAction = true,
+                         const KGuiItem &buttonYes = KGuiItem( i18n( "Send Email" ) ),
+                         const KGuiItem &buttonNo = KGuiItem( i18n( "Do Not Send" ) ) ) const;
+
+    /**
+      We are the organizer. If there is more than one attendee, or if there is
+      only one, and it's not the same as the organizer, ask the user to send
+      mail.
+    */
+    bool weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence );
+
+    /**
+      Assumes that we are the organizer. If there is more than one attendee, or if
+      there is only one, and it's not the same as the organizer, ask the user to send
+      mail.
+     */
+    bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
+
+    FetchJobCalendar::Ptr mCalendar;
+    InvitationHandlerHelper::Action mDefaultAction;
+    QWidget *mParent;
+    bool mOutlookCompatCounterProposals;
+    MailScheduler *m_scheduler;
+    Status m_status;
+    KCalCore::Incidence::Ptr m_incidence;
 };
 
 }
 
-#endif // INVITATIONSENDER_H
+#endif
