@@ -112,6 +112,7 @@ void InvitationHandler::handleInvitation( const QString &receiver,
       d->m_scheduler->acceptTransaction( incidence, d->m_method, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     }
+    //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
     d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
