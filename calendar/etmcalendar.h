@@ -69,7 +69,6 @@ namespace Akonadi {
     QAbstractItemModel *unfilteredModel() const;
     QAbstractItemModel *filteredModel() const;
     KCheckableProxyModel *checkableProxyModel() const;
-    Akonadi::CollectionSelection *collectionSelection() const;
 
     /**
      * Returns all alarms occuring in a specified time interval.

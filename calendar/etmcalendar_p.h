@@ -23,7 +23,6 @@
 #include "etmcalendar.h"
 #include "calendarbase_p.h"
 #include "incidencechanger.h"
-#include "collectionselection_p.h"
 
 #include <QVector>
 #include <QModelIndex>
@@ -82,7 +81,6 @@ class ETMCalendarPrivate : public CalendarBasePrivate
     // akonadi id to collections
     QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
     KCheckableProxyModel *mCheckableProxyModel;
-    Akonadi::CollectionSelection *mCollectionSelection;
   private:
     ETMCalendar *const q;
 };

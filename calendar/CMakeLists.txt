@@ -12,7 +12,6 @@ set(akonadicalendar_LIB_SRC
   blockalarmsattribute.cpp
   calendarbase.cpp
   calendarmodel.cpp
-  collectionselection.cpp
   etmcalendar.cpp
   history.cpp
   history_p.cpp

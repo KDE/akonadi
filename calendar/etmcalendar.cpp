@@ -22,7 +22,6 @@
 #include "etmcalendar_p.h"
 #include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
-#include "collectionselection_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 
 #include <akonadi/item.h>
@@ -48,7 +47,6 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                             , mETM( 0 )
                                                             , mFilteredETM( 0 )
                                                             , mCheckableProxyModel( 0 )
-                                                            , mCollectionSelection( 0 )
                                                             , q( qq )
 {
 }
@@ -125,7 +123,6 @@ void ETMCalendarPrivate::setupFilteredETM()
   mCheckableProxyModel->setSourceModel( columnFilterProxy );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
 
-  mCollectionSelection = new CollectionSelection( selectionModel, this );
   KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel );
   selectionProxy->setObjectName( "Only show items of selected collection" );
   selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
@@ -388,12 +385,6 @@ KCheckableProxyModel *ETMCalendar::checkableProxyModel() const
 {
   Q_D( const ETMCalendar );
   return d->mCheckableProxyModel;
-}
-
-Akonadi::CollectionSelection* ETMCalendar::collectionSelection() const
-{
-  Q_D( const ETMCalendar );
-  return d->mCollectionSelection;
 }
 
 KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
