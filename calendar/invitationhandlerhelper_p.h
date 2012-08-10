@@ -155,9 +155,6 @@ class InvitationHandlerHelper : public QObject
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
 
-    QStringList allEmails() const;
-    bool thatIsMe( const QString &email ) const;
-
   Q_SIGNALS:
     void finished( Akonadi::InvitationHandlerHelper::SendResult result,
                    const QString &errorMessage );
