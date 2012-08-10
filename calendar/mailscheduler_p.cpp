@@ -75,8 +75,8 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
 
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
   d->m_mailer->mailTo( incidence,
-                       d->m_identityManager->identityForAddress( Calendar::email() ),
-                       Calendar::email(),
+                       d->m_identityManager->identityForAddress( CalendarUtils::email() ),
+                       CalendarUtils::email(),
                        CalendarSettings::self()->bcc(), recipients, messageText,
                        d->m_transport );
 }
@@ -91,8 +91,8 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
   const QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   d->m_mailer->mailTo( incidence,
-                       d->m_identityManager->identityForAddress( Akonadi::Calendar::email() ),
-                       Akonadi::Calendar::email(),
+                       d->m_identityManager->identityForAddress( Akonadi::CalendarUtils::email() ),
+                       Akonadi::CalendarUtils::email(),
                        CalendarSettings::self()->bcc(),
                        recipients, messageText,
                        d->m_transport );
@@ -112,7 +112,7 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
        method == KCalCore::iTIPAdd ||
        method == KCalCore::iTIPDeclineCounter ) {
     d->m_mailer->mailAttendees( incidence,
-                                d->m_identityManager->identityForAddress( Calendar::email() ),
+                                d->m_identityManager->identityForAddress( CalendarUtils::email() ),
                                 CalendarSettings::self()->bcc(), messageText, d->m_transport );
   } else {
     QString subject;
@@ -122,8 +122,8 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
     }
 
     d->m_mailer->mailOrganizer( incidence,
-                                d->m_identityManager->identityForAddress( Calendar::email() ),
-                                Calendar::email(),
+                                d->m_identityManager->identityForAddress( CalendarUtils::email() ),
+                                CalendarUtils::email(),
                                 CalendarSettings::self()->bcc(),
                                 messageText, subject, d->m_transport );
   }

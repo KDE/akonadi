@@ -513,8 +513,8 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       {
         Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
         Q_ASSERT( incidence );
-        if ( !Akonadi::Calendar::thatIsMe( incidence->organizer()->email() ) ) {
-          const QStringList myEmails = Akonadi::Calendar::allEmails();
+        if ( !Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
+          const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
           bool notifyOrganizer = false;
           for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
             const QString email = *it;
@@ -549,7 +549,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
         }
         const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                     oldIncidence,
-                                                                    Akonadi::Calendar::allEmails() );
+                                                                    Akonadi::CalendarUtils::allEmails() );
         InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                                                                               newIncidence,
                                                                                               attendeeStatusChanged );

@@ -26,9 +26,9 @@
 
 #include <KEMailSettings>
 
-using namespace Akonadi::Calendar;
+using namespace Akonadi::CalendarUtils;
 
-QString Akonadi::Calendar::fullName()
+QString Akonadi::CalendarUtils::fullName()
 {
   KEMailSettings settings;
   QString tusername = settings.getSetting( KEMailSettings::RealName );
@@ -43,13 +43,13 @@ QString Akonadi::Calendar::fullName()
   return tname;
 }
 
-QString Akonadi::Calendar::email()
+QString Akonadi::CalendarUtils::email()
 {
   KEMailSettings emailSettings;
   return emailSettings.getSetting( KEMailSettings::EmailAddress );
 }
 
-bool Akonadi::Calendar::thatIsMe( const QString &_email )
+bool Akonadi::CalendarUtils::thatIsMe( const QString &_email )
 {
   KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
   
@@ -94,7 +94,7 @@ bool Akonadi::Calendar::thatIsMe( const QString &_email )
   return false;
 }
 
-QStringList Akonadi::Calendar::allEmails()
+QStringList Akonadi::CalendarUtils::allEmails()
 {
   KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
   // Grab emails from the email identities

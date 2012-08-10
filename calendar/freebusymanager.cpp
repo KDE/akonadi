@@ -180,7 +180,7 @@ void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
   if ( !url.isEmpty() ) {
     kDebug() << "Found cached url:" << url;
     KUrl cachedUrl( url );
-    if ( Akonadi::Calendar::thatIsMe( email ) ) {
+    if ( Akonadi::CalendarUtils::thatIsMe( email ) ) {
       cachedUrl.setUser( CalendarSettings::self()->freeBusyRetrieveUser() );
       cachedUrl.setPass( CalendarSettings::self()->freeBusyRetrievePassword() );
     }
@@ -335,8 +335,8 @@ KCalCore::FreeBusy::Ptr FreeBusyManagerPrivate::ownerFreeBusy()
   KCalCore::Event::List events = mCalendar ? mCalendar->rawEvents( start.date(), end.date() ) : KCalCore::Event::List();
   KCalCore::FreeBusy::Ptr freebusy ( new KCalCore::FreeBusy( events, start, end ) );
   freebusy->setOrganizer( KCalCore::Person::Ptr(
-                            new KCalCore::Person( Akonadi::Calendar::fullName(),
-                                                  Akonadi::Calendar::email() ) ) );
+                            new KCalCore::Person( Akonadi::CalendarUtils::fullName(),
+                                                  Akonadi::CalendarUtils::email() ) ) );
   return freebusy;
 }
 
@@ -856,8 +856,8 @@ void FreeBusyManager::mailFreeBusy( int daysToPublish, QWidget *parentWidget )
 
   FreeBusy::Ptr freebusy( new FreeBusy( events, start, end ) );
   freebusy->setOrganizer( Person::Ptr(
-                            new Person( Akonadi::Calendar::fullName(),
-                                        Akonadi::Calendar::email() ) ) );
+                            new Person( Akonadi::CalendarUtils::fullName(),
+                                        Akonadi::CalendarUtils::email() ) ) );
 
   QPointer<PublishDialog> publishdlg = new PublishDialog();
   if ( publishdlg->exec() == QDialog::Accepted ) {
@@ -885,7 +885,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
 
   d->mParentWidgetForRetrieval = parentWidget;
 
-  if ( Akonadi::Calendar::thatIsMe( email ) ) {
+  if ( Akonadi::CalendarUtils::thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
     kDebug() << "freebusy of owner, not downloading";
     emit freeBusyRetrieved( d->ownerFreeBusy(), email );

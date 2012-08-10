@@ -126,7 +126,7 @@ InvitationHandlerHelper::sentInvitation( int messageBoxReturnCode,
 bool InvitationHandlerHelper::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incidence )
 {
   const QString email = incidence->organizer()->email();
-  return Akonadi::Calendar::thatIsMe( email ) || email.isEmpty()
+  return Akonadi::CalendarUtils::thatIsMe( email ) || email.isEmpty()
          || email == QLatin1String( "invalid@email.address" );
 }
 
@@ -135,7 +135,7 @@ bool InvitationHandlerHelper::weNeedToSendMailFor( const KCalCore::Incidence::Pt
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence."
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << Akonadi::Calendar::thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return false;
   }
@@ -185,7 +185,7 @@ InvitationHandlerHelper::sendIncidenceCreatedMessage( KCalCore::iTIPMethod metho
   if ( !weAreOrganizerOf( incidence ) ) {
     kError() << "We should be the organizer of ths incidence!"
              << "; email= "       << incidence->organizer()->email()
-             << "; thatIsMe() = " << Akonadi::Calendar::thatIsMe( incidence->organizer()->email() );
+             << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
     return InvitationHandlerHelper::ResultFailAbortUpdate;
   }
@@ -335,7 +335,7 @@ InvitationHandlerHelper::sendIncidenceDeletedMessage( KCalCore::iTIPMethod metho
     return sentInvitation( messageBoxReturnCode, incidence, method );
   } else if ( incidence->type() == KCalCore::Incidence::TypeEvent ) {
 
-    const QStringList myEmails = Akonadi::Calendar::allEmails();
+    const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
     bool incidenceAcceptedBefore = false;
     foreach ( const QString &email, myEmails ) {
       KCalCore::Attendee::Ptr me = incidence->attendeeByMail( email );

@@ -33,7 +33,7 @@
  */
 
 namespace Akonadi {
-  namespace Calendar {
+  namespace CalendarUtils {
 
     QString fullName();
     QString email();
