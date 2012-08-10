@@ -60,6 +60,7 @@ install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGE
 
 install( FILES
   akonadi-calendar_export.h
+  blockalarmsattribute.h
   calendarbase.h
   etmcalendar.h
   history.h
