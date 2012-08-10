@@ -25,9 +25,9 @@ InvitationHandler::Private::Private( InvitationHandler *qq )
                                      : m_handleInvitationCalled( false )
                                      , m_calendarLoadError( false )
                                      , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
-                                     , m_scheduler( new MailScheduler( m_calendar, q ) )
+                                     , m_scheduler( new MailScheduler( q ) )
                                      , m_method( KCalCore::iTIPNoMethod )
-                                     , m_helper( new InvitationHandlerHelper( m_calendar ) ) //TODO parent
+                                     , m_helper( new InvitationHandlerHelper() ) //TODO parent
                                      , q( qq )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),

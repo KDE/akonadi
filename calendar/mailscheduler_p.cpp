@@ -20,7 +20,7 @@
 
 #include "calendarsettings.h"
 #include "mailscheduler_p.h"
-#include "fetchjobcalendar.h"
+#include "calendarbase.h"
 #include "utils_p.h"
 
 #include <akonadi/item.h>
@@ -48,8 +48,7 @@ public:
   MailClient *m_mailer;
 };
 
-MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
-                              QObject *parent ) : Scheduler( calendar, parent )
+MailScheduler::MailScheduler( QObject *parent ) : Scheduler( parent )
                                                 , d( new Private() )
 
 {
@@ -135,18 +134,20 @@ QString MailScheduler::freeBusyDir() const
 }
 
 //TODO: AKONADI_PORT review following code
-void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence )
+//TODO: should be a loaded calendar
+void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
+                                           const Akonadi::CalendarBase::Ptr &calendar )
 {
   Q_ASSERT( incidence );
-  if ( !incidence )
+  Q_ASSERT( calendar );
+  if ( !incidence || !calendar )
     return;
 
-  Q_ASSERT( mCalendar );
-  Akonadi::Item exInc = mCalendar->item( incidence->uid() );
+  Akonadi::Item exInc = calendar->item( incidence->uid() );
   if ( !exInc.isValid() ) {
-    KCalCore::Incidence::Ptr exIncidence = mCalendar->incidenceFromSchedulingID( incidence->uid() );
+    KCalCore::Incidence::Ptr exIncidence = calendar->incidenceFromSchedulingID( incidence->uid() );
     if ( exIncidence ) {
-      exInc = mCalendar->item( exIncidence->uid() );
+      exInc = calendar->item( exIncidence->uid() );
     }
     //exInc = exIncItem.isValid() && exIncItem.hasPayload<KCalCore::Incidence::Ptr>() ?
     //        exIncItem.payload<KCalCore::Incidence::Ptr>() : KCalCore::Incidence::Ptr();
@@ -173,10 +174,10 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
 
     exIncPtr->updated();
 
-    if ( !mCalendar->modifyIncidence( exIncPtr ) )
+    if ( !calendar->modifyIncidence( exIncPtr ) )
       result = ResultModifyingError;
   } else {
-      if ( !mCalendar->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) ) )
+      if ( !calendar->addIncidence( KCalCore::Incidence::Ptr( incidence->clone() ) ) )
         result = ResultCreatingError;
   }
 

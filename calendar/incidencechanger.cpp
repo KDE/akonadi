@@ -443,7 +443,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 {
   bool result = true;
   if ( mGroupwareCommunication ) {
-    InvitationHandlerHelper handler( FetchJobCalendar::Ptr(), change->parentWidget );  // TODO make async
+    InvitationHandlerHelper handler( change->parentWidget );  // TODO make async
     if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
@@ -491,7 +491,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr &change )
 {
   if ( mGroupwareCommunication ) {
-    InvitationHandlerHelper handler( FetchJobCalendar::Ptr(), change->parentWidget ); // TODO make async
+    InvitationHandlerHelper handler( change->parentWidget ); // TODO make async
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
@@ -533,8 +533,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           }
 
           if ( notifyOrganizer ) {
-            FetchJobCalendar::Ptr invalidPtr;
-            MailScheduler scheduler( invalidPtr ); // TODO make async
+            MailScheduler scheduler; // TODO make async
             scheduler.performTransaction( incidence, KCalCore::iTIPReply );
           }
         }

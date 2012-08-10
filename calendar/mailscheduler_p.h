@@ -21,7 +21,6 @@
 #define AKONADI_CALENDAR_MAILSCHEDULER_H
 
 #include "scheduler_p.h"
-#include "fetchjobcalendar.h"
 #include "mailclient_p.h"
 
 #include <kcalcore/incidence.h>
@@ -50,8 +49,7 @@ class MailScheduler : public Akonadi::Scheduler
     /**
      * @param calendar Must be a valid and loaded calendar.
      */
-    MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
-                   QObject *parent = 0 );
+    MailScheduler( QObject *parent = 0 );
     ~MailScheduler();
 
     /** reimp */
@@ -71,7 +69,8 @@ class MailScheduler : public Akonadi::Scheduler
     /** reimp*/ QString freeBusyDir() const;
 
     /** Accepts a counter proposal */
-    void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
+    void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
+                                const Akonadi::CalendarBase::Ptr &calendar );
 
 private Q_SLOTS:
     /**

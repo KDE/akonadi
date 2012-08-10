@@ -54,27 +54,11 @@ struct Akonadi::Scheduler::Private
     Scheduler *q;
 };
 
-Scheduler::Scheduler( const CalendarBase::Ptr &calendar,
-                      QObject *parent ) : QObject( parent )
+Scheduler::Scheduler( QObject *parent ) : QObject( parent )
                                         , d( new Akonadi::Scheduler::Private( this ) )
 {
-  mCalendar = calendar;
   mFormat = new ICalFormat();
-
-  if ( mCalendar ) {
-    mFormat->setTimeSpec( calendar->timeSpec() );
-  } else {
-    mFormat->setTimeSpec( KSystemTimeZones::local() );
-  }
-
-  if ( mCalendar ) {
-    connect( mCalendar.data(), SIGNAL(createFinished(bool,QString)),
-             SLOT(handleCreateFinished(bool,QString)) );
-    connect( mCalendar.data(), SIGNAL(modifyFinished(bool,QString)),
-             SLOT(handleModifyFinished(bool,QString)) );
-    connect( mCalendar.data(), SIGNAL(deleteFinished(bool,QString)),
-             SLOT(handleDeleteFinished(bool,QString)) );
-  }
+  mFormat->setTimeSpec( KSystemTimeZones::local() );
 }
 
 Scheduler::~Scheduler()
@@ -93,30 +77,33 @@ FreeBusyCache *Scheduler::freeBusyCache() const
   return d->mFreeBusyCache;
 }
 
-void Scheduler::acceptTransaction( const IncidenceBase::Ptr &incidence, iTIPMethod method,
+void Scheduler::acceptTransaction( const IncidenceBase::Ptr &incidence,
+                                   const Akonadi::CalendarBase::Ptr &calendar,
+                                   iTIPMethod method,
                                    ScheduleMessage::Status status, const QString &email )
 {
   Q_ASSERT( incidence );
+  Q_ASSERT( calendar );
   kDebug() << "method=" << ScheduleMessage::methodName( method ); //krazy:exclude=kdebug
-
+  connectCalendar( calendar );
   switch ( method ) {
   case iTIPPublish:
-    acceptPublish( incidence, status, method );
+    acceptPublish( incidence, calendar, status, method );
     break;
   case iTIPRequest:
-    acceptRequest( incidence, status, email );
+    acceptRequest( incidence, calendar, status, email );
     break;
   case iTIPAdd:
     acceptAdd( incidence, status );
     break;
   case iTIPCancel:
-    acceptCancel( incidence, status, email );
+    acceptCancel( incidence, calendar, status, email );
     break;
   case iTIPDeclineCounter:
     acceptDeclineCounter( incidence, status );
     break;
   case iTIPReply:
-    acceptReply( incidence, status, method );
+    acceptReply( incidence,calendar, status, method );
     break;
   case iTIPRefresh:
     acceptRefresh( incidence, status );
@@ -134,7 +121,9 @@ bool Scheduler::deleteTransaction( const IncidenceBase::Ptr & )
   return true;
 }
 
-void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMessage::Status status,
+void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
+                               const Akonadi::CalendarBase::Ptr &calendar,
+                               ScheduleMessage::Status status,
                                iTIPMethod method )
 {
   if ( newIncBase->type() == IncidenceBase::TypeFreeBusy ) {
@@ -149,7 +138,7 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
            << KCalUtils::Stringify::scheduleMessageStatus( status ); //krazy:exclude=kdebug
 
   Incidence::Ptr newInc = newIncBase.staticCast<Incidence>() ;
-  Incidence::Ptr calInc = mCalendar->incidence( newIncBase->uid() );
+  Incidence::Ptr calInc = calendar->incidence( newIncBase->uid() );
   switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
@@ -166,7 +155,7 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
             kError() << errorString;
           } else {
             newInc->setSchedulingID( newInc->uid(), oldUid );
-            mCalendar->modifyIncidence( newInc );
+            calendar->modifyIncidence( newInc );
             return; // signal will be emited in the handleModifyFinished() slot
           }
         }
@@ -182,6 +171,7 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase, ScheduleMes
 }
 
 void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
+                               const Akonadi::CalendarBase::Ptr &calendar,
                                ScheduleMessage::Status status,
                                const QString &email )
 {
@@ -196,7 +186,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   QString errorString;
   Result result = ResultSuccess;
 
-  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( inc->uid() );
   kDebug() << "status=" << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy:exclude=kdebug
            << ": found " << existingIncidences.count()
            << " incidences with schedulingID " << inc->schedulingID()
@@ -205,8 +195,8 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   if ( existingIncidences.isEmpty() ) {
     // Perfectly normal if the incidence doesn't exist. This is probably
     // a new invitation.
-    kDebug() << "incidence not found; calendar = " << mCalendar.data()
-             << "; incidence count = " << mCalendar->incidences().count();
+    kDebug() << "incidence not found; calendar = " << calendar.data()
+             << "; incidence count = " << calendar->incidences().count();
   }
   Incidence::List::ConstIterator incit = existingIncidences.begin();
   for ( ; incit != existingIncidences.end() ; ++incit ) {
@@ -261,7 +251,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           d->finishAccept( incidence, result, errorString );
         } else {
           inc->setSchedulingID( inc->uid(), oldUid );
-          mCalendar->modifyIncidence( inc );
+          calendar->modifyIncidence( inc );
           //handleModifyFinished() will emit the final signal.
         }
         return;
@@ -298,7 +288,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   kDebug() << "Storing new incidence with scheduling uid=" << inc->schedulingID()
            << " and uid=" << inc->uid();
 
-  mCalendar->addIncidence( inc ); // The slot will emit the result
+  calendar->addIncidence( inc ); // The slot will emit the result
 }
 
 void Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
@@ -308,6 +298,7 @@ void Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
 }
 
 void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
+                              const Akonadi::CalendarBase::Ptr &calendar,
                               ScheduleMessage::Status status,
                               const QString &attendee )
 {
@@ -319,7 +310,7 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     return;
   }
 
-  const Incidence::List existingIncidences = mCalendar->incidencesFromSchedulingID( inc->uid() );
+  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( inc->uid() );
   kDebug() << "Scheduler::acceptCancel="
            << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy2:exclude=kdebug
            << ": found " << existingIncidences.count()
@@ -368,11 +359,11 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
     if ( isMine ) {
       kDebug() << "removing existing incidence " << i->uid();
       if ( i->type() == IncidenceBase::TypeEvent ) {
-        Event::Ptr event = mCalendar->event( i->uid() );
-        result = ( event && mCalendar->deleteEvent( event ) ) ? ResultSuccess : ResultErrorDelete;
+        Event::Ptr event = calendar->event( i->uid() );
+        result = ( event && calendar->deleteEvent( event ) ) ? ResultSuccess : ResultErrorDelete;
       } else if ( i->type() == IncidenceBase::TypeTodo ) {
-        Todo::Ptr todo = mCalendar->todo( i->uid() );
-        result = ( todo && mCalendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
+        Todo::Ptr todo = calendar->todo( i->uid() );
+        result = ( todo && calendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
       }
       if ( result != ResultSuccess )
         d->finishAccept( incidence, result, errorString );
@@ -402,6 +393,7 @@ void Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &incidence,
 }
 
 void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
+                             const Akonadi::CalendarBase::Ptr &calendar,
                              ScheduleMessage::Status status,
                              iTIPMethod method )
 {
@@ -414,11 +406,11 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
   Result result = ResultGenericError;
   QString errorString = i18n( "Generic Error" );
 
-  Incidence::Ptr incidence = mCalendar->incidence( incidenceBase->uid() );
+  Incidence::Ptr incidence = calendar->incidence( incidenceBase->uid() );
 
   // try harder to find the correct incidence
   if ( !incidence ) {
-    const Incidence::List list = mCalendar->incidences();
+    const Incidence::List list = calendar->incidences();
     for ( Incidence::List::ConstIterator it=list.constBegin(), end=list.constEnd();
           it != end; ++it ) {
       if ( (*it)->schedulingID() == incidenceBase->uid() ) {
@@ -522,7 +514,7 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       if ( update && ( calendarTodo->percentComplete() != update->percentComplete() ) ) {
         calendarTodo->setPercentComplete( update->percentComplete() );
         calendarTodo->updated();
-        mCalendar->modifyIncidence( calendarTodo );
+        calendar->modifyIncidence( calendarTodo );
         // success will be emitted in the handleModifyFinished() slot
         return;
       }
@@ -532,7 +524,7 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
       incidence->updated();
-      mCalendar->modifyIncidence( incidence );
+      calendar->modifyIncidence( incidence );
       // success will be emitted in the handleModifyFinished() slot
       return;
     }
@@ -612,4 +604,14 @@ void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage 
   d->finishAccept( IncidenceBase::Ptr(),
                    success ? ResultSuccess : ResultDeletingError,
                    errorMessage );
+}
+
+void Scheduler::connectCalendar( const Akonadi::CalendarBase::Ptr &calendar )
+{
+  connect( calendar.data(), SIGNAL(createFinished(bool,QString)),
+           SLOT(handleCreateFinished(bool,QString)), Qt::UniqueConnection );
+  connect( calendar.data(), SIGNAL(modifyFinished(bool,QString)),
+           SLOT(handleModifyFinished(bool,QString)), Qt::UniqueConnection );
+  connect( calendar.data(), SIGNAL(deleteFinished(bool,QString)),
+           SLOT(handleDeleteFinished(bool,QString)), Qt::UniqueConnection );
 }

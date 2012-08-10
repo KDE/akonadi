@@ -25,7 +25,6 @@
 #define AKONADI_CALENDAR_INVITATIONHANDLER_P_H
 
 #include "invitationhandler.h"
-#include "fetchjobcalendar.h"
 #include "mailscheduler_p.h"
 #include "etmcalendar.h"
 
@@ -69,8 +68,7 @@ class InvitationHandlerHelper : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationHandlerHelper( const Akonadi::FetchJobCalendar::Ptr & = Akonadi::FetchJobCalendar::Ptr(),
-                                      QWidget *parent = 0 );
+    explicit InvitationHandlerHelper( QWidget *parent = 0 ); // TODO
     ~InvitationHandlerHelper();
 
     enum SendResult {

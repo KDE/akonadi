@@ -121,20 +121,20 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     }
     if ( CalendarSettings::self()->outlookCompatCounterProposals() ||
          !action.startsWith( QLatin1String( "counter" ) ) ) {
-      d->m_scheduler->acceptTransaction( incidence, d->m_method, status, receiver );
+      d->m_scheduler->acceptTransaction( incidence, d->m_calendar, d->m_method, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     }
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
+    d->m_scheduler->acceptTransaction( incidence, d->m_calendar, KCalCore::iTIPCancel, status, receiver );
     return; // signal emitted in onSchedulerFinished().
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( d->m_method != KCalCore::iTIPCounter ) {
-      d->m_scheduler->acceptTransaction( incidence, d->m_method, status, QString() );
+      d->m_scheduler->acceptTransaction( incidence, d->m_calendar, d->m_method, status, QString() );
     } else {
       d->m_incidence = incidence; // so we can access it in the slot
-      d->m_scheduler->acceptCounterProposal( incidence );
+      d->m_scheduler->acceptCounterProposal( incidence, d->m_calendar );
     }
     return; // signal emitted in onSchedulerFinished().
   } else {

@@ -62,7 +62,7 @@ public:
     /**
       Creates a scheduler for calendar specified as argument.
     */
-    explicit Scheduler( const Akonadi::CalendarBase::Ptr &calendar, QObject *parent = 0 );
+    explicit Scheduler( QObject *parent = 0 );
     ~Scheduler();
 
     /**
@@ -105,6 +105,7 @@ public:
       action to be taken for this incidence.
 
       @param incidence the incidence for the transaction. Must be valid.
+      @param calendar a loaded calendar.
       @param method iTIP transaction method to check.
       @param status scheduling status.
       @param email the email address of the person for whom this
@@ -113,6 +114,7 @@ public:
       Listen to the acceptTransactionFinished() signal to know the success.
     */
     void acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                            const Akonadi::CalendarBase::Ptr &calendar,
                             KCalCore::iTIPMethod method,
                             KCalCore::ScheduleMessage::Status status,
                             const QString &email = QString() );
@@ -136,10 +138,12 @@ public:
 
 protected:
     void acceptPublish( const KCalCore::IncidenceBase::Ptr &,
+                        const Akonadi::CalendarBase::Ptr &calendar,
                         KCalCore::ScheduleMessage::Status status,
                         KCalCore::iTIPMethod method );
 
     void acceptRequest( const KCalCore::IncidenceBase::Ptr &,
+                        const Akonadi::CalendarBase::Ptr &calendar,
                         KCalCore::ScheduleMessage::Status status,
                         const QString &email );
 
@@ -147,6 +151,7 @@ protected:
                     KCalCore::ScheduleMessage::Status status );
 
     void acceptCancel( const KCalCore::IncidenceBase::Ptr &,
+                       const Akonadi::CalendarBase::Ptr &calendar,
                        KCalCore::ScheduleMessage::Status status,
                        const QString &attendee );
 
@@ -154,6 +159,7 @@ protected:
                                KCalCore::ScheduleMessage::Status status );
 
     void acceptReply( const KCalCore::IncidenceBase::Ptr &,
+                      const Akonadi::CalendarBase::Ptr &calendar,
                       KCalCore::ScheduleMessage::Status status,
                       KCalCore::iTIPMethod method );
 
@@ -164,8 +170,6 @@ protected:
                         KCalCore::ScheduleMessage::Status status );
 
     void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
-
-    Akonadi::CalendarBase::Ptr mCalendar;
     KCalCore::ICalFormat *mFormat;
 
 Q_SIGNALS:
@@ -176,6 +180,7 @@ private Q_SLOTS:
     void handleDeleteFinished( bool success, const QString &errorMessage );
 
   private:
+    void connectCalendar( const Akonadi::CalendarBase::Ptr &calendar );
     Q_DISABLE_COPY( Scheduler )
     struct Private;
     Private *const d;

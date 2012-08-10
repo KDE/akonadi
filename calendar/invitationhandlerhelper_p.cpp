@@ -150,11 +150,10 @@ bool InvitationHandlerHelper::weNeedToSendMailFor( const KCalCore::Incidence::Pt
     incidence->attendees().first()->email() != incidence->organizer()->email();
 }
 
-InvitationHandlerHelper::InvitationHandlerHelper( const FetchJobCalendar::Ptr &calendar,
-                                                  QWidget *parent )
+InvitationHandlerHelper::InvitationHandlerHelper( QWidget *parent )
     : mDefaultAction( InvitationHandlerHelper::ActionAsk )
     , mParent( parent )
-    , m_scheduler( new MailScheduler( calendar, parent ) )
+    , m_scheduler( new MailScheduler( parent ) )
     , m_status( StatusNone )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
