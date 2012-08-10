@@ -1,4 +1,6 @@
 /*
+    Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+
     Copyright (C) 2010 Klarälvdalens Datakonsult AB,
         a KDAB Group company, info@kdab.net,
         author Tobias Koenig <tokoe@kdab.com>
@@ -20,7 +22,7 @@
 */
 
 #include "blockalarmsattribute.h"
-
+#include <Akonadi/AttributeFactory>
 #include <QtCore/QByteArray>
 
 using namespace Akonadi;
@@ -53,3 +55,31 @@ void BlockAlarmsAttribute::deserialize( const QByteArray &data )
   Q_ASSERT( data.isEmpty() );
   Q_UNUSED( data );
 }
+
+
+#ifndef KDELIBS_STATIC_LIBS
+namespace {
+
+// Anonymous namespace; function is invisible outside this file.
+bool dummy()
+{
+  Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
+
+  return true;
+}
+
+// Called when this library is loaded.
+const bool registered = dummy();
+
+} // namespace
+
+#else
+
+extern bool ___Akonadi____INIT()
+{
+  Akonadi::AttributeFactory::registerAttribute<Akonadi::BlockAlarmsAttribute>();
+
+  return true;
+}
+
+#endif
