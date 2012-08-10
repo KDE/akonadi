@@ -186,7 +186,6 @@ class InvitationHandlerHelper : public QObject
      */
     bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
 
-    FetchJobCalendar::Ptr mCalendar;
     InvitationHandlerHelper::Action mDefaultAction;
     QWidget *mParent;
     MailScheduler *m_scheduler;

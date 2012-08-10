@@ -152,8 +152,7 @@ bool InvitationHandlerHelper::weNeedToSendMailFor( const KCalCore::Incidence::Pt
 
 InvitationHandlerHelper::InvitationHandlerHelper( const FetchJobCalendar::Ptr &calendar,
                                                   QWidget *parent )
-    : mCalendar( calendar )
-    , mDefaultAction( InvitationHandlerHelper::ActionAsk )
+    : mDefaultAction( InvitationHandlerHelper::ActionAsk )
     , mParent( parent )
     , m_scheduler( new MailScheduler( calendar, parent ) )
     , m_status( StatusNone )
