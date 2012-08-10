@@ -152,8 +152,6 @@ class InvitationHandlerHelper : public QObject
     InvitationHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                                              const KCalCore::Incidence::Ptr &newIncidence );
 
-    void setBccMe( bool enable );
-
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
 

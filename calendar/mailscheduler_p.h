@@ -73,8 +73,6 @@ class MailScheduler : public Akonadi::Scheduler
     /** Accepts a counter proposal */
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence );
 
-    void setBccMe( bool enable );
-
 private Q_SLOTS:
     /**
      * @brief onMailerFinished Handles the result of the MailClient operation.

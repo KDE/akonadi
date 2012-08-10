@@ -18,6 +18,7 @@
   02110-1301, USA.
 */
 
+#include "calendarsettings.h"
 #include "mailscheduler_p.h"
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
@@ -42,7 +43,6 @@ using namespace KPIMIdentities;
 
 class MailScheduler::Private {
 public:
-  bool m_bccMe;
   QString m_transport;
   KPIMIdentities::IdentityManager *m_identityManager;
   MailClient *m_mailer;
@@ -53,7 +53,6 @@ MailScheduler::MailScheduler( const Akonadi::FetchJobCalendar::Ptr &calendar,
                                                 , d( new Private() )
 
 {
-  d->m_bccMe = false;
   //d->m_transport = ; TODO
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );
   d->m_mailer = new MailClient();
@@ -77,7 +76,8 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
   const QString messageText = mFormat->createScheduleMessage( incidence, KCalCore::iTIPPublish );
   d->m_mailer->mailTo( incidence,
                        d->m_identityManager->identityForAddress( Calendar::email() ),
-                       Calendar::email(), d->m_bccMe, recipients, messageText,
+                       Calendar::email(),
+                       CalendarSettings::self()->bcc(), recipients, messageText,
                        d->m_transport );
 }
 
@@ -92,7 +92,9 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
 
   d->m_mailer->mailTo( incidence,
                        d->m_identityManager->identityForAddress( Akonadi::Calendar::email() ),
-                       Akonadi::Calendar::email(), d->m_bccMe, recipients, messageText,
+                       Akonadi::Calendar::email(),
+                       CalendarSettings::self()->bcc(),
+                       recipients, messageText,
                        d->m_transport );
 }
 
@@ -111,7 +113,7 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
        method == KCalCore::iTIPDeclineCounter ) {
     d->m_mailer->mailAttendees( incidence,
                                 d->m_identityManager->identityForAddress( Calendar::email() ),
-                                d->m_bccMe, messageText, d->m_transport );
+                                CalendarSettings::self()->bcc(), messageText, d->m_transport );
   } else {
     QString subject;
     KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
@@ -121,7 +123,9 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
 
     d->m_mailer->mailOrganizer( incidence,
                                 d->m_identityManager->identityForAddress( Calendar::email() ),
-                                Calendar::email(), d->m_bccMe, messageText, subject, d->m_transport );
+                                Calendar::email(),
+                                CalendarSettings::self()->bcc(),
+                                messageText, subject, d->m_transport );
   }
 }
 
@@ -192,9 +196,4 @@ void MailScheduler::onMailerFinished( Akonadi::MailClient::Result result,
     const QString message = i18n( "Error sending e-mail: ") + errorMsg;
     emit transactionFinished( ResultGenericError, message );
   }
-}
-
-void MailScheduler::setBccMe( bool enable )
-{
-  d->m_bccMe = enable;
 }

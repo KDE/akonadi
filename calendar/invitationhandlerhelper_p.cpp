@@ -158,8 +158,6 @@ InvitationHandlerHelper::InvitationHandlerHelper( const FetchJobCalendar::Ptr &c
     , m_scheduler( new MailScheduler( calendar, parent ) )
     , m_status( StatusNone )
 {
-  m_scheduler->setBccMe( false );
-
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
            SLOT(onSchedulerFinished(Akonadi::MailScheduler::Result,QString)) );
 }
@@ -386,11 +384,6 @@ InvitationHandlerHelper::sendCounterProposal( const KCalCore::Incidence::Ptr &ol
   } else {
     return sentInvitation( KMessageBox::Yes, newEvent, KCalCore::iTIPCounter );
   }
-}
-
-void InvitationHandlerHelper::setBccMe( bool enable )
-{
-  m_scheduler->setBccMe( enable );
 }
 
 void InvitationHandlerHelper::onSchedulerFinished( MailScheduler::Result result,
