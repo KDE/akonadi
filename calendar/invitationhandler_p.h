@@ -31,13 +31,22 @@
 #include <QString>
 
 namespace Akonadi {
+
+struct Invitation {
+  QString receiver;
+  QString iCal;
+  QString action;
+};
   
 class InvitationHandler::Private : public QObject
 {
   Q_OBJECT
 public:
-  Private( const FetchJobCalendar::Ptr &calendar, InvitationHandler *q );
-  
+  Private( InvitationHandler *q );
+
+  Invitation m_queuedInvitation;
+  bool m_handleInvitationCalled;
+  bool m_calendarLoadError;
   FetchJobCalendar::Ptr m_calendar;
   MailScheduler *m_scheduler;
   KCalCore::Incidence::Ptr m_incidence;
@@ -45,7 +54,8 @@ public:
   InvitationHandlerHelper *m_helper;
   InvitationHandler *q;
 public Q_SLOTS:
-  void onSchedulerFinished( Akonadi::MailScheduler::Result, const QString &errorMsg );
+  void onLoadFinished( bool success, const QString &errorMessage );
+  void onSchedulerFinished( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
                          const QString &errorMessage );
 };

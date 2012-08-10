@@ -44,11 +44,10 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 }
 
 
-InvitationHandler::InvitationHandler( const FetchJobCalendar::Ptr &calendar, QObject *parent )
+InvitationHandler::InvitationHandler( QObject *parent )
                   : QObject( parent )
-                  , d( new Private( calendar, this ) )
+                  , d( new Private( this ) )
 {
-  Q_ASSERT( calendar );
 }
 
 InvitationHandler::~InvitationHandler()
@@ -60,6 +59,19 @@ void InvitationHandler::handleInvitation( const QString &receiver,
                                           const QString &iCal,
                                           const QString &action )
 {
+  if ( !d->m_calendar->isLoaded() ) {
+    d->m_queuedInvitation.receiver = receiver;
+    d->m_queuedInvitation.iCal     = iCal;
+    d->m_queuedInvitation.action   = action;
+    d->m_handleInvitationCalled = true;
+    return;
+  }
+
+  if ( d->m_calendarLoadError ) {
+    emit finished( ResultError, i18n( "Error loading calendar." ) );
+    return;
+  }
+
   KCalCore::ICalFormat format;
   KCalCore::ScheduleMessage::Ptr message = format.parseScheduleMessage( d->m_calendar, iCal );
 

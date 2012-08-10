@@ -55,7 +55,8 @@ public:
     ResultError,      /**< An unexpected error occured */
     ResultSuccess     /**< The invitation was successfuly handled. */
   };
-  explicit InvitationHandler( const Akonadi::FetchJobCalendar::Ptr &, QObject *parent = 0 );
+
+  explicit InvitationHandler( QObject *parent = 0 );
   ~InvitationHandler();
     
   void handleInvitation( const QString &receiver, const QString &iCal, const QString &type );

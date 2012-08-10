@@ -21,11 +21,13 @@
 
 using namespace Akonadi;
 
-InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, InvitationHandler *qq )
-                                     : m_calendar( calendar )
+InvitationHandler::Private::Private( InvitationHandler *qq )
+                                     : m_handleInvitationCalled( false )
+                                     , m_calendarLoadError( false )
+                                     , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
                                      , m_scheduler( new MailScheduler( m_calendar, q ) )
                                      , m_method( KCalCore::iTIPNoMethod )
-                                     , m_helper( new InvitationHandlerHelper( calendar ) ) //TODO parent
+                                     , m_helper( new InvitationHandlerHelper( m_calendar ) ) //TODO parent
                                      , q( qq )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
@@ -33,6 +35,8 @@ InvitationHandler::Private::Private( const FetchJobCalendar::Ptr &calendar, Invi
 
   connect( m_helper, SIGNAL(finished(Akonadi::InvitationHandlerHelper::SendResult,QString)),
            SLOT(onHelperFinished(Akonadi::InvitationHandlerHelper::SendResult,QString)) );
+
+  connect( m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)) );
 }
 
 void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Result result,
@@ -73,5 +77,21 @@ void InvitationHandler::Private::onHelperFinished( Akonadi::InvitationHandlerHel
   emit q->finished( success ? ResultSuccess : ResultError,
                     success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
+
+void InvitationHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
+{
+  if ( m_handleInvitationCalled ) {
+    if ( success ) {
+      q->handleInvitation( m_queuedInvitation.receiver,
+                           m_queuedInvitation.iCal,
+                           m_queuedInvitation.action );
+    } else {
+      emit q->finished( ResultError, i18n( "Error loading calendar: %1", errorMessage ) );
+    }
+  } else if ( !success ) {
+    m_calendarLoadError = true;
+  }
+}
+
 
 #include "invitationhandler_p.moc"
