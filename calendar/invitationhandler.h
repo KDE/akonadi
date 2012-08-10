@@ -64,11 +64,11 @@ public:
 Q_SIGNALS:
   void finished( Akonadi::InvitationHandler::Result result, const QString &errorMessage );
 
-    /**
-      This signal is emitted when an invitation for a counter proposal is sent.
-      @param incidence The incidence for which the counter proposal must be specified.
-     */ //TODO_SERGIO: connect this
-    void editorRequested( const KCalCore::Incidence::Ptr &incidence );
+  /**
+    This signal is emitted when an invitation for a counter proposal is sent.
+    @param incidence The incidence for which the counter proposal must be specified.
+   */ //TODO_SERGIO: connect this
+  void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
 private:
   Q_DISABLE_COPY( InvitationHandler )
