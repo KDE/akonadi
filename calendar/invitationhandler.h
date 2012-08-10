@@ -26,8 +26,10 @@
 #ifndef _AKONADI_CALENDAR_INVITATION_HANDLER_H
 #define _AKONADI_CALENDAR_INVITATION_HANDLER_H
 
+#include "akonadi-calendar_export.h"
 #include "fetchjobcalendar.h"
 #include "etmcalendar.h"
+
 #include <kcalcore/incidence.h>
 
 #include <QString>
@@ -45,7 +47,7 @@ class GroupwareUiDelegate
     virtual void createCalendar() = 0;
 };
   
-class InvitationHandler : public QObject
+class AKONADI_CALENDAR_EXPORT InvitationHandler : public QObject
 {
   Q_OBJECT
 public:
