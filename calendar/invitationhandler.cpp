@@ -24,20 +24,114 @@
 */
 
 #include "invitationhandler.h"
+#include "invitationhandler_p.h"
 #include "invitationhandlerhelper_p.h"
+#include "calendarsettings.h"
+
+#include <kcalcore/icalformat.h>
+#include <kcalcore/incidence.h>
+#include <kcalcore/schedulemessage.h>
+#include <kcalcore/attendee.h>
+#include <kcalutils/stringify.h>
+
+#include <KMessageBox>
+#include <KLocale>
 
 using namespace Akonadi;
-
-namespace Akonadi {
-
-struct Invitation {
-  QString type;
-  QString iCal;
-  QString receiver;
-};
-
-}
 
 GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
+
+
+InvitationHandler::InvitationHandler( const FetchJobCalendar::Ptr &calendar, QObject *parent )
+                  : QObject( parent )
+                  , d( new Private( calendar, this ) )
+{
+  Q_ASSERT( calendar );
+}
+
+InvitationHandler::~InvitationHandler()
+{
+  delete d;
+}
+
+void InvitationHandler::handleInvitation( const QString &receiver,
+                                          const QString &iCal,
+                                          const QString &action )
+{
+  KCalCore::ICalFormat format;
+  KCalCore::ScheduleMessage::Ptr message = format.parseScheduleMessage( d->m_calendar, iCal );
+
+  if ( !message ) {
+    const QString errorMessage = format.exception() ? i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *format.exception() ) )
+                                                    : i18n( "Unknown error while parsing iCal invitation" );
+
+    kError() << "Error parsing" << errorMessage;
+    KMessageBox::detailedError( 0,// mParent, TODO
+                                i18n( "Error while processing an invitation or update." ),
+                                errorMessage );
+    emit finished( ResultError, errorMessage );
+    return;
+  }
+
+  d->m_method = static_cast<KCalCore::iTIPMethod>( message->method() );
+  d->m_incidence.clear();
+  
+  KCalCore::ScheduleMessage::Status status = message->status();
+  KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
+  if ( !incidence ) {
+    emit finished( ResultError, QLatin1String( "Invalid incidence" ) );
+    return;
+  }
+
+  if ( action.startsWith( QLatin1String( "accepted" ) ) ||
+       action.startsWith( QLatin1String( "tentative" ) ) ||
+       action.startsWith( QLatin1String( "delegated" ) ) ||
+       action.startsWith( QLatin1String( "counter" ) ) ) {
+    // Find myself and set my status. This can't be done in the scheduler,
+    // since this does not know the choice I made in the KMail bpf
+    const KCalCore::Attendee::List attendees = incidence->attendees();
+    foreach ( KCalCore::Attendee::Ptr attendee, attendees ) {
+      if ( attendee->email() == receiver ) {
+        if ( action.startsWith( QLatin1String( "accepted" ) ) ) {
+          attendee->setStatus( KCalCore::Attendee::Accepted );
+        } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
+          attendee->setStatus( KCalCore::Attendee::Tentative );
+        } else if ( CalendarSettings::self()->outlookCompatCounterProposals() &&
+                    action.startsWith( QLatin1String( "counter" ) ) ) {
+          attendee->setStatus( KCalCore::Attendee::Tentative );
+        } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
+          attendee->setStatus( KCalCore::Attendee::Delegated );
+        }
+        break;
+      }
+    }
+    if ( CalendarSettings::self()->outlookCompatCounterProposals() ||
+         !action.startsWith( QLatin1String( "counter" ) ) ) {
+      d->m_scheduler->acceptTransaction( incidence, d->m_method, status, receiver );
+      return; // signal emitted in onSchedulerFinished().
+    }
+  } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
+    // Delete the old incidence, if one is present
+    d->m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
+    return; // signal emitted in onSchedulerFinished().
+  } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
+    if ( d->m_method != KCalCore::iTIPCounter ) {
+      d->m_scheduler->acceptTransaction( incidence, d->m_method, status, QString() );
+    } else {
+      d->m_incidence = incidence; // so we can access it in the slot
+      d->m_scheduler->acceptCounterProposal( incidence );
+    }
+    return; // signal emitted in onSchedulerFinished().
+  } else {
+    kError() << "Unknown incoming action" << action;
+    emit finished( ResultError, i18n( "Invalid action: %1", action ) );
+  }
+
+  if ( action.startsWith( QLatin1String( "counter" ) ) ) {
+    emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
+  }
+}
+
+#include "invitationhandler.moc"

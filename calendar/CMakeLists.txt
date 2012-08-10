@@ -19,6 +19,7 @@ set(akonadicalendar_LIB_SRC
   incidencefetchjob_p.cpp
   incidencechanger.cpp
   invitationhandler.cpp
+  invitationhandler_p.cpp
   invitationhandlerhelper_p.cpp
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
@@ -52,11 +53,6 @@ target_link_libraries(akonadi-calendar
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDE4_PHONON_LIBS})
-
-if(NOT WINCE)
-target_link_libraries(akonadi-calendar
-                                      ${NEPOMUK_LIBRARIES})
-endif()
 
 set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 

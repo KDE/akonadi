@@ -21,6 +21,7 @@
   02110-1301, USA.
 */
 
+#include "calendarsettings.h"
 #include "invitationhandlerhelper_p.h"
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
@@ -154,7 +155,6 @@ InvitationHandlerHelper::InvitationHandlerHelper( const FetchJobCalendar::Ptr &c
     : mCalendar( calendar )
     , mDefaultAction( InvitationHandlerHelper::ActionAsk )
     , mParent( parent )
-    , mOutlookCompatCounterProposals( false )
     , m_scheduler( new MailScheduler( calendar, parent ) )
     , m_status( StatusNone )
 {
@@ -171,82 +171,6 @@ InvitationHandlerHelper::~InvitationHandlerHelper()
 void InvitationHandlerHelper::setDialogParent( QWidget *parent )
 {
   mParent = parent;
-}
-
-void InvitationHandlerHelper::handleInvitation( const QString &receiver,
-                                                const QString &iCal,
-                                                const QString &action )
-{
-  KCalCore::ICalFormat mFormat;
-  KCalCore::ScheduleMessage::Ptr message = mFormat.parseScheduleMessage( mCalendar, iCal );
-
-  if ( !message ) {
-    const QString errorMessage = mFormat.exception() ? i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *mFormat.exception() ) )
-                                                     : i18n( "Unknown error while parsing iCal invitation" );
-
-    kError() << "Error parsing" << errorMessage;
-    KMessageBox::detailedError( mParent,
-                                i18n( "Error while processing an invitation or update." ),
-                                errorMessage );
-    emit finished( ResultError, errorMessage );
-    return;
-  }
-
-  KCalCore::iTIPMethod method = static_cast<KCalCore::iTIPMethod>( message->method() );
-  KCalCore::ScheduleMessage::Status status = message->status();
-  KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
-  if ( !incidence ) {
-    emit finished( ResultError, QLatin1String( "Invalid incidence" ) );
-    return;
-  }
-
-  if ( action.startsWith( QLatin1String( "accepted" ) ) ||
-       action.startsWith( QLatin1String( "tentative" ) ) ||
-       action.startsWith( QLatin1String( "delegated" ) ) ||
-       action.startsWith( QLatin1String( "counter" ) ) ) {
-    // Find myself and set my status. This can't be done in the scheduler,
-    // since this does not know the choice I made in the KMail bpf
-    const KCalCore::Attendee::List attendees = incidence->attendees();
-    foreach ( KCalCore::Attendee::Ptr attendee, attendees ) {
-      if ( attendee->email() == receiver ) {
-        if ( action.startsWith( QLatin1String( "accepted" ) ) ) {
-          attendee->setStatus( KCalCore::Attendee::Accepted );
-        } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
-          attendee->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( mOutlookCompatCounterProposals &&
-                    action.startsWith( QLatin1String( "counter" ) ) ) {
-          attendee->setStatus( KCalCore::Attendee::Tentative );
-        } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
-          attendee->setStatus( KCalCore::Attendee::Delegated );
-        }
-        break;
-      }
-    }
-    if ( mOutlookCompatCounterProposals || !action.startsWith( QLatin1String( "counter" ) ) ) {
-      m_scheduler->acceptTransaction( incidence, method, status, receiver );
-      return; // signal emitted in onSchedulerFinished().
-    }
-  } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
-    // Delete the old incidence, if one is present
-    m_scheduler->acceptTransaction( incidence, KCalCore::iTIPCancel, status, receiver );
-    return; // signal emitted in onSchedulerFinished().
-  } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
-    if ( method != KCalCore::iTIPCounter ) {
-      m_scheduler->acceptTransaction( incidence, method, status, QString() );
-    } else {
-      m_status = StatusAcceptingCounterProposal;
-      m_incidence = incidence; // so we can access it in the slot
-      m_scheduler->acceptCounterProposal( incidence );
-    }
-    return; // signal emitted in onSchedulerFinished().
-  } else {
-    kError() << "Unknown incoming action" << action;
-    emit finished( ResultError, i18n( "Invalid action: %1", action ) );
-  }
-
-  if ( action.startsWith( QLatin1String( "counter" ) ) ) {
-    emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
-  }
 }
 
 void InvitationHandlerHelper::setDefaultAction( Action action )
@@ -452,7 +376,7 @@ InvitationHandlerHelper::sendCounterProposal( const KCalCore::Incidence::Ptr &ol
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent )
     return InvitationHandlerHelper::ResultNoSendingNeeded;
 
-  if ( mOutlookCompatCounterProposals ) {
+  if ( CalendarSettings::self()->outlookCompatCounterProposals() ) {
     KCalCore::Incidence::Ptr tmp( oldEvent->clone() );
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
@@ -462,11 +386,6 @@ InvitationHandlerHelper::sendCounterProposal( const KCalCore::Incidence::Ptr &ol
   } else {
     return sentInvitation( KMessageBox::Yes, newEvent, KCalCore::iTIPCounter );
   }
-}
-
-void InvitationHandlerHelper::setOutlookCompatibleCounterProposals( bool enable )
-{
-  mOutlookCompatCounterProposals = enable;
 }
 
 void InvitationHandlerHelper::setBccMe( bool enable )
@@ -479,26 +398,7 @@ void InvitationHandlerHelper::onSchedulerFinished( MailScheduler::Result result,
 {
   const bool success = result == MailScheduler::ResultSuccess;
 
-  if ( m_status == StatusAcceptingCounterProposal ) {
-    if ( success ) {
-      m_status = StatusNone;
-      // send update to all attendees
-      Q_ASSERT( m_incidence );
-      SendResult sendResult = sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                            KCalCore::Incidence::Ptr( m_incidence->clone() ),
-                                                            false );
-      m_incidence.clear();
-      if ( sendResult == ResultNoSendingNeeded ||
-           sendResult == InvitationHandlerHelper::ResultCanceled ) {
-        emit finished( sendResult, QString() );
-      } else {
-        // MailScheduler is working hard and this slot will be called again
-        return;
-      }
-    } else {
-      //fall through
-    }
-  } else if ( m_status == StatusSendingInvitation ) {
+if ( m_status == StatusSendingInvitation ) {
     m_status = StatusNone;
     if ( !success ) {
       const QString question( i18n( "Sending group scheduling email failed." ) );

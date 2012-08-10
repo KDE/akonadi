@@ -26,9 +26,11 @@
 #ifndef _AKONADI_CALENDAR_INVITATION_HANDLER_H
 #define _AKONADI_CALENDAR_INVITATION_HANDLER_H
 
-#include "calendarbase.h"
+#include "fetchjobcalendar.h"
 #include "etmcalendar.h"
+#include <kcalcore/incidence.h>
 
+#include <QString>
 #include <QWidget>
 
 namespace Akonadi {
@@ -45,12 +47,13 @@ class GroupwareUiDelegate
   
 class InvitationHandler : public QObject
 {
+  Q_OBJECT
 public:
   enum Result {
     ResultError,      /**< An unexpected error occured */
     ResultSuccess     /**< The invitation was successfuly handled. */
   };
-  explicit InvitationHandler( const Akonadi::CalendarBase::Ptr &, QWidget *parent = 0 );
+  explicit InvitationHandler( const Akonadi::FetchJobCalendar::Ptr &, QObject *parent = 0 );
   ~InvitationHandler();
     
   void handleInvitation( const QString &receiver, const QString &iCal, const QString &type );
@@ -58,8 +61,16 @@ public:
 Q_SIGNALS:
   void finished( Akonadi::InvitationHandler::Result result, const QString &errorMessage );
 
+    /**
+      This signal is emitted when an invitation for a counter proposal is sent.
+      @param incidence The incidence for which the counter proposal must be specified.
+     */ //TODO_SERGIO: connect this
+    void editorRequested( const KCalCore::Incidence::Ptr &incidence );
+
 private:
   Q_DISABLE_COPY( InvitationHandler )
+  class Private;
+  Private *const d;
 };
   
 }

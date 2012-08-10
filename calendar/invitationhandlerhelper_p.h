@@ -43,7 +43,6 @@ namespace Akonadi {
 
 enum Status {
     StatusNone,
-    StatusAcceptingCounterProposal,
     StatusSendingInvitation
 };
   
@@ -90,10 +89,6 @@ class InvitationHandlerHelper : public QObject
       ActionSendMessage,
       ActionDontSendMessage
     };
-
-    void handleInvitation( const QString &receiver,
-                           const QString &iCal,
-                           const QString &type );
 
     /**
       When an Incidence is created/modified/deleted the user can choose to send
@@ -157,8 +152,6 @@ class InvitationHandlerHelper : public QObject
     InvitationHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                                              const KCalCore::Incidence::Ptr &newIncidence );
 
-    void setOutlookCompatibleCounterProposals( bool enable );
-
     void setBccMe( bool enable );
 
     // Frees calendar if it doesn't have jobs running
@@ -168,12 +161,6 @@ class InvitationHandlerHelper : public QObject
     bool thatIsMe( const QString &email ) const;
 
   Q_SIGNALS:
-    /**
-      This signal is emitted when an invitation for a counter proposal is sent.
-      @param incidence The incidence for which the counter proposal must be specified.
-     */
-    void editorRequested( const KCalCore::Incidence::Ptr &incidence );
-
     void finished( Akonadi::InvitationHandlerHelper::SendResult result,
                    const QString &errorMessage );
 
@@ -207,10 +194,8 @@ class InvitationHandlerHelper : public QObject
     FetchJobCalendar::Ptr mCalendar;
     InvitationHandlerHelper::Action mDefaultAction;
     QWidget *mParent;
-    bool mOutlookCompatCounterProposals;
     MailScheduler *m_scheduler;
     Status m_status;
-    KCalCore::Incidence::Ptr m_incidence;
 };
 
 }
