@@ -85,7 +85,7 @@ namespace Akonadi {
       // contain the non-internal change.
       QSharedPointer<Change> parentChange;
 
-      Akonadi::Item originalItem;
+      Akonadi::Item::List originalItems;
       Akonadi::Item newItem;
 
       QString errorString;

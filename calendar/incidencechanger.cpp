@@ -419,8 +419,9 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   } else { // success
     ConflictPreventer::self()->mLatestRevisionByItemId[item.id()] = item.revision();
     change->newItem = item;
-    if ( change->recordToHistory && change->originalItem.isValid() ) {
-      mHistory->recordModification( change->originalItem, item,
+    if ( change->recordToHistory && !change->originalItems.isEmpty() ) {
+      Q_ASSERT( change->originalItems.count() == 1 );
+      mHistory->recordModification( change->originalItems.first(), item,
                                     description, change->atomicOperationId );
     }
   }
@@ -455,28 +456,34 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       case IncidenceChanger::ChangeTypeDelete:
       {
         InvitationHandlerHelper::SendResult status;
-
-        Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
-        status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
-        if ( change->atomicOperationId ) {
-          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+        foreach( const Akonadi::Item &item, change->originalItems ) {
+          Q_ASSERT( item.hasPayload() );
+          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
+          if ( change->atomicOperationId ) {
+            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+          }
+          result = status != InvitationHandlerHelper::ResultFailAbortUpdate;
+          //TODO: with some status we want to break immediately
         }
-        result = status != InvitationHandlerHelper::ResultFailAbortUpdate;
       }
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        Incidence::Ptr oldIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
-        Incidence::Ptr newIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
+        if ( !change->originalItems.isEmpty() ) {
+          Q_ASSERT( change->originalItems.count() == 1 );
+          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
 
-        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-        if ( !modify ) {
-          if ( newIncidence->type() == oldIncidence->type() ) {
-            IncidenceBase *i1 = newIncidence.data();
-            IncidenceBase *i2 = oldIncidence.data();
-            *i1 = *i2;
+          const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+          if ( !modify ) {
+            if ( newIncidence->type() == oldIncidence->type() ) {
+              IncidenceBase *i1 = newIncidence.data();
+              IncidenceBase *i2 = oldIncidence.data();
+              *i1 = *i2;
+            }
+            result = false;
           }
-          result = false;
         }
       }
       break;
@@ -511,50 +518,57 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeDelete:
       {
-        Incidence::Ptr incidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
-        Q_ASSERT( incidence );
-        if ( !Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
-          const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
-          bool notifyOrganizer = false;
-          for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
-            const QString email = *it;
-            KCalCore::Attendee::Ptr me( incidence->attendeeByMail( email ) );
-            if ( me ) {
-              if ( me->status() == KCalCore::Attendee::Accepted ||
-                   me->status() == KCalCore::Attendee::Delegated ) {
-                notifyOrganizer = true;
-              }
-              KCalCore::Attendee::Ptr newMe( new KCalCore::Attendee( *me ) );
-              newMe->setStatus( KCalCore::Attendee::Declined );
-              incidence->clearAttendees();
-              incidence->addAttendee( newMe );
-              break;
-            }
-          }
+        foreach( const Akonadi::Item &item, change->originalItems ) {
+          Q_ASSERT( item.hasPayload() );
+          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          Q_ASSERT( incidence );
 
-          if ( notifyOrganizer ) {
-            MailScheduler scheduler; // TODO make async
-            scheduler.performTransaction( incidence, KCalCore::iTIPReply );
+          if ( !Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
+            const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
+            bool notifyOrganizer = false;
+            for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
+              const QString email = *it;
+              KCalCore::Attendee::Ptr me( incidence->attendeeByMail( email ) );
+              if ( me ) {
+                if ( me->status() == KCalCore::Attendee::Accepted ||
+                    me->status() == KCalCore::Attendee::Delegated ) {
+                  notifyOrganizer = true;
+                }
+                KCalCore::Attendee::Ptr newMe( new KCalCore::Attendee( *me ) );
+                newMe->setStatus( KCalCore::Attendee::Declined );
+                incidence->clearAttendees();
+                incidence->addAttendee( newMe );
+                break;
+              }
+            }
+
+            if ( notifyOrganizer ) {
+              MailScheduler scheduler; // TODO make async
+              scheduler.performTransaction( incidence, KCalCore::iTIPReply );
+            }
           }
         }
       }
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        Incidence::Ptr oldIncidence = change->originalItem.payload<KCalCore::Incidence::Ptr>();
-        Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-        if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
-          handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
-        }
-        const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
-                                                                    oldIncidence,
-                                                                    Akonadi::CalendarUtils::allEmails() );
-        InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                              newIncidence,
-                                                                                              attendeeStatusChanged );
+        if ( !change->originalItems.isEmpty() ) {
+          Q_ASSERT( change->originalItems.count() == 1 );
+          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+          if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+            handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+          }
+          const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                      oldIncidence,
+                                                                      Akonadi::CalendarUtils::allEmails() );
+          InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                             newIncidence,
+                                                                                             attendeeStatusChanged );
 
-        if ( change->atomicOperationId != 0 ) {
-          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+          if ( change->atomicOperationId != 0 ) {
+            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+          }
         }
       }
       break;
@@ -772,8 +786,6 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     return changeId;
   }
 
-  d->handleInvitationsBeforeChange( change );
-
   Item::List itemsToDelete;
   foreach( const Item &item, items ) {
     if ( d->deleteAlreadyCalled( item.id() ) ) {
@@ -807,6 +819,8 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     d->cancelTransaction();
     return changeId;
   }
+
+  d->handleInvitationsBeforeChange( change );
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob( change ) );
   d->mChangeForJob.insert( deleteJob, change );
@@ -848,18 +862,18 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     return changeId;
   }
 
-  Item originalItem;
-  if ( originalPayload ) {
-    originalItem = Item( changedItem );
-    originalItem.setPayload<KCalCore::Incidence::Ptr>( originalPayload );
-  }
-
   const uint atomicOperationId = d->mBatchOperationInProgress ? d->mLatestAtomicOperationId : 0;
   const int changeId = ++d->mLatestChangeId;
   ModificationChange *modificationChange = new ModificationChange( this, changeId,
                                                                    atomicOperationId, parent );
   Change::Ptr change( modificationChange );
-  modificationChange->originalItem = originalItem;
+
+  if ( originalPayload ) {
+    Item originalItem( changedItem );
+    originalItem.setPayload<KCalCore::Incidence::Ptr>( originalPayload );
+    modificationChange->originalItems << originalItem;
+  }
+
   modificationChange->newItem = changedItem;
   d->mChangeById.insert( changeId, change );
 
