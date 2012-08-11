@@ -165,7 +165,7 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      *
      * @see descriptionOfNextRedo()
      */
-    QString descriptionOfNextUndo() const;
+    QString nextUndoDescription() const;
 
     /**
      * Returns the description of the next redo.
@@ -175,7 +175,7 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      *
      * @see descriptionOfNextUndo()
      */
-    QString descriptionOfNextRedo() const;
+    QString nextRedoDescription() const;
 
   public Q_SLOTS:
     /**

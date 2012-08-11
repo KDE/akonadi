@@ -106,7 +106,7 @@ void History::recordDeletions( const Akonadi::Item::List &items,
   d->stackEntry( entry, atomicOperationId );
 }
 
-QString History::descriptionOfNextUndo() const
+QString History::nextUndoDescription() const
 {
   //TODO i18n
   if ( !d->mUndoStack.isEmpty() )
@@ -115,7 +115,7 @@ QString History::descriptionOfNextUndo() const
     return QString();
 }
 
-QString History::descriptionOfNextRedo() const
+QString History::nextRedoDescription() const
 {
   if ( !d->mRedoStack.isEmpty() )
     return i18n( "Redo " ) + d->mRedoStack.top()->mDescription;
