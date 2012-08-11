@@ -40,10 +40,10 @@ class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
     void addAttendee( const KCalCore::Attendee::Ptr &attendee );
     QString addresses() const;
 
-  signals:
+  Q_SIGNALS:
     void numMessagesChanged( int );
 
-  protected slots:
+  protected Q_SLOTS:
     void addItem();
     void removeItem();
     void openAddressbook();
