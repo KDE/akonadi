@@ -44,6 +44,7 @@ namespace Akonadi {
 */
 class MailScheduler : public Akonadi::Scheduler
 {
+  Q_OBJECT
   public:
 
     /**
