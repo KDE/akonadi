@@ -16,38 +16,31 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#ifndef AKONADI_PUBLISHDIALOG_H
-#define AKONADI_PUBLISHDIALOG_H
 
-#include "akonadi-calendar_export.h"
+#ifndef AKONADI_PUBLISHDIALOG_P_H
+#define AKONADI_PUBLISHDIALOG_P_H
 
-#include <kcalcore/attendee.h>
-#include <KDialog>
+#include "publishdialog.h"
+#include "ui_publishdialog_base.h"
 
-class PublishDialog_base;
-
-// Uses akonadi-contact, so don't move this class to KCalUtils.
 namespace Akonadi {
 
-class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
-{
-  Q_OBJECT
-  public:
-    explicit PublishDialog( QWidget *parent=0 );
-    ~PublishDialog();
+class PublishDialog::Private : public QObject {
+Q_OBJECT
 
-    void addAttendee( const KCalCore::Attendee::Ptr &attendee );
-    QString addresses() const;
+public:
+  Private( PublishDialog *q );
 
-  Q_SIGNALS:
-    void numMessagesChanged( int );
-  private:
-    //@cond PRIVATE
-    class Private;
-    Private *const d;
-    //@endcond
+public Q_SLOTS:
+  void addItem();
+  void removeItem();
+  void openAddressbook();
+  void updateItem();
+  void updateInput();
+
+public:
+  Ui::PublishDialog_base mUI;
+  PublishDialog *q;
 };
-
 }
-
 #endif

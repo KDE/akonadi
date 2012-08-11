@@ -28,6 +28,7 @@ set(akonadicalendar_LIB_SRC
   mailclient_p.cpp
   mailscheduler_p.cpp
   publishdialog.cpp
+  publishdialog_p.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
   utils_p.cpp
