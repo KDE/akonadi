@@ -117,7 +117,6 @@ QString History::descriptionOfNextUndo() const
 
 QString History::descriptionOfNextRedo() const
 {
-  //TODO i18n
   if ( !d->mRedoStack.isEmpty() )
     return i18n( "Redo " ) + d->mRedoStack.top()->mDescription;
   else
@@ -158,7 +157,7 @@ bool History::clear()
   } else {
     result = false;
   }
-
+  emit changed();
   return result;
 }
 
@@ -208,6 +207,7 @@ void History::Private::updateIds( Item::Id oldId, Item::Id newId )
 void History::Private::doIt( OperationType type )
 {
   mOperationTypeInProgress = type;
+  emit q->changed(); // Application will disable undo/redo buttons because operation is in progress
   Q_ASSERT( !stack().isEmpty() );
   mEntryInProgress = stack().pop();
 
@@ -249,6 +249,7 @@ void History::Private::handleFinished( IncidenceChanger::ResultCode changerResul
 
   emitDone( mOperationTypeInProgress, resultCode );
   mOperationTypeInProgress = TypeNone;
+  emit q->changed();
 }
 
 void History::Private::stackEntry( const Entry::Ptr &entry, uint atomicOperationId )
@@ -286,6 +287,7 @@ void History::Private::stackEntry( const Entry::Ptr &entry, uint atomicOperation
       mUndoStack.push( entryToPush );
     }
     mRedoStack.clear();
+    emit q->changed();
   } else {
     if ( entryToPush ) {
       mQueuedEntries.append( entryToPush );

@@ -229,6 +229,11 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
      */
     void redone( Akonadi::History::ResultCode resultCode );
 
+    /**
+     * The redo/undo stacks have changed.
+     */
+    void changed();
+
   private:
     void setEnabled( bool enabled );
 
