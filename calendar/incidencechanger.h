@@ -181,8 +181,9 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * Modifies an incidence.
      *
      * @param item A valid item, with the new payload.
-     * @param originalPayload The payload before the modification, if invalid it won't be recorded
-     *                        to the undo stack.
+     * @param originalPayload The payload before the modification. If invalid it won't be recorded
+     *                        to the undo stack and groupware functionality won't be used for this
+     *                        deletion.
      * @param parent Parent to be used in dialogs.
      *
      * @return Returns an integer which identifies this modification. This identifier is useful
