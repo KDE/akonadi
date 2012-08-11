@@ -156,8 +156,8 @@ InvitationHandlerHelper::InvitationHandlerHelper( QWidget *parent )
     , m_scheduler( new MailScheduler( parent ) )
     , m_status( StatusNone )
 {
-  connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
-           SLOT(onSchedulerFinished(Akonadi::MailScheduler::Result,QString)) );
+  connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
+           SLOT(onSchedulerFinished(Akonadi::Scheduler::Result,QString)) );
 }
 
 InvitationHandlerHelper::~InvitationHandlerHelper()

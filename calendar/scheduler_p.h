@@ -42,148 +42,147 @@ namespace Akonadi {
 */
 class Scheduler : public QObject
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
+  enum Result {
+    ResultSuccess,
+    ResultAssigningDifferentTypes,
+    ResultOutatedUpdate,
+    ResultErrorDelete,
+    ResultIncidenceToDeleteNotFound,
+    ResultGenericError,
+    ResultNoFreeBusyCache,
+    ResultErrorSavingFreeBusy,
+    ResultCreatingError,
+    ResultModifyingError,
+    ResultDeletingError
+  };
 
-    enum Result {
-      ResultSuccess,
-      ResultAssigningDifferentTypes,
-      ResultOutatedUpdate,
-      ResultErrorDelete,
-      ResultIncidenceToDeleteNotFound,
-      ResultGenericError,
-      ResultNoFreeBusyCache,
-      ResultErrorSavingFreeBusy,
-      ResultCreatingError,
-      ResultModifyingError,
-      ResultDeletingError
-    };
+  /**
+    Creates a scheduler for calendar specified as argument.
+  */
+  explicit Scheduler( QObject *parent = 0 );
+  ~Scheduler();
 
-    /**
-      Creates a scheduler for calendar specified as argument.
-    */
-    explicit Scheduler( QObject *parent = 0 );
-    ~Scheduler();
+  /**
+    iTIP publish action
+    @param incidence. Must a valid incidence.
+  */
+  virtual void publish( const KCalCore::IncidenceBase::Ptr &incidence,
+                        const QString &recipients ) = 0;
+  /**
+    Performs iTIP transaction on incidence. The method is specified as the
+    method argument and can be any valid iTIP method.
 
-    /**
-      iTIP publish action
-      @param incidence. Must a valid incidence.
-    */
-    virtual void publish( const KCalCore::IncidenceBase::Ptr &incidence,
-                          const QString &recipients ) = 0;
-    /**
-      Performs iTIP transaction on incidence. The method is specified as the
-      method argument and can be any valid iTIP method.
+    @param incidence the incidence for the transaction. Must be valid.
+    @param method the iTIP transaction method to use.
+  */
+  virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                    KCalCore::iTIPMethod method ) = 0;
 
-      @param incidence the incidence for the transaction. Must be valid.
-      @param method the iTIP transaction method to use.
-    */
-    virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method ) = 0;
+  /**
+    Performs iTIP transaction on incidence to specified recipient(s).
+    The method is specified as the method argumanet and can be any valid iTIP method.
 
-    /**
-      Performs iTIP transaction on incidence to specified recipient(s).
-      The method is specified as the method argumanet and can be any valid iTIP method.
+    @param incidence the incidence for the transaction. Must be valid.
+    @param method the iTIP transaction method to use.
+    @param recipients the receipients of the transaction.
+  */
+  virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                                    KCalCore::iTIPMethod method,
+                                    const QString &recipients ) = 0;
 
-      @param incidence the incidence for the transaction. Must be valid.
-      @param method the iTIP transaction method to use.
-      @param recipients the receipients of the transaction.
-    */
-    virtual void performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                                     KCalCore::iTIPMethod method,
-                                     const QString &recipients ) = 0;
+  /**
+    Retrieves incoming iTIP transactions.
+  */
+  //virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0; // TODO
 
-    /**
-      Retrieves incoming iTIP transactions.
-    */
-    //virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0; // TODO
+  /**
+    Accepts the transaction. The incidence argument specifies the iCal
+    component on which the transaction acts. The status is the result of
+    processing a iTIP message with the current calendar and specifies the
+    action to be taken for this incidence.
 
-    /**
-      Accepts the transaction. The incidence argument specifies the iCal
-      component on which the transaction acts. The status is the result of
-      processing a iTIP message with the current calendar and specifies the
-      action to be taken for this incidence.
+    @param incidence the incidence for the transaction. Must be valid.
+    @param calendar a loaded calendar.
+    @param method iTIP transaction method to check.
+    @param status scheduling status.
+    @param email the email address of the person for whom this
+    transaction is to be performed.
 
-      @param incidence the incidence for the transaction. Must be valid.
-      @param calendar a loaded calendar.
-      @param method iTIP transaction method to check.
-      @param status scheduling status.
-      @param email the email address of the person for whom this
-      transaction is to be performed.
+    Listen to the acceptTransactionFinished() signal to know the success.
+  */
+  void acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
+                          const Akonadi::CalendarBase::Ptr &calendar,
+                          KCalCore::iTIPMethod method,
+                          KCalCore::ScheduleMessage::Status status,
+                          const QString &email = QString() );
 
-      Listen to the acceptTransactionFinished() signal to know the success.
-    */
-    void acceptTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
-                            const Akonadi::CalendarBase::Ptr &calendar,
-                            KCalCore::iTIPMethod method,
-                            KCalCore::ScheduleMessage::Status status,
-                            const QString &email = QString() );
+  virtual bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
 
-    virtual bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
+  /**
+    Returns the directory where the free-busy information is stored.
+  */
+  virtual QString freeBusyDir() const = 0;
 
-    /**
-      Returns the directory where the free-busy information is stored.
-    */
-    virtual QString freeBusyDir() const = 0;
+  /**
+    Sets the free/busy cache used to store free/busy information.
+  */
+  void setFreeBusyCache( KCalCore::FreeBusyCache * );
 
-    /**
-      Sets the free/busy cache used to store free/busy information.
-    */
-    void setFreeBusyCache( KCalCore::FreeBusyCache * );
-
-    /**
-      Returns the free/busy cache.
-    */
-    KCalCore::FreeBusyCache *freeBusyCache() const;
+  /**
+    Returns the free/busy cache.
+  */
+  KCalCore::FreeBusyCache *freeBusyCache() const;
 
 protected:
-    void acceptPublish( const KCalCore::IncidenceBase::Ptr &,
-                        const Akonadi::CalendarBase::Ptr &calendar,
-                        KCalCore::ScheduleMessage::Status status,
-                        KCalCore::iTIPMethod method );
-
-    void acceptRequest( const KCalCore::IncidenceBase::Ptr &,
-                        const Akonadi::CalendarBase::Ptr &calendar,
-                        KCalCore::ScheduleMessage::Status status,
-                        const QString &email );
-
-    void acceptAdd( const KCalCore::IncidenceBase::Ptr &,
-                    KCalCore::ScheduleMessage::Status status );
-
-    void acceptCancel( const KCalCore::IncidenceBase::Ptr &,
-                       const Akonadi::CalendarBase::Ptr &calendar,
-                       KCalCore::ScheduleMessage::Status status,
-                       const QString &attendee );
-
-    void acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
-                               KCalCore::ScheduleMessage::Status status );
-
-    void acceptReply( const KCalCore::IncidenceBase::Ptr &,
+  void acceptPublish( const KCalCore::IncidenceBase::Ptr &,
                       const Akonadi::CalendarBase::Ptr &calendar,
                       KCalCore::ScheduleMessage::Status status,
                       KCalCore::iTIPMethod method );
 
-    void acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
-                        KCalCore::ScheduleMessage::Status status );
+  void acceptRequest( const KCalCore::IncidenceBase::Ptr &,
+                      const Akonadi::CalendarBase::Ptr &calendar,
+                      KCalCore::ScheduleMessage::Status status,
+                      const QString &email );
 
-    void acceptCounter( const KCalCore::IncidenceBase::Ptr &,
-                        KCalCore::ScheduleMessage::Status status );
+  void acceptAdd( const KCalCore::IncidenceBase::Ptr &,
+                  KCalCore::ScheduleMessage::Status status );
 
-    void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
-    KCalCore::ICalFormat *mFormat;
+  void acceptCancel( const KCalCore::IncidenceBase::Ptr &,
+                      const Akonadi::CalendarBase::Ptr &calendar,
+                      KCalCore::ScheduleMessage::Status status,
+                      const QString &attendee );
+
+  void acceptDeclineCounter( const KCalCore::IncidenceBase::Ptr &,
+                              KCalCore::ScheduleMessage::Status status );
+
+  void acceptReply( const KCalCore::IncidenceBase::Ptr &,
+                    const Akonadi::CalendarBase::Ptr &calendar,
+                    KCalCore::ScheduleMessage::Status status,
+                    KCalCore::iTIPMethod method );
+
+  void acceptRefresh( const KCalCore::IncidenceBase::Ptr &,
+                      KCalCore::ScheduleMessage::Status status );
+
+  void acceptCounter( const KCalCore::IncidenceBase::Ptr &,
+                      KCalCore::ScheduleMessage::Status status );
+
+  void acceptFreeBusy( const KCalCore::IncidenceBase::Ptr &, KCalCore::iTIPMethod method );
+  KCalCore::ICalFormat *mFormat;
 
 Q_SIGNALS:
-    void transactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
+  void transactionFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
 private Q_SLOTS:
-    void handleCreateFinished( bool success, const QString &errorMessage );
-    void handleModifyFinished( bool success, const QString &errorMessage );
-    void handleDeleteFinished( bool success, const QString &errorMessage );
+  void handleCreateFinished( bool success, const QString &errorMessage );
+  void handleModifyFinished( bool success, const QString &errorMessage );
+  void handleDeleteFinished( bool success, const QString &errorMessage );
 
-  private:
-    void connectCalendar( const Akonadi::CalendarBase::Ptr &calendar );
-    Q_DISABLE_COPY( Scheduler )
-    struct Private;
-    Private *const d;
+private:
+  void connectCalendar( const Akonadi::CalendarBase::Ptr &calendar );
+  Q_DISABLE_COPY( Scheduler )
+  struct Private;
+  Private *const d;
 };
 
 }
