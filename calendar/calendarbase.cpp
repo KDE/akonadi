@@ -84,7 +84,7 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
   // the ETMCalendar received the monitor notification and tried to delete it again.
   if ( incidence ) {
     mItemById.remove( item.id() );
-    kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
+    // kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
     mItemIdByUid.remove( incidence->uid() );
 
     mParentUidToChildrenUid.remove( incidence->uid() );
