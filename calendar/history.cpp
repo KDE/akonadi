@@ -21,7 +21,6 @@
 #include "history_p.h"
 
 #include <kcalutils/stringify.h>
-#include <KLocale>
 
 using namespace KCalCore;
 using namespace Akonadi;
@@ -108,9 +107,8 @@ void History::recordDeletions( const Akonadi::Item::List &items,
 
 QString History::nextUndoDescription() const
 {
-  //TODO i18n
   if ( !d->mUndoStack.isEmpty() )
-    return i18n( "Undo " ) + d->mUndoStack.top()->mDescription;
+    return d->mUndoStack.top()->mDescription;
   else
     return QString();
 }
@@ -118,7 +116,7 @@ QString History::nextUndoDescription() const
 QString History::nextRedoDescription() const
 {
   if ( !d->mRedoStack.isEmpty() )
-    return i18n( "Redo " ) + d->mRedoStack.top()->mDescription;
+    return d->mRedoStack.top()->mDescription;
   else
     return QString();
 }
