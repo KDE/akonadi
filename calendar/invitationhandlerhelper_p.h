@@ -158,7 +158,7 @@ class InvitationHandlerHelper : public QObject
                    const QString &errorMessage );
 
   private Q_SLOTS:
-    void onSchedulerFinished( Akonadi::MailScheduler::Result result, const QString &errorMsg );
+    void onSchedulerFinished( Akonadi::Scheduler::Result result, const QString &errorMsg );
 
   private:
     InvitationHandlerHelper::SendResult sentInvitation( int messageBoxReturnCode,

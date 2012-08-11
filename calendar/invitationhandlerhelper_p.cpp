@@ -384,7 +384,7 @@ InvitationHandlerHelper::sendCounterProposal( const KCalCore::Incidence::Ptr &ol
   }
 }
 
-void InvitationHandlerHelper::onSchedulerFinished( MailScheduler::Result result,
+void InvitationHandlerHelper::onSchedulerFinished( Akonadi::Scheduler::Result result,
                                                    const QString &errorMsg )
 {
   const bool success = result == MailScheduler::ResultSuccess;
