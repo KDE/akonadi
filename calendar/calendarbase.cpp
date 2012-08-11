@@ -59,7 +59,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   KCalCore::Incidence::Ptr incidence= item.payload<KCalCore::Incidence::Ptr>();
   Q_ASSERT( incidence );
   if ( incidence ) {
-    kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
+    //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
     Q_ASSERT( !incidence->uid().isEmpty() );
     mItemIdByUid.insert( incidence->uid(), item.id() );
 
