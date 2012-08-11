@@ -323,8 +323,17 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      */
     bool deletedRecently( Akonadi::Item::Id ) const;
 
-    //TODO: documentation
+    /**
+     * Enables or disabled groupware communication.
+     * With groupware communication enabled, invitations and update e-mails will be sent to each
+     * attendee.
+     */
     void setGroupwareCommuniation( bool enabled );
+
+    /**
+     * Returns if we're using groupware communication.
+     * @see setGroupwareCommuniation()
+     */
     bool groupwareCommunication() const;
 
 Q_SIGNALS:
