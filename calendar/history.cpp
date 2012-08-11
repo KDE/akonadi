@@ -173,24 +173,14 @@ void History::setEnabled( bool enabled )
   }
 }
 
-int History::undoCount() const
+bool History::undoAvailable() const
 {
-  return d->mUndoStack.count();
+  return !d->mUndoStack.isEmpty() && d->mOperationTypeInProgress == TypeNone;
 }
 
-int History::redoCount() const
+bool History::redoAvailable() const
 {
-  return d->mRedoStack.count();
-}
-
-bool History::Private::isUndoAvailable() const
-{
-  return !mUndoStack.isEmpty() && mOperationTypeInProgress == TypeNone;
-}
-
-bool History::Private::isRedoAvailable() const
-{
-  return !mRedoStack.isEmpty() && mOperationTypeInProgress == TypeNone;
+  return !d->mRedoStack.isEmpty() && d->mOperationTypeInProgress == TypeNone;
 }
 
 void History::Private::updateIds( Item::Id oldId, Item::Id newId )

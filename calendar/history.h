@@ -148,14 +148,14 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     void undoAll( QWidget *parent = 0 );
 
     /**
-     * Returns the number of changes available to be undone.
+     * Returns true if there are changes that can be undone.
      */
-    int undoCount() const;
+    bool undoAvailable() const;
 
     /**
-     * Returns the number of changes available to be redone.
+     * Returns true if there are changes that can be redone.
      */
-    int redoCount() const;
+    bool redoAvailable() const;
 
     /**
      * Returns the description of the next undo.
