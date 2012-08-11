@@ -459,6 +459,8 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          if ( !incidence->supportsGroupwareCommunication() )
+            continue;
           status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
           if ( change->atomicOperationId ) {
             mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
@@ -475,14 +477,16 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
           Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
           Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
 
-          const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-          if ( !modify ) {
-            if ( newIncidence->type() == oldIncidence->type() ) {
-              IncidenceBase *i1 = newIncidence.data();
-              IncidenceBase *i2 = oldIncidence.data();
-              *i1 = *i2;
+          if ( oldIncidence->supportsGroupwareCommunication() ) {
+            const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+            if ( !modify ) {
+              if ( newIncidence->type() == oldIncidence->type() ) {
+                IncidenceBase *i1 = newIncidence.data();
+                IncidenceBase *i2 = oldIncidence.data();
+                *i1 = *i2;
+              }
+              result = false;
             }
-            result = false;
           }
         }
       }
@@ -503,16 +507,18 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       case IncidenceChanger::ChangeTypeCreate:
       {
         Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-        const InvitationHandlerHelper::SendResult status =
-          handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
+        if ( incidence->supportsGroupwareCommunication() ) {
+          const InvitationHandlerHelper::SendResult status =
+            handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 
-        if ( status == InvitationHandlerHelper::ResultFailAbortUpdate ) {
-          kError() << "Sending invitations failed, but did not delete the incidence";
-        }
+          if ( status == InvitationHandlerHelper::ResultFailAbortUpdate ) {
+            kError() << "Sending invitations failed, but did not delete the incidence";
+          }
 
-        const uint atomicOperationId = change->atomicOperationId;
-        if ( atomicOperationId != 0 ) {
-          mInvitationStatusByAtomicOperation.insert( atomicOperationId, status );
+          const uint atomicOperationId = change->atomicOperationId;
+          if ( atomicOperationId != 0 ) {
+            mInvitationStatusByAtomicOperation.insert( atomicOperationId, status );
+          }
         }
       }
       break;
@@ -522,6 +528,8 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           Q_ASSERT( item.hasPayload() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
           Q_ASSERT( incidence );
+          if ( !incidence->supportsGroupwareCommunication() )
+            continue;
 
           if ( !Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
             const QStringList myEmails = Akonadi::CalendarUtils::allEmails();
@@ -556,18 +564,20 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           Q_ASSERT( change->originalItems.count() == 1 );
           Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
           Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-          if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
-            handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
-          }
-          const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
-                                                                      oldIncidence,
-                                                                      Akonadi::CalendarUtils::allEmails() );
-          InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                             newIncidence,
-                                                                                             attendeeStatusChanged );
+          if ( newIncidence->supportsGroupwareCommunication() ) {
+            if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+              handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+            }
+            const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                        oldIncidence,
+                                                                        Akonadi::CalendarUtils::allEmails() );
+            InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                              newIncidence,
+                                                                                              attendeeStatusChanged );
 
-          if ( change->atomicOperationId != 0 ) {
-            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+            if ( change->atomicOperationId != 0 ) {
+              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+            }
           }
         }
       }
