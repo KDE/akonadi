@@ -93,11 +93,6 @@ public:
                                     const QString &recipients ) = 0;
 
   /**
-    Retrieves incoming iTIP transactions.
-  */
-  //virtual QList<KCalCore::ScheduleMessage::Ptr> retrieveTransactions() = 0; // TODO
-
-  /**
     Accepts the transaction. The incidence argument specifies the iCal
     component on which the transaction acts. The status is the result of
     processing a iTIP message with the current calendar and specifies the
@@ -117,8 +112,6 @@ public:
                           KCalCore::iTIPMethod method,
                           KCalCore::ScheduleMessage::Status status,
                           const QString &email = QString() );
-
-  virtual bool deleteTransaction( const KCalCore::IncidenceBase::Ptr &incidence );
 
   /**
     Returns the directory where the free-busy information is stored.

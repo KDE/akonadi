@@ -40,16 +40,6 @@ struct Akonadi::Scheduler::Private
     {
     }
 
-    void finishAccept( const IncidenceBase::Ptr &incidence,
-                       Scheduler::Result result = Scheduler::ResultSuccess,
-                       const QString errorString = QString() )
-    {
-      if ( incidence )
-        q->deleteTransaction( incidence );
-
-      emit q->transactionFinished( result, errorString );
-    }
-
     FreeBusyCache *mFreeBusyCache;
     Scheduler *q;
 };
@@ -116,11 +106,6 @@ void Scheduler::acceptTransaction( const IncidenceBase::Ptr &incidence,
   }
 }
 
-bool Scheduler::deleteTransaction( const IncidenceBase::Ptr & )
-{
-  return true;
-}
-
 void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
                                const Akonadi::CalendarBase::Ptr &calendar,
                                ScheduleMessage::Status status,
@@ -167,7 +152,7 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
       break;
   }
 
-  d->finishAccept( newIncBase, result, errorString );
+  emit transactionFinished( result, errorString );
 }
 
 void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
@@ -179,7 +164,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
-    d->finishAccept( inc );
+    emit transactionFinished( ResultSuccess, QString() );
     return;
   }
 
@@ -239,7 +224,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           errorString = i18n( "This isn't an update"
                               "The found incidence was modified more recently." );
           kWarning() << errorString;
-          d->finishAccept( existingIncidence, ResultOutatedUpdate, errorString );
+          emit transactionFinished( ResultOutatedUpdate, errorString );
           return;
         }
         kDebug() << "replacing existing incidence " << existingIncidence->uid();
@@ -248,7 +233,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           kError() << "assigning different incidence types";
           result = ResultAssigningDifferentTypes;
           errorString = i18n( "Error: Assigning different incidence types." );
-          d->finishAccept( incidence, result, errorString );
+          emit transactionFinished( result, errorString );
         } else {
           inc->setSchedulingID( inc->uid(), oldUid );
           calendar->modifyIncidence( inc );
@@ -262,7 +247,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
       kWarning() << errorString;
       // This isn't an update - the found incidence has a bigger revision number
       kDebug() << "This isn't an update - the found incidence has a bigger revision number";
-      d->finishAccept( incidence, ResultOutatedUpdate, errorString );
+      emit transactionFinished( ResultOutatedUpdate, errorString );
       return;
     }
   }
@@ -291,10 +276,9 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   calendar->addIncidence( inc ); // The slot will emit the result
 }
 
-void Scheduler::acceptAdd( const IncidenceBase::Ptr &incidence,
-                           ScheduleMessage::Status /* status */)
+void Scheduler::acceptAdd( const IncidenceBase::Ptr &, ScheduleMessage::Status )
 {
-  d->finishAccept( incidence );
+  emit transactionFinished( ResultSuccess, QString() );
 }
 
 void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
@@ -306,7 +290,7 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
 
   if ( inc->type() == IncidenceBase::TypeFreeBusy ) {
     // reply to this request is handled in korganizer's incomingdialog
-    d->finishAccept( inc );
+    emit transactionFinished( ResultSuccess, QString() );
     return;
   }
 
@@ -366,7 +350,7 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
         result = ( todo && calendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
       }
       if ( result != ResultSuccess )
-        d->finishAccept( incidence, result, errorString );
+        emit transactionFinished( result, errorString );
       // The success case will be handled in handleDeleteFinished()
       return;
     }
@@ -381,15 +365,13 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
              "Maybe it has already been deleted or is not owned by you. "
              "Or it might belong to a read-only or disabled calendar." ) );
   }
-  d->finishAccept( incidence, result, errorString );
+  emit transactionFinished( result, errorString );
 }
 
-void Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &incidence,
-                                      ScheduleMessage::Status status )
+void Scheduler::acceptDeclineCounter( const IncidenceBase::Ptr &, ScheduleMessage::Status)
 {
-  Q_UNUSED( status );
   //Not sure why KCalUtils::Scheduler returned false here
-  d->finishAccept( incidence, ResultGenericError, i18n( "Generic Error" ) );
+  emit transactionFinished( ResultGenericError, i18n( "Generic Error" ) );
 }
 
 void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
@@ -533,33 +515,27 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
     errorString = i18n( "No incidence for scheduling." );
     kError() << errorString;
   }
-
-  if ( result == ResultSuccess ) {
-    deleteTransaction( incidenceBase );
-  }
-  d->finishAccept( /*incidence=*/IncidenceBase::Ptr(), result, errorString );
+  emit transactionFinished( result, errorString );
 }
 
-void Scheduler::acceptRefresh( const IncidenceBase::Ptr &incidence, ScheduleMessage::Status status )
+void Scheduler::acceptRefresh( const IncidenceBase::Ptr &, ScheduleMessage::Status )
 {
-  Q_UNUSED( status );
   // handled in korganizer's IncomingDialog
   // Not sure why it returns false here
-  d->finishAccept( incidence, ResultGenericError, i18n( "Generic Error" ) );
+  emit transactionFinished( ResultGenericError, i18n( "Generic Error" ) );
 }
 
-void Scheduler::acceptCounter( const IncidenceBase::Ptr &incidence, ScheduleMessage::Status status )
+void Scheduler::acceptCounter( const IncidenceBase::Ptr &, ScheduleMessage::Status )
 {
-  Q_UNUSED( status );
   // Not sure why it returns false here
-  d->finishAccept( incidence, ResultGenericError, i18n( "Generic Error" ) );
+  emit transactionFinished( ResultGenericError, i18n( "Generic Error" ) );
 }
 
 void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod method )
 {
   if ( !d->mFreeBusyCache ) {
     kError() << "Scheduler: no FreeBusyCache.";
-    d->finishAccept( incidence, ResultNoFreeBusyCache, i18n( "No Free Busy Cache" ) );
+    emit transactionFinished( ResultNoFreeBusyCache, i18n( "No Free Busy Cache" ) );
     return;
   }
 
@@ -578,32 +554,25 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
   }
 
   if ( !d->mFreeBusyCache->saveFreeBusy( freebusy, from ) ) {
-    d->finishAccept( IncidenceBase::Ptr(), ResultErrorSavingFreeBusy,
-                     i18n( "Error saving freebusy object" ) );
+    emit transactionFinished( ResultErrorSavingFreeBusy, i18n( "Error saving freebusy object" ) );
   } else {
-    d->finishAccept( incidence, ResultNoFreeBusyCache );
+    emit transactionFinished( ResultNoFreeBusyCache, QString() );
   }
 }
 
 void Scheduler::handleCreateFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(),
-                   success ? ResultSuccess : ResultCreatingError,
-                   errorMessage );
+  emit transactionFinished( success ? ResultSuccess : ResultCreatingError, errorMessage );
 }
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(),
-                   success ? ResultSuccess : ResultModifyingError,
-                   errorMessage );
+  emit transactionFinished( success ? ResultSuccess : ResultModifyingError, errorMessage );
 }
 
 void Scheduler::handleDeleteFinished( bool success, const QString &errorMessage )
 {
-  d->finishAccept( IncidenceBase::Ptr(),
-                   success ? ResultSuccess : ResultDeletingError,
-                   errorMessage );
+  emit transactionFinished( success ? ResultSuccess : ResultDeletingError, errorMessage );
 }
 
 void Scheduler::connectCalendar( const Akonadi::CalendarBase::Ptr &calendar )
