@@ -633,10 +633,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
   const int changeId = change->id;
   Q_ASSERT( !( d->mBatchOperationInProgress && !d->mAtomicOperations.contains( atomicOperationId ) ) );
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
-    // rollback is in progress, no more changes allowed.
-    // TODO: better message, and i18n
-    const QString errorMessage = "One change belonging to a group of changes failed."
-                                 "Undoing in progress.";
+    const QString errorMessage = d->showErrorDialog( ResultCodeRolledback, parent );
     kWarning() << errorMessage;
 
     change->resultCode = ResultCodeRolledback;
@@ -803,10 +800,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
   }
 
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
-    // rollback is in progress, no more changes allowed.
-    // TODO: better message, and i18n
-    const QString errorMessage = "One change belonging to a group of changes failed."
-                                 "Undoing in progress.";
+    const QString errorMessage = d->showErrorDialog( ResultCodeRolledback, parent );
     change->resultCode = ResultCodeRolledback;
     change->errorString = errorMessage;
     kError() << errorMessage;
@@ -899,10 +893,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
   }
 
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
-    // rollback is in progress, no more changes allowed.
-    // TODO: better message, and i18n
-    const QString errorMessage = "One change belonging to a group of changes failed."
-                                 "Undoing in progress.";
+    const QString errorMessage = d->showErrorDialog( ResultCodeRolledback, parent );
     kError() << errorMessage;
     d->cleanupTransaction();
     emitModifyFinished( this, changeId, changedItem, ResultCodeRolledback, errorMessage );
@@ -936,10 +927,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
   const bool hasAtomicOperationId = atomicOperationId != 0;
   if ( hasAtomicOperationId &&
        mAtomicOperations[atomicOperationId]->rolledback() ) {
-    // rollback is in progress, no more changes allowed.
-    // TODO: better message, and i18n
-    const QString errorMessage = "One change belonging to a group of changes failed."
-                                 "Undoing in progress.";
+    const QString errorMessage = showErrorDialog( ResultCodeRolledback, 0 );
     kError() << errorMessage;
     emitModifyFinished( q, changeId, newItem, ResultCodeRolledback, errorMessage );
     return;
@@ -1133,11 +1121,15 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
       errorString = i18n( "Default collection is invalid or doesn't have proper ACLs"
                           " and DestinationPolicyNeverAsk was used" );
       break;
-    default:
     case IncidenceChanger::ResultCodeDuplicateId:
       errorString = i18n( "Duplicate item id in a group operation");
       break;
-    Q_ASSERT( false );
+    case IncidenceChanger::ResultCodeRolledback:
+      errorString = i18n( "One change belonging to a group of changes failed."
+                          "All changes are being rolledback." );
+      break;
+    default:
+      Q_ASSERT( false );
     return QString( i18n( "Unknown error" ) );
   }
 
