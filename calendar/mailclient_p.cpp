@@ -184,6 +184,17 @@ void MailClient::mailTo( const KCalCore::IncidenceBase::Ptr &incidence,
         bccMe, attachment, mailTransport );
 }
 
+static QStringList extractEmailAndNormalize( const QString &email )
+{
+  const QStringList splittedEmail = KPIMUtils::splitAddressList( email );
+  QStringList normalizedEmail;
+  foreach( const QString &email, splittedEmail ) {
+    const QString str = KPIMUtils::extractEmailAddress( KPIMUtils::normalizeAddressesAndEncodeIdn( email ) );
+    normalizedEmail << str;
+  }
+  return normalizedEmail;
+}
+
 void MailClient::send( const KPIMIdentities::Identity &identity,
                        const QString &from, const QString &_to,
                        const QString &cc, const QString &subject,
@@ -348,14 +359,21 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   const QString finalFrom = KPIMUtils::extractEmailAddress( normalizedFrom );
   qjob->addressAttribute().setFrom( finalFrom );
 
-  const QStringList toStringList = KPIMUtils::splitAddressList( to );
-  const QStringList ccStringList = KPIMUtils::splitAddressList( cc );
-  QStringList bccStringList;
+  QStringList toStringList;
+  if( !to.isEmpty() ) {
+    toStringList = extractEmailAndNormalize( to );
+    qjob->addressAttribute().setTo( toStringList );
+  }
 
-  qjob->addressAttribute().setTo( toStringList );
-  qjob->addressAttribute().setCc( ccStringList );
+  QStringList ccStringList;
+  if( !cc.isEmpty() ) {
+    ccStringList = extractEmailAndNormalize( cc );
+    qjob->addressAttribute().setCc( ccStringList );
+  }
+
+  QStringList bccStringList;
   if ( bccMe ) {
-    bccStringList = KPIMUtils::splitAddressList( from );
+    bccStringList = extractEmailAndNormalize( from );
     qjob->addressAttribute().setBcc( bccStringList );
   }
   qjob->setMessage( message );
