@@ -243,7 +243,7 @@ ModificationEntry::ModificationEntry( const Akonadi::Item &item,
                                       const Incidence::Ptr &originalPayload,
                                       const QString &description,
                                       History *q ) : Entry( item, description, q )
-                                                  , mOriginalPayload( originalPayload )
+                                                   , mOriginalPayload( originalPayload->clone() )
 {
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
   if ( mDescription.isEmpty() ) {
