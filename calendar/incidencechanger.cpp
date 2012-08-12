@@ -363,7 +363,10 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
       mDeletedItemIds.remove( item.id() );
     }
   } else { // success
-    mHistory->recordDeletions( items, description, change->atomicOperationId );
+    if ( change->recordToHistory ) {
+      Q_ASSERT( mHistory );
+      mHistory->recordDeletions( items, description, change->atomicOperationId );
+    }
   }
 
   change->errorString = errorString;
