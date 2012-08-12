@@ -102,6 +102,10 @@ bool CreationEntry::undo()
 {
   const int changeId = mChanger->deleteIncidence( mItems.first(), currentParent() );
   mChangeIds << changeId;
+
+  if ( changeId == -1 )
+    kError() << "Undo failed";
+
   return changeId != -1;
 }
 
@@ -113,6 +117,10 @@ bool CreationEntry::redo()
                                                   Collection( item.storageCollectionId() ),
                                                   currentParent() );
   mChangeIds << changeId;
+
+  if ( changeId == -1 )
+    kError() << "Redo failed";
+
   return changeId != -1;
 }
 
@@ -192,6 +200,10 @@ bool DeletionEntry::redo()
 {
   const int changeId = mChanger->deleteIncidences( mItems, currentParent() );
   mChangeIds << changeId;
+
+  if ( changeId == -1 )
+    kError() << "Redo failed";
+
   return changeId != -1;
 }
 
@@ -249,6 +261,10 @@ bool ModificationEntry::undo()
   oldItem.setPayload<KCalCore::Incidence::Ptr>( mOriginalPayload );
   const int changeId = mChanger->modifyIncidence( oldItem, Incidence::Ptr(), currentParent() );
   mChangeIds << changeId;
+
+  if ( changeId == -1 )
+    kError() << "Undo failed";
+
   return changeId != -1;
 }
 
@@ -257,6 +273,10 @@ bool ModificationEntry::redo()
   const int changeId = mChanger->modifyIncidence( mItems.first(), mOriginalPayload,
                                                   currentParent() );
   mChangeIds << changeId;
+
+  if ( changeId == -1 )
+    kError() << "Redo failed";
+
   return changeId != -1;
 }
 

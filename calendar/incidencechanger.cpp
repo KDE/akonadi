@@ -792,6 +792,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     const QString errorString = d->showErrorDialog( ResultCodeDuplicateId, parent );
     change->resultCode = ResultCodeDuplicateId;
     change->errorString = errorString;
+    kWarning() << errorString;
     d->cancelTransaction();
     return changeId;
   }
@@ -813,6 +814,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
                                  "Undoing in progress.";
     change->resultCode = ResultCodeRolledback;
     change->errorString = errorMessage;
+    kError() << errorMessage;
     d->cleanupTransaction();
     return changeId;
   }
@@ -827,6 +829,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     change->resultCode = ResultCodeAlreadyDeleted;
     change->errorString = errorMessage;
     d->cancelTransaction();
+    kWarning() << errorMessage;
     return changeId;
   }
 
@@ -892,6 +895,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     change->resultCode = ResultCodeDuplicateId;
     change->errorString = errorString;
     d->cancelTransaction();
+    kWarning() << "Atomic operation now allowed";
     return changeId;
   }
 
@@ -900,6 +904,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
+    kError() << errorMessage;
     d->cleanupTransaction();
     emitModifyFinished( this, changeId, changedItem, ResultCodeRolledback, errorMessage );
   } else {
@@ -936,7 +941,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     // TODO: better message, and i18n
     const QString errorMessage = "One change belonging to a group of changes failed."
                                  "Undoing in progress.";
-
+    kError() << errorMessage;
     emitModifyFinished( q, changeId, newItem, ResultCodeRolledback, errorMessage );
     return;
   }
@@ -1014,7 +1019,7 @@ void IncidenceChanger::endAtomicOperation()
 {
   //kDebug();
   if ( !d->mBatchOperationInProgress ) {
-    kDebug() << "No atomic operation is in progress.";
+    kWarning() << "No atomic operation is in progress.";
     return;
   }
 
