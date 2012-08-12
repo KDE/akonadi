@@ -88,8 +88,10 @@ CreationEntry::CreationEntry( const Akonadi::Item &item, const QString &descript
   mLatestRevisionByItemId.insert( item.id(), item.revision() );
   Q_ASSERT( mItems.count() == 1 );
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
-  mDescription =  i18n( "%1 creation",
-                        KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  if ( mDescription.isEmpty() ) {
+    mDescription = i18n( "%1 creation",
+                         KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  }
   connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
             SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
   connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
@@ -151,8 +153,10 @@ DeletionEntry::DeletionEntry( const Akonadi::Item::List &items, const QString &d
 {
   const Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
   //TODO i18n
-  mDescription = i18n( "%1 deletion",
-                       KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  if ( mDescription.isEmpty() ) {
+    mDescription = i18n( "%1 deletion",
+                         KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  }
   connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
             SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
   connect( mChanger, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
@@ -230,8 +234,10 @@ ModificationEntry::ModificationEntry( const Akonadi::Item &item,
                                                   , mOriginalPayload( originalPayload )
 {
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
-  mDescription =  i18n( "%1 deletion",
-                        KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  if ( mDescription.isEmpty() ) {
+    mDescription =  i18n( "%1 deletion",
+                          KCalUtils::Stringify::incidenceType( incidence->type() ) );
+  }
 
   connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
             SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
