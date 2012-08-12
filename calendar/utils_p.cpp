@@ -1,6 +1,6 @@
 /*
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (C) 2010-2011 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (C) 2010-2012 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
