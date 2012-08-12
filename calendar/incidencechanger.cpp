@@ -363,14 +363,7 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
       mDeletedItemIds.remove( item.id() );
     }
   } else { // success
-    foreach( const Item &item, items ) {
-      ConflictPreventer::self()->mLatestRevisionByItemId.remove( item.id() );
-      if ( change->recordToHistory && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-        //TODO: check return value
-        //TODO: make History support a list of items
-        mHistory->recordDeletion( item, description, change->atomicOperationId );
-      }
-    }
+    mHistory->recordDeletions( items, description, change->atomicOperationId );
   }
 
   change->errorString = errorString;
