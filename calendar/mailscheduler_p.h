@@ -24,10 +24,7 @@
 #include "mailclient_p.h"
 
 #include <kcalcore/incidence.h>
-
 #include <akonadi/item.h>
-
-//TODO: include commits done in mailscheduler1
 
 namespace KCalCore {
   class ICalFormat;
