@@ -69,7 +69,8 @@ class MailScheduler : public Akonadi::Scheduler
     /**
      * Accepts a counter proposal.
      * @param incidence A non-null incidence.
-     * 
+     * @param calendar A loaded calendar. Try not to use an ETMCalendar here, due to it's
+     *                 async loading.
      */
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
                                 const Akonadi::CalendarBase::Ptr &calendar );
