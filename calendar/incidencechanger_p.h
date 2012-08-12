@@ -35,6 +35,7 @@
 #include <QSet>
 #include <QObject>
 #include <QPointer>
+#include <QVector>
 
 
 class KJob;
@@ -293,7 +294,7 @@ class IncidenceChanger::Private : public QObject
     bool mShowDialogsOnError;
     Akonadi::Collection mDefaultCollection;
     DestinationPolicy mDestinationPolicy;
-    QSet<Akonadi::Item::Id> mDeletedItemIds;
+    QVector<Akonadi::Item::Id> mDeletedItemIds;
 
     History *mHistory;
     bool mUseHistory;

@@ -360,7 +360,6 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
 
     foreach( const Item &item, items ) {
       // Werent deleted due to error
-      //TODO: this really needed? will eat some memory
       mDeletedItemIds.remove( item.id() );
     }
   } else { // success
@@ -846,8 +845,12 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
   }
 
   foreach( const Item &item, itemsToDelete ) {
-    d->mDeletedItemIds.insert( item.id() );
+    d->mDeletedItemIds << item.id();
   }
+
+  // Do some cleanup
+  if ( d->mDeletedItemIds.count() > 100 )
+    d->mDeletedItemIds.remove( 0, 50 );
 
   // QueuedConnection because of possible sync exec calls.
   connect( deleteJob, SIGNAL(result(KJob *)),
