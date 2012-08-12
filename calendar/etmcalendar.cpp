@@ -315,10 +315,11 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
       Q_ASSERT( !newIncidence->uid().isEmpty() );
       IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid() );
       Q_ASSERT( existingIncidence );
-      *(existingIncidence.data()) = *( newIncidence.data() );
 
       // The item needs updating too, revision changed.
       mItemById.insert( item.id(), item );
+
+      *(existingIncidence.data()) = *( newIncidence.data() );
     }
     ++row;
     i = i.sibling( row, topLeft.column() );
