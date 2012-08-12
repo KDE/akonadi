@@ -214,16 +214,16 @@ void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 {
   foreach( const Akonadi::Item &item, items ) {
     internalInsert( item );
-    emit q->calendarChanged();
   }
+  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::itemsRemoved( const Akonadi::Item::List &items )
 {
   foreach( const Akonadi::Item &item, items ) {
     internalRemove( item );
-    emit q->calendarChanged();
   }
+  emit q->calendarChanged();
 }
 
 Akonadi::Collection ETMCalendarPrivate::collectionFromIndex( const QModelIndex &index )
