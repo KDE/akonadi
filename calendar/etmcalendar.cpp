@@ -319,11 +319,11 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
 
       // The item needs updating too, revision changed.
       mItemById.insert( item.id(), item );
-      emit q->calendarChanged();
     }
     ++row;
     i = i.sibling( row, topLeft.column() );
   }
+  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::onRowsInsertedInFilteredModel( const QModelIndex &index,
