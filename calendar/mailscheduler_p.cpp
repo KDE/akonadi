@@ -43,7 +43,6 @@ using namespace KPIMIdentities;
 
 class MailScheduler::Private {
 public:
-  QString m_transport;
   KPIMIdentities::IdentityManager *m_identityManager;
   MailClient *m_mailer;
 };
@@ -52,7 +51,6 @@ MailScheduler::MailScheduler( QObject *parent ) : Scheduler( parent )
                                                 , d( new Private() )
 
 {
-  //d->m_transport = ; TODO
   d->m_identityManager = new IdentityManager( /*ro=*/true, this );
   d->m_mailer = new MailClient();
   connect( d->m_mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
@@ -77,7 +75,7 @@ void MailScheduler::publish( const KCalCore::IncidenceBase::Ptr &incidence,
                        d->m_identityManager->identityForAddress( CalendarUtils::email() ),
                        CalendarUtils::email(),
                        CalendarSettings::self()->bcc(), recipients, messageText,
-                       d->m_transport );
+                       CalendarSettings::self()->mailTransport() );
 }
 
 void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -94,7 +92,7 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                        Akonadi::CalendarUtils::email(),
                        CalendarSettings::self()->bcc(),
                        recipients, messageText,
-                       d->m_transport );
+                       CalendarSettings::self()->mailTransport() );
 }
 
 void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &incidence,
@@ -112,7 +110,8 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
        method == KCalCore::iTIPDeclineCounter ) {
     d->m_mailer->mailAttendees( incidence,
                                 d->m_identityManager->identityForAddress( CalendarUtils::email() ),
-                                CalendarSettings::self()->bcc(), messageText, d->m_transport );
+                                CalendarSettings::self()->bcc(), messageText,
+                                CalendarSettings::self()->mailTransport() );
   } else {
     QString subject;
     KCalCore::Incidence::Ptr inc = incidence.dynamicCast<KCalCore::Incidence>() ;
@@ -124,7 +123,7 @@ void MailScheduler::performTransaction( const KCalCore::IncidenceBase::Ptr &inci
                                 d->m_identityManager->identityForAddress( CalendarUtils::email() ),
                                 CalendarUtils::email(),
                                 CalendarSettings::self()->bcc(),
-                                messageText, subject, d->m_transport );
+                                messageText, subject, CalendarSettings::self()->mailTransport() );
   }
 }
 
