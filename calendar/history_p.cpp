@@ -235,7 +235,7 @@ ModificationEntry::ModificationEntry( const Akonadi::Item &item,
 {
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
   if ( mDescription.isEmpty() ) {
-    mDescription =  i18n( "%1 deletion",
+    mDescription =  i18n( "%1 modification",
                           KCalUtils::Stringify::incidenceType( incidence->type() ) );
   }
 
