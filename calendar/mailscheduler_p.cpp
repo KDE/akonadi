@@ -134,7 +134,6 @@ QString MailScheduler::freeBusyDir() const
 }
 
 //TODO: AKONADI_PORT review following code
-//TODO: should be a loaded calendar
 void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
                                            const Akonadi::CalendarBase::Ptr &calendar )
 {

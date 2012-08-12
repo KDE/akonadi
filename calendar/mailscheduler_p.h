@@ -69,7 +69,11 @@ class MailScheduler : public Akonadi::Scheduler
     /** Returns the directory where the free-busy information is stored */
     /** reimp*/ QString freeBusyDir() const;
 
-    /** Accepts a counter proposal */
+    /**
+     * Accepts a counter proposal.
+     * @param incidence A non-null incidence.
+     * 
+     */
     void acceptCounterProposal( const KCalCore::Incidence::Ptr &incidence,
                                 const Akonadi::CalendarBase::Ptr &calendar );
 
