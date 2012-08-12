@@ -24,6 +24,8 @@
 
 #include "mailclient_p.h"
 
+#include "akonadi/kdepimlibs-version.h"
+
 #include <akonadi/collection.h>
 
 #include <kcalcore/attendee.h>
@@ -260,11 +262,11 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   message->contentTransferEncoding()->clear();  // 7Bit, decoded.
 
   // Set the headers
-  /*
+
   message->userAgent()->fromUnicodeString(
     KProtocolManager::userAgentForApplication(
-      QLatin1String( "KOrganizer" ), QLatin1String( KDEPIM_VERSION ) ), "utf-8" );
-      */ // TODO
+      QLatin1String( "KOrganizer" ), QLatin1String( KDEPIMLIBS_VERSION ) ), "utf-8" );
+
   message->from()->fromUnicodeString( from, "utf-8" );
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
