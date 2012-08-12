@@ -90,7 +90,6 @@ bool Akonadi::CalendarUtils::thatIsMe( const QString &_email )
     }
   }
 
-  // TODO: Remove the additional e-mails stuff from korganizer and test e-mail aliases
   return false;
 }
 
