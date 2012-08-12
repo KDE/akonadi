@@ -665,7 +665,6 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
       {
         int dialogCode;
         const QStringList mimeTypes( incidence->mimeType() );
-        //TODO: selectCollection uses an .exec()
         collectionToUse = selectCollection( parent, dialogCode /*by-ref*/, mimeTypes,
                                             d->mDefaultCollection );
         if ( dialogCode != QDialog::Accepted ) {
@@ -983,7 +982,6 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
 
 void IncidenceChanger::startAtomicOperation( const QString &operationDescription )
 {
-  //kDebug();
   if ( d->mBatchOperationInProgress ) {
     kDebug() << "An atomic operation is already in progress.";
     return;
@@ -997,14 +995,12 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
   d->mAtomicOperations.insert( d->mLatestAtomicOperationId, atomicOperation );
   d->mAtomicOperationByTransaction.insert( atomicOperation->transaction, d->mLatestAtomicOperationId );
 
-  // TODO: rename transaction
   d->connect( atomicOperation->transaction, SIGNAL(result(KJob*)),
               d, SLOT(handleTransactionJobResult(KJob*)) );
 }
 
 void IncidenceChanger::endAtomicOperation()
 {
-  //kDebug();
   if ( !d->mBatchOperationInProgress ) {
     kWarning() << "No atomic operation is in progress.";
     return;
