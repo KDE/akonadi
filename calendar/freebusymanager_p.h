@@ -86,7 +86,7 @@ class FreeBusyManagerPrivate : public QObject
     };
 
   public:
-    Akonadi::ETMCalendar::Ptr mCalendar; //TODO_SERGIO: check if we can use CalendarBase instead
+    Akonadi::ETMCalendar::Ptr mCalendar;
     KCalCore::ICalFormat mFormat;
 
     QStringList mRetrieveQueue;
