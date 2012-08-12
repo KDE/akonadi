@@ -239,8 +239,8 @@ ModificationEntry::ModificationEntry( const Akonadi::Item &item,
                           KCalUtils::Stringify::incidenceType( incidence->type() ) );
   }
 
-  connect( mChanger,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
-            SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+  connect( mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+           SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
 bool ModificationEntry::undo()
