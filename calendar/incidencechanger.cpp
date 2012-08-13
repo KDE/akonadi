@@ -1092,7 +1092,7 @@ bool IncidenceChanger::deletedRecently( Akonadi::Item::Id id ) const
   return d->deleteAlreadyCalled( id );
 }
 
-void IncidenceChanger::setGroupwareCommuniation( bool enabled )
+void IncidenceChanger::setGroupwareCommunication( bool enabled )
 {
   d->mGroupwareCommunication = enabled;
 }

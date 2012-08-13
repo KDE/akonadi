@@ -329,7 +329,7 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * With groupware communication enabled, invitations and update e-mails will be sent to each
      * attendee.
      */
-    void setGroupwareCommuniation( bool enabled );
+    void setGroupwareCommunication( bool enabled );
 
     /**
      * Returns if we're using groupware communication.
