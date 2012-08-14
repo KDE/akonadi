@@ -27,7 +27,7 @@
 #include <QObject>
 
 namespace Akonadi {
-
+//TODO_SERGIO: Documentation and unit-tests.
 class IncidenceChanger;
 
 class AKONADI_CALENDAR_EXPORT CalendarClipboard : public QObject {
