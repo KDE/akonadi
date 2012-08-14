@@ -55,6 +55,15 @@ public:
   void cutIncidence( const KCalCore::Incidence::Ptr &incidence,
                      CalendarClipboard::Mode mode = RecursiveMode );
 
+
+  /**
+   * Copies the specified incidence into the clipboard.
+   *
+   * @return true on success
+   */
+  bool copyIncidence( const KCalCore::Incidence::Ptr &incidence,
+                      CalendarClipboard::Mode mode = RecursiveMode );
+
   /**
    * Returns if there's any ical mime data available for pasting
    */

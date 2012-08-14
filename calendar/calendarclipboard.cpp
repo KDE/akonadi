@@ -222,6 +222,41 @@ void CalendarClipboard::cutIncidence( const KCalCore::Incidence::Ptr &incidence,
   }    
 }
 
+bool CalendarClipboard::copyIncidence( const KCalCore::Incidence::Ptr &incidence,
+                                       CalendarClipboard::Mode mode )
+{
+  const bool hasChildren = !d->m_calendar->childIncidences( incidence->uid() ).isEmpty();
+  if ( mode == AskMode && hasChildren ) {
+    const int km = KMessageBox::questionYesNoCancel( 0,
+                                                     i18n( "The item \"%1\" has sub-to-dos. "
+                                                           "Do you want to copy just this item or "
+                                                           "copy the to-do with all its sub-to-dos?",
+                                                           incidence->summary() ),
+                                                     i18n( "KOrganizer Confirmation" ),
+                                                     KGuiItem( i18n( "Copy Only This" ) ),
+                                                     KGuiItem( i18n( "Copy All" ) ) );
+    mode = km == KMessageBox::Yes ? SingleMode : RecursiveMode;
+  } else if ( mode == AskMode ) {
+    mode = SingleMode; // Doesn't have children, don't ask
+  }
+
+  KCalCore::Incidence::List incidencesToCopy;
+  if ( mode == SingleMode ) {
+    incidencesToCopy << incidence;
+  } else {
+    QStringList uids;
+    d->getIncidenceHierarchy( incidence, uids );
+    Q_ASSERT( !uids.isEmpty() );
+    foreach( const QString &uid, uids ) {
+      KCalCore::Incidence::Ptr child = d->m_calendar->incidence( uid );
+      if ( child )
+        incidencesToCopy << child;
+    }
+  }
+
+  return d->m_dndfactory->copyIncidences( incidencesToCopy );
+}
+
 bool CalendarClipboard::pasteAvailable() const
 {
   return KCalUtils::ICalDrag::canDecode( QApplication::clipboard()->mimeData() );
