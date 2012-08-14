@@ -21,6 +21,7 @@
 #define _AKONADI_CALENDAR_CLIPBOARD_H
 
 #include "etmcalendar.h"
+#include "akonadi-calendar_export.h"
 
 #include <kcalcore/incidence.h>
 #include <QObject>
@@ -29,7 +30,7 @@ namespace Akonadi {
 
 class IncidenceChanger;
 
-class CalendarClipboard : public QObject {
+class AKONADI_CALENDAR_EXPORT CalendarClipboard : public QObject {
   Q_OBJECT
 public:
 
