@@ -108,20 +108,19 @@ void CalendarClipboard::Private::makeChildsIndependent( const KCalCore::Incidenc
   if ( childs.isEmpty() ) {
     cut( incidence );
   } else {
-    Akonadi::Item item = m_calendar->item( incidence->uid() );
-
-    if ( !item.isValid() ) {
-      emit q->cutFinished( /**success=*/ false, i18n( "Can't find item." ) );
-      return;
-    }
-
     m_pendingChangeIds.clear();
     m_abortCurrentOperation = false;
     foreach( const KCalCore::Incidence::Ptr &child, childs ) {
+      Akonadi::Item childItem = m_calendar->item( incidence->uid() );
+      if ( !childItem.isValid() ) {
+        emit q->cutFinished( /**success=*/ false, i18n( "Can't find item: %1", childItem.id() ) );
+        return;
+      }
+
       KCalCore::Incidence::Ptr newIncidence( child->clone() );
       newIncidence->setRelatedTo( QString() );
-      item.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
-      const int changeId = m_changer->modifyIncidence( item, /*originalPayload*/child );
+      childItem.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
+      const int changeId = m_changer->modifyIncidence( childItem, /*originalPayload*/child );
       if ( changeId == -1 ) {
         m_abortCurrentOperation = true;
         break;
