@@ -19,9 +19,13 @@
 
 #include "calendarclipboard_p.h"
 #include <kcalutils/dndfactory.h>
+#include <kcalutils/icaldrag.h>
 
 #include <KLocale>
 #include <KMessageBox>
+
+#include <QApplication>
+#include <QClipboard>
 
 using namespace Akonadi;
 
@@ -216,4 +220,9 @@ void CalendarClipboard::cutIncidence( const KCalCore::Incidence::Ptr &incidence,
     }
     d->cut( incidencesToCut );
   }    
+}
+
+bool CalendarClipboard::pasteAvailable() const
+{
+  return KCalUtils::ICalDrag::canDecode( QApplication::clipboard()->mimeData() );
 }

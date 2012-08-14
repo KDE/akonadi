@@ -55,15 +55,19 @@ public:
   void cutIncidence( const KCalCore::Incidence::Ptr &incidence,
                      CalendarClipboard::Mode mode = RecursiveMode );
 
-Q_SIGNALS:
+  /**
+   * Returns if there's any ical mime data available for pasting
+   */
+  bool pasteAvailable() const;
 
+Q_SIGNALS:
   /**
    * Emitted after cutIncidences() finishes.
    * @param success true if the cut was successful
    * @param errorMessage if @p success if false, contains the error message, empty otherwise.
    */
   void cutFinished( bool success, const QString &errorMessage );
-  
+
 private:
   class Private;
   Private *const d;
