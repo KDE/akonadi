@@ -34,7 +34,6 @@ CalendarClipboard::Private::Private( const Akonadi::CalendarBase::Ptr &calendar,
                                      CalendarClipboard *qq ) : QObject( qq )
                                                              , m_calendar( calendar )
                                                              , m_changer( changer )
-                                                             , m_numChildsToUnparent( 0 )
                                                              , m_abortCurrentOperation( false )
                                                              , q( qq )
 {
@@ -78,6 +77,7 @@ void CalendarClipboard::Private::getIncidenceHierarchy( const KCalCore::Incidenc
 void CalendarClipboard::Private::cut( const KCalCore::Incidence::List &incidences )
 {
   const bool result = m_dndfactory->copyIncidences( incidences );
+  m_pendingChangeIds.clear();
   // Note: Don't use DndFactory::cutIncidences(), it doesn't use IncidenceChanger for deletion
   // we would loose async error handling and redo/undo features
   if ( result ) {
@@ -85,6 +85,8 @@ void CalendarClipboard::Private::cut( const KCalCore::Incidence::List &incidence
     const int result = m_changer->deleteIncidences( items );
     if ( result == -1 ) {
       emit q->cutFinished( /**success=*/false, i18n( "Error performing deletion." ) );
+    } else {
+      m_pendingChangeIds << result;
     }
   } else {
     emit q->cutFinished( /**success=*/false, i18n( "Error performing copy." ) );
@@ -113,26 +115,23 @@ void CalendarClipboard::Private::makeChildsIndependent( const KCalCore::Incidenc
       return;
     }
 
-    m_numChildsToUnparent = 0;
+    m_pendingChangeIds.clear();
     m_abortCurrentOperation = false;
     foreach( const KCalCore::Incidence::Ptr &child, childs ) {
       KCalCore::Incidence::Ptr newIncidence( child->clone() );
       newIncidence->setRelatedTo( QString() );
       item.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
-      
-      if ( m_changer->modifyIncidence( item, /*originalPayload*/child ) == -1 ) {
+      const int changeId = m_changer->modifyIncidence( item, /*originalPayload*/child );
+      if ( changeId == -1 ) {
         m_abortCurrentOperation = true;
         break;
       } else {
-        ++m_numChildsToUnparent;
+        m_pendingChangeIds << changeId;
       }
     }
-
-    if ( m_numChildsToUnparent == 0 && m_abortCurrentOperation ) {
+    if ( m_pendingChangeIds.isEmpty() && m_abortCurrentOperation ) {
       emit q->cutFinished( /**success=*/false, i18n( "Error while removing relations." ) );
-    } // if m_numChildsToUnparent is > 0, we wait for all jobs to finish first.
-
-    
+    } // if m_pendingChangeIds isn't empty, we wait for all jobs to finish first.
   }
 }
 
@@ -140,16 +139,19 @@ void CalendarClipboard::Private::slotModifyFinished( int changeId, const Akonadi
                                                      IncidenceChanger::ResultCode resultCode,
                                                      const QString &errorMessage )
 {
-  Q_UNUSED( changeId );
+  if ( !m_pendingChangeIds.contains( changeId ) )
+    return; // Not ours, someone else deleted something, not our business.
+
+  m_pendingChangeIds.remove( changeId );
+  const bool isLastChange = m_pendingChangeIds.isEmpty();
+
   Q_UNUSED( item );
   Q_UNUSED( errorMessage );
-  --m_numChildsToUnparent;
-  Q_ASSERT( m_numChildsToUnparent >= 0 );
-  if ( m_abortCurrentOperation && m_numChildsToUnparent == 0 ) {
+  if ( m_abortCurrentOperation && isLastChange ) {
     emit q->cutFinished( /**success=*/false, i18n( "Error while removing relations." ) );
   } else if ( !m_abortCurrentOperation ) {
     if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-      if ( m_numChildsToUnparent == 0 ) {
+      if ( isLastChange ) {
         // All children are unparented, lets cut.
         Q_ASSERT( item.isValid() && item.hasPayload() );
         cut( item.payload<KCalCore::Incidence::Ptr>() );
@@ -164,13 +166,17 @@ void CalendarClipboard::Private::slotDeleteFinished( int changeId, const QVector
                                                      Akonadi::IncidenceChanger::ResultCode result,
                                                      const QString &errorMessage )
 {
-  Q_UNUSED( changeId );
+  if ( !m_pendingChangeIds.contains( changeId ) )
+    return; // Not ours, someone else deleted something, not our business.
+
+  m_pendingChangeIds.remove( changeId );
+
   Q_UNUSED( ids );
   if ( result == IncidenceChanger::ResultCodeSuccess ) {
     emit q->cutFinished( /**success=*/true, QString() );
   } else {
     emit q->cutFinished( /**success=*/false, i18n( "Error while deleting incidences: %1",
-                                                   errorMessage ) );
+                                                    errorMessage ) );
   }
 }
 

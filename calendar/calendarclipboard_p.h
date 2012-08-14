@@ -25,6 +25,7 @@
 #include "calendarbase.h"
 #include <kcalcore/incidence.h>
 #include <QVector>
+#include <QSet>
 
 namespace KCalUtils {
   class DndFactory;
@@ -83,9 +84,9 @@ public:
   Akonadi::CalendarBase::Ptr m_calendar;
   Akonadi::IncidenceChanger *m_changer;
   KCalUtils::DndFactory *m_dndfactory;
-  int m_numChildsToUnparent;
   int m_numChildsToDelete;
   bool m_abortCurrentOperation;
+  QSet<int> m_pendingChangeIds;
   CalendarClipboard *const q;
 };
 }
