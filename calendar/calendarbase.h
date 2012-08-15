@@ -187,6 +187,20 @@ namespace Akonadi {
     /**reimp*/ bool deleteIncidence( const KCalCore::Incidence::Ptr & );
 
     /**
+       Call this to tell the calendar that you're adding a batch of incidences.
+       So it doesn't, for example, ask the destination for each incidence.
+
+       @see endBatchAdding()
+    */
+    /**reimp*/ void startBatchAdding();
+
+    /**
+     * Tells the Calendar that you stoped adding a batch of incidences.
+     * @see startBatchAdding()
+     */
+    /**reimp*/ void endBatchAdding();
+
+    /**
      * Returns the IncidenceChanger used by this calendar to make changes in akonadi.
      * Use this if you need the defaults used by CalendarBase.
      */

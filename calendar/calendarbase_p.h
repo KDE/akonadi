@@ -64,6 +64,7 @@ class CalendarBasePrivate : public QObject
     Akonadi::IncidenceChanger *mIncidenceChanger;
     QHash<QString,QStringList> mParentUidToChildrenUid;
     QWeakPointer<CalendarBase> mWeakPointer;
+    Akonadi::Collection mCollectionForBatchInsertion;
 
   private:
     CalendarBase *const q;

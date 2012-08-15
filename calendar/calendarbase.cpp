@@ -329,7 +329,20 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   //TODO: Parent for dialogs
   Q_D(CalendarBase);
-  return -1 != d->mIncidenceChanger->createIncidence( incidence, Akonadi::Collection() );
+
+  Akonadi::Collection collection;
+
+  if ( batchAdding() && d->mCollectionForBatchInsertion.isValid() )
+    collection = d->mCollectionForBatchInsertion;
+
+  const int changeId = d->mIncidenceChanger->createIncidence( incidence, collection );
+
+  if ( batchAdding() &&
+       !d->mCollectionForBatchInsertion.isValid() &&
+       d->mIncidenceChanger->lastCollectionUsed().isValid() )
+    d->mCollectionForBatchInsertion = d->mIncidenceChanger->lastCollectionUsed();
+
+  return changeId != -1;
 }
 
 bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
@@ -364,6 +377,18 @@ IncidenceChanger* CalendarBase::incidenceChanger() const
 {
   Q_D(const CalendarBase);
   return d->mIncidenceChanger;
+}
+
+void CalendarBase::startBatchAdding()
+{
+  KCalCore::MemoryCalendar::startBatchAdding();
+}
+
+void CalendarBase::endBatchAdding()
+{
+  Q_D(CalendarBase);
+  d->mCollectionForBatchInsertion = Akonadi::Collection();
+  KCalCore::MemoryCalendar::endBatchAdding();
 }
 
 #include "calendarbase.moc"
