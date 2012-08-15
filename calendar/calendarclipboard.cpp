@@ -206,6 +206,11 @@ void CalendarClipboard::cutIncidence( const KCalCore::Incidence::Ptr &incidence,
                                                            i18n( "KOrganizer Confirmation" ),
                                                            KGuiItem( i18n( "Cut Only This" ) ),
                                                            KGuiItem( i18n( "Cut All" ) ) );
+
+    if ( km == KMessageBox::Cancel ) {
+      emit cutFinished( /*success=*/true, QString() );
+      return;
+    }
     mode = km == KMessageBox::Yes ? SingleMode : RecursiveMode;
   } else if ( mode == AskMode ) {
     mode = SingleMode; // Doesn't have children, don't ask
@@ -240,6 +245,9 @@ bool CalendarClipboard::copyIncidence( const KCalCore::Incidence::Ptr &incidence
                                                      i18n( "KOrganizer Confirmation" ),
                                                      KGuiItem( i18n( "Copy Only This" ) ),
                                                      KGuiItem( i18n( "Copy All" ) ) );
+    if ( km == KMessageBox::Cancel ) {
+      return true;
+    }
     mode = km == KMessageBox::Yes ? SingleMode : RecursiveMode;
   } else if ( mode == AskMode ) {
     mode = SingleMode; // Doesn't have children, don't ask
