@@ -46,6 +46,8 @@ CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
            SLOT(slotModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 
   mIncidenceChanger->setDestinationPolicy( IncidenceChanger::DestinationPolicyAsk );
+  mIncidenceChanger->setGroupwareCommunication( false );
+  mIncidenceChanger->setHistoryEnabled( false );
 }
 
 CalendarBasePrivate::~CalendarBasePrivate()
