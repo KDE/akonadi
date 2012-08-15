@@ -718,6 +718,8 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
     }
   }
 
+  d->mLastCollectionUsed = collectionToUse;
+
   Item item;
   item.setPayload<Incidence::Ptr>( incidence );
   item.setMimeType( incidence->mimeType() );
@@ -1100,6 +1102,11 @@ void IncidenceChanger::setGroupwareCommunication( bool enabled )
 bool IncidenceChanger::groupwareCommunication() const
 {
   return d->mGroupwareCommunication;
+}
+
+Akonadi::Collection IncidenceChanger::lastCollectionUsed() const
+{
+  return d->mLastCollectionUsed;
 }
 
 QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode resultCode,

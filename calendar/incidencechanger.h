@@ -135,7 +135,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      *
      * @param incidence Incidence to create, must be valid.
      * @param collection Collection where the incidence will be created. If invalid, one according
-     *                   to the DestinationPolicy will be used.
+     *                   to the DestinationPolicy will be used. You can know which collection was
+     *                   used by calling lastCollectionUsed();
      * @param parent Parent to be used in dialogs.
      *
      * @return Returns an integer which identifies this change. This identifier is useful
@@ -336,6 +337,14 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * @see setGroupwareCommuniation()
      */
     bool groupwareCommunication() const;
+
+    /**
+     * Returns the collection that the last createIncidence() used.
+     * Will invalid if no incidences were created yet.
+     *
+     * @see createIncidence().
+     */
+    Akonadi::Collection lastCollectionUsed() const;
 
 Q_SIGNALS:
     /**

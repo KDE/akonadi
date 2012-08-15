@@ -329,6 +329,7 @@ class IncidenceChanger::Private : public QObject
 
     uint mLatestAtomicOperationId;
     bool mBatchOperationInProgress;
+    Akonadi::Collection mLastCollectionUsed;
 
     QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
 
