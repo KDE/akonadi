@@ -31,6 +31,7 @@ using namespace KCalCore;
 
 CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
                                                              , mIncidenceChanger( new IncidenceChanger() )
+                                                             , mBatchInsertionCancelled( false )
                                                              , q( qq )
 {
   connect( mIncidenceChanger,
@@ -332,6 +333,10 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
   //TODO: Parent for dialogs
   Q_D(CalendarBase);
 
+  // User canceled on the collection selection dialog
+  if ( batchAdding() && d->mBatchInsertionCancelled )
+    return -1;
+
   Akonadi::Collection collection;
 
   if ( batchAdding() && d->mCollectionForBatchInsertion.isValid() )
@@ -339,10 +344,14 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 
   const int changeId = d->mIncidenceChanger->createIncidence( incidence, collection );
 
-  if ( batchAdding() &&
-       !d->mCollectionForBatchInsertion.isValid() &&
-       d->mIncidenceChanger->lastCollectionUsed().isValid() )
-    d->mCollectionForBatchInsertion = d->mIncidenceChanger->lastCollectionUsed();
+  if ( batchAdding() ) {
+    const Akonadi::Collection lastCollection = d->mIncidenceChanger->lastCollectionUsed();
+    if ( changeId != -1 && !lastCollection.isValid() ) {
+      d->mBatchInsertionCancelled = true;
+    } else if ( lastCollection.isValid() && !d->mCollectionForBatchInsertion.isValid() ) {
+      d->mCollectionForBatchInsertion = d->mIncidenceChanger->lastCollectionUsed();
+    }
+  }
 
   return changeId != -1;
 }
@@ -390,6 +399,7 @@ void CalendarBase::endBatchAdding()
 {
   Q_D(CalendarBase);
   d->mCollectionForBatchInsertion = Akonadi::Collection();
+  d->mBatchInsertionCancelled = false;
   KCalCore::MemoryCalendar::endBatchAdding();
 }
 
