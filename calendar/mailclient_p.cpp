@@ -212,6 +212,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
+    kError() << "Error while creating transport";
     emit finished( ResultErrorCreatingTransport, i18n( "Error while creating transport" ) );
     return;
   }
