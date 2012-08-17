@@ -395,6 +395,7 @@ void MailClient::handleQueueJobFinished( KJob *job )
     emit finished( ResultQueueJobError, i18n( "Error queuing message in outbox: %1",
                                              job->errorText() ) );
   } else {
+    kDebug() << "Mail queued";
     emit finished( ResultSuccess, QString() );
   }
 }
