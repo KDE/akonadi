@@ -1215,3 +1215,31 @@ void DeletionChange::emitCompletionSignal()
 {
   emitDeleteFinished( changer, id, mItemIds, resultCode, errorString );
 }
+
+/**
+Lost code from KDE 4.4 that was never called/used with incidenceeditors-ng.
+
+void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
+{
+  const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
+  Q_ASSERT( incidence );
+  if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
+    if ( KMessageBox::questionYesNo(
+           0,
+           i18n( "Some attendees were removed from the incidence. "
+                 "Shall cancel messages be sent to these attendees?" ),
+           i18n( "Attendees Removed" ), KGuiItem( i18n( "Send Messages" ) ),
+           KGuiItem( i18n( "Do Not Send" ) ) ) == KMessageBox::Yes ) {
+      // don't use Akonadi::Groupware::sendICalMessage here, because that asks just
+      // a very general question "Other people are involved, send message to
+      // them?", which isn't helpful at all in this situation. Afterwards, it
+      // would only call the Akonadi::MailScheduler::performTransaction, so do this
+      // manually.
+      CalendarSupport::MailScheduler scheduler(
+        static_cast<CalendarSupport::Calendar*>(d->mCalendar) );
+      scheduler.performTransaction( incidence, KCalCore::iTIPCancel );
+    }
+  }
+}
+
+*/
