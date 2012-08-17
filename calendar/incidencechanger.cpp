@@ -367,6 +367,8 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
       Q_ASSERT( mHistory );
       mHistory->recordDeletions( items, description, change->atomicOperationId );
     }
+
+    handleInvitationsAfterChange( change );
   }
 
   change->errorString = errorString;
@@ -419,6 +421,8 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
       mHistory->recordModification( change->originalItems.first(), item,
                                     description, change->atomicOperationId );
     }
+
+    handleInvitationsAfterChange( change );
   }
 
   change->errorString = errorString;
