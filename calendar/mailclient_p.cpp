@@ -31,11 +31,8 @@
 #include <kcalcore/attendee.h>
 #include <kcalcore/incidence.h>
 #include <kcalcore/incidencebase.h>
-
 #include <kcalutils/incidenceformatter.h>
-
 #include <kmime/kmime_message.h>
-
 #include <kpimidentities/identity.h>
 #include <kpimutils/email.h>
 
@@ -77,9 +74,9 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
 
   QStringList toList;
   QStringList ccList;
-  const int numberOfAttendees( attendees.count() );
+  const int numberOfAttendees = attendees.count();
   for ( int i=0; i<numberOfAttendees; ++i ) {
-    KCalCore::Attendee::Ptr a = attendees.at(i);
+    KCalCore::Attendee::Ptr a = attendees.at( i );
 
     const QString email = a->email();
     if ( email.isEmpty() ) {
@@ -214,7 +211,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
 #endif
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
-         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
+        0, MailTransport::TransportManager::IfNoTransportExists ) ) {
     emit finished( ResultErrorCreatingTransport, i18n( "Error while creating transport" ) );
     return;
   }
@@ -388,7 +385,6 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   mUnitTestResult.bcc                = bccStringList;
   mUnitTestResult.transportId        = transportId;
 #endif
-
 }
 
 void MailClient::handleQueueJobFinished( KJob *job )
