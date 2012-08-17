@@ -1219,6 +1219,10 @@ void DeletionChange::emitCompletionSignal()
 /**
 Lost code from KDE 4.4 that was never called/used with incidenceeditors-ng.
 
+      Attendees were removed from this incidence. Only the removed attendees
+      are present in the incidence, so we just need to send a cancel messages
+      to all attendees groupware messages are enabled at all.
+
 void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
 {
   const KCalCore::Incidence::Ptr incidence = CalendarSupport::incidence( aitem );
