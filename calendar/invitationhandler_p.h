@@ -29,6 +29,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QPointer>
 
 namespace Akonadi {
 
@@ -36,28 +37,47 @@ struct Invitation {
   QString receiver;
   QString iCal;
   QString action;
+  KCalCore::iTIPMethod method;
+  KCalCore::Incidence::Ptr incidence;
 };
-  
+
+/**
+ * Our API has two methods, one to process received invitations and another one to send them.
+ * These operations are async and we don't want them to be called before the other has finished.
+ * This enum is just to Q_ASSERT that.
+ */
+enum Operation {
+  OperationNone,
+  OperationProcessiTIPMessage,
+  OperationSendiTIPMessage
+};
+
 class InvitationHandler::Private : public QObject
 {
   Q_OBJECT
 public:
   Private( InvitationHandler *q );
 
+  void finishProcessiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage);
+  void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage);
+
   Invitation m_queuedInvitation;
-  bool m_handleInvitationCalled;
   bool m_calendarLoadError;
   FetchJobCalendar::Ptr m_calendar;
   MailScheduler *m_scheduler;
   KCalCore::Incidence::Ptr m_incidence;
   KCalCore::iTIPMethod m_method;
   InvitationHandlerHelper *m_helper;
+  Operation m_currentOperation;
+  QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
   InvitationHandler *q;
+
 public Q_SLOTS:
   void onLoadFinished( bool success, const QString &errorMessage );
   void onSchedulerFinished( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
                          const QString &errorMessage );
 };
+
 }
 #endif

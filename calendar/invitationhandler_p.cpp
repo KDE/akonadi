@@ -18,16 +18,19 @@
 */
 
 #include "invitationhandler_p.h"
+#include <kcalcore/incidence.h>
+#include <KMessageBox>
+#include <KLocale>
 
 using namespace Akonadi;
 
 InvitationHandler::Private::Private( InvitationHandler *qq )
-                                     : m_handleInvitationCalled( false )
-                                     , m_calendarLoadError( false )
+                                     : m_calendarLoadError( false )
                                      , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
                                      , m_scheduler( new MailScheduler( q ) )
                                      , m_method( KCalCore::iTIPNoMethod )
                                      , m_helper( new InvitationHandlerHelper() ) //TODO parent
+                                     , m_currentOperation( OperationNone )
                                      , q( qq )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
@@ -42,6 +45,52 @@ InvitationHandler::Private::Private( InvitationHandler *qq )
 void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Result result,
                                                       const QString &errorMessage )
 {
+  Q_ASSERT( m_currentOperation != OperationProcessiTIPMessage );
+  if ( m_currentOperation == OperationNone ) {
+    kError() << "Operation can't be none!" << result << errorMessage;
+    return;
+  }
+
+  if ( m_currentOperation == OperationProcessiTIPMessage ) {
+    finishProcessiTIPMessage( result, errorMessage );
+  } else if ( m_currentOperation == OperationSendiTIPMessage ) {
+    finishSendiTIPMessage( result, errorMessage );
+  } else {
+    Q_ASSERT( false );
+    kError() << "Unknown operation" << m_currentOperation;
+  }
+}
+
+void InvitationHandler::Private::onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
+                                                   const QString &errorMessage )
+{
+  const bool success = result == InvitationHandlerHelper::ResultSuccess;
+  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
+                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+}
+
+void InvitationHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
+{
+  if ( m_currentOperation == OperationProcessiTIPMessage ) {
+    if ( success ) {
+      q->processiTIPMessage( m_queuedInvitation.receiver,
+                             m_queuedInvitation.iCal,
+                             m_queuedInvitation.action );
+    } else {
+      emit q->iTipMessageSent( ResultError, i18n( "Error loading calendar: %1", errorMessage ) );
+    }
+  } else if ( m_currentOperation ==  OperationSendiTIPMessage ) {
+    q->sendiTIPMessage( m_queuedInvitation.method,
+                        m_queuedInvitation.incidence,
+                        m_parentWidget );
+  } else if ( !success ) {
+    m_calendarLoadError = true;
+  }
+}
+
+void InvitationHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Result result,
+                                                           const QString &errorMessage )
+{
   const bool success = result == MailScheduler::ResultSuccess;
 
   if ( m_method != KCalCore::iTIPCounter) {
@@ -55,7 +104,7 @@ void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Re
       m_incidence.clear();
       if ( sendResult == InvitationHandlerHelper::ResultNoSendingNeeded ||
            sendResult == InvitationHandlerHelper::ResultCanceled ) {
-        emit q->finished( ResultSuccess, QString() );
+        emit q->iTipMessageSent( ResultSuccess, QString() );
       } else {
         // InvitationHandlerHelper is working hard and slot onHelperFinished will be called soon
         return;
@@ -65,33 +114,36 @@ void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Re
     }
   }
 
-  emit q->finished( success ? ResultSuccess : ResultError,
-                    success ? QString() : i18n( "Error: %1", errorMessage ) );
-  
+  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
+                           success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
-void InvitationHandler::Private::onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
-                                                   const QString &errorMessage )
+void InvitationHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
+                                                        const QString &errorMessage )
 {
-  const bool success = result == InvitationHandlerHelper::ResultSuccess;
-  emit q->finished( success ? ResultSuccess : ResultError,
-                    success ? QString() : i18n( "Error: %1", errorMessage ) );
-}
-
-void InvitationHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
-{
-  if ( m_handleInvitationCalled ) {
-    if ( success ) {
-      q->handleInvitation( m_queuedInvitation.receiver,
-                           m_queuedInvitation.iCal,
-                           m_queuedInvitation.action );
-    } else {
-      emit q->finished( ResultError, i18n( "Error loading calendar: %1", errorMessage ) );
+  if ( result == Scheduler::ResultSuccess ) {
+    if ( m_parentWidget ) {
+      KMessageBox::information( m_parentWidget,
+                          i18n( "The groupware message for item '%1' "
+                                "was successfully sent.\nMethod: %2",
+                                m_queuedInvitation.incidence->summary(),
+                                KCalCore::ScheduleMessage::methodName( m_queuedInvitation.method ) ),
+                          i18n( "Sending Free/Busy" ),
+                          "FreeBusyPublishSuccess" );
     }
-  } else if ( !success ) {
-    m_calendarLoadError = true;
-  }
+    emit q->iTipMessageSent( InvitationHandler::ResultSuccess, QString() );
+  } else {
+     const QString error = i18nc( "Groupware message sending failed. "
+                                  "%2 is request/reply/add/cancel/counter/etc.",
+                                  "Unable to send the item '%1'.\nMethod: %2",
+                                  m_queuedInvitation.incidence->summary(),
+                                  KCalCore::ScheduleMessage::methodName( m_queuedInvitation.method ) );
+    if ( m_parentWidget ) {
+      KMessageBox::error( m_parentWidget, error );
+    }
+    kError() << "Groupware message sending failed." << error << errorMessage;
+    emit q->iTipMessageSent( InvitationHandler::ResultError, error + errorMessage );
+  } 
 }
-
 
 #include "invitationhandler_p.moc"

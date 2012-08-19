@@ -55,20 +55,27 @@ InvitationHandler::~InvitationHandler()
   delete d;
 }
 
-void InvitationHandler::handleInvitation( const QString &receiver,
-                                          const QString &iCal,
-                                          const QString &action )
+void InvitationHandler::processiTIPMessage( const QString &receiver,
+                                            const QString &iCal,
+                                            const QString &action )
 {
+  Q_ASSERT( d->m_currentOperation == OperationNone );
+  if ( d->m_currentOperation != OperationNone ) {
+    kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+    return;
+  }
+
+  d->m_currentOperation = OperationProcessiTIPMessage;
+
   if ( !d->m_calendar->isLoaded() ) {
     d->m_queuedInvitation.receiver = receiver;
     d->m_queuedInvitation.iCal     = iCal;
     d->m_queuedInvitation.action   = action;
-    d->m_handleInvitationCalled = true;
     return;
   }
 
   if ( d->m_calendarLoadError ) {
-    emit finished( ResultError, i18n( "Error loading calendar." ) );
+    emit iTipMessageProcessed( ResultError, i18n( "Error loading calendar." ) );
     return;
   }
 
@@ -83,17 +90,17 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     KMessageBox::detailedError( 0,// mParent, TODO
                                 i18n( "Error while processing an invitation or update." ),
                                 errorMessage );
-    emit finished( ResultError, errorMessage );
+    emit iTipMessageProcessed( ResultError, errorMessage );
     return;
   }
 
   d->m_method = static_cast<KCalCore::iTIPMethod>( message->method() );
   d->m_incidence.clear();
-  
+
   KCalCore::ScheduleMessage::Status status = message->status();
   KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !incidence ) {
-    emit finished( ResultError, QLatin1String( "Invalid incidence" ) );
+    emit iTipMessageProcessed( ResultError, QLatin1String( "Invalid incidence" ) );
     return;
   }
 
@@ -139,12 +146,57 @@ void InvitationHandler::handleInvitation( const QString &receiver,
     return; // signal emitted in onSchedulerFinished().
   } else {
     kError() << "Unknown incoming action" << action;
-    emit finished( ResultError, i18n( "Invalid action: %1", action ) );
+    emit iTipMessageProcessed( ResultError, i18n( "Invalid action: %1", action ) );
   }
 
   if ( action.startsWith( QLatin1String( "counter" ) ) ) {
     emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
   }
+}
+
+// TODO make async, and probably remove these kmessageboxes.
+void InvitationHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
+                                         const KCalCore::Incidence::Ptr &incidence,
+                                         QWidget *parentWidget )
+{
+  if ( !incidence ) {
+    Q_ASSERT( false );
+    kError() << "Invalid incidence";
+    return;
+  }
+
+  d->m_queuedInvitation.method    = method;
+  d->m_queuedInvitation.incidence = incidence;
+  d->m_parentWidget = parentWidget;
+
+  if ( !d->m_calendar->isLoaded() ) {
+    // This method will be called again once the calendar is loaded.
+    return;
+  }
+
+  Q_ASSERT( d->m_currentOperation == OperationNone );
+  if ( d->m_currentOperation != OperationNone ) {
+    kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+    return;
+  }
+
+  d->m_currentOperation = OperationSendiTIPMessage;
+
+  if ( incidence->attendeeCount() == 0 && method != KCalCore::iTIPPublish ) {
+    KMessageBox::information( parentWidget,
+                              i18n( "The item '%1' has no attendees. "
+                                    "Therefore no groupware message will be sent.",
+                                    incidence->summary() ),
+                              i18n( "Message Not Sent" ),
+                              QLatin1String( "ScheduleNoAttendees" ) );
+    return;
+  }
+
+  KCalCore::Incidence *incidenceCopy = incidence->clone();
+  incidenceCopy->registerObserver( 0 );
+  incidenceCopy->clearAttendees();
+
+  d->m_scheduler->performTransaction( incidence, method );
 }
 
 #include "invitationhandler.moc"

@@ -31,6 +31,7 @@
 #include "etmcalendar.h"
 
 #include <kcalcore/incidence.h>
+#include <kcalcore/schedulemessage.h>
 
 #include <QString>
 #include <QWidget>
@@ -46,7 +47,7 @@ class GroupwareUiDelegate
     virtual void setCalendar( const Akonadi::ETMCalendar::Ptr &calendar ) = 0;
     virtual void createCalendar() = 0;
 };
-  
+
 class AKONADI_CALENDAR_EXPORT InvitationHandler : public QObject
 {
   Q_OBJECT
@@ -58,11 +59,37 @@ public:
 
   explicit InvitationHandler( QObject *parent = 0 );
   ~InvitationHandler();
-    
-  void handleInvitation( const QString &receiver, const QString &iCal, const QString &type );
+
+  /**
+   * Processes a received iTip message.
+   *
+   * @param receiver
+   * @param iCal
+   * @param type
+   */
+  void processiTIPMessage( const QString &receiver, const QString &iCal, const QString &type );
+
+  /**
+   * Sends an iTip message.
+   *
+   * @param method iTip method
+   * @param incidence Incidence for which we're sending the iTip message.
+   *                  Should contain a list of attendees.
+   * @param parentWidget 
+   */
+  void sendiTIPMessage( KCalCore::iTIPMethod method,
+                        const KCalCore::Incidence::Ptr &incidence,
+                        QWidget *parentWidget = 0 );
 
 Q_SIGNALS:
-  void finished( Akonadi::InvitationHandler::Result result, const QString &errorMessage );
+  void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
+                             const QString &errorMessage );
+
+
+  /**
+   * Signal emitted after an iTip message was sent through sendiTIPMessage().
+   */
+  void iTipMessageSent( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
   /**
     This signal is emitted when an invitation for a counter proposal is sent.
