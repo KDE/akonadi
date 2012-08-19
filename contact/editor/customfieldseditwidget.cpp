@@ -35,6 +35,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QPushButton>
 #include <QtGui/QTreeView>
+#include <QSortFilterProxyModel>
 
 void splitCustomField( const QString &str, QString &app, QString &name, QString &value )
 {
@@ -57,7 +58,10 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   QGridLayout *layout = new QGridLayout( this );
   layout->setMargin( 0 );
 
+
+
   mView = new QTreeView;
+  mView->setSortingEnabled(true);
   mView->setRootIsDecorated( false );
   mView->setItemDelegate( new CustomFieldsDelegate( this ) );
 
@@ -71,7 +75,10 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   layout->addWidget( mRemoveButton, 2, 1 );
 
   mModel = new CustomFieldsModel( this );
-  mView->setModel( mModel );
+  QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
+  proxyModel->setDynamicSortFilter(true);
+  proxyModel->setSourceModel(mModel);
+  mView->setModel( proxyModel );
   mView->setColumnHidden( 2, true ); // hide the 'key' column
 
   connect( mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
