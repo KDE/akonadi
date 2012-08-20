@@ -27,6 +27,7 @@
 #include "invitationhandler_p.h"
 #include "invitationhandlerhelper_p.h"
 #include "calendarsettings.h"
+#include "publishdialog.h"
 
 #include <kcalcore/icalformat.h>
 #include <kcalcore/incidence.h>
@@ -154,7 +155,6 @@ void InvitationHandler::processiTIPMessage( const QString &receiver,
   }
 }
 
-// TODO make async, and probably remove these kmessageboxes.
 void InvitationHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
                                          const KCalCore::Incidence::Ptr &incidence,
                                          QWidget *parentWidget )
@@ -197,6 +197,42 @@ void InvitationHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
   incidenceCopy->clearAttendees();
 
   d->m_scheduler->performTransaction( incidence, method );
+}
+
+void InvitationHandler::publishInformation( const KCalCore::Incidence::Ptr &incidence,
+                                            QWidget *parentWidget )
+{
+  Q_ASSERT( incidence );
+  if ( !incidence ) {
+    kError() << "Invalid incidence. Aborting.";
+    return;
+  }
+
+  Q_ASSERT( d->m_currentOperation == OperationNone );
+  if ( d->m_currentOperation != OperationNone ) {
+    kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+    return;
+  }
+
+  d->m_queuedInvitation.incidence = incidence;
+  d->m_parentWidget = parentWidget;
+
+  d->m_currentOperation = OperationPublishInformation;
+
+  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog();
+  if ( incidence->attendeeCount() > 0 ) {
+    KCalCore::Attendee::List attendees = incidence->attendees();
+    KCalCore::Attendee::List::ConstIterator it;
+    KCalCore::Attendee::List::ConstIterator end( attendees.constEnd() );
+    for ( it = attendees.constBegin(); it != end; ++it ) {
+      publishdlg->addAttendee( *it );
+    }
+  }
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg )
+    d->m_scheduler->publish( incidence, publishdlg->addresses() );
+  else
+    emit informationPublished( ResultSuccess, QString() ); // Canceled.
+  delete publishdlg;
 }
 
 #include "invitationhandler.moc"

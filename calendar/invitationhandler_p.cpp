@@ -52,9 +52,14 @@ void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Re
   }
 
   if ( m_currentOperation == OperationProcessiTIPMessage ) {
+    m_currentOperation = OperationNone;
     finishProcessiTIPMessage( result, errorMessage );
   } else if ( m_currentOperation == OperationSendiTIPMessage ) {
+    m_currentOperation = OperationNone;
     finishSendiTIPMessage( result, errorMessage );
+  } else if ( m_currentOperation == OperationPublishInformation ) {
+    m_currentOperation = OperationNone;
+    finishPublishInformation( result, errorMessage );
   } else {
     Q_ASSERT( false );
     kError() << "Unknown operation" << m_currentOperation;
@@ -143,7 +148,29 @@ void InvitationHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::
     }
     kError() << "Groupware message sending failed." << error << errorMessage;
     emit q->iTipMessageSent( InvitationHandler::ResultError, error + errorMessage );
-  } 
+  }
+}
+
+void InvitationHandler::Private::finishPublishInformation( Akonadi::MailScheduler::Result result,
+                                                           const QString &errorMessage )
+{
+  if ( result == Scheduler::ResultSuccess ) {
+    if ( m_parentWidget ) {
+      KMessageBox::information( m_parentWidget,
+                                i18n( "The item information was successfully sent." ),
+                                i18n( "Publishing" ),
+                                "IncidencePublishSuccess" );
+    }
+    emit q->informationPublished( InvitationHandler::ResultSuccess, QString() );
+  } else {
+    const QString error = i18n( "Unable to publish the item '%1'",
+                                m_queuedInvitation.incidence->summary() );
+    if ( m_parentWidget ) {
+      KMessageBox::error( m_parentWidget, error );
+    }
+    kError() << "Publish failed." << error << errorMessage;
+    emit q->informationPublished( InvitationHandler::ResultError, error + errorMessage );
+  }
 }
 
 #include "invitationhandler_p.moc"

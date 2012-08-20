@@ -81,6 +81,8 @@ public:
                         const KCalCore::Incidence::Ptr &incidence,
                         QWidget *parentWidget = 0 );
 
+  void publishInformation( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
+
 Q_SIGNALS:
   void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
                              const QString &errorMessage );
@@ -90,6 +92,8 @@ Q_SIGNALS:
    * Signal emitted after an iTip message was sent through sendiTIPMessage().
    */
   void iTipMessageSent( Akonadi::InvitationHandler::Result, const QString &errorMessage );
+
+  void informationPublished( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
   /**
     This signal is emitted when an invitation for a counter proposal is sent.
