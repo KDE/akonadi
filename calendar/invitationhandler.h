@@ -36,6 +36,8 @@
 #include <QString>
 #include <QWidget>
 
+//TODO rename this class to reflect it's functionality
+
 namespace Akonadi {
 
 class GroupwareUiDelegate
@@ -83,6 +85,8 @@ public:
 
   void publishInformation( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
 
+  void sendAsICalendar( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
+
 Q_SIGNALS:
   void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
                              const QString &errorMessage );
@@ -94,6 +98,8 @@ Q_SIGNALS:
   void iTipMessageSent( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
   void informationPublished( Akonadi::InvitationHandler::Result, const QString &errorMessage );
+
+  void sentAsICalendar( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
   /**
     This signal is emitted when an invitation for a counter proposal is sent.

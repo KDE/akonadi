@@ -50,7 +50,8 @@ enum Operation {
   OperationNone,
   OperationProcessiTIPMessage,
   OperationSendiTIPMessage,
-  OperationPublishInformation
+  OperationPublishInformation,
+  OperationSendAsICalendar,
 };
 
 class InvitationHandler::Private : public QObject
@@ -62,6 +63,7 @@ public:
   void finishProcessiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishPublishInformation( Akonadi::MailScheduler::Result, const QString &errorMessage );
+  void finishSendAsICalendar( Akonadi::MailScheduler::Result, const QString &errorMessage );
 
   Invitation m_queuedInvitation;
   bool m_calendarLoadError;

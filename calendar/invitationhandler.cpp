@@ -28,12 +28,18 @@
 #include "invitationhandlerhelper_p.h"
 #include "calendarsettings.h"
 #include "publishdialog.h"
+#include "utils_p.h"
+#include "mailclient_p.h"
 
 #include <kcalcore/icalformat.h>
 #include <kcalcore/incidence.h>
 #include <kcalcore/schedulemessage.h>
 #include <kcalcore/attendee.h>
 #include <kcalutils/stringify.h>
+
+
+#include <kpimidentities/identitymanager.h>
+#include <mailtransport/transportmanager.h>
 
 #include <KMessageBox>
 #include <KLocale>
@@ -233,6 +239,41 @@ void InvitationHandler::publishInformation( const KCalCore::Incidence::Ptr &inci
   else
     emit informationPublished( ResultSuccess, QString() ); // Canceled.
   delete publishdlg;
+}
+
+void InvitationHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
+                                         QWidget *parentWidget )
+{
+  Q_ASSERT( incidence );
+  if ( !incidence ) {
+    kError() << "Invalid incidence";
+    return;
+  }
+
+  KPIMIdentities::IdentityManager identityManager;
+
+  QPointer<Akonadi::PublishDialog> publishdlg = new Akonadi::PublishDialog;
+  if ( publishdlg->exec() == QDialog::Accepted && publishdlg ) {
+    const QString recipients = publishdlg->addresses();
+    if ( incidence->organizer()->isEmpty() ) {
+      incidence->setOrganizer( KCalCore::Person::Ptr(
+                                 new KCalCore::Person( Akonadi::CalendarUtils::fullName(),
+                                                       Akonadi::CalendarUtils::email() ) ) );
+    }
+
+    KCalCore::ICalFormat format;
+    const QString from = Akonadi::CalendarUtils::email();
+    const bool bccMe = Akonadi::CalendarSettings::self()->bcc();
+    const QString messageText = format.createScheduleMessage( incidence, KCalCore::iTIPRequest );
+    MailClient *mailer = new MailClient();
+    d->m_queuedInvitation.incidence = incidence;
+    connect( mailer, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
+             d, SLOT(finishSendAsICalendar(Akonadi::MailScheduler::Result,QString)) );
+
+    mailer->mailTo( incidence, identityManager.identityForAddress( from ), from, bccMe,
+                    recipients, messageText,
+                    MailTransport::TransportManager::self()->defaultTransportName() );
+  }
 }
 
 #include "invitationhandler.moc"

@@ -88,7 +88,7 @@ void InvitationHandler::Private::onLoadFinished( bool success, const QString &er
     q->sendiTIPMessage( m_queuedInvitation.method,
                         m_queuedInvitation.incidence,
                         m_parentWidget );
-  } else if ( !success ) {
+  } else if ( !success ) { //TODO
     m_calendarLoadError = true;
   }
 }
@@ -171,6 +171,31 @@ void InvitationHandler::Private::finishPublishInformation( Akonadi::MailSchedule
     kError() << "Publish failed." << error << errorMessage;
     emit q->informationPublished( InvitationHandler::ResultError, error + errorMessage );
   }
+}
+
+void InvitationHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::Result result,
+                                                        const QString &errorMessage )
+{
+  if ( result == Scheduler::ResultSuccess ) {
+    if ( m_parentWidget ) {
+      KMessageBox::information( m_parentWidget,
+                                i18n( "The item information was successfully sent." ),
+                                i18n( "Forwarding" ),
+                                "IncidenceForwardSuccess" );
+    }
+    emit q->sentAsICalendar( InvitationHandler::ResultSuccess, QString() );
+  } else {
+    if ( m_parentWidget ) {
+      KMessageBox::error( m_parentWidget,
+                          i18n( "Unable to forward the item '%1'",
+                                m_queuedInvitation.incidence->summary() ),
+                          i18n( "Forwarding Error" ) );
+    }
+    kError() << "Sent as iCalendar failed." << errorMessage;
+    emit q->sentAsICalendar( InvitationHandler::ResultError, errorMessage );
+  }
+
+  sender()->deleteLater(); // Delete the mailer
 }
 
 #include "invitationhandler_p.moc"
