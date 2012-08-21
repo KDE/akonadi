@@ -76,6 +76,9 @@ namespace PartHelper
    */
   bool truncate( Part &part );
 
+  /** Verifies and if necessary fixes the external reference of this part. */
+  bool verify( Akonadi::Part& part );
+
 
 // private: for unit testing only
   /**

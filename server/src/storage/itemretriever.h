@@ -67,6 +67,12 @@ class ItemRetriever
   private:
     QSqlQuery buildQuery() const;
 
+    /**
+     * Checks if external files are still present
+     * This costs extra, but allows us to automatically recover from something changing the external file storage.
+     */
+    void verifyCache();
+
     ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;

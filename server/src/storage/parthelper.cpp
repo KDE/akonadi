@@ -227,3 +227,16 @@ QString PartHelper::storagePath()
   Q_ASSERT( dataDir != QDir::separator() );
   return dataDir;
 }
+
+bool PartHelper::verify(Part& part)
+{
+  const QString fileName = QString::fromUtf8( part.data() );
+  if ( !QFile::exists(fileName) ) {
+    akError() << "Payload file" << fileName << "is missing, trying to recover.";
+    part.setData( QByteArray() );
+    part.setDatasize( 0 );
+    return part.update();
+  }
+
+  return true;
+}

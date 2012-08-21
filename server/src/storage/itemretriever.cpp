@@ -28,6 +28,7 @@
 #include "storage/itemretrievalrequest.h"
 #include "storage/parthelper.h"
 #include "storage/querybuilder.h"
+#include "storage/selectquerybuilder.h"
 #include "utils.h"
 
 #include <QDebug>
@@ -174,6 +175,8 @@ bool ItemRetriever::exec()
   if ( mParts.isEmpty() && !mFullPayload )
     return true;
 
+  verifyCache();
+
   QSqlQuery query = buildQuery();
   ItemRetrievalRequest* lastRequest = 0;
   QList<ItemRetrievalRequest*> requests;
@@ -249,4 +252,24 @@ bool ItemRetriever::exec()
   }
 
   return true;
+}
+
+void ItemRetriever::verifyCache()
+{
+  SelectQueryBuilder<Part> qb;
+  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+  qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
+  qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
+  if ( mScope.scope() != Scope::Invalid )
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
+  else
+    ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
+
+  if (!qb.exec())
+    throw ItemRetrieverException("Unable to query parts.");
+
+  const Part::List externalParts = qb.result();
+  Q_FOREACH ( Part part, externalParts )
+    PartHelper::verify( part );
 }
