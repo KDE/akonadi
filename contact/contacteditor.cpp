@@ -232,6 +232,13 @@ void ContactEditor::loadContact( const Akonadi::Item &item )
   d->mMonitor->setItemMonitored( item );
 }
 
+KABC::Addressee ContactEditor::contact()
+{
+  KABC::Addressee addr;
+  d->storeContact( addr, d->mContactMetaData );
+  return addr;
+}
+
 bool ContactEditor::saveContact()
 {
   if ( d->mMode == EditMode ) {
