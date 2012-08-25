@@ -51,7 +51,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     virtual void init( const QByteArray &sessionId );
 
     void startNext();
-    void reconnect();
+    virtual void reconnect();
     void serverStateChanged( ServerManager::State );
     void socketDisconnected();
     void socketError( QLocalSocket::LocalSocketError error );
