@@ -352,8 +352,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     itemQuery.next();
   }
 
-  // update atime
-  updateItemAccessTime();
+  // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
+  if ( !payloadList.isEmpty() || mFullPayload )
+    updateItemAccessTime();
 
   return true;
 }
