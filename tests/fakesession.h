@@ -32,10 +32,7 @@ class FakeSession : public Session
 public:
   explicit FakeSession(const QByteArray& sessionId = QByteArray(), QObject* parent = 0);
 
-  void firstListJobResult(QList<Collection::List> collectionChunks);
-
 signals:
-  void bytesRead(int numBytes);
   void jobAdded( Akonadi::Job* );
 
   friend class FakeSessionPrivate;
