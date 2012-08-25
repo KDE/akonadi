@@ -279,6 +279,9 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
 
 void CollectionDialog::setMimeTypeFilter( const QStringList &mimeTypes )
 {
+  if ( mimeTypeFilter() == mimeTypes )
+    return;
+
   d->mMimeTypeFilterModel->clearFilters();
   d->mMimeTypeFilterModel->addMimeTypeFilters( mimeTypes );
 
@@ -296,6 +299,8 @@ QStringList CollectionDialog::mimeTypeFilter() const
 
 void CollectionDialog::setAccessRightsFilter( Collection::Rights rights )
 {
+  if ( accessRightsFilter() == rights )
+    return;
   d->mRightsFilterModel->setAccessRights( rights );
 }
 
