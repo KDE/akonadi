@@ -74,7 +74,8 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
      */
     enum CollectionDialogOption {
       None = 0,
-      AllowToCreateNewChildCollection = 1
+      AllowToCreateNewChildCollection = 1,
+      KeepTreeExpanded = 2
     };
 
     Q_DECLARE_FLAGS( CollectionDialogOptions, CollectionDialogOption )

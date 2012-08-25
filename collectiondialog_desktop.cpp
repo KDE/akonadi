@@ -136,6 +136,7 @@ class CollectionDialog::Private
     AsyncSelectionHandler *mSelectionHandler;
     QLabel *mTextLabel;
     bool mAllowToCreateNewChildCollection;
+    bool mKeepTreeExpanded;
 
     void slotSelectionChanged();
     void slotAddChildCollection();
@@ -170,6 +171,13 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
                                                 i18n( "Create a new subfolder under the currently selected folder" ) ) );
     mParent->enableButton( KDialog::User1, false );
     connect( mParent, SIGNAL(user1Clicked()), mParent, SLOT(slotAddChildCollection()) );
+  }
+  mKeepTreeExpanded = ( options & KeepTreeExpanded );
+  if ( mKeepTreeExpanded ) {
+
+    mParent->connect( mRightsFilterModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+                      mView, SLOT(expandAll()), Qt::UniqueConnection );
+    mView->expandAll();
   }
 }
 
