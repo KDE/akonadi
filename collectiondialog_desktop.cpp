@@ -53,6 +53,7 @@ class CollectionDialog::Private
       // setup GUI
       QWidget *widget = mParent->mainWidget();
       QVBoxLayout *layout = new QVBoxLayout( widget );
+      layout->setContentsMargins( 0, 0, 0, 0 );
 
       changeCollectionDialogOptions( options );
 
