@@ -380,6 +380,19 @@ void SessionPrivate::init( const QByteArray &id )
   reconnect();
 }
 
+void SessionPrivate::forceReconnect()
+{
+  jobRunning = false;
+  connected = false;
+  if ( socket ) {
+    socket->disconnect( mParent ); // prevent signal emitted from close() causing mayhem - we might be called from ~QThreadStorage!
+    delete socket;
+  }
+  socket = 0;
+  QMetaObject::invokeMethod( mParent, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
+}
+
+
 Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),
     d( new SessionPrivate( this ) )
@@ -434,13 +447,7 @@ void Session::clear()
   d->pipeline.clear();
   if ( d->currentJob )
     d->currentJob->kill( KJob::EmitResult );
-  d->jobRunning = false;
-  d->connected = false;
-  if ( d->socket )
-      d->socket->disconnect( this ); // prevent signal emitted from close() causing mayhem - we might be called from ~QThreadStorage!
-  delete d->socket;
-  d->socket = 0;
-  QMetaObject::invokeMethod( this, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
+  d->forceReconnect();
 }
 
 #include "session.moc"

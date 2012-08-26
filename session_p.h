@@ -51,6 +51,9 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     virtual void init( const QByteArray &sessionId );
 
     void startNext();
+    /// Disconnects a previously existing connection and tries to reconnect
+    void forceReconnect();
+    /// Attemps to establish a connections to the Akonadi server.
     virtual void reconnect();
     void serverStateChanged( ServerManager::State );
     void socketDisconnected();
