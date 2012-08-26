@@ -440,13 +440,17 @@ Session* Session::defaultSession()
 void Session::clear()
 {
   foreach ( Job* job, d->queue )
-    job->kill( KJob::EmitResult );
+    job->kill( KJob::EmitResult ); // safe, not started yet
   d->queue.clear();
-  foreach ( Job* job, d->pipeline )
+  foreach ( Job* job, d->pipeline ) {
+    job->d_ptr->mStarted = false; // avoid killing/reconnect loops
     job->kill( KJob::EmitResult );
+  }
   d->pipeline.clear();
-  if ( d->currentJob )
+  if ( d->currentJob ) {
+    d->currentJob->d_ptr->mStarted = false; // avoid killing/reconnect loops
     d->currentJob->kill( KJob::EmitResult );
+  }
   d->forceReconnect();
 }
 
