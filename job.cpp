@@ -169,7 +169,7 @@ void JobPrivate::lostConnection()
     mCurrentSubJob->d_ptr->lostConnection();
   } else {
     q->setError( Job::ConnectionFailed );
-    q->kill( KJob::EmitResult );
+    q->emitResult();
   }
 }
 
