@@ -258,7 +258,6 @@ void ItemRetriever::verifyCache()
 {
   SelectQueryBuilder<Part> qb;
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
-  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
   qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
   if ( mScope.scope() != Scope::Invalid )
