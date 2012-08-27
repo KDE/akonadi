@@ -33,13 +33,26 @@
 
 using namespace Akonadi;
 
+class StandardContactFormatter::Private
+{
+public:
+  Private()
+   :displayQRcode(true)
+  {
+
+  }
+
+  bool displayQRcode;
+};
+
 StandardContactFormatter::StandardContactFormatter()
-  : d( 0 )
+  : d( new Private() )
 {
 }
 
 StandardContactFormatter::~StandardContactFormatter()
 {
+  delete d;
 }
 
 QString StandardContactFormatter::toHtml( HtmlForm form ) const
@@ -266,17 +279,19 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   strAddr.append( QString::fromLatin1( "</table>" ) );
 
 #ifdef HAVE_PRISON
-  KConfig config( QLatin1String( "akonadi_contactrc" ) );
-  KConfigGroup group( &config, QLatin1String( "View" ) );
-  if ( group.readEntry( "QRCodes", true ) ) {
-    strAddr.append( QString::fromLatin1(
-      "<p align=\"center\">"
-      "<img src=\"%1\" vspace=\"1\">"
-      "<img src=\"%2\" vspace=\"1\">"
-      "</p>"
-    )
-    .arg( QLatin1String( "datamatrix" ) )
-    .arg( QLatin1String( "qrcode" ) ) );
+  if(d->displayQRcode) {
+    KConfig config( QLatin1String( "akonadi_contactrc" ) );
+    KConfigGroup group( &config, QLatin1String( "View" ) );
+    if ( group.readEntry( "QRCodes", true ) ) {
+      strAddr.append( QString::fromLatin1(
+        "<p align=\"center\">"
+        "<img src=\"%1\" vspace=\"1\">"
+        "<img src=\"%2\" vspace=\"1\">"
+        "</p>"
+      )
+      .arg( QLatin1String( "datamatrix" ) )
+      .arg( QLatin1String( "qrcode" ) ) );
+    }
   }
 #endif // HAVE_PRISON
 
@@ -301,5 +316,15 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
      .arg( strAddr );
 
   return document;
+}
+
+void StandardContactFormatter::setDisplayQRCode( bool show )
+{
+  d->displayQRcode = show;
+}
+
+bool StandardContactFormatter::displayQRCode() const
+{
+  return d->displayQRcode;
 }
 
