@@ -68,6 +68,15 @@ class AKONADI_CONTACT_EXPORT StandardContactFormatter : public AbstractContactFo
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const;
 
+    /*
+     * @since 4.9.1
+     */
+    void setDisplayQRCode( bool show );
+    /*
+     * @since 4.9.1
+     */
+    bool displayQRCode() const;
+
   private:
     //@cond PRIVATE
     class Private;
