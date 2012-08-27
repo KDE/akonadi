@@ -101,12 +101,16 @@ int HandlerHelper::itemWithFlagsCount(const Akonadi::Collection& col, const QStr
   CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
   qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
-  qb.addJoin( QueryBuilder::InnerJoin, Flag::tableName(),
-              Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
   Query::Condition cond( Query::Or );
-  Q_FOREACH ( const QString &flag, flags )
-    cond.addValueCondition( Flag::nameFullColumnName(), Query::Equals, flag );
+  // We use the below instead of an inner join in the query above because postgres seems
+  // to struggle to optimize the two inner joins, despite having indeces that should
+  // facilitate that. This exploits the fact that the Flag::retrieveByName is fast because
+  // it hits an in-memory cache.
+  Q_FOREACH ( const QString &flag, flags ) {
+    const Flag f = Flag::retrieveByName( flag );
+    cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::Equals, f.id() );
+  }
   qb.addCondition( cond );
   if ( !qb.exec() )
     return -1;
