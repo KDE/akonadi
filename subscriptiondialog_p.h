@@ -76,6 +76,8 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
     Q_PRIVATE_SLOT( d, void modelLoaded() )
     Q_PRIVATE_SLOT( d, void slotSetPattern(const QString &) )
     Q_PRIVATE_SLOT( d, void slotSetIncludeCheckedOnly(bool) )
+    Q_PRIVATE_SLOT( d, void slotUnSubscribe())
+    Q_PRIVATE_SLOT( d, void slotSubscribe())
 };
 
 }

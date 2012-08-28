@@ -32,11 +32,13 @@
 
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>
+#include <KPushButton>
 #include <krecursivefilterproxymodel.h>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QTreeView>
 #include <QtGui/QCheckBox>
+#include <QItemSelectionModel>
 #else
 #include <kdescendantsproxymodel.h>
 #include <QtGui/QListView>
@@ -101,9 +103,14 @@ class SubscriptionDialog::Private
       filterRecursiveCollectionFilter->setIncludeCheckedOnly( checked );
     }
 
+    void slotUnSubscribe();
+    void slotSubscribe();
+
     SubscriptionDialog* q;
 #ifndef KDEPIM_MOBILE_UI
     QTreeView *collectionView;
+    KPushButton *subscribe;
+    KPushButton *unSubscribe;
 #else
     QListView *collectionView;
 #endif
@@ -111,6 +118,30 @@ class SubscriptionDialog::Private
     RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
 
 };
+
+
+void SubscriptionDialog::Private::slotSubscribe()
+{
+#ifndef KDEPIM_MOBILE_UI
+  QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
+  foreach (const QModelIndex& index, list) {
+    model->setData(index, Qt::Checked, Qt::CheckStateRole);
+  }
+  collectionView->setFocus();
+#endif
+}
+
+void SubscriptionDialog::Private::slotUnSubscribe()
+{
+#ifndef KDEPIM_MOBILE_UI
+    QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
+    foreach (const QModelIndex& index, list) {
+        model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
+    }
+    collectionView->setFocus();
+#endif
+}
+
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
     KDialog( parent ),
@@ -152,11 +183,12 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
     d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
   }
 
+
   d->collectionView = new QTreeView( mainWidget );
   d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->collectionView->header()->hide();
   d->collectionView->setModel( d->filterRecursiveCollectionFilter );
-
+  d->collectionView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
   QHBoxLayout *filterBarLayout = new QHBoxLayout;
 
@@ -173,8 +205,28 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
            this, SLOT(slotSetIncludeCheckedOnly(bool)) );
   filterBarLayout->addWidget( checkBox );
 
-  mainLayout->addLayout( filterBarLayout );
-  mainLayout->addWidget( d->collectionView );
+
+  QHBoxLayout *hboxLayout = new QHBoxLayout;
+  hboxLayout->addWidget( d->collectionView );
+
+
+  QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
+  d->subscribe = new KPushButton(i18n("Subscribe"));
+  subscribeButtonLayout->addWidget(d->subscribe);
+  connect(d->subscribe,SIGNAL(clicked()),this,SLOT(slotSubscribe()));
+
+  d->unSubscribe = new KPushButton(i18n("Unsubscribe"));
+  subscribeButtonLayout->addWidget(d->unSubscribe);
+  connect(d->unSubscribe,SIGNAL(clicked()),this,SLOT(slotUnSubscribe()));
+  subscribeButtonLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
+
+
+  hboxLayout->addLayout(subscribeButtonLayout);
+
+  mainLayout->addLayout(filterBarLayout);
+  mainLayout->addLayout(hboxLayout);
+
+
 #else
 
   d->filterRecursiveCollectionFilter
