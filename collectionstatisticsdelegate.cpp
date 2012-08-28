@@ -61,10 +61,7 @@ class CollectionStatisticsDelegatePrivate
           drawUnreadAfterFolder( false ),
           animator( 0 )
     {
-      mSelectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::Selection )
-                                         .foreground( KColorScheme::LinkText ).color();
-      mDeselectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::View )
-                                           .foreground( KColorScheme::LinkText ).color();
+      updateColor();
     }
 
     void getCountRecursive( const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount, qint64 &totalSize ) const
@@ -85,6 +82,14 @@ class CollectionStatisticsDelegatePrivate
           }
         }
       }
+    }
+
+    void updateColor()
+    {
+      mSelectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::Selection )
+                                         .foreground( KColorScheme::LinkText ).color();
+      mDeselectedUnreadColor = KColorScheme( QPalette::Active, KColorScheme::View )
+                                           .foreground( KColorScheme::LinkText ).color();
     }
 };
 
@@ -338,6 +343,12 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   if ( textColor.isValid() )
     painter->setPen( textColor );
   painter->drawText( textRect, option4.displayAlignment | Qt::AlignVCenter, text );
+}
+
+void CollectionStatisticsDelegate::updatePalette()
+{
+    Q_D( CollectionStatisticsDelegate );
+    d->updateColor();
 }
 
 #include "collectionstatisticsdelegate.moc"
