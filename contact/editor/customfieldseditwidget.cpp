@@ -121,8 +121,13 @@ void CustomFieldsEditWidget::loadContact( const KABC::Addressee &contact )
                   << QLatin1String( "X-Anniversary" )
                   << QLatin1String( "X-SpousesName" )
                   << QLatin1String( "X-Profession" )
-		  << QLatin1String( "MailPreferedFormatting" )
-		  << QLatin1String( "MailAllowToRemoteContent" );
+		  << QLatin1String( "MailPreferedFormatting")		  
+		  << QLatin1String( "MailAllowToRemoteContent")
+                  << QLatin1String( "CRYPTOPROTOPREF" )
+                  << QLatin1String( "OPENPGPFP" )
+                  << QLatin1String( "SMIMEFP" )
+                  << QLatin1String( "CRYPTOSIGNPREF" ) 
+                  << QLatin1String( "CRYPTOENCRYPTPREF" );
       }
 
       if ( blacklist.contains( name ) ) { // several KAddressBook specific fields
