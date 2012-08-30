@@ -176,7 +176,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
   mKeepTreeExpanded = ( options & KeepTreeExpanded );
   if ( mKeepTreeExpanded ) {
 
-    mParent->connect( mRightsFilterModel, SIGNAL(rowsInserted(const QModelIndex &, int, int)),
+    mParent->connect( mRightsFilterModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                       mView, SLOT(expandAll()), Qt::UniqueConnection );
     mView->expandAll();
   }
