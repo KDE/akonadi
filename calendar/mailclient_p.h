@@ -29,7 +29,7 @@
 #include <QObject>
 
 #ifdef MAILCLIENTTEST_UNITTEST
-#include <KMime/Message>
+#include <kmime/kmime_message.h>
   struct UnitTestResult {
     QString from;
     QStringList to;
