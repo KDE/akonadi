@@ -112,7 +112,7 @@ namespace Akonadi {
     void calendarChanged();
 
   private:
-    Q_DECLARE_PRIVATE( ETMCalendar );
+    Q_DECLARE_PRIVATE( ETMCalendar )
   };
 }
 

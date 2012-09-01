@@ -116,7 +116,7 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
     enum ChangeType {
       ChangeTypeCreate,   ///> Represents an incidence creation.
       ChangeTypeModify,   ///> Represents an incidence modification.
-      ChangeTypeDelete,    ///> Represents an incidence deletion.
+      ChangeTypeDelete    ///> Represents an incidence deletion.
     };
 
     /**

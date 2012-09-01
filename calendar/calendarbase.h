@@ -239,7 +239,7 @@ namespace Akonadi {
     void modifyFinished( bool success, const QString &errorMessage );
 
   protected:
-    Q_DECLARE_PRIVATE( CalendarBase );
+    Q_DECLARE_PRIVATE( CalendarBase )
     QScopedPointer<CalendarBasePrivate> d_ptr;
     CalendarBase( CalendarBasePrivate *const d );
   };
