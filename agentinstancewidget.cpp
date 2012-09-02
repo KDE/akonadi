@@ -94,6 +94,7 @@ class AgentInstanceWidget::Private
 
     void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& );
     void currentAgentInstanceDoubleClicked( const QModelIndex& );
+    void currentAgentInstanceClicked( const QModelIndex &currentIndex );
 
     AgentInstanceWidget *mParent;
     QListView *mView;
@@ -126,6 +127,16 @@ void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked( const QMod
   emit mParent->doubleClicked( currentInstance );
 }
 
+void AgentInstanceWidget::Private::currentAgentInstanceClicked( const QModelIndex &currentIndex )
+{
+    AgentInstance currentInstance;
+    if ( currentIndex.isValid() ) {
+      currentInstance = currentIndex.data( AgentInstanceModel::InstanceRole ).value<AgentInstance>();
+    }
+
+    emit mParent->clicked( currentInstance );
+}
+
 AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
@@ -153,6 +164,8 @@ AgentInstanceWidget::AgentInstanceWidget( QWidget *parent )
            this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)) );
   connect( d->mView, SIGNAL(doubleClicked(QModelIndex)),
            this, SLOT(currentAgentInstanceDoubleClicked(QModelIndex)) );
+  connect( d->mView, SIGNAL(clicked(QModelIndex)),
+           this, SLOT(currentAgentInstanceClicked(QModelIndex)) );
 }
 
 AgentInstanceWidget::~AgentInstanceWidget()

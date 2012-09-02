@@ -88,6 +88,11 @@ class AKONADI_EXPORT CollectionStatisticsDelegate : public QStyledItemDelegate
      */
     ~CollectionStatisticsDelegate();
 
+    /**
+     * @since 4.9.1
+     */
+    void updatePalette();
+
   public Q_SLOTS:
     /**
      * Sets whether the unread count is drawn next to the folder name.

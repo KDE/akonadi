@@ -24,39 +24,63 @@
 #include "job.h"
 
 #include <KDebug>
+#include <QCoreApplication>
 
 class FakeSessionPrivate : public SessionPrivate
 {
   public:
-    FakeSessionPrivate(FakeSession* parent)
-      : SessionPrivate( parent ), q_ptr( parent )
+    FakeSessionPrivate(FakeSession* parent, FakeSession::Mode mode)
+      : SessionPrivate( parent ), q_ptr( parent ), m_mode(mode)
     {
-
+      protocolVersion = minimumProtocolVersion();
     }
 
-    /* reimp */ void init( const QByteArray &sessionId ) { Q_UNUSED( sessionId ); }
+    /* reimp */
+    void init( const QByteArray &id )
+    {
+      // trimmed down version of the real SessionPrivate::init(), without any server access
+      if ( !id.isEmpty() ) {
+        sessionId = id;
+      } else {
+        sessionId = QCoreApplication::instance()->applicationName().toUtf8()
+        + '-' + QByteArray::number( qrand() );
+      }
 
-    /* reimp */ void addJob( Job *job )
+      connected = false;
+      theNextTag = 1;
+      jobRunning = false;
+
+      reconnect();
+    }
+
+    /* reimp */
+    void reconnect()
+    {
+      if ( m_mode == FakeSession::EndJobsImmediately )
+        return;
+
+      emit q_ptr->reconnected();
+      connected = true;
+      startNext();
+    }
+
+    /* reimp */
+    void addJob( Job *job )
     {
       emit q_ptr->jobAdded( job );
       // Return immediately so that no actual communication happens with the server and
       // the started jobs are completed.
-      endJob( job );
+      if ( m_mode == FakeSession::EndJobsImmediately )
+        endJob( job );
+      else
+        SessionPrivate::addJob( job );
     }
     FakeSession *q_ptr;
+    FakeSession::Mode m_mode;
 };
 
-FakeSession::FakeSession(const QByteArray& sessionId, QObject* parent)
-    : Session(new FakeSessionPrivate(this), sessionId, parent)
+FakeSession::FakeSession(const QByteArray& sessionId, FakeSession::Mode mode, QObject* parent)
+    : Session(new FakeSessionPrivate(this, mode), sessionId, parent)
 {
 
 }
-
-void FakeSession::firstListJobResult(QList<Collection::List> collectionChunks)
-{
-  Q_UNUSED( collectionChunks );
-  // write the collection chunks to the socket.
-}
-
-
-

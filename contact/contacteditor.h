@@ -129,6 +129,12 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      */
     void setDefaultAddressBook( const Akonadi::Collection &addressbook );
 
+    /**
+     * @since 4.10
+     * @brief ContactEditor::contact
+     * @return
+     */
+    KABC::Addressee contact();
   public Q_SLOTS:
     /**
      * Loads the @p contact into the editor.

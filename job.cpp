@@ -169,7 +169,7 @@ void JobPrivate::lostConnection()
     mCurrentSubJob->d_ptr->lostConnection();
   } else {
     q->setError( Job::ConnectionFailed );
-    q->kill( KJob::EmitResult );
+    q->emitResult();
   }
 }
 
@@ -269,6 +269,10 @@ void Job::start()
 bool Job::doKill()
 {
   Q_D( Job );
+  if ( d->mStarted ) {
+    // the only way to cancel an already started job is reconnecting to the server
+    d->mSession->d->forceReconnect();
+  }
   d->mStarted = false;
   return true;
 }

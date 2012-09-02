@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
 {
   FakeMonitor *monitor = new FakeMonitor( this );
-  FakeSession *session = new FakeSession( "FS1", this );
+  FakeSession *session = new FakeSession( "FS1", FakeSession::EndJobsImmediately, this );
   monitor->setSession( session );
 
   m_model = new EntityTreeModel( monitor, this );

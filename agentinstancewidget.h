@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2006-2008 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2012 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -119,6 +120,15 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
      */
     void doubleClicked( const Akonadi::AgentInstance &current );
 
+    /**
+     * This signal is emitted whenever the there is a click on an agent instance.
+     *
+     * @param current The current agent instance.
+     * @since 4.9.1
+     */
+    void clicked( const Akonadi::AgentInstance &current );
+
+
   private:
     //@cond PRIVATE
     class Private;
@@ -126,6 +136,7 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
 
     Q_PRIVATE_SLOT( d, void currentAgentInstanceChanged( const QModelIndex&, const QModelIndex& ) )
     Q_PRIVATE_SLOT( d, void currentAgentInstanceDoubleClicked( const QModelIndex& ) )
+    Q_PRIVATE_SLOT( d, void currentAgentInstanceClicked( const QModelIndex &currentIndex ) )
     //@endcond
 };
 

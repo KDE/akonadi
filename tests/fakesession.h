@@ -30,16 +30,17 @@ class FakeSession : public Session
 {
   Q_OBJECT
 public:
-  explicit FakeSession(const QByteArray& sessionId = QByteArray(), QObject* parent = 0);
+  enum Mode {
+    EndJobsImmediately,
+    EndJobsManually
+  };
 
-  void firstListJobResult(QList<Collection::List> collectionChunks);
+  explicit FakeSession(const QByteArray& sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject* parent = 0);
 
 signals:
-  void bytesRead(int numBytes);
   void jobAdded( Akonadi::Job* );
 
   friend class FakeSessionPrivate;
-
 };
 
 #endif
