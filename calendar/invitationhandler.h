@@ -40,7 +40,7 @@
 
 namespace Akonadi {
 
-class GroupwareUiDelegate
+class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
 {
   public:
     virtual ~GroupwareUiDelegate();
