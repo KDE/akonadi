@@ -74,6 +74,7 @@ public:
   InvitationHandlerHelper *m_helper;
   Operation m_currentOperation;
   QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
+  GroupwareUiDelegate *m_uiDelegate;
   InvitationHandler *q;
 
 public Q_SLOTS:

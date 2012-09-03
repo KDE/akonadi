@@ -87,6 +87,8 @@ public:
 
   void sendAsICalendar( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
 
+  void setGroupwareUiDelegate( GroupwareUiDelegate * );
+
 Q_SIGNALS:
   void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
                              const QString &errorMessage );
@@ -100,12 +102,6 @@ Q_SIGNALS:
   void informationPublished( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
   void sentAsICalendar( Akonadi::InvitationHandler::Result, const QString &errorMessage );
-
-  /**
-    This signal is emitted when an invitation for a counter proposal is sent.
-    @param incidence The incidence for which the counter proposal must be specified.
-   */ //TODO_SERGIO: connect this
-  void editorRequested( const KCalCore::Incidence::Ptr &incidence );
 
 private:
   Q_DISABLE_COPY( InvitationHandler )

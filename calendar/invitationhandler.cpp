@@ -156,8 +156,11 @@ void InvitationHandler::processiTIPMessage( const QString &receiver,
     emit iTipMessageProcessed( ResultError, i18n( "Invalid action: %1", action ) );
   }
 
-  if ( action.startsWith( QLatin1String( "counter" ) ) ) {
-    emit editorRequested( KCalCore::Incidence::Ptr( incidence->clone() ) );
+  if ( d->m_uiDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
+    Akonadi::Item item;
+    item.setMimeType( incidence->mimeType() );
+    item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
+    d->m_uiDelegate->requestIncidenceEditor( item );
   }
 }
 
@@ -274,6 +277,11 @@ void InvitationHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &inciden
                     recipients, messageText,
                     MailTransport::TransportManager::self()->defaultTransportName() );
   }
+}
+
+void InvitationHandler::setGroupwareUiDelegate( GroupwareUiDelegate *delegate )
+{
+  d->m_uiDelegate = delegate;
 }
 
 #include "invitationhandler.moc"
