@@ -286,6 +286,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       {
         return d->m_collectionSyncProgress.value( collection.id() );
       }
+      case IsPopulatedRole:
+      {
+        return d->m_populatedCols.contains( collection.id() );
+      }
       case Qt::BackgroundRole:
       {
         if ( collection.hasAttribute<EntityDisplayAttribute>() ) {

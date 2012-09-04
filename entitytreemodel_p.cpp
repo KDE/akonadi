@@ -818,6 +818,8 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   Q_ASSERT( m_collections.contains( parentId ) );
 
+  m_populatedCols.remove( collection.id() );
+
   const QModelIndex parentIndex = indexForCollection( m_collections.value( parentId ) );
 
   // Top-level search collection
@@ -891,6 +893,7 @@ void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
     } else {
       removeChildEntities( ( *it )->id );
       m_collections.remove( ( *it )->id );
+      m_populatedCols.remove( ( *it )->id );
     }
   }
 
@@ -1287,6 +1290,9 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
     } else {
       m_collectionsWithoutItems.remove( collectionId );
     }
+
+    m_populatedCols.insert( collectionId );
+    emit q_ptr->collectionPopulated( collectionId );
   }
 
   if ( !m_showRootCollection &&
@@ -1759,6 +1765,7 @@ void EntityTreeModelPrivate::endResetModel()
   }
   m_collections.clear();
   m_collectionsWithoutItems.clear();
+  m_populatedCols.clear();
   m_items.clear();
 
   foreach ( const QList<Node*> &list, m_childEntities ) {
@@ -1871,20 +1878,19 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
       return false;
     }
 
+    // Can't fetch more if the collection's items have already been fetched
+    if ( m_populatedCols.contains( colId ) ) {
+      return false;
+    }
+
     foreach ( Node *node, m_childEntities.value( colId ) ) {
       if ( Node::Item == node->type ) {
         // Only try to fetch more from a collection if we don't already have items in it.
         // Otherwise we'd spend all the time listing items in collections.
-        // This means that collections which don't contain items get a lot of item fetch jobs started on them.
-        // Will fix that later.
         return false;
       }
     }
 
     return true;
   }
-
-  // TODO: It might be possible to get akonadi to tell us if a collection is empty
-  //       or not and use that information instead of assuming all collections are not empty.
-  //       Using Collection statistics?
 }
