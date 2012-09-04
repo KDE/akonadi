@@ -924,6 +924,13 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
            ( canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation ) );
 }
 
+bool EntityTreeModel::isCollectionTreeFetched() const
+{
+  Q_D( const EntityTreeModel );
+
+  return d->m_collectionTreeFetched;
+}
+
 bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const
 {
   Q_UNUSED( item );

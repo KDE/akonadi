@@ -524,6 +524,14 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual bool hasChildren( const QModelIndex &parent = QModelIndex() ) const;
 
     /**
+     * Returns whether the collection tree has been fetched at initialisation.
+     *
+     * @see collectionTreeFetched
+     * @since 4.10
+     */
+    bool isCollectionTreeFetched() const;
+
+    /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
@@ -572,10 +580,19 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 
   Q_SIGNALS:
     /**
+     * Signal emitted when the collection tree has been fetched for the first time.
+     * @param collections  list of collections which have been fetched
+     *
+     * @see isCollectionTreeFetched, collectionPopulated
+     * @since 4.10
+     */
+    void collectionTreeFetched( const Akonadi::Collection::List &collections );
+
+    /**
      * Signal emitted when a collection has been populated, i.e. its items have been fetched.
      * @param collectionId  id of the collection which has been populated
      *
-     * @see isPopulated
+     * @see isPopulated, collectionTreeFetched
      * @since 4.10
      */
     void collectionPopulated( Akonadi::Collection::Id collectionId );
@@ -645,6 +662,7 @@ private:
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List ) )
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List ) )
+    Q_PRIVATE_SLOT( d_func(), void allCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void firstCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void collectionListFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void topLevelCollectionsFetched( Akonadi::Collection::List ) )

@@ -70,6 +70,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
     m_includeUnsubscribed( true ),
     m_includeStatistics( false ),
     m_showRootCollection( false ),
+    m_collectionTreeFetched ( false ),
     m_showSystemEntities( false )
 {
   // using collection as a parameter of a queued call in runItemFetchJob()
@@ -313,7 +314,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
     if ( listing != FirstListing ) {
       q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                  q, SLOT(collectionsFetched(Akonadi::Collection::List)) );
+                  q, SLOT(allCollectionsFetched(Akonadi::Collection::List)) );
       q->connect( job, SIGNAL(result(KJob*)),
                   q, SLOT(fetchJobDone(KJob*)) );
     } else {
@@ -1456,6 +1457,13 @@ void EntityTreeModelPrivate::startFirstListJob()
   }
 }
 
+void EntityTreeModelPrivate::allCollectionsFetched( const Akonadi::Collection::List& collections )
+{
+  collectionsFetched( collections );
+  m_collectionTreeFetched = true;
+  emit q_ptr->collectionTreeFetched( collections );
+}
+
 void EntityTreeModelPrivate::firstCollectionsFetched( const Akonadi::Collection::List& collections )
 {
   collectionsFetched( collections );
@@ -1818,6 +1826,9 @@ void EntityTreeModelPrivate::fillModel()
        m_monitor->resourcesMonitored().isEmpty() &&
        !m_monitor->itemsMonitoredEx().isEmpty() ) {
     m_rootCollection = Collection( -1 );
+    m_collectionTreeFetched = true;
+    emit q_ptr->collectionTreeFetched( collections );   // there are no collections to fetch
+
     Item::List items;
     foreach ( Entity::Id id, m_monitor->itemsMonitoredEx() ) {
       items.append( Item( id ) );
