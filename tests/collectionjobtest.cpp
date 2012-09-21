@@ -95,7 +95,7 @@ void CollectionJobTest::testTopLevelList( )
 {
   // non-recursive top-level list
   CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection::List list = job->collections();
 
   // check if everything is there and has the correct types and attributes
@@ -130,7 +130,7 @@ void CollectionJobTest::testFolderList( )
   CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Recursive );
   QSignalSpy spy( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)) );
   QVERIFY( spy.isValid() );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection::List list = job->collections();
 
   int count = 0;
@@ -165,7 +165,7 @@ void CollectionJobTest::testFolderList( )
 void CollectionJobTest::testNonRecursiveFolderList( )
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection( res1ColId ), CollectionFetchJob::Base );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 1 );
@@ -175,7 +175,7 @@ void CollectionJobTest::testNonRecursiveFolderList( )
 void CollectionJobTest::testEmptyFolderList( )
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::FirstLevel );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 0 );
@@ -184,7 +184,7 @@ void CollectionJobTest::testEmptyFolderList( )
 void CollectionJobTest::testSearchFolderList( )
 {
   CollectionFetchJob *job = new CollectionFetchJob( Collection( searchColId ), CollectionFetchJob::FirstLevel );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Collection::List list = job->collections();
 
   QCOMPARE( list.count(), 0 );
@@ -200,7 +200,7 @@ void CollectionJobTest::testResourceFolderList()
   // recursive listing of all collections of an existing resource
   job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
   job->fetchScope().setResource( "akonadi_knut_resource_0" );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   Collection::List list = job->collections();
   QCOMPARE( list.count(), 5 );
@@ -213,7 +213,7 @@ void CollectionJobTest::testResourceFolderList()
   // limited listing of a resource
   job = new CollectionFetchJob( Collection( fooId ), CollectionFetchJob::Recursive );
   job->fetchScope().setResource( "akonadi_knut_resource_0" );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   list = job->collections();
   QCOMPARE( list.count(), 3 );
@@ -295,7 +295,7 @@ void CollectionJobTest::testCreateDeleteFolder_data()
   QTest::newRow( "already existing with different case" ) << col << true;
 
   CollectionPathResolver *resolver = new CollectionPathResolver( "res2/foo2", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   col.parentCollection().setId( resolver->collection() );
   col.setName( "new folder" );
   QTest::newRow( "parent noinferior" ) << col << false;
@@ -376,7 +376,7 @@ void CollectionJobTest::testStatistics()
   // empty folder
   CollectionStatisticsJob *statistics =
                    new CollectionStatisticsJob( Collection( res1ColId ), this );
-  QVERIFY( statistics->exec() );
+  AKVERIFYEXEC( statistics );
 
   CollectionStatistics s = statistics->statistics();
   QCOMPARE( s.count(), 0ll );
@@ -384,9 +384,9 @@ void CollectionJobTest::testStatistics()
 
   // folder with attributes and content
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   statistics = new CollectionStatisticsJob( Collection( resolver->collection() ), this );
-  QVERIFY( statistics->exec() );
+  AKVERIFYEXEC( statistics );
 
   s = statistics->statistics();
   QCOMPARE( s.count(), 15ll );
@@ -538,7 +538,7 @@ void CollectionJobTest::testUtf8CollectionName()
 
   // list parent
   CollectionFetchJob *list = new CollectionFetchJob( Collection( res3ColId ), CollectionFetchJob::Recursive, this );
-  QVERIFY( list->exec() );
+  AKVERIFYEXEC( list );
   QCOMPARE( list->collections().count(), 1 );
   QCOMPARE( list->collections().first(), col );
   QCOMPARE( list->collections().first().name(), col.name() );
@@ -550,7 +550,7 @@ void CollectionJobTest::testUtf8CollectionName()
 
   // collection statistics
   CollectionStatisticsJob *statistics = new CollectionStatisticsJob( col, this );
-  QVERIFY( statistics->exec() );
+  AKVERIFYEXEC( statistics );
   CollectionStatistics s = statistics->statistics();
   QCOMPARE( s.count(), 0ll );
   QCOMPARE( s.unreadCount(), 0ll );
@@ -565,7 +565,7 @@ void CollectionJobTest::testMultiList()
   Collection::List req;
   req << Collection( res1ColId ) << Collection( res2ColId );
   CollectionFetchJob* job = new CollectionFetchJob( req, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   Collection::List res;
   res = job->collections();
@@ -575,17 +575,17 @@ void CollectionJobTest::testMultiList()
 void CollectionJobTest::testSelect()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );;
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   Collection col( resolver->collection() );
 
   CollectionSelectJob *job = new CollectionSelectJob( col, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   job = new CollectionSelectJob( col, this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   job = new CollectionSelectJob( Collection::root(), this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   job = new CollectionSelectJob( Collection( INT_MAX ), this );
   QVERIFY( !job->exec() );
@@ -598,7 +598,7 @@ void CollectionJobTest::testRidFetch()
 
   CollectionFetchJob *job = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
   job->fetchScope().setResource( "akonadi_knut_resource_0" );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QCOMPARE( job->collections().count(), 1 );
   col = job->collections().first();
   QVERIFY( col.isValid() );

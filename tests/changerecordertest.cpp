@@ -41,11 +41,11 @@ class ChangeRecorderTest : public QObject
       item.setFlag( "random_flag" );
       ItemModifyJob *job = new ItemModifyJob( item );
       job->disableRevisionCheck();
-      QVERIFY( job->exec() );
+      AKVERIFYEXEC( job );
       item.clearFlag( "random_flag" );
       job = new ItemModifyJob( item );
       job->disableRevisionCheck();
-      QVERIFY( job->exec() );
+      AKVERIFYEXEC( job );
     }
 
   private slots:

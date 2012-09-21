@@ -55,29 +55,29 @@ class CollectionCopyTest : public QObject
 
       // obtain reference listing
       CollectionFetchJob *fetch = new CollectionFetchJob( source, CollectionFetchJob::Base );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->collections().count(), 1 );
       source = fetch->collections().first();
       QVERIFY( source.isValid() );
 
       fetch = new CollectionFetchJob( source, CollectionFetchJob::Recursive );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QHash<Collection, Item::List> referenceData;
       Collection::List cols = fetch->collections();
       cols << source;
       foreach ( const Collection &c, cols ) {
         ItemFetchJob *job = new ItemFetchJob( c, this );
-        QVERIFY( job->exec() );
+        AKVERIFYEXEC( job );
         referenceData.insert( c, job->items() );
       }
 
       // actually copy the collection
       CollectionCopyJob *copy = new CollectionCopyJob( source, target );
-      QVERIFY( copy->exec() );
+      AKVERIFYEXEC( copy );
 
       // list destination and check if everything has arrived
       CollectionFetchJob *list = new CollectionFetchJob( target, CollectionFetchJob::Recursive );
-      QVERIFY( list->exec() );
+      AKVERIFYEXEC( list );
       cols = list->collections();
       QCOMPARE( cols.count(), referenceData.count() );
       for ( QHash<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it ) {
@@ -94,7 +94,7 @@ class CollectionCopyTest : public QObject
         ItemFetchJob *job = new ItemFetchJob( col, this );
         job->fetchScope().fetchFullPayload();
         job->fetchScope().setCacheOnly( true );
-        QVERIFY( job->exec() );
+        AKVERIFYEXEC( job );
         QCOMPARE( job->items().count(), it.value().count() );
         foreach ( const Item &item, job->items() ) {
           QVERIFY( !it.value().contains( item ) );

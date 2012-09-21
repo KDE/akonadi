@@ -208,7 +208,7 @@ void ItemStoreTest::testRemoteId()
 void ItemStoreTest::testMultiPart()
 {
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-  QVERIFY( prefetchjob->exec() );
+  AKVERIFYEXEC( prefetchjob );
   QCOMPARE( prefetchjob->items().count(), 1 );
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
@@ -217,12 +217,12 @@ void ItemStoreTest::testMultiPart()
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   ItemFetchJob *fjob = new ItemFetchJob( Item( 1 ) );
   fjob->fetchScope().fetchAttribute<TestAttribute>();
   fjob->fetchScope().fetchFullPayload();
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QVERIFY( item.hasPayload<QByteArray>() );
@@ -233,26 +233,26 @@ void ItemStoreTest::testMultiPart()
   // clean up
   item.removeAttribute( "EXTRA" );
   sjob = new ItemModifyJob( item );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 }
 
 void ItemStoreTest::testPartRemove()
 {
   ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 2 ) );
-  prefetchjob->exec();
+  AKVERIFYEXEC( prefetchjob );
   Item item = prefetchjob->items()[0];
   item.setMimeType( "application/octet-stream" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
 
   // store item
   ItemModifyJob *sjob = new ItemModifyJob( item );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   // fetch item and its parts (should be RFC822, HEAD and EXTRA)
   ItemFetchJob *fjob = new ItemFetchJob( Item( 2 ) );
   fjob->fetchScope().fetchFullPayload();
   fjob->fetchScope().fetchAllAttributes();
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items()[0];
   QCOMPARE( item.attributes().count(), 2 );
@@ -261,13 +261,13 @@ void ItemStoreTest::testPartRemove()
   // remove a part
   item.removeAttribute<TestAttribute>();
   sjob = new ItemModifyJob( item );
-  QVERIFY( sjob->exec() );
+  AKVERIFYEXEC( sjob );
 
   // fetch item again (should only have RFC822 and HEAD left)
   ItemFetchJob *fjob2 = new ItemFetchJob( Item( 2 ) );
   fjob2->fetchScope().fetchFullPayload();
   fjob2->fetchScope().fetchAllAttributes();
-  QVERIFY( fjob2->exec() );
+  AKVERIFYEXEC( fjob2 );
   QCOMPARE( fjob2->items().count(), 1 );
   item = fjob2->items()[0];
   QCOMPARE( item.attributes().count(), 1 );
@@ -280,7 +280,7 @@ void ItemStoreTest::testRevisionCheck()
   // otherwise EXPUNGE doesn't work and will be triggered by
   // the following tests and mess up the monitor testing
   CollectionSelectJob *sel = new CollectionSelectJob( Collection::root(), this );
-  QVERIFY( sel->exec() );
+  AKVERIFYEXEC( sel );
 
   // fetch same item twice
   Item ref( 2 );
@@ -326,7 +326,7 @@ void ItemStoreTest::testModificationTime()
   QVERIFY( item.modificationTime().isNull() );
 
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   // The item should have a datetime set now.
   item = job->item();
@@ -336,7 +336,7 @@ void ItemStoreTest::testModificationTime()
   // Fetch the same item again.
   Item item2( item.id() );
   ItemFetchJob *fjob = new ItemFetchJob( item2, this );
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   item2 = fjob->items().first();
   QCOMPARE( initialDateTime, item2.modificationTime() );
 
@@ -346,7 +346,7 @@ void ItemStoreTest::testModificationTime()
   // Modify the item
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra";
   ItemModifyJob *mjob = new ItemModifyJob( item );
-  QVERIFY( mjob->exec() );
+  AKVERIFYEXEC( mjob );
 
   // The item should still have a datetime set and that date should be somewhere
   // after the initialDateTime.
@@ -357,7 +357,7 @@ void ItemStoreTest::testModificationTime()
   // Fetch the item after modification.
   Item item3( item.id() );
   ItemFetchJob *fjob2 = new ItemFetchJob( item3, this );
-  QVERIFY( fjob2->exec() );
+  AKVERIFYEXEC( fjob2 );
 
   // item3 should have the same modification time as item.
   item3 = fjob2->items().first();
@@ -365,7 +365,7 @@ void ItemStoreTest::testModificationTime()
 
   // Clean up
   ItemDeleteJob *idjob = new ItemDeleteJob( item, this );
-  QVERIFY( idjob->exec() );
+  AKVERIFYEXEC( idjob );
 }
 
 void ItemStoreTest::testRemoteIdRace()
@@ -374,7 +374,7 @@ void ItemStoreTest::testRemoteIdRace()
   Item item;
   item.setMimeType( "text/directory" );
   ItemCreateJob *job = new ItemCreateJob( item, res1_foo );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   // Fetch the same item again. It should not have a remote Id yet, as the resource
   // is offline.
@@ -382,7 +382,7 @@ void ItemStoreTest::testRemoteIdRace()
   // item don't overwrite the remote id.
   Item item2( job->item().id() );
   ItemFetchJob *fetchJob = new ItemFetchJob( item2 );
-  QVERIFY( fetchJob->exec() );
+  AKVERIFYEXEC( fetchJob );
   QCOMPARE( fetchJob->items().size(), 1 );
   QVERIFY( fetchJob->items().first().remoteId().isNull() );
 }

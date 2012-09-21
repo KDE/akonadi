@@ -38,7 +38,7 @@ static Collection res1;
 void AttributeFactoryTest::initTestCase()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   res1 = Collection( resolver->collection() );
 }
 

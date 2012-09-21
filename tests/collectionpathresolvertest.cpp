@@ -37,23 +37,23 @@ void CollectionPathResolverTest::initTestCase()
 void CollectionPathResolverTest::testPathResolver()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "/res1/foo/bar/bla", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   int col = resolver->collection();
   QVERIFY( col > 0 );
 
   resolver = new CollectionPathResolver( Collection( col ), this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   QCOMPARE( resolver->path(), QString( "res1/foo/bar/bla" ) );
 }
 
 void CollectionPathResolverTest::testRoot()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( CollectionPathResolver::pathDelimiter(), this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   QCOMPARE( resolver->collection(), Collection::root().id() );
 
   resolver = new CollectionPathResolver( Collection::root(), this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   QVERIFY( resolver->path().isEmpty() );
 }
 
