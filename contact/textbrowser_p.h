@@ -1,5 +1,6 @@
 /*
     This file is part of Akonadi Contact.
+    Copyright (c) 2012 Montel Laurent <montel@kde.org>
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -22,13 +23,7 @@
 #ifndef TEXTBROWSER_H
 #define TEXTBROWSER_H
 
-#include <kicontheme.h>
 #include <ktextbrowser.h>
-#include <klocalizedstring.h>
-
-#include <QtGui/QAction>
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
 
 namespace Akonadi {
 
@@ -38,34 +33,17 @@ namespace Akonadi {
  */
 class TextBrowser : public KTextBrowser
 {
-  public:
-    TextBrowser( QWidget *parent = 0 )
-      : KTextBrowser( parent )
-    {
-    }
-
-  protected:
+Q_OBJECT
+public:
+    explicit TextBrowser( QWidget *parent = 0 );
+private Q_SLOTS:
+    void slotCopyEmail();
+protected:
 #ifndef QT_NO_CONTEXTMENU
-    virtual void contextMenuEvent( QContextMenuEvent *event )
-    {
-      QMenu *popup = createStandardContextMenu( event->pos() );
-      if ( popup ) { // can be 0 on touch-only platforms
-        QList<QAction*> actions = popup->actions();
-
-        // inherited from KTextBrowser
-        KIconTheme::assignIconsToContextMenu( KIconTheme::ReadOnlyText, actions );
-
-        // hide the 'Copy Link Location' action if not an e-mail address
-        if ( anchorAt( event->pos() ).left( 7 ) != QLatin1String( "mailto:" ) ) {
-          actions[ 1 ]->setVisible( false );
-        } else {
-          actions[ 1 ]->setText( i18n( "Copy e-mail address" ) );
-        }
-        popup->exec( event->globalPos() );
-        delete popup;
-      }
-    }
+    virtual void contextMenuEvent( QContextMenuEvent *event );
 #endif
+private:
+    QString mLinkToCopy;
 };
 
 }

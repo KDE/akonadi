@@ -118,6 +118,7 @@ set(akonadicontact_LIB_SRC
   emailaddressselectiondialog.cpp
   emailaddressselectionproxymodel.cpp
   emailaddressselectionwidget.cpp
+  textbrowser.cpp
   leafextensionproxymodel.cpp
   recentcontactscollections.cpp
   recentcontactscollectionrequestjob.cpp
