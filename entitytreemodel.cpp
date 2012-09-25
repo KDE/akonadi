@@ -25,9 +25,9 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/QApplication>
-#include <QtGui/QPalette>
+#include <QAbstractProxyModel>
+#include <QApplication>
+#include <QPalette>
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>

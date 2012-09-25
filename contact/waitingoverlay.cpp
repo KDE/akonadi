@@ -27,10 +27,10 @@
 #include <KLocale>
 
 #include <QtCore/QEvent>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPalette>
-#include <QtGui/QProgressBar>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QPalette>
+#include <QProgressBar>
 
 //@cond PRIVATE
 

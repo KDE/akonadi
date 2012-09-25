@@ -24,7 +24,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QTreeView>
+#include <QTreeView>
 
 class KXMLGUIClient;
 class QDragMoveEvent;

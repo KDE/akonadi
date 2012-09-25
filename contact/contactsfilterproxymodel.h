@@ -24,7 +24,7 @@
 
 #include "akonadi-contact_export.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

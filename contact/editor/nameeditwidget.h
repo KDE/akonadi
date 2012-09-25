@@ -22,7 +22,7 @@
 #ifndef NAMEEDITWIDGET_H
 #define NAMEEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <kabc/addressee.h>
 

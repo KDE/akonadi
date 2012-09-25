@@ -33,7 +33,7 @@
 #include <KLocale>
 #include <KMessageBox>
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 #include <boost/static_assert.hpp>
 

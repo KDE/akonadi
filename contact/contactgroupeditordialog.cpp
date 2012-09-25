@@ -31,8 +31,8 @@
 #include <kpushbutton.h>
 #include <klineedit.h>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QLabel>
 
 using namespace Akonadi;
 

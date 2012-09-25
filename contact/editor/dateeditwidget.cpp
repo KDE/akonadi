@@ -28,10 +28,10 @@
 #include <kicon.h>
 #include <klocale.h>
 
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QToolButton>
+#include <QContextMenuEvent>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QToolButton>
 
 DateView::DateView( QWidget *parent )
   : QLabel( parent )

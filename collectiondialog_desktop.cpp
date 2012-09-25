@@ -32,9 +32,9 @@
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectionutils_p.h>
 
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <QHeaderView>
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include <KLineEdit>
 #include <KLocale>

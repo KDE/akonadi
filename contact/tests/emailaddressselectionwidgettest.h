@@ -23,7 +23,7 @@
 
 #include "emailaddressselectionwidget.h"
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KTextBrowser;
 

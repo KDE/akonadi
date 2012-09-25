@@ -22,7 +22,7 @@
 #ifndef AKONADI_CONTACTEDITORPAGEPLUGIN_H
 #define AKONADI_CONTACTEDITORPAGEPLUGIN_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC {
 class Addressee;

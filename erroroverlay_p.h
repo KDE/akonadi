@@ -23,7 +23,7 @@
 #include "servermanager.h"
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <boost/scoped_ptr.hpp>
 

@@ -21,7 +21,7 @@
 #define AKONADI_COLLECTIONFILTERPROXYMODEL_H
 
 #include "akonadi_export.h"
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

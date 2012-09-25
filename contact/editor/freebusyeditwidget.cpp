@@ -21,7 +21,7 @@
 
 #include "freebusyeditwidget.h"
 
-#include <QtGui/QHBoxLayout>
+#include <QHBoxLayout>
 
 #include <kabc/addressee.h>
 #include <kcalcore/freebusyurlstore.h>

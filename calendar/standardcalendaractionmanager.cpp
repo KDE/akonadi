@@ -30,7 +30,7 @@
 #include <kcalcore/todo.h>
 #include <klocale.h>
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 using namespace Akonadi;
 

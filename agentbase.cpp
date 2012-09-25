@@ -47,7 +47,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
-#include <QtGui/QApplication>
+#include <QApplication>
 
 #include <signal.h>
 #include <stdlib.h>

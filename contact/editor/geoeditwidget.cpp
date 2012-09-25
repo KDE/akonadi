@@ -31,13 +31,13 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
-#include <QtGui/QDoubleSpinBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QPainter>
-#include <QtGui/QPushButton>
-#include <QtGui/QSpinBox>
+#include <QDoubleSpinBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QPainter>
+#include <QPushButton>
+#include <QSpinBox>
 
 class GeoMapWidget : public QWidget
 {

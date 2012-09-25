@@ -20,7 +20,7 @@
 #include "agentfilterproxymodel.h"
 
 #include <QObject>
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #include <kdeversion.h>
 

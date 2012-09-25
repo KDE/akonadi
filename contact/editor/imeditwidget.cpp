@@ -26,8 +26,8 @@
 #include "im/improtocols.h"
 
 #include <QtCore/QPointer>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QToolButton>
+#include <QHBoxLayout>
+#include <QToolButton>
 
 #include <kabc/addressee.h>
 #include <klineedit.h>

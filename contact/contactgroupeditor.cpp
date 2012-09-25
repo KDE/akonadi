@@ -43,9 +43,9 @@
 
 
 #include <QtCore/QTimer>
-#include <QtGui/QGridLayout>
-#include <QtGui/QMessageBox>
-#include <QtGui/QTableView>
+#include <QGridLayout>
+#include <QMessageBox>
+#include <QTableView>
 
 using namespace Akonadi;
 

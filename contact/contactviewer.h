@@ -26,7 +26,7 @@
 
 #include <akonadi/itemmonitor.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class KUrl;
 

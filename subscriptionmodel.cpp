@@ -27,7 +27,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QStringList>
-#include <QtGui/QFont>
+#include <QFont>
 
 using namespace Akonadi;
 

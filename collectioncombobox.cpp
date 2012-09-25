@@ -37,7 +37,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QEvent>
-#include <QtGui/QMouseEvent>
+#include <QMouseEvent>
 
 using namespace Akonadi;
 

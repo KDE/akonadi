@@ -40,9 +40,9 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTextStream>
 #include <QtDBus/QtDBus>
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
-#include <QtGui/QStandardItemModel>
+#include <QApplication>
+#include <QClipboard>
+#include <QStandardItemModel>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 

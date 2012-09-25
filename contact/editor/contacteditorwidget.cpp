@@ -50,10 +50,10 @@
 
 #include <QtCore/QDirIterator>
 #include <QtCore/QPluginLoader>
-#include <QtGui/QGroupBox>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QCheckBox>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLayout>
+#include <QCheckBox>
 
 class ContactEditorWidget::Private
 {

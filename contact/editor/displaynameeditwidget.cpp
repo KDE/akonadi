@@ -23,10 +23,10 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QString>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPainter>
-#include <QtGui/QStyledItemDelegate>
+#include <QAbstractItemView>
+#include <QHBoxLayout>
+#include <QPainter>
+#include <QStyledItemDelegate>
 
 #include <kabc/addressee.h>
 #include <kcombobox.h>

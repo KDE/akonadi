@@ -22,7 +22,7 @@
 #ifndef CATEGORIESEDITWIDGET_H
 #define CATEGORIESEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <kabc/addressee.h>
 

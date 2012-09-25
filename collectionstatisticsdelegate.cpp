@@ -25,12 +25,12 @@
 #include <kdebug.h>
 #include <kio/global.h>
 
-#include <QtGui/QPainter>
-#include <QtGui/QStyle>
-#include <QtGui/QStyleOption>
-#include <QtGui/QStyleOptionViewItemV4>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QTreeView>
+#include <QPainter>
+#include <QStyle>
+#include <QStyleOption>
+#include <QStyleOptionViewItemV4>
+#include <QAbstractItemView>
+#include <QTreeView>
 
 #include "entitytreemodel.h"
 #include "collectionstatistics.h"

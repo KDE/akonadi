@@ -24,7 +24,7 @@
 
 #include "akonadi-contact_export.h"
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC {
 class ContactGroup;

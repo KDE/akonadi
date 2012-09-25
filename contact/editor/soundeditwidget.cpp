@@ -33,8 +33,8 @@
 #endif
 
 #include <QtCore/QBuffer>
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 /**
  * @short Small helper class to load sound from network

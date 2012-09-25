@@ -22,7 +22,7 @@
 #ifndef AKONADI_ABSTRACTCONTACTEDITORWIDGET_P_H
 #define AKONADI_ABSTRACTCONTACTEDITORWIDGET_P_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC
 {

@@ -20,7 +20,7 @@
 #ifndef AGENTTYPEWIDGETTEST_H
 #define AGENTTYPEWIDGETTEST_H
 
-#include <QtGui/QDialog>
+#include <QDialog>
 
 #include "agenttypewidget.h"
 

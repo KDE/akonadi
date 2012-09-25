@@ -34,7 +34,7 @@
 #include <kmessagebox.h>
 
 #include <QtCore/QPointer>
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 
 using namespace Akonadi;
 

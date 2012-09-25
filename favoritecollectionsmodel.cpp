@@ -20,7 +20,7 @@
 
 #include "favoritecollectionsmodel.h"
 
-#include <QtGui/QItemSelectionModel>
+#include <QItemSelectionModel>
 #include <QtCore/QMimeData>
 
 #include <kconfiggroup.h>

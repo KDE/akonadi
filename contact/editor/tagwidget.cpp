@@ -28,8 +28,8 @@
 #include <klocale.h>
 #include <ksqueezedtextlabel.h>
 
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QToolButton>
+#include <QHBoxLayout>
+#include <QToolButton>
 
 TagWidget::TagWidget( QWidget *parent )
   : QWidget( parent )

@@ -22,7 +22,7 @@
 #ifndef AKONADI_COLLECTIONFILTERMODEL_P_H
 #define AKONADI_COLLECTIONFILTERMODEL_P_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 #include <akonadi/collection.h>
 

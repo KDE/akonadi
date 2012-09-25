@@ -23,8 +23,8 @@
 #define DATEEDITWIDGET_H
 
 #include <QtCore/QDate>
-#include <QtGui/QLabel>
-#include <QtGui/QWidget>
+#include <QLabel>
+#include <QWidget>
 
 class KDatePickerPopup;
 

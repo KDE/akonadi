@@ -30,8 +30,8 @@
 
 #include <klocale.h>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
+#include <QGridLayout>
+#include <QLabel>
 
 using namespace Akonadi;
 

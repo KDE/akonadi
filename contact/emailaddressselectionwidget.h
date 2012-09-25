@@ -29,8 +29,8 @@
 
 #include <akonadi/item.h>
 
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QWidget>
+#include <QAbstractItemView>
+#include <QWidget>
 
 class KLineEdit;
 class QAbstractItemModel;

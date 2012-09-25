@@ -21,7 +21,7 @@
 #define AKONADI_MESSAGETHREADERPROXYMODEL_H
 
 #include "akonadi-kmime_export.h"
-#include <QtGui/QAbstractProxyModel>
+#include <QAbstractProxyModel>
 #include <QtCore/QModelIndex>
 
 class QModelIndex;

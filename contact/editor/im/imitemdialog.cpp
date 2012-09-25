@@ -25,7 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "immodel.h"
 #include "improtocols.h"
 
-#include <QtGui/QFormLayout>
+#include <QFormLayout>
 
 #include <kcombobox.h>
 #include <klineedit.h>

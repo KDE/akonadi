@@ -23,7 +23,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QAbstractItemView;
 namespace Akonadi {

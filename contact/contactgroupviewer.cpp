@@ -38,7 +38,7 @@
 #include <klocale.h>
 #include <kstringhandler.h>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 

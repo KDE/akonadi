@@ -37,7 +37,7 @@
 #include <KMessageBox>
 #include <KStandardDirs>
 
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeView>

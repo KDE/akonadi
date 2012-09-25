@@ -23,7 +23,7 @@
 #define AKONADI_WAITINGOVERLAY_P_H
 
 #include <QtCore/QPointer>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 class QLabel;
 class QProgressBar;

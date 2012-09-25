@@ -22,8 +22,8 @@
 #include "etmviewstatesaver.h"
 
 #include <QtCore/QModelIndex>
-#include <QtGui/QItemSelection>
-#include <QtGui/QTreeView>
+#include <QItemSelection>
+#include <QTreeView>
 
 #include "entitytreemodel.h"
 

@@ -32,7 +32,7 @@
 #include <kicon.h>
 
 #include <QtCore/QMimeData>
-#include <QtGui/QPixmap>
+#include <QPixmap>
 
 using namespace Akonadi;
 

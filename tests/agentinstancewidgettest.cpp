@@ -23,10 +23,10 @@
 
 #include <kcomponentdata.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QVBoxLayout>
+#include <QApplication>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 //krazy:excludeall=qclasses
 

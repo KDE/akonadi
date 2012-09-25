@@ -22,7 +22,7 @@
 #ifndef AKONADI_ENTITYORDERPROXYMODEL_H
 #define AKONADI_ENTITYORDERPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 #include "akonadi_export.h"
 

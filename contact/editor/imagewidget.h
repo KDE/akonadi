@@ -23,7 +23,7 @@
 #define IMAGEWIDGET_H
 
 #include <QtCore/QPoint>
-#include <QtGui/QPushButton>
+#include <QPushButton>
 
 namespace KABC
 {
