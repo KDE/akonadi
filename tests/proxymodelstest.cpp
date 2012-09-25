@@ -85,9 +85,9 @@ void ProxyModelsTest::init()
   // some sanity checks that setup worked
   QCOMPARE( m_model.rowCount( QModelIndex() ), 5 );
   QCOMPARE( m_model.data( m_model.index( 0, 0 ) ).toString(), QLatin1String("one") );
-  QVERIFY( m_krfp->rowCount( QModelIndex() ) == 5 );
+  QCOMPARE( m_krfp->rowCount( QModelIndex() ), 5 );
   QCOMPARE( m_krfp->data( m_krfp->index( 0, 0 ) ).toString(), QLatin1String("one") );
-  QVERIFY( m_krfptest->rowCount( QModelIndex() ) == 4 );
+  QCOMPARE( m_krfptest->rowCount( QModelIndex() ), 4 );
   QCOMPARE( m_krfptest->data( m_krfptest->index( 0, 0 ) ).toString(), QLatin1String("one") );
 
   QCOMPARE( m_krfp->rowCount( m_krfp->index( 1, 0 ) ), 1 );

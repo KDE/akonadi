@@ -36,11 +36,11 @@ using namespace Akonadi;
 void SearchJobTest::testCreateDeleteSearch()
 {
   SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
-  QVERIFY( create->exec() );
+  AKVERIFYEXEC( create );
   Collection created = create->createdCollection();
   QVERIFY( created.isValid() );
   CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
-  QVERIFY( list->exec() );
+  AKVERIFYEXEC( list );
   Collection::List cols = list->collections();
   Collection col;
   foreach ( const Collection &c, cols ) {
@@ -52,14 +52,14 @@ void SearchJobTest::testCreateDeleteSearch()
   QVERIFY( CollectionUtils::isVirtual( col ) );
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( col, this );
-  QVERIFY( delJob->exec() );
+  AKVERIFYEXEC( delJob );
 }
 
 void SearchJobTest::testModifySearch()
 {
   // make sure there is a virtual collection
   SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
-  QVERIFY( create->exec() );
+  AKVERIFYEXEC( create );
   Collection created = create->createdCollection();
   QVERIFY( created.isValid() );
 

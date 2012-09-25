@@ -57,7 +57,7 @@ void CollectionAttributeTest::initTestCase()
   AttributeFactory::registerAttribute<TestAttribute>();
 
   CollectionPathResolver *resolver = new CollectionPathResolver( "res3", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   parentColId = resolver->collection();
   QVERIFY( parentColId > 0 );
 }
@@ -92,7 +92,7 @@ void CollectionAttributeTest::testAttributes()
   col.setParentCollection( Collection( parentColId ) );
   col.addAttribute( attr );
   CollectionCreateJob *create = new CollectionCreateJob( col, this );
-  QVERIFY( create->exec() );
+  AKVERIFYEXEC( create );
   col = create->collection();
   QVERIFY( col.isValid() );
 
@@ -101,7 +101,7 @@ void CollectionAttributeTest::testAttributes()
   QCOMPARE( attr->serialized(), QByteArray( attr1 ) );
 
   CollectionFetchJob *list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( list->exec() );
+  AKVERIFYEXEC( list );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
 
@@ -128,10 +128,10 @@ void CollectionAttributeTest::testAttributes()
   // modify a custom attribute
   col.attribute<TestAttribute>( Collection::AddIfMissing )->deserialize( attr2 );
   CollectionModifyJob *modify = new CollectionModifyJob( col, this );
-  QVERIFY( modify->exec() );
+  AKVERIFYEXEC( modify );
 
   list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( list->exec() );
+  AKVERIFYEXEC( list );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
 
@@ -144,10 +144,10 @@ void CollectionAttributeTest::testAttributes()
   // delete a custom attribute
   col.removeAttribute<TestAttribute>();
   modify = new CollectionModifyJob( col, this );
-  QVERIFY( modify->exec() );
+  AKVERIFYEXEC( modify );
 
   list = new CollectionFetchJob( col, CollectionFetchJob::Base, this );
-  QVERIFY( list->exec() );
+  AKVERIFYEXEC( list );
   QCOMPARE( list->collections().count(), 1 );
   col = list->collections().first();
 
@@ -158,7 +158,7 @@ void CollectionAttributeTest::testAttributes()
 
   // cleanup
   CollectionDeleteJob *del = new CollectionDeleteJob( col, this );
-  QVERIFY( del->exec() );
+  AKVERIFYEXEC( del );
 
 }
 

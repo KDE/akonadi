@@ -144,7 +144,7 @@ void MonitorTest::testMonitor()
   Item newItem;
   newItem.setMimeType( "application/octet-stream" );
   ItemCreateJob *append = new ItemCreateJob( newItem, monitorCol, this );
-  QVERIFY( append->exec() );
+  AKVERIFYEXEC( append );
   Item monitorRef = append->item();
   QVERIFY( monitorRef.isValid() );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
@@ -197,7 +197,7 @@ void MonitorTest::testMonitor()
   // modify an item
   item.setPayload<QByteArray>( "some new content" );
   ItemModifyJob *store = new ItemModifyJob( item, this );
-  QVERIFY( store->exec() );
+  AKVERIFYEXEC( store );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 1 );
@@ -226,7 +226,7 @@ void MonitorTest::testMonitor()
 
   // move an item
   ItemMoveJob *move = new ItemMoveJob( item, res3 );
-  QVERIFY( move->exec() );
+  AKVERIFYEXEC( move );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 2 );
@@ -259,7 +259,7 @@ void MonitorTest::testMonitor()
 
   // delete an item
   ItemDeleteJob *del = new ItemDeleteJob( monitorRef, this );
-  QVERIFY( del->exec() );
+  AKVERIFYEXEC( del );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000 ) );
 
   QCOMPARE( cstatspy.count(), 1 );
@@ -383,7 +383,7 @@ void MonitorTest::testMonitor()
 
   // delete a collection
   CollectionDeleteJob *cdel = new CollectionDeleteJob( monitorCol, this );
-  QVERIFY( cdel->exec() );
+  AKVERIFYEXEC( cdel );
   QVERIFY( QTest::kWaitForSignal( monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000 ) );
 
   QCOMPARE( crmspy.count(), 1 );
