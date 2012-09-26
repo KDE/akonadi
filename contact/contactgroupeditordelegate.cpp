@@ -30,11 +30,11 @@
 #include <klocale.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QAbstractItemView>
-#include <QtGui/QCompleter>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QToolButton>
+#include <QAbstractItemView>
+#include <QCompleter>
+#include <QMouseEvent>
+#include <QSortFilterProxyModel>
+#include <QToolButton>
 
 using namespace Akonadi;
 

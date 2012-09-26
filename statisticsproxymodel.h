@@ -22,7 +22,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

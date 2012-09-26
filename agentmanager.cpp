@@ -28,7 +28,7 @@
 #include "collection.h"
 
 #include <QtDBus/QDBusServiceWatcher>
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <KGlobal>
 #include <KLocale>

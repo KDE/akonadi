@@ -45,10 +45,9 @@ class LinkTest : public QObject
     void testLink()
     {
       SearchCreateJob *create = new SearchCreateJob( "linkTestFolder", "dummy query", this );
-      QVERIFY( create->exec() );
-
+      AKVERIFYEXEC( create );
       CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
-      QVERIFY( list->exec() );
+      AKVERIFYEXEC( list );
       Collection col;
       foreach ( const Collection &c, list->collections() ) {
         if ( c.name() == "linkTestFolder" ) {
@@ -72,7 +71,7 @@ class LinkTest : public QObject
       QVERIFY( uspy.isValid() );
 
       LinkJob *link = new LinkJob( col, items, this );
-      QVERIFY( link->exec() );
+      AKVERIFYEXEC( link );
 
       QTest::qWait( 1000 );
       QVERIFY( uspy.isEmpty() );
@@ -86,21 +85,21 @@ class LinkTest : public QObject
       lspy.clear();
 
       ItemFetchJob *fetch = new ItemFetchJob( col );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 3 );
       foreach ( const Item &item, fetch->items() ) {
         QVERIFY( items.contains( item ) );
       }
 
       UnlinkJob *unlink = new UnlinkJob( col, items, this );
-      QVERIFY( unlink->exec() );
+      AKVERIFYEXEC( unlink );
 
       QTest::qWait( 1000 );
       QVERIFY( lspy.isEmpty() );
       QCOMPARE( uspy.count(), 3 );
 
       fetch = new ItemFetchJob( col );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 0 );
     }
 

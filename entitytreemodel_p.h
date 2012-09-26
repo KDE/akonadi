@@ -82,6 +82,7 @@ public:
   void fetchCollections( const Collection &collection, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel, ListingOrder = NotFirstListing );
   void fetchItems( const Collection &collection );
   void collectionsFetched( const Akonadi::Collection::List& );
+  void allCollectionsFetched( const Akonadi::Collection::List& );
   void firstCollectionsFetched( const Akonadi::Collection::List& );
   void collectionListFetched( const Akonadi::Collection::List& );
   void itemsFetched( KJob* );
@@ -162,6 +163,7 @@ public:
   bool m_includeUnsubscribed;
   bool m_includeStatistics;
   bool m_showRootCollection;
+  bool m_collectionTreeFetched;
   QHash<Collection::Id, uint> m_collectionSyncProgress;
 
   /**

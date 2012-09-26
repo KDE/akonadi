@@ -23,7 +23,7 @@
 #include "agentmanager.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QIcon>
+#include <QIcon>
 
 #include <klocale.h>
 

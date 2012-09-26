@@ -25,8 +25,8 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QString>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QToolButton>
+#include <QHBoxLayout>
+#include <QToolButton>
 
 #include <kabc/addressee.h>
 #include <kdialog.h>

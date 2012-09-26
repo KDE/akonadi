@@ -21,7 +21,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QStyledItemDelegate>
+#include <QStyledItemDelegate>
 
 class QAbstractItemView;
 class QTreeView;

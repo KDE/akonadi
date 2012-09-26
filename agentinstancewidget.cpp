@@ -27,12 +27,12 @@
 #include <KGlobal>
 
 #include <QtCore/QUrl>
-#include <QtGui/QAbstractTextDocumentLayout>
-#include <QtGui/QApplication>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QListView>
-#include <QtGui/QPainter>
-#include <QtGui/QTextDocument>
+#include <QAbstractTextDocumentLayout>
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QListView>
+#include <QPainter>
+#include <QTextDocument>
 
 namespace Akonadi {
 namespace Internal {

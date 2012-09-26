@@ -22,7 +22,7 @@
 #ifndef FREEBUSYEDITWIDGET_H
 #define FREEBUSYEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC
 {

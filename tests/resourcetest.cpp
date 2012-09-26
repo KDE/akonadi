@@ -45,7 +45,7 @@ class ResourceTest : public QObject
       QCOMPARE( type.capabilities(), QStringList( "Resource" ) );
 
       AgentInstanceCreateJob *job = new AgentInstanceCreateJob( type );
-      QVERIFY( job->exec() );
+      AKVERIFYEXEC( job );
 
       AgentInstance instance = job->instance();
       QVERIFY( instance.isValid() );
@@ -55,7 +55,7 @@ class ResourceTest : public QObject
       QVERIFY( AgentManager::self()->instance( instance.identifier() ).isValid() );
 
       job = new AgentInstanceCreateJob( type );
-      QVERIFY( job->exec() );
+      AKVERIFYEXEC( job );
       AgentInstance instance2 = job->instance();
       QVERIFY( !( instance == instance2 ) );
       QCOMPARE( spyAddInstance.count(), 2 );
@@ -80,7 +80,7 @@ class ResourceTest : public QObject
       const AgentType type = AgentManager::self()->type( "akonadi_mailthreader_agent" );
       QVERIFY( type.isValid() );
       job = new AgentInstanceCreateJob( type );
-      QVERIFY( job->exec() );
+      AKVERIFYEXEC( job );
 
       job = new AgentInstanceCreateJob( type );
       QVERIFY( !job->exec() );

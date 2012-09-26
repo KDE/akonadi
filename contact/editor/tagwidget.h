@@ -22,7 +22,7 @@
 #ifndef TAGWIDGET_H
 #define TAGWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include <nepomuk/tag.h>
 

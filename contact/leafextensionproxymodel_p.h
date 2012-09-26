@@ -23,7 +23,7 @@
 #ifndef LEAFEXTENSIONPROXYMODEL_H
 #define LEAFEXTENSIONPROXYMODEL_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

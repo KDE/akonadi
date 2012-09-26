@@ -74,7 +74,7 @@ class CacheTest : public QObject
       ItemFetchJob *fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().setCacheOnly( true );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 1 );
       item = fetch->items().first();
       QVERIFY( item.isValid() );
@@ -96,7 +96,7 @@ class CacheTest : public QObject
       fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().setCacheOnly( true );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 1 );
       item = fetch->items().first();
       QVERIFY( item.isValid() );
@@ -120,7 +120,7 @@ class CacheTest : public QObject
       ItemFetchJob *fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().setCacheOnly( true );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 1 );
       item = fetch->items().first();
       QVERIFY( item.isValid() );
@@ -138,7 +138,7 @@ class CacheTest : public QObject
       fetch = new ItemFetchJob( item, this );
       fetch->fetchScope().fetchFullPayload();
       fetch->fetchScope().setCacheOnly( true );
-      QVERIFY( fetch->exec() );
+      AKVERIFYEXEC( fetch );
       QCOMPARE( fetch->items().count(), 1 );
       item = fetch->items().first();
       QVERIFY( item.isValid() );

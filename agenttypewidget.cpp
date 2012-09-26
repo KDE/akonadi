@@ -21,10 +21,10 @@
 
 #include <KDebug>
 
-#include <QtGui/QApplication>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QListView>
-#include <QtGui/QPainter>
+#include <QApplication>
+#include <QHBoxLayout>
+#include <QListView>
+#include <QPainter>
 
 #include "agentfilterproxymodel.h"
 #include "agenttype.h"

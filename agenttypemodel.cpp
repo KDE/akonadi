@@ -22,7 +22,7 @@
 #include "agentmanager.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QIcon>
+#include <QIcon>
 
 using namespace Akonadi;
 

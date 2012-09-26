@@ -55,9 +55,9 @@
 #include <KToggleAction>
 
 #include <QtCore/QMimeData>
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
-#include <QtGui/QItemSelectionModel>
+#include <QApplication>
+#include <QClipboard>
+#include <QItemSelectionModel>
 #include <QWeakPointer>
 
 #include <boost/static_assert.hpp>

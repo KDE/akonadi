@@ -21,7 +21,7 @@
 #define AKONADI_COLLECTION_VIEW
 
 #include "akonadi_export.h"
-#include <QtGui/QTreeView>
+#include <QTreeView>
 
 class KXMLGUIClient;
 class KXmlGuiWindow;

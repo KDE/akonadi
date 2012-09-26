@@ -22,7 +22,7 @@
 #ifndef AKONADI_CONTACT_IMDELEGATE_H
 #define AKONADI_CONTACT_IMDELEGATE_H
 
-#include <QtGui/QStyledItemDelegate>
+#include <QStyledItemDelegate>
 
 class IMDelegate : public QStyledItemDelegate
 {

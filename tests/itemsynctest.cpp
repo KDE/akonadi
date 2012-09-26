@@ -73,7 +73,7 @@ class ItemsyncTest : public QObject
 
       ItemSync* syncer = new ItemSync( col );
       syncer->setFullSyncItems( origItems );
-      QVERIFY( syncer->exec() );
+      AKVERIFYEXEC( syncer );
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
@@ -122,7 +122,7 @@ class ItemsyncTest : public QObject
 
       ItemSync* syncer = new ItemSync( col );
       syncer->setIncrementalSyncItems( origItems, Item::List() );
-      QVERIFY( syncer->exec() );
+      AKVERIFYEXEC( syncer );
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );
@@ -190,7 +190,7 @@ class ItemsyncTest : public QObject
 
       ItemSync* syncer = new ItemSync( col );
       syncer->setIncrementalSyncItems( Item::List(), Item::List() );
-      QVERIFY( syncer->exec() );
+      AKVERIFYEXEC( syncer );
 
       Item::List resultItems = fetchItems( col );
       QCOMPARE( resultItems.count(), origItems.count() );

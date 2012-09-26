@@ -24,7 +24,7 @@
 #include "contactactionssettings.h"
 #include "ui_akonadicontactactions.h"
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #include <kaboutdata.h>
 #include <kcomponentdata.h>

@@ -40,11 +40,11 @@
 #include <kglobal.h>
 
 #include <QtCore/QTimer>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QHeaderView>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QLabel>
-#include <QtGui/QVBoxLayout>
+#include <QHBoxLayout>
+#include <QHeaderView>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 

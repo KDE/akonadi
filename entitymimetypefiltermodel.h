@@ -24,7 +24,7 @@
 #include "akonadi_export.h"
 #include "entitytreemodel.h"
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi {
 

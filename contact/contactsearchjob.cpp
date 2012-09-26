@@ -50,7 +50,7 @@ ContactSearchJob::ContactSearchJob( QObject * parent )
                                           "</request>"
 #else
                                           "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
-                                          "SELECT ?r WHERE { ?r a nco:PersonContact }"
+                                          "SELECT ?r WHERE { ?r a nco:Contact }"
 #endif
                                         ) );
 }
@@ -113,11 +113,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. "
-          "  } "
+          "  "
           "} "
 #endif
       );
@@ -141,12 +141,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?person a nco:PersonContact ; "
+          "    ?person a nco:Contact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . "
-          "  } "
+          "   "
           "}"
 #endif
       );
@@ -170,11 +170,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:nickname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -212,9 +212,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    { ?r nco:fullname \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. } "
           "    UNION "
           "    { ?r nco:nameGiven \"%1\"^^<http://www.w3.org/2001/XMLSchema#string>. } "
@@ -223,7 +223,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    UNION "
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> . } "
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -247,11 +247,11 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:contactUID \"%1\"^^<http://www.w3.org/2001/XMLSchema#string> ."
-          "  } "
+          "   "
           "}"
 #endif
       );
@@ -277,12 +277,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:fullname ?v . "
           "    ?v bif:contains \"'%1*'\" . "
-          "  } "
+          "  "
           "} "
 #endif
       );
@@ -306,13 +306,13 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?person a nco:PersonContact ; "
+          "    ?person a nco:Contact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
           "    FILTER regex(str(?v), \"^%1\", \"i\") "
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -336,12 +336,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:nickname ?v . "
           "    FILTER regex(str(?v), \"^%1\", \"i\") "
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -379,9 +379,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "   "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    { ?r nco:fullname ?v . "
           "      FILTER regex(str(?v), \"^%1\", \"i\") } "
           "    UNION "
@@ -394,7 +394,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
           "      FILTER regex(str(?v), \"^%1\", \"i\") } "
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -418,12 +418,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1*'\" . "
-          "  } "
+          " "
           "}"
 #endif
       );
@@ -449,12 +449,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:fullname ?v . "
           "%1"
-          "  } "
+          "  "
           "} "
 #endif
       );
@@ -479,13 +479,13 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?person ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?person <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?person a nco:PersonContact ; "
+          "    ?person a nco:Contact ; "
           "            nco:hasEmailAddress ?email . "
           "    ?email nco:emailAddress ?v . "
           "%1"
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -510,12 +510,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:nickname ?v . "
           "%1"
-          "  } "
+          "  "
           "}"
 #endif
       );
@@ -554,9 +554,9 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    { ?r nco:fullname ?v . "
           "%1 }"
           "    UNION "
@@ -569,7 +569,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
           "%1 }"
-          "  } "
+          " "
           "}"
 #endif
       );
@@ -582,7 +582,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    <and>"
           "      <equals>"
           "        <field name=\"type\"/>"
-          "        <string>PersonContact</string>"
+          "        <string>Contact</string>"
           "      </equals>"
           "      <contains>"
           "        <field name=\"contactUID\"/>"
@@ -594,12 +594,12 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 #else
           "SELECT DISTINCT ?r ?reqProp1 "
           "WHERE { "
-          "  graph ?g { "
+          "  "
           "    ?r <" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
-          "    ?r a nco:PersonContact . "
+          "    ?r a nco:Contact . "
           "    ?r nco:contactUID ?v . "
           "    ?v bif:contains \"'%1'\" . "
-          "  } "
+          " "
           "}"
 #endif
       );

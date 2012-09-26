@@ -33,10 +33,10 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
-#include <QtGui/QDragMoveEvent>
-#include <QtGui/QHeaderView>
-#include <QtGui/QMenu>
+#include <QApplication>
+#include <QDragMoveEvent>
+#include <QHeaderView>
+#include <QMenu>
 
 using namespace Akonadi;
 

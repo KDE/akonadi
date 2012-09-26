@@ -27,7 +27,7 @@
 #include <KGlobal>
 #include <klocale.h>
 
-#include <QtGui/QFont>
+#include <QFont>
 
 using namespace Akonadi;
 

@@ -26,11 +26,11 @@
 #include <kicon.h>
 #include <klocale.h>
 
-#include <QtGui/QDateEdit>
-#include <QtGui/QDateTimeEdit>
-#include <QtGui/QCheckBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QTimeEdit>
+#include <QDateEdit>
+#include <QDateTimeEdit>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QTimeEdit>
 
 CustomFieldsDelegate::CustomFieldsDelegate( QObject *parent )
   : QStyledItemDelegate( parent )

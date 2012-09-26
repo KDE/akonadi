@@ -24,8 +24,8 @@
 #include "differencesalgorithminterface.h"
 #include "typepluginloader_p.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QLabel>
+#include <QVBoxLayout>
+#include <QLabel>
 
 #include <kcolorscheme.h>
 #include <klocale.h>

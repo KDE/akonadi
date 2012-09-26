@@ -22,7 +22,7 @@
 #ifndef SECRECYEDITWIDGET_H
 #define SECRECYEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC
 {

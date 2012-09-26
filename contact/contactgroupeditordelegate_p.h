@@ -24,7 +24,7 @@
 
 #include <KLineEdit>
 
-#include <QtGui/QStyledItemDelegate>
+#include <QStyledItemDelegate>
 
 #include <akonadi/item.h>
 

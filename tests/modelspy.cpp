@@ -52,10 +52,10 @@ QList<ExpectedSignal> ModelSpy::expectedSignals() const
 void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int start, int end )
 {
   ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
-  QVERIFY( type == expectedSignal.signalType );
-  QVERIFY( parent.data() == expectedSignal.parentData );
-  QVERIFY( start == expectedSignal.startRow );
-  QVERIFY( end == expectedSignal.endRow );
+  QCOMPARE( int(type), int(expectedSignal.signalType) );
+  QCOMPARE( parent.data(), expectedSignal.parentData );
+  QCOMPARE( start, expectedSignal.startRow );
+  QCOMPARE( end, expectedSignal.endRow );
   if ( !expectedSignal.newData.isEmpty() )
   {
     // TODO
@@ -65,34 +65,34 @@ void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int sta
 void ModelSpy::verifySignal( SignalType type, const QModelIndex& parent, int start, int end, const QModelIndex& destParent, int destStart )
 {
   ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
-  QVERIFY( type == expectedSignal.signalType );
-  QVERIFY( expectedSignal.startRow == start );
-  QVERIFY( expectedSignal.endRow == end );
-  QVERIFY( parent.data() == expectedSignal.sourceParentData );
-  QVERIFY( destParent.data() == expectedSignal.parentData );
-  QVERIFY( destStart == expectedSignal.destRow );
+  QCOMPARE( int(type), int(expectedSignal.signalType) );
+  QCOMPARE( expectedSignal.startRow, start );
+  QCOMPARE( expectedSignal.endRow, end );
+  QCOMPARE( parent.data(), expectedSignal.sourceParentData );
+  QCOMPARE( destParent.data(), expectedSignal.parentData );
+  QCOMPARE( destStart, expectedSignal.destRow );
   QVariantList moveList;
   QModelIndex _parent = type == RowsAboutToBeMoved ? parent : destParent;
   int _start = type == RowsAboutToBeMoved ? start : destStart;
   int _end = type == RowsAboutToBeMoved ? end : destStart + (end - start);
   for ( int row = _start; row <= _end; ++row )
     moveList << m_model->index( row, 0, _parent ).data();
-  QVERIFY( moveList == expectedSignal.newData );
+  QCOMPARE( moveList, expectedSignal.newData );
 }
 
 void ModelSpy::verifySignal( SignalType type, const QModelIndex& topLeft, const QModelIndex& bottomRight )
 {
-  Q_ASSERT( type == DataChanged );
+  QCOMPARE( type, DataChanged );
   ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
-  QVERIFY( type == expectedSignal.signalType );
+  QCOMPARE( int(type), int(expectedSignal.signalType) );
   QModelIndex parent = topLeft.parent();
   if ( expectedSignal.parentData.isValid() )
-    QVERIFY( parent.data() == expectedSignal.parentData );
-  QVERIFY( topLeft.row() == expectedSignal.startRow );
-  QVERIFY( bottomRight.row() == expectedSignal.endRow );
+    QCOMPARE( parent.data(), expectedSignal.parentData );
+  QCOMPARE( topLeft.row(), expectedSignal.startRow );
+  QCOMPARE( bottomRight.row(), expectedSignal.endRow );
   for ( int i = 0, row = topLeft.row(); row <= bottomRight.row(); ++row, ++i )
   {
-    QVERIFY( expectedSignal.newData.at( i ) == m_model->index( row, 0, parent ).data() );
+    QCOMPARE( expectedSignal.newData.at( i ), m_model->index( row, 0, parent ).data() );
   }
 }
 

@@ -33,7 +33,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTimer>
 #include <QtCore/QPointer>
-#include <QtGui/QFrame>
+#include <QFrame>
 
 using namespace Akonadi;
 

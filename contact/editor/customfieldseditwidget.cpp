@@ -32,9 +32,9 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QUuid>
-#include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QTreeView>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QTreeView>
 #include <QSortFilterProxyModel>
 
 void splitCustomField( const QString &str, QString &app, QString &name, QString &value )

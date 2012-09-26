@@ -56,7 +56,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtDBus/QtDBus>
 
 using namespace Akonadi;

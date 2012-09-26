@@ -44,23 +44,23 @@ void ItemFetchTest::initTestCase()
 void ItemFetchTest::testFetch()
 {
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
   // listing of an empty folder
   ItemFetchJob *job = new ItemFetchJob( Collection( colId ), this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QVERIFY( job->items().isEmpty() );
 
   resolver = new CollectionPathResolver( "res1/foo", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   int colId2 = resolver->collection();
 
   // listing of a non-empty folder
   job = new ItemFetchJob( Collection( colId2 ), this );
   QSignalSpy spy( job, SIGNAL(itemsReceived(Akonadi::Item::List)) );
   QVERIFY( spy.isValid() );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Item::List items = job->items();
   QCOMPARE( items.count(), 15 );
 
@@ -100,7 +100,7 @@ void ItemFetchTest::testResourceRetrieval()
   job->fetchScope().fetchFullPayload( true );
   job->fetchScope().fetchAllAttributes( true );
   job->fetchScope().setCacheOnly( true );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QCOMPARE( job->items().count(), 1 );
   item = job->items().first();
   QCOMPARE( item.id(), 1ll );
@@ -112,7 +112,7 @@ void ItemFetchTest::testResourceRetrieval()
   job->fetchScope().fetchFullPayload( true );
   job->fetchScope().fetchAllAttributes( true );
   job->fetchScope().setCacheOnly( false );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QCOMPARE( job->items().count(), 1 );
   item = job->items().first();
   QCOMPARE( item.id(), 1ll );
@@ -170,7 +170,7 @@ void ItemFetchTest::testMultipartFetch()
   QFETCH( bool, fetchSingleAttr );
 
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1/foo", this );
-  QVERIFY( resolver->exec() );
+  AKVERIFYEXEC( resolver );
   int colId = resolver->collection();
 
   Item item;
@@ -178,7 +178,7 @@ void ItemFetchTest::testMultipartFetch()
   item.setPayload<QByteArray>( "body data" );
   item.attribute<TestAttribute>( Item::AddIfMissing )->data = "extra data";
   ItemCreateJob *job = new ItemCreateJob( item, Collection( colId ), this );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   Item ref = job->item();
 
   ItemFetchJob *fjob = new ItemFetchJob( ref, this );
@@ -191,7 +191,7 @@ void ItemFetchTest::testMultipartFetch()
   if ( fetchSingleAttr )
     fjob->fetchScope().fetchAttribute<TestAttribute>();
 
-  QVERIFY( fjob->exec() );
+  AKVERIFYEXEC( fjob );
   QCOMPARE( fjob->items().count(), 1 );
   item = fjob->items().first();
 
@@ -214,7 +214,7 @@ void ItemFetchTest::testMultipartFetch()
 
   // cleanup
   ItemDeleteJob *djob = new ItemDeleteJob( ref, this );
-  QVERIFY( djob->exec() );
+  AKVERIFYEXEC( djob );
 }
 
 void ItemFetchTest::testRidFetch()
@@ -225,11 +225,11 @@ void ItemFetchTest::testRidFetch()
   col.setRemoteId( "10" );
 
   ResourceSelectJob *select = new ResourceSelectJob( "akonadi_knut_resource_0", this );
-  QVERIFY( select->exec() );
+  AKVERIFYEXEC( select );
 
   ItemFetchJob *job = new ItemFetchJob( item, this );
   job->setCollection( col );
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
   QCOMPARE( job->items().count(), 1 );
   item = job->items().first();
   QVERIFY( item.isValid() );

@@ -20,7 +20,7 @@
 #ifndef AKONADI_DRAGDROPMANAGER_P_H
 #define AKONADI_DRAGDROPMANAGER_P_H
 
-#include <QtGui/QAbstractItemView>
+#include <QAbstractItemView>
 
 #include "akonadi/collection.h"
 

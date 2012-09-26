@@ -32,8 +32,8 @@
 #include <klocale.h>
 #include <kio/global.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QPalette>
+#include <QApplication>
+#include <QPalette>
 #include <KIcon>
 using namespace Akonadi;
 

@@ -28,7 +28,7 @@
 #include <kdebug.h>
 #include <ktabwidget.h>
 
-#include <QtGui/QBoxLayout>
+#include <QBoxLayout>
 
 using namespace Akonadi;
 

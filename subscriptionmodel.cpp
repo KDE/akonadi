@@ -27,7 +27,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QStringList>
-#include <QtGui/QFont>
+#include <QFont>
 
 using namespace Akonadi;
 
@@ -154,6 +154,9 @@ bool SubscriptionModel::setData(const QModelIndex & index, const QVariant & valu
 {
   if ( role == Qt::CheckStateRole ) {
     const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
+    if( !d->isSubscribable(col) ) {
+      return true; //No change
+    }
     if ( d->subscriptions.contains( col ) && d->subscriptions.value( col ) == (value == Qt::Checked) )
       return true; // no change
     d->subscriptions[ col ] = value == Qt::Checked;

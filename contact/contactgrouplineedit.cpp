@@ -29,9 +29,9 @@
 #include <klocale.h>
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QAction>
-#include <QtGui/QCompleter>
-#include <QtGui/QMenu>
+#include <QAction>
+#include <QCompleter>
+#include <QMenu>
 
 ContactGroupLineEdit::ContactGroupLineEdit( QWidget *parent )
   : KLineEdit( parent ),

@@ -32,10 +32,10 @@
 #include <kpixmapregionselectordialog.h>
 
 #include <QtCore/QMimeData>
-#include <QtGui/QDrag>
-#include <QtGui/QDragEnterEvent>
-#include <QtGui/QDropEvent>
-#include <QtGui/QMenu>
+#include <QDrag>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMenu>
 
 /**
  * @short Small helper class to load image from network

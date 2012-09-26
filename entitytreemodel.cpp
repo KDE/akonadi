@@ -25,9 +25,9 @@
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
-#include <QtGui/QAbstractProxyModel>
-#include <QtGui/QApplication>
-#include <QtGui/QPalette>
+#include <QAbstractProxyModel>
+#include <QApplication>
+#include <QPalette>
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>
@@ -285,6 +285,10 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       case CollectionSyncProgressRole:
       {
         return d->m_collectionSyncProgress.value( collection.id() );
+      }
+      case IsPopulatedRole:
+      {
+        return d->m_populatedCols.contains( collection.id() );
       }
       case Qt::BackgroundRole:
       {
@@ -918,6 +922,13 @@ bool EntityTreeModel::hasChildren( const QModelIndex &parent ) const
   // Figure out a way to fix this. (Statistics)
   return ( ( rowCount( parent ) > 0 ) ||
            ( canFetchMore( parent ) && d->m_itemPopulation == LazyPopulation ) );
+}
+
+bool EntityTreeModel::isCollectionTreeFetched() const
+{
+  Q_D( const EntityTreeModel );
+
+  return d->m_collectionTreeFetched;
 }
 
 bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const

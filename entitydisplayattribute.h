@@ -20,7 +20,7 @@
 #ifndef AKONADI_ENTITYDISPLAYATTRIBUTE_H
 #define AKONADI_ENTITYDISPLAYATTRIBUTE_H
 
-#include <QtGui/QColor>
+#include <QColor>
 
 #include <akonadi/attribute.h>
 

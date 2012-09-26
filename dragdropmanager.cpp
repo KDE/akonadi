@@ -21,9 +21,9 @@
 #include "specialcollectionattribute_p.h"
 #include "collectionutils_p.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QDropEvent>
-#include <QtGui/QMenu>
+#include <QApplication>
+#include <QDropEvent>
+#include <QMenu>
 
 #include <KDE/KIcon>
 #include <KDE/KLocale>

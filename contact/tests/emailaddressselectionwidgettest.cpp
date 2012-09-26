@@ -26,9 +26,9 @@
 #include <kcmdlineargs.h>
 #include <ktextbrowser.h>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QTreeView>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QTreeView>
 
 MainWidget::MainWidget()
   : QWidget( 0 )

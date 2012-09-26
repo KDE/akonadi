@@ -26,7 +26,7 @@
 #include <akonadi/item.h>
 #include <klocale.h>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 

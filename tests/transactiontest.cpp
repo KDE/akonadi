@@ -29,7 +29,7 @@
 #include <akonadi/transactionjobs.h>
 
 #include <QtCore/QVariant>
-#include <QtGui/QApplication>
+#include <QApplication>
 #include <QtTest/QSignalSpy>
 #include <qtest_akonadi.h>
 
@@ -47,7 +47,7 @@ void TransactionTest::testTransaction()
   Collection basisCollection;
 
   CollectionFetchJob *listJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-  QVERIFY( listJob->exec() );
+  AKVERIFYEXEC( listJob );
   Collection::List list = listJob->collections();
   foreach ( const Collection &col, list )
     if ( col.name() == "res3" )
@@ -59,44 +59,44 @@ void TransactionTest::testTransaction()
   testCollection.setRemoteId( "transactionTestRemoteId" );
   CollectionCreateJob *job = new CollectionCreateJob( testCollection, Session::defaultSession() );
 
-  QVERIFY( job->exec() );
+  AKVERIFYEXEC( job );
 
   testCollection = job->collection();
 
   TransactionBeginJob *beginTransaction1 = new TransactionBeginJob( Session::defaultSession() );
-  QVERIFY( beginTransaction1->exec() );
+  AKVERIFYEXEC( beginTransaction1 );
 
   TransactionBeginJob *beginTransaction2 = new TransactionBeginJob( Session::defaultSession() );
-  QVERIFY( beginTransaction2->exec() );
+  AKVERIFYEXEC( beginTransaction2 );
 
   TransactionCommitJob *commitTransaction2 = new TransactionCommitJob( Session::defaultSession() );
-  QVERIFY( commitTransaction2->exec() );
+  AKVERIFYEXEC( commitTransaction2 );
 
   TransactionCommitJob *commitTransaction1 = new TransactionCommitJob( Session::defaultSession() );
-  QVERIFY( commitTransaction1->exec() );
+  AKVERIFYEXEC( commitTransaction1 );
 
   TransactionCommitJob *commitTransactionX = new TransactionCommitJob( Session::defaultSession() );
   QVERIFY( commitTransactionX->exec() == false );
 
   TransactionBeginJob *beginTransaction3 = new TransactionBeginJob( Session::defaultSession() );
-  QVERIFY( beginTransaction3->exec() );
+  AKVERIFYEXEC( beginTransaction3 );
 
   Item item;
   item.setMimeType( "application/octet-stream" );
   item.setPayload<QByteArray>( "body data" );
   ItemCreateJob *appendJob = new ItemCreateJob( item, testCollection, Session::defaultSession() );
-  QVERIFY( appendJob->exec() );
+  AKVERIFYEXEC( appendJob );
 
   TransactionRollbackJob *rollbackTransaction3 = new TransactionRollbackJob( Session::defaultSession() );
-  QVERIFY( rollbackTransaction3->exec() );
+  AKVERIFYEXEC( rollbackTransaction3 );
 
   ItemFetchJob *fetchJob = new ItemFetchJob( testCollection, Session::defaultSession() );
-  QVERIFY( fetchJob->exec() );
+  AKVERIFYEXEC( fetchJob );
 
   QVERIFY( fetchJob->items().isEmpty() );
 
   CollectionDeleteJob *deleteJob = new CollectionDeleteJob( testCollection, Session::defaultSession() );
-  QVERIFY( deleteJob->exec() );
+  AKVERIFYEXEC( deleteJob );
 }
 
 #include "transactiontest.moc"

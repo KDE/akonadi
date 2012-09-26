@@ -23,7 +23,7 @@
 #define SOUNDEDITWIDGET_H
 
 #include <QtCore/QPoint>
-#include <QtGui/QToolButton>
+#include <QToolButton>
 
 namespace KABC
 {

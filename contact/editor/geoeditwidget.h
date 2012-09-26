@@ -25,7 +25,7 @@
 #include <kabc/geo.h>
 #include <kdialog.h>
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 namespace KABC
 {

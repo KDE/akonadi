@@ -26,8 +26,8 @@
 #include <kstandardshortcut.h>
 
 #include <QtCore/QEvent>
-#include <QtGui/QAction>
-#include <QtGui/QApplication>
+#include <QAction>
+#include <QApplication>
 
 using namespace Akonadi;
 

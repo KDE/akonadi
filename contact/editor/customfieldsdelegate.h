@@ -22,7 +22,7 @@
 #ifndef CUSTOMFIELDSDELEGATE_H
 #define CUSTOMFIELDSDELEGATE_H
 
-#include <QtGui/QStyledItemDelegate>
+#include <QStyledItemDelegate>
 
 class CustomFieldsDelegate : public QStyledItemDelegate
 {

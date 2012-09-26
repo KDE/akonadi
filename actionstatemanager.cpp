@@ -27,8 +27,8 @@
 
 #include <akonadi/entitydeletedattribute.h>
 
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
+#include <QApplication>
+#include <QClipboard>
 
 using namespace Akonadi;
 

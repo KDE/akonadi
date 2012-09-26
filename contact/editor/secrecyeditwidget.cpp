@@ -21,7 +21,7 @@
 
 #include "secrecyeditwidget.h"
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #include <kabc/addressee.h>
 #include <kabc/secrecy.h>

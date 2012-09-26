@@ -26,9 +26,9 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "imitemdialog.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QGridLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QTreeView>
+#include <QGridLayout>
+#include <QPushButton>
+#include <QTreeView>
 
 #include <klocale.h>
 #include <kmessagebox.h>

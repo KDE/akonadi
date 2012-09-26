@@ -25,15 +25,15 @@
 
 #include <QtCore/QSignalMapper>
 #include <QtCore/QString>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QPushButton>
-#include <QtGui/QScrollArea>
-#include <QtGui/QScrollBar>
-#include <QtGui/QVBoxLayout>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QHBoxLayout>
+#include <QPushButton>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QVBoxLayout>
 
 #include <kabc/phonenumber.h>
 #include <kcombobox.h>
@@ -126,6 +126,8 @@ PhoneNumberWidget::PhoneNumberWidget( QWidget *parent )
 
   mTypeCombo = new PhoneTypeCombo( this );
   mNumberEdit = new KLineEdit( this );
+  QFontMetrics fm(font());
+  mNumberEdit->setMinimumWidth(fm.width(QLatin1String("MMMMMMMMMM")));
 
   layout->addWidget( mTypeCombo );
   layout->addWidget( mNumberEdit );

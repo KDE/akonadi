@@ -26,7 +26,7 @@
 
 #include <kdebug.h>
 
-#include <QtGui/QBoxLayout>
+#include <QBoxLayout>
 
 #include <klocale.h>
 
@@ -34,15 +34,15 @@
 #include <klineedit.h>
 #include <KPushButton>
 #include <krecursivefilterproxymodel.h>
-#include <QtGui/QHeaderView>
-#include <QtGui/QLabel>
-#include <QtGui/QTreeView>
-#include <QtGui/QCheckBox>
+#include <QHeaderView>
+#include <QLabel>
+#include <QTreeView>
+#include <QCheckBox>
 #include <QItemSelectionModel>
 #else
 #include <kdescendantsproxymodel.h>
-#include <QtGui/QListView>
-#include <QtGui/QSortFilterProxyModel>
+#include <QListView>
+#include <QSortFilterProxyModel>
 
 class CheckableFilterProxyModel : public QSortFilterProxyModel
 {
@@ -125,7 +125,7 @@ void SubscriptionDialog::Private::slotSubscribe()
 #ifndef KDEPIM_MOBILE_UI
   QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
   foreach (const QModelIndex& index, list) {
-    model->setData(index, Qt::Checked, Qt::CheckStateRole);
+      model->setData(index, Qt::Checked, Qt::CheckStateRole);
   }
   collectionView->setFocus();
 #endif
@@ -136,7 +136,7 @@ void SubscriptionDialog::Private::slotUnSubscribe()
 #ifndef KDEPIM_MOBILE_UI
     QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
     foreach (const QModelIndex& index, list) {
-        model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
+       model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
 #endif

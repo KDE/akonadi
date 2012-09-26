@@ -25,16 +25,16 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QList>
-#include <QtGui/QApplication>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QButtonGroup>
-#include <QtGui/QCheckBox>
-#include <QtGui/QFrame>
-#include <QtGui/QGridLayout>
-#include <QtGui/QGroupBox>
-#include <QtGui/QKeyEvent>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
+#include <QApplication>
+#include <QBoxLayout>
+#include <QButtonGroup>
+#include <QCheckBox>
+#include <QFrame>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QPushButton>
 
 #include <kacceleratormanager.h>
 #include <kcombobox.h>

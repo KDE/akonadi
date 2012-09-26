@@ -70,6 +70,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate( EntityTreeModel *parent )
     m_includeUnsubscribed( true ),
     m_includeStatistics( false ),
     m_showRootCollection( false ),
+    m_collectionTreeFetched ( false ),
     m_showSystemEntities( false )
 {
   // using collection as a parameter of a queued call in runItemFetchJob()
@@ -313,7 +314,7 @@ void EntityTreeModelPrivate::fetchCollections( const Collection &collection, Col
     job->fetchScope().setAncestorRetrieval( Akonadi::CollectionFetchScope::All );
     if ( listing != FirstListing ) {
       q->connect( job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                  q, SLOT(collectionsFetched(Akonadi::Collection::List)) );
+                  q, SLOT(allCollectionsFetched(Akonadi::Collection::List)) );
       q->connect( job, SIGNAL(result(KJob*)),
                   q, SLOT(fetchJobDone(KJob*)) );
     } else {
@@ -818,6 +819,8 @@ void EntityTreeModelPrivate::monitoredCollectionRemoved( const Akonadi::Collecti
 
   Q_ASSERT( m_collections.contains( parentId ) );
 
+  m_populatedCols.remove( collection.id() );
+
   const QModelIndex parentIndex = indexForCollection( m_collections.value( parentId ) );
 
   // Top-level search collection
@@ -891,6 +894,7 @@ void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
     } else {
       removeChildEntities( ( *it )->id );
       m_collections.remove( ( *it )->id );
+      m_populatedCols.remove( ( *it )->id );
     }
   }
 
@@ -1287,6 +1291,9 @@ void EntityTreeModelPrivate::fetchJobDone( KJob *job )
     } else {
       m_collectionsWithoutItems.remove( collectionId );
     }
+
+    m_populatedCols.insert( collectionId );
+    emit q_ptr->collectionPopulated( collectionId );
   }
 
   if ( !m_showRootCollection &&
@@ -1448,6 +1455,13 @@ void EntityTreeModelPrivate::startFirstListJob()
   if ( !m_monitor->resourcesMonitored().isEmpty() ) {
     fetchTopLevelCollections();
   }
+}
+
+void EntityTreeModelPrivate::allCollectionsFetched( const Akonadi::Collection::List& collections )
+{
+  collectionsFetched( collections );
+  m_collectionTreeFetched = true;
+  emit q_ptr->collectionTreeFetched( collections );
 }
 
 void EntityTreeModelPrivate::firstCollectionsFetched( const Akonadi::Collection::List& collections )
@@ -1759,6 +1773,7 @@ void EntityTreeModelPrivate::endResetModel()
   }
   m_collections.clear();
   m_collectionsWithoutItems.clear();
+  m_populatedCols.clear();
   m_items.clear();
 
   foreach ( const QList<Node*> &list, m_childEntities ) {
@@ -1811,6 +1826,9 @@ void EntityTreeModelPrivate::fillModel()
        m_monitor->resourcesMonitored().isEmpty() &&
        !m_monitor->itemsMonitoredEx().isEmpty() ) {
     m_rootCollection = Collection( -1 );
+    m_collectionTreeFetched = true;
+    emit q_ptr->collectionTreeFetched( collections );   // there are no collections to fetch
+
     Item::List items;
     foreach ( Entity::Id id, m_monitor->itemsMonitoredEx() ) {
       items.append( Item( id ) );
@@ -1871,20 +1889,19 @@ bool EntityTreeModelPrivate::canFetchMore( const QModelIndex & parent ) const
       return false;
     }
 
+    // Can't fetch more if the collection's items have already been fetched
+    if ( m_populatedCols.contains( colId ) ) {
+      return false;
+    }
+
     foreach ( Node *node, m_childEntities.value( colId ) ) {
       if ( Node::Item == node->type ) {
         // Only try to fetch more from a collection if we don't already have items in it.
         // Otherwise we'd spend all the time listing items in collections.
-        // This means that collections which don't contain items get a lot of item fetch jobs started on them.
-        // Will fix that later.
         return false;
       }
     }
 
     return true;
   }
-
-  // TODO: It might be possible to get akonadi to tell us if a collection is empty
-  //       or not and use that information instead of assuming all collections are not empty.
-  //       Using Collection statistics?
 }

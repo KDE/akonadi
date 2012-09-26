@@ -25,9 +25,9 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <QtGui/QCheckBox>
-#include <QtGui/QFormLayout>
-#include <QtGui/QRegExpValidator>
+#include <QCheckBox>
+#include <QFormLayout>
+#include <QRegExpValidator>
 
 CustomFieldEditorDialog::CustomFieldEditorDialog( QWidget *parent )
   : KDialog( parent )

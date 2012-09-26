@@ -39,8 +39,8 @@
 #include <klocale.h>
 
 #include <QtCore/QPointer>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QMessageBox>
+#include <QVBoxLayout>
+#include <QMessageBox>
 
 using namespace Akonadi;
 

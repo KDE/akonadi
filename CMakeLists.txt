@@ -62,6 +62,7 @@ set( akonadikde_LIB_SRC
   cachepolicy.cpp
   changemediator_p.cpp
   changerecorder.cpp
+  changerecorder_p.cpp
   changenotificationdependenciesfactory.cpp
   collection.cpp
   collectionattributessynchronizationjob.cpp

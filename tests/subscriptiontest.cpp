@@ -47,25 +47,25 @@ class SubscriptionTest : public QObject
       QVERIFY( l.first().isValid() );
       SubscriptionJob *sjob = new SubscriptionJob( this );
       sjob->unsubscribe( l );
-      QVERIFY( sjob->exec() );
+      AKVERIFYEXEC( sjob );
 
       const Collection res2Col = Collection( collectionIdFromPath( "res2" ) );
       QVERIFY( res2Col.isValid() );
       CollectionFetchJob *ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      QVERIFY( ljob->exec() );
+      AKVERIFYEXEC( ljob );
       QCOMPARE( ljob->collections().count(), 1 );
 
       ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
       ljob->fetchScope().setIncludeUnsubscribed( true );
-      QVERIFY( ljob->exec() );
+      AKVERIFYEXEC( ljob );
       QCOMPARE( ljob->collections().count(), 2 );
 
       sjob = new SubscriptionJob( this );
       sjob->subscribe( l );
-      QVERIFY( sjob->exec() );
+      AKVERIFYEXEC( sjob );
 
       ljob = new CollectionFetchJob( res2Col, CollectionFetchJob::FirstLevel, this );
-      QVERIFY( ljob->exec() );
+      AKVERIFYEXEC( ljob );
       QCOMPARE( ljob->collections().count(), 2 );
     }
 
@@ -73,7 +73,7 @@ class SubscriptionTest : public QObject
     {
       Collection::List l;
       SubscriptionJob *sjob = new SubscriptionJob( this );
-      QVERIFY( sjob->exec() );
+      AKVERIFYEXEC( sjob );
     }
 
     void testInvalidSubscribe()

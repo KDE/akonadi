@@ -31,7 +31,7 @@
 #include <nepomuk/tag.h>
 
 #include <QtCore/QString>
-#include <QtGui/QHBoxLayout>
+#include <QHBoxLayout>
 
 CategoriesEditWidget::CategoriesEditWidget( QWidget *parent )
   : QWidget( parent )

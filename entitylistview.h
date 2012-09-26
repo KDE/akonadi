@@ -24,7 +24,7 @@
 
 #include "akonadi_export.h"
 
-#include <QtGui/QListView>
+#include <QListView>
 
 class KXMLGUIClient;
 class QDragMoveEvent;

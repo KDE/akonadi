@@ -93,7 +93,7 @@ class ItemMoveTest: public QObject
       QVERIFY( col.isValid() );
 
       ItemFetchJob *prefetchjob = new ItemFetchJob( Item( 1 ) );
-      QVERIFY( prefetchjob->exec() );
+      AKVERIFYEXEC( prefetchjob );
       QCOMPARE( prefetchjob->items().count(), 1 );
       Item item = prefetchjob->items()[0];
 

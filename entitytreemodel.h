@@ -349,6 +349,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
       UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
       FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
       CollectionSyncProgressRole,             ///< Returns the progress of synchronization in percent for a particular collection. @since 4.6
+      IsPopulatedRole,                        ///< Returns whether a Collection has been populated, i.e. whether its items have been fetched. @since 4.10
       UserRole = Qt::UserRole + 500,          ///< First role for user extensions.
       TerminalUserRole = 2000,                ///< Last role for user extensions. Don't use a role beyond this or headerData will break.
       EndRole = 65535
@@ -523,6 +524,14 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     virtual bool hasChildren( const QModelIndex &parent = QModelIndex() ) const;
 
     /**
+     * Returns whether the collection tree has been fetched at initialisation.
+     *
+     * @see collectionTreeFetched
+     * @since 4.10
+     */
+    bool isCollectionTreeFetched() const;
+
+    /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;
@@ -568,6 +577,25 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @since 4.5
      */
     static QModelIndexList modelIndexesForItem( const QAbstractItemModel *model, const Item &item );
+
+  Q_SIGNALS:
+    /**
+     * Signal emitted when the collection tree has been fetched for the first time.
+     * @param collections  list of collections which have been fetched
+     *
+     * @see isCollectionTreeFetched, collectionPopulated
+     * @since 4.10
+     */
+    void collectionTreeFetched( const Akonadi::Collection::List &collections );
+
+    /**
+     * Signal emitted when a collection has been populated, i.e. its items have been fetched.
+     * @param collectionId  id of the collection which has been populated
+     *
+     * @see isPopulated, collectionTreeFetched
+     * @since 4.10
+     */
+    void collectionPopulated( Akonadi::Collection::Id collectionId );
 
   protected:
     /**
@@ -634,6 +662,7 @@ private:
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List ) )
     Q_PRIVATE_SLOT( d_func(), void itemsFetched( KJob* ) )
     Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List ) )
+    Q_PRIVATE_SLOT( d_func(), void allCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void firstCollectionsFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void collectionListFetched( Akonadi::Collection::List ) )
     Q_PRIVATE_SLOT( d_func(), void topLevelCollectionsFetched( Akonadi::Collection::List ) )

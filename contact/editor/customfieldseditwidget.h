@@ -22,7 +22,7 @@
 #ifndef CUSTOMFIELDSEDITWIDGET_H
 #define CUSTOMFIELDSEDITWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QWidget>
 
 #include "customfieldsmodel.h"
 

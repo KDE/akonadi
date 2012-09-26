@@ -26,9 +26,9 @@
 #include <KLocale>
 
 #include <QtCore/QEvent>
-#include <QtGui/QBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPalette>
+#include <QBoxLayout>
+#include <QLabel>
+#include <QPalette>
 
 using namespace Akonadi;
 

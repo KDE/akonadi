@@ -25,11 +25,11 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QString>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolButton>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QPushButton>
+#include <QToolButton>
 
 #include <kabc/addressee.h>
 #include <kacceleratormanager.h>

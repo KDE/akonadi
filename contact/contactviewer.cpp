@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kstringhandler.h>
 
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
 
 #ifdef HAVE_PRISON
 #include <prison/QRCodeBarcode>
