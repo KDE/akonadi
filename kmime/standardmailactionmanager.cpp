@@ -66,8 +66,6 @@ class StandardMailActionManager::Private
       mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
                         mParent, SIGNAL(actionStateUpdated()) );
 
-      //mGenericManager->createAllActions();
-
 
       mGenericManager->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
