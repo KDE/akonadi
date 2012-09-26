@@ -48,10 +48,23 @@ class StandardContactActionManager::Private
       mGenericManager = new StandardActionManager( actionCollection, parentWidget );
       mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
                         mParent, SIGNAL(actionStateUpdated()) );
-      mGenericManager->createAllActions();
 
+      mGenericManager->setMimeTypeFilter(
+        QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
+
+      mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
+    }
+
+    ~Private()
+    {
+      delete mGenericManager;
+    }
+
+    void updateGenericAllActions()
+    {
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText(
         i18n( "Add Address Book Folder..." ) );
+
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis(
         i18n( "Add a new address book folder to the currently selected address book folder." ) );
 
@@ -68,8 +81,8 @@ class StandardContactActionManager::Private
         i18n( "Delete the selected address book folders from the address book." ) );
 
       mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollections,
-                                      ki18np( "Update Address Book Folder",
-                                              "Update %1 Address Book Folders" ) );
+                                        ki18np( "Update Address Book Folder",
+                                                "Update %1 Address Book Folders" ) );
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setWhatsThis(
         i18n( "Update the content of the selected address book folders." ) );
 
@@ -204,15 +217,6 @@ class StandardContactActionManager::Private
         StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
         i18n( "Paste failed" ) );
 
-      mGenericManager->setMimeTypeFilter(
-        QStringList() << KABC::Addressee::mimeType() << KABC::ContactGroup::mimeType() );
-
-      mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
-    }
-
-    ~Private()
-    {
-      delete mGenericManager;
     }
 
     static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
@@ -266,30 +270,53 @@ class StandardContactActionManager::Private
           if ( index.isValid() ) {
             const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
             if ( mimeType == KABC::Addressee::mimeType() ) {
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
-                                              ki18np( "Copy Contact", "Copy %1 Contacts" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Contact To" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
-                                              ki18np( "Delete Contact", "Delete %1 Contacts" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
-                                              ki18np( "Cut Contact", "Cut %1 Contacts" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Contact To" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
-              if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
-                mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
+              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                                ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+                mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Contact To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog)) {
+                mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Contact To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                                ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                                ki18np( "Cut Contact", "Cut %1 Contacts" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu)) {
+                mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Contact To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
+                mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
               }
             } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
-                                              ki18np( "Copy Group", "Copy %1 Groups" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Group To" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Group To" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
-                                              ki18np( "Delete Group", "Delete %1 Groups" ) );
-              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
-                                              ki18np( "Cut Group", "Cut %1 Groups" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Group To" ) );
-              mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Group To" ) );
+              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
+                                                ki18np( "Copy Group", "Copy %1 Groups" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu)) {
+                mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Group To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )) {
+                mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog )->setText( i18n( "Copy Group To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::DeleteItems)) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
+                                                ki18np( "Delete Group", "Delete %1 Groups" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::CutItems)) {
+                mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                                ki18np( "Cut Group", "Cut %1 Groups" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )) {
+                mGenericManager->action( Akonadi::StandardActionManager::MoveItemToMenu )->setText( i18n( "Move Group To" ) );
+              }
+              if(mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
+                mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Group To" ) );
+              }
               if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
                 mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Group..." ) );
               }
@@ -509,6 +536,7 @@ void StandardContactActionManager::createAllActions()
   createAction( EditItem );
 
   d->mGenericManager->createAllActions();
+  d->updateGenericAllActions();
 
   d->updateActions();
 }
