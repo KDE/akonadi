@@ -127,6 +127,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   invalidatecachejob.cpp
   job.cpp
+  kdsignalblocker.cpp
   kjobprivatebase.cpp
   linkjob.cpp
   mimetypechecker.cpp

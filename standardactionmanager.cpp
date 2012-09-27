@@ -43,6 +43,7 @@
 #include "trashrestorejob.h"
 #include "entitydeletedattribute.h"
 #include "recentcollectionaction_p.h"
+#include "kdsignalblocker.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -523,24 +524,20 @@ class StandardActionManager::Private
 
     void collectionSelectionChanged()
     {
-      q->blockSignals( true );
-
       QItemSelection selection = collectionSelectionModel->selection();
       selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
       selection = mapFromEntityTreeModel( favoritesModel, selection );
 
-      if ( favoriteSelectionModel )
+      if ( favoriteSelectionModel ) {
+        KDSignalBlocker blocker(q);
         favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
-
-      q->blockSignals( false );
+      }
 
       updateActions();
     }
 
     void favoriteSelectionChanged()
     {
-      q->blockSignals( true );
-
       QItemSelection selection = favoriteSelectionModel->selection();
       if ( selection.indexes().isEmpty() )
         return;
@@ -548,8 +545,9 @@ class StandardActionManager::Private
       selection = mapToEntityTreeModel( favoritesModel, selection );
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
 
+      KDSignalBlocker blocker(q);
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
-      q->blockSignals( false );
+      blocker.unblock();
 
       updateActions();
     }
