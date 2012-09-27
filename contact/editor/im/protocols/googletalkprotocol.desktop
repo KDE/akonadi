@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Icon=google_protocol
+X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
+X-KDE-InstantMessagingKABCField=messaging/googletalk
+Comment=Google Talk
+Name=Google Talk
