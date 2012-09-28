@@ -43,7 +43,6 @@
 #include "trashrestorejob.h"
 #include "entitydeletedattribute.h"
 #include "recentcollectionaction_p.h"
-#include "kdsignalblocker.h"
 
 #include <KAction>
 #include <KActionCollection>
@@ -194,7 +193,8 @@ class StandardActionManager::Private
       collectionSelectionModel( 0 ),
       itemSelectionModel( 0 ),
       favoritesModel( 0 ),
-      favoriteSelectionModel( 0 )
+      favoriteSelectionModel( 0 ),
+      insideSelectionSlot( false )
     {
       actions.fill( 0, StandardActionManager::LastType );
 
@@ -522,14 +522,31 @@ class StandardActionManager::Private
       }
     }
 
+    // RAII class for setting insideSelectionSlot to true on entering, and false on exiting, the two slots below.
+    class InsideSelectionSlotBlocker {
+    public:
+    InsideSelectionSlotBlocker( Private *p ) : _p( p ) {
+      Q_ASSERT( !p->insideSelectionSlot );
+      p->insideSelectionSlot = true;
+    }
+    ~InsideSelectionSlotBlocker() {
+      Q_ASSERT( _p->insideSelectionSlot );
+      _p->insideSelectionSlot = false;
+    }
+    private:
+      Private *_p;
+    };
+
     void collectionSelectionChanged()
     {
+      if ( insideSelectionSlot )
+        return;
+      InsideSelectionSlotBlocker block( this );
       QItemSelection selection = collectionSelectionModel->selection();
       selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
       selection = mapFromEntityTreeModel( favoritesModel, selection );
 
       if ( favoriteSelectionModel ) {
-        KDSignalBlocker blocker(q);
         favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
       }
 
@@ -538,16 +555,20 @@ class StandardActionManager::Private
 
     void favoriteSelectionChanged()
     {
+      if ( insideSelectionSlot )
+        return;
       QItemSelection selection = favoriteSelectionModel->selection();
-      if ( selection.indexes().isEmpty() )
+      if ( selection.isEmpty() )
         return;
 
       selection = mapToEntityTreeModel( favoritesModel, selection );
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
 
-      KDSignalBlocker blocker(q);
+      InsideSelectionSlotBlocker block( this );
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
-      blocker.unblock();
+
+      // Also set the current index. This will trigger KMMainWidget::slotFolderChanged in kmail, which we want.
+      collectionSelectionModel->setCurrentIndex( selection.indexes().first(), QItemSelectionModel::NoUpdate );
 
       updateActions();
     }
@@ -1416,6 +1437,7 @@ class StandardActionManager::Private
     QItemSelectionModel *itemSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
+    bool insideSelectionSlot;
     QVector<KAction*> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
