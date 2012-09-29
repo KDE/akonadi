@@ -97,10 +97,6 @@ class CollectionDialog::Private
       mRightsFilterModel = new EntityRightsFilterModel( mParent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
-      mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
-      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                        mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
-
       KRecursiveFilterProxyModel* filterCollection = new KRecursiveFilterProxyModel( mParent );
       filterCollection->setDynamicSortFilter( true );
       filterCollection->setSourceModel( mRightsFilterModel );
@@ -116,6 +112,9 @@ class CollectionDialog::Private
       mParent->connect( mView, SIGNAL(doubleClicked(QModelIndex)),
                         mParent, SLOT(accept()) );
 
+      mSelectionHandler = new AsyncSelectionHandler( filterCollection, mParent );
+      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                        mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
     }
 
     ~Private()
