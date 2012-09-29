@@ -126,6 +126,15 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      */
     static QString defaultPageObjectName( DefaultPage page );
 
+    /**
+     * Sets the page to be shown in the tab widget.
+     *
+     * @param name The object name of the page that is to be shown.
+     *
+     * @since 4.10
+     */
+    void setCurrentPage( const QString &name );
+
   private:
     //@cond PRIVATE
     class Private;

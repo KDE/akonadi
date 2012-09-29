@@ -64,6 +64,17 @@ class CollectionPropertiesDialog::Private
       q->deleteLater();
     }
 
+    void setCurrentPage( const QString &name )
+    {
+      for ( int i = 0; i < mTabWidget->count(); ++i ) {
+        QWidget *w = mTabWidget->widget( i );
+        if ( w->objectName() == name ) {
+          mTabWidget->setCurrentIndex( i );
+          break;
+        }
+      }
+    }
+
     CollectionPropertiesDialog *q;
     Collection mCollection;
     QStringList mPageNames;
@@ -187,6 +198,11 @@ QString CollectionPropertiesDialog::defaultPageObjectName( DefaultPage page )
   }
 
   return QString();
+}
+
+void CollectionPropertiesDialog::setCurrentPage( const QString &name )
+{
+  d->setCurrentPage( name );
 }
 
 #include "collectionpropertiesdialog.moc"
