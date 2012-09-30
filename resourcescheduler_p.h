@@ -79,7 +79,7 @@ class ResourceScheduler : public QObject
         QByteArray methodName;
         QVariant argument;
 
-        void sendDBusReplies( bool success );
+        void sendDBusReplies( const QString &errorMsg );
 
         bool operator==( const Task &other ) const
         {
