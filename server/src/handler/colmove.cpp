@@ -62,7 +62,9 @@ bool ColMove::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setCollection( source, true );
   retriever.setRetrieveFullPayload( true );
-  retriever.exec();
+  if (!retriever.exec()) {
+    return failureResponse( retriever.lastError() );
+  }
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

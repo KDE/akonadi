@@ -50,7 +50,9 @@ bool Move::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setScope( mScope );
   retriever.setRetrieveFullPayload( true );
-  retriever.exec();
+  if (!retriever.exec()) {
+    return failureResponse( retriever.lastError() );
+  }
 
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );

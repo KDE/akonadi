@@ -70,7 +70,9 @@ bool Modify::parseStream()
       ItemRetriever retriever( connection() );
       retriever.setCollection( collection, true );
       retriever.setRetrieveFullPayload( true );
-      retriever.exec();
+      if (!retriever.exec()) {
+        throw HandlerException( retriever.lastError() );
+      }
     }
   }
 

@@ -64,6 +64,8 @@ class ItemRetriever
 
     bool exec();
 
+    QByteArray lastError() const;
+
   private:
     QSqlQuery buildQuery() const;
 
@@ -80,6 +82,7 @@ class ItemRetriever
     QStringList mParts;
     bool mFullPayload;
     bool mRecursive;
+    mutable QByteArray mLastError;
 };
 
 }
