@@ -73,7 +73,9 @@ bool Copy::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setItemSet( set );
   retriever.setRetrieveFullPayload( true );
-  retriever.exec();
+  if (!retriever.exec()) {
+    return failureResponse( retriever.lastError() );
+  }
 
   const QByteArray tmp = m_streamParser->readString();
   const Collection targetCollection = HandlerHelper::collectionFromIdOrName( tmp );

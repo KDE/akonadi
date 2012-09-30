@@ -160,8 +160,10 @@ QSqlQuery ItemRetriever::buildQuery() const
 
   qb.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 
-  if ( !qb.exec() )
-    throw ItemRetrieverException( "Unable to retrieve items" );
+  if ( !qb.exec() ) {
+    mLastError = "Unable to retrieve items";
+    throw ItemRetrieverException( mLastError );
+  }
 
   qb.query().next();
 
@@ -233,25 +235,33 @@ bool ItemRetriever::exec()
       ItemRetrievalManager::instance()->requestItemDelivery( request );
     } catch ( const ItemRetrieverException &e ) {
       akError() << e.type() << ": " << e.what();
+      mLastError = e.what();
       return false;
     }
   }
 
   // retrieve items in child collections if requested
+  bool result = true;
   if ( mRecursive && mCollection.isValid() ) {
     Q_FOREACH ( const Collection &col, mCollection.children() ) {
       ItemRetriever retriever( mConnection );
       retriever.setCollection( col, mRecursive );
       retriever.setRetrieveParts( mParts );
       retriever.setRetrieveFullPayload( mFullPayload );
-      retriever.exec();
+      result = retriever.exec();
+      if (!result) break;
     }
   }
 
-  return true;
+  return result;
 }
 
 QString ItemRetriever::driverName()
 {
   return mConnection->storageBackend()->database().driverName();
+}
+
+QByteArray ItemRetriever::lastError() const
+{
+  return mLastError;
 }

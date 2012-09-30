@@ -64,6 +64,8 @@ class ItemRetriever
 
     bool exec();
 
+    QByteArray lastError() const;
+
   private:
     /** Convenience method which returns the database driver name */
     QString driverName();
@@ -77,6 +79,7 @@ class ItemRetriever
     QStringList mParts;
     bool mFullPayload;
     bool mRecursive;
+    mutable QByteArray mLastError;
 };
 
 }
