@@ -31,7 +31,7 @@ class ItemRetrievalJob : public QObject
 {
   Q_OBJECT
   public:
-    ItemRetrievalJob( ItemRetrievalRequest *req, QObject *parent ) : QObject( parent ), m_request( req ), m_active( false ) {}
+    ItemRetrievalJob( ItemRetrievalRequest *req, QObject *parent ) : QObject( parent ), m_request( req ), m_active( false ), m_interface( 0 ), m_oldMethodCalled( false ) {}
     ~ItemRetrievalJob();
     void start( QDBusAbstractInterface* interface );
     void kill();
@@ -41,11 +41,14 @@ class ItemRetrievalJob : public QObject
 
   private Q_SLOTS:
     void callFinished( bool returnValue );
+    void callFinished( const QString& errorMsg );
     void callFailed( const QDBusError &error );
 
   private:
     ItemRetrievalRequest *m_request;
     bool m_active;
+    QDBusAbstractInterface *m_interface;
+    bool m_oldMethodCalled;
 };
 
 #endif
