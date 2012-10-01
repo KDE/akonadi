@@ -20,7 +20,7 @@ set(akonadi_serializer_socialfeeditem_SRCS
 kde4_add_plugin(akonadi_serializer_socialfeeditem ${akonadi_serializer_socialfeeditem_SRCS})
 
 target_link_libraries(akonadi_serializer_socialfeeditem
-  akonadisocialutils
+  akonadi-socialutils
   akonadi-kde
   ${QT_QTCORE_LIBRARY}
   ${KDE4_KDECORE_LIBS}
