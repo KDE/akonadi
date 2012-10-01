@@ -5,7 +5,7 @@ kde4_add_unit_test(asu_tests
 )
 
 target_link_libraries(asu_tests
-    akonadisocialutils
+    akonadi-socialutils
     ${KDE4_KDECORE_LIBS}
     ${QT_QTTEST_LIBRARY}
     ${KDE4_KDEUI_LIBS}
