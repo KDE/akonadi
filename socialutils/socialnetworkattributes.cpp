@@ -16,7 +16,6 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "socialnetworkattributes.h"
 
 #include <QString>
@@ -28,7 +27,10 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes()
 {
 }
 
-Akonadi::SocialNetworkAttributes::SocialNetworkAttributes( const QString &userName, const QString &networkName, bool canPublish, uint maxPostLength )
+Akonadi::SocialNetworkAttributes::SocialNetworkAttributes( const QString &userName,
+                                                           const QString &networkName,
+                                                           bool canPublish,
+                                                           uint maxPostLength )
 {
   mAttributes[QLatin1String( "userName" )] = userName;
   mAttributes[QLatin1String( "networkName" )] = networkName;
@@ -52,12 +54,14 @@ QByteArray Akonadi::SocialNetworkAttributes::serialized() const
   return serializer.serialize(mAttributes);
 }
 
-Akonadi::Attribute* Akonadi::SocialNetworkAttributes::clone() const
+Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 {
-  return new SocialNetworkAttributes( mAttributes[QLatin1String( "userName" )].toString(),
-                                      mAttributes[QLatin1String( "networkName" )].toString(),
-                                      mAttributes[QLatin1String( "canPublish" )].toBool(),
-                                      mAttributes[QLatin1String( "maxPostLength" )].toUInt() );
+  return
+    new SocialNetworkAttributes(
+      mAttributes[QLatin1String( "userName" )].toString(),
+      mAttributes[QLatin1String( "networkName" )].toString(),
+      mAttributes[QLatin1String( "canPublish" )].toBool(),
+      mAttributes[QLatin1String( "maxPostLength" )].toUInt() );
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::type() const

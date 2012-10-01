@@ -25,29 +25,29 @@
 
 class Akonadi::SocialFeedItemData : public QSharedData
 {
-public:
-  SocialFeedItemData();
-  SocialFeedItemData( const Akonadi::SocialFeedItemData &other );
+  public:
+    SocialFeedItemData();
+    SocialFeedItemData( const Akonadi::SocialFeedItemData &other );
 
-  QVariantMap itemSourceMap;
-  QString networkString;
-  QString postId;
-  QString postText;
-  QString postLink;
-  QString postLinkTitle;
-  QString postImageUrl;
-  QString userName;
-  QString userDisplayName;
-  QString userId;
-  QString postTimeString;
-  QString postTimeFormat;
-  QString postInfo;
-  bool shared;
-  QString sharedFrom;
-  QString sharedFromId;
-  QUrl avatarUrl;
-  bool liked;
-  QList<PostReply> replies;
+    QVariantMap itemSourceMap;
+    QString networkString;
+    QString postId;
+    QString postText;
+    QString postLink;
+    QString postLinkTitle;
+    QString postImageUrl;
+    QString userName;
+    QString userDisplayName;
+    QString userId;
+    QString postTimeString;
+    QString postTimeFormat;
+    QString postInfo;
+    bool shared;
+    QString sharedFrom;
+    QString sharedFromId;
+    QUrl avatarUrl;
+    bool liked;
+    QList<PostReply> replies;
 };
 
 Akonadi::SocialFeedItemData::SocialFeedItemData()
@@ -55,15 +55,15 @@ Akonadi::SocialFeedItemData::SocialFeedItemData()
 {
 }
 
-Akonadi::SocialFeedItemData::SocialFeedItemData (const Akonadi::SocialFeedItemData& other)
-  : QSharedData(other)
+Akonadi::SocialFeedItemData::SocialFeedItemData( const Akonadi::SocialFeedItemData &other )
+  : QSharedData( other )
 {
 }
 
 //========================================================================================
 
 Akonadi::SocialFeedItem::SocialFeedItem()
-  : d(new SocialFeedItemData)
+  : d( new SocialFeedItemData )
 {
 }
 
@@ -71,7 +71,6 @@ Akonadi::SocialFeedItem::SocialFeedItem( const Akonadi::SocialFeedItem &other )
 {
   d = other.d;
 }
-
 
 Akonadi::SocialFeedItem::~SocialFeedItem()
 {
@@ -142,7 +141,6 @@ KDateTime Akonadi::SocialFeedItem::postTime() const
   return KDateTime::fromString( d->postTimeString, d->postTimeFormat );
 }
 
-
 QString Akonadi::SocialFeedItem::postTimeString() const
 {
   return d->postTimeString;
@@ -163,7 +161,8 @@ void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString )
   d->postTimeString = postTimeString;
 }
 
-void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString, const QString &postTimeFormat )
+void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString,
+                                           const QString &postTimeFormat )
 {
   d->postTimeString = postTimeString;
   d->postTimeFormat = postTimeFormat;
@@ -204,7 +203,7 @@ QString Akonadi::SocialFeedItem::userDisplayName() const
   return d->userDisplayName;
 }
 
-void Akonadi::SocialFeedItem::setUserDisplayName ( const QString& userDisplayName )
+void Akonadi::SocialFeedItem::setUserDisplayName ( const QString &userDisplayName )
 {
   d->userDisplayName = userDisplayName;
 }

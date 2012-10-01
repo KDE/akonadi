@@ -21,7 +21,7 @@
 #include "akonadi_serializer_socialfeeditem.h"
 #include "../socialfeeditem.h"
 
-#include <akonadi/item.h>
+#include "akonadi/item.h"
 
 #include <QtCore/qplugin.h>
 
@@ -31,12 +31,16 @@
 
 using namespace Akonadi;
 
-bool SocialFeedItemSerializerPlugin::deserialize( Item &item, const QByteArray &label, QIODevice &data, int version )
+bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
+                                                  const QByteArray &label,
+                                                  QIODevice &data,
+                                                  int version )
 {
   Q_UNUSED( version );
 
-  if ( label != Item::FullPayload )
+  if ( label != Item::FullPayload ) {
     return false;
+  }
 
   SocialFeedItem feedItem;
 
@@ -64,7 +68,7 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item, const QByteArray &
 
   if ( map.keys().contains( QLatin1String( "postReplies" ) ) ) {
     QList<PostReply> replies;
-    Q_FOREACH( const QVariant &replyData, map.value( QLatin1String( "postReplies" ) ).toList() ) {
+    Q_FOREACH ( const QVariant &replyData, map.value( QLatin1String( "postReplies" ) ).toList() ) {
       QVariantMap reply = replyData.toMap();
       PostReply postReply;
       postReply.userId        = reply.value( QLatin1String( "userId" ) ).toString();
@@ -87,13 +91,17 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item, const QByteArray &
   return true;
 }
 
-void SocialFeedItemSerializerPlugin::serialize( const Item &item, const QByteArray &label, QIODevice &data, int &version )
+void SocialFeedItemSerializerPlugin::serialize( const Item &item,
+                                                const QByteArray &label,
+                                                QIODevice &data,
+                                                int &version )
 {
   Q_UNUSED( label );
   Q_UNUSED( version );
 
-  if (!item.hasPayload<SocialFeedItem>() )
+  if ( !item.hasPayload<SocialFeedItem>() ) {
     return;
+  }
 
   SocialFeedItem feedItem = item.payload<SocialFeedItem>();
 
@@ -120,7 +128,7 @@ void SocialFeedItemSerializerPlugin::serialize( const Item &item, const QByteArr
 
   if (!feedItem.postReplies().isEmpty() ) {
     QVariantList replies;
-    Q_FOREACH( const PostReply &reply, feedItem.postReplies() ) {
+    Q_FOREACH ( const PostReply &reply, feedItem.postReplies() ) {
       QVariantMap replyData;
       replyData.insert( QLatin1String( "userId" ), reply.userId );
       replyData.insert( QLatin1String( "userName" ), reply.userName );

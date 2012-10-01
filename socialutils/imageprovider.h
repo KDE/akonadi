@@ -19,9 +19,8 @@
   02110-1301, USA.
 */
 
-
-#ifndef AKONADISOCIALUTILS_IMAGEPROVIDER_H
-#define AKONADISOCIALUTILS_IMAGEPROVIDER_H
+#ifndef AKONADI_SOCIALUTILS_IMAGEPROVIDER_H
+#define AKONADI_SOCIALUTILS_IMAGEPROVIDER_H
 
 #include "libakonadisocialutils_export.h"
 
@@ -37,7 +36,7 @@ namespace KIO {
 
 namespace Akonadi {
 
-  class ImageProviderPrivate;
+class ImageProviderPrivate;
 
 /**
  * Class fetching avatars/images from network and storing them in KImageCache
@@ -45,39 +44,41 @@ namespace Akonadi {
 class LIBAKONADISOCIALUTILS_EXPORT ImageProvider : public QObject
 {
   Q_OBJECT
-public:
-  ImageProvider( QObject *parent = 0 );
-  ~ImageProvider();
+  public:
+    ImageProvider( QObject *parent = 0 );
+    ~ImageProvider();
 
-  /**
-   * Starts fetching the avatar/image from network
-   *
-   * @param who The username this picture belongs to, can be some general id as well
-   * @param url URL of the image
-   * @param polishImage set to true if you want the image to have rounded corners, used for avatars mainly
-   */
-  QImage loadImage( const QString &who, const KUrl &url, bool polishImage = false, KImageCache *cache = 0 );
+    /**
+     * Starts fetching the avatar/image from network
+     *
+     * @param who The username this picture belongs to, can be some general id as well
+     * @param url URL of the image
+     * @param polishImage set to true if you want the image to have rounded corners,
+     *        used for avatars mainly
+     */
+    QImage loadImage( const QString &who, const KUrl &url,
+                      bool polishImage = false, KImageCache *cache = 0 );
 
-  /**
-   * Aborts all running jobs
-   */
-  void abortAllJobs();
+    /**
+     * Aborts all running jobs
+     */
+    void abortAllJobs();
 
-Q_SIGNALS:
-  /**
-   * Signals image loading has finished
-   *
-   * @param who The username this picture belongs to
-   * @param url URL of the image
-   * @param image The image itself
-   */
-  void imageLoaded( const QString &who, const KUrl &url, const QImage &image );
+  Q_SIGNALS:
+    /**
+     * Signals image loading has finished
+     *
+     * @param who The username this picture belongs to
+     * @param url URL of the image
+     * @param image The image itself
+     */
+    void imageLoaded( const QString &who, const KUrl &url, const QImage &image );
 
-private:
-  ImageProviderPrivate * const d_ptr;
-  Q_DECLARE_PRIVATE( ImageProvider )
-  Q_PRIVATE_SLOT( d_func(), void result( KJob *job ) );
-  Q_PRIVATE_SLOT( d_func(), void recv( KIO::Job *job, const QByteArray &data ) );
+  private:
+    ImageProviderPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( ImageProvider )
+    Q_PRIVATE_SLOT( d_func(), void result( KJob *job ) );
+    Q_PRIVATE_SLOT( d_func(), void recv( KIO::Job *job, const QByteArray &data ) );
 };
 
 }

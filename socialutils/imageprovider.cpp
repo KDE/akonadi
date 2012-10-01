@@ -19,7 +19,6 @@
   02110-1301, USA.
 */
 
-
 #include "imageprovider.h"
 
 #include <KDebug>
@@ -28,69 +27,71 @@
 
 #include <QPainter>
 
-class Akonadi::ImageProviderPrivate {
-
+class Akonadi::ImageProviderPrivate
+{
   Q_DECLARE_PUBLIC( ImageProvider )
 
-public:
+  public:
 
-  struct QueuedJobHelper {
-    QString who;
-    KUrl url;
-    bool polishImage;
-  };
+    struct QueuedJobHelper {
+      QString who;
+      KUrl url;
+      bool polishImage;
+    };
 
-  ImageProviderPrivate( ImageProvider *q ) : q_ptr( q )
-  {
-  }
+    ImageProviderPrivate( ImageProvider *q ) : q_ptr( q )
+    {
+    }
 
-  /**
-   * Makes the corners of the image rounded
-   */
-  QImage polishImage( const QImage &img )
-  {
-    QImage roundedImage = QImage( QSize( 48*4, 48*4 ), QImage::Format_ARGB32_Premultiplied );
-    roundedImage.fill( Qt::transparent );
-    QPainter p;
-    p.begin( &roundedImage );
-    QPainterPath clippingPath;
-    QRectF imgRect = QRectF( QPoint( 0,0 ), roundedImage.size() );
-    clippingPath.addRoundedRect( imgRect, 24, 24 );
-    p.setClipPath( clippingPath );
-    p.setClipping( true );
-    p.drawImage( QRectF( QPointF( 0, 0 ), roundedImage.size() ), img );
-    return roundedImage;
-  }
+    /**
+     * Makes the corners of the image rounded
+     */
+    QImage polishImage( const QImage &img )
+    {
+      const int sz = 48 * 4;
+      QImage roundedImage = QImage( QSize( sz, sz ), QImage::Format_ARGB32_Premultiplied );
+      roundedImage.fill( Qt::transparent );
+      QPainter p;
+      p.begin( &roundedImage );
+      QPainterPath clippingPath;
+      QRectF imgRect = QRectF( QPoint( 0, 0 ), roundedImage.size() );
+      clippingPath.addRoundedRect( imgRect, 24, 24 );
+      p.setClipPath( clippingPath );
+      p.setClipping( true );
+      p.drawImage( QRectF( QPointF( 0, 0 ), roundedImage.size() ), img );
+      return roundedImage;
+    }
 
-  ///All active jobs
-  QHash<KJob *, QString> jobs;
+    ///All active jobs
+    QHash<KJob *, QString> jobs;
 
-  ///Received data from the jobs
-  QHash<KJob *, QByteArray> jobData;
+    ///Received data from the jobs
+    QHash<KJob *, QByteArray> jobData;
 
-  ///Number of running jobs
-  int runningJobs;
+    ///Number of running jobs
+    int runningJobs;
 
-  ///Queued jobs when the limit is reached
-  QList<QueuedJobHelper> queuedJobs;
+    ///Queued jobs when the limit is reached
+    QList<QueuedJobHelper> queuedJobs;
 
-  ///String list containing the list of loaded persons avatars
-  QStringList pendingPersons;
+    ///String list containing the list of loaded persons avatars
+    QStringList pendingPersons;
 
-  ///KImageCache instance
-  KImageCache *imageCache;
+    ///KImageCache instance
+    KImageCache *imageCache;
 
-private:
-  /**
-   * This slot is called when fetching the avatar has finished
-   */
-  void result( KJob *job );
-  /**
-   * Handling received data from KJob
-   */
-  void recv( KIO::Job *job, const QByteArray &data );
+  private:
+    /**
+     * This slot is called when fetching the avatar has finished
+     */
+    void result( KJob *job );
 
-  ImageProvider *q_ptr;
+    /**
+     * Handling received data from KJob
+     */
+    void recv( KIO::Job *job, const QByteArray &data );
+
+    ImageProvider *q_ptr;
 };
 
 void Akonadi::ImageProviderPrivate::recv( KIO::Job *job, const QByteArray &data )
@@ -113,7 +114,7 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
     q->loadImage( helper.who, helper.url, helper.polishImage );
   }
 
-  if ( job->error()) {
+  if ( job->error() ) {
     // TODO: error handling
     KIO::TransferJob* kiojob = dynamic_cast<KIO::TransferJob*>( job );
     kError() << "Image job for" << jobs.value( job ) << "returned error:" << kiojob->errorString();
@@ -123,7 +124,8 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
     QImage image;
     image.loadFromData( jobData.value( job ) );
     KIO::TransferJob* kiojob = dynamic_cast<KIO::TransferJob*>( job );
-    const QString cacheKey = who + QLatin1Char( '@' ) + kiojob->property( "imageUrl" ).value<KUrl>().pathOrUrl();
+    const QString cacheKey = who + QLatin1Char( '@' ) +
+                             kiojob->property( "imageUrl" ).value<KUrl>().pathOrUrl();
 
     kDebug() << "Downloaded image for" << who << "(key:" << cacheKey << ")";
 
@@ -132,7 +134,9 @@ void Akonadi::ImageProviderPrivate::result( KJob *job )
 
     bool polishImage = job->property( "polishImage" ).toBool();
 
-    Q_EMIT q->imageLoaded( who, kiojob->property( "imageUrl" ).value<KUrl>(), polishImage ? this->polishImage( image ) : image );
+    Q_EMIT q->imageLoaded( who,
+                           kiojob->property( "imageUrl" ).value<KUrl>(),
+                           polishImage ? this->polishImage( image ) : image );
   }
 
   jobs.remove( job );
@@ -154,7 +158,8 @@ Akonadi::ImageProvider::~ImageProvider()
   delete d;
 }
 
-QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url, bool polishImage, KImageCache *cache )
+QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url,
+                                          bool polishImage, KImageCache *cache )
 {
   Q_D( ImageProvider );
 
@@ -164,7 +169,8 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url, b
 
   if ( !d->imageCache && !cache ) {
     //if no old cache and no passed cache, default to plasma_engine_preview
-    d->imageCache = new KImageCache( QLatin1String( "plasma_engine_preview" ), 10485760 ); // Re-use previewengine's cache
+    d->imageCache = new KImageCache( QLatin1String( "plasma_engine_preview" ),
+                                     10485760 ); // Re-use previewengine's cache
   } else if ( !d->imageCache && cache ) {
     //if there is no old cache, set the new one
     d->imageCache = cache;
@@ -203,20 +209,21 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url, b
   //FIXME: since kio_http bombs the system with too many request put a temporary
   // arbitrary limit here, revert as soon as BUG 192625 is fixed
   // Note: seems fixed.
-  if ( d->runningJobs < 500) {
+  if ( d->runningJobs < 500 ) {
     d->runningJobs++;
     kDebug() << "Starting fetch job for" << who;
     KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
     job->setAutoDelete( true );
     d->jobs[job] = who;
-    connect(job, SIGNAL(data(KIO::Job*,QByteArray)),
-            this, SLOT(recv(KIO::Job*,QByteArray)));
-    connect(job, SIGNAL(result(KJob*)),
-           this, SLOT(result(KJob*)));
-    //the url needs to be stored explicitly because for example facebook redirects randomly between its servers
-    //causing the url to be different every time, which makes storing the job's url in cache impossible
-    //therefore we set it here and use this when saving to the cache instead of job->url()
-    job->setProperty( "imageUrl", url  );
+    connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
+             this, SLOT(recv(KIO::Job*,QByteArray)) );
+    connect( job, SIGNAL(result(KJob*)),
+             this, SLOT(result(KJob*)) );
+    // The url needs to be stored explicitly because, for example, facebook redirects
+    // randomly between its servers causing the url to be different every time, which
+    // makes storing the job's url in cache impossible therefore we set it here and
+    // use this when saving to the cache instead of job->url()
+    job->setProperty( "imageUrl", url );
     job->setProperty( "polishImage", polishImage );
     job->start();
   } else {
@@ -234,7 +241,7 @@ QImage Akonadi::ImageProvider::loadImage( const QString &who, const KUrl &url, b
 void Akonadi::ImageProvider::abortAllJobs()
 {
   Q_D( ImageProvider );
-  Q_FOREACH( KJob *job, d->jobs.keys() ) {
+  Q_FOREACH ( KJob *job, d->jobs.keys() ) {
     job->kill();
     d->jobs.remove( job );
     d->jobData.remove( job );

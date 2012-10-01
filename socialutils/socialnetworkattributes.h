@@ -16,13 +16,12 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
-#ifndef SOCIALNETWORKATTRIBUTES_H
-#define SOCIALNETWORKATTRIBUTES_H
+#ifndef AKONADI_SOCIALUTILS_SOCIALNETWORKATTRIBUTES_H
+#define AKONADI_SOCIALUTILS_SOCIALNETWORKATTRIBUTES_H
 
 #include "libakonadisocialutils_export.h"
 
-#include <akonadi/attribute.h>
+#include "akonadi/attribute.h"
 
 #include <QString>
 #include <QVariantMap>
@@ -31,43 +30,47 @@ namespace Akonadi {
 
 class LIBAKONADISOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attribute
 {
+  public:
+    SocialNetworkAttributes();
 
-public:
-   SocialNetworkAttributes();
-  /**
-   * Constructs the attribute
-   * @param userName User that is signed in for this collection/resource
-   * @param networkName Name of the network this collection belongs to (eg. Facebook, Twitter etc)
-   * @param canPublish True if we can publish stuff through this resource
-   * @param maxPostLength Max length of the post that can be published (eg. 140 for Twitter)
-   */
-  SocialNetworkAttributes( const QString &userName, const QString &networkName, bool canPublish, uint maxPostLength );
-  ~SocialNetworkAttributes();
+    /**
+     * Constructs the attribute
+     * @param userName User that is signed in for this collection/resource
+     * @param networkName Name of the network this collection belongs to (eg. Facebook, Twitter etc)
+     * @param canPublish True if we can publish stuff through this resource
+     * @param maxPostLength Max length of the post that can be published (eg. 140 for Twitter)
+     */
+    SocialNetworkAttributes( const QString &userName, const QString &networkName,
+                             bool canPublish, uint maxPostLength );
+    ~SocialNetworkAttributes();
 
-  void deserialize( const QByteArray &data );
-  QByteArray serialized() const;
-  Akonadi::Attribute* clone() const;
-  QByteArray type() const;
+    void deserialize( const QByteArray &data );
+    QByteArray serialized() const;
+    Akonadi::Attribute *clone() const;
+    QByteArray type() const;
 
-  /**
-   * Returns the userName of the user that is signed in with this resource
-   */
-  QString userName() const;
-  /**
-   * Returns the network name this collection belongs to (eg. Facebook, Twitter etc)
-   */
-  QString networkName() const;
-  /**
-   * Returns true if this network can be published to, false otherwise
-   */
-  bool canPublish() const;
-  /**
-   * Returns max length of the post that can be published (eg. 140 chars for Twitter)
-   */
-  uint maxPostLength() const;
+    /**
+     * Returns the userName of the user that is signed in with this resource
+     */
+    QString userName() const;
 
-private:
-  QVariantMap mAttributes;
+    /**
+     * Returns the network name this collection belongs to (eg. Facebook, Twitter etc)
+     */
+    QString networkName() const;
+
+    /**
+     * Returns true if this network can be published to, false otherwise
+     */
+    bool canPublish() const;
+
+    /**
+     * Returns max length of the post that can be published (eg. 140 chars for Twitter)
+     */
+    uint maxPostLength() const;
+
+  private:
+    QVariantMap mAttributes;
 };
 
 }
