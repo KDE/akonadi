@@ -49,7 +49,7 @@ void SearchJobTest::testCreateDeleteSearch()
   }
   QVERIFY( col == created );
   QCOMPARE( col.parentCollection().id(), 1LL );
-  QVERIFY( CollectionUtils::isVirtual( col ) );
+  QVERIFY( col.isVirtual() );
 
   CollectionDeleteJob *delJob = new CollectionDeleteJob( col, this );
   AKVERIFYEXEC( delJob );
