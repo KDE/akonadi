@@ -88,18 +88,17 @@ QImage ImageLoader::loadImage( const KUrl &url, bool *ok )
 
   QPixmap pixmap = QPixmap::fromImage( image );
 
-  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 100, mParent );
+  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 1, 1, mParent );
   if ( image.isNull() ) {
     ( *ok ) = false;
     return image;
   }
 
-  if ( image.height() != 140 || image.width() != 100 ) {
-    if ( image.height() > image.width() ) {
-      image = image.scaledToHeight( 140 );
-    } else {
-      image = image.scaledToWidth( 100 );
-    }
+  if ( image.height() > 720 || image.width() > 720 ) {
+    if ( image.height() > image.width() )
+      image = image.scaledToHeight( 720 );
+    else
+      image = image.scaledToWidth( 720 );
   }
 
   ( *ok ) = true;
