@@ -29,5 +29,7 @@ target_link_libraries(akonadi-socialutils
 
 set_target_properties(akonadi-socialutils PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
-install(TARGETS akonadi-socialutils ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi-socialutils EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
 install(FILES ${akonadi_social_utils_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/socialutils)
+
