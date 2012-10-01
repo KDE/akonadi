@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="22"/>
+    <data columns="version" values="23"/>
   </table>
 
   <table name="Resource">
@@ -92,11 +92,12 @@
     <column name="cachePolicyLocalParts" type="QString"/>
     <column name="queryString" type="QString" size="32768"/>
     <column name="queryLanguage" type="QString"/>
+    <column name="isVirtual" type="bool" default="false"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
     <reference name="children" table="Collection" key="parentId"/>
     <reference name="items" table="PimItem" key="collectionId"/>
     <reference name="attributes" table="CollectionAttribute" key="collectionId"/>
-    <data columns="parentId,name,resourceId" values="NULL,'Search',1"/>
+    <data columns="parentId,name,resourceId,isVirtual" values="NULL,'Search',1,1"/>
   </table>
 
   <table name="MimeType">

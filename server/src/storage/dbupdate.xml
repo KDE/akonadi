@@ -165,4 +165,8 @@
     <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE Collection_id Collection_id BIGINT NOT NULL</raw-sql>
     <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE PimItem_id PimItem_id BIGINT NOT NULL</raw-sql>
   </update>
+
+  <update version="23" abortOnFailure="false">
+    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE CollectionTable SET isVirtual=1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual=1)</raw-sql>
+  </update>
 </updates>

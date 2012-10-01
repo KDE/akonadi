@@ -137,6 +137,8 @@ bool Create::parseStream()
       mimeTypesSet = true;
     } else if ( key == "CACHEPOLICY" ) {
       HandlerHelper::parseCachePolicy( value, collection );
+    } else if ( key == "VIRTUAL" ) {
+      collection.setIsVirtual( value.toUInt() != 0 );
     } else {
       userDefAttrs << qMakePair( key, value );
     }

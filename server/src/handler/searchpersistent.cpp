@@ -84,6 +84,7 @@ bool SearchPersistent::parseStream()
   col.setParentId( 1 ); // search root
   col.setResourceId( 1 ); // search resource
   col.setName( collectionName );
+  col.setIsVirtual( true );
   if ( !db->appendCollection( col ) )
     return failureResponse( "Unable to create persistent search" );
 

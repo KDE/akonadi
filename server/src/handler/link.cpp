@@ -42,6 +42,9 @@ bool Link::parseStream()
   mDestinationScope.parseScope( m_streamParser );
   const Collection collection = CollectionQueryHelper::singleCollectionFromScope( mDestinationScope, connection() );
 
+  if ( !collection.isVirtual() )
+    return failureResponse( "Can't link items to non-virtual collections" );
+
   Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
   if ( itemSelectionScope != Scope::None )
     m_streamParser->readString();

@@ -130,6 +130,8 @@ bool Modify::parseStream()
       if ( !db->moveCollection( collection, Collection::retrieveById( newParent ) ) )
         return failureResponse( "Unable to reparent collection" );
       changes.append( "PARENT" );
+    } else if ( type == "VIRTUAL" ) {
+      return failureResponse( "Can't modify VIRTUAL collection flag" );
     } else if ( type == AKONADI_PARAM_REMOTEID ) {
       QString rid;
       pos = ImapParser::parseString( line, rid, pos );
@@ -226,3 +228,4 @@ bool Modify::parseStream()
 }
 
 #include "modify.moc"
+

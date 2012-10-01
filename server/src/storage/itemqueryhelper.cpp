@@ -34,7 +34,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const
 {
   QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
   if ( collection.isValid() ) {
-    if ( collection.resource().isVirtual() ) {
+    if ( collection.isVirtual() || collection.resource().isVirtual() ) {
       qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
       qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, collection.id() );

@@ -196,7 +196,8 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection & col, bool hi
     b += "MIMETYPE (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID " + ImapParser::quote( col.remoteId().toUtf8() );
   b += " REMOTEREVISION " + ImapParser::quote( col.remoteRevision().toUtf8() );
-  b += " RESOURCE " + ImapParser::quote( col.resource().name().toUtf8() ) + ' ';
+  b += " RESOURCE " + ImapParser::quote( col.resource().name().toUtf8() );
+  b += " VIRTUAL " + QByteArray::number( col.isVirtual() ) + ' ';
 
   if ( includeStatistics ) {
     qint64 itemCount, itemSize;
