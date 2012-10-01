@@ -33,10 +33,10 @@ void ImageProviderTests::setup()
     QEventLoop e;
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadAvatar( QLatin1String( "mck182" ),
-                                 KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
-                                 true,
-                                 cache );
+    QImage image = i.loadImage( QLatin1String( "mck182" ),
+                                KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
+                                true,
+                                cache );
 
     connect(&i, SIGNAL(imageLoaded(QString,KUrl,QImage)),
             this, SLOT(onImageFetched(QString,KUrl,QImage)));
@@ -54,10 +54,10 @@ void ImageProviderTests::testImageNoCache()
     cache->clear();
 
     Akonadi::ImageProvider i;
-    QImage image = i.loadAvatar( QLatin1String( "mck182" ),
-                                 KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
-                                 true,
-                                 cache);
+    QImage image = i.loadImage( QLatin1String( "mck182" ),
+                                KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
+                                true,
+                                cache);
 
     QVERIFY( image.isNull() );
 }
