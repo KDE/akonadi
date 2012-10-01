@@ -207,7 +207,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
         QString value = custom.mid( pos + 1 );
 
         // convert anniversary correctly
-        if ( key == QLatin1String( "Anniversary" ) ) {
+        if ( key == QLatin1String( "Anniversary" ) || key == QLatin1String( "ANNIVERSARY" ) ) {
           const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
           value = KGlobal::locale()->formatDate( dateTime.date() );
         } else if ( key == QLatin1String( "BlogFeed" ) ) {  // blog is handled separated
