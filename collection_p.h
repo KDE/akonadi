@@ -38,7 +38,8 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     CollectionPrivate( Collection::Id id = -1 ) :
       EntityPrivate( id ),
       contentTypesChanged( false ),
-      cachePolicyChanged( false )
+      cachePolicyChanged( false ),
+      isVirtual( false )
     {}
 
     CollectionPrivate( const CollectionPrivate &other ) :
@@ -51,6 +52,7 @@ class Akonadi::CollectionPrivate : public EntityPrivate
       cachePolicy = other.cachePolicy;
       contentTypesChanged = other.contentTypesChanged;
       cachePolicyChanged = other.cachePolicyChanged;
+      isVirtual = other.isVirtual;
     }
 
     ~CollectionPrivate()
@@ -84,8 +86,9 @@ class Akonadi::CollectionPrivate : public EntityPrivate
     QStringList contentTypes;
     static const Collection root;
     CachePolicy cachePolicy;
-    bool contentTypesChanged;
-    bool cachePolicyChanged;
+    bool contentTypesChanged: 1;
+    bool cachePolicyChanged: 1;
+    bool isVirtual: 1;
 };
 
 #endif

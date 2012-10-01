@@ -261,6 +261,15 @@ class AKONADI_EXPORT Collection : public Entity
      */
     bool isVirtual() const;
 
+    /**
+     * Sets whether the collection is virtual or not.
+     *
+     * Virtual collections can't be converted to non-virtual and vice versa.
+     *
+     * @since 4.10
+     */
+    void setVirtual(bool isVirtual);
+
   private:
     AKONADI_DECLARE_PRIVATE( Collection )
     friend class CollectionFetchJob;

@@ -93,7 +93,7 @@ CachePolicyPage::~CachePolicyPage()
 
 bool Akonadi::CachePolicyPage::canHandle( const Collection &collection ) const
 {
-  return !CollectionUtils::isVirtual( collection );
+  return !collection.isVirtual();
 }
 
 void CachePolicyPage::load( const Collection &collection )

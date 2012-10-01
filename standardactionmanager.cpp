@@ -1277,7 +1277,7 @@ class StandardActionManager::Private
      */
     bool isWritableTargetCollectionForMimeTypes( const Collection &collection, const QSet<QString> &mimeTypes, StandardActionManager::Type type ) const
     {
-      if ( CollectionUtils::isVirtual( collection ) )
+      if ( collection.isVirtual() )
         return false;
 
       const bool isItemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
@@ -1305,7 +1305,7 @@ class StandardActionManager::Private
         const QModelIndex index = model->index( row, 0, parentIndex );
         const Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-        if ( CollectionUtils::isVirtual( collection ) )
+        if ( collection.isVirtual() )
           continue;
 
         const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );

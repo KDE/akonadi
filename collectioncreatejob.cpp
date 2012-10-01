@@ -80,6 +80,7 @@ void CollectionCreateJob::doStart( )
   }
   command += " REMOTEID " + ImapParser::quote( d->mCollection.remoteId().toUtf8() );
   command += " REMOTEREVISION " + ImapParser::quote( d->mCollection.remoteRevision().toUtf8() );
+  command += " VIRTUAL " + QByteArray::number( d->mCollection.isVirtual() );
   foreach ( Attribute *attr, d->mCollection.attributes() ) {
     command += ' ' + attr->type() + ' ' + ImapParser::quote( attr->serialized() );
   }
@@ -111,6 +112,7 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
     col.setName( d->mCollection.name() );
     col.setRemoteId( d->mCollection.remoteId() );
     col.setRemoteRevision( d->mCollection.remoteRevision() );
+    col.setVirtual( d->mCollection.isVirtual() );
     d->mCollection = col;
   } else {
     Job::doHandleResponse( tag, data );

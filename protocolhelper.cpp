@@ -172,6 +172,8 @@ int ProtocolHelper::parseCollection(const QByteArray & data, Collection & collec
       for ( int j = 0; j < ct.size(); j++ )
         ct2 << QString::fromLatin1( ct[j] );
       collection.setContentMimeTypes( ct2 );
+    } else if ( key == "VIRTUAL" ) {
+      collection.setVirtual( value.toUInt() != 0 );
     } else if ( key == "MESSAGES" ) {
       CollectionStatistics s = collection.statistics();
       s.setCount( value.toLongLong() );

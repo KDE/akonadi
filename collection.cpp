@@ -217,6 +217,7 @@ QDebug operator <<( QDebug d, const Akonadi::Collection &collection )
              << "   resource:" << collection.resource() << endl
              << "   rights:" << collection.rights() << endl
              << "   contents mime type:" << collection.contentMimeTypes() << endl
+             << "   isVirtual:" << collection.isVirtual() << endl
              << "   " << collection.cachePolicy() << endl
              << "   " << collection.statistics();
 }
@@ -246,8 +247,15 @@ void Collection::setCachePolicy(const CachePolicy & cachePolicy)
 
 bool Collection::isVirtual() const
 {
-  // TODO make this a proper flag
-  return ( ( resource() == QLatin1String( "akonadi_search_resource" ) || resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
+  return d_func()->isVirtual;
 }
+
+void Akonadi::Collection::setVirtual(bool isVirtual)
+{
+  Q_D( Collection );
+
+  d->isVirtual = isVirtual;
+}
+
 
 AKONADI_DEFINE_PRIVATE( Akonadi::Collection )
