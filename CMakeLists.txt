@@ -34,6 +34,7 @@ include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
