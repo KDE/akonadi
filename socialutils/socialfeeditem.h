@@ -303,6 +303,6 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::SocialFeedItem );
+Q_DECLARE_METATYPE( Akonadi::SocialFeedItem )
 
 #endif // SOCIALFEEDITEM_H

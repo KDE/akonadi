@@ -77,8 +77,8 @@ class LIBAKONADISOCIALUTILS_EXPORT ImageProvider : public QObject
   private:
     ImageProviderPrivate * const d_ptr;
     Q_DECLARE_PRIVATE( ImageProvider )
-    Q_PRIVATE_SLOT( d_func(), void result( KJob *job ) );
-    Q_PRIVATE_SLOT( d_func(), void recv( KIO::Job *job, const QByteArray &data ) );
+    Q_PRIVATE_SLOT( d_func(), void result( KJob *job ) )
+    Q_PRIVATE_SLOT( d_func(), void recv( KIO::Job *job, const QByteArray &data ) )
 };
 
 }
