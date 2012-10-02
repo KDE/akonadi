@@ -167,6 +167,7 @@
   </update>
 
   <update version="23" abortOnFailure="false">
-    <raw-sql backends="mysql,psql,sqlite,odbc">UPDATE CollectionTable SET isVirtual=1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual=1)</raw-sql>
+    <raw-sql backends="mysql,psql,odbc">UPDATE CollectionTable SET isVirtual = true WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = true)</raw-sql>
+    <raw-sql backends="sqlite">UPDATE CollectionTable SET isVirtual = 1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = 1)</raw-sql>
   </update>
 </updates>
