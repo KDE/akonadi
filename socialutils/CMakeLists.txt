@@ -25,6 +25,7 @@ target_link_libraries(akonadi-socialutils
   ${KDE4_KIO_LIBS}
   ${QT_QTNETWORK_LIBS}
   ${QJSON_LIBRARIES}
+  ${qjson_LIBRARIES} # for Debian
 )
 
 set_target_properties(akonadi-socialutils PROPERTIES
