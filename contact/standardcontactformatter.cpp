@@ -55,6 +55,16 @@ StandardContactFormatter::~StandardContactFormatter()
   delete d;
 }
 
+static int contactAge( const QDate &date )
+{
+  QDate now = QDate::currentDate();
+  int age = now.year() - date.year();
+  if ( date > now.addYears( -age ) ) {
+    age--;
+  }
+  return age;
+}
+
 QString StandardContactFormatter::toHtml( HtmlForm form ) const
 {
   KABC::Addressee rawContact;
@@ -84,7 +94,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Birthday
   const QDate date = rawContact.birthday().date();
-  const int years = ( date.daysTo( QDate::currentDate() ) / 365 );
+  const int years = contactAge( date );
 
   if ( date.isValid() ) {
     dynamicPart += rowFmtStr
