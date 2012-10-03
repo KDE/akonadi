@@ -1,6 +1,16 @@
 [Misc]
 Name=SocialFeedItem Serializer
+Name[hu]=SocialFeedItem sorosító
+Name[pt]=Serialização de Fontes Sociais
+Name[sk]=Serializátor SocialFeedItem
+Name[uk]=Серіалізатор SocialFeedItem
+Name[x-test]=xxSocialFeedItem Serializerxx
 Comment=An Akonadi serializer plugin for SocialFeedItem
+Comment[hu]=Egy Akonadi sorosító bővítmény a SocialFeedItemhez
+Comment[pt]=Um 'plugin' de serialização do Akonadi de itens de fontes sociais
+Comment[sk]=Plugin serializátora Akonadi pre SocialFeedItem
+Comment[uk]=Додаток серіалізації Akonadi для SocialFeedItem
+Comment[x-test]=xxAn Akonadi serializer plugin for SocialFeedItemxx
 
 [Plugin]
 Type=text/x-vnd.akonadi.socialfeeditem
