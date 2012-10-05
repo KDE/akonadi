@@ -833,7 +833,7 @@ class StandardActionManager::Private
                                                                                     : collection.name();
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
-      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( displayName ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, 0 ,displayName ) );
       dlg->show();
     }
 
@@ -1181,7 +1181,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText,0, job->errorString() ),
                             contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1190,7 +1190,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText, 0 , job->errorString() ),
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1199,7 +1199,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageText, 0, job->errorString() ),
                             contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1208,7 +1208,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageText,0, job->errorString() ),
                             contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1217,7 +1217,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText,0 , job->errorString() ),
                             contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1226,7 +1226,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText,0, job->errorString() ),
                             contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1235,7 +1235,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText, 0,  job->errorString() ),
                             contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1415,16 +1415,16 @@ class StandardActionManager::Private
 
     QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value ) const
     {
-      if ( contextTexts[ type ].value( context ).localizedText.isEmpty() )
+      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
+      if ( text.isEmpty() )
         return contextTexts[ type ].value( context ).text;
 
-      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
       const QString str = text.subs( count ).toString();
       const int argCount = str.count( QRegExp( QLatin1String( "%[0-9]" ) ) );
       if ( argCount > 0 ) {
         return text.subs( count ).subs( value ).toString();
       } else {
-        return text.subs( count ).toString();
+        return text.subs( value ).toString();
       }
     }
 
