@@ -1,6 +1,7 @@
 [Misc]
 Name=SocialFeedItem Serializer
 Name[hu]=SocialFeedItem sorosító
+Name[ia]=SocialFeeditem Serializer
 Name[nl]=Serialisator voor SocialFeedItem
 Name[pt]=Serialização de Fontes Sociais
 Name[pt_BR]=Serializador de Fontes Sociais
@@ -10,6 +11,7 @@ Name[uk]=Серіалізатор SocialFeedItem
 Name[x-test]=xxSocialFeedItem Serializerxx
 Comment=An Akonadi serializer plugin for SocialFeedItem
 Comment[hu]=Egy Akonadi sorosító bővítmény a SocialFeedItemhez
+Comment[ia]=Un plugin pro serializar de Akonadi pro SocialFeedItem
 Comment[nl]=Een Akonadi serialisatorplug-in voor SocialFeedItem
 Comment[pt]=Um 'plugin' de serialização do Akonadi de itens de fontes sociais
 Comment[pt_BR]=Um plugin de serialização do Akonadi de itens de fontes sociais
