@@ -575,7 +575,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * This is like a dataChanged(), but specific to the initial loading, in order to update
      * the GUI (window caption, state of actions).
      * Usually, the GUI uses Akonadi::Monitor to be notified of further changes to the collections.
-     * @since 4.10
+     * @since 4.9.3
      */
     void collectionFetched(int collectionId);
 
