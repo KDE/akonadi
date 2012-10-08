@@ -569,6 +569,16 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     static QModelIndexList modelIndexesForItem( const QAbstractItemModel *model, const Item &item );
 
+  Q_SIGNALS:
+    /**
+     * Emitted once a collection has been fetched for the very first time.
+     * This is like a dataChanged(), but specific to the initial loading, in order to update
+     * the GUI (window caption, state of actions).
+     * Usually, the GUI uses Akonadi::Monitor to be notified of further changes to the collections.
+     * @since 4.10
+     */
+    void collectionFetched(int collectionId);
+
   protected:
     /**
      * Clears and resets the model. Always call this instead of the reset method in the superclass.
