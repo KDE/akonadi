@@ -596,6 +596,14 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @since 4.10
      */
     void collectionPopulated( Akonadi::Collection::Id collectionId );
+    /**
+     * Emitted once a collection has been fetched for the very first time.
+     * This is like a dataChanged(), but specific to the initial loading, in order to update
+     * the GUI (window caption, state of actions).
+     * Usually, the GUI uses Akonadi::Monitor to be notified of further changes to the collections.
+     * @since 4.9.3
+     */
+    void collectionFetched(int collectionId);
 
   protected:
     /**

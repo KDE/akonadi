@@ -86,6 +86,7 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   connect( mAddButton, SIGNAL(clicked()), this, SLOT(slotAdd()) );
   connect( mEditButton, SIGNAL(clicked()), this, SLOT(slotEdit()) );
   connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemove()) );
+  slotUpdateButtons();
 }
 
 CustomFieldsEditWidget::~CustomFieldsEditWidget()
