@@ -40,7 +40,8 @@ SecrecyEditWidget::SecrecyEditWidget( QWidget *parent )
   KABC::Secrecy::TypeList::ConstIterator it;
 
   // (*it) is the type enum, which is also used as the index in the combo
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  KABC::Secrecy::TypeList::ConstIterator end(list.constEnd());
+  for ( it = list.constBegin(); it != end; ++it ) {
     mSecrecyCombo->insertItem( *it, KABC::Secrecy::typeLabel( *it ) );
   }
 }
