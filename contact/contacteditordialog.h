@@ -87,6 +87,11 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
       EditMode    ///< Edits an existing contact
     };
 
+    enum DisplayMode {
+      FullMode, //Show all pages
+      VCardMode //Show just pages with elements stored in vcard.
+    };
+
     /**
      * Creates a new contact editor dialog with the standard editor widget.
      *
@@ -103,6 +108,16 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * @param parent The parent widget of the dialog.
      */
     ContactEditorDialog( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
+
+    /**
+     * Creates a new contact editor dialog with a custom editor widget.
+     *
+     * @param mode The mode of the dialog.
+     * @param editorWidget The contact editor widget that shall be used for editing.
+     * @param parent The parent widget of the dialog.
+     * @since 4.10
+     */
+    ContactEditorDialog( Mode mode, DisplayMode displayMode, QWidget *parent = 0 );
 
     /**
      * Destroys the contact editor dialog.

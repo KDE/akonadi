@@ -47,14 +47,14 @@ using namespace Akonadi;
 class ContactEditor::Private
 {
   public:
-    Private( ContactEditor::Mode mode, AbstractContactEditorWidget *editorWidget, ContactEditor *parent )
+    Private( ContactEditor::Mode mode, ContactEditor::DisplayMode displayMode, AbstractContactEditorWidget *editorWidget, ContactEditor *parent )
       : mParent( parent ), mMode( mode ), mMonitor( 0 ), mReadOnly( false )
     {
       if ( editorWidget ) {
         mEditorWidget = editorWidget;
 #ifndef DISABLE_EDITOR_WIDGETS
       } else {
-        mEditorWidget = new ContactEditorWidget();
+        mEditorWidget = new ContactEditorWidget(displayMode == FullMode ? ContactEditorWidget::FullMode : ContactEditorWidget::VCardMode, 0);
 #endif
       }
 
@@ -201,14 +201,20 @@ void ContactEditor::Private::setupMonitor()
 
 
 ContactEditor::ContactEditor( Mode mode, QWidget *parent )
-  : QWidget( parent ), d( new Private( mode, 0, this ) )
+  : QWidget( parent ), d( new Private( mode, FullMode, 0, this ) )
 {
 }
 
 ContactEditor::ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
-  : QWidget( parent ), d( new Private( mode, editorWidget, this ) )
+  : QWidget( parent ), d( new Private( mode, FullMode, editorWidget, this ) )
 {
 }
+
+ContactEditor::ContactEditor( Mode mode, DisplayMode displayMode, QWidget *parent )
+  : QWidget( parent ), d( new Private( mode, displayMode, 0, this ) )
+{
+}
+
 
 ContactEditor::~ContactEditor()
 {

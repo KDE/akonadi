@@ -38,7 +38,7 @@ using namespace Akonadi;
 class ContactEditorDialog::Private
 {
   public:
-    Private( ContactEditorDialog::Mode mode, AbstractContactEditorWidget *editorWidget,
+    Private( ContactEditorDialog::Mode mode, ContactEditorDialog::DisplayMode displaymode, AbstractContactEditorWidget *editorWidget,
              ContactEditorDialog *parent )
       : q( parent ), mAddressBookBox( 0 ), mMode( mode )
     {
@@ -54,7 +54,7 @@ class ContactEditorDialog::Private
       if ( editorWidget ) {
         mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, editorWidget, q );
       } else {
-        mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, q );
+        mEditor = new ContactEditor( mode == ContactEditorDialog::CreateMode ? ContactEditor::CreateMode : ContactEditor::EditMode, displaymode == ContactEditorDialog::FullMode ? ContactEditor::FullMode : ContactEditor::VCardMode, q );
       }
 
       if ( mode == ContactEditorDialog::CreateMode ) {
@@ -103,12 +103,17 @@ class ContactEditorDialog::Private
 };
 
 ContactEditorDialog::ContactEditorDialog( Mode mode, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, 0, this ) )
+  : KDialog( parent ), d( new Private( mode, FullMode, 0, this ) )
 {
 }
 
 ContactEditorDialog::ContactEditorDialog( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
-  : KDialog( parent ), d( new Private( mode, editorWidget, this ) )
+  : KDialog( parent ), d( new Private( mode, FullMode, editorWidget, this ) )
+{
+}
+
+ContactEditorDialog::ContactEditorDialog( Mode mode, DisplayMode displayMode, QWidget *parent )
+  : KDialog( parent ), d( new Private( mode, displayMode, 0, this ) )
 {
 }
 
