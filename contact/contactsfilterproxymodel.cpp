@@ -277,8 +277,8 @@ bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &
     return true;
   }
 
-  const int count = group.dataCount();
-  for ( int i = 0; i < count; ++i ) {
+  const uint count = group.dataCount();
+  for ( uint i = 0; i < count; ++i ) {
     if ( group.data( i ).name().contains( filterString, Qt::CaseInsensitive ) ) {
       return true;
     }
