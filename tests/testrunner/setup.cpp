@@ -21,6 +21,7 @@
 #include "symbols.h"
 
 #include <kapplication.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <KProcess>
 #include <KStandardDirs>
@@ -347,13 +348,14 @@ void SetupTest::createTempEnvironment()
   copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
   copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
 
-  // copy syscoca file from the host to increase startup speed
+  // copy sycoca file from the host to increase startup speed
   const QString sycoca = KStandardDirs::locateLocal( "cache", "ksycoca4" );
   const QString cacheDir = basePath() + testRunnerKdeHomeDir + QDir::separator() + "cache-" + QHostInfo::localHostName() + QDir::separator();
   QFile::copy( sycoca, cacheDir + "ksycoca4" );
   QFile::copy( sycoca + "stamp", cacheDir + "ksycoca4stamp" );
 }
 
+// TODO Qt5: use QDir::removeRecursively
 void SetupTest::deleteDirectory( const QString &dirName )
 {
   Q_ASSERT( dirName.startsWith( QDir::tempPath() ) || dirName.startsWith(QLatin1String("/tmp") ) ); // just to be sure we don't run amok anywhere
@@ -401,6 +403,11 @@ SetupTest::SetupTest() :
     kDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
     setenv( qPrintable( iter.key() ), qPrintable( iter.value() ), 1 );
   }
+
+  // No kres-migrator please
+  KConfig migratorConfig( basePath() + "kdehome/share/config/kres-migratorrc" );
+  KConfigGroup migrationCfg( &migratorConfig, "Migration" );
+  migrationCfg.writeEntry( "Enabled", false );
 
   Symbols *symbol = Symbols::instance();
   symbol->insertSymbol( "KDEHOME", basePath() + QLatin1String( "kdehome" ) );
