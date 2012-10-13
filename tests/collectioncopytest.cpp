@@ -38,6 +38,8 @@ class CollectionCopyTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
+
       Control::start();
       // switch target resources offline to reduce interference from them
       foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach

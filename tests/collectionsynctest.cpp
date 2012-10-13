@@ -70,12 +70,10 @@ class CollectionSyncTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       Control::start();
+      AkonadiTest::setAllResourcesOffline();
       qRegisterMetaType<KJob*>();
-
-      // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-        agent.setIsOnline( false );
     }
 
     void testFullSync_data()

@@ -39,6 +39,7 @@ class LinkTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       Control::start();
     }
 
@@ -46,6 +47,7 @@ class LinkTest : public QObject
     {
       SearchCreateJob *create = new SearchCreateJob( "linkTestFolder", "dummy query", this );
       AKVERIFYEXEC( create );
+
       CollectionFetchJob *list = new CollectionFetchJob( Collection( 1 ), CollectionFetchJob::Recursive, this );
       AKVERIFYEXEC( list );
       Collection col;

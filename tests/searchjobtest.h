@@ -26,6 +26,7 @@ class SearchJobTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase();
     void testCreateDeleteSearch();
     void testModifySearch();
 };

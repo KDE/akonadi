@@ -41,11 +41,9 @@ static bool isMySQLEnvironment()
 
 void AutoIncrementTest::initTestCase()
 {
-  QVERIFY( Control::start() );
-
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
+  AkonadiTest::checkTestIsIsolated();
+  Control::start();
+  AkonadiTest::setAllResourcesOffline();
 
   itemTargetCollection = Collection( collectionIdFromPath( "res2/space folder" ) );
   QVERIFY( itemTargetCollection.isValid() );

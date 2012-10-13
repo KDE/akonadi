@@ -105,6 +105,10 @@ class EntityCacheTest : public QObject
     }
 
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testCacheGeneric_data()
     {
       QTest::addColumn<bool>( "collection" );

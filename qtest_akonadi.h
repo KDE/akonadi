@@ -22,6 +22,9 @@
 
 #include <qtest_kde.h>
 
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentmanager.h>
+
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib
 *
@@ -52,6 +55,26 @@ int main(int argc, char *argv[]) \
   KGlobal::ref(); /* don't quit qeventloop after closing a mainwindow */ \
   return QTest::qExec( &tc, argc, argv ); \
 }
+
+namespace AkonadiTest {
+/**
+ * Checks that the test is running in the proper test environment
+ */
+void checkTestIsIsolated() {
+  QVERIFY2( !qgetenv( "TESTRUNNER_DB_ENVIRONMENT" ).isEmpty(),
+            "This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi" );
+}
+
+/**
+ * Switch all resources offline to reduce interference from them
+ */
+void setAllResourcesOffline() {
+  // switch all resources offline to reduce interference from them
+  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
+    agent.setIsOnline( false );
+}
+
+} // namespace
 
 /**
  * Runs an Akonadi::Job synchronously and aborts if the job failed.

@@ -37,6 +37,7 @@ QTEST_AKONADIMAIN( ItemFetchTest, NoGUI )
 
 void ItemFetchTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   qRegisterMetaType<Akonadi::Item::List>();
   AttributeFactory::registerAttribute<TestAttribute>();
 }
