@@ -625,14 +625,17 @@ void EntityTreeModelPrivate::retrieveAncestors( const Akonadi::Collection& colle
 
   Collection::List ancestors;
 
-  while ( !m_collections.contains( parentCollection.id() ) ) {
+  while ( parentCollection != Collection::root() && !m_collections.contains( parentCollection.id() ) ) {
     // Put a temporary node in the tree later.
     ancestors.prepend( parentCollection );
 
     parentCollection = parentCollection.parentCollection();
   }
   Q_ASSERT( parentCollection.isValid() );
-  if ( parentCollection == m_rootCollection ) {
+  // if m_rootCollection is Collection::root(), we always have common ancestor and do the retrival
+  // if we traversed up to Collection::root() but are looking at a subtree only (m_rootCollection != Collection::root())
+  // we have no common ancestor, and we don't have to retrieve anything
+  if ( parentCollection == Collection::root() && m_rootCollection != Collection::root() ) {
     return;
   }
 
