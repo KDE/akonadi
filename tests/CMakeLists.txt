@@ -8,6 +8,7 @@ set( TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults )
 file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 option(KDEPIMLIBS_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
+option(KDEPIMLIBS_TESTS_SQLITE "Run all isolated tests with sqlite3 as backend in addition to the default backends" FALSE)
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -95,8 +96,10 @@ macro(add_akonadi_isolated_test _source)
       ${POSTGRESL_EXTRA_OPTIONS_FS} )
   endif()
 
-  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
-    ${SQLITE_EXTRA_OPTIONS} )
+  if ( KDEPIMLIBS_TESTS_SQLITE )
+    add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
+      ${SQLITE_EXTRA_OPTIONS} )
+  endif()
 endmacro(add_akonadi_isolated_test)
 
 
