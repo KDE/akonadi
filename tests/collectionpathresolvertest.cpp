@@ -31,6 +31,7 @@ QTEST_AKONADIMAIN( CollectionPathResolverTest, NoGUI )
 
 void CollectionPathResolverTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
 }
 

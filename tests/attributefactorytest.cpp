@@ -37,6 +37,7 @@ static Collection res1;
 
 void AttributeFactoryTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   CollectionPathResolver *resolver = new CollectionPathResolver( "res1", this );
   AKVERIFYEXEC( resolver );
   res1 = Collection( resolver->collection() );

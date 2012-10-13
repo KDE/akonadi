@@ -37,10 +37,14 @@ class TestEnvironmentTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testEnvironment()
     {
       const QString kdehome = qgetenv( "KDEHOME" );
-      QVERIFY( kdehome.startsWith( QDir::tempPath().toLocal8Bit() ) 
+      QVERIFY( kdehome.startsWith( QDir::tempPath().toLocal8Bit() )
               || kdehome.startsWith( QLatin1String("/tmp") ) );
     }
 

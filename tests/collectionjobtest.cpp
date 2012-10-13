@@ -53,11 +53,9 @@ void CollectionJobTest::initTestCase()
 {
   qRegisterMetaType<Akonadi::Collection::List>();
   AttributeFactory::registerAttribute<TestAttribute>();
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
-
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
+  AkonadiTest::setAllResourcesOffline();
 }
 
 static Collection findCol( const Collection::List &list, const QString &name ) {

@@ -34,6 +34,10 @@ class CollectionMoveTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testIllegalMove_data()
     {
       QTest::addColumn<Collection>( "source" );

@@ -39,6 +39,7 @@ QTEST_AKONADIMAIN( TransactionTest, NoGUI )
 
 void TransactionTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
 }
 

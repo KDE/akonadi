@@ -53,6 +53,7 @@ static int parentColId = -1;
 
 void CollectionAttributeTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
   AttributeFactory::registerAttribute<TestAttribute>();
 

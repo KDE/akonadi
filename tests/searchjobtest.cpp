@@ -33,6 +33,11 @@ QTEST_AKONADIMAIN( SearchJobTest, NoGUI )
 
 using namespace Akonadi;
 
+void SearchJobTest::initTestCase()
+{
+  AkonadiTest::checkTestIsIsolated();
+}
+
 void SearchJobTest::testCreateDeleteSearch()
 {
   SearchCreateJob *create = new SearchCreateJob( "search123456", "<request><userQuery>Akonadi</userQuery></request>", this );
