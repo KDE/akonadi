@@ -1,3 +1,8 @@
+1.8.1                         14-October-2012
+---------------------------------------------
+- Fix payload loss on some move/copy scenarios.
+- Improve error reporting for failed item retrievals.
+
 1.8.0                            25-July-2012
 ---------------------------------------------
 - Fix deadlock in ad-hoc Nepomuk searches.
