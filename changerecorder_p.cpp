@@ -296,12 +296,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  stream << (qulonglong)(pipeline.count() + pendingNotifications.count());
-
-  for ( int i = 0; i < pipeline.count(); ++i ) {
-    const NotificationMessage msg = pipeline.at( i );
-    addToStream( stream, msg );
-  }
+  stream << (qulonglong)(pendingNotifications.count());
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
     const NotificationMessage msg = pendingNotifications.at( i );
