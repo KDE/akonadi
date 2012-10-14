@@ -155,7 +155,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
   return true;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
+bool MonitorPrivate::acceptNotification( const NotificationMessage & msg ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )

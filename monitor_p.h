@@ -81,7 +81,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessage &msg );
+    bool acceptNotification( const NotificationMessage &msg ) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -233,7 +233,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       return false;
     }
 
-    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
+    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg ) const
     {
       if ( msg.operation() != NotificationMessage::Move )
         return false;
