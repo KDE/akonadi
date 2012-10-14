@@ -73,15 +73,28 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Session *session;
     CollectionCache *collectionCache;
     ItemCache *itemCache;
+
+    // The waiting list
     QQueue<NotificationMessage> pendingNotifications;
+    // The messages for which data is currently being fetched
     QQueue<NotificationMessage> pipeline;
+    // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
+    // The ordering [ pipeline ] [ pendingNotifications ] is kept at all times.
+    // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
+    // In a ChangeRecorder, the pipeline contains one item only, and not dequeued yet.
+    // [] [A B C] -> [A] [A B C] -> [] [A B C] -> (changeProcessed) [] [B C] -> [B] [B C] etc...
+
     bool fetchCollection;
     bool fetchCollectionStatistics;
     bool collectionMoveTranslationEnabled;
 
+    // Virtual methods for ChangeRecorder
+    virtual void notificationsEnqueued( int ) {}
+    virtual void notificationsErased() {}
+
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessage &msg );
+    bool acceptNotification( const NotificationMessage &msg ) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -103,6 +116,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     */
     void invalidateCache( const Collection &col );
 
+    /// Virtual so that ChangeRecorder can set it to 0 and handle the pipeline itself
     virtual int pipelineSize() const;
 
     // private slots
@@ -233,7 +247,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       return false;
     }
 
-    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg )
+    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg ) const
     {
       if ( msg.operation() != NotificationMessage::Move )
         return false;

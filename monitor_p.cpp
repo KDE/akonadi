@@ -155,7 +155,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessage & msg ) const
   return true;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
+bool MonitorPrivate::acceptNotification( const NotificationMessage & msg ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )
@@ -209,19 +209,26 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg )
 
 void MonitorPrivate::cleanOldNotifications()
 {
+  bool erased = false;
   for ( NotificationMessage::List::iterator it = pipeline.begin(); it != pipeline.end(); ) {
-    if ( !acceptNotification( *it ) )
+    if ( !acceptNotification( *it ) ) {
       it = pipeline.erase( it );
-    else
+      erased = true;
+    } else {
       ++it;
+    }
   }
 
   for ( NotificationMessage::List::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
-    if ( !acceptNotification( *it ) )
+    if ( !acceptNotification( *it ) ) {
       it = pendingNotifications.erase( it );
-    else
+      erased = true;
+    } else {
       ++it;
+    }
   }
+  if (erased)
+    notificationsErased();
 }
 
 bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
@@ -408,13 +415,19 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
 
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
+  int appendedMessages = 0;
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
-      translateAndCompress( pendingNotifications, msg );
+      const bool appended = translateAndCompress( pendingNotifications, msg );
+      if ( appended )
+        ++appendedMessages;
     }
   }
+
+  // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
+  notificationsEnqueued( appendedMessages );
 
   dispatchNotifications();
 }
@@ -442,6 +455,7 @@ void MonitorPrivate::dataAvailable()
 
 void MonitorPrivate::dispatchNotifications()
 {
+  // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
   while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = pendingNotifications.dequeue();
     if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )
