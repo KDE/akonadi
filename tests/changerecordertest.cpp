@@ -49,80 +49,69 @@ class ChangeRecorderTest : public QObject
     // After each test
     void cleanup()
     {
-      settings->clear();
+      // See ChangeRecorderPrivate::notificationsFileName()
+      QFile::remove(settings->fileName() + QLatin1String( "_changes.dat") );
+    }
+
+    void testChangeRecorder_data()
+    {
+      QTest::addColumn<QStringList>( "actions" );
+
+      QTest::newRow("nothingToReplay") << (QStringList() << "rn");
+      QTest::newRow("nothingOneNothing") << (QStringList() << "rn" << "c2" << "r2" << "rn");
+      QTest::newRow("multipleItems") << (QStringList() << "c1" << "c2" << "c3" << "r1" << "c4" << "r2" << "r3" << "r4" << "rn");
+      QTest::newRow("reload") << (QStringList() << "c1" << "c1" << "c3" << "reload" << "r1" << "r3" << "rn");
+      QTest::newRow("more") << (QStringList() << "c1" << "c2" << "c3" << "reload" << "r1" << "reload" << "c4" << "reload" << "r2" << "reload" << "r3" << "r4" << "rn");
     }
 
     void testChangeRecorder()
     {
+      QFETCH(QStringList, actions);
+      QString lastAction;
+
       ChangeRecorder *rec = createChangeRecorder();
       QVERIFY( rec->isEmpty() );
-
-      QSignalSpy spy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-      QVERIFY( spy.isValid() );
-      QSignalSpy cspy( rec, SIGNAL(changesAdded()) );
-      QVERIFY( cspy.isValid() );
-
-      triggerChange( 1 );
-      triggerChange( 1 ); // will get compressed with the previous change
-      triggerChange( 3 );
-      QTest::qWait( 500 ); // enter event loop and wait for change notifications from the server
-
-      QCOMPARE( spy.count(), 0 );
-      QVERIFY( !cspy.isEmpty() );
-      delete rec;
-
-      // Test loading changes from the file
-
-      rec = createChangeRecorder();
-      QVERIFY( !rec->isEmpty() );
-
-      QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-      QVERIFY( spy2.isValid() );
-      replayNextAndProcess(rec, 1);
-      QVERIFY( !rec->isEmpty() );
-      replayNextAndProcess(rec, 3);
+      Q_FOREACH( const QString& action, actions ) {
+        kDebug() << action;
+        if ( action == "rn" ) {
+          replayNextAndExpectNothing( rec );
+        } else if ( action == "reload" ) {
+          // Check saving and loading from disk
+          delete rec;
+          rec = createChangeRecorder();
+        } else if ( action.at(0) == 'c' ) {
+          // c1 = "trigger change on item 1"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          triggerChange( id );
+          if (action != lastAction) {
+            // enter event loop and wait for change notifications from the server
+            QVERIFY( QTest::kWaitForSignal( rec, SIGNAL(changesAdded()), 1000 ) );
+          }
+        } else if ( action.at(0) == 'r' ) {
+          // r1 = "replayNext and expect to get itemChanged(1)"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          replayNextAndProcess( rec, id );
+        } else {
+          QVERIFY2( false, qPrintable("Unsupported: " + action) );
+        }
+        lastAction = action;
+      }
       QVERIFY( rec->isEmpty() );
-
-      // nothing changes here
-      replayNextAndExpectNothing( rec );
-      QVERIFY( rec->isEmpty() );
-      QCOMPARE( spy2.count(), 2 );
       delete rec;
-    }
-
-    void testEmptyChangeReplay()
-    {
-      ChangeRecorder recorder;
-      recorder.setAllMonitored();
-      recorder.itemFetchScope().fetchFullPayload();
-      recorder.itemFetchScope().fetchAllAttributes();
-
-      // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
-      QSignalSpy spy( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-
-      // Nothing to replay, should emit that signal then.
-      replayNextAndExpectNothing( &recorder );
-
-      // Give it something to replay
-      triggerChange( 2 );
-      QVERIFY( QTest::kWaitForSignal( &recorder, SIGNAL(changesAdded()), 1000 ) );
-
-      replayNextAndProcess( &recorder, 2 );
-
-      // Nothing else to replay now
-      replayNextAndExpectNothing( &recorder );
-      QVERIFY( recorder.isEmpty() );
     }
 
   private:
     void triggerChange( Akonadi::Item::Id uid )
     {
+      static int s_num = 0;
       Item item( uid );
-      item.setFlag( "random_flag" );
+      item.setFlag( "random_flag" + QByteArray::number(++s_num) );
       ItemModifyJob *job = new ItemModifyJob( item );
       job->disableRevisionCheck();
       AKVERIFYEXEC( job );
-      item.clearFlag( "random_flag" );
+      item.clearFlag( "random_flag" + QByteArray::number(s_num) );
       job = new ItemModifyJob( item );
       job->disableRevisionCheck();
       AKVERIFYEXEC( job );
@@ -170,6 +159,11 @@ class ChangeRecorderTest : public QObject
       rec->setAllMonitored();
       rec->itemFetchScope().fetchFullPayload();
       rec->itemFetchScope().fetchAllAttributes();
+
+      // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
+      QSignalSpy* spy = new QSignalSpy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      spy->setParent( rec );
+
       return rec;
     }
 

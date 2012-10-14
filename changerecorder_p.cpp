@@ -55,6 +55,8 @@ bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessage 
   return someoneWasListening;
 }
 
+// The QSettings object isn't actually used anymore, except for migrating old data
+// and it gives us the base of the filename to use. This is all historical.
 QString ChangeRecorderPrivate::notificationsFileName() const
 {
   return settings->fileName() + QLatin1String( "_changes.dat" );
