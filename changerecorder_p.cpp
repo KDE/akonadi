@@ -116,160 +116,161 @@ void ChangeRecorderPrivate::loadNotifications()
 
 QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 {
-QDataStream stream( device );
-stream.setVersion( QDataStream::Qt_4_6 );
+  QDataStream stream( device );
+  stream.setVersion( QDataStream::Qt_4_6 );
 
-qulonglong size;
-QByteArray sessionId, resource;
-int type, operation;
-qlonglong uid, parentCollection, parentDestCollection;
-QString remoteId, mimeType;
-QSet<QByteArray> itemParts;
+  qulonglong size;
+  QByteArray sessionId, resource;
+  int type, operation;
+  qlonglong uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
 
-QQueue<NotificationMessage> list;
+  QQueue<NotificationMessage> list;
 
-stream >> size;
-for ( qulonglong i = 0; i < size; ++i ) {
-  NotificationMessage msg;
+  stream >> size;
+  for ( qulonglong i = 0; i < size; ++i ) {
+    NotificationMessage msg;
 
-  stream >> sessionId;
-  stream >> type;
-  stream >> operation;
-  stream >> uid;
-  stream >> remoteId;
-  stream >> resource;
-  stream >> parentCollection;
-  stream >> parentDestCollection;
-  stream >> mimeType;
-  stream >> itemParts;
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
 
-  msg.setSessionId( sessionId );
-  msg.setType( static_cast<NotificationMessage::Type>( type ) );
-  msg.setOperation( static_cast<NotificationMessage::Operation>( operation ) );
-  msg.setUid( uid );
-  msg.setRemoteId( remoteId );
-  msg.setResource( resource );
-  msg.setParentCollection( parentCollection );
-  msg.setParentDestCollection( parentDestCollection );
-  msg.setMimeType( mimeType );
-  msg.setItemParts( itemParts );
-  list << msg;
-}
-return list;
+    msg.setSessionId( sessionId );
+    msg.setType( static_cast<NotificationMessage::Type>( type ) );
+    msg.setOperation( static_cast<NotificationMessage::Operation>( operation ) );
+    msg.setUid( uid );
+    msg.setRemoteId( remoteId );
+    msg.setResource( resource );
+    msg.setParentCollection( parentCollection );
+    msg.setParentDestCollection( parentDestCollection );
+    msg.setMimeType( mimeType );
+    msg.setItemParts( itemParts );
+    list << msg;
+  }
+  return list;
 }
 
 QString ChangeRecorderPrivate::dumpNotificationListToString() const
 {
-    if ( !settings )
-      return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
-    QString result;
-    const QString changesFileName = notificationsFileName();
-    QFile file( changesFileName );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      QDataStream stream( &file );
-      stream.setVersion( QDataStream::Qt_4_6 );
+  if ( !settings )
+    return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
+  QString result;
+  const QString changesFileName = notificationsFileName();
+  QFile file( changesFileName );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    return QString::fromLatin1( "Error reading " ) + changesFileName;
 
-      qulonglong size;
-      QByteArray sessionId, resource;
-      int type, operation;
-      qlonglong uid, parentCollection, parentDestCollection;
-      QString remoteId, mimeType;
-      QSet<QByteArray> itemParts;
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
 
-      QStringList list;
+  qulonglong size;
+  QByteArray sessionId, resource;
+  int type, operation;
+  qlonglong uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
 
-      stream >> size;
-      for ( qulonglong i = 0; i < size; ++i ) {
-        stream >> sessionId;
-        stream >> type;
-        stream >> operation;
-        stream >> uid;
-        stream >> remoteId;
-        stream >> resource;
-        stream >> parentCollection;
-        stream >> parentDestCollection;
-        stream >> mimeType;
-        stream >> itemParts;
+  QStringList list;
 
-        QString typeString;
-        switch ( type ) {
-        case NotificationMessage::Collection:
-          typeString = QLatin1String( "Collection" );
-          break;
-        case NotificationMessage::Item:
-          typeString = QLatin1String( "Item" );
-          break;
-        default:
-          typeString = QLatin1String( "InvalidType" );
-          break;
-        };
+  stream >> size;
+  for ( qulonglong i = 0; i < size; ++i ) {
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
 
-        QString operationString;
-        switch ( operation ) {
-        case NotificationMessage::Add:
-          operationString = QLatin1String( "Add" );
-          break;
-        case NotificationMessage::Modify:
-          operationString = QLatin1String( "Modify" );
-          break;
-        case NotificationMessage::Move:
-          operationString = QLatin1String( "Move" );
-          break;
-        case NotificationMessage::Remove:
-          operationString = QLatin1String( "Remove" );
-          break;
-        case NotificationMessage::Link:
-          operationString = QLatin1String( "Link" );
-          break;
-        case NotificationMessage::Unlink:
-          operationString = QLatin1String( "Unlink" );
-          break;
-        case NotificationMessage::Subscribe:
-          operationString = QLatin1String( "Subscribe" );
-          break;
-        case NotificationMessage::Unsubscribe:
-          operationString = QLatin1String( "Unsubscribe" );
-          break;
-        default:
-          operationString = QLatin1String( "InvalidOp" );
-          break;
-        };
+    QString typeString;
+    switch ( type ) {
+    case NotificationMessage::Collection:
+      typeString = QLatin1String( "Collection" );
+      break;
+    case NotificationMessage::Item:
+      typeString = QLatin1String( "Item" );
+      break;
+    default:
+      typeString = QLatin1String( "InvalidType" );
+      break;
+    };
 
-        QStringList itemPartsList;
-        foreach( const QByteArray &b, itemParts )
-          itemPartsList.push_back( QString::fromLatin1(b) );
+    QString operationString;
+    switch ( operation ) {
+    case NotificationMessage::Add:
+      operationString = QLatin1String( "Add" );
+      break;
+    case NotificationMessage::Modify:
+      operationString = QLatin1String( "Modify" );
+      break;
+    case NotificationMessage::Move:
+      operationString = QLatin1String( "Move" );
+      break;
+    case NotificationMessage::Remove:
+      operationString = QLatin1String( "Remove" );
+      break;
+    case NotificationMessage::Link:
+      operationString = QLatin1String( "Link" );
+      break;
+    case NotificationMessage::Unlink:
+      operationString = QLatin1String( "Unlink" );
+      break;
+    case NotificationMessage::Subscribe:
+      operationString = QLatin1String( "Subscribe" );
+      break;
+    case NotificationMessage::Unsubscribe:
+      operationString = QLatin1String( "Unsubscribe" );
+      break;
+    default:
+      operationString = QLatin1String( "InvalidOp" );
+      break;
+    };
 
-        const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
-                              .arg( QString::fromLatin1( sessionId ) )
-                              .arg( typeString )
-                              .arg( operationString )
-                              .arg( uid )
-                              .arg( remoteId )
-                              .arg( QString::fromLatin1( resource ) )
-                              .arg( parentCollection )
-                              .arg( parentDestCollection )
-                              .arg( mimeType )
-                              .arg( itemPartsList.join(QLatin1String(", " )) );
+    QStringList itemPartsList;
+    foreach( const QByteArray &b, itemParts )
+      itemPartsList.push_back( QString::fromLatin1(b) );
 
-        result += entry + QLatin1Char('\n');
-      }
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+                          .arg( QString::fromLatin1( sessionId ) )
+                          .arg( typeString )
+                          .arg( operationString )
+                          .arg( uid )
+                          .arg( remoteId )
+                          .arg( QString::fromLatin1( resource ) )
+                          .arg( parentCollection )
+                          .arg( parentDestCollection )
+                          .arg( mimeType )
+                          .arg( itemPartsList.join(QLatin1String(", " )) );
 
-    }
+    result += entry + QLatin1Char('\n');
+  }
+
     return result;
 }
 
 void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessage &msg)
 {
-        stream << msg.sessionId();
-        stream << int(msg.type());
-        stream << int(msg.operation());
-        stream << qulonglong(msg.uid());
-        stream << msg.remoteId();
-        stream << msg.resource();
-        stream << qulonglong(msg.parentCollection());
-        stream << qulonglong(msg.parentDestCollection());
-        stream << msg.mimeType();
-        stream << msg.itemParts();
+  stream << msg.sessionId();
+  stream << int(msg.type());
+  stream << int(msg.operation());
+  stream << qulonglong(msg.uid());
+  stream << msg.remoteId();
+  stream << msg.resource();
+  stream << qulonglong(msg.parentCollection());
+  stream << qulonglong(msg.parentDestCollection());
+  stream << msg.mimeType();
+  stream << msg.itemParts();
 }
 
 void ChangeRecorderPrivate::saveNotifications()
@@ -292,7 +293,6 @@ void ChangeRecorderPrivate::saveNotifications()
 
 void ChangeRecorderPrivate::saveTo(QIODevice *device)
 {
-
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
