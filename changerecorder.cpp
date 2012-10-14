@@ -59,10 +59,13 @@ void ChangeRecorder::replayNext()
   Q_D( ChangeRecorder );
   if ( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.head();
-    // TODO kDebug() << msg;
-    if ( d->ensureDataAvailable( msg ) )
+    if ( d->ensureDataAvailable( msg ) ) {
       d->emitNotification( msg );
-    else if ( !d->translateAndCompress( d->pipeline, msg ) ) {
+    } else if ( d->translateAndCompress( d->pipeline, msg ) ) {
+      // The msg is now in both pipeline and pendingNotifications.
+      // When data is available, MonitorPrivate::flushPipeline will emitNotification.
+      // When changeProcessed is called, we'll finally remove it from pendingNotifications.
+    } else {
       // In the case of a move where both source and destination are
       // ignored, we ignore the message and process the next one.
       d->pendingNotifications.dequeue();

@@ -442,6 +442,7 @@ void MonitorPrivate::dataAvailable()
 
 void MonitorPrivate::dispatchNotifications()
 {
+  // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
   while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = pendingNotifications.dequeue();
     if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )

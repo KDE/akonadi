@@ -73,8 +73,17 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Session *session;
     CollectionCache *collectionCache;
     ItemCache *itemCache;
+
+    // The waiting list
     QQueue<NotificationMessage> pendingNotifications;
+    // The messages for which data is currently being fetched
     QQueue<NotificationMessage> pipeline;
+    // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
+    // The ordering [ pipeline ] [ pendingNotifications ] is kept at all times.
+    // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
+    // In a ChangeRecorder, the pipeline contains one item only, and not dequeued yet.
+    // [] [A B C] -> [A] [A B C] -> [] [A B C] -> (changeProcessed) [] [B C] -> [B] [B C] etc...
+
     bool fetchCollection;
     bool fetchCollectionStatistics;
     bool collectionMoveTranslationEnabled;
@@ -103,6 +112,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     */
     void invalidateCache( const Collection &col );
 
+    /// Virtual so that ChangeRecorder can set it to 0 and handle the pipeline itself
     virtual int pipelineSize() const;
 
     // private slots
