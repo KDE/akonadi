@@ -251,16 +251,26 @@ void StorageJanitor::verifyExternalParts()
   // list all parts from the db which claim to have an associated file
   QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
   qb.addColumn( Part::dataColumn() );
+  qb.addColumn( Part::pimItemIdColumn() );
+  qb.addColumn( Part::idColumn() );
   qb.addValueCondition( Part::externalColumn(), Query::Equals, true );
   qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   qb.exec();
   while ( qb.query().next() ) {
     const QString partPath = qb.query().value( 0 ).toString();
+    const Entity::Id pimItemId = qb.query().value( 1 ).value<Entity::Id>();
+    const Entity::Id id = qb.query().value( 2 ).value<Entity::Id>();
     if ( existingFiles.contains( partPath ) ) {
       usedFiles.insert( partPath );
     } else {
-      inform( QLatin1Literal( "Missing external file: " ) + partPath );
-      // TODO: fix this, by clearing the data column?
+      inform( QLatin1Literal( "Cleaning up missing external file: " ) + partPath + QLatin1Literal( " for item: " ) + QString::number( pimItemId ) + QLatin1Literal( " on part: " ) + QString::number( id ) );
+
+      Part part;
+      part.setId( id );
+      part.setPimItemId( pimItemId );
+      part.setData( QByteArray() );
+      part.setDatasize( 0 );
+      part.update();
     }
   }
   inform( QLatin1Literal( "Found " ) + QString::number( usedFiles.size() ) + QLatin1Literal( " external parts." ) );
