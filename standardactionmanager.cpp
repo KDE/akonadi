@@ -193,7 +193,8 @@ class StandardActionManager::Private
       collectionSelectionModel( 0 ),
       itemSelectionModel( 0 ),
       favoritesModel( 0 ),
-      favoriteSelectionModel( 0 )
+      favoriteSelectionModel( 0 ),
+      insideSelectionSlot( false )
     {
       actions.fill( 0, StandardActionManager::LastType );
 
@@ -521,35 +522,53 @@ class StandardActionManager::Private
       }
     }
 
+    // RAII class for setting insideSelectionSlot to true on entering, and false on exiting, the two slots below.
+    class InsideSelectionSlotBlocker {
+    public:
+    InsideSelectionSlotBlocker( Private *p ) : _p( p ) {
+      Q_ASSERT( !p->insideSelectionSlot );
+      p->insideSelectionSlot = true;
+    }
+    ~InsideSelectionSlotBlocker() {
+      Q_ASSERT( _p->insideSelectionSlot );
+      _p->insideSelectionSlot = false;
+    }
+    private:
+      Private *_p;
+    };
+
     void collectionSelectionChanged()
     {
-      q->blockSignals( true );
-
+      if ( insideSelectionSlot )
+        return;
+      InsideSelectionSlotBlocker block( this );
       QItemSelection selection = collectionSelectionModel->selection();
       selection = mapToEntityTreeModel( collectionSelectionModel->model(), selection );
       selection = mapFromEntityTreeModel( favoritesModel, selection );
 
-      if ( favoriteSelectionModel )
+      if ( favoriteSelectionModel ) {
         favoriteSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect );
-
-      q->blockSignals( false );
+      }
 
       updateActions();
     }
 
     void favoriteSelectionChanged()
     {
-      q->blockSignals( true );
-
+      if ( insideSelectionSlot )
+        return;
       QItemSelection selection = favoriteSelectionModel->selection();
-      if ( selection.indexes().isEmpty() )
+      if ( selection.isEmpty() )
         return;
 
       selection = mapToEntityTreeModel( favoritesModel, selection );
       selection = mapFromEntityTreeModel( collectionSelectionModel->model(), selection );
 
+      InsideSelectionSlotBlocker block( this );
       collectionSelectionModel->select( selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
-      q->blockSignals( false );
+
+      // Also set the current index. This will trigger KMMainWidget::slotFolderChanged in kmail, which we want.
+      collectionSelectionModel->setCurrentIndex( selection.indexes().first(), QItemSelectionModel::NoUpdate );
 
       updateActions();
     }
@@ -816,7 +835,7 @@ class StandardActionManager::Private
                                                                                     : collection.name();
 
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
-      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle ).arg( displayName ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,displayName ) );
       dlg->show();
     }
 
@@ -1164,7 +1183,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::CreateCollection, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1173,7 +1192,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1182,7 +1201,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::MoveCollectionsToTrash, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1191,7 +1210,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::MoveItemsToTrash, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1200,7 +1219,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::DeleteItems, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1209,7 +1228,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::CreateResource, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1218,7 +1237,7 @@ class StandardActionManager::Private
     {
       if ( job->error() ) {
         KMessageBox::error( parentWidget,
-                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText ).arg( job->errorString() ),
+                            contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageText, job->errorString() ),
                             contextText( StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle ) );
       }
     }
@@ -1258,7 +1277,7 @@ class StandardActionManager::Private
      */
     bool isWritableTargetCollectionForMimeTypes( const Collection &collection, const QSet<QString> &mimeTypes, StandardActionManager::Type type ) const
     {
-      if ( CollectionUtils::isVirtual( collection ) )
+      if ( collection.isVirtual() )
         return false;
 
       const bool isItemAction = ( type == CopyItemToMenu || type == MoveItemToMenu );
@@ -1286,7 +1305,7 @@ class StandardActionManager::Private
         const QModelIndex index = model->index( row, 0, parentIndex );
         const Collection collection = model->data( index, CollectionModel::CollectionRole ).value<Collection>();
 
-        if ( CollectionUtils::isVirtual( collection ) )
+        if ( collection.isVirtual() )
           continue;
 
         const bool readOnly = !isWritableTargetCollectionForMimeTypes( collection, mimeTypes, type );
@@ -1396,12 +1415,22 @@ class StandardActionManager::Private
       return contextTexts[ type ].value( context ).text;
     }
 
+    QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, const QString& value ) const
+    {
+      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
+      if ( text.isEmpty() )
+        return contextTexts[ type ].value( context ).text;
+ 
+      return text.subs( value ).toString();
+    }
+
+
     QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value ) const
     {
-      if ( contextTexts[ type ].value( context ).localizedText.isEmpty() )
+      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
+      if ( text.isEmpty() )
         return contextTexts[ type ].value( context ).text;
 
-      KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
       const QString str = text.subs( count ).toString();
       const int argCount = str.count( QRegExp( QLatin1String( "%[0-9]" ) ) );
       if ( argCount > 0 ) {
@@ -1418,6 +1447,7 @@ class StandardActionManager::Private
     QItemSelectionModel *itemSelectionModel;
     FavoriteCollectionsModel *favoritesModel;
     QItemSelectionModel *favoriteSelectionModel;
+    bool insideSelectionSlot;
     QVector<KAction*> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;

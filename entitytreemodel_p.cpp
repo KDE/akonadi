@@ -429,6 +429,7 @@ void EntityTreeModelPrivate::collectionsFetched( const Akonadi::Collection::List
 
       const QModelIndex collectionIndex = indexForCollection( collection );
       dataChanged( collectionIndex, collectionIndex );
+      emit q->collectionFetched( collectionId );
       continue;
     }
 

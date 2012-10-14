@@ -26,6 +26,7 @@ add_subdirectory( kmime )
 add_subdirectory( contact )
 add_subdirectory( calendar )
 add_subdirectory( notes )
+add_subdirectory( socialutils )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
@@ -33,6 +34,7 @@ include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
   ${Boost_INCLUDE_DIR}
   ${KDE4_INCLUDE_DIR}
+  ${QJSON_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}
   ${AKONADI_INCLUDE_DIR}/akonadi/private
 )
@@ -127,6 +129,7 @@ set( akonadikde_LIB_SRC
   itemsync.cpp
   invalidatecachejob.cpp
   job.cpp
+  kdsignalblocker.cpp
   kjobprivatebase.cpp
   linkjob.cpp
   mimetypechecker.cpp

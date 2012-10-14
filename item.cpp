@@ -470,12 +470,12 @@ void Item::apply( const Item &other )
 
   setRemoteId( other.remoteId() );
   setRevision( other.revision() );
+  setRemoteRevision( other.remoteRevision() );
   setFlags( other.flags() );
   setModificationTime( other.modificationTime() );
   setSize( other.size() );
   setParentCollection( other.parentCollection() );
   setStorageCollectionId( other.storageCollectionId() );
-  setRemoteId( other.remoteId() );
 
   QList<QByteArray> attrs;
   foreach ( Attribute *attribute, other.attributes() ) {

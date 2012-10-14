@@ -97,10 +97,6 @@ class CollectionDialog::Private
       mRightsFilterModel = new EntityRightsFilterModel( mParent );
       mRightsFilterModel->setSourceModel( mMimeTypeFilterModel );
 
-      mSelectionHandler = new AsyncSelectionHandler( mRightsFilterModel, mParent );
-      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                        mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
-
       KRecursiveFilterProxyModel* filterCollection = new KRecursiveFilterProxyModel( mParent );
       filterCollection->setDynamicSortFilter( true );
       filterCollection->setSourceModel( mRightsFilterModel );
@@ -116,6 +112,9 @@ class CollectionDialog::Private
       mParent->connect( mView, SIGNAL(doubleClicked(QModelIndex)),
                         mParent, SLOT(accept()) );
 
+      mSelectionHandler = new AsyncSelectionHandler( filterCollection, mParent );
+      mParent->connect( mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
+                        mParent, SLOT(slotCollectionAvailable(QModelIndex)) );
     }
 
     ~Private()
@@ -153,9 +152,8 @@ void CollectionDialog::Private::slotSelectionChanged()
   if ( mAllowToCreateNewChildCollection ) {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
-    const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
 
-    mParent->enableButton( KDialog::User1, ( canCreateChildCollections && !isVirtual ) );
+    mParent->enableButton( KDialog::User1, ( canCreateChildCollections && !parentCollection.isVirtual() ) );
     if ( parentCollection.isValid() ) {
       const bool canCreateItems = ( parentCollection.rights() & Akonadi::Collection::CanCreateItem );
       mParent->enableButton( KDialog::Ok, canCreateItems );

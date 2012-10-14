@@ -10,4 +10,5 @@ install( FILES icqprotocol.desktop
                groupwiseprotocol.desktop
                meanwhileprotocol.desktop
                skypeprotocol.desktop
+	       googletalkprotocol.desktop
          DESTINATION ${SERVICES_INSTALL_DIR}/akonadi/contact )

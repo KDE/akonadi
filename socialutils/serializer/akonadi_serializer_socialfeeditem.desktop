@@ -1,0 +1,39 @@
+[Misc]
+Name=SocialFeedItem Serializer
+Name[es]=Serializador SocialFeedItem
+Name[et]=SocialFeedItemi jadasti
+Name[hu]=SocialFeedItem sorosító
+Name[ia]=SocialFeeditem Serializer
+Name[nl]=Serialisator voor SocialFeedItem
+Name[pt]=Serialização de Fontes Sociais
+Name[pt_BR]=Serializador de Fontes Sociais
+Name[sk]=Serializátor SocialFeedItem
+Name[sr]=Серијализатор SocialFeedItem
+Name[sr@ijekavian]=Серијализатор SocialFeedItem
+Name[sr@ijekavianlatin]=Serijalizator SocialFeedItem
+Name[sr@latin]=Serijalizator SocialFeedItem
+Name[sv]=Serialisering av sociala kanalobjekt
+Name[uk]=Серіалізатор SocialFeedItem
+Name[x-test]=xxSocialFeedItem Serializerxx
+Comment=An Akonadi serializer plugin for SocialFeedItem
+Comment[es]=Un complemento de serializador Akonadi para SocialFeedItem
+Comment[et]=Akonadi SocialFeedItemi jadastamisplugin
+Comment[hu]=Egy Akonadi sorosító bővítmény a SocialFeedItemhez
+Comment[ia]=Un plugin pro serializar de Akonadi pro SocialFeedItem
+Comment[nl]=Een Akonadi serialisatorplug-in voor SocialFeedItem
+Comment[pt]=Um 'plugin' de serialização do Akonadi de itens de fontes sociais
+Comment[pt_BR]=Um plugin de serialização do Akonadi de itens de fontes sociais
+Comment[sk]=Plugin serializátora Akonadi pre SocialFeedItem
+Comment[sr]=Аконадијев прикључак серијализатора за SocialFeedItem
+Comment[sr@ijekavian]=Аконадијев прикључак серијализатора за SocialFeedItem
+Comment[sr@ijekavianlatin]=Akonadijev priključak serijalizatora za SocialFeedItem
+Comment[sr@latin]=Akonadijev priključak serijalizatora za SocialFeedItem
+Comment[sv]=Ett Akonadi insticksprogram för serialisering av sociala kanalobjekt
+Comment[uk]=Додаток серіалізації Akonadi для SocialFeedItem
+Comment[x-test]=xxAn Akonadi serializer plugin for SocialFeedItemxx
+
+[Plugin]
+Type=text/x-vnd.akonadi.socialfeeditem
+X-KDE-Library=akonadi_serializer_socialfeeditem
+X-Akonadi-Class=Akonadi::SocialFeedItem;
+X-KDE-ClassName=Akonadi::SocialFeedItemSerializerPlugin

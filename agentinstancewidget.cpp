@@ -24,15 +24,14 @@
 #include "agentinstancemodel.h"
 
 #include <KIcon>
+#include <KIconLoader>
 #include <KGlobal>
 
 #include <QtCore/QUrl>
-#include <QAbstractTextDocumentLayout>
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QListView>
 #include <QPainter>
-#include <QTextDocument>
 
 namespace Akonadi {
 namespace Internal {
@@ -60,9 +59,12 @@ void iconsEarlyCleanup() {
   ic->readyPixmap = ic->syncPixmap = ic->errorPixmap = ic->offlinePixmap = QPixmap();
 }
 
+static const int s_delegatePaddingSize = 7;
+
 /**
  * @internal
  */
+
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
   public:
@@ -70,11 +72,6 @@ class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 
     virtual void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
     virtual QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
-
-  private:
-    void drawFocus( QPainter*, const QStyleOptionViewItem&, const QRect& ) const;
-
-    QTextDocument* document( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
 };
 
 }
@@ -221,131 +218,81 @@ AgentInstanceWidgetDelegate::AgentInstanceWidgetDelegate( QObject *parent )
 {
 }
 
-QTextDocument* AgentInstanceWidgetDelegate::document( const QStyleOptionViewItem &option, const QModelIndex &index ) const
-{
-  if ( !index.isValid() ) {
-    return 0;
-  }
-
-  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
-  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
-  uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
-  const QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
-  const QStringList capabilities = index.model()->data( index, AgentInstanceModel::CapabilitiesRole ).toStringList();
-
-  QTextDocument *document = new QTextDocument( 0 );
-
-  const QVariant data = index.model()->data( index, Qt::DecorationRole );
-  if ( data.isValid() && data.type() == QVariant::Icon ) {
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "agent_icon" ) ),
-                           qvariant_cast<QIcon>( data ).pixmap( QSize( 64, 64 ) ) );
-  }
-
-  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() ) {
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->offlinePixmap );
-  } else if ( status == AgentInstance::Idle ) {
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->readyPixmap );
-  } else if ( status == AgentInstance::Running ) {
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->syncPixmap );
-  } else {
-    document->addResource( QTextDocument::ImageResource, QUrl( QLatin1String( "status_icon" ) ), s_icons->errorPixmap );
-  }
-
-  QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
-  if ( cg == QPalette::Normal && !( option.state & QStyle::State_Active ) ) {
-    cg = QPalette::Inactive;
-  }
-
-  QColor textColor;
-  if ( option.state & QStyle::State_Selected ) {
-    textColor = option.palette.color( cg, QPalette::HighlightedText );
-  } else {
-    textColor = option.palette.color( cg, QPalette::Text );
-  }
-
-  QString content = QString::fromLatin1(
-     "<html style=\"color:%1\">"
-     "<body>"
-     "<table>"
-     "<tr>"
-     "<td rowspan=\"2\"><img src=\"agent_icon\">&nbsp;&nbsp;</td>"
-     "<td><b>%2</b></td>"
-     "</tr>" ).arg( textColor.name().toUpper() ).arg( name )
-     + QString::fromLatin1(
-     "<tr>"
-     "<td><img src=\"status_icon\"/> %1 %2</td>"
-     "</tr>" ).arg( statusMessage ).arg( status == 1 ? QString( QLatin1String( "(%1%)" ) ).arg( progress ) : QLatin1String( "" ) )
-     + QLatin1String( "</table></body></html>" );
-
-  document->setHtml( content );
-
-  return document;
-}
-
 void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
   if ( !index.isValid() ) {
     return;
   }
 
-  QTextDocument *doc = document( option, index );
-  if ( !doc ) {
-    return;
+  QStyle *style = QApplication::style();
+  style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+
+  QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
+  const QString name = index.model()->data( index, Qt::DisplayRole ).toString();
+  int status = index.model()->data( index, AgentInstanceModel::StatusRole ).toInt();
+  uint progress = index.model()->data( index, AgentInstanceModel::ProgressRole ).toUInt();
+  QString statusMessage = index.model()->data( index, AgentInstanceModel::StatusMessageRole ).toString();
+
+  QPixmap statusPixmap;
+
+  if ( !index.data( AgentInstanceModel::OnlineRole ).toBool() ) {
+    statusPixmap = s_icons->offlinePixmap;
+  } else if ( status == AgentInstance::Idle ) {
+    statusPixmap = s_icons->readyPixmap;
+  } else if ( status == AgentInstance::Running ) {
+    statusPixmap = s_icons->syncPixmap;
+  } else {
+    statusPixmap = s_icons->errorPixmap;
   }
 
-  painter->setRenderHint( QPainter::Antialiasing );
+  if (status == 1) {
+    statusMessage.append(QString::fromLatin1("(%1%)").arg(progress));
+  }
 
-  QPen pen = painter->pen();
+  QRect innerRect = option.rect.adjusted( s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize ); //add some padding round entire delegate
+
+  const QSize decorationSize( KIconLoader::global()->currentSize( KIconLoader::Desktop ), KIconLoader::global()->currentSize( KIconLoader::Desktop ) );
+  const QSize statusIconSize = QSize(16,16);//= KIconLoader::global()->currentSize(KIconLoader::Small);
+
+  QFont nameFont = option.font;
+  nameFont.setBold(true);
+
+  QFont statusTextFont = option.font;
+  const QRect decorationRect( innerRect.left(), innerRect.top(), decorationSize.width(), innerRect.height() );
+  const QRect nameTextRect( decorationRect.topRight() + QPoint( 4, 0 ), innerRect.topRight() + QPoint( 0, innerRect.height() / 2) );
+  const QRect statusTextRect( decorationRect.bottomRight() + QPoint( 4, - innerRect.height()/2 ), innerRect.bottomRight() );
+
+  const QPixmap iconPixmap = icon.pixmap(decorationSize);
 
   QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
-  if ( cg == QPalette::Normal && !( option.state & QStyle::State_Active ) ) {
+  if ( cg == QPalette::Normal && ! ( option.state & QStyle::State_Active ) ) {
     cg = QPalette::Inactive;
   }
 
-  QStyleOptionViewItemV4 opt( option );
-  opt.showDecorationSelected = true;
-  QApplication::style()->drawPrimitive( QStyle::PE_PanelItemViewItem, &opt, painter );
+  if ( option.state & QStyle::State_Selected ) {
+    painter->setPen(option.palette.color( cg, QPalette::HighlightedText ) );
+  } else {
+    painter->setPen(option.palette.color( cg, QPalette::Text ) );
+  }
 
-  painter->save();
-  painter->translate( option.rect.topLeft() );
-  doc->drawContents( painter );
-  delete doc;
-  painter->restore();
+  painter->drawPixmap( style->itemPixmapRect( decorationRect, Qt::AlignCenter, iconPixmap ), iconPixmap );
 
-  painter->setPen( pen );
+  painter->setFont(nameFont);
+  painter->drawText(nameTextRect, Qt::AlignVCenter | Qt::AlignLeft, name);
 
-  drawFocus( painter, option, option.rect );
+  painter->setFont(statusTextFont);
+  painter->drawText(statusTextRect.adjusted( statusIconSize.width() + 4, 0, 0, 0 ), Qt::AlignVCenter | Qt::AlignLeft, statusMessage );
+  painter->drawPixmap(style->itemPixmapRect( statusTextRect, Qt::AlignVCenter | Qt::AlignLeft, statusPixmap ), statusPixmap );
 }
 
 QSize AgentInstanceWidgetDelegate::sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const
 {
-  if ( !index.isValid() ) {
-    return QSize( 0, 0 );
-  }
+  Q_UNUSED ( index );
 
-  QTextDocument *doc = document( option, index );
-  if ( !doc ) {
-    return QSize( 0, 0 );
-  }
+  const int iconHeight = KIconLoader::global()->currentSize(KIconLoader::Desktop) + ( s_delegatePaddingSize*2 );  //icon height + padding either side
+  const int textHeight = option.fontMetrics.height() + qMax( option.fontMetrics.height(), 16 ) + ( s_delegatePaddingSize*2 ); //height of text + icon/text + padding either side
 
-  const QSize size = doc->documentLayout()->documentSize().toSize();
-  delete doc;
-
-  return size;
-}
-
-void AgentInstanceWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect ) const
-{
-  if ( option.state & QStyle::State_HasFocus ) {
-    QStyleOptionFocusRect o;
-    o.QStyleOption::operator=( option );
-    o.rect = rect;
-    o.state |= QStyle::State_KeyboardFocusChange;
-    QPalette::ColorGroup cg = ( option.state & QStyle::State_Enabled ) ? QPalette::Normal : QPalette::Disabled;
-    o.backgroundColor = option.palette.color( cg, ( option.state & QStyle::State_Selected )
-                                                  ? QPalette::Highlight : QPalette::Background );
-    QApplication::style()->drawPrimitive( QStyle::PE_FrameFocusRect, &o, painter );
-  }
+  return QSize( 1,qMax( iconHeight, textHeight ) ); //any width,the view will give us the whole thing in list mode
 }
 
 }

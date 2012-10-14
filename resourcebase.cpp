@@ -466,7 +466,7 @@ void ResourceBase::itemRetrieved( const Item &item )
   Q_D( ResourceBase );
   Q_ASSERT( d->scheduler->currentTask().type == ResourceScheduler::FetchItem );
   if ( !item.isValid() ) {
-    d->scheduler->currentTask().sendDBusReplies( false );
+    d->scheduler->currentTask().sendDBusReplies( i18nc( "@info", "Invalid item retrieved" ) );
     d->scheduler->taskDone();
     return;
   }
@@ -490,9 +490,9 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   Q_Q( ResourceBase );
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::FetchItem );
   if ( job->error() ) {
-    emit q->error( QLatin1String( "Error while creating item: " ) + job->errorString() );
+    emit q->error( i18nc( "@info", "Error while creating item: %1" ).arg( job->errorString() ) );
   }
-  scheduler->currentTask().sendDBusReplies( !job->error() );
+  scheduler->currentTask().sendDBusReplies( job->error() ? job->errorString() : QString() );
   scheduler->taskDone();
 }
 
@@ -515,7 +515,7 @@ void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob * job)
   Q_Q( ResourceBase );
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes );
   if ( job->error() ) {
-    emit q->error( QLatin1String( "Error while updating collection: " ) + job->errorString() );
+    emit q->error( i18nc( "@info", "Error while updating collection: %1" ).arg( job->errorString() ) );
   }
   emit q->attributesSynchronized( scheduler->currentTask().collection.id() );
   scheduler->taskDone();
@@ -591,13 +591,19 @@ void ResourceBasePrivate::changeCommittedResult( KJob *job )
   changeProcessed();
 }
 
-bool ResourceBase::requestItemDelivery( qint64 uid, const QString & remoteId,
-                                        const QString &mimeType, const QStringList &_parts )
+bool ResourceBase::requestItemDelivery( qint64 uid, const QString &remoteId,
+                                        const QString &mimeType, const QStringList &parts )
+{
+  return requestItemDeliveryV2( uid, remoteId, mimeType, parts ).isEmpty();
+}
+
+QString ResourceBase::requestItemDeliveryV2(qint64 uid, const QString &remoteId, const QString &mimeType, const QStringList &_parts)
 {
   Q_D( ResourceBase );
   if ( !isOnline() ) {
-    emit error( i18nc( "@info", "Cannot fetch item in offline mode." ) );
-    return false;
+    const QString errorMsg = i18nc( "@info", "Cannot fetch item in offline mode." );
+    emit error( errorMsg );
+    return errorMsg;
   }
 
   setDelayedReply( true );
@@ -610,9 +616,10 @@ bool ResourceBase::requestItemDelivery( qint64 uid, const QString & remoteId,
   Q_FOREACH( const QString &str, _parts )
     parts.insert( str.toLatin1() );
 
-  d->scheduler->scheduleItemFetch( item, parts, message().createReply() );
+  d->scheduler->scheduleItemFetch( item, parts, message() );
 
-  return true;
+  return QString();
+
 }
 
 void ResourceBase::collectionsRetrieved( const Collection::List & collections )

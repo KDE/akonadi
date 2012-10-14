@@ -386,12 +386,12 @@ void ResourceScheduler::setOnline(bool state)
     TaskList& itemFetchQueue = queueForTaskType( FetchItem );
     for ( QList< Task >::iterator it = itemFetchQueue.begin(); it != itemFetchQueue.end(); ) {
       if ( (*it).type == FetchItem ) {
-        (*it).sendDBusReplies( false );
+        (*it).sendDBusReplies( i18nc( "@info", "Job canceled." ) );
         it = itemFetchQueue.erase( it );
         if ( s_resourcetracker ) {
           QList<QVariant> argumentList;
           argumentList << QString::number( mCurrentTask.serial )
-                       << QLatin1String( "Job canceled." );
+                       << i18nc( "@info", "Job canceled." );
           s_resourcetracker->asyncCallWithArgumentList( QLatin1String( "jobEnded" ), argumentList );
         }
       } else {
@@ -435,11 +435,20 @@ void ResourceScheduler::collectionRemoved( const Akonadi::Collection &collection
   }
 }
 
-void ResourceScheduler::Task::sendDBusReplies( bool success )
+void ResourceScheduler::Task::sendDBusReplies( const QString &errorMsg )
 {
   Q_FOREACH( const QDBusMessage &msg, dbusMsgs ) {
-    QDBusMessage reply( msg );
-    reply << success;
+    QDBusMessage reply( msg.createReply() );
+    const QString methodName = msg.member();
+    if (methodName == QLatin1String("requestItemDelivery")) {
+      reply << errorMsg.isEmpty();
+    } else if (methodName == QLatin1String("requestItemDeliveryV2")) {
+      reply << errorMsg;
+    } else if (methodName.isEmpty()) {
+      continue; // unittest calls scheduleItemFetch with empty QDBusMessage
+    } else {
+      kFatal() << "Got unexpected member:" << methodName;
+    }
     DBusConnectionPool::threadConnection().send( reply );
   }
 }

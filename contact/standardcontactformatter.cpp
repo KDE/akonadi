@@ -30,6 +30,7 @@
 #include <kstringhandler.h>
 
 #include <QtCore/QSet>
+#include <QtGui/QTextDocument>
 
 using namespace Akonadi;
 
@@ -53,6 +54,16 @@ StandardContactFormatter::StandardContactFormatter()
 StandardContactFormatter::~StandardContactFormatter()
 {
   delete d;
+}
+
+static int contactAge( const QDate &date )
+{
+  QDate now = QDate::currentDate();
+  int age = now.year() - date.year();
+  if ( date > now.addYears( -age ) ) {
+    age--;
+  }
+  return age;
 }
 
 QString StandardContactFormatter::toHtml( HtmlForm form ) const
@@ -84,7 +95,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // Birthday
   const QDate date = rawContact.birthday().date();
-  const int years = ( date.daysTo( QDate::currentDate() ) / 365 );
+  const int years = contactAge( date );
 
   if ( date.isValid() ) {
     dynamicPart += rowFmtStr
@@ -99,9 +110,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
       QString url;
       if ( number.type() & KABC::PhoneNumber::Cell ) {
-        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a> (<a href=\"sms:?index=%1\">SMS</a>)" ).arg( counter ).arg( number.number() );
+        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a> (<a href=\"sms:?index=%1\">SMS</a>)" ).arg( counter ).arg( Qt::escape( number.number() ) );
       } else {
-        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( number.number() );
+        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( Qt::escape( number.number() ) );
       }
 
       counter++;
@@ -113,7 +124,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   // EMails
   foreach ( const QString &email, rawContact.emails() ) {
-    QString type = i18nc( "a contact's email address", "Email" );
+    const QString type = i18nc( "a contact's email address", "Email" );
 
     const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
@@ -129,14 +140,14 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
       url = QLatin1String( "http://" ) + url;
     }
 
-    url = KStringHandler::tagUrls( url );
+    url = KStringHandler::tagUrls( Qt::escape( url ) );
     dynamicPart += rowFmtStr.arg( i18n( "Homepage" ) ).arg( url );
   }
 
   // Blog Feed
   const QString blog = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() ) {
-    dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( blog ) );
+    dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( Qt::escape( blog ) ) );
   }
 
   // Addresses
@@ -145,9 +156,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     QString formattedAddress;
 
     if ( address.label().isEmpty() ) {
-      formattedAddress = address.formattedAddress().trimmed();
+      formattedAddress = Qt::escape( address.formattedAddress().trimmed() );
     } else {
-      formattedAddress = address.label();
+      formattedAddress = Qt::escape( address.label() );
     }
 
     formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
@@ -166,7 +177,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   // Note
   QString notes;
   if ( !rawContact.note().isEmpty() ) {
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( rawContact.note().replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
+    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( Qt::escape( rawContact.note() ).replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
   }
 
   // Custom Data
@@ -207,7 +218,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
         QString value = custom.mid( pos + 1 );
 
         // convert anniversary correctly
-        if ( key == QLatin1String( "Anniversary" ) ) {
+        if ( key == QLatin1String( "Anniversary" ) || key == QLatin1String( "ANNIVERSARY" ) ) {
           const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
           value = KGlobal::locale()->formatDate( dateTime.date() );
         } else if ( key == QLatin1String( "BlogFeed" ) ) {  // blog is handled separated
@@ -246,7 +257,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
           }
         }
 
-        customData += rowFmtStr.arg( key ).arg( value ) ;
+        customData += rowFmtStr.arg( key ).arg( Qt::escape( value ) ) ;
       }
     }
   }
@@ -276,9 +287,9 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     "<td align=\"left\" width=\"70%\">%4</td>"  // organization
     "</tr>")
       .arg( QLatin1String( "contact_photo" ) )
-      .arg( rawContact.realName() )
-      .arg( role )
-      .arg( rawContact.organization() );
+      .arg( Qt::escape( rawContact.realName() ) )
+      .arg( Qt::escape( role ) )
+      .arg( Qt::escape( rawContact.organization() ) );
 
   strAddr.append( dynamicPart );
   strAddr.append( notes );

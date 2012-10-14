@@ -86,6 +86,7 @@ CustomFieldsEditWidget::CustomFieldsEditWidget( QWidget *parent )
   connect( mAddButton, SIGNAL(clicked()), this, SLOT(slotAdd()) );
   connect( mEditButton, SIGNAL(clicked()), this, SLOT(slotEdit()) );
   connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(slotRemove()) );
+  slotUpdateButtons();
 }
 
 CustomFieldsEditWidget::~CustomFieldsEditWidget()
@@ -119,6 +120,7 @@ void CustomFieldsEditWidget::loadContact( const KABC::Addressee &contact )
                   << QLatin1String( "X-ManagersName" )
                   << QLatin1String( "X-AssistantsName" )
                   << QLatin1String( "X-Anniversary" )
+		  << QLatin1String( "X-ANNIVERSARY" )
                   << QLatin1String( "X-SpousesName" )
                   << QLatin1String( "X-Profession" )
 		  << QLatin1String( "MailPreferedFormatting")		  

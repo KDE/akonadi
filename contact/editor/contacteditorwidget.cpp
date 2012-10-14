@@ -58,8 +58,8 @@
 class ContactEditorWidget::Private
 {
   public:
-    Private( ContactEditorWidget *parent )
-      : mParent( parent )
+    Private( ContactEditorWidget::DisplayMode displayMode, ContactEditorWidget *parent )
+      : mDisplayMode(displayMode), mParent( parent ), mCustomFieldsWidget(0)
     {
     }
 
@@ -76,6 +76,7 @@ class ContactEditorWidget::Private
     QString loadCustom( const KABC::Addressee &contact, const QString &key ) const;
     void storeCustom( KABC::Addressee &contact, const QString &key, const QString &value ) const;
 
+    ContactEditorWidget::DisplayMode mDisplayMode;
     ContactEditorWidget *mParent;
     KTabWidget *mTabWidget;
 
@@ -150,9 +151,10 @@ void ContactEditorWidget::Private::initGui()
   initGuiBusinessTab();
   initGuiPersonalTab();
   initGuiNotesTab();
-  initGuiCustomFieldsTab();
-
-  loadCustomPages();
+  if(mDisplayMode == FullMode) {
+    initGuiCustomFieldsTab();
+    loadCustomPages();
+  }
 }
 
 void ContactEditorWidget::Private::initGuiContactTab()
@@ -519,7 +521,18 @@ void ContactEditorWidget::Private::storeCustom( KABC::Addressee &contact, const 
 }
 
 ContactEditorWidget::ContactEditorWidget( QWidget* )
-  : d( new Private( this ) )
+  : d( new Private( FullMode, this ) )
+{
+  d->initGui();
+
+  connect( d->mNameWidget, SIGNAL(nameChanged(KABC::Addressee)),
+           d->mDisplayNameWidget, SLOT(changeName(KABC::Addressee)) );
+  connect( d->mOrganizationWidget, SIGNAL(textChanged(QString)),
+           d->mDisplayNameWidget, SLOT(changeOrganization(QString)) );
+}
+
+ContactEditorWidget::ContactEditorWidget( ContactEditorWidget::DisplayMode displayMode, QWidget * )
+  : d( new Private( displayMode, this ) )
 {
   d->initGui();
 
@@ -602,13 +615,15 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
 
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
 
-  // custom fields group
-  d->mCustomFieldsWidget->setLocalCustomFieldDescriptions( metaData.customFieldDescriptions() );
-  d->mCustomFieldsWidget->loadContact( contact );
+  if(d->mDisplayMode == FullMode) {
+    // custom fields group
+    d->mCustomFieldsWidget->setLocalCustomFieldDescriptions( metaData.customFieldDescriptions() );
+    d->mCustomFieldsWidget->loadContact( contact );
 
-  // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
-    plugin->loadContact( contact );
+    // custom pages
+    foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
+      plugin->loadContact( contact );
+    }
   }
 }
 
@@ -686,15 +701,17 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   // family group
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
-  // custom fields group
-  d->mCustomFieldsWidget->storeContact( contact );
-  metaData.setCustomFieldDescriptions( d->mCustomFieldsWidget->localCustomFieldDescriptions() );
+  if(d->mDisplayMode == FullMode) {
+    // custom fields group
+    d->mCustomFieldsWidget->storeContact( contact );
+    metaData.setCustomFieldDescriptions( d->mCustomFieldsWidget->localCustomFieldDescriptions() );
 
-  metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
+    metaData.setDisplayNameMode( d->mDisplayNameWidget->displayType() );
 
-  // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
-    plugin->storeContact( contact );
+    // custom pages
+    foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
+      plugin->storeContact( contact );
+    }
   }
 }
 
@@ -752,11 +769,13 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   // widgets from family group
   d->mPartnerWidget->setReadOnly( readOnly );
 
-  // widgets from custom fields group
-  d->mCustomFieldsWidget->setReadOnly( readOnly );
+  if(d->mDisplayMode == FullMode) {
+    // widgets from custom fields group
+    d->mCustomFieldsWidget->setReadOnly( readOnly );
 
-  // custom pages
-  foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
-    plugin->setReadOnly( readOnly );
+    // custom pages
+    foreach ( Akonadi::ContactEditorPagePlugin *plugin, d->mCustomPages ) {
+      plugin->setReadOnly( readOnly );
+    }
   }
 }

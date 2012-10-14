@@ -263,7 +263,7 @@ void DragDropManager::startDrag( Qt::DropActions supportedActions )
         sourceDeletable = source.rights() & Collection::CanDeleteItem;
       } else {
         // index points to a collection
-        sourceDeletable = ( source.rights() & Collection::CanDeleteCollection ) && !source.hasAttribute<SpecialCollectionAttribute>() && !CollectionUtils::isVirtual( source );
+        sourceDeletable = ( source.rights() & Collection::CanDeleteCollection ) && !source.hasAttribute<SpecialCollectionAttribute>() && !source.isVirtual();
       }
     }
     indexes.append( index );

@@ -42,7 +42,13 @@ class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
      *
      * @param parent The parent widget.
      */
-    ContactEditorWidget( QWidget *parent = 0 );
+    enum DisplayMode {
+      FullMode, //Show all pages
+      VCardMode //Show just pages with elements stored in vcard.
+    };
+    explicit ContactEditorWidget( QWidget *parent = 0 );
+
+    ContactEditorWidget( DisplayMode displayMode, QWidget *parent );
 
     /**
      * Destroys the contact editor widget.

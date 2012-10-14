@@ -34,14 +34,7 @@ namespace CollectionUtils
 {
   inline bool isVirtualParent( const Collection &collection )
   {
-    return ( collection.parentCollection() == Collection::root() &&
-             ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ||
-               collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
-  }
-
-  inline bool isVirtual( const Collection &collection )
-  {
-    return ( ( collection.resource() == QLatin1String( "akonadi_search_resource" ) || collection.resource() == QLatin1String( "akonadi_nepomuktag_resource" ) ) );
+    return ( collection.parentCollection() == Collection::root() && collection.isVirtual() );
   }
 
   inline bool isReadOnly( const Collection &collection )
@@ -78,7 +71,7 @@ namespace CollectionUtils
     if ( CollectionUtils::isVirtualParent( col ) ) {
       return QLatin1String( "edit-find" );
     }
-    if ( CollectionUtils::isVirtual( col ) ) {
+    if ( col.isVirtual() ) {
       return QLatin1String( "document-preview" );
     }
     if ( CollectionUtils::isResource( col ) ) {

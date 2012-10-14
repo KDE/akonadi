@@ -35,7 +35,7 @@ static QString createToolTip( const KABC::ContactGroup &group )
 
   txt += QString::fromLatin1( "<b>%1</b>" ).arg( i18n( "Distribution List %1", group.name() ) );
   txt += QLatin1String( "<ul>" );
-  const int groupDataCount( group.dataCount() );
+  const uint groupDataCount( group.dataCount() );
   for ( uint i = 0; i < groupDataCount; ++i ) {
     txt += QLatin1String( "<li>" );
     txt += group.data( i ).name() + QLatin1Char( ' ' );
