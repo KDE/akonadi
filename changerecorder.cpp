@@ -37,9 +37,6 @@ ChangeRecorder::ChangeRecorder( ChangeRecorderPrivate *privateclass, QObject * p
 
 ChangeRecorder::~ChangeRecorder()
 {
-  Q_D( ChangeRecorder );
-  if ( d->enableChangeRecording )
-    d->saveNotifications();
 }
 
 void ChangeRecorder::setConfig(QSettings * settings)
@@ -70,7 +67,7 @@ void ChangeRecorder::replayNext()
     } else {
       // In the case of a move where both source and destination are
       // ignored, we ignore the message and process the next one.
-      d->pendingNotifications.dequeue();
+      d->dequeueNotification();
       return replayNext();
     }
   } else {
@@ -79,7 +76,6 @@ void ChangeRecorder::replayNext()
     // will be stuck forever in the ResourceScheduler.
     emit nothingToReplay();
   }
-  d->saveNotifications();
 }
 
 bool ChangeRecorder::isEmpty() const
@@ -91,16 +87,12 @@ bool ChangeRecorder::isEmpty() const
 void ChangeRecorder::changeProcessed()
 {
   Q_D( ChangeRecorder );
-  if ( !d->pendingNotifications.isEmpty() )
-    d->pendingNotifications.dequeue();
 
-  // SLOW! After loading 8000 notifications and processing one, we save back the 7999 remaining
-  // ones, and then process the next one etc.
-  // Testcase: mark 8000 emails as read.
-  // TODO: Reserve 4 bytes at the beginning of the file, for the number of the next change
-  // that must be processed. In the loading code, skip everything until that number.
-  // Do a full-save only once the notifications list is empty (or only once in a while).
-  d->saveNotifications();
+  // changerecordertest.cpp calls changeProcessed after receiving nothingToReplay,
+  // so test for emptiness. Not sure real code does this though.
+  // Q_ASSERT( !d->pendingNotifications.isEmpty() )
+  if ( !d->pendingNotifications.isEmpty() )
+    d->dequeueNotification();
 }
 
 void ChangeRecorder::setChangeRecordingEnabled( bool enable )
@@ -109,8 +101,11 @@ void ChangeRecorder::setChangeRecordingEnabled( bool enable )
   if ( d->enableChangeRecording == enable )
     return;
   d->enableChangeRecording = enable;
-  if ( !enable )
+  if ( enable ) {
+    d->notificationsLoaded();
+  } else {
     d->dispatchNotifications();
+  }
 }
 
 QString Akonadi::ChangeRecorder::dumpNotificationListToString() const

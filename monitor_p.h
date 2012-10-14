@@ -88,6 +88,10 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool fetchCollectionStatistics;
     bool collectionMoveTranslationEnabled;
 
+    // Virtual methods for ChangeRecorder
+    virtual void notificationsEnqueued( int ) {}
+    virtual void notificationsErased() {}
+
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
     bool acceptNotification( const NotificationMessage &msg ) const;

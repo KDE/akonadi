@@ -24,7 +24,8 @@ ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFacto
                                              ChangeRecorder *parent)
   : MonitorPrivate( dependenciesFactory_, parent ),
      settings( 0 ),
-     enableChangeRecording( true )
+     enableChangeRecording( true ),
+    m_lastKnownNotificationsCount( 0 )
 {
 }
 
@@ -39,9 +40,9 @@ void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessage::List 
 {
   Q_Q( ChangeRecorder );
   const int oldChanges = pendingNotifications.size();
-  MonitorPrivate::slotNotify( msgs ); // with change recording disabled this will automatically take care of dispatching notification messages
+  // with change recording disabled this will automatically take care of dispatching notification messages and saving
+  MonitorPrivate::slotNotify( msgs );
   if ( enableChangeRecording && pendingNotifications.size() != oldChanges ) {
-    saveNotifications();
     emit q->changesAdded();
   }
 }
@@ -62,6 +63,8 @@ QString ChangeRecorderPrivate::notificationsFileName() const
 void ChangeRecorderPrivate::loadNotifications()
 {
     pendingNotifications.clear();
+    Q_ASSERT(pipeline.isEmpty());
+    pipeline.clear();
 
     const QString changesFileName = notificationsFileName();
 
@@ -109,9 +112,10 @@ void ChangeRecorderPrivate::loadNotifications()
     }
 
     QFile file( changesFileName );
-    if ( !file.open( QIODevice::ReadOnly ) )
-      return;
-    pendingNotifications = loadFrom( &file );
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      pendingNotifications = loadFrom( &file );
+    }
+    notificationsLoaded();
 }
 
 QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
@@ -285,7 +289,7 @@ void ChangeRecorderPrivate::saveNotifications()
     dir.mkpath( info.absolutePath() );
   }
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    qWarning() << "could not save notifications to file " << file.fileName();
+    qWarning() << "Could not save notifications to file" << file.fileName();
     return;
   }
   saveTo(&file);
@@ -304,5 +308,44 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   }
 }
 
+void ChangeRecorderPrivate::notificationsEnqueued( int count )
+{
+  // Just to ensure the contract is kept, and these two methods are always properly called.
+  if (enableChangeRecording) {
+    m_lastKnownNotificationsCount += count;
+    Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount );
 
+    saveNotifications();
+  }
+}
 
+void ChangeRecorderPrivate::dequeueNotification()
+{
+  if (enableChangeRecording) {
+    pendingNotifications.dequeue();
+
+    Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount - 1 );
+    --m_lastKnownNotificationsCount;
+
+    // SLOW! After loading 8000 notifications and processing one, we save back the 7999 remaining
+    // ones, and then process the next one etc.
+    // Testcase: mark 8000 emails as read.
+    // TODO: Reserve 4 bytes at the beginning of the file, for the number of the next change
+    // that must be processed. In the loading code, skip everything until that number.
+    // Do a full-save only once the notifications list is empty (or only once in a while).
+    saveNotifications();
+  }
+}
+
+void ChangeRecorderPrivate::notificationsErased()
+{
+  if (enableChangeRecording) {
+    m_lastKnownNotificationsCount = pendingNotifications.count();
+    saveNotifications();
+  }
+}
+
+void ChangeRecorderPrivate::notificationsLoaded()
+{
+  m_lastKnownNotificationsCount = pendingNotifications.count();
+}

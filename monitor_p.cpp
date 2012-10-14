@@ -209,19 +209,26 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg ) const
 
 void MonitorPrivate::cleanOldNotifications()
 {
+  bool erased = false;
   for ( NotificationMessage::List::iterator it = pipeline.begin(); it != pipeline.end(); ) {
-    if ( !acceptNotification( *it ) )
+    if ( !acceptNotification( *it ) ) {
       it = pipeline.erase( it );
-    else
+      erased = true;
+    } else {
       ++it;
+    }
   }
 
   for ( NotificationMessage::List::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
-    if ( !acceptNotification( *it ) )
+    if ( !acceptNotification( *it ) ) {
       it = pendingNotifications.erase( it );
-    else
+      erased = true;
+    } else {
       ++it;
+    }
   }
+  if (erased)
+    notificationsErased();
 }
 
 bool MonitorPrivate::ensureDataAvailable( const NotificationMessage &msg )
@@ -408,13 +415,19 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
 
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
+  int appendedMessages = 0;
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
-      translateAndCompress( pendingNotifications, msg );
+      const bool appended = translateAndCompress( pendingNotifications, msg );
+      if ( appended )
+        ++appendedMessages;
     }
   }
+
+  // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
+  notificationsEnqueued( appendedMessages );
 
   dispatchNotifications();
 }
