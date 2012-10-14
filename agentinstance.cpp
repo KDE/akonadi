@@ -77,6 +77,8 @@ AgentInstance::Status AgentInstance::status() const
     case 2:
     default:
       return Broken;
+    case 3:
+      return NotConfigured;
   }
 }
 

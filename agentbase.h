@@ -303,7 +303,8 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     {
       Idle = 0, ///< The agent does currently nothing.
       Running,  ///< The agent is working on something.
-      Broken    ///< The agent encountered an error state.
+      Broken,    ///< The agent encountered an error state.
+      NotConfigured ///< The agent is lacking required configuration
     };
 
     /**
@@ -350,6 +351,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *  - 0 - Idle
      *  - 1 - Running
      *  - 2 - Broken
+     *  - 3 - NotConfigured
      */
     virtual int status() const;
 
