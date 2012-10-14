@@ -38,7 +38,8 @@ ChangeRecorder::ChangeRecorder( ChangeRecorderPrivate *privateclass, QObject * p
 ChangeRecorder::~ChangeRecorder()
 {
   Q_D( ChangeRecorder );
-  d->saveNotifications();
+  if ( d->enableChangeRecording )
+    d->saveNotifications();
 }
 
 void ChangeRecorder::setConfig(QSettings * settings)
@@ -49,7 +50,8 @@ void ChangeRecorder::setConfig(QSettings * settings)
     Q_ASSERT( d->pendingNotifications.isEmpty() );
     d->loadNotifications();
   } else if ( d->settings ) {
-    d->saveNotifications();
+    if ( d->enableChangeRecording )
+      d->saveNotifications();
     d->settings = settings;
   }
 }
