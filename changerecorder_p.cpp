@@ -315,7 +315,12 @@ void ChangeRecorderPrivate::notificationsEnqueued( int count )
   // Just to ensure the contract is kept, and these two methods are always properly called.
   if (enableChangeRecording) {
     m_lastKnownNotificationsCount += count;
-    Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount );
+    if ( m_lastKnownNotificationsCount != pendingNotifications.count() ) {
+      kWarning() << this << "The number of pending notifications changed without telling us! Expected"
+                 << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
+                 << "Caller just added" << count;
+      Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount );
+    }
 
     saveNotifications();
   }
