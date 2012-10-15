@@ -416,6 +416,7 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessage> &notifica
 void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
 {
   int appendedMessages = 0;
+  int modifiedMessages = 0;
   foreach ( const NotificationMessage &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
@@ -423,11 +424,15 @@ void MonitorPrivate::slotNotify( const NotificationMessage::List &msgs )
       const bool appended = translateAndCompress( pendingNotifications, msg );
       if ( appended )
         ++appendedMessages;
+      else
+        ++modifiedMessages;
     }
   }
 
   // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
-  notificationsEnqueued( appendedMessages );
+  if ( appendedMessages > 0 || modifiedMessages > 0 ) {
+    notificationsEnqueued( appendedMessages );
+  }
 
   dispatchNotifications();
 }
