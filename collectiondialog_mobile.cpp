@@ -137,7 +137,7 @@ void CollectionDialog::Private::slotSelectionChanged()
   if ( mAllowToCreateNewChildCollection ) {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
-    const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
+    const bool isVirtual = parentCollection.isVirtual();
 
     mCreateButtonEnabled = ( canCreateChildCollections && !isVirtual );
     if ( parentCollection.isValid() ) {
