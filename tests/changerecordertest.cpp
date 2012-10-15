@@ -20,6 +20,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/agentmanager.h>
 
 #include <QtCore/QObject>
@@ -62,6 +63,7 @@ class ChangeRecorderTest : public QObject
       QTest::newRow("multipleItems") << (QStringList() << "c1" << "c2" << "c3" << "r1" << "c4" << "r2" << "r3" << "r4" << "rn");
       QTest::newRow("reload") << (QStringList() << "c1" << "c1" << "c3" << "reload" << "r1" << "r3" << "rn");
       QTest::newRow("more") << (QStringList() << "c1" << "c2" << "c3" << "reload" << "r1" << "reload" << "c4" << "reload" << "r2" << "reload" << "r3" << "r4" << "rn");
+      QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
     }
 
     void testChangeRecorder()
@@ -88,6 +90,12 @@ class ChangeRecorderTest : public QObject
             // enter event loop and wait for change notifications from the server
             QVERIFY( QTest::kWaitForSignal( rec, SIGNAL(changesAdded()), 1000 ) );
           }
+        } else if ( action.at(0) == 'd' ) {
+          // d1 = "delete item 1"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          triggerDelete( id );
+          QTest::qWait(500);
         } else if ( action.at(0) == 'r' ) {
           // r1 = "replayNext and expect to get itemChanged(1)"
           const int id = action.mid(1).toInt();
@@ -114,6 +122,13 @@ class ChangeRecorderTest : public QObject
       item.clearFlag( "random_flag" + QByteArray::number(s_num) );
       job = new ItemModifyJob( item );
       job->disableRevisionCheck();
+      AKVERIFYEXEC( job );
+    }
+
+    void triggerDelete( Akonadi::Item::Id uid )
+    {
+      Item item( uid );
+      ItemDeleteJob* job = new ItemDeleteJob( item );
       AKVERIFYEXEC( job );
     }
 
