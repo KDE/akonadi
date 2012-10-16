@@ -328,8 +328,9 @@ void ChangeRecorderPrivate::notificationsEnqueued( int count )
 
 void ChangeRecorderPrivate::dequeueNotification()
 {
+  pendingNotifications.dequeue();
+
   if (enableChangeRecording) {
-    pendingNotifications.dequeue();
 
     Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount - 1 );
     --m_lastKnownNotificationsCount;
