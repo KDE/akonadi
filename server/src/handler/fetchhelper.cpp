@@ -225,7 +225,15 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.setRetrieveParts( payloadList );
     retriever.setRetrieveFullPayload( mFullPayload );
     if ( !retriever.exec() ) { // There we go, retrieve the missing parts from the resource.
-      throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2)").arg(mConnection->selectedCollectionId()).arg(mConnection->resourceContext().id()) );
+      if (mConnection->resourceContext().isValid())
+        throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2) : %3")
+                .arg(mConnection->selectedCollectionId())
+                .arg(mConnection->resourceContext().id())
+                .arg(QString::fromLatin1(retriever.lastError())));
+      else
+        throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1) : %2")
+                .arg(mConnection->selectedCollectionId())
+                .arg(QString::fromLatin1(retriever.lastError())));
     }
   }
 
