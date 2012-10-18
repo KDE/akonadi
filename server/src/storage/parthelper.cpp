@@ -218,6 +218,7 @@ bool Akonadi::PartHelper::truncate(Part& part)
 
   part.setData( QByteArray() );
   part.setDatasize( 0 );
+  part.setExternal( false );
   return part.update();
 }
 
@@ -235,6 +236,7 @@ bool PartHelper::verify(Part& part)
     akError() << "Payload file" << fileName << "is missing, trying to recover.";
     part.setData( QByteArray() );
     part.setDatasize( 0 );
+    part.setExternal( false );
     return part.update();
   }
 

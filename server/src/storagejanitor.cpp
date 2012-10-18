@@ -270,6 +270,7 @@ void StorageJanitor::verifyExternalParts()
       part.setPimItemId( pimItemId );
       part.setData( QByteArray() );
       part.setDatasize( 0 );
+      part.setExternal( false );
       part.update();
     }
   }
