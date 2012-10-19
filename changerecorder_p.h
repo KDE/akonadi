@@ -56,8 +56,11 @@ class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivat
 private:
     void dequeueNotification();
     void notificationsLoaded();
+    void writeStartOffset();
 
     int m_lastKnownNotificationsCount; // just for invariant checking
+    int m_startOffset; // number of saved notifications to skip
+    bool m_needFullSave;
 };
 
 } // namespace Akonadi

@@ -102,6 +102,7 @@ void ChangeRecorder::setChangeRecordingEnabled( bool enable )
     return;
   d->enableChangeRecording = enable;
   if ( enable ) {
+    d->m_needFullSave = true;
     d->notificationsLoaded();
   } else {
     d->dispatchNotifications();

@@ -25,7 +25,9 @@ ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFacto
   : MonitorPrivate( dependenciesFactory_, parent ),
      settings( 0 ),
      enableChangeRecording( true ),
-    m_lastKnownNotificationsCount( 0 )
+    m_lastKnownNotificationsCount( 0 ),
+    m_startOffset( 0 ),
+    m_needFullSave( true )
 {
 }
 
@@ -115,27 +117,47 @@ void ChangeRecorderPrivate::loadNotifications()
 
     QFile file( changesFileName );
     if ( file.open( QIODevice::ReadOnly ) ) {
+      m_needFullSave = false;
       pendingNotifications = loadFrom( &file );
+    } else {
+      m_needFullSave = true;
     }
     notificationsLoaded();
 }
+
+static const quint64 s_currentVersion = Q_UINT64_C(0x000100000000);
+static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
+static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
 QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 {
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  qulonglong size;
   QByteArray sessionId, resource;
   int type, operation;
-  qlonglong uid, parentCollection, parentDestCollection;
+  quint64 uid, parentCollection, parentDestCollection;
   QString remoteId, mimeType;
   QSet<QByteArray> itemParts;
 
   QQueue<NotificationMessage> list;
 
-  stream >> size;
-  for ( qulonglong i = 0; i < size; ++i ) {
+  quint64 sizeAndVersion;
+  stream >> sizeAndVersion;
+
+  const quint64 size = sizeAndVersion & s_sizeMask;
+  const quint64 version = (sizeAndVersion & s_versionMask) >> 32;
+
+  quint64 startOffset = 0;
+  if ( version >= 1 ) {
+    stream >> startOffset;
+  }
+
+  // If we skip the first N items, then we'll need to rewrite the file on saving.
+  // Also, if the file is old, it needs to be rewritten.
+  m_needFullSave = startOffset > 0 || version == 0;
+
+  for ( quint64 i = 0; i < size; ++i ) {
     NotificationMessage msg;
 
     stream >> sessionId;
@@ -148,6 +170,9 @@ QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
     stream >> parentDestCollection;
     stream >> mimeType;
     stream >> itemParts;
+
+    if ( i < startOffset )
+      continue;
 
     msg.setSessionId( sessionId );
     msg.setType( static_cast<NotificationMessage::Type>( type ) );
@@ -177,17 +202,26 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   QDataStream stream( &file );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  qulonglong size;
   QByteArray sessionId, resource;
   int type, operation;
-  qlonglong uid, parentCollection, parentDestCollection;
+  quint64 uid, parentCollection, parentDestCollection;
   QString remoteId, mimeType;
   QSet<QByteArray> itemParts;
 
   QStringList list;
 
-  stream >> size;
-  for ( qulonglong i = 0; i < size; ++i ) {
+  quint64 sizeAndVersion;
+  stream >> sizeAndVersion;
+
+  const quint64 size = sizeAndVersion & s_sizeMask;
+  const quint64 version = (sizeAndVersion & s_versionMask) >> 32;
+
+  quint64 startOffset = 0;
+  if ( version >= 1 ) {
+    stream >> startOffset;
+  }
+
+  for ( quint64 i = 0; i < size; ++i ) {
     stream >> sessionId;
     stream >> type;
     stream >> operation;
@@ -198,6 +232,9 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     stream >> parentDestCollection;
     stream >> mimeType;
     stream >> itemParts;
+
+    if ( i < startOffset )
+        continue;
 
     QString typeString;
     switch ( type ) {
@@ -262,7 +299,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     result += entry + QLatin1Char('\n');
   }
 
-    return result;
+  return result;
 }
 
 void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessage &msg)
@@ -270,13 +307,36 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationM
   stream << msg.sessionId();
   stream << int(msg.type());
   stream << int(msg.operation());
-  stream << qulonglong(msg.uid());
+  stream << quint64(msg.uid());
   stream << msg.remoteId();
   stream << msg.resource();
-  stream << qulonglong(msg.parentCollection());
-  stream << qulonglong(msg.parentDestCollection());
+  stream << quint64(msg.parentCollection());
+  stream << quint64(msg.parentDestCollection());
   stream << msg.mimeType();
   stream << msg.itemParts();
+}
+
+void ChangeRecorderPrivate::writeStartOffset()
+{
+  if ( !settings )
+    return;
+
+  QFile file( notificationsFileName() );
+  if ( !file.open( QIODevice::ReadWrite ) ) {
+    qWarning() << "Could not update notifications in file" << file.fileName();
+    return;
+  }
+
+  // Skip "countAndVersion"
+  file.seek( 8 );
+
+  //kDebug() << "Writing start offset=" << m_startOffset;
+
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
+  stream << static_cast<quint64>(m_startOffset);
+
+  // Everything else stays unchanged
 }
 
 void ChangeRecorderPrivate::saveNotifications()
@@ -295,14 +355,24 @@ void ChangeRecorderPrivate::saveNotifications()
     return;
   }
   saveTo(&file);
+  m_needFullSave = false;
+  m_startOffset = 0;
 }
 
 void ChangeRecorderPrivate::saveTo(QIODevice *device)
 {
+  // Version 0 of this file format was writing a quint64 count, followed by the notifications.
+  // Version 1 bundles a version number into that quint64, to be able to detect a version number at load time.
+
+  const quint64 countAndVersion = static_cast<quint64>(pendingNotifications.count()) | s_currentVersion;
+
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  stream << (qulonglong)(pendingNotifications.count());
+  stream << countAndVersion;
+  stream << quint64(0); // no start offset
+
+  //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
     const NotificationMessage msg = pendingNotifications.at( i );
@@ -335,13 +405,12 @@ void ChangeRecorderPrivate::dequeueNotification()
     Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount - 1 );
     --m_lastKnownNotificationsCount;
 
-    // SLOW! After loading 8000 notifications and processing one, we save back the 7999 remaining
-    // ones, and then process the next one etc.
-    // Testcase: mark 8000 emails as read.
-    // TODO: Reserve 4 bytes at the beginning of the file, for the number of the next change
-    // that must be processed. In the loading code, skip everything until that number.
-    // Do a full-save only once the notifications list is empty (or only once in a while).
-    saveNotifications();
+    if ( m_needFullSave || pendingNotifications.isEmpty() ) {
+      saveNotifications();
+    } else {
+      ++m_startOffset;
+      writeStartOffset();
+    }
   }
 }
 
@@ -349,6 +418,7 @@ void ChangeRecorderPrivate::notificationsErased()
 {
   if (enableChangeRecording) {
     m_lastKnownNotificationsCount = pendingNotifications.count();
+    m_needFullSave = true;
     saveNotifications();
   }
 }
@@ -356,4 +426,5 @@ void ChangeRecorderPrivate::notificationsErased()
 void ChangeRecorderPrivate::notificationsLoaded()
 {
   m_lastKnownNotificationsCount = pendingNotifications.count();
+  m_startOffset = 0;
 }
