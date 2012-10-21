@@ -157,7 +157,7 @@ QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
   // Also, if the file is old, it needs to be rewritten.
   m_needFullSave = startOffset > 0 || version == 0;
 
-  for ( quint64 i = 0; i < size; ++i ) {
+  for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
     NotificationMessage msg;
 
     stream >> sessionId;
@@ -221,7 +221,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     stream >> startOffset;
   }
 
-  for ( quint64 i = 0; i < size; ++i ) {
+  for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
     stream >> sessionId;
     stream >> type;
     stream >> operation;
