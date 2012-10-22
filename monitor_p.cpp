@@ -166,7 +166,7 @@ bool MonitorPrivate::acceptNotification( const NotificationMessage & msg ) const
     return false;
 
   // user requested everything
-  if ( monitorAll )
+  if ( monitorAll && msg.type() != NotificationMessage::InvalidType)
     return true;
 
   switch ( msg.type() ) {
