@@ -131,7 +131,10 @@ bool Modify::parseStream()
         return failureResponse( "Unable to reparent collection" );
       changes.append( "PARENT" );
     } else if ( type == "VIRTUAL" ) {
-      return failureResponse( "Can't modify VIRTUAL collection flag" );
+      QString newValue;
+      pos = ImapParser::parseString( line, newValue, pos );
+      if ( newValue.toInt() != collection.isVirtual() )
+          return failureResponse( "Can't modify VIRTUAL collection flag" );
     } else if ( type == AKONADI_PARAM_REMOTEID ) {
       QString rid;
       pos = ImapParser::parseString( line, rid, pos );
