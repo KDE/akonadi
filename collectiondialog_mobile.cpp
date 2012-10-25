@@ -38,9 +38,9 @@
 #include <KStandardDirs>
 
 #include <QApplication>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeView>
 
 using namespace Akonadi;
 
