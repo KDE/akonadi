@@ -151,4 +151,4 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
 }
 
 
-#include "markascommand_p.moc"
+#include "moc_markascommand_p.cpp"

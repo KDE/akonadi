@@ -92,4 +92,4 @@ void CollectionGeneralPropertiesPage::save(Collection & collection)
 
 //@endcond
 
-#include "collectiongeneralpropertiespage_p.moc"
+#include "moc_collectiongeneralpropertiespage_p.cpp"

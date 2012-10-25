@@ -333,4 +333,4 @@ void EntityTreeView::setDefaultPopupMenu( const QString &name )
 }
 
 
-#include "entitytreeview.moc"
+#include "moc_entitytreeview.cpp"

@@ -664,4 +664,4 @@ void SelfTestDialog::linkActivated(const QString & link)
 
 // @endcond
 
-#include "selftestdialog_p.moc"
+#include "moc_selftestdialog_p.cpp"

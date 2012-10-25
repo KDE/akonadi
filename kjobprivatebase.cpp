@@ -46,4 +46,4 @@ void KJobPrivateBase::serverStateChanged( Akonadi::ServerManager::State state )
   }
 }
 
-#include "kjobprivatebase_p.moc"
+#include "moc_kjobprivatebase_p.cpp"

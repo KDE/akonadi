@@ -66,4 +66,3 @@ void ItemSerializerTest::testDefaultSerializer()
   QCOMPARE( data.isNull(), serialized.isNull() );
 }
 
-#include "itemserializertest.moc"

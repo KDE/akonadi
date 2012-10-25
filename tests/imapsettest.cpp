@@ -18,7 +18,6 @@
 */
 
 #include "imapsettest.h"
-#include "imapsettest.moc"
 #include <akonadi/private/imapset_p.h>
 
 #include <qtest_kde.h>

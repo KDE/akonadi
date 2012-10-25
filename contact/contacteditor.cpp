@@ -308,4 +308,4 @@ void ContactEditor::setDefaultAddressBook( const Akonadi::Collection &collection
   d->mDefaultCollection = collection;
 }
 
-#include "contacteditor.moc"
+#include "moc_contacteditor.cpp"

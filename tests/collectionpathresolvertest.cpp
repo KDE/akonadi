@@ -18,7 +18,6 @@
 */
 
 #include "collectionpathresolvertest.h"
-#include "collectionpathresolvertest.moc"
 #include "collectionpathresolver_p.h"
 
 #include <akonadi/control.h>

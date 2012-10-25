@@ -78,4 +78,4 @@ void TransportResourceBase::itemSent( const Item &item,
   emit d->transportResult( item.id(), (int)result, message );
 }
 
-#include "transportresourcebase_p.moc"
+#include "moc_transportresourcebase_p.cpp"

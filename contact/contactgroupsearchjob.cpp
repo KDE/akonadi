@@ -195,4 +195,3 @@ KABC::ContactGroup::List ContactGroupSearchJob::contactGroups() const
   return contactGroups;
 }
 
-#include "contactgroupsearchjob.moc"

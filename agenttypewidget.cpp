@@ -273,4 +273,4 @@ void AgentTypeWidgetDelegate::drawFocus( QPainter *painter, const QStyleOptionVi
 
 }
 
-#include "agenttypewidget.moc"
+#include "moc_agenttypewidget.cpp"

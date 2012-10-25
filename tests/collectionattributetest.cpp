@@ -18,7 +18,6 @@
 */
 
 #include "collectionattributetest.h"
-#include "collectionattributetest.moc"
 #include "collectionpathresolver_p.h"
 
 #include <akonadi/collection.h>

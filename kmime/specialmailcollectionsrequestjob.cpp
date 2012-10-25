@@ -93,4 +93,3 @@ void SpecialMailCollectionsRequestJob::requestCollection( SpecialMailCollections
   return SpecialCollectionsRequestJob::requestCollection( enumToType( type ), instance );
 }
 
-#include "specialmailcollectionsrequestjob.moc"

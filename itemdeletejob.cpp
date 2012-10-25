@@ -116,4 +116,4 @@ void ItemDeleteJob::doStart()
   }
 }
 
-#include "itemdeletejob.moc"
+#include "moc_itemdeletejob.cpp"

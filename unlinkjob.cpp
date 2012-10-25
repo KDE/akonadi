@@ -49,4 +49,3 @@ void UnlinkJob::doStart()
   d->sendCommand( "UNLINK" );
 }
 
-#include "unlinkjob.moc"

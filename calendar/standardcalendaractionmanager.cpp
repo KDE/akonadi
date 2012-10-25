@@ -684,4 +684,4 @@ void StandardCalendarActionManager::setCollectionPropertiesPageNames( const QStr
   d->mGenericManager->setCollectionPropertiesPageNames( names );
 }
 
-#include "standardcalendaractionmanager.moc"
+#include "moc_standardcalendaractionmanager.cpp"

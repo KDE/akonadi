@@ -355,4 +355,4 @@ void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions op
 }
 
 #include "collectiondialog.moc"
-#include "collectiondialog_mobile_p.moc"
+#include "moc_collectiondialog_mobile_p.cpp"

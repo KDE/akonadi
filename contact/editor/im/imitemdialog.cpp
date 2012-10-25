@@ -83,4 +83,3 @@ void IMItemDialog::slotUpdateButtons()
   enableButtonOk( mProtocolCombo->currentIndex()>0 && !mNameEdit->text().isEmpty() );
 }
 
-#include "imitemdialog.moc"

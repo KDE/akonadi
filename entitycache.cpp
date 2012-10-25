@@ -30,4 +30,4 @@ void EntityCacheBase::setSession( Session *_session )
   session = _session;
 }
 
-#include "entitycache_p.moc"
+#include "moc_entitycache_p.cpp"

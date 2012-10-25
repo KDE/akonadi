@@ -82,4 +82,3 @@ void TestRunner::terminate()
 }
 
 
-#include "testrunner.moc"

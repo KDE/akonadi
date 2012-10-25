@@ -1700,4 +1700,4 @@ void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
 
 
 
-#include "standardactionmanager.moc"
+#include "moc_standardactionmanager.cpp"

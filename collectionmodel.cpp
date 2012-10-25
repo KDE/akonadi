@@ -333,4 +333,4 @@ void CollectionModel::includeUnsubscribed(bool include)
 
 
 
-#include "collectionmodel.moc"
+#include "moc_collectionmodel.cpp"

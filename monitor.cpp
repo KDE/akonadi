@@ -243,4 +243,4 @@ void Monitor::setCollectionMoveTranslationEnabled( bool enabled )
   d->collectionMoveTranslationEnabled = enabled;
 }
 
-#include "monitor.moc"
+#include "moc_monitor.cpp"

@@ -387,4 +387,3 @@ void ItemStoreTest::testRemoteIdRace()
 }
 
 
-#include "itemstoretest.moc"

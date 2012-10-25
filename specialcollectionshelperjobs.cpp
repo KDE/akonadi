@@ -658,4 +658,4 @@ bool Akonadi::releaseLock()
   return DBusConnectionPool::threadConnection().unregisterService( dbusServiceName() );
 }
 
-#include "specialcollectionshelperjobs_p.moc"
+#include "moc_specialcollectionshelperjobs_p.cpp"

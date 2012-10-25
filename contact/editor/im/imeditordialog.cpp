@@ -166,4 +166,3 @@ void IMEditorDialog::slotUpdateButtons()
                                !mModel->data( currentIndex, IMModel::IsPreferredRole ).toBool() );
 }
 
-#include "imeditordialog.moc"

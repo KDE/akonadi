@@ -155,4 +155,4 @@ void KDatePickerPopup::slotNextMonth()
   emit dateChanged( QDate::currentDate().addMonths( 1 ) );
 }
 
-#include "kdatepickerpopup_p.moc"
+#include "moc_kdatepickerpopup_p.cpp"

@@ -155,4 +155,4 @@ Akonadi::Collection MoveToTrashCommand::findTrashFolder( const Akonadi::Collecti
 
 
 
-#include "movetotrashcommand_p.moc"
+#include "moc_movetotrashcommand_p.cpp"

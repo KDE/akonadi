@@ -126,4 +126,4 @@ Akonadi::Item::List RecursiveItemFetchJob::items() const
   return d->mItems;
 }
 
-#include "recursiveitemfetchjob.moc"
+#include "moc_recursiveitemfetchjob.cpp"

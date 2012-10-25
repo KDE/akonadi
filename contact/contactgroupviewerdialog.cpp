@@ -73,4 +73,3 @@ void ContactGroupViewerDialog::setContactGroup( const Akonadi::Item &group )
   d->mViewer->setContactGroup( group );
 }
 
-#include "contactgroupviewerdialog.moc"

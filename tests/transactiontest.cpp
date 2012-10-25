@@ -100,4 +100,3 @@ void TransactionTest::testTransaction()
   AKVERIFYEXEC( deleteJob );
 }
 
-#include "transactiontest.moc"

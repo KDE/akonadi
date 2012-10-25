@@ -190,4 +190,4 @@ void ItemView::setXmlGuiClient(KXMLGUIClient * xmlGuiClient)
   d->xmlGuiClient = xmlGuiClient;
 }
 
-#include "itemview.moc"
+#include "moc_itemview.cpp"

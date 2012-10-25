@@ -302,5 +302,4 @@ void MimeTypeCheckerTest::testStringMatchEquivalent()
   QVERIFY( MimeTypeChecker::isWantedCollection( collection3, randomMimeType ) );
 }
 
-#include "mimetypecheckertest.moc"
 // kate: space-indent on; indent-width 2; replace-tabs on;

@@ -116,4 +116,3 @@ QString Akonadi::ChangeRecorder::dumpNotificationListToString() const
   return d->dumpNotificationListToString();
 }
 
-#include "changerecorder.moc"

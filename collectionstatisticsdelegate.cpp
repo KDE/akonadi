@@ -354,4 +354,3 @@ void CollectionStatisticsDelegate::updatePalette()
     d->updateColor();
 }
 
-#include "collectionstatisticsdelegate.moc"

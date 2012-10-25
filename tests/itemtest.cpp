@@ -18,7 +18,6 @@
 */
 
 #include "itemtest.h"
-#include "itemtest.moc"
 #include "testattribute.h"
 
 #include <akonadi/item.h>

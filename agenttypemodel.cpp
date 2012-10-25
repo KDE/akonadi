@@ -159,4 +159,4 @@ Qt::ItemFlags AgentTypeModel::flags(const QModelIndex& index) const
   return QAbstractItemModel::flags( index );
 }
 
-#include "agenttypemodel.moc"
+#include "moc_agenttypemodel.cpp"

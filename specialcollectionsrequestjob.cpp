@@ -365,4 +365,4 @@ void SpecialCollectionsRequestJob::slotResult( KJob *job )
   TransactionSequence::slotResult( job );
 }
 
-#include "specialcollectionsrequestjob.moc"
+#include "moc_specialcollectionsrequestjob.cpp"

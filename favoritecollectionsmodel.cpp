@@ -333,4 +333,4 @@ void FavoriteCollectionsModel::pasteJobDone( KJob *job )
   }
 }
 
-#include "favoritecollectionsmodel.moc"
+#include "moc_favoritecollectionsmodel.cpp"

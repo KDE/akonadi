@@ -332,4 +332,3 @@ void ItemHydra::testSharedPointerConversions()
 
 }
 
-#include "itemhydratest.moc"

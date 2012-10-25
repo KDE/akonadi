@@ -220,4 +220,4 @@ void ContactGroupViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-#include "contactgroupviewer.moc"
+#include "moc_contactgroupviewer.cpp"

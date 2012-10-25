@@ -141,4 +141,4 @@ ContactEditor* ContactEditorDialog::editor() const
   return d->mEditor;
 }
 
-#include "contacteditordialog.moc"
+#include "moc_contacteditordialog.cpp"

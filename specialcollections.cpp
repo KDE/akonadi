@@ -263,4 +263,4 @@ Akonadi::Collection SpecialCollections::defaultCollection( const QByteArray &typ
   return collection( type, d->defaultResource() );
 }
 
-#include "specialcollections.moc"
+#include "moc_specialcollections.cpp"

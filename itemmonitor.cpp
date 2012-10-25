@@ -82,4 +82,4 @@ ItemFetchScope &ItemMonitor::fetchScope()
   return d->mMonitor->itemFetchScope();
 }
 
-#include "itemmonitor_p.moc"
+#include "moc_itemmonitor_p.cpp"

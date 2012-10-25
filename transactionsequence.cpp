@@ -219,4 +219,4 @@ void TransactionSequence::rollback()
 }
 
 
-#include "transactionsequence.moc"
+#include "moc_transactionsequence.cpp"

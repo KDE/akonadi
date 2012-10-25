@@ -268,4 +268,4 @@ void Control::widgetNeedsAkonadi(QWidget * widget)
 
 }
 
-#include "control.moc"
+#include "moc_control.cpp"

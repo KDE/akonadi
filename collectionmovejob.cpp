@@ -45,4 +45,3 @@ void CollectionMoveJob::doStart()
   d->sendCommand( "COLMOVE" );
 }
 
-#include "collectionmovejob.moc"

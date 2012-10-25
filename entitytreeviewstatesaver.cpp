@@ -231,4 +231,4 @@ void EntityTreeViewStateSaver::restoreState (const KConfigGroup & configGroup) c
 
 } // namespace Akonadi
 
-#include "entitytreeviewstatesaver.moc"
+#include "moc_entitytreeviewstatesaver.cpp"

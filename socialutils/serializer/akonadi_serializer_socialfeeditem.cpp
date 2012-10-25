@@ -156,4 +156,3 @@ QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const
 
 Q_EXPORT_PLUGIN2( akonadi_serializer_socialfeeditem, Akonadi::SocialFeedItemSerializerPlugin )
 
-#include "akonadi_serializer_socialfeeditem.moc"

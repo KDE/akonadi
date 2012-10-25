@@ -249,4 +249,4 @@ void Akonadi::ImageProvider::abortAllJobs()
 }
 
 
-#include "imageprovider.moc"
+#include "moc_imageprovider.cpp"

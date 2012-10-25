@@ -49,4 +49,3 @@ void LinkJob::doStart()
   d->sendCommand( "LINK" );
 }
 
-#include "linkjob.moc"

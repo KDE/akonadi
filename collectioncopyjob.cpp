@@ -62,4 +62,3 @@ void CollectionCopyJob::doStart()
   d->writeData( command );
 }
 
-#include "collectioncopyjob.moc"

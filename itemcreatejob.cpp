@@ -169,4 +169,3 @@ Item ItemCreateJob::item() const
   return item;
 }
 
-#include "itemcreatejob.moc"

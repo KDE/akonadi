@@ -825,5 +825,5 @@ KComponentData AgentBase::componentData()
   return *( s_agentComponentDatas.localData() );
 }
 
-#include "agentbase.moc"
-#include "agentbase_p.moc"
+#include "moc_agentbase.cpp"
+#include "moc_agentbase_p.cpp"

@@ -301,4 +301,3 @@ ImageLoader* ImageWidget::imageLoader()
   return mImageLoader;
 }
 
-#include "imagewidget.moc"

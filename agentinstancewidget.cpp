@@ -297,4 +297,4 @@ QSize AgentInstanceWidgetDelegate::sizeHint( const QStyleOptionViewItem &option,
 
 }
 
-#include "agentinstancewidget.moc"
+#include "moc_agentinstancewidget.cpp"

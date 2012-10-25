@@ -410,4 +410,3 @@ KABC::PhoneNumber::Type PhoneTypeDialog::type() const
   return type;
 }
 
-#include "phoneeditwidget.moc"

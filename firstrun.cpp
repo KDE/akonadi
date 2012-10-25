@@ -308,4 +308,4 @@ QVariant::Type Firstrun::argumentType( const QMetaObject *mo, const QString &met
   return QVariant::nameToType( argTypes.first() );
 }
 
-#include "firstrun_p.moc"
+#include "moc_firstrun_p.cpp"

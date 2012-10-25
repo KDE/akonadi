@@ -138,4 +138,4 @@ void ConflictHandler::slotUseBothItemsFinished( KJob *job )
   }
 }
 
-#include "conflicthandler_p.moc"
+#include "moc_conflicthandler_p.cpp"

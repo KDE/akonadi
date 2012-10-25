@@ -105,4 +105,3 @@ CollectionStatistics Akonadi::CollectionStatisticsJob::statistics() const
   return d->mStatistics;
 }
 
-#include "collectionstatisticsjob.moc"

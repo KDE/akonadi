@@ -459,4 +459,4 @@ bool ContactGroupModel::removeRows( int row, int count, const QModelIndex &paren
   return true;
 }
 
-#include "contactgroupmodel_p.moc"
+#include "moc_contactgroupmodel_p.cpp"

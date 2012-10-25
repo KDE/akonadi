@@ -96,4 +96,3 @@ void AttributeFactoryTest::testRegisteredAttribute()
 }
 
 
-#include "attributefactorytest.moc"

@@ -445,5 +445,5 @@ QModelIndexList StatisticsProxyModel::match( const QModelIndex& start, int role,
 }
 
 
-#include "statisticsproxymodel.moc"
+#include "moc_statisticsproxymodel.cpp"
 

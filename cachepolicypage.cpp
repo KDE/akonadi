@@ -163,4 +163,4 @@ void CachePolicyPage::save( Collection &collection )
   collection.setCachePolicy( policy );
 }
 
-#include "cachepolicypage.moc"
+#include "moc_cachepolicypage.cpp"

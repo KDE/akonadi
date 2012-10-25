@@ -351,4 +351,4 @@ void Job::emitWriteFinished()
   emit writeFinished( this );
 }
 
-#include "job.moc"
+#include "moc_job.cpp"

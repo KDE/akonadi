@@ -94,4 +94,3 @@ void SearchCreateJob::doHandleResponse( const QByteArray &tag, const QByteArray 
   kDebug() << "Unhandled response: " << tag << data;
 }
 
-#include "searchcreatejob.moc"

@@ -99,4 +99,3 @@ void ImageProviderTests::testImageFetchingUrl()
 
 QTEST_MAIN( ImageProviderTests );
 
-#include "moc_image-provider-tests.cpp"

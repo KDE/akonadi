@@ -18,7 +18,6 @@
 */
 
 #include "itemfetchtest.h"
-#include "itemfetchtest.moc"
 #include "collectionpathresolver_p.h"
 #include "testattribute.h"
 

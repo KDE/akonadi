@@ -416,4 +416,3 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   QCOMPARE( caddspy.count(), 1 );
 }
 
-#include "monitortest.moc"

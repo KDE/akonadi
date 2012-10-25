@@ -18,7 +18,6 @@
 */
 
 #include "searchjobtest.h"
-#include "searchjobtest.moc"
 
 #include <akonadi/collection.h>
 #include <akonadi/collectiondeletejob.h>

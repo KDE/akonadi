@@ -151,4 +151,3 @@ bool AgentFilterProxyModel::filterAcceptsRow( int row, const QModelIndex& ) cons
   return true;
 }
 
-#include "agentfilterproxymodel.moc"

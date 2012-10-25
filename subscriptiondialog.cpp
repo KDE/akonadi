@@ -262,4 +262,4 @@ SubscriptionDialog::~ SubscriptionDialog()
 }
 
 
-#include "subscriptiondialog_p.moc"
+#include "moc_subscriptiondialog_p.cpp"

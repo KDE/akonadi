@@ -634,4 +634,3 @@ KABC::Addressee::List ContactSearchJob::contacts() const
   return contacts;
 }
 
-#include "contactsearchjob.moc"

@@ -142,4 +142,3 @@ void DateEditWidget::updateView()
   }
 }
 
-#include "dateeditwidget.moc"

@@ -473,4 +473,4 @@ void ItemSync::setTransactionMode(ItemSync::TransactionMode mode)
 }
 
 
-#include "itemsync.moc"
+#include "moc_itemsync.cpp"

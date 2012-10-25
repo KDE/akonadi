@@ -388,4 +388,4 @@ QMimeData *MessageThreaderProxyModel::mimeData(const QModelIndexList &indexes) c
     return sourceModel()->mimeData(sourceIndexes);
 }
 
-#include "messagethreaderproxymodel.moc"
+#include "moc_messagethreaderproxymodel.cpp"

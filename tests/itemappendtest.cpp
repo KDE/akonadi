@@ -261,4 +261,3 @@ void ItemAppendTest::testItemSize()
   QCOMPARE( fetch->items().first().size(), size );
 }
 
-#include "itemappendtest.moc"

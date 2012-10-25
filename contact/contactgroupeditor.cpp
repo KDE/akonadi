@@ -333,4 +333,4 @@ void ContactGroupEditor::groupNameIsValid(bool isValid)
 #endif
 }
 
-#include "contactgroupeditor.moc"
+#include "moc_contactgroupeditor.cpp"

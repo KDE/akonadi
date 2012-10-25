@@ -168,4 +168,3 @@ QVariant CollectionStatisticsModel::headerData( int section, Qt::Orientation ori
   return CollectionModel::headerData( section, orientation, role );
 }
 
-#include "collectionstatisticsmodel.moc"

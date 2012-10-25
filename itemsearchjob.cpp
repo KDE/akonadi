@@ -144,4 +144,4 @@ QUrl ItemSearchJob::akonadiItemIdUri()
   return QUrl( QLatin1String( "http://akonadi-project.org/ontologies/aneo#akonadiItemId" ) );
 }
 
-#include "itemsearchjob.moc"
+#include "moc_itemsearchjob.cpp"

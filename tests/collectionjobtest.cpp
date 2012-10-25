@@ -672,4 +672,3 @@ void CollectionJobTest::testAncestorRetrieval()
   QCOMPARE( col, col2 );
 }
 
-#include "collectionjobtest.moc"

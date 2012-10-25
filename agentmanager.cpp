@@ -421,4 +421,4 @@ void AgentManager::synchronizeCollection( const Collection & collection, bool re
   d->mManager->agentInstanceSynchronizeCollection( resId, collection.id(), recursive );
 }
 
-#include "agentmanager.moc"
+#include "moc_agentmanager.cpp"

@@ -235,4 +235,4 @@ void LeafExtensionProxyModel::setSourceModel( QAbstractItemModel *_sourceModel )
   endResetModel();
 }
 
-#include "leafextensionproxymodel_p.moc"
+#include "moc_leafextensionproxymodel_p.cpp"

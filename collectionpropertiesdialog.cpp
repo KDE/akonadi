@@ -205,4 +205,4 @@ void CollectionPropertiesDialog::setCurrentPage( const QString &name )
   d->setCurrentPage( name );
 }
 
-#include "collectionpropertiesdialog.moc"
+#include "moc_collectionpropertiesdialog.cpp"

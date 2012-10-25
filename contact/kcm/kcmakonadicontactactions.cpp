@@ -74,4 +74,3 @@ void KCMAkonadiContactActions::defaults()
   mConfigManager->updateWidgetsDefault();
 }
 
-#include "kcmakonadicontactactions.moc"

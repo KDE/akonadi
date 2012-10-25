@@ -65,4 +65,3 @@ void FreeBusyEditWidget::setReadOnly( bool readOnly )
   mURL->setEnabled( !readOnly );
 }
 
-#include "freebusyeditwidget.moc"

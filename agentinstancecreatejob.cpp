@@ -223,4 +223,4 @@ void AgentInstanceCreateJobPrivate::doStart()
   }
 }
 
-#include "agentinstancecreatejob.moc"
+#include "moc_agentinstancecreatejob.cpp"

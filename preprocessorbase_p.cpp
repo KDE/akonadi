@@ -91,4 +91,3 @@ void PreprocessorBasePrivate::itemFetched( KJob *job )
   }
 }
 
-#include "preprocessorbase_p.moc"

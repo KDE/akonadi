@@ -903,4 +903,4 @@ Akonadi::StandardActionManager* StandardMailActionManager::standardActionManager
   return d->mGenericManager;
 }
 
-#include "standardmailactionmanager.moc"
+#include "moc_standardmailactionmanager.cpp"
