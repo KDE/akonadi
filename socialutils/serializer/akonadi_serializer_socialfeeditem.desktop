@@ -1,5 +1,6 @@
 [Misc]
 Name=SocialFeedItem Serializer
+Name[el]=Πρόγραμμα γραμμικής διάταξης SocialFeedItem
 Name[es]=Serializador SocialFeedItem
 Name[et]=SocialFeedItemi jadasti
 Name[fi]=SocialFeedItem-serialisoija
@@ -19,6 +20,7 @@ Name[uk]=Серіалізатор SocialFeedItem
 Name[x-test]=xxSocialFeedItem Serializerxx
 Name[zh_TW]=SocialFeedItem 序列器
 Comment=An Akonadi serializer plugin for SocialFeedItem
+Comment[el]=ένα πρόσθετο γραμμικής διάταξης του Akonadi για το SocialFeedItem
 Comment[es]=Un complemento de serializador Akonadi para SocialFeedItem
 Comment[et]=Akonadi SocialFeedItemi jadastamisplugin
 Comment[fi]=Akonadi-serialisoijaliitännäinen SocialFeedItemille
