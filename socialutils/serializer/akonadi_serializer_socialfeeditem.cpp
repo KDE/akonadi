@@ -144,7 +144,8 @@ void SocialFeedItemSerializerPlugin::serialize( const Item &item,
   }
 
   QJson::Serializer serializer;
-  data.write( serializer.serialize( map ) );
+  bool ok;						// dummy variable is required
+  data.write( serializer.serialize( map, &ok ) );
 }
 
 QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const

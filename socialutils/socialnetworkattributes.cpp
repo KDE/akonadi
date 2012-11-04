@@ -51,7 +51,8 @@ void Akonadi::SocialNetworkAttributes::deserialize( const QByteArray &data )
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
   QJson::Serializer serializer;
-  return serializer.serialize(mAttributes);
+  bool ok;						// dummy variable is required
+  return serializer.serialize(mAttributes, &ok);
 }
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
