@@ -26,8 +26,8 @@
 #include "emptytrashcommand_p.h"
 #include "markascommand_p.h"
 #include "movetotrashcommand_p.h"
-#include "removeduplicatescommand_p.h"
 #include "specialmailcollections.h"
+#include "removeduplicatesjob.h"
 
 #include "akonadi/agentfilterproxymodel.h"
 #include "akonadi/agentinstance.h"
@@ -37,6 +37,7 @@
 #include "akonadi/collectionstatistics.h"
 #include "akonadi/entitytreemodel.h"
 #include "akonadi/kmime/messagestatus.h"
+#include "util_p.h"
 #include "akonadi/mimetypechecker.h"
 #include "akonadi/subscriptiondialog_p.h"
 
@@ -586,8 +587,15 @@ class StandardMailActionManager::Private
         return;
       }
 
-      RemoveDuplicatesCommand *command = new RemoveDuplicatesCommand( mCollectionSelectionModel->model(), collections, mParent );
-      command->execute();
+      RemoveDuplicatesJob *job = new RemoveDuplicatesJob( collections, mParent );
+      connect( job, SIGNAL(finished(KJob*)), mParent, SLOT(slotJobFinished(KJob*)) );
+    }
+
+    void slotJobFinished( KJob *job )
+    {
+      if ( job->error() ) {
+        Util::showJobError( job );
+      }
     }
 
     void slotEmptyAllTrash()

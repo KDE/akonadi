@@ -38,6 +38,7 @@ endmacro(add_resource_iface)
 set( kmimeakonadi_LIB_SRC 
   addressattribute.cpp
   attributeregistrar.cpp
+  removeduplicatesjob.cpp
   specialmailcollections.cpp
   specialmailcollectionsrequestjob.cpp
   messagefolderattribute.cpp
@@ -54,7 +55,6 @@ set( kmimeakonadi_LIB_SRC
   markascommand.cpp
   movecommand.cpp
   movetotrashcommand.cpp
-  removeduplicatescommand.cpp
   standardmailactionmanager.cpp
 )
 
@@ -80,6 +80,7 @@ install(TARGETS akonadi-kmime EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_
 
 install( FILES
   addressattribute.h
+  removeduplicatesjob.h
   specialmailcollections.h
   specialmailcollectionsrequestjob.h
   standardmailactionmanager.h
