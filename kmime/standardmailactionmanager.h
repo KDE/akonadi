@@ -209,7 +209,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotRemoveDuplicates() )
     Q_PRIVATE_SLOT( d, void slotEmptyAllTrash() )
     Q_PRIVATE_SLOT( d, void slotEmptyTrash() )
-    Q_PRIVATE_SLOT( d, void slotJobFinished( KJob* ) );
+    Q_PRIVATE_SLOT( d, void slotJobFinished( KJob* ) )
     //@endcond
 };
 
