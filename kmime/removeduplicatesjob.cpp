@@ -22,12 +22,13 @@
 
 #include <QAbstractItemModel>
 
-#include <Akonadi/ItemFetchJob>
-#include <Akonadi/ItemDeleteJob>
-#include <Akonadi/ItemFetchScope>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemdeletejob.h>
+#include <akonadi/itemfetchscope.h>
+#include <kmime/kmime_message.h>
+
 #include <KLocalizedString>
 
-#include <KMime/Message>
 
 class Akonadi::RemoveDuplicatesJob::Private {
 
