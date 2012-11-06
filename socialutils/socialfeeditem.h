@@ -173,18 +173,6 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     KDateTime postTime() const;
 
     /**
-     * @return The original time string as received from the network
-     */
-    QString postTimeString() const;
-
-    /**
-     * Sets the time string which was received from the network
-     *
-     * @param postTimeString The time string
-     */
-    void setPostTime( const QString &postTimeString );
-
-    /**
      * Sets the time string which was received from the network together with the format
      * which could be received from the network as well or custom-supplied
      *
@@ -199,12 +187,9 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     QString postTimeFormat() const;
 
     /**
-     * Sets the time format of the time string for this post,
-     * it's used for parsing with KDateTime
-     *
-     * @param postTimeFormat The time format
+     * @return The original time string as received from the network
      */
-    void setPostTimeFormat( const QString &postTimeFormat );
+    QString postTimeString() const;
 
     /**
      * @return Additional info for the post, like number of comments, likes, retweed from etc

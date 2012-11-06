@@ -41,6 +41,7 @@ class Akonadi::SocialFeedItemData : public QSharedData
     QString userId;
     QString postTimeString;
     QString postTimeFormat;
+    KDateTime postTime;
     QString postInfo;
     bool shared;
     QString sharedFrom;
@@ -138,7 +139,7 @@ void Akonadi::SocialFeedItem::setPostImageUrl( const QString &imageUrl )
 
 KDateTime Akonadi::SocialFeedItem::postTime() const
 {
-  return KDateTime::fromString( d->postTimeString, d->postTimeFormat );
+  return d->postTime;
 }
 
 QString Akonadi::SocialFeedItem::postTimeString() const
@@ -156,26 +157,17 @@ void Akonadi::SocialFeedItem::setPostInfo( const QString &postInfo )
   d->postInfo = postInfo;
 }
 
-void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString )
-{
-  d->postTimeString = postTimeString;
-}
-
 void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString,
                                            const QString &postTimeFormat )
 {
   d->postTimeString = postTimeString;
   d->postTimeFormat = postTimeFormat;
+  d->postTime = KDateTime::fromString( d->postTimeString, d->postTimeFormat );
 }
 
 QString Akonadi::SocialFeedItem::postTimeFormat() const
 {
   return d->postTimeFormat;
-}
-
-void Akonadi::SocialFeedItem::setPostTimeFormat( const QString &postTimeFormat )
-{
-  d->postTimeFormat = postTimeFormat;
 }
 
 QString Akonadi::SocialFeedItem::userId() const

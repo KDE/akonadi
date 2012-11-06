@@ -58,8 +58,8 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
   feedItem.setUserDisplayName( map.value( QLatin1String( "userDisplayName" ) ).toString() );
   feedItem.setUserId( map.value( QLatin1String( "userId" ) ).toString() );
   feedItem.setAvatarUrl( map.value( QLatin1String( "avatarUrl" ) ).toUrl() );
-  feedItem.setPostTime( map.value( QLatin1String( "postTimeString" ) ).toString() );
-  feedItem.setPostTimeFormat( map.value( QLatin1String( "postTimeFormat" ) ).toString() );
+  feedItem.setPostTime( map.value( QLatin1String( "postTimeString" ) ).toString(),
+                        map.value( QLatin1String( "postTimeFormat" ) ).toString() );
   feedItem.setShared( map.value( QLatin1String( "shared" ) ).toBool() );
   feedItem.setSharedFrom( map.value( QLatin1String( "sharedFrom" ) ).toString() );
   feedItem.setSharedFromId( map.value( QLatin1String( "sharedFromId" ) ).toString() );
