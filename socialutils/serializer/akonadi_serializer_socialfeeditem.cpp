@@ -51,8 +51,8 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
   feedItem.setPostId( map.value( QLatin1String( "postId" ) ).toString() );
   feedItem.setPostText( map.value( QLatin1String( "postText" ) ).toString() );
   feedItem.setPostLinkTitle( map.value( QLatin1String( "postLinkTitle" ) ).toString() );
-  feedItem.setPostLink( map.value( QLatin1String( "postLink" ) ).toString() );
-  feedItem.setPostImageUrl( map.value( QLatin1String( "postImageUrl" ) ).toString() );
+  feedItem.setPostLink( map.value( QLatin1String( "postLink" ) ).toUrl() );
+  feedItem.setPostImageUrl( map.value( QLatin1String( "postImageUrl" ) ).toUrl() );
   feedItem.setPostInfo( map.value( QLatin1String( "postInfo" ) ).toString() );
   feedItem.setUserName( map.value( QLatin1String( "userName" ) ).toString() );
   feedItem.setUserDisplayName( map.value( QLatin1String( "userDisplayName" ) ).toString() );

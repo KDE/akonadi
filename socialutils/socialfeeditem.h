@@ -97,14 +97,14 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     /**
      * @return Link from the post
      */
-    QString postLink() const;
+    QUrl postLink() const;
 
     /**
      * Sets the link the posts links to
      *
      * @param link URL of the link
      */
-    void setPostLink( const QString &link );
+    void setPostLink( const QUrl &link );
 
     /**
      * @return Link title from the post
@@ -121,7 +121,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     /**
      * @return URL of an image associated with this post
      */
-    QString postImageUrl() const;
+    QUrl postImageUrl() const;
 
     /**
      * Sets the URL of an image associated with this post,
@@ -129,7 +129,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param imageUrl The URL of the image
      */
-    void setPostImageUrl( const QString &imageUrl );
+    void setPostImageUrl( const QUrl &imageUrl );
 
     /**
      * @return Post user name
