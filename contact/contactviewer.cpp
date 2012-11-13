@@ -301,4 +301,4 @@ void ContactViewer::itemRemoved()
   d->mBrowser->clear();
 }
 
-#include "contactviewer.moc"
+#include "moc_contactviewer.cpp"

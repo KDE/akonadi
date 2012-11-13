@@ -107,4 +107,3 @@ void ContactDefaultActions::showAddress( const KABC::Address &address )
   action.showAddress( address );
 }
 
-#include "contactdefaultactions.moc"

@@ -62,4 +62,4 @@ bool CollectionFilterModel::filterAcceptsRow( int row, const QModelIndex &parent
   return accepted;
 }
 
-#include "collectionfiltermodel_p.moc"
+#include "moc_collectionfiltermodel_p.cpp"

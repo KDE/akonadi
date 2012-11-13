@@ -429,4 +429,4 @@ CollectionFetchScope& CollectionFetchJob::fetchScope()
   return d->mScope;
 }
 
-#include "collectionfetchjob.moc"
+#include "moc_collectionfetchjob.cpp"

@@ -20,6 +20,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/agentmanager.h>
 
 #include <QtCore/QObject>
@@ -34,115 +35,155 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 class ChangeRecorderTest : public QObject
 {
   Q_OBJECT
-  private:
-    void triggerChange( int uid )
-    {
-      Item item( uid );
-      item.setFlag( "random_flag" );
-      ItemModifyJob *job = new ItemModifyJob( item );
-      job->disableRevisionCheck();
-      AKVERIFYEXEC( job );
-      item.clearFlag( "random_flag" );
-      job = new ItemModifyJob( item );
-      job->disableRevisionCheck();
-      AKVERIFYEXEC( job );
-    }
 
   private slots:
     void initTestCase()
     {
       qRegisterMetaType<Akonadi::Item>();
       qRegisterMetaType<QSet<QByteArray> >();
+      AkonadiTest::checkTestIsIsolated();
+      AkonadiTest::setAllResourcesOffline();
 
-      // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-        agent.setIsOnline( false );
+      settings = new QSettings( "kde.org", "akonadi-changerecordertest", this );
+    }
+
+    // After each test
+    void cleanup()
+    {
+      // See ChangeRecorderPrivate::notificationsFileName()
+      QFile::remove(settings->fileName() + QLatin1String( "_changes.dat") );
+    }
+
+    void testChangeRecorder_data()
+    {
+      QTest::addColumn<QStringList>( "actions" );
+
+      QTest::newRow("nothingToReplay") << (QStringList() << "rn");
+      QTest::newRow("nothingOneNothing") << (QStringList() << "rn" << "c2" << "r2" << "rn");
+      QTest::newRow("multipleItems") << (QStringList() << "c1" << "c2" << "c3" << "r1" << "c4" << "r2" << "r3" << "r4" << "rn");
+      QTest::newRow("reload") << (QStringList() << "c1" << "c1" << "c3" << "reload" << "r1" << "r3" << "rn");
+      QTest::newRow("more") << (QStringList() << "c1" << "c2" << "c3" << "reload" << "r1" << "reload" << "c4" << "reload" << "r2" << "reload" << "r3" << "r4" << "rn");
+      QTest::newRow("modifyThenDelete") << (QStringList() << "c1" << "d1" << "r1" << "rn");
     }
 
     void testChangeRecorder()
     {
-      QSettings *settings = new QSettings( "kde.org", "akonadi-changerecordertest", this );
-      settings->clear();
+      QFETCH(QStringList, actions);
+      QString lastAction;
 
-      ChangeRecorder *rec = new ChangeRecorder();
-      rec->setConfig( settings );
-      rec->setAllMonitored();
-
-      QSignalSpy spy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-      QVERIFY( spy.isValid() );
-      QSignalSpy cspy( rec, SIGNAL(changesAdded()) );
-      QVERIFY( cspy.isValid() );
-
-      triggerChange( 1 );
-      triggerChange( 1 );
-      triggerChange( 3 );
-      QTest::qWait( 500 ); // enter event loop and wait for change notifications from the server
-
-      QCOMPARE( spy.count(), 0 );
-      QVERIFY( !cspy.isEmpty() );
+      ChangeRecorder *rec = createChangeRecorder();
+      QVERIFY( rec->isEmpty() );
+      Q_FOREACH( const QString& action, actions ) {
+        kDebug() << action;
+        if ( action == "rn" ) {
+          replayNextAndExpectNothing( rec );
+        } else if ( action == "reload" ) {
+          // Check saving and loading from disk
+          delete rec;
+          rec = createChangeRecorder();
+        } else if ( action.at(0) == 'c' ) {
+          // c1 = "trigger change on item 1"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          triggerChange( id );
+          if (action != lastAction) {
+            // enter event loop and wait for change notifications from the server
+            QVERIFY( QTest::kWaitForSignal( rec, SIGNAL(changesAdded()), 1000 ) );
+          }
+        } else if ( action.at(0) == 'd' ) {
+          // d1 = "delete item 1"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          triggerDelete( id );
+          QTest::qWait(500);
+        } else if ( action.at(0) == 'r' ) {
+          // r1 = "replayNext and expect to get itemChanged(1)"
+          const int id = action.mid(1).toInt();
+          Q_ASSERT(id);
+          replayNextAndProcess( rec, id );
+        } else {
+          QVERIFY2( false, qPrintable("Unsupported: " + action) );
+        }
+        lastAction = action;
+      }
+      QVERIFY( rec->isEmpty() );
       delete rec;
+    }
 
-      rec = new ChangeRecorder();
+  private:
+    void triggerChange( Akonadi::Item::Id uid )
+    {
+      static int s_num = 0;
+      Item item( uid );
+      item.setFlag( "random_flag" + QByteArray::number(++s_num) );
+      ItemModifyJob *job = new ItemModifyJob( item );
+      job->disableRevisionCheck();
+      AKVERIFYEXEC( job );
+      item.clearFlag( "random_flag" + QByteArray::number(s_num) );
+      job = new ItemModifyJob( item );
+      job->disableRevisionCheck();
+      AKVERIFYEXEC( job );
+    }
+
+    void triggerDelete( Akonadi::Item::Id uid )
+    {
+      Item item( uid );
+      ItemDeleteJob* job = new ItemDeleteJob( item );
+      AKVERIFYEXEC( job );
+    }
+
+    void replayNextAndProcess( ChangeRecorder* rec, Akonadi::Item::Id expectedUid )
+    {
+      kDebug();
+
+      QSignalSpy nothingSpy( rec, SIGNAL(nothingToReplay()) );
+      QVERIFY( nothingSpy.isValid() );
+      QSignalSpy itemChangedSpy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      QVERIFY( itemChangedSpy.isValid() );
+
+      rec->replayNext();
+      if ( itemChangedSpy.isEmpty() )
+        QVERIFY( QTest::kWaitForSignal( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 ) );
+      QCOMPARE( itemChangedSpy.count(), 1 );
+      QCOMPARE( itemChangedSpy.at(0).at(0).value<Akonadi::Item>().id(), expectedUid );
+
+      rec->changeProcessed();
+
+      QCOMPARE( nothingSpy.count(), 0 );
+    }
+
+    void replayNextAndExpectNothing( ChangeRecorder* rec )
+    {
+      kDebug();
+
+      QSignalSpy nothingSpy( rec, SIGNAL(nothingToReplay()) );
+      QVERIFY( nothingSpy.isValid() );
+      QSignalSpy itemChangedSpy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      QVERIFY( itemChangedSpy.isValid() );
+
+      rec->replayNext(); // emits nothingToReplay immediately
+
+      QCOMPARE( itemChangedSpy.count(), 0 );
+      QCOMPARE( nothingSpy.count(), 1 );
+    }
+
+    ChangeRecorder* createChangeRecorder() const
+    {
+      ChangeRecorder* rec = new ChangeRecorder();
       rec->setConfig( settings );
       rec->setAllMonitored();
       rec->itemFetchScope().fetchFullPayload();
       rec->itemFetchScope().fetchAllAttributes();
-      QVERIFY( !rec->isEmpty() );
 
-      QSignalSpy spy2( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-      QVERIFY( spy2.isValid() );
-      rec->replayNext();
-      QTest::kWaitForSignal( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
-      QCOMPARE( spy2.count(), 1 );
-      rec->changeProcessed();
-      QVERIFY( !rec->isEmpty() );
-      rec->replayNext();
-      QTest::kWaitForSignal( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
-      QCOMPARE( spy2.count(), 2 );
-      rec->changeProcessed();
-      QVERIFY( rec->isEmpty() );
+      // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
+      QSignalSpy* spy = new QSignalSpy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
+      spy->setParent( rec );
 
-      // nothing changes here
-      rec->replayNext();
-      QTest::kWaitForSignal( rec, SIGNAL(nothingToReplay()), 1000 );
-      rec->changeProcessed();
-      QVERIFY( rec->isEmpty() );
-      QCOMPARE( spy2.count(), 2 );
-      delete rec;
+      return rec;
     }
 
-    void testEmptyChangeReplay()
-    {
-      ChangeRecorder recorder;
-      recorder.setAllMonitored();
-      recorder.itemFetchScope().fetchFullPayload();
-      recorder.itemFetchScope().fetchAllAttributes();
-      QSignalSpy nothingSpy( &recorder, SIGNAL(nothingToReplay()) );
-      QSignalSpy changedSpy( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-      QVERIFY( nothingSpy.isValid() );
-      QVERIFY( changedSpy.isValid() );
+    QSettings* settings;
 
-      // Nothing to replay, should emit that signal then.
-      recorder.replayNext();
-      QTest::kWaitForSignal( &recorder, SIGNAL(nothingToReplay()), 1000 );
-      QCOMPARE( nothingSpy.count(), 1 );
-      QCOMPARE( changedSpy.count(), 0 );
-
-      // Give it something to replay
-      triggerChange( 2 );
-      QTest::kWaitForSignal( &recorder, SIGNAL(changesAdded()), 1000 );
-      recorder.replayNext();
-      QTest::kWaitForSignal( &recorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000 );
-      QCOMPARE( nothingSpy.count(), 1 );
-      QCOMPARE( changedSpy.count(), 1 );
-
-      // Nothing else to replay now
-      recorder.changeProcessed();
-      recorder.replayNext();
-      QTest::kWaitForSignal( &recorder, SIGNAL(nothingToReplay()), 1000 );
-      QCOMPARE( nothingSpy.count(), 2 );
-      QCOMPARE( changedSpy.count(), 1 );
-    };
 };
 
 QTEST_AKONADIMAIN( ChangeRecorderTest, NoGUI )

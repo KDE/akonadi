@@ -45,6 +45,10 @@ class CacheTest : public QObject
     }
 
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
     {
       Collection col( collectionIdFromPath( "res1/foo" ) );

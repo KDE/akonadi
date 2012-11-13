@@ -51,15 +51,15 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
   feedItem.setPostId( map.value( QLatin1String( "postId" ) ).toString() );
   feedItem.setPostText( map.value( QLatin1String( "postText" ) ).toString() );
   feedItem.setPostLinkTitle( map.value( QLatin1String( "postLinkTitle" ) ).toString() );
-  feedItem.setPostLink( map.value( QLatin1String( "postLink" ) ).toString() );
-  feedItem.setPostImageUrl( map.value( QLatin1String( "postImageUrl" ) ).toString() );
+  feedItem.setPostLink( map.value( QLatin1String( "postLink" ) ).toUrl() );
+  feedItem.setPostImageUrl( map.value( QLatin1String( "postImageUrl" ) ).toUrl() );
   feedItem.setPostInfo( map.value( QLatin1String( "postInfo" ) ).toString() );
   feedItem.setUserName( map.value( QLatin1String( "userName" ) ).toString() );
   feedItem.setUserDisplayName( map.value( QLatin1String( "userDisplayName" ) ).toString() );
   feedItem.setUserId( map.value( QLatin1String( "userId" ) ).toString() );
   feedItem.setAvatarUrl( map.value( QLatin1String( "avatarUrl" ) ).toUrl() );
-  feedItem.setPostTime( map.value( QLatin1String( "postTimeString" ) ).toString() );
-  feedItem.setPostTimeFormat( map.value( QLatin1String( "postTimeFormat" ) ).toString() );
+  feedItem.setPostTime( map.value( QLatin1String( "postTimeString" ) ).toString(),
+                        map.value( QLatin1String( "postTimeFormat" ) ).toString() );
   feedItem.setShared( map.value( QLatin1String( "shared" ) ).toBool() );
   feedItem.setSharedFrom( map.value( QLatin1String( "sharedFrom" ) ).toString() );
   feedItem.setSharedFromId( map.value( QLatin1String( "sharedFromId" ) ).toString() );
@@ -156,4 +156,3 @@ QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const
 
 Q_EXPORT_PLUGIN2( akonadi_serializer_socialfeeditem, Akonadi::SocialFeedItemSerializerPlugin )
 
-#include "akonadi_serializer_socialfeeditem.moc"

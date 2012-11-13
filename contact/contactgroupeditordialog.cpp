@@ -141,4 +141,4 @@ void ContactGroupEditorDialog::slotButtonClicked( int button )
   }
 }
 
-#include "contactgroupeditordialog.moc"
+#include "moc_contactgroupeditordialog.cpp"

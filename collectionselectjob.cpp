@@ -67,4 +67,4 @@ void CollectionSelectJob::doStart( )
   }
 }
 
-#include "collectionselectjob_p.moc"
+#include "moc_collectionselectjob_p.cpp"

@@ -48,7 +48,6 @@ class ImageLoader
     QImage loadImage( const KUrl &url, bool *ok );
 
   private:
-    QImage mImage;
     QWidget *mParent;
 };
 
@@ -139,10 +138,9 @@ ImageWidget::~ImageWidget()
 
 void ImageWidget::loadContact( const KABC::Addressee &contact )
 {
-  const KABC::Picture picture = ( mType == Photo ? contact.photo() : contact.logo() );
-  if ( picture.isIntern() && !picture.data().isNull() ) {
+  mPicture = ( mType == Photo ? contact.photo() : contact.logo() );
+  if ( mPicture.isIntern() && !mPicture.data().isNull() ) {
     mHasImage = true;
-    mImage = picture.data();
   }
 
   updateView();
@@ -151,9 +149,9 @@ void ImageWidget::loadContact( const KABC::Addressee &contact )
 void ImageWidget::storeContact( KABC::Addressee &contact ) const
 {
   if ( mType == Photo ) {
-    contact.setPhoto( mImage );
+    contact.setPhoto( mPicture );
   } else {
-    contact.setLogo( mImage );
+    contact.setLogo( mPicture );
   }
 }
 
@@ -165,7 +163,7 @@ void ImageWidget::setReadOnly( bool readOnly )
 void ImageWidget::updateView()
 {
   if ( mHasImage ) {
-    setIcon( QPixmap::fromImage( mImage ) );
+    setIcon( QPixmap::fromImage( mPicture.data() ) );
   } else {
     if ( mType == Photo ) {
       setIcon( KIcon( QLatin1String( "user-identity" ) ) );
@@ -189,7 +187,7 @@ void ImageWidget::dropEvent( QDropEvent *event )
 
   const QMimeData *mimeData = event->mimeData();
   if ( mimeData->hasImage() ) {
-    mImage = qvariant_cast<QImage>( mimeData->imageData() );
+    mPicture.setData( qvariant_cast<QImage>( mimeData->imageData() ) );
     mHasImage = true;
     updateView();
   }
@@ -201,7 +199,7 @@ void ImageWidget::dropEvent( QDropEvent *event )
     bool ok = false;
     const QImage image = imageLoader()->loadImage( urls.first(), &ok );
     if ( ok ) {
-      mImage = image;
+      mPicture.setData( image );
       mHasImage = true;
       updateView();
     }
@@ -222,7 +220,7 @@ void ImageWidget::mouseMoveEvent( QMouseEvent *event )
     if ( mHasImage ) {
       QDrag *drag = new QDrag( this );
       drag->setMimeData( new QMimeData() );
-      drag->mimeData()->setImageData( mImage );
+      drag->mimeData()->setImageData( mPicture.data() );
       drag->start();
     }
   }
@@ -267,12 +265,12 @@ void ImageWidget::changeImage()
     return;
   }
 
-  const KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
+  const KUrl url = KFileDialog::getOpenUrl( QUrl(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
     bool ok = false;
     const QImage image = imageLoader()->loadImage( url, &ok );
     if ( ok ) {
-      mImage = image;
+      mPicture.setData( image );
       mHasImage = true;
       updateView();
     }
@@ -283,14 +281,14 @@ void ImageWidget::saveImage()
 {
   const QString fileName = KFileDialog::getSaveFileName( KUrl(), KImageIO::pattern(), this );
   if ( !fileName.isEmpty() ) {
-    mImage.save( fileName );
+    mPicture.data().save( fileName );
   }
 }
 
 void ImageWidget::deleteImage()
 {
   mHasImage = false;
-  mImage = QImage();
+  mPicture.setData( QImage() );
   updateView();
 }
 
@@ -303,4 +301,3 @@ ImageLoader* ImageWidget::imageLoader()
   return mImageLoader;
 }
 
-#include "imagewidget.moc"

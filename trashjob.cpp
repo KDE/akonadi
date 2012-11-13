@@ -372,4 +372,4 @@ void TrashJob::doStart()
   }
 }
 
-#include "trashjob.moc"
+#include "moc_trashjob.cpp"

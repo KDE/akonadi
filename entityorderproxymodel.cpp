@@ -25,6 +25,7 @@
 #include <QMimeData>
 
 #include <KDE/KConfigGroup>
+#include <KUrl>
 
 #include "collection.h"
 #include "item.h"

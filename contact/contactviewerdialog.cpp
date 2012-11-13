@@ -73,4 +73,3 @@ void ContactViewerDialog::setContact( const Akonadi::Item &contact )
   d->mViewer->setContact( contact );
 }
 
-#include "contactviewerdialog.moc"

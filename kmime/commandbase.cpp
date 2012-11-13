@@ -31,4 +31,4 @@ void CommandBase::emitResult( Result value )
   deleteLater();
 }
 
-#include "commandbase_p.moc"
+#include "moc_commandbase_p.cpp"

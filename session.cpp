@@ -454,4 +454,4 @@ void Session::clear()
   d->forceReconnect();
 }
 
-#include "session.moc"
+#include "moc_session.cpp"

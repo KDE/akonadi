@@ -39,6 +39,7 @@ QTEST_AKONADIMAIN( TransactionTest, NoGUI )
 
 void TransactionTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
 }
 
@@ -99,4 +100,3 @@ void TransactionTest::testTransaction()
   AKVERIFYEXEC( deleteJob );
 }
 
-#include "transactiontest.moc"

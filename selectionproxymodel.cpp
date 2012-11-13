@@ -77,6 +77,6 @@ SelectionProxyModel::~SelectionProxyModel()
   delete d_ptr;
 }
 
-#include "selectionproxymodel.moc"
+#include "moc_selectionproxymodel.cpp"
 
 

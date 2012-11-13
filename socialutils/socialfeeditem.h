@@ -97,14 +97,14 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     /**
      * @return Link from the post
      */
-    QString postLink() const;
+    QUrl postLink() const;
 
     /**
      * Sets the link the posts links to
      *
      * @param link URL of the link
      */
-    void setPostLink( const QString &link );
+    void setPostLink( const QUrl &link );
 
     /**
      * @return Link title from the post
@@ -121,7 +121,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     /**
      * @return URL of an image associated with this post
      */
-    QString postImageUrl() const;
+    QUrl postImageUrl() const;
 
     /**
      * Sets the URL of an image associated with this post,
@@ -129,7 +129,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
      *
      * @param imageUrl The URL of the image
      */
-    void setPostImageUrl( const QString &imageUrl );
+    void setPostImageUrl( const QUrl &imageUrl );
 
     /**
      * @return Post user name
@@ -173,18 +173,6 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     KDateTime postTime() const;
 
     /**
-     * @return The original time string as received from the network
-     */
-    QString postTimeString() const;
-
-    /**
-     * Sets the time string which was received from the network
-     *
-     * @param postTimeString The time string
-     */
-    void setPostTime( const QString &postTimeString );
-
-    /**
      * Sets the time string which was received from the network together with the format
      * which could be received from the network as well or custom-supplied
      *
@@ -199,12 +187,9 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     QString postTimeFormat() const;
 
     /**
-     * Sets the time format of the time string for this post,
-     * it's used for parsing with KDateTime
-     *
-     * @param postTimeFormat The time format
+     * @return The original time string as received from the network
      */
-    void setPostTimeFormat( const QString &postTimeFormat );
+    QString postTimeString() const;
 
     /**
      * @return Additional info for the post, like number of comments, likes, retweed from etc

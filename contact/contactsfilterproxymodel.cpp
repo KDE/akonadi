@@ -290,4 +290,3 @@ bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &
   return false;
 }
 
-#include "contactsfilterproxymodel.moc"

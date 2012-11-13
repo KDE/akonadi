@@ -18,7 +18,6 @@
 */
 
 #include "searchjobtest.h"
-#include "searchjobtest.moc"
 
 #include <akonadi/collection.h>
 #include <akonadi/collectiondeletejob.h>
@@ -32,6 +31,11 @@
 QTEST_AKONADIMAIN( SearchJobTest, NoGUI )
 
 using namespace Akonadi;
+
+void SearchJobTest::initTestCase()
+{
+  AkonadiTest::checkTestIsIsolated();
+}
 
 void SearchJobTest::testCreateDeleteSearch()
 {

@@ -180,4 +180,4 @@ Item PartFetcher::item() const
   return d->m_item;
 }
 
-#include "partfetcher.moc"
+#include "moc_partfetcher.cpp"

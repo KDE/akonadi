@@ -248,4 +248,4 @@ bool AgentInstanceModel::setData( const QModelIndex & index, const QVariant & va
   return false;
 }
 
-#include "agentinstancemodel.moc"
+#include "moc_agentinstancemodel.cpp"

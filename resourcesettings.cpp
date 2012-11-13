@@ -41,4 +41,3 @@ ResourceSettings::~ResourceSettings()
 {
 }
 
-#include "resourcesettings.moc"

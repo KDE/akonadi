@@ -154,4 +154,4 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 
 }
 
-#include "collectionattributessynchronizationjob.moc"
+#include "moc_collectionattributessynchronizationjob.cpp"

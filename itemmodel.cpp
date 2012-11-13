@@ -454,4 +454,4 @@ Qt::DropActions ItemModel::supportedDropActions() const
 }
 
 
-#include "itemmodel.moc"
+#include "moc_itemmodel.cpp"

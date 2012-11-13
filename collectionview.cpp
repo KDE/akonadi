@@ -266,4 +266,4 @@ void CollectionView::setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow )
   d->xmlGuiClient = static_cast<KXMLGUIClient*>( xmlGuiWindow );
 }
 
-#include "collectionview.moc"
+#include "moc_collectionview.cpp"

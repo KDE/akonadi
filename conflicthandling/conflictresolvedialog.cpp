@@ -263,4 +263,4 @@ void ConflictResolveDialog::slotUseBothItemsChoosen()
   accept();
 }
 
-#include "conflictresolvedialog_p.moc"
+#include "moc_conflictresolvedialog_p.cpp"

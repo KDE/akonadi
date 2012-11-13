@@ -112,4 +112,3 @@ void NameEditWidget::openNameEditDialog()
   delete dlg;
 }
 
-#include "nameeditwidget.moc"

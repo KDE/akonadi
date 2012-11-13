@@ -84,4 +84,3 @@ void MainWindow::moveCollection()
   m_serverData->processNotifications();
 }
 
-#include "mainwindow.moc"

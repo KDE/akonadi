@@ -34,6 +34,7 @@ class ServerManagerTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       QVERIFY( Control::start() );
       trackAkonadiProcess( false );
     }

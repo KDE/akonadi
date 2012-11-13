@@ -18,7 +18,6 @@
 */
 
 #include "collectionpathresolvertest.h"
-#include "collectionpathresolvertest.moc"
 #include "collectionpathresolver_p.h"
 
 #include <akonadi/control.h>
@@ -31,6 +30,7 @@ QTEST_AKONADIMAIN( CollectionPathResolverTest, NoGUI )
 
 void CollectionPathResolverTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
 }
 

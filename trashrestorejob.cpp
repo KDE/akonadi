@@ -334,4 +334,4 @@ void TrashRestoreJob::doStart()
 
 }
 
-#include "trashrestorejob.moc"
+#include "moc_trashrestorejob.cpp"

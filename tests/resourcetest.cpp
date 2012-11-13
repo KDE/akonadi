@@ -31,6 +31,10 @@ class ResourceTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testResourceManagement()
     {
       qRegisterMetaType<Akonadi::AgentInstance>();

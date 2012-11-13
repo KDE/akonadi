@@ -47,6 +47,7 @@ static Collection res3;
 
 void ItemStoreTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
   AttributeFactory::registerAttribute<TestAttribute>();
 
@@ -58,9 +59,7 @@ void ItemStoreTest::initTestCase()
   res3 = Collection( collectionIdFromPath( "res3" ) );
   QVERIFY( res3.isValid() );
 
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
+  AkonadiTest::setAllResourcesOffline();
 }
 
 void ItemStoreTest::testFlagChange()
@@ -388,4 +387,3 @@ void ItemStoreTest::testRemoteIdRace()
 }
 
 
-#include "itemstoretest.moc"

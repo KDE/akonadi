@@ -130,4 +130,3 @@ QModelIndexList EntityRightsFilterModel::match( const QModelIndex& start, int ro
   return list;
 }
 
-#include "entityrightsfiltermodel.moc"

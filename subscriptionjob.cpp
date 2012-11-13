@@ -110,4 +110,4 @@ void SubscriptionJob::doHandleResponse(const QByteArray &_tag, const QByteArray 
   }
 }
 
-#include "subscriptionjob_p.moc"
+#include "moc_subscriptionjob_p.cpp"

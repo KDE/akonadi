@@ -32,21 +32,30 @@ using namespace Akonadi;
 
 QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
-  org::freedesktop::Akonadi::NotificationManager manager(
-          ServerManager::serviceName( Akonadi::ServerManager::Server ),
-          QLatin1String( "/notifications" ),
-          DBusConnectionPool::threadConnection() );
+  org::freedesktop::Akonadi::NotificationManager *manager =
+    new org::freedesktop::Akonadi::NotificationManager(
+      ServerManager::serviceName( Akonadi::ServerManager::Server ),
+      QLatin1String( "/notifications" ),
+      DBusConnectionPool::threadConnection() );
 
-  QDBusObjectPath p = manager.subscribe( KGlobal::mainComponent().componentName() );
-  if ( manager.lastError().isValid() ) {
+  if ( !manager ) {
+    // :TODO: error handling
+    return 0;
+  }
+
+  QDBusObjectPath p = manager->subscribe( KGlobal::mainComponent().componentName() );
+  const bool validError = manager->lastError().isValid();
+  delete manager;
+  if ( validError ) {
     // :TODO: What to do?
     return 0;
   }
 
-  org::freedesktop::Akonadi::NotificationSource *notificationSource = new org::freedesktop::Akonadi::NotificationSource(
-              ServerManager::serviceName( Akonadi::ServerManager::Server ),
-              p.path(),
-              DBusConnectionPool::threadConnection(), parent );
+  org::freedesktop::Akonadi::NotificationSource *notificationSource =
+    new org::freedesktop::Akonadi::NotificationSource(
+      ServerManager::serviceName( Akonadi::ServerManager::Server ),
+      p.path(),
+      DBusConnectionPool::threadConnection(), parent );
 
   if ( !notificationSource ) {
     // :TODO: error handling

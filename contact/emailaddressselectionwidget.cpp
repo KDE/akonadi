@@ -225,4 +225,3 @@ QTreeView* EmailAddressSelectionWidget::view() const
   return d->mView;
 }
 
-#include "emailaddressselectionwidget.moc"

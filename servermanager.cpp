@@ -359,4 +359,4 @@ QString Internal::xdgSaveDir( const char *resource, const QString &relPath )
   return XdgBaseDirs::saveDir( resource, fullRelPath );
 }
 
-#include "servermanager.moc"
+#include "moc_servermanager.cpp"

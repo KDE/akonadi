@@ -356,4 +356,4 @@ void AgentActionManager::setContextText( Type type, TextContext context,
   d->setContextText( type, context, text );
 }
 
-#include "agentactionmanager.moc"
+#include "moc_agentactionmanager.cpp"

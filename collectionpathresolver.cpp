@@ -207,4 +207,4 @@ void CollectionPathResolver::doStart()
 
 //@endcond
 
-#include "collectionpathresolver_p.moc"
+#include "moc_collectionpathresolver_p.cpp"

@@ -1,3 +1,5 @@
+DisableAll=false
+
 [0]
 AbortFatal=true
 ErrorFilename[$e]=kdebug.dbg

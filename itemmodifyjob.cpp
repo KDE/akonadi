@@ -353,4 +353,4 @@ Item::List ItemModifyJob::items() const
   return d->mItems;
 }
 
-#include "itemmodifyjob.moc"
+#include "moc_itemmodifyjob.cpp"

@@ -70,4 +70,3 @@ void SecrecyEditWidget::storeContact( KABC::Addressee &contact ) const
   contact.setSecrecy( secrecy );
 }
 
-#include "secrecyeditwidget.moc"

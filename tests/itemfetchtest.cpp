@@ -18,7 +18,6 @@
 */
 
 #include "itemfetchtest.h"
-#include "itemfetchtest.moc"
 #include "collectionpathresolver_p.h"
 #include "testattribute.h"
 
@@ -37,6 +36,7 @@ QTEST_AKONADIMAIN( ItemFetchTest, NoGUI )
 
 void ItemFetchTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   qRegisterMetaType<Akonadi::Item::List>();
   AttributeFactory::registerAttribute<TestAttribute>();
 }

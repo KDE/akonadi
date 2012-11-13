@@ -18,7 +18,6 @@
 */
 
 #include "collectionattributetest.h"
-#include "collectionattributetest.moc"
 #include "collectionpathresolver_p.h"
 
 #include <akonadi/collection.h>
@@ -53,6 +52,7 @@ static int parentColId = -1;
 
 void CollectionAttributeTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
   AttributeFactory::registerAttribute<TestAttribute>();
 

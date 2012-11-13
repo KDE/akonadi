@@ -112,4 +112,3 @@ Collection CollectionModifyJob::collection() const
   return d->mCollection;
 }
 
-#include "collectionmodifyjob.moc"

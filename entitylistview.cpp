@@ -265,4 +265,4 @@ bool EntityListView::isDropActionMenuEnabled() const
 #endif
 }
 
-#include "entitylistview.moc"
+#include "moc_entitylistview.cpp"

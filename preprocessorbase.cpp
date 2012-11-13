@@ -61,4 +61,3 @@ ItemFetchScope &PreprocessorBase::fetchScope()
 
   return d->mFetchScope;
 }
-#include "preprocessorbase.moc"

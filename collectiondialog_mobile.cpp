@@ -34,13 +34,14 @@
 
 #include <KLocale>
 #include <KInputDialog>
+#include <KUrl>
 #include <KMessageBox>
 #include <KStandardDirs>
 
 #include <QApplication>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeView>
+#include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <QDeclarativeView>
 
 using namespace Akonadi;
 
@@ -137,7 +138,7 @@ void CollectionDialog::Private::slotSelectionChanged()
   if ( mAllowToCreateNewChildCollection ) {
     const Akonadi::Collection parentCollection = mParent->selectedCollection();
     const bool canCreateChildCollections = canCreateCollection( parentCollection );
-    const bool isVirtual = Akonadi::CollectionUtils::isVirtual( parentCollection );
+    const bool isVirtual = parentCollection.isVirtual();
 
     mCreateButtonEnabled = ( canCreateChildCollections && !isVirtual );
     if ( parentCollection.isValid() ) {
@@ -355,4 +356,4 @@ void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions op
 }
 
 #include "collectiondialog.moc"
-#include "collectiondialog_mobile_p.moc"
+#include "moc_collectiondialog_mobile_p.cpp"

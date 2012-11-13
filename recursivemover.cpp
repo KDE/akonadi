@@ -212,4 +212,4 @@ void RecursiveMover::replayNext()
     replayNextCollection();
 }
 
-#include "recursivemover_p.moc"
+#include "moc_recursivemover_p.cpp"

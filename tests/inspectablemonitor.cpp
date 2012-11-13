@@ -52,4 +52,3 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependeciesFactory *dependenci
   QTimer::singleShot(0, this, SLOT(doConnectToNotificationManager()));
 }
 
-#include "inspectablemonitor.moc"

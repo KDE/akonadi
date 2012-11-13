@@ -30,7 +30,7 @@
 #include <kstringhandler.h>
 
 #include <QtCore/QSet>
-#include <QtGui/QTextDocument>
+#include <QTextDocument>
 
 using namespace Akonadi;
 

@@ -155,4 +155,3 @@ void SpecialMailCollections::slotCollectionModified(KJob*job)
   }
 }
 
-#include "specialmailcollections.moc"

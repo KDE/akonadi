@@ -288,8 +288,8 @@ class ItemPrivate : public EntityPrivate
     mutable _detail::clone_ptr<PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
     mutable bool mConversionInProgress;
-    Item::Flags mFlags;
     int mRevision;
+    Item::Flags mFlags;
     Entity::Id mCollectionId;
     qint64 mSize;
     QDateTime mModificationTime;

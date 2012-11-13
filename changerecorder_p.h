@@ -39,6 +39,9 @@ class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivat
     bool enableChangeRecording;
 
     virtual int pipelineSize() const;
+    virtual void notificationsEnqueued( int count );
+    virtual void notificationsErased();
+
     virtual void slotNotify( const NotificationMessage::List &msgs );
     virtual bool emitNotification(const Akonadi::NotificationMessage& msg);
 
@@ -51,6 +54,13 @@ class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivat
     void saveNotifications();
     void saveTo( QIODevice *device );
 private:
+    void dequeueNotification();
+    void notificationsLoaded();
+    void writeStartOffset();
+
+    int m_lastKnownNotificationsCount; // just for invariant checking
+    int m_startOffset; // number of saved notifications to skip
+    bool m_needFullSave;
 };
 
 } // namespace Akonadi

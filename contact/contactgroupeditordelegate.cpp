@@ -313,4 +313,4 @@ void ContactGroupEditorDelegate::setFirstColumnAsCurrent()
   d->mItemView->setCurrentIndex( d->mItemView->model()->index( d->mItemView->currentIndex().row(), 0 ) );
 }
 
-#include "contactgroupeditordelegate_p.moc"
+#include "moc_contactgroupeditordelegate_p.cpp"

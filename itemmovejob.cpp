@@ -73,4 +73,3 @@ QList<Item> ItemMoveJob::items() const
   return d->objectsToMove;
 }
 
-#include "itemmovejob.moc"

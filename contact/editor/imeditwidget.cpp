@@ -136,4 +136,3 @@ void IMEditWidget::edit()
   delete dlg;
 }
 
-#include "imeditwidget.moc"

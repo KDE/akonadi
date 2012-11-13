@@ -135,4 +135,4 @@ int ContactCompletionModel::entityColumnCount( HeaderGroup ) const
   return 3;
 }
 
-#include "contactcompletionmodel_p.moc"
+#include "moc_contactcompletionmodel_p.cpp"

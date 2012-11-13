@@ -592,7 +592,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * Signal emitted when a collection has been populated, i.e. its items have been fetched.
      * @param collectionId  id of the collection which has been populated
      *
-     * @see isPopulated, collectionTreeFetched
+     * @see collectionTreeFetched
      * @since 4.10
      */
     void collectionPopulated( Akonadi::Collection::Id collectionId );

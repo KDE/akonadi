@@ -55,13 +55,11 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 void MonitorTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
+  AkonadiTest::setAllResourcesOffline();
 
   res3 = Collection( collectionIdFromPath( "res3" ) );
-
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
 }
 
 void MonitorTest::testMonitor_data()
@@ -418,4 +416,3 @@ void MonitorTest::testVirtualCollectionsMonitoring()
   QCOMPARE( caddspy.count(), 1 );
 }
 
-#include "monitortest.moc"

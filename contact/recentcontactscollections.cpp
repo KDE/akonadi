@@ -97,4 +97,4 @@ Collection RecentContactsCollections::defaultCollection() const
   return SpecialCollections::defaultCollection( sRecentContactsType );
 }
 
-#include "recentcontactscollections_p.moc"
+#include "moc_recentcontactscollections_p.cpp"

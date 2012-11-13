@@ -47,7 +47,7 @@ void FreeBusyEditWidget::loadContact( const KABC::Addressee &contact )
     return;
   }
 
-  mURL->setUrl( KCalCore::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) );
+  mURL->setUrl( QUrl(KCalCore::FreeBusyUrlStore::self()->readUrl( contact.preferredEmail() ) ) );
 }
 
 void FreeBusyEditWidget::storeContact( KABC::Addressee &contact ) const
@@ -65,4 +65,3 @@ void FreeBusyEditWidget::setReadOnly( bool readOnly )
   mURL->setEnabled( !readOnly );
 }
 
-#include "freebusyeditwidget.moc"

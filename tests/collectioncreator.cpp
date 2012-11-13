@@ -36,10 +36,8 @@ class CollectionCreator : public QObject
   private slots:
     void initTestCase()
     {
-      // switch all resources offline to reduce interference from them
-      foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) { //krazy:exclude=foreach
-        agent.setIsOnline( false );
-      }
+      AkonadiTest::checkTestIsIsolated();
+      AkonadiTest::setAllResourcesOffline();
     }
 
     void createCollections_data()

@@ -217,5 +217,5 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
   }
 }
 
-#include "collectioncombobox.moc"
-#include "collectioncombobox_p.moc"
+#include "moc_collectioncombobox.cpp"
+#include "moc_collectioncombobox_p.cpp"

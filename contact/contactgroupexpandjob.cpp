@@ -158,4 +158,4 @@ KABC::Addressee::List ContactGroupExpandJob::contacts() const
   return d->mContacts;
 }
 
-#include "contactgroupexpandjob.moc"
+#include "moc_contactgroupexpandjob.cpp"

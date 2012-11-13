@@ -607,4 +607,3 @@ KABC::Address::Type AddressTypeDialog::type() const
   return type;
 }
 
-#include "addresseditwidget.moc"

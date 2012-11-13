@@ -70,4 +70,3 @@ void AgentFactoryBase::createComponentData( const QString& identifier ) const
   }
 }
 
-#include "agentfactory.moc"

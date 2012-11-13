@@ -241,4 +241,4 @@ void ErrorOverlay::serverStateChanged( ServerManager::State state )
 
 //@endcond
 
-#include "erroroverlay_p.moc"
+#include "moc_erroroverlay_p.cpp"

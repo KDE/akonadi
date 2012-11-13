@@ -64,4 +64,3 @@ CollectionPropertiesPageFactory::~CollectionPropertiesPageFactory()
 {
 }
 
-#include "collectionpropertiespage.moc"

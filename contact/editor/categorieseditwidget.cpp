@@ -77,4 +77,3 @@ void CategoriesEditWidget::storeContact( KABC::Addressee &contact ) const
   contact.setCategories( categories );
 }
 
-#include "categorieseditwidget.moc"

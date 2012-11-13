@@ -1212,4 +1212,4 @@ QModelIndexList EntityTreeModel::modelIndexesForItem( const QAbstractItemModel *
   return proxyList;
 }
 
-#include "entitytreemodel.moc"
+#include "moc_entitytreemodel.cpp"

@@ -533,4 +533,3 @@ int GeoDialog::nearestCity( double x, double y ) const
   return -1;
 }
 
-#include "geoeditwidget.moc"

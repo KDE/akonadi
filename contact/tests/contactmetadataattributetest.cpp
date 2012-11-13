@@ -73,4 +73,3 @@ void ContactMetaDataAttributeTest::serialization()
   QVERIFY( content1 == content2 );
 }
 
-#include "contactmetadataattributetest.moc"

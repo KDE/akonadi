@@ -37,6 +37,10 @@ class TestEnvironmentTest : public QObject
 {
   Q_OBJECT
   private slots:
+    void initTestCase()
+    {
+      AkonadiTest::checkTestIsIsolated();
+    }
     void testEnvironment()
     {
       const QString kdehome = qgetenv( "KDEHOME" );

@@ -51,4 +51,4 @@ void ResourceSelectJob::doStart()
   emitWriteFinished();
 }
 
-#include "resourceselectjob_p.moc"
+#include "moc_resourceselectjob_p.cpp"

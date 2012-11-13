@@ -68,4 +68,3 @@ void CollectionDeleteJob::doStart()
   }
 }
 
-#include "collectiondeletejob.moc"

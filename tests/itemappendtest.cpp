@@ -40,12 +40,9 @@ QTEST_AKONADIMAIN( ItemAppendTest, NoGUI )
 
 void ItemAppendTest::initTestCase()
 {
+  AkonadiTest::checkTestIsIsolated();
   Control::start();
-
-  // switch all resources offline to reduce interference from them
-  foreach ( Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances() ) //krazy:exclude=foreach
-    agent.setIsOnline( false );
-
+  AkonadiTest::setAllResourcesOffline();
   AttributeFactory::registerAttribute<TestAttribute>();
 }
 
@@ -264,4 +261,3 @@ void ItemAppendTest::testItemSize()
   QCOMPARE( fetch->items().first().size(), size );
 }
 
-#include "itemappendtest.moc"

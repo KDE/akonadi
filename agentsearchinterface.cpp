@@ -53,4 +53,4 @@ AgentSearchInterface::~AgentSearchInterface()
   delete d;
 }
 
-#include "agentsearchinterface_p.moc"
+#include "moc_agentsearchinterface_p.cpp"

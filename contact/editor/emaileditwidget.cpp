@@ -364,4 +364,3 @@ void EmailEditDialog::selectionChanged()
   mStandardButton->setEnabled( value );
 }
 
-#include "emaileditwidget.moc"

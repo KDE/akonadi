@@ -122,4 +122,4 @@ void RecentCollectionAction::cleanRecentCollection()
   fillRecentCollection();
 }
 
-#include "recentcollectionaction_p.moc"
+#include "moc_recentcollectionaction_p.cpp"

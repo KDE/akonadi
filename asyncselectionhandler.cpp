@@ -86,4 +86,4 @@ void AsyncSelectionHandler::rowsInserted( const QModelIndex &parent, int start, 
   }
 }
 
-#include "asyncselectionhandler_p.moc"
+#include "moc_asyncselectionhandler_p.cpp"

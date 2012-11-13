@@ -344,4 +344,3 @@ void CustomFieldsEditWidget::slotUpdateButtons()
   mRemoveButton->setEnabled( !mReadOnly && hasCurrent && !isExternal );
 }
 
-#include "customfieldseditwidget.moc"

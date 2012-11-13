@@ -77,4 +77,3 @@ void ItemCopyJob::doStart()
   d->writeData( cmd );
 }
 
-#include "itemcopyjob.moc"

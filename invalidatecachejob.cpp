@@ -111,4 +111,4 @@ void InvalidateCacheJob::doStart()
   connect( job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)) );
 }
 
-#include "invalidatecachejob_p.moc"
+#include "moc_invalidatecachejob_p.cpp"

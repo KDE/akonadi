@@ -239,4 +239,4 @@ void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 }
 
 
-#include "itemfetchjob.moc"
+#include "moc_itemfetchjob.cpp"

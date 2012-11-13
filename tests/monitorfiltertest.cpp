@@ -22,6 +22,7 @@
 #include "monitor_p.h"
 #include <akonadi/private/notificationmessage_p.h>
 #include <qtest_kde.h>
+#include <qtest_akonadi.h>
 #include <QtTest>
 
 using namespace Akonadi;
@@ -36,6 +37,7 @@ class MonitorFilterTest : public QObject
   private Q_SLOTS:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       qRegisterMetaType<Akonadi::Item>();
       qRegisterMetaType<Akonadi::Collection>();
       qRegisterMetaType<QSet<QByteArray> >();

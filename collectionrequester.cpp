@@ -180,4 +180,4 @@ void CollectionRequester::changeCollectionDialogOptions( CollectionDialog::Colle
   }
 }
 
-#include "collectionrequester.moc"
+#include "moc_collectionrequester.cpp"

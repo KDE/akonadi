@@ -119,4 +119,3 @@ void CollectionCreateJob::doHandleResponse(const QByteArray & tag, const QByteAr
   }
 }
 
-#include "collectioncreatejob.moc"

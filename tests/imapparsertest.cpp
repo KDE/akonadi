@@ -571,4 +571,3 @@ void ImapParserTest::testJoin()
   QCOMPARE( ImapParser::join( list, " " ), joined );
 }
 
-#include "imapparsertest.moc"

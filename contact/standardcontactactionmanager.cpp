@@ -655,4 +655,4 @@ void StandardContactActionManager::setCollectionPropertiesPageNames( const QStri
 {
   d->mGenericManager->setCollectionPropertiesPageNames( names );
 }
-#include "standardcontactactionmanager.moc"
+#include "moc_standardcontactactionmanager.cpp"

@@ -69,4 +69,3 @@ void RecentContactsCollectionRequestJob::requestCollection( const AgentInstance 
   SpecialCollectionsRequestJob::requestCollection( sRecentContactsType, instance );
 }
 
-#include "recentcontactscollectionrequestjob.moc"

@@ -185,4 +185,4 @@ void SubscriptionModel::showHiddenCollection(bool showHidden)
   d->showHiddenCollection = showHidden;
 }
 
-#include "subscriptionmodel_p.moc"
+#include "moc_subscriptionmodel_p.cpp"

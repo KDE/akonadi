@@ -73,4 +73,4 @@ void FreeBusyProviderBase::freeBusyRetrieved( const QString &email, const QStrin
   emit d->freeBusyRetrieved( email, freeBusy, success, errorText );
 }
 
-#include "freebusyproviderbase_p.moc"
+#include "moc_freebusyproviderbase_p.cpp"

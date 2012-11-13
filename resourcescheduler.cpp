@@ -564,4 +564,4 @@ QDebug Akonadi::operator<<( QDebug d, const ResourceScheduler::Task& task )
 
 //@endcond
 
-#include "resourcescheduler_p.moc"
+#include "moc_resourcescheduler_p.cpp"

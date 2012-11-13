@@ -37,6 +37,7 @@ class SubscriptionTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       Control::start();
     }
 

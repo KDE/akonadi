@@ -22,6 +22,8 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
+#include "picture.h"
+
 #include <QtCore/QPoint>
 #include <QPushButton>
 
@@ -73,7 +75,7 @@ class ImageWidget : public QPushButton
     ImageLoader *imageLoader();
 
     Type mType;
-    QImage mImage;
+    KABC::Picture mPicture;
     bool mHasImage;
     bool mReadOnly;
 

@@ -106,4 +106,3 @@ void FakeServerData::returnItems( Entity::Id fetchColId )
   }
 }
 
-#include "fakeserverdata.moc"

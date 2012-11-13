@@ -100,4 +100,3 @@ void TransactionCommitJob::doStart()
   d_ptr->writeData( d_ptr->newTag() + " COMMIT\n" );
 }
 
-#include "transactionjobs.moc"

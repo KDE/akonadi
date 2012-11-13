@@ -24,7 +24,10 @@ ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFacto
                                              ChangeRecorder *parent)
   : MonitorPrivate( dependenciesFactory_, parent ),
      settings( 0 ),
-     enableChangeRecording( true )
+     enableChangeRecording( true ),
+    m_lastKnownNotificationsCount( 0 ),
+    m_startOffset( 0 ),
+    m_needFullSave( true )
 {
 }
 
@@ -39,9 +42,9 @@ void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessage::List 
 {
   Q_Q( ChangeRecorder );
   const int oldChanges = pendingNotifications.size();
-  MonitorPrivate::slotNotify( msgs ); // with change recording disabled this will automatically take care of dispatching notification messages
+  // with change recording disabled this will automatically take care of dispatching notification messages and saving
+  MonitorPrivate::slotNotify( msgs );
   if ( enableChangeRecording && pendingNotifications.size() != oldChanges ) {
-    saveNotifications();
     emit q->changesAdded();
   }
 }
@@ -54,6 +57,8 @@ bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessage 
   return someoneWasListening;
 }
 
+// The QSettings object isn't actually used anymore, except for migrating old data
+// and it gives us the base of the filename to use. This is all historical.
 QString ChangeRecorderPrivate::notificationsFileName() const
 {
   return settings->fileName() + QLatin1String( "_changes.dat" );
@@ -62,6 +67,8 @@ QString ChangeRecorderPrivate::notificationsFileName() const
 void ChangeRecorderPrivate::loadNotifications()
 {
     pendingNotifications.clear();
+    Q_ASSERT(pipeline.isEmpty());
+    pipeline.clear();
 
     const QString changesFileName = notificationsFileName();
 
@@ -109,167 +116,227 @@ void ChangeRecorderPrivate::loadNotifications()
     }
 
     QFile file( changesFileName );
-    if ( !file.open( QIODevice::ReadOnly ) )
-      return;
-    pendingNotifications = loadFrom( &file );
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      m_needFullSave = false;
+      pendingNotifications = loadFrom( &file );
+    } else {
+      m_needFullSave = true;
+    }
+    notificationsLoaded();
 }
+
+static const quint64 s_currentVersion = Q_UINT64_C(0x000100000000);
+static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
+static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
 QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 {
-QDataStream stream( device );
-stream.setVersion( QDataStream::Qt_4_6 );
+  QDataStream stream( device );
+  stream.setVersion( QDataStream::Qt_4_6 );
 
-qulonglong size;
-QByteArray sessionId, resource;
-int type, operation;
-qlonglong uid, parentCollection, parentDestCollection;
-QString remoteId, mimeType;
-QSet<QByteArray> itemParts;
+  QByteArray sessionId, resource;
+  int type, operation;
+  quint64 uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
 
-QQueue<NotificationMessage> list;
+  QQueue<NotificationMessage> list;
 
-stream >> size;
-for ( qulonglong i = 0; i < size; ++i ) {
-  NotificationMessage msg;
+  quint64 sizeAndVersion;
+  stream >> sizeAndVersion;
 
-  stream >> sessionId;
-  stream >> type;
-  stream >> operation;
-  stream >> uid;
-  stream >> remoteId;
-  stream >> resource;
-  stream >> parentCollection;
-  stream >> parentDestCollection;
-  stream >> mimeType;
-  stream >> itemParts;
+  const quint64 size = sizeAndVersion & s_sizeMask;
+  const quint64 version = (sizeAndVersion & s_versionMask) >> 32;
 
-  msg.setSessionId( sessionId );
-  msg.setType( static_cast<NotificationMessage::Type>( type ) );
-  msg.setOperation( static_cast<NotificationMessage::Operation>( operation ) );
-  msg.setUid( uid );
-  msg.setRemoteId( remoteId );
-  msg.setResource( resource );
-  msg.setParentCollection( parentCollection );
-  msg.setParentDestCollection( parentDestCollection );
-  msg.setMimeType( mimeType );
-  msg.setItemParts( itemParts );
-  list << msg;
-}
-return list;
+  quint64 startOffset = 0;
+  if ( version >= 1 ) {
+    stream >> startOffset;
+  }
+
+  // If we skip the first N items, then we'll need to rewrite the file on saving.
+  // Also, if the file is old, it needs to be rewritten.
+  m_needFullSave = startOffset > 0 || version == 0;
+
+  for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
+    NotificationMessage msg;
+
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
+
+    if ( i < startOffset )
+      continue;
+
+    msg.setSessionId( sessionId );
+    msg.setType( static_cast<NotificationMessage::Type>( type ) );
+    msg.setOperation( static_cast<NotificationMessage::Operation>( operation ) );
+    msg.setUid( uid );
+    msg.setRemoteId( remoteId );
+    msg.setResource( resource );
+    msg.setParentCollection( parentCollection );
+    msg.setParentDestCollection( parentDestCollection );
+    msg.setMimeType( mimeType );
+    msg.setItemParts( itemParts );
+    list << msg;
+  }
+  return list;
 }
 
 QString ChangeRecorderPrivate::dumpNotificationListToString() const
 {
-    if ( !settings )
-      return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
-    QString result;
-    const QString changesFileName = notificationsFileName();
-    QFile file( changesFileName );
-    if ( file.open( QIODevice::ReadOnly ) ) {
-      QDataStream stream( &file );
-      stream.setVersion( QDataStream::Qt_4_6 );
+  if ( !settings )
+    return QString::fromLatin1( "No settings set in ChangeRecorder yet." );
+  QString result;
+  const QString changesFileName = notificationsFileName();
+  QFile file( changesFileName );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    return QString::fromLatin1( "Error reading " ) + changesFileName;
 
-      qulonglong size;
-      QByteArray sessionId, resource;
-      int type, operation;
-      qlonglong uid, parentCollection, parentDestCollection;
-      QString remoteId, mimeType;
-      QSet<QByteArray> itemParts;
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
 
-      QStringList list;
+  QByteArray sessionId, resource;
+  int type, operation;
+  quint64 uid, parentCollection, parentDestCollection;
+  QString remoteId, mimeType;
+  QSet<QByteArray> itemParts;
 
-      stream >> size;
-      for ( qulonglong i = 0; i < size; ++i ) {
-        stream >> sessionId;
-        stream >> type;
-        stream >> operation;
-        stream >> uid;
-        stream >> remoteId;
-        stream >> resource;
-        stream >> parentCollection;
-        stream >> parentDestCollection;
-        stream >> mimeType;
-        stream >> itemParts;
+  QStringList list;
 
-        QString typeString;
-        switch ( type ) {
-        case NotificationMessage::Collection:
-          typeString = QLatin1String( "Collection" );
-          break;
-        case NotificationMessage::Item:
-          typeString = QLatin1String( "Item" );
-          break;
-        default:
-          typeString = QLatin1String( "InvalidType" );
-          break;
-        };
+  quint64 sizeAndVersion;
+  stream >> sizeAndVersion;
 
-        QString operationString;
-        switch ( operation ) {
-        case NotificationMessage::Add:
-          operationString = QLatin1String( "Add" );
-          break;
-        case NotificationMessage::Modify:
-          operationString = QLatin1String( "Modify" );
-          break;
-        case NotificationMessage::Move:
-          operationString = QLatin1String( "Move" );
-          break;
-        case NotificationMessage::Remove:
-          operationString = QLatin1String( "Remove" );
-          break;
-        case NotificationMessage::Link:
-          operationString = QLatin1String( "Link" );
-          break;
-        case NotificationMessage::Unlink:
-          operationString = QLatin1String( "Unlink" );
-          break;
-        case NotificationMessage::Subscribe:
-          operationString = QLatin1String( "Subscribe" );
-          break;
-        case NotificationMessage::Unsubscribe:
-          operationString = QLatin1String( "Unsubscribe" );
-          break;
-        default:
-          operationString = QLatin1String( "InvalidOp" );
-          break;
-        };
+  const quint64 size = sizeAndVersion & s_sizeMask;
+  const quint64 version = (sizeAndVersion & s_versionMask) >> 32;
 
-        QStringList itemPartsList;
-        foreach( const QByteArray &b, itemParts )
-          itemPartsList.push_back( QString::fromLatin1(b) );
+  quint64 startOffset = 0;
+  if ( version >= 1 ) {
+    stream >> startOffset;
+  }
 
-        const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
-                              .arg( QString::fromLatin1( sessionId ) )
-                              .arg( typeString )
-                              .arg( operationString )
-                              .arg( uid )
-                              .arg( remoteId )
-                              .arg( QString::fromLatin1( resource ) )
-                              .arg( parentCollection )
-                              .arg( parentDestCollection )
-                              .arg( mimeType )
-                              .arg( itemPartsList.join(QLatin1String(", " )) );
+  for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
+    stream >> sessionId;
+    stream >> type;
+    stream >> operation;
+    stream >> uid;
+    stream >> remoteId;
+    stream >> resource;
+    stream >> parentCollection;
+    stream >> parentDestCollection;
+    stream >> mimeType;
+    stream >> itemParts;
 
-        result += entry + QLatin1Char('\n');
-      }
+    if ( i < startOffset )
+        continue;
 
-    }
-    return result;
+    QString typeString;
+    switch ( type ) {
+    case NotificationMessage::Collection:
+      typeString = QLatin1String( "Collection" );
+      break;
+    case NotificationMessage::Item:
+      typeString = QLatin1String( "Item" );
+      break;
+    default:
+      typeString = QLatin1String( "InvalidType" );
+      break;
+    };
+
+    QString operationString;
+    switch ( operation ) {
+    case NotificationMessage::Add:
+      operationString = QLatin1String( "Add" );
+      break;
+    case NotificationMessage::Modify:
+      operationString = QLatin1String( "Modify" );
+      break;
+    case NotificationMessage::Move:
+      operationString = QLatin1String( "Move" );
+      break;
+    case NotificationMessage::Remove:
+      operationString = QLatin1String( "Remove" );
+      break;
+    case NotificationMessage::Link:
+      operationString = QLatin1String( "Link" );
+      break;
+    case NotificationMessage::Unlink:
+      operationString = QLatin1String( "Unlink" );
+      break;
+    case NotificationMessage::Subscribe:
+      operationString = QLatin1String( "Subscribe" );
+      break;
+    case NotificationMessage::Unsubscribe:
+      operationString = QLatin1String( "Unsubscribe" );
+      break;
+    default:
+      operationString = QLatin1String( "InvalidOp" );
+      break;
+    };
+
+    QStringList itemPartsList;
+    foreach( const QByteArray &b, itemParts )
+      itemPartsList.push_back( QString::fromLatin1(b) );
+
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+                          .arg( QString::fromLatin1( sessionId ) )
+                          .arg( typeString )
+                          .arg( operationString )
+                          .arg( uid )
+                          .arg( remoteId )
+                          .arg( QString::fromLatin1( resource ) )
+                          .arg( parentCollection )
+                          .arg( parentDestCollection )
+                          .arg( mimeType )
+                          .arg( itemPartsList.join(QLatin1String(", " )) );
+
+    result += entry + QLatin1Char('\n');
+  }
+
+  return result;
 }
 
 void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessage &msg)
 {
-        stream << msg.sessionId();
-        stream << int(msg.type());
-        stream << int(msg.operation());
-        stream << qulonglong(msg.uid());
-        stream << msg.remoteId();
-        stream << msg.resource();
-        stream << qulonglong(msg.parentCollection());
-        stream << qulonglong(msg.parentDestCollection());
-        stream << msg.mimeType();
-        stream << msg.itemParts();
+  stream << msg.sessionId();
+  stream << int(msg.type());
+  stream << int(msg.operation());
+  stream << quint64(msg.uid());
+  stream << msg.remoteId();
+  stream << msg.resource();
+  stream << quint64(msg.parentCollection());
+  stream << quint64(msg.parentDestCollection());
+  stream << msg.mimeType();
+  stream << msg.itemParts();
+}
+
+void ChangeRecorderPrivate::writeStartOffset()
+{
+  if ( !settings )
+    return;
+
+  QFile file( notificationsFileName() );
+  if ( !file.open( QIODevice::ReadWrite ) ) {
+    qWarning() << "Could not update notifications in file" << file.fileName();
+    return;
+  }
+
+  // Skip "countAndVersion"
+  file.seek( 8 );
+
+  //kDebug() << "Writing start offset=" << m_startOffset;
+
+  QDataStream stream( &file );
+  stream.setVersion( QDataStream::Qt_4_6 );
+  stream << static_cast<quint64>(m_startOffset);
+
+  // Everything else stays unchanged
 }
 
 void ChangeRecorderPrivate::saveNotifications()
@@ -284,24 +351,28 @@ void ChangeRecorderPrivate::saveNotifications()
     dir.mkpath( info.absolutePath() );
   }
   if ( !file.open( QIODevice::WriteOnly ) ) {
-    qWarning() << "could not save notifications to file " << file.fileName();
+    qWarning() << "Could not save notifications to file" << file.fileName();
     return;
   }
   saveTo(&file);
+  m_needFullSave = false;
+  m_startOffset = 0;
 }
 
 void ChangeRecorderPrivate::saveTo(QIODevice *device)
 {
+  // Version 0 of this file format was writing a quint64 count, followed by the notifications.
+  // Version 1 bundles a version number into that quint64, to be able to detect a version number at load time.
+
+  const quint64 countAndVersion = static_cast<quint64>(pendingNotifications.count()) | s_currentVersion;
 
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  stream << (qulonglong)(pipeline.count() + pendingNotifications.count());
+  stream << countAndVersion;
+  stream << quint64(0); // no start offset
 
-  for ( int i = 0; i < pipeline.count(); ++i ) {
-    const NotificationMessage msg = pipeline.at( i );
-    addToStream( stream, msg );
-  }
+  //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
     const NotificationMessage msg = pendingNotifications.at( i );
@@ -309,5 +380,51 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   }
 }
 
+void ChangeRecorderPrivate::notificationsEnqueued( int count )
+{
+  // Just to ensure the contract is kept, and these two methods are always properly called.
+  if (enableChangeRecording) {
+    m_lastKnownNotificationsCount += count;
+    if ( m_lastKnownNotificationsCount != pendingNotifications.count() ) {
+      kWarning() << this << "The number of pending notifications changed without telling us! Expected"
+                 << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
+                 << "Caller just added" << count;
+      Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount );
+    }
 
+    saveNotifications();
+  }
+}
 
+void ChangeRecorderPrivate::dequeueNotification()
+{
+  pendingNotifications.dequeue();
+
+  if (enableChangeRecording) {
+
+    Q_ASSERT( pendingNotifications.count() == m_lastKnownNotificationsCount - 1 );
+    --m_lastKnownNotificationsCount;
+
+    if ( m_needFullSave || pendingNotifications.isEmpty() ) {
+      saveNotifications();
+    } else {
+      ++m_startOffset;
+      writeStartOffset();
+    }
+  }
+}
+
+void ChangeRecorderPrivate::notificationsErased()
+{
+  if (enableChangeRecording) {
+    m_lastKnownNotificationsCount = pendingNotifications.count();
+    m_needFullSave = true;
+    saveNotifications();
+  }
+}
+
+void ChangeRecorderPrivate::notificationsLoaded()
+{
+  m_lastKnownNotificationsCount = pendingNotifications.count();
+  m_startOffset = 0;
+}

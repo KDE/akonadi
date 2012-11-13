@@ -202,4 +202,4 @@ QString ContactGroupLineEdit::requestPreferredEmail( const KABC::Addressee &cont
   return emails.at( action->data().toInt() );
 }
 
-#include "contactgrouplineedit_p.moc"
+#include "moc_contactgrouplineedit_p.cpp"

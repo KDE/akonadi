@@ -84,11 +84,9 @@ void SmsDialog::updateCounter()
   mText = mSmsTextEdit->toPlainText();
   unsigned int messageSize = 160;
 
-  bool noLatin1Char = false;
   const int size = mText.length();
   for ( int i = 0; i <size; ++i ) {
     if ( mText[i].row() > 0 ) {
-      noLatin1Char = true;
       messageSize = 70;
       break;
     }

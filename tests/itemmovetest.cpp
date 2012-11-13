@@ -39,6 +39,7 @@ class ItemMoveTest: public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
       Control::start();
     }
 

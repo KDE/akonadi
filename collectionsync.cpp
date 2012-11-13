@@ -674,4 +674,4 @@ void CollectionSync::setHierarchicalRemoteIds( bool hierarchical )
   d->hierarchicalRIDs = hierarchical;
 }
 
-#include "collectionsync_p.moc"
+#include "moc_collectionsync_p.cpp"

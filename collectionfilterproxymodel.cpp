@@ -178,4 +178,3 @@ Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) cons
   }
 }
 
-#include "collectionfilterproxymodel.moc"

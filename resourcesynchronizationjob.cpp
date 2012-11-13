@@ -164,4 +164,4 @@ AgentInstance ResourceSynchronizationJob::resource() const
 
 }
 
-#include "resourcesynchronizationjob.moc"
+#include "moc_resourcesynchronizationjob.cpp"

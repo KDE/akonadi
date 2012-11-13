@@ -33,14 +33,15 @@ class Akonadi::SocialFeedItemData : public QSharedData
     QString networkString;
     QString postId;
     QString postText;
-    QString postLink;
+    QUrl postLink;
     QString postLinkTitle;
-    QString postImageUrl;
+    QUrl postImageUrl;
     QString userName;
     QString userDisplayName;
     QString userId;
     QString postTimeString;
     QString postTimeFormat;
+    KDateTime postTime;
     QString postInfo;
     bool shared;
     QString sharedFrom;
@@ -106,12 +107,12 @@ void Akonadi::SocialFeedItem::setPostText( const QString &postText )
   d->postText = postText;
 }
 
-QString Akonadi::SocialFeedItem::postLink() const
+QUrl Akonadi::SocialFeedItem::postLink() const
 {
   return d->postLink;
 }
 
-void Akonadi::SocialFeedItem::setPostLink( const QString &link )
+void Akonadi::SocialFeedItem::setPostLink( const QUrl &link )
 {
   d->postLink = link;
 }
@@ -126,19 +127,19 @@ void Akonadi::SocialFeedItem::setPostLinkTitle( const QString &linkTitle )
   d->postLinkTitle = linkTitle;
 }
 
-QString Akonadi::SocialFeedItem::postImageUrl() const
+QUrl Akonadi::SocialFeedItem::postImageUrl() const
 {
   return d->postImageUrl;
 }
 
-void Akonadi::SocialFeedItem::setPostImageUrl( const QString &imageUrl )
+void Akonadi::SocialFeedItem::setPostImageUrl( const QUrl &imageUrl )
 {
   d->postImageUrl = imageUrl;
 }
 
 KDateTime Akonadi::SocialFeedItem::postTime() const
 {
-  return KDateTime::fromString( d->postTimeString, d->postTimeFormat );
+  return d->postTime;
 }
 
 QString Akonadi::SocialFeedItem::postTimeString() const
@@ -156,26 +157,17 @@ void Akonadi::SocialFeedItem::setPostInfo( const QString &postInfo )
   d->postInfo = postInfo;
 }
 
-void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString )
-{
-  d->postTimeString = postTimeString;
-}
-
 void Akonadi::SocialFeedItem::setPostTime( const QString &postTimeString,
                                            const QString &postTimeFormat )
 {
   d->postTimeString = postTimeString;
   d->postTimeFormat = postTimeFormat;
+  d->postTime = KDateTime::fromString( d->postTimeString, d->postTimeFormat );
 }
 
 QString Akonadi::SocialFeedItem::postTimeFormat() const
 {
   return d->postTimeFormat;
-}
-
-void Akonadi::SocialFeedItem::setPostTimeFormat( const QString &postTimeFormat )
-{
-  d->postTimeFormat = postTimeFormat;
 }
 
 QString Akonadi::SocialFeedItem::userId() const

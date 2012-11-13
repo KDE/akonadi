@@ -165,4 +165,3 @@ void RaceTest::killZombies()
 
 QTEST_AKONADIMAIN( RaceTest, NoGUI )
 
-#include "racetest.moc"

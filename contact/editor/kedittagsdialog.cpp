@@ -253,4 +253,4 @@ void KEditTagsDialog::removeNewTagItem()
     }
 }
 
-#include "kedittagsdialog_p.moc"
+#include "moc_kedittagsdialog_p.cpp"
