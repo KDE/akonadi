@@ -466,6 +466,7 @@ void ContactEditorWidget::Private::initGuiNotesTab()
   mTabWidget->addTab( widget, i18nc( "@title:tab", "Notes" ) );
 
   mNotesWidget = new KTextEdit;
+  mNotesWidget->setAcceptRichText(false);
   layout->addWidget( mNotesWidget );
 }
 
