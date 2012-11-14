@@ -55,8 +55,8 @@ void ETMCalendarPrivate::init()
 {
   Akonadi::Session *session = new Akonadi::Session( "ETMCalendar", q );
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( q );
-  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>) ),
-           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>) ) );
+  connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
+           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
 
   Akonadi::ItemFetchScope scope;
   scope.fetchFullPayload( true );

@@ -128,3 +128,4 @@ void PublishDialog::Private::updateInput()
   mUI.mNameLineEdit->setText( name );
   mUI.mEmailLineEdit->setText( mail );
 }
+
