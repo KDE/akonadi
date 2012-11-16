@@ -406,6 +406,12 @@ void GeoDialog::updateInputs( ExceptType type )
   mLongSeconds->blockSignals( true );
   mLongDirection->blockSignals( true );
 
+  if ( !( type & ExceptDecimal ) ) {
+    mLatitude->setValue( mCoordinates.latitude() );
+    mLongitude->setValue( mCoordinates.longitude() );
+  }
+
+
   if ( !(type & ExceptSexagesimal) ) {
     int degrees, minutes, seconds;
     double latitude = mCoordinates.latitude();
@@ -422,7 +428,7 @@ void GeoDialog::updateInputs( ExceptType type )
     mLatMinutes->setValue( minutes );
     mLatSeconds->setValue( seconds );
 
-    mLatDirection->setCurrentIndex( mLatitude < 0 ? 1 : 0 );
+    mLatDirection->setCurrentIndex( mLatitude->value() < 0 ? 1 : 0 );
 
     degrees = (int)( longitude * 1 );
     minutes = (int)( ( longitude - degrees ) * 60 );
@@ -431,12 +437,7 @@ void GeoDialog::updateInputs( ExceptType type )
     mLongDegrees->setValue( degrees );
     mLongMinutes->setValue( minutes );
     mLongSeconds->setValue( seconds );
-    mLongDirection->setCurrentIndex( mLongitude < 0 ? 1 : 0 );
-  }
-
-  if ( !( type & ExceptDecimal ) ) {
-    mLatitude->setValue( mCoordinates.latitude() );
-    mLongitude->setValue( mCoordinates.longitude() );
+    mLongDirection->setCurrentIndex( mLongitude->value() < 0 ? 1 : 0 );
   }
 
   if ( !( type & ExceptCity ) ) {
