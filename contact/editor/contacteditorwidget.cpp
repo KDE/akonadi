@@ -256,7 +256,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   mPhonesWidget = new PhoneEditWidget;
   phonesLayout->addWidget( mPhonesWidget, 0, 0 );
 
-  phonesLayout->setRowStretch( 1, 1 );
+  //phonesLayout->setRowStretch( 1, 1 );
 
   // setup categories section
   const bool nepomukInitialized( Nepomuk::ResourceManager::instance()->initialized() );
