@@ -221,7 +221,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
         if ( existingIncidence->revision() == inc->revision() &&
              existingIncidence->lastModified() > inc->lastModified() ) {
           // This isn't an update - the found incidence was modified more recently
-          errorString = i18n( "This isn't an update"
+          errorString = i18n( "This isn't an update. "
                               "The found incidence was modified more recently." );
           kWarning() << errorString;
           emit transactionFinished( ResultOutatedUpdate, errorString );
@@ -242,7 +242,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
         return;
       }
     } else {
-      errorString = i18n( "This isn't an update"
+      errorString = i18n( "This isn't an update. "
                           "The found incidence was modified more recently." );
       kWarning() << errorString;
       // This isn't an update - the found incidence has a bigger revision number

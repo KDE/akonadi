@@ -1132,8 +1132,8 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
       errorString = i18n( "Duplicate item id in a group operation");
       break;
     case IncidenceChanger::ResultCodeRolledback:
-      errorString = i18n( "One change belonging to a group of changes failed."
-                          "All changes are being rolledback." );
+      errorString = i18n( "One change belonging to a group of changes failed. "
+                          "All changes are being rolled back." );
       break;
     default:
       Q_ASSERT( false );
