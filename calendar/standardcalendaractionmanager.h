@@ -72,7 +72,7 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
     explicit StandardCalendarActionManager( KActionCollection *actionCollection, QWidget *parent = 0 );
 
     /**
-     * Destroys the standard contact action manager.
+     * Destroys the standard calendar action manager.
      */
     ~StandardCalendarActionManager();
 
@@ -87,7 +87,7 @@ class AKONADI_CALENDAR_EXPORT StandardCalendarActionManager : public QObject
      * Sets the item selection model based on which the item related actions
      * should operate. If none is set, all item actions will be disabled.
      */
-    void setItemSelectionModel( QItemSelectionModel* selectionModel );
+    void setItemSelectionModel( QItemSelectionModel *selectionModel );
 
     /**
      * Creates the action of the given type and adds it to the action collection
