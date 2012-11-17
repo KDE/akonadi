@@ -32,20 +32,22 @@ namespace Akonadi {
 class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
 {
   Q_OBJECT
-  public:
-    explicit PublishDialog( QWidget *parent=0 );
-    ~PublishDialog();
+public:
 
-    void addAttendee( const KCalCore::Attendee::Ptr &attendee );
-    QString addresses() const;
+  explicit PublishDialog( QWidget *parent=0 );
+  ~PublishDialog();
 
-  Q_SIGNALS:
-    void numMessagesChanged( int );
-  private:
-    //@cond PRIVATE
-    class Private;
-    Private *const d;
-    //@endcond
+  void addAttendee( const KCalCore::Attendee::Ptr &attendee );
+  QString addresses() const;
+
+Q_SIGNALS:
+  void numMessagesChanged( int );
+
+private:
+  //@cond PRIVATE
+  class Private;
+  Private *const d;
+  //@endcond
 };
 
 }
