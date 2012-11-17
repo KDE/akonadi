@@ -33,9 +33,10 @@ namespace Akonadi {
 /**
  * @short IncidenceChanger is the prefered way to easily create, modify and delete incidences.
  *
- * It hide the communication with akonadi from the user.
+ * It hides the communication with akonadi from the library user.
  *
- * It provides the following features that ItemCreateJob, ItemModifyJob and ItemDeleteJob do not:
+ * It provides the following features that ItemCreateJob, ItemModifyJob and
+ * ItemDeleteJob do not:
  * - Sending groupware ( iTip ) messages to attendees and organizers.
  * - Aware of recurrences, allowing to only change one occurrence.
  * - Undo/Redo
@@ -44,7 +45,7 @@ namespace Akonadi {
  * - Error dialogs with calendaring lingo
  *
  * In the context of this API, "change", means "creation", "deletion" or incidence "modification".
- * 
+ *
  * @code
  * IncidenceChanger *changer = new IncidenceChanger( parent );
  * connect( changer,
@@ -61,7 +62,7 @@ namespace Akonadi {
  * changer->setDestinationPolicy( IncidenceChanger::DestinationPolicyAsk );
  *
  * KCalCore::Incidence::Ptr incidence = (...);
- * const int changeId = changer->createIncidence( incidence, Akonadi::Collection() );
+ * int changeId = changer->createIncidence( incidence, Akonadi::Collection() );
  *
  * 
  * if ( changeId == -1 )
@@ -72,7 +73,7 @@ namespace Akonadi {
  * @endcode
  *
  * @author Sérgio Martins <iamsergio@gmail.com>
- * @since 4.9
+ * @since 4.11
  */
 
 class History;
@@ -83,26 +84,26 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
   public:
 
     /**
-     * This enum describes result codes which are returned by createFinished(), modifyfinished() and
-     * deleteFinished() signals.
+     * This enum describes result codes which are returned by createFinished(),
+     * modifyfinished() and deleteFinished() signals.
      */
     enum ResultCode {
       ResultCodeSuccess = 0,
       ResultCodeJobError, ///< ItemCreateJob, ItemModifyJob or ItemDeleteJob weren't successfull
       ResultCodeAlreadyDeleted, ///< That incidence was already deleted, or currently being deleted.
       ResultCodeInvalidDefaultCollection, ///< Default collection is invalid and DestinationPolicyNeverAsk was used
-      ResultCodeRolledback, ///< One change belonging to an atomic operation failed. All other changes were rollbacked.
+      ResultCodeRolledback, ///< One change belonging to an atomic operation failed. All other changes were rolled back.
       ResultCodePermissions, ///< The parent collection doesn't have ACLs for this operation
       ResultCodeUserCanceled, ///< User canceled the operation
       ResultCodeInvalidUserCollection, ///< User somehow chose an invalid collection in the collection dialog ( should not happen )
-      ResultCodeModificationDiscarded, ///< A new modification came in, no use in performing this one
+      ResultCodeModificationDiscarded, ///< A new modification came in, the old one is discarded
       ResultCodeDuplicateId ///< Duplicate Akonadi::Item::Ids must be unique in group operations
     };
 
     /**
      * This enum describes destination policies.
-     * Destination policies control how the createIncidence() method chooses the collection where
-     * the item will be created.
+     * Destination policies control how the createIncidence() method chooses the
+     * collection where the item will be created.
      */
     enum DestinationPolicy {
       DestinationPolicyDefault, ///< The default collection is used, if it's invalid, the user is prompted. @see setDefaultCollection().
@@ -137,7 +138,7 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * @param collection Collection where the incidence will be created. If invalid, one according
      *                   to the DestinationPolicy will be used. You can know which collection was
      *                   used by calling lastCollectionUsed();
-     * @param parent Parent to be used in dialogs.
+     * @param parent widget parent to be used in dialogs.
      *
      * @return Returns an integer which identifies this change. This identifier is useful
      *         to correlate this operation with the IncidenceChanger::createFinished() signal.
@@ -153,13 +154,11 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
      * Deletes an incidence. If it's recurring, all occurrences are deleted.
      *
      * @param item Item to delete. Item must be valid.
-     * @param recordToHistory If true, this deletion is recorded into the undo stack,
-     *                        and can be undone.
      * @param parent Parent to be used in dialogs.
      *
      * @return Returns an integer which identifies this deletion. This identifier is useful
      *         to correlate this deletion with the IncidenceChanger::deleteFinished() signal.
-
+     *
      *         Returns -1 if item is invalid. The deleteFinished() signal won't be emitted in this
      *         case.
      */
@@ -199,17 +198,17 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
 
     /**
      * Some incidence operations require more than one change. Like dissociating
-     * occurrences, which needs an incidence add, and an incidence change.
+     * occurrences, which needs an incidence add and an incidence change.
      *
      * If you want to prevent that the same dialogs are presented multiple times
      * use this function to start a batch operation.
      *
      * If one change belonging to a batch operation fails, all other changes
-     * are rolledback.
+     * are rolled back.
      *
-     * @param operationDescription Reserved for future use. Describes what the atomic operation does.
-     *        This will be retrieved with incidenceChanger->history()->descriptionForNextUndo()
-     *        so you can put that text on the undo/redo button, ex: "Undo delete all to-dos".
+     * @param operationDescription Describes what the atomic operation does.
+     *        This will be what incidenceChanger->history()->descriptionForNextUndo()
+     *        if you have history enabled.
      *
      * @see endAtomicOperation()
      */
@@ -225,8 +224,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
 
     /**
      * Sets the default collection.
-     * @param collection The collection to be used in createIncidence() if the proper destination
-     *        policy is set.
+     * @param collection The collection to be used in createIncidence() if the
+     *        proper destination policy is set.
      * @see createIncidence()
      * @see destinationPolicy()
      * @see defaultCollection()
@@ -242,8 +241,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
     Akonadi::Collection defaultCollection() const;
 
     /**
-     * Sets the destination policy to use. The destination policy determines the collection to use
-     * in createIncidence()
+     * Sets the destination policy to use. The destination policy determines the
+     * collection to use in createIncidence()
      *
      * @see createIncidence()
      * @see destinationPolicy()
@@ -278,8 +277,8 @@ class AKONADI_CALENDAR_EXPORT IncidenceChanger : public QObject
     void setRespectsCollectionRights( bool respect );
 
     /**
-     * Returns true if IncidenceChanger honours collection's ACLs by disallowing changes if
-     * necessary.
+     * Returns true if IncidenceChanger honours collection's ACLs by disallowing
+     * changes if necessary.
      * 
      * The default is true.
      * @see setRespectsCollectionRights()
