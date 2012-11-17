@@ -28,10 +28,10 @@
 namespace Akonadi {
 
 /**
- * @short An Attribute that marks that alarms from an calendar collection are blocked.
+ * @short An Attribute that marks that alarms from a calendar collection are blocked.
  *
  * A calendar collection which has this attribute set won't be evaluated by korgac and
- * therefor its alarms won't be used.
+ * therefore it's alarms won't be used.
  *
  * @author Tobias Koenig <tokoe@kdab.com>
  * @see Akonadi::Attribute
