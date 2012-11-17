@@ -25,9 +25,7 @@
 #include "incidencechanger.h"
 
 #include <kcalcore/incidence.h>
-
 #include <akonadi/item.h>
-
 #include <QWidget>
 
 namespace Akonadi {
@@ -35,13 +33,16 @@ namespace Akonadi {
 class IncidenceChanger;
 
 /**
-   @short History class for implementing undo/redo of calendar incidences
+   @short History class for implementing undo/redo of calendar operations
 
-   Whenever you use IncidenceChanger to create, delete or modify incidences, this class is used
-   to record those changes in a stack, so they can be undone/redone.
+   Whenever you use IncidenceChanger to create, delete or modify incidences,
+   this class is used to record those changes onto a stack, so they can be
+   undone or redone.
 
-   If needed, groupware invitations will be sent to attendees and organizers when using this class
-   to undo/redo changes.
+   If needed, groupware invitations will be sent to attendees and organizers when
+   undoing or redoing changes.
+
+   This class can't be instantiated directly, use it through IncidenceChanger:
 
    @code
       Akonadi::IncidenceChanger *myIncidenceChanger = new Akonadi::IncidenceChanger();
@@ -50,23 +51,22 @@ class IncidenceChanger;
    @endcode
 
    @author Sérgio Martins <iamsergio@gmail.com>
-   @since 4.9
+   @since 4.11
 */
 
 class AKONADI_CALENDAR_EXPORT History : public QObject {
   Q_OBJECT
   public:
     /**
-     * This enum describes the possible result codes (success/error values)
-     * for an undo or redo operation.
+     * This enum describes the possible result codes (success/error values) for an
+     * undo or redo operation.
      * @see undone()
      * @see redone()
      */
     enum ResultCode {
       ResultCodeSuccess = 0, ///< Success
       ResultCodeError, ///< An error occurred. Call lastErrorString() for the error message. This isn't very verbose because IncidenceChanger hasn't been refactored yet.
-      ResultCodeIncidenceChangerError ///< IncidenceChanger returned false and didn't even create the job. This error is temporary. IncidenceChanger needs to be refactored.
-
+      ResultCodeIncidenceChangerError ///< IncidenceChanger returned false and didn't even create the job. This error is temporary. IncidenceChanger needs to be refactored. TODO
     };
 
     /**
@@ -75,29 +75,33 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     ~History();
 
     /**
-     *  Pushes an incidence creation into the undo stack. The creation can be undone calling
-     * undo().
+     * Pushes an incidence creation onto the undo stack. The creation can be
+     * undone calling undo().
      *
-     * @param incidence the item that was created. Must be valid and have a Incidence::Ptr payload
-     * @param atomicOperationId if not 0, specifies which group of changes this change belongs too.
-     *        When a change is undone/redone, all other changes which are in the same group are
-     *        undone/redone too
+     * @param item the item that was created. Must be valid and have a Incidence::Ptr payload
+     * @param description text that can be used in the undo/redo menu item to describe the operation
+     *        If empty, a default one will be provided.
+     * @param atomicOperationId if not 0, specifies which group of changes this change belongs to.
+     *        When a change is undone/redone, all other changes which are in the same group are also
+     *        undone/redone
      */
     void recordCreation( const Akonadi::Item &item,
                          const QString &description,
                          const uint atomicOperationId = 0 );
 
     /**
-     * Pushes an incidence modification into the undo stack. The modification can be undone calling
+     * Pushes an incidence modification onto the undo stack. The modification can be undone calling
      * undo().
      *
-     * @param oldItem item containing the payload before the change. Must be valid and contain an
-     *        Incidence::Ptr payload
-     * @param newitem item containing the new payload. Must be valid. Must be valid and contain an
-     *        Incidence::Ptr payload
-     * @param atomicOperationId if not 0, specifies which group of changes this change belongs too.
-     *        When a change is undone/redone, all other changes which are in the same group are
-     *        undone/redone too
+     * @param oldItem item containing the payload before the change. Must be valid
+     *        and contain an Incidence::Ptr payload.
+     * @param newitem item containing the new payload. Must be valid and contain
+     *        an Incidence::Ptr payload.
+     * @param description text that can be used in the undo/redo menu item to describe the operation
+     *        If empty, a default one will be provided.
+     * @param atomicOperationId if not 0, specifies which group of changes this change belongs to.
+     *        When a change is undone/redone, all other changes which are in the same group are also
+     *        undone/redone
      */
     void recordModification( const Akonadi::Item &oldItem,
                              const Akonadi::Item &newItem,
@@ -105,24 +109,27 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
                              const uint atomicOperationId = 0 );
 
     /**
-     * Pushes an incidence deletion into the undo stack. The deletion can be undone calling
-     * undo().
+     * Pushes an incidence deletion onto the undo stack. The deletion can be
+     * undone calling undo().
      *
-     * @param item The item to delete. Must be valid.
-     * @param atomicOperationId if not 0, specifies which group of changes this change belongs too.
-     *        When a change is undone/redone, all other changes which are in the same group are
-     *        undone/redone too
+     * @param item The item to delete. Must be valid, doesn't need to contain a
+     *        payload.
+     * @param description text that can be used in the undo/redo menu item to describe the operation
+     *        If empty, a default one will be provided.
+     * @param atomicOperationId if not 0, specifies which group of changes this change belongs to.
+     *        When a change is undone/redone, all other changes which are in the same group are also
+     *        undone/redone
      */
     void recordDeletion( const Akonadi::Item &item,
                          const QString &description,
                          const uint atomicOperationId = 0 );
 
     /**
-     * Pushes a list of incidence deletions into the undo stack. The deletions can be undone calling
-     * undo() once.
+     * Pushes a list of incidence deletions onto the undo stack. The deletions can
+     * be undone calling undo() once.
      *
      * @param items The list of items to delete. All items must be valid.
-     * @param atomicOperation If != 0, specifies which group of changes this change belongs too.
+     * @param atomicOperation If != 0, specifies which group of changes thischange belongs to.
      *        Will be useful for atomic undoing/redoing, not implemented yet.
      */
     void recordDeletions( const Akonadi::Item::List &items,
@@ -140,10 +147,10 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     QString lastErrorString() const;
 
     /**
-     * Reverts every change in the undostack.
+     * Reverts every change in the undo stack.
      *
-     * @param parent will be passed to dialogs created by IncidenceChanger, for example
-     *        those which ask if you want to send invitations.
+     * @param parent will be passed to dialogs created by IncidenceChanger,
+     *        for example those asking if you want to send invitations.
      */
     void undoAll( QWidget *parent = 0 );
 
@@ -160,20 +167,20 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     /**
      * Returns the description of the next undo.
      *
-     * This is the description that was passed when calling recordCreation(), recordDeletion()
-     * or recordModification().
+     * This is the description that was passed when calling recordCreation(),
+     * recordDeletion() or recordModification().
      *
-     * @see descriptionOfNextRedo()
+     * @see nextRedoDescription()
      */
     QString nextUndoDescription() const;
 
     /**
      * Returns the description of the next redo.
      *
-     * This is the description that was passed when calling recordCreation(), recordDeletion()
-     * or recordModification().
+     * This is the description that was passed when calling recordCreation(),
+     * recordDeletion() or recordModification().
      *
-     * @see descriptionOfNextUndo()
+     * @see nextUndoDescription()
      */
     QString nextRedoDescription() const;
 
@@ -187,13 +194,14 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     bool clear();
 
     /**
-     * Reverts the change that's ontop of the undo stack.
-     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
+     * Reverts the change that's on top of the undo stack.
+     * Can't be called if there's an undo/redo operation running, asserts.
      * Can be called if the stack is empty, in this case, nothing happens.
-     * This function is async, listen to signal undone() to know when the operation finishes.
+     * This function is async, catch signal undone() to know when the operation
+     * finishes.
      *
-     * @param parent will be passed to dialogs created by IncidenceChanger, for example
-     *        those which ask if you want to send invitations.
+     * @param parent will be passed to dialogs created by IncidenceChanger,
+     *        for example those asking if you want to send invitations.
      *
      * @see redo()
      * @see undone()
@@ -201,13 +209,14 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     void undo( QWidget *parent = 0 );
 
     /**
-     * Reverts the change that's ontop of the redo stack.
-     * Can't be called if there's an undo/redo operation running, Q_ASSERTs.
+     * Reverts the change that's on top of the redo stack.
+     * Can't be called if there's an undo/redo operation running, asserts.
      * Can be called if the stack is empty, in this case, nothing happens.
-     * This function is async, listen to signal redone() to know when the operation finishes.
+     * This function is async, catch signal redone() to know when the operation
+     * finishes.
      *
-     * @param parent will be passed to dialogs created by IncidenceChanger, for example
-     *        those which ask if you want to send invitations.
+     * @param parent will be passed to dialogs created by IncidenceChanger,
+     *        for example those asking if you want to send invitations.
      *
      * @see undo()
      * @see redone()
@@ -235,16 +244,14 @@ class AKONADI_CALENDAR_EXPORT History : public QObject {
     void changed();
 
   private:
-    void setEnabled( bool enabled );
+    void setEnabled( bool enabled ); // TODO: kill this ?
 
-    /**
-     * Creates an History instance.
-     * Only IncidenceChanger can create an History instance.
-     * @param changer a valid pointer to an IncidenceChanger. Ownership is not taken.
-     */
     friend class IncidenceChanger;
     friend class Entry;
+
+    // Only IncidenceChanger can create History classes
     explicit History( QObject *parent = 0 );
+
     // Used by unit-tests
     Akonadi::IncidenceChanger* incidenceChanger() const;
 
