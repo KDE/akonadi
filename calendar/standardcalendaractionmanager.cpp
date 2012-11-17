@@ -1,7 +1,7 @@
 /*
  *  Copyright (C) 2010 Casey Link <unnamedrambler@gmail.com>
  *  Copyright (C) 2010 Klaralvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
- *   Copyright (c) 2009 - 2010 Tobias Koenig <tokoe@kde.org>
+ *  Copyright (C) 2009 - 2010 Tobias Koenig <tokoe@kde.org>
  *
  *  This library is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU Library General Public License as published by

@@ -1,5 +1,6 @@
 /*
    Copyright (C) 2011 Sérgio Martins <sergio.martins@kdab.com>
+   Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by

@@ -1,5 +1,5 @@
 /*
-  Copyright (C) 2010-2011 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (C) 2010-2012 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -16,7 +16,6 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-
 
 #ifndef AKONADI_HISTORY_H
 #define AKONADI_HISTORY_H
