@@ -39,7 +39,7 @@ class FetchJobCalendarPrivate;
 * @see CalendarBase
 *
 * @author Sérgio Martins <sergio.martins@kdab.com>
-* @since 4.9
+* @since 4.11
 */
 class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::CalendarBase
 {
