@@ -38,36 +38,36 @@ namespace Akonadi {
  */
 class AKONADI_CALENDAR_EXPORT BlockAlarmsAttribute : public Akonadi::Attribute
 {
-  public:
-    /**
-     * Creates a new block alarms attribute.
-     */
-    BlockAlarmsAttribute();
+public:
+  /**
+    * Creates a new block alarms attribute.
+    */
+  BlockAlarmsAttribute();
 
-    /**
-     * Destroys the block alarms attribute.
-     */
-    ~BlockAlarmsAttribute();
+  /**
+    * Destroys the block alarms attribute.
+    */
+  ~BlockAlarmsAttribute();
 
-    /**
-     * Reimplemented from Attribute
-     */
-    QByteArray type() const;
+  /**
+    * Reimplemented from Attribute
+    */
+  QByteArray type() const;
 
-    /**
-     * Reimplemented from Attribute
-     */
-    BlockAlarmsAttribute *clone() const;
+  /**
+    * Reimplemented from Attribute
+    */
+  BlockAlarmsAttribute *clone() const;
 
-    /**
-     * Reimplemented from Attribute
-     */
-    QByteArray serialized() const;
+  /**
+    * Reimplemented from Attribute
+    */
+  QByteArray serialized() const;
 
-    /**
-     * Reimplemented from Attribute
-     */
-    void deserialize( const QByteArray &data );
+  /**
+    * Reimplemented from Attribute
+    */
+  void deserialize( const QByteArray &data );
 };
 
 }

@@ -28,50 +28,51 @@
 #include <KSystemTimeZones>
 
 namespace Akonadi {
-  class FetchJobCalendarPrivate;
-  /**
-  * @short A Calendar that gets populated by a one time IncidenceFetchJob.
-  *
-  * If you want a persistent calendar ( which monitors Akonadi for changes )
-  * use an ETMCalendar.
-  * 
-  * @see ETMCalendar
-  * @see CalendarBase
-  *
-  * @author Sérgio Martins <sergio.martins@kdab.com>
-  * @since 4.9
-  */
-  class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::CalendarBase
-  {
+class FetchJobCalendarPrivate;
+/**
+* @short A Calendar that gets populated by a one time IncidenceFetchJob.
+*
+* If you want a persistent calendar ( which monitors Akonadi for changes )
+* use an ETMCalendar.
+*
+* @see ETMCalendar
+* @see CalendarBase
+*
+* @author Sérgio Martins <sergio.martins@kdab.com>
+* @since 4.9
+*/
+class AKONADI_CALENDAR_EXPORT FetchJobCalendar : public Akonadi::CalendarBase
+{
   Q_OBJECT
-  public:
-    typedef QSharedPointer<FetchJobCalendar> Ptr;
+public:
+  typedef QSharedPointer<FetchJobCalendar> Ptr;
 
-    /**
-     * Creates a new FetchJobCalendar. Loading begins asynchronously.
-     * @see loadFinished()
-     */
-    explicit FetchJobCalendar();
+  /**
+    * Creates a new FetchJobCalendar. Loading begins asynchronously.
+    * @see loadFinished()
+    */
+  explicit FetchJobCalendar();
 
-    /**
-     * Destroys this FetchJobCalendar.
-     */
-    ~FetchJobCalendar();
+  /**
+    * Destroys this FetchJobCalendar.
+    */
+  ~FetchJobCalendar();
 
-    /**
-     * Returns if the calendar already finished loading.
-     * This is an alternative to listening for the loadFinished() signal.
-     */
-    bool isLoaded() const;
+  /**
+    * Returns if the calendar already finished loading.
+    * This is an alternative to listening for the loadFinished() signal.
+    */
+  bool isLoaded() const;
 
-  Q_SIGNALS:
-    /**
-     * This signal is emitted when the IncidenceFetchJob finishes.
-     * @param success the success of the operation
-     * @param errorMessage if @p success is false, contains the error message
-     */
-    void loadFinished( bool success, const QString &errorMessage );
-  };
+Q_SIGNALS:
+  /**
+    * This signal is emitted when the IncidenceFetchJob finishes.
+    * @param success the success of the operation
+    * @param errorMessage if @p success is false, contains the error message
+    */
+  void loadFinished( bool success, const QString &errorMessage );
+};
+
 }
 
 #endif

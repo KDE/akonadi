@@ -32,43 +32,43 @@ namespace Akonadi {
 class CalendarBasePrivate : public QObject
 {
   Q_OBJECT
-  public:
+public:
 
-    explicit CalendarBasePrivate( CalendarBase *qq );
-    ~CalendarBasePrivate();
+  explicit CalendarBasePrivate( CalendarBase *qq );
+  ~CalendarBasePrivate();
 
-    void internalInsert( const Akonadi::Item &item );
-    void internalRemove( const Akonadi::Item &item );
+  void internalInsert( const Akonadi::Item &item );
+  void internalRemove( const Akonadi::Item &item );
 
-    void deleteAllIncidencesOfType( const QString &mimeType );
+  void deleteAllIncidencesOfType( const QString &mimeType );
 
-  public Q_SLOTS:
-    void slotDeleteFinished( int changeId,
-                             const QVector<Akonadi::Item::Id> &,
-                             Akonadi::IncidenceChanger::ResultCode,
-                             const QString &errorMessage );
+public Q_SLOTS:
+  void slotDeleteFinished( int changeId,
+                            const QVector<Akonadi::Item::Id> &,
+                            Akonadi::IncidenceChanger::ResultCode,
+                            const QString &errorMessage );
 
-    void slotCreateFinished( int changeId,
-                             const Akonadi::Item &,
-                             Akonadi::IncidenceChanger::ResultCode,
-                             const QString &errorMessage );
+  void slotCreateFinished( int changeId,
+                            const Akonadi::Item &,
+                            Akonadi::IncidenceChanger::ResultCode,
+                            const QString &errorMessage );
 
-    void slotModifyFinished( int changeId,
-                             const Akonadi::Item &,
-                             Akonadi::IncidenceChanger::ResultCode,
-                             const QString &errorMessage );
+  void slotModifyFinished( int changeId,
+                            const Akonadi::Item &,
+                            Akonadi::IncidenceChanger::ResultCode,
+                            const QString &errorMessage );
 
-  public:
-    QHash<QString,Akonadi::Item::Id> mItemIdByUid;
-    QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
-    Akonadi::IncidenceChanger *mIncidenceChanger;
-    QHash<QString,QStringList> mParentUidToChildrenUid;
-    QWeakPointer<CalendarBase> mWeakPointer;
-    Akonadi::Collection mCollectionForBatchInsertion;
-    bool mBatchInsertionCancelled;
+public:
+  QHash<QString,Akonadi::Item::Id> mItemIdByUid;
+  QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
+  Akonadi::IncidenceChanger *mIncidenceChanger;
+  QHash<QString,QStringList> mParentUidToChildrenUid;
+  QWeakPointer<CalendarBase> mWeakPointer;
+  Akonadi::Collection mCollectionForBatchInsertion;
+  bool mBatchInsertionCancelled;
 
-  private:
-    CalendarBase *const q;
+private:
+  CalendarBase *const q;
 };
 
 }

@@ -37,52 +37,52 @@ class EntityMimeTypeFilterModel;
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
-  public:
+public:
 
-    explicit ETMCalendarPrivate( ETMCalendar *qq );
-    ~ETMCalendarPrivate();
+  explicit ETMCalendarPrivate( ETMCalendar *qq );
+  ~ETMCalendarPrivate();
 
-    void init();
-    void setupFilteredETM();
-    void loadFromETM();
+  void init();
+  void setupFilteredETM();
+  void loadFromETM();
 
-  public Q_SLOTS:
-    Akonadi::Item::List itemsFromModel( const QAbstractItemModel *model,
-                                        const QModelIndex &parentIndex = QModelIndex(),
-                                        int start = 0,
-                                        int end = -1 );
+public Q_SLOTS:
+  Akonadi::Item::List itemsFromModel( const QAbstractItemModel *model,
+                                      const QModelIndex &parentIndex = QModelIndex(),
+                                      int start = 0,
+                                      int end = -1 );
 
-    Akonadi::Collection::List collectionsFromModel( const QAbstractItemModel *model,
-                                                    const QModelIndex &parentIndex = QModelIndex(),
-                                                    int start = 0,
-                                                    int end = -1 );
-    void clear();
-    Akonadi::Item itemFromIndex( const QModelIndex &idx );
-    Akonadi::Collection collectionFromIndex( const QModelIndex &index );
-    void itemsAdded( const Akonadi::Item::List &items );
-    void itemsRemoved( const Akonadi::Item::List &items );
+  Akonadi::Collection::List collectionsFromModel( const QAbstractItemModel *model,
+                                                  const QModelIndex &parentIndex = QModelIndex(),
+                                                  int start = 0,
+                                                  int end = -1 );
+  void clear();
+  Akonadi::Item itemFromIndex( const QModelIndex &idx );
+  Akonadi::Collection collectionFromIndex( const QModelIndex &index );
+  void itemsAdded( const Akonadi::Item::List &items );
+  void itemsRemoved( const Akonadi::Item::List &items );
 
-    void onRowsInserted( const QModelIndex &index, int start, int end );
-    void onRowsRemoved( const QModelIndex &index, int start, int end );
-    void onDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-    void onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
-                      const QModelIndex &destinationParent, int destinationRow );
+  void onRowsInserted( const QModelIndex &index, int start, int end );
+  void onRowsRemoved( const QModelIndex &index, int start, int end );
+  void onDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+  void onRowsMoved( const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+                    const QModelIndex &destinationParent, int destinationRow );
 
-    void onLayoutChangedInFilteredModel();
-    void onModelResetInFilteredModel();
-    void onDataChangedInFilteredModel( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-    void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
-    void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
+  void onLayoutChangedInFilteredModel();
+  void onModelResetInFilteredModel();
+  void onDataChangedInFilteredModel( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+  void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
+  void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
 
-  public:
-    QAbstractItemModel *mETM;
-    Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
+public:
+  QAbstractItemModel *mETM;
+  Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
 
-    // akonadi id to collections
-    QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
-    KCheckableProxyModel *mCheckableProxyModel;
-  private:
-    ETMCalendar *const q;
+  // akonadi id to collections
+  QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
+  KCheckableProxyModel *mCheckableProxyModel;
+private:
+  ETMCalendar *const q;
 };
 
 }

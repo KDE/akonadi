@@ -33,23 +33,23 @@ namespace Akonadi {
 class FreeBusyDownloadJob : public KJob
 {
   Q_OBJECT
-  public:
-    explicit FreeBusyDownloadJob( const KUrl &url, QWidget *parentWidget = 0 );
-    ~FreeBusyDownloadJob();
+public:
+  explicit FreeBusyDownloadJob( const KUrl &url, QWidget *parentWidget = 0 );
+  ~FreeBusyDownloadJob();
 
-    /** reimp */ void start();
+  /** reimp */ void start();
 
-    KUrl url() const;
-    QByteArray rawFreeBusyData() const;
+  KUrl url() const;
+  QByteArray rawFreeBusyData() const;
 
-  private slots:
-    void slotData( KIO::Job *, const QByteArray &data );
-    void slotResult( KJob * );
+private slots:
+  void slotData( KIO::Job *, const QByteArray &data );
+  void slotResult( KJob * );
 
-  private:
-    KUrl mUrl;
-    QByteArray mFreeBusyData;
-    QWidget *mParent;
+private:
+  KUrl mUrl;
+  QByteArray mFreeBusyData;
+  QWidget *mParent;
 };
 
 }

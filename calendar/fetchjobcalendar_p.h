@@ -32,19 +32,19 @@ namespace Akonadi {
 class FetchJobCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
-  public:
+public:
 
-    explicit FetchJobCalendarPrivate( FetchJobCalendar *qq );
-    ~FetchJobCalendarPrivate();
+  explicit FetchJobCalendarPrivate( FetchJobCalendar *qq );
+  ~FetchJobCalendarPrivate();
 
-  public Q_SLOTS:
-    void slotSearchJobFinished( KJob *job );
+public Q_SLOTS:
+  void slotSearchJobFinished( KJob *job );
 
-  public:
-    bool m_isLoaded;
+public:
+  bool m_isLoaded;
 
-  private:
-    FetchJobCalendar *const q;
+private:
+  FetchJobCalendar *const q;
 };
 
 }

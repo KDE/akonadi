@@ -55,83 +55,82 @@ class FreeBusyManagerPrivate : public QObject
   FreeBusyManager *const q_ptr;
   Q_DECLARE_PUBLIC( FreeBusyManager )
 
-  public: /// Structs
+public: /// Structs
+  struct FreeBusyProviderRequest
+  {
+    FreeBusyProviderRequest( const QString &provider );
 
-    struct FreeBusyProviderRequest
-    {
-      FreeBusyProviderRequest( const QString &provider );
-
-      enum Status {
-        NotStarted,
-        HandlingRequested,
-        FreeBusyRequested
-      };
-
-      Status mRequestStatus;
-      QSharedPointer<QDBusInterface> mInterface;
+    enum Status {
+      NotStarted,
+      HandlingRequested,
+      FreeBusyRequested
     };
 
-    struct FreeBusyProvidersRequestsQueue
-    {
-      explicit FreeBusyProvidersRequestsQueue( const QString &start = QString(),
-                                               const QString &end = QString() );
+    Status mRequestStatus;
+    QSharedPointer<QDBusInterface> mInterface;
+  };
 
-      FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end );
+  struct FreeBusyProvidersRequestsQueue
+  {
+    explicit FreeBusyProvidersRequestsQueue( const QString &start = QString(),
+                                              const QString &end = QString() );
 
-      QString mStartTime;
-      QString mEndTime;
-      QList<FreeBusyProviderRequest> mRequests;
-      int mHandlersCount;
-      KCalCore::FreeBusy::Ptr mResultingFreeBusy;
-    };
+    FreeBusyProvidersRequestsQueue( const KDateTime &start, const KDateTime &end );
 
-  public:
-    Akonadi::ETMCalendar::Ptr mCalendar;
-    KCalCore::ICalFormat mFormat;
+    QString mStartTime;
+    QString mEndTime;
+    QList<FreeBusyProviderRequest> mRequests;
+    int mHandlersCount;
+    KCalCore::FreeBusy::Ptr mResultingFreeBusy;
+  };
 
-    QStringList mRetrieveQueue;
-    QMap<KUrl, QString> mFreeBusyUrlEmailMap;
-    QMap<QString, FreeBusyProvidersRequestsQueue> mProvidersRequestsByEmail;
+public:
+  Akonadi::ETMCalendar::Ptr mCalendar;
+  KCalCore::ICalFormat mFormat;
 
-    // Free/Busy uploading
-    QDateTime mNextUploadTime;
-    int mTimerID;
-    bool mUploadingFreeBusy;
-    bool mBrokenUrl;
+  QStringList mRetrieveQueue;
+  QMap<KUrl, QString> mFreeBusyUrlEmailMap;
+  QMap<QString, FreeBusyProvidersRequestsQueue> mProvidersRequestsByEmail;
 
-    QPointer<QWidget > mParentWidgetForMailling;
+  // Free/Busy uploading
+  QDateTime mNextUploadTime;
+  int mTimerID;
+  bool mUploadingFreeBusy;
+  bool mBrokenUrl;
 
-    // the parentWidget to use while doing our "recursive" retrieval
-    QPointer<QWidget>  mParentWidgetForRetrieval;
+  QPointer<QWidget > mParentWidgetForMailling;
 
-  public: /// Functions
-    FreeBusyManagerPrivate( FreeBusyManager *q );
-    void checkFreeBusyUrl();
-    QString freeBusyDir() const;
-    void fetchFreeBusyUrl( const QString &email );
-    QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
-    KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
-    KCalCore::FreeBusy::Ptr ownerFreeBusy();
-    QString ownerFreeBusyAsString();
-    void processFreeBusyDownloadResult( KJob *_job );
-    void processFreeBusyUploadResult( KJob *_job );
-    void uploadFreeBusy();
-    QStringList getFreeBusyProviders() const;
-    void queryFreeBusyProviders( const QStringList &providers, const QString &email );
-    void queryFreeBusyProviders( const QStringList &providers, const QString &email,
-                                 const KDateTime &start, const KDateTime &end );
+  // the parentWidget to use while doing our "recursive" retrieval
+  QPointer<QWidget>  mParentWidgetForRetrieval;
 
-  public slots:
-    void processRetrieveQueue();
-    void contactSearchJobFinished( KJob *_job );
-    void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
-    void onHandlesFreeBusy( const QString &email, bool handles );
-    void onFreeBusyRetrieved( const QString &email, const QString &freeBusy,
-                              bool success, const QString &errorText );
-    void processMailSchedulerResult( Akonadi::Scheduler::Result result, const QString &errorMsg );
+public: /// Functions
+  FreeBusyManagerPrivate( FreeBusyManager *q );
+  void checkFreeBusyUrl();
+  QString freeBusyDir() const;
+  void fetchFreeBusyUrl( const QString &email );
+  QString freeBusyToIcal( const KCalCore::FreeBusy::Ptr & );
+  KCalCore::FreeBusy::Ptr iCalToFreeBusy( const QByteArray &freeBusyData );
+  KCalCore::FreeBusy::Ptr ownerFreeBusy();
+  QString ownerFreeBusyAsString();
+  void processFreeBusyDownloadResult( KJob *_job );
+  void processFreeBusyUploadResult( KJob *_job );
+  void uploadFreeBusy();
+  QStringList getFreeBusyProviders() const;
+  void queryFreeBusyProviders( const QStringList &providers, const QString &email );
+  void queryFreeBusyProviders( const QStringList &providers, const QString &email,
+                                const KDateTime &start, const KDateTime &end );
 
-  signals:
-    void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
+public slots:
+  void processRetrieveQueue();
+  void contactSearchJobFinished( KJob *_job );
+  void finishProcessRetrieveQueue( const QString &email, const KUrl &url );
+  void onHandlesFreeBusy( const QString &email, bool handles );
+  void onFreeBusyRetrieved( const QString &email, const QString &freeBusy,
+                            bool success, const QString &errorText );
+  void processMailSchedulerResult( Akonadi::Scheduler::Result result, const QString &errorMsg );
+
+signals:
+  void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
 };
 
 }
