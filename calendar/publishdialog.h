@@ -56,9 +56,6 @@ public:
    */
   QString addresses() const;
 
-Q_SIGNALS:
-  void numMessagesChanged( int );
-
 private:
   //@cond PRIVATE
   class Private;
