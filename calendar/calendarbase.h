@@ -1,5 +1,6 @@
 /*
    Copyright (C) 2011 Sérgio Martins <sergio.martins@kdab.com>
+   Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -32,17 +33,17 @@ namespace Akonadi {
   class IncidenceChanger;
 
  /**
-  * @short CalendarBase is the base class for all akonadi aware calendars.
+  * @short The base class for all akonadi aware calendars.
   *
   * Because it inherits KCalCore::Calendar, it provides seamless integration
-  * with the KCalCore and KCalUtils libraries eliminating any need for
-  * adapter ( akonadi<->KCalCore ) classes.
+  * with KCalCore and KCalUtils libraries eliminating any need for adapter
+  * ( akonadi<->KCalCore ) classes.
   *
   * @see ETMCalendar
   * @see FetchJobCalendar
   *
   * @author Sérgio Martins <sergio.martins@kdab.com>
-  * @since 4.9
+  * @since 4.11
   */
   class AKONADI_CALENDAR_EXPORT CalendarBase : public KCalCore::MemoryCalendar
   {
