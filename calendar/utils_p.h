@@ -34,7 +34,6 @@
 
 namespace Akonadi {
   namespace CalendarUtils {
-
     QString fullName();
     QString email();
     bool thatIsMe( const QString &email );
