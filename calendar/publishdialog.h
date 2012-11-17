@@ -33,11 +33,27 @@ class AKONADI_CALENDAR_EXPORT PublishDialog : public KDialog
 {
   Q_OBJECT
 public:
-
+  /**
+   * Creates a new PublishDialog
+   * @param parent the dialog's parent
+   */
   explicit PublishDialog( QWidget *parent=0 );
+
+  /**
+   * Destructor
+   */
   ~PublishDialog();
 
+  /**
+   * Adds a new attendee to the dialog
+   * @param attendee the attendee to add
+   */
   void addAttendee( const KCalCore::Attendee::Ptr &attendee );
+
+  /**
+   * Returns a list of... TODO: this actually returns full names, not addresses.
+   *                      TODO: Also, why not return QStringList.
+   */
   QString addresses() const;
 
 Q_SIGNALS:
