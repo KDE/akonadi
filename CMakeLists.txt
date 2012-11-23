@@ -130,10 +130,6 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 set(QT_MIN_VERSION 4.6.0)
 find_package(Qt4 REQUIRED)
 
-# Load the custom qt4_add_dbus_interface macro.
-# TODO: Add if/endif lines when the macro is available in a cmake version
-include(AkonadiMacros)
-
 # We need QtDBus and QtSql
 set(QT_USE_QTDBUS TRUE)
 set(QT_USE_QTSQL TRUE)
