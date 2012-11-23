@@ -1,6 +1,6 @@
 project(Akonadi)
 
-cmake_minimum_required(VERSION 2.6.3 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.8 FATAL_ERROR)
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
@@ -120,7 +120,6 @@ set_default_db_backend(${DATABASE_BACKEND})
 
 #### Qt4 ####
 # Don't use absolute path in Akonadi-qtTargets-$buildType.cmake
-# note: this will have no effect with cmake < 2.8
 set(QT_USE_IMPORTED_TARGETS TRUE)
 
 set(QT_MIN_VERSION 4.6.0)
