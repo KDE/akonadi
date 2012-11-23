@@ -8,6 +8,9 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 # Enable CMake's Automoc
 set(CMAKE_AUTOMOC ON)
 
+# Used to report the packages we found
+include(FeatureSummary)
+
 ############### Build Options ###############
 
 include(CTest)
@@ -29,9 +32,9 @@ endif()
 if(AKONADI_USE_STRIGI_SEARCH)
   set(AKONADI_DEFINITIONS "-DAKONADI_USE_STRIGI_SEARCH")
   add_definitions(${AKONADI_DEFINITIONS})
-  set(SOPRANO_REQUIRED FALSE)
-else()
-  set(SOPRANO_REQUIRED TRUE)
+  set(SOPRANO_TYPE "OPTIONAL")
+ else()
+  set(SOPRANO_TYPE "REQUIRED")
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
@@ -51,7 +54,6 @@ endif()
 
 ############### CMake Macros ###############
 
-include(MacroLogFeature)
 include(InstallSettings)
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
@@ -174,11 +176,21 @@ if(NOT WINCE)
   find_package(Soprano)
 endif()
 
-macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "${SOPRANO_MIN_VERSION}" "Soprano is needed for the Nepomuk search backend")
+set_package_properties(Soprano PROPERTIES
+                       URL "http://soprano.sourceforge.net"
+                       DESCRIPTION "Storage of semantic data"
+                       TYPE ${SOPRANO_TYPE}
+                       PURPOSE "Soprano is needed for the Nepomuk search backend"
+)
 
 #### SMI ####
-set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
-find_package(SharedMimeInfo REQUIRED)
+set(SMI_MIN_VERSION "0.20")
+find_package(SharedMimeInfo ${SMI_MIN_VERSION})
+set_package_properties(SharedMimeInfo PROPERTIES
+                       URL "http://freedesktop.org/wiki/Software/shared-mime-info"
+                       DESCRIPTION "File types database and utilities"
+                       TYPE REQUIRED
+)
 
 #### XSLTProc ####
 find_program(XSLTPROC_EXECUTABLE xsltproc)
@@ -201,7 +213,12 @@ endif()
 
 if(NOT WINCE)
     find_package(Boost COMPONENTS program_options)
-    macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Akonadi requires the Boost C++ libraries (program_options).")
+    set_package_properties(Boost PROPERTIES
+                           URL "http://www.boost.org"
+                           DESCRIPTION "The Boost C++ Libraries"
+                           TYPE REQUIRED
+                           PURPOSE "Akonadi requires the Boost C++ libraries (program_options)"
+    )
 endif()
 
 # should be handled by FindBoost.cmake ->  cmake bug #8335
@@ -214,15 +231,20 @@ endif()
 #### Sqlite ####
 # If Sqlite is the default backend, it cannot be optional.
 if("${DATABASE_BACKEND}" STREQUAL "SQLITE")
-  set(SQLITE_REQUIRED "TRUE")
+  set(SQLITE_TYPE "REQUIRED")
 else()
-  set(SQLITE_REQUIRED "FALSE")
+  set(SQLITE_TYPE "OPTIONAL")
 endif()
 
 if(AKONADI_BUILD_QSQLITE)
   set(SQLITE_MIN_VERSION 3.6.23)
-  find_package(Sqlite)
-  macro_log_feature(SQLITE_FOUND "Sqlite" "Sqlite database library" "http://www.sqlite.org" ${SQLITE_REQUIRED} "${SQLITE_MIN_VERSION}" "")
+  find_package(Sqlite ${SQLITE_MIN_VERSION})
+  set_package_properties(Sqlite PROPERTIES
+                         URL "http://www.sqlite.org"
+                         DESCRIPTION "The Sqlite database library"
+                         TYPE ${SQLITE_TYPE}
+                         PURPOSE "Required by the Sqlite backend"
+  )
 endif()
 
 ############### Compilers flags ###############
@@ -374,7 +396,7 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.svn/" "/\\\\.git/" "makechangelog")
 include(CPack) # needs to happen after the above variables are set!
 
 
-macro_display_feature_log()
+feature_summary(WHAT ALL)
 
 # Install the file with the exported targets
 install(EXPORT akonadiLibraryTargets

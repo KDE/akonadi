@@ -1,7 +1,7 @@
 # - Try to find the shared-mime-info package
 # Once done this will define
 #
-#  SHARED_MIME_INFO_FOUND - system has the shared-mime-info package
+#  SharedMimeInfo_FOUND - system has the shared-mime-info package
 #  UPDATE_MIME_DATABASE_EXECUTABLE - the update-mime-database executable
 
 # Copyright (c) 2007, Pino Toscano, <toscano.pino@tiscali.it>
@@ -17,7 +17,7 @@ endif (NOT SHARED_MIME_INFO_MINIMUM_VERSION)
 if (UPDATE_MIME_DATABASE_EXECUTABLE)
 
     # in cache already
-    set(SHARED_MIME_INFO_FOUND TRUE)
+    set(SharedMimeInfo_FOUND TRUE)
 
 else (UPDATE_MIME_DATABASE_EXECUTABLE)
 
@@ -31,10 +31,10 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
 
         string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
                "\\1" smiVersion "${_smiVersionRaw}")
-        set (SHARED_MIME_INFO_FOUND TRUE)
+        set (SharedMimeInfo_FOUND TRUE)
     endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
-    if (SHARED_MIME_INFO_FOUND)
+    if (SharedMimeInfo_FOUND)
         if (NOT SharedMimeInfo_FIND_QUIETLY)
             message(STATUS "Found shared-mime-info version: ${smiVersion}")
             macro_ensure_version(${SHARED_MIME_INFO_MINIMUM_VERSION} ${smiVersion} _smiVersion_OK)
@@ -43,11 +43,11 @@ else (UPDATE_MIME_DATABASE_EXECUTABLE)
             endif (NOT _smiVersion_OK)
 
         endif (NOT SharedMimeInfo_FIND_QUIETLY)
-    else (SHARED_MIME_INFO_FOUND)
+    else (SharedMimeInfo_FOUND)
         if (SharedMimeInfo_FIND_REQUIRED)
             message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
         endif (SharedMimeInfo_FIND_REQUIRED)
-    endif (SHARED_MIME_INFO_FOUND)
+    endif (SharedMimeInfo_FOUND)
 
 endif (UPDATE_MIME_DATABASE_EXECUTABLE)
 
