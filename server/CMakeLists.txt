@@ -206,7 +206,7 @@ else(NOT WINCE)
 endif(NOT WINCE)
 
 
-automoc4_add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
+add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
 
 target_link_libraries( akonadiprivate
   akonadi_shared

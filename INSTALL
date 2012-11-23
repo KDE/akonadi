@@ -29,9 +29,8 @@ That's all :)
 
 Required:
 
-* Automoc4 (https://projects.kde.org/projects/kdesupport/automoc)
 * Boost (http://www.boost.org)
-* CMake (http://www.cmake.org)
+* CMake (http://www.cmake.org) >= 2.8.8
 * Qt4 >= 4.6.0 (http://qt.nokia.com/downloads)
 * Shared-mime-info >= 0.20 (http://freedesktop.org/wiki/Software/shared-mime-info)
 * Soprano (http://soprano.sourceforge.net)

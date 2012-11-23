@@ -11,9 +11,9 @@ set( akonadi_agent_server_srcs
 )
 
 if (NOT WINCE)
-automoc4_add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
+add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
 else(NOT WINCE)
-automoc4_add_library(akonadi_agent_server ${akonadi_agent_server_srcs})
+add_library(akonadi_agent_server ${akonadi_agent_server_srcs})
 endif(NOT WINCE)
 
 target_link_libraries(akonadi_agent_server
@@ -34,7 +34,7 @@ if(NOT WINCE)
     agentlauncher.cpp
   )
 
-  automoc4_add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
+  add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
   target_link_libraries(akonadi_agent_launcher
     akonadi_shared
     ${QT_QTGUI_LIBRARY}

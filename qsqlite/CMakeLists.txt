@@ -4,11 +4,6 @@ set(QSqlite_SRCS
   src/smain.cpp
 )
 
-# another list, this time it includes all header files that should be treated with moc
-SET(QSqlite_MOC_HDRS
-  src/qsql_sqlite.h
-)
-
 message(STATUS "Building QSQLITE3 driver")
 
 if (INSTALL_QSQLITE_IN_QT_PREFIX)
@@ -21,8 +16,6 @@ add_definitions(-Wall)
 add_definitions(${QT_DEFINITIONS})
 add_definitions(-DQT_PLUGIN)
 add_definitions(-DQT_SHARED)
-
-qt4_wrap_cpp(QSqlite_MOC_SRCS ${QSqlite_MOC_HDRS})
 
 include_directories(
   ${CMAKE_BINARY_DIR}

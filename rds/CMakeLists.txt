@@ -11,7 +11,7 @@ set( akonadi_rds_srcs
   main.cpp
 )
 
-automoc4_add_executable(akonadi_rds ${akonadi_rds_srcs})
+add_executable(akonadi_rds ${akonadi_rds_srcs})
 
 target_link_libraries(akonadi_rds akonadi_shared ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${AKONADI_PROTOCOLINTERNALS_LIBS} ${Boost_PROGRAM_OPTIONS_LIBRARY})
 

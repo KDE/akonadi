@@ -5,6 +5,10 @@ cmake_minimum_required(VERSION 2.8.8 FATAL_ERROR)
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
+# Enable CMake's Automoc
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOMOC_RELAXED_MODE ON)
+
 ############### Build Options ###############
 
 include(CTest)
@@ -172,9 +176,6 @@ if(NOT WINCE)
 endif()
 
 macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" ${SOPRANO_REQUIRED} "${SOPRANO_MIN_VERSION}" "Soprano is needed for the Nepomuk search backend")
-
-#### Automoc ####
-find_package(Automoc4 REQUIRED)
 
 #### SMI ####
 set(SHARED_MIME_INFO_MINIMUM_VERSION "0.20")
