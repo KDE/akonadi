@@ -115,4 +115,3 @@ bool SearchPersistent::parseStream()
   return successResponse( "SEARCH_STORE completed" );
 }
 
-#include "searchpersistent.moc"

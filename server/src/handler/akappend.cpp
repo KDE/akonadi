@@ -233,4 +233,3 @@ bool AkAppend::parseStream()
   return commit();
 }
 
-#include "akappend.moc"

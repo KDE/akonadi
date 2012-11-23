@@ -248,4 +248,3 @@ bool Append::parseStream()
   return commit();
 }
 
-#include "append.moc"

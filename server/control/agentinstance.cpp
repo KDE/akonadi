@@ -211,5 +211,3 @@ T* AgentInstance::findInterface(AkDBus::AgentType agentType, const char* path)
   return iface;
 }
 
-
-#include "agentinstance.moc"

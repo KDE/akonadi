@@ -47,4 +47,3 @@ bool ResourceSelect::parseStream()
   return successResponse( resourceName.toUtf8() + " selected" );
 }
 
-#include "resourceselect.moc"

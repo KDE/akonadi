@@ -103,4 +103,3 @@ void XesamSearch::hitsAdded( const QString &search, uint count )
   }
 }
 
-#include "xesamsearch.moc"

@@ -106,4 +106,3 @@ void ItemRetrievalJob::callFailed(const QDBusError& error)
   deleteLater();
 }
 
-#include "itemretrievaljob.moc"

@@ -129,4 +129,3 @@ void AgentServer::processConfigureRequest()
   m_processingConfigureRequests = false;
 }
 
-#include "agentserver.moc"

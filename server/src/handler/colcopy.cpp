@@ -110,5 +110,3 @@ bool ColCopy::parseStream()
   return successResponse( "COLCOPY complete" );
 }
 
-
-#include "colcopy.moc"

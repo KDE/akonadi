@@ -31,4 +31,3 @@ BridgeServerBase::BridgeServerBase( quint16 port, QObject *parent )
                                            .arg( port ).arg( m_server->errorString() ) );
 }
 
-#include "bridgeserver.moc"

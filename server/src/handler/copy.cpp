@@ -103,4 +103,3 @@ bool Copy::parseStream()
   return successResponse( "COPY complete" );
 }
 
-#include "copy.moc"

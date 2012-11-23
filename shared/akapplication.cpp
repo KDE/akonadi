@@ -140,5 +140,4 @@ void AkApplication::setInstanceIdentifier(const QString& instanceId)
   sInstance->mInstanceId = instanceId;
 }
 
-
-#include "akapplication.moc"
+#include "moc_akapplication.cpp"

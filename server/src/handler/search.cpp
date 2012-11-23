@@ -84,4 +84,3 @@ bool Search::parseStream()
   return true;
 }
 
-#include "search.moc"

@@ -86,4 +86,3 @@ ResourceManager * Akonadi::ResourceManager::self()
   return mSelf;
 }
 
-#include "resourcemanager.moc"

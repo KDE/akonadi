@@ -43,4 +43,3 @@ bool Login::parseStream()
   return true;
 }
 
-#include "login.moc"

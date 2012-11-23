@@ -57,4 +57,3 @@ bool Akonadi::TransactionHandler::parseStream()
   return successResponse( me.valueToKey( mMode ) + QByteArray( " completed" ) );
 }
 
-#include "transaction.moc"

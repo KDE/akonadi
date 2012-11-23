@@ -228,4 +228,3 @@ bool List::parseStream()
   return true;
 }
 
-#include "list.moc"

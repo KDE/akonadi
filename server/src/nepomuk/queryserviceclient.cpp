@@ -235,4 +235,4 @@ QString Nepomuk::Query::QueryServiceClient::errorMessage() const
     return d->m_errorMessage;
 }
 
-#include "queryserviceclient.moc"
+#include "moc_queryserviceclient.cpp"

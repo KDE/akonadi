@@ -63,4 +63,3 @@ void AgentThread::configure( qlonglong windowId )
                            );
 }
 
-#include "agentthread.moc"

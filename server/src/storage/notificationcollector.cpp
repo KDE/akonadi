@@ -237,4 +237,3 @@ void NotificationCollector::dispatchNotifications()
   clear();
 }
 
-#include "notificationcollector.moc"

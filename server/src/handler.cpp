@@ -237,4 +237,3 @@ bool UnknownCommandHandler::parseStream()
   return true;
 }
 
-#include "handler.moc"

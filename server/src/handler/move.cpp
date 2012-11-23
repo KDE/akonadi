@@ -105,4 +105,3 @@ bool Move::parseStream()
 
 }
 
-#include "move.moc"

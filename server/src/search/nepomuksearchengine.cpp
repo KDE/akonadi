@@ -218,4 +218,3 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
   mCollector->dispatchNotifications();
 }
 
-#include "nepomuksearchengine.moc"

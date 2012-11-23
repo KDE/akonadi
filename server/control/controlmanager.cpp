@@ -40,4 +40,3 @@ void ControlManager::shutdown()
   QTimer::singleShot( 0, QCoreApplication::instance(), SLOT(quit()) );
 }
 
-#include "controlmanager.moc"

@@ -110,4 +110,3 @@ void IntervalCheck::requestCollectionSync(const Akonadi::Collection& collection)
                              Q_ARG( QString, collection.resource().name() ), Q_ARG( qint64, collection.id() ) );
 }
 
-#include "intervalcheck.moc"

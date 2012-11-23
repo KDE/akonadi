@@ -183,4 +183,3 @@ bool Create::parseStream()
   return successResponse( "CREATE completed" );
 }
 
-#include "create.moc"

@@ -269,4 +269,3 @@ void XesamSearchEngine::slotSearchDone(const QString &search)
     mInterface->CloseSearch( search );
 }
 
-#include "xesamsearchengine.moc"

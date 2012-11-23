@@ -234,4 +234,3 @@ void ItemRetrievalManager::triggerCollectionTreeSync( const QString& resource )
     interface->synchronizeCollectionTree();
 }
 
-#include "itemretrievalmanager.moc"

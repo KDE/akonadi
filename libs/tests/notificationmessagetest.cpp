@@ -18,7 +18,6 @@
 */
 
 #include "notificationmessagetest.h"
-#include "notificationmessagetest.moc"
 
 #include <notificationmessage_p.h>
 

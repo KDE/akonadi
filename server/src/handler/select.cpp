@@ -111,6 +111,3 @@ bool Select::parseStream()
   return true;
 }
 
-
-
-#include "select.moc"

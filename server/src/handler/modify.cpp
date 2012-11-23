@@ -230,5 +230,3 @@ bool Modify::parseStream()
   return true;
 }
 
-#include "modify.moc"
-

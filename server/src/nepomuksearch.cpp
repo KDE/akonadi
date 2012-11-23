@@ -133,5 +133,3 @@ void NepomukSearch::idHitsAdded(const QList< Nepomuk::Query::Result >& entries)
   }
 }
 
-
-#include "nepomuksearch.moc"

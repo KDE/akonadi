@@ -64,4 +64,3 @@ bool Remove::parseStream()
 
 }
 
-#include "remove.moc"

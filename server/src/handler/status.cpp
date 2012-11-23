@@ -104,4 +104,3 @@ bool Status::parseStream()
   return true;
 }
 
-#include "status.moc"

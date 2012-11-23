@@ -111,4 +111,3 @@ void SearchManager::updateSearch(const Akonadi::Collection& collection, Notifica
   addSearch( collection );
 }
 
-#include "searchmanager.moc"

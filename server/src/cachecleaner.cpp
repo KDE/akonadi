@@ -115,4 +115,3 @@ void CacheCleaner::cleanCache()
   QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
 }
 
-#include "cachecleaner.moc"

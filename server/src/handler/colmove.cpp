@@ -80,4 +80,3 @@ bool ColMove::parseStream()
 
 }
 
-#include "colmove.moc"

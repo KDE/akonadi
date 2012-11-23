@@ -147,4 +147,3 @@ void Tracer::activateTracer(const QString & type)
   Q_ASSERT( mTracerBackend );
 }
 
-#include "tracer.moc"

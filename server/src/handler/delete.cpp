@@ -97,4 +97,3 @@ bool Delete::parseStream()
   return true;
 }
 
-#include "delete.moc"

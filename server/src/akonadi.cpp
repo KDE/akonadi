@@ -366,4 +366,3 @@ void AkonadiServer::serviceOwnerChanged( const QString&, const QString&, const Q
   }
 }
 
-#include "akonadi.moc"

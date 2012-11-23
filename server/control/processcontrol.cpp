@@ -248,4 +248,3 @@ bool ProcessControl::isRunning() const
   return mProcess.state() != QProcess::NotRunning;
 }
 
-#include "processcontrol.moc"

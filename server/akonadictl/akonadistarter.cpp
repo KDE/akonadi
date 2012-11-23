@@ -80,4 +80,3 @@ void AkonadiStarter::serviceOwnerChanged( const QString&, const QString&, const 
   QCoreApplication::instance()->quit();
 }
 
-#include "akonadistarter.moc"

@@ -311,4 +311,3 @@ bool AkonadiConnection::isOwnerResource(const Collection &collection) const
   return false;
 }
 
-#include "akonadiconnection.moc"

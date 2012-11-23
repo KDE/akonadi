@@ -81,4 +81,3 @@ bool Link::parseStream()
   return successResponse( "LINK complete" );
 }
 
-#include "link.moc"

@@ -38,4 +38,3 @@ void ItemRetrievalThread::run()
   delete mgr;
 }
 
-#include "itemretrievalthread.moc"

@@ -64,5 +64,3 @@ bool Subscribe::parseStream()
   return successResponse( "Completed" );
 }
 
-
-#include "subscribe.moc"

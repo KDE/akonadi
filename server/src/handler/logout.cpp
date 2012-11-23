@@ -49,4 +49,3 @@ bool Logout::parseStream()
   return true;
 }
 
-#include "logout.moc"

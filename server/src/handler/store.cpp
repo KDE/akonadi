@@ -445,4 +445,3 @@ void Store::sendPimItemResponse( const PimItem &pimItem )
   Q_EMIT responseAvailable( response );
 }
 
-#include "store.moc"

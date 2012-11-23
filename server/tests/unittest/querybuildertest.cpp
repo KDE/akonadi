@@ -18,7 +18,7 @@
 */
 
 #include "querybuildertest.h"
-#include "querybuildertest.moc"
+#include "moc_querybuildertest.cpp"
 
 #define QUERYBUILDER_UNITTEST
 

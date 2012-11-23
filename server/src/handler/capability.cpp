@@ -47,4 +47,3 @@ bool Capability::parseStream()
   return true;
 }
 
-#include "capability.moc"

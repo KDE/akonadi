@@ -741,4 +741,3 @@ bool Akonadi::DataStore::inTransaction() const
   return m_transactionLevel > 0;
 }
 
-#include "datastore.moc"

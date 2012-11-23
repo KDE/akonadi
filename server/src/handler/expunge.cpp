@@ -92,4 +92,3 @@ bool Expunge::parseStream()
   return true;
 }
 
-#include "expunge.moc"

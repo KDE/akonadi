@@ -828,4 +828,3 @@ void AgentManager::serverFailure()
   QCoreApplication::instance()->exit( 255 );
 }
 
-#include "agentmanager.moc"

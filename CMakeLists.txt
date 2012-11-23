@@ -7,7 +7,6 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
 # Enable CMake's Automoc
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOMOC_RELAXED_MODE ON)
 
 ############### Build Options ###############
 

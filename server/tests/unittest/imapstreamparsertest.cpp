@@ -468,4 +468,3 @@ void ImapStreamParserTest::testAbortCommand()
   }  
 }
 
-#include "imapstreamparsertest.moc"

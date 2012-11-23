@@ -127,6 +127,3 @@ void NotificationManager::unsubscribe( const QString &identifier )
   }
 }
 
-
-
-#include "notificationmanager.moc"

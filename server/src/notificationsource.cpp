@@ -100,4 +100,3 @@ void NotificationSource::serviceUnregistered(const QString& serviceName)
     unsubscribe();
 }
 
-#include "notificationsource.moc"
