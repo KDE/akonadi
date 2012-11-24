@@ -35,8 +35,14 @@ public:
       Q_Q( SelectionProxyModel );
       foreach ( const QModelIndex &rootIndex, q->sourceRootIndexes() ) {
         rootIndexAdded( rootIndex );
-        q->sourceModel()->fetchMore( rootIndex );
       }
+  }
+  ~SelectionProxyModelPrivate()
+  {
+    Q_Q( SelectionProxyModel );
+    foreach(const QModelIndex& idx, q->sourceRootIndexes()) {
+      rootIndexAboutToBeRemoved(idx);
+    }
   }
 
   /**
