@@ -175,8 +175,6 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       static const int MAXBUFFERSIZE = 10;
     public:
       explicit PurgeBuffer()
-        : m_index( 0 ),
-          m_bufferSize( MAXBUFFERSIZE )
       {
       }
 
@@ -198,9 +196,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       }
 
     private:
-      QVector<Collection::Id> m_buffer;
-      int m_index;
-      int m_bufferSize;
+      QQueue<Collection::Id> m_buffer;
     } m_buffer;
 
 

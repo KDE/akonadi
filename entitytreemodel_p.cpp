@@ -1565,20 +1565,25 @@ void EntityTreeModelPrivate::ref( Collection::Id id )
 
 bool EntityTreeModelPrivate::shouldPurge( Collection::Id id )
 {
+  // reference counted collections should never be purged
+  // they first have to be deref'ed until they reach 0
   if ( m_monitor->d_ptr->refCountMap.contains( id ) ) {
     return false;
   }
 
+  // if the collection is buffered, keep it
   if ( m_monitor->d_ptr->m_buffer.isBuffered( id ) ) {
     return false;
   }
 
   static const int MAXITEMS = 10000;
 
+  // if we do not exceed the maximum items limit, keep it
   if ( m_items.size() < MAXITEMS ) {
     return false;
   }
 
+  // otherwise we can safely purge this item
   return true;
 }
 

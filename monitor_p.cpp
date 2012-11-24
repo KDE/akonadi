@@ -717,40 +717,22 @@ Akonadi::Collection::Id MonitorPrivate::deref( Collection::Id id )
 
 void MonitorPrivate::PurgeBuffer::purge( Collection::Id id )
 {
-  int idx = m_buffer.indexOf( id, 0 );
-  while ( idx <= m_index )
-  {
-    if ( idx < 0 )
-      break;
-    m_buffer.remove( idx );
-    if ( m_index > 0 )
-      --m_index;
-    idx = m_buffer.indexOf( id, idx );
-  }
-  while ( int idx = m_buffer.indexOf( id, m_index ) > -1 )
-  {
-    m_buffer.remove( idx );
-  }
+  m_buffer.removeOne(id);
 }
 
 Akonadi::Collection::Id MonitorPrivate::PurgeBuffer::buffer( Collection::Id id )
 {
-  if ( m_index == MAXBUFFERSIZE )
-  {
-    m_index = 0;
-  }
-  Collection::Id bumpedId = -1;
-  if ( m_buffer.size() == MAXBUFFERSIZE )
-  {
-    bumpedId = m_buffer[ m_index ];
-    m_buffer.remove( m_index );
-  }
-
   // Ensure that we don't put a duplicate @p id into the buffer.
   purge( id );
 
-  m_buffer.insert( m_index, id );
-  ++m_index;
+  Collection::Id bumpedId = -1;
+  if ( m_buffer.size() == MAXBUFFERSIZE )
+  {
+    bumpedId = m_buffer.dequeue();
+    purge( bumpedId );
+  }
+
+  m_buffer.enqueue( id );
 
   return bumpedId;
 }
