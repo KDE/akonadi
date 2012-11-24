@@ -39,7 +39,7 @@ namespace QueryCache
 
   /// Insert @p query into the cache for @p queryStatement.
   void insert( const QString &queryStatement, const QSqlQuery &query );
-};
+}
 
 }
 
