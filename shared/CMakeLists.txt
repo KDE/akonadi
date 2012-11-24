@@ -1,5 +1,3 @@
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 set(akonadi_shared_srcs
   akapplication.cpp
   akcrash.cpp

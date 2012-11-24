@@ -1,5 +1,4 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${Akonadi_SOURCE_DIR})
 
 # Agent server
 

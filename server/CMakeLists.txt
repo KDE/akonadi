@@ -21,7 +21,6 @@ else ()
    message( STATUS "PostgreSQL wasn't found. it is required to use the Postgres backend." )
 endif()
 
-include_directories( ${Boost_INCLUDE_DIR} )
 include_directories( ${Akonadi_SOURCE_DIR}/libs )
 include_directories( ${Akonadi_BINARY_DIR}/libs )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )

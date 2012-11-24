@@ -18,7 +18,6 @@ add_definitions(-DQT_PLUGIN)
 add_definitions(-DQT_SHARED)
 
 include_directories(
-  ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${SQLITE_INCLUDE_DIR}
 )

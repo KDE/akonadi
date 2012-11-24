@@ -7,6 +7,7 @@ set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 
 # Enable CMake's Automoc
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Used to report the packages we found
 include(FeatureSummary)

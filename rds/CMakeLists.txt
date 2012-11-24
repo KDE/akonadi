@@ -2,7 +2,6 @@ project(akonadi_rds)
 
 #set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
 set( AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akonadiprotocolinternals)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
 ########### next target ###############
 
 set( akonadi_rds_srcs
