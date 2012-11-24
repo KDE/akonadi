@@ -1614,6 +1614,7 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
   QList<Node *>::iterator startIt = it;
 
+  // figure out how many items we will delete
   int start = *pos;
   for ( ; it != end; ++it ) {
     if ( ( *it )->type != Node::Item ) {
@@ -1622,15 +1623,19 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
     ++( *pos );
   }
-  QList<Node *>::iterator endIt = it;
   it = startIt;
 
   const QModelIndex parentIndex = indexForCollection( collection );
 
   q->beginRemoveRows( parentIndex, start, ( *pos ) - 1 );
+  const int toDelete = (*pos) - start;
+  Q_ASSERT(toDelete > 0);
 
   QList<Node *> &es = m_childEntities[ collection.id() ];
-  while ( it != endIt ) {
+  //NOTE: .erase will invalidate all iterators besides "it"!
+  for(int i = 0; i < toDelete; ++i) {
+    Q_ASSERT(es.count(*it) == 1);
+    // delete actual node
     delete *it;
     it = es.erase( it );
   }
@@ -1647,11 +1652,12 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
   Q_ASSERT( collection.isValid() );
 
   QList<Node*>::iterator begin = childEntities.begin();
-  const QList<Node*>::iterator end = childEntities.end();
+  QList<Node*>::iterator end = childEntities.end();
 
   int pos = 0;
   while ( ( begin = skipCollections( begin, end, &pos ) ) != end ) {
     begin = removeItems( begin, end, &pos, collection );
+    end = childEntities.end();
   }
 }
 
