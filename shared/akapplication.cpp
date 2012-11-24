@@ -42,6 +42,10 @@ AkApplication::AkApplication(int & argc, char ** argv) :
   sInstance = this;
 }
 
+AkApplication::~AkApplication()
+{
+}
+
 void AkApplication::init()
 {
   akInit( QString::fromLatin1( mArgv[ 0 ] ) );
@@ -140,4 +144,3 @@ void AkApplication::setInstanceIdentifier(const QString& instanceId)
   sInstance->mInstanceId = instanceId;
 }
 
-#include "moc_akapplication.cpp"

@@ -36,6 +36,7 @@ class AkApplication : public QObject
 {
   Q_OBJECT
   public:
+    ~AkApplication();
     void parseCommandLine();
     void setDescription( const QString &desc ) { mDescription = desc; }
 
