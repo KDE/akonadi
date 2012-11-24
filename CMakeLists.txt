@@ -20,6 +20,13 @@ add_definitions( -DQT_NO_CAST_TO_ASCII )
 # Set the resources and agents version
 configure_file(kdepimlibs-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepimlibs-version.h)
 
+# Detect the QJson version (0.8.0 is BIC)
+if (QJSON_VERSION VERSION_GREATER 0.7.1)
+  set(USE_QJSON_0_8 TRUE)
+endif()
+
+configure_file(config-akonadi.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadi.h)
+
 add_subdirectory( kabc )
 add_subdirectory( kcal )
 add_subdirectory( kmime )

@@ -18,6 +18,8 @@
 
 #include "socialnetworkattributes.h"
 
+#include "akonadi/config-akonadi.h"
+
 #include <QString>
 
 #include <qjson/serializer.h>
@@ -51,7 +53,11 @@ void Akonadi::SocialNetworkAttributes::deserialize( const QByteArray &data )
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
   QJson::Serializer serializer;
-  return serializer.serialize(mAttributes);
+#if !defined( USE_QJSON_0_8 )
+  return serializer.serialize( mAttributes );
+#else
+  return serializer.serialize( mAttributes, 0 );
+#endif
 }
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const

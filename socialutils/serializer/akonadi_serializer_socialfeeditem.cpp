@@ -21,6 +21,7 @@
 #include "akonadi_serializer_socialfeeditem.h"
 #include "../socialfeeditem.h"
 
+#include "akonadi/config-akonadi.h"
 #include "akonadi/item.h"
 
 #include <QtCore/qplugin.h>
@@ -144,7 +145,11 @@ void SocialFeedItemSerializerPlugin::serialize( const Item &item,
   }
 
   QJson::Serializer serializer;
+#if !defined( USE_QJSON_0_8 )
   data.write( serializer.serialize( map ) );
+#else
+  data.write( serializer.serialize( map, 0 ) );
+#endif
 }
 
 QSet<QByteArray> SocialFeedItemSerializerPlugin::parts( const Item &item ) const
