@@ -1640,6 +1640,9 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
   //NOTE: .erase will invalidate all iterators besides "it"!
   for(int i = 0; i < toDelete; ++i) {
     Q_ASSERT(es.count(*it) == 1);
+    // don't keep implicitly shared data alive
+    Q_ASSERT(m_items.contains((*it)->id));
+    m_items.remove((*it)->id);
     // delete actual node
     delete *it;
     it = es.erase( it );
@@ -1664,6 +1667,7 @@ void EntityTreeModelPrivate::purgeItems( Collection::Id id )
     begin = removeItems( begin, end, &pos, collection );
     end = childEntities.end();
   }
+  m_populatedCols.remove(id);
 }
 
 void EntityTreeModelPrivate::dataChanged( const QModelIndex &top, const QModelIndex &bottom )
