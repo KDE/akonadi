@@ -170,6 +170,7 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mProgress( 0 ),
     mNeedsNetwork( false ),
     mOnline( false ),
+    mDesiredOnlineState( false ),
     mSettings( 0 ),
     mObserver( 0 )
 {
@@ -215,7 +216,8 @@ void AgentBasePrivate::init()
   mChangeRecorder->itemFetchScope().setCacheOnly( true );
   mChangeRecorder->setConfig( mSettings );
 
-  mOnline = mSettings->value( QLatin1String( "Agent/Online" ), true ).toBool();
+  mDesiredOnlineState = mSettings->value( QLatin1String( "Agent/DesiredOnlineState" ), true ).toBool();
+  mOnline = mDesiredOnlineState;
 
   // reinitialize the status message now that online state is available
   mStatusMessage = defaultReadyMessage();
@@ -285,9 +287,10 @@ void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
   const QString serviceId = QLatin1String(  "org.freedesktop.Akonadi.Agent." ) + mId;
-  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) )
+  if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) ) {
     kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
-  q->setOnline( mOnline );
+  }
+  q->setOnlineInternal( mDesiredOnlineState );
 }
 
 void AgentBasePrivate::setProgramName()
@@ -479,7 +482,7 @@ void AgentBasePrivate::slotError( const QString& message )
 void AgentBasePrivate::slotNetworkStatusChange( Solid::Networking::Status stat )
 {
   Q_Q( AgentBase );
-  q->setOnline( stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected );
+  q->setOnlineInternal( mDesiredOnlineState && ( stat == Solid::Networking::Unknown || stat == Solid::Networking::Connected ) );
 }
 
 void AgentBasePrivate::slotResumedFromSuspend()
@@ -600,11 +603,19 @@ void AgentBase::setNeedsNetwork( bool needsNetwork )
 
   } else {
     disconnect( Solid::Networking::notifier(), 0, 0, 0 );
-    setOnline( true );
+    setOnlineInternal( d->mDesiredOnlineState );
   }
 }
 
 void AgentBase::setOnline( bool state )
+{
+  Q_D( AgentBase );
+  d->mDesiredOnlineState = state;
+  d->mSettings->setValue( QLatin1String( "Agent/DesiredOnlineState" ), state );
+  setOnlineInternal( state );
+}
+
+void AgentBase::setOnlineInternal( bool state )
 {
   Q_D( AgentBase );
   d->mOnline = state;
@@ -613,7 +624,6 @@ void AgentBase::setOnline( bool state )
   if ( d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken )
     emit status( d->mStatusCode, newMessage );
 
-  d->mSettings->setValue( QLatin1String( "Agent/Online" ), state );
   doSetOnline( state );
   emit onlineChanged( state );
 }

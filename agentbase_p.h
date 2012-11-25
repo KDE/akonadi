@@ -90,6 +90,7 @@ class AgentBasePrivate : public QObject
 
     bool mNeedsNetwork;
     bool mOnline;
+    bool mDesiredOnlineState;
 
     QSettings *mSettings;
 
