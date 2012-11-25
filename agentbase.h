@@ -615,6 +615,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     //@cond PRIVATE
     static QString parseArguments( int, char** );
     static int init( AgentBase *r );
+    void setOnlineInternal( bool state );
 
     // D-Bus interface stuff
     void abort();
