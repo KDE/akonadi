@@ -33,7 +33,7 @@ using namespace Akonadi;
 struct GroupMember
 {
   GroupMember()
-    : loadingError( false )
+    : isReference(false), loadingError( false )
   {
   }
 

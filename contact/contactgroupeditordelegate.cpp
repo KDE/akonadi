@@ -184,23 +184,12 @@ void ContactGroupEditorDelegate::setEditorData( QWidget *editor, const QModelInd
       comboBox->setCurrentIndex( comboBox->findText( index.data( Qt::EditRole ).toString() ) );
     }
   } else {
-    if ( index.column() == 0 ) {
-
       KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
       if ( !lineEdit ) {
         return;
       }
 
       lineEdit->setText( index.data( Qt::EditRole ).toString() );
-
-    } else {
-      KLineEdit *lineEdit = qobject_cast<KLineEdit*>( editor );
-      if ( !lineEdit ) {
-        return;
-      }
-
-      lineEdit->setText( index.data( Qt::EditRole ).toString() );
-    }
   }
 }
 
