@@ -28,7 +28,7 @@
 #include <kurlrequester.h>
 
 FreeBusyEditWidget::FreeBusyEditWidget( QWidget *parent )
-  : QWidget( parent )
+  : QWidget( parent ), mReadOnly( false )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setMargin( 0 );
