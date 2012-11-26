@@ -34,6 +34,7 @@ class JobPrivate
     JobPrivate( Job *parent )
       : q_ptr( parent ),
         mCurrentSubJob( 0 ),
+        mSession( 0 ),
         mWriteFinished( false ),
         mStarted( false )
     {

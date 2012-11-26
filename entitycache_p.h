@@ -246,8 +246,6 @@ class Comparator
 public:
   static bool compare(const typename T::List &lhs_, const QList<typename T::Id> &rhs_ )
   {
-    bool val = true;
-
     if (lhs_.size() != rhs_.size())
       return false;
 
