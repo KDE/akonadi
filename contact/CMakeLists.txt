@@ -14,7 +14,7 @@ if (Soprano_FOUND)
 endif()
 
 find_package(Prison QUIET)
-macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
+set_package_properties(Prison PROPERTIES DESCRIPTION "Prison" URL "http://projects.kde.org/prison" TYPE OPTIONAL PURPOSE "Needed to show mobile barcodes of your contacts")
 if (PRISON_FOUND)
     add_definitions(-DHAVE_PRISON)
     include_directories(${PRISON_INCLUDE_DIR})

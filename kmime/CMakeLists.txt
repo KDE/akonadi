@@ -9,7 +9,7 @@ add_subdirectory( tests )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
 
 find_package(LibXslt)
-macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "Needed to generate D-Bus interface specifications" "http://xmlsoft.org/XSLT/" TRUE "" "")
+set_package_properties(LibXslt PROPERTIES DESCRIPTION "xsltproc" URL "http://xmlsoft.org/XSLT/" TYPE REQUIRED PURPOSE "Needed to generate D-Bus interface specifications")
 
 # generates a D-Bus interface description from a KConfigXT file
 macro(kcfg_generate_dbus_interface _kcfg _name)
