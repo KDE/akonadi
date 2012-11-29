@@ -294,7 +294,6 @@ class StandardActionManager::Private
 
       qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
     }
-
     void enableAction( int type, bool enable )
     {
       enableAction( static_cast<StandardActionManager::Type>( type ), enable );
@@ -314,6 +313,7 @@ class StandardActionManager::Private
         //Not necessary to delete and recreate menu when it was not created
         if ( menu->property( "actionType" ).isValid() && menu->isEmpty() )
           return;
+        mRecentCollectionsMenu.remove(type);
         delete menu;
         menu = new KMenu();
 
