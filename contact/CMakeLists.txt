@@ -13,7 +13,7 @@ if (Soprano_FOUND)
   )
 endif()
 
-macro_optional_find_package(Prison QUIET)
+find_package(Prison QUIET)
 macro_log_feature(PRISON_FOUND "Prison" "Prison library" "http://projects.kde.org/prison" FALSE "" "Needed to show mobile barcodes of your contacts")
 if (PRISON_FOUND)
     add_definitions(-DHAVE_PRISON)
