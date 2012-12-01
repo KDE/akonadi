@@ -1201,6 +1201,12 @@ QModelIndex EntityTreeModel::modelIndexForCollection( const QAbstractItemModel *
 QModelIndexList EntityTreeModel::modelIndexesForItem( const QAbstractItemModel *model, const Item &item )
 {
   QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel*> pair = proxiesAndModel( model );
+
+  if ( !pair.second ) {
+    kWarning() << "Couldn't find an EntityTreeModel";
+    return QModelIndexList();
+  }
+
   QModelIndexList list = pair.second->d_ptr->indexesForItem( item );
   QModelIndexList proxyList;
   foreach ( const QModelIndex &idx, list ) {
