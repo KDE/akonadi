@@ -17,7 +17,7 @@ endif(NOT WINCE)
 
 target_link_libraries(akonadi_agent_server
   akonadi_shared
-  ${QT_QTGUI_LIBRARY}
+  ${QT_QTGUI_LIBRARIES}
   ${QT_QTDBUS_LIBRARY}
   ${AKONADI_SYSTEM_LIBS}
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
@@ -36,7 +36,7 @@ if(NOT WINCE)
   add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
   target_link_libraries(akonadi_agent_launcher
     akonadi_shared
-    ${QT_QTGUI_LIBRARY}
+    ${QT_QTGUI_LIBRARIES}
     ${AKONADI_SYSTEM_LIBS}
     ${AKONADI_PROTOCOLINTERNALS_LIBS}
     ${Boost_PROGRAM_OPTIONS_LIBRARY}
