@@ -207,6 +207,11 @@ endif(NOT WINCE)
 
 add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
 
+if (QT5_BUILD)
+  # TODO: Remove when Qt 4 is no longer supported.
+  set_property(TARGET akonadiprivate APPEND PROPERTY COMPILE_DEFINITIONS QT_DISABLE_DEPRECATED_BEFORE=0)
+endif()
+
 target_link_libraries( akonadiprivate
   akonadi_shared
   ${QT_QTCORE_LIBRARY}

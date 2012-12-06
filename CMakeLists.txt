@@ -124,24 +124,25 @@ set_default_db_backend(${DATABASE_BACKEND})
 
 ############### Find what we need ###############
 
-#### Qt4 ####
-# Don't use absolute path in Akonadi-qtTargets-$buildType.cmake
-set(QT_USE_IMPORTED_TARGETS TRUE)
+#### Qt 4 and 5 ####
+set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
+set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
+find_package(Qt5Transitional REQUIRED Gui Sql Network Xml DBus)
 
-set(QT_MIN_VERSION 4.6.0)
-find_package(Qt4 REQUIRED)
+if (QT5_BUILD)
+  if (CMAKE_VERSION VERSION_LESS 2.8.9)
+    message(FATAL_ERROR "Akonadi Qt 5 build requires at least CMake version 2.8.9")
+  endif()
 
-# We need QtDBus and QtSql
-set(QT_USE_QTDBUS TRUE)
-set(QT_USE_QTSQL TRUE)
-if(NOT QT_QTDBUS_FOUND)
-  message(FATAL_ERROR  "Akonadi requires Qt4 with QtDBus module in order to built.")
+  find_package(Qt5Test REQUIRED)
+  set(QT_QTTEST_LIBRARIES Qt5::Test)
+else()
+  include(${QT_USE_FILE})
 endif()
-if(NOT QT_QTSQL_FOUND)
-  message(FATAL_ERROR  "Akonadi requires Qt4 with QtSql module in order to built.")
+
+if (Qt5_POSITION_INDEPENDENT_CODE)
+  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
-# properly set up compile flags (QT_DEBUG/QT_NO_DEBUG, ...)
-include(${QT_USE_FILE})
 
 # Missing in FindQt4.cmake until Dec 2011: setting QT_NO_DEBUG_OUTPUT
 if(CMAKE_BUILD_TYPE)
@@ -152,11 +153,14 @@ if(NOT CMAKE_BUILD_TYPE_TOLOWER MATCHES "debug")
    add_definitions(-DQT_NO_DEBUG_OUTPUT)
 endif()
 
-if(WINCE)
-    find_package(Wcecompat REQUIRED)
-    set(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
-    set(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
-    set(STATIC_LIBRARY ON)
+# FIXME
+if(NOT QT5_BUILD)
+    if(WINCE)
+        find_package(Wcecompat REQUIRED)
+        set(QT_DBUSCPP2XML_EXECUTABLE ${HOST_BINDIR}/qdbuscpp2xml.exe)
+        set(QT_DBUSXML2CPP_EXECUTABLE ${HOST_BINDIR}/qdbusxml2cpp.exe)
+        set(STATIC_LIBRARY ON)
+    endif()
 endif()
 
 if(STATIC_LIBRARY)
@@ -361,9 +365,11 @@ if(XSLTPROC_EXECUTABLE)
 endif()
 
 add_subdirectory(rds)
-if(SQLITE_FOUND)
-  option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
-  add_subdirectory(qsqlite)
+if (NOT QT5_BUILD)
+  if(SQLITE_FOUND)
+    option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
+    add_subdirectory(qsqlite)
+  endif()
 endif()
 
 ############### install stuff ###############
