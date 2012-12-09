@@ -109,7 +109,7 @@ void PreprocessorInstance::enqueueItem( qint64 itemId )
 void PreprocessorInstance::processHeadItem()
 {
   // We shouldn't be called if there are no items in the queue
-  Q_ASSERT( !mItemQueue.isEmpty() );
+  Q_ASSERT( !mItemQueue.empty() );
   // We shouldn't be here with no interface
   Q_ASSERT( mInterface );
 
