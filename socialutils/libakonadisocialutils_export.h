@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef LIBAKONADISOCIALUTILS_EXPORT
-# if defined(MAKE_LIBKOAUTH_LIB)
+# if defined(MAKE_AKONADI_SOCIALUTILS_LIB)
 /* We are building this library */
 #  define LIBAKONADISOCIALUTILS_EXPORT KDE_EXPORT
 # else
