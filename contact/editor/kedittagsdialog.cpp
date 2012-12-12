@@ -32,7 +32,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
-KEditTagsDialog::KEditTagsDialog(const QVector<Nepomuk::Tag>& tags,
+KEditTagsDialog::KEditTagsDialog(const QVector<Nepomuk2::Tag>& tags,
                                  QWidget* parent,
                                  Qt::WFlags flags) :
     KDialog(parent, flags),
@@ -104,7 +104,7 @@ KEditTagsDialog::~KEditTagsDialog()
 {
 }
 
-QVector<Nepomuk::Tag> KEditTagsDialog::tags() const
+QVector<Nepomuk2::Tag> KEditTagsDialog::tags() const
 {
     return m_tags;
 }
@@ -131,7 +131,7 @@ void KEditTagsDialog::slotButtonClicked(int button)
             QListWidgetItem* item = m_tagsList->item( i );
             if ( item->checkState() == Qt::Checked ) {
                 const QString label = item->data( Qt::UserRole ).toString();
-                Nepomuk::Tag tag( label );
+                Nepomuk2::Tag tag( label );
                 tag.setLabel( label );
                 m_tags.append( tag );
             }
@@ -210,7 +210,7 @@ void KEditTagsDialog::deleteTag()
     const KGuiItem cancelItem( i18nc( "@action:button", "Cancel" ), KIcon( QLatin1String( "dialog-cancel" ) ) );
     if ( KMessageBox::warningYesNo( this, text, caption, deleteItem, cancelItem ) == KMessageBox::Yes ) {
         const QString label = m_deleteCandidate->data( Qt::UserRole ).toString();
-        Nepomuk::Tag tag( label );
+        Nepomuk2::Tag tag( label );
         tag.remove();
 
         // clear list and reload it
@@ -226,14 +226,14 @@ void KEditTagsDialog::loadTags()
 {
     // load all available tags and mark those tags as checked
     // that have been passed to the KEditTagsDialog
-    foreach ( const Nepomuk::Tag& tag, Nepomuk::Tag::allTags() ) {
+    foreach ( const Nepomuk2::Tag& tag, Nepomuk2::Tag::allTags() ) {
         const QString label = tag.label();
 
         QListWidgetItem *item = new QListWidgetItem( label, m_tagsList );
         item->setData( Qt::UserRole, label );
 
         bool check = false;
-        foreach ( const Nepomuk::Tag& selectedTag, m_tags ) {
+        foreach ( const Nepomuk2::Tag& selectedTag, m_tags ) {
             if ( selectedTag.label() == label ) {
                 check = true;
                 break;

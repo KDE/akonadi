@@ -28,7 +28,7 @@
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
-#include <nepomuk/tag.h>
+#include <nepomuk2/tag.h>
 
 #include <QtCore/QString>
 #include <QHBoxLayout>
@@ -55,11 +55,11 @@ void CategoriesEditWidget::setReadOnly( bool readOnly )
 
 void CategoriesEditWidget::loadContact( const KABC::Addressee &contact )
 {
-  QVector<Nepomuk::Tag> tags;
+  QVector<Nepomuk2::Tag> tags;
 
   const QStringList categories = contact.categories();
   foreach ( const QString &category, categories ) {
-    tags.append( Nepomuk::Tag( category ) );
+    tags.append( Nepomuk2::Tag( category ) );
   }
 
   mTagWidget->setTags( tags );
@@ -69,8 +69,8 @@ void CategoriesEditWidget::storeContact( KABC::Addressee &contact ) const
 {
   QStringList categories;
 
-  const QVector<Nepomuk::Tag> tags = mTagWidget->tags();
-  foreach ( const Nepomuk::Tag &tag, tags ) {
+  const QVector<Nepomuk2::Tag> tags = mTagWidget->tags();
+  foreach ( const Nepomuk2::Tag &tag, tags ) {
     categories.append( tag.genericLabel() );
   }
 

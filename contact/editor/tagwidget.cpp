@@ -52,13 +52,13 @@ TagWidget::~TagWidget()
 {
 }
 
-void TagWidget::setTags( const QVector<Nepomuk::Tag> &tags )
+void TagWidget::setTags( const QVector<Nepomuk2::Tag> &tags )
 {
   mTags = tags;
   updateView();
 }
 
-QVector<Nepomuk::Tag> TagWidget::tags() const
+QVector<Nepomuk2::Tag> TagWidget::tags() const
 {
   return mTags;
 }
@@ -75,7 +75,7 @@ void TagWidget::editTags()
 void TagWidget::updateView()
 {
   QString text;
-  foreach ( const Nepomuk::Tag &tag, mTags ) {
+  foreach ( const Nepomuk2::Tag &tag, mTags ) {
     const QString separator = ( tag == mTags.last() ? QString() : QLatin1String( ", " ) );
     text += tag.genericLabel() + separator;
   }

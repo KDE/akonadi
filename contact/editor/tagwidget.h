@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include <nepomuk/tag.h>
+#include <nepomuk2/tag.h>
 
 class QHBoxLayout;
 class QLabel;
@@ -38,8 +38,8 @@ class TagWidget : public QWidget
     explicit TagWidget( QWidget *parent = 0 );
     ~TagWidget();
 
-    void setTags( const QVector<Nepomuk::Tag> &tags );
-    QVector<Nepomuk::Tag> tags() const;
+    void setTags( const QVector<Nepomuk2::Tag> &tags );
+    QVector<Nepomuk2::Tag> tags() const;
 
   private Q_SLOTS:
     void editTags();
@@ -50,7 +50,7 @@ class TagWidget : public QWidget
     QToolButton *mEditButton;
     QLabel *mTagLabel;
 
-    QVector<Nepomuk::Tag> mTags;
+    QVector<Nepomuk2::Tag> mTags;
 };
 
 #endif
