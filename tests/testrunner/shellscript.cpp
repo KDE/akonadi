@@ -74,7 +74,7 @@ void ShellScript::makeShellScript( const QString &fileName )
     writeEnvironmentVariables();
     writeShutdownFunction();
 
-    file.write( mScript.toAscii(), qstrlen( mScript.toAscii() ) );
+    file.write( mScript.toLatin1(), qstrlen( mScript.toAscii() ) );
     file.close();
   } else {
     kError() << "Failed to write" << fileName;

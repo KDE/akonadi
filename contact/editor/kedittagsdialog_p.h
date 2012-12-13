@@ -43,7 +43,7 @@ class KEditTagsDialog : public KDialog
 public:
     explicit KEditTagsDialog(const QVector<Nepomuk2::Tag>& tags,
                     QWidget* parent = 0,
-                    Qt::WFlags flags = 0);
+                    Qt::WindowFlags flags = 0);
 
     virtual ~KEditTagsDialog();
 

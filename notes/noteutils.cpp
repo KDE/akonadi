@@ -280,7 +280,7 @@ void NoteMessageWrapper::NoteMessageWrapperPrivate::parseCustomPart( KMime::Cont
   QDomElement top = document.documentElement();
   if ( top.tagName() != "custom" ) {
     qWarning( "XML error: Top tag was %s instead of the expected custom",
-              top.tagName().toAscii().data() );
+              top.tagName().toLatin1().data() );
     return;
   }
 

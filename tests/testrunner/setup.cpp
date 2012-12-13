@@ -69,9 +69,9 @@ bool SetupTest::clearEnvironment()
 // work around a bug in the Mac OS X 10.4.0 SDK
 #if defined(MAC_OS_X_VERSION_MAX_ALLOWED) && (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4)
       /* on OSX 10.4, unsetenv is a void, not a boolean */
-      unsetenv( key.toAscii() );
+      unsetenv( key.toLatin1() );
 #else
-      if ( !unsetenv( key.toAscii() ) ) {
+      if ( !unsetenv( key.toLatin1() ) ) {
         return false;
       }
 #endif
@@ -99,10 +99,10 @@ int SetupTest::addDBusToEnvironment( QIODevice& io )
       val = val.mid( p + 1 );
       if ( name == QLatin1String( "DBUS_SESSION_BUS_PID" ) ) {
         pid = val.toInt();
-        setenv( name.toAscii(), val.toAscii(), 1 );
+        setenv( name.toLatin1(), val.toAscii(), 1 );
         symbol->insertSymbol( name, val );
       } else if ( name == QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ) {
-        setenv( name.toAscii(), val.toAscii(), 1 );
+        setenv( name.toLatin1(), val.toAscii(), 1 );
         symbol->insertSymbol( name, val );
       }
     }
