@@ -56,6 +56,7 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
     /**
      * Create a new agent filter proxy model.
      * By default no filtering is done.
+     * @param parent parent object
      */
     explicit AgentFilterProxyModel( QObject *parent = 0 );
 
@@ -81,6 +82,7 @@ class AKONADI_EXPORT AgentFilterProxyModel : public QSortFilterProxyModel
 
     /**
      * Excludes agents with the given @p capability.
+     * @param capability undesired agent capability
      * @since 4.6
      */
     void excludeCapabilities( const QString &capability );

@@ -79,6 +79,8 @@ class AKONADI_CONTACT_EXPORT AbstractContactGroupFormatter
      * Sets the @p item who's payload will be formatted.
      *
      * @note The payload must be a valid KABC::ContactGroup object.
+     *
+     * @param item item, who's payload will be formatted.
      */
     void setItem( const Akonadi::Item &item );
 
@@ -95,6 +97,8 @@ class AKONADI_CONTACT_EXPORT AbstractContactGroupFormatter
      *   - key   (string) The identifier of the field
      *   - title (string) The i18n'ed title of the field
      *   - value (string) The value of the field
+     *
+     * @param fields additional fields that will be shown
      */
     void setAdditionalFields( const QList<QVariantMap> &fields );
 

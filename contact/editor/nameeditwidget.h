@@ -43,9 +43,17 @@ class NameEditWidget : public QWidget
     explicit NameEditWidget( QWidget *parent = 0 );
     ~NameEditWidget();
 
+    /**
+     * @param contact KABC contact's addressee to load
+     */
     void loadContact( const KABC::Addressee &contact );
+    /**
+     * @param contact KABC contact's addressee to store
+     */
     void storeContact( KABC::Addressee &contact ) const;
-
+    /**
+     * @param readOnly sets readonly mode
+     */
     void setReadOnly( bool readOnly );
 
   Q_SIGNALS:

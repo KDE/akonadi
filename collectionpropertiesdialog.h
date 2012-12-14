@@ -111,6 +111,7 @@ class AKONADI_EXPORT CollectionPropertiesDialog : public KDialog
      * Sets whether to @p use default page or not.
      *
      * @since 4.4
+     * @param use mode of default page's usage
      */
     static void useDefaultPage( bool use );
 

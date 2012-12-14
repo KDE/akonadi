@@ -38,8 +38,8 @@ class WaitingOverlay : public QWidget
   public:
     /**
      * Create an overlay widget on @p baseWidget for @p job.
-     * @p baseWidget must not be null.
-     * @p parent must not be equal to @p baseWidget
+     * @param baseWidget must not be null.
+     * @param parent must not be equal to baseWidget
      */
     explicit WaitingOverlay( KJob *job, QWidget *baseWidget, QWidget *parent = 0 );
     ~WaitingOverlay();

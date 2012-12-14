@@ -165,11 +165,13 @@ class AKONADI_EXPORT AgentInstance
 
     /**
      * @internal
+     * @param other other agent instance
      */
     AgentInstance& operator=( const AgentInstance &other );
 
     /**
      * @internal
+     * @param other other agent instance
      */
     bool operator==( const AgentInstance &other ) const;
 

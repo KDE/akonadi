@@ -76,10 +76,23 @@ class AKONADI_EXPORT_DEPRECATED CollectionStatisticsModel : public CollectionMod
      */
     explicit CollectionStatisticsModel( QObject *parent = 0 );
 
+    /**
+     * @param parent parent model index
+     * @return column count
+     */
     virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
 
+    /**
+     * @param index model index
+     * @param role data role
+     */
     virtual QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
 
+    /**
+     * @param section section of header
+     * @param orientation of the data
+     * @param role data role
+     */
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
 
   private:

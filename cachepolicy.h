@@ -144,11 +144,13 @@ class AKONADI_EXPORT CachePolicy
 
     /**
      * @internal.
+     * @param other other cache policy
      */
     CachePolicy& operator=( const CachePolicy &other );
 
     /**
      * @internal
+     * @param other other cache policy
      */
     bool operator==( const CachePolicy &other ) const;
 

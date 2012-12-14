@@ -225,8 +225,12 @@ class AKONADI_TESTS_EXPORT GetLockJob : public KJob
 // ===================== helper functions ============================
 
 /**
-  Sets on @p col the required attributes of SpecialCollection type @p type.
-  These are a SpecialCollectionAttribute and an EntityDisplayAttribute.
+  * Sets on @p col the required attributes of SpecialCollection type @p type
+  * These are a SpecialCollectionAttribute and an EntityDisplayAttribute.
+  * @param col collection
+  * @param type collection type
+  * @param nameForType collection name for type
+  * @param iconForType collection icon for type
 */
 void setCollectionAttributes( Akonadi::Collection &col, const QByteArray &type,
                               const QMap<QByteArray, QString> &nameForType,

@@ -93,6 +93,7 @@ class AKONADI_EXPORT AgentManager : public QObject
      *
      * Note that because a resource is a special case of an agent, the
      * identifier of a resource is the same as that of its agent instance.
+     * @param identifier identifier to choose the agent instance
      */
     AgentInstance instance( const QString &identifier ) const;
 

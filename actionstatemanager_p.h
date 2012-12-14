@@ -57,6 +57,7 @@ class ActionStateManager
      *   - void enableAction( int, bool )
      *   - void updatePluralLabel( int, int )
      *   - bool isFavoriteCollection( const Akonadi::Collection& )
+     * @param receiver object that will actually update the states.
      */
     void setReceiver( QObject *receiver );
 

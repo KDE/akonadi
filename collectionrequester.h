@@ -109,6 +109,9 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
      */
     Collection::Rights accessRightsFilter() const;
 
+    /**
+     * @param options new collection dialog options
+     */
     void changeCollectionDialogOptions( CollectionDialog::CollectionDialogOptions options );
 
   public Q_SLOTS:

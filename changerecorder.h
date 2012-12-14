@@ -78,6 +78,7 @@ class AKONADI_EXPORT ChangeRecorder : public Monitor
      * Enables change recording. If change recording is disabled, this class
      * behaves exactly like Akonadi::Monitor.
      * Change recording is enabled by default.
+     * @param enable @c false to disable change recording. @c true by default
      */
     void setChangeRecordingEnabled( bool enable );
 

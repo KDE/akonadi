@@ -105,6 +105,9 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
      * Convenience ctor equivalent to CollectionFetchJob( const Collection::List &collections, Type type, QObject *parent = 0 )
      * @since 4.8
+     * @param collections list of collection ids
+     * @param type fetch job type
+     * @param parent parent object
      */
     explicit CollectionFetchJob( const QList<Collection::Id> &collections, Type type = Base, QObject *parent = 0 );
 
@@ -129,6 +132,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
      * Include also unsubscribed collections.
      * @deprecated Use CollectionFetchScope instead.
+     * @param include whether to alsof fetch unsubscribed collections
      */
     KDE_DEPRECATED void includeUnsubscribed( bool include = true );
 
@@ -137,6 +141,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      *
      * @since 4.3
      * @deprecated Use CollectionFetchScope instead.
+     * @param include whether to also fetch statistics
      */
     KDE_DEPRECATED void includeStatistics( bool include = true );
 

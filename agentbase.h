@@ -326,6 +326,9 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      *   AKONADI_AGENT_MAIN( MyAgent )
      *
      * @endcode
+     *
+     * @param argc number of arguments
+     * @param argv arguments for the function
      */
     template <typename T>
     static int init( int argc, char **argv )
@@ -424,6 +427,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * This method is used to set the name of the agent.
      *
      * @since 4.3
+     * @param name name of the agent
      */
     //FIXME_API: make sure location is renamed to this by agentbase
     void setAgentName( const QString &name );
@@ -590,6 +594,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * @since 4.2
      * @todo use this in combination with Solid::Networking::Notifier to change
      *       the onLine status of the agent.
+     * @param needsNetwork @c true if the agents needs network. Defaults to @c false
      */
     void setNeedsNetwork( bool needsNetwork );
 
@@ -608,6 +613,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
      * This method is called whenever the @p online status has changed.
      * Reimplement this method to react on online status changes.
+     * @param online online status
      */
     virtual void doSetOnline( bool online );
 

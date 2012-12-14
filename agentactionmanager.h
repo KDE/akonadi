@@ -83,6 +83,7 @@ class AKONADI_EXPORT AgentActionManager : public QObject
     /**
      * Sets the agent selection @p model based on which the actions should operate.
      * If none is set, all actions will be disabled.
+     * @param model model based on which actions should operate
      */
     void setSelectionModel( QItemSelectionModel *model );
 
@@ -100,6 +101,7 @@ class AKONADI_EXPORT AgentActionManager : public QObject
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
+     * @param type action type
      */
     KAction *createAction( Type type );
 
@@ -136,6 +138,10 @@ class AKONADI_EXPORT AgentActionManager : public QObject
     /**
      * Sets the @p text of the action @p type for the given @p context.
      *
+     * @param type action type
+     * @param context context of the given action
+     * @param text text for the given action type
+     *
      * @since 4.6
      */
     void setContextText( Type type, TextContext context, const QString &text );
@@ -144,6 +150,9 @@ class AKONADI_EXPORT AgentActionManager : public QObject
      * Sets the @p text of the action @p type for the given @p context.
      *
      * @since 4.8
+     * @param type action type
+     * @param context context of the given action type
+     * @param text localized text for the given action type
      */
     void setContextText( Type type, TextContext context, const KLocalizedString &text );
 

@@ -94,8 +94,8 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
     };
 
     enum DisplayMode {
-      FullMode, //Show all pages
-      VCardMode //Show just pages with elements stored in vcard.
+      FullMode, ///< Show all pages
+      VCardMode ///< Show just pages with elements stored in vcard.
     };
 
     /**
@@ -115,12 +115,11 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      */
     ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
 
-
     /**
      * Creates a new contact editor dialog with a custom editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param editorWidget The contact editor widget that shall be used for editing.
+     * @param displayMode mode for displaying the editor
      * @param parent The parent widget of the dialog.
      * @since 4.10
      */

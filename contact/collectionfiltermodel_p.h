@@ -54,6 +54,8 @@ class CollectionFilterModel : public QSortFilterProxyModel
      * If a mime type has been added, only collections that contain
      * this mime type in their content mime types will be listed by
      * this proxy model.
+     * 
+     * @param mimeType mime type content filter
      */
     void addContentMimeTypeFilter( const QString &mimeType );
 
@@ -62,6 +64,8 @@ class CollectionFilterModel : public QSortFilterProxyModel
      *
      * Only collections that allows this rights combination
      * will be listed by this proxy model.
+     *
+     * @param rights collection rights filter
      */
     void setRightsFilter( Akonadi::Collection::Rights rights );
 

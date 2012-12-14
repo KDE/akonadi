@@ -121,11 +121,13 @@ class AKONADI_EXPORT AgentType
 
     /**
      * @internal
+     * @param other other agent type
      */
     AgentType& operator=( const AgentType &other );
 
     /**
      * @internal
+     * @param other other agent type
      */
     bool operator==( const AgentType &other ) const;
 

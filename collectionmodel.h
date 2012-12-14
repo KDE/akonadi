@@ -84,6 +84,7 @@ class AKONADI_EXPORT_DEPRECATED CollectionModel : public QAbstractItemModel
      * by the model.
      *
      * @see CollectionStatistics.
+     * @param enable whether to fetch collecton statistics
      */
     void fetchCollectionStatistics( bool enable );
 

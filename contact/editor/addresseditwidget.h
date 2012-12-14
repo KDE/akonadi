@@ -57,11 +57,13 @@ class AddressSelectionWidget : public KComboBox
 
     /**
      * Sets the list of @p addresses that can be chosen from.
+     * @param addresses list of addresses that can be chosen from
      */
     void setAddresses( const KABC::Address::List &addresses );
 
     /**
      * Sets the current @p address.
+     * @param address new current address
      */
     void setCurrentAddress( const KABC::Address &address );
 
@@ -110,6 +112,7 @@ class AddressTypeCombo : public KComboBox
 
     /**
      * Sets the type that shall be selected in the combobox.
+     * @param type KABC adress type to set
      */
     void setType( KABC::Address::Type type );
 

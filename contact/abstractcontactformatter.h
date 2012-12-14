@@ -79,6 +79,7 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
      * Sets the @p item who's payload will be formatted.
      *
      * @note The payload must be a valid KABC::Addressee object.
+     * @param item item, who's payload will be formatted.
      */
     void setItem( const Akonadi::Item &item );
 
@@ -102,6 +103,8 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
      *       - date
      *       - time
      *       - datetime
+     *
+     * @param descriptions list with field descriptions
      */
     void setCustomFieldDescriptions( const QList<QVariantMap> &descriptions );
 
