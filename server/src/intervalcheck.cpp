@@ -86,8 +86,13 @@ void IntervalCheck::requestCollectionSync(const Akonadi::Collection& collection)
   // of the collection hierarchy as well
   if ( collection.parentId() == 0 ) {
     const QString resourceName = collection.resource().name();
+
+    int minInterval = MINIMUM_COLTREESYNC_INTERVAL;
+    if ( collection.cachePolicyCheckInterval() > 0 )
+      minInterval = collection.cachePolicyCheckInterval();
+
+    const QDateTime lastExpectedCheck = now.addSecs( minInterval * - 60 );
     QMutexLocker locker( &m_lastSyncMutex );
-    const QDateTime lastExpectedCheck = now.addSecs( MINIMUM_COLTREESYNC_INTERVAL * - 60 );
     if ( !mLastCollectionTreeSyncs.contains( resourceName ) || mLastCollectionTreeSyncs.value( resourceName ) < lastExpectedCheck ) {
       mLastCollectionTreeSyncs.insert( resourceName, now );
       locker.unlock();
