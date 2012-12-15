@@ -56,7 +56,7 @@ class IMModel : public QAbstractItemModel
       IsPreferredRole
     };
 
-    IMModel( QObject *parent = 0 );
+    explicit IMModel( QObject *parent = 0 );
     ~IMModel();
 
     void setAddresses( const IMAddress::List &addresses );

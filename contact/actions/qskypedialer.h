@@ -31,7 +31,7 @@ class QDBusInterface;
 class QSkypeDialer: public QDialer
 {
   public:
-    QSkypeDialer( const QString &applicationName );
+    explicit QSkypeDialer( const QString &applicationName );
     ~QSkypeDialer();
 
     bool dialNumber( const QString &number );

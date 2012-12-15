@@ -39,7 +39,7 @@ class ContactGroupModel : public QAbstractItemModel
       AllEmailsRole
     };
 
-    ContactGroupModel( QObject *parent = 0 );
+    explicit ContactGroupModel( QObject *parent = 0 );
     ~ContactGroupModel();
 
     void loadContactGroup( const KABC::ContactGroup &contactGroup );

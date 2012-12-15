@@ -35,7 +35,7 @@ class CustomFieldsModel : public QAbstractItemModel
       ScopeRole
     };
 
-    CustomFieldsModel( QObject *parent = 0 );
+    explicit CustomFieldsModel( QObject *parent = 0 );
     ~CustomFieldsModel();
 
     void setCustomFields( const CustomField::List &addresses );

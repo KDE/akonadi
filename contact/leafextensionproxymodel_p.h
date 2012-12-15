@@ -32,7 +32,7 @@ class LeafExtensionProxyModel : public QSortFilterProxyModel
   Q_OBJECT
 
   public:
-    LeafExtensionProxyModel( QObject *parent = 0 );
+    explicit LeafExtensionProxyModel( QObject *parent = 0 );
     ~LeafExtensionProxyModel();
 
     QModelIndex index( int row, int column, const QModelIndex &parent = QModelIndex() ) const;

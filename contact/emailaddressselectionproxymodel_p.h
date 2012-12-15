@@ -39,7 +39,7 @@ class EmailAddressSelectionProxyModel : public Akonadi::LeafExtensionProxyModel
       EmailAddressRole
     };
 
-    EmailAddressSelectionProxyModel( QObject *parent = 0 );
+    explicit EmailAddressSelectionProxyModel( QObject *parent = 0 );
     ~EmailAddressSelectionProxyModel();
 
     QVariant data( const QModelIndex &proxyIndex, int role = Qt::DisplayRole ) const;

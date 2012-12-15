@@ -35,7 +35,7 @@ class CustomFieldEditorDialog : public KDialog
   Q_OBJECT
 
   public:
-    CustomFieldEditorDialog( QWidget *parent = 0 );
+    explicit CustomFieldEditorDialog( QWidget *parent = 0 );
 
     void setCustomField( const CustomField &field );
     CustomField customField() const;

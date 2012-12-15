@@ -40,7 +40,7 @@ class IMEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    IMEditWidget( QWidget *parent = 0 );
+    explicit IMEditWidget( QWidget *parent = 0 );
     ~IMEditWidget();
 
     void loadContact( const KABC::Addressee &contact );

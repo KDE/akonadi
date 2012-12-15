@@ -46,7 +46,7 @@ class GeoEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    GeoEditWidget( QWidget *parent = 0 );
+    explicit GeoEditWidget( QWidget *parent = 0 );
     ~GeoEditWidget();
 
     void loadContact( const KABC::Addressee &contact );

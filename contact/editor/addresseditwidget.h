@@ -48,7 +48,7 @@ class AddressSelectionWidget : public KComboBox
      *
      * @param parent The parent widget.
      */
-    AddressSelectionWidget( QWidget *parent = 0 );
+    explicit AddressSelectionWidget( QWidget *parent = 0 );
 
     /**
      * Destroys the address selection widget.
@@ -103,7 +103,7 @@ class AddressTypeCombo : public KComboBox
      *
      * @param parent The parent widget.
      */
-    AddressTypeCombo( QWidget *parent = 0 );
+    explicit AddressTypeCombo( QWidget *parent = 0 );
 
     /**
      * Destroys the address type combo.
@@ -182,7 +182,7 @@ class AddressEditDialog : public KDialog
   Q_OBJECT
 
   public:
-    AddressEditDialog( QWidget *parent = 0 );
+    explicit AddressEditDialog( QWidget *parent = 0 );
     ~AddressEditDialog();
 
     void setAddress( const KABC::Address &address );

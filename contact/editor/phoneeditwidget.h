@@ -50,7 +50,7 @@ class PhoneTypeCombo : public KComboBox
      *
      * @param parent The parent widget.
      */
-    PhoneTypeCombo( QWidget *parent = 0 );
+    explicit PhoneTypeCombo( QWidget *parent = 0 );
 
     /**
      * Destroys the phone type combo.
@@ -93,7 +93,7 @@ class PhoneNumberWidget : public QWidget
      *
      * @param parent The parent widget.
      */
-    PhoneNumberWidget( QWidget *parent = 0 );
+    explicit PhoneNumberWidget( QWidget *parent = 0 );
 
     /**
      * Sets the phone @p number of the widget.
@@ -132,7 +132,7 @@ class PhoneNumberListWidget : public QWidget
      *
      * @param parent The parent widget.
      */
-    PhoneNumberListWidget( QWidget *parent = 0 );
+    explicit PhoneNumberListWidget( QWidget *parent = 0 );
 
     /**
      * Destroys the phone number list widget.

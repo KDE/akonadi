@@ -38,7 +38,7 @@ class ContactGroupLineEdit : public KLineEdit
   Q_OBJECT
 
   public:
-    ContactGroupLineEdit( QWidget *parent = 0 );
+    explicit ContactGroupLineEdit( QWidget *parent = 0 );
 
     void setCompletionModel( QAbstractItemModel *model );
 

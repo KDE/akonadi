@@ -36,7 +36,7 @@ class DateView : public QLabel
   Q_OBJECT
 
   public:
-    DateView( QWidget *parent = 0 );
+    explicit DateView( QWidget *parent = 0 );
 
   Q_SIGNALS:
     void resetDate();

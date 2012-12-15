@@ -37,7 +37,7 @@ class SoundEditWidget : public QToolButton
   Q_OBJECT
 
   public:
-    SoundEditWidget( QWidget *parent = 0 );
+    explicit SoundEditWidget( QWidget *parent = 0 );
     ~SoundEditWidget();
 
     void loadContact( const KABC::Addressee &contact );

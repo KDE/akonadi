@@ -36,7 +36,7 @@ class FreeBusyEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    FreeBusyEditWidget( QWidget *parent = 0 );
+    explicit FreeBusyEditWidget( QWidget *parent = 0 );
     ~FreeBusyEditWidget();
 
     void loadContact( const KABC::Addressee &contact );

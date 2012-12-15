@@ -35,7 +35,7 @@ class IMEditorDialog : public KDialog
   Q_OBJECT
 
   public:
-    IMEditorDialog( QWidget *parent );
+    explicit IMEditorDialog( QWidget *parent );
     ~IMEditorDialog() {}
 
     void setAddresses( const IMAddress::List &addresses );

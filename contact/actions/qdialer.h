@@ -29,7 +29,7 @@
 class QDialer
 {
   public:
-    QDialer( const QString &applicationName );
+    explicit QDialer( const QString &applicationName );
     virtual ~QDialer();
 
     virtual bool dialNumber( const QString &number );

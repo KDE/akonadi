@@ -37,7 +37,7 @@ class SmsDialog : public KDialog
   Q_OBJECT
 
   public:
-    SmsDialog( const KABC::PhoneNumber &number );
+    explicit SmsDialog( const KABC::PhoneNumber &number );
     ~SmsDialog();
 
     QString message() const;

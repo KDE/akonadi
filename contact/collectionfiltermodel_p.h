@@ -46,7 +46,7 @@ class CollectionFilterModel : public QSortFilterProxyModel
      *
      * @param parent The parent object.
      */
-    CollectionFilterModel( QObject *parent );
+    explicit CollectionFilterModel( QObject *parent );
 
     /**
      * Adds a mime type to the content mime type filter list.

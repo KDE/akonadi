@@ -29,7 +29,7 @@
 class QWinCEDialer: public QDialer
 {
   public:
-    QWinCEDialer( const QString &applicationName );
+    explicit QWinCEDialer( const QString &applicationName );
     ~QWinCEDialer();
 
     bool dialNumber( const QString &number );
