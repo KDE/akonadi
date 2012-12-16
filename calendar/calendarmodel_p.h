@@ -18,8 +18,8 @@
   02110-1301, USA.
 */
 
-#ifndef AKONADI_CALENDARMODEL_H
-#define AKONADI_CALENDARMODEL_H
+#ifndef AKONADI_CALENDARMODEL_P_H
+#define AKONADI_CALENDARMODEL_P_H
 
 #include <akonadi/entitytreemodel.h>
 

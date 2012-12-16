@@ -21,8 +21,8 @@
   02110-1301, USA.
 */
 
-#include "calendarsettings.h"
 #include "invitationhandlerhelper_p.h"
+#include "calendarsettings.h"
 #include "fetchjobcalendar.h"
 #include "utils_p.h"
 

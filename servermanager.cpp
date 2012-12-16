@@ -38,6 +38,7 @@
 #include <akonadi/private/xdgbasedirs_p.h>
 
 #include <QtDBus>
+#include <QPointer>
 #include <QTimer>
 
 #include <boost/scoped_ptr.hpp>
@@ -199,9 +200,10 @@ bool ServerManager::stop()
 void ServerManager::showSelfTestDialog( QWidget *parent )
 {
 #ifndef Q_OS_WINCE
-  Akonadi::SelfTestDialog dlg( parent );
-  dlg.hideIntroduction();
-  dlg.exec();
+  QPointer<Akonadi::SelfTestDialog> dlg( new Akonadi::SelfTestDialog( parent ) );
+  dlg->hideIntroduction();
+  dlg->exec();
+  delete dlg;
 #endif
 }
 

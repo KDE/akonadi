@@ -30,6 +30,8 @@
 #include <kmessagebox.h>
 #include <krun.h>
 
+#include <QPointer>
+
 static QString strippedSmsNumber( const QString &number )
 {
   QString result;
@@ -48,10 +50,11 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
 {
   const QString number = phoneNumber.number().trimmed();
 
-  SmsDialog dlg( number );
-  if ( !dlg.exec() ) { // the cancel button has been clicked
+  QPointer<SmsDialog> dlg( new SmsDialog( number ) );
+  if ( dlg->exec() != QDialog::Accepted ) { // the cancel button has been clicked
     return;
   }
+  delete dlg;
 
   // synchronize
   ContactActionsSettings::self()->readConfig();

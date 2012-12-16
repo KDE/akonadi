@@ -34,6 +34,7 @@
 #include <KMessageBox>
 
 #include <QItemSelectionModel>
+#include <QPointer>
 
 #include <boost/static_assert.hpp>
 
@@ -151,20 +152,20 @@ class AgentActionManager::Private
 
     void slotCreateAgentInstance()
     {
-      Akonadi::AgentTypeDialog dlg( mParentWidget );
-      dlg.setCaption( contextText( AgentActionManager::CreateAgentInstance,
+      QPointer<Akonadi::AgentTypeDialog> dlg( new Akonadi::AgentTypeDialog( mParentWidget ) );
+      dlg->setCaption( contextText( AgentActionManager::CreateAgentInstance,
                                    AgentActionManager::DialogTitle ) );
 
       foreach ( const QString &mimeType, mMimeTypeFilter ) {
-        dlg.agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+        dlg->agentFilterProxyModel()->addMimeTypeFilter( mimeType );
       }
 
       foreach ( const QString &capability, mCapabilityFilter ) {
-        dlg.agentFilterProxyModel()->addCapabilityFilter( capability );
+        dlg->agentFilterProxyModel()->addCapabilityFilter( capability );
       }
 
-      if ( dlg.exec() ) {
-        const AgentType agentType = dlg.agentType();
+      if ( dlg->exec() == QDialog::Accepted && dlg != 0 ) {
+        const AgentType agentType = dlg->agentType();
 
         if ( agentType.isValid() ) {
           AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, q );
@@ -173,6 +174,7 @@ class AgentActionManager::Private
           job->start();
         }
       }
+      delete dlg;
     }
 
     void slotDeleteAgentInstance()

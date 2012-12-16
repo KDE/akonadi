@@ -27,6 +27,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <QtCore/QStringList>
 #include <QGridLayout>
+#include <QPointer>
 #include <QPushButton>
 #include <QTreeView>
 
@@ -89,16 +90,17 @@ IMAddress::List IMEditorDialog::addresses() const
 
 void IMEditorDialog::slotAdd()
 {
-  IMItemDialog d( this );
-  d.setCaption( i18nc( "@title:window", "Add IM Address" ) );
-  if ( d.exec() ) {
-    IMAddress newAddress = d.address();
+  QPointer<IMItemDialog> d( new IMItemDialog( this ) );
+  d->setCaption( i18nc( "@title:window", "Add IM Address" ) );
+  if ( d->exec() == QDialog::Accepted && d != 0 ) {
+    IMAddress newAddress = d->address();
     int addedRow = mModel->rowCount();
     mModel->insertRow( addedRow );
 
     mModel->setData( mModel->index( addedRow, 0 ), newAddress.protocol(), IMModel::ProtocolRole );
     mModel->setData( mModel->index( addedRow, 1 ), newAddress.name(), Qt::EditRole );
   }
+  delete d;
 }
 
 void IMEditorDialog::slotEdit()
@@ -108,17 +110,18 @@ void IMEditorDialog::slotEdit()
     return;
   }
 
-  IMItemDialog d( this );
-  d.setCaption( i18nc( "@title:window", "Edit IM Address" ) );
-  d.setAddress( mModel->addresses().at( currentRow ) );
+  QPointer<IMItemDialog> d( new IMItemDialog( this ) );
+  d->setCaption( i18nc( "@title:window", "Edit IM Address" ) );
+  d->setAddress( mModel->addresses().at( currentRow ) );
 
-  if ( d.exec() ) {
-    IMAddress editedAddress = d.address();
+  if ( d->exec() == QDialog::Accepted && d != 0 ) {
+    IMAddress editedAddress = d->address();
     mModel->setData( mModel->index( currentRow, 0 ), editedAddress.protocol(),
                      IMModel::ProtocolRole );
     mModel->setData( mModel->index( currentRow, 1 ), editedAddress.name(),
                      Qt::EditRole );
   }
+  delete d;
 }
 
 void IMEditorDialog::slotRemove()

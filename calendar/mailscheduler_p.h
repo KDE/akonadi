@@ -17,8 +17,8 @@
   Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA.
 */
-#ifndef AKONADI_CALENDAR_MAILSCHEDULER_H
-#define AKONADI_CALENDAR_MAILSCHEDULER_H
+#ifndef AKONADI_CALENDAR_MAILSCHEDULER_P_H
+#define AKONADI_CALENDAR_MAILSCHEDULER_P_H
 
 #include "scheduler_p.h"
 #include "mailclient_p.h"

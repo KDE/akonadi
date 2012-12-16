@@ -37,6 +37,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QEvent>
+#include <QPointer>
 #include <QMouseEvent>
 
 using namespace Akonadi;
@@ -140,15 +141,16 @@ bool MobileEventHandler::eventFilter( QObject *object, QEvent *event )
 
 void MobileEventHandler::openDialog()
 {
-  Akonadi::CollectionDialog dialog( mCustomModel );
-  dialog.setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
-  dialog.setAccessRightsFilter( mAccessRightsFilter->accessRights() );
+  QPointer<Akonadi::CollectionDialog> dialog( new Akonadi::CollectionDialog( mCustomModel ) );
+  dialog->setMimeTypeFilter( mMimeTypeFilter->mimeTypeFilters() );
+  dialog->setAccessRightsFilter( mAccessRightsFilter->accessRights() );
 
-  if ( dialog.exec() ) {
-    const Akonadi::Collection collection = dialog.selectedCollection();
+  if ( dialog->exec() == QDialog::Accepted && dialog != 0 ) {
+    const Akonadi::Collection collection = dialog->selectedCollection();
     const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection( mComboBox->model(), collection );
     mComboBox->setCurrentIndex( index.row() );
   }
+  delete dialog;
 }
 
 
