@@ -68,7 +68,7 @@ class Firstrun : public QObject
 {
   Q_OBJECT
   public:
-    Firstrun( QObject * parent = 0 );
+    explicit Firstrun( QObject * parent = 0 );
     ~Firstrun();
 
   private:

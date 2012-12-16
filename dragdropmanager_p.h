@@ -30,7 +30,7 @@ namespace Akonadi
 class DragDropManager
 {
   public:
-    DragDropManager( QAbstractItemView *view );
+    explicit DragDropManager( QAbstractItemView *view );
 
     /**
      * @returns True if the drop described in @p event is allowed.

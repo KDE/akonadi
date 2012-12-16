@@ -39,7 +39,7 @@ namespace Akonadi {
 class EntityPrivate : public QSharedData
 {
   public:
-    EntityPrivate( Entity::Id id = -1 )
+    explicit EntityPrivate( Entity::Id id = -1 )
       : mId( id ),
       mParent( 0 )
     {

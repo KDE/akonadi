@@ -38,6 +38,7 @@ class IncidenceFetchJob : public Akonadi::Job
   Q_OBJECT
   public:
     explicit IncidenceFetchJob( QObject *parent = 0 );
+
     Akonadi::Item::List items() const;
   protected:
     void doStart();

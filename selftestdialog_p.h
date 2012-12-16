@@ -50,7 +50,7 @@ class AKONADI_TESTS_EXPORT SelfTestDialog : public KDialog
      *
      * @param parent The parent widget.
      */
-    SelfTestDialog( QWidget *parent = 0 );
+    explicit SelfTestDialog( QWidget *parent = 0 );
 
     /**
      * Hides the label with the introduction message.

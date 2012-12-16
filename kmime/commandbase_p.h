@@ -29,7 +29,7 @@ class CommandBase : public QObject
   Q_OBJECT
 
 public:
-    CommandBase( QObject *parent = 0 );
+    explicit CommandBase( QObject *parent = 0 );
     virtual void execute() = 0;
 
     enum Result { Undefined, OK, Canceled, Failed };

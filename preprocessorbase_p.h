@@ -35,7 +35,7 @@ class PreprocessorBasePrivate : public AgentBasePrivate
   Q_OBJECT
 
   public:
-    PreprocessorBasePrivate( PreprocessorBase *parent );
+    explicit PreprocessorBasePrivate( PreprocessorBase *parent );
 
     void delayedInit();
 

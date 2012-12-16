@@ -163,7 +163,7 @@ namespace Akonadi {
 class ItemPrivate : public EntityPrivate
 {
   public:
-    ItemPrivate( Item::Id id = -1 )
+    explicit ItemPrivate( Item::Id id = -1 )
       : EntityPrivate( id ),
         mLegacyPayload(),
         mPayloads(),

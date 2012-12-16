@@ -58,6 +58,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QItemSelectionModel>
+#include <QPointer>
 #include <QWeakPointer>
 
 #include <boost/static_assert.hpp>
@@ -964,11 +965,12 @@ class StandardActionManager::Private
 
       const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
 
-      RenameFavoriteDialog dlg(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget );
-      if ( dlg.exec() )
+      QPointer<RenameFavoriteDialog> dlg( new RenameFavoriteDialog(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget) );
+      if ( dlg->exec() == QDialog::Accepted && dlg != 0 )
       {
-        favoritesModel->setFavoriteLabel( collection, dlg.newName() );
+        favoritesModel->setFavoriteLabel( collection, dlg->newName() );
       }
+      delete dlg;
     }
 
     void slotSynchronizeFavoriteCollections()
@@ -1057,17 +1059,17 @@ class StandardActionManager::Private
 
     void slotCreateResource()
     {
-      Akonadi::AgentTypeDialog dlg( parentWidget );
-      dlg.setCaption( contextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle ) );
+      QPointer<Akonadi::AgentTypeDialog> dlg( new Akonadi::AgentTypeDialog( parentWidget ) );
+      dlg->setCaption( contextText( StandardActionManager::CreateResource, StandardActionManager::DialogTitle ) );
 
       foreach ( const QString &mimeType, mMimeTypeFilter )
-        dlg.agentFilterProxyModel()->addMimeTypeFilter( mimeType );
+        dlg->agentFilterProxyModel()->addMimeTypeFilter( mimeType );
 
       foreach ( const QString &capability, mCapabilityFilter )
-        dlg.agentFilterProxyModel()->addCapabilityFilter( capability );
+        dlg->agentFilterProxyModel()->addCapabilityFilter( capability );
 
-      if ( dlg.exec() ) {
-        const AgentType agentType = dlg.agentType();
+      if ( dlg->exec() == QDialog::Accepted && dlg != 0 ) {
+        const AgentType agentType = dlg->agentType();
 
         if ( agentType.isValid() ) {
           AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, q );
@@ -1076,6 +1078,7 @@ class StandardActionManager::Private
           job->start();
         }
       }
+      delete dlg;
     }
 
     void slotDeleteResource()
@@ -1129,16 +1132,16 @@ class StandardActionManager::Private
     {
       const QSet<QString> mimeTypes = mimeTypesOfSelection( type );
 
-      CollectionDialog dlg( const_cast<QAbstractItemModel*>( model ) );
-      dlg.setMimeTypeFilter( mimeTypes.toList() );
+      QPointer<CollectionDialog> dlg( new CollectionDialog( const_cast<QAbstractItemModel*>( model ) ) );
+      dlg->setMimeTypeFilter( mimeTypes.toList() );
 
       if ( type == CopyItemToMenu || type == MoveItemToMenu )
-        dlg.setAccessRightsFilter( Collection::CanCreateItem );
+        dlg->setAccessRightsFilter( Collection::CanCreateItem );
       else if ( type == CopyCollectionToMenu || type == MoveCollectionToMenu )
-        dlg.setAccessRightsFilter( Collection::CanCreateCollection );
+        dlg->setAccessRightsFilter( Collection::CanCreateCollection );
 
-      if ( dlg.exec() ) {
-        const QModelIndex index = EntityTreeModel::modelIndexForCollection( collectionSelectionModel->model(), dlg.selectedCollection() );
+      if ( dlg->exec() == QDialog::Accepted && dlg != 0 ) {
+        const QModelIndex index = EntityTreeModel::modelIndexForCollection( collectionSelectionModel->model(), dlg->selectedCollection() );
         if ( !index.isValid() )
           return;
 
@@ -1147,6 +1150,7 @@ class StandardActionManager::Private
         QAbstractItemModel *model = const_cast<QAbstractItemModel *>( index.model() );
         model->dropMimeData( mimeData, dropAction, -1, -1, index );
       }
+      delete dlg;
     }
 
     void pasteTo( QItemSelectionModel *selectionModel, QAction *action, Qt::DropAction dropAction )

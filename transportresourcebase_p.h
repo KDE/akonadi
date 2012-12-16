@@ -38,7 +38,7 @@ class TransportResourceBasePrivate : public QObject
 {
   Q_OBJECT
   public:
-    TransportResourceBasePrivate( TransportResourceBase *qq );
+    explicit TransportResourceBasePrivate( TransportResourceBase *qq );
 
   Q_SIGNALS:
     /**

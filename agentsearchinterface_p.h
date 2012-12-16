@@ -30,7 +30,7 @@ class AgentSearchInterfacePrivate : public QObject
 {
   Q_OBJECT
   public:
-    AgentSearchInterfacePrivate( AgentSearchInterface* qq );
+    explicit AgentSearchInterfacePrivate( AgentSearchInterface* qq );
 
     void addSearch( const QString &query, const QString &queryLanguage, quint64 resultCollectionId );
     void removeSearch( quint64 resultCollectionId );

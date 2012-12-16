@@ -31,7 +31,7 @@ namespace Akonadi {
 class JobPrivate
 {
   public:
-    JobPrivate( Job *parent )
+    explicit JobPrivate( Job *parent )
       : q_ptr( parent ),
         mCurrentSubJob( 0 ),
         mSession( 0 ),

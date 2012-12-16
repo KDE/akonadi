@@ -41,7 +41,7 @@ namespace Akonadi {
 class AKONADI_TESTS_EXPORT SessionPrivate
 {
   public:
-    SessionPrivate( Session *parent );
+    explicit SessionPrivate( Session *parent );
 
     virtual ~SessionPrivate()
     {

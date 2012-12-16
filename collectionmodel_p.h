@@ -46,7 +46,7 @@ class CollectionModelPrivate
 {
   public:
     Q_DECLARE_PUBLIC( CollectionModel )
-    CollectionModelPrivate( CollectionModel *parent )
+    explicit CollectionModelPrivate( CollectionModel *parent )
       : q_ptr( parent ), fetchStatistics( false ), unsubscribed( false ),
         headerContent( i18nc( "@title:column, name of a thing", "Name" ) )
     {

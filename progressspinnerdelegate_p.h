@@ -33,7 +33,7 @@ class DelegateAnimator : public QObject
 {
   Q_OBJECT
 public:
-  DelegateAnimator(QAbstractItemView *view);
+  explicit DelegateAnimator(QAbstractItemView *view);
 
   void push(const QModelIndex &index) {
     if (m_animations.isEmpty())

@@ -62,7 +62,7 @@ class AKONADI_TESTS_EXPORT EntityTreeModelPrivate
 {
 public:
 
-  EntityTreeModelPrivate( EntityTreeModel *parent );
+  explicit EntityTreeModelPrivate( EntityTreeModel *parent );
   ~EntityTreeModelPrivate();
   EntityTreeModel * const q_ptr;
 

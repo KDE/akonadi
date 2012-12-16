@@ -93,7 +93,7 @@ class ResourceScheduler : public QObject
         }
     };
 
-    ResourceScheduler( QObject *parent = 0 );
+    explicit ResourceScheduler( QObject *parent = 0 );
 
     /**
       Schedules a full synchronization.
