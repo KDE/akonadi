@@ -30,9 +30,9 @@ class KDateTime;
 
 namespace Akonadi {
 
-class SocialFeedItemData;
+class SocialFeedItemPrivate;
 
-class LIBAKONADISOCIALUTILS_EXPORT PostReply
+class LIBAKONADISOCIALUTILS_EXPORT PostReply //krazy:exclude=dpointer
 {
   public:
     QString userId;
@@ -283,7 +283,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     QList<PostReply> postReplies() const;
 
   private:
-    QSharedDataPointer<SocialFeedItemData> d;
+    QSharedDataPointer<SocialFeedItemPrivate> d;
 };
 
 }

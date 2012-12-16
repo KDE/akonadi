@@ -23,11 +23,11 @@
 
 #include <qjson/qobjecthelper.h>
 
-class Akonadi::SocialFeedItemData : public QSharedData
+class Akonadi::SocialFeedItemPrivate : public QSharedData
 {
   public:
-    SocialFeedItemData();
-    SocialFeedItemData( const Akonadi::SocialFeedItemData &other );
+    SocialFeedItemPrivate();
+    SocialFeedItemPrivate( const Akonadi::SocialFeedItemPrivate &other );
 
     QVariantMap itemSourceMap;
     QString networkString;
@@ -51,12 +51,12 @@ class Akonadi::SocialFeedItemData : public QSharedData
     QList<PostReply> replies;
 };
 
-Akonadi::SocialFeedItemData::SocialFeedItemData()
+Akonadi::SocialFeedItemPrivate::SocialFeedItemPrivate()
   : QSharedData()
 {
 }
 
-Akonadi::SocialFeedItemData::SocialFeedItemData( const Akonadi::SocialFeedItemData &other )
+Akonadi::SocialFeedItemPrivate::SocialFeedItemPrivate( const Akonadi::SocialFeedItemPrivate &other )
   : QSharedData( other )
 {
 }
@@ -64,7 +64,7 @@ Akonadi::SocialFeedItemData::SocialFeedItemData( const Akonadi::SocialFeedItemDa
 //========================================================================================
 
 Akonadi::SocialFeedItem::SocialFeedItem()
-  : d( new SocialFeedItemData )
+  : d( new SocialFeedItemPrivate )
 {
 }
 
