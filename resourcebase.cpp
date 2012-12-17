@@ -490,7 +490,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob * job)
   Q_Q( ResourceBase );
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::FetchItem );
   if ( job->error() ) {
-    emit q->error( i18nc( "@info", "Error while creating item: %1" ).arg( job->errorString() ) );
+    emit q->error( i18nc( "@info", "Error while creating item: %1", job->errorString() ) );
   }
   scheduler->currentTask().sendDBusReplies( job->error() ? job->errorString() : QString() );
   scheduler->taskDone();
@@ -515,7 +515,7 @@ void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob * job)
   Q_Q( ResourceBase );
   Q_ASSERT( scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes );
   if ( job->error() ) {
-    emit q->error( i18nc( "@info", "Error while updating collection: %1" ).arg( job->errorString() ) );
+    emit q->error( i18nc( "@info", "Error while updating collection: %1", job->errorString() ) );
   }
   emit q->attributesSynchronized( scheduler->currentTask().collection.id() );
   scheduler->taskDone();
