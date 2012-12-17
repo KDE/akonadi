@@ -72,8 +72,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Att
     uint maxPostLength() const;
 
   private:
-    SocialNetworkAttributesPrivate * const d_ptr;
-    Q_DECLARE_PRIVATE( SocialNetworkAttributes )
+    SocialNetworkAttributesPrivate * const d;
 };
 
 }

@@ -32,7 +32,7 @@ class Akonadi::SocialNetworkAttributesPrivate
 };
 
 Akonadi::SocialNetworkAttributes::SocialNetworkAttributes()
-  : d_ptr( new SocialNetworkAttributesPrivate() )
+  : d( new SocialNetworkAttributesPrivate() )
 {
 }
 
@@ -40,10 +40,8 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes( const QString &userNa
                                                            const QString &networkName,
                                                            bool canPublish,
                                                            uint maxPostLength )
-  : d_ptr( new SocialNetworkAttributesPrivate() )
+  : d( new SocialNetworkAttributesPrivate() )
 {
-  Q_D( SocialNetworkAttributes );
-
   d->attributes[QLatin1String( "userName" )] = userName;
   d->attributes[QLatin1String( "networkName" )] = networkName;
   d->attributes[QLatin1String( "canPublish" )] = canPublish;
@@ -52,20 +50,17 @@ Akonadi::SocialNetworkAttributes::SocialNetworkAttributes( const QString &userNa
 
 Akonadi::SocialNetworkAttributes::~SocialNetworkAttributes()
 {
+  delete d;
 }
 
 void Akonadi::SocialNetworkAttributes::deserialize( const QByteArray &data )
 {
-  Q_D( SocialNetworkAttributes );
-
   QJson::Parser parser;
   d->attributes = parser.parse(data).toMap();
 }
 
 QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   QJson::Serializer serializer;
 #if !defined( USE_QJSON_0_8 )
   return serializer.serialize( d->attributes );
@@ -76,8 +71,6 @@ QByteArray Akonadi::SocialNetworkAttributes::serialized() const
 
 Akonadi::Attribute *Akonadi::SocialNetworkAttributes::clone() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   return
     new SocialNetworkAttributes(
       d->attributes[QLatin1String( "userName" )].toString(),
@@ -93,28 +86,20 @@ QByteArray Akonadi::SocialNetworkAttributes::type() const
 
 QString Akonadi::SocialNetworkAttributes::userName() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   return d->attributes[QLatin1String( "userName" )].toString();
 }
 
 QString Akonadi::SocialNetworkAttributes::networkName() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   return d->attributes[QLatin1String( "networkName" )].toString();
 }
 
 bool Akonadi::SocialNetworkAttributes::canPublish() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   return d->attributes[QLatin1String( "canPublish" )].toBool();
 }
 
 uint Akonadi::SocialNetworkAttributes::maxPostLength() const
 {
-  Q_D( const SocialNetworkAttributes );
-
   return d->attributes[QLatin1String( "maxPostLength" )].toUInt();
 }
