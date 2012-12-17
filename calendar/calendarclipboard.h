@@ -27,9 +27,15 @@
 #include <QObject>
 
 namespace Akonadi {
-//TODO_SERGIO: Documentation and unit-tests.
+
 class IncidenceChanger;
 
+/**
+ * @short Class to copy or cut calendar incidences.
+ *
+ * @author Sérgio Martins <iamsergio@gmail.com>
+ * @since 4.11
+ */
 class AKONADI_CALENDAR_EXPORT CalendarClipboard : public QObject {
   Q_OBJECT
 public:
@@ -40,9 +46,19 @@ public:
     AskMode         ///< The user is asked if he wants children to be cut/copied too
   };
 
+  /**
+   * Constructs a new CalendarClipboard.
+   * @param calendar calendar containing incidences
+   * @param changer incidence changer that will delete incidences while copying.
+   *        If 0, an internal one will be created.
+   * @param parent QObject parent
+   */
   explicit CalendarClipboard( const Akonadi::CalendarBase::Ptr &calendar,
                               Akonadi::IncidenceChanger *changer = 0,
                               QObject *parent = 0 );
+  /**
+   * Destroys the CalendarClipboard instance.
+   */
   ~CalendarClipboard();
 
   /**
@@ -66,7 +82,7 @@ public:
                       CalendarClipboard::Mode mode = RecursiveMode );
 
   /**
-   * Returns if there's any ical mime data available for pasting
+   * Returns if there's any ical mime data available for pasting.
    */
   bool pasteAvailable() const;
 

@@ -31,7 +31,7 @@
 namespace Akonadi {
 class FetchJobCalendarPrivate;
 /**
-* @short A Calendar that gets populated by a one time IncidenceFetchJob.
+* @short A KCalCore::Calendar that uses a one time IncidenceFetchJob to populate itself.
 *
 * If you want a persistent calendar ( which monitors Akonadi for changes )
 * use an ETMCalendar.

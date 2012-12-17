@@ -34,13 +34,26 @@ namespace Akonadi {
 class ETMCalendarPrivate;
 class CollectionSelection;
 
+/**
+ * @short A KCalCore::Calendar that uses an EntityTreeModel to populate itself.
+ *
+ * All non-idempotent KCalCore::Calendar methods interact with Akonadi.
+ *
+ * If you need a need a non-persistent calendar, use FetchJobCalendar.
+ *
+ * @see FetchJobCalendar
+ * @see CalendarBase
+ *
+ * @author Sérgio Martins <iamsergio@gmail.com>
+ * @since 4.11
+ */
 class AKONADI_CALENDAR_EXPORT ETMCalendar : public CalendarBase
 {
   Q_OBJECT
 public:
 
   enum CollectionColumn {
-    CollectionTitle=0,
+    CollectionTitle = 0,
     CollectionColumnCount
   };
 
@@ -56,6 +69,9 @@ public:
     */
   ~ETMCalendar();
 
+  /**
+   * Returns the collection having @p id.
+   */
   Akonadi::Collection collection( Akonadi::Collection::Id ) const;
 
   /**
@@ -69,6 +85,7 @@ public:
     */
   bool hasRight( const QString &uid, Akonadi::Collection::Right right ) const;
 
+  //TODO: Document
   QAbstractItemModel *unfilteredModel() const;
   QAbstractItemModel *filteredModel() const;
   KCheckableProxyModel *checkableProxyModel() const;

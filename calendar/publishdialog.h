@@ -26,6 +26,7 @@
 
 class PublishDialog_base;
 
+//TODO: documentation
 // Uses akonadi-contact, so don't move this class to KCalUtils.
 namespace Akonadi {
 

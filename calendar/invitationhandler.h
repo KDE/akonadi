@@ -37,9 +37,14 @@
 #include <QWidget>
 
 //TODO rename this class to reflect it's functionality
+//TODO documentation
 
 namespace Akonadi {
 
+/**
+ * @short Ui delegate for editing counter proposals.
+ * @since 4.11
+ */
 class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
 {
   public:
@@ -50,6 +55,10 @@ class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
     virtual void createCalendar() = 0;
 };
 
+/**
+ * @short Handles sending of iTip invitations aswell as processing incoming ones.
+ * @since 4.11
+ */
 class AKONADI_CALENDAR_EXPORT InvitationHandler : public QObject
 {
   Q_OBJECT
@@ -59,7 +68,14 @@ public:
     ResultSuccess     /**< The invitation was successfuly handled. */
   };
 
+  /**
+   * Creates a new InvitationHandler instance.
+   */
   explicit InvitationHandler( QObject *parent = 0 );
+
+  /**
+   * Destroys this instance.
+   */
   ~InvitationHandler();
 
   /**
@@ -68,6 +84,8 @@ public:
    * @param receiver
    * @param iCal
    * @param type
+   *
+   * @see iTipMessageProcessed()
    */
   void processiTIPMessage( const QString &receiver, const QString &iCal, const QString &type );
 
@@ -87,12 +105,22 @@ public:
 
   void sendAsICalendar( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
 
+
+  /**
+   * Sets the delegate to edit counter proposals.
+   */
   void setGroupwareUiDelegate( GroupwareUiDelegate * );
 
 Q_SIGNALS:
+  /**
+   * Sent after processing an incoming iTip message.
+   *
+   * @param result success of the operation.
+   * @param errorMessage translated error message suitable for user dialogs.
+   *                     Empty if the operation was successul
+   */
   void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
                              const QString &errorMessage );
-
 
   /**
    * Signal emitted after an iTip message was sent through sendiTIPMessage().

@@ -35,6 +35,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kdab.com>
  * @see Akonadi::Attribute
+ * @since 4.11
  */
 class AKONADI_CALENDAR_EXPORT BlockAlarmsAttribute : public Akonadi::Attribute
 {

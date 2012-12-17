@@ -27,7 +27,7 @@
 #include "etmcalendar.h"
 
 #include <kcalcore/freebusycache.h>
-
+//TODO: document
 namespace Akonadi {
 class FreeBusyManagerPrivate;
 class FreeBusyManagerStatic;
