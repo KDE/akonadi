@@ -68,17 +68,17 @@ bool SocialFeedItemSerializerPlugin::deserialize( Item &item,
   feedItem.setItemSourceMap( map.value( QLatin1String( "itemSourceMap" ) ).toMap() );
 
   if ( map.keys().contains( QLatin1String( "postReplies" ) ) ) {
-    QList<PostReply> replies;
+    QList<SocialFeedItem> replies;
     Q_FOREACH ( const QVariant &replyData, map.value( QLatin1String( "postReplies" ) ).toList() ) {
       QVariantMap reply = replyData.toMap();
-      PostReply postReply;
-      postReply.userId        = reply.value( QLatin1String( "userId" ) ).toString();
-      postReply.userName      = reply.value( QLatin1String( "userName" ) ).toString();
-      postReply.userAvatarUrl = reply.value( QLatin1String( "userAvatarUrl" ) ).toString();
-      postReply.replyText     = reply.value( QLatin1String( "replyText" ) ).toString();
-      postReply.replyTime     = reply.value( QLatin1String( "replyTime" ) ).toString();
-      postReply.replyId       = reply.value( QLatin1String( "replyId" ) ).toString();
-      postReply.postId        = reply.value( QLatin1String( "postId" ) ).toString();
+      SocialFeedItem postReply;
+      postReply.setUserId( reply.value( QLatin1String( "userId" ) ).toString() );
+      postReply.setUserName( reply.value( QLatin1String( "userName" ) ).toString() );
+      postReply.setAvatarUrl( reply.value( QLatin1String( "userAvatarUrl" ) ).toString() );
+      postReply.setPostText( reply.value( QLatin1String( "replyText" ) ).toString() );
+//       postReply.setPostTime( reply.value( QLatin1String( "replyTime" ) ).toString();
+      postReply.setPostId( reply.value( QLatin1String( "replyId" ) ).toString() );
+//       postReply.postId        = reply.value( QLatin1String( "postId" ) ).toString();
 
       replies.append( postReply );
     }
@@ -129,15 +129,15 @@ void SocialFeedItemSerializerPlugin::serialize( const Item &item,
 
   if (!feedItem.postReplies().isEmpty() ) {
     QVariantList replies;
-    Q_FOREACH ( const PostReply &reply, feedItem.postReplies() ) {
+    Q_FOREACH ( const SocialFeedItem &reply, feedItem.postReplies() ) {
       QVariantMap replyData;
-      replyData.insert( QLatin1String( "userId" ), reply.userId );
-      replyData.insert( QLatin1String( "userName" ), reply.userName );
-      replyData.insert( QLatin1String( "userAvatarUrl" ), reply.userAvatarUrl );
-      replyData.insert( QLatin1String( "replyText" ), reply.replyText );
-      replyData.insert( QLatin1String( "replyTime" ), reply.replyTime );
-      replyData.insert( QLatin1String( "replyId" ), reply.replyId );
-      replyData.insert( QLatin1String( "postId" ), reply.postId );
+      replyData.insert( QLatin1String( "userId" ), reply.userId() );
+      replyData.insert( QLatin1String( "userName" ), reply.userName() );
+      replyData.insert( QLatin1String( "userAvatarUrl" ), reply.avatarUrl() );
+      replyData.insert( QLatin1String( "replyText" ), reply.postText() );
+//       replyData.insert( QLatin1String( "replyTime" ), reply.postTimeString() );
+      replyData.insert( QLatin1String( "replyId" ), reply.postId() );
+//       replyData.insert( QLatin1String( "postId" ), reply.postId );
       replies.append( replyData );
     }
 

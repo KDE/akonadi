@@ -18,50 +18,11 @@
 */
 
 #include "socialfeeditem.h"
+#include "socialfeeditem_p.h"
 
 #include <KDateTime>
 
 #include <qjson/qobjecthelper.h>
-
-class Akonadi::SocialFeedItemPrivate : public QSharedData
-{
-  public:
-    SocialFeedItemPrivate();
-    SocialFeedItemPrivate( const Akonadi::SocialFeedItemPrivate &other );
-
-    QVariantMap itemSourceMap;
-    QString networkString;
-    QString postId;
-    QString postText;
-    QUrl postLink;
-    QString postLinkTitle;
-    QUrl postImageUrl;
-    QString userName;
-    QString userDisplayName;
-    QString userId;
-    QString postTimeString;
-    QString postTimeFormat;
-    KDateTime postTime;
-    QString postInfo;
-    bool shared;
-    QString sharedFrom;
-    QString sharedFromId;
-    QUrl avatarUrl;
-    bool liked;
-    QList<PostReply> replies;
-};
-
-Akonadi::SocialFeedItemPrivate::SocialFeedItemPrivate()
-  : QSharedData()
-{
-}
-
-Akonadi::SocialFeedItemPrivate::SocialFeedItemPrivate( const Akonadi::SocialFeedItemPrivate &other )
-  : QSharedData( other )
-{
-}
-
-//========================================================================================
 
 Akonadi::SocialFeedItem::SocialFeedItem()
   : d( new SocialFeedItemPrivate )
@@ -75,6 +36,13 @@ Akonadi::SocialFeedItem::SocialFeedItem( const Akonadi::SocialFeedItem &other )
 
 Akonadi::SocialFeedItem::~SocialFeedItem()
 {
+}
+
+Akonadi::SocialFeedItem& Akonadi::SocialFeedItem::operator=(const Akonadi::SocialFeedItem& other)
+{
+  if ( this == &other ) return *this; //Protect against self-assignment
+  d = other.d;
+  return *this;
 }
 
 QString Akonadi::SocialFeedItem::networkString() const
@@ -260,12 +228,12 @@ void Akonadi::SocialFeedItem::setLiked( bool liked )
   d->liked = liked;
 }
 
-QList<Akonadi::PostReply> Akonadi::SocialFeedItem::postReplies() const
+QList<Akonadi::SocialFeedItem> Akonadi::SocialFeedItem::postReplies() const
 {
   return d->replies;
 }
 
-void Akonadi::SocialFeedItem::setPostReplies( const QList<Akonadi::PostReply> &replies )
+void Akonadi::SocialFeedItem::setPostReplies( const QList<Akonadi::SocialFeedItem> &replies )
 {
   d->replies = replies;
 }
