@@ -28,6 +28,8 @@
 
 namespace Akonadi {
 
+class SocialNetworkAttributesPrivate;
+
 class LIBAKONADISOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Attribute
 {
   public:
@@ -70,7 +72,8 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialNetworkAttributes : public Akonadi::Att
     uint maxPostLength() const;
 
   private:
-    QVariantMap mAttributes;
+    SocialNetworkAttributesPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE( SocialNetworkAttributes )
 };
 
 }
