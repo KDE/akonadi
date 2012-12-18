@@ -47,7 +47,7 @@ class MailScheduler : public Akonadi::Scheduler
     /**
      * @param calendar Must be a valid and loaded calendar.
      */
-    MailScheduler( QObject *parent = 0 );
+    explicit MailScheduler( QObject *parent = 0 );
     ~MailScheduler();
 
     /** reimp */

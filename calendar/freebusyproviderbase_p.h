@@ -40,7 +40,7 @@ class FreeBusyProviderBasePrivate : public QObject
   Q_OBJECT
 
 public:
-  FreeBusyProviderBasePrivate( FreeBusyProviderBase *qq );
+  explicit FreeBusyProviderBasePrivate( FreeBusyProviderBase *qq );
 
 Q_SIGNALS:
   /**
