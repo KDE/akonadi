@@ -63,30 +63,38 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   Q_ASSERT( item.isValid() );
   mItemById.insert( item.id(), item );
   KCalCore::Incidence::Ptr incidence= item.payload<KCalCore::Incidence::Ptr>();
-  Q_ASSERT( incidence );
-  if ( incidence ) {
-    //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
-    const QString uid = incidence->uid();
-    Q_ASSERT( !uid.isEmpty() );
 
-    if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
-      // We only allow duplicate UIDs if they have the same item id, for example
-      // when using virtual folders.
-      kWarning() << "Discarding duplicate incidence with uid=" << uid
-                 << "and summary " << incidence->summary();
-      return;
-    }
-
-    mItemIdByUid.insert( incidence->uid(), item.id() );
-
-    // Insert parent relationships
-    const QString parentUid = incidence->relatedTo();
-    if ( !parentUid.isEmpty() ) {
-      mParentUidToChildrenUid[parentUid].append( incidence->uid() );
-    }
-    // Must be the last one due to re-entrancy
-    q->MemoryCalendar::addIncidence( incidence );
+  if ( !incidence ) {
+    kError() << "Incidence is null. id=" << item.id()
+             << "; hasPayload()=" << item.hasPayload()
+             << "; has incidence=" << item.hasPayload<KCalCore::Incidence::Ptr>()
+             << "; mime type="    << item.mimeType();
+    Q_ASSERT( false );
+    return;
   }
+
+  //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
+  const QString uid = incidence->uid();
+  Q_ASSERT( !uid.isEmpty() );
+
+  if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
+    // We only allow duplicate UIDs if they have the same item id, for example
+    // when using virtual folders.
+    kWarning() << "Discarding duplicate incidence with uid=" << uid
+                << "and summary " << incidence->summary();
+    return;
+  }
+
+  mItemIdByUid.insert( incidence->uid(), item.id() );
+
+  // Insert parent relationships
+  const QString parentUid = incidence->relatedTo();
+  if ( !parentUid.isEmpty() ) {
+    mParentUidToChildrenUid[parentUid].append( incidence->uid() );
+  }
+  // Must be the last one due to re-entrancy
+  q->MemoryCalendar::addIncidence( incidence );
+
 }
 
 void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
