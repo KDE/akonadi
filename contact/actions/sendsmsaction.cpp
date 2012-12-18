@@ -54,6 +54,7 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
   if ( dlg->exec() != QDialog::Accepted ) { // the cancel button has been clicked
     return;
   }
+  const QString message = ( dlg != 0 ? dlg->message() : QString() );
   delete dlg;
 
   // synchronize
@@ -62,7 +63,7 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
   //   we handle skype separated
   if ( ContactActionsSettings::self()->sendSmsAction() == ContactActionsSettings::UseSkypeSms ) {
     QSkypeDialer dialer( QLatin1String( "AkonadiContacts" ) );
-    if ( dialer.sendSms( number, dlg.message() ) ) {
+    if ( dialer.sendSms( number, message ) ) {
       // I'm not sure whether here should be a notification.
       // Skype can do a notification itself if whished.
     } else {
@@ -85,8 +86,8 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
    */
   command = command.replace( QLatin1String( "%N" ), phoneNumber.number() );
   command = command.replace( QLatin1String( "%n" ), strippedSmsNumber( number ) );
-  command = command.replace( QLatin1String( "%t" ), dlg.message() );
+  command = command.replace( QLatin1String( "%t" ), message );
   //Bug: 293232 In KDE3 We used %F to replace text
-  command = command.replace( QLatin1String( "%F" ), dlg.message() );
+  command = command.replace( QLatin1String( "%F" ), message );
   KRun::runCommand( command, 0 );
 }
