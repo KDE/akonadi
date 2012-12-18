@@ -40,7 +40,7 @@ class NotificationMessage;
 class ObjectNotificationMessage
 {
 public:
-  explicit ObjectNotificationMessage(const Akonadi::NotificationMessage &message = Akonadi::NotificationMessage());
+  ObjectNotificationMessage(const Akonadi::NotificationMessage &message = Akonadi::NotificationMessage()); // krazy:exclude=explicit
 
   static bool appendAndCompress( QList<ObjectNotificationMessage> &vector, const Akonadi::ObjectNotificationMessage &message);
   static bool appendAndCompress( QVector<ObjectNotificationMessage> &vector, const Akonadi::ObjectNotificationMessage &message);
