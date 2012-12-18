@@ -710,9 +710,8 @@ void FreeBusyManager::setCalendar( const Akonadi::ETMCalendar::Ptr &c )
   d->mCalendar = c;
   if ( d->mCalendar ) {
     d->mFormat.setTimeSpec( d->mCalendar->timeSpec() );
+    connect( d->mCalendar.data(), SIGNAL(calendarChanged()), SLOT(uploadFreeBusy()) );
   }
-
-  connect( d->mCalendar.data(), SIGNAL(calendarChanged()), SLOT(uploadFreeBusy()) );
 
   // Lets see if we need to update our published
   QTimer::singleShot( 0, this, SLOT(uploadFreeBusy()) );
