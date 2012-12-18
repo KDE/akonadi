@@ -78,7 +78,7 @@ class InvitationHandlerHelper : public QObject
       ResultFailAbortUpdate, /**< Sending failed, the changes to the incidence must be undone. */
       ResultNoSendingNeeded, /**< In some cases it is not needed to send an invitation
                                 (e.g. when we are the only attendee) */
-      ResultError,           /**< An unexpected error occured */
+      ResultError,           /**< An unexpected error occurred */
       ResultSuccess          /**< The invitation was sent to all attendees. */
     };
 

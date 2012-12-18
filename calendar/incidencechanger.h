@@ -88,7 +88,7 @@ public:
     */
   enum ResultCode {
     ResultCodeSuccess = 0,
-    ResultCodeJobError, ///< ItemCreateJob, ItemModifyJob or ItemDeleteJob weren't successfull
+    ResultCodeJobError, ///< ItemCreateJob, ItemModifyJob or ItemDeleteJob weren't successful
     ResultCodeAlreadyDeleted, ///< That incidence was already deleted, or currently being deleted.
     ResultCodeInvalidDefaultCollection, ///< Default collection is invalid and DestinationPolicyNeverAsk was used
     ResultCodeRolledback, ///< One change belonging to an atomic operation failed. All other changes were rolled back.

@@ -134,7 +134,7 @@ void History::redo( QWidget *parent )
 void History::undoAll( QWidget *parent )
 {
   if ( d->mOperationTypeInProgress != TypeNone ) {
-    kWarning() << "Dont call History::undoAll() while an undo/redo/undoAll is in progress";
+    kWarning() << "Don't call History::undoAll() while an undo/redo/undoAll is in progress";
   } else if ( d->mEnabled ) {
     d->mUndoAllInProgress = true;
     d->mCurrentParent = parent;

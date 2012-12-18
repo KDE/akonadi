@@ -141,7 +141,7 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
           } else {
             newInc->setSchedulingID( newInc->uid(), oldUid );
             calendar->modifyIncidence( newInc );
-            return; // signal will be emited in the handleModifyFinished() slot
+            return; // signal will be emitted in the handleModifyFinished() slot
           }
         }
       }

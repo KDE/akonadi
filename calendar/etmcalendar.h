@@ -91,7 +91,7 @@ public:
   KCheckableProxyModel *checkableProxyModel() const;
 
   /**
-    * Returns all alarms occuring in a specified time interval.
+    * Returns all alarms occurring in a specified time interval.
     * @param from start date of interval
     * @param to end data of interval
     * @param exludeBlockedAlarms if true, alarms belonging to blocked collections aren't returned.

@@ -64,7 +64,7 @@ class AKONADI_CALENDAR_EXPORT InvitationHandler : public QObject
   Q_OBJECT
 public:
   enum Result {
-    ResultError,      /**< An unexpected error occured */
+    ResultError,      /**< An unexpected error occurred */
     ResultSuccess     /**< The invitation was successfuly handled. */
   };
 
