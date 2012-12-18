@@ -107,10 +107,13 @@ ErrorOverlay::ErrorOverlay( QWidget *baseWidget, QWidget * parent ) :
   connect( ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()) );
 
   const ServerManager::State state = ServerManager::state();
-  mOverlayActive = state == ServerManager::Running;
+  mOverlayActive = (state == ServerManager::Running);
   serverStateChanged( state );
+
   connect( ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+
+
 
   QPalette p = palette();
   p.setColor( backgroundRole(), QColor( 0, 0, 0, 128 ) );
@@ -171,7 +174,12 @@ bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
 
 void ErrorOverlay::startClicked()
 {
-  ServerManager::start();
+  const ServerManager::State state = ServerManager::state();
+  if( state == ServerManager::Running ) {
+    serverStateChanged( state );
+  } else {
+    ServerManager::start();
+  }
 }
 
 void ErrorOverlay::quitClicked()
