@@ -18,8 +18,8 @@
   02110-1301, USA.
 */
 
-#include "calendarsettings.h"
 #include "mailscheduler_p.h"
+#include "calendarsettings.h"
 #include "calendarbase.h"
 #include "utils_p.h"
 
