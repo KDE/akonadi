@@ -66,7 +66,17 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   Q_ASSERT( incidence );
   if ( incidence ) {
     //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
-    Q_ASSERT( !incidence->uid().isEmpty() );
+    const QString uid = incidence->uid();
+    Q_ASSERT( !uid.isEmpty() );
+
+    if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
+      // We only allow duplicate UIDs if they have the same item id, for example
+      // when using virtual folders.
+      kWarning() << "Discarding duplicate incidence with uid=" << uid
+                 << "and summary " << incidence->summary();
+      return;
+    }
+
     mItemIdByUid.insert( incidence->uid(), item.id() );
 
     // Insert parent relationships
