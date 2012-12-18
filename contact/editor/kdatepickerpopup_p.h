@@ -90,7 +90,7 @@ class KDatePickerPopup: public QMenu
   Q_SIGNALS:
 
     /**
-      This signal emits the new date (selected with datepicker or  other
+      This signal emits the new date (selected with datepicker or other
       menu-items).
       @param date changed date
     */

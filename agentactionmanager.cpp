@@ -154,7 +154,7 @@ class AgentActionManager::Private
     {
       QPointer<Akonadi::AgentTypeDialog> dlg( new Akonadi::AgentTypeDialog( mParentWidget ) );
       dlg->setCaption( contextText( AgentActionManager::CreateAgentInstance,
-                                   AgentActionManager::DialogTitle ) );
+                                    AgentActionManager::DialogTitle ) );
 
       foreach ( const QString &mimeType, mMimeTypeFilter ) {
         dlg->agentFilterProxyModel()->addMimeTypeFilter( mimeType );

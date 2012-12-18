@@ -132,7 +132,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
     /**
      * Include also unsubscribed collections.
      * @deprecated Use CollectionFetchScope instead.
-     * @param include whether to alsof fetch unsubscribed collections
+     * @param include whether to also fetch unsubscribed collections
      */
     KDE_DEPRECATED void includeUnsubscribed( bool include = true );
 
