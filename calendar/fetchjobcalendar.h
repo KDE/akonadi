@@ -72,6 +72,9 @@ Q_SIGNALS:
     * @param errorMessage if @p success is false, contains the error message
     */
   void loadFinished( bool success, const QString &errorMessage );
+
+private:
+  Q_DECLARE_PRIVATE( FetchJobCalendar )
 };
 
 }
