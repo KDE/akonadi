@@ -32,6 +32,7 @@ class KCheckableProxyModel;
 
 namespace Akonadi {
 
+class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 
 class ETMCalendarPrivate : public CalendarBasePrivate
@@ -75,7 +76,7 @@ public Q_SLOTS:
   void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
 
 public:
-  QAbstractItemModel *mETM;
+  Akonadi::EntityTreeModel *mETM;
   Akonadi::EntityMimeTypeFilterModel *mFilteredETM;
 
   // akonadi id to collections

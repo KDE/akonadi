@@ -31,6 +31,7 @@ class KCheckableProxyModel;
 
 namespace Akonadi {
 
+class EntityTreeModel;
 class ETMCalendarPrivate;
 class CollectionSelection;
 
@@ -89,6 +90,12 @@ public:
   QAbstractItemModel *unfilteredModel() const;
   QAbstractItemModel *filteredModel() const;
   KCheckableProxyModel *checkableProxyModel() const;
+
+  /**
+   * EntityTreeModel used to populate this KCalCore::Calendar.
+   * Never returns 0.
+   */
+  Akonadi::EntityTreeModel *entityTreeModel() const;
 
   /**
     * Returns all alarms occurring in a specified time interval.

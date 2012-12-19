@@ -426,5 +426,11 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
   return alarmList;
 }
 
+Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
+{
+  Q_D( const ETMCalendar );
+  return d->mETM;
+}
+
 #include "etmcalendar.moc"
 #include "etmcalendar_p.moc"
