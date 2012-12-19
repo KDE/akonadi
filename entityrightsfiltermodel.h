@@ -87,12 +87,12 @@ class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
      Collection::Rights accessRights() const;
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
                                    Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;

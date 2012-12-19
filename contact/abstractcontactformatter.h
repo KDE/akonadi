@@ -67,6 +67,7 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
 
     /**
      * Sets the @p contact that will be formatted.
+     * @param contact contact to be formatted
      */
     void setContact( const KABC::Addressee &contact );
 
@@ -116,6 +117,7 @@ class AKONADI_CONTACT_EXPORT AbstractContactFormatter
     /**
      * This method must be reimplemented to return the contact formatted as HTML
      * according to the requested @p form.
+     * @param form how to render the contact into HTML
      */
     virtual QString toHtml( HtmlForm form = SelfcontainedForm ) const = 0;
 

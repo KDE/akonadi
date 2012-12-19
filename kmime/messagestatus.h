@@ -57,22 +57,26 @@ class AKONADI_KMIME_EXPORT MessageStatus
     /** Assign the status from another instance. The internal
         representation is identical afterwards, i.e. a comparison
         by operator == will return true.
+        @param other message status to copy from
     */
     MessageStatus &operator = ( const MessageStatus &other );
 
     /** Compare the status with that from another instance.
         @return true if the stati are equal, false if different.
+        @param other message status to compare with current object
     */
     bool operator == ( const MessageStatus &other ) const;
 
     /** Compare the status with that from another instance.
         @return true if the stati are equal, false if different.
+        @param other message status to compare with current object
     */
     bool operator != ( const MessageStatus &other ) const;
 
     /** Check, if some of the flags in the status match
         with those flags from another instance.
         @return true if at least one flag is set in both stati.
+        @param other message status to compare objects' flags
     */
     bool operator & ( const MessageStatus &other ) const;
 
@@ -84,12 +88,14 @@ class AKONADI_KMIME_EXPORT MessageStatus
         using the single setter methods.
         However, internally the setters are used anyway to ensure the
         integrity of the resulting status.
+        @param other message status to set
     */
     void set( const MessageStatus &other );
 
     /** Toggle one or more stati described by another MessageStatus object.
         Internally the setters are used to ensure the integrity of the
         resulting status.
+        @param other message status to toggle
     */
     void toggle( const MessageStatus &other );
 
@@ -187,7 +193,10 @@ class AKONADI_KMIME_EXPORT MessageStatus
 
     /* ----- setters ----------------------------------------------------- */
 
-    /** Set the status to read. */
+    /**
+      * Set the status to read
+      * @param read new read status
+    */
     void setRead( bool read = true );
 
     /** Set the status for deleted.
@@ -309,7 +318,7 @@ class AKONADI_KMIME_EXPORT MessageStatus
     QSet<QByteArray> statusFlags() const;
 
     /** Set the status as a whole e.g. for reading from IMAP flags.
-        @param status The status encoded in bits to be set in this instance.
+        @param flags set of flags for status as a whole
     */
     void setStatusFromFlags( const QSet<QByteArray> &flags );
 

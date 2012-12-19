@@ -113,7 +113,7 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      * Creates a new contact editor dialog with a custom editor widget.
      *
      * @param mode The mode of the dialog.
-     * @param editorWidget The contact editor widget that shall be used for editing.
+     * @param displayMode The mode of displaying: full or vcard
      * @param parent The parent widget of the dialog.
      * @since 4.10
      */

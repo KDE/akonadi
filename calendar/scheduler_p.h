@@ -65,8 +65,10 @@ public:
   ~Scheduler();
 
   /**
-    iTIP publish action
-    @param incidence. Must a valid incidence.
+    * Notify @p recipients about @p incidence
+    *
+    * @param incidence the incidence to send
+    * @param recipients the people to send it to
   */
   virtual void publish( const KCalCore::IncidenceBase::Ptr &incidence,
                         const QString &recipients ) = 0;

@@ -105,7 +105,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual void setModel( QAbstractItemModel * model );
 

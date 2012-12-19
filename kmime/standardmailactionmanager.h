@@ -86,12 +86,16 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Sets the collection selection model based on which the collection
      * related actions should operate. If none is set, all collection actions
      * will be disabled.
+     *
+     * @param selectionModel selection model for collections
      */
     void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
 
     /**
      * Sets the item selection model based on which the item related actions
      * should operate. If none is set, all item actions will be disabled.
+     *
+     * @param selectionModel selection model for items
      */
     void setItemSelectionModel( QItemSelectionModel* selectionModel );
 
@@ -99,6 +103,8 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
+     *
+     * @param type action type
      */
     KAction* createAction( Type type );
 
@@ -106,6 +112,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
+     * @param type action type
      */
     KAction* createAction( StandardActionManager::Type type );
 
@@ -117,11 +124,13 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
 
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
+     * @param type action type
      */
     KAction* action( Type type ) const;
 
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
+     * @param type action type
      */
     KAction* action( StandardActionManager::Type type ) const;
 
@@ -136,6 +145,9 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * acctMgr->setActionText( Akonadi::StandardActionManager::CopyItems,
      *                         ki18np( "Copy Item", "Copy %1 Items" ) );
      * @endcode
+     *
+     * @param type action type
+     * @param text localized text for action
      */
     void setActionText( StandardActionManager::Type type, const KLocalizedString &text );
 
@@ -152,6 +164,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * Sets whether the default implementation for the given action @p type
      * shall be executed when the action is triggered.
      *
+     * @param type action type
      * @param intercept If @c false, the default implementation will be executed,
      *                  if @c true no action is taken.
      */
@@ -174,6 +187,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
      * will be disabled.
      *
+     * @param favoritesModel model for a user's favorite mail collections
      */
     void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
 
@@ -182,6 +196,7 @@ class AKONADI_KMIME_EXPORT StandardMailActionManager : public QObject
      * collection related actions should operate. If none is set, all favorite modifications
      * actions will be disabled.
      *
+     * @param selection model for favorite collections
      */
     void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
 

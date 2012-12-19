@@ -109,7 +109,7 @@ class AKONADI_EXPORT EntityListView : public QListView
     void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual void setModel( QAbstractItemModel * model );
 

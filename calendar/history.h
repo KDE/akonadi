@@ -94,7 +94,7 @@ public:
     *
     * @param oldItem item containing the payload before the change. Must be valid
     *        and contain an Incidence::Ptr payload.
-    * @param newitem item containing the new payload. Must be valid and contain
+    * @param newItem item containing the new payload. Must be valid and contain
     *        an Incidence::Ptr payload.
     * @param description text that can be used in the undo/redo menu item to describe the operation
     *        If empty, a default one will be provided.
@@ -128,7 +128,9 @@ public:
     * be undone calling undo() once.
     *
     * @param items The list of items to delete. All items must be valid.
-    * @param atomicOperation If != 0, specifies which group of changes thischange belongs to.
+    * @param description text that can be used in the undo/redo menu item to describe the operation
+    *        If empty, a default one will be provided.
+    * @param atomicOperationId If != 0, specifies which group of changes thischange belongs to.
     *        Will be useful for atomic undoing/redoing, not implemented yet.
     */
   void recordDeletions( const Akonadi::Item::List &items,

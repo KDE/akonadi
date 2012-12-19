@@ -171,6 +171,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *   }
      *
      * @endcode
+     *
+     * @param argc number of arguments
+     * @param argv string arguments
      */
     template <typename T>
     static int init( int argc, char **argv )
@@ -331,7 +334,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Call this method from retrieveCollectionAttributes() once the result is available.
      *
-     * @param item The collection whose attributes got retrieved.
+     * @param collection The collection whose attributes got retrieved.
      * @since 4.6
      */
     void collectionAttributesRetrieved( const Collection &collection );
@@ -409,6 +412,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * that way.
      * @deprecated Use setItemStreamingEnabled( true ) + itemsRetrieved[Incremental]()
      * + itemsRetrieved() instead.
+     * @param amount number of items that will arrive in streaming mode
      */
     void setTotalItems( int amount );
 
@@ -421,6 +425,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
 
     /**
      * Set transaction mode for item sync'ing.
+     * @param mode item transaction mode
      * @see Akonadi::ItemSync::TransactionMode
      * @since 4.6
      */
@@ -476,6 +481,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * The method should be used when the backend indicated that the cached content
      * is no longer valid.
      *
+     * @param collection parent of the content to be invalidated in cache
      * @since 4.8
      */
     void invalidateCache( const Collection &collection );
@@ -534,6 +540,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     /**
      * Stops the execution of the current task and continues with the next one.
      * Additionally an error message is emitted.
+     * @param error additional error message to be emitted
      */
     void cancelTask( const QString &error );
 
@@ -564,6 +571,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * This should be called in the resource constructor as needed.
      *
+     * @param enable whether to enable use of hierachical remote identifiers
      * @since 4.4
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );

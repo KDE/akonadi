@@ -233,7 +233,7 @@ class AKONADI_EXPORT MimeTypeChecker
     /**
      * Checks whether a given @p collection has the given MIME type
      *
-     * @param item The collection to check the content MIME types of.
+     * @param collection The collection to check the content MIME types of.
      * @param wantedMimeType The MIME type to check against.
      *
      * @return @c true if one of the @p collection content MIME types is

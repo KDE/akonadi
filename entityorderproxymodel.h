@@ -72,17 +72,17 @@ class AKONADI_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
     void clearTreeOrder();
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
 
     /**
-     * @reimplemented
+     * @reimp
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1,
                                    Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;

@@ -201,12 +201,16 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Sets the collection selection model based on which the collection
      * related actions should operate. If none is set, all collection actions
      * will be disabled.
+     *
+     * @param selectionModel model to be set for collection
      */
     void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
 
     /**
      * Sets the item selection model based on which the item related actions
      * should operate. If none is set, all item actions will be disabled.
+     *
+     * @param selectionModel selection model for items
      */
     void setItemSelectionModel( QItemSelectionModel* selectionModel );
 
@@ -215,6 +219,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * relatedactions should operate. If none is set, the "Add to Favorite Folders" action
      * will be disabled.
      *
+     * @param favoritesModel model for the user's favorite collections
      * @since 4.4
      */
     void setFavoriteCollectionsModel( FavoriteCollectionsModel *favoritesModel );
@@ -224,6 +229,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * collection related actions should operate. If none is set, all favorite modifications
      * actions will be disabled.
      *
+     * @param selectionModel selection model for favorite collections
      * @since 4.4
      */
     void setFavoriteSelectionModel( QItemSelectionModel *selectionModel );
@@ -232,6 +238,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Creates the action of the given type and adds it to the action collection
      * specified in the constructor if it does not exist yet. The action is
      * connected to its default implementation provided by this class.
+     *
+     * @param type action to be created
      */
     KAction* createAction( Type type );
 
@@ -243,6 +251,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
 
     /**
      * Returns the action of the given type, 0 if it has not been created (yet).
+     * @param type action type
      */
     KAction* action( Type type ) const;
 
@@ -264,6 +273,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Sets whether the default implementation for the given action @p type
      * shall be executed when the action is triggered.
      *
+     * @param type action type
      * @param intercept If @c false, the default implementation will be executed,
      *                  if @c true no action is taken.
      *
@@ -290,6 +300,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     /**
      * Sets the @p text of the action @p type for the given @p context.
      *
+     * @param type action type
+     * @param context context for action
+     * @param text content to set for the action
      * @since 4.6
      */
     void setContextText( Type type, TextContext context, const QString &text );
@@ -297,6 +310,9 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     /**
      * Sets the @p text of the action @p type for the given @p context.
      *
+     * @param type action type
+     * @param context context for action
+     * @param text content to set for the action
      * @since 4.6
      */
     void setContextText( Type type, TextContext context, const KLocalizedString &text );
@@ -304,6 +320,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     /**
      * Sets the mime type filter that will be used when creating new resources.
      *
+     * @param mimeTypes filter for creating new resources
      * @since 4.6
      */
     void setMimeTypeFilter( const QStringList &mimeTypes );
@@ -311,6 +328,7 @@ class AKONADI_EXPORT StandardActionManager : public QObject
     /**
      * Sets the capability filter that will be used when creating new resources.
      *
+     * @param capabilities filter for creating new resources
      * @since 4.6
      */
     void setCapabilityFilter( const QStringList &capabilities );
@@ -319,12 +337,16 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * Sets the page @p names of the config pages that will be used by the
      * built-in collection properties dialog.
      *
+     * @param names list of names which will be used
      * @since 4.6
      */
     void setCollectionPropertiesPageNames( const QStringList &names );
 
     /**
      * Create a popup menu.
+     *
+     * @param menu parent menu for a popup
+     * @param type action type
      * @since 4.8
      */
     void createActionFolderMenu(QMenu *menu, Type type);

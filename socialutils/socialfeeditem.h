@@ -103,7 +103,7 @@ class LIBAKONADISOCIALUTILS_EXPORT SocialFeedItem
     /**
      * Sets the link title the posts links to
      *
-     * @param link Title of the link
+     * @param linkTitle Title of the link
      */
     void setPostLinkTitle( const QString &linkTitle );
 

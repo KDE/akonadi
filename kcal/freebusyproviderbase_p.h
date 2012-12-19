@@ -51,7 +51,6 @@ class FreeBusyProviderBasePrivate : public QObject
      *              answered for.
      * @param handles Whether the resource handles free-busy information
      *              (true) or not (false).
-     * @param identifier The resource identifier
      */
     void handlesFreeBusy( const QString &email, bool handles );
 

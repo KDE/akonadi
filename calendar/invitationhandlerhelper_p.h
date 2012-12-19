@@ -129,7 +129,7 @@ class InvitationHandlerHelper : public QObject
     /**
       Handles sending of invitations for modified incidences.
       @param incidence The modified incidence.
-      @param attendeeSatusChanged ????
+      @param attendeeStatusChanged if @c true and @p method is #iTIPRequest ask the user whether to send a status update as well
      */
     InvitationHandlerHelper::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
                                                                       const KCalCore::Incidence::Ptr &incidence,
@@ -144,8 +144,8 @@ class InvitationHandlerHelper : public QObject
 
     /**
       Send counter proposal message.
-      @param oldEvent The original event provided in the invitations.
-      @param newEvent The new event as edited by the user.
+      @param oldIncidence The original event provided in the invitations.
+      @param newIncidence The new event as edited by the user.
     */
     InvitationHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
                                                              const KCalCore::Incidence::Ptr &newIncidence );
