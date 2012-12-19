@@ -44,10 +44,10 @@ using namespace KCalCore;
 //TODO: implement batchAdding
 
 ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate( qq )
-                                                            , mETM( 0 )
-                                                            , mFilteredETM( 0 )
-                                                            , mCheckableProxyModel( 0 )
-                                                            , q( qq )
+                                                          , mETM( 0 )
+                                                          , mFilteredETM( 0 )
+                                                          , mCheckableProxyModel( 0 )
+                                                          , q( qq )
 {
 }
 
