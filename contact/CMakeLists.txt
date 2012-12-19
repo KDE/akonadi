@@ -150,11 +150,13 @@ target_link_libraries(akonadi-contact akonadi-kde
                                       kmime
                                       kpimutils
                                       ${KDE4_KDEUI_LIBS}
-				      ${KDE4_KIO_LIBS} ${NEPOMUK_CORE_LIBRARY})
+				      ${KDE4_KIO_LIBS} 
+                                      ${NEPOMUK_CORE_LIBRARY})
 
 if(PRISON_FOUND) 
 target_link_libraries(akonadi-contact ${PRISON_LIBRARIES})
 endif()
+
 target_link_libraries(akonadi-contact LINK_INTERFACE_LIBRARIES
                                       akonadi-kde
                                       kabc
