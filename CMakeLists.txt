@@ -127,16 +127,28 @@ set_default_db_backend(${DATABASE_BACKEND})
 #### Qt 4 and 5 ####
 set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
 set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
-find_package(Qt5Transitional REQUIRED Gui Sql Network Xml DBus)
 
-if (QT5_BUILD)
+find_package(Qt5Core QUIET)
+if (Qt5Core_FOUND)
+  find_package(Qt5Gui REQUIRED)
+  find_package(Qt5Widgets REQUIRED)
+  find_package(Qt5Sql REQUIRED)
+  find_package(Qt5Network REQUIRED)
+  find_package(Qt5Xml REQUIRED)
+  find_package(Qt5DBus REQUIRED)
+  find_package(Qt5Test REQUIRED)
+  set(QT5_BUILD TRUE)
+
+  include("cmake/modules/ECMQt4To5Porting.cmake")
+  include_directories(${QT_INCLUDES}) # TODO: Port away from this.
+
   if (CMAKE_VERSION VERSION_LESS 2.8.9)
     message(FATAL_ERROR "Akonadi Qt 5 build requires at least CMake version 2.8.9")
   endif()
 
-  find_package(Qt5Test REQUIRED)
   set(QT_QTTEST_LIBRARIES Qt5::Test)
 else()
+  find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})
 endif()
 
