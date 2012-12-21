@@ -101,7 +101,13 @@ int HandlerHelper::itemWithFlagsCount(const Akonadi::Collection& col, const QStr
   CountQueryBuilder qb( PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct );
   qb.addJoin( QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName() );
-  qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
+  if ( col.isVirtual() ) {
+    qb.addJoin( QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+                CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName() );
+    qb.addValueCondition( CollectionPimItemRelation::leftFullColumnName(), Query::Equals, col.id() );
+  } else {
+    qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, col.id() );
+  }
   Query::Condition cond( Query::Or );
   // We use the below instead of an inner join in the query above because postgres seems
   // to struggle to optimize the two inner joins, despite having indeces that should
