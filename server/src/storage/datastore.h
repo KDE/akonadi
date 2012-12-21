@@ -23,6 +23,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QList>
 #include <QtCore/QMutex>
+#include <QtCore/QVector>
 #include <QtCore/QWaitCondition>
 #include <QtSql/QSqlDatabase>
 
@@ -146,6 +147,10 @@ class DataStore : public QObject
       The active cache policy is set in the corresponding Collection fields.
     */
     void activeCachePolicy( Collection &col );
+
+    /// Returns all virtual collections the @p item is linked to
+    QVector<Collection> virtualCollections( const PimItem &item );
+
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );

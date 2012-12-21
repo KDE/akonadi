@@ -465,6 +465,26 @@ void DataStore::activeCachePolicy(Collection & col)
   col.setCachePolicyLocalParts( QLatin1String("ALL") );
 }
 
+QVector<Collection> DataStore::virtualCollections( const PimItem& item )
+{
+  QueryBuilder qb( CollectionPimItemRelation::tableName(), QueryBuilder::Select );
+  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+              Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName() );
+  Q_FOREACH ( const QString &columnName, Collection::fullColumnNames() ) {
+    qb.addColumn( columnName  );
+  }
+  qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id() );
+
+  if ( !qb.exec() ) {
+    akDebug() << "Error during selection of records from table CollectionPimItemRelation"
+      << qb.query().lastError().text();
+    return QVector<Collection>();
+  }
+
+  return Collection::extractResult( qb.query() );
+}
+
+
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 {

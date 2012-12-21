@@ -158,36 +158,61 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
                                               const QByteArray & resource,
                                               const QSet<QByteArray> &parts )
 {
-  NotificationMessage msg;
-  msg.setSessionId( mSessionId );
-  msg.setType( NotificationMessage::Item );
-  msg.setOperation( op );
-  msg.setUid( item.id() );
-  msg.setRemoteId( item.remoteId() );
-  msg.setItemParts( parts );
+  QVector<Collection> collections;
 
-  //HACK: store remoteRevision in itemparts for deletion
-  if ( op == NotificationMessage::Remove )
-    msg.setItemParts( QSet<QByteArray>() << item.remoteRevision().toUtf8() );
+  if ( op == NotificationMessage::Modify ) {
+    collections = DataStore::self()->virtualCollections(item);
+  }
 
-  if ( collectionDest.isValid() ) // only relevant for moves
-    msg.setDestinationResource( collectionDest.resource().name().toLatin1() );
+  if ( !collection.isValid() ) {
+    collections.append( item.collection() );
+  } else {
+    collections.append ( collection );
+  }
 
-  Collection col = collection;
-  if ( !col.isValid() )
-    col = item.collection();
-  msg.setParentCollection( col.id() );
-  // will be valid if it is a move message
-  msg.setParentDestCollection( collectionDest.id() );
+  QByteArray destResourceName;
+  if ( collectionDest.isValid() ) {
+    destResourceName = collectionDest.resource().name().toLatin1();
+  }
+
   QString mt = mimeType;
-  if ( mt.isEmpty() )
+  if ( mt.isEmpty() ) {
     mt = item.mimeType().name();
-  msg.setMimeType( mt );
-  QByteArray res = resource;
-  if ( res.isEmpty() )
-    res = col.resource().name().toLatin1();
-  msg.setResource( res );
-  dispatchNotification( msg );
+  }
+
+  QSet<QByteArray> itemParts;
+  itemParts << item.remoteRevision().toUtf8();
+
+  /* Notify parent collection as well as all virtual collections the item
+   * is linked to */
+  Q_FOREACH( const Collection &col, collections ) {
+    NotificationMessage msg;
+    msg.setSessionId( mSessionId );
+    msg.setType( NotificationMessage::Item );
+    msg.setOperation( op );
+    msg.setUid( item.id() );
+    msg.setRemoteId( item.remoteId() );
+    msg.setItemParts( parts );
+
+    //HACK: store remoteRevision in itemparts for deletion
+    if ( op == NotificationMessage::Remove )
+      msg.setItemParts( itemParts );
+
+    if ( !destResourceName.isEmpty() ) // only relevant for moves
+      msg.setDestinationResource( destResourceName );
+
+    msg.setParentCollection( col.id() );
+    // will be valid if it is a move message
+    msg.setParentDestCollection( collectionDest.id() );
+    msg.setMimeType( mt );
+
+    QByteArray res = resource;
+    if ( res.isEmpty() )
+      res = col.resource().name().toLatin1();
+    msg.setResource( res );
+
+    dispatchNotification( msg );
+  }
 }
 
 void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
