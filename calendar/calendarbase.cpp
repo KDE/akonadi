@@ -207,8 +207,11 @@ Akonadi::Item CalendarBase::item( Akonadi::Item::Id id ) const
 Akonadi::Item CalendarBase::item( const QString &uid ) const
 {
   Q_D(const CalendarBase);
-  Q_ASSERT( !uid.isEmpty() );
   Akonadi::Item i;
+
+  if ( uid.isEmpty() )
+    return i;
+
   if ( d->mItemIdByUid.contains( uid ) ) {
     const Akonadi::Item::Id id = d->mItemIdByUid[uid];
     if ( !d->mItemById.contains( id ) ) {
