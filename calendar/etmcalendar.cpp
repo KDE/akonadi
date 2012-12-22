@@ -370,16 +370,10 @@ bool ETMCalendar::hasRight( const Akonadi::Item &item, Akonadi::Collection::Righ
   return col.rights() & right;
 }
 
-QAbstractItemModel *ETMCalendar::filteredModel() const
+QAbstractItemModel *ETMCalendar::model() const
 {
   Q_D( const ETMCalendar );
   return d->mFilteredETM;
-}
-
-QAbstractItemModel *ETMCalendar::unfilteredModel() const
-{
-  Q_D( const ETMCalendar );
-  return d->mETM;
 }
 
 KCheckableProxyModel *ETMCalendar::checkableProxyModel() const

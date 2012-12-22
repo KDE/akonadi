@@ -39,8 +39,11 @@ class CollectionSelection;
  * @short A KCalCore::Calendar that uses an EntityTreeModel to populate itself.
  *
  * All non-idempotent KCalCore::Calendar methods interact with Akonadi.
+ * If you need a need a non-persistent calendar use FetchJobCalendar.
  *
- * If you need a need a non-persistent calendar, use FetchJobCalendar.
+ * ETMCalendar allows to be populated with only a subset of your calendar items,
+ * by using a KCheckableProxyModel to specify which collections to be used
+ * and/or by setting a KCalCore::CalFilter.
  *
  * @see FetchJobCalendar
  * @see CalendarBase
@@ -86,14 +89,36 @@ public:
     */
   bool hasRight( const QString &uid, Akonadi::Collection::Right right ) const;
 
-  //TODO: Document
-  QAbstractItemModel *unfilteredModel() const;
-  QAbstractItemModel *filteredModel() const;
+  /**
+   * Returns the KCheckableProxyModel used to select from which collections should
+   * the calendar be populated from.
+   */
   KCheckableProxyModel *checkableProxyModel() const;
 
   /**
-   * EntityTreeModel used to populate this KCalCore::Calendar.
-   * Never returns 0.
+   * Convinience method to access the contents of this KCalCore::Calendar through
+   * a QAIM interface.
+   *
+   * Like through calendar interface, the model only items of selected collections.
+   * To select or unselect collections, see checkableProxyModel().
+   *
+   * @see checkableProxyModel()
+   * @see entityTreeModel()
+   */
+  QAbstractItemModel *model() const;
+
+  /**
+   * Returns the underlying EntityTreeModel.
+   *
+   * For most uses, you'll want model() or the KCalCore::Calendar interface instead.
+   *
+   * It contains every item and collection with calendar mime type, doesn't have
+   * KCalCore filtering and doesn't honour any collection selection.
+   *
+   * This method is exposed for performance reasons only, so you can reuse it,
+   * since it's resource savy.
+   *
+   * @see model()
    */
   Akonadi::EntityTreeModel *entityTreeModel() const;
 
