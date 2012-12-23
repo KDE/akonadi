@@ -34,6 +34,7 @@ namespace Akonadi {
 
 class EntityTreeModel;
 class EntityMimeTypeFilterModel;
+class CollectionFilterProxyModel;
 
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
@@ -82,6 +83,7 @@ public:
   // akonadi id to collections
   QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
   KCheckableProxyModel *mCheckableProxyModel;
+  Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
 private:
   ETMCalendar *const q;
 };

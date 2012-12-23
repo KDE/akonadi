@@ -32,6 +32,7 @@
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/collectionfilterproxymodel.h>
 #include <KSelectionProxyModel>
 #include <kcheckableproxymodel.h>
 
@@ -100,27 +101,28 @@ void ETMCalendarPrivate::init()
 
 void ETMCalendarPrivate::setupFilteredETM()
 {
-  // Our calendar tree must be sorted.
-  QSortFilterProxyModel *sortFilterProxy = new QSortFilterProxyModel( this );
-  sortFilterProxy->setObjectName( "Sort" );
-  sortFilterProxy->setDynamicSortFilter( true );
-  sortFilterProxy->setSortCaseSensitivity( Qt::CaseInsensitive );
-  sortFilterProxy->setSourceModel( mETM );
-
   // We're only interested in the CollectionTitle column
   KColumnFilterProxyModel *columnFilterProxy = new KColumnFilterProxyModel( this );
-  columnFilterProxy->setSourceModel( sortFilterProxy );
+  columnFilterProxy->setSourceModel( mETM );
   columnFilterProxy->setVisibleColumn( CalendarModel::CollectionTitle );
   columnFilterProxy->setObjectName( "Remove columns" );
 
+  mCollectionProxyModel = new Akonadi::CollectionFilterProxyModel( this );
+  mCollectionProxyModel->setObjectName( "Only show collections" );
+  mCollectionProxyModel->setDynamicSortFilter( true );
+  mCollectionProxyModel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
+  mCollectionProxyModel->setExcludeVirtualCollections( true );
+  mCollectionProxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+  mCollectionProxyModel->setSourceModel( columnFilterProxy );
+
   // Keep track of selected items.
-  QItemSelectionModel* selectionModel = new QItemSelectionModel( columnFilterProxy );
+  QItemSelectionModel* selectionModel = new QItemSelectionModel( mCollectionProxyModel );
   selectionModel->setObjectName( "Calendar Selection Model" );
 
   // Make item selection work by means of checkboxes.
   mCheckableProxyModel = new KCheckableProxyModel( this );
   mCheckableProxyModel->setSelectionModel( selectionModel );
-  mCheckableProxyModel->setSourceModel( columnFilterProxy );
+  mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
 
   KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
