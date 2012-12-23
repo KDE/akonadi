@@ -35,7 +35,6 @@ public:
     DateTimeStart,
     DateTimeEnd,
     DateTimeDue,
-    PrimaryDate,
     Priority,
     PercentComplete,
     ItemColumnCount

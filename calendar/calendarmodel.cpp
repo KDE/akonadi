@@ -42,28 +42,12 @@ static KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item )
     KCalCore::Incidence::Ptr();
 }
 
-static KCalCore::Event::Ptr event( const Akonadi::Item &item )
-{
-  return
-    item.hasPayload<KCalCore::Event::Ptr>() ?
-    item.payload<KCalCore::Event::Ptr>() :
-    KCalCore::Event::Ptr();
-}
-
 static KCalCore::Todo::Ptr todo( const Akonadi::Item &item )
 {
   return
     item.hasPayload<KCalCore::Todo::Ptr>() ?
     item.payload<KCalCore::Todo::Ptr>() :
     KCalCore::Todo::Ptr();
-}
-
-static KCalCore::Journal::Ptr journal( const Akonadi::Item &item )
-{
-  return
-    item.hasPayload<KCalCore::Journal::Ptr>() ?
-    item.payload<KCalCore::Journal::Ptr>() :
-    KCalCore::Journal::Ptr();
 }
 
 class CalendarModel::Private
@@ -88,23 +72,6 @@ CalendarModel::CalendarModel( Akonadi::ChangeRecorder *monitor, QObject *parent 
 CalendarModel::~CalendarModel()
 {
   delete d;
-}
-
-static KDateTime primaryDateForIncidence( const Akonadi::Item &item )
-{
-  if ( const KCalCore::Todo::Ptr t = todo( item ) ) {
-    return t->hasDueDate() ? t->dtDue() : KDateTime();
-  }
-
-  if ( const KCalCore::Event::Ptr e = event( item ) ) {
-    return ( !e->recurs() && !e->isMultiDay() ) ? e->dtStart() : KDateTime();
-  }
-
-  if ( const KCalCore::Journal::Ptr j = journal( item ) ) {
-    return j->dtStart();
-  }
-
-  return KDateTime();
 }
 
 QVariant CalendarModel::entityData( const Akonadi::Item &item, int column, int role ) const
@@ -162,12 +129,8 @@ QVariant CalendarModel::entityData( const Akonadi::Item &item, int column, int r
         return QVariant();
       }
 
-    case PrimaryDate:
-      return primaryDateForIncidence( item ).toString();
-
     case Type:
-
-      return inc->type();
+      return inc->typeStr();
     default:
       break;
     }
@@ -189,9 +152,6 @@ QVariant CalendarModel::entityData( const Akonadi::Item &item, int column, int r
       } else {
         return QVariant();
       }
-
-    case PrimaryDate:
-      return primaryDateForIncidence( item ).toUtc().dateTime();
 
     case Priority:
       if ( KCalCore::Todo::Ptr t = todo( item ) ) {
