@@ -1,7 +1,21 @@
-1.8.80                         12-November-2012
+1.9.0                        23-December-2012
+---------------------------------------------
+- Respect collection cache policy refresh interval for collection tree sync.
+- Fix initialization of PostgreSQL database.
+- Correctly count items flags in virtual collections.
+- Notify parent virtual collections about item changes.
+- Require CMake >= 2.8.8.
+- Remove dependency to Automoc4.
+- Support Qt 5.
+
+1.8.80                       12-November-2012
 ---------------------------------------------
 - Recover from lost external payload files.
 - Improve the virtual collections handling.
+- Notify clients about database schema updates.
+- Reduce item access time updates.
+- Make use of referential integrity if supported by the database backend.
+- Add prepared query cache.
 - Many code and queries optimizations.
 
 1.8.1                         14-October-2012
