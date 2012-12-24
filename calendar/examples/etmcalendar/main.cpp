@@ -12,7 +12,7 @@ int main( int argv, char **argc )
   QApplication app( argv, argc );
 
   ETMCalendar calendar;
-  
+
   QWidget *window = new QWidget();
   QHBoxLayout *layout = new QHBoxLayout( window );
 
@@ -24,8 +24,8 @@ int main( int argv, char **argc )
 
   layout->addWidget( collectionSelectionView );
   layout->addWidget( itemView );
-  
+
   window->show();
-  
+
   return app.exec();
 }
