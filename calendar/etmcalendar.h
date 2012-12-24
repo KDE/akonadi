@@ -135,6 +135,21 @@ public:
                                 const KDateTime &to,
                                 bool excludeBlockedAlarms ) const;
 
+  /**
+   * Enable or disable collection filtering.
+   * If true, the calendar will only contain items of selected collections.
+   *
+   * @see checkableProxyModel()
+   * @see collectionFilteringEnabled()
+   */                           
+  void setCollectionFilteringEnabled( bool enable );
+
+  /**
+   * Returns whether collection filtering is enabled. Default is true.
+   * @see setCollectionFilteringEnabled()
+   */
+  bool collectionFilteringEnabled() const;
+
 Q_SIGNALS:
   /**
     * This signal is emitted if a collection has been changed (properties or attributes).

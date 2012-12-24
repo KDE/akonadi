@@ -12,3 +12,4 @@ SOURCES += main.cpp
 INCLUDEPATH += /usr/include/KDE
 
 LIBS += -lakonadi-calendar -lkdecore
+CONFIG += debug

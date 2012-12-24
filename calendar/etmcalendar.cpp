@@ -35,7 +35,8 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <KSelectionProxyModel>
-#include <kcheckableproxymodel.h>
+#include <KCheckableProxyModel>
+#include <KDescendantsProxyModel>
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
@@ -52,6 +53,7 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                           , mCollectionProxyModel( 0 )
                                                           , mCalFilterProxyModel( 0 )
                                                           , mSelectionProxy( 0 )
+                                                          , mCollectionFilteringEnabled( true )
                                                           , q( qq )
 {
 }
@@ -130,7 +132,7 @@ void ETMCalendarPrivate::setupFilteredETM()
   mCheckableProxyModel->setSelectionModel( selectionModel );
   mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
-
+  
   mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
   mSelectionProxy->setObjectName( "Only show items of selected collection" );
   mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
@@ -442,6 +444,30 @@ Akonadi::EntityTreeModel *ETMCalendar::entityTreeModel() const
 {
   Q_D( const ETMCalendar );
   return d->mETM;
+}
+
+void ETMCalendar::setCollectionFilteringEnabled( bool enable )
+{
+  Q_D( ETMCalendar );
+  if ( d->mCollectionFilteringEnabled != enable ) {
+    d->mCollectionFilteringEnabled = enable;
+    if ( enable ) {
+      d->mSelectionProxy->setSourceModel( d->mETM );
+      QAbstractItemModel *oldModel = d->mCalFilterProxyModel->sourceModel();
+      d->mCalFilterProxyModel->setSourceModel( d->mSelectionProxy );
+      delete qobject_cast<KDescendantsProxyModel *>( oldModel );
+    } else {
+      KDescendantsProxyModel *flatner = new KDescendantsProxyModel( this );
+      flatner->setSourceModel( d->mETM );
+      d->mCalFilterProxyModel->setSourceModel( flatner );
+    }
+  }
+}
+
+bool ETMCalendar::collectionFilteringEnabled() const
+{
+  Q_D( const ETMCalendar );
+  return d->mCollectionFilteringEnabled;
 }
 
 #include "etmcalendar.moc"

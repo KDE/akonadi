@@ -91,7 +91,8 @@ public:
   KCheckableProxyModel *mCheckableProxyModel;
   Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
   Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
-  KSelectionProxyModel* mSelectionProxy;
+  KSelectionProxyModel *mSelectionProxy;
+  bool mCollectionFilteringEnabled;
 private:
   ETMCalendar *const q;
 };
