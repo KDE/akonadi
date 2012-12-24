@@ -2,6 +2,7 @@
 Name=Knut
 Name[ar]=Knut
 Name[bg]=Knut
+Name[bs]=Knut
 Name[ca]=Knut
 Name[ca@valencia]=Knut
 Name[cs]=Knut
@@ -50,6 +51,7 @@ Name[zh_CN]=Knut
 Name[zh_TW]=Knut
 Comment=An agent for debugging purpose
 Comment[ar]=أداة لتصحيح الأخطاء
+Comment[bs]=Agent za svrhe debagiranja
 Comment[ca]=Un agent amb la finalitat de depuració
 Comment[ca@valencia]=Un agent amb la finalitat de depuració
 Comment[cs]=Agent pro ladicí účely
