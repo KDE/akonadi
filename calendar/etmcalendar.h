@@ -96,7 +96,7 @@ public:
   KCheckableProxyModel *checkableProxyModel() const;
 
   /**
-   * Convinience method to access the contents of this KCalCore::Calendar through
+   * Convenience method to access the contents of this KCalCore::Calendar through
    * a QAIM interface.
    *
    * Like through calendar interface, the model only items of selected collections.
