@@ -13,6 +13,7 @@ set(akonadicalendar_LIB_SRC
   calendarbase.cpp
   calendarclipboard.cpp
   calendarmodel.cpp
+  calfilterproxymodel_p.cpp
   etmcalendar.cpp
   history.cpp
   history_p.cpp

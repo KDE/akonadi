@@ -29,12 +29,14 @@
 
 class QAbstractItemModel;
 class KCheckableProxyModel;
+class KSelectionProxyModel;
 
 namespace Akonadi {
 
 class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 class CollectionFilterProxyModel;
+class CalFilterProxyModel;
 
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
@@ -58,6 +60,10 @@ public Q_SLOTS:
                                                   const QModelIndex &parentIndex = QModelIndex(),
                                                   int start = 0,
                                                   int end = -1 );
+
+  // KCalCore::CalFilter has changed.
+  void onFilterChanged();
+
   void clear();
   Akonadi::Item itemFromIndex( const QModelIndex &idx );
   Akonadi::Collection collectionFromIndex( const QModelIndex &index );
@@ -84,6 +90,8 @@ public:
   QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
   KCheckableProxyModel *mCheckableProxyModel;
   Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
+  Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
+  KSelectionProxyModel* mSelectionProxy;
 private:
   ETMCalendar *const q;
 };

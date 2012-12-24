@@ -23,6 +23,7 @@
 #include "incidencefetchjob_p.h"
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
+#include "calfilterproxymodel_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/session.h>
@@ -48,6 +49,9 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                           , mETM( 0 )
                                                           , mFilteredETM( 0 )
                                                           , mCheckableProxyModel( 0 )
+                                                          , mCollectionProxyModel( 0 )
+                                                          , mCalFilterProxyModel( 0 )
+                                                          , mSelectionProxy( 0 )
                                                           , q( qq )
 {
 }
@@ -75,6 +79,8 @@ void ETMCalendarPrivate::init()
   mETM->setObjectName( "ETM" );
 
   setupFilteredETM();
+
+  connect( q, SIGNAL(filterChanged()), SLOT(onFilterChanged()) );
 
   connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(onRowsInserted(QModelIndex,int,int)) );
@@ -125,14 +131,19 @@ void ETMCalendarPrivate::setupFilteredETM()
   mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
 
-  KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
-  selectionProxy->setObjectName( "Only show items of selected collection" );
-  selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
-  selectionProxy->setSourceModel( mETM );
+  mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
+  mSelectionProxy->setObjectName( "Only show items of selected collection" );
+  mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  mSelectionProxy->setSourceModel( mETM );
+
+  mCalFilterProxyModel = new CalFilterProxyModel( this );
+  mCalFilterProxyModel->setFilter( q->filter() );
+  mCalFilterProxyModel->setSourceModel( mSelectionProxy );
+  mCalFilterProxyModel->setObjectName( "KCalCore::CalFilter filtering" );
 
   mFilteredETM = new Akonadi::EntityMimeTypeFilterModel( this );
+  mFilteredETM->setSourceModel( mCalFilterProxyModel );
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
-  mFilteredETM->setSourceModel( selectionProxy );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
 }
@@ -339,6 +350,11 @@ void ETMCalendarPrivate::onRowsAboutToBeRemovedInFilteredModel( const QModelInde
                                                                 int start, int end )
 {
   itemsRemoved( itemsFromModel( mFilteredETM, index, start, end ) );
+}
+
+void ETMCalendarPrivate::onFilterChanged()
+{
+  mCalFilterProxyModel->setFilter( q->filter() );
 }
 
 ETMCalendar::ETMCalendar() : CalendarBase( new ETMCalendarPrivate( this ) )
