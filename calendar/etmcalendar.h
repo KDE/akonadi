@@ -66,7 +66,7 @@ public:
   /**
     * Constructs a new ETMCalendar. Loading begins immediately, asynchronously.
     */
-  explicit ETMCalendar();
+  ETMCalendar();
 
   /**
     * Destroys this ETMCalendar.
