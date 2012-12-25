@@ -20,11 +20,11 @@
 
 #include "calfilterproxymodel_p.h"
 
-#include <Akonadi/Item>
-#include <Akonadi/EntityTreeModel>
+#include <akonadi/item.h>
+#include <akonadi/entitytreemodel.h>
 
-#include <KCalCore/CalFilter>
-#include <KCalCore/Incidence>
+#include <kcalcore/calfilter.h>
+#include <kcalcore/incidence.h>
 
 using namespace Akonadi;
 
