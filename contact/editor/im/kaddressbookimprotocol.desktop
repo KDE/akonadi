@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KABC/IMProtocol
 X-KDE-KAddressBook-CEWVersion=1
 Name=KAddressbook Instant Messaging Protocol
+Name[bs]=Protokol brzih poruka K adresara
 Name[ca]=Protocol de missatgeria instantània del KAddressbook
 Name[ca@valencia]=Protocol de missatgeria instantània del KAddressbook
 Name[cs]=KAddressbook instant messaging protokol
