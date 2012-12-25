@@ -33,8 +33,8 @@ InvitationHandler::Private::Private( InvitationHandler *qq )
                                      , m_currentOperation( OperationNone )
                                      , q( qq )
 {
-  connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::MailScheduler::Result,QString)),
-           SLOT(onSchedulerFinished(Akonadi::MailScheduler::Result,QString)) );
+  connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
+           SLOT(onSchedulerFinished(Akonadi::Scheduler::Result,QString)) );
 
   connect( m_helper, SIGNAL(finished(Akonadi::InvitationHandlerHelper::SendResult,QString)),
            SLOT(onHelperFinished(Akonadi::InvitationHandlerHelper::SendResult,QString)) );
