@@ -79,7 +79,7 @@ public:
 
 public Q_SLOTS:
   void onLoadFinished( bool success, const QString &errorMessage );
-  void onSchedulerFinished( Akonadi::MailScheduler::Result, const QString &errorMessage );
+  void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
   void onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
                          const QString &errorMessage );
 };

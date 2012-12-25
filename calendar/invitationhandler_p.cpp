@@ -42,7 +42,7 @@ InvitationHandler::Private::Private( InvitationHandler *qq )
   connect( m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)) );
 }
 
-void InvitationHandler::Private::onSchedulerFinished( Akonadi::MailScheduler::Result result,
+void InvitationHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result result,
                                                       const QString &errorMessage )
 {
   Q_ASSERT( m_currentOperation != OperationProcessiTIPMessage );
