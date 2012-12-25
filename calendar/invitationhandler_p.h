@@ -75,7 +75,7 @@ public:
   Operation m_currentOperation;
   QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
   GroupwareUiDelegate *m_uiDelegate;
-  InvitationHandler *q;
+  InvitationHandler *const q;
 
 public Q_SLOTS:
   void onLoadFinished( bool success, const QString &errorMessage );
