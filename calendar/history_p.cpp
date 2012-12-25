@@ -160,7 +160,6 @@ DeletionEntry::DeletionEntry( const Akonadi::Item::List &items, const QString &d
                               History *q ) : Entry( items, description, q )
 {
   const Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
-  //TODO i18n
   if ( mDescription.isEmpty() ) {
     mDescription = i18n( "%1 deletion",
                          KCalUtils::Stringify::incidenceType( incidence->type() ) );
