@@ -338,7 +338,7 @@ public:
 
   /**
     * Returns the collection that the last createIncidence() used.
-    * Will invalid if no incidences were created yet.
+    * Will be invalid if no incidences were created yet.
     *
     * @see createIncidence().
     */
