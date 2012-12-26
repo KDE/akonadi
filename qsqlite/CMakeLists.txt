@@ -6,7 +6,7 @@ set(QSqlite_SRCS
 
 message(STATUS "Building QSQLITE3 driver")
 
-if (INSTALL_QSQLITE_IN_QT_PREFIX)
+if(INSTALL_QSQLITE_IN_QT_PREFIX)
   set(QSQLITE_INSTALL_PREFIX "${QT_PLUGINS_DIR}/sqldrivers")
 else()
   set(QSQLITE_INSTALL_PREFIX "${LIB_INSTALL_DIR}/plugins/sqldrivers")
@@ -22,26 +22,26 @@ include_directories(
   ${SQLITE_INCLUDE_DIR}
 )
 
-if (AKONADI_STATIC_SQLITE)
-add_definitions(-DQT_STATICPLUGIN)
-add_library(qsqlite3 STATIC ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
-else(AKONADI_STATIC_SQLITE)
-add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
-endif (AKONADI_STATIC_SQLITE)
+if(AKONADI_STATIC_SQLITE)
+  add_definitions(-DQT_STATICPLUGIN)
+  add_library(qsqlite3 STATIC ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
+else()
+  add_library(qsqlite3 SHARED ${QSqlite_SRCS} ${QSqlite_MOC_SRCS})
+endif()
 
-target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY} )
+target_link_libraries(qsqlite3 ${QT_QTCORE_LIBRARY} ${QT_QTSQL_LIBRARY})
 
-if ( SQLITE_LINK_STATIC )
+if(SQLITE_LINK_STATIC)
   message(STATUS "SQlite ${SQLITE_STATIC_LIBRARIES}")
   target_link_libraries(qsqlite3 ${SQLITE_STATIC_LIBRARIES})
-else ( SQLITE_LINK_STATIC )
+else()
   message(STATUS "SQlite ${SQLITE_LIBRARIES}")
   target_link_libraries(qsqlite3 ${SQLITE_LIBRARIES})
-endif ( SQLITE_LINK_STATIC )
+endif()
 
-if (WINCE)
+if(WINCE)
     target_link_libraries(qsqlite3 ${WCECOMPAT_LIBRARIES})
-endif(WINCE)
+endif()
 
 INSTALL(TARGETS qsqlite3
   RUNTIME DESTINATION ${QSQLITE_INSTALL_PREFIX}

@@ -45,7 +45,7 @@ else (WIN32)
     else (NOT DEFINED ${_var})
       SET (${_var} "${${_var}}" CACHE PATH "${_comment}")
     endif (NOT DEFINED ${_var})
-  endmacro(_SET_FANCY)
+  endmacro()
 
 
   _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")

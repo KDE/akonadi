@@ -34,7 +34,7 @@ if(AKONADI_USE_STRIGI_SEARCH)
   set(AKONADI_DEFINITIONS "-DAKONADI_USE_STRIGI_SEARCH")
   add_definitions(${AKONADI_DEFINITIONS})
   set(SOPRANO_TYPE "OPTIONAL")
- else()
+else()
   set(SOPRANO_TYPE "REQUIRED")
 endif()
 
@@ -129,7 +129,7 @@ set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
 set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
 
 find_package(Qt5Core QUIET)
-if (Qt5Core_FOUND)
+if(Qt5Core_FOUND)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Sql REQUIRED)
@@ -142,7 +142,7 @@ if (Qt5Core_FOUND)
   include("cmake/modules/ECMQt4To5Porting.cmake")
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
 
-  if (CMAKE_VERSION VERSION_LESS 2.8.9)
+  if(CMAKE_VERSION VERSION_LESS 2.8.9)
     message(FATAL_ERROR "Akonadi Qt 5 build requires at least CMake version 2.8.9")
   endif()
 
@@ -152,7 +152,7 @@ else()
   include(${QT_USE_FILE})
 endif()
 
-if (Qt5_POSITION_INDEPENDENT_CODE)
+if(Qt5_POSITION_INDEPENDENT_CODE)
   set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
@@ -318,7 +318,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemLibDir)
 if("${_isSystemLibDir}" STREQUAL "-1")
   set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
-endif("${_isSystemLibDir}" STREQUAL "-1")
+endif()
 
 if(NOT DEFINED AKONADI_BUNDLE_PATH)
   set(AKONADI_BUNDLE_PATH "/Applications/KDE4")

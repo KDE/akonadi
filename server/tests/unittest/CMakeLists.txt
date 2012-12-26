@@ -1,10 +1,11 @@
 ########### next target ###############
+
 # QTEST_MAIN is using QApplication when QT_GUI_LIB is defined
 remove_definitions(-DQT_GUI_LIB)
 
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
-include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../src)
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
 macro(add_server_test _source _libs)
   set(_test ${_source})
@@ -13,10 +14,10 @@ macro(add_server_test _source _libs)
   add_executable(${_name} ${_test})
   add_test(akonadi-${_name} ${_name})
   target_link_libraries(${_name} akonadi_shared ${_libs} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARIES} ${QT_QTSQL_LIBRARY} ${QT_QTDBUS_LIBRARY})
-  if (AKONADI_STATIC_SQLITE)
-  target_link_libraries( ${_name} qsqlite3 )
-  endif (AKONADI_STATIC_SQLITE)
-endmacro(add_server_test)
+  if(AKONADI_STATIC_SQLITE)
+    target_link_libraries(${_name} qsqlite3)
+  endif()
+endmacro()
 
 add_server_test(imapstreamparsertest.cpp akonadiprivate)
 add_server_test(scopetest.cpp akonadiprivate)

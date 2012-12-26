@@ -1,60 +1,61 @@
-find_program( MYSQLD_EXECUTABLE NAMES mysqld
+find_program(MYSQLD_EXECUTABLE NAMES mysqld
               PATHS /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin /opt/mysql/sbin
               DOC "The mysqld executable path. ONLY needed at runtime"
             )
-if( MYSQLD_EXECUTABLE )
-   message( STATUS "MySQL Server found: ${MYSQLD_EXECUTABLE}" )
+
+if(MYSQLD_EXECUTABLE)
+   message(STATUS "MySQL Server found: ${MYSQLD_EXECUTABLE}")
 else()
-   message( STATUS "MySQL Server wasn't found. it is required to use the MySQL backend." )
+   message(STATUS "MySQL Server wasn't found. it is required to use the MySQL backend.")
 endif()
 
-find_path( POSTGRES_PATH NAMES pg_ctl
+find_path(POSTGRES_PATH NAMES pg_ctl
               HINTS /usr/lib${LIB_SUFFIX}/postgresql/8.4/bin
                     /usr/lib${LIB_SUFFIX}/postgresql/9.0/bin
                     /usr/lib${LIB_SUFFIX}/postgresql/9.1/bin
               DOC "The pg_ctl executable path. ONLY needed at runtime by the PostgreSQL backend"
          )
 
-if( POSTGRES_PATH )
-   message( STATUS "PostgreSQL Server found." )
-else ()
-   message( STATUS "PostgreSQL wasn't found. it is required to use the Postgres backend." )
+if(POSTGRES_PATH)
+   message(STATUS "PostgreSQL Server found.")
+else()
+   message(STATUS "PostgreSQL wasn't found. it is required to use the Postgres backend.")
 endif()
 
-include_directories( ${Akonadi_SOURCE_DIR}/libs )
-include_directories( ${Akonadi_BINARY_DIR}/libs )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/handler )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/src/nepomuk )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/tests )
-include_directories( ${Akonadi_SOURCE_DIR}/shared )
-if (Soprano_FOUND)
-  include_directories( ${SOPRANO_INCLUDE_DIR} )
-endif (Soprano_FOUND)
-include_directories( BEFORE ${CMAKE_CURRENT_SOURCE_DIR} )
-include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories(${Akonadi_SOURCE_DIR}/libs)
+include_directories(${Akonadi_BINARY_DIR}/libs)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/handler)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/nepomuk)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/tests)
+include_directories(${Akonadi_SOURCE_DIR}/shared)
+if(Soprano_FOUND)
+  include_directories(${SOPRANO_INCLUDE_DIR})
+endif()
+include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
-add_subdirectory( akonadictl )
-add_subdirectory( control )
-add_subdirectory( src )
-add_subdirectory( tests )
+add_subdirectory(akonadictl)
+add_subdirectory(control)
+add_subdirectory(src)
+add_subdirectory(tests)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}" )
-if ( MYSQLD_EXECUTABLE )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMYSQLD_EXECUTABLE=\"\\\"${MYSQLD_EXECUTABLE}\\\"\"" )
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
+if(MYSQLD_EXECUTABLE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DMYSQLD_EXECUTABLE=\"\\\"${MYSQLD_EXECUTABLE}\\\"\"")
 endif()
 
-if ( POSTGRES_PATH )
-  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPOSTGRES_PATH=\"\\\"${POSTGRES_PATH}\\\"\"" )
+if(POSTGRES_PATH)
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPOSTGRES_PATH=\"\\\"${POSTGRES_PATH}\\\"\"")
 endif()
 
 ########### next target ###############
 
 if(NOT WINCE)
-   set (AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml)
-else(NOT WINCE)
-   set (AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb-mobile.xml)
-endif(NOT WINCE)
+   set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml)
+else()
+   set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb-mobile.xml)
+endif()
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
@@ -174,45 +175,44 @@ if (Soprano_FOUND)
 
   qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.QueryService.xml queryserviceinterface)
   qt4_add_dbus_interface(libakonadiprivate_SRCS src/nepomuk/org.kde.nepomuk.Query.xml queryinterface)
-endif (Soprano_FOUND)
+endif()
 
-qt4_generate_dbus_interface( src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml )
+qt4_generate_dbus_interface(src/debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml)
 
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer
-)
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationSource.xml notificationsource.h Akonadi::NotificationSource )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::ResourceManager )
-qt4_add_dbus_adaptor( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::PreprocessorManager )
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::DBusTracer)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Tracer)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationSource.xml notificationsource.h Akonadi::NotificationSource)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::ResourceManager)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::PreprocessorManager)
 
-qt4_add_dbus_interfaces( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml )
-qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface )
-qt4_add_dbus_interface( libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface )
+qt4_add_dbus_interfaces(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml)
+qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)
+qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface)
 
-set(xesam_xml  ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.xesam.Search.xml)
+set(xesam_xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.xesam.Search.xml)
 
 set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
 
-qt4_add_dbus_interface( libakonadiprivate_SRCS ${xesam_xml} xesaminterface )
+qt4_add_dbus_interface(libakonadiprivate_SRCS ${xesam_xml} xesaminterface)
 
 if(NOT WINCE)
-  qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb.qrc )
-else(NOT WINCE)
-  qt4_add_resources( libakonadiprivate_SRCS src/storage/akonadidb_mobile.qrc )
-endif(NOT WINCE)
+  qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
+else()
+  qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb_mobile.qrc)
+endif()
 
 
-add_library( akonadiprivate STATIC ${libakonadiprivate_SRCS} )
+add_library(akonadiprivate STATIC ${libakonadiprivate_SRCS})
 
-if (QT5_BUILD)
+if(QT5_BUILD)
   # TODO: Remove when Qt 4 is no longer supported.
   set_property(TARGET akonadiprivate APPEND PROPERTY COMPILE_DEFINITIONS QT_DISABLE_DEPRECATED_BEFORE=0)
 endif()
 
-target_link_libraries( akonadiprivate
+target_link_libraries(akonadiprivate
   akonadi_shared
   ${QT_QTCORE_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
@@ -222,36 +222,35 @@ target_link_libraries( akonadiprivate
   ${AKONADI_PROTOCOLINTERNALS_LIBS}
   ${AKONADI_SYSTEM_LIBS}
 )
+
 if(Soprano_FOUND)
   target_link_libraries(akonadiprivate ${SOPRANO_LIBRARIES})
 endif()
+
 if(NOT WINCE)
-    target_link_libraries( akonadiprivate ${Boost_PROGRAM_OPTIONS_LIBRARY})
-endif(NOT WINCE)
+  target_link_libraries(akonadiprivate ${Boost_PROGRAM_OPTIONS_LIBRARY})
+endif()
 
+set(akonadiserver_bin_SRCS src/main.cpp)
 
-set( akonadiserver_bin_SRCS src/main.cpp )
+if(AKONADI_STATIC_SQLITE)
+  add_definitions(-DQT_STATICPLUGIN)
+endif()
 
-if (AKONADI_STATIC_SQLITE)
-add_definitions(-DQT_STATICPLUGIN)
-endif (AKONADI_STATIC_SQLITE)
+add_executable(akonadiserver_bin ${akonadiserver_bin_SRCS})
+set_target_properties(akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver)
+target_link_libraries(akonadiserver_bin akonadi_shared akonadiprivate ${QT_QTCORE_LIBRARY})
+if(AKONADI_STATIC_SQLITE)
+  target_link_libraries(akonadiserver_bin qsqlite3)
+endif()
 
-add_executable( akonadiserver_bin ${akonadiserver_bin_SRCS} )
-set_target_properties( akonadiserver_bin PROPERTIES OUTPUT_NAME akonadiserver )
-target_link_libraries( akonadiserver_bin akonadi_shared akonadiprivate ${QT_QTCORE_LIBRARY})
-if (AKONADI_STATIC_SQLITE)
-target_link_libraries( akonadiserver_bin qsqlite3 )
-endif (AKONADI_STATIC_SQLITE)
-
-install( TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR} )
-install( FILES 
+install(TARGETS akonadiserver_bin DESTINATION ${BIN_INSTALL_DIR})
+install(FILES
   src/storage/mysql-global.conf
   src/storage/mysql-global-mobile.conf
-  DESTINATION ${CONFIG_INSTALL_DIR}/akonadi/ )
+  DESTINATION ${CONFIG_INSTALL_DIR}/akonadi)
 
 ## DBus XML files
-
-install( FILES
+install(FILES
    ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml
-DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
-
+DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
