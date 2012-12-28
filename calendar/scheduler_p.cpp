@@ -41,7 +41,7 @@ struct Akonadi::Scheduler::Private
     }
 
     FreeBusyCache *mFreeBusyCache;
-    Scheduler *q;
+    Scheduler *const q;
 };
 
 Scheduler::Scheduler( QObject *parent ) : QObject( parent )
