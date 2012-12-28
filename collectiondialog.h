@@ -124,6 +124,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     /**
      * Sets the mime types any of which the selected collection(s) shall support.
      * Note that mime types are not enabled by default.
+     * @param mimeTypes MIME type filter values
      */
     void setMimeTypeFilter( const QStringList &mimeTypes );
 
@@ -134,7 +135,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
-     *
+     * @param rights access rights filter values
      * @since 4.4
      */
     void setAccessRightsFilter( Collection::Rights rights );
@@ -148,14 +149,14 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Sets the @p text that will be shown in the dialog.
-     *
+     * @param text the dialog's description text 
      * @since 4.4
      */
     void setDescription( const QString &text );
 
     /**
      * Sets the @p collection that shall be selected by default.
-     *
+     * @param collection the dialog's pre-selected collection
      * @since 4.4
      */
     void setDefaultCollection( const Collection &collection );
@@ -163,6 +164,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
     /**
      * Sets the selection mode. The initial default mode is
      * QAbstractItemView::SingleSelection.
+     * @param mode the selection mode to use
      * @see QAbstractItemView::setSelectionMode()
      */
     void setSelectionMode( QAbstractItemView::SelectionMode mode );
@@ -187,6 +189,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Change collection dialog options.
+     * @param options the collection dialog options to change
      * @since 4.6
      */
     void changeCollectionDialogOptions( CollectionDialogOptions options );

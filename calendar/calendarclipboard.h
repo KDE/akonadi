@@ -64,9 +64,9 @@ public:
   /**
    * Copies the specified incidence into the clipboard and then deletes it from akonadi.
    * The incidence must be present in the calendar.
-   *
    * After it's deletion from akonadi, signal cutFinished() is emitted.
-   * 
+   * @param incidence to cut
+   * @param mode how to treat child incidences. Defaults to #RecursiveMode
    * @see cutFinished().
    */
   void cutIncidence( const KCalCore::Incidence::Ptr &incidence,
@@ -75,7 +75,8 @@ public:
 
   /**
    * Copies the specified incidence into the clipboard.
-   *
+   * @param incidence the incidence to copy
+   * @param mode how to treat child incidences. Defaults to #RecursiveMode
    * @return true on success
    */
   bool copyIncidence( const KCalCore::Incidence::Ptr &incidence,

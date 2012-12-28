@@ -81,24 +81,28 @@ public:
   /**
     * Returns the child incidences of the parent identified by @p parentUid.
     * Only the direct childs are returned
+    * @param parentUid identifier of the parent incidence
     */ //TODO: unit-test
   KCalCore::Incidence::List childIncidences( const QString &parentUid ) const;
 
   /**
     * Returns the child incidences of the parent identified by @p parentId.
     * Only the direct childs are returned
+    * @param parentId identifier of the parent item
     */
   KCalCore::Incidence::List childIncidences( const Akonadi::Item::Id &parentId ) const;
 
   /**
     * Returns the child items of the parent identified by @p parentUid.
     * Only the direct childs are returned
+    * @param parentUid identifier of the parent incidence
     */
   Akonadi::Item::List childItems( const QString &parentUid ) const;
 
   /**
     * Returns the child items of the parent identified by @p parentId.
     * Only the direct childs are returned
+    * @param parentId identifier of the parent item
     */
   Akonadi::Item::List childItems( const Akonadi::Item::Id &parentId ) const;
 
@@ -125,12 +129,14 @@ public:
   /**
     * Adds an Event to the calendar.
     * It's added to akonadi in the background @see createFinished().
+    * @param event the event to be added
     */
   /**reimp*/ bool addEvent( const KCalCore::Event::Ptr &event );
 
   /**
     * Deletes an Event from the calendar.
     * It's removed from akonadi in the background @see deleteFinished().
+    * @param event the event to be deleted
     */
   /**reimp*/ bool deleteEvent( const KCalCore::Event::Ptr &event );
 
@@ -143,12 +149,14 @@ public:
   /**
     * Adds a Todo to the calendar.
     * It's added to akonadi in the background @see createFinished().
+    * @param todo the todo to add
     */
   /**reimp*/ bool addTodo( const KCalCore::Todo::Ptr &todo );
 
   /**
     * Deletes a Todo from the calendar.
     * It's removed from akonadi in the background @see deleteFinished().
+    * @param todo the todo to delete
     */
   /**reimp*/ bool deleteTodo( const KCalCore::Todo::Ptr &todo );
 
@@ -161,12 +169,14 @@ public:
   /**
     * Adds a Journal to the calendar.
     * It's added to akonadi in the background @see createFinished().
+    * @param journal the journal to add
     */
   /**reimp*/ bool addJournal( const KCalCore::Journal::Ptr &journal );
 
   /**
     * Deletes a Journal from the calendar.
     * It's removed from akonadi in the background @see deleteFinished().
+    * @param journal the journal to delete
     */
   /**reimp*/ bool deleteJournal( const KCalCore::Journal::Ptr &journal );
 
@@ -179,12 +189,14 @@ public:
   /**
     * Adds an incidence to the calendar.
     * It's added to akonadi in the background @see createFinished().
+    * @param incidence the incidence to add
     */
   /**reimp*/ bool addIncidence( const KCalCore::Incidence::Ptr &incidence );
 
   /**
     * Deletes an incidence from the calendar.
     * It's removed from akonadi in the background @see deleteFinished().
+    * @param incidence the incidence to delete
     */
   /**reimp*/ bool deleteIncidence( const KCalCore::Incidence::Ptr & );
 
@@ -211,7 +223,7 @@ public:
   /**
     * Modifies an incidence.
     * The incidence with the same uid as @p newIncidence will be updated with the contents of
-    * @p newIncidence.
+    * @param newIncidence the incidence to modify
     */
   bool modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence );
 

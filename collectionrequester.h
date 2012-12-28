@@ -99,6 +99,7 @@ class AKONADI_EXPORT CollectionRequester : public KHBox
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
+     * @param rights the access rights to set
      * @since 4.4
      */
     void setAccessRightsFilter( Collection::Rights rights );

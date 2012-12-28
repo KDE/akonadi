@@ -78,7 +78,7 @@ class CollectionSync : public TransactionSequence
     /**
       Sets the result of an incremental remote collection listing.
       @param changedCollections A list of remotely added or changed collections.
-      @param removedCollections A lost of remotely deleted collections.
+      @param removedCollections A list of remotely deleted collections.
     */
     void setRemoteCollections( const Collection::List &changedCollections,
                                const Collection::List &removedCollections );
@@ -88,6 +88,7 @@ class CollectionSync : public TransactionSequence
       Use setRemoteCollections() multiple times when streaming is enabled and call
       retrievalDone() when all collections have been retrieved.
       Must be called before the first call to setRemoteCollections().
+      @param streaming enables streaming if set as @c true
     */
     void setStreamingEnabled( bool streaming );
 
@@ -100,6 +101,7 @@ class CollectionSync : public TransactionSequence
       Indicate whether the resource supplies collections with hierarchical or
       global remote identifiers. @c false by default.
       Must be called before the first call to setRemoteCollections().
+      @param hierachical @c true if collection remote IDs are relative to their parents' remote IDs
     */
     void setHierarchicalRemoteIds( bool hierarchical );
 

@@ -70,7 +70,7 @@ class ContactMetaData
 
     /**
      * Sets the @p descriptions of the custom fields of that contact.
-     *
+     * @param descriptions the descriptions to set
      * The description list contains a QVariantMap for each custom field
      * with the following keys:
      *   - key   (string) The identifier of the field

@@ -126,9 +126,9 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 
     /**
      * Sets the @p contact to edit when in EditMode.
-     *
+     * @param contact the contact to edit
      * @note The contact item just must have a uid set, all
-     *       other data are fetched by the dialog automatically.
+     * other data are fetched by the dialog automatically.
      */
     void setContact( const Akonadi::Item &contact );
 

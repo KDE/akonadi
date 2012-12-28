@@ -99,7 +99,8 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
     QStringList bcc() const;
 
     /**
-      Sets the addresses of the "Bcc:" receivers."
+    * Sets the addresses of the "Bcc:" receivers."
+    * @param bcc addresses of the recievers (CC)
     */
     void setBcc( const QStringList &bcc );
 

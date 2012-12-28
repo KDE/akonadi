@@ -167,12 +167,14 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Sets the identifier of the @p parent collection.
+     * @param parent the parent identifier to set
      * @deprecated Use setParentCollection()
      */
     KDE_DEPRECATED void setParent( Id parent );
 
     /**
      * Sets the parent @p collection.
+     * @param collection the parent collection to set
      * @deprecated Use setParentCollection()
      */
     KDE_DEPRECATED void setParent( const Collection &collection );
@@ -186,6 +188,7 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Sets the parent's remote @p identifier.
+     * @param identifier the parent's remote identifier to set
      * @deprecated Use setParentCollection()
      */
     KDE_DEPRECATED void setParentRemoteId( const QString &identifier );
@@ -249,7 +252,7 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Returns the url of the collection.
-     *
+     * @param type the type of url
      * @since 4.7
      */
     KUrl url( UrlType type ) const;
@@ -263,9 +266,8 @@ class AKONADI_EXPORT Collection : public Entity
 
     /**
      * Sets whether the collection is virtual or not.
-     *
      * Virtual collections can't be converted to non-virtual and vice versa.
-     *
+     * @param isVirtual virtual collection if @c true, otherwise a normal collection
      * @since 4.10
      */
     void setVirtual(bool isVirtual);

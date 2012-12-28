@@ -83,6 +83,7 @@ class AKONADI_CONTACT_EXPORT ContactsFilterProxyModel : public QSortFilterProxyM
      /**
      * Sets the filter @p flags. By default
      * ContactsFilterProxyModel::FilterString is set.
+     * @param flags the filter flags to set
      * @since 4.8
      */
      void setFilterFlags( ContactsFilterProxyModel::FilterFlags flags );

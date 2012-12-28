@@ -107,9 +107,8 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
 
     /**
      * Sets a contact @p group that is used as template in create mode.
-     *
-     * The fields of the editor will be prefilled with the content
-     * of the group.
+     * The fields of the editor will be prefilled with the content of the group.
+     * @param group the group to use as template content
      */
     void setContactGroupTemplate( const KABC::ContactGroup &group );
 
@@ -143,8 +142,7 @@ class AKONADI_CONTACT_EXPORT ContactGroupEditor : public QWidget
 
     /**
      * This signal is emitted when an error occurred during the save.
-     *
-     * @p errorMsg The error message.
+     * @param errorMsg The error message.
      */
     void error( const QString &errorMsg );
 

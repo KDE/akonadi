@@ -133,9 +133,8 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 
     /**
      * Sets a @p contact that is used as template in create mode.
-     *
-     * The fields of the editor will be prefilled with the content
-     * of the contact.
+     * The fields of the editor will be prefilled with the content of the contact.
+     * @param contact the contact to use as template content
      */
     void setContactTemplate( const KABC::Addressee &contact );
 
@@ -171,8 +170,7 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 
     /**
      * This signal is emitted when an error occurred during the save.
-     *
-     * @p errorMsg The error message.
+     * @param errorMsg The error message.
      */
     void error( const QString &errorMsg );
 
