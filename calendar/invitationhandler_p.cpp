@@ -27,7 +27,7 @@ using namespace Akonadi;
 InvitationHandler::Private::Private( InvitationHandler *qq )
                                      : m_calendarLoadError( false )
                                      , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
-                                     , m_scheduler( new MailScheduler( q ) )
+                                     , m_scheduler( new MailScheduler( qq ) )
                                      , m_method( KCalCore::iTIPNoMethod )
                                      , m_helper( new InvitationHandlerHelper() ) //TODO parent
                                      , m_currentOperation( OperationNone )
