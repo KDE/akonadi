@@ -1008,7 +1008,7 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
 void IncidenceChanger::endAtomicOperation()
 {
   if ( !d->mBatchOperationInProgress ) {
-    kWarning() << "No atomic operation is in progress.";
+    kDebug() << "No atomic operation is in progress.";
     return;
   }
 
