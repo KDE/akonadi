@@ -321,8 +321,14 @@ bool MultiEntry::undo()
   mOperationInProgress = TypeUndo;
   Q_ASSERT( !mEntries.isEmpty() );
   mFinishedEntries = 0;
-  foreach( const Entry::Ptr &entry, mEntries )
-    entry->doIt( TypeUndo );
+
+  const int count = mEntries.count();
+  // To undo a batch of changes we iterate in reverse order so we don't violate
+  // causality.
+  for( int i=count-1; i>=0; --i ) {
+    mEntries[i]->doIt( TypeUndo );
+  }
+
   mChanger->endAtomicOperation();
   return true;
 }
