@@ -193,7 +193,8 @@ class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
      *
      * The default implementation is slow as it requires serializing @p other, and deserializing @p item multiple times.
      * Reimplementing this is recommended if your type uses payload parts.
-     *
+     * @param item receives merged parts from @p other
+     * @param other the paylod parts to merge into @p item
      * @since 4.4
      */
     virtual void apply( Item &item, const Item &other );
@@ -205,7 +206,7 @@ class AKONADI_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
      *
      * The default implementation returns an empty set if the item has a payload,
      * and a set containing Item::FullPayload if the item has no payload.
-     *
+     * @param item the item for which to list payload parts
      * @since 4.4
      */
     virtual QSet<QByteArray> availableParts( const Item &item ) const;

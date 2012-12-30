@@ -97,7 +97,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
 
     /**
      * This method must be implemented by every preprocessor subclass.
-     *
+     * @param item the item to process
      * It must realize the preprocessing of the given @p item.
      *
      * The Akonadi server will push in for preprocessing any newly created item:
@@ -117,7 +117,7 @@ class AKONADI_EXPORT PreprocessorBase : public AgentBase
 
     /**
      * This method must be called if processing is implemented asynchronously.
-     *
+     * @param result the processing result
      * You should call it when you have completed the processing
      * or if an abortRequest() signal arrives (and in this case you
      * will probably use ProcessingFailed as result).

@@ -108,7 +108,7 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
     /**
      * Sets the contact @p formatter that should be used for formatting the
      * contact. If formatter is @c 0, the standard formatter will be used.
-     *
+     * @param formatter the contact formatter to set
      * @note The contact viewer won't take ownership of the formatter.
      *
      * @since 4.6
@@ -123,7 +123,7 @@ class AKONADI_CONTACT_EXPORT ContactViewer : public QWidget, public Akonadi::Ite
 
     /**
      * Sets the raw @p contact object that shall be displayed in the viewer.
-     *
+     * @param contact the contact object to set
      * @since 4.5
      */
     void setRawContact( const KABC::Addressee &contact );

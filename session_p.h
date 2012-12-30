@@ -65,6 +65,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
 
     /**
       @internal For testing purposes only. See FakeSesson.
+      @param job the job to end
     */
     void endJob( Job* job );
 
@@ -82,6 +83,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      * You only need to call this method if you want that the
      * default session has a special custom id, otherwise a random unique
      * id is used automatically.
+     * @param sessionId the id of new default session
      */
     static void createDefaultSession( const QByteArray &sessionId );
 

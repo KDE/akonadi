@@ -85,7 +85,7 @@ class AKONADI_EXPORT Entity
 
     /**
      * Sets the remote @p revision of the entity.
-     *
+     * @param revision the entity's remote revision
      * The remote revision can be used by resources to store some
      * revision information of the backend to detect changes there.
      *
@@ -121,6 +121,7 @@ class AKONADI_EXPORT Entity
 
     /**
      * Assigns the @p other to this entity and returns a reference to this entity.
+     * @param other the entity to assign
      */
     Entity& operator=( const Entity &other );
 

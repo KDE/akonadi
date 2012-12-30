@@ -260,7 +260,8 @@ class AKONADI_EXPORT StandardActionManager : public QObject
      * updating the action state and substituted according to the number of
      * selected objects. This is mainly useful to customize the label of actions
      * that can operate on multiple objects.
-     *
+     * @param type the action to set a text for
+     * @param text the text to display for the given action
      * Example:
      * @code
      * acctMgr->setActionText( Akonadi::StandardActionManager::CopyItems,

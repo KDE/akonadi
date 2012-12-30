@@ -54,7 +54,8 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 
       /**
        * Throws ItemSerializerException on failure.
-       *
+       * @param item the item to apply to
+       * @param other the item to get values from
        * @since 4.4
        */
       static void apply( Item& item, const Item &other );
@@ -66,7 +67,7 @@ class AKONADI_TESTS_EXPORT ItemSerializer
 
       /**
        * Returns a list of parts available remotely in the item payload.
-       *
+       * @param item the item for which to list payload parts
        * @since 4.4
        */
       static QSet<QByteArray> availableParts( const Item &item );
@@ -74,9 +75,9 @@ class AKONADI_TESTS_EXPORT ItemSerializer
       /**
        * Tries to convert the payload in \a item into type with
        * metatype-id \a metaTypeId.
-       *
        * Throws ItemSerializerException or returns an Item w/o payload on failure.
-       *
+       * @param item the item to convert
+       * @param metaTypeID the meta type id used to convert items payload
        * @since 4.6
        */
       static Item convert( const Item & item, int metaTypeId );

@@ -120,7 +120,7 @@ class AKONADI_EXPORT EntityMimeTypeFilterModel : public QSortFilterProxyModel
 
     /**
      * Sets the header @p set of the filter model.
-     *
+     * @param headerGroup the header to set.
      * \sa EntityTreeModel::HeaderGroup
      */
     void setHeaderGroup( EntityTreeModel::HeaderGroup headerGroup );

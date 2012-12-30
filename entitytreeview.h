@@ -106,13 +106,14 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 
     /**
      * @reimp
+     * @param model the model to set
      */
     virtual void setModel( QAbstractItemModel * model );
 
     /**
      * Sets whether the drop action menu is @p enabled and will
      * be shown on drop operation.
-     *
+     * @param enabled enables drop action menu if set as @c true
      * @since 4.5
      */
     void setDropActionMenuEnabled( bool enabled );
@@ -136,6 +137,7 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
 
     /**
      * Set true if we automatic sorting
+     * @param active enables automatic sorting if set as @c true
      * @since 4.8.1
      */
     void setManualSortingActive(bool active);

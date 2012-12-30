@@ -95,6 +95,7 @@ class InvitationHandlerHelper : public QObject
       preferably though to not bother the user with this question. This method
       allows to change the default behavior. This method applies to the
       sendIncidence*Message() methods.
+      @param action the action to set as default
      */
     void setDefaultAction( Action action );
 

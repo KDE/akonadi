@@ -56,6 +56,7 @@ class AKONADI_TESTS_EXPORT SpecialCollectionsPrivate
     /**
       Forgets all folders owned by the given resource.
       This method is used by SpecialCollectionsRequestJob.
+      @param resourceId the identifier of the resource for which to forget folders
     */
     void forgetFoldersForResource( const QString &resourceId );
 

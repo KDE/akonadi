@@ -78,6 +78,7 @@ class AKONADI_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
      * Sets the access @p rights the entities shall be filtered
      * against. If no rights are set explicitly, Collection::AllRights
      * is assumed.
+     * @param rights the access rights filter values
      */
     void setAccessRights( Collection::Rights rights );
 

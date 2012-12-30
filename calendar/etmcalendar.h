@@ -85,6 +85,8 @@ public:
 
   /**
     * This is an overloaded function.
+    * @param uid the identifier for the incidence to check for rights
+    * @param right the access right to check for
     * @see hasRight()
     */
   bool hasRight( const QString &uid, Akonadi::Collection::Right right ) const;
@@ -138,7 +140,7 @@ public:
   /**
    * Enable or disable collection filtering.
    * If true, the calendar will only contain items of selected collections.
-   *
+   * @param enable enables collection filtering if set as @c true
    * @see checkableProxyModel()
    * @see collectionFilteringEnabled()
    */                           

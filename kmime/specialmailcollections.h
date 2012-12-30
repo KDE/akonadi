@@ -108,7 +108,8 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
     /**
      * Registers the given @p collection as a special mail collection
      * with the given @p type.
-     *
+     * @param type the type of collection
+     * @param collection the collection to register
      * The collection must be owned by a valid resource.
      * Registering a new collection of a previously registered type forgets the
      * old collection.

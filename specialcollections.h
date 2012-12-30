@@ -87,7 +87,8 @@ class AKONADI_EXPORT SpecialCollections : public QObject
     /**
      * Registers the given @p collection as a special collection
      * with the given @p type.
-     *
+     * @param type the special type of @c collection
+     * @param collection the given collection to register
      * The collection must be owned by a valid resource.
      * Registering a new collection of a previously registered type forgets the
      * old collection.

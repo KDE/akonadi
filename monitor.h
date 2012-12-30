@@ -144,7 +144,7 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
      * Sets whether all items shall be monitored.
-     *
+     * @param monitored sets all items as monitored if set as @c true
      * Note that if a session is being ignored, this takes precedence over
      * setAllMonitored() on that session.
      */
@@ -303,7 +303,7 @@ class AKONADI_EXPORT Monitor : public QObject
     /**
      * Sets the session used by the Monitor to communicate with the %Akonadi server.
      * If not set, the Akonadi::Session::defaultSession is used.
-     *
+     * @param session the session to be set
      * @since 4.4
      */
     void setSession( Akonadi::Session *session );
@@ -319,7 +319,7 @@ class AKONADI_EXPORT Monitor : public QObject
      * Allows to enable/disable collection move translation. If enabled (the default), move
      * notifications are auotmatically translated into add/remove notifications if the source/destination
      * is outside of the monitored collection hierarchy.
-     *
+     * @param enabled enables collection move translation if set as @c true
      * @since 4.9
      */
     void setCollectionMoveTranslationEnabled( bool enabled );

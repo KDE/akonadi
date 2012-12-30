@@ -181,7 +181,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Sets the timestamp of the last modification of this item.
-     *
+     * @param datetime the modification time to set
      * @note Do not modify this value from within an application,
      * it is updated automatically by the revision checking functions.
      * @since 4.2
@@ -250,7 +250,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Sets the @p revision number of the item.
-     *
+     * @param revision the revision number to set
      * @note Do not modify this value from within an application,
      * it is updated automatically by the revision checking functions.
      */
@@ -273,7 +273,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Set the size of the item in bytes.
-     *
+     * @param size the size of the item in bytes
      * @since 4.2
      */
     void setSize( qint64 size );
@@ -385,18 +385,18 @@ class AKONADI_EXPORT Item : public Entity
      * used to perform the merge. If only an ItemSerialzerPlugin class is found, or the merge
      * method of the -V2 plugin is not implemented, the merge is performed with multiple deserializations
      * of the payload.
-     *
+     * @param other the item to get values from
      * @since 4.4
      */
     void apply( const Item &other );
 
     /**
      * Registers \a T as a legacy type for mime type \a mimeType.
-     *
+     * 
      * This is required information for Item to return the correct
      * type from payload() when clients have not been recompiled to
      * use the new code.
-     *
+     * @param mimeType the mimeType to register
      * @since 4.6
      */
     template <typename T> static void addToLegacyMapping( const QString & mimeType );

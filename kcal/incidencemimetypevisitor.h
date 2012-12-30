@@ -121,7 +121,7 @@ class AKONADI_KCAL_EXPORT IncidenceMimeTypeVisitor : public KCal::IncidenceBase:
     /**
       Returns the Akonadi specific @c text/calendar sub MIME type of the given
       @p incidence.
-
+      @param incidence the incidence to retrieve MIME type from
       This is a convenience method, equivalent to
       @code
       incidence->accept( visitor );

@@ -105,6 +105,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool ensureDataAvailable( const NotificationMessage &msg );
     /**
      * Sends out the change notification @p msg.
+     * @param msg the change notification to send
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
     virtual bool emitNotification( const NotificationMessage &msg );

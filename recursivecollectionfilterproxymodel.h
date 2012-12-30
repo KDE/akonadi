@@ -87,12 +87,14 @@ class AKONADI_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilt
 
     /**
      * Add search pattern
+     * @param pattern the search pattern to add
      * @since 4.8.1
      */
     void setSearchPattern( const QString &pattern );
 
     /**
      * Show only checked item
+     * @param checked only shows checked item if set as @c true
      * @since 4.9
      */
     void setIncludeCheckedOnly( bool checked );

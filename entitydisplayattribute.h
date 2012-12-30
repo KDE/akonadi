@@ -77,6 +77,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 
     /**
      * Sets the icon @p name for the active icon.
+     * @param name the icon name to use
      * @since 4.4
      */
     void setActiveIconName( const QString &name );
@@ -101,6 +102,7 @@ class AKONADI_EXPORT EntityDisplayAttribute : public Attribute
 
     /**
      * Sets the backgroundColor to @p color.
+     * @param color the background color to use
      * @since 4.4
      */
     void setBackgroundColor( const QColor &color );

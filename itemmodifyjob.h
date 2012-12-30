@@ -137,6 +137,7 @@ class AKONADI_EXPORT ItemModifyJob : public Job
      * omitted from transmission to the Akonadi storage.
      * The default is @c false, however it can be set for
      * performance reasons.
+     * @param ignore ignores payload if set as @c true
      */
     void setIgnorePayload( bool ignore );
 

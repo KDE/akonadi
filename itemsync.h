@@ -164,6 +164,7 @@ class AKONADI_EXPORT ItemSync : public Job
     /**
      * Set the transaction mode to use for this sync.
      * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @param mode the transaction mode to use
      * @since 4.6
      */
     void setTransactionMode( TransactionMode mode );
@@ -174,7 +175,8 @@ class AKONADI_EXPORT ItemSync : public Job
 
     /**
      * Reimplement this method to customize the synchronization algorithm.
-     *
+     * @param storedItem the item as it is now
+     * @param newItem the item as it should be
      * You can update the @p newItem according to the @p storedItem before
      * it gets committed.
      */

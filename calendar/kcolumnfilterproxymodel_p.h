@@ -51,17 +51,17 @@ public:
 
   /**
     Convenience function. Has the same effect as:
-
     @code
     setVisibleColumns( QVector<int>() << column );
     @endcode
-
+    @param column the column to set as visible
     @see setVisbileColumns
    */
   void setVisibleColumn( int column );
 
   /**
     Change the visible columns. Pass an empty vector to make all columns visible.
+    @param visibleColumns the vector changing visible columns
    */
   void setVisibleColumns( const QVector<int> &visibleColumns );
 

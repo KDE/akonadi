@@ -123,6 +123,7 @@ class AKONADI_EXPORT ServerManager : public QObject
      * Returns the namespaced D-Bus service name for @p serviceType.
      * Use this rather the raw service name strings in order to support usage of a non-default
      * instance of the Akonadi server.
+     * @param serviceType the service type for which to return the D-Bus name
      * @since 4.10
      */
     static QString serviceName( ServiceType serviceType );
@@ -140,6 +141,8 @@ class AKONADI_EXPORT ServerManager : public QObject
     /**
      * Returns the namespaced D-Bus service name for an agent of type @p agentType with agent
      * identifier @p identifier.
+     * @param agentType the agent type to use for D-Bus base name
+     * @param identifier the agent identifier to include in the D-Bus name
      * @since 4.10
      */
     static QString agentServiceName( ServiceAgentType agentType, const QString &identifier );
@@ -147,6 +150,7 @@ class AKONADI_EXPORT ServerManager : public QObject
     /**
      * Adds the multi-instance namespace to @p string if required (with '_' as separator).
      * Use whenever a multi-instance safe name is required (configfiles, identifiers, ...).
+     * @param string the string to adapt
      * @since 4.10
      */
     static QString addNamespace( const QString &string );
@@ -170,6 +174,7 @@ class AKONADI_EXPORT ServerManager : public QObject
 
     /**
      * Emitted whenever the server state changes.
+     * @param state the new server state
      * @since 4.5
      */
     void stateChanged( Akonadi::ServerManager::State state );

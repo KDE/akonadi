@@ -412,9 +412,8 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Some Entities are hidden in the model, but exist for internal purposes, for example, custom object
      * directories in groupware resources.
-     *
      * They are hidden by default, but can be shown by setting @p show to true.
-     *
+     * @param show enabled displaying of hidden entities if set as @c true
      * Most applications will not need to use this feature.
      */
     void setShowSystemEntities( bool show );
@@ -435,7 +434,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Sets whether unsubscribed entities will be included in the listing.
      * By default it's true
-     *
+     * @param show enables displaying of unsubscribed entities if set as @c true
      * Note that it is possible to change the monitor's fetchscope directly,
      *  bypassing this method, which will lead to inconsistencies. Use
      *  this method for turning on/off listing of subscribed folders.
@@ -457,7 +456,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
 
     /**
      * Sets whether the root collection shall be provided by the model.
-     *
+     * @param include enables root collection if set as @c true
      * @see setRootCollectionDisplayName()
      */
     void setIncludeRootCollection( bool include );
@@ -470,7 +469,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Sets the display @p name of the root collection of the model.
      * The default display name is "[*]".
-     *
+     * @param name the name to display for the root collection
      * @note The display name for the root collection is only used if
      *       the root collection has been included with setIncludeRootCollection().
      */
@@ -539,7 +538,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Returns a QModelIndex in @p model which points to @p collection.
      * This method can be used through proxy models if @p model is a proxy model.
-     *
      * @code
      * EntityTreeModel *model = getEntityTreeModel();
      * QSortFilterProxyModel *proxy1 = new QSortFilterProxyModel;
@@ -572,7 +570,8 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     /**
      * Returns a QModelIndex in @p model which points to @p item.
      * This method can be used through proxy models if @p model is a proxy model.
-     *
+     * @param model the model to query for the item
+     * @param item the item to look for
      * @see modelIndexForCollection
      * @since 4.5
      */
@@ -601,6 +600,7 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * This is like a dataChanged(), but specific to the initial loading, in order to update
      * the GUI (window caption, state of actions).
      * Usually, the GUI uses Akonadi::Monitor to be notified of further changes to the collections.
+     * @param collectionId the identifier of the fetched collection
      * @since 4.9.3
      */
     void collectionFetched(int collectionId);

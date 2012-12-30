@@ -59,7 +59,7 @@ class AKONADI_CONTACT_EXPORT RecentContactsCollections : public SpecialCollectio
 
     /**
      * Registers the given @p collection as a recent contacts collection.
-     *
+     * @param collection the contacts collection to register
      * The collection must be owned by a valid resource.
      */
     bool registerCollection( const Akonadi::Collection &collection );
