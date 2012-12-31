@@ -61,6 +61,7 @@ class AKONADI_EXPORT SubscriptionDialog : public KDialog
     ~SubscriptionDialog();
 
     /**
+     * @param showHidden shows hidden collections if set as @c true
      * @since 4.9
      */
     void showHiddenCollection(bool showHidden);

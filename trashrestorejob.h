@@ -72,6 +72,7 @@ class AKONADI_EXPORT TrashRestoreJob : public Job
     /**
      * Sets the target collection, where the item is moved to.
      * If not set the item will be restored in the collection saved in the EntityDeletedAttribute.
+     * @param collection the collection to set as target
      */
     void setTargetCollection( const Collection collection );
 

@@ -59,6 +59,7 @@ class SubscriptionModel : public CollectionModel
     Collection::List unsubscribed() const;
 
     /**
+     * @param showHidden shows hidden collection if set as @c true
      * @since: 4.9
      */
     void showHiddenCollection(bool showHidden);

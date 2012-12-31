@@ -99,7 +99,7 @@ class AKONADI_EXPORT TransactionSequence : public Job
     /**
      * Sets which job of the sequence might fail without rolling back the
      * complete transaction.
-     *
+     * @param job a job to ignore errors from
      * @since 4.5
      */
     void setIgnoreJobFailure( KJob *job );

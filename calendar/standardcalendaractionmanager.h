@@ -79,12 +79,14 @@ public:
     * Sets the collection selection model based on which the collection
     * related actions should operate. If none is set, all collection actions
     * will be disabled.
+    * @param selectionModel the selection model for collections
     */
   void setCollectionSelectionModel( QItemSelectionModel *selectionModel );
 
   /**
     * Sets the item selection model based on which the item related actions
     * should operate. If none is set, all item actions will be disabled.
+    * @param selectionModel the selection model for items
     */
   void setItemSelectionModel( QItemSelectionModel *selectionModel );
 
@@ -92,6 +94,7 @@ public:
     * Creates the action of the given type and adds it to the action collection
     * specified in the constructor if it does not exist yet. The action is
     * connected to its default implementation provided by this class.
+    * @param type the type of action to create
     */
   KAction* createAction( Type type );
 
@@ -99,6 +102,7 @@ public:
     * Creates the action of the given type and adds it to the action collection
     * specified in the constructor if it does not exist yet. The action is
     * connected to its default implementation provided by this class.
+    * @param type the type of action to create
     */
   KAction* createAction( StandardActionManager::Type type );
 
@@ -115,6 +119,7 @@ public:
 
   /**
     * Returns the action of the given type, 0 if it has not been created (yet).
+    * @param type the type of action to return
     */
   KAction* action( StandardActionManager::Type type ) const;
 
