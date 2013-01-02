@@ -50,7 +50,6 @@ class FetchHelper : public QObject
 
   private:
     void init();
-    void parseCommand( const QByteArray &line );
     void updateItemAccessTime();
     void triggerOnDemandFetch();
     QSqlQuery buildItemQuery();
