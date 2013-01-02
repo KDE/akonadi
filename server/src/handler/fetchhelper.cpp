@@ -361,10 +361,19 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
 
   // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
-  if ( !payloadList.isEmpty() || mFullPayload )
+  if ( needsAccessTimeUpdate(partList) || mFullPayload )
     updateItemAccessTime();
 
   return true;
+}
+
+bool FetchHelper::needsAccessTimeUpdate(const QStringList& parts)
+{
+  // TODO technically we should compare the part list with the cache policy of
+  // the parent collection of the retrieved items, but that's kinda expensive
+  // Only updating the atime if the full payload was requested is a good
+  // approximation though.
+  return parts.contains( QLatin1String("PLD:RFC822") );
 }
 
 void FetchHelper::updateItemAccessTime()

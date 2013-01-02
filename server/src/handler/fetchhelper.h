@@ -57,6 +57,7 @@ class FetchHelper : public QObject
     QSqlQuery buildFlagQuery();
     void parseCommandStream();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
+    static bool needsAccessTimeUpdate(const QStringList &parts);
 
   private:
     ImapStreamParser *mStreamParser;
