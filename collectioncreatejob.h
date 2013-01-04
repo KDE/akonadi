@@ -31,7 +31,7 @@ class CollectionCreateJobPrivate;
  * @short Job that creates a new collection in the Akonadi storage.
  *
  * This job creates a new collection with all the set properties.
- * You have to use setParentCollection() to define the collection, the
+ * You have to use setParentCollection() to define the collection the
  * new collection shall be located in.
  *
  * @code
@@ -70,7 +70,7 @@ class AKONADI_EXPORT CollectionCreateJob : public Job
     virtual ~CollectionCreateJob();
 
     /**
-     * Returns the created collection if the job was executed succesfull.
+     * Returns the created collection if the job was executed successfully.
      */
     Collection collection() const;
 

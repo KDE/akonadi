@@ -31,7 +31,7 @@ class ChangeRecorderPrivate;
 /**
  * @short Records and replays change notification.
  *
- * This class is responsible for recording change notification while
+ * This class is responsible for recording change notifications while
  * an agent is not online and replaying the notifications when the agent
  * is online again. Therefore the agent doesn't have to care about
  * online/offline mode in its synchronization algorithm.

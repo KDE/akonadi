@@ -43,7 +43,7 @@ namespace Akonadi {
  * - An optional time interval for regular collection sync (aka interval
  *   mail check).
  *
- * Synching means fetching updates from the Akonadi database. The cache policy
+ * Syncing means fetching updates from the Akonadi database. The cache policy
  * does not affect updates of the Akonadi database from the backend, since
  * backend updates will normally immediately trigger the resource to update the
  * Akonadi database.

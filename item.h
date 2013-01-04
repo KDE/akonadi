@@ -54,7 +54,7 @@ class ItemPrivate;
  * content where needed (eg. mail envelope, mail body and attachments).
  *
  * There is also a namespace (prefix) for special parts which are local to Akonadi.
- * These parts, prefixed by "akonadi-" will never be fetched in the resource.
+ * These parts, prefixed by "akonadi-", will never be fetched in the resource.
  * They are useful for local extensions like agents which might want to add meta data
  * to items in order to handle them but the meta data should not be stored back to the
  * resource.

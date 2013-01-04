@@ -32,9 +32,9 @@ namespace Akonadi {
  * This class contains information such as total number of items,
  * number of new and unread items, etc.
  *
- * These information might be expensive to obtain and are thus
- * not included when fetching collection with a CollectionFetchJob.
- * They can be retrieved spearately using CollectionStatisticsJob.
+ * This information might be expensive to obtain and is thus
+ * not included when fetching collections with a CollectionFetchJob.
+ * It can be retrieved separately using CollectionStatisticsJob.
  *
  * Example:
  *
@@ -62,7 +62,7 @@ namespace Akonadi {
  *
  * @endcode
  *
- * This class is implicitely shared.
+ * This class is implicitly shared.
  *
  * @author Volker Krause <vkrause@kde.org>
  */
