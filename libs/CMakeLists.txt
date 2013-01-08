@@ -29,7 +29,7 @@ install(FILES
   protocol_p.h
   xdgbasedirs_p.h
   capabilities_p.h
-  DESTINATION ${AKONADI_INCLUDE_DIR}/akonadi/private
+  DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/private
 )
 
 add_subdirectory(tests)

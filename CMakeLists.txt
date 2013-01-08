@@ -58,7 +58,7 @@ endif()
 include(InstallSettings)
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
-include(MacroWriteBasicCMakeVersionFile)
+include(CMakePackageConfigHelpers)
 
 ############### CTest options ###############
 # Set a timeout value of 1 minute per test
@@ -92,15 +92,6 @@ endif()
 
 
 ############### Macros ###############
-
-macro(MAKE_INSTALL_PATH_ABSOLUTE out in)
-   if(IS_ABSOLUTE "${in}")
-      set(${out} "${in}")
-   else()
-      set(${out} "\${AKONADI_INSTALL_DIR}/${in}")
-   endif()
-endmacro()
-
 
 macro(SET_DEFAULT_DB_BACKEND)
     set(_backend ${ARGV0})
@@ -329,19 +320,6 @@ if(APPLE)
    set(CMAKE_INSTALL_NAME_DIR ${LIB_INSTALL_DIR})
 endif()
 
-############### Prepare AkonadiConfig.cmake ###############
-
-# all the following variables are put into AkonadiConfig.cmake, so
-# they are usable by projects using Akonadi.
-make_install_path_absolute(AKONADI_BIN_DIR             ${BIN_INSTALL_DIR})
-make_install_path_absolute(AKONADI_INCLUDE_DIR         ${INCLUDE_INSTALL_DIR})
-make_install_path_absolute(AKONADI_LIB_DIR             ${LIB_INSTALL_DIR})
-make_install_path_absolute(AKONADI_CONFIG_DIR          ${CONFIG_INSTALL_DIR})
-make_install_path_absolute(AKONADI_DBUS_INTERFACES_DIR ${DBUS_INTERFACES_INSTALL_DIR})
-make_install_path_absolute(AKONADI_DBUS_SERVICES_DIR   ${DBUS_SERVICES_INSTALL_DIR})
-make_install_path_absolute(AKONADI_XDG_MIME_DIR        ${XDG_MIME_INSTALL_DIR})
-
-
 ############### Generate files ###############
 # Used in configure_file() and install(EXPORT). Must be set before setting the AkonadiConfig.cmake vars.
 set(AKONADI_TARGET_PREFIX Akonadi__)
@@ -351,15 +329,25 @@ if(Soprano_FOUND)
 endif()
 configure_file(akonadi-prefix.h.cmake ${Akonadi_BINARY_DIR}/akonadi-prefix.h)
 configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
-configure_file(AkonadiConfig.cmake.in "${Akonadi_BINARY_DIR}/AkonadiConfig.cmake" @ONLY)
+
+# This command will replace the installation dirs with absolute paths in AkonadiConfig.cmake
+configure_package_config_file(AkonadiConfig.cmake.in ${Akonadi_BINARY_DIR}/AkonadiConfig.cmake
+                              INSTALL_DESTINATION ${LIB_INSTALL_DIR}/cmake/Akonadi
+                              PATH_VARS BIN_INSTALL_DIR INCLUDE_INSTALL_DIR
+                              LIB_INSTALL_DIR CONFIG_INSTALL_DIR
+                              DBUS_INTERFACES_INSTALL_DIR DBUS_SERVICES_INSTALL_DIR
+                              SHARE_INSTALL_PREFIX XDG_MIME_INSTALL_DIR
+                             )
+
+# this file is used by to check if the installed version can be used.
+write_basic_package_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
+                                 VERSION ${AKONADI_VERSION}
+                                 COMPATIBILITY SameMajorVersion
+                                )
 
 if(NOT WIN32)
   configure_file(${Akonadi_SOURCE_DIR}/akonadi.pc.cmake ${Akonadi_BINARY_DIR}/akonadi.pc @ONLY)
 endif()
-
-# this file is used by to check if the installed version can be used.
-macro_write_basic_cmake_version_file(${Akonadi_BINARY_DIR}/AkonadiConfigVersion.cmake
-                                     ${AKONADI_VERSION_MAJOR} ${AKONADI_VERSION_MINOR} ${AKONADI_VERSION_PATCH})
 
 ############### build targets ###############
 
