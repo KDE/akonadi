@@ -394,7 +394,7 @@ SET(CPACK_PACKAGE_VERSION_PATCH "${AKONADI_VERSION_PATCH}")
 
 set(CPACK_SOURCE_GENERATOR "TBZ2")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME "akonadi-${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.svn/" "/\\\\.git/" "makechangelog")
+set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/")
 
 include(CPack) # needs to happen after the above variables are set!
 
