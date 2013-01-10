@@ -87,10 +87,6 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
 
   QString query;
 
-#ifndef AKONADI_USE_STRIGI_SEARCH
-  query = QString::fromLatin1( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
-#endif
-
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
       query += QString::fromLatin1(
@@ -536,7 +532,7 @@ void ContactSearchJob::setQuery( Criterion criterion, const QString &value, Matc
           "    ?r<" + akonadiItemIdUri().toEncoded() + "> ?reqProp1 . "
           "    { ?r ?p ?v ."
           "      FILTER(?p in (nco:fullname, nco:nameGiven, nco:nameFamily) ) ."
-          "%1 }"
+          "%1 } UNION"
           "    { ?r nco:hasEmailAddress ?email . "
           "      ?email nco:emailAddress ?v . "
           "%1 }"
