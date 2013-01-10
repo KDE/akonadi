@@ -49,7 +49,6 @@ ContactGroupSearchJob::ContactGroupSearchJob( QObject * parent )
                                           "  </query>"
                                           "</request>"
 #else
-                                          "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>"
                                           "SELECT ?r WHERE { ?r a nco:ContactGroup }"
 #endif
                                         ) );
@@ -70,10 +69,6 @@ void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value 
 void ContactGroupSearchJob::setQuery( Criterion criterion, const QString &value, Match match )
 {
   QString query;
-
-#ifndef AKONADI_USE_STRIGI_SEARCH
-  query = QString::fromLatin1( "prefix nco:<http://www.semanticdesktop.org/ontologies/2007/03/22/nco#>" );
-#endif
 
   if ( match == ExactMatch ) {
     if ( criterion == Name ) {
