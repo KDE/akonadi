@@ -7,7 +7,7 @@ macro(add_akonadi_contact_demo _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test})
   target_link_libraries(${_name} akonadi-kde akonadi-kmime akonadi-contact ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
-endmacro(add_akonadi_contact_demo)
+endmacro()
 
 ########### next target ###############
 

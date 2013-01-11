@@ -22,7 +22,7 @@ macro(kcfg_generate_dbus_interface _kcfg _name)
     DEPENDS ${CMAKE_SOURCE_DIR}/akonadi/kcfg2dbus.xsl
     ${_kcfg}
     )
-endmacro(kcfg_generate_dbus_interface)
+endmacro()
 
 macro(add_resource_iface _kcfgFile _ifaceName _className)
   kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/${_kcfgFile} ${_ifaceName})
@@ -31,7 +31,7 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   qt4_add_dbus_interface(kmimeakonadi_LIB_SRC
     ${CMAKE_CURRENT_BINARY_DIR}/${_ifaceName}.xml ${_codeFile} ${_className}
   )
-endmacro(add_resource_iface)
+endmacro()
 
 ########### next target ###############
 

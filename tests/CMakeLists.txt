@@ -37,7 +37,7 @@ macro(add_akonadi_demo _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test})
   target_link_libraries(${_name} akonadi-kde akonadi-kmime ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
-endmacro(add_akonadi_demo)
+endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
@@ -45,7 +45,7 @@ macro(add_akonadi_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_unit_test(${_name} TESTNAME akonadi-${_name} ${_test})
   target_link_libraries(${_name} akonadi-kde akonadi-kmime akonaditestfake ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${AKONADI_COMMON_LIBRARIES})
-endmacro(add_akonadi_test)
+endmacro()
 
 # convenience macro to add akonadi testrunner unit-tests
 macro(add_akonadi_isolated_test _source)
@@ -100,7 +100,7 @@ macro(add_akonadi_isolated_test _source)
     add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
       ${SQLITE_EXTRA_OPTIONS} )
   endif()
-endmacro(add_akonadi_isolated_test)
+endmacro()
 
 
 # akonadi test fake library

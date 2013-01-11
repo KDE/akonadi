@@ -22,12 +22,12 @@ macro(add_akonadi_isolated_test _source)
   if (WIN32)
     get_target_property( _loc ${_name} LOCATION )
     set(_executable ${_loc}.bat)
-  else (WIN32)
+  else ()
     set(_executable ./${_name})
-  endif (WIN32)
+  endif ()
   if (UNIX)
     set(_executable ${_executable}.shell)
-  endif (UNIX)
+  endif ()
 
   find_program(_testrunner akonaditest)
 
@@ -36,7 +36,7 @@ macro(add_akonadi_isolated_test _source)
     ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml
     ${_executable}
   )
-endmacro(add_akonadi_isolated_test)
+endmacro()
 
 #add_akonadi_isolated_test( historytest.cpp )
 #add_akonadi_isolated_test( incidencechangertest.cpp )
