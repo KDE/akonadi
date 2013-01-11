@@ -2,7 +2,7 @@ project (akonadixml)
 
 if ( LIBXML2_FOUND )
   add_definitions( -DHAVE_LIBXML2 )
-endif ( LIBXML2_FOUND )
+endif ()
 
 add_subdirectory( tests )
 
