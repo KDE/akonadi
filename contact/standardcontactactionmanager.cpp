@@ -491,12 +491,14 @@ class StandardContactActionManager::Private
           new Akonadi::ContactEditorDialog(
             Akonadi::ContactEditorDialog::EditMode, mParentWidget );
         dlg->setContact( item );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
       } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
         QPointer<Akonadi::ContactGroupEditorDialog> dlg =
           new Akonadi::ContactGroupEditorDialog(
             Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
         dlg->setContactGroup( item );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
       }
     }
