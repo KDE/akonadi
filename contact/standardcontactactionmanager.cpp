@@ -444,6 +444,7 @@ class StandardContactActionManager::Private
         new Akonadi::ContactEditorDialog(
           Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
+      dlg->setAttribute( Qt::WA_DeleteOnClose );
       dlg->show();
     }
 
@@ -457,6 +458,7 @@ class StandardContactActionManager::Private
         new Akonadi::ContactGroupEditorDialog(
           Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
+      dlg->setAttribute( Qt::WA_DeleteOnClose );
       dlg->show();
     }
 
