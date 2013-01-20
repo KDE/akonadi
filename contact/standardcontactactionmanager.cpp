@@ -453,11 +453,11 @@ class StandardContactActionManager::Private
         return;
       }
 
-      QPointer<Akonadi::ContactGroupEditorDialog> dlg( new Akonadi::ContactGroupEditorDialog( Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget ) );
+      QPointer<Akonadi::ContactGroupEditorDialog> dlg =
+        new Akonadi::ContactGroupEditorDialog(
+          Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
-
-      dlg->exec();
-      delete dlg;
+      dlg->show();
     }
 
     void slotEditItem()
