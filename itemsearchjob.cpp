@@ -32,7 +32,7 @@ class Akonadi::ItemSearchJobPrivate : public JobPrivate
 {
   public:
     ItemSearchJobPrivate( ItemSearchJob *parent, const QString &query )
-      : JobPrivate( parent ), mQuery( query )
+      : JobPrivate( parent ), mQuery( query ), mEmitTimer( 0 )
     {
     }
 

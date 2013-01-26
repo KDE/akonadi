@@ -40,7 +40,7 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 {
   public:
     CollectionFetchJobPrivate( CollectionFetchJob *parent )
-      : JobPrivate( parent ), mBasePrefetch( false )
+      : JobPrivate( parent ), mEmitTimer( 0 ), mBasePrefetch( false )
     {
 
     }
