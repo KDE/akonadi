@@ -119,7 +119,6 @@ class GeoDialog : public KDialog
 
     KABC::Geo mCoordinates;
     QMap<QString, GeoData> mGeoDataMap;
-    bool mUpdateSexagesimalInput;
 };
 
 #endif
