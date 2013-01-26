@@ -62,7 +62,6 @@ class EmailAddressExtracter : public QObject
 
   private:
     KLineEdit *mLineEdit;
-    bool mIgnoreFocusOutEvent;
 };
 
 class EmailItem : public QListWidgetItem
