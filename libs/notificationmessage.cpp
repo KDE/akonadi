@@ -285,7 +285,7 @@ QString NotificationMessage::toString() const
   }
 
   if ( parentDestCollection() >= 0 )
-    rv += QString::fromLatin1( "to collection %1" ).arg( parentDestCollection() );
+    rv += QString::fromLatin1( " to collection %1" ).arg( parentDestCollection() );
 
   return rv;
 }
