@@ -18,6 +18,8 @@
  */
 
 #include "querycache.h"
+#include "dbtype.h"
+#include "datastore.h"
 
 #include <QSqlQuery>
 #include <QThreadStorage>
@@ -36,7 +38,11 @@ static QHash<QString, QSqlQuery>* cache()
 
 bool QueryCache::contains(const QString& queryStatement)
 {
-  return cache()->contains( queryStatement );
+  if ( DbType::type( DataStore::self()->database() ) == DbType::Sqlite ) {
+    return false;
+  } else {
+    return cache()->contains( queryStatement );
+  }
 }
 
 QSqlQuery QueryCache::query(const QString& queryStatement)
@@ -46,5 +52,7 @@ QSqlQuery QueryCache::query(const QString& queryStatement)
 
 void QueryCache::insert(const QString& queryStatement, const QSqlQuery& query)
 {
-  cache()->insert( queryStatement, query );
+  if ( DbType::type( DataStore::self()->database() ) != DbType::Sqlite ) {
+    cache()->insert( queryStatement, query );
+  }
 }
