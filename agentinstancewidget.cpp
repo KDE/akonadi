@@ -85,7 +85,7 @@ class AgentInstanceWidget::Private
 {
   public:
     Private( AgentInstanceWidget *parent )
-      : mParent( parent )
+      : mParent( parent ), mView( 0 ), mModel( 0 ), proxy( 0 )
     {
     }
 

@@ -190,6 +190,8 @@ class StandardActionManager::Private
   public:
     Private( StandardActionManager *parent ) :
       q( parent ),
+      actionCollection( 0 ),
+      parentWidget( 0 ),
       collectionSelectionModel( 0 ),
       itemSelectionModel( 0 ),
       favoritesModel( 0 ),
