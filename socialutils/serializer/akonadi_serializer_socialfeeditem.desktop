@@ -1,6 +1,7 @@
 [Misc]
 Name=SocialFeedItem Serializer
 Name[ca]=Serialitzador «SocialFeedItem»
+Name[ca@valencia]=Serialitzador «SocialFeedItem»
 Name[da]=SocialFeedItem-serializer
 Name[de]=SocialFeedItem-Serialisierung
 Name[el]=Πρόγραμμα γραμμικής διάταξης SocialFeedItem
@@ -31,6 +32,7 @@ Name[zh_CN]=社交源项目序列转换器
 Name[zh_TW]=SocialFeedItem 序列器
 Comment=An Akonadi serializer plugin for SocialFeedItem
 Comment[ca]=Un connector de serialització de l'Akonadi pel «SocialFeedItem»
+Comment[ca@valencia]=Un connector de serialització de l'Akonadi pel «SocialFeedItem»
 Comment[da]=Et Akonadi serializer-plugin til SocialFeedItem
 Comment[de]=Akonadi-Modul zur Serialisierung für SocialFeedItem
 Comment[el]=ένα πρόσθετο γραμμικής διάταξης του Akonadi για το SocialFeedItem
