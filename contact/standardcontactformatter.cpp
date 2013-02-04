@@ -81,14 +81,29 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   }
 
   // We'll be building a table to display the vCard in.
-  // Each row of the table will be built using this string for its HTML.
+  // Each row of the table will be built using one of these strings for its HTML.
 
-  QString rowFmtStr = QString::fromLatin1(
-        "<tr>"
-        "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
-        "<td align=\"left\" valign=\"top\" width=\"70%\"><font>%2</font></td>\n"
-        "</tr>\n"
-        );
+  // single data item:
+  //  %1 is the item name
+  //  %2 is the item value
+  QString rowFmtStr1 = QString::fromLatin1(
+    "<tr valign=\"top\">"
+    "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
+    "<td colspan=\"2\" align=\"left\" valign=\"top\" width=\"70%\"><font>%2</font></td>\n"
+    "</tr>\n"
+    );
+
+  // data item plus additional icon(s):
+  //  %1 is the item name
+  //  %2 is the item value
+  //  %3 is the icon(s), each as a HTML <a><img> tag
+  QString rowFmtStr2 = QString::fromLatin1(
+    "<tr valign=\"top\">"
+    "<td align=\"right\" valign=\"top\" width=\"30%\"><b><font color=\"grey\">%1</font></b></td>\n"
+    "<td align=\"left\" valign=\"top\"><font>%2</font></td>\n"
+    "<td align=\"left\" valign=\"top\">%3</td>\n"
+    "</tr>\n"
+    );
 
   // Build the table's rows here
   QString dynamicPart;
@@ -98,7 +113,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   const int years = contactAge( date );
 
   if ( date.isValid() ) {
-    dynamicPart += rowFmtStr
+    dynamicPart += rowFmtStr1
       .arg( KABC::Addressee::birthdayLabel() )
       .arg( KGlobal::locale()->formatDate( date ) +
             QLatin1String( "&nbsp;&nbsp;" ) + i18np( "(One year old)", "(%1 years old)", years ) );
@@ -108,18 +123,23 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
   int counter = 0;
   foreach ( const KABC::PhoneNumber &number, rawContact.phoneNumbers() ) {
 
-      QString url;
-      if ( number.type() & KABC::PhoneNumber::Cell ) {
-        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a> (<a href=\"sms:?index=%1\">SMS</a>)" ).arg( counter ).arg( Qt::escape( number.number() ) );
-      } else {
-        url = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( Qt::escape( number.number() ) );
-      }
+    QString dispLabel = number.typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) );
+    QString dispValue = QString::fromLatin1( "<a href=\"phone:?index=%1\">%2</a>" ).arg( counter ).arg( Qt::escape( number.number() ) );
+    if ( number.type() & KABC::PhoneNumber::Cell ) {
+      QString dispIcon = QString::fromLatin1( "<a href=\"sms:?index=%1\" title=\"%2\"><img src=\"sms_icon\" align=\"top\"/>")
+        .arg( counter )
+        .arg( i18nc( "@info:tooltip", "Send SMS" ) );
+      dynamicPart += rowFmtStr2
+        .arg( dispLabel )
+        .arg( dispValue )
+        .arg( dispIcon );
+    } else {
+      dynamicPart += rowFmtStr1
+        .arg( dispLabel )
+        .arg( dispValue );
+    }
 
-      counter++;
-
-      dynamicPart += rowFmtStr
-        .arg( number.typeLabel().replace( QLatin1String( " " ), QLatin1String( "&nbsp;" ) ) )
-        .arg( url );
+    ++counter;
   }
 
   // EMails
@@ -128,7 +148,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
     const QString fullEmail = QString::fromLatin1( KUrl::toPercentEncoding( rawContact.fullEmail( email ) ) );
 
-    dynamicPart += rowFmtStr.arg( type )
+    dynamicPart += rowFmtStr1.arg( type )
       .arg( QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
       .arg( fullEmail, email ) );
   }
@@ -141,13 +161,13 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
     }
 
     url = KStringHandler::tagUrls( Qt::escape( url ) );
-    dynamicPart += rowFmtStr.arg( i18n( "Homepage" ) ).arg( url );
+    dynamicPart += rowFmtStr1.arg( i18n( "Homepage" ) ).arg( url );
   }
 
   // Blog Feed
   const QString blog = rawContact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "BlogFeed" ) );
   if ( !blog.isEmpty() ) {
-    dynamicPart += rowFmtStr.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( Qt::escape( blog ) ) );
+    dynamicPart += rowFmtStr1.arg( i18n( "Blog Feed" ) ).arg( KStringHandler::tagUrls( Qt::escape( blog ) ) );
   }
 
   // Addresses
@@ -161,23 +181,23 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
       formattedAddress = Qt::escape( address.label() );
     }
 
-    formattedAddress = formattedAddress.replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) );
+    formattedAddress = formattedAddress.replace( QRegExp( QLatin1String( "\n+" ) ), QLatin1String( "<br>" ) );
 
-    const QString url = QString::fromLatin1( "%1 <a href=\"address:?index=%2\"><img src=\"map_icon\" alt=\"%3\"/></a>" )
-                                           .arg( formattedAddress )
+    const QString url = QString::fromLatin1( "<a href=\"address:?index=%1\" title=\"%2\"><img src=\"map_icon\" alt=\"%2\"/></a>" )
                                            .arg( counter )
-                                           .arg( i18n( "Show address on map" ) );
+                                           .arg( i18nc( "@info:tooltip", "Show address on map" ) );
     counter++;
 
-    dynamicPart += rowFmtStr
+    dynamicPart += rowFmtStr2
       .arg( KABC::Address::typeLabel( address.type() ) )
+      .arg( formattedAddress )
       .arg( url );
   }
 
   // Note
   QString notes;
   if ( !rawContact.note().isEmpty() ) {
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( Qt::escape( rawContact.note() ).replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
+    notes = rowFmtStr1.arg( i18n( "Notes" ) ).arg( Qt::escape( rawContact.note() ).replace( QLatin1Char( '\n' ), QLatin1String( "<br>" ) ) ) ;
   }
 
   // Custom Data
@@ -257,7 +277,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
           }
         }
 
-        customData += rowFmtStr.arg( key ).arg( Qt::escape( value ) ) ;
+        customData += rowFmtStr1.arg( key ).arg( Qt::escape( value ) ) ;
       }
     }
   }
@@ -273,18 +293,18 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
   QString strAddr = QString::fromLatin1(
     "<div align=\"center\">"
-    "<table cellpadding=\"3\" cellspacing=\"0\">"
+    "<table cellpadding=\"3\" cellspacing=\"1\">"
     "<tr>"
     "<td align=\"right\" valign=\"top\" width=\"30%\" rowspan=\"3\">"
     "<img src=\"%1\" width=\"100\" vspace=\"1\">" // image
     "</td>"
-    "<td align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
+    "<td colspan=\"2\" align=\"left\" width=\"70%\"><font size=\"+2\"><b>%2</b></font></td>" // name
     "</tr>"
     "<tr>"
-    "<td align=\"left\" width=\"70%\">%3</td>"  // role
+    "<td colspan=\"2\" align=\"left\" width=\"70%\">%3</td>"  // role
     "</tr>"
     "<tr>"
-    "<td align=\"left\" width=\"70%\">%4</td>"  // organization
+    "<td colspan=\"2\" align=\"left\" width=\"70%\">%4</td>"  // organization
     "</tr>")
       .arg( QLatin1String( "contact_photo" ) )
       .arg( Qt::escape( rawContact.realName() ) )

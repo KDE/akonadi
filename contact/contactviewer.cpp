@@ -27,6 +27,8 @@
 #include "standardcontactformatter.h"
 #include "textbrowser_p.h"
 
+#include "editor/im/improtocols.h"
+
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/entitydisplayattribute.h>
@@ -92,6 +94,10 @@ class ContactViewer::Private
       mBrowser->document()->addResource( QTextDocument::ImageResource,
                                          QUrl( QLatin1String( "map_icon" ) ),
                                          KIcon( QLatin1String( "document-open-remote" ) ).pixmap( QSize( 16, 16 ) ) );
+
+      mBrowser->document()->addResource( QTextDocument::ImageResource,
+                                         QUrl( QLatin1String( "sms_icon" ) ),
+                                         KIcon( IMProtocols::self()->icon( QString::fromLatin1( "messaging/sms" ) ) ).pixmap( QSize( 16, 16 ) ) );
 
 #ifdef HAVE_PRISON
       KConfig config( QLatin1String( "akonadi_contactrc" ) );
