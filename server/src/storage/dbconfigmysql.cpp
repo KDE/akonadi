@@ -262,6 +262,10 @@ void DbConfigMysql::startInternalServer()
   arguments << QString::fromLatin1( "--shared-memory" );
 #endif
 
+  if (mysqldPath.isEmpty()) {
+    akError() << "mysqld not found. Please verify your installation";
+    return;
+  }
   mDatabaseProcess = new QProcess;
   mDatabaseProcess->start( mysqldPath, arguments );
   if ( !mDatabaseProcess->waitForStarted() ) {
