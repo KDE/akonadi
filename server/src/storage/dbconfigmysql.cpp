@@ -78,7 +78,8 @@ bool DbConfigMysql::init( QSettings &settings )
   const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqladmin" ), mysqldSearchPath );
   if ( !mysqladminPath.isEmpty() ) {
 #ifndef Q_OS_WIN
-    defaultCleanShutdownCommand = QString::fromLatin1( "%1 shutdown --socket=%2/mysql.socket" )
+    defaultCleanShutdownCommand = QString::fromLatin1( "--defaults-file=%1/mysql.conf %2 shutdown --socket=%3/mysql.socket" )
+                                      .arg( AkStandardDirs::saveDir( "data" ) )
                                       .arg( mysqladminPath )
                                       .arg( socketDirectory );
 #else
@@ -303,7 +304,8 @@ void DbConfigMysql::startInternalServer()
     if ( opened ) {
 
       if ( !mMysqlCheckPath.isEmpty() ) {
-        const QStringList arguments = QStringList() << QLatin1String( "--check-upgrade" )
+        const QStringList arguments = QStringList() << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir )
+                                                    << QLatin1String( "--check-upgrade" )
                                                     << QLatin1String( "--all-databases" )
                                                     << QLatin1String( "--auto-repair" )
                                                     << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory );
