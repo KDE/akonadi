@@ -153,6 +153,15 @@ void CollectionPropertiesDialog::Private::init()
 
   q->connect( q, SIGNAL(okClicked()), SLOT(save()) );
   q->connect( q, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
+
+  KConfigGroup group( KGlobal::config(), "CollectionPropertiesDialog" );
+  const QSize size = group.readEntry( "Size", QSize() );
+  if ( size.isValid() ) {
+    q->resize( size );
+  } else {
+    q->resize( q->sizeHint().width(), q->sizeHint().height() );
+  }
+
 }
 
 
@@ -172,6 +181,8 @@ CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collec
 
 CollectionPropertiesDialog::~CollectionPropertiesDialog()
 {
+  KConfigGroup group( KGlobal::config(), "CollectionPropertiesDialog" );
+  group.writeEntry( "Size", size() );
   delete d;
 }
 
