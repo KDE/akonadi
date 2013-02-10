@@ -114,7 +114,7 @@ class ContactGroupEditorDelegate::Private
 {
   public:
     Private()
-      : mButtonSize( 16, 16 ), mIcon( QLatin1String( "list-remove" ) )
+      : mButtonSize( 16, 16 ), mIcon( QLatin1String( "list-remove" ) ), mItemView( 0 )
     {
     }
 

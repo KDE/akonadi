@@ -65,7 +65,6 @@ class GeoEditWidget : public QWidget
     QLabel *mLongitudeLabel;
     QPushButton *mChangeButton;
     KABC::Geo mCoordinates;
-    bool mReadOnly;
 };
 
 class GeoDialog : public KDialog
