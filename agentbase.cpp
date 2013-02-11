@@ -179,6 +179,8 @@ AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
     mOnline( false ),
     mDesiredOnlineState( false ),
     mSettings( 0 ),
+    mChangeRecorder( 0 ),
+    mTracer( 0 ),
     mObserver( 0 )
 {
 #ifdef Q_OS_WINCE
