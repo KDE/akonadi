@@ -49,7 +49,7 @@ ChangeMediator* ChangeMediator::instance()
 }
 
 ChangeMediator::ChangeMediator(QObject *parent)
-  : QObject(parent)
+  : QObject(parent), m_notificationSource( 0 )
 {
   if ( qApp ) {
     this->moveToThread( qApp->thread() );

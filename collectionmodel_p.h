@@ -47,7 +47,7 @@ class CollectionModelPrivate
   public:
     Q_DECLARE_PUBLIC( CollectionModel )
     CollectionModelPrivate( CollectionModel *parent )
-      : q_ptr( parent ), fetchStatistics( false ), unsubscribed( false ),
+      : q_ptr( parent ), monitor( 0 ), session( 0 ), fetchStatistics( false ), unsubscribed( false ),
         headerContent( i18nc( "@title:column, name of a thing", "Name" ) )
     {
     }
@@ -86,8 +86,9 @@ class CollectionModelPrivate
   private:
     void updateSupportedMimeTypes( Collection col )
     {
-      QStringList l = col.contentMimeTypes();
-      for ( QStringList::ConstIterator it = l.constBegin(); it != l.constEnd(); ++it ) {
+      const QStringList l = col.contentMimeTypes();
+      QStringList::ConstIterator constEnd(l.constEnd());
+      for ( QStringList::ConstIterator it = l.constBegin(); it != constEnd; ++it ) {
         if ( ( *it ) == Collection::mimeType() ) {
           continue;
         }
