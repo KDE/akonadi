@@ -23,6 +23,7 @@
 
 #include "contactactionssettings.h"
 #include "qdialer.h"
+#include "qsflphonedialer.h"
 #include "qskypedialer.h"
 #ifdef Q_OS_WINCE
 #include "qwincedialer.h"
@@ -66,6 +67,9 @@ void DialPhoneNumberAction::dialNumber( const KABC::PhoneNumber &number )
     dialer = new QWinCEDialer( QLatin1String( "AkonadiContacts" ) );
   }
 #endif // Q_OS_WINCE
+  else if ( ContactActionsSettings::self()->dialPhoneNumberAction() == ContactActionsSettings::UseSflPhone) {
+    dialer = new QSflPhoneDialer( QLatin1String( "AkonadiContacts" ) );
+  }
   if ( dialer ) {
     if ( !dialer->dialNumber( strippedDialNumber( number.number().trimmed() ) ) ) {
       KMessageBox::sorry( 0, dialer->errorMessage() );

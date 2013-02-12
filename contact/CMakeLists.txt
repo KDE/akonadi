@@ -47,6 +47,7 @@ set(akonadicontact_actions_SRCS
   actions/qskypedialer.cpp
   actions/sendsmsaction.cpp
   actions/smsdialog.cpp
+  actions/qsflphonedialer.cpp
 )
 
 if (WINCE)
