@@ -33,5 +33,8 @@ public:
     bool dialNumber( const QString &number );
     bool sendSms( const QString &number, const QString &text );
 
+private:
+  bool initializeSflPhone();
+
 };
 #endif // QSFLPHONEDIALER_H

@@ -42,8 +42,8 @@
       <choices>
         <choice name="UseSkype"/>
         <choice name="UseExternalPhoneApplication"/>
-        <choice name="UseWinCE"/>
         <choice name="UseSflPhone"/>
+        <choice name="UseWinCE"/>
       </choices>
       <whatsthis>Defines which application shall be used to dial the phone number of a contact. If 'Skype' is selected the Skype application will be started (if installed on the computer) and the number is dialed. If 'External Application' is selected, a command with placeholders can be defined.</whatsthis>
       <default>@AKONADI_PHONE_DIAL_DEFAULT@</default>
