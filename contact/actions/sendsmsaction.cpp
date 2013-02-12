@@ -52,6 +52,7 @@ void SendSmsAction::sendSms( const KABC::PhoneNumber &phoneNumber )
 
   QPointer<SmsDialog> dlg( new SmsDialog( number ) );
   if ( dlg->exec() != QDialog::Accepted ) { // the cancel button has been clicked
+    delete dlg;
     return;
   }
   const QString message = ( dlg != 0 ? dlg->message() : QString() );
