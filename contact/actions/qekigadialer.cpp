@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2013 Montel Laurent <montel@kde.org>
+  Copyright (c) 2013 Montel Laurent <montel.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -18,7 +18,8 @@
 
 */
 
-#include "qsflphonedialer.h"
+#include "qekigadialer.h"
+
 #include "../dbusconnectionpool.h"
 
 #include <KLocale>
@@ -34,9 +35,9 @@
 
 #include <unistd.h>
 
-static bool isSflPhoneServiceRegistered()
+static bool isEkigaServiceRegistered()
 {
-    const QLatin1String service( "org.sflphone.SFLphone" );
+    const QLatin1String service( "org.ekiga.Ekiga" );
 
     QDBusConnectionInterface *interface = QDBusConnection::systemBus().interface();
     if ( interface->isServiceRegistered( service ) ) {
@@ -50,31 +51,29 @@ static bool isSflPhoneServiceRegistered()
     return false;
 }
 
-
-
-QSflPhoneDialer::QSflPhoneDialer( const QString &applicationName )
+QEkigaDialer::QEkigaDialer( const QString &applicationName )
     : QDialer( applicationName )
 {
 }
 
-QSflPhoneDialer::~QSflPhoneDialer()
+QEkigaDialer::~QEkigaDialer()
 {
 }
 
-bool QSflPhoneDialer::initializeSflPhone()
+bool QEkigaDialer::initializeSflPhone()
 {
     // first check whether dbus interface is available yet
-    if ( !isSflPhoneServiceRegistered() ) {
+    if ( !isEkigaServiceRegistered() ) {
 
         // it could be skype is not running yet, so start it now
-        if ( !QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), QStringList() ) ) {
-            mErrorMessage = i18n( "Unable to start sflphone-client-kde process, check that sflphone-client-kde executable is in your PATH variable." );
+        if ( !QProcess::startDetached( QLatin1String( "ekiga" ), QStringList() ) ) {
+            mErrorMessage = i18n( "Unable to start ekiga process, check that ekiga executable is in your PATH variable." );
             return false;
         }
 
         const int runs = 100;
         for ( int i = 0; i < runs; ++i ) {
-            if ( !isSflPhoneServiceRegistered() ) {
+            if ( !isEkigaServiceRegistered() ) {
                 ::sleep( 2 );
             } else {
                 return true;
@@ -84,24 +83,17 @@ bool QSflPhoneDialer::initializeSflPhone()
     return true;
 }
 
-bool QSflPhoneDialer::dialNumber(const QString &number)
+bool QEkigaDialer::dialNumber(const QString &number)
 {
-    if ( !initializeSflPhone() ) {
+    if ( !isEkigaServiceRegistered() ) {
         return false;
     }
-
-    QStringList arguments;
-    arguments << QLatin1String("--place-call");
-    arguments << number;
-    if (!QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), arguments)) {
-        return false;
-    }
-
+    //TODO
     return true;
 }
 
-bool QSflPhoneDialer::sendSms(const QString &, const QString &)
+bool QEkigaDialer::sendSms(const QString &, const QString &)
 {
-    mErrorMessage = i18n( "Sending an SMS is currently not supported on SflPhone" );
+    mErrorMessage = i18n( "Sending an SMS is currently not supported on Ekiga" );
     return false;
 }

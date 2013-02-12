@@ -28,7 +28,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
-
+#include <QDebug>
 #include <klocale.h>
 
 #include <unistd.h>
@@ -151,13 +151,17 @@ bool QSkypeDialer::sendSms( const QString &number, const QString &text )
 
   // First we create a new SMS object that gets an ID. We need that ID later...
   QDBusReply<QString> reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "CREATE SMS OUTGOING %1" ).arg( number ) );
+  qDebug()<<" reply "<<reply;
   const QString messageId = reply.value().section( QLatin1String( " " ), 1, 1 );
+  qDebug()<<" messageId"<<messageId;
 
   // Set the SMS text
   reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "SET SMS %1 BODY %2" ).arg( messageId, text ) );
 
+  qDebug()<<" reply"<<reply;
   // Send the SMS
   reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "ALTER SMS %1 SEND" ).arg( messageId ) );
+  qDebug()<<" reply2222222222222222222"<<reply;
   if ( reply.value().contains( QLatin1String( "ERROR" ) ) ) {
     mErrorMessage = reply.value();
     // As sending the message failed (not enough Skype credit), lets delete the message

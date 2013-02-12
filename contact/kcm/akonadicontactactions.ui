@@ -110,7 +110,7 @@
       <item>
        <widget class="QStackedWidget" name="stackedWidget_2">
         <property name="currentIndex">
-         <number>0</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="page_3"/>
         <widget class="QWidget" name="page_4">
@@ -127,6 +127,7 @@
           </item>
          </layout>
         </widget>
+        <widget class="QWidget" name="page_7"/>
        </widget>
       </item>
       <item>

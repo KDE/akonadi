@@ -29,15 +29,18 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDebug>
 
 SmsDialog::SmsDialog( const KABC::PhoneNumber &number )
   : mNumber( number.number() )
 {
   initUI();
+  qDebug()<<" XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxx";
 }
 
 SmsDialog::~SmsDialog()
 {
+    qDebug()<<" SmsDialog::~SmsDialog()"<<this;
 }
 
 QString SmsDialog::message() const

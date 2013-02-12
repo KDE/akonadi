@@ -18,23 +18,22 @@
 
 */
 
-#ifndef QSFLPHONEDIALER_H
-#define QSFLPHONEDIALER_H
+#ifndef QEKIGADIALER_H
+#define QEKIGADIALER_H
 
 #include "qdialer.h"
 
-class QSflPhoneDialer : public QDialer
+class QEkigaDialer : public QDialer
 {
 public:
-    explicit QSflPhoneDialer( const QString &applicationName );
-    ~QSflPhoneDialer();
+    explicit QEkigaDialer( const QString &applicationName );
+    ~QEkigaDialer();
 
 
     bool dialNumber( const QString &number );
     bool sendSms( const QString &number, const QString &text );
-
 private:
-  bool initializeSflPhone();
-
+    bool initializeSflPhone();
 };
-#endif // QSFLPHONEDIALER_H
+
+#endif // QEKIGADIALER_H
