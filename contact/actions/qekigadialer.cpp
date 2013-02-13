@@ -51,13 +51,28 @@ static bool isEkigaServiceRegistered()
     return false;
 }
 
+static QDBusInterface* searchEkigaDBusInterface()
+{
+  const QLatin1String service( "org.ekiga.Ekiga" );
+  const QLatin1String path( "/org/ekiga/Ekiga" );
+
+  QDBusInterface *interface = new QDBusInterface( service, path, QString(), QDBusConnection::systemBus() );
+  if ( !interface->isValid() ) {
+    delete interface;
+    interface = new QDBusInterface( service, path, QString(), Akonadi::DBusConnectionPool::threadConnection() );
+  }
+
+  return interface;
+}
+
 QEkigaDialer::QEkigaDialer( const QString &applicationName )
-    : QDialer( applicationName )
+    : QDialer( applicationName ), mInterface( 0 )
 {
 }
 
 QEkigaDialer::~QEkigaDialer()
 {
+    delete mInterface;
 }
 
 bool QEkigaDialer::initializeSflPhone()
@@ -80,6 +95,19 @@ bool QEkigaDialer::initializeSflPhone()
             }
         }
     }
+
+    // check again for the dbus interface
+    mInterface = searchEkigaDBusInterface();
+
+    if ( !mInterface->isValid() ) {
+      delete mInterface;
+      mInterface = 0;
+
+      mErrorMessage = i18n( "Ekiga Public API (D-Bus) seems to be disabled." );
+      return false;
+    }
+
+
     return true;
 }
 
@@ -88,7 +116,7 @@ bool QEkigaDialer::dialNumber(const QString &number)
     if ( !isEkigaServiceRegistered() ) {
         return false;
     }
-    //TODO
+    QDBusReply<void> reply = mInterface->call( QLatin1String( "Call" ), number );
     return true;
 }
 

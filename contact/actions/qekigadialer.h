@@ -22,6 +22,7 @@
 #define QEKIGADIALER_H
 
 #include "qdialer.h"
+class QDBusInterface;
 
 class QEkigaDialer : public QDialer
 {
@@ -34,6 +35,7 @@ public:
     bool sendSms( const QString &number, const QString &text );
 private:
     bool initializeSflPhone();
+    QDBusInterface *mInterface;
 };
 
 #endif // QEKIGADIALER_H
