@@ -1,6 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -23,22 +24,27 @@
 #define KCMAKONADICONTACTACTIONS_H
 
 #include <kcmodule.h>
+#include "ui_akonadicontactactions.h"
 
 class KConfigDialogManager;
 
 class KCMAkonadiContactActions : public KCModule
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
+public:
     KCMAkonadiContactActions( QWidget *parent, const QVariantList &args );
 
     virtual void load();
     virtual void save();
     virtual void defaults();
 
-  private:
+private Q_SLOTS:
+    void slotDialPhoneNumberActionChanged(int);
+
+private:
     KConfigDialogManager *mConfigManager;
+    Ui_AkonadiContactActions ui;
 };
 
 #endif

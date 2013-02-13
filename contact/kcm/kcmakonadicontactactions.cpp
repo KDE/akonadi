@@ -1,6 +1,7 @@
 /*
     This file is part of Akonadi Contact.
 
+    Copyright (c) 2013 Laurent Montel <montel@kde.org>
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -22,7 +23,6 @@
 #include "kcmakonadicontactactions.h"
 
 #include "contactactionssettings.h"
-#include "ui_akonadicontactactions.h"
 
 #include <QVBoxLayout>
 
@@ -31,6 +31,8 @@
 #include <kconfigdialogmanager.h>
 #include <kpluginfactory.h>
 #include <klocale.h>
+
+Q_DECLARE_METATYPE(ContactActionsSettings::EnumDialPhoneNumberAction)
 
 K_PLUGIN_FACTORY( KCMAkonadiContactActionsFactory, registerPlugin<KCMAkonadiContactActions>(); )
 K_EXPORT_PLUGIN( KCMAkonadiContactActionsFactory( "kcm_akonadicontact_actions" ) )
@@ -51,26 +53,50 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
   QWidget *wdg = new QWidget;
   layout->addWidget( wdg );
 
-  Ui_AkonadiContactActions ui;
   ui.setupUi( wdg );
 
   mConfigManager = addConfig( ContactActionsSettings::self(), wdg );
 
+  ui.DialPhoneNumberAction->addItem(i18n("Skype"), QVariant::fromValue(ContactActionsSettings::UseSkype));
+  ui.DialPhoneNumberAction->addItem(i18n("Ekiga"), QVariant::fromValue(ContactActionsSettings::UseEkiga));
+  ui.DialPhoneNumberAction->addItem(i18n("SflPhone"), QVariant::fromValue(ContactActionsSettings::UseSflPhone));
+#ifdef Q_OS_WINCE
+  ui.DialPhoneNumberAction->addItem(i18n("WinCE"), QVariant::fromValue(ContactActionsSettings::UseWinCE));
+#endif
+  ui.DialPhoneNumberAction->addItem(i18n("External Application"), QVariant::fromValue(ContactActionsSettings::UseExternalPhoneApplication));
+
+  connect(ui.DialPhoneNumberAction, SIGNAL(currentIndexChanged(int)), SLOT(slotDialPhoneNumberActionChanged(int)));
   load();
+}
+
+void KCMAkonadiContactActions::slotDialPhoneNumberActionChanged(int value)
+{
+    ContactActionsSettings::EnumDialPhoneNumberAction enumValue = ui.DialPhoneNumberAction->itemData(value).value<ContactActionsSettings::EnumDialPhoneNumberAction>();
+    if (enumValue == ContactActionsSettings::UseExternalPhoneApplication) {
+        ui.stackedWidget_2->setCurrentIndex(1);
+    } else {
+        ui.stackedWidget_2->setCurrentIndex(0);
+    }
+    emit changed(true);
 }
 
 void KCMAkonadiContactActions::load()
 {
   mConfigManager->updateWidgets();
+  ui.DialPhoneNumberAction->setCurrentIndex(ContactActionsSettings::self()->dialPhoneNumberAction());
 }
 
 void KCMAkonadiContactActions::save()
 {
+  ContactActionsSettings::self()->setDialPhoneNumberAction(ui.DialPhoneNumberAction->currentIndex());
   mConfigManager->updateSettings();
 }
 
 void KCMAkonadiContactActions::defaults()
 {
   mConfigManager->updateWidgetsDefault();
+  const bool bUseDefaults = ContactActionsSettings::self()->useDefaults( true );
+  ui.DialPhoneNumberAction->setCurrentIndex(ContactActionsSettings::self()->dialPhoneNumberAction());
+  ContactActionsSettings::self()->useDefaults( bUseDefaults );
 }
 
