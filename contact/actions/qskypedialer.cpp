@@ -156,7 +156,6 @@ bool QSkypeDialer::sendSms( const QString &number, const QString &text )
   // Set the SMS text
   reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "SET SMS %1 BODY %2" ).arg( messageId, text ) );
 
-  qDebug()<<" reply"<<reply;
   // Send the SMS
   reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "ALTER SMS %1 SEND" ).arg( messageId ) );
   if ( reply.value().contains( QLatin1String( "ERROR" ) ) ) {
