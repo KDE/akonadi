@@ -22,7 +22,6 @@
 #include "displaynameeditwidget.h"
 
 #include <QtCore/QEvent>
-#include <QtCore/QString>
 #include <QAbstractItemView>
 #include <QHBoxLayout>
 #include <QPainter>

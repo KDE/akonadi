@@ -30,7 +30,7 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QPalette>
-#include <QProgressBar>
+//#include <QProgressBar>
 
 //@cond PRIVATE
 
@@ -47,10 +47,10 @@ WaitingOverlay::WaitingOverlay( KJob *job, QWidget *baseWidget, QWidget * parent
 
   QBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->addStretch();
-  mDescription = new QLabel( this );
-  mDescription->setText( i18n( "<p style=\"color: white;\"><b>Waiting for operation</b><br/></p>" ) );
-  mDescription->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
-  topLayout->addWidget( mDescription );
+  QLabel *description = new QLabel( this );
+  description->setText( i18n( "<p style=\"color: white;\"><b>Waiting for operation</b><br/></p>" ) );
+  description->setAlignment( Qt::AlignHCenter | Qt::AlignVCenter );
+  topLayout->addWidget( description );
   topLayout->addStretch();
 
   QPalette p = palette();

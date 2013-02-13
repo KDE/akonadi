@@ -25,12 +25,9 @@
 
 #include <akonadi/item.h>
 #include <kabc/addressee.h>
-#include <kcombobox.h>
 #include <kdialog.h>
-#include <klocale.h>
 #include <nepomuk2/tag.h>
 
-#include <QtCore/QString>
 #include <QHBoxLayout>
 
 CategoriesEditWidget::CategoriesEditWidget( QWidget *parent )

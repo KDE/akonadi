@@ -39,13 +39,13 @@ TagWidget::TagWidget( QWidget *parent )
   mTagLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
   layout->addWidget( mTagLabel );
 
-  mEditButton = new QToolButton;
-  mEditButton->setText( QLatin1String( "..." ) );
-  layout->addWidget( mEditButton, Qt::AlignRight );
+  QToolButton *editButton = new QToolButton;
+  editButton->setText( QLatin1String( "..." ) );
+  layout->addWidget( editButton, Qt::AlignRight );
 
   layout->setStretch( 0, 10 );
 
-  connect( mEditButton, SIGNAL(clicked()), SLOT(editTags()) );
+  connect( editButton, SIGNAL(clicked()), SLOT(editTags()) );
 }
 
 TagWidget::~TagWidget()

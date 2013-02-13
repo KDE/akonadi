@@ -25,8 +25,6 @@
 #include <QtCore/QPointer>
 #include <QWidget>
 
-class QLabel;
-class QProgressBar;
 class KJob;
 
 /**
@@ -52,7 +50,6 @@ class WaitingOverlay : public QWidget
 
   private:
     QPointer<QWidget> mBaseWidget;
-    QLabel *mDescription;
     bool mPreviousState;
 };
 

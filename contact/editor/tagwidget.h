@@ -28,7 +28,6 @@
 
 class QHBoxLayout;
 class QLabel;
-class QToolButton;
 
 class TagWidget : public QWidget
 {
@@ -47,7 +46,6 @@ class TagWidget : public QWidget
   private:
     void updateView();
 
-    QToolButton *mEditButton;
     QLabel *mTagLabel;
 
     QVector<Nepomuk2::Tag> mTags;

@@ -31,8 +31,6 @@
 #endif // Q_OS_WINCE
 
 #include <kabc/phonenumber.h>
-#include <kconfig.h>
-#include <kconfiggroup.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <krun.h>

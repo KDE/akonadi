@@ -26,7 +26,6 @@
 #include <QtCore/QEvent>
 #include <QtCore/QList>
 #include <QApplication>
-#include <QBoxLayout>
 #include <QButtonGroup>
 #include <QCheckBox>
 #include <QFrame>

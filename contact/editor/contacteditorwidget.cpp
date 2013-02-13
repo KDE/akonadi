@@ -44,7 +44,6 @@
 #include <kstandarddirs.h>
 #include <ktabwidget.h>
 #include <ktextedit.h>
-#include <kurlrequester.h>
 
 #include <Nepomuk2/ResourceManager>
 
