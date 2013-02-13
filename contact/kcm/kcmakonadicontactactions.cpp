@@ -57,13 +57,13 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
 
   mConfigManager = addConfig( ContactActionsSettings::self(), wdg );
 
-  ui.DialPhoneNumberAction->addItem(i18n("Skype"), QVariant::fromValue(ContactActionsSettings::UseSkype));
-  ui.DialPhoneNumberAction->addItem(i18n("Ekiga"), QVariant::fromValue(ContactActionsSettings::UseEkiga));
-  ui.DialPhoneNumberAction->addItem(i18n("SflPhone"), QVariant::fromValue(ContactActionsSettings::UseSflPhone));
+  ui.DialPhoneNumberAction->addItem(i18n("Skype"), ContactActionsSettings::UseSkype);
+  ui.DialPhoneNumberAction->addItem(i18n("Ekiga"), ContactActionsSettings::UseEkiga);
+  ui.DialPhoneNumberAction->addItem(i18n("SflPhone"), ContactActionsSettings::UseSflPhone);
 #ifdef Q_OS_WINCE
-  ui.DialPhoneNumberAction->addItem(i18n("WinCE"), QVariant::fromValue(ContactActionsSettings::UseWinCE));
+  ui.DialPhoneNumberAction->addItem(i18n("WinCE"), ContactActionsSettings::UseWinCE);
 #endif
-  ui.DialPhoneNumberAction->addItem(i18n("External Application"), QVariant::fromValue(ContactActionsSettings::UseExternalPhoneApplication));
+  ui.DialPhoneNumberAction->addItem(i18n("External Application"), ContactActionsSettings::UseExternalPhoneApplication);
 
   connect(ui.DialPhoneNumberAction, SIGNAL(currentIndexChanged(int)), SLOT(slotDialPhoneNumberActionChanged(int)));
   load();
@@ -71,7 +71,7 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
 
 void KCMAkonadiContactActions::slotDialPhoneNumberActionChanged(int value)
 {
-    ContactActionsSettings::EnumDialPhoneNumberAction enumValue = ui.DialPhoneNumberAction->itemData(value).value<ContactActionsSettings::EnumDialPhoneNumberAction>();
+    ContactActionsSettings::EnumDialPhoneNumberAction enumValue = static_cast<ContactActionsSettings::EnumDialPhoneNumberAction>(ui.DialPhoneNumberAction->itemData(value).toInt());
     if (enumValue == ContactActionsSettings::UseExternalPhoneApplication) {
         ui.stackedWidget_2->setCurrentIndex(1);
     } else {
@@ -83,13 +83,17 @@ void KCMAkonadiContactActions::slotDialPhoneNumberActionChanged(int value)
 void KCMAkonadiContactActions::load()
 {
   mConfigManager->updateWidgets();
-  ui.DialPhoneNumberAction->setCurrentIndex(ContactActionsSettings::self()->dialPhoneNumberAction());
+  ContactActionsSettings::EnumDialPhoneNumberAction enumValue = static_cast<ContactActionsSettings::EnumDialPhoneNumberAction>(ContactActionsSettings::self()->dialPhoneNumberAction());
+  const int index = ui.DialPhoneNumberAction->findData(enumValue);
+  ui.DialPhoneNumberAction->setCurrentIndex(index);
 }
 
 void KCMAkonadiContactActions::save()
 {
-  ContactActionsSettings::self()->setDialPhoneNumberAction(ui.DialPhoneNumberAction->currentIndex());
   mConfigManager->updateSettings();
+  ContactActionsSettings::EnumDialPhoneNumberAction enumValue = static_cast<ContactActionsSettings::EnumDialPhoneNumberAction>(ui.DialPhoneNumberAction->itemData(ui.DialPhoneNumberAction->currentIndex()).toInt());
+  ContactActionsSettings::self()->setDialPhoneNumberAction(enumValue);
+  ContactActionsSettings::self()->writeConfig();
 }
 
 void KCMAkonadiContactActions::defaults()

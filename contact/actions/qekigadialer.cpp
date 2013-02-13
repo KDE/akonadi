@@ -75,7 +75,7 @@ QEkigaDialer::~QEkigaDialer()
     delete mInterface;
 }
 
-bool QEkigaDialer::initializeSflPhone()
+bool QEkigaDialer::initializeEkiga()
 {
     // first check whether dbus interface is available yet
     if ( !isEkigaServiceRegistered() ) {
@@ -91,7 +91,7 @@ bool QEkigaDialer::initializeSflPhone()
             if ( !isEkigaServiceRegistered() ) {
                 ::sleep( 2 );
             } else {
-                return true;
+                break;
             }
         }
     }
@@ -113,7 +113,7 @@ bool QEkigaDialer::initializeSflPhone()
 
 bool QEkigaDialer::dialNumber(const QString &number)
 {
-    if ( !isEkigaServiceRegistered() ) {
+    if ( !initializeEkiga() ) {
         return false;
     }
     QDBusReply<void> reply = mInterface->call( QLatin1String( "Call" ), number );
