@@ -52,7 +52,7 @@ Firstrun::Firstrun( QObject *parent )
 {
   //The code in firstrun is not safe in multi-instance mode
   Q_ASSERT( !ServerManager::hasInstanceIdentifier() );
-  if ( !ServerManager::hasInstanceIdentifier() ) {
+  if ( ServerManager::hasInstanceIdentifier() ) {
     deleteLater();
     return;
   }
