@@ -103,12 +103,14 @@ class KDatePickerPopup: public QMenu
     void slotNextWeek();
     void slotNextMonth();
     void slotNoDate();
+    void slotHidePickerPopup();
 
   private:
     void buildMenu();
 
     KDatePicker *mDatePicker;
     Items mItems;
+    QDate mDate;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Items )
