@@ -51,7 +51,7 @@ namespace Akonadi {
  * connect( changer,
  *          SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
  *          SLOT(slotCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
- * 
+ *
  * connect( changer,
  *          SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
  *          SLOT(slotDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
@@ -64,12 +64,12 @@ namespace Akonadi {
  * KCalCore::Incidence::Ptr incidence = (...);
  * int changeId = changer->createIncidence( incidence, Akonadi::Collection() );
  *
- * 
+ *
  * if ( changeId == -1 )
  * {
  *  // Invalid parameters, incidence is null.
  * }
- * 
+ *
  * @endcode
  *
  * @author Sérgio Martins <iamsergio@gmail.com>
@@ -276,7 +276,7 @@ public:
   void setRespectsCollectionRights( bool respect );
 
   /**
-    * Returns true if IncidenceChanger honours collection's ACLs by disallowing
+    * Returns true if IncidenceChanger honors collection's ACLs by disallowing
     * changes if necessary.
     *
     * The default is true.

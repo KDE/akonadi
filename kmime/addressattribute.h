@@ -78,7 +78,7 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
 
     /**
       * Sets the addresses of the "To: "receivers."
-      * @param to address of the reciever
+      * @param to address of the receiver.
       */
     void setTo( const QStringList &to );
 

@@ -101,7 +101,7 @@ class CollectionSync : public TransactionSequence
       Indicate whether the resource supplies collections with hierarchical or
       global remote identifiers. @c false by default.
       Must be called before the first call to setRemoteCollections().
-      @param hierachical @c true if collection remote IDs are relative to their parents' remote IDs
+      @param hierarchical @c true if collection remote IDs are relative to their parents' remote IDs
     */
     void setHierarchicalRemoteIds( bool hierarchical );
 

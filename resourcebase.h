@@ -306,9 +306,9 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      */
     // KDE5: Make it pure virtual, for now can be called only by invokeMethod()
     //       in order to simulate polymorphism
-    QString dumpResourceToString() const 
-    { 
-        return QString(); 
+    QString dumpResourceToString() const
+    {
+        return QString();
     }
 
   protected:
@@ -571,7 +571,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      *
      * This should be called in the resource constructor as needed.
      *
-     * @param enable whether to enable use of hierachical remote identifiers
+     * @param enable whether to enable use of hierarchical remote identifiers
      * @since 4.4
      */
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );

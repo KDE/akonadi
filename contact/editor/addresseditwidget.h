@@ -112,7 +112,7 @@ class AddressTypeCombo : public KComboBox
 
     /**
      * Sets the type that shall be selected in the combobox.
-     * @param type KABC adress type to set
+     * @param type KABC address type to set.
      */
     void setType( KABC::Address::Type type );
 
