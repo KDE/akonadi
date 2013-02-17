@@ -24,7 +24,7 @@
 
 #include "libakonadisocialutils_export.h"
 
-#include <KUrl>
+#include <KDE/KUrl>
 
 class KJob;
 class QImage;
@@ -45,7 +45,7 @@ class LIBAKONADISOCIALUTILS_EXPORT ImageProvider : public QObject
 {
   Q_OBJECT
   public:
-    ImageProvider( QObject *parent = 0 );
+    explicit ImageProvider( QObject *parent = 0 );
     ~ImageProvider();
 
     /**
