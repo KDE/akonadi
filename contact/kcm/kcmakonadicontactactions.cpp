@@ -66,7 +66,26 @@ KCMAkonadiContactActions::KCMAkonadiContactActions( QWidget *parent, const QVari
   ui.DialPhoneNumberAction->addItem(i18n("External Application"), ContactActionsSettings::UseExternalPhoneApplication);
 
   connect(ui.DialPhoneNumberAction, SIGNAL(currentIndexChanged(int)), SLOT(slotDialPhoneNumberActionChanged(int)));
+
+  ui.SendSmsAction->addItem(i18n("Skype"), ContactActionsSettings::UseSkypeSms);
+  ui.SendSmsAction->addItem(i18n("SflPhone"), ContactActionsSettings::UseSflPhoneSms);
+#ifdef Q_OS_WINCE
+  ui.SendSmsAction->addItem(i18n("WinCE"), ContactActionsSettings::UseWinCESms);
+#endif
+  ui.SendSmsAction->addItem(i18n("External Application"), ContactActionsSettings::UseExternalSmsApplication);
+  connect(ui.SendSmsAction, SIGNAL(currentIndexChanged(int)), SLOT(slotSmsPhoneNumberActionChanged(int)));
   load();
+}
+
+void KCMAkonadiContactActions::slotSmsPhoneNumberActionChanged(int value)
+{
+    ContactActionsSettings::EnumSendSmsAction enumValue = static_cast<ContactActionsSettings::EnumSendSmsAction>(ui.SendSmsAction->itemData(value).toInt());
+    if (enumValue == ContactActionsSettings::UseExternalSmsApplication) {
+        ui.stackedWidget_3->setCurrentIndex(1);
+    } else {
+        ui.stackedWidget_3->setCurrentIndex(0);
+    }
+    emit changed(true);
 }
 
 void KCMAkonadiContactActions::slotDialPhoneNumberActionChanged(int value)
@@ -86,6 +105,11 @@ void KCMAkonadiContactActions::load()
   ContactActionsSettings::EnumDialPhoneNumberAction enumValue = static_cast<ContactActionsSettings::EnumDialPhoneNumberAction>(ContactActionsSettings::self()->dialPhoneNumberAction());
   const int index = ui.DialPhoneNumberAction->findData(enumValue);
   ui.DialPhoneNumberAction->setCurrentIndex(index);
+
+  ContactActionsSettings::EnumSendSmsAction enumValueSms = static_cast<ContactActionsSettings::EnumSendSmsAction>(ContactActionsSettings::self()->sendSmsAction());
+  const int indexSms = ui.SendSmsAction->findData(enumValueSms);
+  ui.SendSmsAction->setCurrentIndex(indexSms);
+
 }
 
 void KCMAkonadiContactActions::save()
@@ -93,6 +117,9 @@ void KCMAkonadiContactActions::save()
   mConfigManager->updateSettings();
   ContactActionsSettings::EnumDialPhoneNumberAction enumValue = static_cast<ContactActionsSettings::EnumDialPhoneNumberAction>(ui.DialPhoneNumberAction->itemData(ui.DialPhoneNumberAction->currentIndex()).toInt());
   ContactActionsSettings::self()->setDialPhoneNumberAction(enumValue);
+
+  ContactActionsSettings::EnumSendSmsAction enumValueSms = static_cast<ContactActionsSettings::EnumSendSmsAction>(ui.SendSmsAction->itemData(ui.SendSmsAction->currentIndex()).toInt());
+  ContactActionsSettings::self()->setSendSmsAction(enumValueSms);
   ContactActionsSettings::self()->writeConfig();
 }
 
@@ -101,6 +128,7 @@ void KCMAkonadiContactActions::defaults()
   mConfigManager->updateWidgetsDefault();
   const bool bUseDefaults = ContactActionsSettings::self()->useDefaults( true );
   ui.DialPhoneNumberAction->setCurrentIndex(ContactActionsSettings::self()->dialPhoneNumberAction());
+  ui.SendSmsAction->setCurrentIndex(ContactActionsSettings::self()->sendSmsAction());
   ContactActionsSettings::self()->useDefaults( bUseDefaults );
 }
 

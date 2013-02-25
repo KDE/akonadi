@@ -137,18 +137,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <widget class="KComboBox" name="kcfg_SendSmsAction">
-        <item>
-         <property name="text">
-          <string>Skype</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>External Application</string>
-         </property>
-        </item>
-       </widget>
+       <widget class="KComboBox" name="SendSmsAction"/>
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget_3">
@@ -230,22 +219,6 @@
     <hint type="destinationlabel">
      <x>161</x>
      <y>80</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>kcfg_SendSmsAction</sender>
-   <signal>currentIndexChanged(int)</signal>
-   <receiver>stackedWidget_3</receiver>
-   <slot>setCurrentIndex(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>142</x>
-     <y>273</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>30</x>
-     <y>294</y>
     </hint>
    </hints>
   </connection>

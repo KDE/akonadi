@@ -100,8 +100,19 @@ bool QSflPhoneDialer::dialNumber(const QString &number)
     return true;
 }
 
-bool QSflPhoneDialer::sendSms(const QString &, const QString &)
+bool QSflPhoneDialer::sendSms(const QString &number, const QString &text)
 {
-    mErrorMessage = i18n( "Sending an SMS is currently not supported on SflPhone" );
-    return false;
+    if ( !initializeSflPhone() ) {
+        return false;
+    }
+
+    QStringList arguments;
+    arguments << QLatin1String("--send-text");
+    arguments << number;
+    arguments << QLatin1String("--message");
+    arguments << text;
+    if (!QProcess::startDetached( QLatin1String( "sflphone-client-kde" ), arguments)) {
+        return false;
+    }
+    return true;
 }
