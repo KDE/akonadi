@@ -111,26 +111,26 @@ void CustomFieldsEditWidget::loadContact( const KABC::Addressee &contact )
     }
 
     if ( app == QLatin1String( "KADDRESSBOOK" ) ) {
-      static QSet<QString> blacklist;
-      if ( blacklist.isEmpty() ) {
-        blacklist << QLatin1String( "BlogFeed" )
-                  << QLatin1String( "X-IMAddress" )
-                  << QLatin1String( "X-Profession" )
-                  << QLatin1String( "X-Office" )
-                  << QLatin1String( "X-ManagersName" )
-                  << QLatin1String( "X-AssistantsName" )
-                  << QLatin1String( "X-Anniversary" )
-		  << QLatin1String( "X-ANNIVERSARY" )
-                  << QLatin1String( "X-SpousesName" )
-                  << QLatin1String( "X-Profession" )
-		  << QLatin1String( "MailPreferedFormatting")		  
-		  << QLatin1String( "MailAllowToRemoteContent")
-                  << QLatin1String( "CRYPTOPROTOPREF" )
-                  << QLatin1String( "OPENPGPFP" )
-                  << QLatin1String( "SMIMEFP" )
-                  << QLatin1String( "CRYPTOSIGNPREF" ) 
-                  << QLatin1String( "CRYPTOENCRYPTPREF" );
-      }
+        static QSet<QString> blacklist;
+        if ( blacklist.isEmpty() ) {
+            blacklist << QLatin1String( "BlogFeed" )
+                      << QLatin1String( "X-IMAddress" )
+                      << QLatin1String( "X-Profession" )
+                      << QLatin1String( "X-Office" )
+                      << QLatin1String( "X-ManagersName" )
+                      << QLatin1String( "X-AssistantsName" )
+                      << QLatin1String( "X-Anniversary" )
+                      << QLatin1String( "X-ANNIVERSARY" )
+                      << QLatin1String( "X-SpousesName" )
+                      << QLatin1String( "X-Profession" )
+                      << QLatin1String( "MailPreferedFormatting")
+                      << QLatin1String( "MailAllowToRemoteContent")
+                      << QLatin1String( "CRYPTOPROTOPREF" )
+                      << QLatin1String( "OPENPGPFP" )
+                      << QLatin1String( "SMIMEFP" )
+                      << QLatin1String( "CRYPTOSIGNPREF" )
+                      << QLatin1String( "CRYPTOENCRYPTPREF" );
+        }
 
       if ( blacklist.contains( name ) ) { // several KAddressBook specific fields
         continue;
