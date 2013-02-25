@@ -48,6 +48,7 @@ QWidget* CustomFieldsDelegate::createEditor( QWidget *parent, const QStyleOption
 
     switch ( type ) {
       case CustomField::TextType:
+      case CustomField::UrlType:
       default:
         return QStyledItemDelegate::createEditor( parent, item, index );
         break;
@@ -102,6 +103,7 @@ void CustomFieldsDelegate::setEditorData( QWidget *editor, const QModelIndex &in
 
     switch ( type ) {
       case CustomField::TextType:
+      case CustomField::UrlType:
         QStyledItemDelegate::setEditorData( editor, index );
         break;
       case CustomField::NumericType:
@@ -150,6 +152,7 @@ void CustomFieldsDelegate::setModelData( QWidget *editor, QAbstractItemModel *mo
 
     switch ( type ) {
       case CustomField::TextType:
+      case CustomField::UrlType:
         QStyledItemDelegate::setModelData( editor, model, index );
         break;
       case CustomField::NumericType:

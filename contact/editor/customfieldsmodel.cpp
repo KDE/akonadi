@@ -85,6 +85,7 @@ QVariant CustomFieldsModel::data( const QModelIndex &index, int role ) const
       switch ( customField.type() ) {
         case CustomField::TextType:
         case CustomField::NumericType:
+        case CustomField::UrlType:
           return customField.value();
           break;
         case CustomField::BooleanType:

@@ -249,6 +249,7 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
 
         // check whether we have a mapping for the title
         const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
+        bool needToEscape = true;
         if ( keyIt != titleMap.constEnd() ) {
           key = keyIt.value();
         } else {
@@ -271,13 +272,18 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
               } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "datetime" ) ) {
                 const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
+              } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String("url") ) {
+                value = KStringHandler::tagUrls( Qt::escape(value) );
+                needToEscape = false;
               }
+
               break;
             }
           }
         }
-
-        customData += rowFmtStr1.arg( key ).arg( Qt::escape( value ) ) ;
+        if (needToEscape)
+            value = Qt::escape( value );
+        customData += rowFmtStr1.arg( key ).arg( value );
       }
     }
   }

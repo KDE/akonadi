@@ -119,6 +119,9 @@ CustomField::Type CustomField::stringToType( const QString &type )
   if ( type == QLatin1String( "datetime" ) ) {
     return CustomField::DateTimeType;
   }
+  if ( type == QLatin1String( "url" ) ) {
+    return CustomField::UrlType;
+  }
 
   return CustomField::TextType;
 }
@@ -145,5 +148,9 @@ QString CustomField::typeToString( CustomField::Type type )
     case CustomField::DateTimeType:
       return QLatin1String( "datetime" );
       break;
+    case CustomField::UrlType:
+      return QLatin1String( "url" );
+      break;
+
   }
 }

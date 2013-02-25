@@ -55,7 +55,8 @@ class CustomField
       BooleanType,
       DateType,
       TimeType,
-      DateTimeType
+      DateTimeType,
+      UrlType
     };
 
     enum Scope {
