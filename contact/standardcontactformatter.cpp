@@ -257,22 +257,23 @@ QString StandardContactFormatter::toHtml( HtmlForm form ) const
           foreach ( const QVariantMap &description, customFieldDescriptions() ) {
             if ( description.value( QLatin1String( "key" ) ).toString() == key ) {
               key = description.value( QLatin1String( "title" ) ).toString();
-              if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "boolean" ) ) {
+              const QString descriptionType = description.value( QLatin1String( "type" ) ).toString();
+              if ( descriptionType == QLatin1String( "boolean" ) ) {
                 if ( value == QLatin1String( "true" ) ) {
                   value = i18nc( "Boolean value", "yes" );
                 } else {
                   value = i18nc( "Boolean value", "no" );
                 }
-              } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "date" ) ) {
+              } else if ( descriptionType == QLatin1String( "date" ) ) {
                 const QDate date = QDate::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatDate( date, KLocale::ShortDate );
-              } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "time" ) ) {
+              } else if ( descriptionType == QLatin1String( "time" ) ) {
                 const QTime time = QTime::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatTime( time );
-              } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String( "datetime" ) ) {
+              } else if ( descriptionType == QLatin1String( "datetime" ) ) {
                 const QDateTime dateTime = QDateTime::fromString( value, Qt::ISODate );
                 value = KGlobal::locale()->formatDateTime( dateTime, KLocale::ShortDate );
-              } else if ( description.value( QLatin1String( "type" ) ) == QLatin1String("url") ) {
+              } else if ( descriptionType == QLatin1String("url") ) {
                 value = KStringHandler::tagUrls( Qt::escape(value) );
                 needToEscape = false;
               }
