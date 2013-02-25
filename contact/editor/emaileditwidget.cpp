@@ -25,7 +25,6 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QString>
-#include <QCheckBox>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>

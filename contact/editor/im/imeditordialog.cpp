@@ -25,7 +25,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include "imdelegate.h"
 #include "imitemdialog.h"
 
-#include <QtCore/QStringList>
 #include <QGridLayout>
 #include <QPointer>
 #include <QPushButton>
