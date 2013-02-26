@@ -481,6 +481,12 @@ void AgentBasePrivate::slotStatus( int status, const QString &message )
 
       mStatusCode = 2;
       break;
+
+    case AgentBase::NotConfigured:
+
+      mStatusCode = 3;
+      break;
+
     default:
       Q_ASSERT( !"Unknown status passed" );
       break;
