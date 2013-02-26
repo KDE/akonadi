@@ -247,7 +247,7 @@ void AgentInstanceWidgetDelegate::paint( QPainter *painter, const QStyleOptionVi
   }
 
   if (status == 1) {
-    statusMessage.append(QString::fromLatin1("(%1%)").arg(progress));
+    statusMessage.append(QString::fromLatin1(" (%1%)").arg(progress));
   }
 
   QRect innerRect = option.rect.adjusted( s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize ); //add some padding round entire delegate

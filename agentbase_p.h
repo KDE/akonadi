@@ -71,6 +71,11 @@ class AgentBasePrivate : public QObject
       return i18nc( "@info:status", "Error." );
     }
 
+    QString defaultUnconfiguredMessage() const
+    {
+      return i18nc( "@info:status", "Not configured" );
+    }
+
     void setProgramName();
 
     AgentBase *q_ptr;
