@@ -24,6 +24,7 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QString>
+#include <QtCore/QObject>
 
 class QPluginLoader;
 

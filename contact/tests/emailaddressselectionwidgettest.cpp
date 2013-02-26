@@ -25,6 +25,7 @@
 #include <kcombobox.h>
 #include <kcmdlineargs.h>
 #include <ktextbrowser.h>
+#include <klocale.h>
 
 #include <QGridLayout>
 #include <QPushButton>

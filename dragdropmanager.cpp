@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <QDropEvent>
 #include <QMenu>
+#include <QDrag>
 
 #include <KDE/KIcon>
 #include <KDE/KLocalizedString>

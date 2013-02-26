@@ -26,6 +26,7 @@
 
 #include <klocale.h>
 #include <klocalizedstring.h>
+#include <kglobal.h>
 
 #include <QtCore/QThread>
 #include <QtCore/QThreadStorage>

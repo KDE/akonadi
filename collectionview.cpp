@@ -23,6 +23,7 @@
 #include "collectionmodel.h"
 #include "control.h"
 
+#include <kicon.h>
 #include <kaction.h>
 #include <kdebug.h>
 #include <klocalizedstring.h>

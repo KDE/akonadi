@@ -44,6 +44,7 @@
 #include "entitydeletedattribute.h"
 #include "recentcollectionaction_p.h"
 
+#include <KIcon>
 #include <KAction>
 #include <KActionCollection>
 #include <KActionMenu>

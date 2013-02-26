@@ -31,6 +31,7 @@
 #include <KLocalizedString>
 
 #include <QPixmap>
+#include <QDateTime>
 
 using namespace Akonadi;
 

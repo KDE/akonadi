@@ -27,6 +27,7 @@
 #include <QtCore/QFile>
 #include <QApplication>
 
+#include <klocale.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 

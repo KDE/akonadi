@@ -24,6 +24,7 @@
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentmanager.h>
+#include <klocale.h>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib

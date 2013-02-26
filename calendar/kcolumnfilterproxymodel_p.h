@@ -24,7 +24,7 @@
 #define AKONADI_KCOLUMNFILTERPROXYMODEL_P_H
 
 
-#include <QtGui/QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 template <class T> class QVector;
 

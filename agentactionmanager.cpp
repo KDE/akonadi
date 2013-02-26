@@ -27,6 +27,7 @@
 #include "metatypes.h"
 
 #include <KAction>
+#include <KIcon>
 #include <KActionCollection>
 #include <KDebug>
 #include <KInputDialog>

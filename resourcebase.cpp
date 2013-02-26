@@ -50,6 +50,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <klocalizedstring.h>
+#include <kglobal.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>

@@ -23,6 +23,7 @@
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
+#include <klocalizedstring.h>
 
 int main( int argc, char **argv )
 {

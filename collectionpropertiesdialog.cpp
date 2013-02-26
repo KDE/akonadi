@@ -26,6 +26,7 @@
 #include "collectionmodifyjob.h"
 
 #include <kdebug.h>
+#include <kglobal.h>
 #include <ktabwidget.h>
 
 #include <QBoxLayout>

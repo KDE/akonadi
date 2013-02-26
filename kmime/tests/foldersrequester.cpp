@@ -22,6 +22,8 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KDebug>
+#include <KIcon>
+#include <KLocale>
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
