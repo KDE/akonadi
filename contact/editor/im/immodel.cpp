@@ -92,7 +92,7 @@ IMAddress::List IMModel::addresses() const
 
 QModelIndex IMModel::index( int row, int column, const QModelIndex& ) const
 {
-  return createIndex( row, column, 0 );
+  return createIndex( row, column );
 }
 
 QModelIndex IMModel::parent( const QModelIndex& ) const

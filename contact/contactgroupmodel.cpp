@@ -224,7 +224,7 @@ QString ContactGroupModel::lastErrorMessage() const
 
 QModelIndex ContactGroupModel::index( int row, int col, const QModelIndex& ) const
 {
-  return createIndex( row, col, 0 );
+  return createIndex( row, col);
 }
 
 QModelIndex ContactGroupModel::parent( const QModelIndex& ) const

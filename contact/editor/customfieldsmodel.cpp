@@ -55,7 +55,7 @@ CustomField::List CustomFieldsModel::customFields() const
 
 QModelIndex CustomFieldsModel::index( int row, int column, const QModelIndex& ) const
 {
-  return createIndex( row, column, 0 );
+  return createIndex( row, column );
 }
 
 QModelIndex CustomFieldsModel::parent( const QModelIndex& ) const

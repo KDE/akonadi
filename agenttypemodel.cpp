@@ -137,7 +137,7 @@ QModelIndex AgentTypeModel::index( int row, int column, const QModelIndex& ) con
     return QModelIndex();
   }
 
-  return createIndex( row, column, 0 );
+  return createIndex( row, column);
 }
 
 QModelIndex AgentTypeModel::parent( const QModelIndex& ) const
