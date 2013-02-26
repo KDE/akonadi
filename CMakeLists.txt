@@ -10,7 +10,7 @@ endif()
 if (KDE4_BUILD_TESTS)
    # only with this macro the AKONADI_TESTS_EXPORT macro will do something
    add_definitions(-DCOMPILING_TESTS)
-add_subdirectory( tests )
+   # add_subdirectory( tests )
 endif()
 
 add_definitions( ${AKONADI_DEFINITIONS} )
@@ -31,10 +31,12 @@ add_subdirectory( kabc )
 message(WARNING "Akonadi/KCal needs to be ported to KCalCore")
 #add_subdirectory( kcal )
 add_subdirectory( kmime )
-add_subdirectory( contact )
-add_subdirectory( calendar )
+# TODO: Remove when Soprano is ported to Qt5.
+add_definitions(-DQ_DECL_CONSTRUCTOR_DEPRECATED=Q_DECL_DEPRECATED)
+# add_subdirectory( contact )
+# add_subdirectory( calendar )
 add_subdirectory( notes )
-add_subdirectory( socialutils )
+# add_subdirectory( socialutils )
 
 include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
