@@ -281,13 +281,14 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 void StatisticsProxyModel::connectNotify(const char *signal)
 {
   static bool ignore = false;
-  if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
-    return QSortFilterProxyModel::connectNotify(signal);
+  // Qt5: Port
+//   if (ignore || QLatin1String(signal) == SIGNAL(layoutAboutToBeChanged()))
+//     return QSortFilterProxyModel::connectNotify(signal);
   ignore = true;
   disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
   connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
   ignore = false;
-  QSortFilterProxyModel::connectNotify(signal);
+//   QSortFilterProxyModel::connectNotify(signal);
 }
 
 

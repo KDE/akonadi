@@ -375,7 +375,8 @@ KMime::Message::Ptr NoteMessageWrapper::message() const
   if ( !d->uid.isEmpty() ) {
     uid = d->uid;
   } else {
-    uid = QUuid::createUuid();
+    // Qt5: Port
+//     uid = QUuid::createUuid();
   }
 
   msg->subject( true )->fromUnicodeString( title, ENCODING );

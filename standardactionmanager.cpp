@@ -312,6 +312,8 @@ class StandardActionManager::Private
       // Update the action menu
       KActionMenu *actionMenu = qobject_cast<KActionMenu*>( actions[type] );
       if ( actionMenu ) {
+#if 0
+  Qt5: Port
         //get rid of the submenus, they are re-created in enableAction. clear() is not enough, doesn't remove the submenu object instances.
         KMenu *menu = actionMenu->menu();
         //Not necessary to delete and recreate menu when it was not created
@@ -325,6 +327,7 @@ class StandardActionManager::Private
         q->connect( menu, SIGNAL(aboutToShow()), SLOT(aboutToShowMenu()) );
         q->connect( menu, SIGNAL(triggered(QAction*)), standardActionData[ type ].slot );
         actionMenu->setMenu( menu );
+#endif
       }
     }
 
@@ -1545,12 +1548,15 @@ KAction* StandardActionManager::createAction( Type type )
         createAction(static_cast<Type>(type+1)); //ensure that alternative actions are initialized when not created by createAllActions
       }
       return d->actions[type];
+#if 0
+  Qt5: Port
     case MenuAction:
       action = new KActionMenu( d->parentWidget );
       break;
     case ToggleAction:
       action = new KToggleAction( d->parentWidget );
       break;
+#endif
   }
 
   if ( d->pluralLabels.contains( type ) && !d->pluralLabels.value( type ).isEmpty() )

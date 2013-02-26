@@ -116,8 +116,9 @@ QStandardItem* SelfTestDialog::report( ResultType type, const KLocalizedString &
   item->setEditable( false );
   item->setWhatsThis( details.toString() );
   item->setData( type, ResultTypeRole );
-  item->setData( summary.toString( 0 ), SummaryRole );
-  item->setData( details.toString( 0 ), DetailsRole );
+  // Qt5: Port
+//   item->setData( summary.toString( 0 ), SummaryRole );
+//   item->setData( details.toString( 0 ), DetailsRole );
   mTestModel->appendRow( item );
   return item;
 }

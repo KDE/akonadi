@@ -293,12 +293,12 @@ QVariant::Type Firstrun::argumentType( const QMetaObject *mo, const QString &met
 {
   QMetaMethod m;
   for ( int i = 0; i < mo->methodCount(); ++i ) {
-    const QString signature = QString::fromLatin1( mo->method( i ).signature() );
+    const QString signature = QString::fromLatin1( mo->method( i ).methodSignature() );
     if ( signature.startsWith( method ) )
       m = mo->method( i );
   }
 
-  if ( !m.signature() )
+  if ( m.methodSignature().isEmpty() )
     return QVariant::Invalid;
 
   const QList<QByteArray> argTypes = m.parameterTypes();

@@ -37,9 +37,9 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
   for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex)
   {
     QMetaMethod mm = metaObject()->method(methodIndex);
-    if (mm.methodType() == QMetaMethod::Signal && QString(mm.signature()).startsWith("emit_"))
+    if (mm.methodType() == QMetaMethod::Signal && QString(mm.methodSignature()).startsWith("emit_"))
     {
-      int modelSlotIndex = m_model->metaObject()->indexOfSlot( QString ( mm.signature() ).remove( 0, 5 ).toLatin1().data() );
+      int modelSlotIndex = m_model->metaObject()->indexOfSlot( QString ( mm.methodSignature() ).remove( 0, 5 ).toLatin1().data() );
       Q_ASSERT( modelSlotIndex >= 0 );
       metaObject()->connect( this, methodIndex, m_model, modelSlotIndex );
     }
