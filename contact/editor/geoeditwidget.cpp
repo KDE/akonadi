@@ -208,7 +208,7 @@ GeoDialog::GeoDialog( const KABC::Geo &coordinates, QWidget *parent )
   : KDialog( parent ),
     mCoordinates( coordinates )
 {
-  KGlobal::locale()->insertCatalog( QLatin1String( "timezones4" ) );
+  KLocalizedString::insertCatalog( QLatin1String( "timezones4" ) );
   setCaption( i18nc( "@title:window", "Coordinate Selection" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );

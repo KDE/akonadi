@@ -49,7 +49,7 @@ AgentFactoryBase::AgentFactoryBase( const char *catalogName, QObject *parent)
     new KComponentData( "AkonadiAgentServer", "libakonadi", KComponentData::RegisterAsMainComponent );
   }
 
-  KGlobal::locale()->insertCatalog( d->catalogName );
+  KLocalizedString::insertCatalog( d->catalogName );
 
   Internal::setClientType( Internal::Agent );
   ServerManager::self(); // make sure it's created in the main thread

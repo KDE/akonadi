@@ -44,7 +44,7 @@ class ContactEditorDialog::Private
              ContactEditorDialog *parent )
       : q( parent ), mAddressBookBox( 0 ), mMode( mode )
     {
-      KGlobal::locale()->insertCatalog( QLatin1String( "akonadicontact" ) );
+      KLocalizedString::insertCatalog( QLatin1String( "akonadicontact" ) );
       q->setCaption( mode == ContactEditorDialog::CreateMode ? i18n( "New Contact" ) : i18n( "Edit Contact" ) );
       q->setButtons( ContactEditorDialog::Ok | ContactEditorDialog::Cancel );
 

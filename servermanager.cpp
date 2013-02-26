@@ -58,7 +58,7 @@ class Akonadi::ServerManagerPrivate
       mSafetyTimer->setSingleShot( true );
       mSafetyTimer->setInterval( 30000 );
       QObject::connect( mSafetyTimer.get(), SIGNAL(timeout()), instance, SLOT(timeout()) );
-      KGlobal::locale()->insertCatalog( QString::fromLatin1( "libakonadi" ) );
+      KLocalizedString::insertCatalog( QString::fromLatin1( "libakonadi" ) );
       if ( mState == ServerManager::Running && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier() ) {
         mFirstRunner = new Firstrun( instance );
       }

@@ -62,7 +62,7 @@ class ContactGroupEditorDialog::Private
 ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QWidget *parent )
   : KDialog( parent ), d( new Private( this, mode ) )
 {
-  KGlobal::locale()->insertCatalog( QLatin1String( "akonadicontact" ) );
+  KLocalizedString::insertCatalog( QLatin1String( "akonadicontact" ) );
   setCaption( mode == CreateMode ? i18n( "New Contact Group" ) : i18n( "Edit Contact Group" ) );
   setButtons( Ok | Cancel );
 
