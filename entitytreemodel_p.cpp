@@ -25,7 +25,7 @@
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
 
-#include <KDE/KLocale>
+#include <KDE/KLocalizedString>
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
 

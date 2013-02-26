@@ -49,7 +49,7 @@
 #include <KActionMenu>
 #include <KDebug>
 #include <KInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMenu>
 #include <KMessageBox>
 #include <KToggleAction>

@@ -24,7 +24,7 @@
 #include "recentcontactscollections_p.h"
 
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kstandarddirs.h>
 
 using namespace Akonadi;

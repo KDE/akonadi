@@ -37,7 +37,7 @@
 #include <QVBoxLayout>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KMessageBox>
 

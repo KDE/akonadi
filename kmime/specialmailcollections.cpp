@@ -23,7 +23,7 @@
 #include "specialmailcollectionssettings.h"
 
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 #include "akonadi/agentinstance.h"
 #include "akonadi/servermanager.h"
 

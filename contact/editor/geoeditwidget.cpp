@@ -27,6 +27,7 @@
 #include <kabc/geo.h>
 #include <kcombobox.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kstandarddirs.h>
 
 #include <QtCore/QFile>

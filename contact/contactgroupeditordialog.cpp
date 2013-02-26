@@ -28,6 +28,7 @@
 #include <akonadi/item.h>
 #include <kabc/contactgroup.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
 

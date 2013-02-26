@@ -27,7 +27,7 @@
 #include "customfieldsmodel.h"
 
 #include <kabc/addressee.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 
 #include <QtCore/QPointer>

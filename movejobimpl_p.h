@@ -25,7 +25,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace Akonadi {
 

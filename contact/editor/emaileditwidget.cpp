@@ -35,7 +35,7 @@
 #include <kinputdialog.h>
 #include <klineedit.h>
 #include <KListWidget>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kpimutils/email.h>
 

@@ -31,7 +31,7 @@
 
 #include <kabc/addressee.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 
 IMEditWidget::IMEditWidget( QWidget *parent )

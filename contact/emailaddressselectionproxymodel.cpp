@@ -25,7 +25,7 @@
 #include <akonadi/item.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 

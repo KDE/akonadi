@@ -24,7 +24,7 @@
 #include <akonadi/private/imapparser_p.h>
 
 #include <QtCore/QDebug>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace Akonadi;
 
 class Akonadi::CollectionSelectJobPrivate : public JobPrivate

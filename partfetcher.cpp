@@ -23,7 +23,7 @@
 #include "session.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include <KLocale>
+#include <KLocalizedString>
 
 #ifndef KDE_USE_FINAL
 Q_DECLARE_METATYPE( QSet<QByteArray> )

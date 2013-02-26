@@ -26,7 +26,7 @@
 #include <QMenu>
 
 #include <KDE/KIcon>
-#include <KDE/KLocale>
+#include <KDE/KLocalizedString>
 #include <KDE/KUrl>
 
 #include "akonadi/collection.h"

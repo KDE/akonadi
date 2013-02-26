@@ -28,6 +28,7 @@
 #include <kicon.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 

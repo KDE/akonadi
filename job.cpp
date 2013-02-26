@@ -28,7 +28,7 @@
 #include "session_p.h"
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QTimer>

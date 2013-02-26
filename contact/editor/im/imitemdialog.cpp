@@ -29,7 +29,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <kcombobox.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kicon.h>
 
 IMItemDialog::IMItemDialog( QWidget *parent )

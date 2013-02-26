@@ -43,7 +43,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 #include <kmime/kmime_message.h>
 

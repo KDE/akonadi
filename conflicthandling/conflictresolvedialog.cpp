@@ -29,6 +29,7 @@
 
 #include <kcolorscheme.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kpushbutton.h>
 #include <ktextbrowser.h>
 

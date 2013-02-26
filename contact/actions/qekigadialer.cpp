@@ -22,7 +22,7 @@
 
 #include "../dbusconnectionpool.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDBusConnectionInterface>
 

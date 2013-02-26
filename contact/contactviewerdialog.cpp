@@ -24,7 +24,7 @@
 #include "contactviewer.h"
 
 #include <akonadi/item.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QVBoxLayout>
 

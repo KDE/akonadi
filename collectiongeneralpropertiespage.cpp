@@ -25,6 +25,7 @@
 #include "collectionutils_p.h"
 
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 

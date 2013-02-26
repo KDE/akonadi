@@ -32,7 +32,7 @@
 #include <QMenu>
 
 #include <KAction>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KUrl>
 #include <KXMLGUIFactory>

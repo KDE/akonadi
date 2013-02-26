@@ -24,7 +24,7 @@
 #include <KDebug>
 #include <KIcon>
 #include <KJob>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QEvent>
 #include <QBoxLayout>

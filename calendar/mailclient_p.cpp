@@ -38,7 +38,7 @@
 #include <mailtransport/transportmanager.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KJob>
 #include <KProtocolManager>
 #include <KSystemTimeZone>

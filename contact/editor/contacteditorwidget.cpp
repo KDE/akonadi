@@ -40,7 +40,7 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kstandarddirs.h>
 #include <ktabwidget.h>
 #include <ktextedit.h>

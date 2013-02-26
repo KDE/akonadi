@@ -22,7 +22,7 @@
 
 #include "qdialer.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 QDialer::QDialer( const QString &applicationName)
   : mApplicationName( applicationName )

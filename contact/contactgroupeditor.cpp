@@ -36,7 +36,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <kabc/contactgroup.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <klineedit.h>
 #include <kmessagebox.h>
 #include <KColorScheme>

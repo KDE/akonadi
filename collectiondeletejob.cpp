@@ -23,7 +23,7 @@
 #include "job_p.h"
 
 #include <akonadi/private/imapparser_p.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

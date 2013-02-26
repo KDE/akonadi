@@ -30,7 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QPushButton>
 #include <QTreeView>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 
 IMEditorDialog::IMEditorDialog( QWidget *parent )

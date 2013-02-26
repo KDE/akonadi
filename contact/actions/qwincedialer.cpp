@@ -25,7 +25,7 @@
 #include <Tapi.h>
 #include <phone.h>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 QWinCEDialer::QWinCEDialer(const QString &applicationName)
   : QDialer( applicationName )

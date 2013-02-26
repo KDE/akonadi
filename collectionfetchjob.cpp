@@ -28,7 +28,7 @@
 #include "collectionutils_p.h"
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QHash>
 #include <QtCore/QStringList>

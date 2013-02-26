@@ -26,7 +26,7 @@
 #include <kabc/addressee.h>
 #include <kcolorscheme.h>
 #include <kglobal.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kstringhandler.h>
 
 using namespace Akonadi;

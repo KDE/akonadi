@@ -30,7 +30,7 @@
 #include <QPalette>
 
 #include <KDE/KIcon>
-#include <KDE/KLocale>
+#include <KDE/KLocalizedString>
 #include <KDE/KMessageBox>
 #include <KDE/KUrl>
 

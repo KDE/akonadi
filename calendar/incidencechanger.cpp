@@ -29,7 +29,7 @@
 #include <akonadi/collectiondialog.h>
 
 #include <KJob>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KGuiItem>
 #include <KMessageBox>
 #include <KStandardGuiItem>

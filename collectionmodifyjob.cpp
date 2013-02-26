@@ -28,7 +28,7 @@
 
 #include <akonadi/private/protocol_p.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

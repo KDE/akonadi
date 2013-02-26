@@ -24,7 +24,7 @@
 #include "agentbase.h"
 #include "tracerinterface.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <solid/networking.h>
 

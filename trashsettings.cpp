@@ -22,7 +22,7 @@
 #include <KConfig>
 #include <KConfigGroup>
 #include <KGlobal>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHash>
 #include <QString>

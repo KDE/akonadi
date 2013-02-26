@@ -32,7 +32,7 @@
 #include <akonadi/entityrightsfiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KInputDialog>
 #include <KUrl>
 #include <KMessageBox>

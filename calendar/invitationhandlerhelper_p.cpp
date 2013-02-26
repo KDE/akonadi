@@ -31,7 +31,7 @@
 #include <kcalutils/incidenceformatter.h>
 #include <kcalutils/stringify.h>
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KEMailSettings>
 

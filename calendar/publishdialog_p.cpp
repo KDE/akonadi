@@ -24,7 +24,7 @@
 #include <kpimutils/email.h>
 #include <kcalcore/person.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <QTreeView>
 
 using namespace KCalCore;

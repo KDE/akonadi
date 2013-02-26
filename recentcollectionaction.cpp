@@ -22,7 +22,7 @@
 #include <akonadi/collectionmodel.h>
 #include <KConfig>
 #include <KConfigGroup>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QMenu>
 #include <QAction>

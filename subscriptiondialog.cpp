@@ -28,7 +28,7 @@
 
 #include <QBoxLayout>
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #ifndef KDEPIM_MOBILE_UI
 #include <klineedit.h>

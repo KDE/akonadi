@@ -25,7 +25,7 @@
 #include <kfiledialog.h>
 #include <kicon.h>
 #include <kio/netaccess.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kmessagebox.h>
 
 #ifndef Q_OS_WINCE

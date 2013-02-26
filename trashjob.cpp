@@ -25,7 +25,7 @@
 #include "job_p.h"
 #include "trashsettings.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/collectiondeletejob.h>

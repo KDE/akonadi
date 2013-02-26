@@ -29,7 +29,7 @@
 #include <akonadi/private/imapset_p.h>
 #include <akonadi/private/protocol_p.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

@@ -23,6 +23,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <kstandarddirs.h>
 #include <KPluginLoader>
 

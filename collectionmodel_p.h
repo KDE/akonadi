@@ -22,7 +22,7 @@
 
 #include "collection.h"
 
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QList>

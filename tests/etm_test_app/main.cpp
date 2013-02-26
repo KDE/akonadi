@@ -18,7 +18,7 @@
 */
 
 #include <KApplication>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KAboutData>
 #include <KCmdLineArgs>
 

@@ -22,7 +22,7 @@
 #include <QLabel>
 #include <KLineEdit>
 #include <KStandardGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QVBoxLayout>
 
 RenameFavoriteDialog::RenameFavoriteDialog(const QString& caption, const QString& text, const QString& value, const QString& defaultName, QWidget *parent )

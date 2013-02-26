@@ -21,7 +21,7 @@
 #include "collectiondialog.h"
 
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kpushbutton.h>
 #include <kstandardshortcut.h>
 

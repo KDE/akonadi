@@ -27,7 +27,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/session.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 

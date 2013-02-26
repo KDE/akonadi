@@ -25,6 +25,7 @@
 
 #include <kconfiggroup.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 #include <KJob>
 #include <KUrl>
 

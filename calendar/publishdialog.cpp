@@ -28,7 +28,7 @@
 #include <kcalcore/person.h>
 
 #include <KLineEdit>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace KCalCore;
 using namespace Akonadi;

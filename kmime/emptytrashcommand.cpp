@@ -23,7 +23,7 @@
 #include "imapsettings.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include "akonadi/entitytreemodel.h"

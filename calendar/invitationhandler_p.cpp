@@ -20,7 +20,7 @@
 #include "invitationhandler_p.h"
 #include <kcalcore/incidence.h>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

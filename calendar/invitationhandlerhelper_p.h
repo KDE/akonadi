@@ -32,7 +32,7 @@
 #include <kcalcore/schedulemessage.h>
 
 #include <KGuiItem>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QObject>
 

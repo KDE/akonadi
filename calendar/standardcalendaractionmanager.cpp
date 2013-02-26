@@ -29,6 +29,7 @@
 #include <kcalcore/journal.h>
 #include <kcalcore/todo.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QItemSelectionModel>
 

@@ -30,7 +30,7 @@
 #include <kcomponentdata.h>
 #include <kconfigdialogmanager.h>
 #include <kpluginfactory.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 Q_DECLARE_METATYPE(ContactActionsSettings::EnumDialPhoneNumberAction)
 

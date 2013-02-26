@@ -24,6 +24,7 @@
 #include <kglobal.h>
 #include <kicon.h>
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QDateTime>
 

@@ -49,7 +49,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QDebug>
 #include <QtCore/QDir>

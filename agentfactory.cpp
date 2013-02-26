@@ -25,6 +25,7 @@
 #include "servermanager_p.h"
 
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QThread>
 #include <QtCore/QThreadStorage>

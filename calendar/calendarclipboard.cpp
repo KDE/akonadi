@@ -21,7 +21,7 @@
 #include <kcalutils/dndfactory.h>
 #include <kcalutils/icaldrag.h>
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QApplication>

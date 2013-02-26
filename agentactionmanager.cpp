@@ -30,7 +30,7 @@
 #include <KActionCollection>
 #include <KDebug>
 #include <KInputDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 
 #include <QItemSelectionModel>

@@ -33,7 +33,7 @@
 
 #include <KStandardDirs>
 #include <KSystemTimeZone>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KEMailSettings>
 
 #include <QDir>

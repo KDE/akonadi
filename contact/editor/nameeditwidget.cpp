@@ -30,7 +30,7 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 NameEditWidget::NameEditWidget( QWidget *parent )
   : QWidget( parent )

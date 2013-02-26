@@ -23,7 +23,7 @@
 #include "recursivemover_p.h"
 
 #include <kdebug.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusInterface>

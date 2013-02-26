@@ -26,7 +26,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QAction>

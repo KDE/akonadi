@@ -26,6 +26,7 @@
 #include <kdebug.h>
 #include <KGlobal>
 #include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <QFont>
 

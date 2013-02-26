@@ -28,7 +28,7 @@
 #include "collectionmovejob.h"
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 #include <QtCore/QVariant>
 
 using namespace Akonadi;

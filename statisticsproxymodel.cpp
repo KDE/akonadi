@@ -29,7 +29,7 @@
 
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <kio/global.h>
 
 #include <QApplication>

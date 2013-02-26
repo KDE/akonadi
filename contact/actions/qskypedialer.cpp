@@ -29,7 +29,7 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusReply>
 #include <QDebug>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 #include <unistd.h>
 

@@ -24,7 +24,7 @@
 #include <akonadi/agentmanager.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDBusConnection>
 #include <QDBusInterface>

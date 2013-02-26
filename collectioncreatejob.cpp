@@ -24,7 +24,7 @@
 #include "job_p.h"
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 using namespace Akonadi;
 
 class Akonadi::CollectionCreateJobPrivate : public JobPrivate

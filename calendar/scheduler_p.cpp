@@ -25,7 +25,7 @@
 #include <kcalcore/freebusycache.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KSystemTimeZones>
 

@@ -42,7 +42,7 @@
 #include <KIO/Job>
 #include <KIO/JobUiDelegate>
 #include <KIO/NetAccess>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDir>
 #include <QFile>

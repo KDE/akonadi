@@ -25,7 +25,7 @@
 #include "kedittagsdialog_p.h"
 
 #include <kicon.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 #include <ksqueezedtextlabel.h>
 
 #include <QHBoxLayout>

@@ -39,7 +39,7 @@
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
   : KComboBox( parent ),

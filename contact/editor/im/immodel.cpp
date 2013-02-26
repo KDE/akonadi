@@ -24,7 +24,7 @@
 #include "improtocols.h"
 
 #include <kicon.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 IMAddress::IMAddress()
   : mProtocol( QLatin1String( "messaging/aim" ) ), mPreferred( false )

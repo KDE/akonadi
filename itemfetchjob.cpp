@@ -29,7 +29,7 @@
 #include "protocolhelper_p.h"
 
 #include <kdebug.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTimer>

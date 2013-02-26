@@ -23,7 +23,7 @@
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 using namespace Akonadi;
 

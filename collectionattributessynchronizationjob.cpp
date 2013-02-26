@@ -25,7 +25,7 @@
 #include <akonadi/collection.h>
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QDBusConnection>
 #include <QDBusInterface>

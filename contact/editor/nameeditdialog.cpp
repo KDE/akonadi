@@ -26,7 +26,7 @@
 
 #include <kcombobox.h>
 #include <klineedit.h>
-#include <klocale.h>
+#include <klocalizedstring.h>
 
 NameEditDialog::NameEditDialog( QWidget *parent )
   : KDialog( parent)

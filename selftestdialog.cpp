@@ -29,7 +29,7 @@
 #include <KDebug>
 #include <KIcon>
 #include <KFileDialog>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KMessageBox>
 #include <KRun>
 #include <KStandardDirs>

@@ -42,7 +42,7 @@
 #include <mailtransport/transportmanager.h>
 
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 using namespace Akonadi;
 

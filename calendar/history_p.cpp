@@ -20,7 +20,7 @@
 #include "history_p.h"
 
 #include <kcalutils/stringify.h>
-#include <KLocale>
+#include <KLocalizedString>
 
 Entry::Entry( const Akonadi::Item &item,
               const QString &description,
