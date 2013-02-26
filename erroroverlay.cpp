@@ -40,7 +40,7 @@ class ErrorOverlayStatic
     QVector<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
 };
 
-K_GLOBAL_STATIC( ErrorOverlayStatic, sInstanceOverlay )
+Q_GLOBAL_STATIC( ErrorOverlayStatic, sInstanceOverlay )
 
 static bool isParentOf( QObject* o1, QObject* o2 )
 {

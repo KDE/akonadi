@@ -681,7 +681,7 @@ struct FreeBusyManagerStatic
 
 }
 
-K_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance )
+Q_GLOBAL_STATIC( FreeBusyManagerStatic, sManagerInstance )
 
 FreeBusyManager::FreeBusyManager() : d_ptr( new FreeBusyManagerPrivate( this ) )
 {

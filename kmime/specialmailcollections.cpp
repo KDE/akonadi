@@ -40,7 +40,7 @@ class Akonadi::SpecialMailCollectionsPrivate
 
 typedef SpecialMailCollectionsSettings Settings;
 
-K_GLOBAL_STATIC( SpecialMailCollectionsPrivate, sInstance )
+Q_GLOBAL_STATIC( SpecialMailCollectionsPrivate, sInstance )
 
 static inline QByteArray enumToType( SpecialMailCollections::Type type )
 {

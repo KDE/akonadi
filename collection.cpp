@@ -53,7 +53,7 @@ class CollectionRoot : public Collection
     }
 };
 
-K_GLOBAL_STATIC( CollectionRoot, s_root )
+Q_GLOBAL_STATIC( CollectionRoot, s_root )
 
 Collection::Collection() :
     Entity( new CollectionPrivate )

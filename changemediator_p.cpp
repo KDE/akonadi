@@ -37,7 +37,7 @@ static const char mediatorSessionId[] = "MediatorSession";
 
 using namespace Akonadi;
 
-K_GLOBAL_STATIC(ChangeMediator, s_globalChangeMediator)
+Q_GLOBAL_STATIC(ChangeMediator, s_globalChangeMediator)
 
 ChangeMediator* ChangeMediator::instance()
 {

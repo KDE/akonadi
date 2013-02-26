@@ -121,7 +121,7 @@ class Akonadi::ServerManagerPrivate
 int ServerManagerPrivate::serverProtocolVersion = -1;
 Internal::ClientType ServerManagerPrivate::clientType = Internal::User;
 
-K_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
+Q_GLOBAL_STATIC( ServerManagerPrivate, sInstance )
 
 ServerManager::ServerManager(ServerManagerPrivate * dd ) :
     d( dd )

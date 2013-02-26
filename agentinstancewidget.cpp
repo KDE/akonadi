@@ -52,7 +52,7 @@ struct Icons
   QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
 };
 
-K_GLOBAL_STATIC( Icons, s_icons )
+Q_GLOBAL_STATIC( Icons, s_icons )
 
 // called as a Qt post routine, to prevent pixmap leaking
 void iconsEarlyCleanup() {

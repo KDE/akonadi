@@ -41,7 +41,7 @@ class Akonadi::RecentContactsCollectionsPrivate
 
 typedef RecentContactsCollectionsSettings Settings;
 
-K_GLOBAL_STATIC( RecentContactsCollectionsPrivate, sInstance )
+Q_GLOBAL_STATIC( RecentContactsCollectionsPrivate, sInstance )
 
 static const QByteArray sRecentContactsType = "recent-contacts";
 

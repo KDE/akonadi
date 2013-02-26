@@ -25,7 +25,7 @@
 
 using namespace Akonadi;
 
-K_GLOBAL_STATIC( Akonadi::Collection, s_defaultParentCollection )
+Q_GLOBAL_STATIC( Akonadi::Collection, s_defaultParentCollection )
 
 /**
  * Helper method for assignment operator and copy constructor.

@@ -84,7 +84,7 @@ class CollectionPropertiesDialog::Private
 
 typedef QList<CollectionPropertiesPageFactory*> CollectionPropertiesPageFactoryList;
 
-K_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
+Q_GLOBAL_STATIC( CollectionPropertiesPageFactoryList, s_pages )
 
 static bool s_defaultPage = true;
 

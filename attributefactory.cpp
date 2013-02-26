@@ -85,7 +85,7 @@ class StaticAttributeFactory : public AttributeFactory
     bool initialized;
 };
 
-K_GLOBAL_STATIC( StaticAttributeFactory, s_attributeInstance )
+Q_GLOBAL_STATIC( StaticAttributeFactory, s_attributeInstance )
 
 }
 
