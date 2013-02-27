@@ -35,7 +35,7 @@ class EmailAddressSelectionDialog::Private
       } else {
         mView = new EmailAddressSelectionWidget( q );
       }
-
+      q->connect( mView, SIGNAL(doubleClicked()), q, SLOT(accept()));
       q->setButtons( Ok | Cancel );
       q->setMainWidget( mView );
     }

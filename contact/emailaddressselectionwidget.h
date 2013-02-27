@@ -103,6 +103,11 @@ class AKONADI_CONTACT_EXPORT EmailAddressSelectionWidget : public QWidget
      */
     QTreeView *view() const;
 
+  Q_SIGNALS:
+    /**
+     * @since 4.10.1
+     */
+    void doubleClicked();
   private:
     //@cond PRIVATE
     class Private;
