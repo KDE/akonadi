@@ -167,6 +167,8 @@ void EmailAddressSelectionWidget::Private::init()
   q->connect( mSearchLine, SIGNAL(textChanged(QString)),
               filter, SLOT(setFilterString(QString)) );
 
+  q->connect( mView, SIGNAL(doubleClicked(Akonadi::Item)),
+              q, SIGNAL(doubleClicked()));
   Control::widgetNeedsAkonadi( q );
 
   mSearchLine->setFocus();
