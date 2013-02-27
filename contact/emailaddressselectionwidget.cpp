@@ -167,8 +167,11 @@ void EmailAddressSelectionWidget::Private::init()
   q->connect( mSearchLine, SIGNAL(textChanged(QString)),
               filter, SLOT(setFilterString(QString)) );
 
+  // FIXME: Temporary until EntityTreeView compiles
+#ifndef Q_OS_WINCE
   q->connect( mView, SIGNAL(doubleClicked(Akonadi::Item)),
               q, SIGNAL(doubleClicked()));
+#endif
   Control::widgetNeedsAkonadi( q );
 
   mSearchLine->setFocus();
