@@ -55,7 +55,6 @@ class CollectionDialog::Private
       QVBoxLayout *layout = new QVBoxLayout( widget );
       layout->setContentsMargins( 0, 0, 0, 0 );
 
-      changeCollectionDialogOptions( options );
 
       mTextLabel = new QLabel;
       layout->addWidget( mTextLabel );
@@ -71,7 +70,6 @@ class CollectionDialog::Private
       mView->setDragDropMode( QAbstractItemView::NoDragDrop );
       mView->header()->hide();
       layout->addWidget( mView );
-
 
       mParent->enableButton( KDialog::Ok, false );
 
@@ -103,6 +101,7 @@ class CollectionDialog::Private
       filterCollection->setFilterCaseSensitivity( Qt::CaseInsensitive );
       mView->setModel( filterCollection );
 
+      changeCollectionDialogOptions( options );
       mParent->connect( filterCollectionLineEdit, SIGNAL(textChanged(QString)),
                         filterCollection, SLOT(setFilterFixedString(QString)) );
 
@@ -173,7 +172,6 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
   }
   mKeepTreeExpanded = ( options & KeepTreeExpanded );
   if ( mKeepTreeExpanded ) {
-
     mParent->connect( mRightsFilterModel, SIGNAL(rowsInserted(QModelIndex,int,int)),
                       mView, SLOT(expandAll()), Qt::UniqueConnection );
     mView->expandAll();
