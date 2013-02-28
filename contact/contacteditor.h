@@ -70,10 +70,7 @@ class Item;
  *
  * ...
  *
- * if ( !editor->saveContact() ) {
- *   qDebug() << "Unable to save changed contact to storage";
- *   return;
- * }
+ * editor->saveContactInAddressBook();
  *
  * @endcode
  *
@@ -158,8 +155,17 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 
     /**
      * Saves the contact from the editor back to the storage.
+     * @deprecated use saveContactInAddressBook. We can't get contactStored and error infos.
+     * Remove it for KDE SC5
      */
-    bool saveContact();
+    KDE_DEPRECATED bool saveContact();
+
+    /**
+     * Save the contact from the editor back to the storage. And return error.
+     * Need to connect to finished() signal, to keep time to emit signal.
+     * @since 4.11
+     */
+    void saveContactInAddressBook();
 
   Q_SIGNALS:
     /**
@@ -171,9 +177,15 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
     /**
      * This signal is emitted when an error occurred during the save.
      * @param errorMsg The error message.
+     * @since 4.11
      */
     void error( const QString &errorMsg );
 
+    /**
+     * @brief finished
+     * @since 4.11
+     */
+    void finished();
   private:
     //@cond PRIVATE
     class Private;

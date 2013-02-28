@@ -150,6 +150,16 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
      */
     void contactStored( const Akonadi::Item &contact );
 
+    /**
+     * This signal is emitted whenever a contact is not updated or stored.
+     *
+     * @param errMsg The error during updating or storing contact.
+     */
+    void error(const QString& errMsg);
+
+  public Q_SLOTS:
+    void accept();
+
   private:
     //@cond PRIVATE
     class Private;
@@ -157,6 +167,7 @@ class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 
     Q_PRIVATE_SLOT( d, void slotOkClicked() )
     Q_PRIVATE_SLOT( d, void slotCancelClicked() )
+    Q_PRIVATE_SLOT( d, void slotFinish() )
     //@endcond
 };
 

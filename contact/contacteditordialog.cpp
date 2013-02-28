@@ -76,8 +76,12 @@ class ContactEditorDialog::Private
       connect( mEditor, SIGNAL(contactStored(Akonadi::Item)),
                q, SIGNAL(contactStored(Akonadi::Item)) );
 
+      connect( mEditor, SIGNAL(error(QString)),
+               q, SIGNAL(error(QString)) );
+
       connect( q, SIGNAL(okClicked()), q, SLOT(slotOkClicked()) );
       connect( q, SIGNAL(cancelClicked()), q, SLOT(slotCancelClicked()) );
+      connect( mEditor, SIGNAL(finished()), q, SLOT(slotFinish()) );
 
       q->setInitialSize( QSize( 800, 500 ) );
     }
@@ -87,10 +91,12 @@ class ContactEditorDialog::Private
       if ( mAddressBookBox ) {
         mEditor->setDefaultAddressBook( mAddressBookBox->currentCollection() );
       }
+      mEditor->saveContactInAddressBook();
+    }
 
-      if ( mEditor->saveContact() ) {
-        q->accept();
-      }
+    void slotFinish()
+    {
+        q->KDialog::accept();
     }
 
     void slotCancelClicked()
@@ -141,6 +147,12 @@ void ContactEditorDialog::setDefaultAddressBook( const Akonadi::Collection &addr
 ContactEditor* ContactEditorDialog::editor() const
 {
   return d->mEditor;
+}
+
+
+void ContactEditorDialog::accept()
+{
+    //Nothing
 }
 
 #include "moc_contacteditordialog.cpp"

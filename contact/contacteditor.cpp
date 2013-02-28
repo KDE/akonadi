@@ -149,6 +149,7 @@ void ContactEditor::Private::storeDone( KJob *job )
 {
   if ( job->error() != KJob::NoError ) {
     emit mParent->error( job->errorString() );
+    emit mParent->finished();
     return;
   }
 
@@ -157,6 +158,7 @@ void ContactEditor::Private::storeDone( KJob *job )
   } else if ( mMode == CreateMode ) {
     emit mParent->contactStored( static_cast<Akonadi::ItemCreateJob*>( job )->item() );
   }
+  emit mParent->finished();
 }
 
 void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
@@ -243,6 +245,54 @@ KABC::Addressee ContactEditor::contact()
   KABC::Addressee addr;
   d->storeContact( addr, d->mContactMetaData );
   return addr;
+}
+
+void ContactEditor::saveContactInAddressBook()
+{
+    if ( d->mMode == EditMode ) {
+      if ( !d->mItem.isValid() || d->mReadOnly ) {
+        emit finished();
+        return;
+      }
+
+      KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();
+
+      d->storeContact( addr, d->mContactMetaData );
+
+      d->mContactMetaData.store( d->mItem );
+
+      d->mItem.setPayload<KABC::Addressee>( addr );
+
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mItem );
+      connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
+    } else if ( d->mMode == CreateMode ) {
+      if ( !d->mDefaultCollection.isValid() ) {
+        const QStringList mimeTypeFilter( KABC::Addressee::mimeType() );
+
+        AutoQPointer<CollectionDialog> dlg = new CollectionDialog( this );
+        dlg->setMimeTypeFilter( mimeTypeFilter );
+        dlg->setAccessRightsFilter( Collection::CanCreateItem );
+        dlg->setCaption( i18n( "Select Address Book" ) );
+        dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+        if ( dlg->exec() == KDialog::Accepted ) {
+          setDefaultAddressBook( dlg->selectedCollection() );
+        } else {
+          return;
+        }
+      }
+
+      KABC::Addressee addr;
+      d->storeContact( addr, d->mContactMetaData );
+
+      Akonadi::Item item;
+      item.setPayload<KABC::Addressee>( addr );
+      item.setMimeType( KABC::Addressee::mimeType() );
+
+      d->mContactMetaData.store( item );
+
+      Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
+      connect( job, SIGNAL(result(KJob*)), SLOT(storeDone(KJob*)) );
+    }
 }
 
 bool ContactEditor::saveContact()

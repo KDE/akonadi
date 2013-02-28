@@ -491,6 +491,8 @@ class StandardContactActionManager::Private
         QPointer<Akonadi::ContactEditorDialog> dlg =
           new Akonadi::ContactEditorDialog(
             Akonadi::ContactEditorDialog::EditMode, mParentWidget );
+        connect( dlg, SIGNAL(error(QString)),
+                 mParent, SLOT(slotContactEditorError(QString)) );
         dlg->setContact( item );
         dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
@@ -502,6 +504,11 @@ class StandardContactActionManager::Private
         dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
       }
+    }
+
+    void slotContactEditorError(const QString& error)
+    {
+        KMessageBox::error(mParentWidget, i18n("Contact can not stored: %1", error), i18n("Failed to store contact"));
     }
 
     KActionCollection *mActionCollection;

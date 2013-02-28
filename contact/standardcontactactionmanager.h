@@ -186,6 +186,7 @@ class AKONADI_CONTACT_EXPORT StandardContactActionManager : public QObject
     Q_PRIVATE_SLOT( d, void slotCreateContact() )
     Q_PRIVATE_SLOT( d, void slotCreateContactGroup() )
     Q_PRIVATE_SLOT( d, void slotEditItem() )
+    Q_PRIVATE_SLOT( d, void slotContactEditorError(const QString&) )
     //@endcond
 };
 
