@@ -1,3 +1,9 @@
+1.9.1                           02-March-2013
+---------------------------------------------
+- Disable query cache for Sqlite.
+- Handle missing mysqld better.
+- Ignore my.cnf settings when using the internal MySQL server.
+
 1.9.0                        23-December-2012
 ---------------------------------------------
 - Respect collection cache policy refresh interval for collection tree sync.
