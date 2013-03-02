@@ -64,6 +64,7 @@ void FetchHelper::init()
   mMTimeRequested = false;
   mExternalPayloadSupported = false;
   mRemoteRevisionRequested = false;
+  mIgnoreErrors = false;
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -224,7 +225,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.setScope( mScope );
     retriever.setRetrieveParts( payloadList );
     retriever.setRetrieveFullPayload( mFullPayload );
-    if ( !retriever.exec() ) { // There we go, retrieve the missing parts from the resource.
+    if ( !retriever.exec() && !mIgnoreErrors ) { // There we go, retrieve the missing parts from the resource.
       if (mConnection->resourceContext().isValid())
         throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2) : %3")
                 .arg(mConnection->selectedCollectionId())
@@ -314,6 +315,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     if ( mAncestorDepth > 0 )
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
+    bool skipItem = false;
+
     while ( partQuery.isValid() ) {
       const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
       if ( id > pimItemId ) {
@@ -325,6 +328,12 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
       QByteArray part = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
       QByteArray data = Utils::variantToByteArray( partQuery.value( PartQueryDataColumn ) );
+      if ( mIgnoreErrors && data.isEmpty() ) {
+        //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
+        akDebug() << id << " no payload";
+        skipItem = true;
+        break;
+      }
       bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
       if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
         data = PartHelper::translateData( data, partIsExternal );
@@ -348,6 +357,11 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         attributes << part;
 
       partQuery.next();
+    }
+
+    if (skipItem) {
+      itemQuery.next();
+      continue;
     }
 
     // IMAP protocol violation: should actually be the sequence number
@@ -431,6 +445,8 @@ void FetchHelper::parseCommandStream()
         mFullPayload = true;
       } else if ( buffer == AKONADI_PARAM_ANCESTORS ) {
         mAncestorDepth = HandlerHelper::parseDepth( mStreamParser->readString() );
+      } else if ( buffer == AKONADI_PARAM_IGNOREERRORS ) {
+        mIgnoreErrors = true;
       } else {
         throw HandlerException( "Invalid command argument" );
       }
