@@ -37,7 +37,6 @@
 #include <QWidget>
 
 //TODO rename this class to reflect it's functionality
-//TODO documentation
 
 namespace Akonadi {
 
@@ -101,13 +100,21 @@ public:
                         const KCalCore::Incidence::Ptr &incidence,
                         QWidget *parentWidget = 0 );
 
+  /**
+   * Publishes incidence @p incidence.
+   * A publish dialog will prompt the user to input recipients.
+   * @see rfc2446 3.2.1
+   */
   void publishInformation( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
 
+  /**
+   * Sends an e-mail with the incidence attached as iCalendar source.
+   * A dialog will prompt the user to input recipients.
+   */
   void sendAsICalendar( const KCalCore::Incidence::Ptr &incidence, QWidget *parentWidget = 0 );
 
-
   /**
-   * Sets the delegate to edit counter proposals.
+   * Sets the UI delegate to edit counter proposals.
    */
   void setGroupwareUiDelegate( GroupwareUiDelegate * );
 
@@ -123,12 +130,18 @@ Q_SIGNALS:
                              const QString &errorMessage );
 
   /**
-   * Signal emitted after an iTip message was sent through sendiTIPMessage().
+   * Signal emitted after an iTip message was sent through sendiTIPMessage()
    */
   void iTipMessageSent( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
+  /**
+   * Signal emitted after an incidence was published with publishInformation()
+   */
   void informationPublished( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
+  /**
+   * Signal emitted after an incidence was sent with sendAsICalendar()
+   */
   void sentAsICalendar( Akonadi::InvitationHandler::Result, const QString &errorMessage );
 
 private:
