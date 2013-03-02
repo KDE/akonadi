@@ -74,6 +74,7 @@ class FetchHelper : public QObject
     bool mMTimeRequested;
     bool mExternalPayloadSupported;
     bool mRemoteRevisionRequested;
+    bool mIgnoreErrors;
 };
 
 }
