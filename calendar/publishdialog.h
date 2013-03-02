@@ -52,8 +52,8 @@ public:
   void addAttendee( const KCalCore::Attendee::Ptr &attendee );
 
   /**
-   * Returns a list of... TODO: this actually returns full names, not addresses.
-   *                      TODO: Also, why not return QStringList.
+   * Returns a list of e-mail addresses.
+   * //TODO: This should be a QStringList, but KCalUtils::Scheduler::publish() accepts a QString.
    */
   QString addresses() const;
 
