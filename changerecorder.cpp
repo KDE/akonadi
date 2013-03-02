@@ -56,6 +56,10 @@ void ChangeRecorder::setConfig(QSettings * settings)
 void ChangeRecorder::replayNext()
 {
   Q_D( ChangeRecorder );
+
+  if ( !d->enableChangeRecording )
+    return;
+
   if ( !d->pendingNotifications.isEmpty() ) {
     const NotificationMessage msg = d->pendingNotifications.head();
     if ( d->ensureDataAvailable( msg ) ) {
@@ -87,6 +91,9 @@ bool ChangeRecorder::isEmpty() const
 void ChangeRecorder::changeProcessed()
 {
   Q_D( ChangeRecorder );
+
+  if ( !d->enableChangeRecording )
+    return;
 
   // changerecordertest.cpp calls changeProcessed after receiving nothingToReplay,
   // so test for emptiness. Not sure real code does this though.
