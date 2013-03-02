@@ -329,7 +329,13 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );
       IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid() );
-      Q_ASSERT( existingIncidence );
+      if ( !existingIncidence ) {
+        // The item changed it's UID, update our maps.
+        // The Google resource, for example, changes the UID when we create incidences.
+        handleUidChange( item, newIncidence->uid() );
+        existingIncidence = q->incidence( newIncidence->uid() );
+        Q_ASSERT( existingIncidence );
+      }
 
       // The item needs updating too, revision changed.
       mItemById.insert( item.id(), item );

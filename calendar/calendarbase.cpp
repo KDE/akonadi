@@ -94,7 +94,6 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   }
   // Must be the last one due to re-entrancy
   q->MemoryCalendar::addIncidence( incidence );
-
 }
 
 void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
@@ -176,6 +175,37 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
     *(static_cast<IncidenceBase*>(q->incidence( incidence->uid() ).data() ) ) = *(incidence.data());
   }
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
+}
+
+void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newUid )
+{
+  Q_ASSERT( !mItemIdByUid.contains( newUid ) );
+  mItemIdByUid[newUid] = newItem.id();
+
+  Q_ASSERT( mItemById.contains( newItem.id() ) );
+  Akonadi::Item oldItem = mItemById.value( newItem.id() );
+  Q_ASSERT( oldItem.isValid() );
+
+  Incidence::Ptr oldIncidence = oldItem.payload<KCalCore::Incidence::Ptr>();
+  Q_ASSERT( oldIncidence );
+  Incidence::Ptr newIncidence = newItem.payload<KCalCore::Incidence::Ptr>();
+  Q_ASSERT( newIncidence );
+  Q_ASSERT( newIncidence->uid() != oldIncidence->uid() ); // The reason we're here in the first place
+
+  const QString oldUid = oldIncidence->uid();
+
+  if ( mParentUidToChildrenUid.contains( oldUid ) ) {
+    Q_ASSERT( !mParentUidToChildrenUid.contains( newUid ) );
+    QStringList children = mParentUidToChildrenUid.value( oldUid );
+    mParentUidToChildrenUid.insert( newUid, children );
+    mParentUidToChildrenUid.remove( oldUid );
+  }
+
+  // Update internal maps of the base class, MemoryCalendar
+  q->setObserversEnabled( false );
+  q->MemoryCalendar::deleteIncidence( oldIncidence );
+  q->MemoryCalendar::addIncidence( newIncidence );
+  q->setObserversEnabled( true );
 }
 
 CalendarBase::CalendarBase() : MemoryCalendar( KSystemTimeZones::local() )
