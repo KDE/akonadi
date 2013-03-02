@@ -37,7 +37,8 @@ class ItemFetchScopePrivate : public QSharedData
         mFullPayload( false ),
         mAllAttributes( false ),
         mCacheOnly( false ),
-        mFetchMtime( true )
+        mFetchMtime( true ),
+        mIgnoreRetrievalErrors( false )
     {
     }
 
@@ -61,6 +62,7 @@ class ItemFetchScopePrivate : public QSharedData
     bool mAllAttributes;
     bool mCacheOnly;
     bool mFetchMtime;
+    bool mIgnoreRetrievalErrors;
 };
 
 }
