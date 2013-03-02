@@ -284,10 +284,11 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   // remove all external payload parts
   QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
   qb.addColumn( Part::dataFullColumnName() );
-  qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
-  qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
   qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
+  qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, collection.id() );
+  qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
+  qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
   if ( !qb.exec() )
     return false;
 
