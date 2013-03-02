@@ -85,6 +85,7 @@ public:
   void undoOrRedo( OperationType, QWidget *parent );
 
   void emitDone( OperationType, History::ResultCode );
+  void setEnabled( bool enabled );
 
   bool isUndoAvailable() const;
   bool isRedoAvailable() const;

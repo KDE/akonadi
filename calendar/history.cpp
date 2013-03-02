@@ -164,13 +164,6 @@ QString History::lastErrorString() const
   return d->mLastErrorString;
 }
 
-void History::setEnabled( bool enabled )
-{
-  if ( enabled != d->mEnabled ) {
-    d->mEnabled = enabled;
-  }
-}
-
 bool History::undoAvailable() const
 {
   return !d->mUndoStack.isEmpty() && d->mOperationTypeInProgress == TypeNone;
@@ -304,6 +297,13 @@ QStack<Entry::Ptr>& History::Private::stack( OperationType type )
 {
   // Entries from the undo stack go to the redo stack, and vice-versa
   return type == TypeUndo ? mUndoStack : mRedoStack;
+}
+
+void History::Private::setEnabled( bool enabled )
+{
+  if ( enabled != mEnabled ) {
+    mEnabled = enabled;
+  }
 }
 
 QStack<Entry::Ptr>& History::Private::stack()

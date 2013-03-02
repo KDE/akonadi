@@ -245,7 +245,6 @@ Q_SIGNALS:
   void changed();
 
 private:
-  void setEnabled( bool enabled ); // TODO: kill this ?
 
   friend class IncidenceChanger;
   friend class Entry;
