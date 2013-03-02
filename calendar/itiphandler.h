@@ -23,8 +23,8 @@
   02110-1301, USA.
 */
 
-#ifndef _AKONADI_CALENDAR_INVITATION_HANDLER_H
-#define _AKONADI_CALENDAR_INVITATION_HANDLER_H
+#ifndef _AKONADI_CALENDAR_ITIP_HANDLER_H
+#define _AKONADI_CALENDAR_ITIP_HANDLER_H
 
 #include "akonadi-calendar_export.h"
 #include "fetchjobcalendar.h"
@@ -35,8 +35,6 @@
 
 #include <QString>
 #include <QWidget>
-
-//TODO rename this class to reflect it's functionality
 
 namespace Akonadi {
 
@@ -55,10 +53,10 @@ class AKONADI_CALENDAR_EXPORT GroupwareUiDelegate
 };
 
 /**
- * @short Handles sending of iTip invitations aswell as processing incoming ones.
+ * @short Handles sending of iTip messages aswell as processing incoming ones.
  * @since 4.11
  */
-class AKONADI_CALENDAR_EXPORT InvitationHandler : public QObject
+class AKONADI_CALENDAR_EXPORT ITIPHandler : public QObject
 {
   Q_OBJECT
 public:
@@ -68,14 +66,14 @@ public:
   };
 
   /**
-   * Creates a new InvitationHandler instance.
+   * Creates a new ITIPHandler instance.
    */
-  explicit InvitationHandler( QObject *parent = 0 );
+  explicit ITIPHandler( QObject *parent = 0 );
 
   /**
    * Destroys this instance.
    */
-  ~InvitationHandler();
+  ~ITIPHandler();
 
   /**
    * Processes a received iTip message.
@@ -126,30 +124,30 @@ Q_SIGNALS:
    * @param errorMessage translated error message suitable for user dialogs.
    *                     Empty if the operation was successul
    */
-  void iTipMessageProcessed( Akonadi::InvitationHandler::Result result,
+  void iTipMessageProcessed( Akonadi::ITIPHandler::Result result,
                              const QString &errorMessage );
 
   /**
    * Signal emitted after an iTip message was sent through sendiTIPMessage()
    */
-  void iTipMessageSent( Akonadi::InvitationHandler::Result, const QString &errorMessage );
+  void iTipMessageSent( Akonadi::ITIPHandler::Result, const QString &errorMessage );
 
   /**
    * Signal emitted after an incidence was published with publishInformation()
    */
-  void informationPublished( Akonadi::InvitationHandler::Result, const QString &errorMessage );
+  void informationPublished( Akonadi::ITIPHandler::Result, const QString &errorMessage );
 
   /**
    * Signal emitted after an incidence was sent with sendAsICalendar()
    */
-  void sentAsICalendar( Akonadi::InvitationHandler::Result, const QString &errorMessage );
+  void sentAsICalendar( Akonadi::ITIPHandler::Result, const QString &errorMessage );
 
 private:
-  Q_DISABLE_COPY( InvitationHandler )
+  Q_DISABLE_COPY( ITIPHandler )
   class Private;
   Private *const d;
 };
-  
+
 }
 
 #endif

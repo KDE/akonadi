@@ -17,13 +17,13 @@
   02110-1301, USA.
 */
 
-#ifndef AKONADI_CALENDAR_INVITATION_HANDLER_P_H
-#define AKONADI_CALENDAR_INVITATION_HANDLER_P_H
+#ifndef AKONADI_CALENDAR_ITIP_HANDLER_P_H
+#define AKONADI_CALENDAR_ITIP_HANDLER_P_H
 
 #include "fetchjobcalendar.h"
 #include "mailscheduler_p.h"
-#include "invitationhandler.h"
-#include "invitationhandlerhelper_p.h"
+#include "itiphandler.h"
+#include "itiphandlerhelper_p.h"
 
 #include <kcalcore/schedulemessage.h>
 
@@ -54,11 +54,11 @@ enum Operation {
   OperationSendAsICalendar,
 };
 
-class InvitationHandler::Private : public QObject
+class ITIPHandler::Private : public QObject
 {
   Q_OBJECT
 public:
-  Private( InvitationHandler *q );
+  Private( ITIPHandler *q );
 
   void finishProcessiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
@@ -71,16 +71,16 @@ public:
   MailScheduler *m_scheduler;
   KCalCore::Incidence::Ptr m_incidence;
   KCalCore::iTIPMethod m_method;
-  InvitationHandlerHelper *m_helper;
+  ITIPHandlerHelper *m_helper;
   Operation m_currentOperation;
   QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
   GroupwareUiDelegate *m_uiDelegate;
-  InvitationHandler *const q;
+  ITIPHandler *const q;
 
 public Q_SLOTS:
   void onLoadFinished( bool success, const QString &errorMessage );
   void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
-  void onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
+  void onHelperFinished( Akonadi::ITIPHandlerHelper::SendResult result,
                          const QString &errorMessage );
 };
 

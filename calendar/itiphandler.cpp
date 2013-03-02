@@ -23,9 +23,9 @@
   02110-1301, USA.
 */
 
-#include "invitationhandler.h"
-#include "invitationhandler_p.h"
-#include "invitationhandlerhelper_p.h"
+#include "itiphandler.h"
+#include "itiphandler_p.h"
+#include "itiphandlerhelper_p.h"
 #include "calendarsettings.h"
 #include "publishdialog.h"
 #include "utils_p.h"
@@ -51,20 +51,19 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 }
 
 
-InvitationHandler::InvitationHandler( QObject *parent )
-                  : QObject( parent )
-                  , d( new Private( this ) )
+ITIPHandler::ITIPHandler( QObject *parent ) : QObject( parent )
+                                            , d( new Private( this ) )
 {
 }
 
-InvitationHandler::~InvitationHandler()
+ITIPHandler::~ITIPHandler()
 {
   delete d;
 }
 
-void InvitationHandler::processiTIPMessage( const QString &receiver,
-                                            const QString &iCal,
-                                            const QString &action )
+void ITIPHandler::processiTIPMessage( const QString &receiver,
+                                      const QString &iCal,
+                                      const QString &action )
 {
   Q_ASSERT( d->m_currentOperation == OperationNone );
   if ( d->m_currentOperation != OperationNone ) {
@@ -164,9 +163,9 @@ void InvitationHandler::processiTIPMessage( const QString &receiver,
   }
 }
 
-void InvitationHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
-                                         const KCalCore::Incidence::Ptr &incidence,
-                                         QWidget *parentWidget )
+void ITIPHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
+                                   const KCalCore::Incidence::Ptr &incidence,
+                                   QWidget *parentWidget )
 {
   if ( !incidence ) {
     Q_ASSERT( false );
@@ -208,8 +207,8 @@ void InvitationHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
   d->m_scheduler->performTransaction( incidence, method );
 }
 
-void InvitationHandler::publishInformation( const KCalCore::Incidence::Ptr &incidence,
-                                            QWidget *parentWidget )
+void ITIPHandler::publishInformation( const KCalCore::Incidence::Ptr &incidence,
+                                      QWidget *parentWidget )
 {
   Q_ASSERT( incidence );
   if ( !incidence ) {
@@ -244,8 +243,8 @@ void InvitationHandler::publishInformation( const KCalCore::Incidence::Ptr &inci
   delete publishdlg;
 }
 
-void InvitationHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
-                                         QWidget *parentWidget )
+void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
+                                   QWidget *parentWidget )
 {
   Q_ASSERT( incidence );
   if ( !incidence ) {
@@ -279,9 +278,9 @@ void InvitationHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &inciden
   }
 }
 
-void InvitationHandler::setGroupwareUiDelegate( GroupwareUiDelegate *delegate )
+void ITIPHandler::setGroupwareUiDelegate( GroupwareUiDelegate *delegate )
 {
   d->m_uiDelegate = delegate;
 }
 
-#include "invitationhandler.moc"
+#include "itiphandler.moc"

@@ -19,9 +19,9 @@ set(akonadicalendar_LIB_SRC
   history_p.cpp
   incidencefetchjob_p.cpp
   incidencechanger.cpp
-  invitationhandler.cpp
-  invitationhandler_p.cpp
-  invitationhandlerhelper_p.cpp
+  itiphandler.cpp
+  itiphandler_p.cpp
+  itiphandlerhelper_p.cpp
   kcolumnfilterproxymodel.cpp
   fetchjobcalendar.cpp
   freebusydownloadjob_p.cpp
@@ -68,7 +68,7 @@ install( FILES
   etmcalendar.h
   history.h
   incidencechanger.h
-  invitationhandler.h
+  itiphandler.h
   fetchjobcalendar.h
   freebusymanager.h
   freebusyproviderbase.h

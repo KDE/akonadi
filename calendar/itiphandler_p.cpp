@@ -17,33 +17,32 @@
   02110-1301, USA.
 */
 
-#include "invitationhandler_p.h"
+#include "itiphandler_p.h"
 #include <kcalcore/incidence.h>
 #include <KMessageBox>
 #include <KLocalizedString>
 
 using namespace Akonadi;
 
-InvitationHandler::Private::Private( InvitationHandler *qq )
-                                     : m_calendarLoadError( false )
-                                     , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
-                                     , m_scheduler( new MailScheduler( qq ) )
-                                     , m_method( KCalCore::iTIPNoMethod )
-                                     , m_helper( new InvitationHandlerHelper() ) //TODO parent
-                                     , m_currentOperation( OperationNone )
-                                     , q( qq )
+ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
+                                                 , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
+                                                 , m_scheduler( new MailScheduler( qq ) )
+                                                 , m_method( KCalCore::iTIPNoMethod )
+                                                 , m_helper( new ITIPHandlerHelper() ) //TODO parent
+                                                 , m_currentOperation( OperationNone )
+                                                 , q( qq )
 {
   connect( m_scheduler, SIGNAL(transactionFinished(Akonadi::Scheduler::Result,QString)),
            SLOT(onSchedulerFinished(Akonadi::Scheduler::Result,QString)) );
 
-  connect( m_helper, SIGNAL(finished(Akonadi::InvitationHandlerHelper::SendResult,QString)),
-           SLOT(onHelperFinished(Akonadi::InvitationHandlerHelper::SendResult,QString)) );
+  connect( m_helper, SIGNAL(finished(Akonadi::ITIPHandlerHelper::SendResult,QString)),
+           SLOT(onHelperFinished(Akonadi::ITIPHandlerHelper::SendResult,QString)) );
 
   connect( m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)) );
 }
 
-void InvitationHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result result,
-                                                      const QString &errorMessage )
+void ITIPHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result result,
+                                                const QString &errorMessage )
 {
   Q_ASSERT( m_currentOperation != OperationProcessiTIPMessage );
   if ( m_currentOperation == OperationNone ) {
@@ -66,15 +65,15 @@ void InvitationHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result
   }
 }
 
-void InvitationHandler::Private::onHelperFinished( Akonadi::InvitationHandlerHelper::SendResult result,
-                                                   const QString &errorMessage )
+void ITIPHandler::Private::onHelperFinished( Akonadi::ITIPHandlerHelper::SendResult result,
+                                             const QString &errorMessage )
 {
-  const bool success = result == InvitationHandlerHelper::ResultSuccess;
+  const bool success = result == ITIPHandlerHelper::ResultSuccess;
   emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
                            success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
-void InvitationHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
+void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
 {
   if ( m_currentOperation == OperationProcessiTIPMessage ) {
     if ( success ) {
@@ -93,8 +92,8 @@ void InvitationHandler::Private::onLoadFinished( bool success, const QString &er
   }
 }
 
-void InvitationHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Result result,
-                                                           const QString &errorMessage )
+void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Result result,
+                                                     const QString &errorMessage )
 {
   const bool success = result == MailScheduler::ResultSuccess;
 
@@ -102,16 +101,16 @@ void InvitationHandler::Private::finishProcessiTIPMessage( Akonadi::MailSchedule
     if ( success ) {
       // send update to all attendees
       Q_ASSERT( m_incidence );
-      InvitationHandlerHelper::SendResult sendResult
+      ITIPHandlerHelper::SendResult sendResult
          = m_helper->sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                                    KCalCore::Incidence::Ptr( m_incidence->clone() ),
                                                    false );
       m_incidence.clear();
-      if ( sendResult == InvitationHandlerHelper::ResultNoSendingNeeded ||
-           sendResult == InvitationHandlerHelper::ResultCanceled ) {
+      if ( sendResult == ITIPHandlerHelper::ResultNoSendingNeeded ||
+           sendResult == ITIPHandlerHelper::ResultCanceled ) {
         emit q->iTipMessageSent( ResultSuccess, QString() );
       } else {
-        // InvitationHandlerHelper is working hard and slot onHelperFinished will be called soon
+        // ITIPHandlerHelper is working hard and slot onHelperFinished will be called soon
         return;
       }
     } else {
@@ -123,8 +122,8 @@ void InvitationHandler::Private::finishProcessiTIPMessage( Akonadi::MailSchedule
                            success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
-void InvitationHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
-                                                        const QString &errorMessage )
+void ITIPHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
+                                                  const QString &errorMessage )
 {
   if ( result == Scheduler::ResultSuccess ) {
     if ( m_parentWidget ) {
@@ -136,7 +135,7 @@ void InvitationHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::
                           i18n( "Sending Free/Busy" ),
                           "FreeBusyPublishSuccess" );
     }
-    emit q->iTipMessageSent( InvitationHandler::ResultSuccess, QString() );
+    emit q->iTipMessageSent( ITIPHandler::ResultSuccess, QString() );
   } else {
      const QString error = i18nc( "Groupware message sending failed. "
                                   "%2 is request/reply/add/cancel/counter/etc.",
@@ -147,12 +146,12 @@ void InvitationHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::
       KMessageBox::error( m_parentWidget, error );
     }
     kError() << "Groupware message sending failed." << error << errorMessage;
-    emit q->iTipMessageSent( InvitationHandler::ResultError, error + errorMessage );
+    emit q->iTipMessageSent( ITIPHandler::ResultError, error + errorMessage );
   }
 }
 
-void InvitationHandler::Private::finishPublishInformation( Akonadi::MailScheduler::Result result,
-                                                           const QString &errorMessage )
+void ITIPHandler::Private::finishPublishInformation( Akonadi::MailScheduler::Result result,
+                                                     const QString &errorMessage )
 {
   if ( result == Scheduler::ResultSuccess ) {
     if ( m_parentWidget ) {
@@ -161,7 +160,7 @@ void InvitationHandler::Private::finishPublishInformation( Akonadi::MailSchedule
                                 i18n( "Publishing" ),
                                 "IncidencePublishSuccess" );
     }
-    emit q->informationPublished( InvitationHandler::ResultSuccess, QString() );
+    emit q->informationPublished( ITIPHandler::ResultSuccess, QString() );
   } else {
     const QString error = i18n( "Unable to publish the item '%1'",
                                 m_queuedInvitation.incidence->summary() );
@@ -169,12 +168,12 @@ void InvitationHandler::Private::finishPublishInformation( Akonadi::MailSchedule
       KMessageBox::error( m_parentWidget, error );
     }
     kError() << "Publish failed." << error << errorMessage;
-    emit q->informationPublished( InvitationHandler::ResultError, error + errorMessage );
+    emit q->informationPublished( ITIPHandler::ResultError, error + errorMessage );
   }
 }
 
-void InvitationHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::Result result,
-                                                        const QString &errorMessage )
+void ITIPHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::Result result,
+                                                  const QString &errorMessage )
 {
   if ( result == Scheduler::ResultSuccess ) {
     if ( m_parentWidget ) {
@@ -183,7 +182,7 @@ void InvitationHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::
                                 i18n( "Forwarding" ),
                                 "IncidenceForwardSuccess" );
     }
-    emit q->sentAsICalendar( InvitationHandler::ResultSuccess, QString() );
+    emit q->sentAsICalendar( ITIPHandler::ResultSuccess, QString() );
   } else {
     if ( m_parentWidget ) {
       KMessageBox::error( m_parentWidget,
@@ -192,10 +191,10 @@ void InvitationHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::
                           i18n( "Forwarding Error" ) );
     }
     kError() << "Sent as iCalendar failed." << errorMessage;
-    emit q->sentAsICalendar( InvitationHandler::ResultError, errorMessage );
+    emit q->sentAsICalendar( ITIPHandler::ResultError, errorMessage );
   }
 
   sender()->deleteLater(); // Delete the mailer
 }
 
-#include "invitationhandler_p.moc"
+#include "itiphandler_p.moc"
