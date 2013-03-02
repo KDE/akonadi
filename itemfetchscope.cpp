@@ -128,3 +128,13 @@ bool ItemFetchScope::fetchModificationTime() const
   return d->mFetchMtime;
 }
 
+void ItemFetchScope::setIgnoreRetrievalErrors( bool ignore )
+{
+  d->mIgnoreRetrievalErrors = ignore;
+}
+
+bool ItemFetchScope::ignoreRetrievalErrors() const
+{
+  return d->mIgnoreRetrievalErrors;
+}
+

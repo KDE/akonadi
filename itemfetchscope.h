@@ -226,6 +226,27 @@ class AKONADI_EXPORT ItemFetchScope
     bool fetchModificationTime() const;
 
     /**
+     * Ignore retrieval errors while fetching items, and always deliver what is available.
+     * If items have missing parts and the part can't be retrieved from the resource (i.e. because the system is offline),
+     * the fetch job would normally just fail. By setting this flag, the errors are ignored,
+     * and all items which could be fetched completely are returned.
+     * Note that all items that are returned are completely fetched, and incomplete items are simply ignored.
+     * This flag is useful for displaying everything that is available, where it is not crucial to have all items.
+     * Never use this for things like data migration or alike.
+     *
+     * @since 4.11
+     */
+    void setIgnoreRetrievalErrors( bool enabled );
+
+    /**
+     * Returns whether retrieval errors should be ignored.
+     *
+     * @see setIgnoreRetrievalErrors()
+     * @since 4.11
+     */
+    bool ignoreRetrievalErrors() const;
+
+    /**
      * Returns @c true if there is nothing to fetch.
      */
     bool isEmpty() const;
