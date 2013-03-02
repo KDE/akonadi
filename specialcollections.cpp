@@ -195,22 +195,12 @@ SpecialCollections::~SpecialCollections()
 
 bool SpecialCollections::hasCollection( const QByteArray &type, const AgentInstance &instance ) const
 {
-
-  if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
-    // We do not know any folders in this resource.
-    return false;
-  }
-
-  return d->mFoldersForResource[ instance.identifier() ].contains( type );
+  return d->mFoldersForResource.value(instance.identifier()).contains(type);
 }
 
 Akonadi::Collection SpecialCollections::collection( const QByteArray &type, const AgentInstance &instance ) const
 {
-  if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
-    // We do not know any folders in this resource.
-    return Collection( -1 );
-  }
-  return d->mFoldersForResource[ instance.identifier() ][ type ];
+  return d->mFoldersForResource.value(instance.identifier()).value(type);
 }
 
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )
@@ -234,17 +224,11 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     new CollectionModifyJob( attributeCollection );
   }
 
-  if ( !d->mFoldersForResource.contains( resourceId ) ) {
-    // We do not know any folders in this resource yet.
-    d->mFoldersForResource.insert( resourceId, QHash<QByteArray, Collection>() );
-  }
-
-  if ( !d->mFoldersForResource[ resourceId ].contains( type ) ) {
-    d->mFoldersForResource[ resourceId ].insert( type, Collection() );
-  }
-
-  if ( d->mFoldersForResource[ resourceId ][ type ] != collection ) {
-    d->mMonitor->setCollectionMonitored( d->mFoldersForResource[ resourceId ][ type ], false );
+  const Collection oldCollection = d->mFoldersForResource.value(resourceId).value(type);
+  if (oldCollection != collection) {
+    if (oldCollection.isValid()) {
+      d->mMonitor->setCollectionMonitored(oldCollection, false);
+    }
     d->mMonitor->setCollectionMonitored( collection, true );
     d->mFoldersForResource[ resourceId ].insert( type, collection );
     d->emitChanged( resourceId );
