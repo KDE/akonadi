@@ -63,7 +63,6 @@ public:
   void finishProcessiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishPublishInformation( Akonadi::MailScheduler::Result, const QString &errorMessage );
-  void finishSendAsICalendar( Akonadi::MailScheduler::Result, const QString &errorMessage );
 
   Invitation m_queuedInvitation;
   bool m_calendarLoadError;
@@ -78,6 +77,7 @@ public:
   ITIPHandler *const q;
 
 public Q_SLOTS:
+  void finishSendAsICalendar( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void onLoadFinished( bool success, const QString &errorMessage );
   void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
   void onHelperFinished( Akonadi::ITIPHandlerHelper::SendResult result,
