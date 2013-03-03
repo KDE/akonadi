@@ -29,6 +29,7 @@
 
 #include "entities.h"
 #include "global.h"
+#include "clientcapabilities.h"
 
 namespace Akonadi {
     class Handler;
@@ -72,6 +73,9 @@ public:
     void setSessionId( const QByteArray &id );
     QByteArray sessionId() const;
 
+    const ClientCapabilities& capabilities() const;
+    void setCapabilities(const ClientCapabilities &capabilities);
+
 protected Q_SLOTS:
     void slotDisconnected();
     /**
@@ -104,6 +108,7 @@ private:
     QByteArray m_sessionId;
     ImapStreamParser *m_streamParser;
     Resource m_resourceContext;
+    ClientCapabilities m_clientCapabilities;
 };
 
 }

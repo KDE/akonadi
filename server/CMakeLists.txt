@@ -77,6 +77,7 @@ add_custom_command(
 set(libakonadiprivate_SRCS
   src/akonadi.cpp
   src/akonadiconnection.cpp
+  src/clientcapabilities.cpp
   src/handler.cpp
   src/handlerhelper.cpp
   src/intervalcheck.cpp

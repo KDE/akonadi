@@ -314,3 +314,12 @@ bool AkonadiConnection::isOwnerResource(const Collection &collection) const
   return false;
 }
 
+const ClientCapabilities& AkonadiConnection::capabilities() const
+{
+  return m_clientCapabilities;
+}
+
+void AkonadiConnection::setCapabilities(const ClientCapabilities& capabilities)
+{
+  m_clientCapabilities = capabilities;
+}
