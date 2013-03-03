@@ -184,7 +184,10 @@ void AkonadiConnection::writeOut( const QByteArray &data )
 Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
 {
     Handler * handler = Handler::findHandlerForCommandAlwaysAllowed( command );
-    if ( handler ) return handler;
+    if ( handler ) {
+      handler->setConnection( this );
+      return handler;
+    }
 
     switch ( m_connectionState ) {
         case NonAuthenticated:
