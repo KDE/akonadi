@@ -44,9 +44,8 @@ ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
 void ITIPHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result result,
                                                 const QString &errorMessage )
 {
-  Q_ASSERT( m_currentOperation != OperationProcessiTIPMessage );
   if ( m_currentOperation == OperationNone ) {
-    kError() << "Operation can't be none!" << result << errorMessage;
+    kFatal() << "Operation can't be none!" << result << errorMessage;
     return;
   }
 
@@ -77,6 +76,10 @@ void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMes
 {
   if ( m_currentOperation == OperationProcessiTIPMessage ) {
     if ( success ) {
+
+      // Harmless hack, processiTIPMessage() asserts that there's not current operation running
+      // to prevent users from calling it twice.
+      m_currentOperation = OperationNone;
       q->processiTIPMessage( m_queuedInvitation.receiver,
                              m_queuedInvitation.iCal,
                              m_queuedInvitation.action );
