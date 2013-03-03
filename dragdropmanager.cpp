@@ -66,7 +66,8 @@ bool DragDropManager::dropAllowed( QDragMoveEvent *event ) const
     foreach ( const KUrl &url, urls ) {
       const Collection collection = Collection::fromUrl( url );
       if ( collection.isValid() ) {
-        if ( !supportedContentTypes.contains( Collection::mimeType() ) ) {
+        if ( !supportedContentTypes.contains( Collection::mimeType() ) &&
+             !supportedContentTypes.contains( Collection::virtualMimeType() ) ) {
           break;
         }
 

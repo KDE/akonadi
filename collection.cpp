@@ -191,6 +191,11 @@ QString Collection::mimeType( )
   return QString::fromLatin1( "inode/directory" );
 }
 
+QString Akonadi::Collection::virtualMimeType( )
+{
+  return QString::fromLatin1( "application/x-vnd.akonadi.collection.virtual" );
+}
+
 QString Collection::resource() const
 {
   return d_func()->resource;

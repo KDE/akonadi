@@ -134,7 +134,8 @@ static bool canCreateCollection( const Akonadi::Collection &collection )
   if ( !( collection.rights() & Akonadi::Collection::CanCreateCollection ) )
     return false;
 
-  if ( !collection.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) )
+  if ( !collection.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) &&
+       !collection.contentMimeTypes().contains( Akonadi::Collection::virtualMimeType() ) )
     return false;
 
   return true;
@@ -1294,7 +1295,7 @@ class StandardActionManager::Private
       const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
       const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
-      const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
+      const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() ) || collection.contentMimeTypes().contains( Collection::virtualMimeType() );
       const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet().contains( mimeTypes );
 
       const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));

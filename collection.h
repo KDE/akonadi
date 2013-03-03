@@ -204,6 +204,13 @@ class AKONADI_EXPORT Collection : public Entity
     static QString mimeType();
 
     /**
+     * Returns the mimetype used for virtual collections
+     *
+     * @since 4.11
+     */
+    static QString virtualMimeType();
+
+    /**
      * Returns the identifier of the resource owning the collection.
      */
     QString resource() const;
