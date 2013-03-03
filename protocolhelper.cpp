@@ -270,7 +270,7 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   if ( fetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
   if ( fetchScope.ignoreRetrievalErrors() )
-    command += " " AKONADI_PARAM_IGNOREERRORS;
+    command += " " "IGNOREERRORS";
   if ( fetchScope.ancestorRetrieval() != ItemFetchScope::None ) {
     switch ( fetchScope.ancestorRetrieval() ) {
       case ItemFetchScope::Parent:
