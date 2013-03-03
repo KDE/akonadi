@@ -68,6 +68,7 @@ class FetchHelper : public QObject
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     int mAncestorDepth;
     bool mCacheOnly;
+    bool mCheckCachedPayloadPartsOnly;
     bool mFullPayload;
     bool mAllAttrs;
     bool mSizeRequested;

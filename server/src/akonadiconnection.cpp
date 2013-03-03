@@ -97,7 +97,7 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL(disconnected()),
              this, SLOT(slotDisconnected()), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 30]");
+    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 31]");
 
     m_streamParser = new ImapStreamParser( m_socket );
     m_streamParser->setTracerIdentifier( m_identifier );

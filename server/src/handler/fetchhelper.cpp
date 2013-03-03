@@ -58,6 +58,7 @@ void FetchHelper::init()
 {
   mAncestorDepth = 0;
   mCacheOnly = false;
+  mCheckCachedPayloadPartsOnly = false;
   mFullPayload = false;
   mAllAttrs = false;
   mSizeRequested = false;
@@ -315,7 +316,10 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     if ( mAncestorDepth > 0 )
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
 
+
     bool skipItem = false;
+
+    QList<QByteArray> cachedParts;
 
     while ( partQuery.isValid() ) {
       const qint64 id = partQuery.value( PartQueryPimIdColumn ).toLongLong();
@@ -328,41 +332,54 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       QByteArray partName = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
       QByteArray part = Utils::variantToByteArray( partQuery.value( PartQueryNameColumn ) );
       QByteArray data = Utils::variantToByteArray( partQuery.value( PartQueryDataColumn ) );
-      if ( mIgnoreErrors && data.isEmpty() ) {
-        //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
-        akDebug() << id << " no payload";
-        skipItem = true;
-        break;
-      }
-      bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
-      if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
-        data = PartHelper::translateData( data, partIsExternal );
-      int version = partQuery.value( PartQueryVersionColumn ).toInt();
-      if ( version != 0 ) { // '0' is the default, so don't send it
-        part += '[' + QByteArray::number( version ) + ']';
-      }
-      if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
-        part += " [FILE] ";
-      }
-      if ( data.isNull() ) {
-        part += " NIL";
-      } else if ( data.isEmpty() ) {
-        part += " \"\"";
-      } else {
-        part += " {" + QByteArray::number( data.length() ) + "}\r\n";
-        part += data;
-      }
 
-      if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
-        attributes << part;
+      if ( mCheckCachedPayloadPartsOnly ) {
+        if ( !data.isEmpty() ) {
+           cachedParts << part;
+        }
+         partQuery.next();
+     } else {
+        if ( mIgnoreErrors && data.isEmpty() ) {
+          //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
+          akDebug() << id << " no payload";
+          skipItem = true;
+          break;
+        }
+        bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
+        if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
+          data = PartHelper::translateData( data, partIsExternal );
+        int version = partQuery.value( PartQueryVersionColumn ).toInt();
+        if ( version != 0 ) { // '0' is the default, so don't send it
+          part += '[' + QByteArray::number( version ) + ']';
+        }
+        if (  mExternalPayloadSupported && partIsExternal ) { // external data and this is supported by the client
+          part += " [FILE] ";
+        }
+        if ( data.isNull() ) {
+          part += " NIL";
+        } else if ( data.isEmpty() ) {
+          part += " \"\"";
+        } else {
+          part += " {" + QByteArray::number( data.length() ) + "}\r\n";
+          part += data;
+        }
 
-      partQuery.next();
+        if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
+          attributes << part;
+
+        partQuery.next();
+      }
     }
 
     if (skipItem) {
       itemQuery.next();
       continue;
     }
+
+    if ( mCheckCachedPayloadPartsOnly ) {
+      attributes.append( "CACHEDPARTS (" + ImapParser::join( cachedParts, " " ) + ')');
+    }
+
 
     // IMAP protocol violation: should actually be the sequence number
     QByteArray attr = QByteArray::number( pimItemId ) + ' ' + responseIdentifier + " (";
@@ -436,6 +453,8 @@ void FetchHelper::parseCommandStream()
       const QByteArray buffer = mStreamParser->readString();
       if ( buffer == AKONADI_PARAM_CACHEONLY ) {
         mCacheOnly = true;
+      } else if ( buffer == AKONADI_PARAM_CHECKCACHEDPARTSONLY ) {
+        mCheckCachedPayloadPartsOnly = true;
       } else if ( buffer == AKONADI_PARAM_ALLATTRIBUTES ) {
         mAllAttrs = true;
       } else if ( buffer == AKONADI_PARAM_EXTERNALPAYLOAD ) {
