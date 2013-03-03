@@ -78,6 +78,7 @@ set(libakonadiprivate_SRCS
   src/akonadi.cpp
   src/akonadiconnection.cpp
   src/clientcapabilities.cpp
+  src/clientcapabilityaggregator.cpp
   src/handler.cpp
   src/handlerhelper.cpp
   src/intervalcheck.cpp
