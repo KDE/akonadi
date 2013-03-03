@@ -55,7 +55,7 @@ public:
   /**
     * Constructs a CalendarBase object.
     */
-  explicit CalendarBase();
+  explicit CalendarBase( QObject *parent = 0 );
 
   /**
     * Destroys the calendar.
@@ -255,7 +255,7 @@ Q_SIGNALS:
 protected:
   Q_DECLARE_PRIVATE( CalendarBase )
   QScopedPointer<CalendarBasePrivate> d_ptr;
-  CalendarBase( CalendarBasePrivate *const d );
+  CalendarBase( CalendarBasePrivate *const d, QObject *parent );
 };
 }
 

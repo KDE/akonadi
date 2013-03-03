@@ -208,14 +208,17 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   q->setObserversEnabled( true );
 }
 
-CalendarBase::CalendarBase() : MemoryCalendar( KSystemTimeZones::local() )
-                             , d_ptr( new CalendarBasePrivate( this ) )
+CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )
+                                              , d_ptr( new CalendarBasePrivate( this ) )
 {
+  setParent( parent );
 }
 
-CalendarBase::CalendarBase( CalendarBasePrivate *const dd ) : MemoryCalendar( KSystemTimeZones::local() )
-                                                            , d_ptr( dd )
+CalendarBase::CalendarBase( CalendarBasePrivate *const dd,
+                            QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )
+                                              , d_ptr( dd )
 {
+  setParent( parent );
 }
 
 CalendarBase::~CalendarBase()

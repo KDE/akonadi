@@ -365,7 +365,7 @@ void ETMCalendarPrivate::onFilterChanged()
   mCalFilterProxyModel->setFilter( q->filter() );
 }
 
-ETMCalendar::ETMCalendar() : CalendarBase( new ETMCalendarPrivate( this ) )
+ETMCalendar::ETMCalendar( QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
 {
   Q_D( ETMCalendar );
   d->init();

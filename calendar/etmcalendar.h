@@ -66,7 +66,7 @@ public:
   /**
     * Constructs a new ETMCalendar. Loading begins immediately, asynchronously.
     */
-  ETMCalendar();
+  ETMCalendar( QObject *parent = 0 );
 
   /**
     * Destroys this ETMCalendar.
