@@ -300,12 +300,7 @@ void SpecialCollectionsRequestJob::requestDefaultCollection( const QByteArray &t
 
 void SpecialCollectionsRequestJob::requestCollection( const QByteArray &type, const AgentInstance &instance )
 {
-  if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
-    // This resource was previously unknown.
-    d->mFoldersForResource[ instance.identifier() ] = QHash<QByteArray, bool>();
-  }
   d->mFoldersForResource[ instance.identifier() ][ type ] = true;
-
   d->mRequestedType = type;
   d->mRequestedResource = instance;
 }
