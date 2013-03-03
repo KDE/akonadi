@@ -88,19 +88,33 @@ bool Create::parseStream()
   }
 
   qint64 resourceId = 0;
+  bool forceVirtual = false;
   MimeType::List parentContentTypes;
   if ( parent.isValid() ) {
     // check if parent can contain a sub-folder
     parentContentTypes = parent.mimeTypes();
-    bool found = false;
+    bool found = false, foundVirtual = false;
     Q_FOREACH ( const MimeType &mt, parentContentTypes ) {
       if ( mt.name() == QLatin1String( "inode/directory" ) ) {
         found = true;
-        break;
+        if ( foundVirtual ) {
+          break;
+        }
+      } else if ( mt.name() == QLatin1String( "application/x-vnd.akonadi.collection.virtual" ) ) {
+        foundVirtual = true;
+        if ( found ) {
+          break;
+        }
       }
     }
-    if ( !found )
+    if ( !found && !foundVirtual )
       return failureResponse( "Parent collection can not contain sub-collections" );
+
+    // If only virtual collections are supported, force every new collection to
+    // be virtual. Otherwise depend on VIRTUAL attribute in the command
+    if ( foundVirtual && !found ) {
+      forceVirtual = true;
+    }
 
     // inherit resource
     resourceId = parent.resourceId();
@@ -142,6 +156,10 @@ bool Create::parseStream()
     } else {
       userDefAttrs << qMakePair( key, value );
     }
+  }
+
+  if ( forceVirtual ) {
+    collection.setIsVirtual( true );
   }
 
   DataStore *db = connection()->storageBackend();

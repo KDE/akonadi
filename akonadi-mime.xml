@@ -29,4 +29,7 @@ Notes:
     <sub-class-of type="text/calendar"/>
     <comment>iCal Calendar TODO Component</comment>
   </mime-type>
+  <mime-type type="application/x-vnd.akonadi.collection.virtual">
+    <comment>Virtual Akonadi Collection</comment>
+  </mime-type>
 </mime-info>
