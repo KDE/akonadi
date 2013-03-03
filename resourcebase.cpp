@@ -736,7 +736,7 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   contentTypes.removeAll( Collection::virtualMimeType() );
   if ( !contentTypes.isEmpty() || col.isVirtual() ) {
     if ( mAutomaticProgressReporting ) {
-      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing folder '%1'", currentCollection.name() ) );
+      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing folder '%1'", currentCollection.displayName() ) );
     }
     q->retrieveItems( currentCollection );
     return;
