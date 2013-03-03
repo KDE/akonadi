@@ -26,6 +26,7 @@
 #include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
+#include "entitydisplayattribute.h"
 
 #include <kdebug.h>
 #include <KLocale>
@@ -338,6 +339,11 @@ class CollectionSync::Private
       Collection upd( remoteNode->collection );
       Q_ASSERT( !upd.remoteId().isEmpty() );
       upd.setId( localNode->collection.id() );
+      if ( localNode->collection.attribute<EntityDisplayAttribute>() ) {
+        upd.removeAttribute<EntityDisplayAttribute>();
+        upd.addAttribute( localNode->collection.attribute<EntityDisplayAttribute>()->clone() );
+      }
+
       {
         // ### HACK to work around the implicit move attempts of CollectionModifyJob
         // which we do explicitly below
