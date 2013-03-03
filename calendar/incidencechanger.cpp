@@ -455,6 +455,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       case IncidenceChanger::ChangeTypeDelete:
       {
         ITIPHandlerHelper::SendResult status;
+        Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
@@ -523,6 +524,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeDelete:
       {
+        Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
@@ -826,7 +828,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     kWarning() << errorMessage;
     return changeId;
   }
-
+  change->originalItems = itemsToDelete;
   d->handleInvitationsBeforeChange( change );
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob( change ) );
