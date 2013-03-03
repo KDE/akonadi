@@ -65,9 +65,8 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                                       const QString &iCal,
                                       const QString &action )
 {
-  Q_ASSERT( d->m_currentOperation == OperationNone );
   if ( d->m_currentOperation != OperationNone ) {
-    kError() << "There can't be an operation in progress!" << d->m_currentOperation;
+    kFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
     return;
   }
 
