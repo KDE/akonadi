@@ -61,7 +61,7 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
                              Q_ARG( bool, success ), Q_ARG( QString, errorMessage ) );
 }
 
-FetchJobCalendar::FetchJobCalendar() : CalendarBase( new FetchJobCalendarPrivate( this ) )
+FetchJobCalendar::FetchJobCalendar( QObject *parent ) : CalendarBase( new FetchJobCalendarPrivate( this ), parent )
 {
 }
 
