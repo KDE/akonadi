@@ -100,11 +100,11 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
   }
 
   d->m_method = static_cast<KCalCore::iTIPMethod>( message->method() );
-  d->m_incidence.clear();
 
   KCalCore::ScheduleMessage::Status status = message->status();
-  KCalCore::Incidence::Ptr incidence = message->event().dynamicCast<KCalCore::Incidence>();
-  if ( !incidence ) {
+  d->m_incidence = message->event().dynamicCast<KCalCore::Incidence>();
+  if ( !d->m_incidence ) {
+    kError() << "Invalid incidence";
     emit iTipMessageProcessed( ResultError, QLatin1String( "Invalid incidence" ) );
     return;
   }
@@ -115,7 +115,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
        action.startsWith( QLatin1String( "counter" ) ) ) {
     // Find myself and set my status. This can't be done in the scheduler,
     // since this does not know the choice I made in the KMail bpf
-    const KCalCore::Attendee::List attendees = incidence->attendees();
+    const KCalCore::Attendee::List attendees = d->m_incidence->attendees();
     foreach ( KCalCore::Attendee::Ptr attendee, attendees ) {
       if ( attendee->email() == receiver ) {
         if ( action.startsWith( QLatin1String( "accepted" ) ) ) {
@@ -133,20 +133,19 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     }
     if ( CalendarSettings::self()->outlookCompatCounterProposals() ||
          !action.startsWith( QLatin1String( "counter" ) ) ) {
-      d->m_scheduler->acceptTransaction( incidence, d->m_calendar, d->m_method, status, receiver );
+      d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, d->m_method, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     }
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    d->m_scheduler->acceptTransaction( incidence, d->m_calendar, KCalCore::iTIPCancel, status, receiver );
+    d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, KCalCore::iTIPCancel, status, receiver );
     return; // signal emitted in onSchedulerFinished().
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( d->m_method != KCalCore::iTIPCounter ) {
-      d->m_scheduler->acceptTransaction( incidence, d->m_calendar, d->m_method, status, QString() );
+      d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, d->m_method, status, QString() );
     } else {
-      d->m_incidence = incidence; // so we can access it in the slot
-      d->m_scheduler->acceptCounterProposal( incidence, d->m_calendar );
+      d->m_scheduler->acceptCounterProposal( d->m_incidence, d->m_calendar );
     }
     return; // signal emitted in onSchedulerFinished().
   } else {
@@ -156,8 +155,8 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
 
   if ( d->m_uiDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
     Akonadi::Item item;
-    item.setMimeType( incidence->mimeType() );
-    item.setPayload( KCalCore::Incidence::Ptr( incidence->clone() ) );
+    item.setMimeType( d->m_incidence->mimeType() );
+    item.setPayload( KCalCore::Incidence::Ptr( d->m_incidence->clone() ) );
     d->m_uiDelegate->requestIncidenceEditor( item );
   }
 }
