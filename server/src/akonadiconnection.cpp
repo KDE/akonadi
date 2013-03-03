@@ -26,6 +26,7 @@
 #include "handler.h"
 #include "response.h"
 #include "tracer.h"
+#include "clientcapabilityaggregator.h"
 
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
@@ -50,6 +51,7 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_streamParser( 0 )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
+    ClientCapabilityAggregator::addSession(m_clientCapabilities);
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -62,6 +64,7 @@ DataStore * Akonadi::AkonadiConnection::storageBackend()
 
 AkonadiConnection::~AkonadiConnection()
 {
+    ClientCapabilityAggregator::removeSession(m_clientCapabilities);
     Tracer::self()->endConnection( m_identifier, QString() );
 }
 
@@ -97,7 +100,7 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL(disconnected()),
              this, SLOT(slotDisconnected()), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 31]");
+    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 32]");
 
     m_streamParser = new ImapStreamParser( m_socket );
     m_streamParser->setTracerIdentifier( m_identifier );
@@ -321,5 +324,7 @@ const ClientCapabilities& AkonadiConnection::capabilities() const
 
 void AkonadiConnection::setCapabilities(const ClientCapabilities& capabilities)
 {
+  ClientCapabilityAggregator::removeSession(m_clientCapabilities);
   m_clientCapabilities = capabilities;
+  ClientCapabilityAggregator::addSession(m_clientCapabilities);
 }

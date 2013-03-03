@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #ifndef AKONADICAPABILITY_H
 #define AKONADICAPABILITY_H
 
@@ -27,17 +28,36 @@ namespace Akonadi {
   @ingroup akonadi_server_handler
 
   Handler for the capability command.
+
+  <h4>Syntax</h4>
+  Request:
+  @verbatim
+  <tag> CAPABILITY <client capability list>
+  @endverbatim
+
+  Response:
+  @verbatim
+  [<tag> <server capability list>]
+  <tag> OK
+  @endverbatim
+
+  <h4>Client Capabilities</h4>
+  - @c NOTIFY version - version of the notification message format
+  - @c FILEACCESS - local file access for large payload fetches (TODO)
+
+  <h4>Server Capabilities</h4>
+  None defined yet.
+
+  @since ASAP 32, Akonadi 1.10
  */
 class Capability : public Handler
 {
   Q_OBJECT
 public:
     Capability();
-
     ~Capability();
 
     bool parseStream();
-
 };
 
 }

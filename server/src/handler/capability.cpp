@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
+ *   Copyright (C) 2013 by Volker Krause <vkrause@kde.org>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -14,10 +15,16 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
+
 #include "capability.h"
 #include "response.h"
+#include "imapstreamparser.h"
+#include "clientcapabilities.h"
+#include "akonadiconnection.h"
+
+#include <libs/protocol_p.h>
 
 #include <QtCore/QDebug>
 
@@ -27,19 +34,29 @@ Capability::Capability(): Handler()
 {
 }
 
-
 Capability::~Capability()
 {
 }
 
-
 bool Capability::parseStream()
 {
-  Response response;
-  response.setString( "CAPABILITY IMAP4 IMAP4rev1" );
-  response.setUntagged();
-  Q_EMIT responseAvailable( response );
+  ClientCapabilities capabilities;
 
+  m_streamParser->beginList();
+  while (!m_streamParser->atListEnd()) {
+    const QByteArray capability = m_streamParser->readString();
+    if (capability.isEmpty())
+      break; // shouldn't happen
+    if (capability == AKONADI_PARAM_CAPABILITY_NOTIFY) {
+      capabilities.setNotificationMessageVersion(m_streamParser->readNumber());
+    } else {
+      qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
+    }
+  }
+
+  connection()->setCapabilities(capabilities);
+
+  Response response;
   response.setSuccess();
   response.setTag( tag() );
   response.setString( "CAPABILITY completed" );
