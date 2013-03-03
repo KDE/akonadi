@@ -269,6 +269,8 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
     command += " " AKONADI_PARAM_ALLATTRIBUTES;
   if ( fetchScope.cacheOnly() )
     command += " " AKONADI_PARAM_CACHEONLY;
+  if ( fetchScope.checkForCachedPayloadPartsOnly() )
+    command += " " AKONADI_PARAM_CHECKCACHEDPARTSONLY;
   if ( fetchScope.ignoreRetrievalErrors() )
     command += " " AKONADI_PARAM_IGNOREERRORS;
   if ( fetchScope.ancestorRetrieval() != ItemFetchScope::None ) {
@@ -370,6 +372,14 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
         }
         item.setFlags( convertedFlags );
       }
+    } else if ( key == "CACHEDPARTS" ) {
+      QSet<QByteArray> partsSet;
+      QList<QByteArray> parts;
+      ImapParser::parseParenthesizedList( lineTokens[i + 1], parts );
+      foreach ( const QByteArray &part, parts ) {
+        partsSet.insert(part.mid(4));
+      }
+      item.setCachedPayloadParts( partsSet );
     } else if ( key == "SIZE" ) {
       const quint64 size = lineTokens[i + 1].toLongLong();
       item.setSize( size );

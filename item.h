@@ -376,6 +376,17 @@ class AKONADI_EXPORT Item : public Entity
     QSet<QByteArray> availablePayloadParts() const;
 
     /**
+     * Returns the parts available for this item in the cache. The list might be a subset
+     * of the actual parts in cache, as it contains only the requested parts. See @see ItemFetchJob and
+     * @see ItemFetchScope
+     *
+     * The returned set refers to parts available on the akonadi server.
+     *
+     * @since 4.11
+     */
+    QSet<QByteArray> cachedPayloadParts() const;
+
+    /**
      * Applies the parts of Item @p other to this item.
      * Any parts or attributes available in other, will be applied to this item,
      * and the payload parts of other will be inserted into this item, overwriting
@@ -400,6 +411,7 @@ class AKONADI_EXPORT Item : public Entity
      * @since 4.6
      */
     template <typename T> static void addToLegacyMapping( const QString & mimeType );
+    void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
   private:
     //@cond PRIVATE

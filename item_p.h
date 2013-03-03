@@ -296,6 +296,7 @@ class ItemPrivate : public EntityPrivate
     QString mMimeType;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
+    QSet<QByteArray> mCachedPayloadParts;
     bool mFlagsOverwritten : 1;
     bool mSizeChanged : 1;
     bool mClearPayload : 1;

@@ -192,6 +192,24 @@ class AKONADI_EXPORT ItemFetchScope
     void setCacheOnly( bool cacheOnly );
 
     /**
+     * Sets whether payload will be fetched or there will be only a test performed if the
+     * requested payload is in the cache. Calling it calls @see setCacheOnly with true automatically.
+     * Default is fetching the data.
+     *
+     * @since 4.11
+     */
+    void setCheckForCachedPayloadPartsOnly( bool check = true );
+
+    /**
+     * Returns whether payload data should be fetched or only checked for presence in the cache.
+     *
+     * @see setCheckForCachedPayloadPartsOnly()
+     *
+     * @since 4.11
+     */
+    bool checkForCachedPayloadPartsOnly() const;
+
+    /**
      * Sets how many levels of ancestor collections should be included in the retrieval.
      * The default is AncestorRetrieval::None.
      *
