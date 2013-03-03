@@ -27,6 +27,7 @@
 #include "job_p.h"
 #include "protocol_p.h"
 #include "protocolhelper_p.h"
+#include "session_p.h"
 
 #include <kdebug.h>
 #include <KLocalizedString>
@@ -105,6 +106,13 @@ void ItemFetchJobPrivate::startFetchJob()
     }
   }
 
+  //This is only required for 4.10
+  if ( protocolVersion() < 30 ) {
+    if ( mFetchScope.ignoreRetrievalErrors() ) {
+      kDebug() << "IGNOREERRORS is not available with this akonadi protocol version";
+    }
+    mFetchScope.setIgnoreRetrievalErrors( false );
+  }
   command += ProtocolHelper::itemFetchScopeToByteArray( mFetchScope );
 
   writeData( command );
