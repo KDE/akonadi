@@ -836,11 +836,8 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName()
-                                                                                    : collection.name();
-
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
-      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,displayName ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, collection.displayName() ) );
       dlg->show();
     }
 
@@ -967,9 +964,7 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
-
-      QPointer<RenameFavoriteDialog> dlg( new RenameFavoriteDialog(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget) );
+      QPointer<RenameFavoriteDialog> dlg( new RenameFavoriteDialog(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), collection.displayName(), parentWidget) );
       if ( dlg->exec() == QDialog::Accepted && dlg != 0 )
       {
         favoritesModel->setFavoriteLabel( collection, dlg->newName() );

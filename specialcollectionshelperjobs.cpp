@@ -440,12 +440,7 @@ void DefaultResourceJobPrivate::collectionFetchResult( KJob *job )
       continue;
 
     // Find the type for the collection.
-    QString name = collection.name();
-    if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
-      const QString displayName = collection.attribute<EntityDisplayAttribute>()->displayName();
-      if (!displayName.isEmpty())
-        name = displayName;
-    }
+    const QString name = collection.displayName();
     const QByteArray type = typeForName.value( name );
 
     if ( !type.isEmpty() ) {

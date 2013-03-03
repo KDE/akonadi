@@ -196,11 +196,7 @@ class ContactViewer::Private
         CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
         if ( !fetchJob->collections().isEmpty() ) {
           const Collection collection = fetchJob->collections().first();
-          if ( collection.hasAttribute<EntityDisplayAttribute>() ) {
-            addressBookName = collection.attribute<EntityDisplayAttribute>()->displayName();
-          } else {
-            addressBookName = collection.name();
-          }
+          addressBookName = collection.displayName();
         }
       }
 

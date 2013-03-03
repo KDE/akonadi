@@ -87,11 +87,7 @@ QVariant CollectionModel::data( const QModelIndex & index, int role ) const
   }
 
   if ( index.column() == 0 && ( role == Qt::DisplayRole || role == Qt::EditRole ) ) {
-    if ( col.hasAttribute<EntityDisplayAttribute>() &&
-         !col.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
-      return col.attribute<EntityDisplayAttribute>()->displayName();
-    }
-    return col.name();
+    return col.displayName();
   }
 
   switch ( role ) {

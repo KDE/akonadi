@@ -141,14 +141,7 @@ void CollectionRequester::setCollection( const Collection& collection )
   d->collection = collection;
   QString name;
   if ( collection.isValid() ) {
-    const EntityDisplayAttribute *attr = collection.attribute<EntityDisplayAttribute>();
-    if ( attr ) {
-      name = attr->displayName();
-    }
-
-    if ( name.isEmpty() ) {
-      name = collection.name();
-    }
+    name = collection.displayName();
   }
 
   d->edit->setText( name );
