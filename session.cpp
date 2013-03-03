@@ -195,12 +195,21 @@ void SessionPrivate::dataReceived()
       // handle login response
       if ( parser->tag() == QByteArray( "0" ) ) {
         if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
-          connected = true;
-          startNext();
+          writeData("1 CAPABILITY (NOTIFY 1)");
         } else {
           kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();
           QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+        }
+      }
+
+      // handle capability response
+      if ( parser->tag() == QByteArray("1") ) {
+        if ( parser->data().startsWith("OK") ) {
+          connected = true;
+          startNext();
+        } else {
+          kDebug() << "Unhandled server capability response:" << parser->data();
         }
       }
 
@@ -369,7 +378,7 @@ void SessionPrivate::init( const QByteArray &id )
   }
 
   connected = false;
-  theNextTag = 1;
+  theNextTag = 2;
   jobRunning = false;
 
   if ( ServerManager::state() == ServerManager::NotRunning )
