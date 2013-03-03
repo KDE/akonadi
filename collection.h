@@ -131,6 +131,15 @@ class AKONADI_EXPORT Collection : public Entity
     QString name() const;
 
     /**
+     * Returns the display name (EntityDisplayAttribute::displayName()) if set,
+     * and Collection::name() otherwise. For human-readable strings this is preferred
+     * over Collection::name().
+     *
+     * @since 4.11
+     */
+    QString displayName() const;
+
+    /**
      * Sets the i18n'ed name of the collection.
      *
      * @param name The new collection name.

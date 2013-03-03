@@ -25,6 +25,7 @@
 #include "collectionrightsattribute_p.h"
 #include "collectionstatistics.h"
 #include "entity_p.h"
+#include "entitydisplayattribute.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QHash>
@@ -80,6 +81,13 @@ Collection::~Collection()
 QString Collection::name( ) const
 {
   return d_func()->name;
+}
+
+QString Collection::displayName() const
+{
+  const EntityDisplayAttribute* const attr = attribute<EntityDisplayAttribute>();
+  const QString displayName = attr ? attr->displayName() : QString();
+  return !displayName.isEmpty() ? displayName : d_func()->name;
 }
 
 void Collection::setName( const QString & name )
