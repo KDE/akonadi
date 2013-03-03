@@ -74,7 +74,7 @@ Handler::~Handler()
 Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
 {
     // allowed are LOGIN
-    if ( command == "LOGIN" )
+    if ( command == AKONADI_CMD_LOGIN )
         return new Login();
 
     return 0;
@@ -83,9 +83,9 @@ Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & com
 Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & command )
 {
     // allowed commands CAPABILITY and LOGOUT
-    if ( command == "LOGOUT" )
+    if ( command == AKONADI_CMD_LOGOUT )
         return new Logout();
-    if ( command == "CAPABILITY" )
+    if ( command == AKONADI_CMD_CAPABILITY )
         return new Capability();
     return 0;
 }
