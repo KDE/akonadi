@@ -96,6 +96,16 @@ class AKONADI_EXPORT SpecialCollections : public QObject
     bool registerCollection( const QByteArray &type, const Akonadi::Collection &collection );
 
     /**
+     * Sets the special collection attribute which marks @p collection as being a special
+     * collection of type @p type.
+     * This is typically used by configuration dialog for resources, when the user can choose
+     * a specific special collection (ex: IMAP trash).
+     *
+     * @since 4.11
+     */
+    static void setSpecialCollectionType(const QByteArray &type, const Akonadi::Collection &collection);
+
+    /**
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */

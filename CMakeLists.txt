@@ -166,6 +166,7 @@ set( akonadikde_LIB_SRC
   specialcollections.cpp
   specialcollectionshelperjobs.cpp
   specialcollectionsrequestjob.cpp
+  specialcollectionsdiscoveryjob.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
   subscriptiondialog.cpp
@@ -361,6 +362,7 @@ install( FILES
   servermanager.h
   specialcollections.h
   specialcollectionsrequestjob.h
+  specialcollectionsdiscoveryjob.h
   standardactionmanager.h
   statisticsproxymodel.h
   trashjob.h

@@ -41,6 +41,7 @@ set( kmimeakonadi_LIB_SRC
   removeduplicatesjob.cpp
   specialmailcollections.cpp
   specialmailcollectionsrequestjob.cpp
+  specialmailcollectionsdiscoveryjob.cpp
   messagefolderattribute.cpp
   messagemodel.cpp
   messageparts.cpp
@@ -83,6 +84,7 @@ install( FILES
   removeduplicatesjob.h
   specialmailcollections.h
   specialmailcollectionsrequestjob.h
+  specialmailcollectionsdiscoveryjob.h
   standardmailactionmanager.h
   akonadi-kmime_export.h
   messagefolderattribute.h

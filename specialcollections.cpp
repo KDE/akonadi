@@ -203,6 +203,16 @@ Akonadi::Collection SpecialCollections::collection( const QByteArray &type, cons
   return d->mFoldersForResource.value(instance.identifier()).value(type);
 }
 
+void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const Akonadi::Collection &collection)
+{
+  if (!collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type) {
+    Collection attributeCollection(collection);
+    SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
+    attribute->setCollectionType(type);
+    new CollectionModifyJob(attributeCollection);
+  }
+}
+
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )
 {
   if ( !collection.isValid() ) {
@@ -216,13 +226,7 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     return false;
   }
 
-  if ( !collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type ) {
-    Collection attributeCollection( collection );
-    SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>( Collection::AddIfMissing );
-    attribute->setCollectionType( type );
-
-    new CollectionModifyJob( attributeCollection );
-  }
+  setSpecialCollectionType(type, collection);
 
   const Collection oldCollection = d->mFoldersForResource.value(resourceId).value(type);
   if (oldCollection != collection) {
