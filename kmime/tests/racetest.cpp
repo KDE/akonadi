@@ -34,6 +34,9 @@
 #define MAXCOUNT 10
 // NOTE: REQUESTER_EXE is defined by cmake.
 
+Q_DECLARE_METATYPE(QProcess::ProcessError)
+Q_DECLARE_METATYPE(QProcess::ExitStatus)
+
 using namespace Akonadi;
 
 
@@ -41,6 +44,8 @@ void RaceTest::initTestCase()
 {
   QVERIFY( Control::start() );
   QTest::qWait( 1000 ); // give the MDA time to start so that we can kill it in peace
+  qRegisterMetaType<QProcess::ProcessError>();
+  qRegisterMetaType<QProcess::ExitStatus>();
 }
 
 void RaceTest::testMultipleProcesses_data()
