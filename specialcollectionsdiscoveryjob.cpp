@@ -53,7 +53,6 @@ void Akonadi::SpecialCollectionsDiscoveryJob::start()
 {
     CollectionFetchJob* job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
     job->fetchScope().setContentMimeTypes(d->mMimeTypes);
-    connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchingDone(KJob*)));
     addSubjob(job);
 }
 
