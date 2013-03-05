@@ -18,6 +18,7 @@
 */
 
 #include "specialmailcollections.h"
+#include "akonadi/specialcollectionattribute_p.h"
 #include "akonadi/entitydisplayattribute.h"
 #include "akonadi/collectionmodifyjob.h"
 #include "specialmailcollectionssettings.h"
@@ -42,19 +43,33 @@ typedef SpecialMailCollectionsSettings Settings;
 
 K_GLOBAL_STATIC( SpecialMailCollectionsPrivate, sInstance )
 
-static inline QByteArray enumToType( SpecialMailCollections::Type type )
+static const char s_specialCollectionTypes[SpecialMailCollections::LastType][11] = {
+    "local-mail",
+    "inbox",
+    "outbox",
+    "sent-mail",
+    "trash",
+    "drafts",
+    "templates"
+};
+
+static const int s_numTypes = sizeof s_specialCollectionTypes / sizeof *s_specialCollectionTypes;
+
+BOOST_STATIC_ASSERT(s_numTypes == SpecialMailCollections::LastType);
+
+static inline QByteArray enumToType( SpecialMailCollections::Type value )
 {
-  switch ( type ) {
-    case SpecialMailCollections::Root: return "local-mail"; break;
-    case SpecialMailCollections::Inbox: return "inbox"; break;
-    case SpecialMailCollections::Outbox: return "outbox"; break;
-    case SpecialMailCollections::SentMail: return "sent-mail"; break;
-    case SpecialMailCollections::Trash: return "trash"; break;
-    case SpecialMailCollections::Drafts: return "drafts"; break;
-    case SpecialMailCollections::Templates: return "templates"; break;
-    case SpecialMailCollections::LastType: // fallthrough
-    default: return QByteArray(); break;
-  }
+    return s_specialCollectionTypes[value];
+}
+
+static inline SpecialMailCollections::Type typeToEnum(const QByteArray &type)
+{
+    for (int i = 0; i < s_numTypes; ++i) {
+        if (type == s_specialCollectionTypes[i]) {
+            return static_cast<SpecialMailCollections::Type>(i);
+        }
+    }
+    return SpecialMailCollections::Invalid;
 }
 
 SpecialMailCollectionsPrivate::SpecialMailCollectionsPrivate()
@@ -153,5 +168,14 @@ void SpecialMailCollections::slotCollectionModified(KJob*job)
     kDebug()<<" Error when we modified collection";
     return;
   }
+}
+
+SpecialMailCollections::Type SpecialMailCollections::specialCollectionType(const Akonadi::Collection &collection)
+{
+    if (!collection.hasAttribute<SpecialCollectionAttribute>()) {
+        return Invalid;
+    } else {
+        return typeToEnum(collection.attribute<SpecialCollectionAttribute>()->collectionType());
+    }
 }
 

@@ -106,13 +106,6 @@ class AKONADI_EXPORT SpecialCollections : public QObject
     static void setSpecialCollectionType(const QByteArray &type, const Akonadi::Collection &collection);
 
     /**
-     * Returns the special collection type for a given collection, or empty if the collection
-     * doesn't have a special type.
-     * @since 4.11
-     */
-    static QByteArray specialCollectionType(const Akonadi::Collection &collection);
-
-    /**
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */

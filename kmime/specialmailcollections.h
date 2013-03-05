@@ -106,6 +106,13 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
     Akonadi::Collection collection( Type type, const AgentInstance &instance ) const;
 
     /**
+     * Returns the special collection type for a given collection, or empty if the collection
+     * doesn't have a special type.
+     * @since 4.11
+     */
+    static Type specialCollectionType(const Akonadi::Collection &collection);
+
+    /**
      * Registers the given @p collection as a special mail collection
      * with the given @p type.
      * @param type the type of collection
