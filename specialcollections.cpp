@@ -213,6 +213,15 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
   }
 }
 
+QByteArray SpecialCollections::specialCollectionType(const Akonadi::Collection &collection)
+{
+  if (!collection.hasAttribute<SpecialCollectionAttribute>()) {
+    return QByteArray();
+  } else {
+    return collection.attribute<SpecialCollectionAttribute>()->collectionType();
+  }
+}
+
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )
 {
   if ( !collection.isValid() ) {
