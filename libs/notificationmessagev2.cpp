@@ -68,14 +68,14 @@ class NotificationMessageV2::Private: public QSharedData
           && destResource == other.destResource
           && parentCollection == other.parentCollection
           && parentDestCollection == other.parentDestCollection
-          && mimeType == other.mimeType
-          && addedFlags == other.addedFlags
-          && removedFlags == other.removedFlags;
+          && mimeType == other.mimeType;
     }
 
     bool operator==( const Private &other ) const
     {
-      return operation == other.operation && parts == other.parts && compareWithoutOpAndParts( other );
+      return operation == other.operation && parts == other.parts &&
+             addedFlags == other.addedFlags && removedFlags == other.removedFlags &&
+             compareWithoutOpAndParts( other );
     }
 
 
@@ -484,4 +484,44 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
   }
 
   return v1;
+}
+
+bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg )
+{
+  // fast-path for stuff that is not considered during O(n) compression below
+  if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
+
+    NotificationMessageV2::List::Iterator end = list.end();
+    for ( NotificationMessageV2::List::Iterator it = list.begin(); it != end; ) {
+      if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
+
+        // both are modificatoins, merge them together and drop the new one
+        if (( msg.operation() == Modify || msg.operation() == ModifyFlags ) && ( it->operation() == Modify || it->operation() == ModifyFlags )) {
+            (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+            (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
+            (*it).setRemovedFlags( (*it).removedFlags() + msg.removedFlags() );
+          return false;
+        }
+
+        // new one is a modification, the existing one not, so drop the new one
+        else if (( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags )) {
+          return false;
+        }
+        // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
+        else if ( msg.operation() == Remove && ((*it).operation() == Modify || (*it).operation() == ModifyFlags) ) {
+          it = list.erase( it );
+          end = list.end();
+        }
+        // keep looking
+        else {
+          ++it;
+        }
+      } else {
+        ++it;
+      }
+    }
+  }
+
+  list.append( msg );
+  return true;
 }

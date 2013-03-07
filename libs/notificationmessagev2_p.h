@@ -134,6 +134,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 
     QVector<NotificationMessage> toNotificationV1() const;
 
+    static bool appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg );
   private:
     class Private;
     QSharedDataPointer<Private> d;

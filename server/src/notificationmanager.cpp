@@ -78,11 +78,9 @@ void NotificationManager::connectNotificationCollector(NotificationCollector* co
 
 void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
 {
-  #warning Do we need compression with notifications v2?
-  /*
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
     NotificationMessageV2::appendAndCompress( mNotifications, msg );
-  */
+
   mNotifications << msgs;
 
   if ( !mTimer.isActive() )
@@ -99,26 +97,28 @@ void NotificationManager::emitPendingNotifications()
 
   NotificationMessage::List legacyNotifications;
   Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
-    qDebug() << notification.toString();
-    legacyNotifications << notification.toNotificationV1().toList();
-    Q_FOREACH ( const NotificationMessage &legacyNotification, legacyNotifications ) {
-      qDebug() << legacyNotification.toString();
+    akDebug() << mNotification.toString();
+    const NotificationMessage::List tmp = notification.toNotificationV1().toList();
+    Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
+      akDebug() << "\t" << legacyNotification.toString();
+      bool appended = false;
+      NotificationMessage::appendAndCompress( legacyNotifications, legacyNotification, &appended );
+      if ( !appended ) {
+        legacyNotifications << legacyNotification;
+      }
     }
   }
 
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
     if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() > 1 ) {
-      qDebug() << src->identifier() << " - emitting" << mNotifications.count() << "new notifications";
       src->emitNotification( mNotifications );
     } else {
-      qDebug() << src->identifier() << " - emitting" << legacyNotifications.count() << "legacy notifications";
       src->emitNotification( legacyNotifications );
     }
   }
 
   // backward compatibility with the old non-subcription interface
   // old clients will not support new notifications, so don't bother
-  qDebug() << "Emitting" << legacyNotifications.count() << "legacy non-subscription notifications";
   Q_EMIT notify( legacyNotifications );
 
   mNotifications.clear();

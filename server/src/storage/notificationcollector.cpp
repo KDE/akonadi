@@ -285,8 +285,6 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
 
 void NotificationCollector::dispatchNotification(const NotificationMessageV2 & msg)
 {
-  #warning Do we need compression with Notifications V2?
-  /*
   if ( !mDb || mDb->inTransaction() ) {
     NotificationMessageV2::appendAndCompress( mNotifications, msg );
   } else {
@@ -294,7 +292,7 @@ void NotificationCollector::dispatchNotification(const NotificationMessageV2 & m
     l << msg;
     Q_EMIT notify( l );
   }
-  */
+
   NotificationMessageV2::List l;
   l << msg;
   Q_EMIT notify( l );
