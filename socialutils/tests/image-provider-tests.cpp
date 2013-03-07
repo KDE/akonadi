@@ -24,6 +24,8 @@
 
 #include <QImage>
 
+#define IMAGE_URL "http://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png"
+
 void ImageProviderTests::setup()
 {
     //use special cache
@@ -34,7 +36,7 @@ void ImageProviderTests::setup()
 
     Akonadi::ImageProvider i;
     QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
+                                KUrl( IMAGE_URL ),
                                 true,
                                 cache );
 
@@ -55,7 +57,7 @@ void ImageProviderTests::testImageNoCache()
 
     Akonadi::ImageProvider i;
     QImage image = i.loadImage( QLatin1String( "mck182" ),
-                                KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ),
+                                KUrl( IMAGE_URL ),
                                 true,
                                 cache);
 
@@ -94,8 +96,8 @@ void ImageProviderTests::testImageFetchingUrl()
 {
     setup();
 
-    QCOMPARE( m_url, KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ) );
+    QCOMPARE( m_url, KUrl( IMAGE_URL ) );
 }
 
-QTEST_MAIN( ImageProviderTests );
+QTEST_KDEMAIN( ImageProviderTests, GUI );
 
