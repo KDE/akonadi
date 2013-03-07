@@ -90,7 +90,8 @@ static bool s_defaultPage = true;
 CollectionPropertiesDialog::Private::Private( CollectionPropertiesDialog *qq, const Akonadi::Collection &collection, const QStringList &pageNames )
   : q( qq ),
     mCollection( collection ),
-    mPageNames( pageNames )
+    mPageNames( pageNames ),
+    mTabWidget( 0 )
 {
   if ( s_defaultPage ) {
     registerBuiltinPages();

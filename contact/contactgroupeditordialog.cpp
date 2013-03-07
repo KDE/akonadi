@@ -40,7 +40,7 @@ class ContactGroupEditorDialog::Private
 {
   public:
     Private( ContactGroupEditorDialog *qq, ContactGroupEditorDialog::Mode mode )
-      : q( qq ), mAddressBookBox( 0 ), mMode( mode )
+      : q( qq ), mAddressBookBox( 0 ), mEditor( 0 ), mMode( mode )
     {
     }
 
