@@ -97,5 +97,5 @@ void ImageProviderTests::testImageFetchingUrl()
     QCOMPARE( m_url, KUrl( "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png" ) );
 }
 
-QTEST_MAIN( ImageProviderTests );
+QTEST_KDEMAIN( ImageProviderTests, GUI );
 

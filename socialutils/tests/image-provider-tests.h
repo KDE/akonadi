@@ -22,6 +22,7 @@
 
 #include <QtTest/QTest>
 #include <QtCore/QObject>
+#include <qtest_kde.h>
 
 #include <QImage>
 #include <KUrl>
