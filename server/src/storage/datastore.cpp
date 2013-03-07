@@ -169,26 +169,48 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   // first delete all old flags of this pim item
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
-  Q_FOREACH( PimItem item, items ) {
+  QList<Entity::Id> ids;
+  QVariantList insIds;
+  QVariantList insFlags;
+
+  Q_FOREACH( const PimItem &item, items ) {
     Q_FOREACH( const Flag &flag, item.flags() ) {
       if ( !removedFlags.contains( flag.name().toLatin1() ) ) {
         removedFlags << flag.name().toLatin1();
       }
     }
 
-    if ( !item.clearFlags() )
-      return false;
-
-    // then add the new flags
+    // create a bind values for the insert query - every item repeats exactly
+    // flags.count()-times
     for ( int i = 0; i < flags.count(); ++i ) {
-      if ( !item.addFlag( flags[i] ) )
-        return false;
+      insIds << item.id();
     }
-  }
 
-  for ( int i = 0; i < flags.count(); ++i ) {
+    ids << item.id();
+  }
+  // Clear all flags of all given items at once
+  QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond;
+  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, ids );
+  qb.addCondition( cond );
+  if ( !qb.exec() )
+    return false;
+
+  // create bind values for the insert quest - every flags repeats exactly
+  // items.count()-times
+  Q_FOREACH( const Flag &flag, flags ) {
+    for ( int i = 0; i < items.count(); ++i ) {
+      insFlags << flag.id();
+    }
+
     addedFlags << flags[ i ].name().toLatin1();
   }
+
+  QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
+  qb2.setColumnValue( PimItemFlagRelation::leftFullColumnName(), insIds );
+  qb2.setColumnValue( PimItemFlagRelation::rightFullColumnName(), insFlags );
+  if ( !qb2.exec() )
+    return false;
 
   mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
   return true;
@@ -222,16 +244,31 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
 
 bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
 {
-  QSet<QByteArray> removed;
-  Q_FOREACH ( PimItem item, items ) {
+  QSet<QByteArray> removedFlags;
+  QList<Entity::Id> itemsIds;
+  QList<qint64> flagsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
-      removed << flags[ i ].name().toLatin1();
-      if ( !item.removeFlag( flags[ i ] ) )
-        return false;
+      const QByteArray flagName = removed << flags[ i ].name().toLatin1();
+      if ( !flagsIds.contains( flagName ) ) {
+        flagsIds << flags[ i ].id();
+        removedFlags << flagName;
+      }
     }
   }
 
-  mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removed );
+  // Delete all given flags from all given items in one go
+  QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond( Query::And );
+  cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::In, itemsIds );
+  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, flagsIds );
+  qb.addCondition( cond );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
   return true;
 }
 

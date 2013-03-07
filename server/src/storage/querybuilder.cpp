@@ -290,7 +290,7 @@ bool QueryBuilder::exec()
     mQuery.bindValue( QLatin1Char( ':' ) + QString::number( i ), mBindValues[i] );
 //     akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
-  if ( !mQuery.exec() ) {
+  if ( !mQuery.execBatch() ) {
     akError() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
     return false;
   }
