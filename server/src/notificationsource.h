@@ -20,6 +20,7 @@
 #define AKONADI_NOTIFICATIONSOURCE_H
 
 #include "../libs/notificationmessage_p.h"
+#include "../libs/notificationmessagev2_p.h"
 
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
@@ -60,6 +61,13 @@ class NotificationSource : public QObject
      *
      * @param notifications List of notifications to emit.
      */
+    void emitNotification( const NotificationMessageV2::List &notifications );
+
+    /**
+     * Emit the given notifications
+     *
+     * @param notifications List of notifications to emit.
+     */
     void emitNotification( const NotificationMessage::List &notifications );
 
     /**
@@ -90,6 +98,7 @@ class NotificationSource : public QObject
     Q_SIGNALS:
 
       Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
+      Q_SCRIPTABLE void notify( const Akonadi::NotificationMessageV2::List &msgs );
 
     private Q_SLOTS:
       void serviceUnregistered( const QString &serviceName );

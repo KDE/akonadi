@@ -116,10 +116,10 @@ class DataStore : public QObject
     static DataStore* self();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    bool setItemFlags( const PimItem &item, const QVector<Flag> &flags );
-    bool appendItemFlags( const PimItem &item, const QVector<Flag> &flags, bool& flagsChanged,
+    bool setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
+    bool appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags, bool& flagsChanged,
                           bool checkIfExists = true, const Collection &col = Collection() );
-    bool removeItemFlags( const PimItem &item, const QVector<Flag> &flags );
+    bool removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags );
 
     /* --- ItemParts ----------------------------------------------------- */
     bool removeItemParts( const PimItem &item, const QList<QByteArray> &parts );
@@ -151,6 +151,7 @@ class DataStore : public QObject
     /// Returns all virtual collections the @p item is linked to
     QVector<Collection> virtualCollections( const PimItem &item );
 
+    QMap<Entity::Id /* collection */, PimItem> virtualCollections( const PimItem::List &items );
 
     /* --- MimeType ------------------------------------------------------ */
     bool appendMimeType( const QString & mimetype, qint64 *insertId = 0 );
@@ -167,7 +168,7 @@ class DataStore : public QObject
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
      */
-    bool cleanupPimItem( const PimItem &item );
+    bool cleanupPimItems( const PimItem::List &items );
 
     /**
      * Unhides the specified PimItem. Emits the itemAdded() notification as 

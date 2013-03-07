@@ -1,0 +1,156 @@
+/*
+    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2013 Daniel Vrátil <dvratil@redhat.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#ifndef AKONADI_NOTIFICATIONMESSAGEV2_H
+#define AKONADI_NOTIFICATIONMESSAGEV2_H
+
+
+#include "akonadiprotocolinternals_export.h"
+
+#include <QtCore/QList>
+#include <QtCore/QVector>
+#include <QtCore/QSet>
+#include <QtCore/QMetaType>
+#include <QtCore/QSharedDataPointer>
+#include <QtCore/QVariant>
+#include <QtDBus/QDBusArgument>
+
+namespace Akonadi
+{
+  class NotificationMessage;
+
+/**
+  @internal
+  Used for sending notification signals over DBus.
+  DBus type: (ayiia(xss)ayayxxsasaayaay)
+*/
+class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
+{
+  public:
+    typedef QList<NotificationMessageV2> List;
+    typedef qint64 Id;
+
+    enum Type {
+      InvalidType,
+      Collections,
+      Items
+    };
+
+    // NOTE: Keep this BC with NotificationMessage - i.e. append new stuff to the end
+    enum Operation {
+      InvalidOp,
+      Add,
+      Modify,
+      Move,
+      Remove,
+      Link,
+      Unlink,
+      Subscribe,
+      Unsubscribe,
+      ModifyFlags
+    };
+
+    class Item
+    {
+      public:
+        Item():
+          id( -1 )
+        {
+        }
+
+        bool operator==( const Item &other ) {
+          return id == other.id && remoteId == other.remoteId && remoteRevision == other.remoteRevision;
+        }
+
+        Id id;
+        QString remoteId;
+        QString remoteRevision;
+    };
+
+    NotificationMessageV2();
+    NotificationMessageV2( const NotificationMessageV2 &other );
+    ~NotificationMessageV2();
+
+    NotificationMessageV2& operator=( const NotificationMessageV2 &other );
+    bool operator==( const NotificationMessageV2 &other ) const;
+
+    static void registerDBusTypes();
+
+    NotificationMessageV2::Type type() const;
+    void setType( NotificationMessageV2::Type type );
+
+    NotificationMessageV2::Operation operation() const;
+    void setOperation( NotificationMessageV2::Operation operation );
+
+    QByteArray sessionId() const;
+    void setSessionId( const QByteArray &session );
+
+    void addEntity( Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString() );
+    void setEntities( const QVector<NotificationMessageV2::Item> &entities );
+    QVector<NotificationMessageV2::Item> entities() const;
+
+    QByteArray resource() const;
+    void setResource( const QByteArray &resource );
+
+    Id parentCollection() const;
+    void setParentCollection( Id parent );
+
+    Id parentDestCollection() const;
+    void setParentDestCollection( Id parent );
+
+    QByteArray destinationResource() const;
+    void setDestinationResource( const QByteArray &destResource );
+
+    QString mimeType() const;
+    void setMimeType( const QString &mimeType );
+
+    QSet<QByteArray> itemParts() const;
+    void setItemParts( const QSet<QByteArray> &parts );
+
+    QSet<QByteArray> addedFlags() const;
+    void setAddedFlags( const QSet<QByteArray> &parts );
+
+    QSet<QByteArray> removedFlags() const;
+    void setRemovedFlags( const QSet<QByteArray> &parts );
+
+    QString toString() const;
+
+    QVector<NotificationMessage> toNotificationV1() const;
+
+  private:
+    class Private;
+    QSharedDataPointer<Private> d;
+};
+
+} // namespace Akonadi
+
+const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg );
+QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
+const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Item &item );
+QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Item &item );
+uint qHash( const Akonadi::NotificationMessageV2 &msg );
+
+Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
+
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Item )
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
+
+#endif // NOTIFICATIONMESSAGEV2_H

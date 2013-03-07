@@ -50,7 +50,7 @@ void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
                                                 const QString & mimeType,
                                                 const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Add, item, collection, Collection(), mimeType, resource );
+  itemNotification( NotificationMessageV2::Add, item, collection, Collection(), mimeType, resource );
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
@@ -59,48 +59,59 @@ void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Modify, item, collection, Collection(), mimeType, resource, changedParts );
+  itemNotification( NotificationMessageV2::Modify, item, collection, Collection(), mimeType, resource, changedParts );
 }
 
-void Akonadi::NotificationCollector::itemMoved( const PimItem &item,
-                                                const Collection &collectionSrc,
-                                                const Collection &collectionDest,
-                                                const QString &mimeType,
-                                                const QByteArray &sourceResource )
+void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &items,
+                                                        const QSet< QByteArray > &addedFlags,
+                                                        const QSet< QByteArray > &removedFlags,
+                                                        const Collection &collection,
+                                                        const QString &mimeType,
+                                                        const QByteArray &resource)
 {
-  itemNotification( NotificationMessage::Move, item, collectionSrc, collectionDest, mimeType, sourceResource );
+  itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), mimeType, resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
 
 
-void Akonadi::NotificationCollector::itemRemoved( const PimItem &item,
-                                                  const Collection &collection,
-                                                  const QString & mimeType,
-                                                  const QByteArray & resource )
+void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
+                                                 const Collection &collectionSrc,
+                                                 const Collection &collectionDest,
+                                                 const QString &mimeType,
+                                                 const QByteArray &sourceResource )
 {
-  itemNotification( NotificationMessage::Remove, item, collection, Collection(), mimeType, resource );
+  itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, mimeType, sourceResource );
 }
 
-void NotificationCollector::itemLinked(const PimItem & item, const Collection & collection)
+
+void Akonadi::NotificationCollector::itemsRemoved( const PimItem::List &items,
+                                                   const Collection &collection,
+                                                   const QString & mimeType,
+                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessage::Link, item, collection, Collection(), QString(), QByteArray() );
+  itemNotification( NotificationMessageV2::Remove, items, collection, Collection(), mimeType, resource );
 }
 
-void NotificationCollector::itemUnlinked(const PimItem & item, const Collection & collection)
+void NotificationCollector::itemsLinked(const PimItem::List & items, const Collection & collection)
 {
-  itemNotification( NotificationMessage::Unlink, item, collection, Collection(), QString(), QByteArray() );
+  itemNotification( NotificationMessageV2::Link, items, collection, Collection(), QString(), QByteArray() );
+}
+
+void NotificationCollector::itemsUnlinked(const PimItem::List & items, const Collection & collection)
+{
+  itemNotification( NotificationMessageV2::Unlink, items, collection, Collection(), QString(), QByteArray() );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const Collection &collection,
                                                       const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Add, collection, collection.parentId(), -1, resource );
+  collectionNotification( NotificationMessageV2::Add, collection, collection.parentId(), -1, resource );
 }
 
 void Akonadi::NotificationCollector::collectionChanged( const Collection &collection,
                                                         const QList<QByteArray> &changes,
                                                         const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
+  collectionNotification( NotificationMessageV2::Modify, collection, collection.parentId(), -1, resource, changes.toSet() );
 }
 
 void NotificationCollector::collectionMoved( const Collection &collection,
@@ -108,25 +119,25 @@ void NotificationCollector::collectionMoved( const Collection &collection,
                                              const QByteArray &resource,
                                              const QByteArray &destResource )
 {
-  collectionNotification( NotificationMessage::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource );
+  collectionNotification( NotificationMessageV2::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource );
 }
 
 void Akonadi::NotificationCollector::collectionRemoved( const Collection &collection,
                                                         const QByteArray &resource )
 {
-  collectionNotification( NotificationMessage::Remove, collection, collection.parentId(), -1, resource );
+  collectionNotification( NotificationMessageV2::Remove, collection, collection.parentId(), -1, resource );
 }
 
 void NotificationCollector::collectionSubscribed( const Collection& collection,
                                                   const QByteArray& resource )
 {
-  collectionNotification( NotificationMessage::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+  collectionNotification( NotificationMessageV2::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
 void NotificationCollector::collectionUnsubscribed( const Collection& collection,
                                                     const QByteArray& resource )
 {
-  collectionNotification( NotificationMessage::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
+  collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
 
 
@@ -150,7 +161,7 @@ void NotificationCollector::setSessionId(const QByteArray &sessionId)
   mSessionId = sessionId;
 }
 
-void NotificationCollector::itemNotification( NotificationMessage::Operation op,
+void NotificationCollector::itemNotification( NotificationMessageV2::Operation op,
                                               const PimItem & item,
                                               const Collection & collection,
                                               const Collection & collectionDest,
@@ -158,64 +169,95 @@ void NotificationCollector::itemNotification( NotificationMessage::Operation op,
                                               const QByteArray & resource,
                                               const QSet<QByteArray> &parts )
 {
-  QVector<Collection> collections;
+  PimItem::List items;
+  items << item;
+  itemNotification( op, items, collection, collectionDest, mimeType, resource, parts );
+}
 
-  if ( op == NotificationMessage::Modify ) {
-    collections = DataStore::self()->virtualCollections(item);
+void NotificationCollector::itemNotification( NotificationMessageV2::Operation op,
+                                              const PimItem::List & items,
+                                              const Collection & collection,
+                                              const Collection & collectionDest,
+                                              const QString & mimeType,
+                                              const QByteArray & resource,
+                                              const QSet<QByteArray> &parts,
+                                              const QSet<QByteArray> &addedFlags,
+                                              const QSet<QByteArray> &removedFlags )
+{
+  Collection notificationDestCollection;
+  QMap<Entity::Id, PimItem> vCollections;
+
+  if (( op == NotificationMessageV2::Modify ) ||
+      ( op == NotificationMessageV2::ModifyFlags )) {
+    vCollections = DataStore::self()->virtualCollections( items );
   }
 
   if ( !collection.isValid() ) {
-    collections.append( item.collection() );
+    notificationDestCollection = items.first().collection();
   } else {
-    collections.append ( collection );
+    notificationDestCollection = collection;
   }
 
-  QByteArray destResourceName;
+  NotificationMessageV2 msg;
+  msg.setSessionId( mSessionId );
+  msg.setType( NotificationMessageV2::Items );
+  msg.setOperation( op );
+
+  msg.setItemParts( parts );
+  msg.setAddedFlags( addedFlags );
+  msg.setRemovedFlags( removedFlags );
+
   if ( collectionDest.isValid() ) {
+    QByteArray destResourceName;
     destResourceName = collectionDest.resource().name().toLatin1();
-  }
 
-  QString mt = mimeType;
-  if ( mt.isEmpty() ) {
-    mt = item.mimeType().name();
-  }
-
-  QSet<QByteArray> itemParts;
-  itemParts << item.remoteRevision().toUtf8();
-
-  /* Notify parent collection as well as all virtual collections the item
-   * is linked to */
-  Q_FOREACH( const Collection &col, collections ) {
-    NotificationMessage msg;
-    msg.setSessionId( mSessionId );
-    msg.setType( NotificationMessage::Item );
-    msg.setOperation( op );
-    msg.setUid( item.id() );
-    msg.setRemoteId( item.remoteId() );
-    msg.setItemParts( parts );
-
-    //HACK: store remoteRevision in itemparts for deletion
-    if ( op == NotificationMessage::Remove )
-      msg.setItemParts( itemParts );
-
-    if ( !destResourceName.isEmpty() ) // only relevant for moves
+    // only relevant for moves
+    if ( !destResourceName.isEmpty() )
       msg.setDestinationResource( destResourceName );
-
-    msg.setParentCollection( col.id() );
-    // will be valid if it is a move message
-    msg.setParentDestCollection( collectionDest.id() );
-    msg.setMimeType( mt );
-
-    QByteArray res = resource;
-    if ( res.isEmpty() )
-      res = col.resource().name().toLatin1();
-    msg.setResource( res );
-
-    dispatchNotification( msg );
   }
+
+  msg.setParentDestCollection( collectionDest.id() );
+
+  if ( mimeType.isEmpty() ) {
+    msg.setMimeType( items.first().mimeType().name() );
+  } else {
+    msg.setMimeType( mimeType );
+  }
+
+  /* Notify all virtual collections the items are linked to. */
+  Q_FOREACH( const Entity::Id &colId, vCollections.uniqueKeys() ) {
+    qDebug() << "Notifying virtual collection" << colId;
+    NotificationMessageV2 copy = msg;
+
+    Q_FOREACH( const PimItem &item, vCollections.values( colId ) ) {
+      copy.addEntity( item.id(), item.remoteId(), item.remoteRevision() );
+    }
+    copy.setParentCollection( colId );
+    copy.setResource( resource );
+
+    dispatchNotification( copy );
+  }
+
+  Q_FOREACH( const PimItem &item, items ) {
+    msg.addEntity( item.id(), item.remoteId(), item.remoteRevision() );
+  }
+
+  if ( !collection.isValid() ) {
+    msg.setParentCollection( items.first().collection().id() );
+  } else {
+    msg.setParentCollection( collection.id() );
+  }
+
+  QByteArray res = resource;
+  if ( res.isEmpty() ) {
+    res = items.first().collection().resource().name().toLatin1();
+  }
+  msg.setResource( res );
+
+  dispatchNotification( msg );
 }
 
-void NotificationCollector::collectionNotification( NotificationMessage::Operation op,
+void NotificationCollector::collectionNotification( NotificationMessageV2::Operation op,
                                                     const Collection & collection,
                                                     Collection::Id source,
                                                     Collection::Id destination,
@@ -223,37 +265,39 @@ void NotificationCollector::collectionNotification( NotificationMessage::Operati
                                                     const QSet<QByteArray> &changes,
                                                     const QByteArray & destResource )
 {
-  NotificationMessage msg;
-  msg.setType( NotificationMessage::Collection );
+  NotificationMessageV2 msg;
+  msg.setType( NotificationMessageV2::Collections );
   msg.setOperation( op );
   msg.setSessionId( mSessionId );
-  msg.setUid( collection.id() );
-  msg.setRemoteId( collection.remoteId() );
+  msg.addEntity( collection.id(), collection.remoteId(), collection.remoteRevision() );
   msg.setParentCollection( source );
   msg.setParentDestCollection( destination );
   msg.setDestinationResource( destResource );
   msg.setItemParts( changes );
 
-  //HACK: store remoteRevision in itemparts for deletion
-  if ( op == NotificationMessage::Remove )
-    msg.setItemParts( QSet<QByteArray>() << collection.remoteRevision().toUtf8() );
-
   QByteArray res = resource;
   if ( res.isEmpty() )
     res = collection.resource().name().toLatin1();
   msg.setResource( res );
+
   dispatchNotification( msg );
 }
 
-void NotificationCollector::dispatchNotification(const NotificationMessage & msg)
+void NotificationCollector::dispatchNotification(const NotificationMessageV2 & msg)
 {
+  #warning Do we need compression with Notifications V2?
+  /*
   if ( !mDb || mDb->inTransaction() ) {
-    NotificationMessage::appendAndCompress( mNotifications, msg );
+    NotificationMessageV2::appendAndCompress( mNotifications, msg );
   } else {
-    NotificationMessage::List l;
+    NotificationMessageV2::List l;
     l << msg;
     Q_EMIT notify( l );
   }
+  */
+  NotificationMessageV2::List l;
+  l << msg;
+  Q_EMIT notify( l );
 }
 
 void NotificationCollector::dispatchNotifications()

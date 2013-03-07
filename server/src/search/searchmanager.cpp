@@ -105,8 +105,7 @@ void SearchManager::removeSearchInternal(qint64 id)
 void SearchManager::updateSearch(const Akonadi::Collection& collection, NotificationCollector* collector)
 {
   removeSearch( collection.id() );
-  Q_FOREACH ( const PimItem &item, collection.pimItems() )
-    collector->itemUnlinked( item, collection );
+  collector->itemsUnlinked( collection.pimItems(), collection );
   collection.clearPimItems();
   addSearch( collection );
 }

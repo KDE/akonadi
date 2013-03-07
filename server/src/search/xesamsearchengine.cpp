@@ -125,6 +125,7 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
   akDebug() << "GetHits returned:" << results.count();
 
   typedef QList<QVariant> VariantList;
+  PimItem::List toLink;
   Q_FOREACH ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
@@ -137,12 +138,12 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
     const PimItem item = PimItem::retrieveById( itemId );
     if ( item.isValid() ) {
       Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
-      mCollector->itemLinked( item, collection );
+      toLink << item;
     } else {
       akDebug() << "Non-existing item referenced in XESAM search. Discarding id:" << itemId;
     }
   }
-
+  mCollector->itemsLinked( toLink, collection );
   mCollector->dispatchNotifications();
 }
 
@@ -158,6 +159,7 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
 
   const QVector<QList<QVariant> > results = mInterface->GetHitData( search, hits, QStringList( QLatin1String( "uri" ) ) );
   typedef QList<QVariant> VariantList;
+  PimItem::List toUnlink;
   Q_FOREACH ( const VariantList &list, results ) {
     if ( list.isEmpty() )
       continue;
@@ -167,9 +169,9 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
       continue;
 
     Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
-    mCollector->itemUnlinked( PimItem::retrieveById( itemId ), collection );
+    toUnlink << PimItem::retrieveById( itemId );
   }
-
+  mCollector->itemsUnlinked( toUnlink, collection );
   mCollector->dispatchNotifications();
 }
 

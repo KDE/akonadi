@@ -18,7 +18,6 @@
 */
 
 #include "notificationmessage_p.h"
-
 #include "imapparser_p.h"
 
 #include <QtCore/QDebug>
@@ -252,6 +251,9 @@ QString NotificationMessage::toString() const
 
   if ( parentCollection() >= 0 )
     rv += QString::fromLatin1( "collection %1 " ).arg( parentCollection() );
+  else {
+    rv += QLatin1String( "unspecified parent collection " );
+  }
 
   switch ( operation() ) {
     case Add:

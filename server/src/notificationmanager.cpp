@@ -24,6 +24,7 @@
 #include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+#include "clientcapabilityaggregator.h"
 
 #include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
@@ -41,6 +42,7 @@ NotificationManager::NotificationManager()
   : QObject( 0 )
 {
   NotificationMessage::registerDBusTypes();
+  NotificationMessageV2::registerDBusTypes();
 
   new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
@@ -70,14 +72,19 @@ NotificationManager* NotificationManager::self()
 
 void NotificationManager::connectNotificationCollector(NotificationCollector* collector)
 {
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessage::List)),
-           SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
+           SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
 }
 
-void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &msgs)
+void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
 {
-  Q_FOREACH ( const NotificationMessage &msg, msgs )
-    NotificationMessage::appendAndCompress( mNotifications, msg );
+  #warning Do we need compression with notifications v2?
+  /*
+  Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
+    NotificationMessageV2::appendAndCompress( mNotifications, msg );
+  */
+  mNotifications << msgs;
+
   if ( !mTimer.isActive() )
     mTimer.start();
 }
@@ -86,16 +93,33 @@ void NotificationManager::emitPendingNotifications()
 {
   if ( mNotifications.isEmpty() )
     return;
-  Q_FOREACH ( const NotificationMessage &msg, mNotifications ) {
+  Q_FOREACH ( const NotificationMessageV2 &msg, mNotifications ) {
     Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
   }
 
+  NotificationMessage::List legacyNotifications;
+  Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
+    qDebug() << notification.toString();
+    legacyNotifications << notification.toNotificationV1().toList();
+    Q_FOREACH ( const NotificationMessage &legacyNotification, legacyNotifications ) {
+      qDebug() << legacyNotification.toString();
+    }
+  }
+
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
-    src->emitNotification( mNotifications );
+    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() > 1 ) {
+      qDebug() << src->identifier() << " - emitting" << mNotifications.count() << "new notifications";
+      src->emitNotification( mNotifications );
+    } else {
+      qDebug() << src->identifier() << " - emitting" << legacyNotifications.count() << "legacy notifications";
+      src->emitNotification( legacyNotifications );
+    }
   }
 
   // backward compatibility with the old non-subcription interface
-  Q_EMIT notify( mNotifications );
+  // old clients will not support new notifications, so don't bother
+  qDebug() << "Emitting" << legacyNotifications.count() << "legacy non-subscription notifications";
+  Q_EMIT notify( legacyNotifications );
 
   mNotifications.clear();
 }

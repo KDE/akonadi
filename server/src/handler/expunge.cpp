@@ -61,21 +61,22 @@ bool Expunge::parseStream()
 
   if ( qb.exec() ) {
     const QVector<PimItem> items = qb.result();
-    Q_FOREACH ( const PimItem &item, items ) {
-      if ( store->cleanupPimItem( item ) ) {
+    if ( store->cleanupPimItems( items ) ) {
+      // FIXME: Change the protocol to EXPUNGE + list of removed ids
+      Q_FOREACH( const PimItem &item, items ) {
         response.setUntagged();
         // IMAP protocol violation: should actually be the sequence number
         response.setString( QByteArray::number( item.id() ) + " EXPUNGE" );
 
         Q_EMIT responseAvailable( response );
-      } else {
-        response.setTag( tag() );
-        response.setError();
-        response.setString( "internal error" );
-
-        Q_EMIT responseAvailable( response );
-        return true;
       }
+    } else {
+      response.setTag( tag() );
+      response.setError();
+      response.setString( "internal error" );
+
+      Q_EMIT responseAvailable( response );
+      return true;
     }
   } else {
     throw HandlerException( "Unable to execute query." );
