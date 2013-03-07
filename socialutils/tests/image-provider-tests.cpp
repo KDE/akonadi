@@ -24,7 +24,7 @@
 
 #include <QImage>
 
-#define IMAGE_URL "https://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png"
+#define IMAGE_URL "http://twimg0-a.akamaihd.net/profile_images/1171007559/79ac2ace-f87d-4dce-ac6c-825b6b12729d.png"
 
 void ImageProviderTests::setup()
 {
