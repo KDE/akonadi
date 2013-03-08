@@ -51,6 +51,7 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
     void reloadSearches();
     void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
     void hitsRemoved( const QList<Nepomuk::Query::Result>& entries );
+    void finishedListing();
 
   private:
     QMutex mMutex;
@@ -58,6 +59,8 @@ class NepomukSearchEngine : public QObject, public AbstractSearchEngine
 
     QHash<Nepomuk::Query::QueryServiceClient*, qint64> mQueryMap;
     QHash<qint64, Nepomuk::Query::QueryServiceClient*> mQueryInvMap;
+
+    bool m_liveSearchEnabled;
 };
 
 }
