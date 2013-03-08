@@ -21,7 +21,9 @@
 
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/transaction.h"
 #include "resourcemanager.h"
+#include "entities.h"
 
 #include <akdbus.h>
 #include <akdebug.h>
@@ -38,6 +40,7 @@
 #include <QtSql/QSqlError>
 #include <QtCore/QDir>
 #include <QtCore/qdiriterator.h>
+#include <QDateTime>
 
 #include <boost/bind.hpp>
 #include <algorithm>
@@ -57,7 +60,8 @@ void StorageJanitorThread::run()
 
 StorageJanitor::StorageJanitor(QObject* parent) :
   QObject(parent),
-  m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(staticMetaObject.className()) ) )
+  m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(staticMetaObject.className()) ) ),
+  m_lostFoundCollectionId(-1)
 {
   DataStore::self();
   m_connection.registerService( AkDBus::serviceName(AkDBus::StorageJanitor) );
@@ -75,6 +79,8 @@ StorageJanitor::~StorageJanitor()
 
 void StorageJanitor::check() // implementation of `akonadictl fsck`
 {
+  m_lostFoundCollectionId = -1; // start with a fresh one each time
+
   inform( "Looking for resources in the DB not matching a configured resource..." );
   findOrphanedResources();
 
@@ -110,6 +116,57 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
    */
 
   inform( "Consistency check done." );
+}
+
+qint64 StorageJanitor::lostAndFoundCollection()
+{
+  if (m_lostFoundCollectionId > 0)
+    return m_lostFoundCollectionId;
+
+  Transaction transaction(DataStore::self());
+  Resource lfRes = Resource::retrieveByName(QLatin1String("akonadi_lost+found_resource"));
+  if (!lfRes.isValid()) {
+    lfRes.setName(QLatin1String("akonadi_lost+found_resource"));
+    if (!lfRes.insert())
+      akFatal() << "Failed to create lost+found resource!";
+  }
+
+  Collection lfRoot;
+  SelectQueryBuilder<Collection> qb;
+  qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id());
+  qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
+  qb.exec();
+  const Collection::List cols = qb.result();
+  if (cols.size() > 1) {
+    akFatal() << "More than one top-level lost+found collection!?";
+  } else if (cols.size() == 1) {
+    lfRoot = cols.first();
+  } else {
+    lfRoot.setName(QLatin1String("lost+found"));
+    lfRoot.setResourceId(lfRes.id());
+    lfRoot.setCachePolicyLocalParts(QLatin1String("ALL"));
+    lfRoot.setCachePolicyCacheTimeout(-1);
+    lfRoot.setCachePolicyInherit(false);
+    if (!lfRoot.insert())
+      akFatal() << "Failed to create lost+found root.";
+    DataStore::self()->notificationCollector()->collectionAdded(lfRoot, lfRes.name().toUtf8());
+  }
+
+  Collection lfCol;
+  lfCol.setName(QDateTime::currentDateTime().toString(QLatin1String("yyyy-MM-dd hh:mm:ss")));
+  lfCol.setResourceId(lfRes.id());
+  lfCol.setParentId(lfRoot.id());
+  if (!lfCol.insert())
+    akFatal() << "Failed to create lost+found collection!";
+
+  Q_FOREACH (const MimeType &mt, MimeType::retrieveAll())
+    lfCol.addMimeType(mt);
+
+  DataStore::self()->notificationCollector()->collectionAdded(lfCol, lfRes.name().toUtf8());
+
+  transaction.commit();
+  m_lostFoundCollectionId = lfCol.id();
+  return m_lostFoundCollectionId;
 }
 
 void StorageJanitor::findOrphanedResources()

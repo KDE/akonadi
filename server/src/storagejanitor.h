@@ -61,6 +61,8 @@ class StorageJanitor : public QObject
   private:
     void inform( const char *msg );
     void inform( const QString &msg );
+    /** Create a lost+found collection if necessary. */
+    qint64 lostAndFoundCollection();
 
     /**
      * Look for resources in the DB not existing in reality.
@@ -105,6 +107,7 @@ class StorageJanitor : public QObject
 
   private:
     QDBusConnection m_connection;
+    qint64 m_lostFoundCollectionId;
 };
 
 #endif // STORAGEJANITOR_H
