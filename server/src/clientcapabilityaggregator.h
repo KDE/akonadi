@@ -34,6 +34,6 @@ namespace ClientCapabilityAggregator
 
   /** Minimum required notification message version. */
   int minimumNotificationMessageVersion();
-};
+}
 
 #endif // CLIENTCAPABILITYAGGREGATOR_H
