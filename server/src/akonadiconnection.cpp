@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
+ *   Copyright (C) 2013 by Volker Krause <vkrause@kde.org>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -14,13 +15,14 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 #include "akonadiconnection.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
 #include <QtCore/QLatin1String>
+#include <QSettings>
 
 #include "storage/datastore.h"
 #include "handler.h"
@@ -31,6 +33,8 @@
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
 #include "shared/akcrash.h"
+
+#include <akstandarddirs.h>
 
 #include <assert.h>
 
@@ -49,9 +53,13 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_backend( 0 )
     , m_selectedConnection( 0 )
     , m_streamParser( 0 )
+    , m_verifyCacheOnRetrieval(false)
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     ClientCapabilityAggregator::addSession(m_clientCapabilities);
+
+    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+    m_verifyCacheOnRetrieval = settings.value(QLatin1String("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -334,4 +342,9 @@ void AkonadiConnection::setCapabilities(const ClientCapabilities& capabilities)
   ClientCapabilityAggregator::removeSession(m_clientCapabilities);
   m_clientCapabilities = capabilities;
   ClientCapabilityAggregator::addSession(m_clientCapabilities);
+}
+
+bool AkonadiConnection::verifyCacheOnRetrieval() const
+{
+  return m_verifyCacheOnRetrieval;
 }

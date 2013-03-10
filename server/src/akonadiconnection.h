@@ -76,6 +76,9 @@ public:
     const ClientCapabilities& capabilities() const;
     void setCapabilities(const ClientCapabilities &capabilities);
 
+    /** Returns @c true if permanent cache verification is enabled. */
+    bool verifyCacheOnRetrieval() const;
+
 protected Q_SLOTS:
     void slotDisconnected();
     /**
@@ -109,6 +112,7 @@ private:
     ImapStreamParser *m_streamParser;
     Resource m_resourceContext;
     ClientCapabilities m_clientCapabilities;
+    bool m_verifyCacheOnRetrieval;
 };
 
 }
