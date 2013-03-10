@@ -226,7 +226,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   }
 
   Q_FOREACH( const PimItem &item, items ) {
-    msg.addEntity( item.id(), item.remoteId(), item.remoteRevision() );
+    msg.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
   }
 
   if ( !collection.isValid() ) {

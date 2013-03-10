@@ -255,6 +255,8 @@ QString NotificationMessage::toString() const
     rv += QLatin1String( "unspecified parent collection " );
   }
 
+  rv += QString::fromLatin1( "mimetype %1 " ).arg( mimeType().isEmpty() ? QLatin1String( "unknown" ) : mimeType() );
+
   switch ( operation() ) {
     case Add:
       rv += QLatin1String( "added" );

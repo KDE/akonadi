@@ -280,6 +280,9 @@ QString NotificationMessageV2::toString() const
     if ( !item.remoteRevision.isEmpty() ) {
       itemStr += QString::fromLatin1( ",%1" ).arg( item.remoteRevision );
     }
+    if ( !item.mimeType.isEmpty() ) {
+      itemStr += QString::fromLatin1( ",%1" ).arg( item.mimeType );
+    }
     itemStr += QLatin1String( ")" );
     items << itemStr.toLatin1();
   }
