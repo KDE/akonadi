@@ -38,6 +38,7 @@
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "xesamtypes.h"
+#include "response.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -79,6 +80,8 @@ AkonadiServer::AkonadiServer( QObject* parent )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
+    qRegisterMetaType<Akonadi::Response>();
+
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
