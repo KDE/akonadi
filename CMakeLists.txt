@@ -365,6 +365,7 @@ if(XSLTPROC_EXECUTABLE)
 endif()
 
 add_subdirectory(rds)
+add_subdirectory(asapcat)
 if (NOT QT5_BUILD)
   if(SQLITE_FOUND)
     option(SQLITE_LINK_STATIC "link libsqlite3 statically" FALSE)
