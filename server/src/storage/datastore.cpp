@@ -261,8 +261,8 @@ bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag
   // Delete all given flags from all given items in one go
   QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
   Query::Condition cond( Query::And );
-  cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::In, itemsIds );
-  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, flagsIds );
+  cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::In, flagsIds );
+  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, itemsIds );
   qb.addCondition( cond );
   if ( !qb.exec() ) {
     return false;
