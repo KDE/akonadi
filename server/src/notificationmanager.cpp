@@ -81,8 +81,6 @@ void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List 
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
     NotificationMessageV2::appendAndCompress( mNotifications, msg );
 
-  mNotifications << msgs;
-
   if ( !mTimer.isActive() )
     mTimer.start();
 }
