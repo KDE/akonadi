@@ -53,7 +53,6 @@ class NotificationMessageV2::Private: public QSharedData
       destResource = other.destResource;
       parentCollection = other.parentCollection;
       parentDestCollection = other.parentDestCollection;
-      mimeType = other.mimeType;
       parts = other.parts;
       addedFlags = other.addedFlags;
       removedFlags = other.removedFlags;
@@ -67,8 +66,7 @@ class NotificationMessageV2::Private: public QSharedData
           && resource == other.resource
           && destResource == other.destResource
           && parentCollection == other.parentCollection
-          && parentDestCollection == other.parentDestCollection
-          && mimeType == other.mimeType;
+          && parentDestCollection == other.parentDestCollection;
     }
 
     bool operator==( const Private &other ) const
@@ -82,12 +80,11 @@ class NotificationMessageV2::Private: public QSharedData
     QByteArray sessionId;
     NotificationMessageV2::Type type;
     NotificationMessageV2::Operation operation;
-    QVector<NotificationMessageV2::Item> items;
+    QMap<Id, NotificationMessageV2::Item> items;
     QByteArray resource;
     QByteArray destResource;
     Id parentCollection;
     Id parentDestCollection;
-    QString mimeType;
     QSet<QByteArray> parts;
     QSet<QByteArray> addedFlags;
     QSet<QByteArray> removedFlags;
@@ -128,24 +125,38 @@ void NotificationMessageV2::registerDBusTypes()
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::List>();
 }
 
-void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QString &remoteRevision )
+void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType )
 {
   NotificationMessageV2::Item item;
   item.id = id;
   item.remoteId = remoteId;
   item.remoteRevision = remoteRevision;
+  item.mimeType = mimeType;
 
-  d->items << item;
+  d->items.insert( id, item );
 }
 
-void NotificationMessageV2::setEntities( const QVector<NotificationMessageV2::Item> &entities )
+void NotificationMessageV2::setEntities( const QList<NotificationMessageV2::Item> &items )
 {
-  d->items = entities;
+  d->items.clear();
+  Q_FOREACH( const NotificationMessageV2::Item &item, items ) {
+    d->items.insert( item.id, item );
+  }
 }
 
-QVector<NotificationMessageV2::Item> NotificationMessageV2::entities() const
+QMap<NotificationMessageV2::Id, NotificationMessageV2::Item> NotificationMessageV2::entities() const
 {
   return d->items;
+}
+
+NotificationMessageV2::Item NotificationMessageV2::entity( NotificationMessageV2::Id id ) const
+{
+  return d->items.value( id );
+}
+
+QList<NotificationMessageV2::Id> NotificationMessageV2::uids() const
+{
+  return d->items.keys();
 }
 
 QByteArray NotificationMessageV2::sessionId() const
@@ -216,16 +227,6 @@ void NotificationMessageV2::setDestinationResource( const QByteArray &destResour
 QByteArray NotificationMessageV2::destinationResource() const
 {
   return d->destResource;
-}
-
-QString NotificationMessageV2::mimeType() const
-{
-  return d->mimeType;
-}
-
-void NotificationMessageV2::setMimeType( const QString &mimeType )
-{
-  d->mimeType = mimeType;
 }
 
 QSet<QByteArray> NotificationMessageV2::itemParts() const
@@ -351,12 +352,11 @@ QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessag
   arg << msg.sessionId();
   arg << static_cast<int>( msg.type() );
   arg << static_cast<int>( msg.operation() );
-  arg << msg.entities().toList();
+  arg << msg.entities().values();
   arg << msg.resource();
   arg << msg.destinationResource();
   arg << msg.parentCollection();
   arg << msg.parentDestCollection();
-  arg << msg.mimeType();
 
   QStringList itemParts;
   Q_FOREACH ( const QByteArray &itemPart, msg.itemParts() ) {
@@ -389,15 +389,13 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
   arg >> i;
   msg.setOperation( static_cast<NotificationMessageV2::Operation>( i ) );
   arg >> items;
-  msg.setEntities( items.toVector() );
+  msg.setEntities( items );
   arg >> ba;
   msg.setResource( ba );
   arg >> id;
   msg.setParentCollection( id );
   arg >> id;
   msg.setParentDestCollection( id );
-  arg >> str;
-  msg.setMimeType( str );
 
   arg >> strl;
 
@@ -422,6 +420,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessag
   arg << item.id;
   arg << item.remoteId;
   arg << item.remoteRevision;
+  arg << item.mimeType;
   arg.endStructure();
 
   return arg;
@@ -433,6 +432,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
   arg >> item.id;
   arg >> item.remoteId;
   arg >> item.remoteRevision;
+  arg >> item.mimeType;
   arg.endStructure();
 
   return arg;
@@ -457,6 +457,7 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
     msgv1.setSessionId( d->sessionId );
     msgv1.setUid( item.id );
     msgv1.setRemoteId( item.remoteId );
+    msgv1.setMimeType( item.mimeType );
     msgv1.setType( static_cast<NotificationMessage::Type>( d->type ) );
     if ( d->operation == ModifyFlags ) {
       msgv1.setOperation( NotificationMessage::Modify );
@@ -464,7 +465,6 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
       msgv1.setOperation( static_cast<NotificationMessage::Operation>( d->operation ) );
     }
 
-    msgv1.setMimeType( d->mimeType );
     msgv1.setResource( d->resource );
     msgv1.setDestinationResource( d->destResource );
     msgv1.setParentCollection( d->parentCollection );
@@ -475,6 +475,8 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
     if ( d->operation == Remove ) {
       QByteArray rr = item.remoteRevision.toLatin1();
       parts << (rr.isEmpty() ? "1" : rr);
+    } else if ( d->operation == ModifyFlags ) {
+      parts << "FLAGS";
     } else {
       parts = d->parts;
     }

@@ -35,7 +35,6 @@
 #include "libs/imapparser_p.h"
 #include "libs/protocol_p.h"
 #include "imapstreamparser.h"
-#include <build-overlay/server/entities.h>
 
 #include <QtCore/QStringList>
 #include <QLocale>

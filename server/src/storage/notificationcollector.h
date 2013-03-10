@@ -71,7 +71,6 @@ class NotificationCollector : public QObject
       that is missing will be looked up in the database later.
     */
     void itemAdded( const PimItem &item, const Collection &collection = Collection(),
-                    const QString &mimeType = QString(),
                     const QByteArray &resource = QByteArray() );
 
     /**
@@ -82,7 +81,6 @@ class NotificationCollector : public QObject
     void itemChanged( const PimItem &item,
                       const QSet<QByteArray> &changedParts,
                       const Collection &collection = Collection(),
-                      const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
     /**
@@ -94,7 +92,6 @@ class NotificationCollector : public QObject
                             const QSet<QByteArray> &addedFlags,
                             const QSet<QByteArray> &removedFlags,
                             const Collection &collection = Collection(),
-                            const QString &mimeType = QString(),
                             const QByteArray &resource = QByteArray() );
 
     /**
@@ -104,7 +101,6 @@ class NotificationCollector : public QObject
     */
     void itemsMoved( const PimItem::List &items, const Collection &collectionSrc = Collection(),
                      const Collection &collectionDest = Collection(),
-                     const QString &mimeType = QString(),
                      const QByteArray &sourceResource = QByteArray() );
 
     /**
@@ -113,7 +109,6 @@ class NotificationCollector : public QObject
       actually removing the item from database.
     */
     void itemsRemoved( const PimItem::List &items, const Collection &collection = Collection(),
-                       const QString &mimeType = QString(),
                        const QByteArray &resource = QByteArray() );
 
     /**
@@ -184,7 +179,6 @@ class NotificationCollector : public QObject
     void itemNotification( NotificationMessageV2::Operation op, const PimItem::List &items,
                            const Collection &collection,
                            const Collection &collectionDest,
-                           const QString &mimeType,
                            const QByteArray &resource,
                            const QSet<QByteArray> &parts = QSet<QByteArray>(),
                            const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
@@ -192,7 +186,6 @@ class NotificationCollector : public QObject
     void itemNotification( NotificationMessageV2::Operation op, const PimItem &item,
                            const Collection &collection,
                            const Collection &collectionDest,
-                           const QString &mimeType,
                            const QByteArray &resource,
                            const QSet<QByteArray> &parts = QSet<QByteArray>() );
     void collectionNotification( NotificationMessageV2::Operation op,

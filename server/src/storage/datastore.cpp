@@ -169,7 +169,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   // first delete all old flags of this pim item
   QSet<QByteArray> removedFlags;
   QSet<QByteArray> addedFlags;
-  QList<Entity::Id> ids;
+  QVariantList ids;
   QVariantList insIds;
   QVariantList insFlags;
 
@@ -203,7 +203,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
       insFlags << flag.id();
     }
 
-    addedFlags << flags[ i ].name().toLatin1();
+    addedFlags << flag.name().toLatin1();
   }
 
   QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
@@ -245,12 +245,12 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
 bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
 {
   QSet<QByteArray> removedFlags;
-  QList<Entity::Id> itemsIds;
-  QList<qint64> flagsIds;
+  QVariantList itemsIds;
+  QVariantList flagsIds;
   Q_FOREACH ( const PimItem &item, items ) {
     itemsIds << item.id();
     for ( int i = 0; i < flags.count(); ++i ) {
-      const QByteArray flagName = removed << flags[ i ].name().toLatin1();
+      const QByteArray flagName = flags[ i ].name().toLatin1();
       if ( !flagsIds.contains( flagName ) ) {
         flagsIds << flags[ i ].id();
         removedFlags << flagName;
@@ -337,7 +337,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 
   // generate the notification before actually removing the data
   // TODO: we should try to get rid of this, requires client side changes to resources and Monitor though
-  mNotificationCollector->itemsRemoved( items, collection, QString(), resource );
+  mNotificationCollector->itemsRemoved( items, collection, resource );
 
   // remove all external payload parts
   QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
@@ -370,7 +370,7 @@ bool DataStore::cleanupCollection_slow(Collection& collection)
   // delete the content
   const PimItem::List items = collection.items();
   const QByteArray resource = collection.resource().name().toLatin1();
-  mNotificationCollector->itemsRemoved( items, collection, QString(), resource );
+  mNotificationCollector->itemsRemoved( items, collection, resource );
 
   Q_FOREACH ( const PimItem &item, items ) {
     if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
@@ -639,7 +639,7 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
 
 //   akDebug() << "appendPimItem: " << pimItem;
 
-  mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
+  mNotificationCollector->itemAdded( pimItem, collection );
   return true;
 }
 

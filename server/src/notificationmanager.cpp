@@ -97,7 +97,7 @@ void NotificationManager::emitPendingNotifications()
 
   NotificationMessage::List legacyNotifications;
   Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
-    akDebug() << mNotification.toString();
+    akDebug() << notification.toString();
     const NotificationMessage::List tmp = notification.toNotificationV1().toList();
     Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
       akDebug() << "\t" << legacyNotification.toString();

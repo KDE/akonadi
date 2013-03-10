@@ -39,7 +39,7 @@ namespace Akonadi
 /**
   @internal
   Used for sending notification signals over DBus.
-  DBus type: (ayiia(xss)ayayxxsasaayaay)
+  DBus type: (ayiia(xsss)ayayxxasaayaay)
 */
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 {
@@ -75,13 +75,17 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
         {
         }
 
-        bool operator==( const Item &other ) {
-          return id == other.id && remoteId == other.remoteId && remoteRevision == other.remoteRevision;
+        bool operator==( const Item &other ) const {
+          return id == other.id
+              && remoteId == other.remoteId
+              && remoteRevision == other.remoteRevision
+              && mimeType == other.mimeType;
         }
 
         Id id;
         QString remoteId;
         QString remoteRevision;
+        QString mimeType;
     };
 
     NotificationMessageV2();
@@ -102,9 +106,11 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     QByteArray sessionId() const;
     void setSessionId( const QByteArray &session );
 
-    void addEntity( Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString() );
-    void setEntities( const QVector<NotificationMessageV2::Item> &entities );
-    QVector<NotificationMessageV2::Item> entities() const;
+    void addEntity( Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString(), const QString &mimeType = QString() );
+    void setEntities( const QList<NotificationMessageV2::Item> &items );
+    QMap<Id, NotificationMessageV2::Item> entities() const;
+    NotificationMessageV2::Item entity( Id id ) const;
+    QList<Id> uids() const;
 
     QByteArray resource() const;
     void setResource( const QByteArray &resource );
@@ -117,9 +123,6 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 
     QByteArray destinationResource() const;
     void setDestinationResource( const QByteArray &destResource );
-
-    QString mimeType() const;
-    void setMimeType( const QString &mimeType );
 
     QSet<QByteArray> itemParts() const;
     void setItemParts( const QSet<QByteArray> &parts );

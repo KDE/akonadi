@@ -47,58 +47,53 @@ Akonadi::NotificationCollector::~NotificationCollector()
 
 void Akonadi::NotificationCollector::itemAdded( const PimItem &item,
                                                 const Collection &collection,
-                                                const QString & mimeType,
                                                 const QByteArray & resource )
 {
-  itemNotification( NotificationMessageV2::Add, item, collection, Collection(), mimeType, resource );
+  itemNotification( NotificationMessageV2::Add, item, collection, Collection(), resource );
 }
 
 void Akonadi::NotificationCollector::itemChanged( const PimItem &item,
                                                   const QSet<QByteArray> &changedParts,
                                                   const Collection &collection,
-                                                  const QString & mimeType,
                                                   const QByteArray & resource )
 {
-  itemNotification( NotificationMessageV2::Modify, item, collection, Collection(), mimeType, resource, changedParts );
+  itemNotification( NotificationMessageV2::Modify, item, collection, Collection(), resource, changedParts );
 }
 
 void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &items,
                                                         const QSet< QByteArray > &addedFlags,
                                                         const QSet< QByteArray > &removedFlags,
                                                         const Collection &collection,
-                                                        const QString &mimeType,
                                                         const QByteArray &resource)
 {
-  itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), mimeType, resource, QSet<QByteArray>(), addedFlags, removedFlags );
+  itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
 
 
 void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
                                                  const Collection &collectionSrc,
                                                  const Collection &collectionDest,
-                                                 const QString &mimeType,
                                                  const QByteArray &sourceResource )
 {
-  itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, mimeType, sourceResource );
+  itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, sourceResource );
 }
 
 
 void Akonadi::NotificationCollector::itemsRemoved( const PimItem::List &items,
                                                    const Collection &collection,
-                                                   const QString & mimeType,
                                                    const QByteArray & resource )
 {
-  itemNotification( NotificationMessageV2::Remove, items, collection, Collection(), mimeType, resource );
+  itemNotification( NotificationMessageV2::Remove, items, collection, Collection(), resource );
 }
 
 void NotificationCollector::itemsLinked(const PimItem::List & items, const Collection & collection)
 {
-  itemNotification( NotificationMessageV2::Link, items, collection, Collection(), QString(), QByteArray() );
+  itemNotification( NotificationMessageV2::Link, items, collection, Collection(), QByteArray() );
 }
 
 void NotificationCollector::itemsUnlinked(const PimItem::List & items, const Collection & collection)
 {
-  itemNotification( NotificationMessageV2::Unlink, items, collection, Collection(), QString(), QByteArray() );
+  itemNotification( NotificationMessageV2::Unlink, items, collection, Collection(), QByteArray() );
 }
 
 void Akonadi::NotificationCollector::collectionAdded( const Collection &collection,
@@ -165,20 +160,18 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
                                               const PimItem & item,
                                               const Collection & collection,
                                               const Collection & collectionDest,
-                                              const QString & mimeType,
                                               const QByteArray & resource,
                                               const QSet<QByteArray> &parts )
 {
   PimItem::List items;
   items << item;
-  itemNotification( op, items, collection, collectionDest, mimeType, resource, parts );
+  itemNotification( op, items, collection, collectionDest, resource, parts );
 }
 
 void NotificationCollector::itemNotification( NotificationMessageV2::Operation op,
                                               const PimItem::List & items,
                                               const Collection & collection,
                                               const Collection & collectionDest,
-                                              const QString & mimeType,
                                               const QByteArray & resource,
                                               const QSet<QByteArray> &parts,
                                               const QSet<QByteArray> &addedFlags,
@@ -218,19 +211,13 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
 
   msg.setParentDestCollection( collectionDest.id() );
 
-  if ( mimeType.isEmpty() ) {
-    msg.setMimeType( items.first().mimeType().name() );
-  } else {
-    msg.setMimeType( mimeType );
-  }
-
   /* Notify all virtual collections the items are linked to. */
   Q_FOREACH( const Entity::Id &colId, vCollections.uniqueKeys() ) {
     qDebug() << "Notifying virtual collection" << colId;
     NotificationMessageV2 copy = msg;
 
     Q_FOREACH( const PimItem &item, vCollections.values( colId ) ) {
-      copy.addEntity( item.id(), item.remoteId(), item.remoteRevision() );
+      copy.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
     }
     copy.setParentCollection( colId );
     copy.setResource( resource );
