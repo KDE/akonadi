@@ -100,10 +100,17 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL(disconnected()),
              this, SLOT(slotDisconnected()), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 32]");
-
     m_streamParser = new ImapStreamParser( m_socket );
     m_streamParser->setTracerIdentifier( m_identifier );
+
+    Response greeting;
+    greeting.setUntagged();
+    greeting.setString("OK Akonadi Almost IMAP Server [PROTOCOL 32]");
+    // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
+    // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
+    // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
+    QMetaObject::invokeMethod(this, "slotResponseAvailable", Qt::DirectConnection, Q_ARG(Akonadi::Response, greeting));
+
     exec();
     delete m_socket;
     m_socket = 0;
