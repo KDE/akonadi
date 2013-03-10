@@ -82,7 +82,7 @@ protected Q_SLOTS:
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Response& );
+    void slotResponseAvailable( const Akonadi::Response& response );
     void slotConnectionStateChange( ConnectionState );
 
 protected:

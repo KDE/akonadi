@@ -38,8 +38,8 @@ bool Fetch::parseStream()
 
   FetchHelper fetchHelper( connection(), mScope );
   fetchHelper.setStreamParser( m_streamParser );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Response)),
-           this, SIGNAL(responseAvailable(Response)) );
+  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
+           this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
   if ( !fetchHelper.parseStream( "FETCH" ) )
     return false;

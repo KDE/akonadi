@@ -132,8 +132,8 @@ void AkonadiConnection::slotNewData()
       Tracer::self()->connectionInput( m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
-      connect( m_currentHandler, SIGNAL(responseAvailable(Response)),
-              this, SLOT(slotResponseAvailable(Response)), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Response)),
+              this, SLOT(slotResponseAvailable(Akonadi::Response)), Qt::DirectConnection );
       connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
               this, SLOT(slotConnectionStateChange(ConnectionState)),
                Qt::DirectConnection );
@@ -210,7 +210,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
     return handler;
 }
 
-void AkonadiConnection::slotResponseAvailable( const Response& response )
+void AkonadiConnection::slotResponseAvailable( const Akonadi::Response &response )
 {
     // FIXME handle reentrancy in the presence of continuation. Something like:
     // "if continuation pending, queue responses, once continuation is done, replay them"
