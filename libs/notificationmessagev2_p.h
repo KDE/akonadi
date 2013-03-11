@@ -31,10 +31,10 @@
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QVariant>
 #include <QtDBus/QDBusArgument>
+#include "notificationmessage_p.h"
 
 namespace Akonadi
 {
-  class NotificationMessage;
 
 /**
   @internal

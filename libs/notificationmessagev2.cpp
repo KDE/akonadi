@@ -395,6 +395,8 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
   msg.setEntities( items );
   arg >> ba;
   msg.setResource( ba );
+  arg >> ba;
+  msg.setDestinationResource( ba );
   arg >> id;
   msg.setParentCollection( id );
   arg >> id;
