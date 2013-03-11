@@ -73,7 +73,7 @@ void NotificationSource::emitNotification( const NotificationMessage::List &noti
 
 void NotificationSource::emitNotification( const NotificationMessageV2::List &notifications )
 {
-  Q_EMIT notify( notifications );
+  Q_EMIT notifyV2( notifications );
 }
 
 

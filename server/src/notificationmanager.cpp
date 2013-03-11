@@ -107,17 +107,20 @@ void NotificationManager::emitPendingNotifications()
     }
   }
 
+  akDebug() << "Emitting to" << mNotificationSources.count() << "subscribers";
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
-    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() > 1 ) {
-      src->emitNotification( mNotifications );
-    } else {
+    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
       src->emitNotification( legacyNotifications );
+    } else {
+      src->emitNotification( mNotifications );
     }
   }
 
   // backward compatibility with the old non-subcription interface
-  // old clients will not support new notifications, so don't bother
-  Q_EMIT notify( legacyNotifications );
+  // old clients will not support new notifications and new clients won't support
+  // non-subscription interface, so don't bother
+  if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 )
+    Q_EMIT notify( legacyNotifications );
 
   mNotifications.clear();
 }

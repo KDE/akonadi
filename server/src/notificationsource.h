@@ -98,7 +98,7 @@ class NotificationSource : public QObject
     Q_SIGNALS:
 
       Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
-      Q_SCRIPTABLE void notify( const Akonadi::NotificationMessageV2::List &msgs );
+      Q_SCRIPTABLE void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
 
     private Q_SLOTS:
       void serviceUnregistered( const QString &serviceName );
