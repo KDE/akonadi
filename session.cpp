@@ -195,7 +195,7 @@ void SessionPrivate::dataReceived()
       // handle login response
       if ( parser->tag() == QByteArray( "0" ) ) {
         if ( parser->data().startsWith( "OK" ) ) { //krazy:exclude=strings
-          writeData("1 CAPABILITY (NOTIFY 1)");
+          writeData("1 CAPABILITY (NOTIFY 2)");
         } else {
           kWarning() << "Unable to login to Akonadi server:" << parser->data();
           socket->close();

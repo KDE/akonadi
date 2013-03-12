@@ -334,6 +334,17 @@ class AKONADI_EXPORT Monitor : public QObject
     void itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers );
 
     /**
+     * This signal is emitted if flags of monitored items have changed.
+     *
+     * @param items Items that were changed
+     * @param addedFlags Flags that have been added to each item in @p items
+     * @param removedFlags Flags that have been removed from each item in @p items
+     * @since 4.11
+     */
+    void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
+                                                              const QSet<QByteArray> &removedFlags );
+
+    /**
      * This signal is emitted if a monitored item has been moved between two collections
      *
      * @param item The moved item.
@@ -342,6 +353,18 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void itemMoved( const Akonadi::Item &item, const Akonadi::Collection &collectionSource,
                                                const Akonadi::Collection &collectionDestination );
+
+    /**
+     * This is signal is emitted when multiple monitored items have been moved between two collections
+     *
+     * @param items Moved items
+     * @param collectionSource The collection the items have been moved from.
+     * @param collectionDestination The collection the items have been moved to.
+     *
+     * @since 4.11
+     */
+    void itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &collectionSource,
+                                                       const Akonadi::Collection &collectionDestination );
 
     /**
      * This signal is emitted if an item has been added to a monitored collection in the Akonadi storage.
@@ -362,6 +385,16 @@ class AKONADI_EXPORT Monitor : public QObject
     void itemRemoved( const Akonadi::Item &item );
 
     /**
+     * This signal is emitted if monitored items have been removed from Akonadi
+     * storage of items have been removed from a monitored collection.
+     *
+     * @param items Removed items
+     *
+     * @since 4.11
+     */
+    void itemsRemoved( const Akonadi::Item::List &items );
+
+    /**
      * This signal is emitted if a reference to an item is added to a virtual collection.
      * @param item The linked item.
      * @param collection The collection the item is linked to.
@@ -371,6 +404,16 @@ class AKONADI_EXPORT Monitor : public QObject
     void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
     /**
+     * This signal is emitted if a reference to multiple items is added to a virtual collection
+     *
+     * @param items The linked items
+     * @param collection The collections the items are linked to
+     *
+     * @since 4.11
+     */
+    void itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+
+    /**
      * This signal is emitted if a reference to an item is removed from a virtual collection.
      * @param item The unlinked item.
      * @param collection The collection the item is unlinked from.
@@ -378,6 +421,16 @@ class AKONADI_EXPORT Monitor : public QObject
      * @since 4.2
      */
     void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
+
+    /**
+     * This signal is emitted if a refernece to items is removed from a virtual collection
+     *
+     * @param items The unlinked items
+     * @param collection The collections the items are unlinked from
+     *
+     * @since 4.11
+     */
+    void itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
 
     /**
      * This signal is emitted if a new collection has been added to a monitored collection in the Akonadi storage.
@@ -513,7 +566,7 @@ class AKONADI_EXPORT Monitor : public QObject
     Q_PRIVATE_SLOT( d_ptr, void slotSessionDestroyed( QObject* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotStatisticsChangedFinished( KJob* ) )
     Q_PRIVATE_SLOT( d_ptr, void slotFlushRecentlyChangedCollections() )
-    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessage::List& ) )
+    Q_PRIVATE_SLOT( d_ptr, void slotNotify( const Akonadi::NotificationMessageV2::List& ) )
     Q_PRIVATE_SLOT( d_ptr, void dataAvailable() )
     Q_PRIVATE_SLOT( d_ptr, void serverStateChanged( Akonadi::ServerManager::State ) )
     Q_PRIVATE_SLOT( d_ptr, void invalidateCollectionCache( qint64 ) )

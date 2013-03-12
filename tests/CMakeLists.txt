@@ -108,11 +108,11 @@ endmacro()
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
 
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 kde4_add_library(akonaditestfake STATIC

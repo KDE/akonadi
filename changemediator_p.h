@@ -25,8 +25,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QSet>
 
-#include "notificationmessage_p.h"
-#include "objectnotificationmessage.h"
+#include <akonadi/item.h>
+#include <akonadi/private/notificationmessagev2_p.h>
 
 namespace Akonadi
 {
@@ -57,7 +57,7 @@ public:
   static void itemsMoved(const Item::List &items, const Collection &sourceParent, const QByteArray &id );
 
 Q_SIGNALS:
-  void notify(const QVector<Akonadi::ObjectNotificationMessage> &messages);
+  void notify(const QVector<Akonadi::NotificationMessageV2> &messages);
 
 private Q_SLOTS:
   void init();
@@ -68,7 +68,7 @@ private Q_SLOTS:
   void do_invalidateCollection( const Akonadi::Collection &collection );
   void do_invalidateItem( const Akonadi::Item &item );
 
-  void processAkonadiNotifications(const Akonadi::NotificationMessage::List &messages);
+  void processAkonadiNotifications(const Akonadi::NotificationMessageV2::List &messages);
 
   void do_registerSession( const QByteArray &id );
   void do_unregisterSession( const QByteArray &id );
@@ -79,7 +79,7 @@ private:
   QList<QObject*> m_monitors;
 
   QObject *m_notificationSource;
-  QVector<Akonadi::ObjectNotificationMessage> messageQueue;
+  QVector<Akonadi::NotificationMessageV2> messageQueue;
   QVector<Akonadi::Job*> unfilteredJobs;
 
   QSet<QByteArray> m_sessions;

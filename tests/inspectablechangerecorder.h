@@ -35,7 +35,7 @@ public:
   InspectableChangeRecorderPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableChangeRecorder* parent);
   ~InspectableChangeRecorderPrivate() {}
 
-  virtual bool emitNotification( const Akonadi::NotificationMessage& msg )
+  virtual bool emitNotification( const Akonadi::NotificationMessageV2& msg )
   {
     // TODO: Check/Log
     return Akonadi::ChangeRecorderPrivate::emitNotification(msg);
@@ -52,8 +52,8 @@ public:
     return qobject_cast<FakeNotificationSource*>(d_ptr->notificationSource);
   }
 
-  QQueue<Akonadi::NotificationMessage> pendingNotifications() const { return d_ptr->pendingNotifications; }
-  QQueue<Akonadi::NotificationMessage> pipeline() const { return d_ptr->pipeline; }
+  QQueue<Akonadi::NotificationMessageV2> pendingNotifications() const { return d_ptr->pendingNotifications; }
+  QQueue<Akonadi::NotificationMessageV2> pipeline() const { return d_ptr->pipeline; }
 
 signals:
   void dummySignal();

@@ -18,6 +18,8 @@
 */
 
 #include "changerecorder_p.h"
+#include <boost/graph/graph_concepts.hpp>
+#include <qvarlengtharray.h>
 using namespace Akonadi;
 
 ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
@@ -38,7 +40,7 @@ int ChangeRecorderPrivate::pipelineSize() const
   return MonitorPrivate::pipelineSize();
 }
 
-void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessage::List &msgs)
+void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
 {
   Q_Q( ChangeRecorder );
   const int oldChanges = pendingNotifications.size();
@@ -49,7 +51,7 @@ void ChangeRecorderPrivate::slotNotify(const Akonadi::NotificationMessage::List 
   }
 }
 
-bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessage &msg)
+bool ChangeRecorderPrivate::emitNotification(const Akonadi::NotificationMessageV2 &msg)
 {
   const bool someoneWasListening = MonitorPrivate::emitNotification( msg );
   if ( !someoneWasListening && enableChangeRecording )
@@ -85,16 +87,17 @@ void ChangeRecorderPrivate::loadNotifications()
 
       for ( int i = 0; i < size; ++i ) {
         settings->setArrayIndex( i );
-        NotificationMessage msg;
+        NotificationMessageV2 msg;
         msg.setSessionId( settings->value( QLatin1String( "sessionId" ) ).toByteArray() );
-        msg.setType( (NotificationMessage::Type)settings->value( QLatin1String( "type" ) ).toInt() );
-        msg.setOperation( (NotificationMessage::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
-        msg.setUid( settings->value( QLatin1String( "uid" ) ).toLongLong() );
-        msg.setRemoteId( settings->value( QLatin1String( "rid" ) ).toString() );
+        msg.setType( (NotificationMessageV2::Type)settings->value( QLatin1String( "type" ) ).toInt() );
+        msg.setOperation( (NotificationMessageV2::Operation)settings->value( QLatin1String( "op" ) ).toInt() );
+        msg.addEntity( settings->value( QLatin1String( "uid" ) ).toLongLong(),
+                       settings->value( QLatin1String( "rid" ) ).toString(),
+                       QString(),
+                       settings->value( QLatin1String( "mimeType" ) ).toString() );
         msg.setResource( settings->value( QLatin1String( "resource" ) ).toByteArray() );
         msg.setParentCollection( settings->value( QLatin1String( "parentCol" ) ).toLongLong() );
         msg.setParentDestCollection( settings->value( QLatin1String( "parentDestCol" ) ).toLongLong() );
-        msg.setMimeType( settings->value( QLatin1String( "mimeType" ) ).toString() );
         list = settings->value( QLatin1String( "itemParts" ) ).toStringList();
         QSet<QByteArray> itemParts;
         Q_FOREACH( const QString &entry, list )
@@ -125,22 +128,22 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000100000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000200000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
+QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 {
   QDataStream stream( device );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  QByteArray sessionId, resource;
-  int type, operation;
+  QByteArray sessionId, resource, destinationResource;
+  int type, operation, entityCnt;
   quint64 uid, parentCollection, parentDestCollection;
-  QString remoteId, mimeType;
-  QSet<QByteArray> itemParts;
+  QString remoteId, mimeType, remoteRevision;
+  QSet<QByteArray> itemParts, addedFlags, removedFlags;
 
-  QQueue<NotificationMessage> list;
+  QQueue<NotificationMessageV2> list;
 
   quint64 sizeAndVersion;
   stream >> sizeAndVersion;
@@ -158,34 +161,74 @@ QQueue<NotificationMessage> ChangeRecorderPrivate::loadFrom(QIODevice *device)
   m_needFullSave = startOffset > 0 || version == 0;
 
   for ( quint64 i = 0; i < size && !stream.atEnd(); ++i ) {
-    NotificationMessage msg;
+    NotificationMessageV2 msg;
 
-    stream >> sessionId;
-    stream >> type;
-    stream >> operation;
-    stream >> uid;
-    stream >> remoteId;
-    stream >> resource;
-    stream >> parentCollection;
-    stream >> parentDestCollection;
-    stream >> mimeType;
-    stream >> itemParts;
+    if ( version == 1 ) {
+      stream >> sessionId;
+      stream >> type;
+      stream >> operation;
+      stream >> uid;
+      stream >> remoteId;
+      stream >> resource;
+      stream >> parentCollection;
+      stream >> parentDestCollection;
+      stream >> mimeType;
+      stream >> itemParts;
 
-    if ( i < startOffset )
-      continue;
+      if ( i < startOffset )
+        continue;
 
-    msg.setSessionId( sessionId );
-    msg.setType( static_cast<NotificationMessage::Type>( type ) );
-    msg.setOperation( static_cast<NotificationMessage::Operation>( operation ) );
-    msg.setUid( uid );
-    msg.setRemoteId( remoteId );
-    msg.setResource( resource );
-    msg.setParentCollection( parentCollection );
-    msg.setParentDestCollection( parentDestCollection );
-    msg.setMimeType( mimeType );
-    msg.setItemParts( itemParts );
-    list << msg;
+      msg.setSessionId( sessionId );
+      msg.setType( static_cast<NotificationMessageV2::Type>( type ) );
+      msg.setOperation( static_cast<NotificationMessageV2::Operation>( operation ) );
+      msg.addEntity( uid, remoteId, QString(), mimeType );
+      msg.setResource( resource );
+      msg.setParentCollection( parentCollection );
+      msg.setParentDestCollection( parentDestCollection );
+      msg.setItemParts( itemParts );
+
+    } else if ( version == 2 ) {
+
+      NotificationMessageV2 msg;
+
+
+      stream >> sessionId;
+      stream >> type;
+      stream >> operation;
+      stream >> entityCnt;
+      for ( int j = 0; j < entityCnt; ++j ) {
+        stream >> uid;
+        stream >> remoteId;
+        stream >> remoteRevision;
+        stream >> mimeType;
+        msg.addEntity( uid, remoteId, remoteRevision, mimeType );
+      }
+      stream >> resource;
+      stream >> destinationResource;
+      stream >> parentCollection;
+      stream >> parentDestCollection;
+      stream >> itemParts;
+      stream >> addedFlags;
+      stream >> removedFlags;
+
+      if ( i < startOffset )
+        continue;
+
+      msg.setSessionId( sessionId );
+      msg.setType( static_cast<NotificationMessageV2::Type>( type ) );
+      msg.setOperation( static_cast<NotificationMessageV2::Operation>( operation ) );
+      msg.setResource( resource );
+      msg.setDestinationResource( destinationResource );
+      msg.setParentCollection( parentCollection );
+      msg.setParentDestCollection( parentDestCollection );
+      msg.setItemParts( itemParts );
+      msg.setAddedFlags( addedFlags );
+      msg.setRemovedFlags( removedFlags );
+
+      list << msg;
+    }
   }
+
   return list;
 }
 
@@ -202,11 +245,12 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   QDataStream stream( &file );
   stream.setVersion( QDataStream::Qt_4_6 );
 
-  QByteArray sessionId, resource;
-  int type, operation;
-  quint64 uid, parentCollection, parentDestCollection;
-  QString remoteId, mimeType;
-  QSet<QByteArray> itemParts;
+  QByteArray sessionId, resource, destResource;
+  int type, operation, entityCnt;
+  quint64 parentCollection, parentDestCollection;
+  QString remoteId, remoteRevision, mimeType;
+  QSet<QByteArray> itemParts, addedFlags, removedFlags;
+  QVariantList items;
 
   QStringList list;
 
@@ -225,24 +269,33 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     stream >> sessionId;
     stream >> type;
     stream >> operation;
-    stream >> uid;
-    stream >> remoteId;
+    stream >> entityCnt;
+    for ( int j = 0; j < entityCnt; ++j ) {
+      QVariantMap map;
+      stream >> map[ QLatin1String( "uid" ) ];
+      stream >> map[ QLatin1String( "remoteId" ) ];
+      stream >> map[ QLatin1String( "remoteRevision" ) ];
+      stream >> map[ QLatin1String( "mimeType" ) ];
+      items << map;
+    }
     stream >> resource;
+    stream >> destResource;
     stream >> parentCollection;
     stream >> parentDestCollection;
-    stream >> mimeType;
     stream >> itemParts;
+    stream >> addedFlags;
+    stream >> removedFlags;
 
     if ( i < startOffset )
         continue;
 
     QString typeString;
     switch ( type ) {
-    case NotificationMessage::Collection:
-      typeString = QLatin1String( "Collection" );
+    case NotificationMessageV2::Collections:
+      typeString = QLatin1String( "Collections" );
       break;
-    case NotificationMessage::Item:
-      typeString = QLatin1String( "Item" );
+    case NotificationMessageV2::Items:
+      typeString = QLatin1String( "Items" );
       break;
     default:
       typeString = QLatin1String( "InvalidType" );
@@ -251,28 +304,31 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
 
     QString operationString;
     switch ( operation ) {
-    case NotificationMessage::Add:
+    case NotificationMessageV2::Add:
       operationString = QLatin1String( "Add" );
       break;
-    case NotificationMessage::Modify:
+    case NotificationMessageV2::Modify:
       operationString = QLatin1String( "Modify" );
       break;
-    case NotificationMessage::Move:
+    case NotificationMessageV2::ModifyFlags:
+      operationString = QLatin1String( "ModifyFlags" );
+      break;
+    case NotificationMessageV2::Move:
       operationString = QLatin1String( "Move" );
       break;
-    case NotificationMessage::Remove:
+    case NotificationMessageV2::Remove:
       operationString = QLatin1String( "Remove" );
       break;
-    case NotificationMessage::Link:
+    case NotificationMessageV2::Link:
       operationString = QLatin1String( "Link" );
       break;
-    case NotificationMessage::Unlink:
+    case NotificationMessageV2::Unlink:
       operationString = QLatin1String( "Unlink" );
       break;
-    case NotificationMessage::Subscribe:
+    case NotificationMessageV2::Subscribe:
       operationString = QLatin1String( "Subscribe" );
       break;
-    case NotificationMessage::Unsubscribe:
+    case NotificationMessageV2::Unsubscribe:
       operationString = QLatin1String( "Unsubscribe" );
       break;
     default:
@@ -280,21 +336,26 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
       break;
     };
 
-    QStringList itemPartsList;
+    QStringList itemPartsList, addedFlagsList, removedFlagsList;
     foreach( const QByteArray &b, itemParts )
       itemPartsList.push_back( QString::fromLatin1(b) );
+    foreach( const QByteArray &b, addedFlags )
+      addedFlagsList.push_back( QString::fromLatin1(b) );
+    foreach( const QByteArray &b, removedFlags )
+      removedFlagsList.push_back( QString::fromLatin1(b) );
 
-    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 uid=%4 remoteId=%5 resource=%6 parentCollection=%7 parentDestCollection=%8 mimeType=%9 itemParts=%10")
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 esource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11")
                           .arg( QString::fromLatin1( sessionId ) )
                           .arg( typeString )
                           .arg( operationString )
-                          .arg( uid )
-                          .arg( remoteId )
+                          .arg( QVariant(items).toString() )
                           .arg( QString::fromLatin1( resource ) )
+                          .arg( QString::fromLatin1( destResource ) )
                           .arg( parentCollection )
                           .arg( parentDestCollection )
-                          .arg( mimeType )
-                          .arg( itemPartsList.join(QLatin1String(", " )) );
+                          .arg( itemPartsList.join(QLatin1String(", " )) )
+                          .arg( addedFlagsList.join(QLatin1String( ", " )) )
+                          .arg( removedFlagsList.join(QLatin1String( ", " )) );
 
     result += entry + QLatin1Char('\n');
   }
@@ -302,18 +363,25 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
   return result;
 }
 
-void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessage &msg)
+void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationMessageV2 &msg)
 {
   stream << msg.sessionId();
   stream << int(msg.type());
   stream << int(msg.operation());
-  stream << quint64(msg.uid());
-  stream << msg.remoteId();
+  stream << msg.entities().count();
+  Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
+    stream << quint64(item.id);
+    stream << item.remoteId;
+    stream << item.remoteRevision;
+    stream << item.mimeType;
+  }
   stream << msg.resource();
+  stream << msg.destinationResource();
   stream << quint64(msg.parentCollection());
   stream << quint64(msg.parentDestCollection());
-  stream << msg.mimeType();
   stream << msg.itemParts();
+  stream << msg.addedFlags();
+  stream << msg.removedFlags();
 }
 
 void ChangeRecorderPrivate::writeStartOffset()
@@ -375,7 +443,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
   //kDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
   for ( int i = 0; i < pendingNotifications.count(); ++i ) {
-    const NotificationMessage msg = pendingNotifications.at( i );
+    const NotificationMessageV2 msg = pendingNotifications.at( i );
     addToStream( stream, msg );
   }
 }

@@ -42,15 +42,15 @@ class AKONADI_TESTS_EXPORT ChangeRecorderPrivate : public Akonadi::MonitorPrivat
     virtual void notificationsEnqueued( int count );
     virtual void notificationsErased();
 
-    virtual void slotNotify( const NotificationMessage::List &msgs );
-    virtual bool emitNotification(const Akonadi::NotificationMessage& msg);
+    virtual void slotNotify( const NotificationMessageV2::List &msgs );
+    virtual bool emitNotification(const Akonadi::NotificationMessageV2& msg);
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<NotificationMessage> loadFrom( QIODevice *device );
+    QQueue<NotificationMessageV2> loadFrom( QIODevice *device );
     QString dumpNotificationListToString() const;
-    void addToStream( QDataStream &stream, const NotificationMessage &msg );
+    void addToStream( QDataStream &stream, const NotificationMessageV2 &msg );
     void saveNotifications();
     void saveTo( QIODevice *device );
 private:

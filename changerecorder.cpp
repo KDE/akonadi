@@ -61,7 +61,7 @@ void ChangeRecorder::replayNext()
     return;
 
   if ( !d->pendingNotifications.isEmpty() ) {
-    const NotificationMessage msg = d->pendingNotifications.head();
+    const NotificationMessageV2 msg = d->pendingNotifications.head();
     if ( d->ensureDataAvailable( msg ) ) {
       d->emitNotification( msg );
     } else if ( d->translateAndCompress( d->pipeline, msg ) ) {

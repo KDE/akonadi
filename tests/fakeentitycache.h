@@ -80,10 +80,10 @@ public:
 
   }
 
-  void emitNotify(const Akonadi::NotificationMessage::List &msgs ) { notify(msgs); }
+  void emitNotify(const Akonadi::NotificationMessageV2::List &msgs ) { notifyV2(msgs); }
 
 signals:
-  void notify( const Akonadi::NotificationMessage::List &msgs );
+  void notifyV2( const Akonadi::NotificationMessageV2::List &msgs );
 };
 
 class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory

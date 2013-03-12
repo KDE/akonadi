@@ -25,6 +25,7 @@
 #define AKONADI_AGENTBASE_H
 
 #include "akonadi_export.h"
+#include <akonadi/item.h>
 
 #include <KDE/KApplication>
 
@@ -293,6 +294,57 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
          * @param changedAttributes The identifiers of the collection parts/attributes that has been changed.
          */
         virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );
+    };
+
+    /**
+     * BC extension of ObserverV2 with support for batch operations
+     *
+     * @since 4.11
+     */
+    class AKONADI_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
+    {
+      public:
+        /**
+         * Reimplement to handle changes in flags of existing items
+         *
+         * @param item The changed item.
+         * @param addedFlags Flags that have been added to the item
+         * @param removedFlags Flags that have been removed from the item
+         */
+        virtual void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags );
+
+        /**
+         * Reimplement to handle batch notification about items deletion.
+         *
+         * @param items List of deleted items
+         */
+        virtual void itemsRemoved( const Akonadi::Item::List &items );
+
+        /**
+         * Reimplement to handle batch notification about items move
+         *
+         * @param items List of moved items
+         * @param sourceCollection Collection from where the items were moved
+         * @param destinationCollection Collection to which the items were moved
+         */
+        virtual void itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &sourceCollection,
+                                 const Akonadi::Collection &destinationCollection );
+
+        /**
+         * Reimplement to handle batch notifications about items linking.
+         *
+         * @param items Linked items
+         * @param collection Collection to which the items have been linked
+         */
+        virtual void itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+
+        /**
+         * Reimplement to handle batch notifications about items unlinking.
+         *
+         * @param items Unlinked items
+         * @param collection Collection from which the items have been unlinked
+         */
+        virtual void itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
     };
 
     /**

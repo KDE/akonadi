@@ -169,6 +169,72 @@ void AgentBase::ObserverV2::collectionChanged( const Akonadi::Collection &collec
   collectionChanged( collection );
 }
 
+void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List& items, const QSet< QByteArray >& addedFlags, const QSet< QByteArray >& removedFlags)
+{
+  Q_UNUSED( items );
+  Q_UNUSED( addedFlags );
+  Q_UNUSED( removedFlags );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
+                         sAgentBase->d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV3::itemsMoved(const Akonadi::Item::List& items, const Collection& sourceCollection, const Collection& destinationCollection)
+{
+  Q_UNUSED( items );
+  Q_UNUSED( sourceCollection );
+  Q_UNUSED( destinationCollection );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
+                         sAgentBase->d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV3::itemsRemoved(const Akonadi::Item::List& items)
+{
+  Q_UNUSED( items );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsRemoved(Akonadi::Item::List)),
+                         sAgentBase->d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV3::itemsLinked(const Akonadi::Item::List& items, const Collection& collection)
+{
+  Q_UNUSED( items );
+  Q_UNUSED( collection );
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
+                         sAgentBase->d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
+void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List& items, const Collection& collection)
+{
+  Q_UNUSED( items );
+  Q_UNUSED( collection )
+
+  if ( sAgentBase != 0 ) {
+    // not implementation, let's disconnect the signal to enable optimizations in Monitor
+    QObject::disconnect( sAgentBase->changeRecorder(), SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
+                         sAgentBase->d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
+    sAgentBase->d_ptr->changeProcessed();
+  }
+}
+
 //@cond PRIVATE
 
 AgentBasePrivate::AgentBasePrivate( AgentBase *parent )
@@ -255,6 +321,16 @@ void AgentBasePrivate::init()
            SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
            SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
+           SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+  connect( mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
+           SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
+           SLOT(itemsRemoved(Akonadi::Item::List)) );
+  connect( mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
+           SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
+  connect( mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
+           SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection)),
            SLOT(collectionChanged(Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
@@ -386,6 +462,70 @@ void AgentBasePrivate::itemUnlinked( const Akonadi::Item &item, const Akonadi::C
   AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2*>( mObserver );
   if ( observer2 ) {
     observer2->itemUnlinked( item, collection );
+  } else {
+    changeProcessed();
+  }
+}
+
+void AgentBasePrivate::itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags )
+{
+  AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
+  if ( observer3 ) {
+    observer3->itemsFlagsChanged( items, addedFlags, removedFlags );
+  } else {
+    Q_FOREACH( const Item &item, items ) {
+      itemChanged( item, QSet<QByteArray>() << "FLAGS" );
+    }
+  }
+}
+
+void AgentBasePrivate::itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &source, const Akonadi::Collection &destination )
+{
+  AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
+  if ( observer3 ) {
+    observer3->itemsMoved( items, source, destination );
+  } else {
+    Q_FOREACH( const Item &item, items ) {
+      itemMoved( item, source, destination );
+    }
+  }
+}
+
+void AgentBasePrivate::itemsRemoved( const Akonadi::Item::List &items )
+{
+  AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
+  if ( observer3 ) {
+    observer3->itemsRemoved( items );
+  } else {
+    Q_FOREACH( const Item &item, items ) {
+      itemRemoved( item );
+    }
+  }
+}
+
+void AgentBasePrivate::itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection )
+{
+  AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
+  if ( observer3 ) {
+    observer3->itemsLinked( items, collection );
+  } else if ( dynamic_cast<AgentBase::ObserverV2*>( mObserver ) != 0 ) {
+    Q_FOREACH( const Item &item, items ) {
+      itemLinked( item, collection );
+    }
+  } else {
+    changeProcessed();
+  }
+}
+
+void AgentBasePrivate::itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection )
+{
+  AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
+  if ( observer3 ) {
+    observer3->itemsUnlinked( items, collection );
+  } else if ( dynamic_cast<AgentBase::ObserverV2*>( mObserver ) != 0 ) {
+    Q_FOREACH( const Item &item, items ) {
+      itemUnlinked( item, collection );
+    }
   } else {
     changeProcessed();
   }
