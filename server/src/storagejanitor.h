@@ -91,6 +91,11 @@ class StorageJanitor : public QObject
     void findOrphanedParts();
 
     /**
+     * Look for item flags belonging to non-existing items.
+     */
+    void findOrphanedPimItemFlags();
+
+    /**
      * Look for parts referring to the same external file.
      */
     void findOverlappingParts();

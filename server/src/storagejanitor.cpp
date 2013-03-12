@@ -19,6 +19,8 @@
 
 #include "storagejanitor.h"
 
+#include "storage/queryhelper.h"
+#include "storage/transaction.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
@@ -96,6 +98,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
   inform( "Looking for item parts not belonging to a valid item..." );
   findOrphanedParts();
+
+  inform( "Looking for item flags not belonging to a valid item..." );
+  findOrphanedPimItemFlags();
 
   inform( "Looking for overlapping external parts..." );
   findOverlappingParts();
@@ -246,12 +251,26 @@ void StorageJanitor::findOrphanedItems()
   SelectQueryBuilder<PimItem> qb;
   qb.addJoin( QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName() );
   qb.addValueCondition( Collection::idFullColumnName(), Query::Is, QVariant() );
-
   qb.exec();
   const PimItem::List orphans = qb.result();
   if ( orphans.size() > 0 ) {
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
-    // TODO: attach to lost+found collection
+    // Attach to lost+found collection
+    Transaction transaction(DataStore::self());
+    QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
+    qint64 col = lostAndFoundCollection();
+    qb.setColumnValue(PimItem::collectionIdFullColumnName(), col);
+    QVector<ImapSet::Id> imapIds;
+    Q_FOREACH(const PimItem& item, orphans) {
+      imapIds.append(item.id());
+    }
+    ImapSet set;
+    set.add(imapIds);
+    QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
+    if (qb.exec() && transaction.commit())
+      inform(QLatin1Literal("Moved orphan items to collection ") + QString::number(col));
+    else
+      inform(QLatin1Literal("Error moving orphan items to collection ") + QString::number(col) + QLatin1Literal(" : ") + qb.query().lastError().text());
   }
 }
 
@@ -266,6 +285,37 @@ void StorageJanitor::findOrphanedParts()
   if ( orphans.size() > 0 ) {
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan parts." ) );
     // TODO: create lost+found items for those? delete?
+  }
+}
+
+void StorageJanitor::findOrphanedPimItemFlags()
+{
+  QueryBuilder sqb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
+  sqb.addColumn(PimItemFlagRelation::leftFullColumnName());
+  sqb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName());
+  sqb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
+  if (!sqb.exec()) {
+      akError() << "Error:" << sqb.query().lastError().text();
+      return;
+  }
+  QVector<ImapSet::Id> imapIds;
+  int count = 0;
+  while (sqb.query().next()) {
+    ++count;
+    imapIds.append(sqb.query().value(0).toInt());
+  }
+
+  if (count > 0) {
+    ImapSet set;
+    set.add(imapIds);
+    QueryBuilder qb(PimItemFlagRelation::tableName(), QueryBuilder::Delete);
+    QueryHelper::setToQuery(set, PimItemFlagRelation::leftFullColumnName(), qb);
+    if (!qb.exec()) {
+      akError() << "Error:" << qb.query().lastError().text();
+      return;
+    }
+
+    inform(QLatin1Literal("Found and deleted ") + QString::number(count) + QLatin1Literal(" orphan pim item flags."));
   }
 }
 
