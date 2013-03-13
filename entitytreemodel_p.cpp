@@ -1072,7 +1072,11 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
   node->id = item.id();
   node->parent = collection.id();
   node->type = Node::Item;
-  m_childEntities[ collection.id() ].append( node );
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) {
+    m_childEntities[ collection.id() ].append( node );
+  } else {
+    m_childEntities[ m_rootCollection.id() ].append( node );
+  }
   q->endInsertRows();
 }
 
