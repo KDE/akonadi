@@ -437,7 +437,7 @@ class StandardActionManager::Private
       if ( !favoritesModel )
         return false;
 
-      return favoritesModel->collections().contains( collection );
+      return favoritesModel->collectionIds().contains( collection.id() );
     }
 
     void encodeToClipboard( QItemSelectionModel* selectionModel, bool cut = false )
