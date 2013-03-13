@@ -279,10 +279,6 @@ void NotificationCollector::dispatchNotification(const NotificationMessageV2 & m
     l << msg;
     Q_EMIT notify( l );
   }
-
-  NotificationMessageV2::List l;
-  l << msg;
-  Q_EMIT notify( l );
 }
 
 void NotificationCollector::dispatchNotifications()
