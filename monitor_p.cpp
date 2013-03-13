@@ -116,11 +116,11 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg ) const
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
-    || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item)) ) == 0 )
+    || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
     || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Unlink && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
@@ -521,44 +521,47 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
 
   QMap<NotificationMessageV2::Id,NotificationMessageV2::Item> msgItems = msg.entities();
   Item::List its = items;
-  Item::List::Iterator iter = its.begin();
-  for ( ; iter != its.end(); ++iter ) {
-    if ( iter->isValid() ) {
-      NotificationMessageV2::Item msgItem = msgItems[ iter->id() ];
+  QMutableListIterator<Item> iter( its );
+  while ( iter.hasNext() ) {
+    Item it = iter.next();
+    if ( it.isValid() ) {
+      NotificationMessageV2::Item msgItem = msgItems[ it.id() ];
       if ( msg.operation() == NotificationMessageV2::Remove ) {
-        iter->setRemoteId( msgItem.remoteId );
-        iter->setRemoteRevision( msgItem.remoteRevision );
-        iter->setMimeType( msgItem.mimeType );
+        it.setRemoteId( msgItem.remoteId );
+        it.setRemoteRevision( msgItem.remoteRevision );
+        it.setMimeType( msgItem.mimeType );
       }
 
-      if ( !iter->parentCollection().isValid() ) {
+      if ( !it.parentCollection().isValid() ) {
         if ( msg.operation() == NotificationMessageV2::Move ) {
-          iter->setParentCollection( colDest );
+          it.setParentCollection( colDest );
         } else {
-          iter->setParentCollection( col );
+          it.setParentCollection( col );
         }
       } else {
         // item has a valid parent collection, most likely due to retrieved ancestors
         // still, collection might contain extra info, so inject that
-        if ( iter->parentCollection() == col ) {
-          const Collection oldParent = iter->parentCollection();
+        if ( it.parentCollection() == col ) {
+          const Collection oldParent = it.parentCollection();
           if ( oldParent.parentCollection().isValid() && !col.parentCollection().isValid() )
             col.setParentCollection( oldParent.parentCollection() ); // preserve ancestor chain
-          iter->setParentCollection( col );
+          it.setParentCollection( col );
         } else {
           // If one client does a modify followed by a move we have to make sure that the
           // AgentBase::itemChanged() in another client always sees the parent collection
           // of the item before it has been moved.
           if ( msg.operation() != NotificationMessageV2::Move )
-            iter->setParentCollection( col );
+            it.setParentCollection( col );
         }
       }
-      msgItems.remove( iter->id() );
+      iter.setValue( it );
+      msgItems.remove( it.id() );
     } else {
       // remove the invalid item
-      its.removeOne( *iter );
+      iter.remove();
     }
   }
+
 
   // Now reconstruct any items there were left in msgItems
   Q_FOREACH( const NotificationMessageV2::Item &msgItem, msgItems ) {
@@ -566,6 +569,11 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
     it.setRemoteId( msgItem.remoteId );
     it.setRemoteRevision( msgItem.remoteRevision );
     it.setMimeType( msgItem.mimeType );
+    if ( msg.operation() == NotificationMessageV2::Move ) {
+      it.setParentCollection( colDest );
+    } else {
+      it.setParentCollection( col );
+    }
     its << it;
   }
 
