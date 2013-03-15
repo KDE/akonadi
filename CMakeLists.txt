@@ -21,6 +21,7 @@ option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(AKONADI_USE_STRIGI_SEARCH "Build Akonadi with strigi as search engine." FALSE)
 option(INSTALL_QSQLITE_IN_QT_PREFIX "Install the QSQLite plugin in QT_PLUGIN_DIR" FALSE)
 option(STATIC_LIBRARY "Build Akonadi as a static library." FALSE)
+option(QT5_BUILD "Build Akonadi using the Qt5 framework" FALSE)
 
 if(NOT DEFINED DATABASE_BACKEND)
   set(DATABASE_BACKEND "MYSQL" CACHE STRING "The default database backend to use for Akonadi. Can be either MYSQL, POSTGRES or SQLITE")
@@ -125,11 +126,8 @@ set_default_db_backend(${DATABASE_BACKEND})
 ############### Find what we need ###############
 
 #### Qt 4 and 5 ####
-set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
-set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
-
-find_package(Qt5Core QUIET)
-if (Qt5Core_FOUND)
+if(QT5_BUILD)
+  find_package(Qt5Core REQUIRED)
   find_package(Qt5Gui REQUIRED)
   find_package(Qt5Widgets REQUIRED)
   find_package(Qt5Sql REQUIRED)
@@ -137,7 +135,6 @@ if (Qt5Core_FOUND)
   find_package(Qt5Xml REQUIRED)
   find_package(Qt5DBus REQUIRED)
   find_package(Qt5Test REQUIRED)
-  set(QT5_BUILD TRUE)
 
   include("cmake/modules/ECMQt4To5Porting.cmake")
   include_directories(${QT_INCLUDES}) # TODO: Port away from this.
@@ -146,14 +143,17 @@ if (Qt5Core_FOUND)
     message(FATAL_ERROR "Akonadi Qt 5 build requires at least CMake version 2.8.9")
   endif()
 
+  if (Qt5_POSITION_INDEPENDENT_CODE)
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+  endif()
+
   set(QT_QTTEST_LIBRARIES Qt5::Test)
 else()
+  set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
+  set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
+
   find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})
-endif()
-
-if (Qt5_POSITION_INDEPENDENT_CODE)
-  set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
 # Missing in FindQt4.cmake until Dec 2011: setting QT_NO_DEBUG_OUTPUT
