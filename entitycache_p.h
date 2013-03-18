@@ -262,7 +262,12 @@ public:
 
     qSort( lhs );
     qSort( rhs );
-    return lhs == rhs;
+    for (int i = 0; i < lhs.size(); ++i) {
+      if (lhs.at(i).id() != rhs.at(i)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   static bool compare(const QList<typename T::Id> &l1, const typename T::List &l2)
@@ -284,8 +289,8 @@ public:
 template <typename T>
 struct EntityListCacheNode
 {
-  EntityListCacheNode( const typename T::List &list ) : entityList( list ), pending( false ), invalid( false ) {}
-  EntityListCacheNode( const QList<typename T::Id> &list ) : pending( false ), invalid( false ) {
+  EntityListCacheNode( const typename T::List &list ) : entityList( list ), pending( true ), invalid( false ) {}
+  EntityListCacheNode( const QList<typename T::Id> &list ) : pending( true ), invalid( false ) {
     foreach ( typename T::Id id, list ) {
       entityList.append( T( id ) );
     }
@@ -358,6 +363,30 @@ public:
     }
   }
 
+  /**
+    Asks the cache to retrieve @p id. @p request is used as
+    a token to indicate which request has been finished in the
+    dataAvailable() signal.
+  */
+  template<typename TArg>
+  void request( const QList<TArg> &id, const FetchScope &scope )
+  {
+    Q_ASSERT( !isRequested( id ) );
+    shrinkCache();
+    EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
+    FetchJob* job = createFetchJob( id );
+    job->setFetchScope( scope );
+    job->setProperty( "EntityListCacheNode", QVariant::fromValue<typename T::List>( getTList( id ) ) );
+    connect( job, SIGNAL(result(KJob*)), SLOT(processResult(KJob*)) );
+    mCache.enqueue( node );
+  }
+
+  /** Object has been requested but is not yet loaded into the cache or is already available. */
+  template<typename TArg>
+  bool isRequested( const QList<TArg> &id ) const
+  {
+    return cacheNodeForId( id );
+  }
 
   /** Object is available in the cache and can be retrieved. */
   template<typename TArg>
@@ -383,37 +412,12 @@ private:
     return id;
   }
 
-  /**
-    Asks the cache to retrieve @p id. @p request is used as
-    a token to indicate which request has been finished in the
-    dataAvailable() signal.
-  */
-  template<typename TArg>
-  void request( const QList<TArg> &id, const FetchScope &scope )
-  {
-    Q_ASSERT( !isRequested( id ) );
-    shrinkCache();
-    EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
-    FetchJob* job = createFetchJob( id );
-    job->setFetchScope( scope );
-    job->setProperty( "EntityListCacheNode", QVariant::fromValue<typename T::List>( getTList( id ) ) );
-    connect( job, SIGNAL(result(KJob*)), SLOT(processResult(KJob*)) );
-    mCache.enqueue( node );
-  }
-
   /** Tries to reduce the cache size until at least one more object fits in. */
   void shrinkCache()
   {
     while ( mCache.size() >= mCapacity && !mCache.first()->pending ) {
       delete mCache.dequeue();
     }
-  }
-
-  /** Object has been requested but is not yet loaded into the cache or is already available. */
-  template<typename TArg>
-  bool isRequested( const QList<TArg> &id ) const
-  {
-    return cacheNodeForId( id );
   }
 
   template<typename TArg>
