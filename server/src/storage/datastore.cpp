@@ -46,7 +46,6 @@
 #include <QtCore/QThreadStorage>
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
-#include <qobjectcleanuphandler.h>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
