@@ -111,7 +111,8 @@ void NotificationManager::emitPendingNotifications()
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
     if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
       src->emitNotification( legacyNotifications );
-    } else {
+    }
+    if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1 ) {
       src->emitNotification( mNotifications );
     }
   }
