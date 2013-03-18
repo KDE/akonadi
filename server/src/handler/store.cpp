@@ -182,7 +182,7 @@ bool Store::parseStream()
         if ( !addFlags( pimItems, flags, flagsChanged ) )
           return failureResponse( "Unable to add item flags." );
       } else if ( op == Delete ) {
-        if ( !deleteFlags( pimItems, flags ) )
+        if ( !(flagsChanged = deleteFlags( pimItems, flags )) )
           return failureResponse( "Unable to remove item flags." );
       }
 
