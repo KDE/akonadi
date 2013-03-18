@@ -72,7 +72,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool mFetchChangedOnly;
     Session *session;
     CollectionCache *collectionCache;
-    ItemCache *itemCache;
+    ItemListCache *itemCache;
 
     // The waiting list
     QQueue<NotificationMessageV2> pendingNotifications;

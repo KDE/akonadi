@@ -58,7 +58,7 @@ void MonitorPrivate::init()
   // needs to be at least 3x pipeline size for the collection move case
   collectionCache = dependenciesFactory->createCollectionCache(3*PipelineSize, session);
   // needs to be at least 1x pipeline size
-  itemCache = dependenciesFactory->createItemCache(PipelineSize, session);
+  itemCache = dependenciesFactory->createItemListCache(PipelineSize, session);
 
   QObject::connect( collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
   QObject::connect( itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()) );
@@ -101,7 +101,7 @@ void MonitorPrivate::invalidateCollectionCache( qint64 id )
 
 void MonitorPrivate::invalidateItemCache( qint64 id )
 {
-  itemCache->update( id, mItemFetchScope );
+  itemCache->update( QList<Entity::Id>() << id, mItemFetchScope );
 }
 
 int MonitorPrivate::pipelineSize() const
@@ -289,8 +289,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2 &msg )
         }
       }
     }
-    Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-      if ( allCached && !itemCache->ensureCached( item.id, scope ) )
+    if ( allCached && !itemCache->ensureCached<Entity::Id>( msg.uids(), scope ) ) {
         allCached = false;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
@@ -318,10 +317,7 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2 &msg )
         someoneWasListening = true;
     }
   } else if ( msg.type() == NotificationMessageV2::Items ) {
-    Item::List items;
-    Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
-      items << itemCache->retrieve( item.id );
-    }
+    Item::List items = itemCache->retrieve<Entity::Id>( msg.uids() );
     someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
   }
 
@@ -525,7 +521,7 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
   while ( iter.hasNext() ) {
     Item it = iter.next();
     if ( it.isValid() ) {
-      NotificationMessageV2::Item msgItem = msgItems[ it.id() ];
+      const NotificationMessageV2::Item msgItem = msgItems[ it.id() ];
       if ( msg.operation() == NotificationMessageV2::Remove ) {
         it.setRemoteId( msgItem.remoteId );
         it.setRemoteRevision( msgItem.remoteRevision );
@@ -736,8 +732,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2 &msg )
       Q_FOREACH( qint64 uid, msg.uids() )
         collectionCache->invalidate( uid );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
-      Q_FOREACH( qint64 uid, msg.uids() )
-        itemCache->invalidate( uid );
+      itemCache->invalidate<Entity::Id>( msg.uids() );
     }
   }
 
@@ -751,8 +746,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2 &msg )
       Q_FOREACH( quint64 uid, msg.uids() )
         collectionCache->update( uid, mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
-      Q_FOREACH( quint64 uid, msg.uids() )
-        itemCache->update( uid, mItemFetchScope );
+      itemCache->update<Entity::Id>( msg.uids(), mItemFetchScope );
     }
   }
 }
