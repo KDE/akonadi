@@ -161,7 +161,78 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg ) const
   return true;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessageV2 & msg ) const
+void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &needsSplit, bool &batchSupported) const
+{
+  bool isBatch = (msg.entities().count() > 1);
+
+  if ( msg.type() == NotificationMessageV2::Items ) {
+    switch ( msg.operation() ) {
+      case NotificationMessageV2::Add:
+        needsSplit = isBatch;
+        batchSupported = false;
+        return;
+      case NotificationMessageV2::Modify:
+        needsSplit = isBatch;
+        batchSupported = false;
+      case NotificationMessageV2::ModifyFlags:
+        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0;
+        batchSupported = q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) > 0;
+        return;
+      case NotificationMessageV2::Move:
+        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) > 0;
+        batchSupported = q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) > 0;
+      case NotificationMessageV2::Remove:
+        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) > 0;
+        batchSupported = q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) > 0;
+      case NotificationMessageV2::Link:
+        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) > 0;
+        batchSupported = q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0;
+      case NotificationMessageV2::Unlink:
+        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) > 0;
+        batchSupported = q_ptr->receivers( SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0;
+      default:
+        needsSplit = isBatch;
+        batchSupported = false;
+        kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+    }
+  } else if ( msg.type() == NotificationMessageV2::Collections ) {
+    needsSplit = isBatch;
+    batchSupported = false;
+  }
+}
+
+NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessageV2& msg, bool legacy) const
+{
+  NotificationMessageV2::List list;
+
+  NotificationMessageV2 baseMsg;
+  baseMsg.setSessionId( msg.sessionId() );
+  baseMsg.setType( msg.type() );
+  if ( legacy && msg.operation() == NotificationMessageV2::ModifyFlags ) {
+    baseMsg.setOperation( NotificationMessageV2::Modify );
+    baseMsg.setItemParts( QSet<QByteArray>() << "FLAGS" );
+  } else {
+    baseMsg.setOperation( msg.operation() );
+    baseMsg.setItemParts( msg.itemParts() );
+  }
+  baseMsg.setParentCollection( msg.parentCollection() );
+  baseMsg.setParentDestCollection( msg.parentDestCollection() );
+  baseMsg.setResource( msg.resource() );
+  baseMsg.setDestinationResource( msg.destinationResource() );
+  baseMsg.setAddedFlags( msg.addedFlags() );
+  baseMsg.setRemovedFlags( msg.removedFlags() );
+
+  Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
+    NotificationMessageV2 copy = baseMsg;
+    copy.addEntity(item.id, item.remoteId, item.remoteRevision, item.mimeType);
+
+    list << copy;
+  }
+
+  return list;
+}
+
+bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )
@@ -249,7 +320,7 @@ void MonitorPrivate::cleanOldNotifications()
     notificationsErased();
 }
 
-bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2 &msg )
+bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
 {
   bool allCached = true;
   if ( fetchCollection ) {
@@ -301,7 +372,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2 &msg )
   return allCached;
 }
 
-bool MonitorPrivate::emitNotification( const NotificationMessageV2 &msg )
+bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
 {
   const Collection parent = collectionCache->retrieve( msg.parentCollection() );
   Collection destParent;
@@ -327,7 +398,7 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2 &msg )
   return someoneWasListening;
 }
 
-void MonitorPrivate::updatePendingStatistics( const NotificationMessageV2 &msg )
+void MonitorPrivate::updatePendingStatistics( const NotificationMessageV2& msg )
 {
   if ( msg.type() == NotificationMessageV2::Items ) {
     notifyCollectionStatisticsWatchers( msg.parentCollection(), msg.resource() );
@@ -441,6 +512,24 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
+      bool needsSplit = true;
+      bool supportsBatch = false;
+
+      // if the message contains more items, but we need to emit single-item notification
+      // split the message into one message per item and queue them
+      checkBatchSupport( msg, needsSplit, supportsBatch );
+      kDebug() << "NotificationMessage:" << msg.entities().count() << "items\t needsSplit:" << needsSplit << "\tsupportsBatch:" << supportsBatch;
+      if ( needsSplit ) {
+        const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
+        slotNotify( split );
+      }
+
+      // only queue the batch notification when we split it and there's no-one
+      // listening to batch notifications
+      if ( needsSplit && !supportsBatch ) {
+        continue;
+      }
+
       const int oldSize = pendingNotifications.size();
       const bool appended = translateAndCompress( pendingNotifications, msg );
       if ( appended ) {
@@ -576,26 +665,20 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
   bool handled = false;
   switch ( msg.operation() ) {
     case NotificationMessageV2::Add:
-      if ( q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
-        return false;
-      Q_FOREACH( const Item &it, its ) {
-        emit q_ptr->itemAdded( it, col );
+      if ( q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) > 0 ) {
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemAdded( its.first(), col );
+        return true;
       }
-      return true;
+      return false;
     case NotificationMessageV2::Modify:
-      if ( q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
-        return false;
-      Q_FOREACH( const Item &it, its ) {
-        emit q_ptr->itemChanged( it, msg.itemParts() );
-      }
-      return true;
-    case NotificationMessageV2::ModifyFlags:
       if ( q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) {
-        Q_FOREACH( const Item &it, its ) {
-          emit q_ptr->itemChanged( it, QSet<QByteArray>() << "FLAGS" );
-        }
-        handled = true;
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemChanged( its.first(), msg.itemParts() );
+        return true;
       }
+      return false;
+    case NotificationMessageV2::ModifyFlags:
       if ( q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) > 0 ) {
         emit q_ptr->itemsFlagsChanged( its, msg.addedFlags(), msg.removedFlags() );
         handled = true;
@@ -603,9 +686,8 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       return handled;
     case NotificationMessageV2::Move:
       if ( q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) > 0 ) {
-        Q_FOREACH( const Item &it, its ) {
-          emit q_ptr->itemMoved( it, col, colDest );
-        }
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemMoved( its.first(), col, colDest );
         handled = true;
       }
       if ( q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) > 0 ) {
@@ -615,9 +697,8 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       return handled;
     case NotificationMessageV2::Remove:
       if ( q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) > 0 ) {
-        Q_FOREACH( const Item &it, its ) {
-          emit q_ptr->itemRemoved( it );
-        }
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemRemoved( its.first() );
         handled = true;
       }
       if ( q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) > 0 ) {
@@ -627,9 +708,8 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       return handled;
     case NotificationMessageV2::Link:
       if ( q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) > 0 ) {
-        Q_FOREACH( const Item &it, its ) {
-          emit q_ptr->itemLinked( it, col );
-        }
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemLinked( its.first(), col );
         handled = true;
       }
       if ( q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0 ) {
@@ -639,9 +719,8 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       return handled;
     case NotificationMessageV2::Unlink:
       if ( q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) > 0 ) {
-        Q_FOREACH( const Item &it, its ) {
-          emit q_ptr->itemUnlinked( it, col );
-        }
+        Q_ASSERT( its.count() == 1 );
+        emit q_ptr->itemUnlinked( its.first(), col );
         handled = true;
       }
       if ( q_ptr->receivers( SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0 ) {
@@ -724,7 +803,7 @@ bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV2 &ms
   return false;
 }
 
-void MonitorPrivate::invalidateCaches( const NotificationMessageV2 &msg )
+void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
 {
   // remove invalidates
   if ( msg.operation() == NotificationMessageV2::Remove ) {

@@ -216,6 +216,15 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     */
     bool isLazilyIgnored( const NotificationMessageV2 & msg ) const;
 
+    /**
+      Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
+      listener that does not support batch operations. Sets @p batchSupported to True when
+      there's at least one listener that supporst batch operations.
+    */
+    void checkBatchSupport( const NotificationMessageV2 &msg, bool &needsSplit, bool &batchSupported ) const;
+
+    NotificationMessageV2::List splitMessage( const NotificationMessageV2 &msg, bool legacy ) const;
+
     bool isCollectionMonitored( Collection::Id collection ) const
     {
       if (collection < 0)
