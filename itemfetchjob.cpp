@@ -43,7 +43,7 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
     ItemFetchJobPrivate( ItemFetchJob *parent )
       : JobPrivate( parent ),
         mEmitTimer( 0 ),
-	mValuePool( 0 )
+        mValuePool( 0 )
     {
       mCollection = Collection::root();
     }
