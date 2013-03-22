@@ -22,6 +22,9 @@
 #ifndef AKONADI_CALENDAR_UTILS_P_
 #define AKONADI_CALENDAR_UTILS_P_
 
+#include <kcalcore/incidence.h>
+#include <akonadi/item.h>
+
 #include <QString>
 #include <QStringList>
 
@@ -38,6 +41,8 @@ namespace Akonadi {
     QString email();
     bool thatIsMe( const QString &email );
     QStringList allEmails();
+
+    KCalCore::Incidence::Ptr incidence( const Akonadi::Item &item );
   }
 }
 
