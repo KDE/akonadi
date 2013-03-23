@@ -141,11 +141,11 @@ void MailScheduler::acceptCounterProposal( const KCalCore::Incidence::Ptr &incid
   if ( !incidence || !calendar )
     return;
 
-  Akonadi::Item exInc = calendar->item( incidence->uid() );
+  Akonadi::Item exInc = calendar->item( incidence );
   if ( !exInc.isValid() ) {
     KCalCore::Incidence::Ptr exIncidence = calendar->incidenceFromSchedulingID( incidence->uid() );
     if ( exIncidence ) {
-      exInc = calendar->item( exIncidence->uid() );
+      exInc = calendar->item( exIncidence );
     }
     //exInc = exIncItem.isValid() && exIncItem.hasPayload<KCalCore::Incidence::Ptr>() ?
     //        exIncItem.payload<KCalCore::Incidence::Ptr>() : KCalCore::Incidence::Ptr();
