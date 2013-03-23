@@ -21,6 +21,7 @@
 #include "calendarbase.h"
 #include "calendarbase_p.h"
 #include "incidencechanger.h"
+#include "utils_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
@@ -62,7 +63,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   mItemById.insert( item.id(), item );
-  KCalCore::Incidence::Ptr incidence= item.payload<KCalCore::Incidence::Ptr>();
+  KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
 
   if ( !incidence ) {
     kError() << "Incidence is null. id=" << item.id()
