@@ -100,8 +100,13 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
-  Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-  Incidence::Ptr incidence = q->incidence( item.payload<KCalCore::Incidence::Ptr>()->uid() );
+
+  Incidence::Ptr tmp = CalendarUtils::incidence(item);
+  if (!tmp)
+    return;
+
+  // We want the one stored in the calendar
+  Incidence::Ptr incidence = q->incidence( tmp->uid() );
 
 
   // Null incidence means it was deleted via CalendarBase::deleteIncidence(), but then
@@ -187,9 +192,9 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   Akonadi::Item oldItem = mItemById.value( newItem.id() );
   Q_ASSERT( oldItem.isValid() );
 
-  Incidence::Ptr oldIncidence = oldItem.payload<KCalCore::Incidence::Ptr>();
+  Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
   Q_ASSERT( oldIncidence );
-  Incidence::Ptr newIncidence = newItem.payload<KCalCore::Incidence::Ptr>();
+  Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
   Q_ASSERT( newIncidence );
   Q_ASSERT( newIncidence->uid() != oldIncidence->uid() ); // The reason we're here in the first place
 
@@ -282,9 +287,13 @@ KCalCore::Incidence::List CalendarBase::childIncidences( const Akonadi::Item::Id
   if ( d->mItemById.contains( parentId ) ) {
     const Akonadi::Item item = d->mItemById.value( parentId );
     Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+    KCalCore::Incidence::Ptr parent = CalendarUtils::incidence(item);
 
-    childs = childIncidences( item.payload<KCalCore::Incidence::Ptr>()->uid() );
+    if (parent) {
+      childs = childIncidences( parent->uid() );
+    } else {
+      Q_ASSERT( false );
+    }
   }
 
   return childs;
@@ -313,9 +322,13 @@ Akonadi::Item::List CalendarBase::childItems( const Akonadi::Item::Id &parentId 
   if ( d->mItemById.contains( parentId ) ) {
     const Akonadi::Item item = d->mItemById.value( parentId );
     Q_ASSERT( item.isValid() );
-    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
+    KCalCore::Incidence::Ptr parent = CalendarUtils::incidence(item);
 
-    childs = childItems( item.payload<KCalCore::Incidence::Ptr>()->uid() );
+    if (parent) {
+      childs = childItems(parent->uid());
+    } else {
+      Q_ASSERT(false);
+    }
   }
 
   return childs;
