@@ -75,7 +75,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   }
 
   //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
-  const QString uid = incidence->uid();
+  const QString uid = incidence->instanceIdentifier();
   Q_ASSERT( !uid.isEmpty() );
 
   if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
@@ -86,12 +86,14 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     return;
   }
 
-  mItemIdByUid.insert( incidence->uid(), item.id() );
+  mItemIdByUid.insert( uid, item.id() );
 
-  // Insert parent relationships
-  const QString parentUid = incidence->relatedTo();
-  if ( !parentUid.isEmpty() ) {
-    mParentUidToChildrenUid[parentUid].append( incidence->uid() );
+  if ( !incidence->hasRecurrenceId() ) {
+    // Insert parent relationships
+    const QString parentUid = incidence->relatedTo();
+    if ( !parentUid.isEmpty() ) {
+      mParentUidToChildrenUid[parentUid].append( incidence->uid() );
+    }
   }
   // Must be the last one due to re-entrancy
   q->MemoryCalendar::addIncidence( incidence );
@@ -106,20 +108,21 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
     return;
 
   // We want the one stored in the calendar
-  Incidence::Ptr incidence = q->incidence( tmp->uid() );
-
+  Incidence::Ptr incidence = q->incidence( tmp->uid(), tmp->recurrenceId() );
 
   // Null incidence means it was deleted via CalendarBase::deleteIncidence(), but then
   // the ETMCalendar received the monitor notification and tried to delete it again.
   if ( incidence ) {
     mItemById.remove( item.id() );
     // kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
-    mItemIdByUid.remove( incidence->uid() );
+    mItemIdByUid.remove( incidence->instanceIdentifier() );
 
-    mParentUidToChildrenUid.remove( incidence->uid() );
-    const QString parentUid = incidence->relatedTo();
-    if ( !parentUid.isEmpty() ) {
-      mParentUidToChildrenUid[parentUid].removeAll( incidence->uid() );
+    if ( !incidence->hasRecurrenceId() ) {
+      mParentUidToChildrenUid.remove( incidence->uid() );
+      const QString parentUid = incidence->relatedTo();
+      if ( !parentUid.isEmpty() ) {
+        mParentUidToChildrenUid[parentUid].removeAll( incidence->uid() );
+      }
     }
     // Must be the last one due to re-entrancy
     q->MemoryCalendar::deleteIncidence( incidence );
@@ -161,6 +164,10 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
   Q_UNUSED( changeId );
   Q_UNUSED( item );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+    if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+      emit q->createFinished( false, QString("Invalid item or payload: %1").arg(item.id()) );
+      return;
+    }
     internalInsert( item );
   }
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
@@ -270,13 +277,18 @@ Akonadi::Item CalendarBase::item( const QString &uid ) const
   return i;
 }
 
+Item CalendarBase::item( const Incidence::Ptr& inc ) const
+{
+  return item( inc->instanceIdentifier() );
+}
+
 Akonadi::Item::List CalendarBase::itemList( const KCalCore::Incidence::List &incidences ) const
 {
   Akonadi::Item::List items;
 
   foreach( const KCalCore::Incidence::Ptr &incidence, incidences ) {
     if ( incidence ) {
-      items << item( incidence->uid() );
+      items << item( incidence->instanceIdentifier() );
     } else {
       items << Akonadi::Item();
     }
@@ -435,7 +447,7 @@ bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
 {
   Q_D(CalendarBase);
   Q_ASSERT( incidence );
-  Akonadi::Item item_ = item( incidence->uid() );
+  Akonadi::Item item_ = item( incidence->instanceIdentifier() );
   return -1 != d->mIncidenceChanger->deleteIncidence( item_ );
 }
 
@@ -443,7 +455,13 @@ bool CalendarBase::modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence
 {
   Q_D(CalendarBase);
   Q_ASSERT( newIncidence );
-  const Akonadi::Item item_ = item( newIncidence->uid() );
+  const KCalCore::Incidence::Ptr incidence( newIncidence.dynamicCast<KCalCore::Incidence>() );
+  Akonadi::Item item_;
+  if ( incidence ) {
+    item_ = item( incidence->instanceIdentifier() );
+  } else  {
+    item_ = item( newIncidence->uid() );
+  }
   return -1 != d->mIncidenceChanger->modifyIncidence( item_ );
 }
 

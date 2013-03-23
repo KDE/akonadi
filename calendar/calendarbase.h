@@ -65,8 +65,15 @@ public:
   /**
     * Returns the Item containing the incidence with uid @p uid or an invalid Item
     * if the incidence isn't found.
+    * @see Use item(Incidence::Ptr) instead where possible. This function doesn't take exceptions (recurrenceId) into account (and thus always returns the main event).
     */
   Akonadi::Item item( const QString &uid ) const;
+
+  /**
+    * Returns the Item containing the incidence with uid @p uid or an invalid Item
+    * if the incidence isn't found.
+    */
+  Akonadi::Item item( const KCalCore::Incidence::Ptr &inc ) const;
 
   /**
     * Returns the Item with @p id or an invalid Item if not found.
