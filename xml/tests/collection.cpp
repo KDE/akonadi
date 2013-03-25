@@ -40,11 +40,11 @@ QByteArray collection2(
   <collection rid=\"c11\" name=\"Inbox\" content=\"inode/directory,message/rfc822\">           \
       <attribute type=\"ENTITYDISPLAY\" >(\"Posteingang\" \"mail-folder-inbox\" false)</attribute>  \
       <collection rid=\"c111\" name=\"KDE PIM\" content=\"inode/directory,message/rfc822\">   \
-      </collection>            								      \
+      </collection>                                                                                  \
       <collection rid=\"c112\" name=\"Akonadi\" content=\"inode/directory,message/rfc822\">   \
-        <attribute type=\"AccessRights\">wcW</attribute> 		                      \
-      </collection>									      \
-    </collection>									      \
+        <attribute type=\"AccessRights\">wcW</attribute>                                       \
+      </collection>                                                                              \
+    </collection>                                                                              \
 <test>");
 
 void CollectionTest::testBuildCollection()
