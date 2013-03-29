@@ -117,8 +117,8 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg ) const
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
-    || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
-    || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
+    || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )                               // ModifyFlags will get converted to itemChanged(item, "FLAGS") for legacy clients
+    || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0)
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
@@ -163,7 +163,7 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg ) const
 
 void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &needsSplit, bool &batchSupported) const
 {
-  bool isBatch = (msg.entities().count() > 1);
+  const bool isBatch = (msg.entities().count() > 1);
 
   if ( msg.type() == NotificationMessageV2::Items ) {
     switch ( msg.operation() ) {
@@ -174,26 +174,32 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &n
       case NotificationMessageV2::Modify:
         needsSplit = isBatch;
         batchSupported = false;
+        return;
       case NotificationMessageV2::ModifyFlags:
-        needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) > 0;
+        needsSplit = isBatch && !batchSupported && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0;
         return;
       case NotificationMessageV2::Move:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) > 0;
+        return;
       case NotificationMessageV2::Remove:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) > 0;
+        return;
         batchSupported = q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) > 0;
       case NotificationMessageV2::Link:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0;
+        return;
       case NotificationMessageV2::Unlink:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0;
+        return;
       default:
         needsSplit = isBatch;
         batchSupported = false;
         kDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+        return;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections ) {
     needsSplit = isBatch;
@@ -239,8 +245,10 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) cons
     return false;
 
   // corresponding signal is not connected
-  if ( isLazilyIgnored( msg ) )
+  if ( isLazilyIgnored( msg ) ) {
+    kDebug() << this <<  "\tlazily ignored";
     return false;
+  }
 
   // user requested everything
   if ( monitorAll && msg.type() != NotificationMessageV2::InvalidType)
@@ -360,7 +368,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
         }
       }
     }
-    if ( allCached && !itemCache->ensureCached<Entity::Id>( msg.uids(), scope ) ) {
+    if ( allCached && !itemCache->ensureCached( msg.uids(), scope ) ) {
         allCached = false;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
@@ -388,7 +396,7 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
         someoneWasListening = true;
     }
   } else if ( msg.type() == NotificationMessageV2::Items ) {
-    Item::List items = itemCache->retrieve<Entity::Id>( msg.uids() );
+    Item::List items = itemCache->retrieve( msg.uids() );
     someoneWasListening = emitItemsNotification( msg, items, parent, destParent );
   }
 
@@ -505,41 +513,45 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notifi
 
 void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 {
+  kDebug() << this << msgs.count();
   int appendedMessages = 0;
   int modifiedMessages = 0;
   int erasedMessages = 0;
   foreach ( const NotificationMessageV2 &msg, msgs ) {
+    kDebug() << this << msg.toString();
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg ) ) {
       bool needsSplit = true;
       bool supportsBatch = false;
 
+      checkBatchSupport( msg, needsSplit, supportsBatch );
+
+      if ( !needsSplit || supportsBatch ) {
+        // Make sure the batch msg is always queued before the split notifications
+        const int oldSize = pendingNotifications.size();
+        const bool appended = translateAndCompress( pendingNotifications, msg );
+        if ( appended ) {
+          ++appendedMessages;
+          // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
+          if ( pendingNotifications.count() != oldSize + 1 )
+            ++erasedMessages;
+        } else
+          ++modifiedMessages;
+      } else if ( needsSplit ) {
+        // If it's not queued at least make sure we fetch all the items from split
+        // notifications in one go.
+        itemCache->ensureCached( msg.uids(), mItemFetchScope );
+      }
+
       // if the message contains more items, but we need to emit single-item notification
       // split the message into one message per item and queue them
-      checkBatchSupport( msg, needsSplit, supportsBatch );
-      kDebug() << "NotificationMessage:" << msg.entities().count() << "items\t needsSplit:" << needsSplit << "\tsupportsBatch:" << supportsBatch;
+      kDebug() << this << "NotificationMessage:" << msg.entities().count() << "items\t needsSplit:" << needsSplit << "\tsupportsBatch:" << supportsBatch;
       if ( needsSplit ) {
         const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
-        slotNotify( split );
+        pendingNotifications << split;
+        appendedMessages += split.count();
       }
-
-      // only queue the batch notification when we split it and there's no-one
-      // listening to batch notifications
-      if ( needsSplit && !supportsBatch ) {
-        continue;
-      }
-
-      const int oldSize = pendingNotifications.size();
-      const bool appended = translateAndCompress( pendingNotifications, msg );
-      if ( appended ) {
-        ++appendedMessages;
-        // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
-        if ( pendingNotifications.count() != oldSize + 1 )
-          ++erasedMessages;
-      }
-      else
-        ++modifiedMessages;
     }
   }
 
@@ -551,6 +563,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
       notificationsEnqueued( appendedMessages );
   }
 
+  kDebug() << this << "Queued" << appendedMessages << "new messages, modified" << modifiedMessages << "messages and erased" << erasedMessages << "messages";
   dispatchNotifications();
 }
 
@@ -562,8 +575,10 @@ void MonitorPrivate::flushPipeline()
       // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
       // being called again) and we end up dequeuing an empty pipeline
       pipeline.dequeue();
+      kDebug() << this << "Emitting msg" << msg.toString();
       emitNotification( msg );
     } else {
+      kDebug() << this << "Not ready" << msg.toString();
       break;
     }
   }
@@ -580,10 +595,13 @@ void MonitorPrivate::dispatchNotifications()
   // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
   while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
     const NotificationMessageV2 msg = pendingNotifications.dequeue();
-    if ( ensureDataAvailable( msg ) && pipeline.isEmpty() )
+    if ( ensureDataAvailable( msg ) && pipeline.isEmpty() ) {
+      kDebug() << this << "Emitting msg " << msg.toString();
       emitNotification( msg );
-    else
+    } else {
+      kDebug() << this << "Pipelined msg " << msg.toString();
       pipeline.enqueue( msg );
+    }
   }
 }
 
@@ -811,7 +829,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
       Q_FOREACH( qint64 uid, msg.uids() )
         collectionCache->invalidate( uid );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
-      itemCache->invalidate<Entity::Id>( msg.uids() );
+      itemCache->invalidate( msg.uids() );
     }
   }
 
@@ -825,7 +843,7 @@ void MonitorPrivate::invalidateCaches( const NotificationMessageV2& msg )
       Q_FOREACH( quint64 uid, msg.uids() )
         collectionCache->update( uid, mCollectionFetchScope );
     } else if ( msg.type() == NotificationMessageV2::Items ) {
-      itemCache->update<Entity::Id>( msg.uids(), mItemFetchScope );
+      itemCache->update( msg.uids(), mItemFetchScope );
     }
   }
 }

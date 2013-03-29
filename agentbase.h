@@ -299,6 +299,11 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
     /**
      * BC extension of ObserverV2 with support for batch operations
      *
+     * @warning When using ObserverV3, you will never get single-item notifications
+     * from AgentBase::Observer, even when you don't reimlement corresponding batch
+     * method from ObserverV3. For instance, when you don't reimplement itemsRemoved()
+     * here, you will not get any notifications about item removal whatsoever!
+     *
      * @since 4.11
      */
     class AKONADI_EXPORT ObserverV3 : public ObserverV2 // krazy:exclude=dpointer
@@ -306,6 +311,10 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
       public:
         /**
          * Reimplement to handle changes in flags of existing items
+         *
+         * @warning When using ObserverV3, you will never get notifications about
+         * flag changes via Observer::itemChanged(), even when you don't reimplement
+         * itemsFlagsChanged()!
          *
          * @param item The changed item.
          * @param addedFlags Flags that have been added to the item

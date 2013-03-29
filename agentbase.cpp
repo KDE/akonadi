@@ -307,30 +307,14 @@ void AgentBasePrivate::init()
     }
   }
 
+  const bool haveObserverV3 = (dynamic_cast<AgentBase::ObserverV3*>(mObserver) != 0);
+
   connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
            SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
            SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
-  connect( mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-           SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
-           SLOT(itemRemoved(Akonadi::Item)) );
   connect( mChangeRecorder, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
            SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-           SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
-           SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
-  connect( mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
-           SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
-           SLOT(itemsRemoved(Akonadi::Item::List)) );
-  connect( mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
-           SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
-  connect( mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
-           SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection)),
            SLOT(collectionChanged(Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
@@ -343,6 +327,28 @@ void AgentBasePrivate::init()
            SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
            SLOT(collectionUnsubscribed(Akonadi::Collection)) );
+
+  if ( haveObserverV3 ) {
+    connect( mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
+             this, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+    connect( mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
+             this, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
+    connect( mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
+             this, SLOT(itemsRemoved(Akonadi::Item::List)) );
+    connect( mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
+             this, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
+    connect( mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
+             this, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
+  } else {
+    connect( mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+            SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+    connect( mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
+            SLOT(itemRemoved(Akonadi::Item)) );
+    connect( mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+            SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+    connect( mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+            SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+  }
 
   connect( q, SIGNAL(status(int,QString)), q, SLOT(slotStatus(int,QString)) );
   connect( q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)) );
@@ -374,6 +380,7 @@ void AgentBasePrivate::init()
 void AgentBasePrivate::delayedInit()
 {
   Q_Q( AgentBase );
+
   const QString serviceId = ServerManager::agentServiceName( ServerManager::Agent, mId );
   if ( !DBusConnectionPool::threadConnection().registerService( serviceId ) ) {
     kFatal() << "Unable to register service" << serviceId << "at dbus:" << DBusConnectionPool::threadConnection().lastError().message();
