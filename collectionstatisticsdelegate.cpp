@@ -162,15 +162,9 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
 
   if ( d->animator ) {
 
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-
-    if ( !collection.isValid() ) {
-      d->animator->pop( index );
-      return;
-    }
-
-    if ( index.data( Akonadi::EntityTreeModel::FetchStateRole ).toInt() != Akonadi::EntityTreeModel::FetchingState ) {
-      d->animator->pop( index );
+    const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
+    if (fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+      d->animator->pop(index);
       return;
     }
 
