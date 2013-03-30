@@ -217,9 +217,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   const QWidget *widget = option4.widget;
   const QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
 
-   // When checking if the item is expanded, we need to check that for the first
-  // column, as Qt only recogises the index as expanded for the first column
-  QModelIndex firstColumn = index.model()->index( index.row(), 0, index.parent() );
+  // When checking if the item is expanded, we need to check that for the first
+  // column, as Qt only recognises the index as expanded for the first column
+  const QModelIndex firstColumn = index.sibling( index.row(), 0 );
   QTreeView* treeView = qobject_cast<QTreeView*>( d->parent );
   bool expanded = treeView && treeView->isExpanded( firstColumn );
 
@@ -227,7 +227,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     painter->setPen( textColor.isValid() ? textColor : option.palette.highlightedText().color() );
   }
 
-  Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+  Collection collection = firstColumn.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
   Q_ASSERT( collection.isValid() );
 
@@ -237,7 +237,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   qint64 totalRecursiveCount = 0;
   qint64 unreadRecursiveCount = 0;
   qint64 totalSize = 0;
-  d->getCountRecursive( index.sibling( index.row(), 0 ), totalRecursiveCount, unreadRecursiveCount, totalSize );
+  d->getCountRecursive( firstColumn, totalRecursiveCount, unreadRecursiveCount, totalSize );
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
