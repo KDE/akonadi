@@ -149,7 +149,7 @@ public:
   ConflictPreventer instance;
 };
 
-K_GLOBAL_STATIC( ConflictPreventerPrivate, sConflictPreventerPrivate );
+K_GLOBAL_STATIC( ConflictPreventerPrivate, sConflictPreventerPrivate )
 
 ConflictPreventer* ConflictPreventer::self()
 {

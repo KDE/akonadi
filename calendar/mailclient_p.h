@@ -115,6 +115,6 @@ class MailClient : public QObject
 
 }
 
-Q_DECLARE_METATYPE( Akonadi::MailClient::Result );
+Q_DECLARE_METATYPE( Akonadi::MailClient::Result )
 
 #endif
