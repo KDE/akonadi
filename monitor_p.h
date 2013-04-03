@@ -94,7 +94,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessageV2 &msg ) const;
+    bool acceptNotification( const NotificationMessageV2 &msg, bool allowModifyFlagsConversion = false ) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -214,7 +214,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
-    bool isLazilyIgnored( const NotificationMessageV2 & msg ) const;
+    bool isLazilyIgnored( const NotificationMessageV2 & msg, bool allowModifyFlagsConversion = false ) const;
 
     /**
       Sets @p needsSplit to True when @p msg contains more than one item and there's at least one

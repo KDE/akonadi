@@ -109,16 +109,24 @@ int MonitorPrivate::pipelineSize() const
   return PipelineSize;
 }
 
-bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg ) const
+bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool allowModifyFlagsConversion ) const
 {
   NotificationMessageV2::Operation op = msg.operation();
+
+  // Newly delivered ModifyFlags notifications will be converted to
+  // itemChanged(item, "FLAGS") for legacy clients.
+  if ( op == NotificationMessageV2::ModifyFlags &&
+       ( allowModifyFlagsConversion && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) )
+  {
+    return false;
+  }
 
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
-    || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )                               // ModifyFlags will get converted to itemChanged(item, "FLAGS") for legacy clients
-    || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0)
+    || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
+    || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
@@ -185,8 +193,8 @@ void MonitorPrivate::checkBatchSupport(const NotificationMessageV2& msg, bool &n
         return;
       case NotificationMessageV2::Remove:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) > 0;
-        return;
         batchSupported = q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) > 0;
+        return;
       case NotificationMessageV2::Link:
         needsSplit = isBatch && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) > 0;
         batchSupported = q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) > 0;
@@ -238,14 +246,14 @@ NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessa
   return list;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) const
+bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool allowModifyFlagsConversion ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )
     return false;
 
   // corresponding signal is not connected
-  if ( isLazilyIgnored( msg ) ) {
+  if ( isLazilyIgnored( msg, allowModifyFlagsConversion ) ) {
     kDebug() << this <<  "\tlazily ignored";
     return false;
   }
@@ -368,12 +376,12 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
         }
       }
     }
-    if ( allCached && !itemCache->ensureCached( msg.uids(), scope ) ) {
+    if ( !itemCache->ensureCached( msg.uids(), scope ) ) {
         allCached = false;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
     Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-      if ( allCached && !collectionCache->ensureCached( item.id, mCollectionFetchScope ) )
+      if ( !collectionCache->ensureCached( item.id, mCollectionFetchScope ) )
         allCached = false;
     }
   }
@@ -521,13 +529,13 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
     kDebug() << this << msg.toString();
     invalidateCaches( msg );
     updatePendingStatistics( msg );
-    if ( acceptNotification( msg ) ) {
+    if ( acceptNotification( msg, true ) ) {
       bool needsSplit = true;
       bool supportsBatch = false;
 
       checkBatchSupport( msg, needsSplit, supportsBatch );
 
-      if ( !needsSplit || supportsBatch ) {
+      if ( supportsBatch ) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
         const bool appended = translateAndCompress( pendingNotifications, msg );
@@ -544,10 +552,13 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
         itemCache->ensureCached( msg.uids(), mItemFetchScope );
       }
 
-      // if the message contains more items, but we need to emit single-item notification
+      // if the message contains more items, but we need to emit single-item notification,
       // split the message into one message per item and queue them
+      // if the message contains only one item, but batches are not supported
+      // (and thus neither is flagsModified), splitMessage() will convert the
+      // notification to regular Modify with "FLAGS" part changed
       kDebug() << this << "NotificationMessage:" << msg.entities().count() << "items\t needsSplit:" << needsSplit << "\tsupportsBatch:" << supportsBatch;
-      if ( needsSplit ) {
+      if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
         const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
         pendingNotifications << split;
         appendedMessages += split.count();
