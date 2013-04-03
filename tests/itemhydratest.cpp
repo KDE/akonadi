@@ -62,12 +62,12 @@ struct Gerd: public Volker
 typedef shared_ptr<Gerd> GerdPtr;
 typedef QSharedPointer<Gerd> GerdQPtr;
 
-Q_DECLARE_METATYPE( Volker* );
-Q_DECLARE_METATYPE( Rudi* );
-Q_DECLARE_METATYPE( Gerd* );
+Q_DECLARE_METATYPE( Volker* )
+Q_DECLARE_METATYPE( Rudi* )
+Q_DECLARE_METATYPE( Gerd* )
 
-Q_DECLARE_METATYPE( Rudi );
-Q_DECLARE_METATYPE( Gerd );
+Q_DECLARE_METATYPE( Rudi )
+Q_DECLARE_METATYPE( Gerd )
 
 namespace KPIMUtils
 {

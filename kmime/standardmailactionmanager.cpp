@@ -319,7 +319,7 @@ class StandardMailActionManager::Private
           if ( !status.isRead() ) {
             allMarkedAsRead= false;
           } else {
-	    allMarkedAsUnread = false;
+            allMarkedAsUnread = false;
           }
           if ( !status.isToAct() ) {
             allMarkedAsActionItem = false;

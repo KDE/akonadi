@@ -268,7 +268,7 @@ void EntityTreeView::contextMenuEvent( QContextMenuEvent * event )
   const QModelIndex index = indexAt( event->pos() );
   QString popupName = d->mDefaultPopupMenu;
 
-  if ( index.isValid() ) {				// popup not over empty space
+  if ( index.isValid() ) {                                // popup not over empty space
     // check whether the index under the cursor is a collection or item
     const Item item = model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
     popupName = ( item.isValid() ? QLatin1String( "akonadi_itemview_contextmenu" ) :
