@@ -18,8 +18,7 @@
 */
 
 #include "changerecorder_p.h"
-#include <boost/graph/graph_concepts.hpp>
-#include <qvarlengtharray.h>
+
 using namespace Akonadi;
 
 ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
