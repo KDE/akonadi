@@ -300,7 +300,7 @@ class AKONADI_EXPORT AgentBase : public QObject, protected QDBusContext
      * BC extension of ObserverV2 with support for batch operations
      *
      * @warning When using ObserverV3, you will never get single-item notifications
-     * from AgentBase::Observer, even when you don't reimlement corresponding batch
+     * from AgentBase::Observer, even when you don't reimplement corresponding batch
      * method from ObserverV3. For instance, when you don't reimplement itemsRemoved()
      * here, you will not get any notifications about item removal whatsoever!
      *

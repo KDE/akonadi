@@ -480,9 +480,7 @@ void AgentBasePrivate::itemsFlagsChanged( const Akonadi::Item::List &items, cons
   if ( observer3 ) {
     observer3->itemsFlagsChanged( items, addedFlags, removedFlags );
   } else {
-    Q_FOREACH( const Item &item, items ) {
-      itemChanged( item, QSet<QByteArray>() << "FLAGS" );
-    }
+    Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
   }
 }
 
@@ -492,9 +490,7 @@ void AgentBasePrivate::itemsMoved( const Akonadi::Item::List &items, const Akona
   if ( observer3 ) {
     observer3->itemsMoved( items, source, destination );
   } else {
-    Q_FOREACH( const Item &item, items ) {
-      itemMoved( item, source, destination );
-    }
+    Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
   }
 }
 
@@ -504,37 +500,36 @@ void AgentBasePrivate::itemsRemoved( const Akonadi::Item::List &items )
   if ( observer3 ) {
     observer3->itemsRemoved( items );
   } else {
-    Q_FOREACH( const Item &item, items ) {
-      itemRemoved( item );
-    }
+    Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
   }
 }
 
 void AgentBasePrivate::itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection )
 {
+  if ( !mObserver ) {
+    changeProcessed();
+    return;
+  }
+
   AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
   if ( observer3 ) {
     observer3->itemsLinked( items, collection );
-  } else if ( dynamic_cast<AgentBase::ObserverV2*>( mObserver ) != 0 ) {
-    Q_FOREACH( const Item &item, items ) {
-      itemLinked( item, collection );
-    }
   } else {
-    changeProcessed();
+    Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
   }
 }
 
 void AgentBasePrivate::itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection )
 {
+  if ( !mObserver ) {
+    return;
+  }
+
   AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3*>( mObserver );
   if ( observer3 ) {
     observer3->itemsUnlinked( items, collection );
-  } else if ( dynamic_cast<AgentBase::ObserverV2*>( mObserver ) != 0 ) {
-    Q_FOREACH( const Item &item, items ) {
-      itemUnlinked( item, collection );
-    }
   } else {
-    changeProcessed();
+    Q_ASSERT_X( false, Q_FUNC_INFO, "Batch slots must never be called when ObserverV3 is not available" );
   }
 }
 
