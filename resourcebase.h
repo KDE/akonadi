@@ -349,6 +349,17 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void changeCommitted( const Item &item );
 
     /**
+     * Resets the dirty flag of all give items and update remote ids.
+     *
+     * Call whenever you have successfully written changes back to the server.
+     * This implicitly calls changeProcessed().
+     * @param items Changed items
+     *
+     * @since 4.11
+     */
+    void changesCommitted( const Item::List &items );
+
+    /**
      * Call whenever you have successfully handled or ignored a collection
      * change notification.
      *
