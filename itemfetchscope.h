@@ -234,7 +234,7 @@ class AKONADI_EXPORT ItemFetchScope
      * This flag is useful for displaying everything that is available, where it is not crucial to have all items.
      * Never use this for things like data migration or alike.
      *
-     * @since 4.11
+     * @since 4.10
      */
     void setIgnoreRetrievalErrors( bool enabled );
 
@@ -242,7 +242,7 @@ class AKONADI_EXPORT ItemFetchScope
      * Returns whether retrieval errors should be ignored.
      *
      * @see setIgnoreRetrievalErrors()
-     * @since 4.11
+     * @since 4.10
      */
     bool ignoreRetrievalErrors() const;
 
