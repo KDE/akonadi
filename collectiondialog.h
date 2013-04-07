@@ -149,7 +149,7 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     /**
      * Sets the @p text that will be shown in the dialog.
-     * @param text the dialog's description text 
+     * @param text the dialog's description text
      * @since 4.4
      */
     void setDescription( const QString &text );

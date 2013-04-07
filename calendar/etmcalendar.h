@@ -143,7 +143,7 @@ public:
    * @param enable enables collection filtering if set as @c true
    * @see checkableProxyModel()
    * @see collectionFilteringEnabled()
-   */                           
+   */
   void setCollectionFilteringEnabled( bool enable );
 
   /**

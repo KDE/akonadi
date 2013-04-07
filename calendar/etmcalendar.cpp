@@ -132,7 +132,7 @@ void ETMCalendarPrivate::setupFilteredETM()
   mCheckableProxyModel->setSelectionModel( selectionModel );
   mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
-  
+
   mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
   mSelectionProxy->setObjectName( "Only show items of selected collection" );
   mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
@@ -162,7 +162,7 @@ void ETMCalendarPrivate::loadFromETM()
 void ETMCalendarPrivate::clear()
 {
   mCollectionMap.clear();
- 
+
   itemsRemoved( mItemById.values() );
   Q_ASSERT( mItemById.isEmpty() );
   Q_ASSERT( mItemIdByUid.isEmpty() );

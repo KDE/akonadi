@@ -403,7 +403,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Registers \a T as a legacy type for mime type \a mimeType.
-     * 
+     *
      * This is required information for Item to return the correct
      * type from payload() when clients have not been recompiled to
      * use the new code.

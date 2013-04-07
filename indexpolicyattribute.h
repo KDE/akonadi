@@ -29,7 +29,7 @@ namespace Akonadi {
  *
  * This attribute can be attached to any collection and should be honored by indexing
  * agents.
- * 
+ *
  * @since 4.6
  */
 class AKONADI_EXPORT IndexPolicyAttribute : public Akonadi::Attribute

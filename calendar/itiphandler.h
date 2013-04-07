@@ -92,7 +92,7 @@ public:
    * @param method iTip method
    * @param incidence Incidence for which we're sending the iTip message.
    *                  Should contain a list of attendees.
-   * @param parentWidget 
+   * @param parentWidget
    */
   void sendiTIPMessage( KCalCore::iTIPMethod method,
                         const KCalCore::Incidence::Ptr &incidence,
