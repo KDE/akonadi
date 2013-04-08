@@ -85,15 +85,28 @@ class AKONADI_EXPORT Entity
         { }
 
         /**
-         * Returns IDs of all items in the list
+         * Returns IDs of all entities in the list
          */
         QList<Id> ids() const
         {
           QList< Entity::Id > l;
-          foreach ( const T &e, this ) {
+          Q_FOREACH ( const T &e, *this ) {
             l << e.id();
           }
           return l;
+        }
+
+        /**
+         * Returns entity with given id, or an invalid entity.
+         */
+        T findById(Id id) const
+        {
+          Q_FOREACH ( const T &e, *this ) {
+            if ( e.id() == id ) {
+              return e;
+            }
+          }
+          return T();
         }
     };
 
