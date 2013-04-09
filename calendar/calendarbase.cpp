@@ -185,7 +185,13 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
 
 void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newUid )
 {
-  Q_ASSERT( !mItemIdByUid.contains( newUid ) );
+  if (mItemIdByUid.contains(newUid)) {
+    kWarning() << "New uid shouldn't be known: "  << newUid << "; id="
+               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid];
+    Q_ASSERT(false);
+    return;
+  }
+
   mItemIdByUid[newUid] = newItem.id();
 
   Q_ASSERT( mItemById.contains( newItem.id() ) );
