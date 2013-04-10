@@ -252,6 +252,9 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
   if ( sessions.contains( msg.sessionId() ) )
     return false;
 
+  if ( msg.entities().count() == 0 )
+    return false;
+
   // corresponding signal is not connected
   if ( isLazilyIgnored( msg, allowModifyFlagsConversion ) ) {
     kDebug() << this <<  "\tlazily ignored";
