@@ -538,7 +538,9 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 
       checkBatchSupport( msg, needsSplit, supportsBatch );
 
-      if ( supportsBatch || msg.type() == NotificationMessageV2::Collections ) {
+      if ( supportsBatch
+          || ( !needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags )
+          || msg.type() == NotificationMessageV2::Collections ) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
         const bool appended = translateAndCompress( pendingNotifications, msg );
