@@ -103,6 +103,28 @@ void NotificationMessageV2Test::testCompress4()
   QCOMPARE( list.first().removedFlags(), (QSet<QByteArray>() << "FLAG2") );
 }
 
+void NotificationMessageV2Test::testCompress5()
+{
+  NotificationMessageV2::List list;
+  NotificationMessageV2 msg;
+  msg.setType( NotificationMessageV2::Items );
+  msg.setOperation( NotificationMessageV2::ModifyFlags );
+
+  msg.setAddedFlags( QSet<QByteArray>() << "FLAG1" << "FLAG2" );
+  NotificationMessageV2::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+
+  NotificationMessageV2 msg2;
+  msg2.setOperation( NotificationMessageV2::Add );
+  msg2.setAddedFlags( QSet<QByteArray>() );
+  NotificationMessageV2::appendAndCompress( list, msg2 );
+
+  msg.setAddedFlags( QSet<QByteArray>() );
+  msg.setRemovedFlags( QSet<QByteArray>() << "FLAG2" << "FLAG1" );
+  NotificationMessageV2::appendAndCompress( list, msg );
+  QCOMPARE( list.count(), 1 );
+  QCOMPARE( list.first().operation(), NotificationMessageV2::Add );
+}
 
 void NotificationMessageV2Test::testCompressWithItemParts()
 {

@@ -271,7 +271,7 @@ QString NotificationMessageV2::toString() const
       rv += QLatin1String( "Collections " );
       break;
     case InvalidType:
-      return QString();
+      return QLatin1String( "*INVALID TYPE* " );
   }
 
   QSet<QByteArray> items;
@@ -310,16 +310,13 @@ QString NotificationMessageV2::toString() const
       rv += QLatin1String( ")" );
       break;
     case ModifyFlags:
-      if ( !d->addedFlags.isEmpty() ) {
-        rv += QLatin1String( "added flags (" );
-        rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
-        rv += QLatin1String ( ") " );
-      }
-      if ( !d->removedFlags.isEmpty() ) {
-        rv += QLatin1String( "removed flags (" );
-        rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
-        rv += QLatin1String ( ") " );
-      }
+      rv += QLatin1String( "added flags (" );
+      rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+      rv += QLatin1String ( ") " );
+
+      rv += QLatin1String( "removed flags (" );
+      rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
+      rv += QLatin1String ( ") " );
       break;
     case Move:
       rv += QLatin1String( "moved" );
@@ -340,7 +337,7 @@ QString NotificationMessageV2::toString() const
       rv += QLatin1String( "unsubscribed" );
       break;
     case InvalidOp:
-      return QString();
+      return QLatin1String( "*INVALID OPERATION*" );
   }
 
   if ( d->parentDestCollection >= 0 )
@@ -507,6 +504,15 @@ bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list
             (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
             (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
             (*it).setRemovedFlags( (*it).removedFlags() + msg.removedFlags() );
+
+            // If merged notifications result in no-change notification, drop both.
+            if ( it->operation() == ModifyFlags ) {
+              if ( (*it).addedFlags() == (*it).removedFlags() ) {
+                it = list.erase( it );
+                end = list.end();
+              }
+            }
+
           return false;
         }
 
