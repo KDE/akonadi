@@ -185,7 +185,7 @@ CalendarClipboard::CalendarClipboard( const Akonadi::CalendarBase::Ptr &calendar
                                                         , d( new Private( calendar, changer, this ) )
 {
 
-  
+
 }
 
 CalendarClipboard::~CalendarClipboard()
@@ -229,7 +229,7 @@ void CalendarClipboard::cutIncidence( const KCalCore::Incidence::Ptr &incidence,
         incidencesToCut << child;
     }
     d->cut( incidencesToCut );
-  }    
+  }
 }
 
 bool CalendarClipboard::copyIncidence( const KCalCore::Incidence::Ptr &incidence,

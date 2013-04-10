@@ -1426,7 +1426,7 @@ class StandardActionManager::Private
       KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
       if ( text.isEmpty() )
         return contextTexts[ type ].value( context ).text;
- 
+
       return text.subs( value ).toString();
     }
 

@@ -52,7 +52,7 @@ QString Akonadi::CalendarUtils::email()
 bool Akonadi::CalendarUtils::thatIsMe( const QString &_email )
 {
   KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
-  
+
   // NOTE: this method is called for every created agenda view item,
   // so we need to keep performance in mind
 

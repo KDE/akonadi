@@ -54,7 +54,7 @@ class CollectionFilterModel : public QSortFilterProxyModel
      * If a mime type has been added, only collections that contain
      * this mime type in their content mime types will be listed by
      * this proxy model.
-     * 
+     *
      * @param mimeType mime type content filter
      */
     void addContentMimeTypeFilter( const QString &mimeType );

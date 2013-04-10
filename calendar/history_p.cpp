@@ -141,7 +141,7 @@ void CreationEntry::onCreateFinished( int changeId, const Akonadi::Item &item,
                                       Akonadi::IncidenceChanger::ResultCode resultCode,
                                       const QString &errorString )
 {
-  if ( mChangeIds.contains( changeId ) ) { 
+  if ( mChangeIds.contains( changeId ) ) {
     if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
       mLatestRevisionByItemId.insert( item.id(), item.revision() );
       Q_ASSERT( mItems.count() == 1 );

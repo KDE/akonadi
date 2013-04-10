@@ -68,7 +68,7 @@ bool KColumnFilterProxyModel::filterAcceptsColumn( int column, const QModelIndex
     // We only filter columns out when m_visibleColumns actually contains values.
     return false;
   }
- 
+
   return QSortFilterProxyModel::filterAcceptsColumn( column, parent );
 }
 

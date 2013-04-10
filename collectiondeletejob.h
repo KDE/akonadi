@@ -47,7 +47,7 @@ class CollectionDeleteJobPrivate;
  * the agent will also delete its parent collection; in this case the only
  * option is to delete the sub-collection data in both Akonadi and backend
  * storage.)
- * 
+ *
  * @code
  *
  * const Akonadi::AgentInstance instance =

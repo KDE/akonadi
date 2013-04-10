@@ -44,7 +44,7 @@ enum Status {
     StatusNone,
     StatusSendingInvitation
 };
-  
+
 /**
   This class handles sending of invitations to attendees when Incidences (e.g.
   events or todos) are created/modified/deleted.

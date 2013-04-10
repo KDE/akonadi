@@ -408,7 +408,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void collectionsRetrievalDone();
 
     /**
-     * Call this method to supply the full collection listing from the remote server.
+     * Call this method to supply the full collection listing from the remote server. Items not present in the list
+     * will be dropped from the Akonadi database.
      *
      * If the remote server supports incremental listing, it's strongly
      * recommended to use itemsRetrievedIncremental() instead.

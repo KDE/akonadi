@@ -170,7 +170,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
-
+  qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
   qRegisterMetaType<Akonadi::IncidenceChanger::ResultCode>(
     "Akonadi::IncidenceChanger::ResultCode" );
 }
