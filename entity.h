@@ -108,6 +108,19 @@ class AKONADI_EXPORT Entity
           }
           return T();
         }
+
+        /**
+         * Returns entity with given remote ID, or an invalid entity.
+         */
+        T findByRemoteId(const QString &remoteId) const
+        {
+          Q_FOREACH ( const T &e, *this ) {
+            if ( e.remoteId() == remoteId ) {
+              return e;
+            }
+          }
+          return T();
+        }
     };
 
     /**
