@@ -307,8 +307,6 @@ void AgentBasePrivate::init()
     }
   }
 
-  const bool haveObserverV3 = (dynamic_cast<AgentBase::ObserverV3*>(mObserver) != 0);
-
   connect( mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
            SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
@@ -327,28 +325,6 @@ void AgentBasePrivate::init()
            SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)) );
   connect( mChangeRecorder, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
            SLOT(collectionUnsubscribed(Akonadi::Collection)) );
-
-  if ( haveObserverV3 ) {
-    connect( mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
-             this, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
-    connect( mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
-             this, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
-    connect( mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
-             this, SLOT(itemsRemoved(Akonadi::Item::List)) );
-    connect( mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
-             this, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
-    connect( mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
-             this, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
-  } else {
-    connect( mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-            SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
-    connect( mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
-            SLOT(itemRemoved(Akonadi::Item)) );
-    connect( mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-            SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
-    connect( mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-            SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
-  }
 
   connect( q, SIGNAL(status(int,QString)), q, SLOT(slotStatus(int,QString)) );
   connect( q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)) );
@@ -902,6 +878,50 @@ void AgentBase::registerObserver( Observer *observer )
 {
   // TODO in theory we should re-connect change recorder signals here that we disconnected previously
   d_ptr->mObserver = observer;
+
+  const bool haveObserverV3 = (dynamic_cast<AgentBase::ObserverV3*>(d_ptr->mObserver) != 0);
+
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
+              d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
+              d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
+              d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
+              d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
+              d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+              d_ptr, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
+              d_ptr, SLOT(itemRemoved(Akonadi::Item)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+              d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+  disconnect( d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+              d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+
+  kDebug() << "Registered observer" << observer << ". V3" << (haveObserverV3 ? "is" : "not") << "supported";
+  if ( haveObserverV3 ) {
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
+             d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
+             d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
+             d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
+             d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
+             d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) );
+  } else {
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
+             d_ptr, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
+             d_ptr, SLOT(itemRemoved(Akonadi::Item)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
+             d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)) );
+    connect( d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
+             d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
+  }
 }
 
 QString AgentBase::identifier() const
