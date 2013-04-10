@@ -1,0 +1,147 @@
+/***************************************************************************
+ *   Copyright (C) 2013 by Volker Krause <vkrause@kde.org>                 *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU Library General Public License as       *
+ *   published by the Free Software Foundation; either version 2 of the    *
+ *   License, or (at your option) any later version.                       *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU Library General Public     *
+ *   License along with this program; if not, write to the                 *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
+ ***************************************************************************/
+
+#include "session.h"
+
+#include <shared/akstandarddirs.h>
+#include <shared/akdebug.h>
+
+#include <QCoreApplication>
+#include <QDebug>
+#include <QFile>
+#include <QSocketNotifier>
+#include <QSettings>
+#include <QLocalSocket>
+
+#include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
+
+Session::Session(const QString& input, QObject* parent):
+  QObject(parent),
+  m_input(0),
+  m_session(0),
+  m_notifier(0),
+  m_receivedBytes(0),
+  m_sentBytes(0)
+{
+  QFile *file = new QFile(this);
+  if (input != QLatin1String("-")) {
+    file->setFileName(input);
+    if (!file->open(QFile::ReadOnly))
+      akFatal() << "Failed to open" << input;
+  } else {
+    // ### does that work on Windows?
+    const int flags = fcntl(0, F_GETFL);
+    fcntl(0, F_SETFL, flags | O_NONBLOCK);
+
+    if (!file->open(stdin, QFile::ReadOnly|QFile::Unbuffered))
+      akFatal() << "Failed to open stdin!";
+    m_notifier = new QSocketNotifier(0, QSocketNotifier::Read, this);
+    connect(m_notifier, SIGNAL(activated(int)), SLOT(inputAvailable()));
+  }
+  m_input = file;
+}
+
+Session::~Session()
+{
+}
+
+void Session::connectToHost()
+{
+  const QSettings connectionSettings(AkStandardDirs::connectionConfigFile(), QSettings::IniFormat);
+
+  QString serverAddress;
+#ifdef Q_OS_WIN
+  serverAddress = connectionSettings.value(QLatin1String("Data/NamedPipe"), QString()).toString();
+#else
+  serverAddress = connectionSettings.value(QLatin1String("Data/UnixPath"), QString()).toString();
+#endif
+  if (serverAddress.isEmpty())
+    akFatal() << "Unable to determine server address.";
+
+  QLocalSocket *socket = new QLocalSocket(this);
+  connect(socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(serverError(QLocalSocket::LocalSocketError)));
+  connect(socket, SIGNAL(disconnected()), SLOT(serverDisconnected()));
+  connect(socket, SIGNAL(readyRead()), SLOT(serverRead()));
+  connect(socket, SIGNAL(connected()), SLOT(inputAvailable()));
+
+  m_session = socket;
+  socket->connectToServer(serverAddress);
+
+  m_connectionTime.start();
+}
+
+void Session::inputAvailable()
+{
+  if (!m_session->isOpen())
+    return;
+
+  if (m_notifier)
+    m_notifier->setEnabled(false);
+
+  if (m_input->atEnd()) {
+    return;
+  }
+
+  QByteArray buffer(1024, Qt::Uninitialized);
+  qint64 readSize = 0;
+
+  while ((readSize = m_input->read(buffer.data(), buffer.size())) > 0) {
+    m_session->write(buffer.constData(), readSize);
+    m_sentBytes += readSize;
+  }
+
+  if (m_notifier)
+    m_notifier->setEnabled(true);
+}
+
+void Session::serverDisconnected()
+{
+  QCoreApplication::exit(0);
+}
+
+void Session::serverError(QLocalSocket::LocalSocketError socketError)
+{
+  if (socketError == QLocalSocket::PeerClosedError) {
+    QCoreApplication::exit(0);
+    return;
+  }
+
+  std::cerr << qPrintable(m_session->errorString());
+  QCoreApplication::exit(1);
+}
+
+void Session::serverRead()
+{
+  QByteArray buffer(1024, Qt::Uninitialized);
+  qint64 readSize = 0;
+
+  while ((readSize = m_session->read(buffer.data(), buffer.size())) > 0) {
+    write(1, buffer.data(), readSize);
+    m_receivedBytes += readSize;
+  }
+}
+
+void Session::printStats() const
+{
+  std::cerr << "Connection time: " << m_connectionTime.elapsed() << " ms" << std::endl;
+  std::cerr << "Sent: " << m_sentBytes << " bytes" << std::endl;
+  std::cerr << "Received: " << m_receivedBytes << " bytes" << std::endl;
+}

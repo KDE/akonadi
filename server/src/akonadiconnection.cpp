@@ -1,5 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
+ *   Copyright (C) 2013 by Volker Krause <vkrause@kde.org>                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU Library General Public License as       *
@@ -14,13 +15,14 @@
  *   You should have received a copy of the GNU Library General Public     *
  *   License along with this program; if not, write to the                 *
  *   Free Software Foundation, Inc.,                                       *
- *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 #include "akonadiconnection.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
 #include <QtCore/QLatin1String>
+#include <QSettings>
 
 #include "storage/datastore.h"
 #include "handler.h"
@@ -31,6 +33,8 @@
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
 #include "shared/akcrash.h"
+
+#include <akstandarddirs.h>
 
 #include <assert.h>
 
@@ -49,9 +53,13 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_backend( 0 )
     , m_selectedConnection( 0 )
     , m_streamParser( 0 )
+    , m_verifyCacheOnRetrieval(false)
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
     ClientCapabilityAggregator::addSession(m_clientCapabilities);
+
+    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+    m_verifyCacheOnRetrieval = settings.value(QLatin1String("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
@@ -100,10 +108,17 @@ void AkonadiConnection::run()
     connect( m_socket, SIGNAL(disconnected()),
              this, SLOT(slotDisconnected()), Qt::DirectConnection );
 
-    writeOut( "* OK Akonadi Almost IMAP Server [PROTOCOL 32]");
-
     m_streamParser = new ImapStreamParser( m_socket );
     m_streamParser->setTracerIdentifier( m_identifier );
+
+    Response greeting;
+    greeting.setUntagged();
+    greeting.setString("OK Akonadi Almost IMAP Server [PROTOCOL 32]");
+    // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
+    // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
+    // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
+    QMetaObject::invokeMethod(this, "slotResponseAvailable", Qt::DirectConnection, Q_ARG(Akonadi::Response, greeting));
+
     exec();
     delete m_socket;
     m_socket = 0;
@@ -132,8 +147,8 @@ void AkonadiConnection::slotNewData()
       Tracer::self()->connectionInput( m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
-      connect( m_currentHandler, SIGNAL(responseAvailable(Response)),
-              this, SLOT(slotResponseAvailable(Response)), Qt::DirectConnection );
+      connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Response)),
+              this, SLOT(slotResponseAvailable(Akonadi::Response)), Qt::DirectConnection );
       connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
               this, SLOT(slotConnectionStateChange(ConnectionState)),
                Qt::DirectConnection );
@@ -210,7 +225,7 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
     return handler;
 }
 
-void AkonadiConnection::slotResponseAvailable( const Response& response )
+void AkonadiConnection::slotResponseAvailable( const Akonadi::Response &response )
 {
     // FIXME handle reentrancy in the presence of continuation. Something like:
     // "if continuation pending, queue responses, once continuation is done, replay them"
@@ -327,4 +342,9 @@ void AkonadiConnection::setCapabilities(const ClientCapabilities& capabilities)
   ClientCapabilityAggregator::removeSession(m_clientCapabilities);
   m_clientCapabilities = capabilities;
   ClientCapabilityAggregator::addSession(m_clientCapabilities);
+}
+
+bool AkonadiConnection::verifyCacheOnRetrieval() const
+{
+  return m_verifyCacheOnRetrieval;
 }

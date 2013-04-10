@@ -261,6 +261,9 @@ bool ItemRetriever::exec()
 
 void ItemRetriever::verifyCache()
 {
+  if (!connection()->verifyCacheOnRetrieval())
+    return;
+
   SelectQueryBuilder<Part> qb;
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
   qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );

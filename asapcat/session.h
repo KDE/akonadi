@@ -17,26 +17,46 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef CLIENTCAPABILITYAGGREGATOR_H
-#define CLIENTCAPABILITYAGGREGATOR_H
+#ifndef SESSION_H
+#define SESSION_H
 
-#include "clientcapabilities.h"
+#include <QObject>
+#include <QLocalSocket>
+#include <QTime>
 
-#include <QMutex>
+class QIODevice;
+class QSocketNotifier;
 
-/** Aggregates client capabilities of all active sessions. */
-namespace ClientCapabilityAggregator
+/** ASAP CLI session. */
+class Session : public QObject
 {
-  /** Register capabilities of a new session. */
-  void addSession(const ClientCapabilities &capabilities);
-  /** Unregister capabilities of a new session. */
-  void removeSession(const ClientCapabilities &capabilities);
+    Q_OBJECT
+  public:
+    explicit Session(const QString &input, QObject *parent = 0);
+    ~Session();
 
-  /** Minimum required notification message version. */
-  int minimumNotificationMessageVersion();
+    void printStats() const;
 
-  /** Maximum required notification message version */
-  int maximumNotificationMessageVersion();
-}
+  public Q_SLOTS:
+    void connectToHost();
 
-#endif // CLIENTCAPABILITYAGGREGATOR_H
+  Q_SIGNALS:
+    void disconnected();
+
+  private Q_SLOTS:
+    void inputAvailable();
+    void serverDisconnected();
+    void serverError(QLocalSocket::LocalSocketError socketError);
+    void serverRead();
+
+  private:
+    QIODevice *m_input;
+    QIODevice *m_session;
+    QSocketNotifier *m_notifier;
+
+    QTime m_connectionTime;
+    qint64 m_receivedBytes;
+    qint64 m_sentBytes;
+};
+
+#endif // SESSION_H

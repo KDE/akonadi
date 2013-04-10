@@ -74,7 +74,11 @@ void AkApplication::parseCommandLine()
       ( "instance", po::value<std::string>(), "Namespace for starting multiple Akonadi instances in the same user session" );
     mCmdLineOptions.add( miOptions );
 
-    po::store( po::parse_command_line( mArgc, mArgv, mCmdLineOptions ), mCmdLineArguments );
+    po::command_line_parser parser(mArgc, mArgv);
+    parser.options(mCmdLineOptions);
+    if (mCmdPositionalOptions.max_total_count() > 0)
+      parser.positional(mCmdPositionalOptions);
+    po::store( parser.run(), mCmdLineArguments );
     po::notify( mCmdLineArguments );
 
     if ( mCmdLineArguments.count( "help" ) ) {
@@ -110,6 +114,11 @@ void AkApplication::pollSessionBus() const
 void AkApplication::addCommandLineOptions(const boost::program_options::options_description & desc)
 {
   mCmdLineOptions.add( desc );
+}
+
+void AkApplication::addPositionalCommandLineOption(const char* option, int count)
+{
+  mCmdPositionalOptions.add(option, count);
 }
 #endif
 

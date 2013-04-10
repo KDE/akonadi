@@ -49,16 +49,14 @@ NepomukSearch::NepomukSearch( QObject* parent )
 
 NepomukSearch::~NepomukSearch()
 {
-  if ( mSearchService ) {
-    mSearchService->close();
-    delete mSearchService;
-  }
+  mSearchService->close();
+  delete mSearchService;
 }
 
 QStringList NepomukSearch::search( const QString &query )
 {
   //qDebug() << Q_FUNC_INFO << query;
-  if ( !mSearchService ) {
+  if ( !mSearchService->serviceAvailable() ) {
     qWarning() << "Nepomuk search service not available!";
     return QStringList();
   }
@@ -70,7 +68,7 @@ QStringList NepomukSearch::search( const QString &query )
   encodedRps.insert( QString::fromLatin1( "reqProp1" ), QUrl(QString::fromLatin1("http://akonadi-project.org/ontologies/aneo#akonadiItemId")).toString() );
 
   if ( !mSearchService->blockingQuery( query, encodedRps ) ) {
-    qWarning() << Q_FUNC_INFO << "Calling blockingQuery() failed!";
+    qWarning() << Q_FUNC_INFO << "Calling blockingQuery() failed!" << query;
     return QStringList();
   }
 
@@ -109,7 +107,7 @@ void NepomukSearch::addHit(const Nepomuk::Query::Result& result)
 
 void NepomukSearch::hitsAdded( const QList<Nepomuk::Query::Result>& entries )
 {
-  if ( !mSearchService ) {
+  if ( !mSearchService->serviceAvailable() ) {
     qWarning() << "Nepomuk search service not available!";
     return;
   }

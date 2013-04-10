@@ -20,10 +20,6 @@
 
 #include "nepomuksearchengine.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QUrl>
-#include <QMetaObject>
-
 #include <akdebug.h>
 #include "src/nepomuk/result.h"
 
@@ -31,8 +27,14 @@
 #include "storage/notificationcollector.h"
 #include "storage/selectquerybuilder.h"
 #include "notificationmanager.h"
+#include "libs/xdgbasedirs_p.h"
+
+#include <QtCore/QDebug>
+#include <QtCore/QUrl>
+#include <QMetaObject>
 #include <qdbusservicewatcher.h>
 #include <qdbusconnection.h>
+#include <QSettings>
 
 using namespace Akonadi;
 
@@ -50,7 +52,8 @@ static qint64 resultToId( const Nepomuk::Query::Result &result )
 
 NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
   : QObject( parent ),
-    mCollector( new NotificationCollector( this ) )
+    mCollector( new NotificationCollector( this ) ),
+    m_liveSearchEnabled( true )
 {
   NotificationManager::self()->connectNotificationCollector( mCollector );
 
@@ -66,6 +69,9 @@ NepomukSearchEngine::NepomukSearchEngine( QObject* parent )
     // FIXME: try to start the nepomuk server
     akError() << "Nepomuk Query Server not available";
   }
+
+  const QSettings settings(XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat);
+  m_liveSearchEnabled = settings.value(QLatin1String("Nepomuk/LiveSearchEnabled"), false).toBool();
 }
 
 NepomukSearchEngine::~NepomukSearchEngine()
@@ -98,6 +104,8 @@ void NepomukSearchEngine::addSearch( const Collection &collection )
            this, SLOT(hitsAdded(QList<Nepomuk::Query::Result>)) );
   connect( query, SIGNAL(entriesRemoved(QList<Nepomuk::Query::Result>)),
            this, SLOT(hitsRemoved(QList<Nepomuk::Query::Result>)) );
+  connect( query, SIGNAL(finishedListing()),
+           this, SLOT(finishedListing()) );
 
   mMutex.lock();
   mQueryMap.insert( query, collection.id() );
@@ -221,3 +229,20 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
   mCollector->dispatchNotifications();
 }
 
+void NepomukSearchEngine::finishedListing()
+{
+  if (m_liveSearchEnabled)
+    return;
+
+  Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
+  if ( !query ) {
+    qWarning() << Q_FUNC_INFO << "Nepomuk QueryServer: Got signal from non-existing search query!";
+    return;
+  }
+
+  mMutex.lock();
+  qint64 collectionId = mQueryMap.value( query );
+  mMutex.unlock();
+
+  removeSearch(collectionId);
+}

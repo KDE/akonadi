@@ -19,7 +19,8 @@
 #ifndef AKONADIRESPONSE_H
 #define AKONADIRESPONSE_H
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
+#include <QMetaType>
 
 namespace Akonadi {
 
@@ -63,5 +64,7 @@ private:
 };
 
 }
+
+Q_DECLARE_METATYPE(Akonadi::Response)
 
 #endif

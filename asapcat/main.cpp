@@ -17,26 +17,35 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef CLIENTCAPABILITYAGGREGATOR_H
-#define CLIENTCAPABILITYAGGREGATOR_H
+#include <session.h>
 
-#include "clientcapabilities.h"
+#include <shared/akapplication.h>
+#include <shared/akstandarddirs.h>
 
-#include <QMutex>
+#include <QCoreApplication>
+#include <QDebug>
 
-/** Aggregates client capabilities of all active sessions. */
-namespace ClientCapabilityAggregator
+int main(int argc, char **argv)
 {
-  /** Register capabilities of a new session. */
-  void addSession(const ClientCapabilities &capabilities);
-  /** Unregister capabilities of a new session. */
-  void removeSession(const ClientCapabilities &capabilities);
+  AkCoreApplication app(argc, argv);
+  app.setDescription(QLatin1String("Akonadi ASAP cat\n"
+    "This is a development tool, only use this if you know what you are doing.\n\n"
+    "Usage: asapcat [input]"
+  ));
 
-  /** Minimum required notification message version. */
-  int minimumNotificationMessageVersion();
+  boost::program_options::options_description options;
+  options.add_options()
+    ("input", boost::program_options::value<std::string>()->default_value("-"), "input to read commands from");
+  app.addCommandLineOptions(options);
+  app.addPositionalCommandLineOption("input", 1);
 
-  /** Maximum required notification message version */
-  int maximumNotificationMessageVersion();
+  app.parseCommandLine();
+
+  Session session(QString::fromStdString(app.commandLineArguments()["input"].as<std::string>()));
+  QObject::connect(&session, SIGNAL(disconnected()), QCoreApplication::instance(), SLOT(quit()));
+  QMetaObject::invokeMethod(&session, "connectToHost", Qt::QueuedConnection);
+
+  const int result = app.exec();
+  session.printStats();
+  return result;
 }
-
-#endif // CLIENTCAPABILITYAGGREGATOR_H

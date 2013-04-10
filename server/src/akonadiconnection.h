@@ -76,13 +76,16 @@ public:
     const ClientCapabilities& capabilities() const;
     void setCapabilities(const ClientCapabilities &capabilities);
 
+    /** Returns @c true if permanent cache verification is enabled. */
+    bool verifyCacheOnRetrieval() const;
+
 protected Q_SLOTS:
     void slotDisconnected();
     /**
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Response& );
+    void slotResponseAvailable( const Akonadi::Response& response );
     void slotConnectionStateChange( ConnectionState );
 
 protected:
@@ -109,6 +112,7 @@ private:
     ImapStreamParser *m_streamParser;
     Resource m_resourceContext;
     ClientCapabilities m_clientCapabilities;
+    bool m_verifyCacheOnRetrieval;
 };
 
 }

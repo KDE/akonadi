@@ -74,8 +74,8 @@ bool Search::parseStream()
 
   FetchHelper fetchHelper( connection(), scope );
   fetchHelper.setStreamParser( m_streamParser );
-  connect( &fetchHelper, SIGNAL(responseAvailable(Response)),
-           this, SIGNAL(responseAvailable(Response)) );
+  connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
+           this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
   if ( !fetchHelper.parseStream( "SEARCH" ) )
     return false;

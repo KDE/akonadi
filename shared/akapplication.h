@@ -42,6 +42,7 @@ class AkApplication : public QObject
 
  #ifndef _WIN32_WCE
     void addCommandLineOptions( const boost::program_options::options_description &desc );
+    void addPositionalCommandLineOption( const char *option, int count );
     const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
 #endif
 
@@ -79,6 +80,7 @@ class AkApplication : public QObject
 #ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
     boost::program_options::variables_map mCmdLineArguments;
+    boost::program_options::positional_options_description mCmdPositionalOptions;
 #endif
 };
 

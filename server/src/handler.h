@@ -120,7 +120,7 @@ Q_SIGNALS:
      * be several responses per command.
      * @param response The response to be sent to the client.
      */
-    void responseAvailable( const Response& response );
+    void responseAvailable( const Akonadi::Response& response );
 
     /**
      * Emitted whenever a handler wants the connection to change into a

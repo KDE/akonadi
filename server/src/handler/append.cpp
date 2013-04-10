@@ -91,7 +91,7 @@ bool Append::commit()
 
     Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
     if ( !col.isValid() )
-      return failureResponse( "Unknown collection." );
+      return failureResponse( QByteArray( "Unknown collection for '" ) + m_mailbox + QByteArray( "'." ) );
 
     QByteArray mt;
     QString remote_id;

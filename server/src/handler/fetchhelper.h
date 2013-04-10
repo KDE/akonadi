@@ -46,7 +46,7 @@ class FetchHelper : public QObject
     bool parseStream( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
-    void responseAvailable( const Response& );
+    void responseAvailable( const Akonadi::Response& );
 
   private:
     void init();
