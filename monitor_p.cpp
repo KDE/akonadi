@@ -123,16 +123,16 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
 
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0 )
-    || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
+    || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0
+                                             && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
     || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
-    || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Unlink && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) == 0 )
-    || ( op == NotificationMessageV2::Unlink && q_ptr->receivers( SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) ) == 0 ) ) )
+    || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
+                                           && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0
+                                           && q_ptr->receivers( SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)) ) == 0 )
+    || ( op == NotificationMessageV2::Unlink && q_ptr->receivers( SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)) ) == 0
+                                             && q_ptr->receivers( SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)) ) == 0 ) ) )
   {
     return true;
   }
@@ -535,7 +535,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 
       checkBatchSupport( msg, needsSplit, supportsBatch );
 
-      if ( supportsBatch ) {
+      if ( supportsBatch || msg.type() == NotificationMessageV2::Collections ) {
         // Make sure the batch msg is always queued before the split notifications
         const int oldSize = pendingNotifications.size();
         const bool appended = translateAndCompress( pendingNotifications, msg );
@@ -563,6 +563,8 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
         pendingNotifications << split;
         appendedMessages += split.count();
       }
+    } else {
+      kDebug() << "Notification not accepted";
     }
   }
 
