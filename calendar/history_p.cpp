@@ -89,8 +89,8 @@ CreationEntry::CreationEntry( const Akonadi::Item &item, const QString &descript
   Q_ASSERT( mItems.count() == 1 );
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
   if ( mDescription.isEmpty() ) {
-    mDescription = i18n( "%1 creation",
-                         KCalUtils::Stringify::incidenceType( incidence->type() ) );
+    mDescription = i18nc( "%1 is event, todo or journal", "%1 creation",
+                          KCalUtils::Stringify::incidenceType( incidence->type() ) );
   }
   connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
             SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
@@ -161,8 +161,8 @@ DeletionEntry::DeletionEntry( const Akonadi::Item::List &items, const QString &d
 {
   const Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
   if ( mDescription.isEmpty() ) {
-    mDescription = i18n( "%1 deletion",
-                         KCalUtils::Stringify::incidenceType( incidence->type() ) );
+    mDescription = i18nc( "%1 is event, todo or journal", "%1 deletion",
+                          KCalUtils::Stringify::incidenceType( incidence->type() ) );
   }
   connect( mChanger, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
             SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
@@ -246,8 +246,8 @@ ModificationEntry::ModificationEntry( const Akonadi::Item &item,
 {
   const Incidence::Ptr incidence = mItems.first().payload<KCalCore::Incidence::Ptr>();
   if ( mDescription.isEmpty() ) {
-    mDescription =  i18n( "%1 modification",
-                          KCalUtils::Stringify::incidenceType( incidence->type() ) );
+    mDescription =  i18nc( "%1 is event, todo or journal", "%1 modification",
+                           KCalUtils::Stringify::incidenceType( incidence->type() ) );
   }
 
   connect( mChanger, SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
