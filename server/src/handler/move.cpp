@@ -94,7 +94,7 @@ bool Move::parseStream()
     }
 
     // Emit notification for each source collection separately
-    Q_FOREACH( const Entity::Id &sourceId, toMove.uniqueKeys() ) {
+    Q_FOREACH ( const Entity::Id &sourceId, toMove.uniqueKeys() ) {
       const PimItem::List &itemsToMove = toMove.values( sourceId ).toVector();
       const Collection &source = sources.value( sourceId );
       store->notificationCollector()->itemsMoved( itemsToMove, source, destination );

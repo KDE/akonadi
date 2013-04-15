@@ -212,11 +212,10 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   msg.setParentDestCollection( collectionDest.id() );
 
   /* Notify all virtual collections the items are linked to. */
-  Q_FOREACH( const Entity::Id &colId, vCollections.uniqueKeys() ) {
-    qDebug() << "Notifying virtual collection" << colId;
+  Q_FOREACH ( const Entity::Id &colId, vCollections.uniqueKeys() ) {
     NotificationMessageV2 copy = msg;
 
-    Q_FOREACH( const PimItem &item, vCollections.values( colId ) ) {
+    Q_FOREACH ( const PimItem &item, vCollections.values( colId ) ) {
       copy.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
     }
     copy.setParentCollection( colId );
@@ -225,7 +224,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
     dispatchNotification( copy );
   }
 
-  Q_FOREACH( const PimItem &item, items ) {
+  Q_FOREACH ( const PimItem &item, items ) {
     msg.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
   }
 

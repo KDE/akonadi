@@ -220,7 +220,7 @@ bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag
                                  const Collection &col )
 {
   QSet<QByteArray> added;
-  Q_FOREACH(  PimItem item, items ) {
+  Q_FOREACH( const PimItem &item, items ) {
     flagsChanged = false;
     if ( !item.isValid() )
       return false;

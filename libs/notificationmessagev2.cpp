@@ -286,7 +286,7 @@ QString NotificationMessageV2::toString() const
     itemStr += QLatin1String( ")" );
     items << itemStr.toLatin1();
   }
-  rv += QLatin1String("(") + QString::fromLatin1( ImapParser::join( items, ", " ) ) + QLatin1String(")");
+  rv += QLatin1String( "(" ) + QString::fromLatin1( ImapParser::join( items, ", " ) ) + QLatin1String( ")" );
 
   if ( d->parentDestCollection >= 0 ) {
     rv += QLatin1String( " from " );
@@ -499,7 +499,7 @@ bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list
     for ( NotificationMessageV2::List::Iterator it = list.begin(); it != end; ) {
       if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
 
-        // both are modificatoins, merge them together and drop the new one
+        // both are modifications, merge them together and drop the new one
         if (( msg.operation() == Modify || msg.operation() == ModifyFlags ) && ( it->operation() == Modify || it->operation() == ModifyFlags )) {
             (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
             (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
@@ -515,7 +515,6 @@ bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list
 
           return false;
         }
-
         // new one is a modification, the existing one not, so drop the new one
         else if (( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags )) {
           return false;
