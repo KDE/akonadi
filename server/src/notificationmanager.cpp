@@ -93,26 +93,25 @@ void NotificationManager::emitPendingNotifications()
 {
   if ( mNotifications.isEmpty() )
     return;
-  Q_FOREACH ( const NotificationMessageV2 &msg, mNotifications ) {
-    Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
-  }
 
   NotificationMessage::List legacyNotifications;
   Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
-    akDebug() << notification.toString();
-    const NotificationMessage::List tmp = notification.toNotificationV1().toList();
-    Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
-      akDebug() << "\t" << legacyNotification.toString();
-      bool appended = false;
-      NotificationMessage::appendAndCompress( legacyNotifications, legacyNotification, &appended );
-      if ( !appended ) {
-        legacyNotifications << legacyNotification;
+    Tracer::self()->signal( "NotificationManager::notify", notification.toString() );
+
+    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
+      const NotificationMessage::List tmp = notification.toNotificationV1().toList();
+      Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
+        bool appended = false;
+        NotificationMessage::appendAndCompress( legacyNotifications, legacyNotification, &appended );
+        if ( !appended ) {
+          legacyNotifications << legacyNotification;
+        }
       }
     }
   }
 
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
-    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
+    if ( !legacyNotifications.isEmpty() ) {
       src->emitNotification( legacyNotifications );
     }
     if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1 ) {
@@ -121,9 +120,7 @@ void NotificationManager::emitPendingNotifications()
   }
 
   // backward compatibility with the old non-subcription interface
-  // old clients will not support new notifications and new clients won't support
-  // non-subscription interface, so don't bother
-  if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 )
+  if ( !legacyNotifications.isEmpty() )
     Q_EMIT notify( legacyNotifications );
 
   mNotifications.clear();

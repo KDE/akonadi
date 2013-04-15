@@ -501,17 +501,17 @@ bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list
 
         // both are modifications, merge them together and drop the new one
         if (( msg.operation() == Modify || msg.operation() == ModifyFlags ) && ( it->operation() == Modify || it->operation() == ModifyFlags )) {
-            (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
-            (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
-            (*it).setRemovedFlags( (*it).removedFlags() + msg.removedFlags() );
+          (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+          (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
+          (*it).setRemovedFlags( (*it).removedFlags() + msg.removedFlags() );
 
-            // If merged notifications result in no-change notification, drop both.
-            if ( it->operation() == ModifyFlags ) {
-              if ( (*it).addedFlags() == (*it).removedFlags() ) {
-                it = list.erase( it );
-                end = list.end();
-              }
+          // If merged notifications result in no-change notification, drop both.
+          if ( it->operation() == ModifyFlags ) {
+            if ( (*it).addedFlags() == (*it).removedFlags() ) {
+              it = list.erase( it );
+              end = list.end();
             }
+          }
 
           return false;
         }

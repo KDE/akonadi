@@ -98,18 +98,19 @@ bool Move::parseStream()
       const PimItem::List &itemsToMove = toMove.values( sourceId ).toVector();
       const Collection &source = sources.value( sourceId );
       store->notificationCollector()->itemsMoved( itemsToMove, source, destination );
-    }
 
-    // Store the changes in DB
-    Q_FOREACH( PimItem moved, toMove ) {
-      // reset RID on inter-resource moves, but only after generating the change notification
-      // so that this still contains the old one for the source resource
-      const bool isInterResourceMove = moved.collection().resource().id() != destResource.id();
-      if ( isInterResourceMove )
-        moved.setRemoteId( QString() );
+      Q_FOREACH ( PimItem moved, toMove.values( sourceId ) ) {
+        // reset RID on inter-resource moves, but only after generating the change notification
+        // so that this still contains the old one for the source resource
+        const bool isInterResourceMove = moved.collection().resource().id() != destResource.id();
+        if ( isInterResourceMove )
+          moved.setRemoteId( QString() );
 
-      if ( !moved.update() )
-        throw HandlerException( "Unable to update item" );
+        // FIXME Could we aggregate the changes to a single SQL query?
+        if ( !moved.update() ) {
+          throw HandlerException( "Unable to update item" );
+        }
+      }
     }
   } else {
     throw HandlerException( "Unable to execute query" );

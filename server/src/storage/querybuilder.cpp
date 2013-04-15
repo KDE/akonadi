@@ -289,7 +289,7 @@ bool QueryBuilder::exec()
   for ( int i = 0; i < mBindValues.count(); ++i )
   {
     mQuery.bindValue( QLatin1Char( ':' ) + QString::number( i ), mBindValues[i] );
-    if ( mBindValues[i].canConvert<QVariantList>() )
+    if ( !isBatch && mBindValues[i].canConvert<QVariantList>() )
       isBatch = true;
     //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
