@@ -324,7 +324,7 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() ) {
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );

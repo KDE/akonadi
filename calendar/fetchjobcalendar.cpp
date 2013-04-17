@@ -21,7 +21,6 @@
 #include "fetchjobcalendar.h"
 #include "fetchjobcalendar_p.h"
 #include "incidencefetchjob_p.h"
-#include "utils_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/collection.h>
@@ -53,8 +52,13 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
     kWarning() << "Unable to fetch incidences:" << searchJob->errorText();
   } else {
     foreach( const Akonadi::Item &item, searchJob->items() ) {
-      if ( CalendarUtils::incidence(item) )
-        internalInsert( item );
+      if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        success = false;
+        errorMessage = QString("Invalid item or payload: %1").arg(item.id());
+        kWarning() << "Unable to fetch incidences:" << errorMessage;
+        continue;
+      }
+      internalInsert( item );
     }
   }
   m_isLoaded = true;

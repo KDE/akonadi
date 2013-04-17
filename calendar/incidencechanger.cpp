@@ -386,6 +386,7 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
   const Item item = j->item();
   Q_ASSERT( mDirtyFieldsByJob.contains( job ) );
+  Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
   item.payload<KCalCore::Incidence::Ptr>()->setDirtyFields( mDirtyFieldsByJob.value( job ) );
   const QSet<KCalCore::IncidenceBase::Field> dirtyFields = mDirtyFieldsByJob.value( job );
   QString description;
@@ -457,7 +458,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         ITIPHandlerHelper::SendResult status;
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
-          Q_ASSERT( item.hasPayload() );
+          Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
           if ( !incidence->supportsGroupwareCommunication() )
             continue;
