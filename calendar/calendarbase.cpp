@@ -164,12 +164,8 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
   Q_UNUSED( changeId );
   Q_UNUSED( item );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-    // TODO: There's always a valid item with a payload if result is success.
-    // You can however Q_ASSERT it.
-    if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      emit q->createFinished( false, QString("Invalid item or payload: %1").arg(item.id()) );
-      return;
-    }
+    Q_ASSERT( item.isValid() );
+    Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     internalInsert( item );
   }
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
