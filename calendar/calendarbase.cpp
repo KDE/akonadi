@@ -175,10 +175,10 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
   Q_UNUSED( changeId );
   Q_UNUSED( item );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-    KCalCore::IncidenceBase::Ptr incidence = item.payload<KCalCore::IncidenceBase::Ptr>();
+    KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
     Q_ASSERT( incidence );
     //update our local one
-    *(static_cast<IncidenceBase*>(q->incidence( incidence->uid() ).data() ) ) = *(incidence.data());
+    *(static_cast<KCalCore::IncidenceBase*>(q->incidence(incidence->uid()).data())) = *(incidence.data());
   }
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
@@ -439,7 +439,7 @@ bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
   return -1 != d->mIncidenceChanger->deleteIncidence( item_ );
 }
 
-bool CalendarBase::modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence )
+bool CalendarBase::modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence )
 {
   Q_D(CalendarBase);
   Q_ASSERT( newIncidence );
