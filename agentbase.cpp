@@ -900,7 +900,6 @@ void AgentBase::registerObserver( Observer *observer )
   disconnect( d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
               d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)) );
 
-  kDebug() << "Registered observer" << observer << ". V3" << (haveObserverV3 ? "is" : "not") << "supported";
   if ( haveObserverV3 ) {
     connect( d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
              d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) );

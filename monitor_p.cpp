@@ -524,12 +524,10 @@ bool MonitorPrivate::translateAndCompress( QQueue<NotificationMessageV2> &notifi
 
 void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
 {
-  kDebug() << this << msgs.count();
   int appendedMessages = 0;
   int modifiedMessages = 0;
   int erasedMessages = 0;
   foreach ( const NotificationMessageV2 &msg, msgs ) {
-    kDebug() << this << msg.toString();
     invalidateCaches( msg );
     updatePendingStatistics( msg );
     if ( acceptNotification( msg, true ) ) {
@@ -562,14 +560,11 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
       // if the message contains only one item, but batches are not supported
       // (and thus neither is flagsModified), splitMessage() will convert the
       // notification to regular Modify with "FLAGS" part changed
-      kDebug() << this << "NotificationMessage:" << msg.entities().count() << "items\t needsSplit:" << needsSplit << "\tsupportsBatch:" << supportsBatch;
       if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
         const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
         pendingNotifications << split;
         appendedMessages += split.count();
       }
-    } else {
-      kDebug() << "Notification not accepted";
     }
   }
 
@@ -581,7 +576,6 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
       notificationsEnqueued( appendedMessages );
   }
 
-  kDebug() << this << "Queued" << appendedMessages << "new messages, modified" << modifiedMessages << "messages and erased" << erasedMessages << "messages";
   dispatchNotifications();
 }
 
@@ -593,10 +587,8 @@ void MonitorPrivate::flushPipeline()
       // dequeue should be before emit, otherwise stuff might happen (like dataAvailable
       // being called again) and we end up dequeuing an empty pipeline
       pipeline.dequeue();
-      kDebug() << this << "Emitting msg" << msg.toString();
       emitNotification( msg );
     } else {
-      kDebug() << this << "Not ready" << msg.toString();
       break;
     }
   }
@@ -614,10 +606,8 @@ void MonitorPrivate::dispatchNotifications()
   while ( pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty() ) {
     const NotificationMessageV2 msg = pendingNotifications.dequeue();
     if ( ensureDataAvailable( msg ) && pipeline.isEmpty() ) {
-      kDebug() << this << "Emitting msg " << msg.toString();
       emitNotification( msg );
     } else {
-      kDebug() << this << "Pipelined msg " << msg.toString();
       pipeline.enqueue( msg );
     }
   }
