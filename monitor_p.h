@@ -219,7 +219,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
       listener that does not support batch operations. Sets @p batchSupported to True when
-      there's at least one listener that supporst batch operations.
+      there's at least one listener that supports batch operations.
     */
     void checkBatchSupport( const NotificationMessageV2 &msg, bool &needsSplit, bool &batchSupported ) const;
 
