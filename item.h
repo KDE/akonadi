@@ -121,13 +121,6 @@ class AKONADI_EXPORT Item : public Entity
     typedef QList<Item> List;
 
     /**
-     * Same as List but provides additional functionality.
-     *
-     * @since 4.11
-     */
-    typedef Entity::SmartList<Item> SmartList;
-
-    /**
      * Describes a flag name.
      */
     typedef QByteArray Flag;
@@ -691,7 +684,5 @@ void Item::addToLegacyMapping( const QString & mimeType ) {
 
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
-Q_DECLARE_METATYPE(Akonadi::Item::SmartList)
-
 
 #endif

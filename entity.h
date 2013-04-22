@@ -64,66 +64,6 @@ class AKONADI_EXPORT Entity
     typedef qint64 Id;
 
     /**
-     * A QList with additional functionality
-     *
-     * @since 4.11
-     */
-    template<typename T>
-    class SmartList: public QList<T>
-    {
-      public:
-        explicit SmartList<T>():
-          QList<T>()
-        { }
-
-        SmartList( const SmartList<T> &other ):
-          QList<T>(other)
-        { }
-
-        SmartList( const QList<T> &other ):
-          QList<T>(other)
-        { }
-
-        /**
-         * Returns IDs of all entities in the list
-         */
-        QList<Id> ids() const
-        {
-          QList< Entity::Id > l;
-          Q_FOREACH ( const T &e, *this ) {
-            l << e.id();
-          }
-          return l;
-        }
-
-        /**
-         * Returns entity with given id, or an invalid entity.
-         */
-        T findById(Id id) const
-        {
-          Q_FOREACH ( const T &e, *this ) {
-            if ( e.id() == id ) {
-              return e;
-            }
-          }
-          return T();
-        }
-
-        /**
-         * Returns entity with given remote ID, or an invalid entity.
-         */
-        T findByRemoteId(const QString &remoteId) const
-        {
-          Q_FOREACH ( const T &e, *this ) {
-            if ( e.remoteId() == remoteId ) {
-              return e;
-            }
-          }
-          return T();
-        }
-    };
-
-    /**
      * Sets the unique @p identifier of the entity.
      */
     void setId( Id identifier );
