@@ -175,17 +175,23 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
   Q_UNUSED( changeId );
   Q_UNUSED( item );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-    KCalCore::IncidenceBase::Ptr incidence = item.payload<KCalCore::IncidenceBase::Ptr>();
+    KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
     Q_ASSERT( incidence );
     //update our local one
-    *(static_cast<IncidenceBase*>(q->incidence( incidence->uid() ).data() ) ) = *(incidence.data());
+    *(static_cast<KCalCore::IncidenceBase*>(q->incidence(incidence->uid()).data())) = *(incidence.data());
   }
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
 void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newUid )
 {
-  Q_ASSERT( !mItemIdByUid.contains( newUid ) );
+  if (mItemIdByUid.contains(newUid)) {
+    kWarning() << "New uid shouldn't be known: "  << newUid << "; id="
+               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid];
+    Q_ASSERT(false);
+    return;
+  }
+
   mItemIdByUid[newUid] = newItem.id();
 
   Q_ASSERT( mItemById.contains( newItem.id() ) );
@@ -433,7 +439,7 @@ bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
   return -1 != d->mIncidenceChanger->deleteIncidence( item_ );
 }
 
-bool CalendarBase::modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence )
+bool CalendarBase::modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence )
 {
   Q_D(CalendarBase);
   Q_ASSERT( newIncidence );

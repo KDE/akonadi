@@ -225,7 +225,7 @@ public:
     * The incidence with the same uid as @p newIncidence will be updated with the contents of
     * @param newIncidence the incidence to modify
     */
-  bool modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence );
+  bool modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence );
 
 Q_SIGNALS:
   /**
