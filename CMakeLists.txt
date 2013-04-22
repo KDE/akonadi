@@ -365,7 +365,7 @@ if(XSLTPROC_EXECUTABLE)
 endif()
 
 add_subdirectory(rds)
-if(NOT MSVC)
+if(NOT WIN32)
   add_subdirectory(asapcat)
 endif()
 if (NOT QT5_BUILD)
