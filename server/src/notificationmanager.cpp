@@ -78,12 +78,10 @@ void NotificationManager::connectNotificationCollector(NotificationCollector* co
 
 void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
 {
-  /*
-  akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
+  //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
     NotificationMessageV2::appendAndCompress( mNotifications, msg );
-  akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
-  */
+  //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
   if ( !mTimer.isActive() )
     mTimer.start();
