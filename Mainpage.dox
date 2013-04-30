@@ -227,7 +227,7 @@ Currently, the most complete implementation is the
 operate autonomously (ie. without much user interaction) on the objects handled by Akonadi, mostly
 by reacting to change notifications sent by the %Akonadi server.
 
-Additionally, there are specialized interfaces agents can implement to provide additional functionality.
+Agents can implement specialized interfaces to provide additional functionality.
 The most important ones are the so-called resource agents. 
 
 Resource agents are connectors that provide access to data from an external source, and replay local changes
