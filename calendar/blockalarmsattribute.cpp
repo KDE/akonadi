@@ -24,15 +24,70 @@
 #include "blockalarmsattribute.h"
 #include <akonadi/attributefactory.h>
 #include <QtCore/QByteArray>
+#include <QtCore/QDataStream>
 
 using namespace Akonadi;
 
-BlockAlarmsAttribute::BlockAlarmsAttribute()
+class BlockAlarmsAttribute::Private
+{
+public:
+  Private():
+    audio(1),
+    display(1),
+    email(1),
+    procedure(1)
+  { }
+
+  int audio : 1;
+  int display : 1;
+  int email : 1;
+  int procedure : 1;
+};
+
+BlockAlarmsAttribute::BlockAlarmsAttribute():
+  d(new Private)
 {
 }
 
 BlockAlarmsAttribute::~BlockAlarmsAttribute()
 {
+  delete d;
+}
+
+void BlockAlarmsAttribute::blockAlarmType( KCalCore::Alarm::Type type, bool block )
+{
+  switch ( type ) {
+    case KCalCore::Alarm::Audio:
+      d->audio = block;
+      return;
+    case KCalCore::Alarm::Display:
+      d->display = block;
+      return;
+    case KCalCore::Alarm::Email:
+      d->email = block;
+      return;
+    case KCalCore::Alarm::Procedure:
+      d->procedure = block;
+      return;
+    default:
+      return;
+  }
+}
+
+bool BlockAlarmsAttribute::isAlarmTypeBlocked( KCalCore::Alarm::Type type ) const
+{
+  switch ( type ) {
+    case KCalCore::Alarm::Audio:
+      return d->audio;
+    case KCalCore::Alarm::Display:
+      return d->display;
+    case KCalCore::Alarm::Email:
+      return d->email;
+    case KCalCore::Alarm::Procedure:
+      return d->procedure;
+    default:
+      return false;
+  }
 }
 
 QByteArray BlockAlarmsAttribute::type() const
@@ -42,18 +97,48 @@ QByteArray BlockAlarmsAttribute::type() const
 
 BlockAlarmsAttribute *BlockAlarmsAttribute::clone() const
 {
-  return new BlockAlarmsAttribute();
+  BlockAlarmsAttribute *copy = new BlockAlarmsAttribute();
+  copy->d->audio = d->audio;
+  copy->d->display = d->display;
+  copy->d->email = d->email;
+  copy->d->procedure = d->procedure;
+
+  return copy;
 }
 
 QByteArray BlockAlarmsAttribute::serialized() const
 {
-  return QByteArray();
+  QByteArray ba;
+  QDataStream stream( &ba, QIODevice::WriteOnly );
+  stream << d->audio;
+  stream << d->display;
+  stream << d->email;
+  stream << d->procedure;
+
+  return ba;
 }
 
 void BlockAlarmsAttribute::deserialize( const QByteArray &data )
 {
-  Q_ASSERT( data.isEmpty() );
-  Q_UNUSED( data );
+  // Pre-4.11, default behavior
+  if ( data.isEmpty() ) {
+    d->audio = true;
+    d->display = true;
+    d->email = true;
+    d->procedure = true;
+  } else {
+    QByteArray ba = data;
+    QDataStream stream( &ba, QIODevice::ReadOnly );
+    int i;
+    stream >> i;
+    d->audio = i;
+    stream >> i;
+    d->display = i;
+    stream >> i;
+    d->email = i;
+    stream >> i;
+    d->procedure = i;
+  }
 }
 
 
