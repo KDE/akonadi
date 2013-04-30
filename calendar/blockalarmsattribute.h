@@ -22,6 +22,7 @@
 #define AKONADI_BLOCKALARMSATTRIBUTE_H
 
 #include "akonadi-calendar_export.h"
+#include <kcalcore/alarm.h>
 
 #include <akonadi/attribute.h>
 
@@ -31,7 +32,7 @@ namespace Akonadi {
  * @short An Attribute that marks that alarms from a calendar collection are blocked.
  *
  * A calendar collection which has this attribute set won't be evaluated by korgac and
- * therefore it's alarms won't be used.
+ * therefore it's alarms won't be used, unless explicitly unblocked in blockAlarmType().
  *
  * @author Tobias Koenig <tokoe@kdab.com>
  * @see Akonadi::Attribute
@@ -49,6 +50,22 @@ public:
     * Destroys the block alarms attribute.
     */
   ~BlockAlarmsAttribute();
+
+  /**
+   * Blocks or unblocks given alarm type.
+   *
+   * By default, all alarm types are blocked.
+   *
+   * @since 4.11
+   */
+  void blockAlarmType( KCalCore::Alarm::Type type, bool block = true );
+
+  /**
+   * Returns whether given alarm type is blocked or not.
+   *
+   * @since 4.11
+   */
+  bool isAlarmTypeBlocked( KCalCore::Alarm::Type type ) const;
 
   /**
     * Reimplemented from Attribute
@@ -69,6 +86,10 @@ public:
     * Reimplemented from Attribute
     */
   void deserialize( const QByteArray &data );
+
+private:
+  class Private;
+  Private * const d;
 };
 
 }

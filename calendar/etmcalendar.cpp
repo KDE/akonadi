@@ -418,22 +418,42 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
   while ( i.hasNext() ) {
     const Akonadi::Item item = i.next().value();
 
+    BlockAlarmsAttribute *blockedAttr = 0;
+
     if ( excludeBlockedAlarms ) {
       // take the collection from m_collectionMap, because we need the up-to-date collection attrs
       Akonadi::Collection parentCollection = d->mCollectionMap.value( item.storageCollectionId() );
       if ( parentCollection.isValid() && parentCollection.hasAttribute<BlockAlarmsAttribute>() ) {
-        continue;
+        blockedAttr = parentCollection.attribute<BlockAlarmsAttribute>();
+        if ( blockedAttr->isAlarmTypeBlocked( Alarm::Audio ) && blockedAttr->isAlarmTypeBlocked( Alarm::Display )
+             && blockedAttr->isAlarmTypeBlocked( Alarm::Email ) && blockedAttr->isAlarmTypeBlocked( Alarm::Procedure ) )
+        {
+          continue;
+        }
       }
     }
 
     KCalCore::Incidence::Ptr incidence;
     if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      incidence = item.payload<KCalCore::Incidence::Ptr>();
+      incidence = KCalCore::Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
     } else {
       continue;
     }
 
     if ( !incidence ) {
+      continue;
+    }
+
+    if ( blockedAttr ) {
+      // Remove all blocked types of alarms
+      Q_FOREACH ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() ) {
+        if ( blockedAttr->isAlarmTypeBlocked( alarm->type() ) ) {
+          incidence->removeAlarm( alarm );
+        }
+      }
+    }
+
+    if ( incidence->alarms().isEmpty() ) {
       continue;
     }
 
