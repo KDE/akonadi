@@ -360,7 +360,7 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
 
     foreach( const Item &item, items ) {
       // Werent deleted due to error
-      mDeletedItemIds.remove( item.id() );
+      mDeletedItemIds.remove( mDeletedItemIds.indexOf( item.id() ) );
     }
   } else { // success
     if ( change->recordToHistory ) {
