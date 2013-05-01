@@ -59,13 +59,23 @@ void DelegateAnimator::timerEvent(QTimerEvent* event)
   QRegion region;
   foreach (const Animation &animation, m_animations)
   {
-    // This repaints the entire delegate.
-    // TODO: See if there's a way to repaint only part of it.
-    animation.animate();
-    region += m_view->visualRect(animation.index);
+    // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
+    const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
+    if ( fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+      pop( animation.index );
+      continue;
+    }
+
+    // This repaints the entire delegate (icon and text).
+    // TODO: See if there's a way to repaint only part of it (the icon).
+    animation.nextFrame();
+    const QRect rect = m_view->visualRect(animation.index);
+    region += rect;
   }
 
-  m_view->viewport()->update(region);
+  if ( !region.isEmpty() ) {
+    m_view->viewport()->update(region);
+  }
 }
 
 QPixmap DelegateAnimator::sequenceFrame(const QModelIndex& index)
