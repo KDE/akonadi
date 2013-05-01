@@ -74,16 +74,8 @@ void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, cons
 {
   QStyledItemDelegate::initStyleOption(option, index);
 
-  const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-
-  if (!collection.isValid())
-  {
-    m_animator->pop(index);
-    return;
-  }
-
-  if (index.data(Akonadi::EntityTreeModel::FetchStateRole).toInt() != Akonadi::EntityTreeModel::FetchingState)
-  {
+  const QVariant fetchState = index.data( Akonadi::EntityTreeModel::FetchStateRole );
+  if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
     m_animator->pop(index);
     return;
   }
