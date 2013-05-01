@@ -34,6 +34,23 @@ DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
   m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
 }
 
+void DelegateAnimator::push(const QModelIndex &index)
+{
+    if (m_animations.isEmpty())
+        m_timerId = startTimer(200);
+    m_animations.insert(Animation(index));
+}
+
+void DelegateAnimator::pop(const QModelIndex &index)
+{
+    if (m_animations.remove(Animation(index))) {
+        if (m_animations.isEmpty() && m_timerId != -1) {
+            killTimer(m_timerId);
+            m_timerId = -1;
+        }
+    }
+}
+
 void DelegateAnimator::timerEvent(QTimerEvent* event)
 {
   if (!(event->timerId() == m_timerId && m_view))
