@@ -132,7 +132,6 @@ void CollectionStatisticsDelegate::setProgressAnimationEnabled( bool enable )
   if ( enable == ( d->animator != 0 ) ) {
       return;
   }
-  kDebug() << enable;
   if ( enable ) {
     Q_ASSERT( !d->animator );
     Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator( d->parent );
@@ -161,7 +160,6 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
     noTextOption->text.clear();
   }
 
-  kDebug() << "animator=" << d->animator;
   if ( d->animator ) {
 
     const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
