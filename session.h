@@ -24,6 +24,7 @@
 #include <QtCore/QObject>
 
 class KJob;
+class FakeSession;
 
 namespace Akonadi {
 
@@ -120,6 +121,7 @@ class AKONADI_EXPORT Session : public QObject
   private:
     //@cond PRIVATE
     SessionPrivate* const d;
+    friend class ::FakeSession;
 
     Q_PRIVATE_SLOT( d, void reconnect() )
     Q_PRIVATE_SLOT( d, void socketError( QLocalSocket::LocalSocketError ) )

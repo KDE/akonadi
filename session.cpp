@@ -439,6 +439,11 @@ void SessionPrivate::createDefaultSession( const QByteArray &sessionId )
   instances.setLocalData( new Session( sessionId ) );
 }
 
+void SessionPrivate::setDefaultSession( Session *session )
+{
+  instances.setLocalData( session );
+}
+
 Session* Session::defaultSession()
 {
   if ( !instances.hasLocalData() )
