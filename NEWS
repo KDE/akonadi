@@ -1,3 +1,9 @@
+1.9.2                             05-May-2013
+---------------------------------------------
+- Add option to FETCH to ignore external retrieval failures.
+- Properly restrict external payload removal.
+- Add buildsystem option to choose between Qt4 and Qt5.
+
 1.9.1                           02-March-2013
 ---------------------------------------------
 - Disable query cache for Sqlite.
