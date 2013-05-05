@@ -86,6 +86,12 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     static void createDefaultSession( const QByteArray &sessionId );
 
     /**
+     * Sets the default session.
+     * @internal Only for unit tests.
+     */
+    static void setDefaultSession( Session *session );
+
+    /**
       Associates the given Job object with this session.
     */
     virtual void addJob( Job* job );

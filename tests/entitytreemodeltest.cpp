@@ -150,7 +150,8 @@ private:
 void EntityTreeModelTest::initTestCase()
 {
   m_sessionName = "EntityTreeModelTest fake session";
-  m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately, this);
+  m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately);
+  m_fakeSession->setAsDefaultSession();
 
   qRegisterMetaType<QModelIndex>("QModelIndex");
 }
