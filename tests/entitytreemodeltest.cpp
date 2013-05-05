@@ -455,8 +455,13 @@ void EntityTreeModelTest::testItemMove()
 
   QList<ExpectedSignal> expectedSignals;
 
-  expectedSignals << getExpectedSignal( RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
-  expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
+  //Currently moves are implemented as remove + insert in the ETM.
+  expectedSignals << getExpectedSignal( RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << movedItem );
+  expectedSignals << getExpectedSignal( RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << movedItem );
+  expectedSignals << getExpectedSignal( RowsAboutToBeInserted, targetRow, targetRow, targetCollection, QVariantList() << movedItem );
+  expectedSignals << getExpectedSignal( RowsInserted, targetRow, targetRow, targetCollection, QVariantList() << movedItem );
+//   expectedSignals << getExpectedSignal( RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
+//   expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
 
   m_modelSpy->setExpectedSignals( expectedSignals );
   serverData->processNotifications();

@@ -31,12 +31,14 @@ macro(add_akonadi_isolated_test _source)
 
   find_program(_testrunner akonaditest)
 
-  add_test( libakonadi-${_name}
-    ${_testrunner} -c
-    ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml
-    ${_executable}
-  )
-endmacro()
+  if (KDEPIMLIBS_RUN_ISOLATED_TESTS)
+    add_test( libakonadi-${_name}
+      ${_testrunner} -c
+      ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml
+      ${_executable}
+    )
+  endif ()
+endmacro(add_akonadi_isolated_test)
 
 #add_akonadi_isolated_test( historytest.cpp )
 #add_akonadi_isolated_test( incidencechangertest.cpp )
