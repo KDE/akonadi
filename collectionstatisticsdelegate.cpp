@@ -237,7 +237,19 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   qint64 totalRecursiveCount = 0;
   qint64 unreadRecursiveCount = 0;
   qint64 totalSize = 0;
-  d->getCountRecursive( firstColumn, totalRecursiveCount, unreadRecursiveCount, totalSize );
+  bool needRecursiveCounts = false;
+  bool needTotalSize = false;
+  if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
+    needRecursiveCounts = true;
+  } else if ( ( index.column() == 1 || index.column() == 2 ) ) {
+    needRecursiveCounts = true;
+  } else if ( index.column() == 3 && !expanded ) {
+    needTotalSize = true;
+  }
+
+  if ( needRecursiveCounts || needTotalSize ) {
+    d->getCountRecursive( firstColumn, totalRecursiveCount, unreadRecursiveCount, totalSize );
+  }
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
