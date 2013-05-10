@@ -36,7 +36,8 @@ public:
     : QObject(parent)
   {
     m_sessionName = "MonitorNotificationTest fake session";
-    m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately, this);
+    m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately);
+    m_fakeSession->setAsDefaultSession();
   }
 
 private Q_SLOTS:

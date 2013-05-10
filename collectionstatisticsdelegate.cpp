@@ -163,7 +163,7 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
   if ( d->animator ) {
 
     const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
-    if (fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+    if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
       d->animator->pop(index);
       return;
     }
@@ -229,7 +229,7 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
 
   Collection collection = firstColumn.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
-  Q_ASSERT( collection.isValid() );
+  Q_ASSERT( collection.isValid() ); // TODO: I seem to hit this when removing a duplicated "Personal Contacts" or "Personal Calendar"
 
   CollectionStatistics statistics = collection.statistics();
 

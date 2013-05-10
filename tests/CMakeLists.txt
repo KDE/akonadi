@@ -7,7 +7,6 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 set( TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults )
 file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
-option(KDEPIMLIBS_RUN_ISOLATED_TESTS "Run the isolated tests." FALSE)
 option(KDEPIMLIBS_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
 option(KDEPIMLIBS_TESTS_SQLITE "Run all isolated tests with sqlite3 as backend in addition to the default backends" FALSE)
 
