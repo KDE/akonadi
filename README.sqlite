@@ -5,9 +5,10 @@ with Qt misses a bunch of multi-threading fixes crucial for Akonadi. Of course,
 these changes should be pushed upstream eventually.
 
 == INSTALL ==
-When Sqlite is found the custom driver will be build and installed at:
+When Sqlite is found, the custom driver will be build and installed in:
 
-${CMAKE_INSTALL_PREFIX}/lib/kde4/plugins/sqldrivers
+${CMAKE_INSTALL_PREFIX}/lib/plugins/sqldrivers or ${QT_PLUGINS_DIR}/sqldrivers
+if you enable the INSTALL_QSQLITE_IN_QT_PREFIX option when running CMake.
 
 The next thing you have to do is add that path (if it isn't already) to your
 QT_PLUGIN_PATH environment variable.

@@ -156,7 +156,7 @@ void akInit( const QString &appName )
     QFile fileOld( infoOld.absoluteFilePath() );
     const bool success = fileOld.remove();
     if ( !success )
-      qFatal( "Cannot remove old log file - running on a readlony filesystem maybe?" );
+      qFatal( "Cannot remove old log file - running on a readonly filesystem maybe?" );
   }
   QFileInfo info( sInstance()->errorLogFileName() );
   if ( info.exists() ) {
