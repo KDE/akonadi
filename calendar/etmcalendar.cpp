@@ -164,8 +164,25 @@ void ETMCalendarPrivate::clear()
   mCollectionMap.clear();
 
   itemsRemoved( mItemById.values() );
-  Q_ASSERT( mItemById.isEmpty() );
-  Q_ASSERT( mItemIdByUid.isEmpty() );
+
+  if (!mItemById.isEmpty()) {
+    // This never happens
+    kDebug() << "!mItemById.isEmpty()";
+    foreach(Akonadi::Item::Id id, mItemById.keys()) {
+      kDebug() << "Id = " << id;
+    }
+
+    Q_ASSERT(false);
+  }
+
+  if (!mItemIdByUid.isEmpty()) {
+    // This never happens
+    kDebug() << "!mItemIdByUid.isEmpty()";
+    foreach(const QString &uid, mItemIdByUid.keys()) {
+      kDebug() << "uid: " << uid;
+    }
+    Q_ASSERT(false);
+  }
 
   //m_virtualItems.clear();
 }
