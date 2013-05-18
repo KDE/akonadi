@@ -27,6 +27,7 @@
 #include <QtCore/QList>
 #include <QtCore/QVector>
 #include <QtCore/QSet>
+#include <QtCore/QQueue>
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
 #include <QtCore/QVariant>
@@ -138,6 +139,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     QVector<NotificationMessage> toNotificationV1() const;
 
     static bool appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg );
+    static bool appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg );
   private:
     class Private;
     QSharedDataPointer<Private> d;

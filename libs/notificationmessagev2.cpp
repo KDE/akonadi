@@ -76,6 +76,8 @@ class NotificationMessageV2::Private: public QSharedData
              compareWithoutOpAndParts( other );
     }
 
+    template <typename T>
+    static bool appendAndCompressImpl( T &list, const NotificationMessageV2 &msg );
 
     QByteArray sessionId;
     NotificationMessageV2::Type type;
@@ -490,13 +492,14 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
   return v1;
 }
 
-bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg )
+template <typename T>
+bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const NotificationMessageV2 &msg )
 {
   // fast-path for stuff that is not considered during O(n) compression below
   if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
 
-    NotificationMessageV2::List::Iterator end = list.end();
-    for ( NotificationMessageV2::List::Iterator it = list.begin(); it != end; ) {
+    typename T::Iterator end = list.end();
+    for ( typename T::Iterator it = list.begin(); it != end; ) {
       if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
 
         // both are modifications, merge them together and drop the new one
@@ -536,4 +539,14 @@ bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list
 
   list.append( msg );
   return true;
+}
+
+bool NotificationMessageV2::appendAndCompress( NotificationMessageV2::List &list, const NotificationMessageV2 &msg )
+{
+  return Private::appendAndCompressImpl<NotificationMessageV2::List>( list, msg );
+}
+
+bool NotificationMessageV2::appendAndCompress( QList<NotificationMessageV2> &list, const NotificationMessageV2 &msg )
+{
+  return Private::appendAndCompressImpl< QList<NotificationMessageV2> >( list, msg );
 }
