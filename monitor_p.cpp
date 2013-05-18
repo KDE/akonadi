@@ -236,9 +236,9 @@ NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessa
   baseMsg.setAddedFlags( msg.addedFlags() );
   baseMsg.setRemovedFlags( msg.removedFlags() );
 
-  Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
+  Q_FOREACH( const NotificationMessageV2::Entity &entity, msg.entities() ) {
     NotificationMessageV2 copy = baseMsg;
-    copy.addEntity(item.id, item.remoteId, item.remoteRevision, item.mimeType);
+    copy.addEntity(entity.id, entity.remoteId, entity.remoteRevision, entity.mimeType);
 
     list << copy;
   }
@@ -276,16 +276,16 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
         if ( resources.contains( msg.resource() ) || isMoveDestinationResourceMonitored( msg ) )
           return true;
 
-        Q_FOREACH (const NotificationMessageV2::Item &item, msg.entities() ) {
-          if ( isMimeTypeMonitored( item.mimeType ) )
+        Q_FOREACH (const NotificationMessageV2::Entity &entity, msg.entities() ) {
+          if ( isMimeTypeMonitored( entity.mimeType ) )
             return true;
         }
         return false;
       }
 
       // we explicitly monitor that item or the collections it's in
-      Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-        if ( items.contains( item.id ) )
+      Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+        if ( items.contains( entity.id ) )
           return true;
       }
 
@@ -304,8 +304,8 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
       }
 
       // we explicitly monitor that colleciton, or all of them
-      Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-        if ( isCollectionMonitored( item.id ) )
+      Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+        if ( isCollectionMonitored( entity.id ) )
           return true;
       }
       return isCollectionMonitored( msg.parentCollection() )
@@ -318,7 +318,7 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
 void MonitorPrivate::cleanOldNotifications()
 {
   bool erased = false;
-  for ( NotificationMessageV2::List::iterator it = pipeline.begin(); it != pipeline.end(); ) {
+  for ( QQueue<NotificationMessageV2>::iterator it = pipeline.begin(); it != pipeline.end(); ) {
     if ( !acceptNotification( *it ) ) {
       it = pipeline.erase( it );
       erased = true;
@@ -327,7 +327,7 @@ void MonitorPrivate::cleanOldNotifications()
     }
   }
 
-  for ( NotificationMessageV2::List::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
+  for ( QQueue<NotificationMessageV2>::iterator it = pendingNotifications.begin(); it != pendingNotifications.end(); ) {
     if ( !acceptNotification( *it ) ) {
       it = pendingNotifications.erase( it );
       erased = true;
@@ -383,8 +383,8 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
         allCached = false;
     }
   } else if ( msg.type() == NotificationMessageV2::Collections && fetchCollection ) {
-    Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-      if ( !collectionCache->ensureCached( item.id, mCollectionFetchScope ) )
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      if ( !collectionCache->ensureCached( entity.id, mCollectionFetchScope ) )
         allCached = false;
     }
   }
@@ -401,8 +401,8 @@ bool MonitorPrivate::emitNotification( const NotificationMessageV2& msg )
   bool someoneWasListening = false;
   if ( msg.type() == NotificationMessageV2::Collections ) {
     Collection col;
-    Q_FOREACH ( const NotificationMessageV2::Item &item, msg.entities() ) {
-      col = collectionCache->retrieve( item.id );
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      col = collectionCache->retrieve( entity.id );
       if ( emitCollectionNotification( msg, col, parent, destParent ) && !someoneWasListening )
         someoneWasListening = true;
     }
@@ -425,8 +425,8 @@ void MonitorPrivate::updatePendingStatistics( const NotificationMessageV2& msg )
     notifyCollectionStatisticsWatchers( msg.parentDestCollection(), msg.destinationResource() );
   } else if ( msg.type() == NotificationMessageV2::Collections && msg.operation() == NotificationMessageV2::Remove ) {
     // no need for statistics updates anymore
-    Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
-      recentlyChangedCollections.remove( item.id );
+    Q_FOREACH( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+      recentlyChangedCollections.remove( entity.id );
     }
   }
 }
@@ -562,7 +562,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
       // notification to regular Modify with "FLAGS" part changed
       if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
         const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
-        pendingNotifications << split;
+        pendingNotifications << split.toList();
         appendedMessages += split.count();
       }
     }
@@ -630,17 +630,17 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       colDest.setResource( QString::fromLatin1( *(msg.itemParts().begin()) ) );
   }
 
-  QMap<NotificationMessageV2::Id,NotificationMessageV2::Item> msgItems = msg.entities();
+  QMap<NotificationMessageV2::Id,NotificationMessageV2::Entity> msgEntities = msg.entities();
   Item::List its = items;
   QMutableListIterator<Item> iter( its );
   while ( iter.hasNext() ) {
     Item it = iter.next();
     if ( it.isValid() ) {
-      const NotificationMessageV2::Item msgItem = msgItems[ it.id() ];
+      const NotificationMessageV2::Entity msgEntity = msgEntities[ it.id() ];
       if ( msg.operation() == NotificationMessageV2::Remove ) {
-        it.setRemoteId( msgItem.remoteId );
-        it.setRemoteRevision( msgItem.remoteRevision );
-        it.setMimeType( msgItem.mimeType );
+        it.setRemoteId( msgEntity.remoteId );
+        it.setRemoteRevision( msgEntity.remoteRevision );
+        it.setMimeType( msgEntity.mimeType );
       }
 
       if ( !it.parentCollection().isValid() ) {
@@ -666,7 +666,7 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
         }
       }
       iter.setValue( it );
-      msgItems.remove( it.id() );
+      msgEntities.remove( it.id() );
     } else {
       // remove the invalid item
       iter.remove();
@@ -675,7 +675,7 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
 
 
   // Now reconstruct any items there were left in msgItems
-  Q_FOREACH( const NotificationMessageV2::Item &msgItem, msgItems ) {
+  Q_FOREACH( const NotificationMessageV2::Entity &msgItem, msgEntities ) {
     Item it( msgItem.id );
     it.setRemoteId( msgItem.remoteId );
     it.setRemoteRevision( msgItem.remoteRevision );
@@ -773,11 +773,11 @@ bool MonitorPrivate::emitCollectionNotification( const NotificationMessageV2 &ms
     destination = Collection( msg.parentDestCollection() );
 
   Collection collection = col;
-  NotificationMessageV2::Item msgItem = msg.entities().values().first();
+  NotificationMessageV2::Entity msgEntities = msg.entities().values().first();
   if ( !collection.isValid() || msg.operation() == NotificationMessageV2::Remove ) {
-    collection = Collection( msgItem.id );
+    collection = Collection( msgEntities.id );
     collection.setResource( QString::fromUtf8( msg.resource() ) );
-    collection.setRemoteId( msgItem.remoteId );
+    collection.setRemoteId( msgEntities.remoteId );
   }
 
   if ( !collection.parentCollection().isValid() ) {

@@ -368,11 +368,11 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const NotificationM
   stream << int(msg.type());
   stream << int(msg.operation());
   stream << msg.entities().count();
-  Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
-    stream << quint64(item.id);
-    stream << item.remoteId;
-    stream << item.remoteRevision;
-    stream << item.mimeType;
+  Q_FOREACH( const NotificationMessageV2::Entity &entity, msg.entities() ) {
+    stream << quint64(entity.id);
+    stream << entity.remoteId;
+    stream << entity.remoteRevision;
+    stream << entity.mimeType;
   }
   stream << msg.resource();
   stream << msg.destinationResource();
