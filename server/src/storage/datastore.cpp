@@ -188,15 +188,12 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
     ids << item.id();
   }
 
-  beginTransaction();
-
   // Clear all flags of all given items at once
   QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
   Query::Condition cond;
   cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, ids );
   qb.addCondition( cond );
   if ( !qb.exec() ) {
-    rollbackTransaction();
     return false;
   }
 
@@ -214,11 +211,8 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   qb2.setColumnValue( PimItemFlagRelation::leftFullColumnName(), insIds );
   qb2.setColumnValue( PimItemFlagRelation::rightFullColumnName(), insFlags );
   if ( !qb2.exec() ) {
-    rollbackTransaction();
     return false;
   }
-
-  commitTransaction();
 
   mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
   return true;
