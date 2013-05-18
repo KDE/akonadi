@@ -24,6 +24,7 @@
 #include "notificationsource.h"
 #include "tracer.h"
 #include "storage/datastore.h"
+#include "clientcapabilityaggregator.h"
 
 #include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
@@ -41,6 +42,7 @@ NotificationManager::NotificationManager()
   : QObject( 0 )
 {
   NotificationMessage::registerDBusTypes();
+  NotificationMessageV2::registerDBusTypes();
 
   new NotificationManagerAdaptor( this );
   QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
@@ -70,14 +72,17 @@ NotificationManager* NotificationManager::self()
 
 void NotificationManager::connectNotificationCollector(NotificationCollector* collector)
 {
-  connect( collector, SIGNAL(notify(Akonadi::NotificationMessage::List)),
-           SLOT(slotNotify(Akonadi::NotificationMessage::List)) );
+  connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
+           SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
 }
 
-void NotificationManager::slotNotify(const Akonadi::NotificationMessage::List &msgs)
+void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
 {
-  Q_FOREACH ( const NotificationMessage &msg, msgs )
-    NotificationMessage::appendAndCompress( mNotifications, msg );
+  //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
+  Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
+    NotificationMessageV2::appendAndCompress( mNotifications, msg );
+  //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
+
   if ( !mTimer.isActive() )
     mTimer.start();
 }
@@ -86,16 +91,35 @@ void NotificationManager::emitPendingNotifications()
 {
   if ( mNotifications.isEmpty() )
     return;
-  Q_FOREACH ( const NotificationMessage &msg, mNotifications ) {
-    Tracer::self()->signal( "NotificationManager::notify", msg.toString() );
+
+  NotificationMessage::List legacyNotifications;
+  Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
+    Tracer::self()->signal( "NotificationManager::notify", notification.toString() );
+
+    if ( ClientCapabilityAggregator::minimumNotificationMessageVersion() < 2 ) {
+      const NotificationMessage::List tmp = notification.toNotificationV1().toList();
+      Q_FOREACH ( const NotificationMessage &legacyNotification, tmp ) {
+        bool appended = false;
+        NotificationMessage::appendAndCompress( legacyNotifications, legacyNotification, &appended );
+        if ( !appended ) {
+          legacyNotifications << legacyNotification;
+        }
+      }
+    }
   }
 
   Q_FOREACH( NotificationSource *src, mNotificationSources ) {
-    src->emitNotification( mNotifications );
+    if ( !legacyNotifications.isEmpty() ) {
+      src->emitNotification( legacyNotifications );
+    }
+    if ( ClientCapabilityAggregator::maximumNotificationMessageVersion() > 1 ) {
+      src->emitNotification( mNotifications );
+    }
   }
 
   // backward compatibility with the old non-subcription interface
-  Q_EMIT notify( mNotifications );
+  if ( !legacyNotifications.isEmpty() )
+    Q_EMIT notify( legacyNotifications );
 
   mNotifications.clear();
 }

@@ -22,7 +22,7 @@
 
 #include "entities.h"
 
-#include "../../libs/notificationmessage_p.h"
+#include "../../libs/notificationmessagev2_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
@@ -71,7 +71,6 @@ class NotificationCollector : public QObject
       that is missing will be looked up in the database later.
     */
     void itemAdded( const PimItem &item, const Collection &collection = Collection(),
-                    const QString &mimeType = QString(),
                     const QByteArray &resource = QByteArray() );
 
     /**
@@ -82,37 +81,45 @@ class NotificationCollector : public QObject
     void itemChanged( const PimItem &item,
                       const QSet<QByteArray> &changedParts,
                       const Collection &collection = Collection(),
-                      const QString &mimeType = QString(),
                       const QByteArray &resource = QByteArray() );
 
     /**
-      Notify about a moved item
+      Notify about changed items flags
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemMoved( const PimItem &item, const Collection &collectionSrc = Collection(),
-                    const Collection &collectionDest = Collection(),
-                    const QString &mimeType = QString(),
-                    const QByteArray &sourceResource = QByteArray() );
+    void itemsFlagsChanged( const PimItem::List &items,
+                            const QSet<QByteArray> &addedFlags,
+                            const QSet<QByteArray> &removedFlags,
+                            const Collection &collection = Collection(),
+                            const QByteArray &resource = QByteArray() );
 
     /**
-      Notify about a removed item.
+      Notify about moved items
+      Provide as many parameters as you have at hand currently, everything
+      that is missing will be looked up in the database later.
+    */
+    void itemsMoved( const PimItem::List &items, const Collection &collectionSrc = Collection(),
+                     const Collection &collectionDest = Collection(),
+                     const QByteArray &sourceResource = QByteArray() );
+
+    /**
+      Notify about removed items.
       Make sure you either provide all parameters or call this function before
       actually removing the item from database.
     */
-    void itemRemoved( const PimItem &item, const Collection &collection = Collection(),
-                      const QString &mimeType = QString(),
-                      const QByteArray &resource = QByteArray() );
+    void itemsRemoved( const PimItem::List &items, const Collection &collection = Collection(),
+                       const QByteArray &resource = QByteArray() );
 
     /**
-     * Notify about a linked item.
+     * Notify about linked items
      */
-    void itemLinked( const PimItem &item, const Collection &collection );
+    void itemsLinked( const PimItem::List &items, const Collection &collection );
 
     /**
-     * Notify about a unlinked item.
+     * Notify about unlinked items.
      */
-    void itemUnlinked( const PimItem &item, const Collection &collection );
+    void itemsUnlinked( const PimItem::List &items, const Collection &collection );
 
     /**
       Notify about a added collection.
@@ -159,29 +166,35 @@ class NotificationCollector : public QObject
      */
     void collectionUnsubscribed( const Collection &collection,
                             const QByteArray &resource = QByteArray() );
-    
+
     /**
       Trigger sending of collected notifications.
     */
     void dispatchNotifications();
 
   Q_SIGNALS:
-    void notify( const Akonadi::NotificationMessage::List &msgs );
+    void notify( const Akonadi::NotificationMessageV2::List &msgs );
 
   private:
-    void itemNotification( NotificationMessage::Operation op, const PimItem &item,
+    void itemNotification( NotificationMessageV2::Operation op, const PimItem::List &items,
                            const Collection &collection,
                            const Collection &collectionDest,
-                           const QString &mimeType,
+                           const QByteArray &resource,
+                           const QSet<QByteArray> &parts = QSet<QByteArray>(),
+                           const QSet<QByteArray> &addedFlags = QSet<QByteArray>(),
+                           const QSet<QByteArray> &removedFlags = QSet<QByteArray>() );
+    void itemNotification( NotificationMessageV2::Operation op, const PimItem &item,
+                           const Collection &collection,
+                           const Collection &collectionDest,
                            const QByteArray &resource,
                            const QSet<QByteArray> &parts = QSet<QByteArray>() );
-    void collectionNotification( NotificationMessage::Operation op,
+    void collectionNotification( NotificationMessageV2::Operation op,
                                  const Collection &collection,
                                  Collection::Id source, Collection::Id destination,
                                  const QByteArray &resource,
                                  const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                  const QByteArray &destResource = QByteArray() );
-    void dispatchNotification( const NotificationMessage &msg );
+    void dispatchNotification( const NotificationMessageV2 &msg );
     void clear();
 
   private Q_SLOTS:
@@ -192,7 +205,7 @@ class NotificationCollector : public QObject
     DataStore *mDb;
     QByteArray mSessionId;
 
-    NotificationMessage::List mNotifications;
+    NotificationMessageV2::List mNotifications;
 };
 
 

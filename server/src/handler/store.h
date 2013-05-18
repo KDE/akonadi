@@ -23,13 +23,13 @@
 
 #include <handler.h>
 #include <scope.h>
+#include <entities.h>
 
 #include "storage/entity.h"
 #include "libs/imapset_p.h"
 
 namespace Akonadi {
 
-class PimItem;
 
 /**
   @ingroup akonadi_server_handler
@@ -111,9 +111,9 @@ class Store : public Handler
 
     void parseCommand();
 
-    bool replaceFlags( const PimItem &item, const QList<QByteArray> &flags );
-    bool addFlags( const PimItem &item, const QList<QByteArray> &flags, bool& flagsChanged );
-    bool deleteFlags( const PimItem &item, const QList<QByteArray> &flags );
+    bool replaceFlags( const PimItem::List &items, const QList<QByteArray> &flags );
+    bool addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool& flagsChanged );
+    bool deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags );
     void sendPimItemResponse( const PimItem &pimItem );
 
   private:

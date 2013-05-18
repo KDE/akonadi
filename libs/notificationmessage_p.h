@@ -34,6 +34,7 @@ namespace Akonadi {
   Used for sending notification signals over DBus.
   DBus type: (ayiiisayisas)
 */
+
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
 {
   public:

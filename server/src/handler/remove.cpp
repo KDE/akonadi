@@ -48,9 +48,8 @@ bool Remove::parseStream()
     const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
-    Q_FOREACH ( const PimItem &item, items ) {
-      if ( !store->cleanupPimItem( item ) )
-        throw HandlerException( "Deletion failed" );
+    if ( !store->cleanupPimItems( items ) ) {
+      throw HandlerException( "Deletion failed" );
     }
   } else {
     throw HandlerException( "Unable to execute query" );

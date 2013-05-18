@@ -61,18 +61,25 @@ bool Link::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
+  PimItem::List toLink, toUnlink;
   Q_FOREACH ( const PimItem &item, items ) {
     const bool alreadyLinked = collection.relatesToPimItem( item );
     bool result = true;
     if ( mCreateLinks && !alreadyLinked ) {
       result = collection.addPimItem( item );
-      store->notificationCollector()->itemLinked( item, collection );
+      toLink << item;
     } else if ( !mCreateLinks && alreadyLinked ) {
       result = collection.removePimItem( item );
-      store->notificationCollector()->itemUnlinked( item, collection );
+      toUnlink << item;
     }
     if ( !result )
       return failureResponse( "Failed to modify item reference" );
+  }
+
+  if ( !toLink.isEmpty() ) {
+    store->notificationCollector()->itemsLinked( toLink, collection );
+  } else if ( !toUnlink.isEmpty() ) {
+    store->notificationCollector()->itemsUnlinked( toUnlink, collection );
   }
 
   if ( !transaction.commit() )

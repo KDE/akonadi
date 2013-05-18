@@ -71,6 +71,10 @@ void NotificationSource::emitNotification( const NotificationMessage::List &noti
   Q_EMIT notify( notifications );
 }
 
+void NotificationSource::emitNotification( const NotificationMessageV2::List &notifications )
+{
+  Q_EMIT notifyV2( notifications );
+}
 
 
 QString NotificationSource::identifier() const

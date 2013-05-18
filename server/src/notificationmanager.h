@@ -21,6 +21,7 @@
 #define AKONADI_NOTIFICATIONMANAGER_H
 
 #include "../libs/notificationmessage_p.h"
+#include "../libs/notificationmessagev2_p.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
@@ -72,7 +73,7 @@ class NotificationManager : public QObject, protected QDBusContext
     Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
 
   private Q_SLOTS:
-    void slotNotify( const Akonadi::NotificationMessage::List &msgs );
+    void slotNotify( const Akonadi::NotificationMessageV2::List &msgs );
 
   private:
 
@@ -81,7 +82,7 @@ class NotificationManager : public QObject, protected QDBusContext
   private:
 
     static NotificationManager *mSelf;
-    NotificationMessage::List mNotifications;
+    NotificationMessageV2::List mNotifications;
     QTimer mTimer;
 
     //! One message source for each subscibed process

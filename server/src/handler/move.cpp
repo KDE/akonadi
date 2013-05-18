@@ -67,15 +67,21 @@ bool Move::parseStream()
     const QVector<PimItem> items = qb.result();
     if ( items.isEmpty() )
       throw HandlerException( "No items found" );
+
+    // Split the list by source collection
+    QMap<Entity::Id /* collection */, PimItem> toMove;
+    QMap<Entity::Id /* collection */, Collection> sources;
     Q_FOREACH ( /*sic!*/ PimItem item, items ) {
+      const Collection source = items.first().collection();
+      if ( !source.isValid() )
+        throw HandlerException( "Item without collection found!?" );
+      if ( !sources.contains( source.id() ) ) {
+        sources.insert( source.id(), source );
+      }
+
       if ( !item.isValid() )
         throw HandlerException( "Invalid item in result set!?" );
       Q_ASSERT( item.collectionId() != destination.id() );
-      const Collection source = item.collection();
-      if ( !source.isValid() )
-        throw HandlerException( "Item without collection found!?" );
-
-      const bool isInterResourceMove = item.collection().resource().id() != destResource.id();
 
       item.setCollectionId( destination.id() );
       item.setAtime( mtime );
@@ -84,14 +90,27 @@ bool Move::parseStream()
       if ( connection()->resourceContext().id() != destResource.id() )
         item.setDirty( true );
 
-      store->notificationCollector()->itemMoved( item, source, destination );
-      // reset RID on inter-resource moves, but only after generating the change notification
-      // so that this still contains the old one for the source resource
-      if ( isInterResourceMove )
-        item.setRemoteId( QString() );
+      toMove.insertMulti( source.id(), item );
+    }
 
-      if ( !item.update() )
-        throw HandlerException( "Unable to update item" );
+    // Emit notification for each source collection separately
+    Q_FOREACH ( const Entity::Id &sourceId, toMove.uniqueKeys() ) {
+      const PimItem::List &itemsToMove = toMove.values( sourceId ).toVector();
+      const Collection &source = sources.value( sourceId );
+      store->notificationCollector()->itemsMoved( itemsToMove, source, destination );
+
+      Q_FOREACH ( PimItem moved, toMove.values( sourceId ) ) {
+        // reset RID on inter-resource moves, but only after generating the change notification
+        // so that this still contains the old one for the source resource
+        const bool isInterResourceMove = moved.collection().resource().id() != destResource.id();
+        if ( isInterResourceMove )
+          moved.setRemoteId( QString() );
+
+        // FIXME Could we aggregate the changes to a single SQL query?
+        if ( !moved.update() ) {
+          throw HandlerException( "Unable to update item" );
+        }
+      }
     }
   } else {
     throw HandlerException( "Unable to execute query" );

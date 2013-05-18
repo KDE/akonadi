@@ -284,13 +284,22 @@ bool QueryBuilder::exec()
   }
 
   //too heavy debug info but worths to have from time to time
-//   akDebug() << "Executing query" << statement;
+  //akDebug() << "Executing query" << statement;
+  bool isBatch = false;
   for ( int i = 0; i < mBindValues.count(); ++i )
   {
     mQuery.bindValue( QLatin1Char( ':' ) + QString::number( i ), mBindValues[i] );
-//     akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
+    if ( !isBatch && mBindValues[i].canConvert<QVariantList>() )
+      isBatch = true;
+    //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
-  if ( !mQuery.exec() ) {
+  bool ret;
+  if ( isBatch ) {
+    ret = mQuery.execBatch();
+  } else {
+    ret = mQuery.exec();
+  }
+  if ( !ret ) {
     akError() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
     return false;
   }

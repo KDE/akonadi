@@ -163,52 +163,114 @@ DataStore * Akonadi::DataStore::self()
 
 /* --- ItemFlags ----------------------------------------------------- */
 
-bool DataStore::setItemFlags( const PimItem &item, const QVector<Flag> &flags )
+bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
 {
   // first delete all old flags of this pim item
-  if ( !item.clearFlags() )
-    return false;
+  QSet<QByteArray> removedFlags;
+  QSet<QByteArray> addedFlags;
+  QVariantList ids;
+  QVariantList insIds;
+  QVariantList insFlags;
 
-  // then add the new flags
-  for ( int i = 0; i < flags.count(); ++i ) {
-    if ( !item.addFlag( flags[i] ) )
-      return false;
+  Q_FOREACH( const PimItem &item, items ) {
+    Q_FOREACH( const Flag &flag, item.flags() ) {
+      if ( !removedFlags.contains( flag.name().toLatin1() ) ) {
+        removedFlags << flag.name().toLatin1();
+      }
+    }
+
+    // create a bind values for the insert query - every item repeats exactly
+    // flags.count()-times
+    for ( int i = 0; i < flags.count(); ++i ) {
+      insIds << item.id();
+    }
+
+    ids << item.id();
   }
 
-  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS" );
+  // Clear all flags of all given items at once
+  QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond;
+  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, ids );
+  qb.addCondition( cond );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  // create bind values for the insert quest - every flags repeats exactly
+  // items.count()-times
+  Q_FOREACH( const Flag &flag, flags ) {
+    for ( int i = 0; i < items.count(); ++i ) {
+      insFlags << flag.id();
+    }
+
+    addedFlags << flag.name().toLatin1();
+  }
+
+  QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
+  qb2.setColumnValue( PimItemFlagRelation::leftFullColumnName(), insIds );
+  qb2.setColumnValue( PimItemFlagRelation::rightFullColumnName(), insFlags );
+  if ( !qb2.exec() ) {
+    return false;
+  }
+
+  mNotificationCollector->itemsFlagsChanged( items, addedFlags, removedFlags );
   return true;
 }
 
-bool DataStore::appendItemFlags( const PimItem &item, const QVector<Flag> &flags,
+bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
                                  bool& flagsChanged, bool checkIfExists,
                                  const Collection &col )
 {
-  flagsChanged = false;
-  if ( !item.isValid() )
-    return false;
-  if ( flags.isEmpty() )
-    return true;
+  QSet<QByteArray> added;
+  Q_FOREACH( const PimItem &item, items ) {
+    flagsChanged = false;
+    if ( !item.isValid() )
+      return false;
+    if ( flags.isEmpty() )
+      return true;
 
-  for ( int i = 0; i < flags.count(); ++i ) {
-    if ( !checkIfExists || !item.relatesToFlag( flags[ i ] ) ) {
-      flagsChanged = true;
-      if ( !item.addFlag( flags[i] ) )
-        return false;
+    for ( int i = 0; i < flags.count(); ++i ) {
+      if ( !checkIfExists || !item.relatesToFlag( flags[ i ] ) ) {
+        flagsChanged = true;
+        added << flags[ i ].name().toLatin1();
+        if ( !item.addFlag( flags[i] ) )
+          return false;
+      }
     }
   }
-  if ( flagsChanged )
-    mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS", col );
+
+  mNotificationCollector->itemsFlagsChanged( items, added, QSet<QByteArray>(), col );
   return true;
 }
 
-bool DataStore::removeItemFlags( const PimItem &item, const QVector<Flag> &flags )
+bool DataStore::removeItemsFlags( const PimItem::List &items, const QVector<Flag> &flags )
 {
-  for ( int i = 0; i < flags.count(); ++i ) {
-    if ( !item.removeFlag( flags[ i ] ) )
-      return false;
+  QSet<QByteArray> removedFlags;
+  QVariantList itemsIds;
+  QVariantList flagsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds << item.id();
+    for ( int i = 0; i < flags.count(); ++i ) {
+      const QByteArray flagName = flags[ i ].name().toLatin1();
+      if ( !flagsIds.contains( flagName ) ) {
+        flagsIds << flags[ i ].id();
+        removedFlags << flagName;
+      }
+    }
   }
 
-  mNotificationCollector->itemChanged( item, QSet<QByteArray>() << "FLAGS" );
+  // Delete all given flags from all given items in one go
+  QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+  Query::Condition cond( Query::And );
+  cond.addValueCondition( PimItemFlagRelation::rightFullColumnName(), Query::In, flagsIds );
+  cond.addValueCondition( PimItemFlagRelation::leftFullColumnName(), Query::In, itemsIds );
+  qb.addCondition( cond );
+  if ( !qb.exec() ) {
+    return false;
+  }
+
+  mNotificationCollector->itemsFlagsChanged( items, QSet<QByteArray>(), removedFlags );
   return true;
 }
 
@@ -274,12 +336,10 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   // collect item deletion notifications
   const PimItem::List items = collection.items();
   const QByteArray resource = collection.resource().name().toLatin1();
-  Q_FOREACH ( const PimItem &item, items ) {
 
-    // generate the notification before actually removing the data
-    // TODO: we should try to get rid of this, requires client side changes to resources and Monitor though
-    mNotificationCollector->itemRemoved( item, collection, QString(), resource );
-  }
+  // generate the notification before actually removing the data
+  // TODO: we should try to get rid of this, requires client side changes to resources and Monitor though
+  mNotificationCollector->itemsRemoved( items, collection, resource );
 
   // remove all external payload parts
   QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
@@ -312,11 +372,9 @@ bool DataStore::cleanupCollection_slow(Collection& collection)
   // delete the content
   const PimItem::List items = collection.items();
   const QByteArray resource = collection.resource().name().toLatin1();
+  mNotificationCollector->itemsRemoved( items, collection, resource );
+
   Q_FOREACH ( const PimItem &item, items ) {
-
-    // generate the notification before actually removing the data
-    mNotificationCollector->itemRemoved( item, collection, QString(), resource );
-
     if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
       return false;
     if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) // TODO: reduce to single query
@@ -485,6 +543,44 @@ QVector<Collection> DataStore::virtualCollections( const PimItem& item )
   return Collection::extractResult( qb.query() );
 }
 
+QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &items )
+{
+  QueryBuilder qb( CollectionPimItemRelation::tableName(), QueryBuilder::Select );
+  qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
+              Collection::idFullColumnName(), CollectionPimItemRelation::leftFullColumnName() );
+  qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(),
+              PimItem::idFullColumnName(), CollectionPimItemRelation::rightFullColumnName() );
+  qb.addColumn( Collection::idFullColumnName() );
+  qb.addColumns( QStringList() << PimItem::idFullColumnName()
+                               << PimItem::remoteIdFullColumnName()
+                               << PimItem::remoteRevisionFullColumnName() );
+
+  Query::Condition condition( Query::Or );
+  QStringList ids;
+  Q_FOREACH( const PimItem &item, items ) {
+    ids << QString::number( item.id() );
+  }
+  qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::In, ids );
+
+  if ( !qb.exec() ) {
+    akDebug() << "Error during selection of records from table CollectionPimItemRelation"
+      << qb.query().lastError().text();
+    return QMap<Entity::Id,PimItem>();
+  }
+
+  QSqlQuery query = qb.query();
+  QMap<Entity::Id,PimItem> map;
+  while ( query.next() ) {
+    PimItem item;
+    item.setId( query.value( 1 ).toLongLong() );
+    item.setRemoteId( query.value( 2 ).toString() );
+    item.setRemoteRevision( query.value( 3 ).toString() );
+    map.insertMulti( query.value( 0 ).toLongLong(), item );
+  }
+
+  return map;
+}
+
 
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
@@ -545,7 +641,7 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
 
 //   akDebug() << "appendPimItem: " << pimItem;
 
-  mNotificationCollector->itemAdded( pimItem, collection, mimetype.name() );
+  mNotificationCollector->itemAdded( pimItem, collection );
   return true;
 }
 
@@ -573,23 +669,23 @@ bool DataStore::unhideAllPimItems()
   return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( "ATR:HIDDEN" ) );
 }
 
-bool DataStore::cleanupPimItem( const PimItem &item )
+bool DataStore::cleanupPimItems( const PimItem::List &items )
 {
-  if ( !item.isValid() )
-    return false;
-
   // generate the notification before actually removing the data
-  mNotificationCollector->itemRemoved( item );
+  mNotificationCollector->itemsRemoved( items );
 
-  if ( !item.clearFlags() )
-    return false;
-  if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) )
-    return false;
-  if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
-    return false;
+  // FIXME: Create a single query to do this
+  Q_FOREACH( const PimItem &item, items ) {
+    if ( !item.clearFlags() )
+      return false;
+    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) )
+      return false;
+    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
+      return false;
 
-  if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) )
-    return false;
+    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) )
+      return false;
+  }
 
   return true;
 }

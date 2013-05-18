@@ -65,37 +65,30 @@ Store::Store( Scope::SelectionScope scope )
 {
 }
 
-bool Store::replaceFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::replaceFlags( const PimItem::List &item, const QList<QByteArray> &flags )
 {
   Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
 
-  Flag::List currentFlags = item.flags();
-  std::sort( flagList.begin(), flagList.end(), _detail::ById<std::less>() );
-  std::sort( currentFlags.begin(), currentFlags.end(), _detail::ById<std::less>() );
-
-  if ( flagList == currentFlags )
-    return false;
-
-  if ( !store->setItemFlags( item, flagList ) )
+  if ( !store->setItemsFlags( item, flagList ) )
     throw HandlerException( "Store::replaceFlags: Unable to set new item flags" );
 
   return true;
 }
 
-bool Store::addFlags( const PimItem &item, const QList<QByteArray> &flags, bool& flagsChanged )
+bool Store::addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool& flagsChanged )
 {
   const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
 
-  if ( !store->appendItemFlags( item, flagList, flagsChanged ) ) {
+  if ( !store->appendItemsFlags( items, flagList, flagsChanged ) ) {
     akDebug() << "Store::addFlags: Unable to add new item flags";
     return false;
   }
   return true;
 }
 
-bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
+bool Store::deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags )
 {
   DataStore *store = connection()->storageBackend();
 
@@ -109,7 +102,7 @@ bool Store::deleteFlags( const PimItem &item, const QList<QByteArray> &flags )
     flagList.append( flag );
   }
 
-  if ( !store->removeItemFlags( item, flagList ) ) {
+  if ( !store->removeItemsFlags( items, flagList ) ) {
     akDebug() << "Store::deleteFlags: Unable to remove item flags";
     return false;
   }
@@ -183,20 +176,17 @@ bool Store::parseStream()
     if ( command == AKONADI_PARAM_FLAGS ) {
       bool flagsChanged = true;
       const QList<QByteArray> flags = m_streamParser->readParenthesizedList();
-      // TODO move this iteration to an SQL query.
-      for ( int i = 0; i < pimItems.count(); ++i ) {
-        if ( op == Replace ) {
-          flagsChanged = replaceFlags( pimItems[ i ], flags );
-        } else if ( op == Add ) {
-          if ( !addFlags( pimItems[ i ], flags, flagsChanged ) )
-            return failureResponse( "Unable to add item flags." );
-        } else if ( op == Delete ) {
-          if ( !deleteFlags( pimItems[ i ], flags ) )
-            return failureResponse( "Unable to remove item flags." );
-        }
+      if ( op == Replace ) {
+        flagsChanged = replaceFlags( pimItems, flags );
+      } else if ( op == Add ) {
+        if ( !addFlags( pimItems, flags, flagsChanged ) )
+          return failureResponse( "Unable to add item flags." );
+      } else if ( op == Delete ) {
+        if ( !(flagsChanged = deleteFlags( pimItems, flags )) )
+          return failureResponse( "Unable to remove item flags." );
       }
 
-      if ( flagsChanged )
+      if ( flagsChanged && !changes.contains( AKONADI_PARAM_FLAGS ) )
         changes << AKONADI_PARAM_FLAGS;
       continue;
     }
@@ -359,7 +349,7 @@ bool Store::parseStream()
     const bool onlyRemoteRevisionChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_REMOTEREVISION ));
     const bool onlyRemoteIdAndRevisionChanged = (changes.size() == 2 && changes.contains( AKONADI_PARAM_REMOTEID )
                                                                      && changes.contains( AKONADI_PARAM_REMOTEREVISION ));
-
+    const bool onlyFlagsChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_FLAGS ));
     // If only the remote id and/or the remote revision changed, we don't have to increase the REV,
     // because these updates do not change the payload and can only be done by the owning resource -> no conflicts possible
     const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged);
@@ -384,8 +374,10 @@ bool Store::parseStream()
         }
       }
 
-      if ( !changes.isEmpty() )
+      // flags change notification went separatly during command parsing
+      if ( !changes.isEmpty() && !onlyFlagsChanged )
         store->notificationCollector()->itemChanged( item, changes );
+
       if ( !silent )
         sendPimItemResponse( item );
     }

@@ -57,3 +57,13 @@ int ClientCapabilityAggregator::minimumNotificationMessageVersion()
   }
   return 0;
 }
+
+int ClientCapabilityAggregator::maximumNotificationMessageVersion()
+{
+  QMutexLocker locker(&s_aggregator()->m_mutex);
+  for (int i = s_aggregator()->m_notifyVersions.size() - 1; i >= 1; --i) {
+    if (s_aggregator()->m_notifyVersions.at(i) != 0)
+      return i;
+  }
+  return 0;
+}

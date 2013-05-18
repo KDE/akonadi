@@ -188,6 +188,7 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   mMutex.unlock();
   const Collection collection = Collection::retrieveById( collectionId );
 
+  PimItem::List items;
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
@@ -195,9 +196,9 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
       continue;
 
     Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
-    mCollector->itemLinked( PimItem::retrieveById( itemId ), collection );
+    items << PimItem::retrieveById( itemId );
   }
-
+  mCollector->itemsLinked( items, collection );
   mCollector->dispatchNotifications();
 }
 
@@ -213,6 +214,7 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
   qint64 collectionId = mQueryMap.value( query );
   mMutex.unlock();
   const Collection collection = Collection::retrieveById( collectionId );
+  PimItem::List items;
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
@@ -220,9 +222,10 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
       continue;
 
     Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
-    mCollector->itemUnlinked( PimItem::retrieveById( itemId ), collection );
+    items << PimItem::retrieveById( itemId );
   }
 
+  mCollector->itemsUnlinked( items, collection );
   mCollector->dispatchNotifications();
 }
 

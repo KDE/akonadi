@@ -18,7 +18,6 @@
 */
 
 #include "notificationmessagetest.h"
-
 #include <notificationmessage_p.h>
 
 #include <QSet>
