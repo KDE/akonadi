@@ -50,7 +50,6 @@ static void assignEntityPrivate( QSharedDataPointer<EntityPrivate> &one, const Q
   one = temp;
 }
 
-
 Entity::Entity( const Entity &other )
 {
   assignEntityPrivate( d_ptr, other.d_ptr );

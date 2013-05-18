@@ -227,6 +227,23 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemChanged( item, partIdentifiers );
     }
 
+    void itemsFlagsChanged(const Item::List& items, const QSet< QByteArray >& addedFlags,
+                           const QSet< QByteArray >& removedFlags)
+    {
+      if (addedFlags.isEmpty() && removedFlags.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
+    }
+
     // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
     void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination)
     {
@@ -237,6 +254,22 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemMoved( item, source, destination );
     }
 
+    void itemsMoved(const Item::List& items, const Collection& source, const Collection& destination)
+    {
+      if ( destination.remoteId().isEmpty() || destination == source ) {
+        changeProcessed();
+        return;
+      }
+
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      AgentBasePrivate::itemsMoved( validItems, source, destination );
+    }
+
     void itemRemoved(const Akonadi::Item& item)
     {
       if ( item.remoteId().isEmpty() ) {
@@ -244,6 +277,17 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         return;
       }
       AgentBasePrivate::itemRemoved( item );
+    }
+
+    void itemsRemoved(const Item::List& items)
+    {
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      AgentBasePrivate::itemsRemoved( validItems );
     }
 
     void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
@@ -569,8 +613,13 @@ void ResourceBasePrivate::slotInvalidateCache( const Akonadi::Collection &collec
 
 void ResourceBase::changeCommitted( const Item& item )
 {
+  changesCommitted( Item::List() << item );
+}
+
+void ResourceBase::changesCommitted(const Item::List& items)
+{
   Q_D( ResourceBase );
-  ItemModifyJob *job = new ItemModifyJob( item );
+  ItemModifyJob *job = new ItemModifyJob( items );
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   job->setIgnorePayload( true ); // we only want to reset the dirty flag and update the remote id

@@ -114,6 +114,12 @@ class AgentBasePrivate : public QObject
     void itemLinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void itemUnlinked( const Akonadi::Item &item, const Akonadi::Collection &collection );
 
+    virtual void itemsFlagsChanged( const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags );
+    virtual void itemsMoved( const Akonadi::Item::List &items, const Akonadi::Collection &source, const Akonadi::Collection &destination );
+    virtual void itemsRemoved( const Akonadi::Item::List &items );
+    virtual void itemsLinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+    virtual void itemsUnlinked( const Akonadi::Item::List &items, const Akonadi::Collection &collection );
+
     virtual void collectionAdded( const Akonadi::Collection &collection, const Akonadi::Collection &parent );
     virtual void collectionChanged( const Akonadi::Collection &collection );
     virtual void collectionChanged( const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes );

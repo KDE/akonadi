@@ -125,6 +125,13 @@ class EntityCacheTest : public QObject
         testCache<Item, ItemFetchJob, ItemFetchScope>();
     }
 
+    void testListCacheGeneric_data()
+    {
+      QTest::addColumn<bool>( "collection" );
+      QTest::newRow( "collection" ) << true;
+      QTest::newRow( "item" ) << false;
+    }
+
     void testItemCache()
     {
       ItemCache cache( 1 );

@@ -685,5 +685,4 @@ void Item::addToLegacyMapping( const QString & mimeType ) {
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
 
-
 #endif
