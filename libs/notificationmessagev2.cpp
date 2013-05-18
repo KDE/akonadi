@@ -80,7 +80,7 @@ class NotificationMessageV2::Private: public QSharedData
     QByteArray sessionId;
     NotificationMessageV2::Type type;
     NotificationMessageV2::Operation operation;
-    QMap<Id, NotificationMessageV2::Item> items;
+    QMap<Id, NotificationMessageV2::Entity> items;
     QByteArray resource;
     QByteArray destResource;
     Id parentCollection;
@@ -121,13 +121,13 @@ bool NotificationMessageV2::operator==( const NotificationMessageV2 &other ) con
 void NotificationMessageV2::registerDBusTypes()
 {
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2>();
-  qDBusRegisterMetaType<Akonadi::NotificationMessageV2::Item>();
+  qDBusRegisterMetaType<Akonadi::NotificationMessageV2::Entity>();
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::List>();
 }
 
 void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType )
 {
-  NotificationMessageV2::Item item;
+  NotificationMessageV2::Entity item;
   item.id = id;
   item.remoteId = remoteId;
   item.remoteRevision = remoteRevision;
@@ -136,20 +136,20 @@ void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QSt
   d->items.insert( id, item );
 }
 
-void NotificationMessageV2::setEntities( const QList<NotificationMessageV2::Item> &items )
+void NotificationMessageV2::setEntities( const QList<NotificationMessageV2::Entity> &items )
 {
   d->items.clear();
-  Q_FOREACH( const NotificationMessageV2::Item &item, items ) {
+  Q_FOREACH( const NotificationMessageV2::Entity &item, items ) {
     d->items.insert( item.id, item );
   }
 }
 
-QMap<NotificationMessageV2::Id, NotificationMessageV2::Item> NotificationMessageV2::entities() const
+QMap<NotificationMessageV2::Id, NotificationMessageV2::Entity> NotificationMessageV2::entities() const
 {
   return d->items;
 }
 
-NotificationMessageV2::Item NotificationMessageV2::entity( NotificationMessageV2::Id id ) const
+NotificationMessageV2::Entity NotificationMessageV2::entity( NotificationMessageV2::Id id ) const
 {
   return d->items.value( id );
 }
@@ -275,7 +275,7 @@ QString NotificationMessageV2::toString() const
   }
 
   QSet<QByteArray> items;
-  Q_FOREACH ( const NotificationMessageV2::Item &item, d->items ) {
+  Q_FOREACH ( const NotificationMessageV2::Entity &item, d->items ) {
     QString itemStr = QString::fromLatin1( "(%1,%2" ).arg( item.id ).arg( item.remoteId );
     if ( !item.remoteRevision.isEmpty() ) {
       itemStr += QString::fromLatin1( ",%1" ).arg( item.remoteRevision );
@@ -375,7 +375,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
 {
   QByteArray ba;
   int i;
-  QList<NotificationMessageV2::Item> items;
+  QList<NotificationMessageV2::Entity> items;
   NotificationMessageV2::Id id;
   QString str;
   QStringList strl;
@@ -416,7 +416,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
   return arg;
 }
 
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Item &item )
+QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item )
 {
   arg.beginStructure();
   arg << item.id;
@@ -428,7 +428,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessag
   return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Item &item )
+const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item )
 {
   arg.beginStructure();
   arg >> item.id;
@@ -443,7 +443,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
 uint qHash( const Akonadi::NotificationMessageV2 &msg )
 {
   uint i = 0;
-  Q_FOREACH( const NotificationMessageV2::Item &item, msg.entities() ) {
+  Q_FOREACH( const NotificationMessageV2::Entity &item, msg.entities() ) {
     i += item.id;
   }
 
@@ -454,7 +454,7 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
 {
   QVector<NotificationMessage> v1;
 
-  Q_FOREACH( const Item &item, d->items ) {
+  Q_FOREACH( const Entity &item, d->items ) {
     NotificationMessage msgv1;
     msgv1.setSessionId( d->sessionId );
     msgv1.setUid( item.id );

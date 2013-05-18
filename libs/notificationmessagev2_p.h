@@ -67,15 +67,15 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
       ModifyFlags
     };
 
-    class Item
+    class Entity
     {
       public:
-        Item():
+        Entity():
           id( -1 )
         {
         }
 
-        bool operator==( const Item &other ) const {
+        bool operator==( const Entity &other ) const {
           return id == other.id
               && remoteId == other.remoteId
               && remoteRevision == other.remoteRevision
@@ -107,9 +107,9 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     void setSessionId( const QByteArray &session );
 
     void addEntity( Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString(), const QString &mimeType = QString() );
-    void setEntities( const QList<NotificationMessageV2::Item> &items );
-    QMap<Id, NotificationMessageV2::Item> entities() const;
-    NotificationMessageV2::Item entity( Id id ) const;
+    void setEntities( const QList<NotificationMessageV2::Entity> &items );
+    QMap<Id, NotificationMessageV2::Entity> entities() const;
+    NotificationMessageV2::Entity entity( Id id ) const;
     QList<Id> uids() const;
 
     QByteArray resource() const;
@@ -147,14 +147,14 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 
 const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg );
 QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Item &item );
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Item &item );
+const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item );
+QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item );
 uint qHash( const Akonadi::NotificationMessageV2 &msg );
 
 Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
 
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
-Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Item )
+Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Entity )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
 
 #endif // NOTIFICATIONMESSAGEV2_H
