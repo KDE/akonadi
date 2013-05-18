@@ -636,6 +636,24 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     QString dumpNotificationListToString() const;
 
     /**
+     *  Dumps memory usage information to stdout.
+     *  For now it outputs the result of glibc's mallinfo().
+     *  This is useful to check if your memory problems are due to poor management by glibc.
+     *  Look for a high value on fsmblks when interpreting results.
+     *  man mallinfo for more details.
+     *  @since 4.11
+     */
+    void dumpMemoryInfo() const;
+
+    /**
+     *  Returns a string with memory usage information.
+     *  @see dumpMemoryInfo()
+     *
+     *  @since 4.11
+     */
+    QString dumpMemoryInfoToString() const;
+
+    /**
      * Dump the state of the scheduler
      * @since 4.8.1
      */

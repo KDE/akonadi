@@ -60,6 +60,10 @@
 #include <QApplication>
 #include <QtDBus/QtDBus>
 
+#if defined __GLIBC__
+# include <malloc.h> // for dumping memory information
+#endif
+
 using namespace Akonadi;
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
@@ -201,6 +205,39 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     Q_SCRIPTABLE void clear()
     {
       scheduler->clear();
+    }
+
+    Q_SCRIPTABLE void dumpMemoryInfo() const
+    {
+      // Send it to stdout, so we can debug user problems.
+      // since you have to explicitely call this
+      // it won't flood users with release builds.
+      QTextStream stream( stdout );
+      stream << dumpMemoryInfoToString();
+    }
+
+    Q_SCRIPTABLE QString dumpMemoryInfoToString() const
+    {
+      // man mallinfo for more info
+      QString str;
+#if defined __GLIBC__
+      struct mallinfo mi;
+      mi = mallinfo();
+      QTextStream stream( &str );
+      stream << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
+             << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
+             << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
+             << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
+             << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
+             << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
+             << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
+             << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
+             << "Total free space (fordblks):          " << mi.fordblks  << '\n'
+             << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
+#else
+      str = QLatin1String( "mallinfo() not supported" );
+#endif
+      return str;
     }
 
   protected Q_SLOTS:
@@ -1147,6 +1184,18 @@ QString ResourceBase::dumpSchedulerToString() const
 {
   Q_D( const ResourceBase );
   return d->dumpToString();
+}
+
+void ResourceBase::dumpMemoryInfo() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpMemoryInfo();
+}
+
+QString ResourceBase::dumpMemoryInfoToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpMemoryInfoToString();
 }
 
 #include "resourcebase.moc"
