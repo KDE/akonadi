@@ -44,7 +44,7 @@ namespace Akonadi
 class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 {
   public:
-    typedef QList<NotificationMessageV2> List;
+    typedef QVector<NotificationMessageV2> List;
     typedef qint64 Id;
 
     enum Type {
