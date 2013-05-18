@@ -234,13 +234,14 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         changeProcessed();
         return;
       }
+
+      Item::List validItems;
       foreach ( const Akonadi::Item &item, items ) {
-        if ( item.remoteId().isEmpty() ) {
-          changeProcessed();
-          return;
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
         }
       }
-      AgentBasePrivate::itemsFlagsChanged( items, addedFlags, removedFlags );
+      AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
     }
 
     // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
@@ -259,13 +260,14 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         changeProcessed();
         return;
       }
+
+      Item::List validItems;
       foreach ( const Akonadi::Item &item, items ) {
-        if ( item.remoteId().isEmpty() ) {
-          changeProcessed();
-          return;
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
         }
       }
-      AgentBasePrivate::itemsMoved( items, source, destination );
+      AgentBasePrivate::itemsMoved( validItems, source, destination );
     }
 
     void itemRemoved(const Akonadi::Item& item)
@@ -279,13 +281,13 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 
     void itemsRemoved(const Item::List& items)
     {
+      Item::List validItems;
       foreach ( const Akonadi::Item &item, items ) {
-        if ( item.remoteId().isEmpty() ) {
-          changeProcessed();
-          return;
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
         }
       }
-      AgentBasePrivate::itemsRemoved( items );
+      AgentBasePrivate::itemsRemoved( validItems );
     }
 
     void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
