@@ -463,7 +463,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
-     * @param collectionId the unique identifier of the the collection where this item is stored in.
+     * @param collectionId the unique identifier of the collection where this item is stored in.
      * @since 4.3
      */
     void setStorageCollectionId( Entity::Id collectionId);

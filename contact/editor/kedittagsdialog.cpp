@@ -168,7 +168,7 @@ void KEditTagsDialog::slotTextEdited(const QString& text)
         }
     }
 
-    // There is no tag in the list with the the passed text.
+    // There is no tag in the list with the passed text.
     if ( m_newTagItem == 0 ) {
         m_newTagItem = new QListWidgetItem( tagText, m_tagsList );
     } else {

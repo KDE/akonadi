@@ -828,8 +828,8 @@ KAction* StandardMailActionManager::createAction( Type type )
     case EmptyTrash:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "E&mpty Trash" ) );
-      action->setHelpText( i18n( "Permanently delete all messages from the the trash folder" ) );
-      action->setWhatsThis( i18n( "Permanently delete all messages from the the trash folder" ) );
+      action->setHelpText( i18n( "Permanently delete all messages from the trash folder" ) );
+      action->setWhatsThis( i18n( "Permanently delete all messages from the trash folder" ) );
       d->mActions.insert( EmptyTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_empty_trash" ), action );
       connect( action, SIGNAL(triggered(bool)), this, SLOT(slotEmptyTrash()) );
