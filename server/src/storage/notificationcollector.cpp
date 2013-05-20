@@ -203,10 +203,7 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
   if ( collectionDest.isValid() ) {
     QByteArray destResourceName;
     destResourceName = collectionDest.resource().name().toLatin1();
-
-    // only relevant for moves
-    if ( !destResourceName.isEmpty() )
-      msg.setDestinationResource( destResourceName );
+    msg.setDestinationResource( destResourceName );
   }
 
   msg.setParentDestCollection( collectionDest.id() );
@@ -228,15 +225,18 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
     msg.addEntity( item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() );
   }
 
+  Collection col;
   if ( !collection.isValid() ) {
     msg.setParentCollection( items.first().collection().id() );
+    col = items.first().collection();
   } else {
     msg.setParentCollection( collection.id() );
+    col = collection;
   }
 
   QByteArray res = resource;
   if ( res.isEmpty() ) {
-    res = items.first().collection().resource().name().toLatin1();
+    res = col.resource().name().toLatin1();
   }
   msg.setResource( res );
 
