@@ -343,7 +343,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     foreach( const QByteArray &b, removedFlags )
       removedFlagsList.push_back( QString::fromLatin1(b) );
 
-    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 esource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11")
+    const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11")
                           .arg( QString::fromLatin1( sessionId ) )
                           .arg( typeString )
                           .arg( operationString )

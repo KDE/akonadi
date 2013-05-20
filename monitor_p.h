@@ -129,7 +129,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       Returns whether a message was appended to @p notificationQueue
     */
-    bool translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  );
+    int translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  );
 
     virtual void slotNotify( const NotificationMessageV2::List &msgs );
 
