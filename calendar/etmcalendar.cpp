@@ -32,10 +32,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <KSelectionProxyModel>
-#include <KCheckableProxyModel>
 #include <KDescendantsProxyModel>
 
 #include <QSortFilterProxyModel>
@@ -128,7 +126,7 @@ void ETMCalendarPrivate::setupFilteredETM()
   selectionModel->setObjectName( "Calendar Selection Model" );
 
   // Make item selection work by means of checkboxes.
-  mCheckableProxyModel = new KCheckableProxyModel( this );
+  mCheckableProxyModel = new CheckableProxyModel( this );
   mCheckableProxyModel->setSelectionModel( selectionModel );
   mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
