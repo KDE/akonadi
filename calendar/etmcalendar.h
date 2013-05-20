@@ -75,6 +75,8 @@ public:
 
   /**
    * Returns the collection having @p id.
+   * Use this instead of creating a new collection, the returned collection will have
+   * the correct right, name, display name, etc all set.
    */
   Akonadi::Collection collection( Akonadi::Collection::Id ) const;
 
