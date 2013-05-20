@@ -281,6 +281,12 @@ Item CalendarBase::item( const Incidence::Ptr& inc ) const
   return item( inc->instanceIdentifier() );
 }
 
+Akonadi::Item::List CalendarBase::items() const
+{
+  Q_D(const CalendarBase);
+  return d->mItemById.values();
+}
+
 Akonadi::Item::List CalendarBase::itemList( const KCalCore::Incidence::List &incidences ) const
 {
   Akonadi::Item::List items;

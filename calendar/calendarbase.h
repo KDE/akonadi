@@ -81,6 +81,12 @@ public:
   Akonadi::Item item( Akonadi::Item::Id ) const;
 
   /**
+   *  Returns the list of items contained in this calendar.
+   *  @see incidences()
+   */
+  Akonadi::Item::List items() const;
+
+  /**
     * Returns the item list that corresponds to the @p incidenceList.
     */
   Akonadi::Item::List itemList( const KCalCore::Incidence::List &incidenceList ) const;
