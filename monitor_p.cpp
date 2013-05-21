@@ -113,20 +113,15 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
 {
   NotificationMessageV2::Operation op = msg.operation();
 
-  // Newly delivered ModifyFlags notifications will be converted to
-  // itemChanged(item, "FLAGS") for legacy clients.
-  if ( op == NotificationMessageV2::ModifyFlags &&
-       ( allowModifyFlagsConversion && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) > 0 ) )
-  {
-    return false;
-  }
-
   if ( !fetchCollectionStatistics &&
        ( msg.type() == NotificationMessageV2::Items ) && ( ( op == NotificationMessageV2::Add && q_ptr->receivers( SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Remove && q_ptr->receivers( SIGNAL(itemRemoved(Akonadi::Item)) ) == 0
                                              && q_ptr->receivers( SIGNAL(itemsRemoved(Akonadi::Item::List)) ) == 0 )
     || ( op == NotificationMessageV2::Modify && q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 )
     || ( op == NotificationMessageV2::ModifyFlags && q_ptr->receivers( SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)) ) == 0 )
+        // Newly delivered ModifyFlags notifications will be converted to
+        // itemChanged(item, "FLAGS") for legacy clients.
+    || ( op == NotificationMessageV2::ModifyFlags && ( !allowModifyFlagsConversion || q_ptr->receivers( SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) ) == 0 ) )
     || ( op == NotificationMessageV2::Move && q_ptr->receivers( SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)) ) == 0
                                            && q_ptr->receivers( SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)) ) == 0 )
     || ( op == NotificationMessageV2::Link && q_ptr->receivers( SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)) ) == 0
