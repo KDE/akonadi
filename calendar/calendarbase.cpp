@@ -31,6 +31,21 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
+static QString itemToString(const Akonadi::Item &item)
+{
+    const KCalCore::Incidence::Ptr &incidence = CalendarUtils::incidence(item);
+    QString str;
+    QTextStream stream(&str);
+    stream << item.id()
+           << "; summary=" << incidence->summary() << "; uid=" << incidence->uid() << "; type="
+           << incidence->type() << "; recurs=" << incidence->recurs() << "; recurrenceId="
+           << incidence->recurrenceId().toString() << "; dtStart=" << incidence->dtStart().toString()
+           << "; dtEnd=" << incidence->dateTime(Incidence::RoleEnd).toString()
+           << "; parentCollection=" << item.storageCollectionId() << item.parentCollection().displayName();
+
+    return str;
+}
+
 CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
                                                              , mIncidenceChanger( new IncidenceChanger() )
                                                              , mBatchInsertionCancelled( false )
@@ -97,7 +112,11 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     }
   }
   // Must be the last one due to re-entrancy
-  q->MemoryCalendar::addIncidence( incidence );
+  const bool result = q->MemoryCalendar::addIncidence( incidence );
+  if (!result) {
+    kError() << "Error adding incidence " << itemToString(item);
+    Q_ASSERT(false);
+  }
 }
 
 void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
@@ -105,8 +124,10 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
   Q_ASSERT( item.isValid() );
 
   Incidence::Ptr tmp = CalendarUtils::incidence(item);
-  if (!tmp)
+  if ( !tmp ) {
+    kError() << "CalendarBase::internalRemove1: incidence is null, item.id=" << item.id();
     return;
+  }
 
   // We want the one stored in the calendar
   Incidence::Ptr incidence = q->incidence( tmp->uid(), tmp->recurrenceId() );
@@ -126,7 +147,13 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
       }
     }
     // Must be the last one due to re-entrancy
-    q->MemoryCalendar::deleteIncidence( incidence );
+    const bool result = q->MemoryCalendar::deleteIncidence( incidence );
+    if (!result) {
+      kError() << "Error removing incidence " << itemToString(item);
+      Q_ASSERT(false);
+    }
+  } else {
+    kWarning() << "CalendarBase::internalRemove2: incidence is null, item.id=" << itemToString(item);
   }
 }
 
