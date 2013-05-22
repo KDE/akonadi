@@ -78,7 +78,6 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-  mItemById.insert( item.id(), item );
   KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
 
   if ( !incidence ) {
@@ -102,6 +101,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     return;
   }
 
+  mItemById.insert( item.id(), item );
   mItemIdByUid.insert( uid, item.id() );
 
   if ( !incidence->hasRecurrenceId() ) {
