@@ -128,4 +128,9 @@ Q_DECLARE_TYPEINFO( Akonadi::NotificationMessage, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessage::List )
 
+// V2 is used in NotificationSource.xml interface, so it must be
+// defined so that old clients that only include this header
+// will compile
+#include "notificationmessagev2_p.h"
+
 #endif
