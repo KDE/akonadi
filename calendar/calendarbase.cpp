@@ -101,6 +101,12 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     return;
   }
 
+  Akonadi::Collection collection = item.parentCollection();
+  if (collection.isValid()) {
+      // Some items don't have collection set
+      incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+  }
+
   mItemById.insert( item.id(), item );
   mItemIdByUid.insert( uid, item.id() );
 
