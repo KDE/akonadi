@@ -120,6 +120,7 @@ public Q_SLOTS:
   void onDataChangedInFilteredModel( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
   void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
+  void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
 
 public:
   Akonadi::EntityTreeModel *mETM;

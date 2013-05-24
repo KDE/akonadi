@@ -24,6 +24,7 @@
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 #include "calfilterproxymodel_p.h"
+#include "utils_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/session.h>
@@ -61,7 +62,7 @@ void ETMCalendarPrivate::init()
   Akonadi::Session *session = new Akonadi::Session( "ETMCalendar", q );
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( q );
   connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+           SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
 
   Akonadi::ItemFetchScope scope;
   scope.fetchFullPayload( true );
@@ -103,6 +104,25 @@ void ETMCalendarPrivate::init()
            SLOT(onRowsAboutToBeRemovedInFilteredModel(QModelIndex,int,int)) );
 
   loadFromETM();
+}
+
+void ETMCalendarPrivate::onCollectionChanged(const Akonadi::Collection &collection,
+                                             const QSet<QByteArray> &attributeNames)
+{
+    Q_ASSERT(collection.isValid());
+    // Is the collection changed to read-only, we update all Incidences
+    if (attributeNames.contains("AccessRights")) {
+        Akonadi::Item::List items = q->items();
+        foreach (const Akonadi::Item &item, items) {
+            if (item.storageCollectionId() == collection.id()) {
+                KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
+                if (incidence)
+                    incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+            }
+        }
+    }
+
+    emit q->collectionChanged(collection, attributeNames);
 }
 
 void ETMCalendarPrivate::setupFilteredETM()
