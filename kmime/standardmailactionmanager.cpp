@@ -295,12 +295,12 @@ class StandardMailActionManager::Private
         case Akonadi::StandardActionManager::SynchronizeCollectionsRecursive:
 
             mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
-                                            ki18np( "Update Folder and All Subfolders", "Update this folder and all its subfolders" ) );
+                                            ki18nc( "Update this folder and all its subfolders", "Update Folder and All Subfolders" ) );
 
             mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive )->setWhatsThis(
-                        i18n( "Update the contents of the selected folders and all its subfolders." ) );
+                        i18n( "Update the contents of the selected folders and all their subfolders." ) );
             mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive )->setHelpText(
-                        i18n( "Update the contents of the selected folders and all its subfolders." ) );
+                        i18n( "Update the contents of the selected folders and all their subfolders." ) );
             break;
         case Akonadi::StandardActionManager::Paste:
             mGenericManager->setContextText(
@@ -849,8 +849,8 @@ KAction* StandardMailActionManager::createAction( Type type )
     case EmptyTrash:
       action = new KAction( d->mParentWidget );
       action->setText( i18n( "E&mpty Trash" ) );
-      action->setHelpText( i18n( "Permanently delete all messages from the the trash folder." ) );
-      action->setWhatsThis( i18n( "Permanently delete all messages from the the trash folder." ) );
+      action->setHelpText( i18n( "Permanently delete all messages from the trash folder." ) );
+      action->setWhatsThis( i18n( "Permanently delete all messages from the trash folder." ) );
       d->mActions.insert( EmptyTrash, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_empty_trash" ), action );
       connect( action, SIGNAL(triggered(bool)), this, SLOT(slotEmptyTrash()) );
