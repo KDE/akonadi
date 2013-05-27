@@ -295,7 +295,8 @@ class StandardMailActionManager::Private
         case Akonadi::StandardActionManager::SynchronizeCollectionsRecursive:
 
             mGenericManager->setActionText( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive,
-                                            ki18nc( "Update this folder and all its subfolders", "Update Folder and All Subfolders" ) );
+                                           ki18np( "Update This Folder and All Its Subfolders",
+                                                   "Update These Folders and All Their Subfolders" ));
 
             mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollectionsRecursive )->setWhatsThis(
                         i18n( "Update the contents of the selected folders and all their subfolders." ) );
