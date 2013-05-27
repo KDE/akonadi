@@ -278,6 +278,11 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
           validItems << item;
         }
       }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
       AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
     }
 
@@ -304,6 +309,11 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
           validItems << item;
         }
       }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
       AgentBasePrivate::itemsMoved( validItems, source, destination );
     }
 
@@ -324,6 +334,11 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
           validItems << item;
         }
       }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
       AgentBasePrivate::itemsRemoved( validItems );
     }
 
