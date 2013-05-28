@@ -94,9 +94,9 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 
   if ( uid.isEmpty() ) {
     // This code path should never happen
-    kError() << "Incidence has empty uid. id=" << item.id()
-             << "; summary=" << incidence->summary();
-    Q_ASSERT( false );
+    kError() << "Incidence has empty UID. id=" << item.id()
+             << "; summary=" << incidence->summary()
+             << "Please fix it. Ignoring this incidence.";
     return;
   }
 
