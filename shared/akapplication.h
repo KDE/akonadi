@@ -23,7 +23,9 @@
 #include <QtCore/QObject>
 
 #ifndef _WIN32_WCE
-#include <boost/program_options.hpp>
+# ifndef Q_MOC_RUN
+#  include <boost/program_options.hpp>
+# endif
 #endif
 
 class QCoreApplication;
