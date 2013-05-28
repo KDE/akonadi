@@ -91,7 +91,14 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 
   //kDebug() << "Inserting incidence in calendar. id=" << item.id() << "uid=" << incidence->uid();
   const QString uid = incidence->instanceIdentifier();
-  Q_ASSERT( !uid.isEmpty() );
+
+  if ( uid.isEmpty() ) {
+    // This code path should never happen
+    kError() << "Incidence has empty uid. id=" << item.id()
+             << "; summary=" << incidence->summary();
+    Q_ASSERT( false );
+    return;
+  }
 
   if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
     // We only allow duplicate UIDs if they have the same item id, for example
