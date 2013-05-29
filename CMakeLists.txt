@@ -393,3 +393,19 @@ install( FILES
   DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde/qml
 )
 endif()
+
+#laurent need fix for compile with add_definitions( -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII )
+if(KDE_VERSION VERSION_GREATER 4.10.4)
+MESSAGE(STATUS "We can build akonadiwidgets")
+if(QT_QTDESIGNER_FOUND)
+  set(akonadiwidgets_PART_SRCS)
+  kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/akonadi.widgets)
+
+  kde4_add_plugin(akonadiwidgets ${akonadiwidgets_PART_SRCS})
+
+  target_link_libraries(akonadiwidgets ${KDE4_KIO_LIBS} akonadi-kde)
+
+  install(TARGETS akonadiwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif()
+endif()
+
