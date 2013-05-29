@@ -9,3 +9,11 @@ WhatsThis=A widget to configure akonadi instance.
 IncludeFile=akonadi/agentinstancewidget.h
 ConstructorArgs=(parent)
 Group=Input (KDE-PIM)
+
+[Akonadi::EntityTreeView]
+ToolTip=A view to show an item/collection tree provided by an EntityTreeModel (Akonadi)
+WhatsThis=A view to show an item/collection tree provided by an EntityTreeModel.
+IncludeFile=akonadi/entitytreeview.h
+ConstructorArgs=(parent)
+Group=Input (KDE-PIM)
+
