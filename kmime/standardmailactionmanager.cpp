@@ -696,6 +696,7 @@ KAction* StandardMailActionManager::createAction( Type type )
       d->mActions.insert( MarkMailAsRead, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_mark_as_read" ), action );
       action->setData( QByteArray( "R" ) );
+      action->setShortcut( Qt::CTRL+Qt::Key_R );
       connect( action, SIGNAL(triggered(bool)), this, SLOT(slotMarkAs()) );
       break;
     case MarkMailAsUnread:
