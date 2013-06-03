@@ -398,7 +398,7 @@ endif()
 if((NOT KDE_VERSION VERSION_LESS 4.10.4) AND QT_QTDESIGNER_FOUND)
   message(STATUS "Building Akonadi widgets")
   set(akonadiwidgets_PART_SRCS)
-  kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/akonadi.widgets)
+  kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/akonadi.widgets)
 
   kde4_add_plugin(akonadiwidgets ${akonadiwidgets_PART_SRCS})
 
