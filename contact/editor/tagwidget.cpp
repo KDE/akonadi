@@ -36,7 +36,7 @@ TagWidget::TagWidget( QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
   mTagLabel = new KSqueezedTextLabel;
-  mTagLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mTagLabel->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
   layout->addWidget( mTagLabel );
 
   QToolButton *editButton = new QToolButton;

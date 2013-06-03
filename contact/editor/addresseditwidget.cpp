@@ -245,7 +245,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->addWidget( mAddressSelectionWidget, 0, 0, 1, 3 );
 
   mAddressView = new QLabel( this );
-  mAddressView->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mAddressView->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
   mAddressView->setMinimumHeight( 20 );
   mAddressView->setAlignment( Qt::AlignTop );
   mAddressView->setTextFormat( Qt::PlainText );
