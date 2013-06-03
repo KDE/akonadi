@@ -420,21 +420,31 @@ private:
     typename T::List entities;
     extractResults( job, entities );
 
-    foreach( const T &entity, entities ) {
-      EntityListCacheNode<T> *node = cacheNodeForId( entity.id() );
+    foreach( Entity::Id id, ids ) {
+      EntityListCacheNode<T> *node = cacheNodeForId( id );
       if ( !node ) {
-        return; // got replaced in the meantime
+        continue; // got replaced in the meantime
       }
 
       node->pending = false;
 
+      T result;
+      typename T::List::Iterator iter = entities.begin();
+      for ( ; iter != entities.end(); ++iter ) {
+        if ( (*iter).id() == id ) {
+          result = *iter;
+          entities.erase( iter );
+          break;
+        }
+      }
+
       // make sure we find this node again if something went wrong here,
       // most likely the object got deleted from the server in the meantime
-      if ( !ids.contains( entity.id() ) ) {
-        node->entity = Item( entity.id() );
+      if ( !result.isValid() ) {
+        node->entity = Item( id );
         node->invalid = true;
       } else {
-        node->entity = entity;
+        node->entity = result;
       }
     }
 
