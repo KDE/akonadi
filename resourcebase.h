@@ -32,6 +32,7 @@
 
 class KJob;
 class Akonadi__ResourceAdaptor;
+class ResourceState;
 
 namespace Akonadi {
 
@@ -589,7 +590,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
     friend class ResourceScheduler;
-    friend class ResourceState;
+    friend class ::ResourceState;
 
     /**
      * Describes the scheduling priority of a task that has been queued
