@@ -243,9 +243,12 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
                << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid]
                << "; new summary= " << newIncidence->summary()
                << "; new recurrenceId=" << newIncidence->recurrenceId()
-               << "; oldIncidence uid=" << oldIncidence->uid()
-               << "; oldIncidence recurrenceId = " << oldIncidence->recurrenceId()
-               << "; oldIncidence summary = " << oldIncidence->summary();
+               << "; oldIncidence" << oldIncidence;
+    if (oldIncidence) {
+      kWarning() << "; oldIncidence uid=" << oldIncidence->uid()
+                 << "; oldIncidence recurrenceId = " << oldIncidence->recurrenceId()
+                 << "; oldIncidence summary = " << oldIncidence->summary();
+    }
     Q_ASSERT(false);
     return;
   }
