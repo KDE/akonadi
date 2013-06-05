@@ -103,8 +103,11 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   if ( mItemIdByUid.contains( uid ) && mItemIdByUid[uid] != item.id() ) {
     // We only allow duplicate UIDs if they have the same item id, for example
     // when using virtual folders.
-    kWarning() << "Discarding duplicate incidence with uid=" << uid
-                << "and summary " << incidence->summary();
+    kWarning() << "Discarding duplicate incidence with instanceIdentifier=" << uid
+                << "and summary " << incidence->summary()
+                << "; recurrenceId() =" << incidence->recurrenceId()
+                << "; new id=" << item.id()
+                << "; existing id=" << mItemIdByUid[uid];
     return;
   }
 
@@ -231,26 +234,43 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
 
 void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newUid )
 {
+  Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
+  Q_ASSERT( newIncidence );
   if (mItemIdByUid.contains(newUid)) {
+    Akonadi::Item oldItem = mItemById.value( newItem.id() );
+    Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
     kWarning() << "New uid shouldn't be known: "  << newUid << "; id="
-               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid];
+               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid]
+               << "; new summary= " << newIncidence->summary()
+               << "; new recurrenceId=" << newIncidence->recurrenceId()
+               << "; oldIncidence uid=" << oldIncidence->uid()
+               << "; oldIncidence recurrenceId = " << oldIncidence->recurrenceId()
+               << "; oldIncidence summary = " << oldIncidence->summary();
     Q_ASSERT(false);
     return;
   }
 
   mItemIdByUid[newUid] = newItem.id();
-
   Q_ASSERT( mItemById.contains( newItem.id() ) );
   Akonadi::Item oldItem = mItemById.value( newItem.id() );
   Q_ASSERT( oldItem.isValid() );
-
   Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
   Q_ASSERT( oldIncidence );
-  Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
-  Q_ASSERT( newIncidence );
-  Q_ASSERT( newIncidence->uid() != oldIncidence->uid() ); // The reason we're here in the first place
+  if ( newIncidence->instanceIdentifier() == oldIncidence->instanceIdentifier() ) {
+    kWarning() << "New uid=" << newIncidence->uid() << "; old uid=" << oldIncidence->uid()
+               << "; new recurrenceId="
+               << newIncidence->recurrenceId()
+               << "; old recurrenceId=" << oldIncidence->recurrenceId()
+               << "; new summary = " << newIncidence->summary()
+               << "; old summary = " << oldIncidence->summary()
+               << "; id = " << newItem.id();
+    Q_ASSERT( false ); // The reason we're here in the first place
+    return;
+  }
 
   const QString oldUid = oldIncidence->uid();
+  kDebug() << "Handling identifier change from " << oldIncidence->instanceIdentifier()
+           << " to " << newIncidence->instanceIdentifier();
 
   if ( mParentUidToChildrenUid.contains( oldUid ) ) {
     Q_ASSERT( !mParentUidToChildrenUid.contains( newUid ) );
