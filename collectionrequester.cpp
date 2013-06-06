@@ -90,6 +90,7 @@ void CollectionRequester::Private::init()
   q->connect( openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()) );
 
   collectionDialog = new CollectionDialog( q );
+  collectionDialog->setWindowIcon( KIcon( QLatin1String( "akonadi" ) ) );
   collectionDialog->setCaption( i18n( "Select a collection" ) );
   collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
 }
