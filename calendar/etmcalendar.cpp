@@ -83,6 +83,8 @@ void ETMCalendarPrivate::init()
 
   connect( q, SIGNAL(filterChanged()), SLOT(onFilterChanged()) );
 
+  connect( mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
+           SLOT(onCollectionPopulated(Akonadi::Collection::Id)) );
   connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(onRowsInserted(QModelIndex,int,int)) );
   connect( mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -264,10 +266,18 @@ Akonadi::Item ETMCalendarPrivate::itemFromIndex( const QModelIndex &idx )
 
 void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 {
-  foreach( const Akonadi::Item &item, items ) {
-    internalInsert( item );
+  if ( !items.isEmpty() ) {
+    foreach( const Akonadi::Item &item, items ) {
+      internalInsert( item );
+    }
+
+    Akonadi::Collection::Id id = items.first().storageCollectionId();
+    if ( mPopulatedCollectionIds.contains( id ) ) {
+      // If the collection isn't populated yet, it will be send later
+      // Saves some cpu cycles
+      emit q->calendarChanged();
+    }
   }
-  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::itemsRemoved( const Akonadi::Item::List &items )
@@ -295,6 +305,12 @@ void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
 
   if ( !collections.isEmpty() )
     emit q->collectionsAdded( collections );
+}
+
+void ETMCalendarPrivate::onCollectionPopulated( Akonadi::Collection::Id id )
+{
+  mPopulatedCollectionIds.insert( id );
+  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::onRowsRemoved( const QModelIndex &index, int start, int end )

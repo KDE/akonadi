@@ -27,6 +27,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <KCheckableProxyModel>
 
+#include <QSet>
 #include <QVector>
 #include <QModelIndex>
 
@@ -121,6 +122,7 @@ public Q_SLOTS:
   void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
   void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
   void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
+  void onCollectionPopulated(Akonadi::Collection::Id);
 
 public:
   Akonadi::EntityTreeModel *mETM;
@@ -133,6 +135,7 @@ public:
   Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
   KSelectionProxyModel *mSelectionProxy;
   bool mCollectionFilteringEnabled;
+  QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;
 private:
   ETMCalendar *const q;
 };
