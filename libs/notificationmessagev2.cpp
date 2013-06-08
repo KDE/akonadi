@@ -503,23 +503,25 @@ bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const Notif
       if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
 
         // both are modifications, merge them together and drop the new one
-        if (( msg.operation() == Modify || msg.operation() == ModifyFlags ) && ( it->operation() == Modify || it->operation() == ModifyFlags )) {
+        if ( msg.operation() == Modify && it->operation() == Modify ) {
           (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
+          return false;
+        }
+
+        else if ( msg.operation() == ModifyFlags && it->operation() == ModifyFlags ) {
           (*it).setAddedFlags( (*it).addedFlags() + msg.addedFlags() );
           (*it).setRemovedFlags( (*it).removedFlags() + msg.removedFlags() );
 
-          // If merged notifications result in no-change notification, drop both.
-          if ( it->operation() == ModifyFlags ) {
-            if ( (*it).addedFlags() == (*it).removedFlags() ) {
-              it = list.erase( it );
-              end = list.end();
-            }
+           // If merged notifications result in no-change notification, drop both.
+          if ( (*it).addedFlags() == (*it).removedFlags() ) {
+            it = list.erase( it );
+            end = list.end();
           }
 
           return false;
         }
         // new one is a modification, the existing one not, so drop the new one
-        else if (( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags )) {
+        else if ( ( ( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags ) ) && ( (*it).operation() != Modify) && (*it).operation() != ModifyFlags ) {
           return false;
         }
         // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
