@@ -85,8 +85,8 @@ if(EXISTS "${Akonadi_SOURCE_DIR}/.git")
     message(STATUS "Found git: ${GIT_EXECUTABLE}")
     execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short HEAD
                     WORKING_DIRECTORY ${Akonadi_SOURCE_DIR}
-                    OUTPUT_VARIABLE akonadi_git_revision)
-    string(REGEX REPLACE "\n" "" akonadi_git_revision "${akonadi_git_revision}")
+                    OUTPUT_VARIABLE akonadi_git_revision
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
     set(AKONADI_VERSION_STRING "${AKONADI_VERSION_STRING} (revision: ${akonadi_git_revision})")
   endif()
 endif()
