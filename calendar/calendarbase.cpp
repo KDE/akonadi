@@ -232,15 +232,15 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newUid )
+void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newIdentifier )
 {
   Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
   Q_ASSERT( newIncidence );
-  if (mItemIdByUid.contains(newUid)) {
+  if (mItemIdByUid.contains(newIdentifier)) {
     Akonadi::Item oldItem = mItemById.value( newItem.id() );
     Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
-    kWarning() << "New uid shouldn't be known: "  << newUid << "; id="
-               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newUid]
+    kWarning() << "New uid shouldn't be known: "  << newIdentifier << "; id="
+               << newItem.id() << "; oldItem.id=" << mItemIdByUid[newIdentifier]
                << "; new summary= " << newIncidence->summary()
                << "; new recurrenceId=" << newIncidence->recurrenceId()
                << "; oldIncidence" << oldIncidence;
@@ -253,7 +253,7 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
     return;
   }
 
-  mItemIdByUid[newUid] = newItem.id();
+  mItemIdByUid[newIdentifier] = newItem.id();
   Q_ASSERT( mItemById.contains( newItem.id() ) );
   Akonadi::Item oldItem = mItemById.value( newItem.id() );
   Q_ASSERT( oldItem.isValid() );
@@ -276,9 +276,9 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
            << " to " << newIncidence->instanceIdentifier();
 
   if ( mParentUidToChildrenUid.contains( oldUid ) ) {
-    Q_ASSERT( !mParentUidToChildrenUid.contains( newUid ) );
+    Q_ASSERT( !mParentUidToChildrenUid.contains( newIdentifier ) );
     QStringList children = mParentUidToChildrenUid.value( oldUid );
-    mParentUidToChildrenUid.insert( newUid, children );
+    mParentUidToChildrenUid.insert( newIdentifier, children );
     mParentUidToChildrenUid.remove( oldUid );
   }
 
