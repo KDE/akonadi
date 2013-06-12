@@ -22,6 +22,10 @@
 
 #include "emailaddressselectiondialog.h"
 
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KSharedConfig>
+
 using namespace Akonadi;
 
 class EmailAddressSelectionDialog::Private
@@ -38,6 +42,24 @@ class EmailAddressSelectionDialog::Private
       q->connect( mView, SIGNAL(doubleClicked()), q, SLOT(accept()));
       q->setButtons( Ok | Cancel );
       q->setMainWidget( mView );
+      readConfig();
+    }
+
+    void readConfig()
+    {
+       KConfigGroup group( KGlobal::config(), "EmailAddressSelectionDialog" );
+       const QSize size = group.readEntry( "Size", QSize() );
+       if ( size.isValid() ) {
+          q->resize( size );
+       } else {
+          q->resize( q->sizeHint().width(), q->sizeHint().height() );
+       }
+    }
+
+    void writeConfig()
+    {
+        KConfigGroup group( KGlobal::config(), "EmailAddressSelectionDialog" );
+        group.writeEntry( "Size", q->size() );
     }
 
     EmailAddressSelectionDialog *q;
@@ -56,6 +78,7 @@ EmailAddressSelectionDialog::EmailAddressSelectionDialog( QAbstractItemModel *mo
 
 EmailAddressSelectionDialog::~EmailAddressSelectionDialog()
 {
+  d->writeConfig();
   delete d;
 }
 
@@ -68,3 +91,5 @@ EmailAddressSelectionWidget* EmailAddressSelectionDialog::view() const
 {
   return d->mView;
 }
+
+
