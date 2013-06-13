@@ -111,6 +111,13 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
     return;
   }
 
+  if ( incidence->type() == KCalCore::Incidence::TypeEvent && !incidence->dtStart().isValid() ) {
+      // TODO: make the parser discard them would also be a good idea
+      kWarning() << "Discarding event with invalid DTSTART. identifier="
+                 << incidence->instanceIdentifier() << "; summary=" << incidence->summary();
+      return;
+  }
+
   Akonadi::Collection collection = item.parentCollection();
   if (collection.isValid()) {
       // Some items don't have collection set
