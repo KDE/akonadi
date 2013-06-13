@@ -271,6 +271,7 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
     return;
   }
 
+  mItemIdByUid.remove( oldIncidence->instanceIdentifier() );
   const QString oldUid = oldIncidence->uid();
   kDebug() << "Handling identifier change from " << oldIncidence->instanceIdentifier()
            << " to " << newIncidence->instanceIdentifier();
