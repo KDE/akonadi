@@ -502,7 +502,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 
 bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr &change )
 {
-  if ( mGroupwareCommunication ) {
+  if ( change->useGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:

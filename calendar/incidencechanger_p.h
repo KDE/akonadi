@@ -59,6 +59,7 @@ public:
                             , resultCode( Akonadi::IncidenceChanger::ResultCodeSuccess )
                             , completed( false )
                             , queuedModification( false )
+                            , useGroupwareCommunication( incidenceChanger->groupwareCommunication() )
                             , changer( incidenceChanger )
   {
   }
@@ -94,6 +95,7 @@ public:
   IncidenceChanger::ResultCode resultCode;
   bool completed;
   bool queuedModification;
+  bool useGroupwareCommunication;
 protected:
   IncidenceChanger *const changer;
 };
