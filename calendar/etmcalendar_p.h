@@ -136,6 +136,7 @@ public:
   KSelectionProxyModel *mSelectionProxy;
   bool mCollectionFilteringEnabled;
   QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;
+  QStringList mMimeTypes;
 private:
   ETMCalendar *const q;
 };

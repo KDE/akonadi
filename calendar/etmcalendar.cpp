@@ -72,10 +72,15 @@ void ETMCalendarPrivate::init()
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( "text/calendar", true );
-  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
+
+  QStringList allMimeTypes;
+  allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
+               << KCalCore::Journal::journalMimeType();
+
+  foreach( const QString &mimetype, allMimeTypes ) {
+    monitor->setMimeTypeMonitored( mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype) );
+  }
+
   mETM = new CalendarModel( monitor, q );
   mETM->setObjectName( "ETM" );
 
@@ -421,6 +426,13 @@ void ETMCalendarPrivate::onFilterChanged()
 ETMCalendar::ETMCalendar( QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
 {
   Q_D( ETMCalendar );
+  d->init();
+}
+
+ETMCalendar::ETMCalendar( const QStringList &mimeTypes, QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
+{
+  Q_D( ETMCalendar );
+  d->mMimeTypes = mimeTypes;
   d->init();
 }
 
