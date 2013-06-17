@@ -52,6 +52,7 @@ class ItemFetchScopePrivate : public QSharedData
       mAllAttributes = other.mAllAttributes;
       mCacheOnly = other.mCacheOnly;
       mFetchMtime = other.mFetchMtime;
+      mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
 
   public:
