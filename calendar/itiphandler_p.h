@@ -51,7 +51,7 @@ enum Operation {
   OperationProcessiTIPMessage,
   OperationSendiTIPMessage,
   OperationPublishInformation,
-  OperationSendAsICalendar,
+  OperationSendAsICalendar
 };
 
 class ITIPHandler::Private : public QObject
