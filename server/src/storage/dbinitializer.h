@@ -35,7 +35,7 @@ class QDomElement;
 class TestInterface
 {
   public:
-    virtual ~TestInterface() {};
+    virtual ~TestInterface() {}
     virtual void execStatement( const QString &statement ) = 0;
 };
 
