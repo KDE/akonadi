@@ -219,7 +219,7 @@ void StorageJanitor::findOrphanedCollections()
 
   qb.exec();
   const Collection::List orphans = qb.result();
-  if ( orphans.size() > 0 ) {
+  if ( !orphans.isEmpty() ) {
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan collections." ) );
     // TODO: attach to lost+found resource
   }
