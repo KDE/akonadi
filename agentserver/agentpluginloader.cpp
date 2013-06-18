@@ -43,6 +43,7 @@ QPluginLoader *AgentPluginLoader::load( const QString &pluginName )
     QPluginLoader *loader = new QPluginLoader( pluginFile );
     if ( !loader->load() ) {
       akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
+      delete loader;
       return 0;
     }
     m_pluginLoaders.insert( pluginFile, loader );
