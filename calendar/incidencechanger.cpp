@@ -876,6 +876,9 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     return changeId;
   }
 
+  //TODO also update revision here instead of in the editor
+  changedItem.payload<Incidence::Ptr>()->setLastModified( KDateTime::currentUtcDateTime() );
+
   const uint atomicOperationId = d->mBatchOperationInProgress ? d->mLatestAtomicOperationId : 0;
   const int changeId = ++d->mLatestChangeId;
   ModificationChange *modificationChange = new ModificationChange( this, changeId,
