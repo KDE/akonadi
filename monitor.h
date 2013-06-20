@@ -317,7 +317,7 @@ class AKONADI_EXPORT Monitor : public QObject
 
     /**
      * Allows to enable/disable collection move translation. If enabled (the default), move
-     * notifications are auotmatically translated into add/remove notifications if the source/destination
+     * notifications are automatically translated into add/remove notifications if the source/destination
      * is outside of the monitored collection hierarchy.
      * @param enabled enables collection move translation if set as @c true
      * @since 4.9
