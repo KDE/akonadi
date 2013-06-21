@@ -286,7 +286,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
     }
 
-    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
+    // TODO move the move translation code from AgentBasePrivate here, it's wrong for agents
     void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination)
     {
       if ( item.remoteId().isEmpty() || destination.remoteId().isEmpty() || destination == source ) {
