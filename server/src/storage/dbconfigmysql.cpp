@@ -57,7 +57,10 @@ bool DbConfigMysql::init( QSettings &settings )
   QString defaultServerPath;
   QString defaultCleanShutdownCommand;
 
-  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
+#ifndef Q_OS_WIN
+  const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) )
+  );
+#endif
 
   const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
@@ -169,7 +172,9 @@ void DbConfigMysql::startInternalServer()
 
   const QString akDir   = AkStandardDirs::saveDir( "data" );
   const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "db_data" ) );
+#ifndef Q_OS_WIN
   const QString socketDirectory = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data", QLatin1String( "db_misc" ) ) );
+#endif
 
   // generate config file
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
@@ -218,12 +223,14 @@ void DbConfigMysql::startInternalServer()
   if ( akDir.isEmpty() )
     akFatal() << "Akonadi server was not able to create database log directory";
 
+#ifndef Q_OS_WIN
   if ( socketDirectory.isEmpty() )
     akFatal() << "Akonadi server was not able to create database misc directory";
 
   // the socket path must not exceed 103 characters, so check for max dir length right away
   if ( socketDirectory.length() >= 90 )
       akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+#endif
 
   // move mysql error log file out of the way
   const QFileInfo errorLog( dataDir + QDir::separator() + QString::fromLatin1( "mysql.err" ) );
@@ -308,7 +315,10 @@ void DbConfigMysql::startInternalServer()
                                                     << QLatin1String( "--check-upgrade" )
                                                     << QLatin1String( "--all-databases" )
                                                     << QLatin1String( "--auto-repair" )
-                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory );
+#ifndef Q_OS_WIN
+                                                    << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( socketDirectory )
+#endif
+                                                    ;
         QProcess::execute( mMysqlCheckPath, arguments );
       }
 
