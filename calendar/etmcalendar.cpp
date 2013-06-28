@@ -522,11 +522,21 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
       continue;
     }
 
+    Alarm::List tmpList;
     if ( incidence->recurs() ) {
-      appendRecurringAlarms( alarmList, incidence, from, to );
+      appendRecurringAlarms( tmpList, incidence, from, to );
     } else {
-      appendAlarms( alarmList, incidence, from, to );
+      appendAlarms( tmpList, incidence, from, to );
     }
+
+    // We need to tag them with the incidence uid in case
+    // the caller will need it, because when we get out of
+    // this scope the incidence will be destroyed.
+    QVectorIterator<Alarm::Ptr> a( tmpList );
+    while ( a.hasNext() ) {
+      a.next()->setCustomProperty( "ETMCalendar", "parentUid", incidence->uid() );
+    }
+    alarmList += tmpList;
   }
   return alarmList;
 }
