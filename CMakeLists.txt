@@ -402,7 +402,10 @@ set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/")
 include(CPack) # needs to happen after the above variables are set!
 
 
-feature_summary(WHAT ALL)
+feature_summary(WHAT ALL
+                     INCLUDE_QUIET_PACKAGES
+                     FATAL_ON_MISSING_REQUIRED_PACKAGES
+               )
 
 # Install the file with the exported targets
 install(EXPORT akonadiLibraryTargets
