@@ -67,6 +67,7 @@ namespace Akonadi {
 
     kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
+    dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
     dlg->setMimeTypeFilter( mimeTypes );
     dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
     if ( defCollection.isValid() ) {
