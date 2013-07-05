@@ -301,6 +301,7 @@ CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones
                                               , d_ptr( new CalendarBasePrivate( this ) )
 {
   setParent( parent );
+  setDeletionTracking( false );
 }
 
 CalendarBase::CalendarBase( CalendarBasePrivate *const dd,
@@ -308,6 +309,7 @@ CalendarBase::CalendarBase( CalendarBasePrivate *const dd,
                                               , d_ptr( dd )
 {
   setParent( parent );
+  setDeletionTracking( false );
 }
 
 CalendarBase::~CalendarBase()
