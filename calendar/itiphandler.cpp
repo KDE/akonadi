@@ -72,7 +72,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
 
   d->m_currentOperation = OperationProcessiTIPMessage;
 
-  if ( !d->m_calendar->isLoaded() ) {
+  if ( !d->isLoaded() ) {
     d->m_queuedInvitation.receiver = receiver;
     d->m_queuedInvitation.iCal     = iCal;
     d->m_queuedInvitation.action   = action;
@@ -85,7 +85,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
   }
 
   KCalCore::ICalFormat format;
-  KCalCore::ScheduleMessage::Ptr message = format.parseScheduleMessage( d->m_calendar, iCal );
+  KCalCore::ScheduleMessage::Ptr message = format.parseScheduleMessage( d->calendar(), iCal );
 
   if ( !message ) {
     const QString errorMessage = format.exception() ? i18n( "Error message: %1", KCalUtils::Stringify::errorMessage( *format.exception() ) )
@@ -133,19 +133,19 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     }
     if ( CalendarSettings::self()->outlookCompatCounterProposals() ||
          !action.startsWith( QLatin1String( "counter" ) ) ) {
-      d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, d->m_method, status, receiver );
+      d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), d->m_method, status, receiver );
       return; // signal emitted in onSchedulerFinished().
     }
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, KCalCore::iTIPCancel, status, receiver );
+    d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
     return; // signal emitted in onSchedulerFinished().
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( d->m_method != KCalCore::iTIPCounter ) {
-      d->m_scheduler->acceptTransaction( d->m_incidence, d->m_calendar, d->m_method, status, QString() );
+      d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), d->m_method, status, QString() );
     } else {
-      d->m_scheduler->acceptCounterProposal( d->m_incidence, d->m_calendar );
+      d->m_scheduler->acceptCounterProposal( d->m_incidence, d->calendar() );
     }
     return; // signal emitted in onSchedulerFinished().
   } else {
@@ -175,7 +175,7 @@ void ITIPHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
   d->m_queuedInvitation.incidence = incidence;
   d->m_parentWidget = parentWidget;
 
-  if ( !d->m_calendar->isLoaded() ) {
+  if ( !d->isLoaded() ) {
     // This method will be called again once the calendar is loaded.
     return;
   }
@@ -244,6 +244,7 @@ void ITIPHandler::publishInformation( const KCalCore::Incidence::Ptr &incidence,
 void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
                                    QWidget *parentWidget )
 {
+  Q_UNUSED( parentWidget );
   Q_ASSERT( incidence );
   if ( !incidence ) {
     kError() << "Invalid incidence";
@@ -279,6 +280,18 @@ void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
 void ITIPHandler::setGroupwareUiDelegate( GroupwareUiDelegate *delegate )
 {
   d->m_uiDelegate = delegate;
+}
+
+void ITIPHandler::setCalendar(const Akonadi::CalendarBase::Ptr &calendar)
+{
+  if ( d->m_calendar != calendar ) {
+    d->m_calendar = calendar;
+  }
+}
+
+Akonadi::CalendarBase::Ptr ITIPHandler::calendar() const
+{
+  return d->m_calendar;
 }
 
 #include "itiphandler.moc"

@@ -116,6 +116,19 @@ public:
    */
   void setGroupwareUiDelegate( GroupwareUiDelegate * );
 
+  /**
+   * Sets the calendar that the itip handler should use.
+   * The calendar should already be loaded.
+   *
+   * If none is set, a FetchJobCalendar will be created internally.
+   */
+  void setCalendar(const Akonadi::CalendarBase::Ptr &);
+
+  /**
+   * Returns the calendar used by this itip handler.
+   */
+  Akonadi::CalendarBase::Ptr calendar() const;
+
 Q_SIGNALS:
   /**
    * Sent after processing an incoming iTip message.

@@ -20,7 +20,7 @@
 #ifndef AKONADI_CALENDAR_ITIP_HANDLER_P_H
 #define AKONADI_CALENDAR_ITIP_HANDLER_P_H
 
-#include "fetchjobcalendar.h"
+#include "calendarbase.h"
 #include "mailscheduler_p.h"
 #include "itiphandler.h"
 #include "itiphandlerhelper_p.h"
@@ -64,9 +64,16 @@ public:
   void finishSendiTIPMessage( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void finishPublishInformation( Akonadi::MailScheduler::Result, const QString &errorMessage );
 
+  /**
+   * Returns the calendar.
+   * Creates a new one, if none is set.
+   */
+  CalendarBase::Ptr calendar();
+  bool isLoaded(); // don't make const
+
   Invitation m_queuedInvitation;
   bool m_calendarLoadError;
-  FetchJobCalendar::Ptr m_calendar;
+  CalendarBase::Ptr m_calendar;
   MailScheduler *m_scheduler;
   KCalCore::Incidence::Ptr m_incidence;
   KCalCore::iTIPMethod m_method;

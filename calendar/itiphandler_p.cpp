@@ -25,7 +25,6 @@
 using namespace Akonadi;
 
 ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
-                                                 , m_calendar( FetchJobCalendar::Ptr( new FetchJobCalendar() ) )
                                                  , m_scheduler( new MailScheduler( qq ) )
                                                  , m_method( KCalCore::iTIPNoMethod )
                                                  , m_helper( new ITIPHandlerHelper() ) //TODO parent
@@ -37,8 +36,6 @@ ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
 
   connect( m_helper, SIGNAL(finished(Akonadi::ITIPHandlerHelper::SendResult,QString)),
            SLOT(onHelperFinished(Akonadi::ITIPHandlerHelper::SendResult,QString)) );
-
-  connect( m_calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)) );
 }
 
 void ITIPHandler::Private::onSchedulerFinished( Akonadi::Scheduler::Result result,
@@ -198,6 +195,30 @@ void ITIPHandler::Private::finishSendAsICalendar( Akonadi::MailScheduler::Result
   }
 
   sender()->deleteLater(); // Delete the mailer
+}
+
+CalendarBase::Ptr ITIPHandler::Private::calendar()
+{
+  if ( !m_calendar ) {
+    FetchJobCalendar::Ptr fetchJobCalendar = FetchJobCalendar::Ptr( new FetchJobCalendar() );
+    connect( fetchJobCalendar.data(), SIGNAL(loadFinished(bool,QString)),
+             SLOT(onLoadFinished(bool,QString)) );
+
+    m_calendar = fetchJobCalendar;
+  }
+
+  return m_calendar;
+}
+
+bool ITIPHandler::Private::isLoaded()
+{
+  FetchJobCalendar::Ptr fetchJobCalendar = calendar().dynamicCast<Akonadi::FetchJobCalendar>();
+  if ( fetchJobCalendar )
+    return fetchJobCalendar->isLoaded();
+
+  // If it's an ETMCalendar, set through setCalendar(), then it's already loaded, it's a requirement of setCalendar().
+  // ETM doesn't have any way to check if it's already populated, so we have to require loaded calendars.
+  return true;
 }
 
 #include "itiphandler_p.moc"
