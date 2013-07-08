@@ -73,8 +73,7 @@ class Akonadi::RemoveDuplicatesJob::Private {
 
       emit mParent->description( mParent, i18n( "Searching for duplicates..." ) );
 
-      Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-      Q_ASSERT( fjob );
+      Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob*>( job );
       Akonadi::Item::List items = fjob->items();
 
       //find duplicate mails with the same messageid
