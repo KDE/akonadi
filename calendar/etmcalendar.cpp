@@ -388,6 +388,11 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
       Q_ASSERT( !newIncidence->uid().isEmpty() );
       IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
       if ( !existingIncidence ) {
+        if ( !mItemById.contains( item.id() ) ) {
+          // We don't know about this one because it was discarded. For example, not having DTSTART.
+          return;
+        }
+
         // The item changed it's UID, update our maps.
         // The Google resource, for example, changes the UID when we create incidences.
         handleUidChange( item, newIncidence->instanceIdentifier() );
