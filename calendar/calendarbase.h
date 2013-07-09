@@ -154,8 +154,13 @@ public:
   /**reimp*/ bool deleteEvent( const KCalCore::Event::Ptr &event );
 
   /**
-    * Deletes all Events from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllEvents() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllEvents();
 
@@ -174,8 +179,13 @@ public:
   /**reimp*/ bool deleteTodo( const KCalCore::Todo::Ptr &todo );
 
   /**
-    * Deletes all Todos from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllTodos() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllTodos();
 
@@ -194,8 +204,13 @@ public:
   /**reimp*/ bool deleteJournal( const KCalCore::Journal::Ptr &journal );
 
   /**
-    * Deletes all Journals from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllJournals() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllJournals();
 

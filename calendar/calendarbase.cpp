@@ -182,6 +182,8 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
 
 void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
 {
+  kWarning() << "Refusing to delete your Incidences.";
+  /*
   QHash<Item::Id, Item>::iterator i;
   Item::List incidences;
   for( i = mItemById.begin(); i != mItemById.end(); ++i ) {
@@ -190,6 +192,7 @@ void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
   }
 
   mIncidenceChanger->deleteIncidences( incidences );
+  */
 }
 
 void CalendarBasePrivate::slotDeleteFinished( int changeId,
