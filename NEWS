@@ -1,3 +1,8 @@
+1.10.0                            09-July-2013
+----------------------------------------------
+- Memory optimizations
+- Fix a runtime error on Windows
+
 1.9.80                            10-June-2013
 ----------------------------------------------
 - Update item access time less often.
