@@ -33,6 +33,7 @@
 #include <qobject.h>
 #include <QQueue>
 #include <QVariant>
+#include <QHash>
 #include <QtCore/QQueue>
 
 class KJob;
@@ -282,7 +283,7 @@ public:
     typename T::List list;
 
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T>* node = cacheNodeForId( id );
+      EntityListCacheNode<T>* node = mCache.value( id );
       if ( !node || node->pending || node->invalid )
         return typename T::List();
 
@@ -299,7 +300,7 @@ public:
     bool result = true;
 
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T>* node = cacheNodeForId( id );
+      EntityListCacheNode<T>* node = mCache.value( id );
       if ( !node ) {
         toRequest << id;
         continue;
@@ -321,7 +322,7 @@ public:
   void invalidate( const QList<Entity::Id> &ids )
   {
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T>* node = cacheNodeForId( id );
+      EntityListCacheNode<T>* node = mCache.value( id );
       if ( node ) {
         node->invalid = true;
       }
@@ -334,9 +335,9 @@ public:
     QList<Entity::Id> toRequest;
 
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T>* node = cacheNodeForId( id );
+      EntityListCacheNode<T>* node = mCache.value( id );
       if ( node ) {
-        mCache.removeAll( node );
+        mCache.remove( id );
         if ( node->pending ) {
           toRequest << id;
         }
@@ -360,7 +361,7 @@ public:
     shrinkCache();
     foreach( Entity::Id id, ids ) {
       EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
-      mCache.enqueue( node );
+      mCache.insert( id, node );
     }
     FetchJob* job = createFetchJob( ids );
     job->setFetchScope( scope );
@@ -371,7 +372,7 @@ public:
   bool isNotRequested( const QList<Entity::Id> &ids ) const
   {
     foreach( Entity::Id id, ids ) {
-      if ( cacheNodeForId( id ) )
+      if ( mCache.contains( id ) )
         return false;
     }
 
@@ -382,7 +383,7 @@ public:
   bool isCached( const QList<Entity::Id> &ids ) const
   {
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T>* node = cacheNodeForId( id );
+      EntityListCacheNode<T>* node = mCache.value( id );
       if ( !node || node->pending ) {
         return false;
       }
@@ -394,18 +395,17 @@ private:
   /** Tries to reduce the cache size until at least one more object fits in. */
   void shrinkCache()
   {
-    while ( mCache.size() >= mCapacity && !mCache.first()->pending ) {
-      delete mCache.dequeue();
-    }
-  }
+    typename
+    QHash< Entity::Id, EntityListCacheNode<T>* >::Iterator iter = mCache.begin();
+    while ( iter != mCache.end() && mCache.size() >= mCapacity ) {
+      if ( iter.value()->pending ) {
+        ++iter;
+        continue;
+      }
 
-  EntityListCacheNode<T>* cacheNodeForId( Entity::Id id ) const
-  {
-    foreach( EntityListCacheNode<T> *node, mCache ) {
-      if ( node->entity.id() == id )
-        return node;
+      delete iter.value();
+      iter = mCache.erase( iter );
     }
-    return 0;
   }
 
   inline FetchJob* createFetchJob( const QList<Entity::Id> &ids )
@@ -421,7 +421,7 @@ private:
     extractResults( job, entities );
 
     foreach( Entity::Id id, ids ) {
-      EntityListCacheNode<T> *node = cacheNodeForId( id );
+      EntityListCacheNode<T> *node = mCache.value( id );
       if ( !node ) {
         continue; // got replaced in the meantime
       }
@@ -455,7 +455,7 @@ private:
 
 
 private:
-  QQueue<EntityListCacheNode<T>*> mCache;
+  QHash< Entity::Id, EntityListCacheNode<T>* > mCache;
   int mCapacity;
 };
 
