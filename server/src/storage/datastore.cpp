@@ -208,8 +208,9 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   }
 
   QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
-  qb2.setColumnValue( PimItemFlagRelation::leftFullColumnName(), insIds );
-  qb2.setColumnValue( PimItemFlagRelation::rightFullColumnName(), insFlags );
+  qb2.setColumnValue( PimItemFlagRelation::leftColumn(), insIds );
+  qb2.setColumnValue( PimItemFlagRelation::rightColumn(), insFlags );
+  qb2.setIdentificationColumn( QString() );
   if ( !qb2.exec() ) {
     return false;
   }
