@@ -145,7 +145,6 @@ set( akonadikde_LIB_SRC
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
-  objectnotificationmessage.cpp
   partfetcher.cpp
   pastehelper.cpp
   persistentsearchattribute.cpp
@@ -169,6 +168,7 @@ set( akonadikde_LIB_SRC
   specialcollections.cpp
   specialcollectionshelperjobs.cpp
   specialcollectionsrequestjob.cpp
+  specialcollectionsdiscoveryjob.cpp
   standardactionmanager.cpp
   statisticsproxymodel.cpp
   subscriptiondialog.cpp
@@ -214,11 +214,11 @@ endif()
 
 # DBus interfaces and adaptors
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationmanagerinterface )
 
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h" )
 qt4_add_dbus_interface( akonadikde_LIB_SRC ${akonadi_xml} notificationsourceinterface )
 
 qt4_add_dbus_interfaces( akonadikde_LIB_SRC ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml )
@@ -364,6 +364,7 @@ install( FILES
   servermanager.h
   specialcollections.h
   specialcollectionsrequestjob.h
+  specialcollectionsdiscoveryjob.h
   standardactionmanager.h
   statisticsproxymodel.h
   trashjob.h
@@ -395,3 +396,17 @@ install( FILES
   DESTINATION ${DATA_INSTALL_DIR}/akonadi-kde/qml
 )
 endif()
+
+#Laurent: kdelibs commits 9f575dd and d62c854 are needed to avoid build errors with the -DQT_NO_CAST_*_ASCII flags
+if((NOT KDE_VERSION VERSION_LESS 4.10.4) AND QT_QTDESIGNER_FOUND)
+  message(STATUS "Building Akonadi widgets")
+  set(akonadiwidgets_PART_SRCS)
+  kde4_add_widget_files(akonadiwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/designer/akonadi.widgets)
+
+  kde4_add_plugin(akonadiwidgets ${akonadiwidgets_PART_SRCS})
+
+  target_link_libraries(akonadiwidgets ${KDE4_KIO_LIBS} akonadi-kde)
+
+  install(TARGETS akonadiwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif()
+

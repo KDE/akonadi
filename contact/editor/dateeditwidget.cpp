@@ -37,7 +37,7 @@ DateView::DateView( QWidget *parent )
   : QLabel( parent )
 {
   setTextInteractionFlags( Qt::TextSelectableByMouse );
-  setFrameShape( QFrame::Panel );
+  setFrameShape( QFrame::StyledPanel );
   setFrameShadow( QFrame::Sunken );
 }
 

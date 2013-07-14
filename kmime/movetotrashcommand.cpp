@@ -56,8 +56,7 @@ void MoveToTrashCommand::slotFetchDone(KJob* job)
     return;
   }
 
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  Q_ASSERT( fjob );
+  Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob*>( job );
 
   mMessages =  fjob->items();
   moveMessages();

@@ -114,14 +114,14 @@ class AKONADI_EXPORT AgentInstanceWidget : public QWidget
     void currentChanged( const Akonadi::AgentInstance &current, const Akonadi::AgentInstance &previous );
 
     /**
-     * This signal is emitted whenever the there is a double click on an agent instance.
+     * This signal is emitted whenever there is a double click on an agent instance.
      *
      * @param current The current agent instance.
      */
     void doubleClicked( const Akonadi::AgentInstance &current );
 
     /**
-     * This signal is emitted whenever the there is a click on an agent instance.
+     * This signal is emitted whenever there is a click on an agent instance.
      *
      * @param current The current agent instance.
      * @since 4.9.1

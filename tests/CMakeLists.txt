@@ -80,36 +80,38 @@ macro(add_akonadi_isolated_test _source)
     set( SQLITE_EXTRA_OPTIONS -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml )
   endif()
 
-  find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
-  if ( MYSQLD_EXECUTABLE )
-    add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
-      ${MYSQL_EXTRA_OPTIONS_DB} )
-    add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
-      ${MYSQL_EXTRA_OPTIONS_FS} )
-  endif()
+  if ( KDEPIMLIBS_RUN_ISOLATED_TESTS )
+    find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
+    if ( MYSQLD_EXECUTABLE )
+      add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
+        ${MYSQL_EXTRA_OPTIONS_DB} )
+      add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
+        ${MYSQL_EXTRA_OPTIONS_FS} )
+    endif()
 
-  find_program( POSTGRES_EXECUTABLE postgres )
-  if ( POSTGRES_EXECUTABLE )
-    add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
-      ${POSTGRESL_EXTRA_OPTIONS_DB} )
-    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
-      ${POSTGRESL_EXTRA_OPTIONS_FS} )
-  endif()
+    find_program( POSTGRES_EXECUTABLE postgres )
+    if ( POSTGRES_EXECUTABLE )
+      add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
+        ${POSTGRESL_EXTRA_OPTIONS_DB} )
+      add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
+        ${POSTGRESL_EXTRA_OPTIONS_FS} )
+    endif()
 
-  if ( KDEPIMLIBS_TESTS_SQLITE )
-    add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
-      ${SQLITE_EXTRA_OPTIONS} )
+    if ( KDEPIMLIBS_TESTS_SQLITE )
+      add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
+        ${SQLITE_EXTRA_OPTIONS} )
+    endif()
   endif()
 endmacro()
 
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationmanagerinterface )
 
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
+set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
 kde4_add_library(akonaditestfake STATIC

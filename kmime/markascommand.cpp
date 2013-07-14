@@ -51,8 +51,7 @@ void MarkAsCommand::slotFetchDone(KJob* job)
     return;
   }
 
-  Akonadi::ItemFetchJob *fjob = dynamic_cast<Akonadi::ItemFetchJob*>( job );
-  Q_ASSERT( fjob );
+  Akonadi::ItemFetchJob *fjob = static_cast<Akonadi::ItemFetchJob*>( job );
   mMessages.clear();
   foreach( const Akonadi::Item &item, fjob->items() ) {
     Akonadi::MessageStatus status;

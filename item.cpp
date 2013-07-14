@@ -443,6 +443,18 @@ void Item::addPayloadBaseVariant( int spid, int mtid, std::auto_ptr<PayloadBase>
   d_func()->setPayloadBaseImpl( spid, mtid, p, true );
 }
 
+QSet<QByteArray> Item::cachedPayloadParts() const
+{
+  Q_D(const Item);
+  return d->mCachedPayloadParts;
+}
+
+void Item::setCachedPayloadParts(const QSet< QByteArray > &cachedParts)
+{
+  Q_D(Item);
+  d->mCachedPayloadParts = cachedParts;
+}
+
 QSet<QByteArray> Item::availablePayloadParts() const
 {
   return ItemSerializer::availableParts( *this );

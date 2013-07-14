@@ -108,6 +108,19 @@ void ItemFetchScope::setCacheOnly(bool cacheOnly)
   d->mCacheOnly = cacheOnly;
 }
 
+void ItemFetchScope::setCheckForCachedPayloadPartsOnly( bool check )
+{
+  if ( check )
+    setCacheOnly(true);
+  d->mCheckCachedPayloadPartsOnly = check;
+}
+
+bool ItemFetchScope::checkForCachedPayloadPartsOnly() const
+{
+  return d->mCheckCachedPayloadPartsOnly;
+}
+
+
 ItemFetchScope::AncestorRetrieval ItemFetchScope::ancestorRetrieval() const
 {
   return d->mAncestorDepth;
@@ -126,5 +139,15 @@ void ItemFetchScope::setFetchModificationTime( bool retrieveMtime )
 bool ItemFetchScope::fetchModificationTime() const
 {
   return d->mFetchMtime;
+}
+
+void ItemFetchScope::setIgnoreRetrievalErrors( bool ignore )
+{
+  d->mIgnoreRetrievalErrors = ignore;
+}
+
+bool ItemFetchScope::ignoreRetrievalErrors() const
+{
+  return d->mIgnoreRetrievalErrors;
 }
 

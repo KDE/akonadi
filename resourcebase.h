@@ -32,6 +32,7 @@
 
 class KJob;
 class Akonadi__ResourceAdaptor;
+class ResourceState;
 
 namespace Akonadi {
 
@@ -349,6 +350,17 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void changeCommitted( const Item &item );
 
     /**
+     * Resets the dirty flag of all given items and updates remote ids.
+     *
+     * Call whenever you have successfully written changes back to the server.
+     * This implicitly calls changeProcessed().
+     * @param items Changed items
+     *
+     * @since 4.11
+     */
+    void changesCommitted( const Item::List &items );
+
+    /**
      * Call whenever you have successfully handled or ignored a collection
      * change notification.
      *
@@ -397,7 +409,8 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void collectionsRetrievalDone();
 
     /**
-     * Call this method to supply the full collection listing from the remote server.
+     * Call this method to supply the full collection listing from the remote server. Items not present in the list
+     * will be dropped from the Akonadi database.
      *
      * If the remote server supports incremental listing, it's strongly
      * recommended to use itemsRetrievedIncremental() instead.
@@ -577,7 +590,7 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
     void setHierarchicalRemoteIdentifiersEnabled( bool enable );
 
     friend class ResourceScheduler;
-    friend class ResourceState;
+    friend class ::ResourceState;
 
     /**
      * Describes the scheduling priority of a task that has been queued
@@ -622,6 +635,24 @@ class AKONADI_EXPORT ResourceBase : public AgentBase
      * @since 4.8.1
      */
     QString dumpNotificationListToString() const;
+
+    /**
+     *  Dumps memory usage information to stdout.
+     *  For now it outputs the result of glibc's mallinfo().
+     *  This is useful to check if your memory problems are due to poor management by glibc.
+     *  Look for a high value on fsmblks when interpreting results.
+     *  man mallinfo for more details.
+     *  @since 4.11
+     */
+    void dumpMemoryInfo() const;
+
+    /**
+     *  Returns a string with memory usage information.
+     *  @see dumpMemoryInfo()
+     *
+     *  @since 4.11
+     */
+    QString dumpMemoryInfoToString() const;
 
     /**
      * Dump the state of the scheduler

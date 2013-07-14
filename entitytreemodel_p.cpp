@@ -182,6 +182,7 @@ ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent,
   ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_session );
   itemJob->setFetchScope( scope );
   itemJob->fetchScope().setAncestorRetrieval( ItemFetchScope::All );
+  itemJob->fetchScope().setIgnoreRetrievalErrors( true );
   return itemJob;
 }
 
@@ -189,6 +190,7 @@ ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Item &item, const I
 {
   ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( item, m_session );
   itemJob->setFetchScope( scope );
+  itemJob->fetchScope().setIgnoreRetrievalErrors( true );
   return itemJob;
 }
 
@@ -1070,7 +1072,11 @@ void EntityTreeModelPrivate::monitoredItemAdded( const Akonadi::Item& item, cons
   node->id = item.id();
   node->parent = collection.id();
   node->type = Node::Item;
-  m_childEntities[ collection.id() ].append( node );
+  if ( m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ) {
+    m_childEntities[ collection.id() ].append( node );
+  } else {
+    m_childEntities[ m_rootCollection.id() ].append( node );
+  }
   q->endInsertRows();
 }
 
@@ -1854,6 +1860,7 @@ void EntityTreeModelPrivate::fillModel()
     }
     ItemFetchJob *itemFetch = new ItemFetchJob( items, m_session );
     itemFetch->setFetchScope( m_monitor->itemFetchScope() );
+    itemFetch->fetchScope().setIgnoreRetrievalErrors( true );
     q->connect( itemFetch, SIGNAL(finished(KJob*)), q, SLOT(monitoredItemsRetrieved(KJob*)) );
     return;
   }

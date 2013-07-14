@@ -34,6 +34,23 @@ DelegateAnimator::DelegateAnimator(QAbstractItemView *view)
   m_pixmapSequence = KPixmapSequence(QLatin1String("process-working"), 22);
 }
 
+void DelegateAnimator::push(const QModelIndex &index)
+{
+    if (m_animations.isEmpty())
+        m_timerId = startTimer(200);
+    m_animations.insert(Animation(index));
+}
+
+void DelegateAnimator::pop(const QModelIndex &index)
+{
+    if (m_animations.remove(Animation(index))) {
+        if (m_animations.isEmpty() && m_timerId != -1) {
+            killTimer(m_timerId);
+            m_timerId = -1;
+        }
+    }
+}
+
 void DelegateAnimator::timerEvent(QTimerEvent* event)
 {
   if (!(event->timerId() == m_timerId && m_view))
@@ -42,13 +59,23 @@ void DelegateAnimator::timerEvent(QTimerEvent* event)
   QRegion region;
   foreach (const Animation &animation, m_animations)
   {
-    // This repaints the entire delegate.
-    // TODO: See if there's a way to repaint only part of it.
-    animation.animate();
-    region += m_view->visualRect(animation.index);
+    // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
+    const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
+    if ( fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+      pop( animation.index );
+      continue;
+    }
+
+    // This repaints the entire delegate (icon and text).
+    // TODO: See if there's a way to repaint only part of it (the icon).
+    animation.nextFrame();
+    const QRect rect = m_view->visualRect(animation.index);
+    region += rect;
   }
 
-  m_view->viewport()->update(region);
+  if ( !region.isEmpty() ) {
+    m_view->viewport()->update(region);
+  }
 }
 
 QPixmap DelegateAnimator::sequenceFrame(const QModelIndex& index)
@@ -74,16 +101,8 @@ void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem* option, cons
 {
   QStyledItemDelegate::initStyleOption(option, index);
 
-  const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-
-  if (!collection.isValid())
-  {
-    m_animator->pop(index);
-    return;
-  }
-
-  if (index.data(Akonadi::EntityTreeModel::FetchStateRole).toInt() != Akonadi::EntityTreeModel::FetchingState)
-  {
+  const QVariant fetchState = index.data( Akonadi::EntityTreeModel::FetchStateRole );
+  if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
     m_animator->pop(index);
     return;
   }

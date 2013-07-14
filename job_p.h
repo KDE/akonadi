@@ -88,6 +88,8 @@ class JobPrivate
      */
     virtual void doUpdateItemRevision( Akonadi::Item::Id, int oldRevision, int newRevision );
 
+    int protocolVersion() const;
+
     Job *q_ptr;
     Q_DECLARE_PUBLIC( Job )
 

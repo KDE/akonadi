@@ -60,6 +60,10 @@
 #include <QApplication>
 #include <QtDBus/QtDBus>
 
+#if defined __GLIBC__
+# include <malloc.h> // for dumping memory information
+#endif
+
 using namespace Akonadi;
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
@@ -203,6 +207,39 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       scheduler->clear();
     }
 
+    Q_SCRIPTABLE void dumpMemoryInfo() const
+    {
+      // Send it to stdout, so we can debug user problems.
+      // since you have to explicitely call this
+      // it won't flood users with release builds.
+      QTextStream stream( stdout );
+      stream << dumpMemoryInfoToString();
+    }
+
+    Q_SCRIPTABLE QString dumpMemoryInfoToString() const
+    {
+      // man mallinfo for more info
+      QString str;
+#if defined __GLIBC__
+      struct mallinfo mi;
+      mi = mallinfo();
+      QTextStream stream( &str );
+      stream << "Total non-mmapped bytes (arena):      " << mi.arena     << '\n'
+             << "# of free chunks (ordblks):           " << mi.ordblks   << '\n'
+             << "# of free fastbin blocks (smblks>:    " << mi.smblks    << '\n'
+             << "# of mapped regions (hblks):          " << mi.hblks     << '\n'
+             << "Bytes in mapped regions (hblkhd):     " << mi.hblkhd    << '\n'
+             << "Max. total allocated space (usmblks): " << mi.usmblks   << '\n'
+             << "Free bytes held in fastbins (fsmblks):" << mi.fsmblks   << '\n'
+             << "Total allocated space (uordblks):     " << mi.uordblks  << '\n'
+             << "Total free space (fordblks):          " << mi.fordblks  << '\n'
+             << "Topmost releasable block (keepcost):  " << mi.keepcost  << '\n';
+#else
+      str = QLatin1String( "mallinfo() not supported" );
+#endif
+      return str;
+    }
+
   protected Q_SLOTS:
     // reimplementations from AgentbBasePrivate, containing sanity checks that only apply to resources
     // such as making sure that RIDs are present as well as translations of cross-resource moves
@@ -227,7 +264,29 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemChanged( item, partIdentifiers );
     }
 
-    // TODO move the move translation code from AgebtBasePrivate here, it's wrong for agents
+    void itemsFlagsChanged(const Item::List& items, const QSet< QByteArray >& addedFlags,
+                           const QSet< QByteArray >& removedFlags)
+    {
+      if (addedFlags.isEmpty() && removedFlags.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::itemsFlagsChanged( validItems, addedFlags, removedFlags );
+    }
+
+    // TODO move the move translation code from AgentBasePrivate here, it's wrong for agents
     void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination)
     {
       if ( item.remoteId().isEmpty() || destination.remoteId().isEmpty() || destination == source ) {
@@ -237,6 +296,27 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
       AgentBasePrivate::itemMoved( item, source, destination );
     }
 
+    void itemsMoved(const Item::List& items, const Collection& source, const Collection& destination)
+    {
+      if ( destination.remoteId().isEmpty() || destination == source ) {
+        changeProcessed();
+        return;
+      }
+
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::itemsMoved( validItems, source, destination );
+    }
+
     void itemRemoved(const Akonadi::Item& item)
     {
       if ( item.remoteId().isEmpty() ) {
@@ -244,6 +324,22 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
         return;
       }
       AgentBasePrivate::itemRemoved( item );
+    }
+
+    void itemsRemoved(const Item::List& items)
+    {
+      Item::List validItems;
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( !item.remoteId().isEmpty() ) {
+          validItems << item;
+        }
+      }
+      if ( validItems.isEmpty() ) {
+        changeProcessed();
+        return;
+      }
+
+      AgentBasePrivate::itemsRemoved( validItems );
     }
 
     void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent)
@@ -569,8 +665,13 @@ void ResourceBasePrivate::slotInvalidateCache( const Akonadi::Collection &collec
 
 void ResourceBase::changeCommitted( const Item& item )
 {
+  changesCommitted( Item::List() << item );
+}
+
+void ResourceBase::changesCommitted(const Item::List& items)
+{
   Q_D( ResourceBase );
-  ItemModifyJob *job = new ItemModifyJob( item );
+  ItemModifyJob *job = new ItemModifyJob( items );
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   job->setIgnorePayload( true ); // we only want to reset the dirty flag and update the remote id
@@ -733,9 +834,10 @@ void ResourceBasePrivate::slotSynchronizeCollection( const Collection &col )
   // check if this collection actually can contain anything
   QStringList contentTypes = currentCollection.contentMimeTypes();
   contentTypes.removeAll( Collection::mimeType() );
-  if ( !contentTypes.isEmpty() || (col.rights() & (Collection::CanLinkItem)) ) { // HACK to check for virtual collections
+  contentTypes.removeAll( Collection::virtualMimeType() );
+  if ( !contentTypes.isEmpty() || col.isVirtual() ) {
     if ( mAutomaticProgressReporting ) {
-      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing folder '%1'", currentCollection.name() ) );
+      emit q->status( AgentBase::Running, i18nc( "@info:status", "Syncing folder '%1'", currentCollection.displayName() ) );
     }
     q->retrieveItems( currentCollection );
     return;
@@ -1097,6 +1199,18 @@ QString ResourceBase::dumpSchedulerToString() const
 {
   Q_D( const ResourceBase );
   return d->dumpToString();
+}
+
+void ResourceBase::dumpMemoryInfo() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpMemoryInfo();
+}
+
+QString ResourceBase::dumpMemoryInfoToString() const
+{
+  Q_D( const ResourceBase );
+  return d->dumpMemoryInfoToString();
 }
 
 #include "resourcebase.moc"

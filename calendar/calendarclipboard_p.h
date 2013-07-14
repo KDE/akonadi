@@ -34,7 +34,7 @@ namespace KCalUtils {
 namespace Akonadi {
 
 class IncidenceChanger;
-  
+
 class CalendarClipboard::Private : public QObject {
   Q_OBJECT
 public:
@@ -78,9 +78,9 @@ public Q_SLOTS:
   void slotDeleteFinished( int changeId, const QVector<Akonadi::Item::Id> &ids,
                            Akonadi::IncidenceChanger::ResultCode result,
                            const QString &errorMessage );
-  
+
 public:
-  
+
   Akonadi::CalendarBase::Ptr m_calendar;
   Akonadi::IncidenceChanger *m_changer;
   KCalUtils::DndFactory *m_dndfactory;

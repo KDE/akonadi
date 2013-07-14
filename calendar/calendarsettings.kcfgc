@@ -5,5 +5,5 @@ Singleton=true
 ItemAccessors=true
 Mutators=true
 Visibility=AKONADI_CALENDAR_EXPORT
-SetUserTextx=true
+SetUserTexts=true
 IncludeFiles=akonadi/calendar/akonadi-calendar_export.h

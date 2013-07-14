@@ -28,7 +28,7 @@
 #include "item.h"
 #include "itemfetchscope.h"
 #include "job.h"
-#include <akonadi/private/notificationmessage_p.h>
+#include <akonadi/private/notificationmessagev2_p.h>
 #include "notificationsourceinterface.h"
 #include "entitycache_p.h"
 #include "servermanager.h"
@@ -72,12 +72,12 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     bool mFetchChangedOnly;
     Session *session;
     CollectionCache *collectionCache;
-    ItemCache *itemCache;
+    ItemListCache *itemCache;
 
     // The waiting list
-    QQueue<NotificationMessage> pendingNotifications;
+    QQueue<NotificationMessageV2> pendingNotifications;
     // The messages for which data is currently being fetched
-    QQueue<NotificationMessage> pipeline;
+    QQueue<NotificationMessageV2> pipeline;
     // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
     // The ordering [ pipeline ] [ pendingNotifications ] is kept at all times.
     // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
@@ -94,7 +94,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification( const NotificationMessage &msg ) const;
+    bool acceptNotification( const NotificationMessageV2 &msg, bool allowModifyFlagsConversion = false ) const;
     void dispatchNotifications();
     void flushPipeline();
 
@@ -102,15 +102,15 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     // are still accepted, if not they are removed
     void cleanOldNotifications();
 
-    bool ensureDataAvailable( const NotificationMessage &msg );
+    bool ensureDataAvailable( const NotificationMessageV2 &msg );
     /**
      * Sends out the change notification @p msg.
      * @param msg the change notification to send
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    virtual bool emitNotification( const NotificationMessage &msg );
-    void updatePendingStatistics( const NotificationMessage &msg );
-    void invalidateCaches( const NotificationMessage &msg );
+    virtual bool emitNotification( const NotificationMessageV2 &msg );
+    void updatePendingStatistics( const NotificationMessageV2 &msg );
+    void invalidateCaches( const NotificationMessageV2 &msg );
 
     /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
         needed to avoid the missing RID race on change replay.
@@ -129,21 +129,21 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       Returns whether a message was appended to @p notificationQueue
     */
-    bool translateAndCompress( QQueue<NotificationMessage> &notificationQueue, const NotificationMessage &msg  );
+    int translateAndCompress( QQueue<NotificationMessageV2> &notificationQueue, const NotificationMessageV2 &msg  );
 
-    virtual void slotNotify( const NotificationMessage::List &msgs );
+    virtual void slotNotify( const NotificationMessageV2::List &msgs );
 
     /**
      * Sends out a change notification for an item.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitItemNotification( const NotificationMessage &msg, const Item &item = Item(),
-                               const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
+    bool emitItemsNotification( const NotificationMessageV2 &msg, const Item::List &items = Item::List(),
+                                const Collection &collection = Collection(), const Collection &collectionDest = Collection() );
     /**
      * Sends out a change notification for a collection.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitCollectionNotification( const NotificationMessage &msg, const Collection &col = Collection(),
+    bool emitCollectionNotification( const NotificationMessageV2 &msg, const Collection &col = Collection(),
                                      const Collection &par = Collection(), const Collection &dest = Collection() );
 
     void serverStateChanged( Akonadi::ServerManager::State state );
@@ -214,7 +214,16 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
-    bool isLazilyIgnored( const NotificationMessage & msg ) const;
+    bool isLazilyIgnored( const NotificationMessageV2 & msg, bool allowModifyFlagsConversion = false ) const;
+
+    /**
+      Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
+      listener that does not support batch operations. Sets @p batchSupported to True when
+      there's at least one listener that supports batch operations.
+    */
+    void checkBatchSupport( const NotificationMessageV2 &msg, bool &needsSplit, bool &batchSupported ) const;
+
+    NotificationMessageV2::List splitMessage( const NotificationMessageV2 &msg, bool legacy ) const;
 
     bool isCollectionMonitored( Collection::Id collection ) const
     {
@@ -244,9 +253,9 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       return false;
     }
 
-    bool isMoveDestinationResourceMonitored( const NotificationMessage &msg ) const
+    bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const
     {
-      if ( msg.operation() != NotificationMessage::Move )
+      if ( msg.operation() != NotificationMessageV2::Move )
         return false;
       return resources.contains( msg.destinationResource() );
     }

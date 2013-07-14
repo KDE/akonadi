@@ -88,6 +88,12 @@ class AKONADI_TESTS_EXPORT SessionPrivate
     static void createDefaultSession( const QByteArray &sessionId );
 
     /**
+     * Sets the default session.
+     * @internal Only for unit tests.
+     */
+    static void setDefaultSession( Session *session );
+
+    /**
       Associates the given Job object with this session.
     */
     virtual void addJob( Job* job );
@@ -107,7 +113,7 @@ class AKONADI_TESTS_EXPORT SessionPrivate
      */
     void itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevision, int newRevision );
 
-    static int minimumProtocolVersion() { return 29; }
+    static int minimumProtocolVersion() { return 32; }
 
     /**
      * Default location for akonadiconnectionrc

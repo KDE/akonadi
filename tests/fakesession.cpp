@@ -84,3 +84,8 @@ FakeSession::FakeSession(const QByteArray& sessionId, FakeSession::Mode mode, QO
 {
 
 }
+
+void FakeSession::setAsDefaultSession()
+{
+  d->setDefaultSession(this);
+}

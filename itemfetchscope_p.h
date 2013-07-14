@@ -37,7 +37,9 @@ class ItemFetchScopePrivate : public QSharedData
         mFullPayload( false ),
         mAllAttributes( false ),
         mCacheOnly( false ),
-        mFetchMtime( true )
+        mCheckCachedPayloadPartsOnly( false ),
+        mFetchMtime( true ),
+        mIgnoreRetrievalErrors( false )
     {
     }
 
@@ -50,7 +52,9 @@ class ItemFetchScopePrivate : public QSharedData
       mFullPayload = other.mFullPayload;
       mAllAttributes = other.mAllAttributes;
       mCacheOnly = other.mCacheOnly;
+      mCheckCachedPayloadPartsOnly = other.mCheckCachedPayloadPartsOnly;
       mFetchMtime = other.mFetchMtime;
+      mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
 
   public:
@@ -60,7 +64,9 @@ class ItemFetchScopePrivate : public QSharedData
     bool mFullPayload;
     bool mAllAttributes;
     bool mCacheOnly;
+    bool mCheckCachedPayloadPartsOnly;
     bool mFetchMtime;
+    bool mIgnoreRetrievalErrors;
 };
 
 }

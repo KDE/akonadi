@@ -376,6 +376,17 @@ class AKONADI_EXPORT Item : public Entity
     QSet<QByteArray> availablePayloadParts() const;
 
     /**
+     * Returns the parts available for this item in the cache. The list might be a subset
+     * of the actual parts in cache, as it contains only the requested parts. See @see ItemFetchJob and
+     * @see ItemFetchScope
+     *
+     * The returned set refers to parts available on the akonadi server.
+     *
+     * @since 4.11
+     */
+    QSet<QByteArray> cachedPayloadParts() const;
+
+    /**
      * Applies the parts of Item @p other to this item.
      * Any parts or attributes available in other, will be applied to this item,
      * and the payload parts of other will be inserted into this item, overwriting
@@ -392,7 +403,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Registers \a T as a legacy type for mime type \a mimeType.
-     * 
+     *
      * This is required information for Item to return the correct
      * type from payload() when clients have not been recompiled to
      * use the new code.
@@ -400,6 +411,7 @@ class AKONADI_EXPORT Item : public Entity
      * @since 4.6
      */
     template <typename T> static void addToLegacyMapping( const QString & mimeType );
+    void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
   private:
     //@cond PRIVATE
@@ -451,7 +463,7 @@ class AKONADI_EXPORT Item : public Entity
 
     /**
      * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
-     * @param collectionId the unique identifier of the the collection where this item is stored in.
+     * @param collectionId the unique identifier of the collection where this item is stored in.
      * @since 4.3
      */
     void setStorageCollectionId( Entity::Id collectionId);
@@ -672,6 +684,5 @@ void Item::addToLegacyMapping( const QString & mimeType ) {
 
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)
-
 
 #endif

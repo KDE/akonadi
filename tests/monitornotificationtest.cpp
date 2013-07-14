@@ -36,7 +36,8 @@ public:
     : QObject(parent)
   {
     m_sessionName = "MonitorNotificationTest fake session";
-    m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately, this);
+    m_fakeSession = new FakeSession( m_sessionName, FakeSession::EndJobsImmediately);
+    m_fakeSession->setAsDefaultSession();
   }
 
 private Q_SLOTS:
@@ -98,16 +99,16 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 
   monitor->setCollectionMonitored(Collection::root());
 
-  NotificationMessage::List list;
+  NotificationMessageV2::List list;
 
   Collection parent(1);
   Collection added(2);
 
-  NotificationMessage msg;
+  NotificationMessageV2 msg;
   msg.setParentCollection(parent.id());
-  msg.setOperation(Akonadi::NotificationMessage::Add);
-  msg.setType(Akonadi::NotificationMessage::Collection);
-  msg.setUid(added.id());
+  msg.setOperation(Akonadi::NotificationMessageV2::Add);
+  msg.setType(Akonadi::NotificationMessageV2::Collections);
+  msg.addEntity( added.id() );
 
   QHash<Collection::Id, Collection> data;
   data.insert(parent.id(), parent);
@@ -169,7 +170,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
 
   monitor->setCollectionMonitored(Collection::root());
 
-  NotificationMessage::List list;
+  NotificationMessageV2::List list;
   QHash<Collection::Id, Collection> data;
 
   int i = 1;
@@ -177,11 +178,11 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     Collection parent(i++);
     Collection added(i++);
 
-    NotificationMessage msg;
+    NotificationMessageV2 msg;
     msg.setParentCollection(parent.id());
-    msg.setOperation(Akonadi::NotificationMessage::Add);
-    msg.setType(Akonadi::NotificationMessage::Collection);
-    msg.setUid(added.id());
+    msg.setOperation(Akonadi::NotificationMessageV2::Add);
+    msg.setType(Akonadi::NotificationMessageV2::Collections);
+    msg.addEntity( added.id() );
 
     data.insert(parent.id(), parent);
     data.insert(added.id(), added);
@@ -240,7 +241,7 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
 
   monitor->setCollectionMonitored(Collection(2));
 
-  NotificationMessage::List list;
+  NotificationMessageV2::List list;
 
   Collection col2(2);
   col2.setParentCollection(Collection::root());
@@ -252,11 +253,11 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
   while (i < 10) {
     Collection added(i++);
 
-    NotificationMessage msg;
+    NotificationMessageV2 msg;
     msg.setParentCollection(added.id() % 2 == 0 ? 2 : added.id() - 1);
-    msg.setOperation(Akonadi::NotificationMessage::Add);
-    msg.setType(Akonadi::NotificationMessage::Collection);
-    msg.setUid(added.id());
+    msg.setOperation(Akonadi::NotificationMessageV2::Add);
+    msg.setType(Akonadi::NotificationMessageV2::Collections);
+    msg.addEntity( added.id() );
 
     list << msg;
   }
@@ -316,11 +317,11 @@ void MonitorNotificationTest::testMonitorNonRoot_impl(MonitorImpl *monitor, Fake
   while (i < 20) {
     Collection added(i++);
 
-    NotificationMessage msg;
+    NotificationMessageV2 msg;
     msg.setParentCollection(added.id() % 2 == 0 ? 2 : added.id() - 1);
-    msg.setOperation(Akonadi::NotificationMessage::Add);
-    msg.setType(Akonadi::NotificationMessage::Collection);
-    msg.setUid(added.id());
+    msg.setOperation(Akonadi::NotificationMessageV2::Add);
+    msg.setType(Akonadi::NotificationMessageV2::Collections);
+    msg.addEntity( added.id() );
 
     added.setParentCollection(added.id() % 2 == 0 ? col2 : extraCollections.value(added.id() - 1));
 

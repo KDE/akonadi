@@ -55,7 +55,7 @@ public:
   /**
     * Constructs a CalendarBase object.
     */
-  explicit CalendarBase();
+  explicit CalendarBase( QObject *parent = 0 );
 
   /**
     * Destroys the calendar.
@@ -65,13 +65,26 @@ public:
   /**
     * Returns the Item containing the incidence with uid @p uid or an invalid Item
     * if the incidence isn't found.
+    * @see Use item(Incidence::Ptr) instead where possible. This function doesn't take exceptions (recurrenceId) into account (and thus always returns the main event).
     */
   Akonadi::Item item( const QString &uid ) const;
+
+  /**
+    * Returns the Item containing the incidence with uid @p uid or an invalid Item
+    * if the incidence isn't found.
+    */
+  Akonadi::Item item( const KCalCore::Incidence::Ptr &inc ) const;
 
   /**
     * Returns the Item with @p id or an invalid Item if not found.
     */
   Akonadi::Item item( Akonadi::Item::Id ) const;
+
+  /**
+   *  Returns the list of items contained in this calendar.
+   *  @see incidences()
+   */
+  Akonadi::Item::List items() const;
 
   /**
     * Returns the item list that corresponds to the @p incidenceList.
@@ -141,8 +154,13 @@ public:
   /**reimp*/ bool deleteEvent( const KCalCore::Event::Ptr &event );
 
   /**
-    * Deletes all Events from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllEvents() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllEvents();
 
@@ -161,8 +179,13 @@ public:
   /**reimp*/ bool deleteTodo( const KCalCore::Todo::Ptr &todo );
 
   /**
-    * Deletes all Todos from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllTodos() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllTodos();
 
@@ -181,8 +204,13 @@ public:
   /**reimp*/ bool deleteJournal( const KCalCore::Journal::Ptr &journal );
 
   /**
-    * Deletes all Journals from the calendar.
-    * They are removed from akonadi in the background @see deleteFinished().
+    * Reimplementation of KCalCore::Calendar::deleteAllJournals() that
+    * does nothing. Do not use this.
+    *
+    * A convenience function that makes it easy to have a massive data-loss
+    * is a bad idea.
+    *
+    * @deprecated
     */
   /**reimp*/ void deleteAllJournals();
 
@@ -225,7 +253,7 @@ public:
     * The incidence with the same uid as @p newIncidence will be updated with the contents of
     * @param newIncidence the incidence to modify
     */
-  bool modifyIncidence( const KCalCore::IncidenceBase::Ptr &newIncidence );
+  bool modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence );
 
 Q_SIGNALS:
   /**
@@ -255,7 +283,7 @@ Q_SIGNALS:
 protected:
   Q_DECLARE_PRIVATE( CalendarBase )
   QScopedPointer<CalendarBasePrivate> d_ptr;
-  CalendarBase( CalendarBasePrivate *const d );
+  CalendarBase( CalendarBasePrivate *const d, QObject *parent );
 };
 }
 

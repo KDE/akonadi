@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2013 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,35 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef FAKESESSION_H
-#define FAKESESSION_H
-
-#include "session.h"
-#include "collection.h"
-
+#include "specialmailcollectionsdiscoveryjob.h"
+#include "specialmailcollections.h"
+#include <kmime/kmime_message.h>
+#include <QStringList>
 
 using namespace Akonadi;
 
-class FakeSession : public Session
+SpecialMailCollectionsDiscoveryJob::SpecialMailCollectionsDiscoveryJob(QObject *parent)
+    : SpecialCollectionsDiscoveryJob(SpecialMailCollections::self(), QStringList() << KMime::Message::mimeType(), parent)
 {
-  Q_OBJECT
-public:
-  enum Mode {
-    EndJobsImmediately,
-    EndJobsManually
-  };
-
-  explicit FakeSession(const QByteArray& sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject* parent = 0);
-
-  /** Make this the default session returned by Akonadi::Session::defaultSession().
-   *  Note that ownership is taken over by the thread-local storage.
-   */
-  void setAsDefaultSession();
-
-signals:
-  void jobAdded( Akonadi::Job* );
-
-  friend class FakeSessionPrivate;
-};
-
-#endif
+}

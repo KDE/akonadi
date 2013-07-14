@@ -66,7 +66,15 @@ public:
   /**
     * Constructs a new ETMCalendar. Loading begins immediately, asynchronously.
     */
-  ETMCalendar();
+  explicit ETMCalendar( QObject *parent = 0 );
+
+
+  /**
+   * Constructs a new ETMCalendar that will only load the specified mime types.
+   * Use this ctor to ignore journals or to-dos for example.
+   * If no mime types are specified, all mime types will be used.
+   */
+  explicit ETMCalendar( const QStringList &mimeTypes, QObject *parent = 0 );
 
   /**
     * Destroys this ETMCalendar.
@@ -75,6 +83,8 @@ public:
 
   /**
    * Returns the collection having @p id.
+   * Use this instead of creating a new collection, the returned collection will have
+   * the correct right, name, display name, etc all set.
    */
   Akonadi::Collection collection( Akonadi::Collection::Id ) const;
 
@@ -143,7 +153,7 @@ public:
    * @param enable enables collection filtering if set as @c true
    * @see checkableProxyModel()
    * @see collectionFilteringEnabled()
-   */                           
+   */
   void setCollectionFilteringEnabled( bool enable );
 
   /**

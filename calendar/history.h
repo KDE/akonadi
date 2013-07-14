@@ -64,8 +64,7 @@ public:
     */
   enum ResultCode {
     ResultCodeSuccess = 0, ///< Success
-    ResultCodeError, ///< An error occurred. Call lastErrorString() for the error message. This isn't very verbose because IncidenceChanger hasn't been refactored yet.
-    ResultCodeIncidenceChangerError ///< IncidenceChanger returned false and didn't even create the job. This error is temporary. IncidenceChanger needs to be refactored. TODO
+    ResultCodeError ///< An error occurred. Call lastErrorString() for the error message. This isn't very verbose because IncidenceChanger hasn't been refactored yet.
   };
 
   /**
@@ -245,7 +244,6 @@ Q_SIGNALS:
   void changed();
 
 private:
-  void setEnabled( bool enabled ); // TODO: kill this ?
 
   friend class IncidenceChanger;
   friend class Entry;

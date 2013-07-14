@@ -21,10 +21,10 @@
   02110-1301, USA.
 */
 
-#ifndef AKONADI_CALENDAR_INVITATIONHANDLERHELPER_P_H
-#define AKONADI_CALENDAR_INVITATIONHANDLERHELPER_P_H
+#ifndef AKONADI_CALENDAR_ITIP_HANDLERHELPER_P_H
+#define AKONADI_CALENDAR_ITIP_HANDLERHELPER_P_H
 
-#include "invitationhandler.h"
+#include "itiphandler.h"
 #include "mailscheduler_p.h"
 #include "etmcalendar.h"
 
@@ -44,7 +44,7 @@ enum Status {
     StatusNone,
     StatusSendingInvitation
 };
-  
+
 /**
   This class handles sending of invitations to attendees when Incidences (e.g.
   events or todos) are created/modified/deleted.
@@ -64,12 +64,12 @@ enum Status {
   NOTE: Currently only events and todos are support, meaning Incidence::type()
         should either return "Event" or "Todo"
  */
-class InvitationHandlerHelper : public QObject
+class ITIPHandlerHelper : public QObject
 {
   Q_OBJECT
   public:
-    explicit InvitationHandlerHelper( QWidget *parent = 0 ); // TODO
-    ~InvitationHandlerHelper();
+    explicit ITIPHandlerHelper( QWidget *parent = 0 ); // TODO
+    ~ITIPHandlerHelper();
 
     enum SendResult {
       ResultCanceled,        /**< Sending was canceled by the user, meaning there are
@@ -112,8 +112,8 @@ class InvitationHandlerHelper : public QObject
       Kontact/PIM) are the organizer.
       @param incidence The new incidence.
      */
-    InvitationHandlerHelper::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
-                                                                        const KCalCore::Incidence::Ptr &incidence );
+    ITIPHandlerHelper::SendResult sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
+                                                               const KCalCore::Incidence::Ptr &incidence );
 
     /**
        Checks if the incidence should really be modified.
@@ -132,39 +132,39 @@ class InvitationHandlerHelper : public QObject
       @param incidence The modified incidence.
       @param attendeeStatusChanged if @c true and @p method is #iTIPRequest ask the user whether to send a status update as well
      */
-    InvitationHandlerHelper::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
-                                                                      const KCalCore::Incidence::Ptr &incidence,
-                                                                      bool attendeeStatusChanged );
+    ITIPHandlerHelper::SendResult sendIncidenceModifiedMessage( KCalCore::iTIPMethod method,
+                                                                const KCalCore::Incidence::Ptr &incidence,
+                                                                bool attendeeStatusChanged );
 
     /**
       Handles sending of ivitations for deleted incidences.
       @param incidence The deleted incidence.
      */
-    InvitationHandlerHelper::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
-                                                                     const KCalCore::Incidence::Ptr &incidence );
+    ITIPHandlerHelper::SendResult sendIncidenceDeletedMessage( KCalCore::iTIPMethod method,
+                                                               const KCalCore::Incidence::Ptr &incidence );
 
     /**
       Send counter proposal message.
       @param oldIncidence The original event provided in the invitations.
       @param newIncidence The new event as edited by the user.
     */
-    InvitationHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
-                                                             const KCalCore::Incidence::Ptr &newIncidence );
+    ITIPHandlerHelper::SendResult sendCounterProposal( const KCalCore::Incidence::Ptr &oldIncidence,
+                                                       const KCalCore::Incidence::Ptr &newIncidence );
 
     // Frees calendar if it doesn't have jobs running
     void calendarJobFinished( bool success, const QString &errorString );
 
   Q_SIGNALS:
-    void finished( Akonadi::InvitationHandlerHelper::SendResult result,
+    void finished( Akonadi::ITIPHandlerHelper::SendResult result,
                    const QString &errorMessage );
 
   private Q_SLOTS:
     void onSchedulerFinished( Akonadi::Scheduler::Result result, const QString &errorMsg );
 
   private:
-    InvitationHandlerHelper::SendResult sentInvitation( int messageBoxReturnCode,
-                                                        const KCalCore::Incidence::Ptr &incidence,
-                                                        KCalCore::iTIPMethod method );
+    ITIPHandlerHelper::SendResult sentInvitation( int messageBoxReturnCode,
+                                                  const KCalCore::Incidence::Ptr &incidence,
+                                                  KCalCore::iTIPMethod method );
 
     int askUserIfNeeded( const QString &question,
                          bool ignoreDefaultAction = true,
@@ -185,7 +185,7 @@ class InvitationHandlerHelper : public QObject
      */
     bool weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence );
 
-    InvitationHandlerHelper::Action mDefaultAction;
+    ITIPHandlerHelper::Action mDefaultAction;
     QWidget *mParent;
     MailScheduler *m_scheduler;
     Status m_status;

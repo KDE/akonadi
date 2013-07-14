@@ -192,6 +192,24 @@ class AKONADI_EXPORT ItemFetchScope
     void setCacheOnly( bool cacheOnly );
 
     /**
+     * Sets whether payload will be fetched or there will be only a test performed if the
+     * requested payload is in the cache. Calling it calls @see setCacheOnly with true automatically.
+     * Default is fetching the data.
+     *
+     * @since 4.11
+     */
+    void setCheckForCachedPayloadPartsOnly( bool check = true );
+
+    /**
+     * Returns whether payload data should be fetched or only checked for presence in the cache.
+     *
+     * @see setCheckForCachedPayloadPartsOnly()
+     *
+     * @since 4.11
+     */
+    bool checkForCachedPayloadPartsOnly() const;
+
+    /**
      * Sets how many levels of ancestor collections should be included in the retrieval.
      * The default is AncestorRetrieval::None.
      *
@@ -224,6 +242,27 @@ class AKONADI_EXPORT ItemFetchScope
      * @since 4.6
      */
     bool fetchModificationTime() const;
+
+    /**
+     * Ignore retrieval errors while fetching items, and always deliver what is available.
+     * If items have missing parts and the part can't be retrieved from the resource (i.e. because the system is offline),
+     * the fetch job would normally just fail. By setting this flag, the errors are ignored,
+     * and all items which could be fetched completely are returned.
+     * Note that all items that are returned are completely fetched, and incomplete items are simply ignored.
+     * This flag is useful for displaying everything that is available, where it is not crucial to have all items.
+     * Never use this for things like data migration or alike.
+     *
+     * @since 4.10
+     */
+    void setIgnoreRetrievalErrors( bool enabled );
+
+    /**
+     * Returns whether retrieval errors should be ignored.
+     *
+     * @see setIgnoreRetrievalErrors()
+     * @since 4.10
+     */
+    bool ignoreRetrievalErrors() const;
 
     /**
      * Returns @c true if there is nothing to fetch.

@@ -37,7 +37,7 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
-InvitationHandlerHelper::Action actionFromStatus( InvitationHandlerHelper::SendResult result )
+ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result )
 {
   //enum SendResult {
   //      Canceled,        /**< Sending was canceled by the user, meaning there are
@@ -48,12 +48,12 @@ InvitationHandlerHelper::Action actionFromStatus( InvitationHandlerHelper::SendR
   //                          (e.g. when we are the only attendee) */
   //      Success
   switch ( result ) {
-  case InvitationHandlerHelper::ResultCanceled:
-    return InvitationHandlerHelper::ActionDontSendMessage;
-  case InvitationHandlerHelper::ResultSuccess:
-    return InvitationHandlerHelper::ActionSendMessage;
+  case ITIPHandlerHelper::ResultCanceled:
+    return ITIPHandlerHelper::ActionDontSendMessage;
+  case ITIPHandlerHelper::ResultSuccess:
+    return ITIPHandlerHelper::ActionSendMessage;
   default:
-    return InvitationHandlerHelper::ActionAsk;
+    return ITIPHandlerHelper::ActionAsk;
   }
 }
 
@@ -67,6 +67,7 @@ namespace Akonadi {
 
     kDebug() << "selecting collections with mimeType in " << mimeTypes;
 
+    dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
     dlg->setMimeTypeFilter( mimeTypes );
     dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
     if ( defCollection.isValid() ) {
@@ -149,7 +150,7 @@ public:
   ConflictPreventer instance;
 };
 
-Q_GLOBAL_STATIC( ConflictPreventerPrivate, sConflictPreventerPrivate );
+Q_GLOBAL_STATIC( ConflictPreventerPrivate, sConflictPreventerPrivate )
 
 ConflictPreventer* ConflictPreventer::self()
 {
@@ -170,7 +171,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
-
+  qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
   qRegisterMetaType<Akonadi::IncidenceChanger::ResultCode>(
     "Akonadi::IncidenceChanger::ResultCode" );
 }
@@ -360,7 +361,7 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
 
     foreach( const Item &item, items ) {
       // Werent deleted due to error
-      mDeletedItemIds.remove( item.id() );
+      mDeletedItemIds.remove( mDeletedItemIds.indexOf( item.id() ) );
     }
   } else { // success
     if ( change->recordToHistory ) {
@@ -386,6 +387,7 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   const ItemModifyJob *j = qobject_cast<const ItemModifyJob*>( job );
   const Item item = j->item();
   Q_ASSERT( mDirtyFieldsByJob.contains( job ) );
+  Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
   item.payload<KCalCore::Incidence::Ptr>()->setDirtyFields( mDirtyFieldsByJob.value( job ) );
   const QSet<KCalCore::IncidenceBase::Field> dirtyFields = mDirtyFieldsByJob.value( job );
   QString description;
@@ -443,7 +445,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 {
   bool result = true;
   if ( mGroupwareCommunication ) {
-    InvitationHandlerHelper handler( change->parentWidget );  // TODO make async
+    ITIPHandlerHelper handler( change->parentWidget );  // TODO make async
     if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
@@ -454,9 +456,10 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       break;
       case IncidenceChanger::ChangeTypeDelete:
       {
-        InvitationHandlerHelper::SendResult status;
+        ITIPHandlerHelper::SendResult status;
+        Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
-          Q_ASSERT( item.hasPayload() );
+          Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
           if ( !incidence->supportsGroupwareCommunication() )
             continue;
@@ -464,7 +467,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
           if ( change->atomicOperationId ) {
             mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
           }
-          result = status != InvitationHandlerHelper::ResultFailAbortUpdate;
+          result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
           //TODO: with some status we want to break immediately
         }
       }
@@ -500,17 +503,17 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 
 bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr &change )
 {
-  if ( mGroupwareCommunication ) {
-    InvitationHandlerHelper handler( change->parentWidget ); // TODO make async
+  if ( change->useGroupwareCommunication ) {
+    ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
         Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
         if ( incidence->supportsGroupwareCommunication() ) {
-          const InvitationHandlerHelper::SendResult status =
+          const ITIPHandlerHelper::SendResult status =
             handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
 
-          if ( status == InvitationHandlerHelper::ResultFailAbortUpdate ) {
+          if ( status == ITIPHandlerHelper::ResultFailAbortUpdate ) {
             kError() << "Sending invitations failed, but did not delete the incidence";
           }
 
@@ -523,6 +526,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeDelete:
       {
+        Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
           Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
@@ -570,7 +574,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
             const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                         oldIncidence,
                                                                         Akonadi::CalendarUtils::allEmails() );
-            InvitationHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+            ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
                                                                                               newIncidence,
                                                                                               attendeeStatusChanged );
 
@@ -826,7 +830,7 @@ int IncidenceChanger::deleteIncidences( const Item::List &items, QWidget *parent
     kWarning() << errorMessage;
     return changeId;
   }
-
+  change->originalItems = itemsToDelete;
   d->handleInvitationsBeforeChange( change );
 
   ItemDeleteJob *deleteJob = new ItemDeleteJob( itemsToDelete, d->parentJob( change ) );
@@ -872,6 +876,9 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     d->cancelTransaction();
     return changeId;
   }
+
+  //TODO also update revision here instead of in the editor
+  changedItem.payload<Incidence::Ptr>()->setLastModified( KDateTime::currentUtcDateTime() );
 
   const uint atomicOperationId = d->mBatchOperationInProgress ? d->mLatestAtomicOperationId : 0;
   const int changeId = ++d->mLatestChangeId;

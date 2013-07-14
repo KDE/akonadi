@@ -162,15 +162,9 @@ void CollectionStatisticsDelegate::initStyleOption( QStyleOptionViewItem *option
 
   if ( d->animator ) {
 
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
-
-    if ( !collection.isValid() ) {
-      d->animator->pop( index );
-      return;
-    }
-
-    if ( index.data( Akonadi::EntityTreeModel::FetchStateRole ).toInt() != Akonadi::EntityTreeModel::FetchingState ) {
-      d->animator->pop( index );
+    const QVariant fetchState = index.data(Akonadi::EntityTreeModel::FetchStateRole);
+    if (!fetchState.isValid() || fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState ) {
+      d->animator->pop(index);
       return;
     }
 
@@ -223,9 +217,9 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   const QWidget *widget = option4.widget;
   const QRect textRect = s->subElementRect( QStyle::SE_ItemViewItemText, &option4, widget );
 
-   // When checking if the item is expanded, we need to check that for the first
-  // column, as Qt only recogises the index as expanded for the first column
-  QModelIndex firstColumn = index.model()->index( index.row(), 0, index.parent() );
+  // When checking if the item is expanded, we need to check that for the first
+  // column, as Qt only recognises the index as expanded for the first column
+  const QModelIndex firstColumn = index.sibling( index.row(), 0 );
   QTreeView* treeView = qobject_cast<QTreeView*>( d->parent );
   bool expanded = treeView && treeView->isExpanded( firstColumn );
 
@@ -233,9 +227,12 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
     painter->setPen( textColor.isValid() ? textColor : option.palette.highlightedText().color() );
   }
 
-  Collection collection = index.sibling( index.row(), 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+  Collection collection = firstColumn.data( EntityTreeModel::CollectionRole ).value<Collection>();
 
-  Q_ASSERT( collection.isValid() );
+  if ( !collection.isValid() )
+    kError() << "Invalid collection: " << collection;
+
+  Q_ASSERT( collection.isValid() ); // TODO: I seem to hit this when removing a duplicated "Personal Contacts" or "Personal Calendar"
 
   CollectionStatistics statistics = collection.statistics();
 
@@ -243,7 +240,19 @@ void CollectionStatisticsDelegate::paint( QPainter *painter,
   qint64 totalRecursiveCount = 0;
   qint64 unreadRecursiveCount = 0;
   qint64 totalSize = 0;
-  d->getCountRecursive( index.sibling( index.row(), 0 ), totalRecursiveCount, unreadRecursiveCount, totalSize );
+  bool needRecursiveCounts = false;
+  bool needTotalSize = false;
+  if ( d->drawUnreadAfterFolder && index.column() == 0 ) {
+    needRecursiveCounts = true;
+  } else if ( ( index.column() == 1 || index.column() == 2 ) ) {
+    needRecursiveCounts = true;
+  } else if ( index.column() == 3 && !expanded ) {
+    needTotalSize = true;
+  }
+
+  if ( needRecursiveCounts || needTotalSize ) {
+    d->getCountRecursive( firstColumn, totalRecursiveCount, unreadRecursiveCount, totalSize );
+  }
 
   // Draw the unread count after the folder name (in parenthesis)
   if ( d->drawUnreadAfterFolder && index.column() == 0 ) {

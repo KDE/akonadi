@@ -445,8 +445,8 @@ class StandardContactActionManager::Private
         new Akonadi::ContactEditorDialog(
           Akonadi::ContactEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
-      dlg->setAttribute( Qt::WA_DeleteOnClose );
-      dlg->show();
+      dlg->exec();
+      delete dlg;
     }
 
     void slotCreateContactGroup()
@@ -459,8 +459,8 @@ class StandardContactActionManager::Private
         new Akonadi::ContactGroupEditorDialog(
           Akonadi::ContactGroupEditorDialog::CreateMode, mParentWidget );
       dlg->setDefaultAddressBook( selectedCollection() );
-      dlg->setAttribute( Qt::WA_DeleteOnClose );
-      dlg->show();
+      dlg->exec();
+      delete dlg;
     }
 
     void slotEditItem()
@@ -494,15 +494,15 @@ class StandardContactActionManager::Private
         connect( dlg, SIGNAL(error(QString)),
                  mParent, SLOT(slotContactEditorError(QString)) );
         dlg->setContact( item );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dlg->show();
+        dlg->exec();
+        delete dlg;
       } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
         QPointer<Akonadi::ContactGroupEditorDialog> dlg =
           new Akonadi::ContactGroupEditorDialog(
             Akonadi::ContactGroupEditorDialog::EditMode, mParentWidget );
         dlg->setContactGroup( item );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dlg->show();
+        dlg->exec();
+        delete dlg;
       }
     }
 

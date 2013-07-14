@@ -67,7 +67,7 @@ protected:
   QVector<int> mChangeIds;
 private:
   void init( const QString &description, History *qq );
-  Q_DISABLE_COPY(Entry);
+  Q_DISABLE_COPY(Entry)
 };
 
 class History::Private : public QObject {
@@ -85,6 +85,7 @@ public:
   void undoOrRedo( OperationType, QWidget *parent );
 
   void emitDone( OperationType, History::ResultCode );
+  void setEnabled( bool enabled );
 
   bool isUndoAvailable() const;
   bool isRedoAvailable() const;

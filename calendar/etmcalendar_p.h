@@ -24,11 +24,15 @@
 #include "calendarbase_p.h"
 #include "incidencechanger.h"
 
+#include <akonadi/entitytreemodel.h>
+#include <KCheckableProxyModel>
+
+#include <QSet>
 #include <QVector>
 #include <QModelIndex>
 
 class QAbstractItemModel;
-class KCheckableProxyModel;
+class CheckableProxyModel;
 class KSelectionProxyModel;
 
 namespace Akonadi {
@@ -37,6 +41,42 @@ class EntityTreeModel;
 class EntityMimeTypeFilterModel;
 class CollectionFilterProxyModel;
 class CalFilterProxyModel;
+
+static bool isStructuralCollection( const Akonadi::Collection &collection )
+{
+    QStringList mimeTypes;
+    mimeTypes << QLatin1String( "text/calendar" )
+              << KCalCore::Event::eventMimeType()
+              << KCalCore::Todo::todoMimeType()
+              << KCalCore::Journal::journalMimeType();
+    const QStringList collectionMimeTypes = collection.contentMimeTypes();
+    foreach ( const QString &mimeType, mimeTypes ) {
+        if ( collectionMimeTypes.contains( mimeType ) )
+            return false;
+    }
+
+    return true;
+}
+
+class CheckableProxyModel : public KCheckableProxyModel {
+    Q_OBJECT
+public:
+    CheckableProxyModel(QObject *parent = 0) : KCheckableProxyModel(parent)
+    {
+    }
+
+    QVariant data(const QModelIndex &index, int role) const
+    {
+        if (role == Qt::CheckStateRole) {
+            // Don't show the checkbox if the collection can't contain incidences
+            const Akonadi::Collection collection = index.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+            if (isStructuralCollection(collection))
+                return QVariant();
+        }
+        return KCheckableProxyModel::data(index, role);
+    }
+};
+
 
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
@@ -81,6 +121,8 @@ public Q_SLOTS:
   void onDataChangedInFilteredModel( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onRowsInsertedInFilteredModel( const QModelIndex &index, int start, int end );
   void onRowsAboutToBeRemovedInFilteredModel( const QModelIndex &index, int start, int end );
+  void onCollectionChanged(const Akonadi::Collection &, const QSet<QByteArray> &);
+  void onCollectionPopulated(Akonadi::Collection::Id);
 
 public:
   Akonadi::EntityTreeModel *mETM;
@@ -88,11 +130,13 @@ public:
 
   // akonadi id to collections
   QHash<Akonadi::Entity::Id, Akonadi::Collection> mCollectionMap;
-  KCheckableProxyModel *mCheckableProxyModel;
+  CheckableProxyModel *mCheckableProxyModel;
   Akonadi::CollectionFilterProxyModel *mCollectionProxyModel;
   Akonadi::CalFilterProxyModel *mCalFilterProxyModel; //KCalCore::CalFilter stuff
   KSelectionProxyModel *mSelectionProxy;
   bool mCollectionFilteringEnabled;
+  QSet<Akonadi::Collection::Id> mPopulatedCollectionIds;
+  QStringList mMimeTypes;
 private:
   ETMCalendar *const q;
 };

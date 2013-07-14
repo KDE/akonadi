@@ -52,6 +52,12 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
     kWarning() << "Unable to fetch incidences:" << searchJob->errorText();
   } else {
     foreach( const Akonadi::Item &item, searchJob->items() ) {
+      if ( !item.isValid() || !item.hasPayload<KCalCore::Incidence::Ptr>() ) {
+        success = false;
+        errorMessage = QString("Invalid item or payload: %1").arg(item.id());
+        kWarning() << "Unable to fetch incidences:" << errorMessage;
+        continue;
+      }
       internalInsert( item );
     }
   }
@@ -61,7 +67,7 @@ void FetchJobCalendarPrivate::slotSearchJobFinished( KJob *job )
                              Q_ARG( bool, success ), Q_ARG( QString, errorMessage ) );
 }
 
-FetchJobCalendar::FetchJobCalendar() : CalendarBase( new FetchJobCalendarPrivate( this ) )
+FetchJobCalendar::FetchJobCalendar( QObject *parent ) : CalendarBase( new FetchJobCalendarPrivate( this ), parent )
 {
 }
 

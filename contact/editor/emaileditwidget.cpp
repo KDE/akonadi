@@ -138,7 +138,7 @@ void EmailEditWidget::storeContact( KABC::Addressee &contact ) const
 
   // ... and prepend the one from the line edit
   if ( !mEmailEdit->text().isEmpty() ) {
-    emails.prepend( mEmailEdit->text() );
+      emails.prepend( mEmailEdit->text().toLower() );
   }
 
   contact.setEmails( emails );
@@ -267,7 +267,7 @@ void EmailEditDialog::add()
     return;
   }
 
-  email = KPIMUtils::extractEmailAddress( email );
+  email = KPIMUtils::extractEmailAddress( email.toLower() );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {
@@ -295,7 +295,7 @@ void EmailEditDialog::edit()
     return;
   }
 
-  email = KPIMUtils::extractEmailAddress( email );
+  email = KPIMUtils::extractEmailAddress( email.toLower() );
 
   // check if item already available, ignore if so...
   for ( int i = 0; i < mEmailListBox->count(); ++i ) {

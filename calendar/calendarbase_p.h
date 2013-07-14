@@ -42,6 +42,8 @@ public:
 
   void deleteAllIncidencesOfType( const QString &mimeType );
 
+  void handleUidChange( const Akonadi::Item &newItem, const QString &newUid );
+
 public Q_SLOTS:
   void slotDeleteFinished( int changeId,
                             const QVector<Akonadi::Item::Id> &,

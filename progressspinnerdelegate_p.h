@@ -35,18 +35,8 @@ class DelegateAnimator : public QObject
 public:
   explicit DelegateAnimator(QAbstractItemView *view);
 
-  void push(const QModelIndex &index) {
-    if (m_animations.isEmpty())
-      m_timerId = startTimer(200);
-    m_animations.insert(Animation(index));
-  }
-  void pop(const QModelIndex &index) {
-    m_animations.remove(Animation(index));
-    if (m_animations.isEmpty() && m_timerId != -1) {
-      killTimer(m_timerId);
-      m_timerId = -1;
-    }
-  }
+    void push(const QModelIndex &index);
+    void pop(const QModelIndex &index);
 
   QPixmap sequenceFrame(const QModelIndex &index);
 
@@ -61,7 +51,7 @@ public:
       { return index == other.index; }
 
 
-      inline void animate() const { frame = ( frame + 1 ) % sCount; }
+      inline void nextFrame() const { frame = ( frame + 1 ) % sCount; }
       mutable int frame;
       QPersistentModelIndex index;
   };
@@ -71,7 +61,7 @@ protected:
 
 private:
 
-  mutable QSet<Animation> m_animations;
+  QSet<Animation> m_animations;
   QAbstractItemView *m_view;
   KPixmapSequence m_pixmapSequence;
   int m_timerId;

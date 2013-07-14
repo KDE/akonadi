@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2011-2012 Sérgio Martins <iamsergio@gmail.com>
+   Copyright (C) 2011-2013 Sérgio Martins <iamsergio@gmail.com>
 
    This library is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published by
@@ -24,6 +24,7 @@
 #include "calendarmodel_p.h"
 #include "kcolumnfilterproxymodel_p.h"
 #include "calfilterproxymodel_p.h"
+#include "utils_p.h"
 
 #include <akonadi/item.h>
 #include <akonadi/session.h>
@@ -32,10 +33,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-#include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <KSelectionProxyModel>
-#include <KCheckableProxyModel>
 #include <KDescendantsProxyModel>
 
 #include <QSortFilterProxyModel>
@@ -63,7 +62,7 @@ void ETMCalendarPrivate::init()
   Akonadi::Session *session = new Akonadi::Session( "ETMCalendar", q );
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( q );
   connect( monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-           q, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
+           SLOT(onCollectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
 
   Akonadi::ItemFetchScope scope;
   scope.fetchFullPayload( true );
@@ -73,10 +72,15 @@ void ETMCalendarPrivate::init()
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
-  monitor->setMimeTypeMonitored( "text/calendar", true );
-  monitor->setMimeTypeMonitored( KCalCore::Event::eventMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Todo::todoMimeType(), true );
-  monitor->setMimeTypeMonitored( KCalCore::Journal::journalMimeType(), true );
+
+  QStringList allMimeTypes;
+  allMimeTypes << KCalCore::Event::eventMimeType() << KCalCore::Todo::todoMimeType()
+               << KCalCore::Journal::journalMimeType();
+
+  foreach( const QString &mimetype, allMimeTypes ) {
+    monitor->setMimeTypeMonitored( mimetype, mMimeTypes.isEmpty() || mMimeTypes.contains(mimetype) );
+  }
+
   mETM = new CalendarModel( monitor, q );
   mETM->setObjectName( "ETM" );
 
@@ -84,6 +88,8 @@ void ETMCalendarPrivate::init()
 
   connect( q, SIGNAL(filterChanged()), SLOT(onFilterChanged()) );
 
+  connect( mETM, SIGNAL(collectionPopulated(Akonadi::Collection::Id)),
+           SLOT(onCollectionPopulated(Akonadi::Collection::Id)) );
   connect( mETM, SIGNAL(rowsInserted(QModelIndex,int,int)),
            SLOT(onRowsInserted(QModelIndex,int,int)) );
   connect( mETM, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -107,6 +113,25 @@ void ETMCalendarPrivate::init()
   loadFromETM();
 }
 
+void ETMCalendarPrivate::onCollectionChanged(const Akonadi::Collection &collection,
+                                             const QSet<QByteArray> &attributeNames)
+{
+    Q_ASSERT(collection.isValid());
+    // Is the collection changed to read-only, we update all Incidences
+    if (attributeNames.contains("AccessRights")) {
+        Akonadi::Item::List items = q->items();
+        foreach (const Akonadi::Item &item, items) {
+            if (item.storageCollectionId() == collection.id()) {
+                KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
+                if (incidence)
+                    incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+            }
+        }
+    }
+
+    emit q->collectionChanged(collection, attributeNames);
+}
+
 void ETMCalendarPrivate::setupFilteredETM()
 {
   // We're only interested in the CollectionTitle column
@@ -128,11 +153,11 @@ void ETMCalendarPrivate::setupFilteredETM()
   selectionModel->setObjectName( "Calendar Selection Model" );
 
   // Make item selection work by means of checkboxes.
-  mCheckableProxyModel = new KCheckableProxyModel( this );
+  mCheckableProxyModel = new CheckableProxyModel( this );
   mCheckableProxyModel->setSelectionModel( selectionModel );
   mCheckableProxyModel->setSourceModel( mCollectionProxyModel );
   mCheckableProxyModel->setObjectName( "Add checkboxes" );
-  
+
   mSelectionProxy = new KSelectionProxyModel( selectionModel, /**parent=*/this );
   mSelectionProxy->setObjectName( "Only show items of selected collection" );
   mSelectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
@@ -162,11 +187,30 @@ void ETMCalendarPrivate::loadFromETM()
 void ETMCalendarPrivate::clear()
 {
   mCollectionMap.clear();
- 
-  itemsRemoved( mItemById.values() );
-  Q_ASSERT( mItemById.isEmpty() );
-  Q_ASSERT( mItemIdByUid.isEmpty() );
 
+  itemsRemoved( mItemById.values() );
+
+  if (!mItemById.isEmpty()) {
+    // This never happens
+    kDebug() << "This shouldnt happen: !mItemById.isEmpty()";
+    foreach(Akonadi::Item::Id id, mItemById.keys()) {
+      kDebug() << "Id = " << id;
+    }
+
+    mItemById.clear();
+    //Q_ASSERT(false); // TODO: discover why this happens
+  }
+
+  if (!mItemIdByUid.isEmpty()) {
+    // This never happens
+    kDebug() << "This shouldnt happen: !mItemIdByUid.isEmpty()";
+    foreach(const QString &uid, mItemIdByUid.keys()) {
+      kDebug() << "uid: " << uid;
+    }
+    mItemIdByUid.clear();
+    //Q_ASSERT(false);
+  }
+  mParentUidToChildrenUid.clear();
   //m_virtualItems.clear();
 }
 
@@ -227,10 +271,18 @@ Akonadi::Item ETMCalendarPrivate::itemFromIndex( const QModelIndex &idx )
 
 void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 {
-  foreach( const Akonadi::Item &item, items ) {
-    internalInsert( item );
+  if ( !items.isEmpty() ) {
+    foreach( const Akonadi::Item &item, items ) {
+      internalInsert( item );
+    }
+
+    Akonadi::Collection::Id id = items.first().storageCollectionId();
+    if ( mPopulatedCollectionIds.contains( id ) ) {
+      // If the collection isn't populated yet, it will be send later
+      // Saves some cpu cycles
+      emit q->calendarChanged();
+    }
   }
-  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::itemsRemoved( const Akonadi::Item::List &items )
@@ -258,6 +310,12 @@ void ETMCalendarPrivate::onRowsInserted( const QModelIndex &index,
 
   if ( !collections.isEmpty() )
     emit q->collectionsAdded( collections );
+}
+
+void ETMCalendarPrivate::onCollectionPopulated( Akonadi::Collection::Id id )
+{
+  mPopulatedCollectionIds.insert( id );
+  emit q->calendarChanged();
 }
 
 void ETMCalendarPrivate::onRowsRemoved( const QModelIndex &index, int start, int end )
@@ -324,12 +382,23 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() ) {
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );
-      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid() );
-      Q_ASSERT( existingIncidence );
+      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+      if ( !existingIncidence ) {
+        if ( !mItemById.contains( item.id() ) ) {
+          // We don't know about this one because it was discarded. For example, not having DTSTART.
+          return;
+        }
+
+        // The item changed it's UID, update our maps.
+        // The Google resource, for example, changes the UID when we create incidences.
+        handleUidChange( item, newIncidence->instanceIdentifier() );
+        existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+        Q_ASSERT( existingIncidence );
+      }
 
       // The item needs updating too, revision changed.
       mItemById.insert( item.id(), item );
@@ -359,9 +428,16 @@ void ETMCalendarPrivate::onFilterChanged()
   mCalFilterProxyModel->setFilter( q->filter() );
 }
 
-ETMCalendar::ETMCalendar() : CalendarBase( new ETMCalendarPrivate( this ) )
+ETMCalendar::ETMCalendar( QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
 {
   Q_D( ETMCalendar );
+  d->init();
+}
+
+ETMCalendar::ETMCalendar( const QStringList &mimeTypes, QObject *parent ) : CalendarBase( new ETMCalendarPrivate( this ), parent )
+{
+  Q_D( ETMCalendar );
+  d->mMimeTypes = mimeTypes;
   d->init();
 }
 
@@ -412,17 +488,24 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
   while ( i.hasNext() ) {
     const Akonadi::Item item = i.next().value();
 
+    BlockAlarmsAttribute *blockedAttr = 0;
+
     if ( excludeBlockedAlarms ) {
       // take the collection from m_collectionMap, because we need the up-to-date collection attrs
       Akonadi::Collection parentCollection = d->mCollectionMap.value( item.storageCollectionId() );
       if ( parentCollection.isValid() && parentCollection.hasAttribute<BlockAlarmsAttribute>() ) {
-        continue;
+        blockedAttr = parentCollection.attribute<BlockAlarmsAttribute>();
+        if ( blockedAttr->isAlarmTypeBlocked( Alarm::Audio ) && blockedAttr->isAlarmTypeBlocked( Alarm::Display )
+             && blockedAttr->isAlarmTypeBlocked( Alarm::Email ) && blockedAttr->isAlarmTypeBlocked( Alarm::Procedure ) )
+        {
+          continue;
+        }
       }
     }
 
     KCalCore::Incidence::Ptr incidence;
     if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      incidence = item.payload<KCalCore::Incidence::Ptr>();
+      incidence = KCalCore::Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
     } else {
       continue;
     }
@@ -431,11 +514,34 @@ KCalCore::Alarm::List ETMCalendar::alarms( const KDateTime &from,
       continue;
     }
 
-    if ( incidence->recurs() ) {
-      appendRecurringAlarms( alarmList, incidence, from, to );
-    } else {
-      appendAlarms( alarmList, incidence, from, to );
+    if ( blockedAttr ) {
+      // Remove all blocked types of alarms
+      Q_FOREACH ( const KCalCore::Alarm::Ptr &alarm, incidence->alarms() ) {
+        if ( blockedAttr->isAlarmTypeBlocked( alarm->type() ) ) {
+          incidence->removeAlarm( alarm );
+        }
+      }
     }
+
+    if ( incidence->alarms().isEmpty() ) {
+      continue;
+    }
+
+    Alarm::List tmpList;
+    if ( incidence->recurs() ) {
+      appendRecurringAlarms( tmpList, incidence, from, to );
+    } else {
+      appendAlarms( tmpList, incidence, from, to );
+    }
+
+    // We need to tag them with the incidence uid in case
+    // the caller will need it, because when we get out of
+    // this scope the incidence will be destroyed.
+    QVectorIterator<Alarm::Ptr> a( tmpList );
+    while ( a.hasNext() ) {
+      a.next()->setCustomProperty( "ETMCalendar", "parentUid", incidence->uid() );
+    }
+    alarmList += tmpList;
   }
   return alarmList;
 }

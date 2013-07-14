@@ -52,7 +52,7 @@ QString Akonadi::CalendarUtils::email()
 bool Akonadi::CalendarUtils::thatIsMe( const QString &_email )
 {
   KPIMIdentities::IdentityManager identityManager( /*ro=*/ true );
-  
+
   // NOTE: this method is called for every created agenda view item,
   // so we need to keep performance in mind
 
@@ -101,3 +101,13 @@ QStringList Akonadi::CalendarUtils::allEmails()
   return identityManager.allEmails();
 }
 
+KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence( const Akonadi::Item &item )
+{
+  // With this try-catch block, we get a 2x performance improvement in retrieving the payload
+  // since we don't call hasPayload()
+  try {
+    return item.payload<KCalCore::Incidence::Ptr>();
+  } catch( Akonadi::PayloadException ) {
+    return KCalCore::Incidence::Ptr();
+  }
+}

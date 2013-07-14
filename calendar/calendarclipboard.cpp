@@ -111,7 +111,7 @@ void CalendarClipboard::Private::makeChildsIndependent( const KCalCore::Incidenc
     m_pendingChangeIds.clear();
     m_abortCurrentOperation = false;
     foreach( const KCalCore::Incidence::Ptr &child, childs ) {
-      Akonadi::Item childItem = m_calendar->item( incidence->uid() );
+      Akonadi::Item childItem = m_calendar->item( incidence );
       if ( !childItem.isValid() ) {
         emit q->cutFinished( /**success=*/ false, i18n( "Can't find item: %1", childItem.id() ) );
         return;
@@ -185,7 +185,7 @@ CalendarClipboard::CalendarClipboard( const Akonadi::CalendarBase::Ptr &calendar
                                                         , d( new Private( calendar, changer, this ) )
 {
 
-  
+
 }
 
 CalendarClipboard::~CalendarClipboard()
@@ -229,7 +229,7 @@ void CalendarClipboard::cutIncidence( const KCalCore::Incidence::Ptr &incidence,
         incidencesToCut << child;
     }
     d->cut( incidencesToCut );
-  }    
+  }
 }
 
 bool CalendarClipboard::copyIncidence( const KCalCore::Incidence::Ptr &incidence,

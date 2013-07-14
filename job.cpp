@@ -232,6 +232,11 @@ void JobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int oldRevision
   Q_UNUSED( oldRevision );
   Q_UNUSED( newRevision );
 }
+
+int JobPrivate::protocolVersion() const
+{
+  return mSession->d->protocolVersion;
+}
 //@endcond
 
 

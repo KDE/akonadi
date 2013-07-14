@@ -49,7 +49,9 @@ macro(add_akonadi_isolated_test _source)
 
   find_program(_testrunner akonaditest)
 
-  add_test( akonadikmime-${_targetName} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml ${_executable} )
+  if (KDEPIMLIBS_RUN_ISOLATED_TESTS)
+    add_test( akonadikmime-${_targetName} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml ${_executable} )
+  endif()
 endmacro()
 
 

@@ -188,14 +188,11 @@ QVariant EntityTreeModel::entityData( const Collection &collection, int column, 
     case Qt::DisplayRole:
     case Qt::EditRole:
       if ( column == 0 ) {
-        if ( collection.hasAttribute<EntityDisplayAttribute>() &&
-             !collection.attribute<EntityDisplayAttribute>()->displayName().isEmpty() ) {
-          return collection.attribute<EntityDisplayAttribute>()->displayName();
-        }
-        if ( !collection.name().isEmpty() ) {
-          return collection.name();
-        }
-        return i18n( "Loading..." );
+        const QString displayName = collection.displayName();
+        if ( !displayName.isEmpty() )
+          return displayName;
+        else
+          return i18n( "Loading..." );
       }
       break;
     case Qt::DecorationRole:

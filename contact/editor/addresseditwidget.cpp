@@ -245,7 +245,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->addWidget( mAddressSelectionWidget, 0, 0, 1, 3 );
 
   mAddressView = new QLabel( this );
-  mAddressView->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+  mAddressView->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
   mAddressView->setMinimumHeight( 20 );
   mAddressView->setAlignment( Qt::AlignTop );
   mAddressView->setTextFormat( Qt::PlainText );
@@ -463,12 +463,9 @@ AddressEditDialog::AddressEditDialog( QWidget *parent )
   mPreferredCheckBox = new QCheckBox( i18nc( "street/postal", "This is the preferred address" ), page );
   topLayout->addWidget( mPreferredCheckBox, 8, 0, 1, 2 );
 
-  KSeparator *sep = new KSeparator( Qt::Horizontal, page );
-  topLayout->addWidget( sep, 9, 0, 1, 2 );
-
   KHBox *buttonBox = new KHBox( page );
   buttonBox->setSpacing( spacingHint() );
-  topLayout->addWidget( buttonBox, 10, 0, 1, 2 );
+  topLayout->addWidget( buttonBox, 9, 0, 1, 2 );
 
   KAcceleratorManager::manage( this );
 }

@@ -195,22 +195,22 @@ SpecialCollections::~SpecialCollections()
 
 bool SpecialCollections::hasCollection( const QByteArray &type, const AgentInstance &instance ) const
 {
-
-  if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
-    // We do not know any folders in this resource.
-    return false;
-  }
-
-  return d->mFoldersForResource[ instance.identifier() ].contains( type );
+  return d->mFoldersForResource.value(instance.identifier()).contains(type);
 }
 
 Akonadi::Collection SpecialCollections::collection( const QByteArray &type, const AgentInstance &instance ) const
 {
-  if ( !d->mFoldersForResource.contains( instance.identifier() ) ) {
-    // We do not know any folders in this resource.
-    return Collection( -1 );
+  return d->mFoldersForResource.value(instance.identifier()).value(type);
+}
+
+void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const Akonadi::Collection &collection)
+{
+  if (!collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type) {
+    Collection attributeCollection(collection);
+    SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
+    attribute->setCollectionType(type);
+    new CollectionModifyJob(attributeCollection);
   }
-  return d->mFoldersForResource[ instance.identifier() ][ type ];
 }
 
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )
@@ -226,25 +226,13 @@ bool SpecialCollections::registerCollection( const QByteArray &type, const Colle
     return false;
   }
 
-  if ( !collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type ) {
-    Collection attributeCollection( collection );
-    SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>( Collection::AddIfMissing );
-    attribute->setCollectionType( type );
+  setSpecialCollectionType(type, collection);
 
-    new CollectionModifyJob( attributeCollection );
-  }
-
-  if ( !d->mFoldersForResource.contains( resourceId ) ) {
-    // We do not know any folders in this resource yet.
-    d->mFoldersForResource.insert( resourceId, QHash<QByteArray, Collection>() );
-  }
-
-  if ( !d->mFoldersForResource[ resourceId ].contains( type ) ) {
-    d->mFoldersForResource[ resourceId ].insert( type, Collection() );
-  }
-
-  if ( d->mFoldersForResource[ resourceId ][ type ] != collection ) {
-    d->mMonitor->setCollectionMonitored( d->mFoldersForResource[ resourceId ][ type ], false );
+  const Collection oldCollection = d->mFoldersForResource.value(resourceId).value(type);
+  if (oldCollection != collection) {
+    if (oldCollection.isValid()) {
+      d->mMonitor->setCollectionMonitored(oldCollection, false);
+    }
     d->mMonitor->setCollectionMonitored( collection, true );
     d->mFoldersForResource[ resourceId ].insert( type, collection );
     d->emitChanged( resourceId );

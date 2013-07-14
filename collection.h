@@ -131,6 +131,15 @@ class AKONADI_EXPORT Collection : public Entity
     QString name() const;
 
     /**
+     * Returns the display name (EntityDisplayAttribute::displayName()) if set,
+     * and Collection::name() otherwise. For human-readable strings this is preferred
+     * over Collection::name().
+     *
+     * @since 4.11
+     */
+    QString displayName() const;
+
+    /**
      * Sets the i18n'ed name of the collection.
      *
      * @param name The new collection name.
@@ -202,6 +211,13 @@ class AKONADI_EXPORT Collection : public Entity
      * Returns the mimetype used for collections.
      */
     static QString mimeType();
+
+    /**
+     * Returns the mimetype used for virtual collections
+     *
+     * @since 4.11
+     */
+    static QString virtualMimeType();
 
     /**
      * Returns the identifier of the resource owning the collection.

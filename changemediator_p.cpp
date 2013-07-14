@@ -24,7 +24,6 @@
 #include <QTimer>
 
 #include "changenotificationdependenciesfactory_p.h"
-#include "objectnotificationmessage.h"
 #include "job_p.h"
 #include "itemmovejob.h"
 #include "movejobimpl_p.h"
@@ -67,8 +66,8 @@ void ChangeMediator::init()
     return;
   }
 
-  QObject::connect( m_notificationSource, SIGNAL(notify(Akonadi::NotificationMessage::List)),
-                    this, SLOT(processAkonadiNotifications(Akonadi::NotificationMessage::List)) );
+  QObject::connect( m_notificationSource, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
+                    this, SLOT(processAkonadiNotifications(Akonadi::NotificationMessageV2::List)) );
 }
 
 /* static */
@@ -192,13 +191,13 @@ void ChangeMediator::do_itemsMoved( const Item::List &items, const Collection &s
   qDebug() << "MOVED" << items.size() << sourceParent << "TO   " << items.first().parentCollection() << id;
 }
 
-void ChangeMediator::processAkonadiNotifications(const Akonadi::NotificationMessage::List& messages)
+void ChangeMediator::processAkonadiNotifications(const Akonadi::NotificationMessageV2::List& messages)
 {
-  QVector<ObjectNotificationMessage> objectMessages;
-  Q_FOREACH ( const Akonadi::NotificationMessage &message, messages ) {
+  QVector<NotificationMessageV2> vector;
+  Q_FOREACH ( const Akonadi::NotificationMessageV2 &message, messages ) {
     if ( !m_sessions.contains( message.sessionId() ) ) {
-      ObjectNotificationMessage::appendAndCompress( objectMessages, message );
+      vector.append( message );
     }
   }
-  emit notify( objectMessages );
+  emit notify( vector );
 }

@@ -19,6 +19,7 @@
 
 #include "collectionrequester.h"
 #include "collectiondialog.h"
+#include "entitydisplayattribute.h"
 
 #include <klineedit.h>
 #include <klocalizedstring.h>
@@ -89,6 +90,7 @@ void CollectionRequester::Private::init()
   q->connect( openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()) );
 
   collectionDialog = new CollectionDialog( q );
+  collectionDialog->setWindowIcon( KIcon( QLatin1String( "akonadi" ) ) );
   collectionDialog->setCaption( i18n( "Select a collection" ) );
   collectionDialog->setSelectionMode( QAbstractItemView::SingleSelection );
 }
@@ -138,7 +140,12 @@ Collection CollectionRequester::collection() const
 void CollectionRequester::setCollection( const Collection& collection )
 {
   d->collection = collection;
-  d->edit->setText( collection.isValid() ? collection.name() : QString() );
+  QString name;
+  if ( collection.isValid() ) {
+    name = collection.displayName();
+  }
+
+  d->edit->setText( name );
   emit collectionChanged( collection );
 }
 

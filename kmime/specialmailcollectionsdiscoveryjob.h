@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2013 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,31 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
-#define CHANGENOTIFICATIONDEPENDENCIESFACTORY_P_H
+#ifndef SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
+#define SPECIALMAILCOLLECTIONSDISCOVERYJOB_H
 
-#include <akonadi/session.h>
-
-#include "entitycache_p.h"
+#include "akonadi-kmime_export.h"
+#include <akonadi/specialcollectionsdiscoveryjob.h>
 
 namespace Akonadi {
 
-/**
- * This class exists so that we can create a fake notification source in
- * unit tests.
- */
-class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
+class AKONADI_KMIME_EXPORT SpecialMailCollectionsDiscoveryJob : public SpecialCollectionsDiscoveryJob
 {
+    Q_OBJECT
 public:
-  virtual ~ChangeNotificationDependenciesFactory() {}
-  virtual QObject* createNotificationSource(QObject *parent);
-  virtual QObject* createChangeMediator(QObject *parent);
-
-  virtual Akonadi::CollectionCache* createCollectionCache(int maxCapacity, Session *session);
-  virtual Akonadi::ItemCache* createItemCache(int maxCapacity, Session *session);
-  virtual Akonadi::ItemListCache* createItemListCache(int maxCapacity, Session *session);
+    SpecialMailCollectionsDiscoveryJob(QObject *parent = 0);
 };
 
 }
 
-#endif
+#endif /* SPECIALMAILCOLLECTIONSDISCOVERYJOB_H */
+

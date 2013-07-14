@@ -134,7 +134,8 @@ static bool canCreateCollection( const Akonadi::Collection &collection )
   if ( !( collection.rights() & Akonadi::Collection::CanCreateCollection ) )
     return false;
 
-  if ( !collection.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) )
+  if ( !collection.contentMimeTypes().contains( Akonadi::Collection::mimeType() ) &&
+       !collection.contentMimeTypes().contains( Akonadi::Collection::virtualMimeType() ) )
     return false;
 
   return true;
@@ -439,7 +440,7 @@ class StandardActionManager::Private
       if ( !favoritesModel )
         return false;
 
-      return favoritesModel->collections().contains( collection );
+      return favoritesModel->collectionIds().contains( collection.id() );
     }
 
     void encodeToClipboard( QItemSelectionModel* selectionModel, bool cut = false )
@@ -801,7 +802,10 @@ class StandardActionManager::Private
     {
       Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       if ( !instance.isOnline() ) {
-        if ( KMessageBox::questionYesNo( parentWidget, i18n( "Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?" , collection.name()  ), i18n( "Account \"%1\" is offline", instance.name() ) ) != KMessageBox::Yes )
+        if ( KMessageBox::questionYesNo( parentWidget,
+                                         i18n( "Before syncing folder \"%1\" it is necessary to have the resource online. Do you want to make it online?", collection.displayName() ),
+                                         i18n( "Account \"%1\" is offline", instance.name() ),
+                                         KGuiItem( i18nc( "@action:button", "Go Online" ) ), KStandardGuiItem::cancel() ) != KMessageBox::Yes )
           return false;
         instance.setIsOnline( true );
       }
@@ -838,11 +842,8 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName()
-                                                                                    : collection.name();
-
       CollectionPropertiesDialog* dlg = new CollectionPropertiesDialog( collection, mCollectionPropertiesPageNames, parentWidget );
-      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle,displayName ) );
+      dlg->setCaption( contextText( StandardActionManager::CollectionProperties, StandardActionManager::DialogTitle, collection.displayName() ) );
       dlg->show();
     }
 
@@ -969,9 +970,7 @@ class StandardActionManager::Private
       const Collection collection = index.data( CollectionModel::CollectionRole ).value<Collection>();
       Q_ASSERT( collection.isValid() );
 
-      const QString displayName = collection.hasAttribute<EntityDisplayAttribute>() ? collection.attribute<EntityDisplayAttribute>()->displayName() : collection.name();
-
-      QPointer<RenameFavoriteDialog> dlg( new RenameFavoriteDialog(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), displayName, parentWidget) );
+      QPointer<RenameFavoriteDialog> dlg( new RenameFavoriteDialog(contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle ),contextText( StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText ) , favoritesModel->favoriteLabel( collection ), collection.displayName(), parentWidget) );
       if ( dlg->exec() == QDialog::Accepted && dlg != 0 )
       {
         favoritesModel->setFavoriteLabel( collection, dlg->newName() );
@@ -1297,7 +1296,7 @@ class StandardActionManager::Private
       const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
       const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
-      const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() );
+      const bool canContainCollections = collection.contentMimeTypes().contains( Collection::mimeType() ) || collection.contentMimeTypes().contains( Collection::virtualMimeType() );
       const bool resourceAllowsRequiredMimeTypes = AgentManager::self()->instance( collection.resource() ).type().mimeTypes().toSet().contains( mimeTypes );
 
       const bool isReadOnlyForItems = (isItemAction && (!canCreateNewItems || !canContainRequiredMimeTypes));
@@ -1430,7 +1429,7 @@ class StandardActionManager::Private
       KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
       if ( text.isEmpty() )
         return contextTexts[ type ].value( context ).text;
- 
+
       return text.subs( value ).toString();
     }
 
