@@ -36,6 +36,10 @@ class Akonadi::CollectionStatisticsJobPrivate : public JobPrivate
     {
     }
 
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
+      return QString::number( mCollection.id() );
+    }
+
     Collection mCollection;
     CollectionStatistics mStatistics;
 };

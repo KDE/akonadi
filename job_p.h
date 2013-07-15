@@ -53,6 +53,10 @@ class JobPrivate
     void startNext();
     void signalCreationToJobTracker();
     void delayedEmitResult();
+    /*
+      Returns a string to display in akonadi console's job tracker. E.g. item ID.
+     */
+    virtual QString jobDebuggingString() const { return QString(); }
     /**
       Returns a new unique command tag for communication with the backend.
     */

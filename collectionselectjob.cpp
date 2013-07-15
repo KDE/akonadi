@@ -35,6 +35,13 @@ class Akonadi::CollectionSelectJobPrivate : public JobPrivate
     {
     }
 
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
+      if ( mCollection.id() > 0 )
+        return QString::number( mCollection.id() );
+      else
+        return QString::fromLatin1( "RemoteID " ) + QString::number( mCollection.id() );
+    }
+
     Collection mCollection;
 };
 
