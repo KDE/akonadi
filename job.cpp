@@ -133,7 +133,8 @@ void JobPrivate::signalCreationToJobTracker()
       argumentList << QLatin1String( mSession->sessionId() )
                    << QString::number(reinterpret_cast<quintptr>( q ), 16)
                    << ( mParentJob ? QString::number( reinterpret_cast<quintptr>( mParentJob ), 16) : QString() )
-                   << QString::fromLatin1( q->metaObject()->className() );
+                   << QString::fromLatin1( q->metaObject()->className() )
+                   << jobDebuggingString();
       s_jobtracker->callWithArgumentList(QDBus::NoBlock, QLatin1String( "jobCreated" ), argumentList);
   }
 }
