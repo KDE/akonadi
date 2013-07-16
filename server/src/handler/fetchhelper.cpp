@@ -42,6 +42,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
+#include <QtCore/QDateTime>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
@@ -155,6 +156,10 @@ QSqlQuery FetchHelper::buildItemQuery()
 
   if ( mScope.scope() != Scope::Invalid )
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+
+  if ( mChangedSince.isValid() ) {
+    itemQuery.addValueCondition( PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mChangedSince.toUTC() );
+  }
 
   if ( !itemQuery.exec() ) {
     throw HandlerException("Unable to list items");
@@ -466,6 +471,12 @@ void FetchHelper::parseCommandStream()
         mAncestorDepth = HandlerHelper::parseDepth( mStreamParser->readString() );
       } else if ( buffer == AKONADI_PARAM_IGNOREERRORS ) {
         mIgnoreErrors = true;
+      } else if ( buffer == AKONADI_PARAM_CHANGEDSINCE ) {
+        bool ok = false;
+        mChangedSince = QDateTime::fromTime_t( mStreamParser->readNumber( &ok ) );
+        if ( !ok ) {
+          throw HandlerException( "Invalid CHANGEDSINCE timestamp" );
+        }
       } else {
         throw HandlerException( "Invalid command argument" );
       }
