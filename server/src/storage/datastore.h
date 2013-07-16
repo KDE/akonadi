@@ -262,6 +262,9 @@ protected:
     void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
 
   private:
+    bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
+                           const QSet<PimItem::Id> &existing, const Collection &col );
+
     /** Converts the given date/time to the database format, i.e.
         "YYYY-MM-DD HH:MM:SS".
         @param dateTime the date/time in UTC
