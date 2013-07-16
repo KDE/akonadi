@@ -219,29 +219,81 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   return true;
 }
 
+bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
+                                   const QSet<Entity::Id> &existing, const Collection &col)
+{
+  QVariantList flagIds;
+  QVariantList appendIds;
+  PimItem::List appendItems;
+  Q_FOREACH ( const PimItem &item, items ) {
+    if ( existing.contains( item.id() ) ) {
+      continue;
+    }
+
+    flagIds << flag.id();
+    appendIds << item.id();
+    appendItems << item;
+  }
+
+  QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
+  qb2.setColumnValue( PimItemFlagRelation::leftColumn(), appendIds );
+  qb2.setColumnValue( PimItemFlagRelation::rightColumn(), flagIds );
+  if ( !qb2.exec() ) {
+    akDebug() << "Failed to execute query:" << qb2.query().lastError();
+    return false;
+  }
+
+  mNotificationCollector->itemsFlagsChanged( appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
+                                              QSet<QByteArray>(), col );
+
+  return true;
+}
+
+
 bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
-                                 bool& flagsChanged, bool checkIfExists,
-                                 const Collection &col )
+                                  bool& flagsChanged, bool checkIfExists,
+                                  const Collection &col )
 {
   QSet<QByteArray> added;
-  Q_FOREACH( const PimItem &item, items ) {
-    flagsChanged = false;
-    if ( !item.isValid() )
-      return false;
-    if ( flags.isEmpty() )
-      return true;
 
-    for ( int i = 0; i < flags.count(); ++i ) {
-      if ( !checkIfExists || !item.relatesToFlag( flags[ i ] ) ) {
-        flagsChanged = true;
-        added << flags[ i ].name().toLatin1();
-        if ( !item.addFlag( flags[i] ) )
-          return false;
+  QVariantList itemsIds;
+  Q_FOREACH ( const PimItem &item, items ) {
+    itemsIds.append( item.id() );
+  }
+
+  flagsChanged = false;
+  Q_FOREACH ( const Flag &flag, flags ) {
+    QSet<PimItem::Id> existing;
+    if ( checkIfExists ) {
+      QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Select );
+      Query::Condition cond;
+      cond.addValueCondition( PimItemFlagRelation::rightColumn(), Query::Equals, flag.id() );
+      cond.addValueCondition( PimItemFlagRelation::leftColumn(), Query::In, itemsIds );
+      qb.addColumn( PimItemFlagRelation::leftColumn() );
+      qb.addCondition( cond );
+
+      if ( !qb.exec() ) {
+        akDebug() << "Failed to execute query:" << qb.query().lastError();
+        return false;
       }
+
+      QSqlQuery query = qb.query();
+      if ( query.size() == items.count() ) {
+        continue;
+      }
+
+      flagsChanged = true;
+
+      while ( query.next() ) {
+        existing << query.value( 0 ).value<PimItem::Id>();
+      }
+    }
+
+    if ( !doAppendItemsFlag( items, flag, existing, col ) ) {
+      return false;
     }
   }
 
-  mNotificationCollector->itemsFlagsChanged( items, added, QSet<QByteArray>(), col );
   return true;
 }
 
