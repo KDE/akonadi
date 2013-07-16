@@ -23,6 +23,7 @@
 #include "akonadi_export.h"
 
 #include <QtCore/QSharedDataPointer>
+#include <KDE/KDateTime>
 
 class QStringList;
 template <typename T> class QSet;
@@ -268,6 +269,23 @@ class AKONADI_EXPORT ItemFetchScope
      * Returns @c true if there is nothing to fetch.
      */
     bool isEmpty() const;
+
+    /**
+     * Only fetch items that were added or modified after given timestamp
+     *
+     * When this property is set, all results are filtered, i.e. even when you
+     * request an item with a specific ID, it will not be fetched unless it was
+     * modified after @p changedSince timestamp.
+     *
+     * @param changedSince The timestamp of oldest modified item to fetch
+     * @since 4.12
+     */
+    void setFetchChangedSince( const KDateTime &changedSince );
+
+    /**
+     * Returns timestamp of the oldest item to fetch.
+     */
+    KDateTime fetchChangedSince() const;
 
   private:
     //@cond PRIVATE

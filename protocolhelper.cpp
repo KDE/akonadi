@@ -285,6 +285,9 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
         Q_ASSERT( false );
     }
   }
+  if ( fetchScope.fetchChangedSince().isValid() ) {
+    command += " " AKONADI_PARAM_CHANGEDSINCE " " + QByteArray::number( fetchScope.fetchChangedSince().toTime_t() );
+  }
 
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;

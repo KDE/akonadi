@@ -22,6 +22,7 @@
 
 #include <QtCore/QSet>
 #include <QtCore/QString>
+#include <KDE/KDateTime>
 #include "itemfetchscope.h"
 
 namespace Akonadi {
@@ -55,6 +56,7 @@ class ItemFetchScopePrivate : public QSharedData
       mCheckCachedPayloadPartsOnly = other.mCheckCachedPayloadPartsOnly;
       mFetchMtime = other.mFetchMtime;
       mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
+      mChangedSince = other.mChangedSince;
     }
 
   public:
@@ -67,6 +69,7 @@ class ItemFetchScopePrivate : public QSharedData
     bool mCheckCachedPayloadPartsOnly;
     bool mFetchMtime;
     bool mIgnoreRetrievalErrors;
+    KDateTime mChangedSince;
 };
 
 }
