@@ -22,12 +22,15 @@
 #include "item.h"
 #include "itemserializerplugin.h"
 #include "typepluginloader_p.h"
+#include "servermanager.h"
+#include <akonadi/private/xdgbasedirs_p.h>
 
 // Qt
 #include <QtCore/QBuffer>
 #include <QtCore/QFile>
 #include <QtCore/QIODevice>
 #include <QtCore/QString>
+#include <QtCore/QDir>
 
 #include <string>
 
@@ -81,7 +84,19 @@ void StdStringItemSerializerPlugin::serialize( const Item& item, const QByteArra
 void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QByteArray& data, int version, bool external )
 {
   if ( external ) {
-    QFile file( QString::fromUtf8(data) );
+    QString path;
+    QString fileName = QString::fromUtf8( data );
+    QFileInfo fi( fileName );
+    if ( !fi.isAbsolute() ) {
+      QString fullRelPath = QLatin1String( "akonadi" );
+      if ( Akonadi::ServerManager::hasInstanceIdentifier() ) {
+        fullRelPath += QDir::separator() + QLatin1String( "instance" ) + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
+      }
+      fullRelPath += QDir::separator() + QLatin1String( "file_db_data" );
+      fileName = XdgBaseDirs::saveDir( "data", fullRelPath ) + QDir::separator() + fileName;
+    }
+
+    QFile file( fileName );
     if ( file.open( QIODevice::ReadOnly ) ) {
       deserialize( item, label, file, version );
       file.close();
