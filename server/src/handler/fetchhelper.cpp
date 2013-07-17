@@ -43,6 +43,7 @@
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
+#include <QtCore/QFileInfo>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
@@ -365,6 +366,15 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         } else if ( data.isEmpty() ) {
           part += " \"\"";
         } else {
+          if ( partIsExternal ) {
+            if ( !mConnection->capabilities().noPayloadPath() ) {
+              QFileInfo fi( QString::fromUtf8( data ) );
+              if ( !fi.isAbsolute() ) {
+                data = QString( PartHelper::storagePath() + QDir::separator() ).toLocal8Bit() + data;
+              }
+            }
+          }
+
           part += " {" + QByteArray::number( data.length() ) + "}\r\n";
           part += data;
         }

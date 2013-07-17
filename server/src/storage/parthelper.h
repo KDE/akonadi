@@ -91,6 +91,11 @@ namespace PartHelper
    * Retruns the base path for storing external payloads.
    */
   QString storagePath();
+
+  /**
+   * Read filename from @p data and returns absolute filepath
+   */
+  QString resolveAbsolutePath( const QByteArray &data );
 }
 
 }

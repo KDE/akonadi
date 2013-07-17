@@ -38,8 +38,12 @@ public:
   int notificationMessageVersion() const;
   void setNotificationMessageVersion(int version);
 
+  bool noPayloadPath() const;
+  void setNoPayloadPath(bool noPayloadPath);
+
 private:
   int m_notificationMessageVersion;
+  int m_noPayloadPath : 1;
 };
 
 #endif // CLIENTCAPABILITIES_H

@@ -49,6 +49,8 @@ bool Capability::parseStream()
       break; // shouldn't happen
     if (capability == AKONADI_PARAM_CAPABILITY_NOTIFY) {
       capabilities.setNotificationMessageVersion(m_streamParser->readNumber());
+    } else if (capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH) {
+      capabilities.setNoPayloadPath(true);
     } else {
       qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
     }

@@ -29,6 +29,8 @@
 #include <QDir>
 #include <QFile>
 #include <QDebug>
+#include <QFileInfo>
+
 
 #include <QSqlError>
 
@@ -37,7 +39,7 @@ using namespace Akonadi;
 QString PartHelper::fileNameForPart( Part *part )
 {
   Q_ASSERT( part->id() >= 0 );
-  return storagePath() + QString::number( part->id() );
+  return QString::number( part->id() );
 }
 
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
@@ -46,9 +48,19 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     throw PartHelperException( "Invalid part" );
 
   QString origFileName;
+  QString origFilePath;
+
   // currently external, so recover the filename to delete it after the update succeeded
-  if ( part->external() )
+  if ( part->external() ) {
     origFileName = QString::fromUtf8( part->data() );
+    QFileInfo fi( origFileName );
+    if ( fi.isAbsolute() ) {
+      origFileName = fi.fileName();
+      origFilePath = origFileName;
+    } else if ( !origFileName.isEmpty() ) {
+      origFilePath = storagePath() + QDir::separator() + origFileName;
+    }
+  }
 
   const bool storeExternal = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
 
@@ -68,17 +80,17 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     }
     fileName += rev;
 
-    QFile file( fileName );
+    QFile file( storagePath() + QDir::separator() + fileName );
     if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
       if ( file.write( data ) == data.size() ) {
         part->setData( fileName.toLocal8Bit() );
         part->setExternal( true );
       } else {
-        throw PartHelperException( QString::fromLatin1( "Failed to write into '%1', error was '%2'" ).arg( fileName ).arg( file.errorString() ) );
+        throw PartHelperException( QString::fromLatin1( "Failed to write into '%1', error was '%2'" ).arg( file.fileName() ).arg( file.errorString() ) );
       }
       file.close();
     } else  {
-     throw PartHelperException( QString::fromLatin1( "Could not open '%1' for writing, error was '%2'" ).arg( fileName ).arg( file.errorString() ) );
+     throw PartHelperException( QString::fromLatin1( "Could not open '%1' for writing, error was '%2'" ).arg( file.fileName() ).arg( file.errorString() ) );
     }
 
   // internal storage
@@ -92,8 +104,8 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
   if ( !result )
     throw PartHelperException( "Failed to update database record" );
   // everything worked, remove the old file
-  if ( !origFileName.isEmpty() )
-    removeFile( origFileName );
+  if ( !origFilePath.isEmpty() )
+    removeFile( origFilePath );
 }
 
 bool PartHelper::insert( Part *part, qint64* insertId )
@@ -120,20 +132,21 @@ bool PartHelper::insert( Part *part, qint64* insertId )
   {
     QString fileName = fileNameForPart( part );
     fileName +=  QString::fromUtf8("_r0");
+    const QString filePath = storagePath() + QDir::separator() + fileName;
 
-    QFile file( fileName );
+    QFile file( filePath );
     if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
       if ( file.write( data ) == data.size() ) {
         part->setData( fileName.toLocal8Bit() );
         result = part->update();
       } else {
-        akError() << "Insert: payload file " << fileName << " could not be written to!";
+        akError() << "Insert: payload file " << filePath << " could not be written to!";
         akError() << "Error: " << file.errorString();
         return false;
       }
       file.close();
     } else {
-      akError() << "Insert: payload file " << fileName << " could not be open for writing!";
+      akError() << "Insert: payload file " << filePath << " could not be open for writing!";
       akError() << "Error: " << file.errorString();
       return false;
     }
@@ -148,7 +161,7 @@ bool PartHelper::remove( Akonadi::Part *part )
 
   if ( part->external() ) {
     // akDebug() << "remove part file " << part->data();
-    const QString fileName = QString::fromUtf8( part->data() );
+    const QString fileName = resolveAbsolutePath( part->data() );
     removeFile( fileName );
   }
   return part->remove();
@@ -170,7 +183,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   Part::List::ConstIterator end = parts.constEnd();
   for ( ; it != end; ++it )
   {
-    const QString fileName = QString::fromUtf8( (*it).data() );
+    const QString fileName = resolveAbsolutePath( (*it).data() );
     // akDebug() << "remove part file " << fileName;
     removeFile( fileName );
   }
@@ -187,7 +200,8 @@ void PartHelper::removeFile(const QString& fileName)
 QByteArray PartHelper::translateData( const QByteArray &data, bool isExternal )
 {
   if ( isExternal ) {
-    const QString fileName = QString::fromUtf8( data );
+    const QString fileName = resolveAbsolutePath( data );
+
     QFile file( fileName );
     if ( file.open( QIODevice::ReadOnly ) ) {
       const QByteArray payload = file.readAll();
@@ -212,7 +226,7 @@ QByteArray PartHelper::translateData( const Part& part )
 bool Akonadi::PartHelper::truncate(Part& part)
 {
   if ( part.external() ) {
-    const QString fileName = QString::fromUtf8( part.data() );
+    const QString fileName = resolveAbsolutePath( part.data() );
     removeFile( fileName );
   }
 
@@ -231,7 +245,8 @@ QString PartHelper::storagePath()
 
 bool PartHelper::verify(Part& part)
 {
-  const QString fileName = QString::fromUtf8( part.data() );
+  const QString fileName = resolveAbsolutePath( part.data() );
+
   if ( !QFile::exists(fileName) ) {
     akError() << "Payload file" << fileName << "is missing, trying to recover.";
     part.setData( QByteArray() );
@@ -241,4 +256,15 @@ bool PartHelper::verify(Part& part)
   }
 
   return true;
+}
+
+QString PartHelper::resolveAbsolutePath( const QByteArray &data )
+{
+    QString fileName = QString::fromUtf8( data );
+    QFileInfo fi;
+    if ( !fi.isAbsolute() ) {
+      fileName = storagePath() + QDir::separator() + fileName;
+    }
+
+    return fileName;
 }

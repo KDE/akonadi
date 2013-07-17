@@ -43,14 +43,7 @@ class PartHelperTest : public QObject
       p.setId(42);
 
       QString fileName = PartHelper::fileNameForPart( &p );
-      QVERIFY( fileName.endsWith( QL1S("/.local-unit-test/share/akonadi/file_db_data/42") ) );
-      QVERIFY( fileName.startsWith( QL1S("/") ) );
-
-      akTestSetInstanceIdentifier( QL1S("foo") );
-
-      fileName = PartHelper::fileNameForPart( &p );
-      QVERIFY( fileName.endsWith( QL1S("/.local-unit-test/share/akonadi/instance/foo/file_db_data/42") ) );
-      QVERIFY( fileName.startsWith( QL1S("/") ) );
+      QVERIFY( fileName.endsWith( QL1S("42") ) );
     }
 
     void testRemoveFile_data()
@@ -67,7 +60,7 @@ class PartHelperTest : public QObject
 
       Part p;
       p.setId(23);
-      const QString validFileName = PartHelper::fileNameForPart( &p );
+      const QString validFileName = PartHelper::storagePath() + QDir::separator() + PartHelper::fileNameForPart( &p );
       PartHelper::removeFile( validFileName ); // no throw
     }
 

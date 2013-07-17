@@ -19,7 +19,10 @@
 
 #include "clientcapabilities.h"
 
-ClientCapabilities::ClientCapabilities() : m_notificationMessageVersion(0)
+ClientCapabilities::ClientCapabilities()
+  : m_notificationMessageVersion(0)
+  , m_noPayloadPath(false)
+
 {
 }
 
@@ -38,4 +41,14 @@ void ClientCapabilities::setNotificationMessageVersion(int version)
   if ( version <= 0 )
     return; // invalid
   m_notificationMessageVersion = version;
+}
+
+bool ClientCapabilities::noPayloadPath() const
+{
+  return m_noPayloadPath;
+}
+
+void ClientCapabilities::setNoPayloadPath(bool noPayloadPath)
+{
+  m_noPayloadPath = noPayloadPath;
 }

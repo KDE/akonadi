@@ -43,6 +43,7 @@ namespace Akonadi {
 
   <h4>Client Capabilities</h4>
   - @c NOTIFY version - version of the notification message format
+  - @c NOPAYLOADPATH - only filename of external payload file is expected
   - @c FILEACCESS - local file access for large payload fetches (TODO)
 
   <h4>Server Capabilities</h4>
