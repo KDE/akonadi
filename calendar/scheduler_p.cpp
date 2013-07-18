@@ -208,7 +208,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
       const Attendee::List attendees = existingIncidence->attendees();
       Attendee::List::ConstIterator ait;
       for ( ait = attendees.begin(); ait != attendees.end(); ++ait ) {
-        if( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
+        if ( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
           // This incidence wasn't created by me - it's probably in a shared folder
           // and meant for someone else, ignore it.
           kDebug() << "ignoring " << existingIncidence->uid()
@@ -544,7 +544,7 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
   kDebug() << "freeBusyDirName:" << freeBusyDir();
 
   Person::Ptr from;
-  if( method == iTIPPublish ) {
+  if ( method == iTIPPublish ) {
     from = freebusy->organizer();
   }
   if ( ( method == iTIPReply ) && ( freebusy->attendeeCount() == 1 ) ) {

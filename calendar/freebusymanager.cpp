@@ -240,7 +240,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   // Sanity check: Don't download if it's not a correct email
   // address (this also avoids downloading for "(empty email)").
   int emailpos = email.indexOf( QLatin1Char( '@' ) );
-  if( emailpos == -1 ) {
+  if ( emailpos == -1 ) {
     kWarning() << "No '@' found in" << email;
     emit freeBusyUrlRetrieved( email, KUrl() );
     return;
@@ -469,7 +469,7 @@ void FreeBusyManagerPrivate::uploadFreeBusy()
      return;
   }
 
-  if( mTimerID != 0 ) {
+  if ( mTimerID != 0 ) {
     // A timer is already running, so we don't need to do anything
     return;
   }
@@ -799,7 +799,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
     // Put target string together
     KUrl targetURL;
-    if( CalendarSettings::self()->publishKolab() ) {
+    if ( CalendarSettings::self()->publishKolab() ) {
       // we use Kolab
       QString server;
       if ( CalendarSettings::self()->publishKolabServer() == QLatin1String( "%SERVER%" ) ||
@@ -962,7 +962,7 @@ bool FreeBusyManager::saveFreeBusy( const KCalCore::FreeBusy::Ptr &freebusy,
     kDebug() << "Directory" << fbd <<" does not exist!";
     kDebug() << "Creating directory:" << fbd;
 
-    if( !freeBusyDirectory.mkpath( fbd ) ) {
+    if ( !freeBusyDirectory.mkpath( fbd ) ) {
       kDebug() << "Could not create directory:" << fbd;
       return false;
     }

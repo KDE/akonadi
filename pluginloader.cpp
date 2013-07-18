@@ -84,7 +84,7 @@ QObject* PluginLoader::createForName( const QString & name )
 
   //First try to load it staticly
   foreach (QObject *plugin, QPluginLoader::staticInstances()) {
-    if(QLatin1String(plugin->metaObject()->className()) == info.className) {
+    if (QLatin1String(plugin->metaObject()->className()) == info.className) {
       info.loaded = true;
       return plugin;
       break;

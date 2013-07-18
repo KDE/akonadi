@@ -130,8 +130,8 @@ QVariant SubscriptionModel::data(const QModelIndex & index, int role) const
   } else {
     const Collection::Id collectionId = index.data( CollectionIdRole ).toLongLong();
     const Collection collection = collectionForId( collectionId );
-    if( collection.hasAttribute<EntityHiddenAttribute>() ) {
-      if(d->showHiddenCollection) {
+    if ( collection.hasAttribute<EntityHiddenAttribute>() ) {
+      if (d->showHiddenCollection) {
         return CollectionModel::data( index, role );
       } else {
         return QVariant();
@@ -154,7 +154,7 @@ bool SubscriptionModel::setData(const QModelIndex & index, const QVariant & valu
 {
   if ( role == Qt::CheckStateRole ) {
     const Collection::Id col = index.data( CollectionIdRole ).toLongLong();
-    if( !d->isSubscribable(col) ) {
+    if ( !d->isSubscribable(col) ) {
       return true; //No change
     }
     if ( d->subscriptions.contains( col ) && d->subscriptions.value( col ) == (value == Qt::Checked) )

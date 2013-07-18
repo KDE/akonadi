@@ -79,7 +79,7 @@ void Config::readConfiguration(const QString &configfile)
         insertAgent( element.text(), element.attribute( "synchronize", "false" ) == QLatin1String("true") );
       } else if ( element.tagName() == "envvar" ) {
         const QString name = element.attribute( "name" );
-        if( name.isEmpty() ) {
+        if ( name.isEmpty() ) {
           kWarning() << "Given envvar with no name.";
         } else {
           mEnvVars[ name ] = element.text();

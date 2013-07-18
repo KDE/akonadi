@@ -37,7 +37,7 @@ void showJobError( KJob* job )
   // we can be called from the KJob::kill, where we are no longer a KIO::Job
   // so better safe than sorry
   KIO::Job* kiojob = dynamic_cast<KIO::Job*>(job);
-  if( kiojob && kiojob->ui() )
+  if ( kiojob && kiojob->ui() )
     kiojob->ui()->showErrorMessage();
   else
     kWarning() << "There is no GUI delegate set for a kjob, and it failed with error:" << job->errorString();

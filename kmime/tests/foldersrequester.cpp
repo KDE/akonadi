@@ -45,7 +45,7 @@ Requester::Requester()
 
 void Requester::requestResult( KJob *job )
 {
-  if( job->error() ) {
+  if ( job->error() ) {
     kError() << "LocalFoldersRequestJob failed:" << job->errorString();
     KApplication::exit( 1 );
   } else {

@@ -53,7 +53,7 @@ class SpecialMailCollectionsPrivate;
   become unavailable).
 
   @code
-  if( SpecialMailCollections::self()->hasDefaultCollection( SpecialMailCollections::Outbox ) ) {
+  if ( SpecialMailCollections::self()->hasDefaultCollection( SpecialMailCollections::Outbox ) ) {
     const Collection col = SpecialMailCollections::self()->defaultCollection( SpecialMailCollections::Outbox );
     // ...
   } else {

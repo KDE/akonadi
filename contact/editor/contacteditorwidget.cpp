@@ -150,7 +150,7 @@ void ContactEditorWidget::Private::initGui()
   initGuiBusinessTab();
   initGuiPersonalTab();
   initGuiNotesTab();
-  if(mDisplayMode == FullMode) {
+  if (mDisplayMode == FullMode) {
     initGuiCustomFieldsTab();
     loadCustomPages();
   }
@@ -615,7 +615,7 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
 
   d->mDisplayNameWidget->setDisplayType( (DisplayNameEditWidget::DisplayType)metaData.displayNameMode() );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // custom fields group
     d->mCustomFieldsWidget->setLocalCustomFieldDescriptions( metaData.customFieldDescriptions() );
     d->mCustomFieldsWidget->loadContact( contact );
@@ -701,7 +701,7 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
   // family group
   d->storeCustom( contact, QLatin1String( "X-SpousesName" ), d->mPartnerWidget->text().trimmed() );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // custom fields group
     d->mCustomFieldsWidget->storeContact( contact );
     metaData.setCustomFieldDescriptions( d->mCustomFieldsWidget->localCustomFieldDescriptions() );
@@ -769,7 +769,7 @@ void ContactEditorWidget::setReadOnly( bool readOnly )
   // widgets from family group
   d->mPartnerWidget->setReadOnly( readOnly );
 
-  if(d->mDisplayMode == FullMode) {
+  if (d->mDisplayMode == FullMode) {
     // widgets from custom fields group
     d->mCustomFieldsWidget->setReadOnly( readOnly );
 

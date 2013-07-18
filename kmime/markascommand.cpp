@@ -66,7 +66,7 @@ void MarkAsCommand::slotFetchDone(KJob* job)
       }
   }
   if ( mMessages.empty() ) {
-    if( mFolderListJobCount == 0 ) {
+    if ( mFolderListJobCount == 0 ) {
       emitResult( OK );
       return;
     }

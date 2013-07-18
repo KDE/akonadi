@@ -175,7 +175,7 @@ bool ErrorOverlay::eventFilter(QObject * object, QEvent * event)
 void ErrorOverlay::startClicked()
 {
   const ServerManager::State state = ServerManager::state();
-  if( state == ServerManager::Running ) {
+  if ( state == ServerManager::Running ) {
     serverStateChanged( state );
   } else {
     ServerManager::start();

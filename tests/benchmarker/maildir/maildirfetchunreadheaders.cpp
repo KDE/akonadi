@@ -55,7 +55,7 @@ void MailDirFetchUnreadHeaders::runTest() {
     QString a;
     foreach ( const Item &item, ifj->items() ) {
       // filter read messages
-      if( !item.hasFlag( "\\SEEN" ) ) {
+      if ( !item.hasFlag( "\\SEEN" ) ) {
         a = item.payload<MessagePtr>()->subject()->asUnicodeString();
       }
     }

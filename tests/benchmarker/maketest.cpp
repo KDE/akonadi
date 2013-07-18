@@ -49,7 +49,7 @@ void MakeTest::createAgent(const QString &name)
   job->exec();
   currentInstance = job->instance();
 
-  if( job->error() || !currentInstance.isValid() ) {
+  if ( job->error() || !currentInstance.isValid() ) {
     qDebug() << "  Unable to create resource" << name;
     exit( -1 );
   }
@@ -67,7 +67,7 @@ void MakeTest::configureDBusIface(const QString &name,const QString &dir)
   configIface->call( "setPath", dir );
   configIface->call( "setReadOnly", true );
 
-  if( !configIface->isValid())
+  if ( !configIface->isValid())
     qFatal( "Could not configure instance %s.", qPrintable( currentInstance.identifier() ) );
 }
 

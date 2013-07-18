@@ -30,7 +30,7 @@ typedef SpecialMailCollectionsSettings Settings;
 SpecialMailCollectionsTesting *SpecialMailCollectionsTesting::_t_self()
 {
   static SpecialMailCollectionsTesting *instance = 0;
-  if( !instance ) {
+  if ( !instance ) {
     instance = new SpecialMailCollectionsTesting;
   }
   return instance;

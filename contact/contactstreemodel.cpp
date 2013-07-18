@@ -95,8 +95,8 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
     } else if ( ( role == Qt::DisplayRole ) || ( role == Qt::EditRole ) ) {
       switch ( d->mColumns.at( column ) ) {
         case FullName:
-          if( contact.realName().isEmpty() ) {
-            if( contact.preferredEmail().isEmpty() ) {
+          if ( contact.realName().isEmpty() ) {
+            if ( contact.preferredEmail().isEmpty() ) {
               return contact.familyName();
             }
             return contact.preferredEmail();

@@ -868,7 +868,7 @@ KAction* StandardMailActionManager::createAction( Type type )
 KAction* StandardMailActionManager::createAction( StandardActionManager::Type type )
 {
   KAction *act = d->mGenericManager->action(type);
-  if(!act )
+  if (!act )
     act = d->mGenericManager->createAction( type );
   d->updateGenericAction(type);
   return act;

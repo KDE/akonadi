@@ -363,7 +363,7 @@ bool MonitorPrivate::ensureDataAvailable( const NotificationMessageV2& msg )
 
       QSet<QByteArray> changedParts = msg.itemParts();
       Q_FOREACH( const QByteArray &part, changedParts )  {
-        if( part.startsWith( "PLD:" ) && //krazy:exclude=strings since QByteArray
+        if ( part.startsWith( "PLD:" ) && //krazy:exclude=strings since QByteArray
             ( fullPayloadWasRequested || requestedPayloadParts.contains( part ) ) ) {
           scope.fetchPayloadPart( part.mid(4), true );;
         }

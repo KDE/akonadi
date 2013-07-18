@@ -103,7 +103,7 @@ void MailClient::mailAttendees( const KCalCore::IncidenceBase::Ptr &incidence,
       toList << tname;
     }
   }
-  if( toList.isEmpty() && ccList.isEmpty() ) {
+  if ( toList.isEmpty() && ccList.isEmpty() ) {
     // Not really to be called a groupware meeting, eh
     kWarning() << "There are really no attendees to e-mail";
     emit finished( ResultReallyNoAttendees, i18n( "There are no attendees to e-mail" ) );
@@ -276,7 +276,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   message->from()->fromUnicodeString( from, "utf-8" );
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
-  if( bccMe ) {
+  if ( bccMe ) {
     message->bcc()->fromUnicodeString( from, "utf-8" ); //from==me, right?
   }
   message->date()->setDateTime( KDateTime::currentLocalDateTime() );
@@ -355,13 +355,13 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   qjob->addressAttribute().setFrom( finalFrom );
 
   QStringList toStringList;
-  if( !to.isEmpty() ) {
+  if ( !to.isEmpty() ) {
     toStringList = extractEmailAndNormalize( to );
     qjob->addressAttribute().setTo( toStringList );
   }
 
   QStringList ccStringList;
-  if( !cc.isEmpty() ) {
+  if ( !cc.isEmpty() ) {
     ccStringList = extractEmailAndNormalize( cc );
     qjob->addressAttribute().setCc( ccStringList );
   }
