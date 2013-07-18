@@ -28,6 +28,8 @@
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 
+class FetchHelperTest;
+
 namespace Akonadi {
 
 class AkonadiConnection;
@@ -77,6 +79,8 @@ class FetchHelper : public QObject
     bool mRemoteRevisionRequested;
     bool mIgnoreErrors;
     QDateTime mChangedSince;
+
+    friend class ::FetchHelperTest;
 };
 
 }
