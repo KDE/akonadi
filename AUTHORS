@@ -1,3 +1,6 @@
+Maintainer:
+- Dan Vrátil <dvratil@redhat.com>
+
 Main Authors:
 - Volker Krause <vkrause@kde.org>
 - Till Adam <adam@kde.org>
@@ -5,16 +8,78 @@ Main Authors:
 - Kevin Krammer <kevin.krammer@gmx.at>
 
 Contributors:
+- Albert Astals Cid <aacid@kde.org>
+- Alex Merry <kde@randomguy3.me.uk>
 - Alexander Neundorf <neundorf@kde.org>
 - Allen Winter <winter@kde.org>
+- Andras Mantia <amantia@kde.org>
+- Andreas Cord-Landwehr <cola@uni-paderborn.de>
 - Andreas Gungl <a.gungl@gmx.de>
+- Andreas Hartmetz <ahartmetz@gmail.com>
+- Andreas Holzammer <andreas.holzammer@kdab.com>
+- Andreas Pakulat <apaku@gmx.de>
+- Andre Heinecke <aheinecke@intevation.de>
+- Aurélien Gâteau <agateau@kde.org>
+- Bertjan Broeksema <broeksema@kde.org>
+- Bjoern Ricks <bjoern.ricks@googlemail.com>
+- Carlo Segato <brandon.ml@gmail.com>
+- Christian Ehrlicher <Ch.Ehrlicher@gmx.de>
+- Christian Mollekopf <chrigi_1@fastmail.fm>
 - Christian Schaarschmidt <schaarsc@gmx.de>
+- Christophe Giboudeaux <cgiboudeaux@gmail.com>
+- Constantin Berzan <exit3219@gmail.com>
+- Dario Freddi <drf@kde.org>
 - David Faure <faure@kde.org>
+- David Jarvie <djarvie@kde.org>
+- Dirk Mueller <mueller@kde.org>
+- Frank Osterfeld <frank.osterfeld@kdemail.net>
+- Grégory Oestreicher <greg@kamago.net>
+- Gregory Schlomoff <gregory.schlomoff@gmail.com>
+- Guy Maurel <guy-kde@maurel.de>
+- Harald Fernengel <harry@kdevelop.org>
+- Helio Chissini de Castro <helio@kde.org>
+- Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
 - Ingo Kloecker <kloecker@kde.org>
+- Jaime Torres <jtamate@gmail.com>
+- Jakub Stachowski <qbast@go2.pl>
+- Jesper Thomschütz <jesperht@yahoo.com>
+- Jesse Lee Zamora <xtremek2008@aim.com>
+- Kevin Ottens <ervin@kde.org>
 - Kitware, Inc., Insight Consortium.
 - Laurent Montel <montel@kde.org>
+- Leo Franchi <lfranchi@kde.org>
+- Loic Marteau <loic.marteau@gmail.com>
+- Manolo Valdes <nolis71cu@gmail.com>
+- Marc Mutz <mutz@kde.org>
+- Marco Martin <notmart@gmail.com>
 - Matthias Kretz <kretz@kde.org>
+- Michael Drueing <michael@drueing.de>
+- Michael Jansen <kde@michael-jansen.biz>
+- Mike Arthur <mike@mikemcquaid.com>
+- Milian Wolff <mail@milianw.de>
+- Mirko Boehm <mirko@kde.org>
+- Nicolás Alvarez <nicolas.alvarez@gmail.com>
+- Nicolas Lécureuil <nlecureuil@mandriva.com>
+- Olivier Trichet <nive@nivalis.org>
+- Patrick Spendrin <ps_ml@gmx.de>
+- Pavel Heimlich <tropikhajma@gmail.com>
 - Pino Toscano <toscano.pino@tiscali.it>
+- Raphael Kubo da Costa <rakuco@FreeBSD.org>
+- Rex Dieter <rdieter@math.unl.edu>
 - Robert Zwerus <arzie@dds.nl>
+- Rolf Eike Beer <eike-kernel@sf-tec.de>
+- Romain Pokrzywka <romain@kdab.net>
+- Sebastian Sauer <mail@dipe.org>
+- Sebastian Trueg <sebastian@trueg.de>
+- Sergio Martins <iamsergio@gmail.com>
+- Shaheed Haque <srhaque@theiet.org>
+- Stephen Kelly <steveire@gmail.com>
+- Szymon Stefanek <pragma@kvirc.net>
+- Thomas Friedrichsmeier <thomas.friedrichsmeier@ruhr-uni-bochum.de>
+- Thomas McGuire <mcguire@kde.org>
 - Timo Hummel <timo.hummel@sap.com>
+- Tom Albers <toma@kde.org>
+- Torgny Nyblom <kde@nyblom.org>
 - Will Stephenson <wstephenson@kde.org>
+- Wolfgang Rohdewald <wolfgang@rohdewald.de>
+- Yury G. Kudryashov <urkud.urkud@gmail.com>
