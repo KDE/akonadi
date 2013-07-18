@@ -294,7 +294,7 @@ bool Store::parseStream()
           //the actual streaming code for the remaining parts:
           // reads from the parser, writes immediately to the file
           // ### move this entire block to part helper? should be useful for append as well
-          const QString fileName = QString::fromUtf8( part.data() );
+          const QString fileName = PartHelper::resolveAbsolutePath( part.data() );
           QFile file( fileName );
           if ( file.open( QIODevice::WriteOnly | QIODevice::Append ) ) {
             while ( !m_streamParser->atLiteralEnd() ) {

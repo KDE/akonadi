@@ -167,11 +167,9 @@ bool Append::commit()
     if (storeInFile) {
       //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
       //client knows about the item yet
-      QString fileName = QString::fromUtf8( parts[0].data() );
-      QFile f( fileName );
-      if ( !f.remove() ) {
-        return failureResponse( "Unable to remove item part file" );
-      }
+      PartHelper::remove( &parts[0] );
+
+      QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
       if ( !tmpFile.copy( fileName ) ) {
         return failureResponse( "Unable to copy item part data from the temporary file" );
       }

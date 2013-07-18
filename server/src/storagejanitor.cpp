@@ -24,6 +24,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
+#include "storage/parthelper.h"
 #include "resourcemanager.h"
 #include "entities.h"
 
@@ -364,7 +365,7 @@ void StorageJanitor::verifyExternalParts()
   qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   qb.exec();
   while ( qb.query().next() ) {
-    const QString partPath = qb.query().value( 0 ).toString();
+    QString partPath = PartHelper::resolveAbsolutePath( qb.query().value( 0 ).toByteArray() );
     const Entity::Id pimItemId = qb.query().value( 1 ).value<Entity::Id>();
     const Entity::Id id = qb.query().value( 2 ).value<Entity::Id>();
     if ( existingFiles.contains( partPath ) ) {
