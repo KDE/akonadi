@@ -1644,7 +1644,7 @@ QList<Node*>::iterator EntityTreeModelPrivate::removeItems( QList<Node*>::iterat
 
   QList<Node *> &es = m_childEntities[ collection.id() ];
   //NOTE: .erase will invalidate all iterators besides "it"!
-  for(int i = 0; i < toDelete; ++i) {
+  for (int i = 0; i < toDelete; ++i) {
     Q_ASSERT(es.count(*it) == 1);
     // don't keep implicitly shared data alive
     Q_ASSERT(m_items.contains((*it)->id));

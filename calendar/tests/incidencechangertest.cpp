@@ -397,7 +397,7 @@ class IncidenceChangerTest : public QObject
       }
 
       int changeId = -1;
-      for( int i=0; i<numberOfModifications; ++i ) {
+      for ( int i=0; i<numberOfModifications; ++i ) {
         Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
         Q_ASSERT( incidence );
         incidence->setSummary( QString::number( i ) );
@@ -738,7 +738,7 @@ class IncidenceChangerTest : public QObject
         mIncidencesToAdd = 0;
         mIncidencesToModify = 0;
         mIncidencesToDelete = 0;
-        for( int i=0; i<items.count(); ++i ) {
+        for ( int i=0; i<items.count(); ++i ) {
           mCollection.setRights( rights[i] );
           mChanger->setDefaultCollection( mCollection );
           const Akonadi::Item item = items[i];
@@ -775,7 +775,7 @@ class IncidenceChangerTest : public QObject
         waitForSignals();
 
         //Validate:
-        for( int i=0; i<items.count(); ++i ) {
+        for ( int i=0; i<items.count(); ++i ) {
           const bool expectedSuccess = ( expectedResults[i] == IncidenceChanger::ResultCodeSuccess );
           mCollection.setRights( rights[i] );
 

@@ -254,7 +254,7 @@ void StatisticsProxyModel::Private::sourceLayoutChanged()
 
   const int columnCount = mParent->sourceModel()->columnCount();
 
-  for( int i = 0; i < m_persistent.size(); ++i ) {
+  for ( int i = 0; i < m_persistent.size(); ++i ) {
     const QModelIndex persistentIdx = m_persistent.at( i );
     const QModelIndex nonPersistentIdx = m_nonPersistent.at( i );
     if ( m_persistentFirstColumn.at( i ) != m_nonPersistentFirstColumn.at( i ) && persistentIdx.column() >= columnCount ) {

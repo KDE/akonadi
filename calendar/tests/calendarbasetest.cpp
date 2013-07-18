@@ -87,7 +87,7 @@ class CalendarBaseTest : public QObject
     {
       mExpectedSlotResult = true;
 
-      for( int i=0; i<5; ++i ) {
+      for ( int i=0; i<5; ++i ) {
         Event::Ptr event = Event::Ptr( new Event() );
         event->setUid( QLatin1String( "event" ) + QString::number( i ) );
         event->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
@@ -98,7 +98,7 @@ class CalendarBaseTest : public QObject
       }
       mOneEventUid = mUids.last();
 
-      for( int i=0; i<5; ++i ) {
+      for ( int i=0; i<5; ++i ) {
         Todo::Ptr todo = Todo::Ptr( new Todo() );
         todo->setUid( QLatin1String( "todo" ) + QString::number( i ) );
         todo->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
@@ -109,7 +109,7 @@ class CalendarBaseTest : public QObject
       }
       mOneTodoUid = mUids.last();
 
-      for( int i=0; i<5; ++i ) {
+      for ( int i=0; i<5; ++i ) {
         Journal::Ptr journal = Journal::Ptr( new Journal() );
         journal->setUid( QLatin1String( "journal" ) + QString::number( i ) );
         journal->setSummary( QLatin1String( "summary" ) + QString::number( i ) );
@@ -120,7 +120,7 @@ class CalendarBaseTest : public QObject
       }
       mOneJournalUid = mUids.last();
 
-      for( int i=0; i<5; ++i ) {
+      for ( int i=0; i<5; ++i ) {
         Incidence::Ptr incidence = Incidence::Ptr( new Event() );
         incidence->setUid( QLatin1String( "incidence" ) + QString::number( i ) );
         incidence->setSummary( QLatin1String( "summary" ) + QString::number( i ) );

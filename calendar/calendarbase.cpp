@@ -186,7 +186,7 @@ void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
   /*
   QHash<Item::Id, Item>::iterator i;
   Item::List incidences;
-  for( i = mItemById.begin(); i != mItemById.end(); ++i ) {
+  for ( i = mItemById.begin(); i != mItemById.end(); ++i ) {
     if ( i.value().payload<KCalCore::Incidence::Ptr>()->mimeType() == mimeType )
       incidences.append( i.value() );
   }

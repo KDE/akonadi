@@ -371,7 +371,7 @@ private Q_SLOTS:
       mChanger->setDestinationPolicy( IncidenceChanger::DestinationPolicyNeverAsk );
       mChanger->startAtomicOperation();
 
-      for( int i=0; i<items.count(); ++i ) {
+      for ( int i=0; i<items.count(); ++i ) {
         const Akonadi::Item item = items[i];
         int changeId = -1;
         switch( changeTypes[i] ) {
@@ -419,7 +419,7 @@ private Q_SLOTS:
       QCOMPARE( mHistory->redoCount(), 1 );
 
       // Verify that it got undone
-      for( int i=0; i<items.count(); ++i ) {
+      for ( int i=0; i<items.count(); ++i ) {
         const Akonadi::Item item = items[i];
         switch( changeTypes[i] ) {
           case IncidenceChanger::ChangeTypeCreate:

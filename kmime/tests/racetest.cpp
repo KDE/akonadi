@@ -93,7 +93,7 @@ void RaceTest::testMultipleProcesses()
 
   QSignalSpy *errorSpy[ MAXCOUNT ];
   QSignalSpy *finishedSpy[ MAXCOUNT ];
-  for( int i = 0; i < count; i++ ) {
+  for ( int i = 0; i < count; i++ ) {
     kDebug() << "Starting process" << i + 1 << "of" << count;
     KProcess *proc = new KProcess;
     procs.append( proc );
@@ -113,7 +113,7 @@ void RaceTest::testMultipleProcesses()
 
     error = 0;
     finished = 0;
-    for( int i = 0; i < count; i++ ) {
+    for ( int i = 0; i < count; i++ ) {
       if ( errorSpy[i]->count() > 0 )
         error++;
       if ( finishedSpy[i]->count() > 0 )
@@ -136,7 +136,7 @@ void RaceTest::testMultipleProcesses()
 
   QCOMPARE( error, 0 );
   QCOMPARE( finished, count );
-  for( int i = 0; i < count; i++ ) {
+  for ( int i = 0; i < count; i++ ) {
     kDebug() << "Checking exit status of process" << i + 1 << "of" << count;
     QCOMPARE( finishedSpy[i]->count(), 1 );
     QList<QVariant> args = finishedSpy[i]->takeFirst();
