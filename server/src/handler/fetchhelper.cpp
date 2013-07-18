@@ -203,17 +203,17 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   QStringList partList, payloadList;
   Q_FOREACH( const QByteArray &b, mRequestedParts ) {
     // filter out non-part attributes
-    if ( b == "REV" || b == "FLAGS" || b == "UID" || b == "REMOTEID" )
+    if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_FLAGS || b == AKONADI_PARAM_UID || b == AKONADI_PARAM_REMOTEID )
       continue;
-    if ( b == "SIZE" ) {
+    if ( b == AKONADI_PARAM_SIZE ) {
       mSizeRequested = true;
       continue;
     }
-    if ( b == "DATETIME" ) {
+    if ( b == AKONADI_PARAM_MTIME ) {
       mMTimeRequested = true;
       continue;
     }
-    if ( b == "REMOTEREVISION" ) {
+    if ( b == AKONADI_PARAM_REMOTEREVISION ) {
       mRemoteRevisionRequested = true;
       continue;
     }
@@ -265,7 +265,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
   // build flag query if needed
   QSqlQuery flagQuery;
-  if ( mRequestedParts.contains( "FLAGS" ) ) {
+  if ( mRequestedParts.contains( AKONADI_PARAM_FLAGS ) ) {
     flagQuery = buildFlagQuery();
   }
 
@@ -297,10 +297,10 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     if ( mRemoteRevisionRequested ) {
       const QByteArray rrev = Utils::variantToByteArray( itemQuery.value( ItemQueryRemoteRevisionColumn ) );
       if ( !rrev.isEmpty() )
-        attributes.append( "REMOTEREVISION " + ImapParser::quote( rrev ) );
+        attributes.append( AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( rrev ) );
     }
 
-    if ( mRequestedParts.contains( "FLAGS" ) ) {
+    if ( mRequestedParts.contains( AKONADI_PARAM_FLAGS ) ) {
       QList<QByteArray> flags;
       while ( flagQuery.isValid() ) {
         const qint64 id = flagQuery.value( FlagQueryIdColumn ).toLongLong();
