@@ -51,22 +51,23 @@ class FetchHelper : public QObject
     void responseAvailable( const Akonadi::Response& );
 
   private:
-    void init();
     void updateItemAccessTime();
     void triggerOnDemandFetch();
     QSqlQuery buildItemQuery();
-    QSqlQuery buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs );
+    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
     QSqlQuery buildFlagQuery();
     void parseCommandStream();
+    void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
-    static bool needsAccessTimeUpdate(const QStringList &parts);
+    static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
 
   private:
     ImapStreamParser *mStreamParser;
 
     AkonadiConnection *mConnection;
     Scope mScope;
-    QList<QByteArray> mRequestedParts;
+    QVector<QByteArray> mRequestedParts;
+    QStringList mRequestedPayloads;
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     int mAncestorDepth;
     bool mCacheOnly;
@@ -78,6 +79,7 @@ class FetchHelper : public QObject
     bool mExternalPayloadSupported;
     bool mRemoteRevisionRequested;
     bool mIgnoreErrors;
+    bool mFlagsRequested;
     QDateTime mChangedSince;
 
     friend class ::FetchHelperTest;

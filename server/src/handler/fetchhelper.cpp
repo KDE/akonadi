@@ -47,24 +47,22 @@
 
 using namespace Akonadi;
 
-FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
-  : mConnection( connection ), mScope( scope )
+FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
+  mStreamParser( 0 ),
+  mConnection( connection ),
+  mScope( scope ),
+  mAncestorDepth( 0 ),
+  mCacheOnly( false ),
+  mCheckCachedPayloadPartsOnly( false ),
+  mFullPayload( false ),
+  mAllAttrs( false ),
+  mSizeRequested( false ),
+  mMTimeRequested( false ),
+  mExternalPayloadSupported( false ),
+  mRemoteRevisionRequested( false ),
+  mIgnoreErrors( false ),
+  mFlagsRequested( false )
 {
-  init();
-}
-
-void FetchHelper::init()
-{
-  mAncestorDepth = 0;
-  mCacheOnly = false;
-  mCheckCachedPayloadPartsOnly = false;
-  mFullPayload = false;
-  mAllAttrs = false;
-  mSizeRequested = false;
-  mMTimeRequested = false;
-  mExternalPayloadSupported = false;
-  mRemoteRevisionRequested = false;
-  mIgnoreErrors = false;
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -80,7 +78,7 @@ enum PartQueryColumns {
   PartQueryVersionColumn
 };
 
-QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayload, bool allAttrs )
+QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs )
 {
   ///TODO: merge with ItemQuery
   QueryBuilder partQuery( PimItem::tableName() );
@@ -96,8 +94,13 @@ QSqlQuery FetchHelper::buildPartQuery( const QStringList &partList, bool allPayl
     partQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
     Query::Condition cond( Query::Or );
-    if ( !partList.isEmpty() )
-      cond.addValueCondition( Part::nameFullColumnName(), Query::In, partList );
+    if ( !partList.isEmpty() ) {
+      QStringList partNameList;
+      partNameList.reserve( partList.size() );
+      Q_FOREACH ( const QByteArray &b, partList )
+        partNameList.push_back( QString::fromLatin1( b ) );
+      cond.addValueCondition( Part::nameFullColumnName(), Query::In, partNameList );
+    }
     if ( allPayload )
       cond.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
     if ( allAttrs )
@@ -200,34 +203,12 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   triggerOnDemandFetch();
 
   // retrieve missing parts
-  QStringList partList, payloadList;
-  Q_FOREACH( const QByteArray &b, mRequestedParts ) {
-    // filter out non-part attributes
-    if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_FLAGS || b == AKONADI_PARAM_UID || b == AKONADI_PARAM_REMOTEID )
-      continue;
-    if ( b == AKONADI_PARAM_SIZE ) {
-      mSizeRequested = true;
-      continue;
-    }
-    if ( b == AKONADI_PARAM_MTIME ) {
-      mMTimeRequested = true;
-      continue;
-    }
-    if ( b == AKONADI_PARAM_REMOTEREVISION ) {
-      mRemoteRevisionRequested = true;
-      continue;
-    }
-    partList << QString::fromLatin1( b );
-    if ( b.startsWith( "PLD:" ) )
-      payloadList << QString::fromLatin1( b );
-  }
-
   if ( !mCacheOnly ) {
     // Prepare for a call to ItemRetriever::exec();
     // From a resource perspective the only parts that can be fetched are payloads.
     ItemRetriever retriever( mConnection );
     retriever.setScope( mScope );
-    retriever.setRetrieveParts( payloadList );
+    retriever.setRetrieveParts( mRequestedPayloads );
     retriever.setRetrieveFullPayload( mFullPayload );
     if ( !retriever.exec() && !mIgnoreErrors ) { // There we go, retrieve the missing parts from the resource.
       if (mConnection->resourceContext().isValid())
@@ -259,13 +240,13 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
   // build part query if needed
   QSqlQuery partQuery;
-  if ( !partList.isEmpty() || mFullPayload || mAllAttrs ) {
-    partQuery = buildPartQuery( partList, mFullPayload, mAllAttrs );
+  if ( !mRequestedParts.isEmpty() || mFullPayload || mAllAttrs ) {
+    partQuery = buildPartQuery( mRequestedParts, mFullPayload, mAllAttrs );
   }
 
   // build flag query if needed
   QSqlQuery flagQuery;
-  if ( mRequestedParts.contains( AKONADI_PARAM_FLAGS ) ) {
+  if ( mFlagsRequested ) {
     flagQuery = buildFlagQuery();
   }
 
@@ -300,7 +281,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         attributes.append( AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( rrev ) );
     }
 
-    if ( mRequestedParts.contains( AKONADI_PARAM_FLAGS ) ) {
+    if ( mFlagsRequested ) {
       QList<QByteArray> flags;
       while ( flagQuery.isValid() ) {
         const qint64 id = flagQuery.value( FlagQueryIdColumn ).toLongLong();
@@ -401,19 +382,19 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
 
   // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
-  if ( needsAccessTimeUpdate(partList) || mFullPayload )
+  if ( needsAccessTimeUpdate(mRequestedParts) || mFullPayload )
     updateItemAccessTime();
 
   return true;
 }
 
-bool FetchHelper::needsAccessTimeUpdate(const QStringList& parts)
+bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray>& parts)
 {
   // TODO technically we should compare the part list with the cache policy of
   // the parent collection of the retrieved items, but that's kinda expensive
   // Only updating the atime if the full payload was requested is a good
   // approximation though.
-  return parts.contains( QLatin1String("PLD:RFC822") );
+  return parts.contains( "PLD:RFC822" );
 }
 
 void FetchHelper::updateItemAccessTime()
@@ -450,13 +431,14 @@ void FetchHelper::triggerOnDemandFetch()
 
 void FetchHelper::parseCommandStream()
 {
+  Q_ASSERT( mStreamParser );
+
   // macro vs. attribute list
   Q_FOREVER {
     if ( mStreamParser->atCommandEnd() )
       break;
     if ( mStreamParser->hasList() ) {
-      QList<QByteArray> tmp = mStreamParser->readParenthesizedList();
-      mRequestedParts += tmp;
+      parsePartList();
       break;
     } else {
       const QByteArray buffer = mStreamParser->readString();
@@ -484,6 +466,30 @@ void FetchHelper::parseCommandStream()
       } else {
         throw HandlerException( "Invalid command argument" );
       }
+    }
+  }
+}
+
+void FetchHelper::parsePartList()
+{
+  mStreamParser->beginList();
+  while ( !mStreamParser->atListEnd() ) {
+    const QByteArray b = mStreamParser->readString();
+    // filter out non-part attributes we send all the time
+    if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_UID || b == AKONADI_PARAM_REMOTEID ) {
+      continue;
+    } else if ( b == AKONADI_PARAM_FLAGS ) {
+      mFlagsRequested = true;
+    } else if ( b == AKONADI_PARAM_SIZE ) {
+      mSizeRequested = true;
+    } else if ( b == AKONADI_PARAM_MTIME ) {
+      mMTimeRequested = true;
+    } else if ( b == AKONADI_PARAM_REMOTEREVISION ) {
+      mRemoteRevisionRequested = true;
+    } else {
+      mRequestedParts.push_back( b );
+      if ( b.startsWith( "PLD:" ) )
+        mRequestedPayloads.push_back( QString::fromLatin1( b ) );
     }
   }
 }

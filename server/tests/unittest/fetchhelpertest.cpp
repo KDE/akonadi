@@ -43,17 +43,17 @@ class FetchHelperTest : public QObject
 
       fh.parseCommandStream();
 
-//      QVERIFY(fh.mRemoteRevisionRequested);
-//      QVERIFY(fh.mSizeRequested);
+      QVERIFY(fh.mRemoteRevisionRequested);
+      QVERIFY(fh.mSizeRequested);
       QVERIFY(fh.mCacheOnly);
       QVERIFY(fh.mExternalPayloadSupported);
       QCOMPARE(fh.mAncestorDepth, 42);
       QCOMPARE(fh.mChangedSince.toTime_t(), 1374150376u);
       QVERIFY(fh.mIgnoreErrors);
       QVERIFY(!fh.mFullPayload);
-//      QCOMPARE(fh.mRequestedParts.size(), 2);
+      QCOMPARE(fh.mRequestedParts.size(), 2);
       QVERIFY(!fh.mAllAttrs);
-//      QVERIFY(fh.mMTimeRequested);
+      QVERIFY(fh.mMTimeRequested);
     }
 };
 
