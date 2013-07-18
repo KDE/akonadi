@@ -54,6 +54,7 @@ class FetchHelperTest : public QObject
       QCOMPARE(fh.mRequestedParts.size(), 2);
       QVERIFY(!fh.mAllAttrs);
       QVERIFY(fh.mMTimeRequested);
+      QVERIFY(fh.mRemoteIdRequested);
     }
 };
 

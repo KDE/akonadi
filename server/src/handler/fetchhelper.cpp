@@ -61,7 +61,8 @@ FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
   mExternalPayloadSupported( false ),
   mRemoteRevisionRequested( false ),
   mIgnoreErrors( false ),
-  mFlagsRequested( false )
+  mFlagsRequested( false ),
+  mRemoteIdRequested( false )
 {
 }
 
@@ -260,7 +261,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemRidColumn ) ) ) );
+    if ( mRemoteIdRequested )
+      attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemRidColumn ) ) ) );
     attributes.append( "MIMETYPE " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryMimeTypeColumn ) ) ) );
     Collection::Id parentCollectionId = itemQuery.value( ItemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
@@ -476,8 +478,10 @@ void FetchHelper::parsePartList()
   while ( !mStreamParser->atListEnd() ) {
     const QByteArray b = mStreamParser->readString();
     // filter out non-part attributes we send all the time
-    if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_UID || b == AKONADI_PARAM_REMOTEID ) {
+    if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_UID ) {
       continue;
+    } else if ( b == AKONADI_PARAM_REMOTEID ) {
+      mRemoteIdRequested = true;
     } else if ( b == AKONADI_PARAM_FLAGS ) {
       mFlagsRequested = true;
     } else if ( b == AKONADI_PARAM_SIZE ) {

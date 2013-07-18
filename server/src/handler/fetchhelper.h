@@ -80,6 +80,7 @@ class FetchHelper : public QObject
     bool mRemoteRevisionRequested;
     bool mIgnoreErrors;
     bool mFlagsRequested;
+    bool mRemoteIdRequested;
     QDateTime mChangedSince;
 
     friend class ::FetchHelperTest;
