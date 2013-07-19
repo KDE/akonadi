@@ -120,18 +120,6 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
   return partQuery.query();
 }
 
-enum ItemQueryColumns {
-  ItemQueryPimItemIdColumn,
-  ItemQueryPimItemRidColumn,
-  ItemQueryMimeTypeColumn,
-  ItemQueryResourceColumn,
-  ItemQueryRevColumn,
-  ItemQueryRemoteRevisionColumn,
-  ItemQuerySizeColumn,
-  ItemQueryDatetimeColumn,
-  ItemQueryCollectionIdColumn
-};
-
 QSqlQuery FetchHelper::buildItemQuery()
 {
   QueryBuilder itemQuery( PimItem::tableName() );
@@ -255,30 +243,30 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   Response response;
   response.setUntagged();
   while ( itemQuery.isValid() ) {
-    const qint64 pimItemId = itemQuery.value( ItemQueryPimItemIdColumn ).toLongLong();
-    const int pimItemRev = itemQuery.value( ItemQueryRevColumn ).toInt();
+    const qint64 pimItemId = extractQueryResult( itemQuery, ItemQueryPimItemIdColumn ).toLongLong();
+    const int pimItemRev = extractQueryResult( itemQuery, ItemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
     attributes.append( "UID " + QByteArray::number( pimItemId ) );
     attributes.append( "REV " + QByteArray::number( pimItemRev ) );
     if ( mRemoteIdRequested )
-      attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemRidColumn ) ) ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( Utils::variantToByteArray( itemQuery.value( ItemQueryMimeTypeColumn ) ) ) );
-    Collection::Id parentCollectionId = itemQuery.value( ItemQueryCollectionIdColumn ).toLongLong();
+      attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryPimItemRidColumn ) ) ) );
+    attributes.append( "MIMETYPE " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryMimeTypeColumn ) ) ) );
+    Collection::Id parentCollectionId = extractQueryResult( itemQuery, ItemQueryCollectionIdColumn ).toLongLong();
     attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
 
     if ( mSizeRequested ) {
-      const qint64 pimItemSize = itemQuery.value( ItemQuerySizeColumn ).toLongLong();
+      const qint64 pimItemSize = extractQueryResult( itemQuery, ItemQuerySizeColumn ).toLongLong();
       attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
     }
     if ( mMTimeRequested ) {
-      const QDateTime pimItemDatetime = itemQuery.value( ItemQueryDatetimeColumn ).toDateTime();
+      const QDateTime pimItemDatetime = extractQueryResult( itemQuery, ItemQueryDatetimeColumn ).toDateTime();
       // Date time is always stored in UTC time zone by the server.
       QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
       attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
-      const QByteArray rrev = Utils::variantToByteArray( itemQuery.value( ItemQueryRemoteRevisionColumn ) );
+      const QByteArray rrev = Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryRemoteRevisionColumn ) );
       if ( !rrev.isEmpty() )
         attributes.append( AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( rrev ) );
     }
@@ -515,4 +503,9 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   }
   mAncestorCache.insert( parentColId, ancestors );
   return ancestors;
+}
+
+QVariant FetchHelper::extractQueryResult(const QSqlQuery& query, FetchHelper::ItemQueryColumns column)
+{
+  return query.value(column);
 }

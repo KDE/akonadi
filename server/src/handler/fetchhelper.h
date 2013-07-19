@@ -51,6 +51,19 @@ class FetchHelper : public QObject
     void responseAvailable( const Akonadi::Response& );
 
   private:
+    enum ItemQueryColumns {
+      ItemQueryPimItemIdColumn,
+      ItemQueryPimItemRidColumn,
+      ItemQueryMimeTypeColumn,
+      ItemQueryResourceColumn,
+      ItemQueryRevColumn,
+      ItemQueryRemoteRevisionColumn,
+      ItemQuerySizeColumn,
+      ItemQueryDatetimeColumn,
+      ItemQueryCollectionIdColumn,
+      ItemQueryColumnCount
+    };
+
     void updateItemAccessTime();
     void triggerOnDemandFetch();
     QSqlQuery buildItemQuery();
@@ -60,6 +73,7 @@ class FetchHelper : public QObject
     void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
+    static QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column);
 
   private:
     ImapStreamParser *mStreamParser;
