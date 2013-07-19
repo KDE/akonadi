@@ -73,7 +73,7 @@ class FetchHelper : public QObject
     void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
-    static QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column);
+    QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
 
   private:
     ImapStreamParser *mStreamParser;
@@ -96,6 +96,7 @@ class FetchHelper : public QObject
     bool mFlagsRequested;
     bool mRemoteIdRequested;
     QDateTime mChangedSince;
+    int mItemQueryColumnMap[ItemQueryColumnCount];
 
     friend class ::FetchHelperTest;
 };

@@ -64,6 +64,7 @@ FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
   mFlagsRequested( false ),
   mRemoteIdRequested( false )
 {
+  std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -131,16 +132,18 @@ QSqlQuery FetchHelper::buildItemQuery()
   itemQuery.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
                      Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
-  // make sure the columns indexes here and in the constants defined at the top of the file
-  itemQuery.addColumn( PimItem::idFullColumnName() );
-  itemQuery.addColumn( PimItem::remoteIdFullColumnName() );
-  itemQuery.addColumn( MimeType::nameFullColumnName() );
-  itemQuery.addColumn( Resource::nameFullColumnName() );
-  itemQuery.addColumn( PimItem::revFullColumnName() );
-  itemQuery.addColumn( PimItem::remoteRevisionFullColumnName() );
-  itemQuery.addColumn( PimItem::sizeFullColumnName() );
-  itemQuery.addColumn( PimItem::datetimeFullColumnName() );
-  itemQuery.addColumn( PimItem::collectionIdFullColumnName() );
+  int column = 0;
+  #define ADD_COLUMN(colName, colId) itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = ++column;
+  ADD_COLUMN( PimItem::idFullColumnName(), ItemQueryPimItemIdColumn );
+  ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn );
+  ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn );
+  ADD_COLUMN( Resource::nameFullColumnName(), ItemQueryResourceColumn );
+  ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn );
+  ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn );
+  ADD_COLUMN( PimItem::sizeFullColumnName(), ItemQuerySizeColumn );
+  ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn );
+  ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn );
+  #undef ADD_COLUMN
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
@@ -505,7 +508,8 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   return ancestors;
 }
 
-QVariant FetchHelper::extractQueryResult(const QSqlQuery& query, FetchHelper::ItemQueryColumns column)
+QVariant FetchHelper::extractQueryResult(const QSqlQuery& query, FetchHelper::ItemQueryColumns column) const
 {
-  return query.value(column);
+  Q_ASSERT(mItemQueryColumnMap[column] >= 0);
+  return query.value(mItemQueryColumnMap[column]);
 }
