@@ -20,7 +20,6 @@
 #include "fetchhelper.h"
 
 #include "akdebug.h"
-#include "akonadi.h"
 #include "akonadiconnection.h"
 #include "handler.h"
 #include "handlerhelper.h"
@@ -29,7 +28,6 @@
 #include "libs/protocol_p.h"
 #include "response.h"
 #include "storage/selectquerybuilder.h"
-#include "resourceinterface.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
@@ -43,7 +41,6 @@
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
 #include <QtCore/QDateTime>
-#include <QtCore/QFileInfo>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
@@ -368,10 +365,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         } else {
           if ( partIsExternal ) {
             if ( !mConnection->capabilities().noPayloadPath() ) {
-              QFileInfo fi( QString::fromUtf8( data ) );
-              if ( !fi.isAbsolute() ) {
-                data = QString( PartHelper::storagePath() + QDir::separator() ).toLocal8Bit() + data;
-              }
+              data = PartHelper::resolveAbsolutePath( data ).toLocal8Bit();
             }
           }
 
