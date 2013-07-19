@@ -101,6 +101,14 @@ class PartHelperTest : public QObject
       QVERIFY( PartHelper::storagePath().startsWith( QDir::separator() ) );
       QVERIFY( mainLocation != PartHelper::storagePath() );
     }
+
+    void testResolveAbsolutePath()
+    {
+#ifndef Q_OS_WIN
+      QVERIFY( PartHelper::resolveAbsolutePath("foo").startsWith(QLatin1Char('/')) );
+      QCOMPARE( PartHelper::resolveAbsolutePath("/foo"), QString::fromLatin1("/foo") );
+#endif
+    }
 };
 
 AKTEST_MAIN( PartHelperTest )

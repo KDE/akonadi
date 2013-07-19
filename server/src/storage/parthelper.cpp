@@ -261,7 +261,7 @@ bool PartHelper::verify(Part& part)
 QString PartHelper::resolveAbsolutePath( const QByteArray &data )
 {
     QString fileName = QString::fromUtf8( data );
-    QFileInfo fi;
+    QFileInfo fi( fileName );
     if ( !fi.isAbsolute() ) {
       fileName = storagePath() + QDir::separator() + fileName;
     }
