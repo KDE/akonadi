@@ -133,16 +133,20 @@ QSqlQuery FetchHelper::buildItemQuery()
                      Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
   int column = 0;
-  #define ADD_COLUMN(colName, colId) itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = ++column;
+  #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
   ADD_COLUMN( PimItem::idFullColumnName(), ItemQueryPimItemIdColumn );
-  ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn );
-  ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn );
-  ADD_COLUMN( Resource::nameFullColumnName(), ItemQueryResourceColumn );
-  ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn );
-  ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn );
-  ADD_COLUMN( PimItem::sizeFullColumnName(), ItemQuerySizeColumn );
-  ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn );
-  ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn );
+  if (mRemoteIdRequested)
+    ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn )
+  ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn )
+  ADD_COLUMN( Resource::nameFullColumnName(), ItemQueryResourceColumn )
+  ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn )
+  if (mRemoteRevisionRequested)
+    ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn )
+  if (mSizeRequested)
+    ADD_COLUMN( PimItem::sizeFullColumnName(), ItemQuerySizeColumn )
+  if (mMTimeRequested)
+    ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn )
+  ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn )
   #undef ADD_COLUMN
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
