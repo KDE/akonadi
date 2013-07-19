@@ -127,10 +127,6 @@ QSqlQuery FetchHelper::buildItemQuery()
 
   itemQuery.addJoin( QueryBuilder::InnerJoin, MimeType::tableName(),
                      PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName() );
-  itemQuery.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
-                     PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-  itemQuery.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
-                     Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
   int column = 0;
   #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
@@ -138,7 +134,6 @@ QSqlQuery FetchHelper::buildItemQuery()
   if (mRemoteIdRequested)
     ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn )
   ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn )
-  ADD_COLUMN( Resource::nameFullColumnName(), ItemQueryResourceColumn )
   ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn )
   if (mRemoteRevisionRequested)
     ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn )

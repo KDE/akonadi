@@ -55,7 +55,6 @@ class FetchHelper : public QObject
       ItemQueryPimItemIdColumn,
       ItemQueryPimItemRidColumn,
       ItemQueryMimeTypeColumn,
-      ItemQueryResourceColumn,
       ItemQueryRevColumn,
       ItemQueryRemoteRevisionColumn,
       ItemQuerySizeColumn,
