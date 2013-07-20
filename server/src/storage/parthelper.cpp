@@ -263,7 +263,7 @@ QString PartHelper::resolveAbsolutePath( const QByteArray &data )
     QString fileName = QString::fromUtf8( data );
     QFileInfo fi( fileName );
     if ( !fi.isAbsolute() ) {
-      fileName = storagePath() + QDir::separator() + fileName;
+      fileName = storagePath() + fileName;
     }
 
     return fileName;
