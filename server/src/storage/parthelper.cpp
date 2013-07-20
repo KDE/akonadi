@@ -55,10 +55,10 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     origFileName = QString::fromUtf8( part->data() );
     QFileInfo fi( origFileName );
     if ( fi.isAbsolute() ) {
-      origFileName = fi.fileName();
       origFilePath = origFileName;
+      origFileName = fi.fileName();
     } else if ( !origFileName.isEmpty() ) {
-      origFilePath = storagePath() + QDir::separator() + origFileName;
+      origFilePath = storagePath() + origFileName;
     }
   }
 
@@ -80,7 +80,7 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
     }
     fileName += rev;
 
-    QFile file( storagePath() + QDir::separator() + fileName );
+    QFile file( storagePath() + fileName );
     if ( file.open( QIODevice::WriteOnly | QIODevice::Truncate ) ) {
       if ( file.write( data ) == data.size() ) {
         part->setData( fileName.toLocal8Bit() );
