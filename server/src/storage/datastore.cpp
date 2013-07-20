@@ -407,7 +407,7 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 
   try {
     while ( qb.query().next() )
-      PartHelper::removeFile( QString::fromUtf8( qb.query().value( 0 ).value<QByteArray>() ) );
+      PartHelper::removeFile( PartHelper::resolveAbsolutePath( qb.query().value( 0 ).value<QByteArray>() ) );
   } catch ( const PartHelperException &e ) {
     akDebug() << e.what();
     return false;
