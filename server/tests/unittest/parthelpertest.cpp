@@ -107,6 +107,7 @@ class PartHelperTest : public QObject
 #ifndef Q_OS_WIN
       QVERIFY( PartHelper::resolveAbsolutePath("foo").startsWith(QLatin1Char('/')) );
       QCOMPARE( PartHelper::resolveAbsolutePath("/foo"), QString::fromLatin1("/foo") );
+      QVERIFY( !PartHelper::resolveAbsolutePath("foo").contains(QL1S("//")) ); // no double separator
 #endif
     }
 };
