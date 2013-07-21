@@ -12,7 +12,7 @@
       <arg name='search' type='s' direction='in'/>
     </method>
     <method name='GetHits'>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0"
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0"
                   value="QVector&lt;QList&lt;QVariant> >"/>
       <arg name='search' type='s' direction='in'/>
       <arg name='num' type='u' direction='in'/>
@@ -29,9 +29,9 @@
       <arg name='session' type='s' direction='in'/>
     </method>
     <method name='GetHitData'>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1"
                   value="QList&lt;uint>"/>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.Out0"
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0"
                   value="QVector&lt;QList&lt;QVariant> >"/>
       <arg name='search' type='s' direction='in'/>
       <arg name='hit_ids' type='au' direction='in'/>
@@ -66,13 +66,13 @@
       <arg name='count' type='u'/>
     </signal>
     <signal name='HitsRemoved'>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1"
                   value="QList&lt;uint>"/>
       <arg name='search' type='s'/>
       <arg name='hit_ids' type='au'/>
     </signal>
     <signal name='HitsModified'>
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1"
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1"
                   value="QList&lt;uint>"/>
       <arg name='search' type='s'/>
       <arg name='hit_ids' type='au'/>

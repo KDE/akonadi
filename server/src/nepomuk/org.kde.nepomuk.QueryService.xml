@@ -13,7 +13,7 @@
     <method name="sparqlQuery">
       <arg name="query" type="s" direction="in" />
       <arg name="requestProps" type="a{ss}" direction="in" />
-      <annotation name="com.trolltech.QtDBus.QtTypeName.In1" value="QHash&lt;QString, QString&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QHash&lt;QString, QString&gt;"/>
       <arg name="queryobject" type="o" direction="out" />
     </method>
   </interface>
