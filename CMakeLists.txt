@@ -141,7 +141,7 @@ if(QT5_BUILD)
   set(QT_QTTEST_LIBRARIES Qt5::Test)
 else()
   set(QT_USE_IMPORTED_TARGETS TRUE) # Qt 4 only
-  set(QT_MIN_VERSION 4.6.0)         # Qt 4 only
+  set(QT_MIN_VERSION 4.8.0)         # Qt 4 only
 
   find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})
