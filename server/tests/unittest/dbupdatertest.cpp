@@ -136,5 +136,3 @@ void DbUpdaterTest::cleanupTestCase()
   Q_CLEANUP_RESOURCE( akonadidb_mobile );
 #endif
 }
-
-#include "dbupdatertest.moc"

@@ -170,5 +170,3 @@ QString DbInitializerTest::readNextStatement(QIODevice* io)
 
   return statement;
 }
-
-#include "dbinitializertest.moc"
