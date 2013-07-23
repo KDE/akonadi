@@ -278,7 +278,7 @@ class AKONADI_EXPORT ItemFetchScope
      * modified after @p changedSince timestamp.
      *
      * @param changedSince The timestamp of oldest modified item to fetch
-     * @since 4.12
+     * @since 4.11
      */
     void setFetchChangedSince( const KDateTime &changedSince );
 
