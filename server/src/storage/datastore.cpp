@@ -238,6 +238,7 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
   QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
   qb2.setColumnValue( PimItemFlagRelation::leftColumn(), appendIds );
   qb2.setColumnValue( PimItemFlagRelation::rightColumn(), flagIds );
+  qb2.setIdentificationColumn( QString() );
   if ( !qb2.exec() ) {
     akDebug() << "Failed to execute query:" << qb2.query().lastError();
     return false;
