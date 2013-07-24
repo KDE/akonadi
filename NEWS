@@ -1,3 +1,9 @@
+1.10.1				  22-July-2013
+----------------------------------------------
+- Fix PostgreSQL support
+- Optimize appending flags to items
+- Introduce CHANGEDSINCE parameter to FETCH command
+
 1.10.0                            09-July-2013
 ----------------------------------------------
 - Memory optimizations
