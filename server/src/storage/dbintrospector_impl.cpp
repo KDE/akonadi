@@ -116,6 +116,9 @@ DbIntrospectorVirtuoso::DbIntrospectorVirtuoso(const QSqlDatabase& database): Db
 
 bool DbIntrospectorVirtuoso::hasIndex(const QString& tableName, const QString& indexName)
 {
+  Q_UNUSED(tableName);
+  Q_UNUSED(indexName)
+
   // TODO: Implement index checking for Virtuoso!
   return true;
 }

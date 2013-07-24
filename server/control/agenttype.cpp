@@ -41,6 +41,8 @@ AgentType::AgentType() :
 
 bool AgentType::load(const QString & fileName, AgentManager * manager)
 {
+  Q_UNUSED(manager);
+
   QSettings file( fileName, QSettings::IniFormat );
   file.beginGroup( QLatin1String("Desktop Entry") );
 
