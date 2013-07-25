@@ -359,10 +359,7 @@ set(AKONADI_PROTOCOLINTERNALS_LIBS ${akonadiprotocolinternals_LIB_DEPENDS} akona
 
 add_subdirectory(shared)
 add_subdirectory(agentserver)
-
-if(XSLTPROC_EXECUTABLE)
-  add_subdirectory(server)
-endif()
+add_subdirectory(server)
 
 add_subdirectory(rds)
 if(NOT WIN32)
