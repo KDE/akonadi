@@ -7,8 +7,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/../../src)
 
+akonadi_generate_schema(${CMAKE_CURRENT_SOURCE_DIR}/dbinitializertest_data/unittest_schema.xml UnitTestSchema unittestschema)
+
 macro(add_server_test _source _libs)
-  set(_test ${_source})
+  set(_test ${_source} unittestschema.cpp)
   get_filename_component(_name ${_source} NAME_WE)
   qt4_add_resources(_test dbinitializertest_data/dbinitializertestdata.qrc)
   add_executable(${_name} ${_test})

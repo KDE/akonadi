@@ -25,13 +25,16 @@
 /** Methods to access the desired database schema (@see DbInspector for accessing
     the actual database schema).
  */
-namespace Schema
+class Schema
 {
+public:
+  inline virtual ~Schema() {}
+
   /** List of tables in the schema. */
-  QVector<TableDescription> tables();
+  virtual QVector<TableDescription> tables() = 0;
 
   /** List of relations (N:M helper tables) in the schema. */
-  QVector<RelationDescription> relations();
-}
+  virtual QVector<RelationDescription> relations() = 0;
+};
 
 #endif

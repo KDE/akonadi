@@ -35,6 +35,32 @@ endif()
 include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 
+macro(akonadi_generate_schema _schemaXml _className _fileBaseName)
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.h
+         ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.cpp
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.h
+          --stringparam code header
+          --stringparam className ${_className}
+          --stringparam fileName ${_fileBaseName}
+          ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${_schemaXml}
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.cpp
+          --stringparam code source
+          --stringparam className ${_className}
+          --stringparam fileName ${_fileBaseName}
+          ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${_schemaXml}
+  DEPENDS ${CMAKE_SOURCE_DIR}/server/src/storage/schema.xsl
+          ${CMAKE_SOURCE_DIR}/server/src/storage/schema-header.xsl
+          ${CMAKE_SOURCE_DIR}/server/src/storage/schema-source.xsl
+          ${_schemaXml}
+)
+endmacro()
+
+
 add_subdirectory(akonadictl)
 add_subdirectory(control)
 add_subdirectory(src)
@@ -70,15 +96,7 @@ add_custom_command(
           ${AKONADI_DB_SCHEME}
 )
 
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
-  COMMAND ${XSLTPROC_EXECUTABLE}
-          --output ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/schema.xsl
-          ${AKONADI_DB_SCHEME}
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/schema.xsl
-          ${AKONADI_DB_SCHEME}
-)
+akonadi_generate_schema(${AKONADI_DB_SCHEME} AkonadiSchema akonadischema)
 
 set(libakonadiprivate_SRCS
   src/akonadi.cpp
@@ -124,7 +142,7 @@ set(libakonadiprivate_SRCS
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
-  ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadischema.cpp
   src/storage/datastore.cpp
   src/storage/dbconfig.cpp
   src/storage/dbconfigmysql.cpp

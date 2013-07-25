@@ -19,34 +19,22 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
-<xsl:output method="text" encoding="utf-8"/>
 
-<xsl:include href="schema-header.xsl"/>
-<xsl:include href="schema-source.xsl"/>
+<!-- schema class header template -->
+<xsl:template name="schema-header">
+#ifndef <xsl:value-of select="$className"/>_H
+#define <xsl:value-of select="$className"/>_H
 
-<!-- select wether to generate header or implementation code. -->
-<xsl:param name="code">header</xsl:param>
-<!-- name of the generated schema class -->
-<xsl:param name="className">MySchema</xsl:param>
-<!-- name of the generated file -->
-<xsl:param name="fileName">schema</xsl:param>
+#include "src/storage/schema.h"
 
-<xsl:template match="/">
-/*
- * This is an auto-generated file.
- * Do not edit! All changes made to it will be lost.
- */
+class <xsl:value-of select="$className"/> : public Schema
+{
+  public:
+    QVector&lt;TableDescription&gt; tables() /*override*/;
+    QVector&lt;RelationDescription&gt; relations() /*override*/;
+};
 
-<!-- header generation -->
-<xsl:if test="$code='header'">
-<xsl:call-template name="schema-header"/>
-</xsl:if>
-
-<!-- cpp generation -->
-<xsl:if test="$code='source'">
-<xsl:call-template name="schema-source"/>
-</xsl:if>
-
+#endif
 </xsl:template>
-</xsl:stylesheet>
 
+</xsl:stylesheet>

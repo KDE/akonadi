@@ -138,11 +138,11 @@
     <data columns="name" values="'important'"/>
     <data columns="name" values="'has_attachment'"/>
     <data columns="name" values="'spam'"/>
-    <data columns="name" values="'\ANSWERED'"/>
-    <data columns="name" values="'\FLAGGED'"/>
-    <data columns="name" values="'\DELETED'"/>
-    <data columns="name" values="'\SEEN'"/>
-    <data columns="name" values="'\DRAFT'"/>
+    <data columns="name" values="'\\ANSWERED'"/>
+    <data columns="name" values="'\\FLAGGED'"/>
+    <data columns="name" values="'\\DELETED'"/>
+    <data columns="name" values="'\\SEEN'"/>
+    <data columns="name" values="'\\DRAFT'"/>
   </table>
 
   <table name="Part">
