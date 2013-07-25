@@ -315,6 +315,6 @@ The different parts are laid out as follows:
 
 // DOXYGEN_EXCLUDE = sqlplugin server/control server/akonadictl server/tests
 // DOXYGEN_PROJECTNAME=Akonadi
-// DOXYGEN_PROJECTVERSION=1.10.42
+// DOXYGEN_PROJECTVERSION=1.10.43
 
 // vim:ts=4:sw=4:expandtab:filetype=doxygen
