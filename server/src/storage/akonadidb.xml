@@ -104,11 +104,6 @@
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="name" values="'application/octet-stream'"/>
-    <data columns="name" values="'message/rfc822'"/>
-    <data columns="name" values="'text/calendar'"/>
-    <data columns="name" values="'text/vcard'"/>
-    <data columns="name" values="'inode/directory'"/>
   </table>
 
   <table name="PimItem">
@@ -136,14 +131,6 @@
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="name" values="'important'"/>
-    <data columns="name" values="'has_attachment'"/>
-    <data columns="name" values="'spam'"/>
-    <data columns="name" values="'\ANSWERED'"/>
-    <data columns="name" values="'\FLAGGED'"/>
-    <data columns="name" values="'\DELETED'"/>
-    <data columns="name" values="'\SEEN'"/>
-    <data columns="name" values="'\DRAFT'"/>
   </table>
 
   <table name="Part">
