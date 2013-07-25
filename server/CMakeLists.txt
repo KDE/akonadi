@@ -70,6 +70,16 @@ add_custom_command(
           ${AKONADI_DB_SCHEME}
 )
 
+add_custom_command(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
+          ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/schema.xsl
+          ${AKONADI_DB_SCHEME}
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/schema.xsl
+          ${AKONADI_DB_SCHEME}
+)
+
 set(libakonadiprivate_SRCS
   src/akonadi.cpp
   src/akonadiconnection.cpp
@@ -107,7 +117,6 @@ set(libakonadiprivate_SRCS
   src/handler/status.cpp
   src/handler/store.cpp
   src/handler/transaction.cpp
-
   src/search/agentsearchengine.cpp
   src/search/searchmanager.cpp
   src/search/xesamsearchengine.cpp
@@ -115,6 +124,7 @@ set(libakonadiprivate_SRCS
   src/storage/collectionqueryhelper.cpp
   src/storage/entity.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+  ${CMAKE_CURRENT_BINARY_DIR}/schema.cpp
   src/storage/datastore.cpp
   src/storage/dbconfig.cpp
   src/storage/dbconfigmysql.cpp
