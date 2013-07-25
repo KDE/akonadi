@@ -390,19 +390,6 @@ if(NOT WIN32)
   install(FILES ${Akonadi_BINARY_DIR}/akonadi.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 endif()
 
-############### CPack setup ##################
-
-SET(CPACK_PACKAGE_NAME "akonadi")
-SET(CPACK_PACKAGE_VERSION_MAJOR "${AKONADI_VERSION_MAJOR}")
-SET(CPACK_PACKAGE_VERSION_MINOR "${AKONADI_VERSION_MINOR}")
-SET(CPACK_PACKAGE_VERSION_PATCH "${AKONADI_VERSION_PATCH}")
-
-set(CPACK_SOURCE_GENERATOR "TBZ2")
-set(CPACK_SOURCE_PACKAGE_FILE_NAME "akonadi-${AKONADI_VERSION_MAJOR}.${AKONADI_VERSION_MINOR}.${AKONADI_VERSION_PATCH}")
-set(CPACK_SOURCE_IGNORE_FILES "/\\\\.git/")
-
-include(CPack) # needs to happen after the above variables are set!
-
 
 feature_summary(WHAT ALL
                      INCLUDE_QUIET_PACKAGES
