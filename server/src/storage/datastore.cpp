@@ -35,6 +35,7 @@
 #include "libs/protocol_p.h"
 #include "handler.h"
 #include "collectionqueryhelper.h"
+#include "akonadischema.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -125,8 +126,8 @@ bool Akonadi::DataStore::init()
 {
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
-  const QString dbtemplate = QLatin1String(":akonadidb.xml");
-  DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, dbtemplate );
+  AkonadiSchema schema;
+  DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, &schema );
   if (! initializer->run() ) {
     akError() << initializer->errorMsg();
     return false;

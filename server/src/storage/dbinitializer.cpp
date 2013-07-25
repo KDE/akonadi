@@ -23,6 +23,7 @@
 #include "querybuilder.h"
 #include "dbexception.h"
 #include "shared/akdebug.h"
+#include "schema.h"
 
 #include <QtCore/QDebug>
 #include <QtCore/QFile>
@@ -32,8 +33,6 @@
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlQuery>
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
 #include <QtSql/QSqlError>
 
 #include <boost/bind.hpp>
@@ -41,26 +40,28 @@
 
 using namespace Akonadi;
 
-DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
+DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, Schema *schema)
 {
+  DbInitializer::Ptr i;
   switch ( DbType::type( database ) ) {
     case DbType::MySQL:
-      return boost::shared_ptr<DbInitializer>( new DbInitializerMySql( database, templateFile ) );
+      i.reset( new DbInitializerMySql( database ) ); break;
     case DbType::Sqlite:
-      return boost::shared_ptr<DbInitializer>( new DbInitializerSqlite( database, templateFile ) );
+      i.reset( new DbInitializerSqlite( database ) ); break;
     case DbType::PostgreSQL:
-      return boost::shared_ptr<DbInitializer>( new DbInitializerPostgreSql( database, templateFile ) );
+      i.reset( new DbInitializerPostgreSql( database ) ); break;
     case DbType::Virtuoso:
-      return boost::shared_ptr<DbInitializer>( new DbInitializerVirtuoso( database, templateFile ) );
+      i.reset( new DbInitializerVirtuoso( database ) ); break;
     case DbType::Unknown:
+      akFatal() << database.driverName() << "backend not supported";
       break;
   }
-  akFatal() << database.driverName() << "backend  not supported";
-  return boost::shared_ptr<DbInitializer>();
+  i->mSchema = schema;
+  return i;
 }
 
-DbInitializer::DbInitializer( const QSqlDatabase &database, const QString &templateFile )
-  : mDatabase( database ), mTemplateFile( templateFile ), mTestInterface( 0 ), m_noForeignKeyContraints( false )
+DbInitializer::DbInitializer( const QSqlDatabase &database )
+  : mDatabase( database ), mTestInterface( 0 ), m_noForeignKeyContraints( false )
 {
   m_introspector = DbIntrospector::createInstance( mDatabase );
 }
@@ -74,42 +75,14 @@ bool DbInitializer::run()
   try {
     akDebug() << "DbInitializer::run()";
 
-    QFile file( mTemplateFile );
-    if ( !file.open( QIODevice::ReadOnly ) ) {
-      mErrorMsg = QString::fromLatin1( "Unable to open template file '%1'." ).arg( mTemplateFile );
-      return false;
-    }
-
-    QDomDocument document;
-
-    QString errorMsg;
-    int line, column;
-    if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
-      mErrorMsg = QString::fromLatin1( "Unable to parse template file '%1': %2 (%3:%4)." )
-                        .arg( mTemplateFile ).arg( errorMsg ).arg( line ).arg( column );
-      return false;
-    }
-
-    const QDomElement documentElement = document.documentElement();
-    if ( documentElement.tagName() != QLatin1String( "database" ) ) {
-      mErrorMsg = QString::fromLatin1( "Invalid format of template file '%1'." ).arg( mTemplateFile );
-      return false;
-    }
-
-    QDomElement tableElement = documentElement.firstChildElement();
-    while ( !tableElement.isNull() ) {
-      if ( tableElement.tagName() == QLatin1String( "table" ) ) {
-        if ( !checkTable( parseTableDescription( tableElement ) ) )
-          return false;
-      } else if ( tableElement.tagName() == QLatin1String( "relation" ) ) {
-        if ( !checkRelation( tableElement ) )
-          return false;
-      } else {
-        mErrorMsg = QString::fromLatin1( "Unknown tag, expected <table> and got <%1>." ).arg( tableElement.tagName() );
+    Q_FOREACH ( const TableDescription &table, mSchema->tables() ) {
+      if ( !checkTable( table ) )
         return false;
-      }
+    }
 
-      tableElement = tableElement.nextSiblingElement();
+    Q_FOREACH ( const RelationDescription &relation, mSchema->relations() ) {
+      if ( !checkRelation( relation ) )
+        return false;
     }
 
     akDebug() << "DbInitializer::run() done";
@@ -118,96 +91,6 @@ bool DbInitializer::run()
     mErrorMsg = QString::fromUtf8( e.what() );
   }
   return false;
-}
-
-ColumnDescription::ReferentialAction DbInitializer::parseReferentialAction(const QString& refAction)
-{
-  if ( refAction.isEmpty() || refAction.toLower() == QLatin1String( "cascade" ) )
-    return ColumnDescription::Cascade;
-  if ( refAction.toLower() == QLatin1String( "restrict" ) )
-    return ColumnDescription::Restrict;
-  if ( refAction.toLower() == QLatin1String( "setnull" ) )
-    return ColumnDescription::SetNull;
-
-  Q_ASSERT( !"format error" );
-  return ColumnDescription::Cascade;
-}
-
-TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
-{
-  TableDescription tableDescription;
-
-  tableDescription.name = tableElement.attribute( QLatin1String( "name" ) ) + QLatin1String( "Table" );
-
-  QDomElement childElement = tableElement.firstChildElement();
-  while ( !childElement.isNull() ) {
-    if ( childElement.tagName() == QLatin1String( "column" ) ) {
-      ColumnDescription columnDescription;
-
-      columnDescription.name = childElement.attribute( QLatin1String( "name" ) );
-      columnDescription.type = childElement.attribute( QLatin1String( "type" ) );
-
-      if ( childElement.hasAttribute( QLatin1String("size") ) )
-        columnDescription.size = childElement.attribute( QLatin1String("size") ).toInt();
-
-      if ( childElement.hasAttribute( QLatin1String( "allowNull" ) ) )
-        columnDescription.allowNull = (childElement.attribute( QLatin1String( "allowNull" ) ) == QLatin1String( "true" ));
-
-      if ( childElement.hasAttribute( QLatin1String( "isAutoIncrement" ) ) )
-        columnDescription.isAutoIncrement = (childElement.attribute( QLatin1String( "isAutoIncrement" ) ) == QLatin1String( "true" ));
-
-      if ( childElement.hasAttribute( QLatin1String( "isPrimaryKey" ) ) )
-        columnDescription.isPrimaryKey = (childElement.attribute( QLatin1String( "isPrimaryKey" ) ) == QLatin1String( "true" ));
-
-      if ( childElement.hasAttribute( QLatin1String( "isUnique" ) ) )
-        columnDescription.isUnique = (childElement.attribute( QLatin1String( "isUnique" ) ) == QLatin1String( "true" ));
-
-      columnDescription.refTable = childElement.attribute( QLatin1String( "refTable" ) );
-      columnDescription.refColumn = childElement.attribute( QLatin1String( "refColumn" ) );
-      columnDescription.defaultValue = childElement.attribute( QLatin1String( "default" ) );
-
-      columnDescription.onUpdate = parseReferentialAction( childElement.attribute( QLatin1String( "onUpdate" ) ) );
-      columnDescription.onDelete = parseReferentialAction( childElement.attribute( QLatin1String( "onDelete") ) );
-
-      tableDescription.columns.append( columnDescription );
-    } else if ( childElement.tagName() == QLatin1String( "index" ) ) {
-      IndexDescription indexDescription;
-
-      indexDescription.name = childElement.attribute( QLatin1String( "name" ) );
-      indexDescription.columns = childElement.attribute( QLatin1String( "columns" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-      indexDescription.isUnique = (childElement.attribute( QLatin1String( "unique" ) ) == QLatin1String( "true" ));
-
-      tableDescription.indexes.append( indexDescription );
-    } else if ( childElement.tagName() == QLatin1String( "data" ) ) {
-      DataDescription dataDescription;
-
-      const QStringList columns = childElement.attribute( QLatin1String( "columns" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-      const QStringList values = childElement.attribute( QLatin1String( "values" ) ).split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-      Q_ASSERT( columns.count() == values.count() );
-
-      for ( int i = 0; i < columns.count(); ++i )
-        dataDescription.data.insert( columns.at( i ), values.at( i ) );
-
-      tableDescription.data.append( dataDescription );
-    }
-
-    childElement = childElement.nextSiblingElement();
-  }
-
-  return tableDescription;
-}
-
-RelationDescription DbInitializer::parseRelationDescription( const QDomElement &element ) const
-{
-  RelationDescription relationDescription;
-
-  relationDescription.firstTable = element.attribute( QLatin1String( "table1" ) );
-  relationDescription.firstColumn = element.attribute( QLatin1String( "column1" ) );
-
-  relationDescription.secondTable = element.attribute( QLatin1String( "table2" ) );
-  relationDescription.secondColumn = element.attribute( QLatin1String( "column2" ) );
-
-  return relationDescription;
 }
 
 bool DbInitializer::checkTable( const TableDescription &tableDescription )
@@ -324,10 +207,8 @@ void DbInitializer::checkForeignKeys(const TableDescription& tableDescription)
 }
 
 
-bool DbInitializer::checkRelation( const QDomElement &element )
+bool DbInitializer::checkRelation( const RelationDescription &relationDescription )
 {
-  const RelationDescription relationDescription = parseRelationDescription( element );
-
   const QString relationTableName = relationDescription.firstTable +
                                     relationDescription.secondTable +
                                     QLatin1String( "Relation" );

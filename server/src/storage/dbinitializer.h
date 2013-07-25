@@ -31,14 +31,14 @@
 
 #include <boost/shared_ptr.hpp>
 
-class QDomElement;
-
 class TestInterface
 {
   public:
     virtual ~TestInterface() {}
     virtual void execStatement( const QString &statement ) = 0;
 };
+
+class Schema;
 
 /**
  * A helper class which takes a reference to a database object and
@@ -53,7 +53,7 @@ class DbInitializer
     /**
       Returns an initializer instance for a given backend.
     */
-    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, const QString &templateFile );
+    static DbInitializer::Ptr createInstance( const QSqlDatabase &database, Schema *schema );
 
     /**
      * Destroys the database initializer.
@@ -86,9 +86,8 @@ class DbInitializer
      * Creates a new database initializer.
      *
      * @param database The reference to the database.
-     * @param templateFile The template file.
      */
-    DbInitializer( const QSqlDatabase &database, const QString &templateFile );
+    DbInitializer( const QSqlDatabase &database );
 
     /**
      * Overwrite in backend-specific sub-classes to return the SQL type for a given C++ type.
@@ -148,16 +147,12 @@ class DbInitializer
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */
     void checkForeignKeys( const TableDescription &tableDescription );
-    bool checkRelation( const QDomElement &element );
-
-    TableDescription parseTableDescription( const QDomElement& ) const;
-    RelationDescription parseRelationDescription( const QDomElement& ) const;
-    static ColumnDescription::ReferentialAction parseReferentialAction( const QString &refAction );
+    bool checkRelation( const RelationDescription &relationDescription );
 
     static QString referentialActionToString( ColumnDescription::ReferentialAction action );
 
     QSqlDatabase mDatabase;
-    QString mTemplateFile;
+    Schema *mSchema;
     QString mErrorMsg;
     TestInterface *mTestInterface;
     DbIntrospector::Ptr m_introspector;

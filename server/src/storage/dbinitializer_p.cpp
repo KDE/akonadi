@@ -22,8 +22,8 @@
 
 //BEGIN MySQL
 
-DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile):
-  DbInitializer(database, templateFile)
+DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database):
+  DbInitializer(database)
 {
 }
 
@@ -122,8 +122,8 @@ QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbInt
 
 //BEGIN Sqlite
 
-DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database, const QString& templateFile):
-  DbInitializer(database, templateFile)
+DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database):
+  DbInitializer(database)
 {
 }
 
@@ -192,8 +192,8 @@ QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription 
 
 //BEGIN PostgreSQL
 
-DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database, const QString& templateFile):
-  DbInitializer(database, templateFile)
+DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database):
+  DbInitializer(database)
 {
 }
 
@@ -276,8 +276,8 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescript
 
 //BEGIN Virtuoso
 
-DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database, const QString& templateFile):
-  DbInitializer(database, templateFile)
+DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database):
+  DbInitializer(database)
 {
 }
 

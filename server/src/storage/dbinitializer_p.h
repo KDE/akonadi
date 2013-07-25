@@ -26,7 +26,7 @@
 class DbInitializerMySql : public DbInitializer
 {
   public:
-    DbInitializerMySql(const QSqlDatabase& database, const QString& templateFile);
+    DbInitializerMySql(const QSqlDatabase& database);
   protected:
     QString sqlType(const QString& type, int size) const;
 
@@ -40,7 +40,7 @@ class DbInitializerMySql : public DbInitializer
 class DbInitializerSqlite : public DbInitializer
 {
   public:
-    DbInitializerSqlite( const QSqlDatabase& database, const QString& templateFile);
+    DbInitializerSqlite( const QSqlDatabase& database);
   protected:
     virtual QString buildCreateTableStatement( const TableDescription &tableDescription ) const;
     virtual QString buildColumnStatement( const ColumnDescription &columnDescription, const TableDescription &tableDescription ) const;
@@ -50,7 +50,7 @@ class DbInitializerSqlite : public DbInitializer
 class DbInitializerPostgreSql : public DbInitializer
 {
   public:
-    DbInitializerPostgreSql(const QSqlDatabase& database, const QString& templateFile);
+    DbInitializerPostgreSql(const QSqlDatabase& database);
   protected:
     QString sqlType(const QString& type, int size) const;
 
@@ -62,7 +62,7 @@ class DbInitializerPostgreSql : public DbInitializer
 class DbInitializerVirtuoso : public DbInitializer
 {
   public:
-    DbInitializerVirtuoso(const QSqlDatabase& database, const QString& templateFile);
+    DbInitializerVirtuoso(const QSqlDatabase& database);
   protected:
     QString sqlType(const QString& type, int size) const;
     QString sqlValue(const QString& type, const QString& value) const;
