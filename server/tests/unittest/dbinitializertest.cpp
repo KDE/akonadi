@@ -130,7 +130,7 @@ void DbInitializerTest::testRun()
   if ( QSqlDatabase::drivers().contains( driverName ) ) {
     QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
     DbInitializer::Ptr initializer = DbInitializer::createInstance( db, QLatin1String(":unittest_schema.xml") );
-    QVERIFY( initializer );
+    QVERIFY( bool(initializer) );
 
     StatementCollector collector;
     initializer->setTestInterface( &collector );
