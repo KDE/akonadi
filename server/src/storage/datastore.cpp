@@ -125,12 +125,7 @@ bool Akonadi::DataStore::init()
 {
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
 
-#ifdef Q_OS_WINCE
-  QString dbtemplate = QLatin1String(":akonadidb-mobile.xml");
-#else
-  QString dbtemplate = QLatin1String(":akonadidb.xml");
-#endif
-
+  const QString dbtemplate = QLatin1String(":akonadidb.xml");
   DbInitializer::Ptr initializer = DbInitializer::createInstance( m_database, dbtemplate );
   if (! initializer->run() ) {
     akError() << initializer->errorMsg();

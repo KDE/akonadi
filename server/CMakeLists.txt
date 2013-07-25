@@ -51,11 +51,7 @@ endif()
 
 ########### next target ###############
 
-if(NOT WINCE)
-   set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml)
-else()
-   set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb-mobile.xml)
-endif()
+set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml)
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
@@ -201,11 +197,7 @@ set_source_files_properties(${xesam_xml} PROPERTIES INCLUDE "xesamtypes.h")
 
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${xesam_xml} xesaminterface)
 
-if(NOT WINCE)
-  qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
-else()
-  qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb_mobile.qrc)
-endif()
+qt4_add_resources(libakonadiprivate_SRCS src/storage/akonadidb.qrc)
 
 
 add_library(akonadiprivate STATIC ${libakonadiprivate_SRCS})
