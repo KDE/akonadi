@@ -39,23 +39,6 @@ else()
   set(SOPRANO_TYPE "REQUIRED")
 endif()
 
-if(CMAKE_COMPILER_IS_GNUCXX OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline" CACHE STRING
-       "Flags used by the C++ compiler during debugfull builds." FORCE)
-
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline" CACHE STRING
-       "Flags used by the C compiler during debugfull builds." FORCE)
-
-   mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
-
-   # Update the documentation string of CMAKE_BUILD_TYPE for ccache & cmake-gui
-   set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-       "Choose the type of build, options are: None debugfull Debug Release RelWithDebInfo MinSizeRel."
-       FORCE)
-endif()
-
 ############### CMake Macros ###############
 
 include(InstallSettings)
@@ -213,10 +196,6 @@ endif()
 # not compatible with CMake's FindBoost. Disable this function.
 set(Boost_NO_BOOST_CMAKE TRUE)
 
-if(MSVC)
-  set(_ENABLE_EXCEPTIONS -EHsc)
-endif()
-
 if(NOT WINCE)
     find_package(Boost COMPONENTS program_options)
     set_package_properties(Boost PROPERTIES
@@ -256,10 +235,25 @@ endif()
 ############### Compilers flags ###############
 
 option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
   set(_ENABLE_EXCEPTIONS -fexceptions)
-  set(CMAKE_C_FLAGS    "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
-  set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
+
+  # more aggressive warnings and C++11 support
+  set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wno-long-long -ansi -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-check-new -fno-common" CACHE STRING "Flags used by the compiler during all build types" FORCE)
+
+  # debugfull target
+  set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
+  set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
+  mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
+
+  # Update the documentation string of CMAKE_BUILD_TYPE for ccache & cmake-gui
+  set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
+      "Choose the type of build, options are: None debugfull Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+
+  # coverage support
   if(CMAKE_COMPILE_GCOV)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -268,6 +262,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
       set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lprofile_rt" CACHE STRING "Flags used by the linker" FORCE)
     endif()
   endif()
+endif()
+
+if(MSVC)
+  set(_ENABLE_EXCEPTIONS -EHsc)
 endif()
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
