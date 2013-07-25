@@ -139,6 +139,7 @@ set(libakonadiprivate_SRCS
   src/storage/querybuilder.cpp
   src/storage/querycache.cpp
   src/storage/queryhelper.cpp
+  src/storage/schematypes.cpp
   src/storage/transaction.cpp
   src/storage/parthelper.cpp
   src/storage/storagedebugger.cpp

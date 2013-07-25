@@ -41,33 +41,6 @@
 
 using namespace Akonadi;
 
-DbInitializer::ColumnDescription::ColumnDescription()
-  : size( -1 ), allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false ), onUpdate( Cascade ), onDelete( Cascade )
-{
-}
-
-DbInitializer::IndexDescription::IndexDescription()
-  : isUnique( false )
-{
-}
-
-DbInitializer::DataDescription::DataDescription()
-{
-}
-
-DbInitializer::TableDescription::TableDescription()
-{
-}
-
-int DbInitializer::TableDescription::primaryKeyColumnCount() const
-{
-  return std::count_if( columns.constBegin(), columns.constEnd(), boost::bind<bool>( &ColumnDescription::isPrimaryKey, _1 ) );
-}
-
-DbInitializer::RelationDescription::RelationDescription()
-{
-}
-
 DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, const QString& templateFile)
 {
   switch ( DbType::type( database ) ) {
@@ -147,20 +120,20 @@ bool DbInitializer::run()
   return false;
 }
 
-DbInitializer::ColumnDescription::ReferentialAction DbInitializer::parseReferentialAction(const QString& refAction)
+ColumnDescription::ReferentialAction DbInitializer::parseReferentialAction(const QString& refAction)
 {
   if ( refAction.isEmpty() || refAction.toLower() == QLatin1String( "cascade" ) )
-    return DbInitializer::ColumnDescription::Cascade;
+    return ColumnDescription::Cascade;
   if ( refAction.toLower() == QLatin1String( "restrict" ) )
-    return DbInitializer::ColumnDescription::Restrict;
+    return ColumnDescription::Restrict;
   if ( refAction.toLower() == QLatin1String( "setnull" ) )
-    return DbInitializer::ColumnDescription::SetNull;
+    return ColumnDescription::SetNull;
 
   Q_ASSERT( !"format error" );
-  return DbInitializer::ColumnDescription::Cascade;
+  return ColumnDescription::Cascade;
 }
 
-DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
+TableDescription DbInitializer::parseTableDescription( const QDomElement &tableElement ) const
 {
   TableDescription tableDescription;
 
@@ -224,7 +197,7 @@ DbInitializer::TableDescription DbInitializer::parseTableDescription( const QDom
   return tableDescription;
 }
 
-DbInitializer::RelationDescription DbInitializer::parseRelationDescription( const QDomElement &element ) const
+RelationDescription DbInitializer::parseRelationDescription( const QDomElement &element ) const
 {
   RelationDescription relationDescription;
 
@@ -291,7 +264,7 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
   return true;
 }
 
-void DbInitializer::checkForeignKeys(const DbInitializer::TableDescription& tableDescription)
+void DbInitializer::checkForeignKeys(const TableDescription& tableDescription)
 {
   try {
     const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints( tableDescription.name );
@@ -434,27 +407,27 @@ QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableD
                             .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
 }
 
-QString DbInitializer::buildAddForeignKeyConstraintStatement(const DbInitializer::TableDescription& table, const DbInitializer::ColumnDescription& column) const
+QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription& table, const ColumnDescription& column) const
 {
   Q_UNUSED( table );
   Q_UNUSED( column );
   return QString();
 }
 
-QString DbInitializer::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const DbInitializer::TableDescription& table) const
+QString DbInitializer::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const
 {
   Q_UNUSED( fk );
   Q_UNUSED( table );
   return QString();
 }
 
-QString DbInitializer::buildReferentialAction(DbInitializer::ColumnDescription::ReferentialAction onUpdate, DbInitializer::ColumnDescription::ReferentialAction onDelete)
+QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
 {
   return QLatin1Literal( "ON UPDATE " ) + referentialActionToString( onUpdate )
        + QLatin1Literal( " ON DELETE ") + referentialActionToString( onDelete );
 }
 
-QString DbInitializer::referentialActionToString(DbInitializer::ColumnDescription::ReferentialAction action)
+QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
 {
   switch ( action ) {
     case ColumnDescription::Cascade: return QLatin1String( "CASCADE" );
@@ -466,7 +439,7 @@ QString DbInitializer::referentialActionToString(DbInitializer::ColumnDescriptio
   return QString();
 }
 
-QString DbInitializer::buildPrimaryKeyStatement(const DbInitializer::TableDescription& table)
+QString DbInitializer::buildPrimaryKeyStatement(const TableDescription& table)
 {
   QStringList cols;
   Q_FOREACH( const ColumnDescription &column, table.columns ) {

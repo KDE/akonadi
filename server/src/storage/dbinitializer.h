@@ -21,6 +21,7 @@
 #define DBINITIALIZER_H
 
 #include "dbintrospector.h"
+#include "schematypes.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QPair>
@@ -82,90 +83,6 @@ class DbInitializer
 
   protected:
     /**
-     * @short A helper class that describes a column of a table for the DbInitializer
-     */
-    class ColumnDescription
-    {
-      public:
-        ColumnDescription();
-
-        enum ReferentialAction {
-          Cascade,
-          Restrict,
-          SetNull
-        };
-
-        QString name;
-        QString type;
-        int size;
-        bool allowNull;
-        bool isAutoIncrement;
-        bool isPrimaryKey;
-        bool isUnique;
-        QString refTable;
-        QString refColumn;
-        QString defaultValue;
-        ReferentialAction onUpdate;
-        ReferentialAction onDelete;
-    };
-
-    /**
-     * @short A helper class that describes indexes of a table for the DbInitializer
-     */
-    class IndexDescription
-    {
-      public:
-        IndexDescription();
-
-        QString name;
-        QStringList columns;
-        bool isUnique;
-    };
-
-    /**
-     * @short A helper class that describes the predefined data of a table for the DbInitializer
-     */
-    class DataDescription
-    {
-      public:
-        DataDescription();
-
-        /**
-         * Key contains the column name, value the data.
-         */
-        QHash<QString, QString> data;
-    };
-
-    /**
-     * @short A helper class that describes a table for the DbInitializer
-     */
-    class TableDescription
-    {
-      public:
-        TableDescription();
-        int primaryKeyColumnCount() const;
-
-        QString name;
-        QVector<ColumnDescription> columns;
-        QVector<IndexDescription> indexes;
-        QVector<DataDescription> data;
-    };
-
-    /**
-     * @short A helper class that describes the relation between to tables for the DbInitializer
-     */
-    class RelationDescription
-    {
-      public:
-        RelationDescription();
-
-        QString firstTable;
-        QString firstColumn;
-        QString secondTable;
-        QString secondColumn;
-    };
-
-    /**
      * Creates a new database initializer.
      *
      * @param database The reference to the database.
@@ -226,7 +143,7 @@ class DbInitializer
      */
     void execQuery( const QString &queryString );
 
-    bool checkTable( const DbInitializer::TableDescription& tableDescription );
+    bool checkTable( const TableDescription& tableDescription );
     /**
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */
