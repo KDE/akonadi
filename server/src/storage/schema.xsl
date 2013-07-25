@@ -122,6 +122,23 @@ QVector&lt;TableDescription&gt; tables()
   return tabs;
 }
 
+QVector&lt;RelationDescription&gt; relations()
+{
+  QVector&lt;RelationDescription&gt; rels;
+  rels.reserve(<xsl:value-of select="count(database/relation)"/>);
+  <xsl:for-each select="database/relation">
+  {
+    RelationDescription r;
+    r.firstTable = QLatin1String("<xsl:value-of select="@table1"/>");
+    r.firstColumn = QLatin1String("<xsl:value-of select="@column1"/>");
+    r.secondTable = QLatin1String("<xsl:value-of select="@table2"/>");
+    r.secondColumn = QLatin1String("<xsl:value-of select="@column2"/>");
+    rels.push_back(r);
+  }
+  </xsl:for-each>
+  return rels;
+}
+
 }
 
 </xsl:template>

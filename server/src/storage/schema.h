@@ -29,6 +29,9 @@ namespace Schema
 {
   /** List of tables in the schema. */
   QVector<TableDescription> tables();
+
+  /** List of relations (N:M helper tables) in the schema. */
+  QVector<RelationDescription> relations();
 }
 
 #endif
