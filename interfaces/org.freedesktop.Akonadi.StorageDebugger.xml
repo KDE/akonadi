@@ -1,0 +1,24 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.StorageDebugger">
+    <method name="enableSQLDebugging">
+      <arg type="b" name="enable" direction="in" />
+    </method>
+    <method name="isSQLDebuggingEnabled">
+      <arg type="b" direction="out" />
+    </method>
+
+    <signal name="queryExecuted">
+      <arg type="d" name="sequence" direction="out" />
+      <arg type="u" name="duration" direction="out" />
+      <arg type="s" name="query" direction="out" />
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="const QMap&lt;QString,QVariant&gt; &amp;"/>
+      <arg type="{sv}" name="values" direction="out" />
+      <arg type="i" name="resultsCount" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In5" value="const QList&lt;QList&lt;QVariant&gt; &gt; &amp;"/>
+      <arg type="aav" name="result" direction="out" />
+      <arg type="s" name="error" direction="out"/>
+    </signal>
+
+  </interface>
+</node>

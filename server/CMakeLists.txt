@@ -145,6 +145,7 @@ set(libakonadiprivate_SRCS
   src/storage/queryhelper.cpp
   src/storage/transaction.cpp
   src/storage/parthelper.cpp
+  src/storage/storagedebugger.cpp
   src/tracer.cpp
   src/utils.cpp
   src/dbustracer.cpp
@@ -186,10 +187,10 @@ qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::NotificationManager)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::AkonadiServer)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.NotificationSource.xml notificationsource.h Akonadi::NotificationSource)
+qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.StorageDebugger.xml storage/storagedebugger.h Akonadi::StorageDebugger)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h DebugInterface)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::ResourceManager)
 qt4_add_dbus_adaptor(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::PreprocessorManager)
-
 qt4_add_dbus_interfaces(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.AgentManager.xml ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Resource.xml)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)
 qt4_add_dbus_interface(libakonadiprivate_SRCS ${Akonadi_SOURCE_DIR}/interfaces/org.freedesktop.Akonadi.Agent.Control.xml agentcontrolinterface)

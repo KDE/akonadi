@@ -9,6 +9,7 @@ SET(DBUS_INTERFACE_XMLS
   org.freedesktop.Akonadi.ControlManager.xml
   org.freedesktop.Akonadi.NotificationSource.xml
   org.freedesktop.Akonadi.Server.xml
+  org.freedesktop.Akonadi.StorageDebugger.xml
   org.freedesktop.Akonadi.TracerNotification.xml
 )
 

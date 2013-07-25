@@ -23,6 +23,7 @@
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
 #include "storage/querycache.h"
+#include "storage/storagedebugger.h"
 #endif
 
 #include <QSqlRecord>
@@ -294,11 +295,25 @@ bool QueryBuilder::exec()
     //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
   bool ret;
-  if ( isBatch ) {
-    ret = mQuery.execBatch();
+  if ( StorageDebugger::instance()->isSQLDebuggingEnabled() ) {
+    QTime t;
+    t.start();
+    if ( isBatch ) {
+      ret = mQuery.execBatch();
+    } else {
+      ret = mQuery.exec();
+    }
+    StorageDebugger::instance()->queryExecuted( mQuery, t.elapsed() );
+
   } else {
-    ret = mQuery.exec();
+    StorageDebugger::instance()->incSequence();
+    if ( isBatch ) {
+      ret = mQuery.execBatch();
+    } else {
+      ret = mQuery.exec();
+    }
   }
+
   if ( !ret ) {
     akError() << "Error during executing query" << statement << ": " << mQuery.lastError().text();
     return false;
