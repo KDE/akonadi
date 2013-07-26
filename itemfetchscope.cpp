@@ -160,3 +160,13 @@ KDateTime ItemFetchScope::fetchChangedSince() const
 {
   return d->mChangedSince;
 }
+
+void ItemFetchScope::setFetchRemoteIdentification(bool retrieveRid)
+{
+  d->mFetchRid = retrieveRid;
+}
+
+bool ItemFetchScope::fetchRemoteIdentification() const
+{
+  return d->mFetchRid;
+}

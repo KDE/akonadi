@@ -287,6 +287,27 @@ class AKONADI_EXPORT ItemFetchScope
      */
     KDateTime fetchChangedSince() const;
 
+    /**
+     * Fetch remote identification for items.
+     *
+     * These include Akonadi::Item::remoteId() and Akonadi::Item::remoteRevision(). This should
+     * be off for normal clients usually, to save memory (not to mention normal clients should
+     * not be concerned with these information anyway). It is however crucial for resource agents.
+     * For backward compatibility the default is @c true.
+     *
+     * @param retrieveRid whether or not to load remote identification.
+     * @since 4.12
+     */
+    void setFetchRemoteIdentification( bool retrieveRid );
+
+    /**
+     * Returns whether item remote identification should be retrieved.
+     *
+     * @see setFetchRemoteIdentification()
+     * @since 4.12
+     */
+    bool fetchRemoteIdentification() const;
+
   private:
     //@cond PRIVATE
     QSharedDataPointer<ItemFetchScopePrivate> d;

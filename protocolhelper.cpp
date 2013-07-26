@@ -292,7 +292,9 @@ QByteArray ProtocolHelper::itemFetchScopeToByteArray( const ItemFetchScope &fetc
   //TODO: detect somehow if server supports external payload attribute
   command += " " AKONADI_PARAM_EXTERNALPAYLOAD;
 
-  command += " (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE";
+  command += " (UID COLLECTIONID FLAGS SIZE";
+  if ( fetchScope.fetchRemoteIdentification() )
+    command += " " AKONADI_PARAM_REMOTEID " " AKONADI_PARAM_REMOTEREVISION;
   if ( fetchScope.fetchModificationTime() )
     command += " DATETIME";
   foreach ( const QByteArray &part, fetchScope.payloadParts() )
@@ -340,7 +342,7 @@ void ProtocolHelper::parseItemFetchResult( const QList<QByteArray> &lineTokens, 
   }
 
   if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-    kWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+    kWarning() << "Broken fetch response: UID, REV or MIMETYPE missing!";
     return;
   }
 

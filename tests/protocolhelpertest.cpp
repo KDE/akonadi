@@ -197,18 +197,19 @@ class ProtocolHelperTest : public QObject
       QTest::addColumn<ItemFetchScope>( "scope" );
       QTest::addColumn<QByteArray>( "result" );
 
-      QTest::newRow( "empty" ) << ItemFetchScope() << QByteArray( " EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME)\n" );
+      QTest::newRow( "empty" ) << ItemFetchScope() << QByteArray( " EXTERNALPAYLOAD (UID COLLECTIONID FLAGS SIZE REMOTEID REMOTEREVISION DATETIME)\n" );
 
       ItemFetchScope scope;
       scope.fetchAllAttributes();
       scope.fetchFullPayload();
       scope.setAncestorRetrieval( Akonadi::ItemFetchScope::All );
       scope.setIgnoreRetrievalErrors( true );
-      QTest::newRow( "full" ) << scope << QByteArray( " FULLPAYLOAD ALLATTR IGNOREERRORS ANCESTORS INF EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME)\n" );
+      QTest::newRow( "full" ) << scope << QByteArray( " FULLPAYLOAD ALLATTR IGNOREERRORS ANCESTORS INF EXTERNALPAYLOAD (UID COLLECTIONID FLAGS SIZE REMOTEID REMOTEREVISION DATETIME)\n" );
 
       scope = ItemFetchScope();
       scope.setFetchModificationTime( false );
-      QTest::newRow( "minimal" ) << scope << QByteArray( " EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE)\n" );
+      scope.setFetchRemoteIdentification( false );
+      QTest::newRow( "minimal" ) << scope << QByteArray( " EXTERNALPAYLOAD (UID COLLECTIONID FLAGS SIZE)\n" );
     }
 
     void testItemFetchScopeToByteArray()
