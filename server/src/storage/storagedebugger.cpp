@@ -115,7 +115,3 @@ void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
   q.seek( -1, false );
 }
 
-
-
-
-#include "storagedebugger.moc"
