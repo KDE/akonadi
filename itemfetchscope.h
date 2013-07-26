@@ -295,4 +295,6 @@ class AKONADI_EXPORT ItemFetchScope
 
 }
 
+Q_DECLARE_METATYPE(Akonadi::ItemFetchScope)
+
 #endif

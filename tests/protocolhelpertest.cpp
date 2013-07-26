@@ -191,6 +191,33 @@ class ProtocolHelperTest : public QObject
       qDebug() << ProtocolHelper::hierarchicalRidToByteArray( collection ) << result;
       QCOMPARE( ProtocolHelper::hierarchicalRidToByteArray( collection ), result );
     }
+
+    void testItemFetchScopeToByteArray_data()
+    {
+      QTest::addColumn<ItemFetchScope>( "scope" );
+      QTest::addColumn<QByteArray>( "result" );
+
+      QTest::newRow( "empty" ) << ItemFetchScope() << QByteArray( " EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME)\n" );
+
+      ItemFetchScope scope;
+      scope.fetchAllAttributes();
+      scope.fetchFullPayload();
+      scope.setAncestorRetrieval( Akonadi::ItemFetchScope::All );
+      scope.setIgnoreRetrievalErrors( true );
+      QTest::newRow( "full" ) << scope << QByteArray( " FULLPAYLOAD ALLATTR IGNOREERRORS ANCESTORS INF EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE DATETIME)\n" );
+
+      scope = ItemFetchScope();
+      scope.setFetchModificationTime( false );
+      QTest::newRow( "minimal" ) << scope << QByteArray( " EXTERNALPAYLOAD (UID REMOTEID REMOTEREVISION COLLECTIONID FLAGS SIZE)\n" );
+    }
+
+    void testItemFetchScopeToByteArray()
+    {
+      QFETCH( ItemFetchScope, scope );
+      QFETCH( QByteArray, result );
+      qDebug() << ProtocolHelper::itemFetchScopeToByteArray( scope ) << result;
+      QCOMPARE( ProtocolHelper::itemFetchScopeToByteArray( scope ), result );
+    }
 };
 
 QTEST_KDEMAIN( ProtocolHelperTest, NoGUI )
