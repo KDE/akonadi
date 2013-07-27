@@ -20,6 +20,8 @@
 #include "dbusconnectionpool.h"
 #include "symbols.h"
 
+#include <akonadi/servermanager.h>
+
 #include <kapplication.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -182,6 +184,7 @@ void SetupTest::registerWithInternalDBus( const QString &address )
 
 bool SetupTest::startAkonadiDaemon()
 {
+  Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
   if ( !mAkonadiDaemonProcess ) {
     mAkonadiDaemonProcess = new KProcess( this );
     connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
@@ -323,6 +326,8 @@ void SetupTest::copyDirectory( const QString &src, const QString &dst )
 
 void SetupTest::createTempEnvironment()
 {
+  kDebug() << "Creating test environment in" << basePath();
+
   const QDir tmpDir( basePath() );
   const QString testRunnerKdeHomeDir = QLatin1String( "kdehome" );
   const QString testRunnerDataDir = QLatin1String( "data" );
@@ -378,7 +383,7 @@ SetupTest::SetupTest() :
   mAgentsCreated( false ),
   mTrackAkonadiProcess( true )
 {
-
+  setupInstanceId();
   clearEnvironment();
   cleanTempEnvironment();
   createTempEnvironment();
@@ -525,3 +530,13 @@ void SetupTest::trackAkonadiProcess(bool track)
   mTrackAkonadiProcess = track;
 }
 
+QString SetupTest::instanceId() const
+{
+  // this needs to be customizable for running multiple instance in parallel eventually
+  return QLatin1String("testrunner");
+}
+
+void SetupTest::setupInstanceId()
+{
+  setenv("AKONADI_INSTANCE", instanceId().toLocal8Bit(), 1);
+}

@@ -35,9 +35,18 @@ class SetupTest : public QObject
   public:
     SetupTest();
     ~SetupTest();
+
+    /**
+      Sets the instance identifier for the Akonadi session.
+      Call this before using any other Akonadi API!
+    */
+    void setupInstanceId();
     bool startAkonadiDaemon();
     void stopAkonadiDaemon();
     QString basePath() const;
+
+    /// Identifier used for the Akonadi session
+    QString instanceId() const;
 
   public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();

@@ -89,6 +89,7 @@ int main( int argc, char **argv )
 
   if ( !setup->startAkonadiDaemon() ) {
       delete setup;
+      qCritical("Failed to start Akonadi server!");
       return 1;
   }
 
