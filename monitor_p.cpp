@@ -547,11 +547,15 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
         const int appended = translateAndCompress( pendingNotifications, msg );
         if ( appended > 0 ) {
           appendedMessages += appended;
-          // translateAndCompress can remove an existing "modify" when msg is a "delete". We need to detect that, for ChangeRecorder.
-          if ( pendingNotifications.count() != oldSize + 1 )
-            ++erasedMessages;
-        } else
+        } else {
           ++modifiedMessages;
+        }
+        // translateAndCompress can remove an existing "modify" when msg is a "delete".
+        // Or it can merge two ModifyFlags and return false.
+        // We need to detect such removals, for ChangeRecorder.
+        if ( pendingNotifications.count() != oldSize + appended ) {
+          ++erasedMessages; // this count isn't exact, but it doesn't matter
+        }
       } else if ( needsSplit ) {
         // If it's not queued at least make sure we fetch all the items from split
         // notifications in one go.
