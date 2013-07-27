@@ -106,11 +106,6 @@ void SetupTest::setupAgents()
   if ( mAgentsCreated )
     return;
 #if 0
-  // Start KLauncher now, so that kdeinit4 and kded4 are started. Otherwise, those might get started
-  // on demand, for example in the Knut resource.
-  // This on-demand starting can cause crashes due to timing issues.
-  KToolInvocation::klauncher();
-
   mAgentsCreated = true;
   Config *config = Config::instance();
   QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
@@ -232,12 +227,6 @@ void SetupTest::createTempEnvironment()
   copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
   copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
   copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
-
-  // copy sycoca file from the host to increase startup speed
-  const QString sycoca = KStandardDirs::locateLocal( "cache", "ksycoca4" );
-  const QString cacheDir = basePath() + testRunnerKdeHomeDir + QDir::separator() + "cache-" + QHostInfo::localHostName() + QDir::separator();
-  QFile::copy( sycoca, cacheDir + "ksycoca4" );
-  QFile::copy( sycoca + "stamp", cacheDir + "ksycoca4stamp" );
 }
 
 // TODO Qt5: use QDir::removeRecursively
