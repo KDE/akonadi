@@ -17,7 +17,6 @@
 
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
-#include "dbusconnectionpool.h"
 #include "symbols.h"
 
 #include <kapplication.h>
@@ -70,119 +69,10 @@ bool SetupTest::clearEnvironment()
   return true;
 }
 
-int SetupTest::addDBusToEnvironment( QIODevice& io )
-{
-  QByteArray data = io.readLine();
-  int pid = -1;
-  Symbols *symbol = Symbols::instance();
-
-  while ( data.size() ) {
-    if ( data[ data.size() - 1 ] == '\n' ) {
-      data.resize( data.size() - 1 );
-    }
-
-    QString val( data );
-    const int p = val.indexOf( '=' );
-    if ( p > 0 ) {
-      const QString name = val.left( p ).toUpper();
-      val = val.mid( p + 1 );
-      if ( name == QLatin1String( "DBUS_SESSION_BUS_PID" ) ) {
-        pid = val.toInt();
-        setenv( name.toLatin1(), val.toAscii(), 1 );
-        symbol->insertSymbol( name, val );
-      } else if ( name == QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ) {
-        setenv( name.toLatin1(), val.toAscii(), 1 );
-        symbol->insertSymbol( name, val );
-      }
-    }
-    data = io.readLine();
-  }
-
-  return pid;
-}
-
-void SetupTest::generateDBusConfigFile( const QString& path )
-{
-    static const char* configFileContents =
-        "<!DOCTYPE busconfig PUBLIC \"-//freedesktop//DTD D-Bus Bus Configuration 1.0//EN\"\n"
-        "\"http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd\">\n"
-        "<busconfig>\n"
-        "<type>session</type>"
-        "<keep_umask/>\n"
-        "<listen>unix:path=%1</listen>\n"
-        "<standard_session_servicedirs />\n"
-        "<policy context=\"default\">\n"
-        "<allow send_destination=\"*\" eavesdrop=\"true\"/>\n"
-        "<allow eavesdrop=\"true\"/>\n"
-        "<allow own=\"*\"/>\n"
-        "</policy>\n"
-        "</busconfig>\n";
-
-    QFile confFile(path);
-    if ( confFile.open( QIODevice::WriteOnly ) ) {
-        const QString socketPath = basePath() + QDir::separator() + QLatin1String("dbus.socket");
-        const QString data = QString::fromLatin1( configFileContents ).arg( socketPath );
-        const qint64 bytes = confFile.write( data.toUtf8() );
-        Q_ASSERT( bytes > 0 );
-    }
-}
-
-int SetupTest::startDBusDaemon()
-{
-  QStringList dbusargs;
-#ifdef Q_OS_MAC
-  const QString dbusConfigFilePath = basePath() + QDir::separator() + QLatin1String("dbus-session.conf");
-  generateDBusConfigFile( dbusConfigFilePath );
-  Q_ASSERT( QFile::exists( dbusConfigFilePath ) );
-
-  dbusargs << QString::fromLatin1("--config-file=%1").arg( dbusConfigFilePath );
-#endif
-
-  QProcess dbusprocess;
-  dbusprocess.start( QLatin1String("dbus-launch"), dbusargs );
-  bool ok = dbusprocess.waitForStarted() && dbusprocess.waitForFinished();
-  if ( !ok ) {
-    kWarning() << "error starting dbus-launch";
-    dbusprocess.kill();
-    exit(1); // failure to start an internal dbus must be considered a fatal unit test error
-  }
-
-  int dbuspid = addDBusToEnvironment( dbusprocess );
-  return dbuspid;
-}
-
-void SetupTest::stopDBusDaemon( int dbuspid )
-{
-  kDebug() << dbuspid;
-  if ( dbuspid )
-    kill( dbuspid, 15 );
-  sleep( 1 );
-
-  if ( dbuspid )
-    kill( dbuspid, 9 );
-}
-
-void SetupTest::registerWithInternalDBus( const QString &address )
-{
-  // FIXME: make this work on Windows, address is always empty there as dbus-launch does not return any environment variables like on Unix there
-#ifndef Q_OS_WIN
-  mInternalBus = QDBusConnection::connectToBus( address, QLatin1String( "InternalBus" ) );
-#endif
-  mInternalBus.registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
-  mInternalBus.registerObject( QLatin1String( "/MainApplication" ),
-                                KApplication::kApplication(),
-                                QDBusConnection::ExportScriptableSlots |
-                                QDBusConnection::ExportScriptableProperties |
-                                QDBusConnection::ExportAdaptors );
-  mInternalBus.registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
-
-  connect( mInternalBus.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-           this, SLOT(dbusNameOwnerChanged(QString,QString,QString)) );
-}
-
 bool SetupTest::startAkonadiDaemon()
 {
   Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
+
   if ( !mAkonadiDaemonProcess ) {
     mAkonadiDaemonProcess = new KProcess( this );
     connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
@@ -215,7 +105,7 @@ void SetupTest::setupAgents()
 {
   if ( mAgentsCreated )
     return;
-
+#if 0
   // Start KLauncher now, so that kdeinit4 and kded4 are started. Otherwise, those might get started
   // on demand, for example in the Knut resource.
   // This on-demand starting can cause crashes due to timing issues.
@@ -244,6 +134,7 @@ void SetupTest::setupAgents()
 
   if ( mPendingAgents.isEmpty() )
     emit setupDone();
+#endif
 }
 
 void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
@@ -281,6 +172,7 @@ void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwn
 
 void SetupTest::synchronizeResources()
 {
+#if 0
   foreach ( const QString &id, mPendingSyncs ) {
     QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1").arg( id ),
       "/", "org.freedesktop.Akonadi.Resource", mInternalBus, this );
@@ -293,6 +185,7 @@ void SetupTest::synchronizeResources()
         kError() << "Syncing resource" << id << "failed: " << reply.error();
     }
   }
+#endif
 }
 
 void SetupTest::resourceSynchronized(const QString& agentId)
@@ -375,7 +268,6 @@ void SetupTest::cleanTempEnvironment()
 
 SetupTest::SetupTest() :
   mAkonadiDaemonProcess( 0 ),
-  mInternalBus( Akonadi::DBusConnectionPool::threadConnection() ),
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false ),
@@ -407,11 +299,6 @@ SetupTest::SetupTest() :
   symbol->insertSymbol( "XDG_CONFIG_HOME", basePath() + QLatin1String( "config" ) );
   symbol->insertSymbol( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
-  mDBusDaemonPid = startDBusDaemon();
-
-  const QString dbusAddress = symbol->symbols()[ QLatin1String( "DBUS_SESSION_BUS_ADDRESS" ) ];
-  registerWithInternalDBus( dbusAddress );
-
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 
   connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
@@ -428,6 +315,7 @@ void SetupTest::shutdown()
   if ( mShuttingDown )
     return;
   mShuttingDown = true;
+#if 0
   // check first if the Akonadi server is still running, otherwise D-Bus auto-launch will actually start it here
   if ( mInternalBus.interface()->isServiceRegistered( "org.freedesktop.Akonadi.Control" ) ) {
     kDebug() << "Shutting down Akonadi control...";
@@ -447,24 +335,7 @@ void SetupTest::shutdown()
   } else {
     shutdownHarder();
   }
-}
-
-void SetupTest::shutdownKde()
-{
-  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.klauncher" ) ) {
-    QDBusInterface klauncherIface( QLatin1String( "org.kde.klauncher" ), QLatin1String( "/" ),
-                                  QLatin1String( "org.kde.KLauncher" ), mInternalBus );
-    QDBusReply<void> reply = klauncherIface.call( "terminate_kdeinit" );
-    if ( !reply.isValid() )
-      kDebug() << reply.error();
-  }
-  if ( mInternalBus.interface()->isServiceRegistered( "org.kde.kded" ) ) {
-    QDBusInterface klauncherIface( QLatin1String( "org.kde.kded" ), QLatin1String( "/kded" ),
-                                  QLatin1String( "org.kde.kded" ), mInternalBus );
-    QDBusReply<void> reply = klauncherIface.call( "quit" );
-    if ( !reply.isValid() )
-      kDebug() << reply.error();
-  }
+#endif
 }
 
 void SetupTest::shutdownHarder()
@@ -472,12 +343,12 @@ void SetupTest::shutdownHarder()
   kDebug();
   mShuttingDown = false;
   stopAkonadiDaemon();
-  stopDBusDaemon( mDBusDaemonPid );
   QCoreApplication::instance()->quit();
 }
 
 void SetupTest::restartAkonadiServer()
 {
+#if 0
   kDebug();
   disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
   QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
@@ -496,6 +367,7 @@ void SetupTest::restartAkonadiServer()
   // from here on, the server exiting is an error again
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
            this, SLOT(slotAkonadiDaemonProcessFinished(int)));
+#endif
 }
 
 QString SetupTest::basePath() const

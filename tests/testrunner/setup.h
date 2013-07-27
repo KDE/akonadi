@@ -70,25 +70,17 @@ class SetupTest : public QObject
   private:
     bool clearEnvironment();
     QMap<QString, QString> environment() const;
-    int addDBusToEnvironment( QIODevice &device );
-    void generateDBusConfigFile( const QString& path );
-    int startDBusDaemon();
-    void stopDBusDaemon( int dbusPid );
-    void registerWithInternalDBus( const QString &address );
     void setupAgents();
     void copyDirectory( const QString &src, const QString &dst );
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
-    void shutdownKde();
 
   private slots:
     void synchronizeResources();
 
   private:
     KProcess *mAkonadiDaemonProcess;
-    int mDBusDaemonPid;
-    QDBusConnection mInternalBus;
     QStringList mPendingAgents;
     QStringList mPendingResources;
     QStringList mPendingSyncs;
