@@ -24,21 +24,18 @@
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/resourcesynchronizationjob.h>
 
-#include <kapplication.h>
+#include <KConfig>
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <KProcess>
 #include <KStandardDirs>
-#include <KToolInvocation>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
-#include <QtNetwork/QHostInfo>
 
-#include <signal.h>
 #include <unistd.h>
 
 QMap<QString, QString> SetupTest::environment() const
@@ -301,14 +298,9 @@ void SetupTest::shutdownHarder()
 
 void SetupTest::restartAkonadiServer()
 {
-#if 0
   kDebug();
   disconnect( mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0 );
-  QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                              QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
-  QDBusReply<void> reply = controlIface.call( "shutdown" );
-  if ( !reply.isValid() )
-    kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
+  Akonadi::ServerManager::self()->stop();
   const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
   if ( !shutdownResult ) {
     kWarning() << "Akonadi control did not shut down in time, killing it.";
@@ -320,7 +312,6 @@ void SetupTest::restartAkonadiServer()
   // from here on, the server exiting is an error again
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
            this, SLOT(slotAkonadiDaemonProcessFinished(int)));
-#endif
 }
 
 QString SetupTest::basePath() const
