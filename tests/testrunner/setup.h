@@ -18,6 +18,8 @@
 #ifndef SETUP_H
 #define SETUP_H
 
+#include <akonadi/servermanager.h>
+
 #include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QStringList>
@@ -60,6 +62,7 @@ class SetupTest : public QObject
     void serverExited(int exitCode);
 
   private Q_SLOTS:
+    void serverStateChanged( Akonadi::ServerManager::State state );
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void resourceSynchronized( const QString &agentId );
     void slotAkonadiDaemonProcessFinished( int exitCode );

@@ -20,8 +20,6 @@
 #include "dbusconnectionpool.h"
 #include "symbols.h"
 
-#include <akonadi/servermanager.h>
-
 #include <kapplication.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -248,17 +246,17 @@ void SetupTest::setupAgents()
     emit setupDone();
 }
 
+void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
+{
+  if ( state == Akonadi::ServerManager::Running )
+    setupAgents();
+  else if ( mShuttingDown && state == Akonadi::ServerManager::NotRunning )
+    shutdownHarder();
+}
+
 void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
 {
   kDebug() << name << oldOwner << newOwner;
-
-  if ( name == QLatin1String( "org.freedesktop.Akonadi.Control" ) ) {
-    if ( oldOwner.isEmpty() ) // startup
-      setupAgents();
-    else if ( mShuttingDown ) // our own shutdown
-      shutdownHarder();
-    return;
-  }
 
   if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) && oldOwner.isEmpty() ) {
     const QString identifier = name.mid( 30 );
@@ -415,6 +413,9 @@ SetupTest::SetupTest() :
   registerWithInternalDBus( dbusAddress );
 
   connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
+
+  connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
+           SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
 }
 
 SetupTest::~SetupTest()
