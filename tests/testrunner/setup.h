@@ -64,10 +64,9 @@ class SetupTest : public QObject
 
   private Q_SLOTS:
     void serverStateChanged( Akonadi::ServerManager::State state );
-    void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
-    void resourceSynchronized( const QString &agentId );
     void slotAkonadiDaemonProcessFinished( int exitCode );
     void agentCreationResult(KJob* job);
+    void synchronizationResult(KJob* job);
 
   private:
     bool clearEnvironment();
@@ -79,16 +78,9 @@ class SetupTest : public QObject
     void cleanTempEnvironment();
     bool isSetupDone() const;
 
-  private slots:
-    void synchronizeResources();
-
   private:
     KProcess *mAkonadiDaemonProcess;
-    QStringList mPendingAgents;
-    QStringList mPendingResources;
-    QStringList mPendingSyncs;
     bool mShuttingDown;
-    QSignalMapper *mSyncMapper;
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;
     int mSetupJobCount;

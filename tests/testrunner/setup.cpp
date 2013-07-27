@@ -20,7 +20,9 @@
 #include "config.h" //krazy:exclude=includes
 #include "symbols.h"
 
+#include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/resourcesynchronizationjob.h>
 
 #include <kapplication.h>
 #include <kconfiggroup.h>
@@ -34,10 +36,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTimer>
-#include <QSignalMapper>
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
 #include <QtNetwork/QHostInfo>
 
 #include <signal.h>
@@ -134,7 +132,22 @@ void SetupTest::agentCreationResult(KJob* job)
   }
   const bool needsSync = job->property( "sync" ).toBool();
   if (needsSync) {
-    // TODO sync
+    ++mSetupJobCount;
+    Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
+      qobject_cast<Akonadi::AgentInstanceCreateJob*>(job)->instance(), this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(synchronizationResult(KJob*)) );
+    sync->start();
+  }
+
+  if ( isSetupDone() )
+    emit setupDone();
+}
+
+void SetupTest::synchronizationResult(KJob* job)
+{
+  --mSetupJobCount;
+  if ( job->error() ) {
+    kError() << job->errorString(); // TODO exit
   }
 
   if ( isSetupDone() )
@@ -147,60 +160,6 @@ void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
     setupAgents();
   else if ( mShuttingDown && state == Akonadi::ServerManager::NotRunning )
     shutdownHarder();
-}
-
-void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
-{
-  kDebug() << name << oldOwner << newOwner;
-  return;
-
-  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) && oldOwner.isEmpty() ) {
-    const QString identifier = name.mid( 30 );
-    if ( mPendingAgents.contains( identifier ) ) {
-      kDebug() << "Agent" << identifier << "started.";
-      mPendingAgents.removeAll( identifier );
-      if ( mPendingAgents.isEmpty() && mPendingResources.isEmpty() )
-        QTimer::singleShot( 5000, this, SLOT(synchronizeResources()) );
-    }
-  }
-
-  if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Resource." ) ) && oldOwner.isEmpty() ) {
-    const QString identifier = name.mid( 33 );
-    if ( mPendingResources.contains( identifier ) ) {
-      kDebug() << "Resource" << identifier << "registered.";
-      mPendingResources.removeAll( identifier );
-      if ( mPendingAgents.isEmpty() && mPendingResources.isEmpty() )
-        QTimer::singleShot( 5000, this, SLOT(synchronizeResources()) );
-    }
-  }
-}
-
-void SetupTest::synchronizeResources()
-{
-#if 0
-  foreach ( const QString &id, mPendingSyncs ) {
-    QDBusInterface *iface = new QDBusInterface( QString::fromLatin1( "org.freedesktop.Akonadi.Resource.%1").arg( id ),
-      "/", "org.freedesktop.Akonadi.Resource", mInternalBus, this );
-    mSyncMapper->setMapping( iface, id );
-    connect( iface, SIGNAL(synchronized()), mSyncMapper, SLOT(map()) );
-    if ( mPendingSyncs.contains( id ) ) {
-      kDebug() << "Synchronizing resource" << id << "...";
-      QDBusReply<void> reply = iface->call( "synchronize" );
-      if ( !reply.isValid() )
-        kError() << "Syncing resource" << id << "failed: " << reply.error();
-    }
-  }
-#endif
-}
-
-void SetupTest::resourceSynchronized(const QString& agentId)
-{
-  if ( mPendingSyncs.contains( agentId ) ) {
-    kDebug() << "Agent" << agentId << "synchronized.";
-    mPendingSyncs.removeAll( agentId );
-    if ( mPendingSyncs.isEmpty() )
-      emit setupDone();
-  }
 }
 
 void SetupTest::copyDirectory( const QString &src, const QString &dst )
@@ -268,7 +227,6 @@ void SetupTest::cleanTempEnvironment()
 SetupTest::SetupTest() :
   mAkonadiDaemonProcess( 0 ),
   mShuttingDown( false ),
-  mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false ),
   mTrackAkonadiProcess( true ),
   mSetupJobCount( 0 )
@@ -298,8 +256,6 @@ SetupTest::SetupTest() :
   symbol->insertSymbol( "XDG_DATA_HOME", basePath() + QLatin1String( "data" ) );
   symbol->insertSymbol( "XDG_CONFIG_HOME", basePath() + QLatin1String( "config" ) );
   symbol->insertSymbol( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
-
-  connect( mSyncMapper, SIGNAL(mapped(QString)), SLOT(resourceSynchronized(QString)) );
 
   connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
