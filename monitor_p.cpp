@@ -575,7 +575,7 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   if ( appendedMessages > 0 || modifiedMessages > 0 ) {
     if ( erasedMessages > 0 )
       notificationsErased();
-    else
+    if ( appendedMessages > 0 )
       notificationsEnqueued( appendedMessages );
   }
 
