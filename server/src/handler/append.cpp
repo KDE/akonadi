@@ -96,6 +96,7 @@ bool Append::commit()
     QByteArray mt;
     QString remote_id;
     QString remote_revision;
+    QString gid;
     QList<QByteArray> flags;
     Q_FOREACH( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
@@ -110,6 +111,10 @@ bool Append::commit()
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         remote_revision = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
+      } else if ( flag.startsWith( "\\Gid" ) ) {
+        int pos1 = flag.indexOf( '[' );
+        int pos2 = flag.lastIndexOf( ']' );
+        gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
       } else
         flags << flag;
     }
@@ -152,7 +157,7 @@ bool Append::commit()
       parts.append( hiddenAttribute );
     }
 
-    bool ok = db->appendPimItem( parts, mimeType, col, m_dateTime, remote_id, remote_revision, item );
+    bool ok = db->appendPimItem( parts, mimeType, col, m_dateTime, remote_id, remote_revision, gid, item );
     response.setTag( tag() );
     if ( !ok ) {
         return failureResponse( "Append failed" );

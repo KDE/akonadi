@@ -56,6 +56,16 @@ void Scope::parseScope( ImapStreamParser* parser )
       if ( !parser->atListEnd() )
         throw HandlerException( "Invalid hierarchical RID chain format" );
     }
+  } else if ( mScope == Gid ) {
+    if ( parser->hasList() ) {
+      parser->beginList();
+      while ( !parser->atListEnd() )
+        mGidSet << parser->readUtf8String();
+    } else {
+      mGidSet << parser->readUtf8String();
+    }
+    if ( mGidSet.isEmpty() )
+      throw HandlerException( "Empty gid set specified" );
   } else {
     throw HandlerException( "WTF?!?" );
   }
@@ -69,6 +79,8 @@ Scope::SelectionScope Scope::selectionScopeFromByteArray(const QByteArray& input
     return Scope::Rid;
   } else if ( input == AKONADI_CMD_HRID ) {
     return Scope::HierarchicalRid;
+  } else if ( input == AKONADI_CMD_GID ) {
+    return Scope::Gid;
   }
   return Scope::None;
 }
@@ -102,3 +114,9 @@ QStringList Scope::ridChain() const
 {
   return mRidChain;
 }
+
+QStringList Scope::gidSet() const
+{
+  return mGidSet;
+}
+

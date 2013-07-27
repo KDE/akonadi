@@ -142,6 +142,8 @@ QSqlQuery FetchHelper::buildItemQuery()
   if (mMTimeRequested)
     ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn )
   ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn )
+  if (mGidRequested)
+    ADD_COLUMN( PimItem::gidFullColumnName(), ItemQueryPimItemGidColumn )
   #undef ADD_COLUMN
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
@@ -222,7 +224,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     switch ( mScope.scope() ) {
       case Scope::Uid: // fall through
       case Scope::Rid: // fall through
-      case Scope::HierarchicalRid:
+      case Scope::HierarchicalRid: // fall through
+      case Scope::Gid:
         throw HandlerException( "Item query returned empty result set" );
       break;
       default:
@@ -271,6 +274,11 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       const QByteArray rrev = Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryRemoteRevisionColumn ) );
       if ( !rrev.isEmpty() )
         attributes.append( AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( rrev ) );
+    }
+    if ( mGidRequested ) {
+      const QByteArray gid = Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemGidColumn ) );
+      if ( !gid.isEmpty() )
+        attributes.append( AKONADI_PARAM_GID " " + ImapParser::quote( gid ) );
     }
 
     if ( mFlagsRequested ) {
@@ -480,6 +488,8 @@ void FetchHelper::parsePartList()
       mMTimeRequested = true;
     } else if ( b == AKONADI_PARAM_REMOTEREVISION ) {
       mRemoteRevisionRequested = true;
+    } else if ( b == AKONADI_PARAM_GID ) {
+      mGidRequested = true;
     } else {
       mRequestedParts.push_back( b );
       if ( b.startsWith( "PLD:" ) )

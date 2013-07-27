@@ -68,10 +68,24 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
   }
 }
 
+void ItemQueryHelper::gidToQuery(const QStringList& gids, AkonadiConnection* connection, QueryBuilder& qb)
+{
+  if ( gids.size() == 1 )
+    qb.addValueCondition( PimItem::gidFullColumnName(), Query::Equals, gids.first() );
+  else
+    qb.addValueCondition( PimItem::gidFullColumnName(), Query::In, gids );
+
+}
+
 void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connection, QueryBuilder& qb)
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );
+    return;
+  }
+
+  if ( scope.scope() == Scope::Gid ) {
+    ItemQueryHelper::gidToQuery( scope.gidSet(), connection, qb );
     return;
   }
 

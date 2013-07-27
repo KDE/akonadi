@@ -56,6 +56,7 @@ namespace Akonadi {
   [+-]FLAGS <flag-list>
   REMOTEID <remote-identifier>
   REMOTEREVISION <remote-revision>
+  GID <global-identifier>
   DIRTY false
   INVALIDATECACHE
   <attribute-id> <attribute-value>
@@ -65,12 +66,13 @@ namespace Akonadi {
   <h4>Semantics</h4>
   Modifies the selected items. Item selection can happen within the usual three scopes:
   - based on a uid set relative to the currently selected collection
-  - based on a global uid set (UID)
+  - based on a uid set (UID)
   - based on a list of remote identifiers within the currently selected collection (RID)
 
   The following item properties can be mofidied:
   - the remote identifier (@c REMOTEID)
   - the remote revision (@c REMOTEREVISION)
+  - the global identifier (@c GID)
   - resetting the dirty flag indication local changes not yet replicated to the backend (@c DIRTY)
   - adding/deleting/setting item flags (@c FLAGS)
   - setting the item size hint (@c SIZE)
@@ -114,6 +116,7 @@ class Store : public Handler
     bool replaceFlags( const PimItem::List &items, const QList<QByteArray> &flags );
     bool addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool& flagsChanged );
     bool deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags );
+    bool setGid( const PimItem &item, const QString &gid );
     void sendPimItemResponse( const PimItem &pimItem );
 
   private:

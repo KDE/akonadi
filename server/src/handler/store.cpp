@@ -209,6 +209,13 @@ bool Store::parseStream()
       }
     }
 
+    else if ( command == AKONADI_PARAM_GID ) {
+      const QString gid = m_streamParser->readUtf8String();
+      if ( item.gid() != gid )
+        item.setGid( gid );
+      changes << AKONADI_PARAM_GID;
+    }
+
     else if ( command == AKONADI_PARAM_REMOTEREVISION ) {
       const QString remoteRevision = m_streamParser->readUtf8String();
       if ( item.remoteRevision() != remoteRevision ) {

@@ -153,6 +153,7 @@ class ScopeTest : public QObject
       QTest::newRow( "UID" ) << QByteArray( "UID" ) << Scope::Uid;
       QTest::newRow( "RID" ) << QByteArray( "RID" ) << Scope::Rid;
       QTest::newRow( "HRID" ) << QByteArray( "HRID" ) << Scope::HierarchicalRid;
+      QTest::newRow( "GID" ) << QByteArray( "GID" ) << Scope::Gid;
       QTest::newRow( "none" ) << QByteArray( "1:*" ) << Scope::None;
     }
 
@@ -162,6 +163,61 @@ class ScopeTest : public QObject
       QFETCH( Scope::SelectionScope, scope );
 
       QCOMPARE( Scope::selectionScopeFromByteArray( input ), scope );
+    }
+
+    void testGid_data()
+    {
+      QTest::addColumn<QByteArray>( "input" );
+      QTest::addColumn<QString>( "gid" );
+      QTest::addColumn<QByteArray>( "remainder" );
+
+      QTest::newRow( "no list, remainder" )
+        << QByteArray( "\"(my remote id)\" FOO\n" )
+        << QString::fromLatin1( "(my remote id)" )
+        << QByteArray( " FOO\n" );
+      QTest::newRow( "list, no remainder" ) << QByteArray( "(\"A\")" ) << QString::fromLatin1( "A" ) << QByteArray();
+      QTest::newRow( "list, no reaminder, leading space" )
+        << QByteArray( " (\"A\")\n" ) << QString::fromLatin1( "A" ) << QByteArray( "\n" );
+    }
+
+    void testGid()
+    {
+      QFETCH( QByteArray, input );
+      QFETCH( QString, gid );
+      QFETCH( QByteArray, remainder );
+
+      Scope scope( Scope::Gid );
+
+      QBuffer buffer( &input, this );
+      buffer.open( QIODevice::ReadOnly );
+      ImapStreamParser parser( &buffer );
+
+      scope.parseScope( &parser );
+      QCOMPARE( parser.readRemainingData(), remainder );
+
+      QCOMPARE( scope.scope(), Scope::Gid );
+      QVERIFY( scope.uidSet().isEmpty() );
+      QCOMPARE( scope.gidSet().size(), 1 );
+      QCOMPARE( scope.gidSet().first(), gid );
+    }
+
+    void testGidSet()
+    {
+      Scope scope( Scope::Gid );
+
+      QByteArray input( "(\"my first remote id\" \"my second remote id\") FOO\n" );
+      QBuffer buffer( &input, this );
+      buffer.open( QIODevice::ReadOnly );
+      ImapStreamParser parser( &buffer );
+
+      scope.parseScope( &parser );
+      QCOMPARE( parser.readRemainingData(), QByteArray( " FOO\n" ) );
+
+      QCOMPARE( scope.scope(), Scope::Gid );
+      QVERIFY( scope.uidSet().isEmpty() );
+      QCOMPARE( scope.gidSet().size(), 2 );
+      QCOMPARE( scope.gidSet().first(), QLatin1String( "my first remote id" ) );
+      QCOMPARE( scope.gidSet().last(), QLatin1String( "my second remote id" ) );
     }
 };
 

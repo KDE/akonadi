@@ -55,7 +55,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   }
 
   DataStore *store = connection()->storageBackend();
-  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), newItem ) )
+  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), item.gid(), newItem ) )
     return false;
   Q_FOREACH ( const Flag &flag, item.flags() ) {
     if ( !newItem.addFlag( flag ) )

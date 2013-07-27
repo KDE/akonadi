@@ -163,6 +163,7 @@ class DataStore : public QObject
                         const QDateTime & dateTime,
                         const QString & remote_id,
                         const QString & remoteRevision,
+                        const QString & gid,
                         PimItem &pimItem );
 
     /**

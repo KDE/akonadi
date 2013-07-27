@@ -60,6 +60,7 @@ class FetchHelper : public QObject
       ItemQuerySizeColumn,
       ItemQueryDatetimeColumn,
       ItemQueryCollectionIdColumn,
+      ItemQueryPimItemGidColumn,
       ItemQueryColumnCount
     };
 
@@ -94,6 +95,7 @@ class FetchHelper : public QObject
     bool mIgnoreErrors;
     bool mFlagsRequested;
     bool mRemoteIdRequested;
+    bool mGidRequested;
     QDateTime mChangedSince;
     int mItemQueryColumnMap[ItemQueryColumnCount];
 

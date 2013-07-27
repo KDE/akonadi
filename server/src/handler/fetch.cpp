@@ -48,6 +48,8 @@ bool Fetch::parseStream()
     successResponse( "UID FETCH completed" );
   else if ( mScope.scope() == Scope::Rid )
     successResponse( "RID FETCH completed" );
+  else if ( mScope.scope() == Scope::Gid )
+    successResponse( "GID FETCH completed" );
   else
     successResponse( "FETCH completed" );
 

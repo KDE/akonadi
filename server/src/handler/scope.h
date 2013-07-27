@@ -39,7 +39,8 @@ class Scope
       None,
       Uid,
       Rid,
-      HierarchicalRid
+      HierarchicalRid,
+      Gid
     };
 
     Scope( SelectionScope scope );
@@ -61,12 +62,14 @@ class Scope
     void setUidSet( const ImapSet &uidSet );
     QStringList ridSet() const;
     QStringList ridChain() const;
+    QStringList gidSet() const;
 
   private:
     SelectionScope mScope;
     ImapSet mUidSet;
     QStringList mRidSet;
     QStringList mRidChain;
+    QStringList mGidSet;
 };
 
 }

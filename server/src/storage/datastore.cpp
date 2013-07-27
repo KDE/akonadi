@@ -654,6 +654,7 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
                                const QDateTime & dateTime,
                                const QString & remote_id,
                                const QString & remoteRevision,
+                               const QString & gid,
                                PimItem &pimItem )
 {
   pimItem.setMimeTypeId( mimetype.id() );
@@ -669,6 +670,7 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
     pimItem.setDirty( false );
   }
   pimItem.setRemoteRevision( remoteRevision );
+  pimItem.setGid( gid );
   pimItem.setAtime( QDateTime::currentDateTime() );
 
   if ( !pimItem.insert() )
