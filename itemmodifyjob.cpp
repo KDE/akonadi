@@ -99,6 +99,16 @@ void ItemModifyJobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int o
 }
 
 
+QString ItemModifyJobPrivate::jobDebuggingString() const
+{
+  try {
+    return QString::fromUtf8( fullCommand() );
+  } catch ( const Exception &e ) {
+    return QString::fromUtf8( e.what() );
+  }
+}
+
+
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   : Job( new ItemModifyJobPrivate( this ), parent )
 {
@@ -134,13 +144,11 @@ ItemModifyJob::~ItemModifyJob()
 {
 }
 
-void ItemModifyJob::doStart()
+QByteArray ItemModifyJobPrivate::fullCommand() const
 {
-  Q_D( ItemModifyJob );
-
-  const Akonadi::Item item = d->mItems.first();
+  const Akonadi::Item item = mItems.first();
   QList<QByteArray> changes;
-  foreach ( int op, d->mOperations ) {
+  foreach ( int op, mOperations ) {
     switch ( op ) {
       case ItemModifyJobPrivate::RemoteId:
         if ( !item.remoteId().isNull() ) {
@@ -187,23 +195,14 @@ void ItemModifyJob::doStart()
   }
 
   // nothing to do
-  if ( changes.isEmpty() && d->mParts.isEmpty() && item.attributes().isEmpty() ) {
-    emitResult();
-    return;
+  if ( changes.isEmpty() && mParts.isEmpty() && item.attributes().isEmpty() ) {
+    return QByteArray();
   }
 
-  d->mTag = d->newTag();
-  QByteArray command = d->mTag;
-  try {
-    command += ProtocolHelper::entitySetToByteArray( d->mItems, "STORE" );
-  } catch ( const Exception &e ) {
-    setError( Job::Unknown );
-    setErrorText( QString::fromUtf8( e.what() ) );
-    emitResult();
-    return;
-  }
+  QByteArray command;
+  command += ProtocolHelper::entitySetToByteArray( mItems, "STORE" ); // can throw an exception
   command += ' ';
-  if ( !d->mRevCheck || item.revision() < 0 ) {
+  if ( !mRevCheck || item.revision() < 0 ) {
     command += "NOREV ";
   } else {
     command += "REV " + QByteArray::number( item.revision() ) + ' ';
@@ -216,7 +215,32 @@ void ItemModifyJob::doStart()
   const QByteArray attrs = ProtocolHelper::attributesToByteArray( item, true );
   if ( !attrs.isEmpty() )
     command += ' ' + attrs;
+  return command;
+}
+
+void ItemModifyJob::doStart()
+{
+  Q_D( ItemModifyJob );
+
+  QByteArray command;
+  try {
+    command = d->fullCommand();
+  } catch ( const Exception &e ) {
+    setError( Job::Unknown );
+    setErrorText( QString::fromUtf8( e.what() ) );
+    emitResult();
+    return;
+  }
+  if ( command.isEmpty() ) {
+    emitResult();
+    return;
+  }
+
+  d->mTag = d->newTag();
+  command.prepend( d->mTag );
+
   command += d->nextPartHeader();
+
   d->writeData( command );
   d->newTag(); // hack to circumvent automatic response handling
 }

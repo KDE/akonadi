@@ -417,6 +417,7 @@ class AKONADI_EXPORT Item : public Entity
     //@cond PRIVATE
     friend class ItemCreateJob;
     friend class ItemModifyJob;
+    friend class ItemModifyJobPrivate;
     friend class ItemSync;
     friend class ProtocolHelper;
     PayloadBase* payloadBase() const;

@@ -47,6 +47,9 @@ class ItemModifyJobPrivate : public JobPrivate
 
     void doUpdateItemRevision( Entity::Id, int oldRevision, int newRevision );
 
+    QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/;
+    QByteArray fullCommand() const;
+
     Q_DECLARE_PUBLIC( ItemModifyJob )
 
     QSet<int> mOperations;
