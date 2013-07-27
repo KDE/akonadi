@@ -263,7 +263,7 @@ ServerManager::State ServerManager::state()
     return Broken;
   }
 
-  if ( previousState == Starting || previousState == Broken ) { // valid cases where nothing might be running (yet)
+  if ( previousState == Starting ) { // valid case where nothing is running (yet)
     return previousState;
   }
   return NotRunning;
