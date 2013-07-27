@@ -271,27 +271,24 @@ void SetupTest::shutdown()
   if ( mShuttingDown )
     return;
   mShuttingDown = true;
-#if 0
-  // check first if the Akonadi server is still running, otherwise D-Bus auto-launch will actually start it here
-  if ( mInternalBus.interface()->isServiceRegistered( "org.freedesktop.Akonadi.Control" ) ) {
-    kDebug() << "Shutting down Akonadi control...";
-    QDBusInterface controlIface( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/ControlManager" ),
-                                QLatin1String( "org.freedesktop.Akonadi.ControlManager" ), mInternalBus );
-    QDBusReply<void> reply = controlIface.call( "shutdown" );
-    if ( !reply.isValid() ) {
-      kWarning() << "Failed to shutdown Akonadi control: " << reply.error().message();
-      shutdownKde();
-      shutdownHarder();
-    } else {
+
+  switch ( Akonadi::ServerManager::self()->state() ) {
+    case Akonadi::ServerManager::Running:
+    case Akonadi::ServerManager::Starting:
+    case Akonadi::ServerManager::Upgrading:
+      kDebug() << "Shutting down Akonadi control...";
+      Akonadi::ServerManager::self()->stop();
       // safety timeout
       QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
-    }
-    // in case we indirectly started KDE processes, stop those before we kill their D-Bus
-    shutdownKde();
-  } else {
-    shutdownHarder();
+      break;
+    case Akonadi::ServerManager::NotRunning:
+    case Akonadi::ServerManager::Broken:
+      shutdownHarder();
+    case Akonadi::ServerManager::Stopping:
+      // safety timeout
+      QTimer::singleShot( 30 * 1000, this, SLOT(shutdownHarder()) );
+      break;
   }
-#endif
 }
 
 void SetupTest::shutdownHarder()
