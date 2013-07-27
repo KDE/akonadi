@@ -572,10 +572,10 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   }
 
   // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
-  if ( appendedMessages > 0 || modifiedMessages > 0 ) {
+  if ( appendedMessages > 0 || modifiedMessages > 0 || erasedMessages > 0 ) {
     if ( erasedMessages > 0 )
       notificationsErased();
-    if ( appendedMessages > 0 )
+    else
       notificationsEnqueued( appendedMessages );
   }
 

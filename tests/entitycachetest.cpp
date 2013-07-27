@@ -150,6 +150,25 @@ class EntityCacheTest : public QObject
       QCOMPARE( item.id(), 1ll );
       QVERIFY( item.hasPayload<QByteArray>() );
     }
+
+    void testListCache_ensureCached()
+    {
+      ItemFetchScope scope;
+
+      EntityListCache<Item, ItemFetchJob, ItemFetchScope> cache( 3 );
+      QSignalSpy spy( &cache, SIGNAL(dataAvailable()) );
+      QVERIFY( spy.isValid() );
+
+      cache.request( QList<Entity::Id>() << 1 << 2 << 3, scope );
+      QTest::qWait( 1000 );
+      QCOMPARE( spy.count(), 1 );
+      QVERIFY( cache.isCached( QList<Entity::Id>() << 1 << 2 << 3 ) );
+
+      cache.ensureCached( QList<Entity::Id>() << 1 << 2 << 3 << 4, scope );
+      QTest::qWait( 1000 );
+      QCOMPARE( spy.count(), 2 );
+      QVERIFY( cache.isCached( QList<Entity::Id>() << 1 << 2 << 3 << 4 ) );
+    }
 };
 
 QTEST_AKONADIMAIN( EntityCacheTest, NoGUI )

@@ -311,7 +311,7 @@ public:
     }
 
     if ( !toRequest.isEmpty() ) {
-      request( toRequest, scope );
+      request( toRequest, scope, ids );
       return false;
     }
 
@@ -355,10 +355,10 @@ public:
     a token to indicate which request has been finished in the
     dataAvailable() signal.
   */
-  void request( const QList<Entity::Id> &ids, const FetchScope &scope )
+  void request( const QList<Entity::Id> &ids, const FetchScope &scope, const QList<Entity::Id> &preserveIds = QList<Entity::Id>() )
   {
     Q_ASSERT( isNotRequested( ids ) );
-    shrinkCache();
+    shrinkCache( preserveIds );
     foreach( Entity::Id id, ids ) {
       EntityListCacheNode<T> *node = new EntityListCacheNode<T>( id );
       mCache.insert( id, node );
@@ -393,12 +393,12 @@ public:
 
 private:
   /** Tries to reduce the cache size until at least one more object fits in. */
-  void shrinkCache()
+  void shrinkCache( const QList<Entity::Id> &preserveIds )
   {
     typename
     QHash< Entity::Id, EntityListCacheNode<T>* >::Iterator iter = mCache.begin();
     while ( iter != mCache.end() && mCache.size() >= mCapacity ) {
-      if ( iter.value()->pending ) {
+      if ( iter.value()->pending || preserveIds.contains( iter.key() ) ) {
         ++iter;
         continue;
       }
