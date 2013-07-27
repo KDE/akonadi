@@ -191,7 +191,7 @@ bool SetupTest::startAkonadiDaemon()
             this, SLOT(slotAkonadiDaemonProcessFinished(int)) );
   }
 
-  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ) );
+  mAkonadiDaemonProcess->setProgram( QLatin1String( "akonadi_control" ), QStringList() << QLatin1String("--instance") << instanceId() );
   mAkonadiDaemonProcess->start();
   const bool started = mAkonadiDaemonProcess->waitForStarted( 5000 );
   kDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
