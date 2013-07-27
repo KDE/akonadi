@@ -41,10 +41,6 @@
 #include <signal.h>
 #include <unistd.h>
 
-#ifdef __APPLE__
-#include <AvailabilityMacros.h>
-#endif
-
 QMap<QString, QString> SetupTest::environment() const
 {
   QMap<QString, QString> env;
@@ -65,15 +61,9 @@ bool SetupTest::clearEnvironment()
 
   foreach ( const QString& key, keys ) {
     if ( key != QLatin1String( "HOME" ) ) {
-// work around a bug in the Mac OS X 10.4.0 SDK
-#if defined(MAC_OS_X_VERSION_MAX_ALLOWED) && (MAC_OS_X_VERSION_MAX_ALLOWED <= MAC_OS_X_VERSION_10_4)
-      /* on OSX 10.4, unsetenv is a void, not a boolean */
-      unsetenv( key.toLatin1() );
-#else
       if ( !unsetenv( key.toLatin1() ) ) {
         return false;
       }
-#endif
     }
   }
 
