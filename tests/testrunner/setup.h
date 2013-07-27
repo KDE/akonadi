@@ -28,6 +28,7 @@
 class QIODevice;
 class KProcess;
 class QSignalMapper;
+class KJob;
 
 class SetupTest : public QObject
 {
@@ -66,6 +67,7 @@ class SetupTest : public QObject
     void dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
     void resourceSynchronized( const QString &agentId );
     void slotAkonadiDaemonProcessFinished( int exitCode );
+    void agentCreationResult(KJob* job);
 
   private:
     bool clearEnvironment();
@@ -75,6 +77,7 @@ class SetupTest : public QObject
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
+    bool isSetupDone() const;
 
   private slots:
     void synchronizeResources();
@@ -88,6 +91,7 @@ class SetupTest : public QObject
     QSignalMapper *mSyncMapper;
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;
+    int mSetupJobCount;
 };
 
 #endif

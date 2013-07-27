@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008  Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
+ * Copyright (c) 2013  Volker Krause <vkrause@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,8 @@
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
 #include "symbols.h"
+
+#include <akonadi/agentinstancecreatejob.h>
 
 #include <kapplication.h>
 #include <kconfiggroup.h>
@@ -105,31 +108,37 @@ void SetupTest::setupAgents()
 {
   if ( mAgentsCreated )
     return;
-#if 0
   mAgentsCreated = true;
   Config *config = Config::instance();
-  QDBusInterface agentDBus( QLatin1String( "org.freedesktop.Akonadi.Control" ), QLatin1String( "/AgentManager" ),
-                            QLatin1String( "org.freedesktop.Akonadi.AgentManager" ), mInternalBus );
-
   const QList<QPair<QString,bool> > agents = config->agents();
   typedef QPair<QString,bool> StringBoolPair;
   foreach ( const StringBoolPair &agent, agents ) {
     kDebug() << "Creating agent" << agent.first << "...";
-    QDBusReply<QString> reply = agentDBus.call( QLatin1String( "createAgentInstance" ), agent.first );
-    if ( reply.isValid() && !reply.value().isEmpty() ) {
-      mPendingAgents << reply.value();
-      mPendingResources << reply.value();
-      if ( agent.second ) {
-        mPendingSyncs << reply.value();
-      }
-    } else {
-      kError() << "createAgentInstance call failed:" << reply.error();
-    }
+    ++mSetupJobCount;
+    Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( agent.first, this );
+    job->setProperty( "sync", agent.second );
+    connect( job, SIGNAL(result(KJob*)), SLOT(agentCreationResult(KJob*)) );
+    job->start();
   }
 
-  if ( mPendingAgents.isEmpty() )
+  if ( isSetupDone() )
     emit setupDone();
-#endif
+}
+
+void SetupTest::agentCreationResult(KJob* job)
+{
+  --mSetupJobCount;
+  if ( job->error() ) {
+    kError() << job->errorString(); // TODO exit
+    return;
+  }
+  const bool needsSync = job->property( "sync" ).toBool();
+  if (needsSync) {
+    // TODO sync
+  }
+
+  if ( isSetupDone() )
+    emit setupDone();
 }
 
 void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
@@ -143,6 +152,7 @@ void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
 void SetupTest::dbusNameOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner )
 {
   kDebug() << name << oldOwner << newOwner;
+  return;
 
   if ( name.startsWith( QLatin1String( "org.freedesktop.Akonadi.Agent." ) ) && oldOwner.isEmpty() ) {
     const QString identifier = name.mid( 30 );
@@ -260,7 +270,8 @@ SetupTest::SetupTest() :
   mShuttingDown( false ),
   mSyncMapper( new QSignalMapper( this ) ),
   mAgentsCreated( false ),
-  mTrackAkonadiProcess( true )
+  mTrackAkonadiProcess( true ),
+  mSetupJobCount( 0 )
 {
   setupInstanceId();
   clearEnvironment();
@@ -401,4 +412,9 @@ QString SetupTest::instanceId() const
 void SetupTest::setupInstanceId()
 {
   setenv("AKONADI_INSTANCE", instanceId().toLocal8Bit(), 1);
+}
+
+bool SetupTest::isSetupDone() const
+{
+  return mSetupJobCount == 0;
 }
