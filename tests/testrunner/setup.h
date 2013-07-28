@@ -70,6 +70,7 @@ class SetupTest : public QObject
   private:
     void setupAgents();
     void copyXdgDirectory( const QString &src, const QString &dst );
+    void copyKdeHomeDirectory( const QString &src, const QString &dst );
     void copyDirectory( const QString &src, const QString &dst );
     void createTempEnvironment();
     void deleteDirectory( const QString &dirName );

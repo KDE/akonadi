@@ -148,6 +148,26 @@ void SetupTest::copyXdgDirectory(const QString& src, const QString& dst)
   }
 }
 
+void SetupTest::copyKdeHomeDirectory(const QString& src, const QString& dst)
+{
+  const QDir srcDir( src );
+  QDir::root().mkpath( dst );
+
+  foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
+    if ( fi.isDir() ) {
+      copyKdeHomeDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+    } else {
+      if ( fi.fileName().startsWith( QLatin1String("akonadi_") ) && fi.fileName().endsWith( QLatin1String("rc") ) ) {
+        // namespace according to instance identifier
+        const QString baseName = fi.fileName().left( fi.fileName().size() - 2 );
+        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + Akonadi::ServerManager::addNamespace( baseName ) + QLatin1String("rc") );
+      } else {
+        QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+      }
+    }
+  }
+}
+
 void SetupTest::copyDirectory( const QString &src, const QString &dst )
 {
   const QDir srcDir( src );
@@ -176,7 +196,7 @@ void SetupTest::createTempEnvironment()
   tmpDir.mkdir( testRunnerDataDir );
 
   const Config *config = Config::instance();
-  copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
+  copyKdeHomeDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
   copyXdgDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir );
   copyXdgDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
 }
