@@ -52,21 +52,6 @@ QMap<QString, QString> SetupTest::environment() const
   return env;
 }
 
-bool SetupTest::clearEnvironment()
-{
-  const QStringList keys = environment().keys();
-
-  foreach ( const QString& key, keys ) {
-    if ( key != QLatin1String( "HOME" ) ) {
-      if ( !unsetenv( key.toLatin1() ) ) {
-        return false;
-      }
-    }
-  }
-
-  return true;
-}
-
 bool SetupTest::startAkonadiDaemon()
 {
   Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
@@ -229,7 +214,6 @@ SetupTest::SetupTest() :
   mSetupJobCount( 0 )
 {
   setupInstanceId();
-  clearEnvironment();
   cleanTempEnvironment();
   createTempEnvironment();
 

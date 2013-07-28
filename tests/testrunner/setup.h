@@ -69,7 +69,6 @@ class SetupTest : public QObject
     void synchronizationResult(KJob* job);
 
   private:
-    bool clearEnvironment();
     QMap<QString, QString> environment() const;
     void setupAgents();
     void copyDirectory( const QString &src, const QString &dst );
