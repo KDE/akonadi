@@ -578,7 +578,9 @@ Item::tryToClone( T * ret, const int * ) const
           std::auto_ptr<PayloadBase> npb( new Payload<T>( nt ) );
           addPayloadBaseVariant( PayloadType::sharedPointerId, metaTypeId, npb  );
           // and return it
-          if ( ret ) *ret = nt;
+          if ( ret ) {
+            *ret = nt;
+          }
           return true;
       }
   }
