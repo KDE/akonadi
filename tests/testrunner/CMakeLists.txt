@@ -1,11 +1,7 @@
 project (akonaditest)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/kabc
-    ${CMAKE_SOURCE_DIR}/kcal
     ${CMAKE_SOURCE_DIR}/akonadi
-    ${CMAKE_BINARY_DIR}/kabc
-    ${CMAKE_BINARY_DIR}/kcal
     ${CMAKE_BINARY_DIR}/akonadi
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${Boost_INCLUDE_DIR}
@@ -32,7 +28,6 @@ target_link_libraries(akonaditest
   ${KDE4_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
-  ${QT_QTNETWORK_LIBRARY}
 )
 
 install(TARGETS akonaditest ${INSTALL_TARGETS_DEFAULT_ARGS})
