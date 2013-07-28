@@ -130,6 +130,24 @@ void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
     shutdownHarder();
 }
 
+void SetupTest::copyXdgDirectory(const QString& src, const QString& dst)
+{
+  const QDir srcDir( src );
+  foreach ( const QFileInfo &fi, srcDir.entryInfoList( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot ) ) {
+    if (fi.isDir()) {
+      if ( fi.fileName() == QLatin1String("akonadi") ) {
+        // namespace according to instance identifier
+        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + QLatin1String("akonadi") + QDir::separator()
+                       + QLatin1String("instance") + QDir::separator() + instanceId() );
+      } else {
+        copyDirectory( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+      }
+    } else {
+      QFile::copy( fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName() );
+    }
+  }
+}
+
 void SetupTest::copyDirectory( const QString &src, const QString &dst )
 {
   const QDir srcDir( src );
@@ -159,8 +177,8 @@ void SetupTest::createTempEnvironment()
 
   const Config *config = Config::instance();
   copyDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
-  copyDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir  );
-  copyDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
+  copyXdgDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir );
+  copyXdgDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
 }
 
 // TODO Qt5: use QDir::removeRecursively
