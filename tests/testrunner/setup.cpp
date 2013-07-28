@@ -38,20 +38,6 @@
 
 #include <unistd.h>
 
-QMap<QString, QString> SetupTest::environment() const
-{
-  QMap<QString, QString> env;
-
-  foreach ( const QString& val, QProcess::systemEnvironment() ) {
-    const int p = val.indexOf( QLatin1Char( '=' ) );
-    if ( p > 0 ) {
-      env[ val.left( p ).toUpper() ] = val.mid( p + 1 );
-    }
-  }
-
-  return env;
-}
-
 bool SetupTest::startAkonadiDaemon()
 {
   Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());

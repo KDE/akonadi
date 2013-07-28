@@ -20,7 +20,6 @@
 
 #include <akonadi/servermanager.h>
 
-#include <QtCore/QMap>
 #include <QtCore/QObject>
 #include <QStringList>
 #include <QDBusConnection>
@@ -69,7 +68,6 @@ class SetupTest : public QObject
     void synchronizationResult(KJob* job);
 
   private:
-    QMap<QString, QString> environment() const;
     void setupAgents();
     void copyDirectory( const QString &src, const QString &dst );
     void createTempEnvironment();
