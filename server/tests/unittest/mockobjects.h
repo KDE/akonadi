@@ -45,8 +45,8 @@ public:
 class MockObjects
 {
 public:
-	MockObjects();
-	~MockObjects();
+        MockObjects();
+        ~MockObjects();
 
         static AkonadiConnection * mockConnection()
         {

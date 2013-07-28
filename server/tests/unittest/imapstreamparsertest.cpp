@@ -196,7 +196,7 @@ void ImapStreamParserTest::testParseParenthesizedList( )
   buffer.write( QByteArray( "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) " ) );
   buffer.write( QByteArray( "some_list-less_text" ) );
   buffer.write( QByteArray( "(foo {6}\n\n\nbar\n bla)" ));
-  buffer.write( QByteArray( "(AA (\"BB)\" CC))" ));	// parenthesis inside quoted string
+  buffer.write( QByteArray( "(AA (\"BB)\" CC))" ));    // parenthesis inside quoted string
   buffer.seek(0);
 
   QList<QByteArray>result;
