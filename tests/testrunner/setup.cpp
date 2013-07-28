@@ -134,12 +134,11 @@ void SetupTest::copyDirectory( const QString &src, const QString &dst )
 {
   QDir srcDir( src );
   srcDir.setFilter( QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot );
+  QDir::root().mkpath( dst );
 
   const QFileInfoList list = srcDir.entryInfoList();
   for ( int i = 0; i < list.size(); ++i ) {
     if ( list.at( i ).isDir() ) {
-      const QDir tmpDir( dst );
-      tmpDir.mkdir( list.at( i ).fileName() );
       copyDirectory( list.at( i ).absoluteFilePath(), dst + QDir::separator() + list.at( i ).fileName() );
     } else {
       QFile::copy( srcDir.absolutePath() + QDir::separator() + list.at( i ).fileName(), dst + QDir::separator() + list.at( i ).fileName() );
