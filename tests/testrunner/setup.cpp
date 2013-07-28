@@ -206,6 +206,9 @@ SetupTest::SetupTest() :
   setenv( "KDEHOME", qPrintable( QString( basePath() + "kdehome" ) ), 1 );
   setenv( "XDG_DATA_HOME", qPrintable( QString( basePath() + "data" ) ), 1 );
   setenv( "XDG_CONFIG_HOME", qPrintable( QString( basePath() + "config" ) ), 1 );
+  // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
+  setenv( "AKONADI_DISABLE_AGENT_AUTOSTART", "true", 1 );
+
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
   while( iter.hasNext() ) {
     iter.next();
