@@ -91,6 +91,17 @@ QObject* defaultObjectForMimeType( const QString &mimetype );
  */
 QObject* objectForMimeTypeAndClass( const QString &mimetype, const QVector<int> &metaTypeIds, Options options=NoOptions );
 
+/**
+ * Override the plugin-lookup with @p plugin.
+ *
+ * After calling this each lookup will always return @p plugin.
+ * This is useful to inject a special plugin for testing purposes.
+ * To reset the plugin, set to 0.
+ *
+ * @since 4.12
+ */
+void overridePluginLookup( QObject *plugin );
+
 }
 
 }

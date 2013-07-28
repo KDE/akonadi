@@ -260,6 +260,16 @@ void Item::setMimeType( const QString & mimeType )
   d_func()->mMimeType = mimeType;
 }
 
+void Item::setGid( const QString &id )
+{
+  d_func()->mGid = id;
+}
+
+QString Item::gid() const
+{
+  return d_func()->mGid;
+}
+
 bool Item::hasPayload() const
 {
   return d_func()->hasMetaTypeId( -1 );

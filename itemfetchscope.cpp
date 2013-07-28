@@ -141,6 +141,16 @@ bool ItemFetchScope::fetchModificationTime() const
   return d->mFetchMtime;
 }
 
+void ItemFetchScope::setFetchGid( bool retrieveGid )
+{
+  d->mFetchGid = retrieveGid;
+}
+
+bool ItemFetchScope::fetchGid() const
+{
+  return d->mFetchGid;
+}
+
 void ItemFetchScope::setIgnoreRetrievalErrors( bool ignore )
 {
   d->mIgnoreRetrievalErrors = ignore;

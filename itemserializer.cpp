@@ -221,4 +221,9 @@ Item ItemSerializer::convert( const Item & item, int mtid )
   return Item();
 }
 
+void ItemSerializer::overridePluginLookup( QObject *p )
+{
+  TypePluginLoader::overridePluginLookup(p);
+}
+
 }

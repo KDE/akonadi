@@ -34,6 +34,7 @@ class ItemModifyJobPrivate : public JobPrivate
     {
       RemoteId,
       RemoteRevision,
+      Gid,
       Dirty
     };
 

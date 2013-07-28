@@ -227,7 +227,8 @@ class PluginRegistry
 {
   public:
     PluginRegistry()
-      : mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream@QByteArray" ), s_defaultItemSerializerPlugin ) )
+      : mDefaultPlugin( PluginEntry( QLatin1String( "application/octet-stream@QByteArray" ), s_defaultItemSerializerPlugin ) ),
+        mOverridePlugin( 0 )
     {
       const PluginLoader* pl = PluginLoader::self();
       if ( !pl ) {
@@ -276,6 +277,9 @@ class PluginRegistry
     }
 
     QObject * findBestMatch( const QString & type, const QVector<int> & metaTypeIds ) {
+      if ( mOverridePlugin ) {
+        return mOverridePlugin;
+      }
       if ( QObject * const plugin = cacheLookup( type, metaTypeIds ) )
         // plugin cached, so let's take that one
         return plugin;
@@ -287,6 +291,10 @@ class PluginRegistry
       if ( chosen >= 0 )
           cachedPlugins[type][chosen] = plugin;
       return plugin;
+    }
+
+    void overrideDefaultPlugin( QObject *p ) {
+      mOverridePlugin = p;
     }
 
 private:
@@ -382,6 +390,7 @@ private:
 
   private:
     PluginEntry mDefaultPlugin;
+    QObject *mOverridePlugin;
 };
 
 K_GLOBAL_STATIC( PluginRegistry, s_pluginRegistry )
@@ -419,6 +428,10 @@ ItemSerializerPlugin* TypePluginLoader::defaultPluginForMimeType( const QString 
   ItemSerializerPlugin* plugin = qobject_cast<ItemSerializerPlugin*>( defaultObjectForMimeType( mimetype ) );
   Q_ASSERT( plugin );
   return plugin;
+}
+
+void TypePluginLoader::overridePluginLookup( QObject *p ) {
+    s_pluginRegistry->overrideDefaultPlugin( p );
 }
 
 

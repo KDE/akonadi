@@ -245,6 +245,23 @@ class AKONADI_EXPORT ItemFetchScope
     bool fetchModificationTime() const;
 
     /**
+     * Enables retrieval of the item GID.
+     * This is disabled by default.
+     *
+     * @param retrieveGID @c true to retrieve the GID, @c false otherwise
+     * @since 4.12
+     */
+    void setFetchGid( bool retrieveGID );
+
+    /**
+     * Returns whether item GID should be retrieved.
+     *
+     * @see setFetchGid()
+     * @since 4.12
+     */
+    bool fetchGid() const;
+
+    /**
      * Ignore retrieval errors while fetching items, and always deliver what is available.
      * If items have missing parts and the part can't be retrieved from the resource (i.e. because the system is offline),
      * the fetch job would normally just fail. By setting this flag, the errors are ignored,

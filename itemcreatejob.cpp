@@ -26,6 +26,7 @@
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
+#include "gid/gidextractor_p.h"
 
 #include <QtCore/QDateTime>
 
@@ -72,6 +73,10 @@ void ItemCreateJob::doStart()
 
   QList<QByteArray> flags;
   flags.append( "\\MimeType[" + d->mItem.mimeType().toLatin1() + ']' );
+  const QString gid = GidExtractor::getGid( d->mItem );
+  if ( !gid.isNull() ) {
+    flags.append( ImapParser::quote( "\\Gid[" + gid.toUtf8() + ']' ) );
+  }
   if ( !d->mItem.remoteId().isEmpty() )
     flags.append( ImapParser::quote( "\\RemoteId[" + d->mItem.remoteId().toUtf8() + ']' ) );
   if ( !d->mItem.remoteRevision().isEmpty() )

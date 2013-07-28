@@ -294,6 +294,7 @@ class ItemPrivate : public EntityPrivate
     qint64 mSize;
     QDateTime mModificationTime;
     QString mMimeType;
+    QString mGid;
     Item::Flags mAddedFlags;
     Item::Flags mDeletedFlags;
     QSet<QByteArray> mCachedPayloadParts;

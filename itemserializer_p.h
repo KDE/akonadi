@@ -81,6 +81,17 @@ class AKONADI_TESTS_EXPORT ItemSerializer
        * @since 4.6
        */
       static Item convert( const Item & item, int metaTypeId );
+
+      /**
+      * Override the plugin-lookup with @p plugin.
+      *
+      * After calling this each lookup will always return @p plugin.
+      * This is useful to inject a special plugin for testing purposes.
+      * To reset the plugin, set to 0.
+      *
+      * @since 4.12
+      */
+      static void overridePluginLookup( QObject *plugin );
 };
 
 /**

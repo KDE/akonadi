@@ -119,6 +119,7 @@ set( akonadikde_LIB_SRC
   exception.cpp
   favoritecollectionsmodel.cpp
   firstrun.cpp
+  gid/gidextractor.cpp
   indexpolicyattribute.cpp
   item.cpp
   itemcreatejob.cpp
@@ -327,6 +328,7 @@ install( FILES
   etmviewstatesaver.h
   exception.h
   favoritecollectionsmodel.h
+  gid/gidextractorinterface.h
   indexpolicyattribute.h
   item.h
   itemcreatejob.h

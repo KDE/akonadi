@@ -29,6 +29,7 @@
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
+#include "gid/gidextractor_p.h"
 
 #include <kdebug.h>
 
@@ -119,6 +120,7 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
 
   d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
   d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
+  d->mOperations.insert( ItemModifyJobPrivate::Gid );
 }
 
 ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
@@ -133,6 +135,7 @@ ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
     d->mParts = items.first().loadedPayloadParts();
     d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
     d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
+    d->mOperations.insert( ItemModifyJobPrivate::Gid );
   } else {
     d->mIgnorePayload = true;
     d->mRevCheck = false;
@@ -156,6 +159,14 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
           changes << ImapParser::quote( item.remoteId().toUtf8() );
         }
         break;
+      case ItemModifyJobPrivate::Gid: {
+        const QString gid = GidExtractor::getGid( item, mIgnorePayload );
+        if ( !gid.isNull() ) {
+          changes << "GID";
+          changes << ImapParser::quote( gid.toUtf8() );
+        }
+        break;
+      }
       case ItemModifyJobPrivate::RemoteRevision:
         if ( !item.remoteRevision().isNull() ) {
           changes << "REMOTEREVISION";

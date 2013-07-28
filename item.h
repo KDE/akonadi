@@ -296,6 +296,20 @@ class AKONADI_EXPORT Item : public Entity
     QString mimeType() const;
 
     /**
+     * Sets the @p gid of the entity.
+     *
+     * @since 4.12
+     */
+    void setGid( const QString &gid );
+
+    /**
+     * Returns the gid of the entity.
+     *
+     * @since 4.12
+     */
+    QString gid() const;
+
+    /**
      * Returns a list of metatype-ids, describing the different
      * variants of payload that are currently contained in this item.
      *
