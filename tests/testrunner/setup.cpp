@@ -240,6 +240,10 @@ SetupTest::SetupTest() :
 
   connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
+
+  // TODO: for parallel tests, this should contain the PID, and changed correspondingly in the shell script generator
+  QDBusConnection::sessionBus().registerService( QLatin1String( "org.kde.Akonadi.Testrunner" ) );
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/" ), this, QDBusConnection::ExportScriptableSlots );
 }
 
 SetupTest::~SetupTest()
