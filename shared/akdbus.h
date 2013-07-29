@@ -38,7 +38,7 @@ namespace AkDBus
     StorageJanitor,
     UpgradeIndicator
   };
-  
+
   /**
    * Returns the service name for the given @p serviceType.
    */
@@ -52,7 +52,7 @@ namespace AkDBus
     Resource,
     Preprocessor
   };
-  
+
   /**
    * Parses a D-Bus service name and checks if it belongs to an agent of this instance.
    * @param serviceName The service name to parse.

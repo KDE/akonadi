@@ -29,7 +29,7 @@
 namespace Akonadi {
 
 class AgentThread;
-  
+
 class AgentServer : public QObject
 {
   Q_OBJECT
@@ -58,7 +58,7 @@ class AgentServer : public QObject
     bool m_processingConfigureRequests;
     bool m_quiting;
 };
-  
+
 }
 
 #endif

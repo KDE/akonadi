@@ -54,7 +54,7 @@ class DataStore;
  * The items are marked as hidden (by the Append and AkAppend
  * handlers) and then enqueued to the preprocessor chain via this class.
  * Once all the preprocessors have done their work the item is unhidden again.
- * 
+ *
  * Preprocessing isn't designed for critical tasks. There may
  * be circumstances under that the Akonadi server fails to push an item
  * to all the preprocessors. Most notably after a server restart all

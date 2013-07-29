@@ -465,6 +465,6 @@ void ImapStreamParserTest::testAbortCommand()
   } catch ( const Akonadi::Exception &e ) {
     qDebug() << e.type() << e.what();
     QFAIL( "Exception caught" );
-  }  
+  }
 }
 

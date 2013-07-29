@@ -68,7 +68,7 @@ QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentT
       return QString();
     return parts.at(1);
   }
-  
+
   return QString();
 }
 

@@ -74,7 +74,7 @@ void AgentServer::startAgent( const QString &identifier, const QString &typeIden
       return;
     }
   }
-  
+
   QPluginLoader *loader = m_agentLoader.load( fileName );
   if ( loader == 0 )
     return; // No plugin found, debug output in AgentLoader.

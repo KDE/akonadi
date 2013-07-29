@@ -44,7 +44,7 @@ namespace Akonadi {
   - @c FULLPAYLOAD: Retrieve the full payload
   - @c CACHEONLY: Restrict retrieval to parts already in the cache, even if more parts have been requested.
   - @c EXTERNALPAYLOAD: Indicate the capability to retrieve parts via the filesystem instead over the socket
-  - @c ANCESTORS: Indicate the desired ancestor collection depth (0 is the default) 
+  - @c ANCESTORS: Indicate the desired ancestor collection depth (0 is the default)
  */
 class Fetch : public Handler
 {

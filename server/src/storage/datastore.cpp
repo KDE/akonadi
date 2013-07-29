@@ -839,7 +839,7 @@ bool Akonadi::DataStore::beginTransaction()
     return false;
 
   if ( m_transactionLevel == 0 ) {
-    TRANSACTION_MUTEX_LOCK; 
+    TRANSACTION_MUTEX_LOCK;
     QSqlDriver *driver = m_database.driver();
     if ( !driver->beginTransaction() ) {
       debugLastDbError( "DataStore::beginTransaction" );

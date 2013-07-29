@@ -38,7 +38,7 @@ public:
     {
         if ( !s_backend )
             s_backend = new MockBackend();
-        return s_backend; 
+        return s_backend;
     }
 };
 
@@ -52,7 +52,7 @@ public:
         {
            if ( !s_connection )
                s_connection = new MockConnection();
-           return s_connection; 
+           return s_connection;
         }
 }; // End of class MockObjects
 

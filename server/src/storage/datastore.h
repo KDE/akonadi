@@ -172,7 +172,7 @@ class DataStore : public QObject
     bool cleanupPimItems( const PimItem::List &items );
 
     /**
-     * Unhides the specified PimItem. Emits the itemAdded() notification as 
+     * Unhides the specified PimItem. Emits the itemAdded() notification as
      * the hidden flag is assumed to have been set by appendPimItem() before
      * pushing the item to the preprocessor chain. The hidden item had his
      * notifications disabled until now (so for the clients the "unhide" operation
