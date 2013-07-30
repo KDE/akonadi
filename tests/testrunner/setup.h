@@ -76,6 +76,7 @@ class SetupTest : public QObject
     void deleteDirectory( const QString &dirName );
     void cleanTempEnvironment();
     bool isSetupDone() const;
+    void setupFailed();
 
   private:
     KProcess *mAkonadiDaemonProcess;
@@ -83,6 +84,7 @@ class SetupTest : public QObject
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;
     int mSetupJobCount;
+    int mExitCode;
 };
 
 #endif

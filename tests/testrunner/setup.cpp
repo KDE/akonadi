@@ -95,7 +95,8 @@ void SetupTest::agentCreationResult(KJob* job)
 {
   --mSetupJobCount;
   if ( job->error() ) {
-    kError() << job->errorString(); // TODO exit
+    kError() << job->errorString();
+    setupFailed();
     return;
   }
   const bool needsSync = job->property( "sync" ).toBool();
@@ -115,7 +116,8 @@ void SetupTest::synchronizationResult(KJob* job)
 {
   --mSetupJobCount;
   if ( job->error() ) {
-    kError() << job->errorString(); // TODO exit
+    kError() << job->errorString();
+    setupFailed();
   }
 
   if ( isSetupDone() )
@@ -232,7 +234,8 @@ SetupTest::SetupTest() :
   mShuttingDown( false ),
   mAgentsCreated( false ),
   mTrackAkonadiProcess( true ),
-  mSetupJobCount( 0 )
+  mSetupJobCount( 0 ),
+  mExitCode( 0 )
 {
   setupInstanceId();
   cleanTempEnvironment();
@@ -305,7 +308,7 @@ void SetupTest::shutdownHarder()
   kDebug();
   mShuttingDown = false;
   stopAkonadiDaemon();
-  QCoreApplication::instance()->quit();
+  QCoreApplication::instance()->exit( mExitCode );
 }
 
 void SetupTest::restartAkonadiServer()
@@ -372,5 +375,11 @@ void SetupTest::setupInstanceId()
 
 bool SetupTest::isSetupDone() const
 {
-  return mSetupJobCount == 0;
+  return mSetupJobCount == 0 && mExitCode == 0;
+}
+
+void SetupTest::setupFailed()
+{
+  mExitCode = 1;
+  shutdown();
 }
