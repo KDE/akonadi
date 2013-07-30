@@ -55,6 +55,30 @@ class FetchHelperTest : public QObject
       QVERIFY(!fh.mAllAttrs);
       QVERIFY(fh.mMTimeRequested);
       QVERIFY(fh.mRemoteIdRequested);
+
+      // full payload special case
+      input = "FULLPAYLOAD ()";
+      buffer.setBuffer( &input );
+      buffer.open( QIODevice::ReadOnly );
+      parser = ImapStreamParser( &buffer );
+
+      FetchHelper fh2(0, Scope(Scope::Invalid));
+      fh2.setStreamParser( &parser );
+      fh2.parseCommandStream();
+
+      QVERIFY(!fh2.mRemoteRevisionRequested);
+      QVERIFY(!fh2.mSizeRequested);
+      QVERIFY(!fh2.mCacheOnly);
+      QVERIFY(!fh2.mExternalPayloadSupported);
+      QCOMPARE(fh2.mAncestorDepth, 0);
+      QVERIFY(fh2.mChangedSince.isNull());
+      QVERIFY(!fh2.mIgnoreErrors);
+      QVERIFY(fh2.mFullPayload);
+      QCOMPARE(fh2.mRequestedParts.size(), 1);
+      QCOMPARE(fh2.mRequestedParts.at(0), QByteArray("PLD:RFC822"));
+      QVERIFY(!fh2.mAllAttrs);
+      QVERIFY(!fh2.mMTimeRequested);
+      QVERIFY(!fh2.mRemoteIdRequested);
     }
 };
 
