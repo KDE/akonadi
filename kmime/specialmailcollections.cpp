@@ -116,7 +116,11 @@ bool SpecialMailCollections::registerCollection( Type type, const Collection &co
 
 bool SpecialMailCollections::unregisterCollection( const Collection &collection )
 {
-  return SpecialCollections::unregisterCollection( collection );
+  if (collection != Akonadi::SpecialMailCollections::self()->defaultCollection( Akonadi::SpecialMailCollections::Trash )) {
+    return SpecialCollections::unregisterCollection( collection );
+  } else {
+    return false;
+  }
 }
 
 bool SpecialMailCollections::hasDefaultCollection( Type type ) const
