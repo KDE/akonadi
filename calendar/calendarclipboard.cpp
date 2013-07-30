@@ -185,7 +185,6 @@ CalendarClipboard::CalendarClipboard( const Akonadi::CalendarBase::Ptr &calendar
                                                         , d( new Private( calendar, changer, this ) )
 {
 
-
 }
 
 CalendarClipboard::~CalendarClipboard()

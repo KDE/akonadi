@@ -245,7 +245,6 @@ int JobPrivate::protocolVersion() const
 }
 //@endcond
 
-
 Job::Job( QObject *parent )
   : KCompositeJob( parent ),
     d_ptr( new JobPrivate( this ) )

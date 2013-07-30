@@ -201,7 +201,6 @@ void ContactEditor::Private::setupMonitor()
            mParent, SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)) );
 }
 
-
 ContactEditor::ContactEditor( Mode mode, QWidget *parent )
   : QWidget( parent ), d( new Private( mode, FullMode, 0, this ) )
 {
@@ -216,7 +215,6 @@ ContactEditor::ContactEditor( Mode mode, DisplayMode displayMode, QWidget *paren
   : QWidget( parent ), d( new Private( mode, displayMode, 0, this ) )
 {
 }
-
 
 ContactEditor::~ContactEditor()
 {

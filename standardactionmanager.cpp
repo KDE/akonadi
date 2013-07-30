@@ -184,7 +184,6 @@ static QModelIndexList safeSelectedRows( QItemSelectionModel *selectionModel )
   return selectedRows;
 }
 
-
 /**
  * @internal
  */
@@ -221,7 +220,6 @@ class StandardActionManager::Private
                            ki18np( "&Delete Resource", "&Delete %1 Resources" ) );
       pluralLabels.insert( StandardActionManager::SynchronizeResources,
                            ki18np( "&Synchronize Resource", "&Synchronize %1 Resources" ) );
-
 
       pluralIconLabels.insert( StandardActionManager::CopyCollections,
                            ki18np( "Copy Folder", "Copy %1 Folders" ) );
@@ -371,7 +369,6 @@ class StandardActionManager::Private
                          QModelIndex() );
       }
     }
-
 
     void updateAlternatingAction( int type )
     {
@@ -1430,7 +1427,6 @@ class StandardActionManager::Private
       return text.subs( value ).toString();
     }
 
-
     QString contextText( StandardActionManager::Type type, StandardActionManager::TextContext context, int count, const QString &value ) const
     {
       KLocalizedString text = contextTexts[ type ].value( context ).localizedText;
@@ -1703,7 +1699,5 @@ void StandardActionManager::createActionFolderMenu(QMenu *menu, Type type)
 {
   d->createActionFolderMenu( menu, type );
 }
-
-
 
 #include "moc_standardactionmanager.cpp"

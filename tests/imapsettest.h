@@ -30,5 +30,4 @@ class ImapSetTest : public QObject
     void testAddList();
 };
 
-
 #endif

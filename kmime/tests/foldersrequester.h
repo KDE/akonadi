@@ -43,5 +43,4 @@ class Requester : public QObject
     void requestResult( KJob *job );
 };
 
-
 #endif

@@ -31,5 +31,4 @@ class SearchJobTest : public QObject
     void testModifySearch();
 };
 
-
 #endif

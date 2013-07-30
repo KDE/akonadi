@@ -148,7 +148,6 @@ QModelIndex CollectionModel::parent( const QModelIndex & index ) const
     return QModelIndex();
   }
 
-
   Collection parentCol = d->collections.value( col.parentCollection().id() );
   if ( !parentCol.isValid() ) {
     return QModelIndex();
@@ -326,7 +325,5 @@ void CollectionModel::includeUnsubscribed(bool include)
   Q_D( CollectionModel );
   d->unsubscribed = include;
 }
-
-
 
 #include "moc_collectionmodel.cpp"

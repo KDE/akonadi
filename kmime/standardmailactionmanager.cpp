@@ -68,7 +68,6 @@ class StandardMailActionManager::Private
       mParent->connect( mGenericManager, SIGNAL(actionStateUpdated()),
                         mParent, SIGNAL(actionStateUpdated()) );
 
-
       mGenericManager->setMimeTypeFilter( QStringList() << KMime::Message::mimeType() );
       mGenericManager->setCapabilityFilter( QStringList() << QLatin1String( "Resource" ) );
     }
@@ -659,7 +658,6 @@ class StandardMailActionManager::Private
     QSet<StandardMailActionManager::Type> mInterceptedActions;
     StandardMailActionManager *mParent;
 };
-
 
 StandardMailActionManager::StandardMailActionManager( KActionCollection *actionCollection, QWidget *parent )
   : QObject( parent ), d( new Private( actionCollection, parent, this ) )

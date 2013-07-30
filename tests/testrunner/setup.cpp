@@ -59,7 +59,6 @@ QMap<QString, QString> SetupTest::environment() const
   return env;
 }
 
-
 bool SetupTest::clearEnvironment()
 {
   const QStringList keys = environment().keys();
@@ -502,7 +501,6 @@ void SetupTest::restartAkonadiServer()
   connect( mAkonadiDaemonProcess, SIGNAL(finished(int)),
            this, SLOT(slotAkonadiDaemonProcessFinished(int)));
 }
-
 
 QString SetupTest::basePath() const
 {

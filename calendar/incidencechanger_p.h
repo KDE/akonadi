@@ -37,7 +37,6 @@
 #include <QPointer>
 #include <QVector>
 
-
 class KJob;
 class QWidget;
 

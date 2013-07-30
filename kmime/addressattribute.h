@@ -54,7 +54,6 @@ class AKONADI_KMIME_EXPORT AddressAttribute : public Akonadi::Attribute
     */
     virtual ~AddressAttribute();
 
-
     /* reimpl */
     virtual AddressAttribute* clone() const;
     virtual QByteArray type() const;

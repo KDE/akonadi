@@ -151,7 +151,6 @@ class StandardContactActionManager::Private
                         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageText,
                         ki18n( "Could not delete address book folder: %1" ) );
 
-
             mGenericManager->setContextText(
                         StandardActionManager::DeleteCollections, StandardActionManager::ErrorMessageTitle,
                         i18n( "Address book folder deletion failed" ) );
@@ -667,7 +666,6 @@ Akonadi::Item::List StandardContactActionManager::selectedItems() const
 {
   return d->mGenericManager->selectedItems();
 }
-
 
 void StandardContactActionManager::setCollectionPropertiesPageNames( const QStringList &names )
 {

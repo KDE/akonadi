@@ -169,7 +169,6 @@ void EmailEditWidget::textChanged( const QString &text )
   mEmailList.prepend( text );
 }
 
-
 EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   : KDialog( parent )
 {

@@ -85,4 +85,3 @@ SelectionProxyModel::~SelectionProxyModel()
 
 #include "moc_selectionproxymodel.cpp"
 
-

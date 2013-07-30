@@ -163,7 +163,6 @@ void Monitor::fetchChangedOnly( bool enable )
   d->mFetchChangedOnly = enable;
 }
 
-
 void Monitor::setCollectionFetchScope( const CollectionFetchScope &fetchScope )
 {
   Q_D( Monitor );

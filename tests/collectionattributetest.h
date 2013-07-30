@@ -33,5 +33,4 @@ class CollectionAttributeTest : public QObject
     void testCollectionRightsAttribute();
 };
 
-
 #endif

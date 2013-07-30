@@ -100,7 +100,6 @@ class ContactEditorWidget::Private
     KComboBox* mMailPreferFormatting;
     QCheckBox *mAllowRemoteContent;
 
-
     // widgets from addresses group
     AddressEditWidget *mAddressesWidget;
 
@@ -568,7 +567,6 @@ void ContactEditorWidget::loadContact( const KABC::Addressee &contact, const Ako
   // categories section
   d->mCategoriesWidget->loadContact( contact );
 
-
   const QString mailPreferedFormatting = d->loadCustom( contact, QLatin1String( "MailPreferedFormatting" ) );
   if ( mailPreferedFormatting.isEmpty() ) {
     d->mMailPreferFormatting->setCurrentIndex( 0 );
@@ -647,8 +645,6 @@ void ContactEditorWidget::storeContact( KABC::Addressee &contact, Akonadi::Conta
 
   // categories section
   d->mCategoriesWidget->storeContact( contact );
-
-
 
   QString mailPreferedFormatting;
   const int index = d->mMailPreferFormatting->currentIndex();

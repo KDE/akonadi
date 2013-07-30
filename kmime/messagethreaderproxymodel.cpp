@@ -42,7 +42,6 @@ class MessageThreaderProxyModel::Private
     {
     }
 
-
   MessageModel* sourceMessageModel()
   {
     return dynamic_cast<MessageModel*>( mParent->sourceModel() );
@@ -95,7 +94,6 @@ class MessageThreaderProxyModel::Private
       parentMap[ id ] = parentId;
       QModelIndex index = mParent->createIndex( childrenMap[ parentId ].count() - 1, 0, id );
       mParent->endInsertRows();
-
 
       /*
        * Look for potential children into real children map
@@ -349,7 +347,6 @@ void MessageThreaderProxyModel::setSourceModel( QAbstractItemModel* model )
   connect( sourceModel(), SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(slotRemoveRows(QModelIndex,int,int)) );
   connect( d->sourceMessageModel(), SIGNAL(collectionChanged(Akonadi::Collection)), SLOT(slotCollectionChanged()) );
 }
-
 
 bool MessageThreaderProxyModel::hasChildren( const QModelIndex& index ) const
 {

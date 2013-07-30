@@ -46,6 +46,5 @@ class MimeTypeCheckerTest : public QObject
     void testStringMatchEquivalent();
 };
 
-
 #endif
 // kate: space-indent on; indent-width 2; replace-tabs on;

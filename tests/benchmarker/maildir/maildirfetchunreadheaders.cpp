@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "maildirfetchunreadheaders.h"
 #include "maildir.h"
 

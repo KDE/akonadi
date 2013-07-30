@@ -60,7 +60,6 @@ bool restartAkonadiServer()
     }
 }
 
-
 bool trackAkonadiProcess( bool track )
 {
     QDBusInterface testrunnerIface( QLatin1String( "org.kde.Akonadi.Testrunner" ),

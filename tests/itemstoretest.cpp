@@ -386,4 +386,3 @@ void ItemStoreTest::testRemoteIdRace()
   QVERIFY( fetchJob->items().first().remoteId().isNull() );
 }
 
-

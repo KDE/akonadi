@@ -29,7 +29,6 @@
 
 using namespace Akonadi;
 
-
 class AgentTypeDialog::Private
 {
   public:

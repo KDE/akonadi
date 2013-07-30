@@ -24,7 +24,6 @@
 #include <klocalizedstring.h>
 #include <KUrl>
 
-
 #include <kmime/kmime_util.h>
 
 #include <QAction>

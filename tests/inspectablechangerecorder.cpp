@@ -38,4 +38,3 @@ void InspectableChangeRecorder::doConnectToNotificationManager()
   d_ptr->connectToNotificationManager();
 }
 
-

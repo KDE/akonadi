@@ -101,7 +101,6 @@ class AddressTypeDialog : public KDialog
     KABC::Address::TypeList mTypeList;
 };
 
-
 AddressSelectionWidget::AddressSelectionWidget( QWidget *parent )
   : KComboBox( parent )
 {
@@ -148,8 +147,6 @@ void AddressSelectionWidget::updateView()
     addItem( KABC::Address::typeLabel( mAddresses.at( i ).type() ) );
   }
 }
-
-
 
 AddressTypeCombo::AddressTypeCombo( QWidget *parent )
   : KComboBox( parent ),
@@ -230,7 +227,6 @@ void AddressTypeCombo::otherSelected()
 
   update();
 }
-
 
 AddressEditWidget::AddressEditWidget( QWidget *parent )
   : QWidget( parent ), mReadOnly( false )
@@ -392,7 +388,6 @@ void AddressEditWidget::storeContact( KABC::Addressee &contact ) const
   }
 }
 
-
 AddressEditDialog::AddressEditDialog( QWidget *parent )
   : KDialog(parent)
 {
@@ -548,7 +543,6 @@ void AddressEditDialog::fillCountryCombo()
   const QString currentCountry = KGlobal::locale()->countryCodeToName( KGlobal::locale()->country() );
   mCountryCombo->setCurrentIndex( mCountryCombo->findText( currentCountry ) );
 }
-
 
 AddressTypeDialog::AddressTypeDialog( KABC::Address::Type type, QWidget *parent )
   : KDialog( parent)

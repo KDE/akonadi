@@ -22,7 +22,6 @@
 
 #include <akonadi/job.h>
 
-
 namespace Akonadi {
 
 class Collection;

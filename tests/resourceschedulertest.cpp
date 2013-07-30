@@ -152,7 +152,6 @@ void ResourceSchedulerTest::testChangeReplaySchedule()
   QCOMPARE( syncSpy.count(), 1 );
 }
 
-
 void ResourceSchedulerTest::customTaskNoArg()
 {
   ++mCustomCallCount;
@@ -163,7 +162,6 @@ void ResourceSchedulerTest::customTask(const QVariant& argument)
   ++mCustomCallCount;
   mLastArgument = argument;
 }
-
 
 void ResourceSchedulerTest::testCustomTask()
 {

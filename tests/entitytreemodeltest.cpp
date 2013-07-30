@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include <qtest_kde.h>
 
 #include <QTimer>
@@ -272,7 +271,6 @@ void EntityTreeModelTest::testCollectionMove()
 
   QVERIFY( m_modelSpy->isEmpty() );
 }
-
 
 void EntityTreeModelTest::testCollectionAdded_data()
 {

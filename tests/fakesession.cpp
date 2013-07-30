@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-
-
 #include "fakesession.h"
 #include "session_p.h"
 #include "job.h"

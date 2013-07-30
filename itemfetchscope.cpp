@@ -120,7 +120,6 @@ bool ItemFetchScope::checkForCachedPayloadPartsOnly() const
   return d->mCheckCachedPayloadPartsOnly;
 }
 
-
 ItemFetchScope::AncestorRetrieval ItemFetchScope::ancestorRetrieval() const
 {
   return d->mAncestorDepth;

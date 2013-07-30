@@ -22,14 +22,12 @@
 
 #include "akonadi_export.h"
 
-
 #include <akonadi/attribute.h>
 
 #include <akonadi/collection.h>
 
 namespace Akonadi
 {
-
 
 /**
  * @short An Attribute that marks that an entity was marked as deleted

@@ -1104,7 +1104,6 @@ void ResourceBasePrivate::slotItemSyncDone( KJob *job )
   scheduler->taskDone();
 }
 
-
 void ResourceBasePrivate::slotDelayedEmitProgress()
 {
   Q_Q( ResourceBase );

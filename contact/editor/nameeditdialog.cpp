@@ -19,7 +19,6 @@
     02110-1301, USA.
 */
 
-
 #include "nameeditdialog.h"
 
 #include <QFormLayout>

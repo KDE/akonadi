@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "maildirremovereadmessages.h"
 #include "maildir.h"
 #include <QDebug>

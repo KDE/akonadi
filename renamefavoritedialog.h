@@ -46,6 +46,5 @@ private:
   KLineEdit *m_lineEdit;
 };
 
-
 #endif /* RENAMEFAVORITEDIALOG_H */
 

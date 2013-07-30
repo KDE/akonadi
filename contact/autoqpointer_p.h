@@ -25,7 +25,6 @@
 
 #include <QPointer>
 
-
 /**
  *  A QPointer which when destructed, deletes the object it points to.
  *

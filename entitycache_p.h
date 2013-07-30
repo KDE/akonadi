@@ -453,7 +453,6 @@ private:
 
   void extractResults( KJob* job, typename T::List &entities ) const;
 
-
 private:
   QHash< Entity::Id, EntityListCacheNode<T>* > mCache;
   int mCapacity;

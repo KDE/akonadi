@@ -235,7 +235,6 @@ class IncidenceChangerTest : public QObject
       QTest::addColumn<bool>( "failureExpected" );
       QTest::addColumn<Akonadi::IncidenceChanger::ResultCode>( "expectedResultCode" );
 
-
       QTest::newRow( "Delete empty list" )   << Item::List() << true << true;
       QTest::newRow( "Delete invalid item" ) << (Item::List() << Item()) << true << true;
 

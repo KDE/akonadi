@@ -140,4 +140,3 @@ void AutoIncrementTest::testCollectionAutoIncrement()
   lastId = newCollection.id();
 }
 
-

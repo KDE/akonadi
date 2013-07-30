@@ -434,5 +434,4 @@ void TypePluginLoader::overridePluginLookup( QObject *p ) {
     s_pluginRegistry->overrideDefaultPlugin( p );
 }
 
-
 }

@@ -23,7 +23,6 @@
 #include "session.h"
 #include "collection.h"
 
-
 using namespace Akonadi;
 
 class FakeSession : public Session

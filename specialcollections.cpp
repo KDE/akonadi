@@ -125,7 +125,6 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged( Akonadi::Collection
   q->connect( fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchJobFinished(KJob*)) );
 }
 
-
 void SpecialCollectionsPrivate::collectionFetchJobFinished( KJob* job )
 {
   if ( job->error() ) {
@@ -180,7 +179,6 @@ AgentInstance SpecialCollectionsPrivate::defaultResource() const
   const QString identifier = defaultResourceId();
   return AgentManager::self()->instance( identifier );
 }
-
 
 SpecialCollections::SpecialCollections( KCoreConfigSkeleton *settings, QObject *parent )
   : QObject( parent ),

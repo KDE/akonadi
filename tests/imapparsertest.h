@@ -46,5 +46,4 @@ class ImapParserTest : public QObject
     void testJoin();
 };
 
-
 #endif

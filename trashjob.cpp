@@ -64,13 +64,11 @@ class TrashJob::TrashJobPrivate : public JobPrivate
     //called after parent of the trashed item was fetched (needed to see in which resource the item is in)
     void parentCollectionReceived( const Akonadi::Collection::List & );
 
-
 //1.
     //called after initial fetch of trashed items
     void itemsReceived( const Akonadi::Item::List & );
     //called after initial fetch of trashed collection
     void collectionsReceived( const Akonadi::Collection::List & );
-
 
     Q_DECLARE_PUBLIC( TrashJob )
 
@@ -294,9 +292,6 @@ void TrashJob::TrashJobPrivate::collectionsReceived( const Akonadi::Collection::
   }
 
 }
-
-
-
 
 TrashJob::TrashJob( const Item & item, QObject * parent )
     : Job( new TrashJobPrivate( this ), parent )

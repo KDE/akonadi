@@ -70,7 +70,6 @@ void AgentFilterProxyModel::addCapabilityFilter( const QString &capability )
   invalidateFilter();
 }
 
-
 void AgentFilterProxyModel::excludeCapabilities( const QString &capability )
 {
   d->excludeCapabilities << capability;

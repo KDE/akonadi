@@ -60,7 +60,6 @@ class CollectionRequester::Private
     CollectionDialog *collectionDialog;
 };
 
-
 void CollectionRequester::Private::init()
 {
   q->setMargin( 0 );
@@ -115,7 +114,6 @@ CollectionRequester::CollectionRequester( QWidget *parent )
   d->init();
 }
 
-
 CollectionRequester::CollectionRequester( const Akonadi::Collection &collection, QWidget *parent )
   : KHBox( parent ),
     d( new Private( this ) )
@@ -124,18 +122,15 @@ CollectionRequester::CollectionRequester( const Akonadi::Collection &collection,
   setCollection( collection );
 }
 
-
 CollectionRequester::~CollectionRequester()
 {
   delete d;
 }
 
-
 Collection CollectionRequester::collection() const
 {
   return d->collection;
 }
-
 
 void CollectionRequester::setCollection( const Collection& collection )
 {

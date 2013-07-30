@@ -32,7 +32,6 @@
 
 using namespace Akonadi;
 
-
 Requester::Requester()
 {
   Control::start();
@@ -63,5 +62,4 @@ int main( int argc, char **argv )
   new Requester();
   return app.exec();
 }
-
 

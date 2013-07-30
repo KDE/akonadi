@@ -39,5 +39,4 @@ class ItemAppendTest : public QObject
     void testItemSize();
 };
 
-
 #endif

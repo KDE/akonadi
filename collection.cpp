@@ -270,5 +270,4 @@ void Akonadi::Collection::setVirtual(bool isVirtual)
   d->isVirtual = isVirtual;
 }
 
-
 AKONADI_DEFINE_PRIVATE( Akonadi::Collection )

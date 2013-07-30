@@ -99,7 +99,6 @@ void ItemModifyJobPrivate::doUpdateItemRevision( Akonadi::Item::Id itemId, int o
     (*it).setRevision( newRevision );
 }
 
-
 QString ItemModifyJobPrivate::jobDebuggingString() const
 {
   try {
@@ -108,7 +107,6 @@ QString ItemModifyJobPrivate::jobDebuggingString() const
     return QString::fromUtf8( e.what() );
   }
 }
-
 
 ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
   : Job( new ItemModifyJobPrivate( this ), parent )
@@ -141,7 +139,6 @@ ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
     d->mRevCheck = false;
   }
 }
-
 
 ItemModifyJob::~ItemModifyJob()
 {

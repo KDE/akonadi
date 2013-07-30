@@ -100,7 +100,6 @@ class AttributeFactory::Private
     QHash<QByteArray, Attribute*> attributes;
 };
 
-
 AttributeFactory* AttributeFactory::self()
 {
   s_attributeInstance->init();

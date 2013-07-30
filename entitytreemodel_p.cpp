@@ -175,7 +175,6 @@ void EntityTreeModelPrivate::serverStarted()
   endResetModel();
 }
 
-
 ItemFetchJob* EntityTreeModelPrivate::getItemFetchJob( const Collection &parent, const ItemFetchScope &scope ) const
 {
   Q_ASSERT( parent.isValid() );
@@ -888,7 +887,6 @@ void EntityTreeModelPrivate::monitoredCollectionUnsubscribed( const Akonadi::Col
   monitoredCollectionRemoved( col );
 }
 
-
 void EntityTreeModelPrivate::removeChildEntities( Collection::Id collectionId )
 {
   QList<Node*> childList = m_childEntities.value( collectionId );
@@ -1418,7 +1416,6 @@ void EntityTreeModelPrivate::startFirstListJob()
     m_rootNode->type = Node::Collection;
     m_collections.insert( m_rootCollection.id(), m_rootCollection );
   }
-
 
   const bool noMimetypes = m_mimeChecker.wantedMimeTypes().isEmpty();
   const bool noResources = m_monitor->resourcesMonitored().isEmpty();

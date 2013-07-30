@@ -222,7 +222,6 @@ class AKONADI_EXPORT EntityTreeView : public QTreeView
     virtual void contextMenuEvent( QContextMenuEvent *event );
 #endif
 
-
   private:
     //@cond PRIVATE
     class Private;

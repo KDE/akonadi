@@ -29,7 +29,6 @@
 
 #include <KLocalizedString>
 
-
 class Akonadi::RemoveDuplicatesJob::Private {
 
   public:

@@ -32,5 +32,4 @@ class CollectionPathResolverTest : public QObject
     void testFailure();
 };
 
-
 #endif

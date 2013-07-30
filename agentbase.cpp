@@ -53,7 +53,6 @@
 #include <signal.h>
 #include <stdlib.h>
 
-
 //#define EXPERIMENTAL_INPROCESS_AGENTS 1
 
 using namespace Akonadi;

@@ -107,7 +107,6 @@ bool QEkigaDialer::initializeEkiga()
       return false;
     }
 
-
     return true;
 }
 

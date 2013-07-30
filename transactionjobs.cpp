@@ -50,7 +50,6 @@ class Akonadi::TransactionCommitJobPrivate : public JobPrivate
     }
 };
 
-
 TransactionBeginJob::TransactionBeginJob(QObject * parent)
   : Job( new TransactionBeginJobPrivate( this ), parent )
 {
@@ -66,8 +65,6 @@ void TransactionBeginJob::doStart()
   d_ptr->writeData( d_ptr->newTag() + " BEGIN\n" );
 }
 
-
-
 TransactionRollbackJob::TransactionRollbackJob(QObject * parent)
   : Job( new TransactionRollbackJobPrivate( this ), parent )
 {
@@ -82,8 +79,6 @@ void TransactionRollbackJob::doStart()
 {
   d_ptr->writeData( d_ptr->newTag() + " ROLLBACK\n" );
 }
-
-
 
 TransactionCommitJob::TransactionCommitJob(QObject * parent)
   : Job( new TransactionCommitJobPrivate( this ), parent )

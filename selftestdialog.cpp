@@ -556,7 +556,6 @@ void SelfTestDialog::testControlLog()
   }
 }
 
-
 void SelfTestDialog::testRootUser()
 {
   KUser user;

@@ -190,7 +190,6 @@ QQueue<NotificationMessageV2> ChangeRecorderPrivate::loadFrom(QIODevice *device)
 
       NotificationMessageV2 msg;
 
-
       stream >> sessionId;
       stream >> type;
       stream >> operation;

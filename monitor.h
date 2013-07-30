@@ -185,7 +185,6 @@ class AKONADI_EXPORT Monitor : public QObject
      */
     void setItemFetchScope( const ItemFetchScope &fetchScope );
 
-
     /**
      * Instructs the monitor to fetch only those parts that were changed and
      * were requested in the fetch scope.

@@ -103,7 +103,6 @@ void EntityTreeModel::setIncludeUnsubscribed( bool show )
   d->endResetModel();
 }
 
-
 bool EntityTreeModel::systemEntitiesShown() const
 {
   Q_D( const EntityTreeModel );
@@ -133,7 +132,6 @@ int EntityTreeModel::columnCount( const QModelIndex & parent ) const
 
   return qMax( entityColumnCount( CollectionTreeHeaders ), entityColumnCount( ItemListHeaders ) );
 }
-
 
 QVariant EntityTreeModel::entityData( const Item &item, int column, int role ) const
 {
@@ -356,7 +354,6 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   return QVariant();
 }
 
-
 Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
 {
   Q_D( const EntityTreeModel );
@@ -467,7 +464,6 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 //   if ( row != -1 && column != -1 )
 //   {
 //   }
-
 
   if ( action == Qt::IgnoreAction ) {
     return true;

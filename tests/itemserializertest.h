@@ -31,5 +31,4 @@ class ItemSerializerTest : public QObject
     void testDefaultSerializer();
 };
 
-
 #endif

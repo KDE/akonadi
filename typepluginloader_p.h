@@ -54,7 +54,6 @@ enum Option {
 };
 Q_DECLARE_FLAGS( Options, Option )
 
-
 #if 0
 /**
  * Returns the legacy (pre-KDE-4.6) item serializer plugin that matches the given @p mimetype.

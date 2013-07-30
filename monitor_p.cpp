@@ -155,7 +155,6 @@ bool MonitorPrivate::isLazilyIgnored( const NotificationMessageV2 & msg, bool al
       return false;
   }
 
-
   if ( op == NotificationMessageV2::Move )
   {
     if ( !refCountMap.contains( parentCollectionId ) && !m_buffer.isBuffered( parentCollectionId ) )
@@ -682,7 +681,6 @@ bool MonitorPrivate::emitItemsNotification( const NotificationMessageV2 &msg, co
       iter.remove();
     }
   }
-
 
   // Now reconstruct any items there were left in msgItems
   Q_FOREACH( const NotificationMessageV2::Entity &msgItem, msgEntities ) {

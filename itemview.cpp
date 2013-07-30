@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "itemview.h"
 
 #include "control.h"

@@ -30,7 +30,6 @@ public:
     explicit QEkigaDialer( const QString &applicationName );
     ~QEkigaDialer();
 
-
     bool dialNumber( const QString &number );
     bool sendSms( const QString &number, const QString &text );
 private:

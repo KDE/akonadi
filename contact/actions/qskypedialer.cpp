@@ -110,7 +110,6 @@ bool QSkypeDialer::initializeSkype()
     return false;
   }
 
-
   QDBusReply<QString> reply = mInterface->call( QLatin1String( "Invoke" ), QString::fromLatin1( "NAME %1" ).arg( mApplicationName ) );
   if ( reply.value() != QLatin1String( "OK" ) ) {
     delete mInterface;

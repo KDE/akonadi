@@ -50,7 +50,6 @@
 
 using namespace Akonadi;
 
-
 //@cond PRIVATE
 
 void SessionPrivate::startNext()
@@ -359,7 +358,6 @@ void SessionPrivate::itemRevisionChanged( Akonadi::Item::Id itemId, int oldRevis
 
 //@endcond
 
-
 SessionPrivate::SessionPrivate( Session *parent )
     : mParent( parent ), socket( 0 ), protocolVersion( 0 ), currentJob( 0 ), parser( 0 )
 {
@@ -400,7 +398,6 @@ void SessionPrivate::forceReconnect()
   socket = 0;
   QMetaObject::invokeMethod( mParent, "reconnect", Qt::QueuedConnection ); // avoids reconnecting in the dtor
 }
-
 
 Session::Session(const QByteArray & sessionId, QObject * parent) :
     QObject( parent ),

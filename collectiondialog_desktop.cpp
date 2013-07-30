@@ -55,7 +55,6 @@ class CollectionDialog::Private
       QVBoxLayout *layout = new QVBoxLayout( widget );
       layout->setContentsMargins( 0, 0, 0, 0 );
 
-
       mTextLabel = new QLabel;
       layout->addWidget( mTextLabel );
       mTextLabel->hide();
@@ -178,8 +177,6 @@ void CollectionDialog::Private::changeCollectionDialogOptions( CollectionDialogO
   }
 }
 
-
-
 bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &parentCollection ) const
 {
   if ( !parentCollection.isValid() ) {
@@ -198,7 +195,6 @@ bool CollectionDialog::Private::canCreateCollection( const Akonadi::Collection &
   }
   return false;
 }
-
 
 void CollectionDialog::Private::slotAddChildCollection()
 {
@@ -227,8 +223,6 @@ void CollectionDialog::Private::slotCollectionCreationResult( KJob* job )
   }
 }
 
-
-
 CollectionDialog::CollectionDialog( QWidget *parent )
   : KDialog( parent ),
     d( new Private( 0, this, CollectionDialog::None ) )
@@ -246,7 +240,6 @@ CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractIt
     d( new Private( model, this, options ) )
 {
 }
-
 
 CollectionDialog::~CollectionDialog()
 {

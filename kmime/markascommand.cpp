@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "markascommand_p.h"
 #include "util_p.h"
 #include <akonadi/itemfetchjob.h>
@@ -79,7 +78,6 @@ void MarkAsCommand::slotFetchDone(KJob* job)
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
   }
 }
-
 
 void MarkAsCommand::execute()
 {
@@ -148,6 +146,5 @@ void MarkAsCommand::slotModifyItemDone( KJob * job )
     emitResult( OK );
   }
 }
-
 
 #include "moc_markascommand_p.cpp"

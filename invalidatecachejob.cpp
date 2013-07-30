@@ -62,7 +62,6 @@ void InvalidateCacheJobPrivate::collectionFetchResult(KJob* job)
     return;
   }
 
-
   ItemFetchJob *itemFetch = new ItemFetchJob( collection, q );
   QObject::connect( itemFetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)) );
 }
@@ -94,7 +93,6 @@ void InvalidateCacheJobPrivate::itemStoreResult(KJob* job)
     return;
   q->emitResult();
 }
-
 
 InvalidateCacheJob::InvalidateCacheJob( const Collection &collection, QObject *parent ) :
   Job( new InvalidateCacheJobPrivate( this ), parent )

@@ -66,7 +66,6 @@ void CachePolicyPage::Private::slotRetrievalOptionsGroupBoxDisabled( bool disabl
   }
 }
 
-
 CachePolicyPage::CachePolicyPage( QWidget *parent, GuiMode mode )
   : CollectionPropertiesPage( parent ),
     d( new Private )

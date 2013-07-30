@@ -156,7 +156,6 @@ class QForeachContainer<Akonadi::PayloadContainer> {};
 
 namespace Akonadi {
 
-
 /**
  * @internal
  */

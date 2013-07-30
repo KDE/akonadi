@@ -180,7 +180,6 @@ void EmailAddressSelectionWidget::Private::init()
   QTimer::singleShot( 1000, mView, SLOT(expandAll()) );
 }
 
-
 EmailAddressSelectionWidget::EmailAddressSelectionWidget( QWidget * parent )
   : QWidget( parent ),
     d( new Private( this, 0 ) )

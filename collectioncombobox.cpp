@@ -153,7 +153,6 @@ void MobileEventHandler::openDialog()
   delete dialog;
 }
 
-
 CollectionComboBox::CollectionComboBox( QWidget *parent )
   : KComboBox( parent ), d( new Private( 0, this ) )
 {

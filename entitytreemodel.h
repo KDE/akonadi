@@ -423,7 +423,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      */
     bool systemEntitiesShown() const;
 
-
     /**
      * Returns whether unsubscribed entities will be included in the listing.
      *
@@ -442,7 +441,6 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
      * @since 4.5
      */
     void setIncludeUnsubscribed( bool show );
-
 
     /**
      * Sets the item population @p strategy of the model.

@@ -166,7 +166,6 @@ void CollectionPropertiesDialog::Private::init()
 
 }
 
-
 CollectionPropertiesDialog::CollectionPropertiesDialog( const Collection &collection, QWidget *parent )
   : KDialog( parent ),
     d( new Private( this, collection, QStringList() ) )

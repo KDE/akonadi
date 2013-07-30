@@ -80,7 +80,6 @@ class AKONADI_EXPORT CollectionDialog : public KDialog
 
     Q_DECLARE_FLAGS( CollectionDialogOptions, CollectionDialogOption )
 
-
     /**
      * Creates a new collection dialog.
      *

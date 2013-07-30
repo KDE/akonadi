@@ -286,7 +286,6 @@ class StandardCalendarActionManager::Private
 
     }
 
-
     static bool hasWritableCollection( const QModelIndex &index, const QString &mimeType )
     {
       const Akonadi::Collection collection =
@@ -509,7 +508,6 @@ class StandardCalendarActionManager::Private
     QSet<StandardCalendarActionManager::Type> mInterceptedActions;
     StandardCalendarActionManager *mParent;
 };
-
 
 Akonadi::StandardCalendarActionManager::StandardCalendarActionManager( KActionCollection *actionCollection, QWidget *parent )
   : QObject( parent ),

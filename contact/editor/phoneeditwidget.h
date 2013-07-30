@@ -19,7 +19,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef PHONEEDITWIDGET_H
 #define PHONEEDITWIDGET_H
 

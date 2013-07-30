@@ -112,7 +112,6 @@ bool CollectionFilterProxyModel::Private::collectionAccepted( const QModelIndex 
   return false;
 }
 
-
 CollectionFilterProxyModel::CollectionFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )

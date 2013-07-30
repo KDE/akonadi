@@ -66,7 +66,6 @@ namespace PasteHelper
   KJob* pasteUriList( const QMimeData* mimeData, const Collection &collection, Qt::DropAction action, Session *session = 0 );
 }
 
-
 }
 
 #endif

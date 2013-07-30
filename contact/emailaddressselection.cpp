@@ -41,7 +41,6 @@ EmailAddressSelection::Private::Private( const Private &other )
   mItem = other.mItem;
 }
 
-
 EmailAddressSelection::EmailAddressSelection()
   : d( new Private )
 {

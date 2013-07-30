@@ -72,7 +72,6 @@ public:
   void cutIncidence( const KCalCore::Incidence::Ptr &incidence,
                      CalendarClipboard::Mode mode = RecursiveMode );
 
-
   /**
    * Copies the specified incidence into the clipboard.
    * @param incidence the incidence to copy

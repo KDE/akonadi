@@ -45,7 +45,6 @@ static const int safetyTimeout = 60000; // ms
 static const int safetyTimeout = 10000; // ms
 #endif
 
-
 namespace Akonadi {
 /**
  * @internal

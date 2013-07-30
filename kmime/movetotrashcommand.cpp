@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "movetotrashcommand_p.h"
 #include "util_p.h"
 #include "movecommand_p.h"
@@ -44,7 +43,6 @@ MoveToTrashCommand::MoveToTrashCommand(const QAbstractItemModel* model, const QL
   mFolderListJobCount = 0;
 }
 
-
 void MoveToTrashCommand::slotFetchDone(KJob* job)
 {
   mFolderListJobCount--;
@@ -67,7 +65,6 @@ void MoveToTrashCommand::slotFetchDone(KJob* job)
     connect( job, SIGNAL(result(KJob*)), this, SLOT(slotFetchDone(KJob*)) );
   }
 }
-
 
 void MoveToTrashCommand::execute()
 {
@@ -140,7 +137,6 @@ Akonadi::Collection MoveToTrashCommand::trashCollectionFolder()
   return collectionFromId( the_trashCollectionFolder );
 }
 
-
 Akonadi::Collection MoveToTrashCommand::findTrashFolder( const Akonadi::Collection& folder )
 {
   Akonadi::Collection col = trashCollectionFromResource( folder );
@@ -151,7 +147,5 @@ Akonadi::Collection MoveToTrashCommand::findTrashFolder( const Akonadi::Collecti
     return col;
   return Akonadi::Collection();
 }
-
-
 
 #include "moc_movetotrashcommand_p.cpp"

@@ -77,7 +77,6 @@ public:
     }
 };
 
-
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT

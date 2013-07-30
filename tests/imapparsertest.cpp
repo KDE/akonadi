@@ -83,7 +83,6 @@ void ImapParserTest::testParseQuotedString( )
   QCOMPARE( result, QByteArray( "string" ) );
   QCOMPARE( consumed, 24 );
 
-
   // NIL and emptyness tests
   input = "NIL \"NIL\" \"\"";
 

@@ -200,7 +200,6 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
       QQueue<Collection::Id> m_buffer;
     } m_buffer;
 
-
     QHash<Collection::Id, int> refCountMap;
     bool useRefCounting;
     void ref( Collection::Id id );

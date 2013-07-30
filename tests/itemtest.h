@@ -31,5 +31,4 @@ class ItemTest : public QObject
     void testParentCollection();
 };
 
-
 #endif

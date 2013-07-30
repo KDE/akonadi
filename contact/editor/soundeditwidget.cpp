@@ -51,7 +51,6 @@ class SoundLoader
     QWidget *mParent;
 };
 
-
 SoundLoader::SoundLoader( QWidget *parent )
   : mParent( parent )
 {
@@ -94,9 +93,6 @@ QByteArray SoundLoader::loadSound( const KUrl &url, bool *ok )
 
   return sound;
 }
-
-
-
 
 SoundEditWidget::SoundEditWidget( QWidget *parent )
   : QToolButton( parent ),

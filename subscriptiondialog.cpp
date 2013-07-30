@@ -119,7 +119,6 @@ class SubscriptionDialog::Private
 
 };
 
-
 void SubscriptionDialog::Private::slotSubscribe()
 {
 #ifndef KDEPIM_MOBILE_UI
@@ -141,7 +140,6 @@ void SubscriptionDialog::Private::slotUnSubscribe()
     collectionView->setFocus();
 #endif
 }
-
 
 SubscriptionDialog::SubscriptionDialog(QWidget * parent) :
     KDialog( parent ),
@@ -183,7 +181,6 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
     d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters( mimetypes );
   }
 
-
   d->collectionView = new QTreeView( mainWidget );
   d->collectionView->setEditTriggers( QAbstractItemView::NoEditTriggers );
   d->collectionView->header()->hide();
@@ -205,10 +202,8 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
            this, SLOT(slotSetIncludeCheckedOnly(bool)) );
   filterBarLayout->addWidget( checkBox );
 
-
   QHBoxLayout *hboxLayout = new QHBoxLayout;
   hboxLayout->addWidget( d->collectionView );
-
 
   QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
   d->subscribe = new KPushButton(i18n("Subscribe"));
@@ -220,12 +215,10 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   connect(d->unSubscribe,SIGNAL(clicked()),this,SLOT(slotUnSubscribe()));
   subscribeButtonLayout->addItem( new QSpacerItem( 5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding ) );
 
-
   hboxLayout->addLayout(subscribeButtonLayout);
 
   mainLayout->addLayout(filterBarLayout);
   mainLayout->addLayout(hboxLayout);
-
 
 #else
 
@@ -260,6 +253,5 @@ SubscriptionDialog::~ SubscriptionDialog()
 {
   delete d;
 }
-
 
 #include "moc_subscriptiondialog_p.cpp"

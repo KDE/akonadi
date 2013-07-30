@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #ifndef MODELSPY_H
 #define MODELSPY_H
 

@@ -347,7 +347,6 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   const QString unormalizedFrom = ( transport && transport->specifySenderOverwriteAddress() ) ?
                                                          transport->senderOverwriteAddress() : from;
 
-
   const QString normalizedFrom = KPIMUtils::extractEmailAddress(
                                      KPIMUtils::normalizeAddressesAndEncodeIdn( unormalizedFrom ) );
 

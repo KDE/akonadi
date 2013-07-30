@@ -149,7 +149,6 @@ ContactEditor* ContactEditorDialog::editor() const
   return d->mEditor;
 }
 
-
 void ContactEditorDialog::accept()
 {
     //Nothing

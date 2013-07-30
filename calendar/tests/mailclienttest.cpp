@@ -358,7 +358,6 @@ private slots:
     }
   }
 
-
 public Q_SLOTS:
 private:
 

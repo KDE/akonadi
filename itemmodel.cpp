@@ -204,7 +204,6 @@ void ItemModel::Private::itemMoved( const Akonadi::Item &item, const Akonadi::Co
     return;
   }
 
-
   if ( colDst == collection && colSrc != collection )
   {
     itemAdded( item );
@@ -452,6 +451,5 @@ Qt::DropActions ItemModel::supportedDropActions() const
 {
   return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
-
 
 #include "moc_itemmodel.cpp"

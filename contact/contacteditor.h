@@ -122,7 +122,6 @@ class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
      */
     ContactEditor( Mode mode, DisplayMode displayMode, QWidget *parent = 0 );
 
-
     /**
      * Destroys the contact editor.
      */

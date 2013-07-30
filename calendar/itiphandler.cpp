@@ -37,7 +37,6 @@
 #include <kcalcore/attendee.h>
 #include <kcalutils/stringify.h>
 
-
 #include <kpimidentities/identitymanager.h>
 #include <mailtransport/transportmanager.h>
 
@@ -49,7 +48,6 @@ using namespace Akonadi;
 GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
-
 
 ITIPHandler::ITIPHandler( QObject *parent ) : QObject( parent )
                                             , d( new Private( this ) )

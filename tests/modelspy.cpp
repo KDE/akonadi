@@ -119,7 +119,6 @@ void ModelSpy::startSpying()
   disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
           this, SLOT(dataChanged(QModelIndex,QModelIndex)));
 
-
   connect(m_model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
           SLOT(rowsAboutToBeInserted(QModelIndex,int,int)));
   connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
@@ -137,7 +136,6 @@ void ModelSpy::startSpying()
           SLOT(dataChanged(QModelIndex,QModelIndex)));
 
 }
-
 
 void ModelSpy::stopSpying()
 {

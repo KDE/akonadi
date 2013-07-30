@@ -45,7 +45,6 @@ bool TrashFilterProxyModel::TrashFilterProxyModelPrivate::showEntity( const Akon
   return showEntity( entity.parentCollection() );
 }
 
-
 TrashFilterProxyModel::TrashFilterProxyModel( QObject* parent )
     : KRecursiveFilterProxyModel( parent ),
     d_ptr( new TrashFilterProxyModelPrivate() )
@@ -57,7 +56,6 @@ TrashFilterProxyModel::~TrashFilterProxyModel()
 {
   delete d_ptr;
 }
-
 
 void TrashFilterProxyModel::showTrash( bool enable )
 {
@@ -71,7 +69,6 @@ bool TrashFilterProxyModel::trashIsShown() const
   Q_D( const TrashFilterProxyModel );
   return d->mTrashIsShown;
 }
-
 
 bool TrashFilterProxyModel::acceptRow( int sourceRow, const QModelIndex& sourceParent ) const
 {
@@ -92,6 +89,4 @@ bool TrashFilterProxyModel::acceptRow( int sourceRow, const QModelIndex& sourceP
   }
   return !d->mTrashIsShown;
 }
-
-
 

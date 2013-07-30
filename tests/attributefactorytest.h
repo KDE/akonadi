@@ -22,7 +22,6 @@
 
 #include <QtCore/QObject>
 
-
 class AttributeFactoryTest : public QObject
 {
   Q_OBJECT
@@ -32,6 +31,5 @@ class AttributeFactoryTest : public QObject
     void testRegisteredAttribute();
 
 };
-
 
 #endif

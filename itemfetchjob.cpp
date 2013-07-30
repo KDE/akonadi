@@ -175,7 +175,6 @@ ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id>& items, QObject* paren
     d->mRequestedItems.append(Item(id));
 }
 
-
 ItemFetchJob::~ItemFetchJob()
 {
 }
@@ -258,6 +257,5 @@ void ItemFetchJob::setCollection(const Akonadi::Collection& collection)
 
   d->mCollection = collection;
 }
-
 
 #include "moc_itemfetchjob.cpp"

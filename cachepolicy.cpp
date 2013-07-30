@@ -53,7 +53,6 @@ class CachePolicy::Private : public QSharedData
     bool syncOnDemand;
 };
 
-
 CachePolicy::CachePolicy() :
     d( new Private )
 {

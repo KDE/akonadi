@@ -67,7 +67,6 @@ class AKONADI_EXPORT TransactionBeginJob : public Job
     Q_DECLARE_PRIVATE( TransactionBeginJob )
 };
 
-
 /**
  * @short Job that aborts a session-global transaction.
  *
@@ -103,7 +102,6 @@ class AKONADI_EXPORT TransactionRollbackJob : public Job
   private:
     Q_DECLARE_PRIVATE( TransactionRollbackJob )
 };
-
 
 /**
  * @short Job that commits a session-global transaction.

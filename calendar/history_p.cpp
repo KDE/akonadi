@@ -345,7 +345,6 @@ bool MultiEntry::redo()
   return true;
 }
 
-
 void MultiEntry::onEntryFinished( Akonadi::IncidenceChanger::ResultCode resultCode,
                                   const QString &errorString )
 {

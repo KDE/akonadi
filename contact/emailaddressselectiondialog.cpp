@@ -92,4 +92,3 @@ EmailAddressSelectionWidget* EmailAddressSelectionDialog::view() const
   return d->mView;
 }
 
-

@@ -39,7 +39,6 @@ Q_DECLARE_METATYPE(QProcess::ExitStatus)
 
 using namespace Akonadi;
 
-
 void RaceTest::initTestCase()
 {
   QVERIFY( Control::start() );

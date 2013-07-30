@@ -33,7 +33,6 @@
 #include <klineedit.h>
 #include <klocalizedstring.h>
 
-
 IMEditWidget::IMEditWidget( QWidget *parent )
   : QWidget( parent )
 {

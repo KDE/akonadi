@@ -218,5 +218,4 @@ void TransactionSequence::rollback()
   connect( job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)) );
 }
 
-
 #include "moc_transactionsequence.cpp"

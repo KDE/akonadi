@@ -50,7 +50,6 @@ public:
    */
   void getIncidenceHierarchy( const KCalCore::Incidence::Ptr &incidence, QStringList &uids );
 
-
   /**
    * Copies all these incidences to clipboard. Deletes them.
    * This function assumes the caller already unparented all childs ( made them independent ).

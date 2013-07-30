@@ -17,7 +17,6 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-
 #include "emptytrashcommand_p.h"
 #include "util_p.h"
 #include "imapsettings.h"
@@ -49,7 +48,6 @@ EmptyTrashCommand::EmptyTrashCommand(const Akonadi::Collection& folder, QObject*
     mNumberOfTrashToEmpty( 0 )
 {
 }
-
 
 void EmptyTrashCommand::execute()
 {

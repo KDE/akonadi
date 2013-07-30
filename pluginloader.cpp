@@ -46,7 +46,6 @@ PluginMetaData::PluginMetaData( const QString & lib, const QString & name, const
 {
 }
 
-
 PluginLoader* PluginLoader::mSelf = 0;
 
 PluginLoader::PluginLoader()

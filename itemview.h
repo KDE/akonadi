@@ -111,7 +111,6 @@ class AKONADI_EXPORT ItemView : public QTreeView
      */
      void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
-
     virtual void setModel( QAbstractItemModel * model );
 
   Q_SIGNALS:

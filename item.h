@@ -505,7 +505,6 @@ class AKONADI_EXPORT Item : public Entity
     AKONADI_DECLARE_PRIVATE( Item )
 };
 
-
 template <typename T>
 T Item::payload() const
 {

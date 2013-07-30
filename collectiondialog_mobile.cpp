@@ -286,7 +286,6 @@ CollectionDialog::CollectionDialog( CollectionDialogOptions options, QAbstractIt
 {
 }
 
-
 CollectionDialog::~CollectionDialog()
 {
 }

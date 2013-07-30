@@ -36,5 +36,4 @@ class ItemFetchTest : public QObject
     void testAncestorRetrieval();
 };
 
-
 #endif

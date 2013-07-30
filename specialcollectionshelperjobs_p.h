@@ -92,7 +92,6 @@ class AKONADI_TESTS_EXPORT ResourceScanJob : public Job
     Q_PRIVATE_SLOT( d, void fetchResult( KJob* ) )
 };
 
-
 // ===================== DefaultResourceJob ============================
 
 class DefaultResourceJobPrivate;
@@ -172,7 +171,6 @@ class AKONADI_TESTS_EXPORT DefaultResourceJob : public ResourceScanJob
     Q_PRIVATE_SLOT( d, void collectionModifyResult( KJob* ) )
 };
 
-
 // ===================== GetLockJob ============================
 
 /**
@@ -220,7 +218,6 @@ class AKONADI_TESTS_EXPORT GetLockJob : public KJob
     Q_PRIVATE_SLOT( d, void serviceOwnerChanged( QString, QString, QString ) )
     Q_PRIVATE_SLOT( d, void timeout() )
 };
-
 
 // ===================== helper functions ============================
 

@@ -28,7 +28,6 @@
 #include <QtXml/QDomElement>
 #include <QtXml/QDomNode>
 
-
 Q_GLOBAL_STATIC(Config, globalConfig)
 
 Config::Config()
