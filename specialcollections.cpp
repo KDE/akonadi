@@ -215,7 +215,7 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
 
 void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &collection)
 {
-  if (!collection.hasAttribute<SpecialCollectionAttribute>()) {
+  if (collection.hasAttribute<SpecialCollectionAttribute>()) {
     Collection attributeCollection(collection);
     attributeCollection.removeAttribute<SpecialCollectionAttribute>();
     new CollectionModifyJob(attributeCollection);
