@@ -28,6 +28,7 @@
 #include "storage/transaction.h"
 #include "handlerhelper.h"
 #include "storage/selectquerybuilder.h"
+#include "libs/protocol_p.h"
 
 #include "response.h"
 #include "libs/imapparser_p.h"
