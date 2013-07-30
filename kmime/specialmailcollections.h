@@ -124,6 +124,14 @@ class AKONADI_KMIME_EXPORT SpecialMailCollections : public SpecialCollections
     bool registerCollection( Type type, const Akonadi::Collection &collection );
 
     /**
+     * Unregisters the given @p collection as a special mail collection
+     * @param collection the collection to unregister
+     * The collection must be owned by a valid resource.
+     * @since 4.12
+     */
+    bool unregisterCollection( const Collection &collection );
+
+    /**
      * Returns whether the default resource has a special mail collection of
      * the given @p type.
      */

@@ -114,6 +114,11 @@ bool SpecialMailCollections::registerCollection( Type type, const Collection &co
   return SpecialCollections::registerCollection( enumToType( type ), collection );
 }
 
+bool SpecialMailCollections::unregisterCollection( const Collection &collection )
+{
+  return SpecialCollections::unregisterCollection( collection );
+}
+
 bool SpecialMailCollections::hasDefaultCollection( Type type ) const
 {
   return SpecialCollections::hasDefaultCollection( enumToType( type ) );

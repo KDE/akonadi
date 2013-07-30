@@ -213,6 +213,36 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
   }
 }
 
+void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &collection)
+{
+  if (!collection.hasAttribute<SpecialCollectionAttribute>()) {
+    Collection attributeCollection(collection);
+    attributeCollection.removeAttribute<SpecialCollectionAttribute>();
+    new CollectionModifyJob(attributeCollection);
+  }
+}
+
+bool SpecialCollections::unregisterCollection( const Collection &collection )
+{
+  if ( !collection.isValid() ) {
+    kWarning() << "Invalid collection.";
+    return false;
+  }
+
+  const QString &resourceId = collection.resource();
+  if ( resourceId.isEmpty() ) {
+    kWarning() << "Collection has empty resourceId.";
+    return false;
+  }
+
+  unsetSpecialCollection(collection);
+
+  d->mMonitor->setCollectionMonitored(collection, false);
+  //Remove from list of collection
+  d->collectionRemoved(collection);
+  return true;
+}
+
 bool SpecialCollections::registerCollection( const QByteArray &type, const Collection &collection )
 {
   if ( !collection.isValid() ) {
