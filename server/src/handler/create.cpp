@@ -44,8 +44,9 @@ Create::Create( Scope::SelectionScope scope ) :
 bool Create::parseStream()
 {
   QString name = m_streamParser->readUtf8String();
-  if ( name.isEmpty() )
+  if ( name.isEmpty() ) {
     return failureResponse( "Invalid collection name" );
+  }
 
   bool ok = false;
   Collection parent;
@@ -59,31 +60,38 @@ bool Create::parseStream()
         parentPath = name.left( index );
         name = name.mid( index + 1 );
         parent = HandlerHelper::collectionFromIdOrName( parentPath.toUtf8() );
-      } else
+      } else {
         parentId = 0;
+      }
     } else {
-      if ( parentId > 0 )
+      if ( parentId > 0 ) {
         parent = Collection::retrieveById( parentId );
+      }
     }
 
-    if ( parentId != 0 && !parent.isValid() )
+    if ( parentId != 0 && !parent.isValid() ) {
       return failureResponse( "Parent collection not found" );
+    }
   } else if ( m_scope == Scope::Rid ) {
     const QString rid = m_streamParser->readUtf8String();
-    if ( rid.isEmpty() )
+    if ( rid.isEmpty() ) {
       throw HandlerException( "Empty parent remote identifier" );
-    if ( !connection()->resourceContext().isValid() )
+    }
+    if ( !connection()->resourceContext().isValid() ) {
       throw HandlerException( "Invalid resource context" );
+    }
     SelectQueryBuilder<Collection> qb;
     qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, rid );
     qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
-    if ( !qb.exec() )
+    if ( !qb.exec() ) {
       throw HandlerException( "Unable to execute collection query" );
+    }
     const Collection::List cols = qb.result();
-    if ( cols.size() == 0 )
+    if ( cols.size() == 0 ) {
       throw HandlerException( "Parent collection not found" );
-    else if ( cols.size() > 1 )
+    } else if ( cols.size() > 1 ) {
       throw HandlerException( "Parent collection is not unique" );
+    }
     parent = cols.first();
   }
 
@@ -107,8 +115,9 @@ bool Create::parseStream()
         }
       }
     }
-    if ( !found && !foundVirtual )
+    if ( !found && !foundVirtual ) {
       return failureResponse( "Parent collection can not contain sub-collections" );
+    }
 
     // If only virtual collections are supported, force every new collection to
     // be virtual. Otherwise depend on VIRTUAL attribute in the command
@@ -122,14 +131,16 @@ bool Create::parseStream()
     // deduce owning resource from current session id
     QString sessionId = QString::fromUtf8( connection()->sessionId() );
     Resource res = Resource::retrieveByName( sessionId );
-    if ( !res.isValid() )
+    if ( !res.isValid() ) {
       return failureResponse( "Cannot create top-level collection" );
+    }
     resourceId = res.id();
   }
 
   Collection collection;
-  if ( parent.isValid() )
+  if ( parent.isValid() ) {
     collection.setParentId( parent.id() );
+  }
   collection.setName( name );
   collection.setResourceId( resourceId );
 
@@ -142,16 +153,16 @@ bool Create::parseStream()
   for ( int i = 0; i < attributes.count() - 1; i += 2 ) {
     const QByteArray key = attributes.at( i );
     const QByteArray value = attributes.at( i + 1 );
-    if ( key == "REMOTEID" ) {
+    if ( key == AKONADI_PARAM_REMOTEID ) {
       collection.setRemoteId( QString::fromUtf8( value ) );
-    } else if ( key == "REMOTEREVISION" ) {
+    } else if ( key == AKONADI_PARAM_REMOTEREVISION ) {
       collection.setRemoteRevision( QString::fromUtf8( value ) );
-    } else if ( key == "MIMETYPE" ) {
+    } else if ( key == AKONADI_PARAM_MIMETYPE ) {
       ImapParser::parseParenthesizedList( value, mimeTypes );
       mimeTypesSet = true;
-    } else if ( key == "CACHEPOLICY" ) {
+    } else if ( key == AKONADI_PARAM_CACHEPOLICY ) {
       HandlerHelper::parseCachePolicy( value, collection );
-    } else if ( key == "VIRTUAL" ) {
+    } else if ( key == AKONADI_PARAM_VIRTUAL ) {
       collection.setIsVirtual( value.toUInt() != 0 );
     } else {
       userDefAttrs << qMakePair( key, value );
@@ -165,8 +176,9 @@ bool Create::parseStream()
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
-  if ( !db->appendCollection( collection ) )
+  if ( !db->appendCollection( collection ) ) {
     return failureResponse( "Could not create collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId));
+  }
 
   QStringList effectiveMimeTypes;
   if ( mimeTypesSet ) {
@@ -176,14 +188,16 @@ bool Create::parseStream()
     Q_FOREACH ( const MimeType &mt, parentContentTypes )
       effectiveMimeTypes << mt.name();
   }
-  if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) )
+  if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) ) {
     return failureResponse( "Unable to append mimetype for collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId) );
+  }
 
   // store user defined attributes
   typedef QPair<QByteArray,QByteArray> QByteArrayPair;
   Q_FOREACH ( const QByteArrayPair &attr, userDefAttrs ) {
-    if ( !db->addCollectionAttribute( collection, attr.first, attr.second ) )
+    if ( !db->addCollectionAttribute( collection, attr.first, attr.second ) ) {
       return failureResponse( "Unable to add collection attribute." );
+    }
   }
 
   Response response;
@@ -195,9 +209,9 @@ bool Create::parseStream()
   response.setString( b );
   Q_EMIT responseAvailable( response );
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Unable to commit transaction." );
+  }
 
   return successResponse( "CREATE completed" );
 }
-
