@@ -21,6 +21,7 @@
 #include "symbols.h"
 
 #include <KDebug>
+#include <QCoreApplication>
 #include <QtCore/QFile>
 #include <QtCore/QHashIterator>
 
@@ -54,7 +55,7 @@ void ShellScript::writeShutdownFunction()
   QString s =
     "function shutdown-testenvironment()\n"
     "{\n"
-    "  qdbus org.kde.Akonadi.Testrunner / org.kde.Akonadi.Testrunner.shutdown\n";
+    "  qdbus org.kde.Akonadi.Testrunner-" + QString::number( QCoreApplication::instance()->applicationPid() ) + " / org.kde.Akonadi.Testrunner.shutdown\n";
   QHashIterator<QString, QString> it( mSymbol->symbols() );
   while ( it.hasNext() ) {
     it.next();
