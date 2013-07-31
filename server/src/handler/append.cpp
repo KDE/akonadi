@@ -170,11 +170,12 @@ bool Append::commit()
       return failureResponse( "Unable to append item flags." );
 
     if (storeInFile) {
+      const QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
+
       //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
       //client knows about the item yet
-      PartHelper::remove( &parts[0] );
+      PartHelper::removeFile( fileName );
 
-      QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
       if ( !tmpFile.copy( fileName ) ) {
         return failureResponse( "Unable to copy item part data from the temporary file" );
       }
