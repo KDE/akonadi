@@ -136,7 +136,6 @@ class CacheTest : public QObject
       QVERIFY( dest.isValid() );
 
       ItemCopyJob *copy = new ItemCopyJob( item, dest, this );
-      QEXPECT_FAIL( "offline", "what do we actually want here?", Continue );
       QCOMPARE( copy->exec(), resourceEnabled );
 
       fetch = new ItemFetchJob( item, this );
