@@ -100,6 +100,8 @@ void ItemSerializer::deserialize( Item& item, const QByteArray& label, const QBy
     if ( file.open( QIODevice::ReadOnly ) ) {
       deserialize( item, label, file, version );
       file.close();
+    } else {
+      kWarning() << "Failed to open external payload:" << fileName << file.errorString();
     }
   } else {
     QBuffer buffer;
