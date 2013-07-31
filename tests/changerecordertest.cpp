@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+#include "testattribute.h"
+
 #include <akonadi/changerecorder.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
@@ -115,12 +117,9 @@ class ChangeRecorderTest : public QObject
     {
       static int s_num = 0;
       Item item( uid );
-      item.setFlag( "random_flag" + QByteArray::number(++s_num) );
+      TestAttribute *attr = item.attribute<TestAttribute>(Item::AddIfMissing);
+      attr->data = QByteArray::number(++s_num);
       ItemModifyJob *job = new ItemModifyJob( item );
-      job->disableRevisionCheck();
-      AKVERIFYEXEC( job );
-      item.clearFlag( "random_flag" + QByteArray::number(s_num) );
-      job = new ItemModifyJob( item );
       job->disableRevisionCheck();
       AKVERIFYEXEC( job );
     }
@@ -174,6 +173,7 @@ class ChangeRecorderTest : public QObject
       rec->setAllMonitored();
       rec->itemFetchScope().fetchFullPayload();
       rec->itemFetchScope().fetchAllAttributes();
+      rec->itemFetchScope().setCacheOnly( true );
 
       // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
       QSignalSpy* spy = new QSignalSpy( rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)) );

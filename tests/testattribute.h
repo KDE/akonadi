@@ -22,6 +22,8 @@
 
 #include <akonadi/attribute.h>
 
+#include <QByteArray>
+
 /* Attribute used for testing by various unit tests. */
 class TestAttribute : public Akonadi::Attribute
 {
