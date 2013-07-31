@@ -235,6 +235,9 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
     appendItems << item;
   }
 
+  if ( appendItems.isEmpty() )
+    return true; // all items have the desired flags already
+
   QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
   qb2.setColumnValue( PimItemFlagRelation::leftColumn(), appendIds );
   qb2.setColumnValue( PimItemFlagRelation::rightColumn(), flagIds );
