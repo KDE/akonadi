@@ -62,7 +62,8 @@ FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
   mRemoteRevisionRequested( false ),
   mIgnoreErrors( false ),
   mFlagsRequested( false ),
-  mRemoteIdRequested( false )
+  mRemoteIdRequested( false ),
+  mGidRequested( false )
 {
   std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
