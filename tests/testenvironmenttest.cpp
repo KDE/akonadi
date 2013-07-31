@@ -61,11 +61,11 @@ class TestEnvironmentTest : public QObject
     void testResources()
     {
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_0" ) );
+        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_0" ) ) );
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_1" ) );
+        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_1" ) ) );
       QVERIFY( DBusConnectionPool::threadConnection().interface()->isServiceRegistered(
-        "org.freedesktop.Akonadi.Agent.akonadi_knut_resource_2" ) );
+        ServerManager::agentServiceName( ServerManager::Resource, "akonadi_knut_resource_2" ) ) );
     }
 };
 
