@@ -269,7 +269,6 @@ void AkonadiServer::quit()
     const QString connectionSettingsFile = AkStandardDirs::connectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN
-    QSettings connectionSettings( connectionSettingsFile, QSettings::IniFormat );
     const QString socketDir = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data" ) );
 
     if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
