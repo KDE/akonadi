@@ -245,3 +245,9 @@ QDebug& operator<<( QDebug &d, const Akonadi::ImapInterval &interval )
   return d;
 }
 
+QDebug operator<<( QDebug d, const Akonadi::ImapSet &set )
+{
+  d << set.toImapSequenceSet();
+  return d;
+}
+
