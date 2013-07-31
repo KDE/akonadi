@@ -68,7 +68,7 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
   }
 }
 
-void ItemQueryHelper::gidToQuery(const QStringList& gids, AkonadiConnection* connection, QueryBuilder& qb)
+void ItemQueryHelper::gidToQuery(const QStringList& gids, QueryBuilder& qb)
 {
   if ( gids.size() == 1 )
     qb.addValueCondition( PimItem::gidFullColumnName(), Query::Equals, gids.first() );
@@ -85,7 +85,7 @@ void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connec
   }
 
   if ( scope.scope() == Scope::Gid ) {
-    ItemQueryHelper::gidToQuery( scope.gidSet(), connection, qb );
+    ItemQueryHelper::gidToQuery( scope.gidSet(), qb );
     return;
   }
 
