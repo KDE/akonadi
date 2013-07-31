@@ -82,14 +82,16 @@ set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/akonadidb.xml)
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
          ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
-  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code header
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/entities.h
+          --stringparam code header
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
           ${AKONADI_DB_SCHEME}
-          > ${CMAKE_CURRENT_BINARY_DIR}/entities.h
-  COMMAND ${XSLTPROC_EXECUTABLE} --stringparam code source
+  COMMAND ${XSLTPROC_EXECUTABLE}
+          --output ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+          --stringparam code source
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
           ${AKONADI_DB_SCHEME}
-          > ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities-header.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/src/storage/entities-source.xsl
