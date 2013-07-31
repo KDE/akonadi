@@ -19,6 +19,8 @@
 #define SHELLSCRIPT_H
 
 #include <QtCore/QString>
+#include <QVector>
+#include <QPair>
 
 class Symbols;
 
@@ -28,11 +30,14 @@ class ShellScript
     ShellScript();
     void makeShellScript( const QString &filename );
 
+    typedef QPair<QByteArray, QByteArray> EnvVar;
+    void setEnvironmentVariables( const QVector<EnvVar> &envVars );
+
   private:
     void writeEnvironmentVariables();
     void writeShutdownFunction();
 
-    Symbols *mSymbol;
     QString mScript;
+    QVector<EnvVar> mEnvVars;
 };
 #endif

@@ -23,6 +23,8 @@
 #include <QtCore/QObject>
 #include <QStringList>
 #include <QDBusConnection>
+#include <QVector>
+#include <QPair>
 
 class QIODevice;
 class KProcess;
@@ -49,6 +51,13 @@ class SetupTest : public QObject
 
     /// Identifier used for the Akonadi session
     QString instanceId() const;
+
+    /// set an environment variable
+    void setEnvironmentVariable( const QByteArray &name, const QString &value );
+
+    /// retrieve all modified environment variables, for writing the shell script
+    typedef QPair<QByteArray, QByteArray> EnvVar;
+    QVector<EnvVar> environmentVariables() const;
 
   public Q_SLOTS:
     Q_SCRIPTABLE void shutdown();
@@ -85,6 +94,7 @@ class SetupTest : public QObject
     bool mTrackAkonadiProcess;
     int mSetupJobCount;
     int mExitCode;
+    QVector<EnvVar> mEnvVars;
 };
 
 #endif

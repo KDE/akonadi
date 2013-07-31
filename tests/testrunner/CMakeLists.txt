@@ -16,7 +16,6 @@ set(akonaditest_SRCS
   setup.cpp
   config.cpp
   shellscript.cpp
-  symbols.cpp
   testrunner.cpp
 )
 

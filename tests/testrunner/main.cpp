@@ -93,12 +93,13 @@ int main( int argc, char **argv )
       return 1;
   }
 
-  ShellScript *sh = new ShellScript();
+  ShellScript sh;
+  sh.setEnvironmentVariables( setup->environmentVariables() );
 
   if ( args->isSet( "testenv" ) ) {
-    sh->makeShellScript( args->getOption( "testenv" ) );
+    sh.makeShellScript( args->getOption( "testenv" ) );
   } else {
-    sh->makeShellScript( setup->basePath() + "testenvironment.sh" );
+    sh.makeShellScript( setup->basePath() + "testenvironment.sh" );
   }
 
   if ( args->count() > 0 ) {
@@ -120,7 +121,6 @@ int main( int argc, char **argv )
 
   delete setup;
   setup = 0;
-  delete sh;
 
   return exitCode;
 }

@@ -18,7 +18,6 @@
 
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
-#include "symbols.h"
 
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
@@ -241,29 +240,24 @@ SetupTest::SetupTest() :
   cleanTempEnvironment();
   createTempEnvironment();
 
-  setenv( "KDEHOME", qPrintable( QString( basePath() + "kdehome" ) ), 1 );
-  setenv( "XDG_DATA_HOME", qPrintable( QString( basePath() + "data" ) ), 1 );
-  setenv( "XDG_CONFIG_HOME", qPrintable( QString( basePath() + "config" ) ), 1 );
+  setEnvironmentVariable( "KDEHOME", basePath() + "kdehome" );
+  setEnvironmentVariable( "XDG_DATA_HOME", basePath() + "data" );
+  setEnvironmentVariable( "XDG_CONFIG_HOME", basePath() + "config" );
   // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
-  setenv( "AKONADI_DISABLE_AGENT_AUTOSTART", "true", 1 );
+  setEnvironmentVariable( "AKONADI_DISABLE_AGENT_AUTOSTART", "true" );
+  setEnvironmentVariable( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
   QHashIterator<QString, QString> iter( Config::instance()->envVars() );
   while( iter.hasNext() ) {
     iter.next();
     kDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
-    setenv( qPrintable( iter.key() ), qPrintable( iter.value() ), 1 );
+    setEnvironmentVariable( iter.key().toLocal8Bit(), iter.value() );
   }
 
   // No kres-migrator please
   KConfig migratorConfig( basePath() + "kdehome/share/config/kres-migratorrc" );
   KConfigGroup migrationCfg( &migratorConfig, "Migration" );
   migrationCfg.writeEntry( "Enabled", false );
-
-  Symbols *symbol = Symbols::instance();
-  symbol->insertSymbol( "KDEHOME", basePath() + QLatin1String( "kdehome" ) );
-  symbol->insertSymbol( "XDG_DATA_HOME", basePath() + QLatin1String( "data" ) );
-  symbol->insertSymbol( "XDG_CONFIG_HOME", basePath() + QLatin1String( "config" ) );
-  symbol->insertSymbol( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
 
   connect( Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
            SLOT(serverStateChanged(Akonadi::ServerManager::State)) );
@@ -368,7 +362,7 @@ QString SetupTest::instanceId() const
 
 void SetupTest::setupInstanceId()
 {
-  setenv("AKONADI_INSTANCE", instanceId().toLocal8Bit(), 1);
+  setEnvironmentVariable("AKONADI_INSTANCE", instanceId());
 }
 
 bool SetupTest::isSetupDone() const
@@ -380,4 +374,15 @@ void SetupTest::setupFailed()
 {
   mExitCode = 1;
   shutdown();
+}
+
+void SetupTest::setEnvironmentVariable(const QByteArray& name, const QString& value)
+{
+  mEnvVars.push_back( qMakePair(name, value.toLocal8Bit()) );
+  setenv( name, qPrintable(value), 1 );
+}
+
+QVector< SetupTest::EnvVar > SetupTest::environmentVariables() const
+{
+  return mEnvVars;
 }
