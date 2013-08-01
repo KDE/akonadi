@@ -191,15 +191,22 @@ void SetupTest::createTempEnvironment()
   const QString testRunnerKdeHomeDir = QLatin1String( "kdehome" );
   const QString testRunnerDataDir = QLatin1String( "data" );
   const QString testRunnerConfigDir = QLatin1String( "config" );
+  const QString testRunnerTmpDir = QLatin1String( "tmp" );
 
   tmpDir.mkdir( testRunnerKdeHomeDir );
   tmpDir.mkdir( testRunnerConfigDir );
   tmpDir.mkdir( testRunnerDataDir );
+  tmpDir.mkdir( testRunnerTmpDir );
 
   const Config *config = Config::instance();
   copyKdeHomeDirectory( config->kdeHome(), basePath() + testRunnerKdeHomeDir );
   copyXdgDirectory( config->xdgConfigHome(), basePath() + testRunnerConfigDir );
   copyXdgDirectory( config->xdgDataHome(), basePath() + testRunnerDataDir );
+
+  setEnvironmentVariable( "KDEHOME", basePath() + testRunnerKdeHomeDir );
+  setEnvironmentVariable( "XDG_DATA_HOME", basePath() + testRunnerDataDir );
+  setEnvironmentVariable( "XDG_CONFIG_HOME", basePath() + testRunnerConfigDir );
+  setEnvironmentVariable( "TMPDIR", basePath() + testRunnerTmpDir );
 }
 
 // TODO Qt5: use QDir::removeRecursively
@@ -240,9 +247,6 @@ SetupTest::SetupTest() :
   cleanTempEnvironment();
   createTempEnvironment();
 
-  setEnvironmentVariable( "KDEHOME", basePath() + "kdehome" );
-  setEnvironmentVariable( "XDG_DATA_HOME", basePath() + "data" );
-  setEnvironmentVariable( "XDG_CONFIG_HOME", basePath() + "config" );
   // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
   setEnvironmentVariable( "AKONADI_DISABLE_AGENT_AUTOSTART", "true" );
   setEnvironmentVariable( "AKONADI_TESTRUNNER_PID", QString::number( QCoreApplication::instance()->applicationPid() ) );
