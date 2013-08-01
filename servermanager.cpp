@@ -170,7 +170,10 @@ bool ServerManager::start()
   }
 
   kDebug() << "executing akonadi_control";
-  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ) );
+  QStringList args;
+  if ( hasInstanceIdentifier() )
+    args << QLatin1String( "--instance" ) << instanceIdentifier();
+  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ), args );
   if ( !ok ) {
     kWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
     QDBusReply<void> reply = DBusConnectionPool::threadConnection().interface()->startService( ServerManager::serviceName(ServerManager::Control) );
