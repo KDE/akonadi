@@ -11,8 +11,24 @@
       <arg type="s" name="identifier" direction="in"/>
       <arg type="o" direction="out"/>
     </method>
+    <signal name="subscribed">
+      <arg type="s" name="identifier" direction="out"/>
+    </signal>
+
+    <method name="subscribeV2">
+      <arg type="s" name="identifier" direction="in"/>
+      <arg type="b" name="serverSideMonitor" direction="in"/>
+      <arg type="o" direction="out"/>
+    </method>
     <method name="unsubscribe">
       <arg type="s" name="identifier" direction="in"/>
+    </method>
+    <signal name="unsubscribed">
+      <arg type="s" name="identifier" direction="out"/>
+    </signal>
+
+    <method name="subscribers">
+      <arg type="as" direction="out" />
     </method>
   </interface>
 </node>

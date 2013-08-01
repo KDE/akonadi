@@ -21,7 +21,6 @@
 #include <akdebug.h>
 
 #include "notificationsourceadaptor.h"
-
 #include "notificationmanager.h"
 
 using namespace Akonadi;
@@ -84,9 +83,16 @@ QString NotificationSource::identifier() const
 
 void NotificationSource::unsubscribe()
 {
-  akDebug() << Q_FUNC_INFO << mIdentifier;
   mManager->unsubscribe( mIdentifier );
 }
+
+bool NotificationSource::isServerSideMonitorEnabled() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return !mgr->mClientSideMonitoredSources.contains( const_cast<NotificationSource*>( this ) );
+}
+
 
 void NotificationSource::addClientServiceName(const QString& clientServiceName)
 {
@@ -104,3 +110,148 @@ void NotificationSource::serviceUnregistered(const QString& serviceName)
     unsubscribe();
 }
 
+void NotificationSource::setMonitoredCollection( Entity::Id id, bool monitored )
+{
+  if ( id < 0 || !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( monitored && !mgr->mMonitoredCollections.contains( id, this ) ) {
+    mgr->mMonitoredCollections.insert( id, this );
+    Q_EMIT monitoredCollectionsChanged();
+  } else if ( !monitored ) {
+    mgr->mMonitoredCollections.remove( id, this );
+    Q_EMIT monitoredCollectionsChanged();
+  }
+}
+
+QVector<Entity::Id> NotificationSource::monitoredCollections() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mMonitoredCollections.keys( const_cast<NotificationSource*>( this ) ).toVector();
+}
+
+
+void NotificationSource::setMonitoredItem( Entity::Id id, bool monitored )
+{
+  if ( id < 0 || !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( monitored && !mgr->mMonitoredItems.contains( id, this ) ) {
+    mgr->mMonitoredItems.insert( id, this );
+    Q_EMIT monitoredItemsChanged();
+  } else if ( !monitored ) {
+    mgr->mMonitoredItems.remove( id, this );
+    Q_EMIT monitoredItemsChanged();
+  }
+}
+
+QVector<Entity::Id> NotificationSource::monitoredItems() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mMonitoredItems.keys( const_cast<NotificationSource*>( this ) ).toVector();
+}
+
+void NotificationSource::setMonitoredResource( const QByteArray &resource, bool monitored )
+{
+  if ( !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( monitored && !mgr->mMonitoredResources.contains( resource, this ) ) {
+    mgr->mMonitoredResources.insert( resource, this );
+    Q_EMIT monitoredResourcesChanged();
+  } else if ( !monitored ) {
+    mgr->mMonitoredResources.remove( resource, this );
+    Q_EMIT monitoredResourcesChanged();
+  }
+}
+
+QVector<QByteArray> NotificationSource::monitoredResources() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mMonitoredResources.keys( const_cast<NotificationSource*>( this ) ).toVector();
+}
+
+
+void NotificationSource::setMonitoredMimeType( const QString &mimeType, bool monitored )
+{
+  if ( mimeType.isEmpty() || !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( monitored && !mgr->mMonitoredMimeTypes.contains( mimeType, this ) ) {
+    mgr->mMonitoredMimeTypes.insert( mimeType, this );
+    Q_EMIT monitoredMimeTypesChanged();
+  } else if ( !monitored ) {
+    mgr->mMonitoredMimeTypes.remove( mimeType, this );
+    Q_EMIT monitoredMimeTypesChanged();
+  }
+}
+
+QStringList NotificationSource::monitoredMimeTypes() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mMonitoredMimeTypes.keys( const_cast<NotificationSource*>( this ) );
+}
+
+void NotificationSource::setAllMonitored( bool allMonitored )
+{
+  if ( !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( allMonitored && !mgr->mAllMonitored.contains( this ) ) {
+    mgr->mAllMonitored.insert( this );
+    Q_EMIT isAllMonitoredChanged();
+  } else if ( !allMonitored ) {
+    mgr->mAllMonitored.remove( this );
+    Q_EMIT isAllMonitoredChanged();
+  }
+}
+
+bool NotificationSource::isAllMonitored() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mAllMonitored.contains( const_cast<NotificationSource*>( this ) );
+}
+
+void NotificationSource::setIgnoredSession( const QByteArray &sessionId, bool ignored )
+{
+  if ( !isServerSideMonitorEnabled() ) {
+    return;
+  }
+
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  if ( ignored && !mgr->mIgnoredSessions.contains( sessionId, this ) ) {
+    mgr->mIgnoredSessions.insert( sessionId, this );
+    Q_EMIT ignoredSessionsChanged();
+  } else if ( !ignored ) {
+    mgr->mIgnoredSessions.remove( sessionId, this );
+    Q_EMIT ignoredSessionsChanged();
+  }
+}
+
+QVector<QByteArray> NotificationSource::ignoredSessions() const
+{
+  NotificationManager *mgr = qobject_cast<NotificationManager*>( parent() );
+
+  return mgr->mIgnoredSessions.keys( const_cast<NotificationSource*>( this ) ).toVector();
+}

@@ -158,5 +158,7 @@ Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2 )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::Entity )
 Q_DECLARE_METATYPE( Akonadi::NotificationMessageV2::List )
+Q_DECLARE_METATYPE( QVector<QByteArray> )
+Q_DECLARE_METATYPE( QVector<qint64> )
 
 #endif // NOTIFICATIONMESSAGEV2_H

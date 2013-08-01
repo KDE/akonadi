@@ -125,6 +125,8 @@ void NotificationMessageV2::registerDBusTypes()
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2>();
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::Entity>();
   qDBusRegisterMetaType<Akonadi::NotificationMessageV2::List>();
+  qDBusRegisterMetaType<QVector<QByteArray> >();
+  qDBusRegisterMetaType<QVector<qint64> >();
 }
 
 void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType )

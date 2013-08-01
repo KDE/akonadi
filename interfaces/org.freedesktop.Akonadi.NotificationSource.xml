@@ -15,6 +15,70 @@
     </signal>
     <method name="unsubscribe">
     </method>
+
+    <method name="setMonitoredCollection">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::Entity::Id"/>
+      <arg name="collection" type="x" direction="in"/>
+      <arg name="monitored" type="b" direction="in"/>
+    </method>
+    <method name="monitoredCollections">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
+      <arg type="ax" direction="out"/>
+    </method>
+    <signal name="monitoredCollectionsChanged" />
+
+    <method name="setMonitoredItem">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="Akonadi::Entity::Id"/>
+      <arg name="item" type="x" direction="in"/>
+      <arg name="monitored" type="b" direction="in"/>
+    </method>
+    <method name="monitoredItems">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;qint64&gt;"/>
+      <arg type="ax" direction="out"/>
+    </method>
+    <signal name="monitoredItemsChanged" />
+
+    <method name="setMonitoredResource">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QByteArray &amp;"/>
+      <arg name="resource" type="ay" direction="in"/>
+      <arg name="monitored" type="b" direction="in"/>
+    </method>
+    <method name="monitoredResources">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;QByteArray&gt;"/>
+      <arg type="aay" direction="out"/>
+    </method>
+    <signal name="monitoredResourcesChanged" />
+
+    <method name="setMonitoredMimeType">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QString &amp;"/>
+      <arg name="mimetype" type="s" direction="in"/>
+      <arg name="monitored" type="b" direction="in"/>
+    </method>
+    <method name="monitoredMimeTypes">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="const QStringList &amp;"/>
+      <arg type="as" direction="out"/>
+    </method>
+    <signal name="monitoredMimeTypesChanged" />
+
+    <method name="setAllMonitored">
+      <arg name="allMonitored" type="b" direction="in"/>
+    </method>
+    <method name="isAllMonitored">
+      <arg type="b" direction="out"/>
+    </method>
+    <signal name="isAllMonitoredChanged" />
+
+    <method name="setIgnoredSession">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="const QByteArray &amp;"/>
+      <arg name="session" type="ay" direction="in"/>
+      <arg name="ignored" type="b" direction="in"/>
+    </method>
+    <method name="ignoredSessions">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;QByteArray&gt;"/>
+      <arg type="aay" direction="out"/>
+    </method>
+    <signal name="ignoredSessionsChanged"/>
+
   </interface>
 </node>
 

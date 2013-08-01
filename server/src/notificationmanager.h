@@ -22,11 +22,14 @@
 
 #include "../libs/notificationmessage_p.h"
 #include "../libs/notificationmessagev2_p.h"
+#include "storage/entity.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtDBus/qdbuscontext.h>
+
+class NotificationManagerTest;
 
 namespace Akonadi {
 
@@ -60,6 +63,15 @@ class NotificationManager : public QObject, protected QDBusContext
     Q_SCRIPTABLE QDBusObjectPath subscribe( const QString &identifier );
 
     /**
+     * Subscribe to notifications emitted by this manager.
+     *
+     * @param identifier Identifier to use for our subscription.
+     * @param serverSideMonitor Whether client supports server-side monitoring
+     * @return The path we got assigned. Contains identifier.
+     */
+    Q_SCRIPTABLE QDBusObjectPath subscribeV2( const QString &identifier, bool serverSideMonitor );
+
+    /**
      * Unsubscribe from this manager.
      *
      * This method is for your inconvenience only. It's advisable to use the unsubscribe method
@@ -69,25 +81,45 @@ class NotificationManager : public QObject, protected QDBusContext
      */
     Q_SCRIPTABLE void unsubscribe( const QString &identifier );
 
+    /**
+     * Returns identifiers of currently subscribed sources
+     */
+    Q_SCRIPTABLE QStringList subscribers() const;
+
   Q_SIGNALS:
     Q_SCRIPTABLE void notify( const Akonadi::NotificationMessage::List &msgs );
+
+    Q_SCRIPTABLE void subscribed( const QString &identifier );
+    Q_SCRIPTABLE void unsubscribed( const QString &identifier );
 
   private Q_SLOTS:
     void slotNotify( const Akonadi::NotificationMessageV2::List &msgs );
 
   private:
-
     NotificationManager();
 
   private:
+    void registerSource( NotificationSource *source, bool serverSideMonitor );
+    void unregisterSource( NotificationSource *source );
+    QSet<NotificationSource*> findInterestedSources( const NotificationMessageV2 &msg );
 
     static NotificationManager *mSelf;
     NotificationMessageV2::List mNotifications;
     QTimer mTimer;
 
-    //! One message source for each subscibed process
+    //! One message source for each subscribed process
     QHash<QString, NotificationSource*> mNotificationSources;
 
+    QSet<NotificationSource*> mClientSideMonitoredSources;
+    QSet< NotificationSource* > mAllMonitored;
+    QMultiHash< QByteArray /* Session */, NotificationSource*> mIgnoredSessions;
+    QMultiHash< QByteArray /* resource */, NotificationSource*> mMonitoredResources;
+    QMultiHash< QString /* mimetype */, NotificationSource*> mMonitoredMimeTypes;
+    QMultiHash< Entity::Id, NotificationSource*> mMonitoredItems;
+    QMultiHash< Entity::Id, NotificationSource*> mMonitoredCollections;
+
+    friend class NotificationSource;
+    friend class ::NotificationManagerTest;
 };
 
 }
