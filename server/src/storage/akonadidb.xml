@@ -155,7 +155,7 @@
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
-    <index name="pimItemIdTypeIndex" columns="pimItemId,type" unique="true"/>
+    <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
   </table>
 
   <table name="CollectionAttribute">
