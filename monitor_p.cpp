@@ -261,7 +261,7 @@ NotificationMessageV2::List MonitorPrivate::splitMessage(const NotificationMessa
   return list;
 }
 
-bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool allowModifyFlagsConversion ) const
+bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg ) const
 {
   // session is ignored
   if ( sessions.contains( msg.sessionId() ) )
