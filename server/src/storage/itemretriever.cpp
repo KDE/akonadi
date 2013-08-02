@@ -134,13 +134,7 @@ QSqlQuery ItemRetriever::buildQuery() const
 
   qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
 
-  Query::Condition partJoinCondition;
-  partJoinCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
-  if ( !mFullPayload && !mParts.isEmpty() ) {
-    partJoinCondition.addCondition( PartTypeHelper::conditionFromFqNames( mParts ) );
-  }
-  partJoinCondition.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
-  qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), partJoinCondition );
+  qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName() );
 
   qb.addJoin( QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName() );
 
@@ -161,6 +155,14 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addValueCondition( Resource::nameFullColumnName(), Query::NotEquals,
                           QString::fromLatin1( mConnection->sessionId() ) );
   }
+
+  Query::Condition partTypeCondition;
+  partTypeCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, Part::pimItemIdFullColumnName());
+  if ( !mFullPayload && !mParts.isEmpty() ) {
+    partTypeCondition.addCondition( PartTypeHelper::conditionFromFqNames( mParts ) );
+  }
+  partTypeCondition.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
+  qb.addCondition( partTypeCondition );
 
   qb.addSortColumn( PimItem::idFullColumnName(), Query::Ascending );
 

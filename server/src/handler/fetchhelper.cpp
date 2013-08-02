@@ -103,17 +103,24 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     Query::Condition cond( Query::Or );
     if ( !partList.isEmpty() ) {
       QStringList partNameList;
-      partNameList.reserve( partList.size() );
-      Q_FOREACH ( const QByteArray &b, partList )
-        partNameList.push_back( QString::fromLatin1( b ) );
-      cond.addCondition( PartTypeHelper::conditionFromFqNames( partNameList ) );
+      Q_FOREACH ( const QByteArray &b, partList ) {
+        if ( b.startsWith( "PLD:" ) || b.startsWith( "ATR:" ) ) {
+          partNameList.push_back( QString::fromLatin1( b ) );
+        }
+      }
+      if ( !partNameList.isEmpty() ) {
+        cond.addCondition( PartTypeHelper::conditionFromFqNames( partNameList ) );
+      }
     }
 
     if ( allPayload )
       cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD:" ) );
     if ( allAttrs )
       cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "ATR:" ) );
-    partQuery.addCondition( cond );
+
+    if ( !cond.isEmpty() ) {
+      partQuery.addCondition( cond );
+    }
 
     ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
 
