@@ -51,6 +51,7 @@ MonitorPrivate::MonitorPrivate( ChangeNotificationDependenciesFactory *dependenc
   collectionMoveTranslationEnabled( true ),
   useRefCounting( false )
 {
+
 }
 
 void MonitorPrivate::init()
@@ -77,7 +78,7 @@ bool MonitorPrivate::connectToNotificationManager()
   delete notificationSource;
   notificationSource = 0;
 
-  notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
+  notificationSource = qobject_cast<org::freedesktop::Akonadi::NotificationSource*>( dependenciesFactory->createNotificationSource(q_ptr) );
 
   if (!notificationSource)
     return false;
@@ -90,8 +91,25 @@ bool MonitorPrivate::connectToNotificationManager()
 
 void MonitorPrivate::serverStateChanged(ServerManager::State state)
 {
-  if ( state == ServerManager::Running )
+  if ( state == ServerManager::Running ) {
     connectToNotificationManager();
+    notificationSource->setAllMonitored( monitorAll );
+    Q_FOREACH ( const Collection &col, collections ) {
+      notificationSource->setMonitoredCollection( col.id(), true );
+    }
+    Q_FOREACH ( const Entity::Id id, items ) {
+      notificationSource->setMonitoredItem( id, true );
+    }
+    Q_FOREACH ( const QByteArray &resource, resources ) {
+      notificationSource->setMonitoredResource( resource, true );
+    }
+    Q_FOREACH ( const QByteArray &session, sessions ) {
+      notificationSource->setIgnoredSession( session, true );
+    }
+    Q_FOREACH ( const QString &mimeType, mimetypes ) {
+      notificationSource->setMonitoredMimeType( mimeType, true );
+    }
+  }
 }
 
 void MonitorPrivate::invalidateCollectionCache( qint64 id )
@@ -251,11 +269,6 @@ bool MonitorPrivate::acceptNotification( const NotificationMessageV2 &msg, bool 
 
   if ( msg.entities().count() == 0 )
     return false;
-
-  // corresponding signal is not connected
-  if ( isLazilyIgnored( msg, allowModifyFlagsConversion ) ) {
-    return false;
-  }
 
   // user requested everything
   if ( monitorAll && msg.type() != NotificationMessageV2::InvalidType)
@@ -535,45 +548,47 @@ void MonitorPrivate::slotNotify( const NotificationMessageV2::List &msgs )
   foreach ( const NotificationMessageV2 &msg, msgs ) {
     invalidateCaches( msg );
     updatePendingStatistics( msg );
-    if ( acceptNotification( msg, true ) ) {
-      bool needsSplit = true;
-      bool supportsBatch = false;
+    bool needsSplit = true;
+    bool supportsBatch = false;
 
-      checkBatchSupport( msg, needsSplit, supportsBatch );
+    if ( isLazilyIgnored( msg, true ) ) {
+      continue;
+    }
 
-      if ( supportsBatch
-          || ( !needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags )
-          || msg.type() == NotificationMessageV2::Collections ) {
-        // Make sure the batch msg is always queued before the split notifications
-        const int oldSize = pendingNotifications.size();
-        const int appended = translateAndCompress( pendingNotifications, msg );
-        if ( appended > 0 ) {
-          appendedMessages += appended;
-        } else {
-          ++modifiedMessages;
-        }
-        // translateAndCompress can remove an existing "modify" when msg is a "delete".
-        // Or it can merge two ModifyFlags and return false.
-        // We need to detect such removals, for ChangeRecorder.
-        if ( pendingNotifications.count() != oldSize + appended ) {
-          ++erasedMessages; // this count isn't exact, but it doesn't matter
-        }
-      } else if ( needsSplit ) {
-        // If it's not queued at least make sure we fetch all the items from split
-        // notifications in one go.
-        itemCache->ensureCached( msg.uids(), mItemFetchScope );
+    checkBatchSupport( msg, needsSplit, supportsBatch );
+
+    if ( supportsBatch
+        || ( !needsSplit && !supportsBatch && msg.operation() != NotificationMessageV2::ModifyFlags )
+        || msg.type() == NotificationMessageV2::Collections ) {
+      // Make sure the batch msg is always queued before the split notifications
+      const int oldSize = pendingNotifications.size();
+      const int appended = translateAndCompress( pendingNotifications, msg );
+      if ( appended > 0 ) {
+        appendedMessages += appended;
+      } else {
+        ++modifiedMessages;
       }
-
-      // if the message contains more items, but we need to emit single-item notification,
-      // split the message into one message per item and queue them
-      // if the message contains only one item, but batches are not supported
-      // (and thus neither is flagsModified), splitMessage() will convert the
-      // notification to regular Modify with "FLAGS" part changed
-      if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
-        const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
-        pendingNotifications << split.toList();
-        appendedMessages += split.count();
+      // translateAndCompress can remove an existing "modify" when msg is a "delete".
+      // Or it can merge two ModifyFlags and return false.
+      // We need to detect such removals, for ChangeRecorder.
+      if ( pendingNotifications.count() != oldSize + appended ) {
+        ++erasedMessages; // this count isn't exact, but it doesn't matter
       }
+    } else if ( needsSplit ) {
+      // If it's not queued at least make sure we fetch all the items from split
+      // notifications in one go.
+      itemCache->ensureCached( msg.uids(), mItemFetchScope );
+    }
+
+    // if the message contains more items, but we need to emit single-item notification,
+    // split the message into one message per item and queue them
+    // if the message contains only one item, but batches are not supported
+    // (and thus neither is flagsModified), splitMessage() will convert the
+    // notification to regular Modify with "FLAGS" part changed
+    if ( needsSplit || ( !needsSplit && !supportsBatch && msg.operation() == Akonadi::NotificationMessageV2::ModifyFlags ) ) {
+      const NotificationMessageV2::List split = splitMessage( msg, !supportsBatch );
+      pendingNotifications << split.toList();
+      appendedMessages += split.count();
     }
   }
 

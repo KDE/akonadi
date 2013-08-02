@@ -22,6 +22,7 @@
 #include <QSignalSpy>
 #include <qtest_akonadi.h>
 
+
 using namespace Akonadi;
 
 class EntityCacheTest : public QObject

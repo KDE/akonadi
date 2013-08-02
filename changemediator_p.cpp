@@ -24,6 +24,7 @@
 #include <QTimer>
 
 #include "changenotificationdependenciesfactory_p.h"
+#include "notificationsourceinterface.h"
 #include "job_p.h"
 #include "itemmovejob.h"
 #include "movejobimpl_p.h"
@@ -48,26 +49,11 @@ ChangeMediator* ChangeMediator::instance()
 }
 
 ChangeMediator::ChangeMediator(QObject *parent)
-  : QObject(parent), m_notificationSource( 0 )
+  : QObject(parent)
 {
   if ( qApp ) {
     this->moveToThread( qApp->thread() );
   }
-  QTimer::singleShot(0, this, SLOT(init()));
-}
-
-void ChangeMediator::init()
-{
-  ChangeNotificationDependenciesFactory dependenciesFactory;
-
-  m_notificationSource = dependenciesFactory.createNotificationSource( this );
-
-  if ( !m_notificationSource ) {
-    return;
-  }
-
-  QObject::connect( m_notificationSource, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)),
-                    this, SLOT(processAkonadiNotifications(Akonadi::NotificationMessageV2::List)) );
 }
 
 /* static */
@@ -189,15 +175,4 @@ void ChangeMediator::do_beginMoveItems( JobPrivate *movePrivate, const QByteArra
 void ChangeMediator::do_itemsMoved( const Item::List &items, const Collection &sourceParent, const QByteArray &id )
 {
   qDebug() << "MOVED" << items.size() << sourceParent << "TO   " << items.first().parentCollection() << id;
-}
-
-void ChangeMediator::processAkonadiNotifications(const Akonadi::NotificationMessageV2::List& messages)
-{
-  QVector<NotificationMessageV2> vector;
-  Q_FOREACH ( const Akonadi::NotificationMessageV2 &message, messages ) {
-    if ( !m_sessions.contains( message.sessionId() ) ) {
-      vector.append( message );
-    }
-  }
-  emit notify( vector );
 }

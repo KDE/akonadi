@@ -26,6 +26,7 @@
 
 #include <KComponentData>
 #include <KGlobal>
+#include <KRandom>
 #include <qdbusextratypes.h>
 
 using namespace Akonadi;
@@ -43,10 +44,15 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     return 0;
   }
 
-  QDBusObjectPath p = manager->subscribe( KGlobal::mainComponent().componentName() );
+  const QString name = QString::fromLatin1( "%1_%2_%3" ).arg(
+      KGlobal::mainComponent().componentName(),
+      QString::number( QCoreApplication::applicationPid() ),
+      KRandom::randomString( 6 ) );
+  QDBusObjectPath p = manager->subscribeV2( name, true );
   const bool validError = manager->lastError().isValid();
   delete manager;
   if ( validError ) {
+    kWarning() << manager->lastError().name() << manager->lastError().message();
     // :TODO: What to do?
     return 0;
   }

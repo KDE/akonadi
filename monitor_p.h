@@ -29,10 +29,10 @@
 #include "itemfetchscope.h"
 #include "job.h"
 #include <akonadi/private/notificationmessagev2_p.h>
-#include "notificationsourceinterface.h"
 #include "entitycache_p.h"
 #include "servermanager.h"
 #include "changenotificationdependenciesfactory_p.h"
+#include "notificationsourceinterface.h"
 
 #include <kmimetype.h>
 
@@ -60,7 +60,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
     ChangeNotificationDependenciesFactory *dependenciesFactory;
-    QObject* notificationSource;
+    org::freedesktop::Akonadi::NotificationSource* notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
