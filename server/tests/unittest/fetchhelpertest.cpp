@@ -35,7 +35,7 @@ class FetchHelperTest : public QObject
       FetchHelper fh(0, Scope(Scope::Invalid));
       QVERIFY(!fh.mRemoteRevisionRequested);
 
-      QByteArray input( "CACHEONLY EXTERNALPAYLOAD IGNOREERRORS CHANGEDSINCE 1374150376 ANCESTORS 42 (DATETIME REMOTEREVISION REMOTEID FLAGS SIZE PLD:RFC822 ATR::MyAttr)\n" );
+      QByteArray input( "CACHEONLY EXTERNALPAYLOAD IGNOREERRORS CHANGEDSINCE 1374150376 ANCESTORS 42 (DATETIME REMOTEREVISION REMOTEID GID FLAGS SIZE PLD:RFC822 ATR::MyAttr)\n" );
       QBuffer buffer( &input, this );
       buffer.open( QIODevice::ReadOnly );
       ImapStreamParser parser( &buffer );
@@ -55,6 +55,7 @@ class FetchHelperTest : public QObject
       QVERIFY(!fh.mAllAttrs);
       QVERIFY(fh.mMTimeRequested);
       QVERIFY(fh.mRemoteIdRequested);
+      QVERIFY(fh.mGidRequested);
 
       // full payload special case
       input = "FULLPAYLOAD ()";
@@ -79,6 +80,7 @@ class FetchHelperTest : public QObject
       QVERIFY(!fh2.mAllAttrs);
       QVERIFY(!fh2.mMTimeRequested);
       QVERIFY(!fh2.mRemoteIdRequested);
+      QVERIFY(!fh2.mGidRequested);
     }
 };
 
