@@ -82,6 +82,7 @@ AgentManager::AgentManager( QObject *parent )
     serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
 
   mStorageController = new Akonadi::ProcessControl;
+  mStorageController->setShutdownTimeout( 10 * 000 ); // the server needs more time for shutdown if we are using an internal mysqld
   connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( QLatin1String("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash );
 

@@ -41,7 +41,7 @@ static const int s_maxCrashCount = 2;
 
 ProcessControl::ProcessControl( QObject *parent )
   : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 ),
-  mRestartOnceOnExit( false )
+  mRestartOnceOnExit( false ), mShutdownTimeout( 1000 )
 {
   connect( &mProcess, SIGNAL(error(QProcess::ProcessError)),
            this, SLOT(slotError(QProcess::ProcessError)) );
@@ -82,7 +82,7 @@ void ProcessControl::setCrashPolicy( CrashPolicy policy )
 void ProcessControl::stop()
 {
   if ( mProcess.state() != QProcess::NotRunning ) {
-    mProcess.waitForFinished( 1000 );
+    mProcess.waitForFinished( mShutdownTimeout );
     mProcess.terminate();
     mProcess.waitForFinished( 10000 );
     mProcess.kill();
@@ -250,3 +250,7 @@ bool ProcessControl::isRunning() const
   return mProcess.state() != QProcess::NotRunning;
 }
 
+void ProcessControl::setShutdownTimeout(int msecs)
+{
+  mShutdownTimeout = msecs;
+}

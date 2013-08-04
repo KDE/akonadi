@@ -90,6 +90,14 @@ class ProcessControl : public QObject
      */
     bool isRunning() const;
 
+    /**
+     * Sets the time (in msecs) we wait for the process to shut down before we send terminate/kill signals.
+     * Default is 1 second.
+     * Note that it is your responsiblility to ask the process to quit, otherwise this is just
+     * pointless waiting.
+     */
+    void setShutdownTimeout( int msecs );
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the observed application
@@ -123,6 +131,7 @@ class ProcessControl : public QObject
     bool mFailedToStart;
     int mCrashCount;
     bool mRestartOnceOnExit;
+    int mShutdownTimeout;
 };
 
 }
