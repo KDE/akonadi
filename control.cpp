@@ -171,6 +171,10 @@ void Control::Private::serverStateChanged(ServerManager::State state)
 {
   kDebug() << state;
   if ( mEventLoop && mEventLoop->isRunning() ) {
+    // ignore transient states going into the right direction
+    if ( mStarting && ( state == ServerManager::Starting || state == ServerManager::Upgrading ) ||
+         mStopping && state == ServerManager::Stopping )
+      return;
     mEventLoop->quit();
     mSuccess = ( mStarting && state == ServerManager::Running ) || ( mStopping && state == ServerManager::NotRunning );
   }
