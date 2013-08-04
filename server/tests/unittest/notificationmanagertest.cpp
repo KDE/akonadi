@@ -182,6 +182,23 @@ class NotificationManagerTest : public QObject
         << EmptyList( QByteArray )
         << msg
         << false;
+
+      msg = NotificationMessageV2();
+      msg.setType( NotificationMessageV2::Items );
+      msg.setOperation( NotificationMessageV2::Add );
+      msg.setSessionId( "randomSession" );
+      msg.setResource( "randomResource" );
+      msg.setParentCollection( 1 );
+      msg.addEntity( 10 );
+      QTest::newRow( "new mail for mailfilter or maildispatcher")
+        << false
+        << List( Entity::Id, 1 )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << EmptyList( QString )
+        << EmptyList( QByteArray )
+        << msg
+        << true;
     }
 
     void testSourceFilter()

@@ -130,17 +130,18 @@ QSet< NotificationSource* > NotificationManager::findInterestedSources( const No
 
         sources.unite( srcs );
 
-      } else if ( !mMonitoredItems.isEmpty() ) {
+      }
+      if ( !mMonitoredItems.isEmpty() ) {
         Q_FOREACH ( const NotificationMessageV2::Entity &entity, entities ) {
           sources.unite( mMonitoredMimeTypes.values( entity.mimeType ).toSet() );
         }
-
-        sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( msg.parentCollection() ) ).toSet() );
-        sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( msg.parentDestCollection() ) ).toSet() );
-        // If the resource is watching root collection, then it wants to be notified
-        // about all changes in it's subcollections
-        sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( 0 ) ).toSet() );
       }
+
+      sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( msg.parentCollection() ) ).toSet() );
+      sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( msg.parentDestCollection() ) ).toSet() );
+      // If the resource is watching root collection, then it wants to be notified
+      // about all changes in it's subcollections
+      sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( 0 ) ).toSet() );
 
     } break;
 
