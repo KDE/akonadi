@@ -49,6 +49,7 @@ static QString itemToString(const Akonadi::Item &item)
 CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
                                                              , mIncidenceChanger( new IncidenceChanger() )
                                                              , mBatchInsertionCancelled( false )
+                                                             , mListensForNewItems( false )
                                                              , q( qq )
 {
   connect( mIncidenceChanger,
@@ -217,7 +218,7 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
 {
   Q_UNUSED( changeId );
   Q_UNUSED( item );
-  if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
+  if ( resultCode == IncidenceChanger::ResultCodeSuccess && !mListensForNewItems) {
     Q_ASSERT( item.isValid() );
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     internalInsert( item );
