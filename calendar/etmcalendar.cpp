@@ -55,6 +55,7 @@ ETMCalendarPrivate::ETMCalendarPrivate( ETMCalendar *qq ) : CalendarBasePrivate(
                                                           , mCollectionFilteringEnabled( true )
                                                           , q( qq )
 {
+  mListensForNewItems = true;
 }
 
 void ETMCalendarPrivate::init()

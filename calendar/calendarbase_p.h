@@ -68,6 +68,7 @@ public:
   QWeakPointer<CalendarBase> mWeakPointer;
   Akonadi::Collection mCollectionForBatchInsertion;
   bool mBatchInsertionCancelled;
+  bool mListensForNewItems; // does this model detect new item creations ?
 
 private:
   CalendarBase *const q;
