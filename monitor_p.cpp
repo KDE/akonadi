@@ -443,8 +443,12 @@ void MonitorPrivate::updatePendingStatistics( const NotificationMessageV2& msg )
 void MonitorPrivate::slotSessionDestroyed( QObject * object )
 {
   Session* objectSession = qobject_cast<Session*>( object );
-  if ( objectSession )
+  if ( objectSession ) {
     sessions.removeAll( objectSession->sessionId() );
+    if ( notificationSource ) {
+      notificationSource->setIgnoredSession( objectSession->sessionId(), false );
+    }
+  }
 }
 
 void MonitorPrivate::slotStatisticsChangedFinished( KJob* job )

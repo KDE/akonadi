@@ -33,6 +33,10 @@ using namespace Akonadi;
 
 QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
+  if ( !Akonadi::ServerManager::self()->isRunning() ) {
+    return 0;
+  }
+
   org::freedesktop::Akonadi::NotificationManager *manager =
     new org::freedesktop::Akonadi::NotificationManager(
       ServerManager::serviceName( Akonadi::ServerManager::Server ),

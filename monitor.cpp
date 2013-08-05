@@ -68,11 +68,15 @@ void Monitor::setCollectionMonitored( const Collection &collection, bool monitor
   Q_D( Monitor );
   if ( !d->collections.contains( collection ) && monitored ) {
     d->collections << collection;
-    d->notificationSource->setMonitoredCollection( collection.id(), true );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredCollection( collection.id(), true );
+    }
   } else if ( !monitored ) {
     if ( d->collections.removeAll( collection ) ) {
       d->cleanOldNotifications();
-      d->notificationSource->setMonitoredCollection( collection.id(), false );
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredCollection( collection.id(), false );
+      }
     }
   }
 
@@ -84,11 +88,15 @@ void Monitor::setItemMonitored( const Item &item, bool monitored )
   Q_D( Monitor );
   if ( !d->items.contains( item.id() ) && monitored ) {
     d->items.insert( item.id() );
-    d->notificationSource->setMonitoredItem( item.id(), true );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredItem( item.id(), true );
+    }
   } else if ( !monitored ) {
     if ( d->items.remove( item.id() ) ) {
       d->cleanOldNotifications();
-      d->notificationSource->setMonitoredItem( item.id(), false );
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredItem( item.id(), false );
+      }
     }
   }
 
@@ -100,11 +108,15 @@ void Monitor::setResourceMonitored( const QByteArray &resource, bool monitored )
   Q_D( Monitor );
   if ( !d->resources.contains( resource) && monitored ) {
     d->resources.insert( resource );
-    d->notificationSource->setMonitoredResource( resource, true );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredResource( resource, true );
+    }
   } else if ( !monitored ) {
     if ( d->resources.remove( resource ) ) {
       d->cleanOldNotifications();
-      d->notificationSource->setMonitoredResource( resource, false );
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredResource( resource, false );
+      }
     }
   }
 
@@ -116,11 +128,15 @@ void Monitor::setMimeTypeMonitored( const QString & mimetype, bool monitored )
   Q_D( Monitor );
   if ( !d->mimetypes.contains( mimetype ) && monitored ) {
     d->mimetypes.insert( mimetype );
-    d->notificationSource->setMonitoredMimeType( mimetype, true );
+    if ( d->notificationSource ) {
+      d->notificationSource->setMonitoredMimeType( mimetype, true );
+    }
   } else if ( !monitored ) {
     if ( d->mimetypes.remove( mimetype ) ) {
       d->cleanOldNotifications();
-      d->notificationSource->setMonitoredMimeType( mimetype, false );
+      if ( d->notificationSource ) {
+        d->notificationSource->setMonitoredMimeType( mimetype, false );
+      }
     }
   }
 
@@ -140,7 +156,9 @@ void Akonadi::Monitor::setAllMonitored( bool monitored )
     d->cleanOldNotifications();
   }
 
-  d->notificationSource->setAllMonitored( monitored );
+  if ( d->notificationSource ) {
+    d->notificationSource->setAllMonitored( monitored );
+  }
 
   emit allMonitored( monitored );
 }
@@ -152,7 +170,9 @@ void Monitor::ignoreSession( Session * session )
   if ( !d->sessions.contains( session->sessionId() )) {
     d->sessions << session->sessionId();
     connect( session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)) );
-    d->notificationSource->setIgnoredSession( session->sessionId(), true );
+    if ( d->notificationSource ) {
+      d->notificationSource->setIgnoredSession( session->sessionId(), true );
+    }
   }
 }
 
