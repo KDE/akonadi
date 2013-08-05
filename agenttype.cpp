@@ -78,6 +78,11 @@ QStringList AgentType::capabilities() const
   return d->mCapabilities;
 }
 
+QVariantMap AgentType::customProperties() const
+{
+  return d->mCustomProperties;
+}
+
 AgentType& AgentType::operator=( const AgentType &other )
 {
   if ( this != &other ) {

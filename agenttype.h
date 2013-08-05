@@ -29,6 +29,8 @@
 class QIcon;
 class QString;
 class QStringList;
+class QVariant;
+typedef QMap<QString, QVariant> QVariantMap;
 
 namespace Akonadi
 {
@@ -118,6 +120,12 @@ class AKONADI_EXPORT AgentType
      * Returns the list of supported capabilities of the agent type.
      */
     QStringList capabilities() const;
+
+    /**
+     * Returns a Map of custom properties of the agent type.
+     * @since 4.12
+     */
+    QVariantMap customProperties() const;
 
     /**
      * @internal
