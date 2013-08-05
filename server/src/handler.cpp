@@ -60,12 +60,11 @@
 using namespace Akonadi;
 
 Handler::Handler()
-    :QObject()
+    : QObject()
     , m_connection( 0 )
     , m_streamParser( 0 )
 {
 }
-
 
 Handler::~Handler()
 {
@@ -74,8 +73,9 @@ Handler::~Handler()
 Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
 {
     // allowed are LOGIN
-    if ( command == AKONADI_CMD_LOGIN )
+    if ( command == AKONADI_CMD_LOGIN ) {
         return new Login();
+    }
 
     return 0;
 }
@@ -83,10 +83,12 @@ Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & com
 Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & command )
 {
     // allowed commands CAPABILITY and LOGOUT
-    if ( command == AKONADI_CMD_LOGOUT )
+    if ( command == AKONADI_CMD_LOGOUT ) {
         return new Logout();
-    if ( command == AKONADI_CMD_CAPABILITY )
+    }
+    if ( command == AKONADI_CMD_CAPABILITY ) {
         return new Capability();
+    }
     return 0;
 }
 
@@ -105,81 +107,105 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
   QByteArray command( _command );
   // deal with command prefixes
   Scope::SelectionScope scope = Scope::selectionScopeFromByteArray( command );
-  if ( scope != Scope::None )
+  if ( scope != Scope::None ) {
     command = streamParser->readString();
+  }
 
     // allowed commands are listed below ;-).
-    if ( command == "APPEND" )
+    if ( command == AKONADI_CMD_APPEND ) {
         return new Append();
-    if ( command == AKONADI_CMD_COLLECTIONCREATE )
+    }
+    if ( command == AKONADI_CMD_COLLECTIONCREATE ) {
         return new Create( scope );
-    if ( command == "LIST" || command == "X-AKLIST" ) //TODO: remove X-AKLIST support in Akonadi 2.0
+    }
+    if ( command == AKONADI_CMD_LIST || command == AKONADI_CMD_X_AKLIST ) { //TODO: remove X-AKLIST support in Akonadi 2.0
         return new List( scope, false );
-    if ( command == "LSUB" || command == "X-AKLSUB" ) //TODO: remove X-AKLSUB support in Akonadi 2.0
+    }
+    if ( command == AKONADI_CMD_LSUB || command == AKONADI_CMD_X_AKLSUB ) { //TODO: remove X-AKLSUB support in Akonadi 2.0
         return new List( scope, true );
-    if ( command == "SELECT" )
+    }
+    if ( command == AKONADI_CMD_SELECT ) {
         return new Select( scope );
-    if ( command == "SEARCH_STORE" )
+    }
+    if ( command == AKONADI_CMD_SEARCH_STORE ) {
         return new SearchPersistent();
-    if ( command == "SEARCH" )
+    }
+    if ( command == AKONADI_CMD_SEARCH ) {
         return new Search();
-    if ( command == AKONADI_CMD_ITEMFETCH )
+    }
+    if ( command == AKONADI_CMD_ITEMFETCH ) {
         return new Fetch( scope );
-    if ( command == "EXPUNGE" ) //TODO: remove EXPUNGE support in Akonadi 2.0
+    }
+    if ( command == AKONADI_CMD_EXPUNGE ) { //TODO: remove EXPUNGE support in Akonadi 2.0
         return new Expunge();
-    if ( command == AKONADI_CMD_ITEMMODIFY )
+    }
+    if ( command == AKONADI_CMD_ITEMMODIFY ) {
         return new Store( scope );
-    if ( command == "STATUS" )
+    }
+    if ( command == AKONADI_CMD_STATUS ) {
         return new Status();
-    if ( command == AKONADI_CMD_COLLECTIONDELETE )
+    }
+    if ( command == AKONADI_CMD_COLLECTIONDELETE ) {
       return new Delete( scope );
-    if ( command == AKONADI_CMD_COLLECTIONMODIFY )
+    }
+    if ( command == AKONADI_CMD_COLLECTIONMODIFY ) {
       return new Modify( scope );
-    if ( command == "BEGIN" )
+    }
+    if ( command == AKONADI_CMD_BEGIN ) {
       return new TransactionHandler( TransactionHandler::Begin );
-    if ( command == "ROLLBACK" )
+    }
+    if ( command == AKONADI_CMD_ROLLBACK ) {
       return new TransactionHandler( TransactionHandler::Rollback );
-    if ( command == "COMMIT" )
+    }
+    if ( command == AKONADI_CMD_COMMIT ) {
       return new TransactionHandler( TransactionHandler::Commit );
-    if ( command == AKONADI_CMD_ITEMCREATE )
+    }
+    if ( command == AKONADI_CMD_ITEMCREATE ) {
       return new AkAppend();
-    if ( command == "SUBSCRIBE" )
+    }
+    if ( command == AKONADI_CMD_SUBSCRIBE ) {
       return new Subscribe( true );
-    if ( command == "UNSUBSCRIBE" )
+    }
+    if ( command == AKONADI_CMD_UNSUBSCRIBE ) {
       return new Subscribe( false );
-    if ( command == AKONADI_CMD_ITEMCOPY )
+    }
+    if ( command == AKONADI_CMD_ITEMCOPY ) {
       return new Copy();
-    if ( command == AKONADI_CMD_COLLECTIONCOPY )
+    }
+    if ( command == AKONADI_CMD_COLLECTIONCOPY ) {
       return new ColCopy();
-    if ( command == AKONADI_CMD_ITEMLINK )
+    }
+    if ( command == AKONADI_CMD_ITEMLINK ) {
       return new Link( scope, true );
-    if ( command == AKONADI_CMD_ITEMUNLINK )
+    }
+    if ( command == AKONADI_CMD_ITEMUNLINK ) {
       return new Link( scope, false );
-    if ( command == AKONADI_CMD_RESOURCESELECT )
+    }
+    if ( command == AKONADI_CMD_RESOURCESELECT ) {
       return new ResourceSelect();
-    if ( command == AKONADI_CMD_ITEMDELETE )
+    }
+    if ( command == AKONADI_CMD_ITEMDELETE ) {
       return new Remove( scope );
-    if ( command == AKONADI_CMD_ITEMMOVE )
+    }
+    if ( command == AKONADI_CMD_ITEMMOVE ) {
       return new Move( scope );
-    if ( command == AKONADI_CMD_COLLECTIONMOVE )
+    }
+    if ( command == AKONADI_CMD_COLLECTIONMOVE ) {
       return new ColMove( scope );
+    }
 
     return 0;
 }
-
 
 void Akonadi::Handler::setConnection( AkonadiConnection* connection )
 {
     m_connection = connection;
 }
 
-
 AkonadiConnection* Akonadi::Handler::connection() const
 {
     return m_connection;
 }
-
-
 
 bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
 {
@@ -216,7 +242,6 @@ void Handler::setStreamParser( ImapStreamParser *parser )
   m_streamParser = parser;
 }
 
-
 UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command) :
   mCommand( command )
 {
@@ -227,13 +252,13 @@ bool UnknownCommandHandler::parseStream()
   Response response;
   response.setError();
   response.setTag( tag() );
-  if ( mCommand.isEmpty() )
+  if ( mCommand.isEmpty() ) {
     response.setString( "No command specified" );
-  else
-    response.setString( "Unrecognized command: "  + mCommand );
+  } else {
+    response.setString( "Unrecognized command: " + mCommand );
+  }
   m_streamParser->readUntilCommandEnd();
 
   Q_EMIT responseAvailable( response );
   return true;
 }
-
