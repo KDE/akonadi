@@ -105,6 +105,13 @@ class AgentManager : public QObject, protected QDBusContext
     QStringList agentCapabilities( const QString &identifier ) const;
 
     /**
+     * Returns a list of Custom added propeties of the agent type
+     * for the given @p identifier
+     * @since 1.11
+     */
+    QVariantMap agentCustomProperties( const QString &identifier) const;
+
+    /**
      * Creates a new agent of the given agent type @p identifier.
      *
      * @return The identifier of the new agent if created successfully,

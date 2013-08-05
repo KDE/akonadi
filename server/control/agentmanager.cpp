@@ -218,6 +218,14 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
   return mAgents.value( identifier ).capabilities;
 }
 
+QVariantMap AgentManager::agentCustomProperties( const QString &identifier ) const
+{
+  if ( !checkAgentExists( identifier ) )
+    return QVariantMap();
+
+  return mAgents.value( identifier ).custom;
+}
+
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
 {
   switch ( info.launchMethod ) {
@@ -479,6 +487,7 @@ void AgentManager::readPluginInfos( const QDir &directory )
   const QStringList files = directory.entryList();
   akDebug() << "PLUGINS: " << directory.canonicalPath();
   akDebug() << "PLUGINS: " << files;
+
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 
