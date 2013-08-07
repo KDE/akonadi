@@ -159,7 +159,7 @@ class NotificationManagerTest : public QObject
 
       QTest::newRow( "inter-resource move, uninterested party" )
         << false
-        << List( Entity::Id, 0 )
+        << List( Entity::Id, 12 )
         << EmptyList( Entity::Id )
         << EmptyList( QByteArray )
         << List( QString, QLatin1String( "inode/directory" ) )

@@ -105,32 +105,25 @@ QSet< NotificationSource* > NotificationManager::findInterestedSources( const No
     sources.unite( mMonitoredResources.values( msg.destinationResource() ).toSet() );
   }
 
+  qDebug() << msg.toString();
   switch ( msg.type() ) {
     case NotificationMessageV2::InvalidType:
       return sources;
 
     case NotificationMessageV2::Items: {
       const QList<NotificationMessageV2::Entity> entities = msg.entities().values();
-      if ( !mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty() ) {
-        QSet<NotificationSource*> srcs;
-        srcs.unite( mMonitoredResources.values( msg.resource() ).toSet() );
-        if ( msg.operation() == NotificationMessageV2::Move ) {
-          srcs.unite( mMonitoredResources.values( msg.destinationResource() ) .toSet() );
-        }
 
-        if ( !mMonitoredMimeTypes.isEmpty() ) {
-          Q_FOREACH ( const NotificationMessageV2::Entity &entity, entities ) {
-            srcs.unite( mMonitoredMimeTypes.values( entity.mimeType ).toSet() );
-          }
-        }
-
-        if ( srcs.isEmpty() ) {
-          return sources;
-        }
-
-        sources.unite( srcs );
-
+      sources.unite( mMonitoredResources.values( msg.resource() ).toSet() );
+      if ( msg.operation() == NotificationMessageV2::Move ) {
+        sources.unite( mMonitoredResources.values( msg.destinationResource() ) .toSet() );
       }
+
+      if ( !mMonitoredMimeTypes.isEmpty() ) {
+        Q_FOREACH ( const NotificationMessageV2::Entity &entity, entities ) {
+          sources.unite( mMonitoredMimeTypes.values( entity.mimeType ).toSet() );
+        }
+      }
+
       if ( !mMonitoredItems.isEmpty() ) {
         Q_FOREACH ( const NotificationMessageV2::Entity &entity, entities ) {
           sources.unite( mMonitoredMimeTypes.values( entity.mimeType ).toSet() );
@@ -147,11 +140,9 @@ QSet< NotificationSource* > NotificationManager::findInterestedSources( const No
 
     case NotificationMessageV2::Collections: {
       const QList<NotificationMessageV2::Id> ids = msg.entities().uniqueKeys();
-      if ( !mMonitoredResources.isEmpty() ) {
-        sources.unite( mMonitoredResources.values( msg.resource() ).toSet() );
-        if ( msg.operation() == NotificationMessageV2::Move ) {
-          sources.unite( mMonitoredResources.values( msg.destinationResource() ).toSet() );
-        }
+      sources.unite( mMonitoredResources.values( msg.resource() ).toSet() );
+      if ( msg.operation() == NotificationMessageV2::Move ) {
+        sources.unite( mMonitoredResources.values( msg.destinationResource() ).toSet() );
       }
 
       if ( !mMonitoredCollections.isEmpty() ) {
