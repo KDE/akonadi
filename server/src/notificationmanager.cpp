@@ -207,11 +207,9 @@ void NotificationManager::emitPendingNotifications()
 
       QSet<NotificationSource*> sources = findInterestedSources( notification );
 
-      akDebug() << "Sending" << notification.toString() << "to: ";
       QList<NotificationSource*> ignoredSources = mIgnoredSessions.values( notification.sessionId() );
       Q_FOREACH ( NotificationSource *source, sources ) {
         if ( !ignoredSources.contains( source ) ) {
-          akDebug() << "\t" << source->identifier();
           source->emitNotification( NotificationMessageV2::List() << notification );
         }
       }
