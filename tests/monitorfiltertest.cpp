@@ -73,7 +73,7 @@ class MonitorFilterTest : public QObject
 
       QVERIFY( !m.acceptNotification( msg ) );
       m.monitorAll = true;
-      QVERIFY( !m.acceptNotification( msg ) );
+      QVERIFY( m.acceptNotification( msg ) );
       QSignalSpy spy( &dummyMonitor, signalName );
       QVERIFY( spy.isValid() );
       QVERIFY( m.acceptNotification( msg ) );
