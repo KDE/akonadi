@@ -49,7 +49,7 @@ public:
   InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = 0);
 
   FakeNotificationSource* notifier() const {
-    return qobject_cast<FakeNotificationSource*>(d_ptr->notificationSource);
+    return qobject_cast<FakeNotificationSource*>(d_ptr->notificationSource->source());
   }
 
   QQueue<Akonadi::NotificationMessageV2> pendingNotifications() const { return d_ptr->pendingNotifications; }
