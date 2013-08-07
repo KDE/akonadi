@@ -154,7 +154,7 @@ QSet< NotificationSource* > NotificationManager::findInterestedSources( const No
         }
       }
 
-      if ( !mMonitoredMimeTypes.isEmpty() && !mMonitoredCollections.isEmpty() ) {
+      if ( !mMonitoredCollections.isEmpty() ) {
         Q_FOREACH ( NotificationMessageV2::Id id, ids ) {
           sources.unite( mMonitoredCollections.values( static_cast<Entity::Id>( id ) ).toSet() );
         }
