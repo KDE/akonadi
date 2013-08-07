@@ -143,6 +143,7 @@ set( akonadikde_LIB_SRC
   mimetypechecker.cpp
   monitor.cpp
   monitor_p.cpp
+  notificationsource.cpp
   partfetcher.cpp
   pastehelper.cpp
   persistentsearchattribute.cpp

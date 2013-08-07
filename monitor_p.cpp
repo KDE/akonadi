@@ -78,7 +78,7 @@ bool MonitorPrivate::connectToNotificationManager()
   delete notificationSource;
   notificationSource = 0;
 
-  notificationSource = qobject_cast<org::freedesktop::Akonadi::NotificationSource*>( dependenciesFactory->createNotificationSource(q_ptr) );
+  notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
 
   if (!notificationSource)
     return false;

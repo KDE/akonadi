@@ -32,7 +32,7 @@
 #include "entitycache_p.h"
 #include "servermanager.h"
 #include "changenotificationdependenciesfactory_p.h"
-#include "notificationsourceinterface.h"
+#include "notificationsource_p.h"
 
 #include <kmimetype.h>
 
@@ -60,7 +60,7 @@ class AKONADI_TESTS_EXPORT MonitorPrivate
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC( Monitor )
     ChangeNotificationDependenciesFactory *dependenciesFactory;
-    org::freedesktop::Akonadi::NotificationSource* notificationSource;
+    NotificationSource* notificationSource;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;

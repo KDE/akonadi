@@ -19,6 +19,7 @@
 
 #include "changenotificationdependenciesfactory_p.h"
 #include "dbusconnectionpool.h"
+#include "notificationsource_p.h"
 #include "notificationsourceinterface.h"
 #include "notificationmanagerinterface.h"
 #include "changemediator_p.h"
@@ -31,7 +32,7 @@
 
 using namespace Akonadi;
 
-QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
+NotificationSource* ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
 {
   if ( !Akonadi::ServerManager::self()->isRunning() ) {
     return 0;
@@ -71,7 +72,7 @@ QObject* ChangeNotificationDependenciesFactory::createNotificationSource(QObject
     // :TODO: error handling
     return 0;
   }
-  return notificationSource;
+  return new NotificationSource( notificationSource );
 }
 
 QObject* ChangeNotificationDependenciesFactory::createChangeMediator(QObject* parent)
