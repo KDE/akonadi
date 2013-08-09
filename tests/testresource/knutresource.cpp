@@ -112,7 +112,7 @@ void KnutResource::configure( WId windowId )
 
   const QString newFile =
       KFileDialog::getSaveFileNameWId( url,
-                                       "*.xml |" + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ),
+                                       QLatin1String("*.xml |") + i18nc( "Filedialog filter for Akonadi data file", "Akonadi Knut Data File" ),
                                        windowId, i18n( "Select Data File" ) );
 
   if ( newFile.isEmpty() || oldFile == newFile )
@@ -197,10 +197,10 @@ void KnutResource::collectionChanged( const Akonadi::Collection &collection )
   const int numberOfChildren = children.count();
   for ( int i = 0; i < numberOfChildren; ++i ) {
     const QDomElement child = children.at( i ).toElement();
-    kDebug() << "reparenting " << child.tagName() << child.attribute( "rid" );
+    kDebug() << "reparenting " << child.tagName() << child.attribute( QLatin1String("rid") );
     if ( child.isNull() )
       continue;
-    if ( child.tagName() == "item" || child.tagName() == "collection" ) {
+    if ( child.tagName() == QLatin1String("item") || child.tagName() == QLatin1String("collection") ) {
       newElem.appendChild( child ); // reparents
       --i; // children, despite being const is modified by the reparenting
     }
