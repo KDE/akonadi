@@ -220,6 +220,8 @@ ServerManager::State ServerManager::state()
   ServerManager::State previousState = NotRunning;
   if ( sInstance.exists() ) { // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
     previousState = sInstance->mState;
+  } else {
+    return NotRunning;
   }
 
   const bool serverUpgrading = DBusConnectionPool::threadConnection().interface()->isServiceRegistered( ServerManager::serviceName( ServerManager::UpgradeIndicator ) );
