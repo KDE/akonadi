@@ -108,4 +108,13 @@
 #define AKONADI_PARAM_UID                          "UID"
 #define AKONADI_PARAM_VIRTUAL                      "VIRTUAL"
 
+// Flags
+#define AKONADI_FLAG_MIMETYPE                      "\\MimeType"
+#define AKONADI_FLAG_REMOTEID                      "\\RemoteId"
+#define AKONADI_FLAG_REMOTEREVISION                "\\RemoteRevision"
+#define AKONADI_FLAG_GID                           "\\Gid"
+
+// Attributes
+#define AKONADI_ATTRIBUTE_HIDDEN                   "ATR:HIDDEN"
+
 #endif
