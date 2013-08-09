@@ -47,32 +47,37 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
   }
 
   DataStore *db = connection()->storageBackend();
-  if ( !db->appendCollection( col ) )
+  if ( !db->appendCollection( col ) ) {
     return false;
+  }
 
   Q_FOREACH ( const MimeType &mt, source.mimeTypes() ) {
-    if ( !col.addMimeType( mt ) )
+    if ( !col.addMimeType( mt ) ) {
       return false;
+    }
   }
 
   Q_FOREACH ( const CollectionAttribute &attr, source.attributes() ) {
     CollectionAttribute newAttr = attr;
     newAttr.setId( -1 );
     newAttr.setCollectionId( col.id() );
-    if ( !newAttr.insert() )
+    if ( !newAttr.insert() ) {
       return false;
+    }
   }
 
   // copy sub-collections
   Q_FOREACH ( const Collection &child, source.children() ) {
-    if ( !copyCollection( child, col ) )
+    if ( !copyCollection( child, col ) ) {
       return false;
+    }
   }
 
   // copy items
   Q_FOREACH ( const PimItem &item, source.items() ) {
-    if ( !copyItem( item, col ) )
+    if ( !copyItem( item, col ) ) {
       return false;
+    }
   }
 
   return true;
@@ -80,15 +85,17 @@ bool ColCopy::copyCollection(const Collection & source, const Collection & targe
 
 bool ColCopy::parseStream()
 {
-  QByteArray tmp =  m_streamParser->readString();
+  QByteArray tmp = m_streamParser->readString();
   const Collection source = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !source.isValid() )
+  if ( !source.isValid() ) {
     return failureResponse( "No valid source specified" );
+  }
 
-  tmp =  m_streamParser->readString();
+  tmp = m_streamParser->readString();
   const Collection target = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !target.isValid() )
+  if ( !target.isValid() ) {
     return failureResponse( "No valid target specified" );
+  }
 
   // retrieve all not yet cached items of the source
   ItemRetriever retriever( connection() );
@@ -101,12 +108,13 @@ bool ColCopy::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  if ( !copyCollection( source, target ) )
+  if ( !copyCollection( source, target ) ) {
     return failureResponse( "Failed to copy collection" );
+  }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Cannot commit transaction." );
+  }
 
   return successResponse( "COLCOPY complete" );
 }
-
