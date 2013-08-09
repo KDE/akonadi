@@ -117,7 +117,7 @@ class agentClass ## Factory : public Akonadi::AgentFactory< agentClass > \
 { \
   public: \
     explicit agentClass ## Factory( QObject * parent = 0 ) : Akonadi::AgentFactory< agentClass >( # catalogName, parent ) {\
-      setObjectName(# catalogName );\
+      setObjectName(QLatin1String(# catalogName) );\
     } \
 }; \
 Q_EXPORT_PLUGIN2( catalogName, agentClass ## Factory )
