@@ -26,7 +26,6 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/transactionsequence.h>
-#include <akonadi/collectiondialog.h>
 
 #include <KJob>
 #include <KLocalizedString>
