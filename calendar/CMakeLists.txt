@@ -17,6 +17,7 @@ set(akonadicalendar_LIB_SRC
   etmcalendar.cpp
   history.cpp
   history_p.cpp
+  icalimporter.cpp
   incidencefetchjob_p.cpp
   incidencechanger.cpp
   itiphandler.cpp
@@ -67,6 +68,7 @@ install( FILES
   calendarclipboard.h
   etmcalendar.h
   history.h
+  icalimporter.h
   incidencechanger.h
   itiphandler.h
   fetchjobcalendar.h

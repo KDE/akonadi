@@ -58,37 +58,6 @@ ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result
 }
 
 namespace Akonadi {
-  static Akonadi::Collection selectCollection( QWidget *parent,
-                                               int &dialogCode,
-                                               const QStringList &mimeTypes,
-                                               const Akonadi::Collection &defCollection )
-  {
-    QPointer<Akonadi::CollectionDialog> dlg( new Akonadi::CollectionDialog( parent ) );
-
-    kDebug() << "selecting collections with mimeType in " << mimeTypes;
-
-    dlg->changeCollectionDialogOptions( Akonadi::CollectionDialog::KeepTreeExpanded );
-    dlg->setMimeTypeFilter( mimeTypes );
-    dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-    if ( defCollection.isValid() ) {
-      dlg->setDefaultCollection( defCollection );
-    }
-    Akonadi::Collection collection;
-
-    // FIXME: don't use exec.
-    dialogCode = dlg->exec();
-    if ( dialogCode == QDialog::Accepted ) {
-      collection = dlg->selectedCollection();
-
-      if ( !collection.isValid() ) {
-        kWarning() <<"An invalid collection was selected!";
-      }
-    }
-    delete dlg;
-
-    return collection;
-  }
-
   // Does a queued emit, with QMetaObject::invokeMethod
   static void emitCreateFinished( IncidenceChanger *changer,
                                   int changeId,
@@ -673,8 +642,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
       {
         int dialogCode;
         const QStringList mimeTypes( incidence->mimeType() );
-        collectionToUse = selectCollection( parent, dialogCode /*by-ref*/, mimeTypes,
-                                            d->mDefaultCollection );
+        collectionToUse = CalendarUtils::selectCollection( parent, dialogCode /*by-ref*/, mimeTypes, d->mDefaultCollection );
         if ( dialogCode != QDialog::Accepted ) {
           kDebug() << "User canceled collection choosing";
           change->resultCode = ResultCodeUserCanceled;
