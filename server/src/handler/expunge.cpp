@@ -82,8 +82,9 @@ bool Expunge::parseStream()
     throw HandlerException( "Unable to execute query." );
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Unable to commit transaction." );
+  }
 
   response.setTag( tag() );
   response.setSuccess();
