@@ -24,6 +24,8 @@
 #include "fetchhelper.h"
 #include "response.h"
 
+#include <libs/protocol_p.h>
+
 using namespace Akonadi;
 
 Fetch::Fetch( Scope::SelectionScope scope )
@@ -41,17 +43,19 @@ bool Fetch::parseStream()
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( "FETCH" ) )
+  if ( !fetchHelper.parseStream( AKONADI_CMD_ITEMFETCH ) ) {
     return false;
+  }
 
-  if ( mScope.scope() == Scope::Uid )
+  if ( mScope.scope() == Scope::Uid ) {
     successResponse( "UID FETCH completed" );
-  else if ( mScope.scope() == Scope::Rid )
+  } else if ( mScope.scope() == Scope::Rid ) {
     successResponse( "RID FETCH completed" );
-  else if ( mScope.scope() == Scope::Gid )
+  } else if ( mScope.scope() == Scope::Gid ) {
     successResponse( "GID FETCH completed" );
-  else
+  } else {
     successResponse( "FETCH completed" );
+  }
 
   return true;
 }

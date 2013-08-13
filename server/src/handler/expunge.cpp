@@ -93,4 +93,3 @@ bool Expunge::parseStream()
   Q_EMIT responseAvailable( response );
   return true;
 }
-
