@@ -62,13 +62,12 @@ public:
 Q_SIGNALS:
     /**
      * Emitted after calling importIntoExistingResource()
-     * @param success true if all incidences were created, in this case @p numErrors will be 0.
-     * @param total Number of incidences that were imported plus the number of incidences that resulted in an error.
-     * @param numErrors Number of incidences that weren't be imported.
+     * @param success Success of the operation.
+     * @param total Number of incidences included in the ical file.
      *
-     * @see importIntoExistingResource().
+     * @see importIntoExistingResource(), errorMessage().
      */
-    void importIntoExistingFinished(bool success, int total, int numErrors);
+    void importIntoExistingFinished(bool success, int total);
 
     /**
      * Emitted after calling importIntoNewResource().

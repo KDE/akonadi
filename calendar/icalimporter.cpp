@@ -53,7 +53,6 @@ ICalImporter::Private::Private(IncidenceChanger *changer,
                                ICalImporter *qq) : QObject(), q(qq)
                                                  , m_changer(changer)
                                                  , m_numIncidences(0)
-                                                 , m_numErrors(0)
                                                  , m_working(false)
                                                  , m_temporaryFile(0)
 {
@@ -79,17 +78,15 @@ void ICalImporter::Private::onIncidenceCreated(int changeId,
         return; // Not ours
 
     m_pendingRequests.removeAll(changeId);
-    if (resultCode != IncidenceChanger::ResultCodeSuccess) {
-        ++m_numErrors;
-        kWarning() << "Couldn't import incidence: " << errorString;
-    }
 
-    if (m_pendingRequests.isEmpty()) {
-        const bool success = m_numErrors == 0;
-        if (!success)
-            setErrorMessage(i18n("Some incidences weren't imported. Check stderr."));
+    if (resultCode != IncidenceChanger::ResultCodeSuccess) {
         m_working = false;
-        emit q->importIntoExistingFinished(success, m_numIncidences, m_numErrors);
+        setErrorMessage(errorString);
+        m_pendingRequests.clear();
+        emit q->importIntoExistingFinished(false, m_numIncidences);
+    } else if (m_pendingRequests.isEmpty()) {
+        m_working = false;
+        emit q->importIntoExistingFinished(true, m_numIncidences);
     }
 }
 
@@ -139,7 +136,7 @@ void ICalImporter::Private::remoteDownloadFinished(KIO::Job *job, const QByteArr
         q->importIntoExistingResource(QUrl(m_temporaryFile->fileName()), m_collection);
     } else {
         setErrorMessage(i18n("Could not download remote file."));
-        emit q->importIntoExistingFinished(false, -1, 1);
+        emit q->importIntoExistingFinished(false, 0);
     }
 }
 
@@ -207,7 +204,6 @@ bool ICalImporter::importIntoExistingResource(const QUrl &url, Akonadi::Collecti
             return false;
         }
 
-        d->m_numErrors  = 0;
         d->m_pendingRequests.clear();
         Incidence::List incidences = temporaryCalendar->incidences();
 
