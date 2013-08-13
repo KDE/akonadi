@@ -286,6 +286,11 @@ void EntityTreeView::setXmlGuiClient( KXMLGUIClient * xmlGuiClient )
   d->mXmlGuiClient = xmlGuiClient;
 }
 
+KXMLGUIClient *EntityTreeView::xmlGuiClient() const
+{
+  return d->mXmlGuiClient;
+}
+
 #ifndef QT_NO_DRAGANDDROP
 void EntityTreeView::startDrag( Qt::DropActions supportedActions )
 {
