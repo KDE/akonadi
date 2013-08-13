@@ -66,7 +66,6 @@ bool Delete::parseStream()
   else if ( collections.size() > 1 )
     throw HandlerException( "Deleting multiple collections is not yet implemented" );
 
-
   // check if collection exists
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
@@ -76,7 +75,7 @@ bool Delete::parseStream()
     return failureResponse( "No such collection." );
 
   // handle virtual folders
-  if ( collection.resource().name() == QLatin1String("akonadi_search_resource") ) {
+  if ( collection.resource().name() == QLatin1String( AKONADI_SEARCH_RESOURCE ) ) {
     // don't delete virtual root
     if ( collection.parentId() == 0 )
       return failureResponse( "Cannot delete virtual root collection" );
@@ -96,4 +95,3 @@ bool Delete::parseStream()
   Q_EMIT responseAvailable( response );
   return true;
 }
-

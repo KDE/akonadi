@@ -117,4 +117,6 @@
 // Attributes
 #define AKONADI_ATTRIBUTE_HIDDEN                   "ATR:HIDDEN"
 
+// special resource names
+#define AKONADI_SEARCH_RESOURCE                    "akonadi_search_resource"
 #endif
