@@ -184,6 +184,7 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
 void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
 {
   kWarning() << "Refusing to delete your Incidences.";
+  Q_UNUSED(mimeType);
   /*
   QHash<Item::Id, Item>::iterator i;
   Item::List incidences;
