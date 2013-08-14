@@ -44,6 +44,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QThread>
 #include <QtCore/QThreadStorage>
+#include <QtCore/QTimer>
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlDatabase>
@@ -67,12 +68,24 @@ DataStore::DataStore() :
   QObject(),
   m_dbOpened( false ),
   m_transactionLevel( 0 ),
-  mNotificationCollector( new NotificationCollector( this ) )
+  mNotificationCollector( new NotificationCollector( this ) ),
+  m_keepAliveTimer( 0 )
 {
   open();
 
   m_transactionLevel = 0;
   NotificationManager::self()->connectNotificationCollector( mNotificationCollector );
+
+  if ( DbConfig::configuredDatabase()->driverName() == QLatin1String( "QMYSQL" ) ) {
+    // Send a dummy query to MySQL every 1 hour to keep the connection alive,
+    // otherwise MySQL just drops the connection and our subsequent queries fail
+    // without properly reporting the error
+    m_keepAliveTimer = new QTimer( this );
+    m_keepAliveTimer->setInterval( 3600 * 1000 );
+    QObject::connect( m_keepAliveTimer, SIGNAL(timeout()),
+                      this, SLOT(sendKeepAliveQuery()) );
+    m_keepAliveTimer->start();
+  }
 }
 
 DataStore::~DataStore()
@@ -119,6 +132,7 @@ void Akonadi::DataStore::close()
   QSqlDatabase::removeDatabase( m_connectionName );
 
   m_dbOpened = false;
+  m_keepAliveTimer->stop();
 }
 
 bool Akonadi::DataStore::init()
@@ -916,3 +930,10 @@ bool Akonadi::DataStore::inTransaction() const
   return m_transactionLevel > 0;
 }
 
+void DataStore::sendKeepAliveQuery()
+{
+  if ( m_database.isOpen() ) {
+    QSqlQuery query( m_database );
+    query.exec( QLatin1String( "SELECT 1" ) );
+  }
+}

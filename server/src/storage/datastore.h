@@ -28,6 +28,7 @@
 #include <QtSql/QSqlDatabase>
 
 class QSqlQuery;
+class QTimer;
 
 #include "entities.h"
 #include "notificationcollector.h"
@@ -280,6 +281,9 @@ protected:
      */
     static QDateTime dateTimeToQDateTime( const QByteArray & dateTime );
 
+  private Q_SLOTS:
+    void sendKeepAliveQuery();
+
 private:
     QString m_connectionName;
     QSqlDatabase m_database;
@@ -287,6 +291,7 @@ private:
     uint m_transactionLevel;
     QByteArray mSessionId;
     NotificationCollector* mNotificationCollector;
+    QTimer *m_keepAliveTimer;
     static bool s_hasForeignKeyConstraints;
 };
 
