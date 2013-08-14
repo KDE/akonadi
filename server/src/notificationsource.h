@@ -23,6 +23,7 @@
 #include "../libs/notificationmessagev2_p.h"
 
 #include <QtCore/QObject>
+#include <QtCore/QVector>
 #include <QtDBus/QtDBus>
 
 #include "entities.h"
@@ -82,8 +83,12 @@ class NotificationSource : public QObject
      */
     void addClientServiceName( const QString &clientServiceName );
 
-  public Q_SLOTS:
+    void setServerSideMonitorEnabled( bool enabled );
+    bool isServerSideMonitorEnabled() const;
 
+    bool acceptsNotification( const NotificationMessageV2 &notification );
+
+  public Q_SLOTS:
     /**
       * Unsubscribe from the message source.
       *
@@ -120,13 +125,23 @@ class NotificationSource : public QObject
     void serviceUnregistered( const QString &serviceName );
 
   private:
-    bool isServerSideMonitorEnabled() const;
+    bool isCollectionMonitored( Entity::Id id ) const;
+    bool isMimeTypeMonitored( const QString &mimeType ) const;
+    bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const;
 
   private:
     Akonadi::NotificationManager *mManager;
     QString mIdentifier;
     QString mDBusIdentifier;
     QDBusServiceWatcher* mClientWatcher;
+
+    bool mServerSideMonitorEnabled;
+    bool mAllMonitored;
+    QSet<Entity::Id> mMonitoredCollections;
+    QSet<Entity::Id> mMonitoredItems;
+    QSet<QString> mMonitoredMimeTypes;
+    QSet<QByteArray> mMonitoredResources;
+    QSet<QByteArray> mIgnoredSessions;
 
 }; // class NotificationSource
 

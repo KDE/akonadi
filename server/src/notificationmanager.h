@@ -99,9 +99,8 @@ class NotificationManager : public QObject, protected QDBusContext
     NotificationManager();
 
   private:
-    void registerSource( NotificationSource *source, bool serverSideMonitor );
+    void registerSource( NotificationSource *source );
     void unregisterSource( NotificationSource *source );
-    QSet<NotificationSource*> findInterestedSources( const NotificationMessageV2 &msg );
 
     static NotificationManager *mSelf;
     NotificationMessageV2::List mNotifications;
@@ -109,14 +108,6 @@ class NotificationManager : public QObject, protected QDBusContext
 
     //! One message source for each subscribed process
     QHash<QString, NotificationSource*> mNotificationSources;
-
-    QSet<NotificationSource*> mClientSideMonitoredSources;
-    QSet< NotificationSource* > mAllMonitored;
-    QMultiHash< QByteArray /* Session */, NotificationSource*> mIgnoredSessions;
-    QMultiHash< QByteArray /* resource */, NotificationSource*> mMonitoredResources;
-    QMultiHash< QString /* mimetype */, NotificationSource*> mMonitoredMimeTypes;
-    QMultiHash< Entity::Id, NotificationSource*> mMonitoredItems;
-    QMultiHash< Entity::Id, NotificationSource*> mMonitoredCollections;
 
     friend class NotificationSource;
     friend class ::NotificationManagerTest;
