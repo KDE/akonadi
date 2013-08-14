@@ -36,43 +36,55 @@ NotificationSource::~NotificationSource()
 
 void NotificationSource::setAllMonitored( bool allMonitored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setAllMonitored",
-                                       Q_ARG( bool, allMonitored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setAllMonitored",
+                                             Q_ARG( bool, allMonitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 void NotificationSource::setMonitoredCollection( Entity::Id id, bool monitored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setMonitoredCollection",
-                                       Q_ARG( qlonglong, id ),
-                                       Q_ARG( bool, monitored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredCollection",
+                                             Q_ARG( qlonglong, id ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 void NotificationSource::setMonitoredItem( Entity::Id id, bool monitored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setMonitoredItem",
-                                       Q_ARG( qlonglong, id ),
-                                       Q_ARG( bool, monitored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredItem",
+                                             Q_ARG( qlonglong, id ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 void NotificationSource::setMonitoredResource( const QByteArray &resource, bool monitored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setMonitoredResource",
-                                       Q_ARG( QByteArray, resource ),
-                                       Q_ARG( bool, monitored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredResource",
+                                             Q_ARG( QByteArray, resource ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 void NotificationSource::setMonitoredMimeType( const QString &mimeType, bool monitored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setMonitoredMimeType",
-                                       Q_ARG( QString, mimeType ),
-                                       Q_ARG( bool, monitored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setMonitoredMimeType",
+                                             Q_ARG( QString, mimeType ),
+                                             Q_ARG( bool, monitored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 void NotificationSource::setIgnoredSession( const QByteArray &session, bool ignored )
 {
-  Q_ASSERT( QMetaObject::invokeMethod( parent(), "setIgnoredSession",
-                                       Q_ARG( QByteArray, session ),
-                                       Q_ARG( bool, ignored ) ) );
+  const bool ok = QMetaObject::invokeMethod( parent(), "setIgnoredSession",
+                                             Q_ARG( QByteArray, session ),
+                                             Q_ARG( bool, ignored ) );
+  Q_ASSERT( ok );
+  Q_UNUSED( ok );
 }
 
 QObject* NotificationSource::source() const
