@@ -110,6 +110,7 @@
 #define AKONADI_PARAM_RESOURCE                     "RESOURCE"
 #define AKONADI_PARAM_REVISION                     "REV"
 #define AKONADI_PARAM_SIZE                         "SIZE"
+#define AKONADI_PARAM_STATISTICS                   "STATISTICS"
 #define AKONADI_PARAM_UID                          "UID"
 #define AKONADI_PARAM_VIRTUAL                      "VIRTUAL"
 

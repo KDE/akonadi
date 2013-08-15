@@ -39,8 +39,9 @@ template <typename T>
 static bool intersect( const QVector<typename T::Id> &l1, const QVector<T> &l2 )
 {
   Q_FOREACH ( const T& e2, l2 ) {
-    if ( l1.contains( e2.id() ) )
+    if ( l1.contains( e2.id() ) ) {
       return true;
+    }
   }
   return false;
 }
@@ -55,13 +56,15 @@ List::List( Scope::SelectionScope scope, bool onlySubscribed ):
 
 QStack<Collection> List::ancestorsForCollection( const Collection &col )
 {
-  if ( mAncestorDepth <= 0 )
+  if ( mAncestorDepth <= 0 ) {
     return QStack<Collection>();
+  }
   QStack<Collection> ancestors;
   Collection parent = col;
   for ( int i = 0; i < mAncestorDepth; ++i ) {
-    if ( parent.parentId() == 0 )
+    if ( parent.parentId() == 0 ) {
       break;
+    }
     parent = parent.parent();
     ancestors.prepend( parent );
   }
@@ -77,8 +80,9 @@ bool List::listCollection(const Collection & root, int depth, const QStack<Colle
     QStack<Collection> ancestorsAndMe( ancestors );
     ancestorsAndMe.push( root );
     Q_FOREACH ( const Collection &col, children ) {
-      if ( listCollection( col, depth - 1, ancestorsAndMe ) )
+      if ( listCollection( col, depth - 1, ancestorsAndMe ) ) {
         childrenFound = true;
+      }
     }
   }
 
@@ -89,8 +93,9 @@ bool List::listCollection(const Collection & root, int depth, const QStack<Colle
       || isUnsubscribed
       || (!mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes()) );
 
-  if ( !childrenFound && hidden )
+  if ( !childrenFound && hidden ) {
     return false;
+  }
 
   // write out collection details
   Collection dummy = root;
@@ -113,16 +118,19 @@ bool List::parseStream()
   if ( mScope.scope() == Scope::None || mScope.scope() == Scope::Uid ) {
     bool ok = false;
     baseCollection = m_streamParser->readNumber( &ok );
-    if ( !ok )
+    if ( !ok ) {
       return failureResponse( "Invalid base collection" );
+    }
   } else if ( mScope.scope() == Scope::Rid ) {
     rid = m_streamParser->readUtf8String();
-    if ( rid.isEmpty() )
+    if ( rid.isEmpty() ) {
       throw HandlerException( "No remote identifier specified" );
+    }
   } else if ( mScope.scope() == Scope::HierarchicalRid ) {
     mScope.parseScope( m_streamParser );
-  } else
+  } else {
     throw HandlerException( "WTF" );
+  }
 
   int depth = HandlerHelper::parseDepth( m_streamParser->readString() );
 
@@ -131,8 +139,9 @@ bool List::parseStream()
     const QByteArray filter = m_streamParser->readString();
     if ( filter == AKONADI_PARAM_RESOURCE ) {
       mResource = Resource::retrieveByName( m_streamParser->readUtf8String() );
-      if ( !mResource.isValid() )
+      if ( !mResource.isValid() ) {
         return failureResponse( "Unknown resource" );
+      }
     } else if ( filter == AKONADI_PARAM_MIMETYPE ) {
       m_streamParser->beginList();
       while ( !m_streamParser->atListEnd() ) {
@@ -142,8 +151,9 @@ bool List::parseStream()
           mMimeTypes.append( mt.id() );
         } else {
           MimeType mt ( mtName );
-          if ( !mt.insert() )
+          if ( !mt.insert() ) {
             throw HandlerException( "Failed to create mimetype record" );
+          }
           mMimeTypes.append( mt.id() );
         }
       }
@@ -154,9 +164,10 @@ bool List::parseStream()
     m_streamParser->beginList();
     while ( !m_streamParser->atListEnd() ) {
       const QByteArray option = m_streamParser->readString();
-      if ( option == "STATISTICS" ) {
-        if ( m_streamParser->readString() == "true" )
+      if ( option == AKONADI_PARAM_STATISTICS ) {
+        if ( m_streamParser->readString() == "true" ) {
           mIncludeStatistics = true;
+        }
       }
       if ( option == AKONADI_PARAM_ANCESTORS ) {
         const QByteArray argument = m_streamParser->readString();
@@ -177,28 +188,33 @@ bool List::parseStream()
       qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rid );
       qb.addJoin( QueryBuilder::InnerJoin, Resource::tableName(),
                   Collection::resourceIdFullColumnName(), Resource::idFullColumnName() );
-      if ( mResource.isValid() )
+      if ( mResource.isValid() ) {
         qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, mResource.id() );
-      else if ( connection()->resourceContext().isValid() )
+      } else if ( connection()->resourceContext().isValid() ) {
         qb.addValueCondition( Resource::idFullColumnName(), Query::Equals, connection()->resourceContext().id() );
-      else
+      } else {
         throw HandlerException( "Cannot retrieve collection based on remote identifier without a resource context" );
-      if ( !qb.exec() )
+      }
+      if ( !qb.exec() ) {
         throw HandlerException( "Unable to retrieve collection for listing" );
+      }
       Collection::List results = qb.result();
-      if ( results.count() != 1 )
+      if ( results.count() != 1 ) {
         throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
+      }
       col = results.first();
     } else if ( mScope.scope() == Scope::HierarchicalRid ) {
-      if ( !connection()->resourceContext().isValid() )
+      if ( !connection()->resourceContext().isValid() ) {
         throw HandlerException( "Cannot retrieve collection based on hierarchical remote identifier without a resource context" );
+      }
       col = CollectionQueryHelper::resolveHierarchicalRID( mScope.ridChain(), connection()->resourceContext().id() );
     } else {
       throw HandlerException( "WTF" );
     }
 
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       return failureResponse( "Collection " + QByteArray::number( baseCollection ) + " does not exist" );
+    }
 
     if ( depth == 0 ) {
       collections << col;
@@ -206,8 +222,9 @@ bool List::parseStream()
     } else {
       collections << col.children();
       --depth;
-      if ( !collections.isEmpty() )
+      if ( !collections.isEmpty() ) {
         ancestors = ancestorsForCollection( collections.first() );
+      }
     }
   } else {
     if ( depth != 0 ) {
@@ -217,8 +234,9 @@ bool List::parseStream()
     --depth;
   }
 
-  Q_FOREACH ( const Collection &col, collections )
+  Q_FOREACH ( const Collection &col, collections ) {
     listCollection( col, depth, ancestors );
+  }
 
   Response response;
   response.setSuccess();
@@ -227,4 +245,3 @@ bool List::parseStream()
   Q_EMIT responseAvailable( response );
   return true;
 }
-
