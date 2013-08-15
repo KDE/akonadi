@@ -204,7 +204,7 @@ bool AkAppend::parseStream()
     if (item.startsWith(':')) {
       int pos = 1;
       ImapParser::parseNumber( item, partSize, &ok, pos );
-      if( !ok ) {
+      if ( !ok ) {
         partSize = 0;
       }
 
