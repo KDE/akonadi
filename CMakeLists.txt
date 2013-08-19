@@ -303,6 +303,7 @@ install( FILES
   collectionmovejob.h
   collectionpropertiesdialog.h
   collectionpropertiespage.h
+  collectionpathresolver_p.h
   collectionquotaattribute.h
   collectionrequester.h
   collectionstatisticsdelegate.h
