@@ -31,8 +31,9 @@ Login::Login(): Handler()
 bool Login::parseStream()
 {
   const QByteArray sessionId = m_streamParser->readString();
-  if ( sessionId.isEmpty() )
+  if ( sessionId.isEmpty() ) {
     return failureResponse( "Missing session identifier." );
+  }
   connection()->setSessionId( sessionId );
 
   // ignore anything that follows, for Roundcube compatibility
@@ -42,4 +43,3 @@ bool Login::parseStream()
   Q_EMIT connectionStateChange( Authenticated );
   return true;
 }
-
