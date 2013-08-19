@@ -20,6 +20,7 @@
 
 #include "itemserializerplugin.h"
 #include "item.h"
+#include "itemserializer_p.h"
 
 #include <QtCore/QBuffer>
 
@@ -36,6 +37,11 @@ QSet<QByteArray> ItemSerializerPlugin::parts( const Item & item ) const
     set.insert( Item::FullPayload );
 
   return set;
+}
+
+void ItemSerializerPlugin::overridePluginLookup( QObject *p )
+{
+  ItemSerializer::overridePluginLookup( p );
 }
 
 ItemSerializerPluginV2::~ItemSerializerPluginV2()
