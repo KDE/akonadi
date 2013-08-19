@@ -529,6 +529,14 @@ class AKONADI_EXPORT EntityTreeModel : public QAbstractItemModel
     bool isCollectionTreeFetched() const;
 
     /**
+     * Returns whether the collection has been populated.
+     *
+     * @see collectionPopulated
+     * @since 4.12
+     */
+    bool isCollectionPopulated( Akonadi::Collection::Id ) const;
+
+    /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
     virtual QModelIndexList match( const QModelIndex& start, int role, const QVariant& value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags( Qt::MatchStartsWith | Qt::MatchWrap ) ) const;

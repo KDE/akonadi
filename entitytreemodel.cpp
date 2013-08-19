@@ -924,6 +924,12 @@ bool EntityTreeModel::isCollectionTreeFetched() const
   return d->m_collectionTreeFetched;
 }
 
+bool EntityTreeModel::isCollectionPopulated( Collection::Id id ) const
+{
+  Q_D( const EntityTreeModel );
+  return d->m_populatedCols.contains( id );
+}
+
 bool EntityTreeModel::entityMatch( const Item &item, const QVariant &value, Qt::MatchFlags flags ) const
 {
   Q_UNUSED( item );
