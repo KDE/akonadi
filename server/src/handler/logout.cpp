@@ -28,7 +28,6 @@ Logout::Logout(): Handler()
 {
 }
 
-
 Logout::~Logout()
 {
 }
@@ -48,4 +47,3 @@ bool Logout::parseStream()
   Q_EMIT connectionStateChange( LoggingOut );
   return true;
 }
-
