@@ -36,13 +36,13 @@ QString GidExtractor::extractGid( const Item &item )
   return QString();
 }
 
-QString GidExtractor::getGid( const Item &item, bool ignorePayload )
+QString GidExtractor::getGid( const Item &item )
 {
   const QString gid = item.gid();
   if ( !gid.isNull() ) {
     return gid;
   }
-  if ( ignorePayload ) {
+  if ( item.loadedPayloadParts().isEmpty() ) {
     return QString();
   }
   return extractGid( item );

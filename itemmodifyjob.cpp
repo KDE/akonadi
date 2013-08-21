@@ -118,7 +118,6 @@ ItemModifyJob::ItemModifyJob( const Item &item, QObject * parent )
 
   d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
   d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
-  d->mOperations.insert( ItemModifyJobPrivate::Gid );
 }
 
 ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
@@ -133,7 +132,6 @@ ItemModifyJob::ItemModifyJob( const Akonadi::Item::List &items, QObject *parent)
     d->mParts = items.first().loadedPayloadParts();
     d->mOperations.insert( ItemModifyJobPrivate::RemoteId );
     d->mOperations.insert( ItemModifyJobPrivate::RemoteRevision );
-    d->mOperations.insert( ItemModifyJobPrivate::Gid );
   } else {
     d->mIgnorePayload = true;
     d->mRevCheck = false;
@@ -157,7 +155,7 @@ QByteArray ItemModifyJobPrivate::fullCommand() const
         }
         break;
       case ItemModifyJobPrivate::Gid: {
-        const QString gid = GidExtractor::getGid( item, mIgnorePayload );
+        const QString gid = GidExtractor::getGid( item );
         if ( !gid.isNull() ) {
           changes << "GID";
           changes << ImapParser::quote( gid.toUtf8() );
@@ -355,6 +353,22 @@ bool ItemModifyJob::ignorePayload() const
   Q_D( const ItemModifyJob );
 
   return d->mIgnorePayload;
+}
+
+void ItemModifyJob::setUpdateGid( bool update )
+{
+  Q_D( ItemModifyJob );
+  if ( update && !updateGid() ) {
+    d->mOperations.insert( ItemModifyJobPrivate::Gid );
+  } else {
+    d->mOperations.remove( ItemModifyJobPrivate::Gid );
+  }
+}
+
+bool ItemModifyJob::updateGid() const
+{
+  Q_D( const ItemModifyJob );
+  return d->mOperations.contains( ItemModifyJobPrivate::Gid );
 }
 
 void ItemModifyJob::disableRevisionCheck()

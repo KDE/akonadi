@@ -109,6 +109,7 @@ static void fetchAndSetGid(Item item) {
     //Write the gid to the db
     fetchedItem.setGid(item.gid());
     ItemModifyJob *store = new ItemModifyJob( fetchedItem );
+    store->setUpdateGid( true );
     AKVERIFYEXEC( store );
 }
 
@@ -164,6 +165,7 @@ void GidTest::testSetWithIgnorePayload()
   fetchedItem.setGid( "gid5" );
   ItemModifyJob *store = new ItemModifyJob( fetchedItem );
   store->setIgnorePayload( true );
+  store->setUpdateGid( true );
   AKVERIFYEXEC( store );
   Item toFetch;
   toFetch.setGid( "gid5" );

@@ -148,6 +148,24 @@ class AKONADI_EXPORT ItemModifyJob : public Job
     bool ignorePayload() const;
 
     /**
+     * Sets whether the GID shall be updated either from the gid parameter or
+     * by extracting it from the payload.
+     * The default is @c false to avoid unecessarily update the GID,
+     * as it should never change once set, and the ItemCreateJob already sets it.
+     * @param update update the GID if set as @c true
+     *
+     * @note If disabled the GID will not be updated, but still be used for identification of the item.
+     * @since 4.12
+     */
+    void setUpdateGid( bool update );
+
+    /**
+     * Returns wheter the GID should be updated.
+     * @since 4.12
+     */
+    bool updateGid() const;
+
+    /**
      * Disables the check of the revision number.
      *
      * @note If disabled, no conflict detection is available.

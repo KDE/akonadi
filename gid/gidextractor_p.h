@@ -45,7 +45,7 @@ class GidExtractor
      * If the item has no GID set, and the item has a payload, the GID is extracted using extractGid().
      * If the item has no GID set and no payload, a default constructed QString is returned.
      */
-    static QString getGid( const Item &item, bool ignorePayload = false );
+    static QString getGid( const Item &item );
 };
 
 }
