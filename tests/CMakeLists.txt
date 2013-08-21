@@ -81,7 +81,6 @@ macro(add_akonadi_isolated_test _source)
   endif()
 
   if ( KDEPIMLIBS_RUN_ISOLATED_TESTS )
-    if ( FALSE )
     find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
     if ( MYSQLD_EXECUTABLE )
       add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
@@ -97,7 +96,6 @@ macro(add_akonadi_isolated_test _source)
       add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
         ${POSTGRESL_EXTRA_OPTIONS_FS} )
     endif()
-    endif ( FALSE )
 
     if ( KDEPIMLIBS_TESTS_SQLITE )
       add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
