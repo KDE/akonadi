@@ -28,6 +28,8 @@
 #include "collectionmovejob.h"
 #include "entitydisplayattribute.h"
 
+#include "cachepolicy.h"
+
 #include <kdebug.h>
 #include <KLocalizedString>
 #include <QtCore/QVariant>
@@ -91,23 +93,40 @@ class CollectionSync::Private
       q( parent ),
       pendingJobs( 0 ),
       progress( 0 ),
+      localRoot( 0 ),
+      currentTransaction( 0 ),
+      knownLocalCollections( 0 ),
       incremental( false ),
       streaming( false ),
       hierarchicalRIDs( false ),
       localListDone( false ),
       deliveryDone( false )
     {
-      localRoot = new LocalNode( Collection::root() );
-      localRoot->processed = true; // never try to delete that one
-      localUidMap.insert( localRoot->collection.id(), localRoot );
-      if ( !hierarchicalRIDs ) {
-        localRidMap.insert( QString(), localRoot );
-      }
     }
 
     ~Private()
     {
       delete localRoot;
+      qDeleteAll( rootRemoteNodes );
+    }
+
+    /** Utility method to reset the node tree. */
+    void resetNodeTree()
+    {
+      delete localRoot;
+      localRoot = new LocalNode( Collection::root() );
+      localRoot->processed = true; // never try to delete that one
+      if ( currentTransaction ) {
+        // we are running the update transaction, initialize pending remote nodes
+        localRoot->pendingRemoteNodes.swap( rootRemoteNodes );
+      }
+
+      localUidMap.clear();
+      localRidMap.clear();
+      localUidMap.insert( localRoot->collection.id(), localRoot );
+      if ( !hierarchicalRIDs ) {
+        localRidMap.insert( QString(), localRoot );
+      }
     }
 
     /** Create a local node from the given local collection and integrate it into the local tree structure. */
@@ -155,14 +174,16 @@ class CollectionSync::Private
         return;
       }
       RemoteNode *node = new RemoteNode( col );
-      localRoot->pendingRemoteNodes.append( node );
+      rootRemoteNodes.append( node );
     }
 
     /** Create local nodes as we receive the local listing from the Akonadi server. */
     void localCollectionsReceived( const Akonadi::Collection::List &localCols )
     {
-      foreach ( const Collection &c, localCols )
+      foreach ( const Collection &c, localCols ) {
         createLocalNode( c );
+        knownLocalCollections++;
+      }
     }
 
     /** Once the local collection listing finished we can continue with the interesting stuff. */
@@ -189,7 +210,7 @@ class CollectionSync::Private
      * @note This is used as a fallback if the resource lost the RID update somehow.
      * This can be used because the Akonadi server enforces unique child collection names inside the hierarchy
      */
-    LocalNode* findLocalChildNodeByName( LocalNode *localParentNode, const QString &name )
+    LocalNode* findLocalChildNodeByName( LocalNode *localParentNode, const QString &name ) const
     {
       if ( name.isEmpty() ) { // shouldn't happen...
         return 0;
@@ -212,7 +233,7 @@ class CollectionSync::Private
       Find the local node that matches the given remote collection, returns 0
       if that doesn't exist (yet).
     */
-    LocalNode* findMatchingLocalNode( const Collection &collection )
+    LocalNode* findMatchingLocalNode( const Collection &collection ) const
     {
       if ( !hierarchicalRIDs ) {
         if ( localRidMap.contains( collection.remoteId() ) ) {
@@ -290,6 +311,29 @@ class CollectionSync::Private
     }
 
     /**
+      Checks if any of the remote nodes is not equal to the current local one. If so return true.
+    */
+    bool checkPendingRemoteNodes() const
+    {
+      if ( rootRemoteNodes.size() != knownLocalCollections ) {
+        return true;
+      }
+
+      foreach ( RemoteNode *remoteNode, rootRemoteNodes ) {
+        // every remote note should have a local node already
+        LocalNode *localNode = findMatchingLocalNode( remoteNode->collection );
+        if ( localNode ) {
+          if ( checkLocalCollection( localNode, remoteNode ) ) {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
       Checks the pending remote nodes attached to the given local root node
       to see if any of them can be processed by now. If not, they are moved to
       the closest ancestor available.
@@ -332,12 +376,60 @@ class CollectionSync::Private
     }
 
     /**
+      Checks if the given localNode and remoteNode are different
+    */
+    bool checkLocalCollection( LocalNode *localNode, RemoteNode *remoteNode ) const
+    {
+      const Collection &localCollection = localNode->collection;
+      const Collection &remoteCollection = remoteNode->collection;
+
+      if ( localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size() ) {
+        return true;
+      } else {
+        for ( int i = 0; i < remoteCollection.contentMimeTypes().size(); i++ ) {
+          const QString &m=remoteCollection.contentMimeTypes().at(i);
+          if( !localCollection.contentMimeTypes().contains( m ) ) {
+            return true;
+          }
+        }
+      }
+
+      if ( localCollection.parentCollection().remoteId() != remoteCollection.parentCollection().remoteId() ) {
+        return true;
+      }
+      if ( localCollection.name() != remoteCollection.name() ) {
+        return true;
+      }
+      if ( localCollection.remoteId() != remoteCollection.remoteId() ) {
+        return true;
+      }
+      if ( localCollection.remoteRevision() != remoteCollection.remoteRevision() ) {
+        return true;
+      }
+      if ( !(localCollection.cachePolicy() == remoteCollection.cachePolicy()) ) {
+        return true;
+      }
+
+      // CollectionModifyJob adds the remote attributes to the local collection
+      foreach ( const Attribute* attr, remoteCollection.attributes() ) {
+        const Attribute* localAttr = localCollection.attribute( attr->type() );
+        // The attribute must both exist and have equal contents
+        if ( !localAttr || localAttr->serialized() != attr->serialized() ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    /**
       Performs a local update for the given node pair.
     */
     void updateLocalCollection( LocalNode *localNode, RemoteNode *remoteNode )
     {
       Collection upd( remoteNode->collection );
       Q_ASSERT( !upd.remoteId().isEmpty() );
+      Q_ASSERT( currentTransaction );
       upd.setId( localNode->collection.id() );
       if ( localNode->collection.attribute<EntityDisplayAttribute>() ) {
         upd.removeAttribute<EntityDisplayAttribute>();
@@ -350,7 +442,7 @@ class CollectionSync::Private
         Collection c( upd );
         c.setParentCollection( localNode->collection.parentCollection() );
         ++pendingJobs;
-        CollectionModifyJob *mod = new CollectionModifyJob( c, q );
+        CollectionModifyJob *mod = new CollectionModifyJob( c, currentTransaction );
         connect( mod, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
       }
 
@@ -362,7 +454,7 @@ class CollectionSync::Private
         // local parent has been created
         if ( newParent && oldParent != newParent ) {
           ++pendingJobs;
-          CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, q );
+          CollectionMoveJob *move = new CollectionMoveJob( upd, newParent->collection, currentTransaction );
           connect( move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)) );
         }
       }
@@ -394,7 +486,7 @@ class CollectionSync::Private
         Collection col( remoteNode->collection );
         Q_ASSERT( !col.remoteId().isEmpty() );
         col.setParentCollection( localParent->collection );
-        CollectionCreateJob *create = new CollectionCreateJob( col, q );
+        CollectionCreateJob *create = new CollectionCreateJob( col, currentTransaction );
         create->setProperty( LOCAL_NODE, QVariant::fromValue( localParent ) );
         create->setProperty( REMOTE_NODE, QVariant::fromValue( remoteNode ) );
         connect( create, SIGNAL(result(KJob*)), q, SLOT(createLocalCollectionResult(KJob*)) );
@@ -493,14 +585,15 @@ class CollectionSync::Private
         Q_ASSERT( !col.remoteId().isEmpty() ); // empty RID -> stuff we haven't even written to the remote side yet
 
         ++pendingJobs;
-        CollectionDeleteJob *job = new CollectionDeleteJob( col, q );
+        Q_ASSERT( currentTransaction );
+        CollectionDeleteJob *job = new CollectionDeleteJob( col, currentTransaction );
         connect( job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)) );
 
         // It can happen that the groupware servers report us deleted collections
         // twice, in this case this collection delete job will fail on the second try.
         // To avoid a rollback of the complete transaction we gracefully allow the job
         // to fail :)
-        q->setIgnoreJobFailure( job );
+        currentTransaction->setIgnoreJobFailure( job );
       }
     }
 
@@ -513,6 +606,38 @@ class CollectionSync::Private
     }
 
     /**
+      Check update necessity.
+    */
+    void checkUpdateNecessity()
+    {
+      bool updateNeeded = checkPendingRemoteNodes();
+      if ( !updateNeeded ) {
+        // We can end right now
+        q->emitResult();
+        return;
+      }
+
+      // Since there are differences with the remote collections we need to sync. Start a transaction here.
+      Q_ASSERT( !currentTransaction );
+      currentTransaction = new TransactionSequence( q );
+      currentTransaction->setAutomaticCommittingEnabled( false );
+      q->connect( currentTransaction, SIGNAL(result(KJob*)), SLOT(transactionSequenceResult(KJob*)) );
+
+      // Now that a transaction is started we need to fetch local collections again and do the update
+      q->doStart();
+    }
+
+    /** After the transaction has finished report we're done as well. */
+    void transactionSequenceResult( KJob *job )
+    {
+      if ( job->error() ) {
+        return; // handled by the base class
+      }
+
+      q->emitResult();
+    }
+
+    /**
       Process what's currently available.
     */
     void execute()
@@ -522,6 +647,14 @@ class CollectionSync::Private
         return;
       }
 
+      // If a transaction is not started yet we are still checking if the update is
+      // actually needed.
+      if ( !currentTransaction ) {
+        checkUpdateNecessity();
+        return;
+      }
+
+      // Since the transaction is already running we need to execute the update.
       processPendingRemoteNodes( localRoot );
 
       if ( !incremental && deliveryDone ) {
@@ -584,7 +717,8 @@ class CollectionSync::Private
       }
 
       kDebug() << Q_FUNC_INFO << "q->commit()";
-      q->commit();
+      Q_ASSERT( currentTransaction );
+      currentTransaction->commit();
     }
 
     CollectionSync *q;
@@ -595,6 +729,7 @@ class CollectionSync::Private
     int progress;
 
     LocalNode* localRoot;
+    TransactionSequence* currentTransaction;
     QHash<Collection::Id, LocalNode*> localUidMap;
     QHash<QString, LocalNode*> localRidMap;
 
@@ -603,6 +738,13 @@ class CollectionSync::Private
 
     // removed remote collections in incremental mode
     Collection::List removedRemoteCollections;
+
+    // used to store the list of remote nodes passed by the user
+    QList<RemoteNode*> rootRemoteNodes;
+
+    // keep track of the total number of local collections that are known
+    // only used during the preliminary check to see if updating is needed
+    int knownLocalCollections;
 
     bool incremental;
     bool streaming;
@@ -613,7 +755,7 @@ class CollectionSync::Private
 };
 
 CollectionSync::CollectionSync( const QString &resourceId, QObject *parent ) :
-    TransactionSequence( parent ),
+    Job( parent ),
     d( new Private( this ) )
 {
   d->resourceId = resourceId;
@@ -655,7 +797,8 @@ void CollectionSync::setRemoteCollections(const Collection::List & changedCollec
 
 void CollectionSync::doStart()
 {
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
+  d->resetNodeTree();
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, (d->currentTransaction)?(Job*)d->currentTransaction:(Job*)this );
   job->fetchScope().setResource( d->resourceId );
   job->fetchScope().setIncludeUnsubscribed( true );
   job->fetchScope().setAncestorRetrieval( CollectionFetchScope::Parent );
@@ -678,6 +821,13 @@ void CollectionSync::retrievalDone()
 void CollectionSync::setHierarchicalRemoteIds( bool hierarchical )
 {
   d->hierarchicalRIDs = hierarchical;
+}
+
+void CollectionSync::rollback()
+{
+  if ( d->currentTransaction ) {
+    d->currentTransaction->rollback();
+  }
 }
 
 #include "moc_collectionsync_p.cpp"
