@@ -387,7 +387,7 @@ class CollectionSync::Private
         return true;
       } else {
         for ( int i = 0; i < remoteCollection.contentMimeTypes().size(); i++ ) {
-          const QString &m=remoteCollection.contentMimeTypes().at(i);
+          const QString &m = remoteCollection.contentMimeTypes().at( i );
           if( !localCollection.contentMimeTypes().contains( m ) ) {
             return true;
           }
@@ -798,7 +798,8 @@ void CollectionSync::setRemoteCollections(const Collection::List & changedCollec
 void CollectionSync::doStart()
 {
   d->resetNodeTree();
-  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, (d->currentTransaction)?(Job*)d->currentTransaction:(Job*)this );
+  Job *parent = ( d->currentTransaction ? static_cast<Job*>( d->currentTransaction ) : static_cast<Job*>( this ) );
+  CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, parent );
   job->fetchScope().setResource( d->resourceId );
   job->fetchScope().setIncludeUnsubscribed( true );
   job->fetchScope().setAncestorRetrieval( CollectionFetchScope::Parent );
