@@ -139,6 +139,11 @@ bool Akonadi::DataStore::init()
   if ( !updater.run() )
     return false;
 
+  if ( !initializer->updateIndexesAndConstraints() ) {
+    akError() << initializer->errorMsg();
+    return false;
+  }
+
   // enable caching for some tables
   MimeType::enableCache( true );
   Flag::enableCache( true );

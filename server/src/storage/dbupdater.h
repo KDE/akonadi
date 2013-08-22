@@ -20,6 +20,7 @@
 #ifndef AKONADI_DBUPDATER_H
 #define AKONADI_DBUPDATER_H
 
+#include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 #include <QtSql/QSqlDatabase>
@@ -35,20 +36,23 @@ class UpdateSet
     typedef QMap<int, UpdateSet> Map;
 
     UpdateSet()
-      : version( -1 ), abortOnFailure( false )
+      : version( -1 ), abortOnFailure( false ), complex( false )
     {
     }
 
     int version;
     bool abortOnFailure;
     QStringList statements;
+    bool complex;
 };
 
 /**
   Updates the database schema.
 */
-class DbUpdater
+class DbUpdater: public QObject
 {
+    Q_OBJECT
+
   public:
     /**
      * Creates a new database updates.
@@ -63,6 +67,9 @@ class DbUpdater
      * On success true is returned, false otherwise.
      */
     bool run();
+
+  private Q_SLOTS:
+    bool complexUpdate_25();
 
   private:
     friend class DbUpdaterTest;

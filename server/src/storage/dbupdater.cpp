@@ -22,15 +22,21 @@
 #include "entities.h"
 #include "akdebug.h"
 #include "akdbus.h"
+#include "querybuilder.h"
+#include "selectquerybuilder.h"
+
 
 #include <QCoreApplication>
-#include <QDBusConnection>
-#include <QSqlQuery>
-#include <QSqlError>
+#include <QMetaMethod>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtSql/QSqlQuery>
+#include <QtSql/QSqlError>
 #include <QThread>
 
 #include <QDomDocument>
 #include <QFile>
+#include <QtSql/qsqlresult.h>
 
 DbUpdater::DbUpdater( const QSqlDatabase & database, const QString & filename )
   : m_database( database ),
@@ -54,7 +60,9 @@ bool DbUpdater::run()
     return true;
   // indicate clients this might take a while
   // we can ignore unregistration in error cases, that'll kill the server anyway
-  QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::UpgradeIndicator) );
+  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::UpgradeIndicator ) ) ) {
+    akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+  }
 
   // QMap is sorted, so we should be replaying the changes in correct order
   for ( QMap<int, UpdateSet>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it ) {
@@ -63,14 +71,26 @@ bool DbUpdater::run()
 
     bool success = m_database.transaction();
     if ( success ) {
-      Q_FOREACH ( const QString &statement, it.value().statements ) {
-        QSqlQuery query( m_database );
-        success = query.exec( statement );
-        if ( !success ) {
-          akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
-          akError() << "Query was: " << statement;
-          akError() << "Target version was: " << it.key();
-          akError() << "Mandatory: " << it.value().abortOnFailure;
+      if ( it.value().complex ) {
+        const QString methodName = QString::fromLatin1( "complexUpdate_%1()" ).arg( it.value().version );
+        const int index = metaObject()->indexOfMethod( methodName.toLatin1().constData() );
+        if ( index == -1 ) {
+          success = false;
+          akError() << "Update to version" << it.value().version << "marked as complex, but no implementation is available";
+        } else {
+          const QMetaMethod method = metaObject()->method( index );
+          method.invoke( this, Q_RETURN_ARG(bool, success) );
+        }
+      } else {
+        Q_FOREACH ( const QString &statement, it.value().statements ) {
+          QSqlQuery query( m_database );
+          success = query.exec( statement );
+          if ( !success ) {
+            akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
+            akError() << "Query was: " << statement;
+            akError() << "Target version was: " << it.key();
+            akError() << "Mandatory: " << it.value().abortOnFailure;
+          }
         }
       }
     }
@@ -143,6 +163,10 @@ bool DbUpdater::parseUpdateSets( int currentVersion, UpdateSet::Map &updates ) c
             if ( updateApplicable( childElement.attribute( QLatin1String( "backends" ) ) ) ) {
               updateSet.statements << buildRawSqlStatement( childElement );
             }
+          } else if ( childElement.tagName() == QLatin1String( "complex-update" ) ) {
+            if ( updateApplicable( childElement.attribute( QLatin1String( "backends" ) ) ) ) {
+              updateSet.complex = true;
+            }
           }
           //TODO: check for generic tags here in the future
 
@@ -183,3 +207,56 @@ QString DbUpdater::buildRawSqlStatement( const QDomElement &element ) const
 {
   return element.text().trimmed();
 }
+
+bool DbUpdater::complexUpdate_25()
+{
+  akDebug() << "Starting update to version 25";
+
+  // Get list of all part names
+  Akonadi::QueryBuilder qb( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Select );
+  qb.setDistinct( true );
+  qb.addColumn( QLatin1String( "PartTable.name" ) );
+
+  if ( !qb.exec() ) {
+    akError() << qb.query().lastError().text();
+    return false;
+  }
+
+  // Process them one by one
+  QSqlQuery query = qb.query();
+  while ( query.next() ) {
+    const QString partName = query.value( 0 ).toString();
+    const QString ns = partName.left( 3 );
+    const QString name = partName.mid( 4 );
+    akDebug() << "Moving part type" << partName << "to PartTypeTable";
+
+    // Split the part name to namespace and name and insert it to PartTypeTable
+    Akonadi::QueryBuilder qb2( QLatin1String( "PartTypeTable" ), Akonadi::QueryBuilder::Insert );
+    qb2.setColumnValue( QLatin1String( "ns" ), ns );
+    qb2.setColumnValue( QLatin1String( "name" ), name );
+    if ( !qb2.exec() ) {
+      akError() << qb.query().lastError().text();
+      return false;
+    }
+    const qint64 id = qb2.insertId();
+
+    akDebug() << "Updating" << partName << "entries in PartTable.partTypeId to" << id;
+    // Store id of the part type in PartTable partTypeId column
+    Akonadi::QueryBuilder qb3( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Update );
+    qb3.setColumnValue( QLatin1String( "partTypeId" ), id );
+    qb3.addValueCondition( QLatin1String( "name" ), Akonadi::Query::Equals, partName );
+    if ( !qb3.exec() ) {
+      akError() << qb.query().lastError().text();
+      return false;
+    }
+  }
+
+  akDebug() << "Done.";
+  akDebug() << "Removing PartTable.partType column now";
+
+  // Ok done. Next raw-sql element will take care of dropping the name column from PartTable
+  return true;
+}
+
+
+#include "dbupdater.moc"

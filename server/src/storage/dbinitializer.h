@@ -81,6 +81,14 @@ class DbInitializer
      */
     bool hasForeignKeyConstraints() const;
 
+    /**
+     * Checks and creates missing indexes.
+     *
+     * This method is run after DbUpdater to ensure that data in new columns
+     * are populated and creation of indexes and foreign keys does not fail.
+     */
+    bool updateIndexesAndConstraints();
+
   protected:
     /**
      * Creates a new database initializer.
@@ -147,9 +155,12 @@ class DbInitializer
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */
     void checkForeignKeys( const TableDescription &tableDescription );
+    void checkIndexes( const TableDescription &tableDescription );
     bool checkRelation( const RelationDescription &relationDescription );
 
     static QString referentialActionToString( ColumnDescription::ReferentialAction action );
+
+    void execPendingQueries( const QStringList &queries );
 
     QSqlDatabase mDatabase;
     Schema *mSchema;
@@ -157,6 +168,9 @@ class DbInitializer
     TestInterface *mTestInterface;
     DbIntrospector::Ptr m_introspector;
     bool m_noForeignKeyContraints;
+    QStringList m_pendingIndexes;
+    QStringList m_pendingForeignKeys;
+    QStringList m_removedForeignKeys;
 };
 
 #endif
