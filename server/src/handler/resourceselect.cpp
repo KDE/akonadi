@@ -39,11 +39,11 @@ bool ResourceSelect::parseStream()
   }
 
   const Resource res = Resource::retrieveByName( resourceName );
-  if ( !res.isValid() )
+  if ( !res.isValid() ) {
     throw HandlerException( resourceName.toUtf8() + " is not a valid resource identifier" );
+  }
 
   connection()->setResourceContext( res );
 
   return successResponse( resourceName.toUtf8() + " selected" );
 }
-
