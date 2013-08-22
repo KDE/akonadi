@@ -118,8 +118,14 @@ void DataStore::open()
 
 void Akonadi::DataStore::close()
 {
-  if ( !m_dbOpened )
+
+  if ( m_keepAliveTimer ) {
+    m_keepAliveTimer->stop();
+  }
+
+  if ( !m_dbOpened ) {
     return;
+  }
 
   if ( inTransaction() ) {
     // By setting m_transactionLevel to '1' here, we skip all nested transactions
@@ -133,7 +139,6 @@ void Akonadi::DataStore::close()
   QSqlDatabase::removeDatabase( m_connectionName );
 
   m_dbOpened = false;
-  m_keepAliveTimer->stop();
 }
 
 bool Akonadi::DataStore::init()
