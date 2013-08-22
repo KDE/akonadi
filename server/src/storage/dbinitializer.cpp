@@ -106,6 +106,10 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
     // Check for every column whether it exists, and add the missing ones
     Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
       if ( !m_introspector->hasColumn( tableDescription.name, columnDescription.name ) ) {
+        // Don't add the column on update, DbUpdater will add it
+        if ( columnDescription.noUpdate ) {
+          continue;
+        }
         // Get the ADD COLUMN statement for the specific SQL dialect
         const QString statement = buildAddColumnStatement( tableDescription, columnDescription );
         akDebug() << statement;

@@ -69,6 +69,9 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       <xsl:if test="@onDelete">
       c.onDelete = ColumnDescription::<xsl:value-of select="@onDelete"/>;
       </xsl:if>
+      <xsl:if test="@noUpdate">
+      c.noUpdate = <xsl:value-of select="@noUpdate"/>;
+      </xsl:if>
 
       t.columns.push_back(c);
     }

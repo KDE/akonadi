@@ -24,6 +24,7 @@
 #include "akdbus.h"
 #include "querybuilder.h"
 #include "selectquerybuilder.h"
+#include "datastore.h"
 
 
 #include <QCoreApplication>
@@ -210,51 +211,90 @@ QString DbUpdater::buildRawSqlStatement( const QDomElement &element ) const
 
 bool DbUpdater::complexUpdate_25()
 {
-  akDebug() << "Starting update to version 25";
+  akDebug() << "Starting database update to version 25";
 
+  akDebug() << "Adding column partTypeId";
+  // Remove index from PartTable, it will speed up adding new column
+  {
+    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    // Set default value, otherwise PGSQL won't be able to add the column to a populate database.
+    // We will drop the default value later
+    if ( !query.exec( QLatin1String( "ALTER TABLE PartTable ADD COLUMN partTypeId BIGINT NOT NULL DEFAULT 0" ) ) ) {
+      akError() << query.lastError().text();
+      return false;
+    }
+  }
+  akDebug() << "Done";
+
+  akDebug() << "Migrating data";
   // Get list of all part names
-  Akonadi::QueryBuilder qb( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Select );
-  qb.setDistinct( true );
-  qb.addColumn( QLatin1String( "PartTable.name" ) );
+  {
+    Akonadi::QueryBuilder qb( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Select );
+    qb.setDistinct( true );
+    qb.addColumn( QLatin1String( "PartTable.name" ) );
 
-  if ( !qb.exec() ) {
-    akError() << qb.query().lastError().text();
-    return false;
-  }
-
-  // Process them one by one
-  QSqlQuery query = qb.query();
-  while ( query.next() ) {
-    const QString partName = query.value( 0 ).toString();
-    const QString ns = partName.left( 3 );
-    const QString name = partName.mid( 4 );
-    akDebug() << "Moving part type" << partName << "to PartTypeTable";
-
-    // Split the part name to namespace and name and insert it to PartTypeTable
-    Akonadi::QueryBuilder qb2( QLatin1String( "PartTypeTable" ), Akonadi::QueryBuilder::Insert );
-    qb2.setColumnValue( QLatin1String( "ns" ), ns );
-    qb2.setColumnValue( QLatin1String( "name" ), name );
-    if ( !qb2.exec() ) {
+    if ( !qb.exec() ) {
       akError() << qb.query().lastError().text();
       return false;
     }
-    const qint64 id = qb2.insertId();
 
-    akDebug() << "Updating" << partName << "entries in PartTable.partTypeId to" << id;
-    // Store id of the part type in PartTable partTypeId column
-    Akonadi::QueryBuilder qb3( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Update );
-    qb3.setColumnValue( QLatin1String( "partTypeId" ), id );
-    qb3.addValueCondition( QLatin1String( "name" ), Akonadi::Query::Equals, partName );
-    if ( !qb3.exec() ) {
-      akError() << qb.query().lastError().text();
-      return false;
+    // Process them one by one
+    QSqlQuery query = qb.query();
+    while ( query.next() ) {
+      const QString partName = query.value( 0 ).toString();
+      const QString ns = partName.left( 3 );
+      const QString name = partName.mid( 4 );
+      akDebug() << "Moving part type" << partName << "to PartTypeTable";
+
+      // Split the part name to namespace and name and insert it to PartTypeTable
+      qint64 id;
+      {
+        Akonadi::QueryBuilder qb( QLatin1String( "PartTypeTable" ), Akonadi::QueryBuilder::Insert );
+        qb.setColumnValue( QLatin1String( "ns" ), ns );
+        qb.setColumnValue( QLatin1String( "name" ), name );
+        if ( !qb.exec() ) {
+          akError() << qb.query().lastError().text();
+          return false;
+        }
+       id = qb.insertId();
+      }
+
+      akDebug() << "Updating" << partName << "entries in PartTable.partTypeId to" << id;
+      // Store id of the part type in PartTable partTypeId column
+      {
+        Akonadi::QueryBuilder qb( QLatin1String( "PartTable" ), Akonadi::QueryBuilder::Update );
+        qb.setColumnValue( QLatin1String( "partTypeId" ), id );
+        qb.addValueCondition( QLatin1String( "name" ), Akonadi::Query::Equals, partName );
+        if ( !qb.exec() ) {
+          akError() << qb.query().lastError().text();
+          return false;
+        }
+      }
     }
   }
-
   akDebug() << "Done.";
-  akDebug() << "Removing PartTable.partType column now";
 
-  // Ok done. Next raw-sql element will take care of dropping the name column from PartTable
+  akDebug() << "Final adjustment to partTypeId column";
+  {
+    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    if( !query.exec( QLatin1String( "ALTER TABLE PartTable ALTER COLUMN partTypeId DROP DEFAULT;") ) ) {
+      akError() << query.lastError().text();
+      akDebug() << "Not a fatal error, continuing";
+    }
+  }
+  akDebug() << "Done";
+
+  akDebug() << "Removing Part3Table.partType column now";
+  {
+    QSqlQuery query( Akonadi::DataStore::self()->database() );
+    if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP COLUMN name") ) ) {
+      akError() << query.lastError().text();
+      akDebug() << "Not a fatal error, continuing";
+    }
+  }
+  akDebug() << "Done";
+
+  akDebug() << "Database update to version 25 finished";
   return true;
 }
 

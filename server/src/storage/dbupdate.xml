@@ -177,6 +177,5 @@
   -->
   <update version="25" abortOnFailure="true">
     <complex-update backends="mysql,psql,sqlite,odbc" />
-    <raw-sql backends="mysql,psql,sqlite,odbc">ALTER TABLE PartTable DROP COLUMN name;</raw-sql>
   </update>
 </updates>

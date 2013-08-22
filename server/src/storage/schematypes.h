@@ -52,6 +52,7 @@ class ColumnDescription
     QString defaultValue;
     ReferentialAction onUpdate;
     ReferentialAction onDelete;
+    bool noUpdate;
 };
 
 /**

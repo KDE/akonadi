@@ -150,7 +150,7 @@
   <table name="Part">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
-    <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false"/>
+    <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false" noUpdate="true" />
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>

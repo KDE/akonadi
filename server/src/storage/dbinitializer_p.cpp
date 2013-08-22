@@ -238,13 +238,6 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
   if ( !columnDescription.allowNull && !( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) )
     column += QLatin1String( " NOT NULL" );
 
-  if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
-    column += QString::fromLatin1( " REFERENCES %1Table(%2) " )
-                                 .arg( columnDescription.refTable )
-                                 .arg( columnDescription.refColumn )
-           +  buildReferentialAction( columnDescription.onUpdate, columnDescription.onDelete );
-  }
-
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
@@ -269,6 +262,21 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescript
                             .arg( QStringList( data.keys() ).join( QLatin1String( "," ) ) )
                             .arg( QStringList( data.values() ).join( QLatin1String( "," ) ) );
 }
+
+QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const
+{
+  // constraints must have name in PostgreSQL
+  const QString constraintName = table.name + column.name + QLatin1Literal( "_" ) + column.refTable + column.refColumn + QLatin1Literal( "_fk" );
+  return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " ADD CONSTRAINT " ) + constraintName + QLatin1Literal( " FOREIGN KEY (" ) + column.name
+       + QLatin1Literal( ") REFERENCES " ) + column.refTable + QLatin1Literal( "Table(" ) + column.refColumn
+       + QLatin1Literal( ") " ) + buildReferentialAction( column.onUpdate, column.onDelete );
+}
+
+QString DbInitializerPostgreSql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const
+{
+  return QLatin1Literal( "ALTER TABLE " ) + table.name + QLatin1Literal( " DROP CONSTRAINT " ) + fk.name;
+}
+
 
 //END PostgreSQL
 

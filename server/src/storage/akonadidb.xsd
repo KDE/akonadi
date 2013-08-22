@@ -72,6 +72,7 @@
     <xsd:attribute name="methodName"  type="xsd:string"/>
     <xsd:attribute name="onUpdate"    type="xsd:string"/>
     <xsd:attribute name="onDelete"    type="xsd:string"/>
+    <xsd:attribute name="noUpdate"    type="xsd:boolean" default="false"/>
   </xsd:complexType>
 
   <xsd:complexType name="indexType">
