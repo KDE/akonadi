@@ -19,6 +19,8 @@
 
 #include "searchhelper.h"
 
+#include <libs/protocol_p.h>
+
 using namespace Akonadi;
 
 QList<QByteArray> SearchHelper::splitLine( const QByteArray &line )
@@ -51,29 +53,34 @@ QString SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start
 {
   QString mimeType;
 
-  if ( junks.count() <= start )
+  if ( junks.count() <= start ) {
     return QString();
+  }
 
-  if ( junks[ start ].toUpper() == "CHARSET" ) {
-    if ( junks.count() <= ( start + 2 ) )
+  if ( junks[ start ].toUpper() == AKONADI_PARAM_CHARSET ) {
+    if ( junks.count() <= ( start + 2 ) ) {
       return QString();
-    if ( junks[ start + 2 ].toUpper() == "MIMETYPE" ) {
-      if ( junks.count() <= ( start + 3 ) )
+    }
+    if ( junks[ start + 2 ].toUpper() == AKONADI_PARAM_MIMETYPE ) {
+      if ( junks.count() <= ( start + 3 ) ) {
         return QString();
-      else
-        mimeType = QString::fromLatin1(junks[ start + 3 ].toLower());
+      } else {
+        mimeType = QString::fromLatin1( junks[ start + 3 ].toLower() );
+      }
     }
   } else {
-    if ( junks[ start ].toUpper() == "MIMETYPE" ) {
-      if ( junks.count() <= ( start + 1 ) )
+    if ( junks[ start ].toUpper() == AKONADI_PARAM_MIMETYPE ) {
+      if ( junks.count() <= ( start + 1 ) ) {
         return QString();
-      else
-        mimeType = QString::fromLatin1(junks[ start + 1 ].toLower());
+      } else {
+        mimeType = QString::fromLatin1( junks[ start + 1 ].toLower() );
+      }
     }
   }
 
-  if ( mimeType.isEmpty() )
+  if ( mimeType.isEmpty() ) {
     mimeType = QString::fromLatin1( "message/rfc822" );
+  }
 
   return mimeType;
 }
