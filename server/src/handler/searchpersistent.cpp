@@ -46,19 +46,20 @@ SearchPersistent::~SearchPersistent()
 {
 }
 
-
 bool SearchPersistent::parseStream()
 {
   QString collectionName = m_streamParser->readUtf8String();
-  if ( collectionName.isEmpty() )
+  if ( collectionName.isEmpty() ) {
     return failureResponse( "No name specified" );
+  }
 
   DataStore *db = connection()->storageBackend();
   Transaction transaction( db );
 
   const QString queryString = m_streamParser->readUtf8String();
-  if ( queryString.isEmpty() )
+  if ( queryString.isEmpty() ) {
     return failureResponse( "No query specified" );
+  }
 
   // for legacy clients we have to guess the language
 #ifdef AKONADI_USE_STRIGI_SEARCH
@@ -85,25 +86,30 @@ bool SearchPersistent::parseStream()
   col.setResourceId( 1 ); // search resource
   col.setName( collectionName );
   col.setIsVirtual( true );
-  if ( !db->appendCollection( col ) )
+  if ( !db->appendCollection( col ) ) {
     return failureResponse( "Unable to create persistent search" );
+  }
 
-  if ( !db->addCollectionAttribute( col, "AccessRights", "luD" ) )
+  if ( !db->addCollectionAttribute( col, "AccessRights", "luD" ) ) {
     return failureResponse( "Unable to set rights attribute on persistent search" );
+  }
 
   // work around the fact that we have no clue what might be in there
   MimeType::List mts = MimeType::retrieveAll();
   Q_FOREACH ( const MimeType &mt, mts ) {
-    if ( mt.name() == QLatin1String( "inode/directory" ) )
+    if ( mt.name() == QLatin1String( "inode/directory" ) ) {
       continue;
+    }
     col.addMimeType( mt );
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Unable to commit transaction" );
+  }
 
-  if ( !SearchManager::instance()->addSearch( col ) )
+  if ( !SearchManager::instance()->addSearch( col ) ) {
     return failureResponse( "Unable to add search to search manager" );
+  }
 
   const QByteArray b = HandlerHelper::collectionToByteArray( col );
 
@@ -114,4 +120,3 @@ bool SearchPersistent::parseStream()
 
   return successResponse( "SEARCH_STORE completed" );
 }
-
