@@ -30,6 +30,8 @@
 
 #include "response.h"
 
+#include <libs/protocol_p.h>
+
 using namespace Akonadi;
 
 Select::Select( Scope::SelectionScope scope ) :
@@ -46,7 +48,7 @@ bool Select::parseStream()
   QByteArray buffer = m_streamParser->readString();
 
   bool silent = false;
-  if ( buffer == "SILENT" ) {
+  if ( buffer == AKONADI_PARAM_SILENT ) {
     silent = true;
     buffer = m_streamParser->readString();
   }
@@ -58,25 +60,29 @@ bool Select::parseStream()
     col = HandlerHelper::collectionFromIdOrName( buffer );
     if ( !col.isValid() ) {
       bool ok = false;
-      if ( buffer.toLongLong( &ok ) == 0 && ok )
+      if ( buffer.toLongLong( &ok ) == 0 && ok ) {
         silent = true;
-      else
+      } else {
         return failureResponse( "Cannot select this collection" );
+      }
     }
   } else if ( mScope == Scope::Rid ) {
     if ( buffer.isEmpty() ) {
       silent = true; // unselect
     } else {
-      if ( !connection()->resourceContext().isValid() )
+      if ( !connection()->resourceContext().isValid() ) {
         throw HandlerException( "Cannot select based on remote identifier without a resource scope" );
+      }
       SelectQueryBuilder<Collection> qb;
       qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString::fromUtf8( buffer ) );
       qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, connection()->resourceContext().id() );
-      if ( !qb.exec() )
+      if ( !qb.exec() ) {
         throw HandlerException( "Failed to select collection" );
+      }
       Collection::List results = qb.result();
-      if ( results.count() != 1 )
+      if ( results.count() != 1 ) {
         throw HandlerException( QByteArray::number( results.count() ) + " collections found" );
+      }
       col = results.first();
     }
   }
@@ -90,14 +96,17 @@ bool Select::parseStream()
     Q_EMIT responseAvailable( response );
 
     const int itemCount = HandlerHelper::itemCount( col );
-    if ( itemCount < 0 )
+    if ( itemCount < 0 ) {
       return failureResponse( "Unable to determine item count" );
+    }
     response.setString( QByteArray::number( itemCount ) + " EXISTS" );
     Q_EMIT responseAvailable( response );
 
-    int readCount = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) );
-    if ( readCount < 0 || itemCount < readCount )
+    int readCount = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
+                                                                          << QLatin1String( AKONADI_FLAG_IGNORED ) );
+    if ( readCount < 0 || itemCount < readCount ) {
       return failureResponse( "Unable to retrieve unseen count" );
+    }
     response.setString( "OK [UNSEEN " + QByteArray::number( itemCount - readCount ) + "] Message 0 is first unseen" );
     Q_EMIT responseAvailable( response );
   }
@@ -110,4 +119,3 @@ bool Select::parseStream()
   connection()->setSelectedCollection( col.id() );
   return true;
 }
-
