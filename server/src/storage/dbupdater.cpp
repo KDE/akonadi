@@ -20,11 +20,15 @@
 #include "dbupdater.h"
 #include "dbtype.h"
 #include "entities.h"
+#include <akonadischema.h>
 #include "akdebug.h"
 #include "akdbus.h"
 #include "querybuilder.h"
 #include "selectquerybuilder.h"
 #include "datastore.h"
+#include "dbconfig.h"
+#include "dbintrospector.h"
+#include "dbinitializer_p.h"
 
 
 #include <QCoreApplication>
@@ -217,8 +221,8 @@ bool DbUpdater::complexUpdate_25()
   // Remove index from PartTable, it will speed up adding new column
   {
     QSqlQuery query( Akonadi::DataStore::self()->database() );
-    // Set default value, otherwise PGSQL won't be able to add the column to a populate database.
-    // We will drop the default value later
+    // Set default value, otherwise PGSQL won't be able to add the column to a populate database
+    // (because of NOT NULL). We will drop the default value later
     if ( !query.exec( QLatin1String( "ALTER TABLE PartTable ADD COLUMN partTypeId BIGINT NOT NULL DEFAULT 0" ) ) ) {
       akError() << query.lastError().text();
       return false;
@@ -274,25 +278,31 @@ bool DbUpdater::complexUpdate_25()
   }
   akDebug() << "Done.";
 
-  akDebug() << "Final adjustment to partTypeId column";
-  {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
-    if( !query.exec( QLatin1String( "ALTER TABLE PartTable ALTER COLUMN partTypeId DROP DEFAULT;") ) ) {
-      akError() << query.lastError().text();
-      akDebug() << "Not a fatal error, continuing";
+  // There is no ALTER COLUMN or DROP COLUMN in SQLite, so we just leave the
+  // old 'name' column there. We can't DROP DEFAULT either, but that's not really
+  // a problem.
+  if ( DbConfig::configuredDatabase()->driverName() != QLatin1String( "QSQLITE" ) ) {
+    akDebug() << "Final adjustment to partTypeId column";
+    {
+      // Drop the default value we added because of PostgreSQL
+      QSqlQuery query( Akonadi::DataStore::self()->database() );
+      if( !query.exec( QLatin1String( "ALTER TABLE PartTable ALTER COLUMN partTypeId DROP DEFAULT;") ) ) {
+        akError() << query.lastError().text();
+        akDebug() << "Not a fatal error, continuing";
+      }
     }
-  }
-  akDebug() << "Done";
+    akDebug() << "Done";
 
-  akDebug() << "Removing Part3Table.partType column now";
-  {
-    QSqlQuery query( Akonadi::DataStore::self()->database() );
-    if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP COLUMN name") ) ) {
-      akError() << query.lastError().text();
-      akDebug() << "Not a fatal error, continuing";
+    akDebug() << "Removing Part3Table.partType column now";
+    {
+      QSqlQuery query( Akonadi::DataStore::self()->database() );
+      if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP COLUMN name") ) ) {
+        akError() << query.lastError().text();
+        akDebug() << "Not a fatal error, continuing";
+      }
     }
+    akDebug() << "Done";
   }
-  akDebug() << "Done";
 
   akDebug() << "Database update to version 25 finished";
   return true;
