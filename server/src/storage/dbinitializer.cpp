@@ -121,11 +121,6 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
     // very likely previous columns contain data that needs to be moved to a new column first.
   }
 
-  // Make sure the foreign key constraints are all there
-  checkForeignKeys( tableDescription );
-
-  checkIndexes( tableDescription );
-
   // Add initial data if table is empty
   if ( tableDescription.data.isEmpty() )
     return true;
@@ -252,6 +247,12 @@ bool DbInitializer::hasForeignKeyConstraints() const
 
 bool DbInitializer::updateIndexesAndConstraints()
 {
+  Q_FOREACH ( const TableDescription &table, mSchema->tables() ) {
+    // Make sure the foreign key constraints are all there
+    checkForeignKeys( table );
+    checkIndexes( table );
+  }
+
   try {
     if ( !m_pendingIndexes.isEmpty() ) {
       akDebug() << "Updating indexes";

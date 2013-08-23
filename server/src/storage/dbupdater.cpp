@@ -286,14 +286,31 @@ bool DbUpdater::complexUpdate_25()
     {
       // Drop the default value we added because of PostgreSQL
       QSqlQuery query( Akonadi::DataStore::self()->database() );
-      if( !query.exec( QLatin1String( "ALTER TABLE PartTable ALTER COLUMN partTypeId DROP DEFAULT;") ) ) {
+      if( !query.exec( QLatin1String( "ALTER TABLE PartTable ALTER COLUMN partTypeId DROP DEFAULT") ) ) {
         akError() << query.lastError().text();
         akDebug() << "Not a fatal error, continuing";
       }
     }
     akDebug() << "Done";
 
-    akDebug() << "Removing PartTable.partType column now";
+    akDebug() << "Removing PartTable.name column now";
+    // First create a new index (otherwise we can't drop the old one, there's a FK depending on it)
+    {
+      QSqlQuery query( Akonadi::DataStore::self()->database() );
+      if ( !query.exec( QLatin1String( "CREATE UNIQUE INDEX PartTable_pimItemIdTypeIndex ON PartTable (pimItemId,partTypeId)") ) ) {
+        akError() << query.lastError().text();
+        akDebug() << "Not a fatal error, continuing";
+      }
+    }
+    // Then drop the old one
+    {
+      QSqlQuery query( Akonadi::DataStore::self()->database() );
+      if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP INDEX PartTable_pimItemIdNameIndex" ) ) ) {
+        akError() << query.lastError().text();
+        akDebug() << "Not a fatal error, continuing";
+      }
+    }
+    // Now the 'name' column can be removed
     {
       QSqlQuery query( Akonadi::DataStore::self()->database() );
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP COLUMN name") ) ) {
