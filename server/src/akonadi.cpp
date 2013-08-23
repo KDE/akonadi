@@ -80,6 +80,13 @@ AkonadiServer::AkonadiServer( QObject* parent )
     , mDatabaseProcess( 0 )
     , mAlreadyShutdown( false )
 {
+    // Make sure we do initialization from eventloop, otherwise
+    // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
+    QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void AkonadiServer::init()
+{
     qRegisterMetaType<Akonadi::Response>();
 
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
@@ -220,6 +227,12 @@ AkonadiServer::AkonadiServer( QObject* parent )
     db->unhideAllPimItems();
 
     qDBusRegisterMetaType<XesamVariantListVector>();
+
+    // We are ready, now register org.freedesktop.Akonadi service to DBus and
+    // the fun can begin
+    if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::Server) ) ) {
+      akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+    }
 }
 
 AkonadiServer::~AkonadiServer()

@@ -87,9 +87,6 @@ int main( int argc, char ** argv )
     Akonadi::AkonadiServer::instance(); // trigger singleton creation
     AkonadiCrash::setShutdownMethod( shutdownHandler );
 
-    if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::Server) ) )
-      akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
-
     const int result = app.exec();
 
     Akonadi::AkonadiServer::instance()->quit();
