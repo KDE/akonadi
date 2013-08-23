@@ -42,19 +42,22 @@ bool Link::parseStream()
   mDestinationScope.parseScope( m_streamParser );
   const Collection collection = CollectionQueryHelper::singleCollectionFromScope( mDestinationScope, connection() );
 
-  if ( !collection.isVirtual() )
+  if ( !collection.isVirtual() ) {
     return failureResponse( "Can't link items to non-virtual collections" );
+  }
 
   Scope::SelectionScope itemSelectionScope = Scope::selectionScopeFromByteArray( m_streamParser->peekString() );
-  if ( itemSelectionScope != Scope::None )
+  if ( itemSelectionScope != Scope::None ) {
     m_streamParser->readString();
+  }
   Scope itemScope( itemSelectionScope );
   itemScope.parseScope( m_streamParser );
 
   SelectQueryBuilder<PimItem> qb;
   ItemQueryHelper::scopeToQuery( itemScope, connection(), qb );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return failureResponse( "Unable to execute item query" );
+  }
 
   const PimItem::List items = qb.result();
 
@@ -72,8 +75,9 @@ bool Link::parseStream()
       result = collection.removePimItem( item );
       toUnlink << item;
     }
-    if ( !result )
+    if ( !result ) {
       return failureResponse( "Failed to modify item reference" );
+    }
   }
 
   if ( !toLink.isEmpty() ) {
@@ -82,9 +86,9 @@ bool Link::parseStream()
     store->notificationCollector()->itemsUnlinked( toUnlink, collection );
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Cannot commit transaction." );
+  }
 
   return successResponse( "LINK complete" );
 }
-

@@ -46,8 +46,9 @@ bool Remove::parseStream()
 
   if ( qb.exec() ) {
     const QVector<PimItem> items = qb.result();
-    if ( items.isEmpty() )
+    if ( items.isEmpty() ) {
       throw HandlerException( "No items found" );
+    }
     if ( !store->cleanupPimItems( items ) ) {
       throw HandlerException( "Deletion failed" );
     }
@@ -55,11 +56,11 @@ bool Remove::parseStream()
     throw HandlerException( "Unable to execute query" );
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Unable to commit transaction." );
+  }
 
   return successResponse( "REMOVE complete" );
 }
 
 }
-

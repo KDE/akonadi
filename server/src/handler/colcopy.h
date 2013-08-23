@@ -65,5 +65,4 @@ class ColCopy : public Copy
 
 }
 
-
 #endif

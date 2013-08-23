@@ -185,12 +185,6 @@ void NotificationCollector::itemNotification( NotificationMessageV2::Operation o
     vCollections = DataStore::self()->virtualCollections( items );
   }
 
-  if ( !collection.isValid() ) {
-    notificationDestCollection = items.first().collection();
-  } else {
-    notificationDestCollection = collection;
-  }
-
   NotificationMessageV2 msg;
   msg.setSessionId( mSessionId );
   msg.setType( NotificationMessageV2::Items );

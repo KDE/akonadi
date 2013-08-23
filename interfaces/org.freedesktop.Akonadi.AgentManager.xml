@@ -78,6 +78,11 @@
       <arg type="as" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
+    <method name="agentCustomProperties">
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      <arg type="a{sv}" direction="out"/>
+      <arg name="identifier" type="s" direction="in"/>
+    </method>
     <method name="createAgentInstance">
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>

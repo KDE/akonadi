@@ -82,6 +82,7 @@ AgentManager::AgentManager( QObject *parent )
     serviceArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
 
   mStorageController = new Akonadi::ProcessControl;
+  mStorageController->setShutdownTimeout( 10 * 1000 ); // the server needs more time for shutdown if we are using an internal mysqld
   connect( mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()) );
   mStorageController->start( QLatin1String("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash );
 
@@ -215,6 +216,14 @@ QStringList AgentManager::agentCapabilities( const QString &identifier ) const
   if ( !checkAgentExists( identifier ) )
     return QStringList();
   return mAgents.value( identifier ).capabilities;
+}
+
+QVariantMap AgentManager::agentCustomProperties( const QString &identifier ) const
+{
+  if ( !checkAgentExists( identifier ) )
+    return QVariantMap();
+
+  return mAgents.value( identifier ).custom;
 }
 
 AgentInstance::Ptr AgentManager::createAgentInstance( const AgentType &info )
@@ -478,6 +487,7 @@ void AgentManager::readPluginInfos( const QDir &directory )
   const QStringList files = directory.entryList();
   akDebug() << "PLUGINS: " << directory.canonicalPath();
   akDebug() << "PLUGINS: " << files;
+
   for ( int i = 0; i < files.count(); ++i ) {
     const QString fileName = directory.absoluteFilePath( files[ i ] );
 

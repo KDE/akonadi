@@ -34,6 +34,8 @@
 #include "storage/transaction.h"
 #include "storage/parttypehelper.h"
 
+#include <libs/protocol_p.h>
+
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
@@ -55,8 +57,9 @@ bool Akonadi::AkAppend::commit()
     Transaction transaction( db );
 
     Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       return failureResponse( QByteArray( "Unknown collection for '" ) + m_mailbox + QByteArray( "'." ) );
+    }
 
     QByteArray mt;
     QString remote_id;
@@ -64,32 +67,36 @@ bool Akonadi::AkAppend::commit()
     QString gid;
     QList<QByteArray> flags;
     Q_FOREACH( const QByteArray &flag, m_flags ) {
-      if ( flag.startsWith( "\\MimeType" ) ) {
+      if ( flag.startsWith( AKONADI_FLAG_MIMETYPE ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
         mt = flag.mid( pos1 + 1, pos2 - pos1 - 1 );
-      } else if ( flag.startsWith( "\\RemoteId" ) ) {
+      } else if ( flag.startsWith( AKONADI_FLAG_REMOTEID ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         remote_id = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else if ( flag.startsWith( "\\RemoteRevision" ) ) {
+      } else if ( flag.startsWith( AKONADI_FLAG_REMOTEREVISION ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         remote_revision = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else if ( flag.startsWith( "\\Gid" ) ) {
+      } else if ( flag.startsWith( AKONADI_FLAG_GID ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else
+      } else {
         flags << flag;
+      }
     }
     // standard imap does not know this attribute, so that's mail
-    if ( mt.isEmpty() ) mt = "message/rfc822";
+    if ( mt.isEmpty() ) {
+      mt = "message/rfc822";
+    }
     MimeType mimeType = MimeType::retrieveByName( QString::fromLatin1( mt ) );
     if ( !mimeType.isValid() ) {
       MimeType m( QString::fromLatin1( mt ) );
-      if ( !m.insert() )
+      if ( !m.insert() ) {
         return failureResponse( QByteArray( "Unable to create mimetype '") + mt + QByteArray( "'." ) );
+      }
       mimeType = m;
     }
 
@@ -97,13 +104,11 @@ bool Akonadi::AkAppend::commit()
     item.setRev( 0 );
     item.setSize( m_size );
 
-
     // If we have active preprocessors then we also set the hidden attribute
     // for the UI and we enqueue the item for preprocessing.
     bool doPreprocessing = PreprocessorManager::instance()->isActive();
 
-    if ( doPreprocessing )
-    {
+    if ( doPreprocessing ) {
       Part hiddenAttribute;
       hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
       hiddenAttribute.setData( QByteArray() );
@@ -116,24 +121,25 @@ bool Akonadi::AkAppend::commit()
 
     response.setTag( tag() );
     if ( !ok ) {
-        return failureResponse( "Append failed" );
+      return failureResponse( "Append failed" );
     }
 
     // set message flags
     const Flag::List flagList = HandlerHelper::resolveFlags( flags );
     bool flagsChanged = false;
-    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) )
+    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) ) {
       return failureResponse( "Unable to append item flags." );
+    }
 
     // TODO if the mailbox is currently selected, the normal new message
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
     //      client immediately via an untagged EXISTS response.
 
-    if ( !transaction.commit() )
-        return failureResponse( "Unable to commit transaction." );
+    if ( !transaction.commit() ) {
+      return failureResponse( "Unable to commit transaction." );
+    }
 
-    if ( doPreprocessing )
-    {
+    if ( doPreprocessing ) {
       // enqueue the item for preprocessing
       PreprocessorManager::instance()->beginHandleItem( item, db );
     }
@@ -191,19 +197,17 @@ bool AkAppend::parseStream()
   bool ok = false;
 
   QList<QByteArray> list = m_streamParser->readParenthesizedList();
-  Q_FOREACH( const QByteArray &item, list )
-  {
-    if (partName.isEmpty() && partSize == -1)
-    {
+  Q_FOREACH( const QByteArray &item, list ) {
+    if (partName.isEmpty() && partSize == -1) {
       partName = item;
       continue;
     }
-    if (item.startsWith(':'))
-    {
+    if (item.startsWith(':')) {
       int pos = 1;
       ImapParser::parseNumber( item, partSize, &ok, pos );
-      if( !ok )
+      if ( !ok ) {
         partSize = 0;
+      }
 
       int version = 0;
       QByteArray plainPartName;
@@ -229,8 +233,9 @@ bool AkAppend::parseStream()
     Part part;
     part.setPartType( PartTypeHelper::fromFqName( partSpec.first ) );
     part.setData( allParts.mid( pos, partSpec.second.first ) );
-    if ( partSpec.second.second != 0 )
+    if ( partSpec.second.second != 0 ) {
       part.setVersion( partSpec.second.second );
+    }
     part.setDatasize( partSpec.second.first );
     m_parts.append( part );
     pos += partSpec.second.first;
@@ -238,4 +243,3 @@ bool AkAppend::parseStream()
 
   return commit();
 }
-

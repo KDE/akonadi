@@ -45,8 +45,9 @@ bool Capability::parseStream()
   m_streamParser->beginList();
   while (!m_streamParser->atListEnd()) {
     const QByteArray capability = m_streamParser->readString();
-    if (capability.isEmpty())
+    if (capability.isEmpty()) {
       break; // shouldn't happen
+    }
     if (capability == AKONADI_PARAM_CAPABILITY_NOTIFY) {
       capabilities.setNotificationMessageVersion(m_streamParser->readNumber());
     } else if (capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH) {
@@ -65,4 +66,3 @@ bool Capability::parseStream()
   Q_EMIT responseAvailable( response );
   return true;
 }
-

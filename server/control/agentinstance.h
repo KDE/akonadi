@@ -122,6 +122,7 @@ class AgentInstance : public QObject
     int mPercent;
     QString mResourceName;
     bool mOnline;
+    bool mPendingQuit;
 
 };
 

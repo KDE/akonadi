@@ -526,7 +526,7 @@ bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const Notif
         else if ( ( ( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags ) ) && ( (*it).operation() != Modify) && (*it).operation() != ModifyFlags ) {
           return false;
         }
-        // new on is a deletion, erase the existing modification ones (and keep going, in case there are more)
+        // new one is a deletion, erase the existing modification ones (and keep going, in case there are more)
         else if ( msg.operation() == Remove && ((*it).operation() == Modify || (*it).operation() == ModifyFlags) ) {
           it = list.erase( it );
           end = list.end();

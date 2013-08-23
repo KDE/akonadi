@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QStringList>
+#include <QVariantMap>
 #include <QHash>
 
 namespace Akonadi {
@@ -52,6 +53,7 @@ class AgentType
     QStringList mimeTypes;
     QStringList capabilities;
     QString exec;
+    QVariantMap custom;
     uint instanceCounter;
     LaunchMethod launchMethod;
 

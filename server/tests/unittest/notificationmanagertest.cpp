@@ -22,9 +22,11 @@
 #include "entities.h"
 #include "notificationmanager.h"
 #include "notificationsource.h"
+#include "clientcapabilityaggregator.h"
 
 #include <QtCore/QObject>
 #include <QtTest/QTest>
+#include <QSignalSpy>
 #include <QtCore/QDebug>
 
 using namespace Akonadi;
@@ -159,7 +161,7 @@ class NotificationManagerTest : public QObject
 
       QTest::newRow( "inter-resource move, uninterested party" )
         << false
-        << List( Entity::Id, 0 )
+        << List( Entity::Id, 12 )
         << EmptyList( Entity::Id )
         << EmptyList( QByteArray )
         << List( QString, QLatin1String( "inode/directory" ) )
@@ -182,6 +184,23 @@ class NotificationManagerTest : public QObject
         << EmptyList( QByteArray )
         << msg
         << false;
+
+      msg = NotificationMessageV2();
+      msg.setType( NotificationMessageV2::Items );
+      msg.setOperation( NotificationMessageV2::Add );
+      msg.setSessionId( "randomSession" );
+      msg.setResource( "randomResource" );
+      msg.setParentCollection( 1 );
+      msg.addEntity( 10, QString(), QString(), QLatin1String( "message/rfc822" ) );
+      QTest::newRow( "new mail for mailfilter or maildispatcher" )
+        << false
+        << List( Entity::Id, 0 )
+        << EmptyList( Entity::Id )
+        << EmptyList( QByteArray )
+        << List( QString, QLatin1String( "message/rfc822" ) )
+        << EmptyList( QByteArray )
+        << msg
+        << true;
     }
 
     void testSourceFilter()
@@ -195,9 +214,14 @@ class NotificationManagerTest : public QObject
       QFETCH( NotificationMessageV2, notification );
       QFETCH( bool, accepted );
 
+      ClientCapabilities caps;
+      caps.setNotificationMessageVersion( 2 );
+      ClientCapabilityAggregator::addSession( caps );
+
       NotificationManager mgr;
       NotificationSource source( QLatin1String( "testSource" ), QString(), &mgr );
-      mgr.registerSource( &source, true );
+      source.setServerSideMonitorEnabled( true );
+      mgr.registerSource( &source );
 
       source.setAllMonitored( allMonitored );
       Q_FOREACH ( Entity::Id id, monitoredCollections ) {
@@ -216,8 +240,18 @@ class NotificationManagerTest : public QObject
         source.setIgnoredSession( session, true );
       }
 
-      QSet<NotificationSource*> matchedSources = mgr.findInterestedSources( notification );
-      QCOMPARE( matchedSources.count(), (int) accepted );
+      QSignalSpy spy( &source, SIGNAL(notifyV2(Akonadi::NotificationMessageV2::List)) );
+      NotificationMessageV2::List list;
+      list << notification;
+      mgr.slotNotify( list );
+      mgr.emitPendingNotifications();
+
+      QCOMPARE( spy.count(), accepted ? 1 : 0 );
+
+      if ( accepted ) {
+        list = spy.at( 0 ).at( 0 ).value<NotificationMessageV2::List>();
+        QCOMPARE( list.count(), accepted ? 1 : 0 );
+      }
     }
 };
 

@@ -35,7 +35,8 @@ AgentInstance::AgentInstance(AgentManager * manager) :
     mPreprocessorInterface( 0 ),
     mStatus( 0 ),
     mPercent( 0 ),
-    mOnline( false )
+    mOnline( false ),
+    mPendingQuit( false )
 {
 }
 
@@ -43,6 +44,8 @@ void AgentInstance::quit()
 {
   if ( mAgentControlInterface && mAgentControlInterface->isValid() )
     mAgentControlInterface->quit();
+  else
+    mPendingQuit = true;
 }
 
 void AgentInstance::cleanup()
@@ -60,6 +63,11 @@ bool AgentInstance::obtainAgentInterface()
     findInterface<org::freedesktop::Akonadi::Agent::Control>( AkDBus::Agent, "/" );
   mAgentStatusInterface =
     findInterface<org::freedesktop::Akonadi::Agent::Status>( AkDBus::Agent, "/" );
+
+  if ( mPendingQuit && mAgentControlInterface && mAgentControlInterface->isValid() ) {
+    mAgentControlInterface->quit();
+    mPendingQuit = false;
+  }
 
   if ( !mAgentControlInterface || !mAgentStatusInterface )
     return false;

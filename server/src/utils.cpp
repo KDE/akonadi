@@ -99,10 +99,10 @@ QString akonadiSocketDirectory()
   const QString tmpl = QLatin1String( "akonadi-" ) + QLatin1String( pw_ent->pw_name ) + QLatin1String( ".XXXXXX" );
 
   if ( checkSocketDirectory( link ) )
-    return link;
+    return QFileInfo( link ).symLinkTarget();
 
   if ( createSocketDirectory( link, tmpl ) )
-    return link;
+    return QFileInfo( link ).symLinkTarget();
 
   qCritical() << "Could not create socket directory for Akonadi.";
   return QString();

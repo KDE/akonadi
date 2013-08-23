@@ -293,7 +293,7 @@ bool DbUpdater::complexUpdate_25()
     }
     akDebug() << "Done";
 
-    akDebug() << "Removing Part3Table.partType column now";
+    akDebug() << "Removing PartTable.partType column now";
     {
       QSqlQuery query( Akonadi::DataStore::self()->database() );
       if ( !query.exec( QLatin1String( "ALTER TABLE PartTable DROP COLUMN name") ) ) {

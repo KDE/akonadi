@@ -35,37 +35,43 @@ void Scope::parseScope( ImapStreamParser* parser )
 {
   if ( mScope == None || mScope == Uid ) {
     mUidSet = parser->readSequenceSet();
-    if ( mUidSet.isEmpty() )
+    if ( mUidSet.isEmpty() ) {
       throw HandlerException( "Empty uid set specified" );
+    }
   } else if ( mScope == Rid ) {
     if ( parser->hasList() ) {
       parser->beginList();
-      while ( !parser->atListEnd() )
+      while ( !parser->atListEnd() ) {
         mRidSet << parser->readUtf8String();
+      }
     } else {
       mRidSet << parser->readUtf8String();
     }
-    if ( mRidSet.isEmpty() )
+    if ( mRidSet.isEmpty() ) {
       throw HandlerException( "Empty remote identifier set specified" );
+    }
   } else if ( mScope == HierarchicalRid ) {
     parser->beginList();
     while ( !parser->atListEnd() ) {
       parser->beginList();
       parser->readString(); // uid, invalid here
       mRidChain.append( parser->readUtf8String() );
-      if ( !parser->atListEnd() )
+      if ( !parser->atListEnd() ) {
         throw HandlerException( "Invalid hierarchical RID chain format" );
+      }
     }
   } else if ( mScope == Gid ) {
     if ( parser->hasList() ) {
       parser->beginList();
-      while ( !parser->atListEnd() )
+      while ( !parser->atListEnd() ) {
         mGidSet << parser->readUtf8String();
+      }
     } else {
       mGidSet << parser->readUtf8String();
     }
-    if ( mGidSet.isEmpty() )
+    if ( mGidSet.isEmpty() ) {
       throw HandlerException( "Empty gid set specified" );
+    }
   } else {
     throw HandlerException( "WTF?!?" );
   }
@@ -119,4 +125,3 @@ QStringList Scope::gidSet() const
 {
   return mGidSet;
 }
-

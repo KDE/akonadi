@@ -57,6 +57,9 @@ bool AgentType::load(const QString & fileName, AgentManager * manager)
       comment.insert( lang, QString::fromUtf8( file.value( key ).toByteArray() )  );
     } else if ( key == QLatin1String("Comment") ) {
       comment.insert( QLatin1String("en_US"), QString::fromUtf8( file.value( QLatin1String("Comment") ).toByteArray() ) );
+    } else if ( key.startsWith( QLatin1String("X-Akonadi-Custom-") ) ) {
+      QString customKey = key.mid( 17, key.length() );
+      custom[customKey] = file.value(key);
     }
   }
   icon = file.value( QLatin1String("Icon") ).toString();

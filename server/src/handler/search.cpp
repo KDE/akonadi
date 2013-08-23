@@ -28,6 +28,8 @@
 #include "response.h"
 #include "xesamsearch.h"
 
+#include <libs/protocol_p.h>
+
 #include <QtCore/QStringList>
 
 using namespace Akonadi;
@@ -44,8 +46,9 @@ Search::~Search()
 bool Search::parseStream()
 {
   const QByteArray queryString = m_streamParser->readString();
-  if ( queryString.isEmpty() )
+  if ( queryString.isEmpty() ) {
     return failureResponse( "No query specified" );
+  }
 
 #ifdef AKONADI_USE_STRIGI_SEARCH
   XesamSearch *service = new XesamSearch;
@@ -64,8 +67,9 @@ bool Search::parseStream()
 
   // create imap query
   QVector<ImapSet::Id> imapIds;
-  Q_FOREACH ( const QString &uid, uids )
+  Q_FOREACH ( const QString &uid, uids ) {
     imapIds.append( uid.toULongLong() );
+  }
 
   ImapSet itemSet;
   itemSet.add( imapIds );
@@ -77,10 +81,10 @@ bool Search::parseStream()
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( "SEARCH" ) )
+  if ( !fetchHelper.parseStream( AKONADI_CMD_SEARCH ) ) {
     return false;
+  }
 
   successResponse( "SEARCH completed" );
   return true;
 }
-

@@ -46,7 +46,6 @@ Append::Append()
 {
 }
 
-
 Append::~Append()
 {
 }
@@ -71,8 +70,7 @@ bool Append::commit()
       while ( !m_streamParser->atLiteralEnd() ) {
         if ( !storeInFile ) {
           m_data += m_streamParser->readLiteralPart();
-        } else
-        {
+        } else {
           m_data = m_streamParser->readLiteralPart();
           tmpFile.write( m_data );
         }
@@ -91,8 +89,9 @@ bool Append::commit()
     Transaction transaction( db );
 
     Collection col = HandlerHelper::collectionFromIdOrName( m_mailbox );
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       return failureResponse( QByteArray( "Unknown collection for '" ) + m_mailbox + QByteArray( "'." ) );
+    }
 
     QByteArray mt;
     QString remote_id;
@@ -116,16 +115,20 @@ bool Append::commit()
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.lastIndexOf( ']' );
         gid = QString::fromUtf8( flag.mid( pos1 + 1, pos2 - pos1 - 1 ) );
-      } else
+      } else {
         flags << flag;
+      }
     }
     // standard imap does not know this attribute, so that's mail
-    if ( mt.isEmpty() ) mt = "message/rfc822";
+    if ( mt.isEmpty() ) {
+      mt = "message/rfc822";
+    }
     MimeType mimeType = MimeType::retrieveByName( QString::fromLatin1( mt ) );
     if ( !mimeType.isValid() ) {
       MimeType m( QString::fromLatin1( mt ) );
-      if ( !m.insert() )
+      if ( !m.insert() ) {
         return failureResponse( QByteArray( "Unable to create mimetype '") +  mt + QByteArray( "'." ) );
+      }
       mimeType = m;
     }
 
@@ -148,8 +151,7 @@ bool Append::commit()
     // for the UI and we enqueue the item for preprocessing.
     bool doPreprocessing = PreprocessorManager::instance()->isActive();
     //akDebug() << "Append handler: doPreprocessing is" << doPreprocessing;
-    if ( doPreprocessing )
-    {
+    if ( doPreprocessing ) {
       Part hiddenAttribute;
       hiddenAttribute.setPartType( PartTypeHelper::fromName( "ATR", "HIDDEN" ) );
       hiddenAttribute.setData( QByteArray() );
@@ -167,8 +169,9 @@ bool Append::commit()
     // set message flags
     const Flag::List flagList = HandlerHelper::resolveFlags( flags );
     bool flagsChanged = false;
-    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) )
+    if ( !db->appendItemsFlags( PimItem::List() << item, flagList, flagsChanged, false, col ) ) {
       return failureResponse( "Unable to append item flags." );
+    }
 
     if (storeInFile) {
       const QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
@@ -189,8 +192,7 @@ bool Append::commit()
     if ( !transaction.commit() )
         return failureResponse( "Unable to commit transaction." );
 
-    if ( doPreprocessing )
-    {
+    if ( doPreprocessing ) {
       // enqueue the item for preprocessing
       PreprocessorManager::instance()->beginHandleItem( item, db );
     }
@@ -252,4 +254,3 @@ bool Append::parseStream()
 
   return commit();
 }
-

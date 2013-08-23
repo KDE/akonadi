@@ -113,10 +113,12 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
       }
     }
 
-    if ( allPayload )
+    if ( allPayload ) {
       cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD:" ) );
-    if ( allAttrs )
+    }
+    if ( allAttrs ) {
       cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "ATR:" ) );
+    }
 
     if ( !cond.isEmpty() ) {
       partQuery.addCondition( cond );
@@ -144,25 +146,31 @@ QSqlQuery FetchHelper::buildItemQuery()
   int column = 0;
   #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
   ADD_COLUMN( PimItem::idFullColumnName(), ItemQueryPimItemIdColumn );
-  if (mRemoteIdRequested)
+  if (mRemoteIdRequested) {
     ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn )
+  }
   ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn )
   ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn )
-  if (mRemoteRevisionRequested)
+  if (mRemoteRevisionRequested) {
     ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn )
-  if (mSizeRequested)
+  }
+  if (mSizeRequested) {
     ADD_COLUMN( PimItem::sizeFullColumnName(), ItemQuerySizeColumn )
-  if (mMTimeRequested)
+  }
+  if (mMTimeRequested) {
     ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn )
+  }
   ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn )
-  if (mGidRequested)
+  if (mGidRequested) {
     ADD_COLUMN( PimItem::gidFullColumnName(), ItemQueryPimItemGidColumn )
+  }
   #undef ADD_COLUMN
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
-  if ( mScope.scope() != Scope::Invalid )
+  if ( mScope.scope() != Scope::Invalid ) {
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+  }
 
   if ( mChangedSince.isValid() ) {
     itemQuery.addValueCondition( PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mChangedSince.toUTC() );
@@ -217,15 +225,16 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.setRetrieveParts( mRequestedPayloads );
     retriever.setRetrieveFullPayload( mFullPayload );
     if ( !retriever.exec() && !mIgnoreErrors ) { // There we go, retrieve the missing parts from the resource.
-      if (mConnection->resourceContext().isValid())
+      if (mConnection->resourceContext().isValid()) {
         throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2) : %3")
                 .arg(mConnection->selectedCollectionId())
                 .arg(mConnection->resourceContext().id())
                 .arg(QString::fromLatin1(retriever.lastError())));
-      else
+      } else {
         throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1) : %2")
                 .arg(mConnection->selectedCollectionId())
                 .arg(QString::fromLatin1(retriever.lastError())));
+      }
     }
   }
 
@@ -235,13 +244,13 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   // a request for a specific item
   if ( !itemQuery.isValid() ) {
     switch ( mScope.scope() ) {
-      case Scope::Uid: // fall through
-      case Scope::Rid: // fall through
-      case Scope::HierarchicalRid: // fall through
-      case Scope::Gid:
+    case Scope::Uid: // fall through
+    case Scope::Rid: // fall through
+    case Scope::HierarchicalRid: // fall through
+    case Scope::Gid:
         throw HandlerException( "Item query returned empty result set" );
-      break;
-      default:
+    break;
+    default:
         break;
     }
   }
@@ -265,33 +274,36 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     const int pimItemRev = extractQueryResult( itemQuery, ItemQueryRevColumn ).toInt();
 
     QList<QByteArray> attributes;
-    attributes.append( "UID " + QByteArray::number( pimItemId ) );
-    attributes.append( "REV " + QByteArray::number( pimItemRev ) );
-    if ( mRemoteIdRequested )
-      attributes.append( "REMOTEID " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryPimItemRidColumn ) ) ) );
-    attributes.append( "MIMETYPE " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryMimeTypeColumn ) ) ) );
+    attributes.append( AKONADI_PARAM_UID " " + QByteArray::number( pimItemId ) );
+    attributes.append( AKONADI_PARAM_REVISION " " + QByteArray::number( pimItemRev ) );
+    if ( mRemoteIdRequested ) {
+      attributes.append( AKONADI_PARAM_REMOTEID " " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryPimItemRidColumn ) ) ) );
+    }
+    attributes.append( AKONADI_PARAM_MIMETYPE " " + ImapParser::quote( Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryMimeTypeColumn ) ) ) );
     Collection::Id parentCollectionId = extractQueryResult( itemQuery, ItemQueryCollectionIdColumn ).toLongLong();
-    attributes.append( "COLLECTIONID " + QByteArray::number( parentCollectionId ) );
+    attributes.append( AKONADI_PARAM_COLLECTIONID " " + QByteArray::number( parentCollectionId ) );
 
     if ( mSizeRequested ) {
       const qint64 pimItemSize = extractQueryResult( itemQuery, ItemQuerySizeColumn ).toLongLong();
-      attributes.append( "SIZE " + QByteArray::number( pimItemSize ) );
+      attributes.append( AKONADI_PARAM_SIZE " " + QByteArray::number( pimItemSize ) );
     }
     if ( mMTimeRequested ) {
       const QDateTime pimItemDatetime = extractQueryResult( itemQuery, ItemQueryDatetimeColumn ).toDateTime();
       // Date time is always stored in UTC time zone by the server.
       QString datetime = QLocale::c().toString( pimItemDatetime, QLatin1String( "dd-MMM-yyyy hh:mm:ss +0000" ) );
-      attributes.append( "DATETIME " + ImapParser::quote( datetime.toUtf8() ) );
+      attributes.append( AKONADI_PARAM_MTIME " " + ImapParser::quote( datetime.toUtf8() ) );
     }
     if ( mRemoteRevisionRequested ) {
       const QByteArray rrev = Utils::variantToByteArray( extractQueryResult( itemQuery, ItemQueryRemoteRevisionColumn ) );
-      if ( !rrev.isEmpty() )
+      if ( !rrev.isEmpty() ) {
         attributes.append( AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( rrev ) );
+      }
     }
     if ( mGidRequested ) {
       const QByteArray gid = Utils::variantToByteArray( itemQuery.value( ItemQueryPimItemGidColumn ) );
-      if ( !gid.isEmpty() )
+      if ( !gid.isEmpty() ) {
         attributes.append( AKONADI_PARAM_GID " " + ImapParser::quote( gid ) );
+      }
     }
 
     if ( mFlagsRequested ) {
@@ -307,12 +319,12 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
         flags << Utils::variantToByteArray( flagQuery.value( FlagQueryNameColumn ) );
         flagQuery.next();
       }
-      attributes.append( "FLAGS (" + ImapParser::join( flags, " " ) + ')' );
+      attributes.append( AKONADI_PARAM_FLAGS " (" + ImapParser::join( flags, " " ) + ')' );
     }
 
-    if ( mAncestorDepth > 0 )
+    if ( mAncestorDepth > 0 ) {
       attributes.append( HandlerHelper::ancestorsToByteArray( mAncestorDepth, ancestorsForItem( parentCollectionId ) ) );
-
+    }
 
     bool skipItem = false;
 
@@ -333,9 +345,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 
       if ( mCheckCachedPayloadPartsOnly ) {
         if ( !data.isEmpty() ) {
-           cachedParts << part;
+          cachedParts << part;
         }
-         partQuery.next();
+        partQuery.next();
      } else {
         if ( mIgnoreErrors && data.isEmpty() ) {
           //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
@@ -344,8 +356,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
           break;
         }
         const bool partIsExternal = partQuery.value( PartQueryExternalColumn ).toBool();
-        if ( !mExternalPayloadSupported && partIsExternal ) //external payload not supported by the client, translate the data
+        if ( !mExternalPayloadSupported && partIsExternal ) { //external payload not supported by the client, translate the data
           data = PartHelper::translateData( data, partIsExternal );
+        }
         int version = partQuery.value( PartQueryVersionColumn ).toInt();
         if ( version != 0 ) { // '0' is the default, so don't send it
           part += '[' + QByteArray::number( version ) + ']';
@@ -368,8 +381,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
           part += data;
         }
 
-        if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs )
+        if ( mRequestedParts.contains( partName ) || mFullPayload || mAllAttrs ) {
           attributes << part;
+        }
 
         partQuery.next();
       }
@@ -381,9 +395,8 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     }
 
     if ( mCheckCachedPayloadPartsOnly ) {
-      attributes.append( "CACHEDPARTS (" + ImapParser::join( cachedParts, " " ) + ')');
+      attributes.append( AKONADI_PARAM_CACHEDPARTS " (" + ImapParser::join( cachedParts, " " ) + ')');
     }
-
 
     // IMAP protocol violation: should actually be the sequence number
     QByteArray attr = QByteArray::number( pimItemId ) + ' ' + responseIdentifier + " (";
@@ -396,8 +409,9 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
 
   // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
-  if ( needsAccessTimeUpdate(mRequestedParts) || mFullPayload )
+  if ( needsAccessTimeUpdate(mRequestedParts) || mFullPayload ) {
     updateItemAccessTime();
+  }
 
   return true;
 }
@@ -408,7 +422,7 @@ bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray>& parts)
   // the parent collection of the retrieved items, but that's kinda expensive
   // Only updating the atime if the full payload was requested is a good
   // approximation though.
-  return parts.contains( "PLD:RFC822" );
+  return parts.contains( AKONADI_PARAM_PLD_RFC822 );
 }
 
 void FetchHelper::updateItemAccessTime()
@@ -418,27 +432,31 @@ void FetchHelper::updateItemAccessTime()
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
   ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
 
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     qWarning() << "Unable to update item access time";
-  else
+  } else {
     transaction.commit();
+  }
 }
 
 void FetchHelper::triggerOnDemandFetch()
 {
-  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly )
+  if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mCacheOnly ) {
     return;
+  }
 
   Collection collection = mConnection->selectedCollection();
 
   // HACK: don't trigger on-demand syncing if the resource is the one triggering it
-  if ( mConnection->sessionId() == collection.resource().name().toLatin1() )
+  if ( mConnection->sessionId() == collection.resource().name().toLatin1() ) {
     return;
+  }
 
   DataStore *store = mConnection->storageBackend();
   store->activeCachePolicy( collection );
-  if ( !collection.cachePolicySyncOnDemand() )
+  if ( !collection.cachePolicySyncOnDemand() ) {
     return;
+  }
 
   IntervalCheck::instance()->requestCollectionSync( collection );
 }
@@ -449,8 +467,9 @@ void FetchHelper::parseCommandStream()
 
   // macro vs. attribute list
   Q_FOREVER {
-    if ( mStreamParser->atCommandEnd() )
+    if ( mStreamParser->atCommandEnd() ) {
       break;
+    }
     if ( mStreamParser->hasList() ) {
       parsePartList();
       break;
@@ -465,7 +484,7 @@ void FetchHelper::parseCommandStream()
       } else if ( buffer == AKONADI_PARAM_EXTERNALPAYLOAD ) {
         mExternalPayloadSupported = true;
       } else if ( buffer == AKONADI_PARAM_FULLPAYLOAD ) {
-        mRequestedParts << "PLD:RFC822"; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
+        mRequestedParts << AKONADI_PARAM_PLD_RFC822; // HACK: temporary workaround until we have support for detecting the availability of the full payload in the server
         mFullPayload = true;
       } else if ( buffer == AKONADI_PARAM_ANCESTORS ) {
         mAncestorDepth = HandlerHelper::parseDepth( mStreamParser->readString() );
@@ -506,24 +525,28 @@ void FetchHelper::parsePartList()
       mGidRequested = true;
     } else {
       mRequestedParts.push_back( b );
-      if ( b.startsWith( "PLD:" ) )
+      if ( b.startsWith( AKONADI_PARAM_PLD ) ) {
         mRequestedPayloads.push_back( QString::fromLatin1( b ) );
+      }
     }
   }
 }
 
 QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
 {
-  if ( mAncestorDepth <= 0 || parentColId == 0 )
+  if ( mAncestorDepth <= 0 || parentColId == 0 ) {
     return QStack<Collection>();
-  if ( mAncestorCache.contains( parentColId ) )
+  }
+  if ( mAncestorCache.contains( parentColId ) ) {
     return mAncestorCache.value( parentColId );
+  }
 
   QStack<Collection> ancestors;
   Collection col = Collection::retrieveById( parentColId );
   for ( int i = 0; i < mAncestorDepth; ++i ) {
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       break;
+    }
     ancestors.prepend( col );
     col = col.parent();
   }
