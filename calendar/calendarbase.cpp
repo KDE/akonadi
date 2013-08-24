@@ -127,6 +127,7 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 
   mItemById.insert( item.id(), item );
   mItemIdByUid.insert( uid, item.id() );
+  mItemsByCollection.insert( item.storageCollectionId(), item );
 
   if ( !incidence->hasRecurrenceId() ) {
     // Insert parent relationships
@@ -162,6 +163,8 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
     mItemById.remove( item.id() );
     // kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
     mItemIdByUid.remove( incidence->instanceIdentifier() );
+
+    mItemsByCollection.remove( item.storageCollectionId(), item );
 
     if ( !incidence->hasRecurrenceId() ) {
       mParentUidToChildrenUid.remove( incidence->uid() );
@@ -363,6 +366,12 @@ Akonadi::Item::List CalendarBase::items() const
 {
   Q_D(const CalendarBase);
   return d->mItemById.values();
+}
+
+Akonadi::Item::List CalendarBase::items( Akonadi::Collection::Id id ) const
+{
+  Q_D(const CalendarBase);
+  return d->mItemsByCollection.values( id );
 }
 
 Akonadi::Item::List CalendarBase::itemList( const KCalCore::Incidence::List &incidences ) const

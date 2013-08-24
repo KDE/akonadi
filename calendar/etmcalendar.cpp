@@ -188,6 +188,7 @@ void ETMCalendarPrivate::loadFromETM()
 void ETMCalendarPrivate::clear()
 {
   mCollectionMap.clear();
+  mItemsByCollection.clear();
 
   itemsRemoved( mItemById.values() );
 
@@ -403,6 +404,7 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
 
       // The item needs updating too, revision changed.
       mItemById.insert( item.id(), item );
+      mItemsByCollection.insert( item.storageCollectionId(), item );
 
       *(existingIncidence.data()) = *( newIncidence.data() );
     }

@@ -24,6 +24,7 @@
 #include "incidencechanger.h"
 
 #include <QVector>
+#include <QMultiHash>
 
 class KJob;
 
@@ -61,6 +62,7 @@ public Q_SLOTS:
                             const QString &errorMessage );
 
 public:
+  QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
   QHash<QString,Akonadi::Item::Id> mItemIdByUid;
   QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
   Akonadi::IncidenceChanger *mIncidenceChanger;

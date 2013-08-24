@@ -24,6 +24,7 @@
 #include "akonadi-calendar_export.h"
 
 #include <akonadi/item.h>
+#include <akonadi/collection.h>
 #include <kcalcore/memorycalendar.h>
 #include <kcalcore/incidence.h>
 #include <KDE/KDateTime>
@@ -85,6 +86,14 @@ public:
    *  @see incidences()
    */
   Akonadi::Item::List items() const;
+
+  /**
+   * Returns the list of items contained in this calendar that belong to the specified collection.
+   * @see incidences()
+   * // TODO_KDE5: merge with items() overload
+   * @since 4.12
+   */
+  Akonadi::Item::List items( Akonadi::Collection::Id ) const;
 
   /**
     * Returns the item list that corresponds to the @p incidenceList.
