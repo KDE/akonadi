@@ -55,11 +55,13 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   }
 
   DataStore *store = connection()->storageBackend();
-  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), item.gid(), newItem ) )
+  if ( !store->appendPimItem( parts, item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), item.gid(), newItem ) ) {
     return false;
+  }
   Q_FOREACH ( const Flag &flag, item.flags() ) {
-    if ( !newItem.addFlag( flag ) )
+    if ( !newItem.addFlag( flag ) ) {
       return false;
+    }
   }
   return true;
 }
@@ -67,8 +69,9 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
 bool Copy::parseStream()
 {
   ImapSet set = m_streamParser->readSequenceSet();
-  if ( set.isEmpty() )
+  if ( set.isEmpty() ) {
     return failureResponse( "No items specified" );
+  }
 
   ItemRetriever retriever( connection() );
   retriever.setItemSet( set );
@@ -79,13 +82,15 @@ bool Copy::parseStream()
 
   const QByteArray tmp = m_streamParser->readString();
   const Collection targetCollection = HandlerHelper::collectionFromIdOrName( tmp );
-  if ( !targetCollection.isValid() )
+  if ( !targetCollection.isValid() ) {
     return failureResponse( "No valid target specified" );
+  }
 
   SelectQueryBuilder<PimItem> qb;
   ItemQueryHelper::itemSetToQuery( set, qb );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return failureResponse( "Unable to retrieve items" );
+  }
   PimItem::List items = qb.result();
   qb.query().finish();
 
@@ -93,13 +98,14 @@ bool Copy::parseStream()
   Transaction transaction( store );
 
   Q_FOREACH ( const PimItem &item, items ) {
-    if ( !copyItem( item, targetCollection ) )
+    if ( !copyItem( item, targetCollection ) ) {
       return failureResponse( "Unable to copy item" );
+    }
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Cannot commit transaction." );
+  }
 
   return successResponse( "COPY complete" );
 }
-
