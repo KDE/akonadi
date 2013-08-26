@@ -36,4 +36,3 @@ QDBusConnection threadConnection();
 }
 
 #endif
-
