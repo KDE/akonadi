@@ -129,6 +129,8 @@
 
 // Attributes
 #define AKONADI_ATTRIBUTE_HIDDEN                   "ATR:HIDDEN"
+#define AKONADI_ATTRIBUTE_MESSAGES                 "MESSAGES"
+#define AKONADI_ATTRIBUTE_UNSEEN                   "UNSEEN"
 
 // special resource names
 #define AKONADI_SEARCH_RESOURCE                    "akonadi_search_resource"
