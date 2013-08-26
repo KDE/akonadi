@@ -30,7 +30,6 @@
 
 namespace Akonadi {
 
-
 /**
   @ingroup akonadi_server_handler
 
@@ -104,8 +103,7 @@ class Store : public Handler
     bool parseStream();
 
   private:
-    enum Operation
-    {
+    enum Operation {
       Replace,
       Add,
       Delete
