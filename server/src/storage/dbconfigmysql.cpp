@@ -34,6 +34,9 @@
 
 using namespace Akonadi;
 
+#define MYSQL_MIN_MAJOR 5
+#define MYSQL_MIN_MINOR 1
+
 DbConfigMysql::DbConfigMysql()
   : mDatabaseProcess( 0 )
 {
@@ -320,6 +323,33 @@ void DbConfigMysql::startInternalServer()
 #endif
                                                     ;
         QProcess::execute( mMysqlCheckPath, arguments );
+      }
+
+      // Verify MySQL version
+      {
+        QSqlQuery query( db );
+        if ( !query.exec( QString::fromLatin1( "SELECT VERSION()") ) || !query.first() ) {
+          akError() << "Failed to verify database server version";
+          akError() << "Query error:" << query.lastError().text();
+          akFatal() << "Database error:" << db.lastError().text();
+        }
+
+        const QString version = query.value( 0 ).toString();
+        const QStringList versions = version.split( QLatin1Char( '.' ), QString::SkipEmptyParts );
+        if ( versions.count() < 3 ) {
+          akFatal() << "Invalid database server version: " << version;
+        }
+
+        if ( versions[0].toInt() < MYSQL_MIN_MAJOR || ( versions[0].toInt() == MYSQL_MIN_MAJOR && versions[1].toInt() < MYSQL_MIN_MINOR ) ) {
+          akError() << "Unsupported MySQL version:";
+          akError() << "Current version:" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] );
+          akError() << "Minimum required version:" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR );
+          akFatal() << "Please update your MySQL database server";
+        } else {
+          akDebug() << "MySQL version OK"
+                    << "(required" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR )
+                    << ", available" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] ) << ")";
+        }
       }
 
       {
