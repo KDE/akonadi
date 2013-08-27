@@ -30,50 +30,57 @@
 
 using namespace Akonadi;
 
-void CollectionQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection* connection, QueryBuilder& qb)
+void CollectionQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection *connection, QueryBuilder& qb)
 {
-  if ( rids.size() == 1 )
+  if ( rids.size() == 1 ) {
     qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rids.first() );
-  else
+  } else {
     qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::In, rids );
+  }
 
   if ( connection->resourceContext().isValid() ) {
     qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, connection->resourceContext().id() );
   }
 }
 
-void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connection, QueryBuilder& qb)
+void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection *connection, QueryBuilder& qb)
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     QueryHelper::setToQuery( scope.uidSet(), Collection::idFullColumnName(), qb );
   } else if ( scope.scope() == Scope::Rid ) {
-    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
+    if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() ) {
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
+    }
     CollectionQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );
   } else if ( scope.scope() == Scope::HierarchicalRid ) {
-    if ( !connection->resourceContext().isValid() )
+    if ( !connection->resourceContext().isValid() ) {
       throw HandlerException( "Operations based on hierarchical remote identifiers require a resource or collection context" );
+    }
     const Collection c = CollectionQueryHelper::resolveHierarchicalRID( scope.ridChain(), connection->resourceContext().id() );
     qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, c.id() );
-  } else
+  } else {
     throw HandlerException( "WTF?" );
+  }
 }
 
 bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QString & name, Collection::Id parent)
 {
   Q_UNUSED( collection );
   SelectQueryBuilder<Collection> qb;
-  if ( parent > 0 )
+  if ( parent > 0 ) {
     qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parent );
-  else
+  } else {
     qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
+  }
   qb.addValueCondition( Collection::nameColumn(), Query::Equals, name );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
   const QVector<Collection> result = qb.result();
   if ( result.size() > 0 ) {
-    if ( result.first().id() == collection.id() )
+    if ( result.first().id() == collection.id() ) {
       return true;
+    }
     return false;
   }
   return true;
@@ -84,10 +91,12 @@ bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const C
   if ( _parent.isValid() ) {
     Collection parent = _parent;
     Q_FOREVER {
-      if ( parent.id() == collection.id() )
+      if ( parent.id() == collection.id() ) {
         return false; // target is child of source
-      if ( parent.parentId() == 0 )
+      }
+      if ( parent.parentId() == 0 ) {
         break;
+      }
       parent = parent.parent();
     }
   }
@@ -96,25 +105,30 @@ bool CollectionQueryHelper::canBeMovedTo ( const Collection &collection, const C
 
 Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &ridChain, Resource::Id resId )
 {
-  if ( ridChain.size() < 2 )
+  if ( ridChain.size() < 2 ) {
     throw HandlerException( "Empty or incomplete hierarchical RID chain" );
-  if ( !ridChain.last().isEmpty() )
+  }
+  if ( !ridChain.last().isEmpty() ) {
     throw HandlerException( "Hierarchical RID chain is not root-terminated" );
+  }
   Collection::Id parentId = 0;
   Collection result;
   for ( int i = ridChain.size() - 2; i >= 0; --i ) {
     SelectQueryBuilder<Collection> qb;
-    if ( parentId > 0 )
+    if ( parentId > 0 ) {
       qb.addValueCondition( Collection::parentIdColumn(), Query::Equals, parentId );
-    else
+    } else {
       qb.addValueCondition( Collection::parentIdColumn(), Query::Is, QVariant() );
+    }
     qb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, ridChain.at( i ) );
     qb.addValueCondition( Collection::resourceIdColumn(), Query::Equals, resId );
-    if ( !qb.exec() )
+    if ( !qb.exec() ) {
       throw HandlerException( "Unable to execute query" );
+    }
     Collection::List results = qb.result();
-    if ( results.size() != 1 )
+    if ( results.size() != 1 ) {
       throw HandlerException( "Hierarchical RID does not specify a unique collection" );
+    }
     result = results.first();
     parentId = result.id();
   }
@@ -134,13 +148,15 @@ Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope(const Akona
   }
   SelectQueryBuilder<Collection> qb;
   scopeToQuery( scope, connection, qb );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     throw HandlerException( "Unable to execute query" );
+  }
   const Collection::List cols = qb.result();
-  if ( cols.isEmpty() )
+  if ( cols.isEmpty() ) {
     throw HandlerException( "No collection found" );
-  if ( cols.size() > 1 )
+  }
+  if ( cols.size() > 1 ) {
     throw HandlerException( "Collection cannot be uniquely identified" );
+  }
   return cols.first();
 }
-
