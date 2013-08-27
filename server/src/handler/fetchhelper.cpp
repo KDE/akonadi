@@ -104,7 +104,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     if ( !partList.isEmpty() ) {
       QStringList partNameList;
       Q_FOREACH ( const QByteArray &b, partList ) {
-        if ( b.startsWith( "PLD:" ) || b.startsWith( "ATR:" ) ) {
+        if ( b.startsWith( "PLD" ) || b.startsWith( "ATR" ) ) {
           partNameList.push_back( QString::fromLatin1( b ) );
         }
       }
@@ -114,10 +114,10 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     }
 
     if ( allPayload ) {
-      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD:" ) );
+      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "PLD" ) );
     }
     if ( allAttrs ) {
-      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "ATR:" ) );
+      cond.addValueCondition( PartType::nsFullColumnName(), Query::Equals, QLatin1String( "ATR" ) );
     }
 
     if ( !cond.isEmpty() ) {
