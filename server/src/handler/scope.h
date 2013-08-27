@@ -33,8 +33,7 @@ class ImapStreamParser;
 class Scope
 {
   public:
-    enum SelectionScope
-    {
+    enum SelectionScope {
       Invalid,
       None,
       Uid,
