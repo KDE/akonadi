@@ -108,10 +108,11 @@ void DataStore::open()
   }
   m_dbOpened = m_database.open();
 
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     debugLastDbError( "Cannot open database." );
-  else
+  } else {
     akDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
+  }
 
   DbConfig::configuredDatabase()->initSession( m_database );
 }
@@ -154,8 +155,9 @@ bool Akonadi::DataStore::init()
   s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
 
   DbUpdater updater( m_database, QLatin1String( ":dbupdate.xml" ) );
-  if ( !updater.run() )
+  if ( !updater.run() ) {
     return false;
+  }
 
   // enable caching for some tables
   MimeType::enableCache( true );
@@ -170,11 +172,11 @@ QThreadStorage<DataStore*> instances;
 
 DataStore * Akonadi::DataStore::self()
 {
-  if ( !instances.hasLocalData() )
+  if ( !instances.hasLocalData() ) {
     instances.setLocalData( new DataStore() );
+  }
   return instances.localData();
 }
-
 
 /* --- ItemFlags ----------------------------------------------------- */
 
@@ -187,8 +189,8 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
   QVariantList insIds;
   QVariantList insFlags;
 
-  Q_FOREACH( const PimItem &item, items ) {
-    Q_FOREACH( const Flag &flag, item.flags() ) {
+  Q_FOREACH ( const PimItem &item, items ) {
+    Q_FOREACH ( const Flag &flag, item.flags() ) {
       if ( !removedFlags.contains( flag.name().toLatin1() ) ) {
         removedFlags << flag.name().toLatin1();
       }
@@ -214,7 +216,7 @@ bool DataStore::setItemsFlags( const PimItem::List &items, const QVector<Flag> &
 
   // create bind values for the insert quest - every flags repeats exactly
   // items.count()-times
-  Q_FOREACH( const Flag &flag, flags ) {
+  Q_FOREACH ( const Flag &flag, flags ) {
     for ( int i = 0; i < items.count(); ++i ) {
       insFlags << flag.id();
     }
@@ -250,8 +252,9 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
     appendItems << item;
   }
 
-  if ( appendItems.isEmpty() )
+  if ( appendItems.isEmpty() ) {
     return true; // all items have the desired flags already
+  }
 
   QueryBuilder qb2( PimItemFlagRelation::tableName(), QueryBuilder::Insert );
   qb2.setColumnValue( PimItemFlagRelation::leftColumn(), appendIds );
@@ -263,11 +266,10 @@ bool DataStore::doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
   }
 
   mNotificationCollector->itemsFlagsChanged( appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
-                                              QSet<QByteArray>(), col );
+                                             QSet<QByteArray>(), col );
 
   return true;
 }
-
 
 bool DataStore::appendItemsFlags( const PimItem::List &items, const QVector<Flag> &flags,
                                   bool& flagsChanged, bool checkIfExists,
@@ -352,9 +354,10 @@ bool DataStore::removeItemParts( const PimItem &item, const QList<QByteArray> &p
 {
   Part::List existingParts = item.parts();
   Q_FOREACH ( Part part, existingParts ) {
-    if( parts.contains( part.name().toLatin1() ) ) {
-      if ( !PartHelper::remove(&part) )
+    if ( parts.contains( part.name().toLatin1() ) ) {
+      if ( !PartHelper::remove(&part) ) {
         return false;
+      }
     }
   }
 
@@ -372,14 +375,16 @@ bool DataStore::invalidateItemCache( const PimItem &item )
   qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
   qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
 
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
 
   const Part::List parts = qb.result();
   // clear data field
   Q_FOREACH ( Part part, parts ) {
-    if ( !PartHelper::truncate( part ) )
+    if ( !PartHelper::truncate( part ) ) {
       return false;
+    }
   }
 
   return true;
@@ -390,8 +395,9 @@ bool DataStore::appendCollection( Collection &collection )
 {
   // no need to check for already existing collection with the same name,
   // a unique index on parent + name prevents that in the database
-  if ( !collection.insert() )
+  if ( !collection.insert() ) {
     return false;
+  }
 
   mNotificationCollector->collectionAdded( collection );
   return true;
@@ -399,8 +405,9 @@ bool DataStore::appendCollection( Collection &collection )
 
 bool Akonadi::DataStore::cleanupCollection(Collection &collection)
 {
-  if ( !s_hasForeignKeyConstraints )
+  if ( !s_hasForeignKeyConstraints ) {
     return cleanupCollection_slow( collection );
+  }
 
   // db will do most of the work for us, we just deal with notifications and external payload parts here
   Q_ASSERT( s_hasForeignKeyConstraints );
@@ -421,8 +428,9 @@ bool Akonadi::DataStore::cleanupCollection(Collection &collection)
   qb.addValueCondition( Collection::idFullColumnName(), Query::Equals, collection.id() );
   qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
 
   try {
     while ( qb.query().next() )
@@ -447,16 +455,20 @@ bool DataStore::cleanupCollection_slow(Collection& collection)
   mNotificationCollector->itemsRemoved( items, collection, resource );
 
   Q_FOREACH ( const PimItem &item, items ) {
-    if ( !item.clearFlags() ) // TODO: move out of loop and use only a single query
+    if ( !item.clearFlags() ) { // TODO: move out of loop and use only a single query
       return false;
-    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) // TODO: reduce to single query
+    }
+    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) { // TODO: reduce to single query
       return false;
+    }
 
-    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) // TODO: move into single query
+    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) { // TODO: move into single query
       return false;
+    }
 
-    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) // TODO: move into single query
+    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) { // TODO: move into single query
       return false;
+    }
   }
 
   // delete collection mimetypes
@@ -464,9 +476,11 @@ bool DataStore::cleanupCollection_slow(Collection& collection)
   Collection::clearPimItems( collection.id() );
 
   // delete attributes
-  Q_FOREACH ( CollectionAttribute attr, collection.attributes() )
-    if ( !attr.remove() )
+  Q_FOREACH ( CollectionAttribute attr, collection.attributes() ) {
+    if ( !attr.remove() ) {
       return false;
+    }
+  }
 
   // delete the collection itself
   mNotificationCollector->collectionRemoved( collection );
@@ -482,8 +496,9 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   qb.setColumnValue( Collection::resourceIdColumn(), resourceId );
   qb.setColumnValue( Collection::remoteIdColumn(), QVariant() );
   qb.setColumnValue( Collection::remoteRevisionColumn(), QVariant() );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
 
   // this is a cross-resource move, so also reset any resource-specific data (RID, RREV, etc)
   // as well as mark the items dirty to prevent cache purging before they have been written back
@@ -495,87 +510,99 @@ static bool recursiveSetResourceId( const Collection & collection, qint64 resour
   qb.setColumnValue( PimItem::datetimeColumn(), now );
   qb.setColumnValue( PimItem::atimeColumn(), now );
   qb.setColumnValue( PimItem::dirtyColumn(), true );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
 
   transaction.commit();
 
   Q_FOREACH ( const Collection &col, collection.children() ) {
-    if ( !recursiveSetResourceId( col, resourceId ) )
+    if ( !recursiveSetResourceId( col, resourceId ) ) {
       return false;
+    }
   }
   return true;
 }
 
 bool Akonadi::DataStore::moveCollection( Collection & collection, const Collection &newParent )
 {
-  if ( collection.parentId() == newParent.id() )
+  if ( collection.parentId() == newParent.id() ) {
     return true;
+  }
 
-  if ( !m_dbOpened || !newParent.isValid() )
+  if ( !m_dbOpened || !newParent.isValid() ) {
     return false;
+  }
 
   const QByteArray oldResource = collection.resource().name().toLatin1();
 
   int resourceId = collection.resourceId();
   const Collection source = collection.parent();
-  if ( newParent.id() > 0 ) // not root
+  if ( newParent.id() > 0 ) { // not root
     resourceId = newParent.resourceId();
-  if ( !CollectionQueryHelper::canBeMovedTo ( collection, newParent ) )
+  }
+  if ( !CollectionQueryHelper::canBeMovedTo ( collection, newParent ) ) {
     return false;
+  }
 
   collection.setParentId( newParent.id() );
   if ( collection.resourceId() != resourceId ) {
     collection.setResourceId( resourceId );
     collection.setRemoteId( QString() );
     collection.setRemoteRevision( QString() );
-    if ( !recursiveSetResourceId( collection, resourceId ) )
+    if ( !recursiveSetResourceId( collection, resourceId ) ) {
       return false;
+    }
   }
 
-  if ( !collection.update() )
+  if ( !collection.update() ) {
     return false;
+  }
 
   mNotificationCollector->collectionMoved( collection, source, oldResource, newParent.resource().name().toLatin1() );
   return true;
 }
 
-
 bool DataStore::appendMimeTypeForCollection( qint64 collectionId, const QStringList & mimeTypes )
 {
-  if ( mimeTypes.isEmpty() )
+  if ( mimeTypes.isEmpty() ) {
     return true;
+  }
   SelectQueryBuilder<MimeType> qb;
   qb.addValueCondition( MimeType::nameColumn(), Query::In, mimeTypes );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
   QStringList missingMimeTypes = mimeTypes;
 
   Q_FOREACH ( const MimeType &mt, qb.result() ) {
     // unique index on n:m relation prevents duplicates, ie. this will fail
     // if this mimetype is already set
-    if ( !Collection::addMimeType( collectionId, mt.id() ) )
+    if ( !Collection::addMimeType( collectionId, mt.id() ) ) {
       return false;
+    }
     missingMimeTypes.removeAll( mt.name() );
   }
 
   // the MIME type doesn't exist, so we have to add it to the db
   Q_FOREACH ( const QString &mtName, missingMimeTypes ) {
     qint64 mimeTypeId;
-    if ( !appendMimeType( mtName, &mimeTypeId ) )
+    if ( !appendMimeType( mtName, &mimeTypeId ) ) {
       return false;
-    if ( !Collection::addMimeType( collectionId, mimeTypeId ) )
+    }
+    if ( !Collection::addMimeType( collectionId, mimeTypeId ) ) {
       return false;
+    }
   }
 
   return true;
 }
 
-
 void DataStore::activeCachePolicy(Collection & col)
 {
-  if ( !col.cachePolicyInherit() )
+  if ( !col.cachePolicyInherit() ) {
     return;
+  }
 
   Collection parent = col;
   while ( parent.parentId() != 0 ) {
@@ -608,7 +635,7 @@ QVector<Collection> DataStore::virtualCollections( const PimItem& item )
 
   if ( !qb.exec() ) {
     akDebug() << "Error during selection of records from table CollectionPimItemRelation"
-      << qb.query().lastError().text();
+              << qb.query().lastError().text();
     return QVector<Collection>();
   }
 
@@ -629,14 +656,14 @@ QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &ite
 
   Query::Condition condition( Query::Or );
   QStringList ids;
-  Q_FOREACH( const PimItem &item, items ) {
+  Q_FOREACH ( const PimItem &item, items ) {
     ids << QString::number( item.id() );
   }
   qb.addValueCondition( CollectionPimItemRelation::rightFullColumnName(), Query::In, ids );
 
   if ( !qb.exec() ) {
     akDebug() << "Error during selection of records from table CollectionPimItemRelation"
-      << qb.query().lastError().text();
+              << qb.query().lastError().text();
     return QMap<Entity::Id,PimItem>();
   }
 
@@ -653,21 +680,18 @@ QMap<Entity::Id,PimItem> DataStore::virtualCollections( const PimItem::List &ite
   return map;
 }
 
-
 /* --- MimeType ------------------------------------------------------ */
 bool DataStore::appendMimeType( const QString & mimetype, qint64 *insertId )
 {
   if ( MimeType::exists( mimetype ) ) {
     akDebug() << "Cannot insert mimetype " << mimetype
-             << " because it already exists.";
+              << " because it already exists.";
     return false;
   }
 
   MimeType mt( mimetype );
   return mt.insert( insertId );
 }
-
-
 
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem( QVector<Part> & parts,
@@ -681,8 +705,9 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
 {
   pimItem.setMimeTypeId( mimetype.id() );
   pimItem.setCollectionId( collection.id() );
-  if ( dateTime.isValid() )
+  if ( dateTime.isValid() ) {
     pimItem.setDatetime( dateTime );
+  }
   if ( remote_id.isEmpty() ) {
     // from application
     pimItem.setDirty( true );
@@ -695,21 +720,24 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
   pimItem.setGid( gid );
   pimItem.setAtime( QDateTime::currentDateTime() );
 
-  if ( !pimItem.insert() )
+  if ( !pimItem.insert() ) {
     return false;
+  }
 
   // insert every part
   if ( !parts.isEmpty() ) {
     //don't use foreach, the caller depends on knowing the part has changed, see the Append handler
-    for(QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
+    for (QVector<Part>::iterator it = parts.begin(); it != parts.end(); ++it ) {
 
       (*it).setPimItemId( pimItem.id() );
-      if ( (*it).datasize() < (*it).data().size() )
+      if ( (*it).datasize() < (*it).data().size() ) {
         (*it).setDatasize( (*it).data().size() );
+      }
 
-//       akDebug() << "Insert from DataStore::appendPimItem";
-      if( !PartHelper::insert(&(*it)) )
+//      akDebug() << "Insert from DataStore::appendPimItem";
+      if ( !PartHelper::insert(&(*it)) ) {
         return false;
+      }
     }
   }
 
@@ -721,26 +749,28 @@ bool DataStore::appendPimItem( QVector<Part> & parts,
 
 bool DataStore::unhidePimItem( PimItem &pimItem )
 {
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     return false;
+  }
 
   akDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
 
   // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
   QList< QByteArray > parts;
-  parts << "ATR:HIDDEN";
+  parts << AKONADI_ATTRIBUTE_HIDDEN;
 
   return removeItemParts( pimItem, parts );
 }
 
 bool DataStore::unhideAllPimItems()
 {
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     return false;
+  }
 
   akDebug() << "DataStore::unhideAllPimItems()";
 
-  return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( "ATR:HIDDEN" ) );
+  return PartHelper::remove( Part::nameFullColumnName(), QLatin1String( AKONADI_ATTRIBUTE_HIDDEN ) );
 }
 
 bool DataStore::cleanupPimItems( const PimItem::List &items )
@@ -749,16 +779,20 @@ bool DataStore::cleanupPimItems( const PimItem::List &items )
   mNotificationCollector->itemsRemoved( items );
 
   // FIXME: Create a single query to do this
-  Q_FOREACH( const PimItem &item, items ) {
-    if ( !item.clearFlags() )
+  Q_FOREACH ( const PimItem &item, items ) {
+    if ( !item.clearFlags() ) {
       return false;
-    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) )
+    }
+    if ( !PartHelper::remove( Part::pimItemIdColumn(), item.id() ) ) {
       return false;
-    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) )
+    }
+    if ( !PimItem::remove( PimItem::idColumn(), item.id() ) ) {
       return false;
+    }
 
-    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) )
+    if ( !Entity::clearRelation<CollectionPimItemRelation>( item.id(), Entity::Right ) ) {
       return false;
+    }
   }
 
   return true;
@@ -769,8 +803,9 @@ bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray 
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
   qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, key );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     return false;
+  }
 
   if ( qb.result().count() > 0 ) {
     akDebug() << "Attribute" << key << "already exists for collection" << col.id();
@@ -782,8 +817,9 @@ bool DataStore::addCollectionAttribute(const Collection & col, const QByteArray 
   attr.setType( key );
   attr.setValue( value );
 
-  if ( !attr.insert() )
+  if ( !attr.insert() ) {
     return false;
+  }
 
   mNotificationCollector->collectionChanged( col, QList<QByteArray>() << key );
   return true;
@@ -794,13 +830,15 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
   SelectQueryBuilder<CollectionAttribute> qb;
   qb.addValueCondition( CollectionAttribute::collectionIdColumn(), Query::Equals, col.id() );
   qb.addValueCondition( CollectionAttribute::typeColumn(), Query::Equals, key );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     throw HandlerException( "Unable to query for collection attribute" );
+  }
 
   const QVector<CollectionAttribute> result = qb.result();
   Q_FOREACH ( CollectionAttribute attr, result ) {
-    if ( !attr.remove() )
+    if ( !attr.remove() ) {
       throw HandlerException( "Unable to remove collection attribute" );
+    }
   }
 
   if (!result.isEmpty()) {
@@ -810,8 +848,7 @@ bool Akonadi::DataStore::removeCollectionAttribute(const Collection & col, const
   return false;
 }
 
-
-void DataStore::debugLastDbError( const char* actionDescription ) const
+void DataStore::debugLastDbError( const char *actionDescription ) const
 {
   akError() << "Database error:" << actionDescription;
   akError() << "  Last driver error:" << m_database.lastError().driverText();
@@ -825,7 +862,7 @@ void DataStore::debugLastDbError( const char* actionDescription ) const
                        );
 }
 
-void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const
+void DataStore::debugLastQueryError( const QSqlQuery &query, const char *actionDescription ) const
 {
   akError() << "Query error:" << actionDescription;
   akError() << "  Last error message:" << query.lastError().text();
@@ -843,11 +880,11 @@ void DataStore::debugLastQueryError( const QSqlQuery &query, const char* actionD
 QString DataStore::dateTimeFromQDateTime( const QDateTime & dateTime )
 {
     QDateTime utcDateTime = dateTime;
-    if ( utcDateTime.timeSpec() != Qt::UTC )
+    if ( utcDateTime.timeSpec() != Qt::UTC ) {
         utcDateTime.toUTC();
+    }
     return utcDateTime.toString( QLatin1String("yyyy-MM-dd hh:mm:ss") );
 }
-
 
 // static
 QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
@@ -857,8 +894,9 @@ QDateTime DataStore::dateTimeToQDateTime( const QByteArray & dateTime )
 
 bool Akonadi::DataStore::beginTransaction()
 {
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     return false;
+  }
 
   if ( m_transactionLevel == 0 ) {
     TRANSACTION_MUTEX_LOCK;
@@ -877,8 +915,9 @@ bool Akonadi::DataStore::beginTransaction()
 
 bool Akonadi::DataStore::rollbackTransaction()
 {
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     return false;
+  }
 
   if ( m_transactionLevel == 0 ) {
     qWarning() << "DataStore::rollbackTransaction(): No transaction in progress!";
@@ -904,8 +943,9 @@ bool Akonadi::DataStore::rollbackTransaction()
 
 bool Akonadi::DataStore::commitTransaction()
 {
-  if ( !m_dbOpened )
+  if ( !m_dbOpened ) {
     return false;
+  }
 
   if ( m_transactionLevel == 0 ) {
     qWarning() << "DataStore::commitTransaction(): No transaction in progress!";

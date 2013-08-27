@@ -260,8 +260,8 @@ protected:
     */
     DataStore();
 
-    void debugLastDbError( const char* actionDescription ) const;
-    void debugLastQueryError( const QSqlQuery &query, const char* actionDescription ) const;
+    void debugLastDbError( const char *actionDescription ) const;
+    void debugLastQueryError( const QSqlQuery &query, const char *actionDescription ) const;
 
   private:
     bool doAppendItemsFlag( const PimItem::List &items, const Flag &flag,
