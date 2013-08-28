@@ -37,7 +37,7 @@ class DbConfig
      * Returns the DbConfig instance for the database the user has
      * configured.
      */
-    static DbConfig* configuredDatabase();
+    static DbConfig *configuredDatabase();
 
     /**
      * Returns the name of the used driver.

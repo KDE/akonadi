@@ -46,20 +46,22 @@ DbConfig::DbConfig()
 
   mSizeThreshold = 4096;
   const QVariant value = settings.value( QLatin1String( "General/SizeThreshold" ), mSizeThreshold );
-  if ( value.canConvert<qint64>() )
+  if ( value.canConvert<qint64>() ) {
     mSizeThreshold = value.value<qint64>();
-  else
+  } else {
     mSizeThreshold = 0;
+  }
 
-  if ( mSizeThreshold < 0 )
+  if ( mSizeThreshold < 0 ) {
     mSizeThreshold = 0;
+  }
 }
 
 DbConfig::~DbConfig()
 {
 }
 
-DbConfig* DbConfig::configuredDatabase()
+DbConfig *DbConfig::configuredDatabase()
 {
   if ( !s_DbConfigInstance ) {
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
@@ -74,19 +76,19 @@ DbConfig* DbConfig::configuredDatabase()
       settings.sync();
     }
 
-    if ( driverName == QLatin1String( "QMYSQL" ) )
+    if ( driverName == QLatin1String( "QMYSQL" ) ) {
       s_DbConfigInstance = new DbConfigMysql;
-    else if ( driverName == QLatin1String( "QMYSQL_EMBEDDED" ) )
+    } else if ( driverName == QLatin1String( "QMYSQL_EMBEDDED" ) ) {
       s_DbConfigInstance = new DbConfigMysqlEmbedded;
-    else if ( driverName == QLatin1String( "QSQLITE" ) )
+    } else if ( driverName == QLatin1String( "QSQLITE" ) ) {
       s_DbConfigInstance = new DbConfigSqlite( DbConfigSqlite::Default );
-    else if ( driverName == QLatin1String( "QSQLITE3" ) )
+    } else if ( driverName == QLatin1String( "QSQLITE3" ) ) {
       s_DbConfigInstance = new DbConfigSqlite( DbConfigSqlite::Custom );
-    else if ( driverName == QLatin1String( "QPSQL" ) )
+    } else if ( driverName == QLatin1String( "QPSQL" ) ) {
       s_DbConfigInstance = new DbConfigPostgresql;
-    else if ( driverName == QLatin1String( "QODBC" ) )
+    } else if ( driverName == QLatin1String( "QODBC" ) ) {
       s_DbConfigInstance = new DbConfigVirtuoso;
-    else {
+    } else {
       akError() << "Unknown database driver: " << driverName;
       akError() << "Available drivers are: " << QSqlDatabase::drivers();
       akFatal();
@@ -120,8 +122,9 @@ qint64 DbConfig::sizeThreshold() const
 
 QString DbConfig::defaultDatabaseName()
 {
-  if ( !AkApplication::hasInstanceIdentifier() )
+  if ( !AkApplication::hasInstanceIdentifier() ) {
     return QLatin1String("akonadi");
+  }
   return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier();
 }
 
