@@ -68,8 +68,9 @@ bool DbConfigPostgresql::init( QSettings &settings )
 
 #ifdef POSTGRES_PATH
     const QString dir( QLatin1String( POSTGRES_PATH ) );
-    if( QDir( dir ).exists() )
+    if ( QDir( dir ).exists() ) {
       postgresSearchPath << QLatin1String( POSTGRES_PATH );
+    }
 #endif
     postgresSearchPath << QLatin1String( "/usr/sbin" )
                        << QLatin1String( "/usr/local/sbin" )
@@ -102,10 +103,12 @@ bool DbConfigPostgresql::init( QSettings &settings )
   settings.setValue( QLatin1String( "Name" ), mDatabaseName );
   settings.setValue( QLatin1String( "Host" ), mHostName );
   settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-  if ( !mServerPath.isEmpty() )
+  if ( !mServerPath.isEmpty() ) {
     settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
-  if ( !mInitDbPath.isEmpty() )
+  }
+  if ( !mInitDbPath.isEmpty() ) {
     settings.setValue( QLatin1String( "InitDbPath" ), mInitDbPath );
+  }
   settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
   settings.endGroup();
   settings.sync();
@@ -115,14 +118,18 @@ bool DbConfigPostgresql::init( QSettings &settings )
 
 void DbConfigPostgresql::apply( QSqlDatabase &database )
 {
-  if ( !mDatabaseName.isEmpty() )
+  if ( !mDatabaseName.isEmpty() ) {
     database.setDatabaseName( mDatabaseName );
-  if ( !mHostName.isEmpty() )
+  }
+  if ( !mHostName.isEmpty() ) {
     database.setHostName( mHostName );
-  if ( !mUserName.isEmpty() )
+  }
+  if ( !mUserName.isEmpty() ) {
     database.setUserName( mUserName );
-  if ( !mPassword.isEmpty() )
+  }
+  if ( !mPassword.isEmpty() ) {
     database.setPassword( mPassword );
+  }
 
   database.setConnectOptions( mConnectionOptions );
 
@@ -198,14 +205,16 @@ void DbConfigPostgresql::startInternalServer()
     // use the dummy database that is always available
     db.setDatabaseName( QLatin1String( "template1" ) );
 
-    if ( !db.isValid() )
+    if ( !db.isValid() ) {
       akFatal() << "Invalid database object during database server startup";
+    }
 
     bool opened = false;
     for ( int i = 0; i < 120; ++i ) {
       opened = db.open();
-      if ( opened )
+      if ( opened ) {
         break;
+      }
 
       if ( mDatabaseProcess->waitForFinished( 500 ) ) {
         akError() << "Database process exited unexpectedly during initial connection!";
@@ -243,14 +252,16 @@ void DbConfigPostgresql::startInternalServer()
 
 void DbConfigPostgresql::stopInternalServer()
 {
-  if ( !mDatabaseProcess )
+  if ( !mDatabaseProcess ) {
     return;
+  }
 
   // first, try the nicest approach
   if ( !mCleanServerShutdownCommand.isEmpty() ) {
     QProcess::execute( mCleanServerShutdownCommand );
-    if ( mDatabaseProcess->waitForFinished( 3000 ) )
+    if ( mDatabaseProcess->waitForFinished( 3000 ) ) {
       return;
+    }
   }
 
   // if pg_ctl couldn't terminate all the postgres processes, we have to kill the master one.

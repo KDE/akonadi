@@ -48,14 +48,14 @@ static QString sqliteDataFile()
   const QString akonadiPath = dataDir() + QLatin1String( "akonadi.db" );
   if ( !QFile::exists( akonadiPath ) ) {
     QFile file( akonadiPath );
-    if ( !file.open( QIODevice::WriteOnly ) )
+    if ( !file.open( QIODevice::WriteOnly ) ) {
       akFatal() << "Unable to create file" << akonadiPath << "during database initialization.";
+    }
     file.close();
   }
 
   return akonadiPath;
 }
-
 
 DbConfigSqlite::DbConfigSqlite( Version driverVersion )
   : mDriverVersion( driverVersion )
@@ -64,10 +64,11 @@ DbConfigSqlite::DbConfigSqlite( Version driverVersion )
 
 QString DbConfigSqlite::driverName() const
 {
-  if ( mDriverVersion == Default )
+  if ( mDriverVersion == Default ) {
     return QLatin1String( "QSQLITE" );
-  else
+  } else {
     return QLatin1String( "QSQLITE3" );
+  }
 }
 
 QString DbConfigSqlite::databaseName() const
@@ -102,14 +103,18 @@ bool DbConfigSqlite::init( QSettings &settings )
 
 void DbConfigSqlite::apply( QSqlDatabase &database )
 {
-  if ( !mDatabaseName.isEmpty() )
+  if ( !mDatabaseName.isEmpty() ) {
     database.setDatabaseName( mDatabaseName );
-  if ( !mHostName.isEmpty() )
+  }
+  if ( !mHostName.isEmpty() ) {
     database.setHostName( mHostName );
-  if ( !mUserName.isEmpty() )
+  }
+  if ( !mUserName.isEmpty() ) {
     database.setUserName( mUserName );
-  if ( !mPassword.isEmpty() )
+  }
+  if ( !mPassword.isEmpty() ) {
     database.setPassword( mPassword );
+  }
 
   database.setConnectOptions( mConnectionOptions );
 
