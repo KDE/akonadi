@@ -29,8 +29,8 @@ class QSqlQuery;
 class DbException : public Akonadi::Exception
 {
   public:
-    explicit DbException( const QSqlQuery &query, const char* what = 0 );
-    virtual const char* type() const throw();
+    explicit DbException( const QSqlQuery &query, const char *what = 0 );
+    virtual const char *type() const throw();
 };
 
 #endif // DBEXCEPTION_H

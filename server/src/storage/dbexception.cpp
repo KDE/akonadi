@@ -24,13 +24,13 @@
 
 using namespace Akonadi;
 
-DbException::DbException(const QSqlQuery& query, const char* what): Exception(what)
+DbException::DbException(const QSqlQuery& query, const char *what): Exception(what)
 {
   mWhat += "\nSql error: " + query.lastError().text().toUtf8();
   mWhat += "\nQuery: " + query.lastQuery().toUtf8();
 }
 
-const char* DbException::type() const throw()
+const char *DbException::type() const throw()
 {
   return "Database Exception";
 }
