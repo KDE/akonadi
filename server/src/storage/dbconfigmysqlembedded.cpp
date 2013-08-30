@@ -47,15 +47,17 @@ static QString mysqlEmbeddedDataDir()
   const QString dbDataDir = dataDir() + QLatin1String( "db" ) + QDir::separator();
   if ( !QDir( dbDataDir ).exists() ) {
     QDir dir;
-    if ( !dir.mkdir( dbDataDir ) )
+    if ( !dir.mkdir( dbDataDir ) ) {
       akFatal() << "Unable to create directory" << dbDataDir << "during database initialization.";
+    }
   }
 
   const QString dbDir = dbDataDir + QLatin1String( "akonadi" );
   if ( !QDir( dbDir ).exists() ) {
     QDir dir;
-    if ( !dir.mkdir( dbDir ) )
+    if ( !dir.mkdir( dbDir ) ) {
       akFatal() << "Unable to create directory" << dbDir << "during database initialization.";
+    }
   }
 
   return dbDataDir;
@@ -105,14 +107,18 @@ bool DbConfigMysqlEmbedded::init( QSettings &settings )
 
 void DbConfigMysqlEmbedded::apply( QSqlDatabase &database )
 {
-  if ( !mDatabaseName.isEmpty() )
+  if ( !mDatabaseName.isEmpty() ) {
     database.setDatabaseName( mDatabaseName );
-  if ( !mHostName.isEmpty() )
+  }
+  if ( !mHostName.isEmpty() ) {
     database.setHostName( mHostName );
-  if ( !mUserName.isEmpty() )
+  }
+  if ( !mUserName.isEmpty() ) {
     database.setUserName( mUserName );
-  if ( !mPassword.isEmpty() )
+  }
+  if ( !mPassword.isEmpty() ) {
     database.setPassword( mPassword );
+  }
 
   database.setConnectOptions( mConnectionOptions );
 

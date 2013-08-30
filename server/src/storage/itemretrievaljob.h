@@ -33,7 +33,7 @@ class ItemRetrievalJob : public QObject
   public:
     ItemRetrievalJob( ItemRetrievalRequest *req, QObject *parent ) : QObject( parent ), m_request( req ), m_active( false ), m_interface( 0 ), m_oldMethodCalled( false ) {}
     ~ItemRetrievalJob();
-    void start( QDBusAbstractInterface* interface );
+    void start( QDBusAbstractInterface *interface );
     void kill();
 
   Q_SIGNALS:

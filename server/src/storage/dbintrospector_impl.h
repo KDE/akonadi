@@ -52,5 +52,4 @@ class DbIntrospectorVirtuoso : public DbIntrospector
     bool hasIndex(const QString& tableName, const QString& indexName);
 };
 
-
 #endif // DBINTROSPECTOR_IMPL_H

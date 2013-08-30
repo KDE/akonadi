@@ -51,14 +51,14 @@ namespace ItemQueryHelper
     Add conditions to @p qb for the given remote identifier @p rid.
     The rid context is taken from @p connection.
   */
-  void remoteIdToQuery( const QStringList &rids, AkonadiConnection* connection, QueryBuilder &qb );
+  void remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb );
   void gidToQuery(const QStringList& gids, QueryBuilder& qb);
 
   /**
     Add conditions to @p qb for the given item operation scope @p scope.
     The rid context is taken from @p connection, if none is specified an exception is thrown.
   */
-  void scopeToQuery( const Scope &scope, AkonadiConnection* connection, QueryBuilder &qb );
+  void scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb );
 }
 
 }
