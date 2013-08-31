@@ -31,6 +31,8 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
+#include <libs/protocol_p.h>
+
 #include <QDebug>
 
 using namespace Akonadi;
@@ -54,8 +56,9 @@ void ItemRetriever::setRetrieveParts(const QStringList& parts)
 {
   mParts = parts;
   // HACK, we need a full payload available flag in PimItem
-  if ( mFullPayload && !mParts.contains( QLatin1String( "PLD:RFC822" ) ) )
-    mParts.append( QLatin1String( "PLD:RFC822" ) );
+  if ( mFullPayload && !mParts.contains( QLatin1String( AKONADI_PARAM_PLD_RFC822 ) ) ) {
+    mParts.append( QLatin1String( AKONADI_PARAM_PLD_RFC822 ) );
+  }
 }
 
 void ItemRetriever::setItemSet(const ImapSet& set, const Collection &collection )
@@ -67,10 +70,11 @@ void ItemRetriever::setItemSet(const ImapSet& set, const Collection &collection 
 void ItemRetriever::setItemSet(const ImapSet& set, bool isUid)
 {
   Q_ASSERT( mConnection );
-  if ( !isUid && mConnection->selectedCollectionId() >= 0 )
+  if ( !isUid && mConnection->selectedCollectionId() >= 0 ) {
     setItemSet( set, mConnection->selectedCollection() );
-  else
+  } else {
     setItemSet( set );
+  }
 }
 
 void ItemRetriever::setItem( const Akonadi::Entity::Id& id )
@@ -85,8 +89,9 @@ void ItemRetriever::setRetrieveFullPayload(bool fullPayload)
 {
   mFullPayload = fullPayload;
   // HACK, we need a full payload available flag in PimItem
-  if ( fullPayload && !mParts.contains( QLatin1String( "PLD:RFC822" ) ) )
-    mParts.append( QLatin1String( "PLD:RFC822" ) );
+  if ( fullPayload && !mParts.contains( QLatin1String( AKONADI_PARAM_PLD_RFC822 ) ) ) {
+    mParts.append( QLatin1String( AKONADI_PARAM_PLD_RFC822 ) );
+  }
 }
 
 void ItemRetriever::setCollection(const Collection& collection, bool recursive)
@@ -138,7 +143,7 @@ QSqlQuery ItemRetriever::buildQuery() const
   if ( !mFullPayload && !mParts.isEmpty() ) {
     partJoinCondition.addValueCondition( Part::nameFullColumnName(), Query::In, mParts );
   }
-  partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+  partJoinCondition.addValueCondition( QString::fromLatin1( "substr(%1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( AKONADI_PARAM_PLD ) );
   qb.addJoin( QueryBuilder::LeftJoin, Part::tableName(), partJoinCondition );
 
   qb.addColumn( PimItem::idFullColumnName() );
@@ -148,10 +153,11 @@ QSqlQuery ItemRetriever::buildQuery() const
   qb.addColumn( Part::nameFullColumnName() );
   qb.addColumn( Part::datasizeFullColumnName() );
 
-  if ( mScope.scope() != Scope::Invalid )
+  if ( mScope.scope() != Scope::Invalid ) {
     ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
-  else
+  } else {
     ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
+  }
 
   // prevent a resource to trigger item retrieval from itself
   if ( mConnection ) {
@@ -171,21 +177,21 @@ QSqlQuery ItemRetriever::buildQuery() const
   return qb.query();
 }
 
-
 bool ItemRetriever::exec()
 {
-  if ( mParts.isEmpty() && !mFullPayload )
+  if ( mParts.isEmpty() && !mFullPayload ) {
     return true;
+  }
 
   verifyCache();
 
   QSqlQuery query = buildQuery();
-  ItemRetrievalRequest* lastRequest = 0;
+  ItemRetrievalRequest *lastRequest = 0;
   QList<ItemRetrievalRequest*> requests;
 
   QStringList parts;
   Q_FOREACH ( const QString &part, mParts ) {
-    if ( part.startsWith( QLatin1String( "PLD:" ) ) ) {
+    if ( part.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) ) {
       parts << part.mid(4);
     }
   }
@@ -210,12 +216,13 @@ bool ItemRetriever::exec()
 
     qint64 datasize = query.value( PartDatasizeColumn ).toLongLong();
     QString partName = Utils::variantToString( query.value( PartNameColumn ) );
-    Q_ASSERT( partName.startsWith( QLatin1String( "PLD:" ) ) );
+    Q_ASSERT( partName.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) );
     partName = partName.mid( 4 );
     if ( datasize <= 0 ) {
       // request update for this part
-      if ( mFullPayload && !lastRequest->parts.contains( partName ) )
+      if ( mFullPayload && !lastRequest->parts.contains( partName ) ) {
         lastRequest->parts << partName;
+      }
     } else {
       // data available, don't request update
       lastRequest->parts.removeAll( partName );
@@ -227,7 +234,7 @@ bool ItemRetriever::exec()
 
   query.finish();
 
-  Q_FOREACH ( ItemRetrievalRequest* request, requests ) {
+  Q_FOREACH ( ItemRetrievalRequest *request, requests ) {
     if ( request->parts.isEmpty() ) {
         delete request;
         continue;
@@ -252,7 +259,9 @@ bool ItemRetriever::exec()
       retriever.setRetrieveParts( mParts );
       retriever.setRetrieveFullPayload( mFullPayload );
       result = retriever.exec();
-      if (!result) break;
+      if (!result) {
+        break;
+      }
     }
   }
 
@@ -261,17 +270,19 @@ bool ItemRetriever::exec()
 
 void ItemRetriever::verifyCache()
 {
-  if (!connection()->verifyCacheOnRetrieval())
+  if (!connection()->verifyCacheOnRetrieval()) {
     return;
+  }
 
   SelectQueryBuilder<Part> qb;
   qb.addJoin( QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName() );
   qb.addValueCondition( Part::externalFullColumnName(), Query::Equals, true );
   qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-  if ( mScope.scope() != Scope::Invalid )
+  if ( mScope.scope() != Scope::Invalid ) {
     ItemQueryHelper::scopeToQuery( mScope, mConnection, qb );
-  else
+  } else {
     ItemQueryHelper::itemSetToQuery( mItemSet, qb, mCollection );
+  }
 
   if (!qb.exec()) {
     mLastError = "Unable to query parts.";
@@ -279,8 +290,9 @@ void ItemRetriever::verifyCache()
   }
 
   const Part::List externalParts = qb.result();
-  Q_FOREACH ( Part part, externalParts )
+  Q_FOREACH ( Part part, externalParts ) {
     PartHelper::verify( part );
+  }
 }
 
 QByteArray ItemRetriever::lastError() const
