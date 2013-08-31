@@ -42,12 +42,14 @@ void QueryHelper::setToQuery(const ImapSet& set, const QString &column, QueryBui
         }
       }
     } else if ( i.hasDefinedBegin() ) {
-      if ( i.begin() != 1 ) // 1 is our standard lower bound, so we don't have to check for it explicitly
+      if ( i.begin() != 1 ) { // 1 is our standard lower bound, so we don't have to check for it explicitly
         cond.addValueCondition( column, Query::GreaterOrEqual, i.begin() );
+      }
     } else if ( i.hasDefinedEnd() ) {
       cond.addValueCondition( column, Query::LessOrEqual, i.end() );
     }
   }
-  if ( !cond.isEmpty() )
+  if ( !cond.isEmpty() ) {
     qb.addCondition( cond );
+  }
 }

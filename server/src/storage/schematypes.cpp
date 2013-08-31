@@ -24,7 +24,13 @@
 #include <algorithm>
 
 ColumnDescription::ColumnDescription()
-  : size( -1 ), allowNull( true ), isAutoIncrement( false ), isPrimaryKey( false ), isUnique( false ), onUpdate( Cascade ), onDelete( Cascade )
+  : size( -1 )
+  , allowNull( true )
+  , isAutoIncrement( false )
+  , isPrimaryKey( false )
+  , isUnique( false )
+  , onUpdate( Cascade )
+  , onDelete( Cascade )
 {
 }
 
@@ -49,4 +55,3 @@ int TableDescription::primaryKeyColumnCount() const
 RelationDescription::RelationDescription()
 {
 }
-
