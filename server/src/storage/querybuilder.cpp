@@ -34,26 +34,26 @@ using namespace Akonadi;
 static QString compareOperatorToString( Query::CompareOperator op )
 {
   switch ( op ) {
-    case Query::Equals:
-      return QLatin1String( " = " );
-    case Query::NotEquals:
-      return QLatin1String( " <> " );
-    case Query::Is:
-      return QLatin1String( " IS " );
-    case Query::IsNot:
-      return QLatin1String( " IS NOT " );
-    case Query::Less:
-      return QLatin1String( " < " );
-    case Query::LessOrEqual:
-      return QLatin1String( " <= " );
-    case Query::Greater:
-      return QLatin1String( " > " );
-    case Query::GreaterOrEqual:
-      return QLatin1String( " >= " );
-    case Query::In:
-      return QLatin1String( " IN " );
-    case Query::NotIn:
-      return QLatin1String( " NOT IN " );
+  case Query::Equals:
+    return QLatin1String( " = " );
+  case Query::NotEquals:
+    return QLatin1String( " <> " );
+  case Query::Is:
+    return QLatin1String( " IS " );
+  case Query::IsNot:
+    return QLatin1String( " IS NOT " );
+  case Query::Less:
+    return QLatin1String( " < " );
+  case Query::LessOrEqual:
+    return QLatin1String( " <= " );
+  case Query::Greater:
+    return QLatin1String( " > " );
+  case Query::GreaterOrEqual:
+    return QLatin1String( " >= " );
+  case Query::In:
+    return QLatin1String( " IN " );
+  case Query::NotIn:
+    return QLatin1String( " NOT IN " );
   }
   Q_ASSERT_X( false, "QueryBuilder::compareOperatorToString()", "Unknown compare operator." );
   return QString();
@@ -62,10 +62,10 @@ static QString compareOperatorToString( Query::CompareOperator op )
 static QString logicOperatorToString( Query::LogicOperator op )
 {
   switch ( op ) {
-    case Query::And:
-      return QLatin1String( " AND " );
-    case Query::Or:
-      return QLatin1String( " OR " );
+  case Query::And:
+    return QLatin1String( " AND " );
+  case Query::Or:
+    return QLatin1String( " OR " );
   }
   Q_ASSERT_X( false, "QueryBuilder::logicOperatorToString()", "Unknown logic operator." );
   return QString();
@@ -74,10 +74,10 @@ static QString logicOperatorToString( Query::LogicOperator op )
 static QString sortOrderToString( Query::SortOrder order )
 {
   switch ( order ) {
-    case Query::Ascending:
-      return QLatin1String( " ASC" );
-    case Query::Descending:
-      return QLatin1String( " DESC" );
+  case Query::Ascending:
+    return QLatin1String( " ASC" );
+  case Query::Descending:
+    return QLatin1String( " DESC" );
   }
   Q_ASSERT_X( false, "QueryBuilder::sortOrderToString()", "Unknown sort order." );
   return QString();
@@ -151,96 +151,99 @@ bool QueryBuilder::exec()
   Query::Condition whereCondition = mRootCondition[WhereCondition];
 
   switch ( mType ) {
-    case Select:
-      statement += QLatin1String( "SELECT " );
-      if ( mDistinct )
-        statement += QLatin1String( "DISTINCT " );
-      if ( mDatabaseType == DbType::Virtuoso && mLimit > 0 )
-        statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
-      Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
-      statement += mColumns.join( QLatin1String( ", " ) );
-      statement += QLatin1String(" FROM ");
-      statement += mTable;
-      Q_FOREACH ( const QString& joinedTable, mJoinedTables ) {
-        const QPair< JoinType, Query::Condition >& join = mJoins.value( joinedTable );
-        switch ( join.first ) {
-          case LeftJoin:
-            statement += QLatin1String( " LEFT JOIN " );
-            break;
-          case InnerJoin:
-            statement += QLatin1String( " INNER JOIN " );
-            break;
-        }
-        statement += joinedTable;
-        statement += QLatin1String( " ON " );
-        statement += buildWhereCondition( join.second );
-      }
-     break;
-    case Insert:
-    {
-      statement += QLatin1String( "INSERT INTO " );
-      statement += mTable;
-      statement += QLatin1String(" (");
-      typedef QPair<QString,QVariant> StringVariantPair;
-      QStringList cols, vals;
-      Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
-        cols.append( p.first );
-        vals.append( bindValue( p.second ) );
-      }
-      statement += cols.join( QLatin1String( ", " ) );
-      statement += QLatin1String(") VALUES (");
-      statement += vals.join( QLatin1String( ", " ) );
-      statement += QLatin1Char(')');
-      if ( mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty() )
-        statement += QLatin1String( " RETURNING " ) + mIdentificationColumn;
-      break;
+  case Select:
+    statement += QLatin1String( "SELECT " );
+    if ( mDistinct ) {
+      statement += QLatin1String( "DISTINCT " );
     }
-    case Update:
-    {
-      ///TODO: fix joined Update tables for SQLite by using subqueries
-      // put the ON condition into the WHERE part of the UPDATE query
-      Q_FOREACH ( const QString& table, mJoinedTables ) {
-        QPair< JoinType, Query::Condition > join = mJoins.value( table );
-        Q_ASSERT( join.first == InnerJoin );
-        whereCondition.addCondition( join.second );
-      }
-
-      statement += QLatin1String( "UPDATE " );
-      statement += mTable;
-
-      if ( mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty() ) {
-        // for mysql we list all tables directly
-        statement += QLatin1String( ", " );
-        statement += mJoinedTables.join( QLatin1String( ", " ) );
-      }
-
-      statement += QLatin1String( " SET " );
-      Q_ASSERT_X( mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
-      typedef QPair<QString,QVariant> StringVariantPair;
-      QStringList updStmts;
-      Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
-        QString updStmt = p.first;
-        updStmt += QLatin1String( " = " );
-        updStmt += bindValue( p.second );
-        updStmts << updStmt;
-      }
-      statement += updStmts.join( QLatin1String( ", " ) );
-
-      if ( mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty() ) {
-        // PSQL have this syntax
-        // FROM t1 JOIN t2 JOIN ...
-        statement += QLatin1String( " FROM " );
-        statement += mJoinedTables.join( QLatin1String( " JOIN " ) );
-      }
-
-      break;
+    if ( mDatabaseType == DbType::Virtuoso && mLimit > 0 ) {
+      statement += QLatin1Literal( "TOP " ) + QString::number( mLimit ) + QLatin1Char( ' ' );
     }
-    case Delete:
-      statement += QLatin1String( "DELETE FROM " );
-      statement += mTable;
-      break;
-    default:
-      Q_ASSERT_X( false, "QueryBuilder::exec()", "Unknown enum value" );
+    Q_ASSERT_X( mColumns.count() > 0, "QueryBuilder::exec()", "No columns specified" );
+    statement += mColumns.join( QLatin1String( ", " ) );
+    statement += QLatin1String(" FROM ");
+    statement += mTable;
+    Q_FOREACH ( const QString& joinedTable, mJoinedTables ) {
+      const QPair< JoinType, Query::Condition >& join = mJoins.value( joinedTable );
+      switch ( join.first ) {
+      case LeftJoin:
+        statement += QLatin1String( " LEFT JOIN " );
+        break;
+      case InnerJoin:
+        statement += QLatin1String( " INNER JOIN " );
+        break;
+      }
+      statement += joinedTable;
+      statement += QLatin1String( " ON " );
+      statement += buildWhereCondition( join.second );
+    }
+   break;
+  case Insert:
+  {
+    statement += QLatin1String( "INSERT INTO " );
+    statement += mTable;
+    statement += QLatin1String(" (");
+    typedef QPair<QString,QVariant> StringVariantPair;
+    QStringList cols, vals;
+    Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
+      cols.append( p.first );
+      vals.append( bindValue( p.second ) );
+    }
+    statement += cols.join( QLatin1String( ", " ) );
+    statement += QLatin1String(") VALUES (");
+    statement += vals.join( QLatin1String( ", " ) );
+    statement += QLatin1Char(')');
+    if ( mDatabaseType == DbType::PostgreSQL && !mIdentificationColumn.isEmpty() ) {
+      statement += QLatin1String( " RETURNING " ) + mIdentificationColumn;
+    }
+    break;
+  }
+  case Update:
+  {
+    ///TODO: fix joined Update tables for SQLite by using subqueries
+    // put the ON condition into the WHERE part of the UPDATE query
+    Q_FOREACH ( const QString& table, mJoinedTables ) {
+      QPair< JoinType, Query::Condition > join = mJoins.value( table );
+      Q_ASSERT( join.first == InnerJoin );
+      whereCondition.addCondition( join.second );
+    }
+
+    statement += QLatin1String( "UPDATE " );
+    statement += mTable;
+
+    if ( mDatabaseType == DbType::MySQL && !mJoinedTables.isEmpty() ) {
+      // for mysql we list all tables directly
+      statement += QLatin1String( ", " );
+      statement += mJoinedTables.join( QLatin1String( ", " ) );
+    }
+
+    statement += QLatin1String( " SET " );
+    Q_ASSERT_X( mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed" );
+    typedef QPair<QString,QVariant> StringVariantPair;
+    QStringList updStmts;
+    Q_FOREACH ( const StringVariantPair &p, mColumnValues ) {
+      QString updStmt = p.first;
+      updStmt += QLatin1String( " = " );
+      updStmt += bindValue( p.second );
+      updStmts << updStmt;
+    }
+    statement += updStmts.join( QLatin1String( ", " ) );
+
+    if ( mDatabaseType == DbType::PostgreSQL && !mJoinedTables.isEmpty() ) {
+      // PSQL have this syntax
+      // FROM t1 JOIN t2 JOIN ...
+      statement += QLatin1String( " FROM " );
+      statement += mJoinedTables.join( QLatin1String( " JOIN " ) );
+    }
+
+    break;
+  }
+  case Delete:
+    statement += QLatin1String( "DELETE FROM " );
+    statement += mTable;
+    break;
+  default:
+    Q_ASSERT_X( false, "QueryBuilder::exec()", "Unknown enum value" );
   }
 
   if ( !whereCondition.isEmpty() ) {
@@ -287,11 +290,11 @@ bool QueryBuilder::exec()
   //too heavy debug info but worths to have from time to time
   //akDebug() << "Executing query" << statement;
   bool isBatch = false;
-  for ( int i = 0; i < mBindValues.count(); ++i )
-  {
+  for ( int i = 0; i < mBindValues.count(); ++i ) {
     mQuery.bindValue( QLatin1Char( ':' ) + QString::number( i ), mBindValues[i] );
-    if ( !isBatch && mBindValues[i].canConvert<QVariantList>() )
+    if ( !isBatch && mBindValues[i].canConvert<QVariantList>() ) {
       isBatch = true;
+    }
     //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
   }
   bool ret;
@@ -442,10 +445,14 @@ qint64 QueryBuilder::insertId()
     return query().record().value( mIdentificationColumn ).toLongLong();
   } else {
     const QVariant v = query().lastInsertId();
-    if ( !v.isValid() ) return -1;
+    if ( !v.isValid() ) {
+      return -1;
+    }
     bool ok;
     const qint64 insertId = v.toLongLong( &ok );
-    if ( !ok ) return -1;
+    if ( !ok ) {
+      return -1;
+    }
     return insertId;
   }
   return -1;

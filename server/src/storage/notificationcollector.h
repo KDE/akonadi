@@ -208,7 +208,6 @@ class NotificationCollector : public QObject
     NotificationMessageV2::List mNotifications;
 };
 
-
 }
 
 #endif

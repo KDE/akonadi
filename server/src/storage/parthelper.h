@@ -55,7 +55,7 @@ namespace PartHelper
    * @p part must not be in the database yet (ie. valid() == false) and must have
    * a data size set.
    */
-  bool insert( Part *part, qint64* insertId = 0 );
+  bool insert( Part *part, qint64 *insertId = 0 );
 
   /** Deletes @p part from the database and also removes existing filesystem data if needed. */
   bool remove( Part *part );
@@ -78,7 +78,6 @@ namespace PartHelper
 
   /** Verifies and if necessary fixes the external reference of this part. */
   bool verify( Akonadi::Part& part );
-
 
 // private: for unit testing only
   /**

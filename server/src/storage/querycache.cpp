@@ -28,10 +28,8 @@
 
 using namespace Akonadi;
 
-enum {
-  // After these seconds without activity the cache is cleaned
-  CLEANUP_TIMEOUT = 30 // seconds
-};
+// After these seconds without activity the cache is cleaned
+#define CLEANUP_TIMEOUT 30 // seconds
 
 class Cache : public QObject
 {
@@ -46,7 +44,7 @@ public:
 
   QSqlQuery query( const QString &queryStatement)
   {
-    m_cleanupTimer.start( CLEANUP_TIMEOUT*1000 );
+    m_cleanupTimer.start( CLEANUP_TIMEOUT * 1000 );
     return m_cache.value( queryStatement );
   }
 
@@ -63,10 +61,11 @@ public: // public, this is just a helper class
 
 static QThreadStorage<Cache*> g_queryCache;
 
-static Cache* perThreadCache()
+static Cache *perThreadCache()
 {
-  if ( !g_queryCache.hasLocalData() )
+  if ( !g_queryCache.hasLocalData() ) {
     g_queryCache.setLocalData( new Cache() );
+  }
 
   return g_queryCache.localData();
 }
@@ -91,6 +90,5 @@ void QueryCache::insert(const QString &queryStatement, const QSqlQuery &query)
     perThreadCache()->m_cache.insert( queryStatement, query );
   }
 }
-
 
 #include <querycache.moc>
