@@ -62,7 +62,7 @@ class Transaction
 
   private:
     Q_DISABLE_COPY( Transaction )
-    DataStore* mDb;
+    DataStore *mDb;
     bool mGlobal;
     bool mCommitted;
 };

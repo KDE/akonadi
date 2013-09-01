@@ -27,14 +27,14 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMetaType>
 
-Akonadi::StorageDebugger* Akonadi::StorageDebugger::mSelf = 0;
+Akonadi::StorageDebugger *Akonadi::StorageDebugger::mSelf = 0;
 QMutex Akonadi::StorageDebugger::mMutex;
 
 using namespace Akonadi;
 
 Q_DECLARE_METATYPE(QList< QList<QVariant> >)
 
-StorageDebugger* StorageDebugger::instance()
+StorageDebugger *StorageDebugger::instance()
 {
   mMutex.lock();
   if ( mSelf == 0 ) {
@@ -45,10 +45,9 @@ StorageDebugger* StorageDebugger::instance()
   return mSelf;
 }
 
-
-StorageDebugger::StorageDebugger():
-  mEnabled( false ),
-  mSequence( 0 )
+StorageDebugger::StorageDebugger()
+  : mEnabled( false )
+  , mSequence( 0 )
 {
   qDBusRegisterMetaType<QList< QList<QVariant> > >();
   new StorageDebuggerAdaptor( this );
@@ -114,4 +113,3 @@ void StorageDebugger::queryExecuted( const QSqlQuery &query, int duration )
   // Reset the query
   q.seek( -1, false );
 }
-
