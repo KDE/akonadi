@@ -67,7 +67,7 @@ using namespace Akonadi;
 
 static AkonadiServer *s_instance = 0;
 
-AkonadiServer::AkonadiServer( QObject* parent )
+AkonadiServer::AkonadiServer( QObject *parent )
 #ifdef Q_OS_WINCE
     : QTcpServer( parent )
 #else
@@ -85,10 +85,11 @@ AkonadiServer::AkonadiServer( QObject* parent )
     const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
     QSettings settings( serverConfigFile, QSettings::IniFormat );
 
-    if ( DbConfig::configuredDatabase()->useInternalServer() )
+    if ( DbConfig::configuredDatabase()->useInternalServer() ) {
       startDatabaseProcess();
-    else
+    } else {
       createDatabase();
+    }
 
     DbConfig::configuredDatabase()->setup();
 
@@ -102,44 +103,43 @@ AkonadiServer::AkonadiServer( QObject* parent )
     PSID sid;
     QString userID;
 
-    OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hToken);
-    if(hToken)
-    {
+    OpenProcessToken( GetCurrentProcess(), TOKEN_READ, &hToken );
+    if ( hToken ) {
         DWORD size;
         PTOKEN_USER userStruct;
 
-        GetTokenInformation(hToken, TokenUser, NULL, 0, &size);
-        if( ERROR_INSUFFICIENT_BUFFER == GetLastError() )
-        {
+        GetTokenInformation( hToken, TokenUser, NULL, 0, &size );
+        if ( ERROR_INSUFFICIENT_BUFFER == GetLastError() ) {
             userStruct = reinterpret_cast<PTOKEN_USER>( new BYTE[size] );
-            GetTokenInformation(hToken, TokenUser, userStruct, size, &size);
+            GetTokenInformation( hToken, TokenUser, userStruct, size, &size );
 
-            int sidLength = GetLengthSid(userStruct->User.Sid);
-            sid = (PSID) malloc(sidLength);
-            CopySid(sidLength, sid, userStruct->User.Sid);
-            CloseHandle(hToken);
+            int sidLength = GetLengthSid( userStruct->User.Sid );
+            sid = (PSID) malloc( sidLength );
+            CopySid( sidLength, sid, userStruct->User.Sid );
+            CloseHandle( hToken );
             delete [] userStruct;
         }
 
         LPWSTR s;
-        if (!ConvertSidToStringSidW(sid, &s)) {
+        if ( !ConvertSidToStringSidW( sid, &s ) ) {
             akError() << "Could not determine user id for current process.";
             userID = QString();
         } else {
-            userID = QString::fromUtf16(reinterpret_cast<ushort*>(s));
-            LocalFree(s);
+            userID = QString::fromUtf16( reinterpret_cast<ushort *>( s ) );
+            LocalFree( s );
         }
-        free(sid);
+        free( sid );
     }
     QString defaultPipe = QLatin1String( "Akonadi-" ) + userID;
 
     QString namedPipe = settings.value( QLatin1String( "Connection/NamedPipe" ), defaultPipe ).toString();
 #ifdef Q_OS_WINCE
-    if ( !listen( QHostAddress::LocalHost, 31414 ) )
+    if ( !listen( QHostAddress::LocalHost, 31414 ) ) {
 #else
-    if ( !listen( namedPipe ) )
+    if ( !listen( namedPipe ) ) {
 #endif
       akFatal() << "Unable to listen on Named Pipe" << namedPipe;
+    }
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "NamedPipe" ) );
     connectionSettings.setValue( QLatin1String( "Data/NamedPipe" ), namedPipe );
@@ -147,8 +147,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     const QString socketDir = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data" ) );
     const QString socketFile = socketDir + QLatin1String( "/akonadiserver.socket" );
     unlink( socketFile.toUtf8().constData() );
-    if ( !listen( socketFile ) )
+    if ( !listen( socketFile ) ) {
       akFatal() << "Unable to listen on Unix socket" << socketFile;
+    }
 
     connectionSettings.setValue( QLatin1String( "Data/Method" ), QLatin1String( "UnixPath" ) );
     connectionSettings.setValue( QLatin1String( "Data/UnixPath" ), socketFile );
@@ -156,10 +157,12 @@ AkonadiServer::AkonadiServer( QObject* parent )
 
     // initialize the database
     DataStore *db = DataStore::self();
-    if ( !db->database().isOpen() )
+    if ( !db->database().isOpen() ) {
       akFatal() << "Unable to open database" << db->database().lastError().text();
-    if ( !db->init() )
+    }
+    if ( !db->init() ) {
       akFatal() << "Unable to initialize database.";
+    }
 
     NotificationManager::self();
     Tracer::self();
@@ -170,8 +173,9 @@ AkonadiServer::AkonadiServer( QObject* parent )
     PreprocessorManager::init();
 
     // Forcibly disable it if configuration says so
-    if ( settings.value( QLatin1String( "General/DisablePreprocessing" ), false ).toBool() )
+    if ( settings.value( QLatin1String( "General/DisablePreprocessing" ), false ).toBool() ) {
       PreprocessorManager::instance()->setEnabled( false );
+    }
 
     if ( settings.value( QLatin1String( "Cache/EnableCleaner" ), true ).toBool() ) {
       mCacheCleaner = new CacheCleaner( this );
@@ -205,7 +209,7 @@ AkonadiServer::AkonadiServer( QObject* parent )
       connectionSettings.setValue( QLatin1String( "DBUS/Address" ), QLatin1String( dbusAddress ) );
     }
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName(AkDBus::Control),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName( AkDBus::Control ),
                                                             QDBusConnection::sessionBus(),
                                                             QDBusServiceWatcher::WatchForOwnerChange, this );
 
@@ -228,8 +232,9 @@ AkonadiServer::~AkonadiServer()
 
 template <typename T> static void quitThread( T & thread )
 {
-  if ( !thread )
+  if ( !thread ) {
     return;
+  }
   thread->quit();
   thread->wait();
   delete thread;
@@ -238,8 +243,9 @@ template <typename T> static void quitThread( T & thread )
 
 void AkonadiServer::quit()
 {
-    if ( mAlreadyShutdown )
+    if ( mAlreadyShutdown ) {
       return;
+    }
     mAlreadyShutdown = true;
 
     akDebug() << "terminating service threads";
@@ -252,8 +258,9 @@ void AkonadiServer::quit()
     mSearchManager = 0;
 
     akDebug() << "terminating connection threads";
-    for ( int i = 0; i < mConnections.count(); ++i )
+    for ( int i = 0; i < mConnections.count(); ++i ) {
       quitThread( mConnections[ i ] );
+    }
     mConnections.clear();
 
     // Terminate the preprocessor manager before the database but after all connections are gone
@@ -271,11 +278,13 @@ void AkonadiServer::quit()
 #ifndef Q_OS_WIN
     const QString socketDir = Utils::preferredSocketDirectory( AkStandardDirs::saveDir( "data" ) );
 
-    if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) )
+    if ( !QDir::home().remove( socketDir + QLatin1String( "/akonadiserver.socket" ) ) ) {
         akError() << "Failed to remove Unix socket";
+    }
 #endif
-    if ( !QDir::home().remove( connectionSettingsFile ) )
+    if ( !QDir::home().remove( connectionSettingsFile ) ) {
         akError() << "Failed to remove runtime connection config file";
+    }
 
     QTimer::singleShot( 0, this, SLOT(doQuit()) );
 }
@@ -291,19 +300,20 @@ void AkonadiServer::incomingConnection( int socketDescriptor )
 void AkonadiServer::incomingConnection( quintptr socketDescriptor )
 #endif
 {
-    if ( mAlreadyShutdown )
+    if ( mAlreadyShutdown ) {
       return;
+    }
     QPointer<AkonadiConnection> thread = new AkonadiConnection( socketDescriptor, this );
     connect( thread, SIGNAL(finished()), thread, SLOT(deleteLater()) );
     mConnections.append( thread );
     thread->start();
 }
 
-
 AkonadiServer * AkonadiServer::instance()
 {
-    if ( !s_instance )
+    if ( !s_instance ) {
         s_instance = new AkonadiServer();
+    }
     return s_instance;
 }
 
@@ -325,12 +335,13 @@ void AkonadiServer::createDatabase()
   QSqlDatabase db = QSqlDatabase::addDatabase( DbConfig::configuredDatabase()->driverName(), initCon );
   DbConfig::configuredDatabase()->apply( db );
   db.setDatabaseName( DbConfig::configuredDatabase()->databaseName() );
-  if ( !db.isValid() )
+  if ( !db.isValid() ) {
     akFatal() << "Invalid database object during initial database connection";
+  }
 
-  if ( db.open() )
+  if ( db.open() ) {
     db.close();
-  else {
+  } else {
     akDebug() << "Failed to use database" << DbConfig::configuredDatabase()->databaseName();
     akDebug() << "Database error:" << db.lastError().text();
     akDebug() << "Trying to create database now...";
@@ -354,8 +365,9 @@ void AkonadiServer::createDatabase()
 
 void AkonadiServer::stopDatabaseProcess()
 {
-  if ( !DbConfig::configuredDatabase()->useInternalServer() )
+  if ( !DbConfig::configuredDatabase()->useInternalServer() ) {
     return;
+  }
 
   DbConfig::configuredDatabase()->stopInternalServer();
 }
@@ -367,4 +379,3 @@ void AkonadiServer::serviceOwnerChanged( const QString&, const QString&, const Q
     quit();
   }
 }
-
