@@ -69,24 +69,24 @@ public:
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static Handler* findHandlerForCommandAlwaysAllowed( const QByteArray& line );
+    static Handler *findHandlerForCommandAlwaysAllowed( const QByteArray& line );
 
     /**
      * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static Handler* findHandlerForCommandNonAuthenticated( const QByteArray& line );
+    static Handler *findHandlerForCommandNonAuthenticated( const QByteArray& line );
 
     /**
      * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
      * @param line the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static Handler* findHandlerForCommandAuthenticated( const QByteArray& line, ImapStreamParser *streamParser );
+    static Handler *findHandlerForCommandAuthenticated( const QByteArray& line, ImapStreamParser *streamParser );
 
-    void setConnection( AkonadiConnection* connection );
-    AkonadiConnection* connection() const;
+    void setConnection( AkonadiConnection *connection );
+    AkonadiConnection *connection() const;
 
     /** Send a failure response with the given message. */
     bool failureResponse( const QByteArray &failureMessage );
@@ -132,7 +132,7 @@ Q_SIGNALS:
 
 private:
     QByteArray m_tag;
-    AkonadiConnection* m_connection;
+    AkonadiConnection *m_connection;
 
 protected:
     ImapStreamParser *m_streamParser;
