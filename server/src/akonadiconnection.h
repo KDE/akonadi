@@ -53,7 +53,7 @@ public:
     virtual ~AkonadiConnection();
     void run();
 
-    virtual DataStore* storageBackend();
+    virtual DataStore *storageBackend();
     qint64 selectedCollectionId() const;
     void setSelectedCollection( qint64 collection );
 
@@ -67,14 +67,14 @@ public:
 
     const Collection selectedCollection();
 
-    void addStatusMessage( const QByteArray& msg );
+    void addStatusMessage( const QByteArray &msg );
     void flushStatusMessageQueue();
 
     void setSessionId( const QByteArray &id );
     QByteArray sessionId() const;
 
-    const ClientCapabilities& capabilities() const;
-    void setCapabilities(const ClientCapabilities &capabilities);
+    const ClientCapabilities &capabilities() const;
+    void setCapabilities( const ClientCapabilities &capabilities );
 
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
@@ -85,14 +85,13 @@ protected Q_SLOTS:
      * New data arrived from the client. Creates a handler for it and passes the data to the handler.
      */
     void slotNewData();
-    void slotResponseAvailable( const Akonadi::Response& response );
+    void slotResponseAvailable( const Akonadi::Response &response );
     void slotConnectionStateChange( ConnectionState );
 
 protected:
     AkonadiConnection() {} // used for testing
     void writeOut( const QByteArray &data );
-    Handler* findHandlerForCommand( const QByteArray& command );
-
+    Handler *findHandlerForCommand( const QByteArray &command );
 
 private:
 #ifdef Q_OS_WINCE
