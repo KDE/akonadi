@@ -189,11 +189,11 @@ int HandlerHelper::parseCachePolicy( const QByteArray &data, Collection &col, in
 QByteArray HandlerHelper::cachePolicyToByteArray( const Collection &col )
 {
   QByteArray rv = AKONADI_PARAM_CACHEPOLICY " (";
-  rv += AKONADI_PARAM_INHERIT + ' ' + ( col.cachePolicyInherit() ? QByteArray( "true" ) : QByteArray( "false" ) );
-  rv += ' ' + AKONADI_PARAM_INTERVAL + ' ' + QByteArray::number( col.cachePolicyCheckInterval() );
-  rv += ' ' + AKONADI_PARAM_CACHETIMEOUT + ' ' + QByteArray::number( col.cachePolicyCacheTimeout() );
-  rv += ' ' + AKONADI_PARAM_SYNCONDEMAND + ' ' + ( col.cachePolicySyncOnDemand() ? QByteArray( "true" ) : QByteArray( "false" ) );
-  rv += ' ' + AKONADI_PARAM_LOCALPARTS + '(' + col.cachePolicyLocalParts().toLatin1() + ')';
+  rv += AKONADI_PARAM_INHERIT " " + ( col.cachePolicyInherit() ? QByteArray( "true" ) : QByteArray( "false" ) );
+  rv += " " AKONADI_PARAM_INTERVAL " " + QByteArray::number( col.cachePolicyCheckInterval() );
+  rv += " " AKONADI_PARAM_CACHETIMEOUT " " + QByteArray::number( col.cachePolicyCacheTimeout() );
+  rv += " " AKONADI_PARAM_SYNCONDEMAND " " + ( col.cachePolicySyncOnDemand() ? QByteArray( "true" ) : QByteArray( "false" ) );
+  rv += " " AKONADI_PARAM_LOCALPARTS " (" + col.cachePolicyLocalParts().toLatin1() + ')';
   rv += ')';
   return rv;
 }
@@ -204,26 +204,26 @@ QByteArray HandlerHelper::collectionToByteArray( const Collection &col, bool hid
   QByteArray b = QByteArray::number( col.id() ) + ' '
                + QByteArray::number( col.parentId() ) + " (";
 
-  b += AKONADI_PARAM_NAME + ' ' + ImapParser::quote( col.name().toUtf8() ) + ' ';
+  b += AKONADI_PARAM_NAME " " + ImapParser::quote( col.name().toUtf8() ) + ' ';
   if ( hidden ) {
     b += AKONADI_PARAM_MIMETYPE " () ";
   } else {
     b += AKONADI_PARAM_MIMETYPE " (" + MimeType::joinByName( col.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   }
-  b += AKONADI_PARAM_REMOTEID + ' ' + ImapParser::quote( col.remoteId().toUtf8() );
-  b += ' ' + AKONADI_PARAM_REMOTEREVISION + ' ' + ImapParser::quote( col.remoteRevision().toUtf8() );
-  b += ' ' + AKONADI_PARAM_RESOURCE + ' ' + ImapParser::quote( col.resource().name().toUtf8() );
-  b += ' ' + AKONADI_PARAM_VIRTUAL + ' ' + QByteArray::number( col.isVirtual() ) + ' ';
+  b += AKONADI_PARAM_REMOTEID " " + ImapParser::quote( col.remoteId().toUtf8() );
+  b += " " AKONADI_PARAM_REMOTEREVISION " " + ImapParser::quote( col.remoteRevision().toUtf8() );
+  b += " " AKONADI_PARAM_RESOURCE " " + ImapParser::quote( col.resource().name().toUtf8() );
+  b += " " AKONADI_PARAM_VIRTUAL " " + QByteArray::number( col.isVirtual() ) + ' ';
 
   if ( includeStatistics ) {
     qint64 itemCount, itemSize;
     if ( itemStatistics( col, itemCount, itemSize ) ) {
-      b += AKONADI_ATTRIBUTE_MESSAGES + ' ' + QByteArray::number( itemCount ) + ' ';
+      b += AKONADI_ATTRIBUTE_MESSAGES " " + QByteArray::number( itemCount ) + ' ';
       // itemWithFlagCount is twice as fast as itemWithoutFlagCount, so emulated that...
-      b += AKONADI_ATTRIBUTE_UNSEEN + ' ';
+      b += AKONADI_ATTRIBUTE_UNSEEN " ";
       b += QByteArray::number( itemCount - itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
                                                                                   << QLatin1String( AKONADI_FLAG_IGNORED ) ) );
-      b += ' ' + AKONADI_PARAM_SIZE + ' ' + QByteArray::number( itemSize ) + ' ';
+      b += " " AKONADI_PARAM_SIZE " " + QByteArray::number( itemSize ) + ' ';
     }
   }
 
