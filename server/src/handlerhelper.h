@@ -75,7 +75,7 @@ class HandlerHelper
       has actually changed
       @todo Error handling.
     */
-    static int parseCachePolicy( const QByteArray& data, Akonadi::Collection& col, int start = 0, bool* changed = 0 );
+    static int parseCachePolicy( const QByteArray &data, Akonadi::Collection &col, int start = 0, bool *changed = 0 );
 
     /**
       Returns the protocol representation of the cache policy of the given
