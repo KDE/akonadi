@@ -23,12 +23,14 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 
+#include <libs/protocol_p.h>
+
 #include <QDebug>
 #include <QTimer>
 
 using namespace Akonadi;
 
-CacheCleaner::CacheCleaner(QObject * parent) :
+CacheCleaner::CacheCleaner( QObject *parent ) :
     QThread( parent )
 {
   mTime = 60;
@@ -58,8 +60,9 @@ void CacheCleaner::cleanCache()
 
     // check if there is something to expire at all
     if ( collection.cachePolicyLocalParts() == QLatin1String( "ALL" ) || collection.cachePolicyCacheTimeout() < 0
-       || !collection.subscribed() || !collection.resourceId() )
+       || !collection.subscribed() || !collection.resourceId() ) {
       continue;
+    }
     const int expireTime = qMax( 5, collection.cachePolicyCacheTimeout() );
 
     // find all expired item parts
@@ -68,28 +71,33 @@ void CacheCleaner::cleanCache()
     qb.addValueCondition( PimItem::collectionIdFullColumnName(), Query::Equals, collection.id() );
     qb.addValueCondition( PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs( -60 * expireTime ) );
     qb.addValueCondition( Part::dataFullColumnName(), Query::IsNot, QVariant() );
-    qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( "PLD:" ) );
+    qb.addValueCondition( QString::fromLatin1( "substr( %1, 1, 4 )" ).arg( Part::nameFullColumnName() ), Query::Equals, QLatin1String( AKONADI_PARAM_PLD ) );
     qb.addValueCondition( PimItem::dirtyFullColumnName(), Query::Equals, false );
     QStringList localParts;
     Q_FOREACH ( const QString &partName, collection.cachePolicyLocalParts().split( QLatin1String( " " ) ) ) {
-      if ( partName.startsWith( QLatin1String( "PLD:" ) ) )
+      if ( partName.startsWith( QLatin1String( AKONADI_PARAM_PLD ) ) ) {
         localParts.append( partName );
-      else
-        localParts.append( QLatin1String( "PLD:" ) + partName );
+      } else {
+        localParts.append( QLatin1String( AKONADI_PARAM_PLD ) + partName );
+      }
     }
-    if ( !collection.cachePolicyLocalParts().isEmpty() )
+    if ( !collection.cachePolicyLocalParts().isEmpty() ) {
       qb.addValueCondition( Part::nameFullColumnName(), Query::NotIn, localParts );
-    if ( !qb.exec() )
+    }
+    if ( !qb.exec() ) {
       continue;
+    }
     const Part::List parts = qb.result();
-    if ( parts.isEmpty() )
+    if ( parts.isEmpty() ) {
       continue;
+    }
     akDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
 
     // clear data field
     Q_FOREACH ( Part part, parts ) {
-      if ( !PartHelper::truncate( part ) )
+      if ( !PartHelper::truncate( part ) ) {
         akDebug() << "failed to update item part" << part.id();
+      }
     }
     loopsWithExpiredItem++;
   }
@@ -99,14 +107,16 @@ void CacheCleaner::cleanCache()
    * mTime is 60 otherwise we increment mTime in 60
    */
 
-  if( mLoops < loopsWithExpiredItem) {
-    if( (mTime > 60) && (loopsWithExpiredItem - mLoops) < 50 )
+  if ( mLoops < loopsWithExpiredItem) {
+    if ( (mTime > 60) && (loopsWithExpiredItem - mLoops) < 50 ) {
       mTime -= 60;
-    else
+    } else {
       mTime = 60;
+    }
   } else {
-    if( mTime < 600)
+    if ( mTime < 600 ) {
       mTime += 60;
+    }
   }
 
   // measured arithmetic between mLoops and loopsWithExpiredItem
@@ -114,4 +124,3 @@ void CacheCleaner::cleanCache()
 
   QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
 }
-

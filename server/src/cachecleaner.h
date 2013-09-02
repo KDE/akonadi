@@ -36,7 +36,7 @@ class CacheCleaner : public QThread
       Creates a new cache cleaner thread.
       @param parent The parent object.
     */
-    CacheCleaner( QObject* parent = 0 );
+    CacheCleaner( QObject *parent = 0 );
 
     ~CacheCleaner();
 
