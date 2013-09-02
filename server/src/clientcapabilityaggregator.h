@@ -28,9 +28,9 @@
 namespace ClientCapabilityAggregator
 {
   /** Register capabilities of a new session. */
-  void addSession(const ClientCapabilities &capabilities);
+  void addSession( const ClientCapabilities &capabilities );
   /** Unregister capabilities of a new session. */
-  void removeSession(const ClientCapabilities &capabilities);
+  void removeSession( const ClientCapabilities &capabilities );
 
   /** Minimum required notification message version. */
   int minimumNotificationMessageVersion();
