@@ -272,19 +272,26 @@ void ContactEditorWidget::Private::initGuiContactTab()
 
   layout->addLayout( categoriesLayout, 1, 1 );
 
+  QGroupBox *receivedMessageGroupBox = new QGroupBox( i18n("Messages") );
+  layout->addWidget( receivedMessageGroupBox, 2, 1 );
+
+  QVBoxLayout *vbox = new QVBoxLayout(receivedMessageGroupBox);
+
   QHBoxLayout *mailPreferFormattingLayout = new QHBoxLayout;
-  label = new QLabel( i18n( "Prefers to receive messages formatted as:" ) );
+  label = new QLabel( i18n( "Show messages received from this contact as:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mMailPreferFormatting = new KComboBox;
   QStringList listFormat;
-  listFormat << i18n( "Unknown" ) << i18n( "Plain Text" ) << i18n( "HTML" );
+  listFormat << i18n( "Default" ) << i18n( "Plain Text" ) << i18n( "HTML" );
   mMailPreferFormatting->addItems( listFormat );
   mailPreferFormattingLayout->addWidget( label );
   mailPreferFormattingLayout->addWidget( mMailPreferFormatting );
-  layout->addLayout( mailPreferFormattingLayout, 2, 1 );
 
-  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content." ) );
-  layout->addWidget( mAllowRemoteContent, 3,1 );
+
+  vbox->addLayout( mailPreferFormattingLayout );
+
+  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content in received HTML messages." ) );
+  vbox->addWidget( mAllowRemoteContent );
 
   layout->setRowStretch( 4,1 );
 }
