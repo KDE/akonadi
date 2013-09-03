@@ -176,7 +176,7 @@ void ETMCalendarPrivate::setupFilteredETM()
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
 
-#ifndef AKONADI_CALENDAR_DEBUG_MODEL
+#ifdef AKONADI_CALENDAR_DEBUG_MODEL
   QTreeView *view = new QTreeView;
   view->setModel( mFilteredETM );
   view->show();
