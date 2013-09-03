@@ -70,17 +70,9 @@ KDatePickerPopup::KDatePickerPopup( Items items, const QDate &date, QWidget *par
   connect( mDatePicker, SIGNAL(dateSelected(QDate)),
            SLOT(slotDateChanged(QDate)) );
 
-  connect( this, SIGNAL(aboutToHide()), SLOT(slotHidePickerPopup()));
   mDatePicker->setDate( date );
 
   buildMenu();
-}
-
-void KDatePickerPopup::slotHidePickerPopup()
-{
-    if (mDatePicker->date() != mDate) {
-        emit dateChanged( mDatePicker->date() );
-    }
 }
 
 void KDatePickerPopup::buildMenu()
@@ -132,8 +124,11 @@ void KDatePickerPopup::setItems( int items )
 }
 #endif
 
-void KDatePickerPopup::slotDateChanged( const QDate &/*date*/ )
+void KDatePickerPopup::slotDateChanged( const QDate &date )
 {
+  if (date != mDate) {
+    emit dateChanged( date );
+  }
   hide();
 }
 
