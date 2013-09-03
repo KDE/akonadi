@@ -39,6 +39,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
+#include <QTreeView>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -174,6 +175,12 @@ void ETMCalendarPrivate::setupFilteredETM()
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
+
+#ifndef AKONADI_CALENDAR_DEBUG_MODEL
+  QTreeView *view = new QTreeView;
+  view->setModel( mFilteredETM );
+  view->show();
+#endif
 }
 
 ETMCalendarPrivate::~ETMCalendarPrivate()
