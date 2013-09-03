@@ -66,14 +66,18 @@ bool DbConfigVirtuoso::init( QSettings &settings )
 
 void DbConfigVirtuoso::apply( QSqlDatabase &database )
 {
-  if ( !mDatabaseName.isEmpty() )
+  if ( !mDatabaseName.isEmpty() ) {
     database.setDatabaseName( mDatabaseName );
-  if ( !mHostName.isEmpty() )
+  }
+  if ( !mHostName.isEmpty() ) {
     database.setHostName( mHostName );
-  if ( !mUserName.isEmpty() )
+  }
+  if ( !mUserName.isEmpty() ) {
     database.setUserName( mUserName );
-  if ( !mPassword.isEmpty() )
+  }
+  if ( !mPassword.isEmpty() ) {
     database.setPassword( mPassword );
+  }
 
   database.setConnectOptions( mConnectionOptions );
 

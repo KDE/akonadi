@@ -24,14 +24,12 @@
 #include <qdbusabstractinterface.h>
 #include <qdebug.h>
 
-
 ItemRetrievalJob::~ItemRetrievalJob()
 {
   Q_ASSERT( !m_active );
 }
 
-
-void ItemRetrievalJob::start(QDBusAbstractInterface* interface)
+void ItemRetrievalJob::start(QDBusAbstractInterface *interface)
 {
   Q_ASSERT( m_request );
   akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
@@ -63,10 +61,11 @@ void ItemRetrievalJob::callFinished(bool returnValue)
 {
   if ( m_active ) {
     m_active = false;
-    if ( !returnValue )
+    if ( !returnValue ) {
       Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Resource was unable to deliver item" ) );
-    else
+    } else {
       Q_EMIT requestCompleted( m_request, QString() );
+    }
   }
   deleteLater();
 }
@@ -75,14 +74,14 @@ void ItemRetrievalJob::callFinished(const QString& errorMsg)
 {
   if ( m_active ) {
     m_active = false;
-    if ( !errorMsg.isEmpty() )
+    if ( !errorMsg.isEmpty() ) {
       Q_EMIT requestCompleted( m_request, QString::fromLatin1( "Unable to retrieve item from resource: %1" ).arg( errorMsg ) );
-    else
+    } else {
       Q_EMIT requestCompleted( m_request, QString() );
+    }
   }
   deleteLater();
 }
-
 
 void ItemRetrievalJob::callFailed(const QDBusError& error)
 {
@@ -105,4 +104,3 @@ void ItemRetrievalJob::callFailed(const QDBusError& error)
   }
   deleteLater();
 }
-

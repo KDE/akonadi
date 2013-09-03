@@ -58,11 +58,13 @@ bool DbUpdater::run()
 
   UpdateSet::Map updates;
 
-  if ( !parseUpdateSets( currentVersion.version(), updates ) )
+  if ( !parseUpdateSets( currentVersion.version(), updates ) ) {
     return false;
+  }
 
-  if ( updates.isEmpty() )
+  if ( updates.isEmpty() ) {
     return true;
+  }
   // indicate clients this might take a while
   // we can ignore unregistration in error cases, that'll kill the server anyway
   if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::UpgradeIndicator ) ) ) {
@@ -107,8 +109,9 @@ bool DbUpdater::run()
     if ( !success || !m_database.commit() ) {
       akError() << "Failed to commit transaction for database update";
       m_database.rollback();
-      if ( it.value().abortOnFailure )
+      if ( it.value().abortOnFailure ) {
         return false;
+      }
     }
   }
 
@@ -130,7 +133,7 @@ bool DbUpdater::parseUpdateSets( int currentVersion, UpdateSet::Map &updates ) c
   int line, column;
   if ( !document.setContent( &file, &errorMsg, &line, &column ) ) {
     akError() << "Unable to parse update description file" << m_filename << ":"
-        << errorMsg << "at line" << line << "column" << column;
+              << errorMsg << "at line" << line << "column" << column;
     return false;
   }
 
@@ -193,16 +196,20 @@ bool DbUpdater::updateApplicable( const QString &backends ) const
 
   QString currentBackend;
   switch ( DbType::type( m_database ) ) {
-    case DbType::MySQL:
-      currentBackend = QLatin1String( "mysql" ); break;
-    case DbType::PostgreSQL:
-      currentBackend = QLatin1String( "psql" ); break;
-    case DbType::Sqlite:
-      currentBackend = QLatin1String( "sqlite" ); break;
-    case DbType::Virtuoso:
-      currentBackend = QLatin1String( "odbc" ); break;
-    case DbType::Unknown:
-      return false;
+  case DbType::MySQL:
+    currentBackend = QLatin1String( "mysql" );
+    break;
+  case DbType::PostgreSQL:
+    currentBackend = QLatin1String( "psql" );
+    break;
+  case DbType::Sqlite:
+    currentBackend = QLatin1String( "sqlite" );
+    break;
+  case DbType::Virtuoso:
+    currentBackend = QLatin1String( "odbc" );
+    break;
+  case DbType::Unknown:
+    return false;
   }
 
   return matchingBackends.contains( currentBackend );

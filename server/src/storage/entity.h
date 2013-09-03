@@ -50,8 +50,9 @@ class Entity
     template <typename T> static QString joinByName( const QVector<T> &list, const QString &sep )
     {
       QStringList tmp;
-      Q_FOREACH( const T & t, list )
+      Q_FOREACH ( const T & t, list ) {
         tmp << t.name();
+      }
       return tmp.join( sep );
     }
 
@@ -177,6 +178,5 @@ namespace _detail {
 }
 
 }
-
 
 #endif

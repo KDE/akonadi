@@ -37,4 +37,3 @@ void ItemRetrievalThread::run()
   exec();
   delete mgr;
 }
-

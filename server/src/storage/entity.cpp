@@ -64,15 +64,16 @@ QSqlDatabase Entity::database()
 int Entity::countImpl( const QString & tableName, const QString & column, const QVariant & value )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
       return -1;
+  }
 
   CountQueryBuilder builder( tableName );
   builder.addValueCondition( column, Query::Equals, value );
 
   if ( !builder.exec() ) {
     akDebug() << "Error during counting records in table" << tableName
-             << builder.query().lastError().text();
+              << builder.query().lastError().text();
     return -1;
   }
 
@@ -82,15 +83,16 @@ int Entity::countImpl( const QString & tableName, const QString & column, const 
 bool Entity::removeImpl( const QString & tableName, const QString & column, const QVariant & value )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
     return false;
+  }
 
   QueryBuilder builder( tableName, QueryBuilder::Delete );
   builder.addValueCondition( column, Query::Equals, value );
 
   if ( !builder.exec() ) {
     akDebug() << "Error during deleting records from table"
-             << tableName << builder.query().lastError().text();
+              << tableName << builder.query().lastError().text();
     return false;
   }
   return true;
@@ -99,8 +101,9 @@ bool Entity::removeImpl( const QString & tableName, const QString & column, cons
 bool Entity::relatesToImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
     return false;
+  }
 
   CountQueryBuilder builder( tableName );
   builder.addValueCondition( leftColumn, Query::Equals, leftId );
@@ -108,20 +111,22 @@ bool Entity::relatesToImpl( const QString & tableName, const QString & leftColum
 
   if ( !builder.exec() ) {
     akDebug() << "Error during counting records in table" << tableName
-             << builder.query().lastError().text();
+              << builder.query().lastError().text();
     return false;
   }
 
-  if ( builder.result() > 0 )
+  if ( builder.result() > 0 ) {
     return true;
+  }
   return false;
 }
 
 bool Entity::addToRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
     return false;
+  }
 
   QueryBuilder qb( tableName, QueryBuilder::Insert );
   qb.setColumnValue( leftColumn, leftId );
@@ -130,7 +135,7 @@ bool Entity::addToRelationImpl( const QString & tableName, const QString & leftC
 
   if ( !qb.exec() ) {
     akDebug() << "Error during adding a record to table" << tableName
-             << qb.query().lastError().text();
+              << qb.query().lastError().text();
     return false;
   }
 
@@ -140,8 +145,9 @@ bool Entity::addToRelationImpl( const QString & tableName, const QString & leftC
 bool Entity::removeFromRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
     return false;
+  }
 
   QueryBuilder builder( tableName, QueryBuilder::Delete );
   builder.addValueCondition( leftColumn, Query::Equals, leftId );
@@ -149,7 +155,7 @@ bool Entity::removeFromRelationImpl( const QString & tableName, const QString & 
 
   if ( !builder.exec() ) {
     akDebug() << "Error during removing a record from relation table" << tableName
-             << builder.query().lastError().text();
+              << builder.query().lastError().text();
     return false;
   }
 
@@ -159,23 +165,24 @@ bool Entity::removeFromRelationImpl( const QString & tableName, const QString & 
 bool Entity::clearRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 id, RelationSide side )
 {
   QSqlDatabase db = database();
-  if ( !db.isOpen() )
+  if ( !db.isOpen() ) {
     return false;
+  }
 
   QueryBuilder builder( tableName, QueryBuilder::Delete );
   switch ( side ) {
-    case Left:
-      builder.addValueCondition( leftColumn, Query::Equals, id );
-      break;
-    case Right:
-      builder.addValueCondition( rightColumn, Query::Equals, id );
-      break;
-    default:
-      qFatal("Invalid enum value");
+  case Left:
+    builder.addValueCondition( leftColumn, Query::Equals, id );
+    break;
+  case Right:
+    builder.addValueCondition( rightColumn, Query::Equals, id );
+    break;
+  default:
+    qFatal("Invalid enum value");
   }
   if ( !builder.exec() ) {
     akDebug() << "Error during clearing relation table" << tableName
-             << "for id" << id << builder.query().lastError().text();
+              << "for id" << id << builder.query().lastError().text();
     return false;
   }
 

@@ -28,7 +28,7 @@
 
 using namespace Akonadi;
 
-Subscribe::Subscribe(bool subscribe) :
+Subscribe::Subscribe( bool subscribe ) :
   mSubscribe( subscribe )
 {
 }
@@ -39,28 +39,33 @@ bool Subscribe::parseStream()
   Transaction transaction( store );
 
   QByteArray buffer;
-  while (!m_streamParser->atCommandEnd()) {
+  while ( !m_streamParser->atCommandEnd() ) {
     buffer = m_streamParser->readString();
-    if ( buffer.isEmpty() )
+    if ( buffer.isEmpty() ) {
       break;
+    }
     Collection col = HandlerHelper::collectionFromIdOrName( buffer );
-    if ( !col.isValid() )
+    if ( !col.isValid() ) {
       return failureResponse( "Invalid collection" );
-    if ( col.subscribed() == mSubscribe )
+    }
+    if ( col.subscribed() == mSubscribe ) {
       continue;
+    }
     // TODO do all changes in one db operation
     col.setSubscribed( mSubscribe );
-    if ( !col.update() )
+    if ( !col.update() ) {
       return failureResponse( "Unable to change subscription" );
-    if( mSubscribe )
+    }
+    if ( mSubscribe ) {
       store->notificationCollector()->collectionSubscribed( col );
-    else
+    } else {
       store->notificationCollector()->collectionUnsubscribed( col );
+    }
   }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Cannot commit transaction." );
+  }
 
   return successResponse( "Completed" );
 }
-

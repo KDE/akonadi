@@ -26,8 +26,7 @@
 
 using namespace Akonadi;
 
-
-NotificationCollector::NotificationCollector(QObject* parent) :
+NotificationCollector::NotificationCollector(QObject *parent) :
   QObject( parent ),
   mDb( 0 )
 {
@@ -69,7 +68,6 @@ void Akonadi::NotificationCollector::itemsFlagsChanged( const PimItem::List &ite
   itemNotification( NotificationMessageV2::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags );
 }
 
-
 void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
                                                  const Collection &collectionSrc,
                                                  const Collection &collectionDest,
@@ -77,7 +75,6 @@ void Akonadi::NotificationCollector::itemsMoved( const PimItem::List &items,
 {
   itemNotification( NotificationMessageV2::Move, items, collectionSrc, collectionDest, sourceResource );
 }
-
 
 void Akonadi::NotificationCollector::itemsRemoved( const PimItem::List &items,
                                                    const Collection &collection,
@@ -134,7 +131,6 @@ void NotificationCollector::collectionUnsubscribed( const Collection& collection
 {
   collectionNotification( NotificationMessageV2::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>() );
 }
-
 
 void Akonadi::NotificationCollector::transactionCommitted()
 {
@@ -256,8 +252,9 @@ void NotificationCollector::collectionNotification( NotificationMessageV2::Opera
   msg.setItemParts( changes );
 
   QByteArray res = resource;
-  if ( res.isEmpty() )
+  if ( res.isEmpty() ) {
     res = collection.resource().name().toLatin1();
+  }
   msg.setResource( res );
 
   dispatchNotification( msg );
@@ -279,4 +276,3 @@ void NotificationCollector::dispatchNotifications()
   Q_EMIT notify( mNotifications );
   clear();
 }
-

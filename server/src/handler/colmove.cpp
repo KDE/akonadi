@@ -35,19 +35,20 @@ ColMove::ColMove(Scope::SelectionScope scope) :
 {
 }
 
-
 bool ColMove::parseStream()
 {
   m_scope.parseScope( m_streamParser );
   SelectQueryBuilder<Collection> qb;
   CollectionQueryHelper::scopeToQuery( m_scope, connection(), qb );
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     throw HandlerException( "Unable to execute collection query" );
+  }
   const Collection::List sources = qb.result();
-  if ( sources.isEmpty() )
+  if ( sources.isEmpty() ) {
     throw HandlerException( "No source collection specified" );
-  else if ( sources.size() > 1 ) // TODO
+  } else if ( sources.size() > 1 ) { // TODO
     throw HandlerException( "Moving multiple collections is not yet implemented" );
+  }
   Collection source = sources.first();
 
   Scope destScope( m_scope.scope() );
@@ -55,8 +56,9 @@ bool ColMove::parseStream()
   akDebug() << destScope.uidSet().toImapSequenceSet();
   const Collection target = CollectionQueryHelper::singleCollectionFromScope( destScope, connection() );
 
-  if ( source.parentId() == target.id() )
+  if ( source.parentId() == target.id() ) {
     return successResponse( "COLMOVE complete - nothing to do" );
+  }
 
   // retrieve all not yet cached items of the source
   ItemRetriever retriever( connection() );
@@ -69,14 +71,15 @@ bool ColMove::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  if ( !store->moveCollection( source, target ) )
+  if ( !store->moveCollection( source, target ) ) {
     return failureResponse( "Unable to reparent collection" );
+  }
 
-  if ( !transaction.commit() )
+  if ( !transaction.commit() ) {
     return failureResponse( "Cannot commit transaction." );
+  }
 
   return successResponse( "COLMOVE complete" );
 }
 
 }
-

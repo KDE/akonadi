@@ -44,20 +44,22 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const
   }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConnection* connection, QueryBuilder& qb)
+void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConnection *connection, QueryBuilder& qb)
 {
-  if ( !isUid && connection->selectedCollectionId() >= 0 )
+  if ( !isUid && connection->selectedCollectionId() >= 0 ) {
     itemSetToQuery( set, qb, connection->selectedCollection() );
-  else
+  } else {
     itemSetToQuery( set, qb );
+  }
 }
 
-void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection* connection, QueryBuilder& qb)
+void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection *connection, QueryBuilder& qb)
 {
-  if ( rids.size() == 1 )
+  if ( rids.size() == 1 ) {
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rids.first() );
-  else
+  } else {
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::In, rids );
+  }
 
   if ( connection->resourceContext().isValid() ) {
     qb.addJoin( QueryBuilder::InnerJoin, Collection::tableName(),
@@ -70,14 +72,15 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
 
 void ItemQueryHelper::gidToQuery(const QStringList& gids, QueryBuilder& qb)
 {
-  if ( gids.size() == 1 )
+  if ( gids.size() == 1 ) {
     qb.addValueCondition( PimItem::gidFullColumnName(), Query::Equals, gids.first() );
-  else
+  } else {
     qb.addValueCondition( PimItem::gidFullColumnName(), Query::In, gids );
+  }
 
 }
 
-void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connection, QueryBuilder& qb)
+void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection *connection, QueryBuilder& qb)
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );
@@ -89,8 +92,9 @@ void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection* connec
     return;
   }
 
-  if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() )
+  if ( connection->selectedCollectionId() <= 0 && !connection->resourceContext().isValid() ) {
       throw HandlerException( "Operations based on remote identifiers require a resource or collection context" );
+  }
 
   if ( scope.scope() == Scope::Rid ) {
     ItemQueryHelper::remoteIdToQuery( scope.ridSet(), connection, qb );

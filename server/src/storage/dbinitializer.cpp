@@ -44,17 +44,21 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, S
 {
   DbInitializer::Ptr i;
   switch ( DbType::type( database ) ) {
-    case DbType::MySQL:
-      i.reset( new DbInitializerMySql( database ) ); break;
-    case DbType::Sqlite:
-      i.reset( new DbInitializerSqlite( database ) ); break;
-    case DbType::PostgreSQL:
-      i.reset( new DbInitializerPostgreSql( database ) ); break;
-    case DbType::Virtuoso:
-      i.reset( new DbInitializerVirtuoso( database ) ); break;
-    case DbType::Unknown:
-      akFatal() << database.driverName() << "backend not supported";
-      break;
+  case DbType::MySQL:
+    i.reset( new DbInitializerMySql( database ) );
+    break;
+  case DbType::Sqlite:
+    i.reset( new DbInitializerSqlite( database ) );
+    break;
+  case DbType::PostgreSQL:
+    i.reset( new DbInitializerPostgreSql( database ) );
+    break;
+  case DbType::Virtuoso:
+    i.reset( new DbInitializerVirtuoso( database ) );
+    break;
+  case DbType::Unknown:
+    akFatal() << database.driverName() << "backend not supported";
+    break;
   }
   i->mSchema = schema;
   return i;
@@ -76,13 +80,15 @@ bool DbInitializer::run()
     akDebug() << "DbInitializer::run()";
 
     Q_FOREACH ( const TableDescription &table, mSchema->tables() ) {
-      if ( !checkTable( table ) )
+      if ( !checkTable( table ) ) {
         return false;
+      }
     }
 
     Q_FOREACH ( const RelationDescription &relation, mSchema->relations() ) {
-      if ( !checkRelation( relation ) )
+      if ( !checkRelation( relation ) ) {
         return false;
+      }
     }
 
     akDebug() << "DbInitializer::run() done";
@@ -122,8 +128,9 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
   }
 
   // Add initial data if table is empty
-  if ( tableDescription.data.isEmpty() )
+  if ( tableDescription.data.isEmpty() ) {
     return true;
+  }
   if ( m_introspector->isTableEmpty( tableDescription.name ) ) {
     Q_FOREACH ( const DataDescription &dataDescription, tableDescription.data ) {
       // Get the INSERT VALUES statement for the specific SQL dialect
@@ -153,10 +160,9 @@ void DbInitializer::checkForeignKeys(const TableDescription& tableDescription)
         if ( !existingForeignKey.column.isEmpty() ) {
           // there's a constraint on this column, check if it's the correct one
           if ( QString::compare( existingForeignKey.refTable, column.refTable + QLatin1Literal( "table" ), Qt::CaseInsensitive ) == 0
-            && QString::compare( existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive ) == 0
-            && QString::compare( existingForeignKey.onUpdate, referentialActionToString( column.onUpdate ), Qt::CaseInsensitive ) == 0
-            && QString::compare( existingForeignKey.onDelete, referentialActionToString( column.onDelete ), Qt::CaseInsensitive ) == 0 )
-          {
+               && QString::compare( existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive ) == 0
+               && QString::compare( existingForeignKey.onUpdate, referentialActionToString( column.onUpdate ), Qt::CaseInsensitive ) == 0
+               && QString::compare( existingForeignKey.onDelete, referentialActionToString( column.onDelete ), Qt::CaseInsensitive ) == 0 ) {
             continue; // all good
           }
 
@@ -291,26 +297,33 @@ void DbInitializer::execPendingQueries( const QStringList &queries )
 QString DbInitializer::sqlType(const QString & type, int size) const
 {
   Q_UNUSED(size);
-  if ( type == QLatin1String("int") )
+  if ( type == QLatin1String("int") ) {
     return QLatin1String("INTEGER");
-  if ( type == QLatin1String("qint64") )
+  }
+  if ( type == QLatin1String("qint64") ) {
     return QLatin1String( "BIGINT" );
-  if ( type == QLatin1String("QString") )
+  }
+  if ( type == QLatin1String("QString") ) {
     return QLatin1String("TEXT");
-  if (type == QLatin1String("QByteArray") )
+  }
+  if (type == QLatin1String("QByteArray") ) {
     return QLatin1String("LONGBLOB");
-  if ( type == QLatin1String("QDateTime") )
+  }
+  if ( type == QLatin1String("QDateTime") ) {
     return QLatin1String("TIMESTAMP");
-  if ( type == QLatin1String( "bool" ) )
+  }
+  if ( type == QLatin1String( "bool" ) ) {
     return QLatin1String("BOOL");
+  }
   Q_ASSERT( false );
   return QString();
 }
 
 QString DbInitializer::sqlValue( const QString &type, const QString &value ) const
 {
-  if ( type == QLatin1String( "QDateTime" ) && value == QLatin1String( "QDateTime::currentDateTime()" ) )
+  if ( type == QLatin1String( "QDateTime" ) && value == QLatin1String( "QDateTime::currentDateTime()" ) ) {
     return QLatin1String( "CURRENT_TIMESTAMP" );
+  }
 
   return value;
 }
@@ -353,9 +366,12 @@ QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialActi
 QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
 {
   switch ( action ) {
-    case ColumnDescription::Cascade: return QLatin1String( "CASCADE" );
-    case ColumnDescription::Restrict: return QLatin1String( "RESTRICT" );
-    case ColumnDescription::SetNull: return QLatin1String( "SET NULL" );
+  case ColumnDescription::Cascade:
+    return QLatin1String( "CASCADE" );
+  case ColumnDescription::Restrict:
+    return QLatin1String( "RESTRICT" );
+  case ColumnDescription::SetNull:
+    return QLatin1String( "SET NULL" );
   }
 
   Q_ASSERT( !"invalid referential action enum!" );
@@ -365,9 +381,10 @@ QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialA
 QString DbInitializer::buildPrimaryKeyStatement(const TableDescription& table)
 {
   QStringList cols;
-  Q_FOREACH( const ColumnDescription &column, table.columns ) {
-    if ( column.isPrimaryKey )
+  Q_FOREACH ( const ColumnDescription &column, table.columns ) {
+    if ( column.isPrimaryKey ) {
       cols.push_back( column.name );
+    }
   }
   return QLatin1Literal( "PRIMARY KEY (" ) + cols.join( QLatin1String( ", " ) ) + QLatin1Char( ')' );
 }
@@ -381,10 +398,10 @@ void DbInitializer::execQuery(const QString& queryString)
   }
 
   QSqlQuery query( mDatabase );
-  if ( !query.exec( queryString ) )
+  if ( !query.exec( queryString ) ) {
     throw DbException( query );
+  }
 }
-
 
 void DbInitializer::setTestInterface( TestInterface *interface )
 {

@@ -28,7 +28,6 @@ namespace Akonadi {
 
 class NotificationCollector;
 
-
 class AbstractSearchEngine;
 class Collection;
 

@@ -35,25 +35,29 @@ bool Akonadi::TransactionHandler::parseStream()
   DataStore *store = connection()->storageBackend();
 
   if ( mMode == Begin ) {
-    if ( !store->beginTransaction() )
+    if ( !store->beginTransaction() ) {
       return failureResponse( "Unable to begin transaction." );
+    }
   }
 
   if ( mMode == Rollback ) {
-    if ( !store->inTransaction() )
+    if ( !store->inTransaction() ) {
       return failureResponse( "There is no transaction in progress." );
-    if ( !store->rollbackTransaction() )
+    }
+    if ( !store->rollbackTransaction() ) {
       return failureResponse( "Unable to roll back transaction." );
+    }
   }
 
   if ( mMode == Commit ) {
-    if ( !store->inTransaction() )
+    if ( !store->inTransaction() ) {
       return failureResponse( "There is no transaction in progress." );
-    if ( !store->commitTransaction() )
+    }
+    if ( !store->commitTransaction() ) {
       return failureResponse( "Unable to commit transaction." );
+    }
   }
 
   const QMetaEnum me = metaObject()->enumerator( metaObject()->indexOfEnumerator( "Mode" ) );
   return successResponse( me.valueToKey( mMode ) + QByteArray( " completed" ) );
 }
-

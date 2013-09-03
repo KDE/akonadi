@@ -25,7 +25,6 @@
 #include <Soprano/Node>
 #include <Soprano/BindingSet>
 
-
 void Nepomuk::Query::registerDBusTypes()
 {
     qDBusRegisterMetaType<Nepomuk::Query::Result>();
@@ -33,7 +32,6 @@ void Nepomuk::Query::registerDBusTypes()
     qDBusRegisterMetaType<Soprano::Node>();
     qDBusRegisterMetaType<RequestPropertyMapDBus>();
 }
-
 
 QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& result )
 {
@@ -73,7 +71,6 @@ QDBusArgument& operator<<( QDBusArgument& arg, const Nepomuk::Query::Result& res
 
     return arg;
 }
-
 
 const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Result& result )
 {
@@ -122,22 +119,19 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Nepomuk::Query::Resul
     return arg;
 }
 
-
 QDBusArgument& operator<<( QDBusArgument& arg, const Soprano::Node& node )
 {
     arg.beginStructure();
     arg << ( int )node.type();
     if ( node.type() == Soprano::Node::ResourceNode ) {
         arg << QString::fromAscii( node.uri().toEncoded() );
-    }
-    else {
+    } else {
         arg << node.toString();
     }
     arg << node.language() << node.dataType().toString();
     arg.endStructure();
     return arg;
 }
-
 
 const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& node )
 {
@@ -149,18 +143,16 @@ const QDBusArgument& operator>>( const QDBusArgument& arg, Soprano::Node& node )
     QString value, language, dataTypeUri;
     arg >> type >> value >> language >> dataTypeUri;
     if ( type == Soprano::Node::LiteralNode ) {
-        if ( dataTypeUri.isEmpty() )
+        if ( dataTypeUri.isEmpty() ) {
             node = Soprano::Node( Soprano::LiteralValue::createPlainLiteral( value, language ) );
-        else
+        } else {
             node = Soprano::Node( Soprano::LiteralValue::fromString( value, QUrl::fromEncoded( dataTypeUri.toAscii() ) ) );
-    }
-    else if ( type == Soprano::Node::ResourceNode ) {
+        }
+    } else if ( type == Soprano::Node::ResourceNode ) {
         node = Soprano::Node( QUrl::fromEncoded( value.toAscii() ) );
-    }
-    else if ( type == Soprano::Node::BlankNode ) {
+    } else if ( type == Soprano::Node::BlankNode ) {
         node = Soprano::Node( value );
-    }
-    else {
+    } else {
         node = Soprano::Node();
     }
     arg.endStructure();

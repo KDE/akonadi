@@ -69,25 +69,23 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_finishedListing()
 {
     m_queryActive = false;
     Q_EMIT q->finishedListing();
-    if( loop ) {
+    if ( loop ) {
         q->close();
     }
 }
 
-
 void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply(QDBusPendingCallWatcher* watcher)
 {
     QDBusPendingReply<QDBusObjectPath> reply = *watcher;
-    if(reply.isError()) {
+    if (reply.isError()) {
         akDebug() << reply.error();
         m_errorMessage = reply.error().message();
         m_queryActive = false;
         Q_EMIT q->error(m_errorMessage);
-        if( loop ) {
+        if ( loop ) {
             loop->exit();
         }
-    }
-    else {
+    } else {
         queryInterface = new org::kde::nepomuk::Query( queryServiceInterface->service(),
                                                        reply.value().path(),
                                                        dbusConnection );
@@ -105,7 +103,6 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_handleQueryReply(QDBusPendi
     delete watcher;
 }
 
-
 void Nepomuk::Query::QueryServiceClient::Private::_k_serviceRegistered(const QString &service)
 {
     if (service == QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")) {
@@ -119,7 +116,6 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_serviceRegistered(const QSt
     }
 }
 
-
 void Nepomuk::Query::QueryServiceClient::Private::_k_serviceUnregistered(const QString &service)
 {
     if (service == QLatin1String("org.kde.nepomuk.services.nepomukqueryservice")) {
@@ -127,8 +123,6 @@ void Nepomuk::Query::QueryServiceClient::Private::_k_serviceUnregistered(const Q
         Q_EMIT q->serviceAvailabilityChanged(false);
     }
 }
-
-
 
 Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject* parent )
     : QObject( parent ),
@@ -150,14 +144,12 @@ Nepomuk::Query::QueryServiceClient::QueryServiceClient( QObject* parent )
     connect(d->queryServiceWatcher, SIGNAL(serviceUnregistered(QString)), this, SLOT(_k_serviceUnregistered(QString)));
 }
 
-
 Nepomuk::Query::QueryServiceClient::~QueryServiceClient()
 {
     close();
     delete d->queryServiceInterface;
     delete d;
 }
-
 
 bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHash<QString, QString> &encodedRps )
 {
@@ -172,30 +164,25 @@ bool Nepomuk::Query::QueryServiceClient::query( const QString& query, const QHas
         connect(d->m_pendingCallWatcher, SIGNAL(finished(QDBusPendingCallWatcher*)),
                 this, SLOT(_k_handleQueryReply(QDBusPendingCallWatcher*)));
         return true;
-    }
-    else {
+    } else {
         akDebug() << "Could not contact nepomuk query service.";
         return false;
     }
 }
 
-
-
 bool Nepomuk::Query::QueryServiceClient::blockingQuery( const QString& q, const QHash<QString, QString> &encodedRps )
 {
-    if( query( q, encodedRps ) ) {
+    if ( query( q, encodedRps ) ) {
         QEventLoop loop;
         d->loop = &loop;
         loop.exec();
         d->loop = 0;
         close();
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
-
 
 void Nepomuk::Query::QueryServiceClient::close()
 {
@@ -212,23 +199,21 @@ void Nepomuk::Query::QueryServiceClient::close()
         delete d->queryInterface;
         d->queryInterface = 0;
         d->m_queryActive = false;
-        if( d->loop )
+        if ( d->loop ) {
             d->loop->exit();
+        }
     }
 }
-
 
 bool Nepomuk::Query::QueryServiceClient::isListingFinished() const
 {
     return !d->m_queryActive;
 }
 
-
 bool Nepomuk::Query::QueryServiceClient::serviceAvailable()
 {
     return QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
 }
-
 
 QString Nepomuk::Query::QueryServiceClient::errorMessage() const
 {

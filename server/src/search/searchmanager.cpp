@@ -75,8 +75,9 @@ bool SearchManager::addSearch(const Collection& collection)
     qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
     return false;
   }
-  if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() )
+  if ( collection.queryString().isEmpty() || collection.queryLanguage().isEmpty() ) {
     return false;
+  }
 
   // send to the main thread
   QMetaObject::invokeMethod( this, "addSearchInternal", Qt::QueuedConnection, Q_ARG(Collection, collection) );
@@ -85,8 +86,9 @@ bool SearchManager::addSearch(const Collection& collection)
 
 void SearchManager::addSearchInternal(const Collection& collection)
 {
-  Q_FOREACH ( AbstractSearchEngine* engine, m_engines )
+  Q_FOREACH ( AbstractSearchEngine* engine, m_engines ) {
     engine->addSearch( collection );
+  }
 }
 
 bool SearchManager::removeSearch(qint64 id)
@@ -98,8 +100,9 @@ bool SearchManager::removeSearch(qint64 id)
 
 void SearchManager::removeSearchInternal(qint64 id)
 {
-  Q_FOREACH ( AbstractSearchEngine* engine, m_engines )
+  Q_FOREACH ( AbstractSearchEngine* engine, m_engines ) {
     engine->removeSearch( id );
+  }
 }
 
 void SearchManager::updateSearch(const Akonadi::Collection& collection, NotificationCollector* collector)
@@ -109,4 +112,3 @@ void SearchManager::updateSearch(const Akonadi::Collection& collection, Notifica
   collection.clearPimItems();
   addSearch( collection );
 }
-

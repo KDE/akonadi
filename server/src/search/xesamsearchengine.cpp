@@ -38,10 +38,11 @@ static qint64 uriToItemId( const QString &urlString )
 
   const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
 
-  if ( !ok )
+  if ( !ok ) {
     return -1;
-  else
+  } else {
     return id;
+  }
 }
 
 XesamSearchEngine::XesamSearchEngine( QObject *parent )
@@ -60,15 +61,17 @@ XesamSearchEngine::XesamSearchEngine( QObject *parent )
 
   initializeSearchInterface();
 
-  if ( !mValid )
+  if ( !mValid ) {
     qWarning() << "No valid XESAM interface found!";
+  }
 }
 
 XesamSearchEngine::~XesamSearchEngine()
 {
   stopSearches();
-  if ( !mSession.isEmpty() )
+  if ( !mSession.isEmpty() ) {
     mInterface->CloseSession( mSession );
+  }
 }
 
 void XesamSearchEngine::initializeSearchInterface()
@@ -114,8 +117,9 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
   akDebug() << "hits added: " << search << count;
   const qint64 collectionId = searchToCollectionId( search );
 
-  if ( collectionId <= 0 || count <= 0 )
+  if ( collectionId <= 0 || count <= 0 ) {
     return;
+  }
 
   const Collection collection = Collection::retrieveById( collectionId );
 
@@ -127,13 +131,14 @@ void XesamSearchEngine::slotHitsAdded( const QString &search, uint count )
   typedef QList<QVariant> VariantList;
   PimItem::List toLink;
   Q_FOREACH ( const VariantList &list, results ) {
-    if ( list.isEmpty() )
+    if ( list.isEmpty() ) {
       continue;
+    }
 
     const qint64 itemId = uriToItemId( list.first().toString() );
-    if ( itemId == -1 )
+    if ( itemId == -1 ) {
       continue;
-
+    }
 
     const PimItem item = PimItem::retrieveById( itemId );
     if ( item.isValid() ) {
@@ -152,8 +157,9 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
   akDebug() << "hits removed: " << search << hits;
   const qint64 collectionId = searchToCollectionId( search );
 
-  if ( collectionId <= 0 )
+  if ( collectionId <= 0 ) {
     return;
+  }
 
   const Collection collection = Collection::retrieveById( collectionId );
 
@@ -161,12 +167,14 @@ void XesamSearchEngine::slotHitsRemoved( const QString &search, const QList<uint
   typedef QList<QVariant> VariantList;
   PimItem::List toUnlink;
   Q_FOREACH ( const VariantList &list, results ) {
-    if ( list.isEmpty() )
+    if ( list.isEmpty() ) {
       continue;
+    }
 
     const qint64 itemId = uriToItemId( list.first().toString() );
-    if ( itemId == -1 )
+    if ( itemId == -1 ) {
       continue;
+    }
 
     Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
     toUnlink << PimItem::retrieveById( itemId );
@@ -205,15 +213,18 @@ void XesamSearchEngine::reloadSearches()
 
 void XesamSearchEngine::addSearch( const Collection &collection )
 {
-  if ( !mInterface->isValid() || !mValid || collection.queryLanguage() != QLatin1String( "XESAM" ) )
+  if ( !mInterface->isValid() || !mValid || collection.queryLanguage() != QLatin1String( "XESAM" ) ) {
     return;
+  }
 
-  if ( collection.remoteId().isEmpty() )
+  if ( collection.remoteId().isEmpty() ) {
     return;
+  }
 
   const QString searchString = collection.queryString();
-  if ( searchString.isEmpty() )
+  if ( searchString.isEmpty() ) {
     return;
+  }
   const QString searchId = mInterface->NewSearch( mSession, searchString );
   akDebug() << "XesamSearchEngine::addSearch" << collection.name() << searchId << searchString;
 
@@ -227,14 +238,17 @@ void XesamSearchEngine::addSearch( const Collection &collection )
 
 void XesamSearchEngine::removeSearch( qint64 collectionId )
 {
-  if ( !mInvSearchMap.contains( collectionId ) )
+  if ( !mInvSearchMap.contains( collectionId ) ) {
     return;
+  }
+
   mMutex.lock();
   const QString searchId = mInvSearchMap.value( collectionId );
   mMutex.unlock();
 
-  if ( searchId.isEmpty() )
+  if ( searchId.isEmpty() ) {
     return;
+  }
 
   Q_ASSERT( mSearchMap.contains( searchId ) );
 
@@ -267,7 +281,7 @@ void XesamSearchEngine::slotSearchDone(const QString &search)
   // so we can stop monitoring it. This is to avoid getting
   // spurious hits for already finished searches.
   akDebug() << "search done" << search;
-  if ( mSearchMap.contains( search ) )
+  if ( mSearchMap.contains( search ) ) {
     mInterface->CloseSearch( search );
+  }
 }
-

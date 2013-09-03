@@ -54,20 +54,20 @@ class ItemRetrievalManager : public QObject
      */
     void requestItemDelivery( ItemRetrievalRequest *request );
 
-    static ItemRetrievalManager* instance();
+    static ItemRetrievalManager *instance();
 
   Q_SIGNALS:
     void requestAdded();
 
   private:
-    OrgFreedesktopAkonadiResourceInterface* resourceInterface( const QString &id );
+    OrgFreedesktopAkonadiResourceInterface *resourceInterface( const QString &id );
 
   private Q_SLOTS:
     void serviceOwnerChanged( const QString &serviceName, const QString &oldOwner, const QString &newOwner );
     void processRequest();
     void triggerCollectionSync( const QString &resource, qint64 colId );
     void triggerCollectionTreeSync( const QString &resource );
-    void retrievalJobFinished( ItemRetrievalRequest* request, const QString &errorMsg );
+    void retrievalJobFinished( ItemRetrievalRequest *request, const QString &errorMsg );
 
   private:
     static ItemRetrievalManager *sInstance;

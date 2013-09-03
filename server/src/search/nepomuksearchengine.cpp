@@ -81,8 +81,9 @@ NepomukSearchEngine::~NepomukSearchEngine()
 
 void NepomukSearchEngine::addSearch( const Collection &collection )
 {
-  if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) )
+  if ( collection.queryLanguage() != QLatin1String( "SPARQL" ) ) {
     return;
+  }
   const QString &q = collection.queryString();
 
   if ( q.size() >= 32768 ) {
@@ -152,7 +153,7 @@ void NepomukSearchEngine::reloadSearches()
       mMutex.unlock();
       akDebug() << "updating search" << collection.name();
       removeSearch( collection.id() );
-    } else  {
+    } else {
       mMutex.unlock();
       akDebug() << "adding search" << collection.name();
     }
@@ -192,8 +193,9 @@ void NepomukSearchEngine::hitsAdded( const QList<Nepomuk::Query::Result>& entrie
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
-    if ( itemId == -1 )
+    if ( itemId == -1 ) {
       continue;
+    }
 
     Entity::addToRelation<CollectionPimItemRelation>( collectionId, itemId );
     items << PimItem::retrieveById( itemId );
@@ -218,8 +220,9 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
   Q_FOREACH( const Nepomuk::Query::Result &result, entries ) {
     const qint64 itemId = resultToId( result );
 
-    if ( itemId == -1 )
+    if ( itemId == -1 ) {
       continue;
+    }
 
     Entity::removeFromRelation<CollectionPimItemRelation>( collectionId, itemId );
     items << PimItem::retrieveById( itemId );
@@ -231,8 +234,9 @@ void NepomukSearchEngine::hitsRemoved( const QList<Nepomuk::Query::Result>& entr
 
 void NepomukSearchEngine::finishedListing()
 {
-  if (m_liveSearchEnabled)
+  if (m_liveSearchEnabled) {
     return;
+  }
 
   Nepomuk::Query::QueryServiceClient *query = qobject_cast<Nepomuk::Query::QueryServiceClient*>( sender() );
   if ( !query ) {

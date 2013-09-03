@@ -34,6 +34,9 @@
 
 using namespace Akonadi;
 
+#define MYSQL_MIN_MAJOR 5
+#define MYSQL_MIN_MINOR 1
+
 DbConfigMysql::DbConfigMysql()
   : mDatabaseProcess( 0 )
 {
@@ -64,8 +67,9 @@ bool DbConfigMysql::init( QSettings &settings )
 
   const bool defaultInternalServer = true;
 #ifdef MYSQLD_EXECUTABLE
-   if ( QFile::exists( QLatin1String( MYSQLD_EXECUTABLE ) ) )
+   if ( QFile::exists( QLatin1String( MYSQLD_EXECUTABLE ) ) ) {
      defaultServerPath = QLatin1String( MYSQLD_EXECUTABLE );
+   }
 #endif
   const QStringList mysqldSearchPath = QStringList()
       << QLatin1String( "/usr/sbin" )
@@ -75,8 +79,9 @@ bool DbConfigMysql::init( QSettings &settings )
       << QLatin1String( "/opt/mysql/libexec" )
       << QLatin1String( "/opt/local/lib/mysql5/bin" )
       << QLatin1String( "/opt/mysql/sbin" );
-  if ( defaultServerPath.isEmpty() )
+  if ( defaultServerPath.isEmpty() ) {
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqld" ), mysqldSearchPath );
+  }
 
   const QString mysqladminPath = XdgBaseDirs::findExecutableFile( QLatin1String( "mysqladmin" ), mysqldSearchPath );
   if ( !mysqladminPath.isEmpty() ) {
@@ -97,11 +102,11 @@ bool DbConfigMysql::init( QSettings &settings )
   akDebug() << "Found mysqlcheck: " << mMysqlCheckPath;
 
   mInternalServer = settings.value( QLatin1String( "QMYSQL/StartServer" ), defaultInternalServer ).toBool();
-  if ( mInternalServer ) {
 #if !(defined Q_WS_WIN)
+  if ( mInternalServer ) {
     defaultOptions = QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( socketDirectory );
-#endif
   }
+#endif
 
   // read settings for current driver
   settings.beginGroup( driverName() );
@@ -120,16 +125,18 @@ bool DbConfigMysql::init( QSettings &settings )
     // intentionally not namespaced as we are the only one in this db instance when using internal mode
     mDatabaseName = QLatin1String("akonadi");
   }
-  if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) )
+  if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) ) {
     mServerPath = defaultServerPath;
+  }
 
   // store back the default values
   settings.beginGroup( driverName() );
   settings.setValue( QLatin1String( "Name" ), mDatabaseName );
   settings.setValue( QLatin1String( "Host" ), mHostName );
   settings.setValue( QLatin1String( "Options" ), mConnectionOptions );
-  if ( !mServerPath.isEmpty() )
+  if ( !mServerPath.isEmpty() ) {
     settings.setValue( QLatin1String( "ServerPath" ), mServerPath );
+  }
   settings.setValue( QLatin1String( "StartServer" ), mInternalServer );
   settings.endGroup();
   settings.sync();
@@ -146,14 +153,18 @@ bool DbConfigMysql::init( QSettings &settings )
 
 void DbConfigMysql::apply( QSqlDatabase &database )
 {
-  if ( !mDatabaseName.isEmpty() )
+  if ( !mDatabaseName.isEmpty() ) {
     database.setDatabaseName( mDatabaseName );
-  if ( !mHostName.isEmpty() )
+  }
+  if ( !mHostName.isEmpty() ) {
     database.setHostName( mHostName );
-  if ( !mUserName.isEmpty() )
+  }
+  if ( !mUserName.isEmpty() ) {
     database.setUserName( mUserName );
-  if ( !mPassword.isEmpty() )
+  }
+  if ( !mPassword.isEmpty() ) {
     database.setPassword( mPassword );
+  }
 
   database.setConnectOptions( mConnectionOptions );
 
@@ -180,15 +191,15 @@ void DbConfigMysql::startInternalServer()
   const QString globalConfig = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   const QString localConfig  = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-local.conf" ) );
   const QString actualConfig = AkStandardDirs::saveDir( "data" ) + QLatin1String( "/mysql.conf" );
-  if ( globalConfig.isEmpty() )
+  if ( globalConfig.isEmpty() ) {
     akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
+  }
 
   bool confUpdate = false;
   QFile actualFile ( actualConfig );
   // update conf only if either global (or local) is newer than actual
   if ( (QFileInfo( globalConfig ).lastModified() > QFileInfo( actualFile ).lastModified()) ||
-       (QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified()) )
-  {
+       (QFileInfo( localConfig ).lastModified()  > QFileInfo( actualFile ).lastModified()) ) {
     QFile globalFile( globalConfig );
     QFile localFile ( localConfig );
     if ( globalFile.open( QFile::ReadOnly ) && actualFile.open( QFile::WriteOnly ) ) {
@@ -214,22 +225,27 @@ void DbConfigMysql::startInternalServer()
   // apparent reason nevertheless, so fix that
   const QFile::Permissions allowedPerms = actualFile.permissions()
       & ( QFile::ReadOwner | QFile::WriteOwner | QFile::ReadGroup | QFile::WriteGroup | QFile::ReadOther );
-  if ( allowedPerms != actualFile.permissions() )
+  if ( allowedPerms != actualFile.permissions() ) {
     actualFile.setPermissions( allowedPerms );
+  }
 
-  if ( dataDir.isEmpty() )
+  if ( dataDir.isEmpty() ) {
     akFatal() << "Akonadi server was not able to create database data directory";
+  }
 
-  if ( akDir.isEmpty() )
+  if ( akDir.isEmpty() ) {
     akFatal() << "Akonadi server was not able to create database log directory";
+  }
 
 #ifndef Q_OS_WIN
-  if ( socketDirectory.isEmpty() )
+  if ( socketDirectory.isEmpty() ) {
     akFatal() << "Akonadi server was not able to create database misc directory";
+  }
 
   // the socket path must not exceed 103 characters, so check for max dir length right away
-  if ( socketDirectory.length() >= 90 )
+  if ( socketDirectory.length() >= 90 ) {
       akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+  }
 #endif
 
   // move mysql error log file out of the way
@@ -289,14 +305,16 @@ void DbConfigMysql::startInternalServer()
     apply( db );
 
     db.setDatabaseName( QString() ); // might not exist yet, then connecting to the actual db will fail
-    if ( !db.isValid() )
+    if ( !db.isValid() ) {
       akFatal() << "Invalid database object during database server startup";
+    }
 
     bool opened = false;
     for ( int i = 0; i < 120; ++i ) {
       opened = db.open();
-      if ( opened )
+      if ( opened ) {
         break;
+      }
       if ( mDatabaseProcess->waitForFinished( 500 ) ) {
         akError() << "Database process exited unexpectedly during initial connection!";
         akError() << "executable:" << mysqldPath;
@@ -309,7 +327,6 @@ void DbConfigMysql::startInternalServer()
     }
 
     if ( opened ) {
-
       if ( !mMysqlCheckPath.isEmpty() ) {
         const QStringList arguments = QStringList() << QString::fromLatin1( "--defaults-file=%1/mysql.conf" ).arg( akDir )
                                                     << QLatin1String( "--check-upgrade" )
@@ -320,6 +337,33 @@ void DbConfigMysql::startInternalServer()
 #endif
                                                     ;
         QProcess::execute( mMysqlCheckPath, arguments );
+      }
+
+      // Verify MySQL version
+      {
+        QSqlQuery query( db );
+        if ( !query.exec( QString::fromLatin1( "SELECT VERSION()") ) || !query.first() ) {
+          akError() << "Failed to verify database server version";
+          akError() << "Query error:" << query.lastError().text();
+          akFatal() << "Database error:" << db.lastError().text();
+        }
+
+        const QString version = query.value( 0 ).toString();
+        const QStringList versions = version.split( QLatin1Char( '.' ), QString::SkipEmptyParts );
+        if ( versions.count() < 3 ) {
+          akFatal() << "Invalid database server version: " << version;
+        }
+
+        if ( versions[0].toInt() < MYSQL_MIN_MAJOR || ( versions[0].toInt() == MYSQL_MIN_MAJOR && versions[1].toInt() < MYSQL_MIN_MINOR ) ) {
+          akError() << "Unsupported MySQL version:";
+          akError() << "Current version:" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] );
+          akError() << "Minimum required version:" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR );
+          akFatal() << "Please update your MySQL database server";
+        } else {
+          akDebug() << "MySQL version OK"
+                    << "(required" << QString::fromLatin1( "%1.%2" ).arg( MYSQL_MIN_MAJOR ).arg( MYSQL_MIN_MINOR )
+                    << ", available" << QString::fromLatin1( "%1.%2" ).arg( versions[0], versions[1] ) << ")";
+        }
       }
 
       {
@@ -345,21 +389,24 @@ void DbConfigMysql::startInternalServer()
 
 void DbConfigMysql::stopInternalServer()
 {
-  if ( !mDatabaseProcess )
+  if ( !mDatabaseProcess ) {
     return;
+  }
 
   // first, try the nicest approach
   if ( !mCleanServerShutdownCommand.isEmpty() ) {
     QProcess::execute( mCleanServerShutdownCommand );
-    if ( mDatabaseProcess->waitForFinished( 3000 ) )
+    if ( mDatabaseProcess->waitForFinished( 3000 ) ) {
       return;
+    }
   }
 
   mDatabaseProcess->terminate();
   const bool result = mDatabaseProcess->waitForFinished( 3000 );
   // We've waited nicely for 3 seconds, to no avail, let's be rude.
-  if ( !result )
+  if ( !result ) {
     mDatabaseProcess->kill();
+  }
 }
 
 void DbConfigMysql::initSession(const QSqlDatabase& database)

@@ -1,4 +1,3 @@
-
 /***************************************************************************
  *   Copyright (C) 2006 by Till Adam <adam@kde.org>                        *
  *                                                                         *
@@ -70,7 +69,7 @@ Handler::~Handler()
 {
 }
 
-Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & command )
+Handler *Handler::findHandlerForCommandNonAuthenticated( const QByteArray &command )
 {
     // allowed are LOGIN
     if ( command == AKONADI_CMD_LOGIN ) {
@@ -80,7 +79,7 @@ Handler * Handler::findHandlerForCommandNonAuthenticated( const QByteArray & com
     return 0;
 }
 
-Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & command )
+Handler *Handler::findHandlerForCommandAlwaysAllowed( const QByteArray &command )
 {
     // allowed commands CAPABILITY and LOGOUT
     if ( command == AKONADI_CMD_LOGOUT ) {
@@ -92,7 +91,7 @@ Handler * Handler::findHandlerForCommandAlwaysAllowed( const QByteArray & comman
     return 0;
 }
 
-void Handler::setTag( const QByteArray & tag )
+void Handler::setTag( const QByteArray &tag )
 {
     m_tag = tag;
 }
@@ -197,12 +196,12 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
     return 0;
 }
 
-void Akonadi::Handler::setConnection( AkonadiConnection* connection )
+void Akonadi::Handler::setConnection( AkonadiConnection *connection )
 {
     m_connection = connection;
 }
 
-AkonadiConnection* Akonadi::Handler::connection() const
+AkonadiConnection *Akonadi::Handler::connection() const
 {
     return m_connection;
 }
@@ -217,12 +216,12 @@ bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
   return false;
 }
 
-bool Akonadi::Handler::failureResponse(const char * failureMessage)
+bool Akonadi::Handler::failureResponse( const char *failureMessage )
 {
   return failureResponse( QByteArray( failureMessage ) );
 }
 
-bool Handler::successResponse(const QByteArray &successMessage)
+bool Handler::successResponse( const QByteArray &successMessage )
 {
   Response response;
   response.setTag( tag() );
@@ -232,7 +231,7 @@ bool Handler::successResponse(const QByteArray &successMessage)
   return true;
 }
 
-bool Handler::successResponse(const char * successMessage)
+bool Handler::successResponse( const char *successMessage )
 {
   return successResponse( QByteArray( successMessage ) );
 }
@@ -242,8 +241,8 @@ void Handler::setStreamParser( ImapStreamParser *parser )
   m_streamParser = parser;
 }
 
-UnknownCommandHandler::UnknownCommandHandler(const QByteArray &command) :
-  mCommand( command )
+UnknownCommandHandler::UnknownCommandHandler( const QByteArray &command )
+  : mCommand( command )
 {
 }
 

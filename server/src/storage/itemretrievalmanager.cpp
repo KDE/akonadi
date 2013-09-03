@@ -36,11 +36,11 @@
 
 using namespace Akonadi;
 
-ItemRetrievalManager* ItemRetrievalManager::sInstance = 0;
+ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
 
-ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
-  QObject( parent ),
-  mDBusConnection(
+ItemRetrievalManager::ItemRetrievalManager( QObject *parent )
+  : QObject( parent ),
+    mDBusConnection(
       QDBusConnection::connectToBus(
           QDBusConnection::SessionBus,
           QString::fromLatin1("AkonadiServerItemRetrievalManager") ) )
@@ -53,7 +53,6 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent ) :
   mLock = new QReadWriteLock();
   mWaitCondition = new QWaitCondition();
 
-
   connect( mDBusConnection.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
            this, SLOT(serviceOwnerChanged(QString,QString,QString)) );
   connect( this, SIGNAL(requestAdded()), this, SLOT(processRequest()), Qt::QueuedConnection );
@@ -65,7 +64,7 @@ ItemRetrievalManager::~ItemRetrievalManager()
   delete mLock;
 }
 
-ItemRetrievalManager* ItemRetrievalManager::instance()
+ItemRetrievalManager *ItemRetrievalManager::instance()
 {
   Q_ASSERT( sInstance );
   return sInstance;
@@ -75,25 +74,29 @@ ItemRetrievalManager* ItemRetrievalManager::instance()
 void ItemRetrievalManager::serviceOwnerChanged(const QString& serviceName, const QString& oldOwner, const QString& newOwner)
 {
   Q_UNUSED( newOwner );
-  if ( oldOwner.isEmpty() )
+  if ( oldOwner.isEmpty() ) {
     return;
+  }
   AkDBus::AgentType type = AkDBus::Unknown;
   const QString resourceId = AkDBus::parseAgentServiceName( serviceName, type );
-  if ( resourceId.isEmpty() || type != AkDBus::Resource )
+  if ( resourceId.isEmpty() || type != AkDBus::Resource ) {
     return;
+  }
   akDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
   mResourceInterfaces.remove( resourceId );
 }
 
 // called within the retrieval thread
-OrgFreedesktopAkonadiResourceInterface* ItemRetrievalManager::resourceInterface(const QString& id)
+OrgFreedesktopAkonadiResourceInterface *ItemRetrievalManager::resourceInterface(const QString& id)
 {
-  if ( id.isEmpty() )
+  if ( id.isEmpty() ) {
     return 0;
+  }
 
   OrgFreedesktopAkonadiResourceInterface *iface = mResourceInterfaces.value( id );
-  if ( iface && iface->isValid() )
+  if ( iface && iface->isValid() ) {
     return iface;
+  }
 
   delete iface;
   iface = new OrgFreedesktopAkonadiResourceInterface( AkDBus::agentServiceName( id, AkDBus::Resource ),
@@ -167,14 +170,14 @@ void ItemRetrievalManager::processRequest()
 
   mLock->lockForWrite();
   // look for idle resources
-  for ( QHash< QString, QList< ItemRetrievalRequest* > >::iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
+  for ( QHash< QString, QList< ItemRetrievalRequest *> >::iterator it = mPendingRequests.begin(); it != mPendingRequests.end(); ) {
     if ( it.value().isEmpty() ) {
       it = mPendingRequests.erase( it );
       continue;
     }
     if ( !mCurrentJobs.contains( it.key() ) || mCurrentJobs.value( it.key() ) == 0 ) {
       // TODO: check if there is another one for the same uid with more parts requested
-      ItemRetrievalRequest* req = it.value().takeFirst();
+      ItemRetrievalRequest *req = it.value().takeFirst();
       Q_ASSERT( req->resourceId == it.key() );
       ItemRetrievalJob *job = new ItemRetrievalJob( req, this );
       connect( job, SIGNAL(requestCompleted(ItemRetrievalRequest*,QString)), SLOT(retrievalJobFinished(ItemRetrievalRequest*,QString)) );
@@ -193,11 +196,12 @@ void ItemRetrievalManager::processRequest()
     return;
   }
 
-  for ( QVector< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it )
+  for ( QVector< QPair< ItemRetrievalJob*, QString > >::const_iterator it = newJobs.constBegin(); it != newJobs.constEnd(); ++it ) {
     (*it).first->start( resourceInterface( (*it).second ) );
+  }
 }
 
-void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, const QString& errorMsg)
+void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, const QString& errorMsg)
 {
   mLock->lockForWrite();
   request->errorMsg = errorMsg;
@@ -223,14 +227,15 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest* request, c
 void ItemRetrievalManager::triggerCollectionSync(const QString& resource, qint64 colId)
 {
   OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
-  if ( interface )
+  if ( interface ) {
     interface->synchronizeCollection( colId );
+  }
 }
 
 void ItemRetrievalManager::triggerCollectionTreeSync( const QString& resource )
 {
   OrgFreedesktopAkonadiResourceInterface *interface = resourceInterface( resource );
-  if ( interface )
+  if ( interface ) {
     interface->synchronizeCollectionTree();
+  }
 }
-

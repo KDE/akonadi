@@ -78,7 +78,7 @@ class ItemRetriever
     ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;
-    AkonadiConnection* mConnection;
+    AkonadiConnection *mConnection;
     QStringList mParts;
     bool mFullPayload;
     bool mRecursive;
@@ -88,4 +88,3 @@ class ItemRetriever
 }
 
 #endif
-

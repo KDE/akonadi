@@ -36,16 +36,16 @@ using namespace Akonadi;
 DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase& database)
 {
   switch ( DbType::type( database ) ) {
-    case DbType::MySQL:
-      return Ptr( new DbIntrospectorMySql( database ) );
-    case DbType::Sqlite:
-      return Ptr( new DbIntrospectorSqlite( database ) );
-    case DbType::PostgreSQL:
-      return Ptr( new DbIntrospectorPostgreSql( database ) );
-    case DbType::Virtuoso:
-      return Ptr( new DbIntrospectorVirtuoso( database ) );
-    case DbType::Unknown:
-      break;
+  case DbType::MySQL:
+    return Ptr( new DbIntrospectorMySql( database ) );
+  case DbType::Sqlite:
+    return Ptr( new DbIntrospectorSqlite( database ) );
+  case DbType::PostgreSQL:
+    return Ptr( new DbIntrospectorPostgreSql( database ) );
+  case DbType::Virtuoso:
+    return Ptr( new DbIntrospectorVirtuoso( database ) );
+  case DbType::Unknown:
+    break;
   }
   akFatal() << database.driverName() << "backend  not supported";
   return Ptr();
@@ -67,8 +67,9 @@ bool DbIntrospector::hasTable(const QString& tableName)
 bool DbIntrospector::hasIndex(const QString& tableName, const QString& indexName)
 {
   QSqlQuery query( m_database );
-  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) )
+  if ( !query.exec( hasIndexQuery( tableName, indexName ) ) ) {
     throw DbException( query, "Failed to query index" );
+  }
   return query.next();
 }
 
@@ -94,12 +95,14 @@ bool DbIntrospector::isTableEmpty(const QString& tableName)
   QueryBuilder queryBuilder( tableName, QueryBuilder::Select );
   queryBuilder.addColumn( QLatin1String( "*" ) );
   queryBuilder.setLimit( 1 );
-  if ( !queryBuilder.exec() )
+  if ( !queryBuilder.exec() ) {
     throw DbException( queryBuilder.query(), "Unable to retrieve data from table." );
+  }
 
   QSqlQuery query = queryBuilder.query();
-  if ( query.size() == 0  || !query.first() ) // table is empty
+  if ( query.size() == 0  || !query.first() ) { // table is empty
     return true;
+  }
   return false;
 }
 

@@ -38,6 +38,8 @@
 
 #include <assert.h>
 
+#define AKONADI_PROTOCOL_VERSION "34"
+
 using namespace Akonadi;
 
 #ifdef Q_OS_WINCE
@@ -45,34 +47,34 @@ AkonadiConnection::AkonadiConnection( int socketDescriptor, QObject *parent )
 #else
 AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent )
 #endif
-    : QThread(parent)
-    , m_socketDescriptor(socketDescriptor)
+    : QThread( parent )
+    , m_socketDescriptor( socketDescriptor )
     , m_socket( 0 )
     , m_currentHandler( 0 )
     , m_connectionState( NonAuthenticated )
     , m_backend( 0 )
     , m_selectedConnection( 0 )
     , m_streamParser( 0 )
-    , m_verifyCacheOnRetrieval(false)
+    , m_verifyCacheOnRetrieval( false )
 {
     m_identifier.sprintf( "%p", static_cast<void*>( this ) );
-    ClientCapabilityAggregator::addSession(m_clientCapabilities);
+    ClientCapabilityAggregator::addSession( m_clientCapabilities );
 
-    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-    m_verifyCacheOnRetrieval = settings.value(QLatin1String("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
+    const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
+    m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
 }
 
 DataStore * Akonadi::AkonadiConnection::storageBackend()
 {
-    if ( !m_backend )
+    if ( !m_backend ) {
       m_backend = DataStore::self();
+    }
     return m_backend;
 }
 
-
 AkonadiConnection::~AkonadiConnection()
 {
-    ClientCapabilityAggregator::removeSession(m_clientCapabilities);
+    ClientCapabilityAggregator::removeSession( m_clientCapabilities );
     Tracer::self()->endConnection( m_identifier, QString() );
 }
 
@@ -86,8 +88,8 @@ void AkonadiConnection::run()
 
     if ( !m_socket->setSocketDescriptor( m_socketDescriptor ) ) {
         qWarning() << "AkonadiConnection(" << m_identifier
-                 << ")::run: failed to set socket descriptor: "
-                 << m_socket->error() << "(" << m_socket->errorString() << ")";
+                   << ")::run: failed to set socket descriptor: "
+                   << m_socket->error() << "(" << m_socket->errorString() << ")";
         delete m_socket;
         m_socket = 0;
         return;
@@ -113,11 +115,11 @@ void AkonadiConnection::run()
 
     Response greeting;
     greeting.setUntagged();
-    greeting.setString("OK Akonadi Almost IMAP Server [PROTOCOL 34]");
+    greeting.setString( "OK Akonadi Almost IMAP Server [PROTOCOL " AKONADI_PROTOCOL_VERSION "]" );
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
     // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
-    QMetaObject::invokeMethod(this, "slotResponseAvailable", Qt::DirectConnection, Q_ARG(Akonadi::Response, greeting));
+    QMetaObject::invokeMethod( this, "slotResponseAvailable", Qt::DirectConnection, Q_ARG( Akonadi::Response, greeting ) );
 
     exec();
     delete m_socket;
@@ -134,17 +136,19 @@ void AkonadiConnection::slotDisconnected()
 void AkonadiConnection::slotNewData()
 {
   // On Windows, calling readLiteralPart() triggers the readyRead() signal recursively and leads to parse errors
-  if ( m_currentHandler )
+  if ( m_currentHandler ) {
     return;
+  }
 
   while ( m_socket->bytesAvailable() > 0 || !m_streamParser->readRemainingData().isEmpty() ) {
     try {
       const QByteArray tag = m_streamParser->readString();
       // deal with stray newlines
-      if ( tag.isEmpty() && m_streamParser->atCommandEnd() )
+      if ( tag.isEmpty() && m_streamParser->atCommandEnd() ) {
         continue;
+      }
       const QByteArray command = m_streamParser->readString();
-      Tracer::self()->connectionInput( m_identifier, (tag + ' ' + command + ' ' + m_streamParser->readRemainingData()) );
+      Tracer::self()->connectionInput( m_identifier, ( tag + ' ' + command + ' ' + m_streamParser->readRemainingData() ) );
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
       connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Response)),
@@ -181,25 +185,23 @@ void AkonadiConnection::slotNewData()
     delete m_currentHandler;
     m_currentHandler = 0;
 
-    if (m_streamParser->readRemainingData().startsWith('\n') || m_streamParser->readRemainingData().startsWith("\r\n"))
+    if ( m_streamParser->readRemainingData().startsWith( '\n' ) || m_streamParser->readRemainingData().startsWith( "\r\n" ) )
       try {
         m_streamParser->readUntilCommandEnd(); //just eat the ending newline
       } catch ( ... ) {}
   }
 }
 
-
 void AkonadiConnection::writeOut( const QByteArray &data )
 {
     QByteArray block = data + "\r\n";
-    m_socket->write(block);
+    m_socket->write( block );
     m_socket->waitForBytesWritten();
 
     Tracer::self()->connectionOutput( m_identifier, block );
 }
 
-
-Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
+Handler *AkonadiConnection::findHandlerForCommand( const QByteArray &command )
 {
     Handler * handler = Handler::findHandlerForCommandAlwaysAllowed( command );
     if ( handler ) {
@@ -208,19 +210,21 @@ Handler * AkonadiConnection::findHandlerForCommand( const QByteArray & command )
     }
 
     switch ( m_connectionState ) {
-        case NonAuthenticated:
-            handler =  Handler::findHandlerForCommandNonAuthenticated( command );
-            break;
-        case Authenticated:
-            handler =  Handler::findHandlerForCommandAuthenticated( command, m_streamParser );
-            break;
-        case Selected:
-            break;
-        case LoggingOut:
-            break;
+    case NonAuthenticated:
+        handler =  Handler::findHandlerForCommandNonAuthenticated( command );
+        break;
+    case Authenticated:
+        handler =  Handler::findHandlerForCommandAuthenticated( command, m_streamParser );
+        break;
+    case Selected:
+        break;
+    case LoggingOut:
+        break;
     }
     // we didn't have a handler for this, let the default one do its thing
-    if ( !handler ) handler = new UnknownCommandHandler( command );
+    if ( !handler ) {
+        handler = new UnknownCommandHandler( command );
+    }
     handler->setConnection( this );
     return handler;
 }
@@ -234,23 +238,25 @@ void AkonadiConnection::slotResponseAvailable( const Akonadi::Response &response
 
 void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
 {
-    if ( state == m_connectionState ) return;
+    if ( state == m_connectionState ) {
+        return;
+    }
     m_connectionState = state;
     switch ( m_connectionState ) {
-        case NonAuthenticated:
-            assert( 0 ); // can't happen, it's only the initial state, we can't go back to it
-            break;
-        case Authenticated:
-            break;
-        case Selected:
-            break;
-        case LoggingOut:
+    case NonAuthenticated:
+        assert( 0 ); // can't happen, it's only the initial state, we can't go back to it
+        break;
+    case Authenticated:
+        break;
+    case Selected:
+        break;
+    case LoggingOut:
 #ifdef Q_OS_WINCE
-            m_socket->disconnectFromHost();
+        m_socket->disconnectFromHost();
 #else
-            m_socket->disconnectFromServer();
+        m_socket->disconnectFromServer();
 #endif
-            break;
+        break;
     }
 }
 
@@ -269,7 +275,7 @@ const Collection Akonadi::AkonadiConnection::selectedCollection()
   return Collection::retrieveById( selectedCollectionId() );
 }
 
-void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray& msg )
+void Akonadi::AkonadiConnection::addStatusMessage( const QByteArray &msg )
 {
     m_statusMessageQueue.append( msg );
 }
@@ -287,7 +293,7 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
     m_statusMessageQueue.clear();
 }
 
-void AkonadiConnection::setSessionId(const QByteArray &id)
+void AkonadiConnection::setSessionId( const QByteArray &id )
 {
   m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void*>( this ) );
   Tracer::self()->beginConnection( m_identifier, QString() );
@@ -308,40 +314,44 @@ Resource Akonadi::AkonadiConnection::resourceContext() const
   return m_resourceContext;
 }
 
-void AkonadiConnection::setResourceContext(const Resource& res)
+void AkonadiConnection::setResourceContext( const Resource &res )
 {
   m_resourceContext = res;
 }
 
-bool AkonadiConnection::isOwnerResource(const PimItem& item) const
+bool AkonadiConnection::isOwnerResource( const PimItem &item ) const
 {
-  if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() )
+  if ( resourceContext().isValid() && item.collection().resourceId() == resourceContext().id() ) {
     return true;
+  }
   // fallback for older resources
-  if ( sessionId() == item.collection().resource().name().toUtf8() )
+  if ( sessionId() == item.collection().resource().name().toUtf8() ) {
     return true;
+  }
   return false;
 }
 
-bool AkonadiConnection::isOwnerResource(const Collection &collection) const
+bool AkonadiConnection::isOwnerResource( const Collection &collection ) const
 {
-  if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() )
+  if ( resourceContext().isValid() && collection.resourceId() == resourceContext().id() ) {
     return true;
-  if ( sessionId() == collection.resource().name().toUtf8() )
+  }
+  if ( sessionId() == collection.resource().name().toUtf8() ) {
     return true;
+  }
   return false;
 }
 
-const ClientCapabilities& AkonadiConnection::capabilities() const
+const ClientCapabilities &AkonadiConnection::capabilities() const
 {
   return m_clientCapabilities;
 }
 
-void AkonadiConnection::setCapabilities(const ClientCapabilities& capabilities)
+void AkonadiConnection::setCapabilities( const ClientCapabilities &capabilities )
 {
-  ClientCapabilityAggregator::removeSession(m_clientCapabilities);
+  ClientCapabilityAggregator::removeSession( m_clientCapabilities );
   m_clientCapabilities = capabilities;
-  ClientCapabilityAggregator::addSession(m_clientCapabilities);
+  ClientCapabilityAggregator::addSession( m_clientCapabilities );
 }
 
 bool AkonadiConnection::verifyCacheOnRetrieval() const

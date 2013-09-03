@@ -17,7 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.             *
  ***************************************************************************/
 
-
 #ifndef AKONADISERVER_H
 #define AKONADISERVER_H
 
@@ -50,7 +49,7 @@ class AkonadiServer: public QLocalServer
     Q_OBJECT
 
   public:
-    static AkonadiServer* instance();
+    static AkonadiServer *instance();
 
     AkonadiServer( QObject *parent = 0 );
     ~AkonadiServer();
@@ -88,7 +87,7 @@ class AkonadiServer: public QLocalServer
     ItemRetrievalThread *mItemRetrievalThread;
     QProcess *mDatabaseProcess;
     QVector< QPointer<AkonadiConnection> > mConnections;
-    SearchManager* mSearchManager;
+    SearchManager *mSearchManager;
     bool mAlreadyShutdown;
 };
 

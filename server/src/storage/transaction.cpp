@@ -20,17 +20,20 @@
 #include "transaction.h"
 #include "storage/datastore.h"
 
-Akonadi::Transaction::Transaction(DataStore * db, bool beginTransaction ) :
-    mDb( db ), mCommitted( false )
+Akonadi::Transaction::Transaction(DataStore * db, bool beginTransaction )
+  : mDb( db )
+  , mCommitted( false )
 {
-  if ( beginTransaction )
+  if ( beginTransaction ) {
     mDb->beginTransaction();
+  }
 }
 
 Akonadi::Transaction::~Transaction()
 {
-  if ( !mCommitted )
+  if ( !mCommitted ) {
     mDb->rollbackTransaction();
+  }
 }
 
 bool Akonadi::Transaction::commit()

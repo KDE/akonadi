@@ -55,8 +55,9 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
   qb.addValueCondition( QLatin1String( "information_schema.KEY_COLUMN_USAGE.TABLE_SCHEMA" ), Query::Equals, m_database.databaseName() );
   qb.addValueCondition( QLatin1String( "information_schema.KEY_COLUMN_USAGE.TABLE_NAME" ), Query::Equals, tableName );
 
-  if ( !qb.exec() )
+  if ( !qb.exec() ) {
     throw DbException( qb.query() );
+  }
 
   QVector<ForeignKey> result;
   while ( qb.query().next() ) {
@@ -75,7 +76,6 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
 
 //END MySql
 
-
 //BEGIN Sqlite
 
 DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase& database): DbIntrospector(database)
@@ -89,7 +89,6 @@ QString DbIntrospectorSqlite::hasIndexQuery(const QString& tableName, const QStr
 }
 
 //END Sqlite
-
 
 //BEGIN PostgreSql
 
@@ -106,7 +105,6 @@ QString DbIntrospectorPostgreSql::hasIndexQuery(const QString& tableName, const 
 }
 
 //END PostgreSql
-
 
 //BEGIN Virtuoso
 

@@ -30,12 +30,13 @@
 #include "handlerhelper.h"
 #include "imapstreamparser.h"
 
+#include <libs/protocol_p.h>
+
 using namespace Akonadi;
 
 Status::Status(): Handler()
 {
 }
-
 
 Status::~Status()
 {
@@ -54,41 +55,45 @@ bool Status::parseStream()
   QList<QByteArray> attributeList = m_streamParser->readParenthesizedList();
   const Collection col = HandlerHelper::collectionFromIdOrName( mailbox );
 
-  if ( !col.isValid() )
+  if ( !col.isValid() ) {
     return failureResponse( "No status for this folder" );
+  }
 
     // Responses:
     // REQUIRED untagged responses: STATUS
 
   qint64 itemCount, itemSize;
-  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) )
+  if ( !HandlerHelper::itemStatistics( col, itemCount, itemSize ) ) {
     return failureResponse( "Failed to query statistics." );
+  }
 
     // build STATUS response
   QByteArray statusResponse;
     // MESSAGES - The number of messages in the mailbox
-  if ( attributeList.contains( "MESSAGES" ) ) {
-    statusResponse += "MESSAGES ";
+  if ( attributeList.contains( AKONADI_ATTRIBUTE_MESSAGES ) ) {
+    statusResponse += AKONADI_ATTRIBUTE_MESSAGES " ";
     statusResponse += QByteArray::number( itemCount );
   }
 
-  if ( attributeList.contains( "UNSEEN" ) ) {
-    if ( !statusResponse.isEmpty() )
-      statusResponse += " UNSEEN ";
-    else
-      statusResponse += "UNSEEN ";
+  if ( attributeList.contains( AKONADI_ATTRIBUTE_UNSEEN ) ) {
+    if ( !statusResponse.isEmpty() ) {
+      statusResponse += " ";
+    }
+    statusResponse += AKONADI_ATTRIBUTE_UNSEEN " ";
 
     // itemWithFlagCount is twice as fast as itemWithoutFlagCount...
-    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( "\\SEEN" ) << QLatin1String( "$IGNORED" ) );
-    if ( count < 0 )
+    const int count = HandlerHelper::itemWithFlagsCount( col, QStringList() << QLatin1String( AKONADI_FLAG_SEEN )
+                                                                            << QLatin1String( AKONADI_FLAG_IGNORED ) );
+    if ( count < 0 ) {
       return failureResponse( "Unable to retrieve unread count" );
+    }
     statusResponse += QByteArray::number( itemCount - count );
   }
-  if ( attributeList.contains( "SIZE" ) ) {
-    if ( !statusResponse.isEmpty() )
-      statusResponse += " SIZE ";
-    else
-      statusResponse += "SIZE ";
+  if ( attributeList.contains( AKONADI_PARAM_SIZE ) ) {
+    if ( !statusResponse.isEmpty() ) {
+      statusResponse += " ";
+    }
+    statusResponse += AKONADI_PARAM_SIZE " ";
     statusResponse += QByteArray::number( itemSize );
   }
 
@@ -103,4 +108,3 @@ bool Status::parseStream()
   Q_EMIT responseAvailable( response );
   return true;
 }
-

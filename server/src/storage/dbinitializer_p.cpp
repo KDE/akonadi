@@ -29,10 +29,11 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase& database):
 
 QString DbInitializerMySql::sqlType(const QString & type, int size) const
 {
-  if ( type == QLatin1String( "QString" ) )
+  if ( type == QLatin1String( "QString" ) ) {
     return QLatin1Literal("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
-  else
+  } else {
     return DbInitializer::sqlType( type, size );
+  }
 }
 
 QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &tableDescription ) const
@@ -52,8 +53,9 @@ QString DbInitializerMySql::buildCreateTableStatement( const TableDescription &t
     }
   }
 
-  if ( tableDescription.primaryKeyColumnCount() > 1 )
+  if ( tableDescription.primaryKeyColumnCount() > 1 ) {
     columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
+  }
   columns << references;
 
   const QString tableProperties = QLatin1String( " COLLATE=utf8_general_ci DEFAULT CHARSET=utf8" );
@@ -67,23 +69,28 @@ QString DbInitializerMySql::buildColumnStatement( const ColumnDescription &colum
 
   column += QLatin1Char( ' ' ) + sqlType( columnDescription.type, columnDescription.size );
 
-  if ( !columnDescription.allowNull )
+  if ( !columnDescription.allowNull ) {
     column += QLatin1String( " NOT NULL" );
+  }
 
-  if ( columnDescription.isAutoIncrement )
+  if ( columnDescription.isAutoIncrement ) {
     column += QLatin1String( " AUTO_INCREMENT" );
+  }
 
-  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) {
     column += QLatin1String( " PRIMARY KEY" );
+  }
 
-  if ( columnDescription.isUnique )
+  if ( columnDescription.isUnique ) {
     column += QLatin1String( " UNIQUE" );
+  }
 
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
-    if ( !defaultValue.isEmpty() )
+    if ( !defaultValue.isEmpty() ) {
       column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+    }
   }
 
   return column;
@@ -118,8 +125,6 @@ QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbInt
 
 //END MySQL
 
-
-
 //BEGIN Sqlite
 
 DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase& database):
@@ -131,11 +136,13 @@ QString DbInitializerSqlite::buildCreateTableStatement( const TableDescription &
 {
   QStringList columns;
 
-  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
     columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+  }
 
-  if ( tableDescription.primaryKeyColumnCount() > 1 )
+  if ( tableDescription.primaryKeyColumnCount() > 1 ) {
     columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
+  }
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
@@ -144,27 +151,32 @@ QString DbInitializerSqlite::buildColumnStatement( const ColumnDescription &colu
 {
   QString column = columnDescription.name + QLatin1Char( ' ' );
 
-  if ( columnDescription.isAutoIncrement )
+  if ( columnDescription.isAutoIncrement ) {
     column += QLatin1String( "INTEGER" );
-  else
+  } else {
     column += sqlType( columnDescription.type, columnDescription.size );
+  }
 
-  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) {
     column += QLatin1String( " PRIMARY KEY" );
-  else if ( columnDescription.isUnique )
+  } else if ( columnDescription.isUnique ) {
     column += QLatin1String( " UNIQUE" );
+  }
 
-  if ( columnDescription.isAutoIncrement )
+  if ( columnDescription.isAutoIncrement ) {
     column += QLatin1String( " AUTOINCREMENT" );
+  }
 
-  if ( !columnDescription.allowNull )
+  if ( !columnDescription.allowNull ) {
     column += QLatin1String( " NOT NULL" );
+  }
 
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
-    if ( !defaultValue.isEmpty() )
+    if ( !defaultValue.isEmpty() ) {
       column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+    }
   }
 
   return column;
@@ -188,8 +200,6 @@ QString DbInitializerSqlite::buildInsertValuesStatement( const TableDescription 
 
 //END Sqlite
 
-
-
 //BEGIN PostgreSQL
 
 DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database):
@@ -199,12 +209,15 @@ DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase& database):
 
 QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
 {
-  if ( type == QLatin1String("qint64") )
+  if ( type == QLatin1String("qint64") ) {
     return QLatin1String( "int8" );
-  if ( type == QLatin1String("QByteArray") )
+  }
+  if ( type == QLatin1String("QByteArray") ) {
     return QLatin1String("BYTEA");
-  if ( type == QLatin1String("QString") )
+  }
+  if ( type == QLatin1String("QString") ) {
     return QLatin1String("BYTEA");
+  }
   return DbInitializer::sqlType( type, size );
 }
 
@@ -212,11 +225,13 @@ QString DbInitializerPostgreSql::buildCreateTableStatement( const TableDescripti
 {
   QStringList columns;
 
-  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
     columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+  }
 
-  if ( tableDescription.primaryKeyColumnCount() > 1 )
+  if ( tableDescription.primaryKeyColumnCount() > 1 ) {
     columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
+  }
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
@@ -225,24 +240,28 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
 {
   QString column = columnDescription.name + QLatin1Char( ' ' );
 
-  if ( columnDescription.isAutoIncrement )
+  if ( columnDescription.isAutoIncrement ) {
     column += QLatin1String( "SERIAL" );
-  else
+  } else {
     column += sqlType( columnDescription.type, columnDescription.size );
+  }
 
-  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) {
     column += QLatin1String( " PRIMARY KEY" );
-  else if ( columnDescription.isUnique )
+  } else if ( columnDescription.isUnique ) {
     column += QLatin1String( " UNIQUE" );
+  }
 
-  if ( !columnDescription.allowNull && !( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) )
+  if ( !columnDescription.allowNull && !( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) ) {
     column += QLatin1String( " NOT NULL" );
+  }
 
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
-    if ( !defaultValue.isEmpty() )
+    if ( !defaultValue.isEmpty() ) {
       column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+    }
   }
 
   return column;
@@ -280,8 +299,6 @@ QString DbInitializerPostgreSql::buildRemoveForeignKeyConstraintStatement(const 
 
 //END PostgreSQL
 
-
-
 //BEGIN Virtuoso
 
 DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database):
@@ -291,20 +308,27 @@ DbInitializerVirtuoso::DbInitializerVirtuoso(const QSqlDatabase& database):
 
 QString DbInitializerVirtuoso::sqlType(const QString& type, int size) const
 {
-  if ( type == QLatin1String("QString") )
+  if ( type == QLatin1String("QString") ) {
     return QLatin1Literal("VARCHAR(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
-  if (type == QLatin1String("QByteArray") )
+  }
+  if (type == QLatin1String("QByteArray") ) {
     return QLatin1String("LONG VARCHAR");
-  if ( type == QLatin1String( "bool" ) )
+  }
+  if ( type == QLatin1String( "bool" ) ) {
     return QLatin1String("CHAR");
+  }
   return DbInitializer::sqlType( type, size );
 }
 
 QString DbInitializerVirtuoso::sqlValue(const QString& type, const QString& value) const
 {
   if ( type == QLatin1String( "bool" ) ) {
-    if ( value == QLatin1String( "false" ) ) return QLatin1String( "0" );
-    if ( value == QLatin1String( "true" ) ) return QLatin1String( "1" );
+    if ( value == QLatin1String( "false" ) ) {
+      return QLatin1String( "0" );
+    }
+    if ( value == QLatin1String( "true" ) ) {
+      return QLatin1String( "1" );
+    }
   }
   return DbInitializer::sqlValue( type, value );
 }
@@ -313,11 +337,13 @@ QString DbInitializerVirtuoso::buildCreateTableStatement( const TableDescription
 {
   QStringList columns;
 
-  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns )
+  Q_FOREACH ( const ColumnDescription &columnDescription, tableDescription.columns ) {
     columns.append( buildColumnStatement( columnDescription, tableDescription ) );
+  }
 
-  if ( tableDescription.primaryKeyColumnCount() > 1 )
+  if ( tableDescription.primaryKeyColumnCount() > 1 ) {
     columns.push_back( buildPrimaryKeyStatement( tableDescription ) );
+  }
 
   return QString::fromLatin1( "CREATE TABLE %1 (%2)" ).arg( tableDescription.name, columns.join( QLatin1String( ", " ) ) );
 }
@@ -328,17 +354,21 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
 
   column += QLatin1Char( ' ' ) + sqlType( columnDescription.type, columnDescription.size );
 
-  if ( !columnDescription.allowNull )
+  if ( !columnDescription.allowNull ) {
     column += QLatin1String( " NOT NULL" );
+  }
 
-  if ( columnDescription.isAutoIncrement )
+  if ( columnDescription.isAutoIncrement ) {
     column += QLatin1String( " IDENTITY" );
+  }
 
-  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 )
+  if ( columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1 ) {
     column += QLatin1String( " PRIMARY KEY" );
+  }
 
-  if ( columnDescription.isUnique )
+  if ( columnDescription.isUnique ) {
     column += QLatin1String( " UNIQUE" );
+  }
 
   if ( !columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty() ) {
     column += QLatin1Literal( " REFERENCES " ) + columnDescription.refTable + QLatin1Literal( "Table(" )
@@ -348,8 +378,9 @@ QString DbInitializerVirtuoso::buildColumnStatement( const ColumnDescription &co
   if ( !columnDescription.defaultValue.isEmpty() ) {
     const QString defaultValue = sqlValue( columnDescription.type, columnDescription.defaultValue );
 
-    if ( !defaultValue.isEmpty() && (defaultValue != QLatin1String( "CURRENT_TIMESTAMP" )) )
+    if ( !defaultValue.isEmpty() && (defaultValue != QLatin1String( "CURRENT_TIMESTAMP" )) ) {
       column += QString::fromLatin1( " DEFAULT %1" ).arg( defaultValue );
+    }
   }
 
   return column;

@@ -31,7 +31,6 @@
 #include <QDebug>
 #include <QFileInfo>
 
-
 #include <QSqlError>
 
 using namespace Akonadi;
@@ -44,8 +43,9 @@ QString PartHelper::fileNameForPart( Part *part )
 
 void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 {
-  if (!part)
+  if (!part) {
     throw PartHelperException( "Invalid part" );
+  }
 
   QString origFileName;
   QString origFilePath;
@@ -66,8 +66,9 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 
   if ( storeExternal ) {
     QString fileName = origFileName;
-    if ( fileName.isEmpty() )
+    if ( fileName.isEmpty() ) {
       fileName = fileNameForPart( part );
+    }
     QString rev = QString::fromAscii("_r0");
     if ( fileName.contains( QString::fromAscii("_r") ) ) {
       int revIndex = fileName.indexOf(QString::fromAscii("_r"));
@@ -101,17 +102,20 @@ void PartHelper::update( Part *part, const QByteArray &data, qint64 dataSize )
 
   part->setDatasize( dataSize );
   const bool result = part->update();
-  if ( !result )
+  if ( !result ) {
     throw PartHelperException( "Failed to update database record" );
+  }
   // everything worked, remove the old file
-  if ( !origFilePath.isEmpty() )
+  if ( !origFilePath.isEmpty() ) {
     removeFile( origFilePath );
+  }
 }
 
-bool PartHelper::insert( Part *part, qint64* insertId )
+bool PartHelper::insert( Part *part, qint64 *insertId )
 {
-  if (!part)
+  if (!part) {
     return false;
+  }
 
   const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
 
@@ -128,8 +132,7 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
   bool result = part->insert( insertId );
 
-  if ( storeInFile && result )
-  {
+  if ( storeInFile && result ) {
     QString fileName = fileNameForPart( part );
     fileName +=  QString::fromUtf8("_r0");
     const QString filePath = storagePath() + QDir::separator() + fileName;
@@ -156,8 +159,9 @@ bool PartHelper::insert( Part *part, qint64* insertId )
 
 bool PartHelper::remove( Akonadi::Part *part )
 {
-  if (!part)
+  if (!part) {
     return false;
+  }
 
   if ( part->external() ) {
     // akDebug() << "remove part file " << part->data();
@@ -181,8 +185,7 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
   const Part::List parts = builder.result();
   Part::List::ConstIterator it = parts.constBegin();
   Part::List::ConstIterator end = parts.constEnd();
-  for ( ; it != end; ++it )
-  {
+  for ( ; it != end; ++it ) {
     const QString fileName = resolveAbsolutePath( (*it).data() );
     // akDebug() << "remove part file " << fileName;
     removeFile( fileName );
@@ -192,8 +195,9 @@ bool PartHelper::remove( const QString &column, const QVariant &value )
 
 void PartHelper::removeFile(const QString& fileName)
 {
-  if ( !fileName.startsWith( storagePath() ) )
+  if ( !fileName.startsWith( storagePath() ) ) {
     throw PartHelperException( "Attempting to delete a file not in our prefix." );
+  }
   QFile::remove( fileName );
 }
 
