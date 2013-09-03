@@ -103,7 +103,6 @@ class KDatePickerPopup: public QMenu
     void slotNextWeek();
     void slotNextMonth();
     void slotNoDate();
-    void slotHidePickerPopup();
 
   private:
     void buildMenu();
