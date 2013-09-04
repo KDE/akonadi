@@ -102,13 +102,10 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
             return contact.preferredEmail();
           }
           return contact.realName();
-          break;
         case FamilyName:
           return contact.familyName();
-          break;
         case GivenName:
           return contact.givenName();
-          break;
         case Birthday:
           if ( contact.birthday().date().isValid() ) {
             return KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
@@ -144,22 +141,16 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
           break;
         case PreferredEmail:
           return contact.preferredEmail();
-          break;
         case AllEmails:
           return contact.emails().join( QLatin1String( "\n" ) );
-          break;
         case Organization:
           return contact.organization();
-          break;
         case Role:
           return contact.role();
-          break;
         case Homepage:
           return contact.url().url();
-          break;
         case Note:
           return contact.note();
-          break;
       }
     } else if ( role == DateRole ) {
       if ( d->mColumns.at( column ) == Birthday ) {
@@ -251,43 +242,30 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
         switch ( d->mColumns.at( section ) ) {
           case FullName:
             return i18nc( "@title:column name of a person", "Name" );
-            break;
           case FamilyName:
             return i18nc( "@title:column family name of a person", "Family Name" );
-            break;
           case GivenName:
             return i18nc( "@title:column given name of a person", "Given Name" );
-            break;
           case Birthday:
             return KABC::Addressee::birthdayLabel();
-            break;
           case HomeAddress:
             return i18nc( "@title:column home address of a person", "Home" );
-            break;
           case BusinessAddress:
             return i18nc( "@title:column work address of a person", "Work" );
-            break;
           case PhoneNumbers:
             return i18nc( "@title:column phone numbers of a person", "Phone Numbers" );
-            break;
           case PreferredEmail:
             return i18nc( "@title:column the preferred email addresses of a person", "Preferred EMail" );
-            break;
           case AllEmails:
             return i18nc( "@title:column all email addresses of a person", "All EMails" );
-            break;
           case Organization:
             return KABC::Addressee::organizationLabel();
-            break;
           case Role:
             return KABC::Addressee::roleLabel();
-            break;
           case Homepage:
             return KABC::Addressee::urlLabel();
-            break;
           case Note:
             return KABC::Addressee::noteLabel();
-            break;
         }
       }
     }
