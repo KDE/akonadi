@@ -131,9 +131,15 @@ void KEditTagsDialog::slotButtonClicked(int button)
             QListWidgetItem* item = m_tagsList->item( i );
             if ( item->checkState() == Qt::Checked ) {
                 const QString label = item->data( Qt::UserRole ).toString();
-                Nepomuk2::Tag tag( label );
-                tag.setLabel( label );
-                m_tags.append( tag );
+                const QString uri = item->data(UrlTag).toString();
+                if (uri.isEmpty()) {
+                    Nepomuk2::Tag tag( label );
+                    tag.setLabel( label );
+                    m_tags.append( tag );
+                } else {
+                    Nepomuk2::Tag tag( uri );
+                    m_tags.append( tag );
+                }
             }
         }
 
@@ -231,6 +237,7 @@ void KEditTagsDialog::loadTags()
 
         QListWidgetItem *item = new QListWidgetItem( label, m_tagsList );
         item->setData( Qt::UserRole, label );
+        item->setData( UrlTag, tag.uri().toString());
 
         bool check = false;
         foreach ( const Nepomuk2::Tag& selectedTag, m_tags ) {

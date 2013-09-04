@@ -65,6 +65,10 @@ private:
     void removeNewTagItem();
 
 private:
+    enum ItemType {
+        UrlTag = Qt::UserRole + 1
+    };
+
     QVector<Nepomuk2::Tag> m_tags;
     QListWidget* m_tagsList;
     QListWidgetItem* m_newTagItem;
