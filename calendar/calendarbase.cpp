@@ -302,7 +302,13 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   q->setObserversEnabled( false );
   q->MemoryCalendar::deleteIncidence( oldIncidence );
   q->MemoryCalendar::addIncidence( newIncidence );
+  const QString newUid = newIncidence->uid();
+  newIncidence->setUid( oldUid );
   q->setObserversEnabled( true );
+
+  // The actual operation of updating the UID must be done with observers enabled so
+  // FieldUid gets dirty.
+  newIncidence->setUid( newUid );
 }
 
 CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )
