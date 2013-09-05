@@ -40,7 +40,7 @@ class IntervalCheck : public QThread
     IntervalCheck( QObject *parent = 0 );
     ~IntervalCheck();
 
-    static IntervalCheck* instance();
+    static IntervalCheck *instance();
 
     /**
      * Requests the given collection to be synced.
@@ -57,7 +57,7 @@ class IntervalCheck : public QThread
     void doIntervalCheck();
 
   private:
-    static IntervalCheck* s_instance;
+    static IntervalCheck *s_instance;
     QMutex m_lastSyncMutex;
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
