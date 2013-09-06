@@ -31,10 +31,10 @@
 using namespace Akonadi;
 
 ImapStreamParser::ImapStreamParser( QIODevice *socket )
-  : m_peeking( false )
-  , m_socket( socket )
+  : m_socket( socket )
   , m_position( 0 )
   , m_literalSize( 0 )
+  , m_peeking( false )
 {
 }
 

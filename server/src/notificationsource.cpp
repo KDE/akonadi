@@ -37,22 +37,23 @@ QVector<T> setToVector( const QSet<T> &set )
   return v;
 }
 
-NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager* parent )
-  : QObject( parent ),
-    mManager( parent ),
-    mIdentifier( identifier ),
-    mDBusIdentifier( identifier ),
-    mClientWatcher( 0 ),
-    mServerSideMonitorEnabled( false ),
-    mAllMonitored( false )
+NotificationSource::NotificationSource( const QString &identifier, const QString &clientServiceName, Akonadi::NotificationManager *parent )
+  : QObject( parent )
+  , mManager( parent )
+  , mIdentifier( identifier )
+  , mDBusIdentifier( identifier )
+  , mClientWatcher( 0 )
+  , mServerSideMonitorEnabled( false )
+  , mAllMonitored( false )
 {
   new NotificationSourceAdaptor( this );
 
   // Clean up for dbus usage: any non-alphanumeric char should be turned into '_'
   const int len = mDBusIdentifier.length();
   for ( int i = 0; i < len; ++i ) {
-    if ( !mDBusIdentifier[i].isLetterOrNumber() )
-      mDBusIdentifier[i] = QLatin1Char('_');
+    if ( !mDBusIdentifier[i].isLetterOrNumber() ) {
+      mDBusIdentifier[i] = QLatin1Char( '_' );
+    }
   }
 
   QDBusConnection::sessionBus().registerObject(
@@ -64,19 +65,14 @@ NotificationSource::NotificationSource( const QString &identifier, const QString
   connect( mClientWatcher, SIGNAL(serviceUnregistered(QString)), SLOT(serviceUnregistered(QString)) );
 }
 
-
-
 NotificationSource::~NotificationSource()
-{}
-
-
+{
+}
 
 QDBusObjectPath NotificationSource::dbusPath() const
 {
   return QDBusObjectPath( QLatin1String( "/subscriber/" ) + mDBusIdentifier );
 }
-
-
 
 void NotificationSource::emitNotification( const NotificationMessage::List &notifications )
 {
@@ -87,7 +83,6 @@ void NotificationSource::emitNotification( const NotificationMessageV2::List &no
 {
   Q_EMIT notifyV2( notifications );
 }
-
 
 QString NotificationSource::identifier() const
 {
@@ -109,7 +104,7 @@ void NotificationSource::setServerSideMonitorEnabled( bool enabled )
   mServerSideMonitorEnabled = enabled;
 }
 
-void NotificationSource::addClientServiceName(const QString& clientServiceName)
+void NotificationSource::addClientServiceName( const QString &clientServiceName )
 {
   if ( mClientWatcher->watchedServices().contains( clientServiceName ) ) {
     return;
@@ -119,7 +114,7 @@ void NotificationSource::addClientServiceName(const QString& clientServiceName)
   akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
 }
 
-void NotificationSource::serviceUnregistered(const QString& serviceName)
+void NotificationSource::serviceUnregistered( const QString &serviceName )
 {
   mClientWatcher->removeWatchedService( serviceName );
   akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
@@ -148,7 +143,6 @@ QVector<Entity::Id> NotificationSource::monitoredCollections() const
 {
   return setToVector<Entity::Id>( mMonitoredCollections );
 }
-
 
 void NotificationSource::setMonitoredItem( Entity::Id id, bool monitored )
 {
@@ -189,7 +183,6 @@ QVector<QByteArray> NotificationSource::monitoredResources() const
 {
   return setToVector<QByteArray>( mMonitoredResources );
 }
-
 
 void NotificationSource::setMonitoredMimeType( const QString &mimeType, bool monitored )
 {
@@ -290,68 +283,68 @@ bool NotificationSource::acceptsNotification( const NotificationMessageV2 &notif
   }
 
   // user requested everything
-  if ( mAllMonitored && notification.type() != NotificationMessageV2::InvalidType) {
+  if ( mAllMonitored && notification.type() != NotificationMessageV2::InvalidType ) {
     return true;
   }
 
   switch ( notification.type() ) {
-    case NotificationMessageV2::InvalidType:
-      akDebug() << "Received invalid change notification!";
+  case NotificationMessageV2::InvalidType:
+    akDebug() << "Received invalid change notification!";
+    return false;
+
+  case NotificationMessageV2::Items:
+    // we have a resource or mimetype filter
+    if ( !mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty() ) {
+      if ( mMonitoredResources.contains( notification.resource() ) ) {
+        return true;
+      }
+
+      if ( isMoveDestinationResourceMonitored( notification ) ) {
+        return true;
+      }
+
+      Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+        if ( isMimeTypeMonitored( entity.mimeType ) ) {
+          return true;
+        }
+      }
+
       return false;
+    }
 
-    case NotificationMessageV2::Items:
-      // we have a resource or mimetype filter
-      if ( !mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty() ) {
-        if ( mMonitoredResources.contains( notification.resource() ) ) {
-          return true;
-        }
-
-        if ( isMoveDestinationResourceMonitored( notification ) ) {
-          return true;
-        }
-
-        Q_FOREACH (const NotificationMessageV2::Entity &entity, notification.entities() ) {
-          if ( isMimeTypeMonitored( entity.mimeType ) ) {
-            return true;
-          }
-        }
-
-        return false;
+    // we explicitly monitor that item or the collections it's in
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+      if ( mMonitoredItems.contains( entity.id ) ) {
+        return true;
       }
+    }
 
-      // we explicitly monitor that item or the collections it's in
-      Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
-        if ( mMonitoredItems.contains( entity.id ) ) {
-          return true;
-        }
+    return isCollectionMonitored( notification.parentCollection() )
+        || isCollectionMonitored( notification.parentDestCollection() );
+
+  case NotificationMessageV2::Collections:
+    // we have a resource filter
+    if ( !mMonitoredResources.isEmpty() ) {
+      const bool resourceMatches = mMonitoredResources.contains( notification.resource() )
+                                  || isMoveDestinationResourceMonitored( notification );
+
+      // a bit hacky, but match the behaviour from the item case,
+      // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
+      if ( mMonitoredMimeTypes.isEmpty() || resourceMatches ) {
+        return resourceMatches;
       }
+      // else continue
+    }
 
-      return isCollectionMonitored( notification.parentCollection() )
-          || isCollectionMonitored( notification.parentDestCollection() );
-
-    case NotificationMessageV2::Collections:
-      // we have a resource filter
-      if ( !mMonitoredResources.isEmpty() ) {
-        const bool resourceMatches = mMonitoredResources.contains( notification.resource() )
-                                    || isMoveDestinationResourceMonitored( notification );
-
-        // a bit hacky, but match the behaviour from the item case,
-        // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
-        if ( mMonitoredMimeTypes.isEmpty() || resourceMatches ) {
-          return resourceMatches;
-        }
-        // else continue
+    // we explicitly monitor that colleciton, or all of them
+    Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
+      if ( isCollectionMonitored( entity.id ) ) {
+        return true;
       }
+    }
 
-      // we explicitly monitor that colleciton, or all of them
-      Q_FOREACH ( const NotificationMessageV2::Entity &entity, notification.entities() ) {
-        if ( isCollectionMonitored( entity.id ) ) {
-          return true;
-        }
-      }
-
-      return isCollectionMonitored( notification.parentCollection() )
-          || isCollectionMonitored( notification.parentDestCollection() );
+    return isCollectionMonitored( notification.parentCollection() )
+        || isCollectionMonitored( notification.parentDestCollection() );
   }
 
   return false;
