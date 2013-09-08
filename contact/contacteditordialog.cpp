@@ -83,7 +83,7 @@ class ContactEditorDialog::Private
       connect( q, SIGNAL(cancelClicked()), q, SLOT(slotCancelClicked()) );
       connect( mEditor, SIGNAL(finished()), q, SLOT(slotFinish()) );
 
-      q->setInitialSize( QSize( 800, 500 ) );
+      readConfig();
     }
 
     void slotOkClicked()
@@ -102,6 +102,26 @@ class ContactEditorDialog::Private
     void slotCancelClicked()
     {
       q->reject();
+    }
+
+    void readConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, "ContactEditor" );
+      const QSize size = group.readEntry( "Size", QSize() );
+      if ( size.isValid() ) {
+        q->resize( size );
+      } else {
+        q->resize( 800,  500 );
+      }
+    }
+
+    void writeConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, "ContactEditor" );
+      group.writeEntry( "Size", q->size() );
+      group.sync();
     }
 
     ContactEditorDialog *q;
@@ -127,6 +147,7 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, DisplayMode displayMode, QW
 
 ContactEditorDialog::~ContactEditorDialog()
 {
+  d->writeConfig();
   delete d;
 }
 
