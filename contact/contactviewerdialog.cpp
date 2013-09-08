@@ -21,6 +21,7 @@
 
 #include "contactviewerdialog.h"
 #include "contactviewer.h"
+#include "contactdefaultactions.h"
 
 #include <akonadi/item.h>
 using namespace Akonadi;
@@ -75,6 +76,9 @@ ContactViewerDialog::ContactViewerDialog( QWidget *parent )
 
   d->mViewer = new ContactViewer;
   layout->addWidget( d->mViewer );
+
+  ContactDefaultActions *actions = new ContactDefaultActions( this );
+  actions->connectToView( d->mViewer );
 
   d->readConfig();
 }
