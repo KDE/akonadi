@@ -47,7 +47,7 @@ class EmailAddressSelectionDialog::Private
 
     void readConfig()
     {
-       KConfigGroup group( KGlobal::config(), "EmailAddressSelectionDialog" );
+       KConfigGroup group( KGlobal::config(), QLatin1String( "EmailAddressSelectionDialog" ) );
        const QSize size = group.readEntry( "Size", QSize() );
        if ( size.isValid() ) {
           q->resize( size );
@@ -58,7 +58,7 @@ class EmailAddressSelectionDialog::Private
 
     void writeConfig()
     {
-        KConfigGroup group( KGlobal::config(), "EmailAddressSelectionDialog" );
+        KConfigGroup group( KGlobal::config(), QLatin1String( "EmailAddressSelectionDialog" ) );
         group.writeEntry( "Size", q->size() );
     }
 
