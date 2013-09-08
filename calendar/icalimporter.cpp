@@ -244,7 +244,7 @@ bool ICalImporter::importIntoExistingResource(const QUrl &url, Akonadi::Collecti
     } else {
         d->m_collection = collection;
         KIO::StoredTransferJob *job = KIO::storedGet(KUrl(url));
-        connect(job, SIGNAL(data(KIO::Job *,QByteArray)), d, SLOT(remoteDownloadFinished(KIO::Job *,QByteArray)));
+        connect(job, SIGNAL(data(KIO::Job*,QByteArray)), d, SLOT(remoteDownloadFinished(KIO::Job*,QByteArray)));
     }
 
     d->m_working = true;
