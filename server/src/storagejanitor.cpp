@@ -50,31 +50,32 @@
 
 using namespace Akonadi;
 
-StorageJanitorThread::StorageJanitorThread(QObject* parent): QThread(parent)
+StorageJanitorThread::StorageJanitorThread( QObject *parent )
+  : QThread( parent )
 {
 }
 
 void StorageJanitorThread::run()
 {
-  StorageJanitor* janitor = new StorageJanitor;
+  StorageJanitor *janitor = new StorageJanitor;
   exec();
   delete janitor;
 }
 
-StorageJanitor::StorageJanitor(QObject* parent) :
-  QObject(parent),
-  m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String(staticMetaObject.className()) ) ),
-  m_lostFoundCollectionId(-1)
+StorageJanitor::StorageJanitor( QObject *parent )
+  : QObject( parent )
+  , m_connection( QDBusConnection::connectToBus( QDBusConnection::SessionBus, QLatin1String( staticMetaObject.className() ) ) )
+  , m_lostFoundCollectionId( -1 )
 {
   DataStore::self();
-  m_connection.registerService( AkDBus::serviceName(AkDBus::StorageJanitor) );
+  m_connection.registerService( AkDBus::serviceName( AkDBus::StorageJanitor ) );
   m_connection.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );
 }
 
 StorageJanitor::~StorageJanitor()
 {
   m_connection.unregisterObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), QDBusConnection::UnregisterTree );
-  m_connection.unregisterService( AkDBus::serviceName(AkDBus::StorageJanitor) );
+  m_connection.unregisterService( AkDBus::serviceName( AkDBus::StorageJanitor ) );
   m_connection.disconnectFromBus( m_connection.name() );
 
   DataStore::self()->close();
@@ -126,49 +127,54 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
 qint64 StorageJanitor::lostAndFoundCollection()
 {
-  if (m_lostFoundCollectionId > 0)
+  if ( m_lostFoundCollectionId > 0 ) {
     return m_lostFoundCollectionId;
+  }
 
-  Transaction transaction(DataStore::self());
-  Resource lfRes = Resource::retrieveByName(QLatin1String("akonadi_lost+found_resource"));
-  if (!lfRes.isValid()) {
-    lfRes.setName(QLatin1String("akonadi_lost+found_resource"));
-    if (!lfRes.insert())
+  Transaction transaction( DataStore::self() );
+  Resource lfRes = Resource::retrieveByName( QLatin1String( "akonadi_lost+found_resource" ) );
+  if ( !lfRes.isValid() ) {
+    lfRes.setName( QLatin1String( "akonadi_lost+found_resource" ) );
+    if ( !lfRes.insert() ) {
       akFatal() << "Failed to create lost+found resource!";
+    }
   }
 
   Collection lfRoot;
   SelectQueryBuilder<Collection> qb;
-  qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id());
-  qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
+  qb.addValueCondition( Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id() );
+  qb.addValueCondition( Collection::parentIdFullColumnName(), Query::Is, QVariant() );
   qb.exec();
   const Collection::List cols = qb.result();
-  if (cols.size() > 1) {
+  if ( cols.size() > 1 ) {
     akFatal() << "More than one top-level lost+found collection!?";
-  } else if (cols.size() == 1) {
+  } else if ( cols.size() == 1 ) {
     lfRoot = cols.first();
   } else {
-    lfRoot.setName(QLatin1String("lost+found"));
-    lfRoot.setResourceId(lfRes.id());
-    lfRoot.setCachePolicyLocalParts(QLatin1String("ALL"));
-    lfRoot.setCachePolicyCacheTimeout(-1);
-    lfRoot.setCachePolicyInherit(false);
-    if (!lfRoot.insert())
+    lfRoot.setName( QLatin1String( "lost+found" ) );
+    lfRoot.setResourceId( lfRes.id() );
+    lfRoot.setCachePolicyLocalParts( QLatin1String( "ALL" ) );
+    lfRoot.setCachePolicyCacheTimeout( -1 );
+    lfRoot.setCachePolicyInherit( false );
+    if ( !lfRoot.insert() ) {
       akFatal() << "Failed to create lost+found root.";
-    DataStore::self()->notificationCollector()->collectionAdded(lfRoot, lfRes.name().toUtf8());
+    }
+    DataStore::self()->notificationCollector()->collectionAdded( lfRoot, lfRes.name().toUtf8() );
   }
 
   Collection lfCol;
-  lfCol.setName(QDateTime::currentDateTime().toString(QLatin1String("yyyy-MM-dd hh:mm:ss")));
-  lfCol.setResourceId(lfRes.id());
-  lfCol.setParentId(lfRoot.id());
-  if (!lfCol.insert())
+  lfCol.setName( QDateTime::currentDateTime().toString( QLatin1String( "yyyy-MM-dd hh:mm:ss" ) ) );
+  lfCol.setResourceId( lfRes.id() );
+  lfCol.setParentId( lfRoot.id() );
+  if ( !lfCol.insert() ) {
     akFatal() << "Failed to create lost+found collection!";
+  }
 
-  Q_FOREACH (const MimeType &mt, MimeType::retrieveAll())
-    lfCol.addMimeType(mt);
+  Q_FOREACH ( const MimeType &mt, MimeType::retrieveAll() ) {
+    lfCol.addMimeType( mt );
+  }
 
-  DataStore::self()->notificationCollector()->collectionAdded(lfCol, lfRes.name().toUtf8());
+  DataStore::self()->notificationCollector()->collectionAdded( lfCol, lfRes.name().toUtf8() );
 
   transaction.commit();
   m_lostFoundCollectionId = lfCol.id();
@@ -179,33 +185,32 @@ void StorageJanitor::findOrphanedResources()
 {
   SelectQueryBuilder<Resource> qbres;
   OrgFreedesktopAkonadiAgentManagerInterface iface(
-      AkDBus::serviceName(AkDBus::Control),
+      AkDBus::serviceName( AkDBus::Control ),
       QLatin1String( "/AgentManager" ),
       QDBusConnection::sessionBus(),
-      this
-    );
-  if (!iface.isValid()) {
-      inform( QString::fromLatin1("ERROR: Couldn't talk to %1").arg(AkDBus::Control) );
+      this );
+  if ( !iface.isValid() ) {
+      inform( QString::fromLatin1( "ERROR: Couldn't talk to %1" ).arg( AkDBus::Control ) );
       return;
   }
   const QStringList knownResources = iface.agentInstances();
-  if (knownResources.isEmpty()) {
-      inform( QString::fromLatin1("ERROR: no known resources. This must be a mistake?") );
+  if ( knownResources.isEmpty() ) {
+      inform( QString::fromLatin1( "ERROR: no known resources. This must be a mistake?" ) );
       return;
   }
   akDebug() << "Known resources:" << knownResources;
-  qbres.addValueCondition( Resource::nameFullColumnName(), Query::NotIn, QVariant(knownResources) );
+  qbres.addValueCondition( Resource::nameFullColumnName(), Query::NotIn, QVariant( knownResources ) );
   qbres.addValueCondition( Resource::idFullColumnName(), Query::NotEquals, 1 ); // skip akonadi_search_resource
   qbres.exec();
   //akDebug() << "SQL:" << qbres.query().lastQuery();
   const Resource::List orphanResources = qbres.result();
   if ( orphanResources.size() > 0 ) {
     QStringList resourceNames;
-    Q_FOREACH ( const Resource& resource, orphanResources ) {
-        resourceNames.append(resource.name());
+    Q_FOREACH ( const Resource &resource, orphanResources ) {
+        resourceNames.append( resource.name() );
     }
-    inform( QString::fromLatin1( "Found %1 orphan resources: %2" ).arg( orphanResources.size() ). arg( resourceNames.join(QLatin1String(",")) ) );
-    Q_FOREACH ( const QString& resourceName, resourceNames ) {
+    inform( QString::fromLatin1( "Found %1 orphan resources: %2" ).arg( orphanResources.size() ). arg( resourceNames.join( QLatin1String( "," ) ) ) );
+    Q_FOREACH ( const QString &resourceName, resourceNames ) {
         inform( QString::fromLatin1( "Removing resource %1" ).arg( resourceName ) );
         ResourceManager::self()->removeResourceInstance( resourceName );
     }
@@ -226,10 +231,11 @@ void StorageJanitor::findOrphanedCollections()
   }
 }
 
-void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
+void StorageJanitor::checkPathToRoot( const Akonadi::Collection &col )
 {
-  if ( col.parentId() == 0 )
+  if ( col.parentId() == 0 ) {
     return;
+  }
   const Akonadi::Collection parent = col.parent();
   if ( !parent.isValid() ) {
     inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
@@ -239,7 +245,7 @@ void StorageJanitor::checkPathToRoot(const Akonadi::Collection& col)
   }
 
   if ( col.resourceId() != parent.resourceId() ) {
-    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id()  )
+    inform( QLatin1Literal( "Collection \"" ) + col.name() + QLatin1Literal( "\" (id: " ) + QString::number( col.id() )
           + QLatin1Literal( ") belongs to a different resource than its parent." ) );
     // can/should we actually fix that?
   }
@@ -257,21 +263,22 @@ void StorageJanitor::findOrphanedItems()
   if ( orphans.size() > 0 ) {
     inform( QLatin1Literal( "Found " ) + QString::number( orphans.size() ) + QLatin1Literal( " orphan items." ) );
     // Attach to lost+found collection
-    Transaction transaction(DataStore::self());
-    QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
+    Transaction transaction( DataStore::self() );
+    QueryBuilder qb( PimItem::tableName(), QueryBuilder::Update );
     qint64 col = lostAndFoundCollection();
-    qb.setColumnValue(PimItem::collectionIdFullColumnName(), col);
+    qb.setColumnValue( PimItem::collectionIdFullColumnName(), col );
     QVector<ImapSet::Id> imapIds;
-    Q_FOREACH(const PimItem& item, orphans) {
-      imapIds.append(item.id());
+    Q_FOREACH ( const PimItem &item, orphans ) {
+      imapIds.append( item.id() );
     }
     ImapSet set;
-    set.add(imapIds);
-    QueryHelper::setToQuery(set, PimItem::idFullColumnName(), qb);
-    if (qb.exec() && transaction.commit())
-      inform(QLatin1Literal("Moved orphan items to collection ") + QString::number(col));
-    else
-      inform(QLatin1Literal("Error moving orphan items to collection ") + QString::number(col) + QLatin1Literal(" : ") + qb.query().lastError().text());
+    set.add( imapIds );
+    QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
+    if ( qb.exec() && transaction.commit() ) {
+      inform( QLatin1Literal( "Moved orphan items to collection " ) + QString::number( col ) );
+    } else {
+      inform( QLatin1Literal( "Error moving orphan items to collection " ) + QString::number( col ) + QLatin1Literal( " : " ) + qb.query().lastError().text() );
+    }
   }
 }
 
@@ -291,32 +298,32 @@ void StorageJanitor::findOrphanedParts()
 
 void StorageJanitor::findOrphanedPimItemFlags()
 {
-  QueryBuilder sqb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
-  sqb.addColumn(PimItemFlagRelation::leftFullColumnName());
-  sqb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName());
-  sqb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
-  if (!sqb.exec()) {
+  QueryBuilder sqb( PimItemFlagRelation::tableName(), QueryBuilder::Select );
+  sqb.addColumn( PimItemFlagRelation::leftFullColumnName() );
+  sqb.addJoin( QueryBuilder::LeftJoin, PimItem::tableName(), PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName() );
+  sqb.addValueCondition( PimItem::idFullColumnName(), Query::Is, QVariant() );
+  if ( !sqb.exec() ) {
       akError() << "Error:" << sqb.query().lastError().text();
       return;
   }
   QVector<ImapSet::Id> imapIds;
   int count = 0;
-  while (sqb.query().next()) {
+  while ( sqb.query().next() ) {
     ++count;
-    imapIds.append(sqb.query().value(0).toInt());
+    imapIds.append( sqb.query().value( 0 ).toInt() );
   }
 
-  if (count > 0) {
+  if ( count > 0 ) {
     ImapSet set;
-    set.add(imapIds);
-    QueryBuilder qb(PimItemFlagRelation::tableName(), QueryBuilder::Delete);
-    QueryHelper::setToQuery(set, PimItemFlagRelation::leftFullColumnName(), qb);
-    if (!qb.exec()) {
+    set.add( imapIds );
+    QueryBuilder qb( PimItemFlagRelation::tableName(), QueryBuilder::Delete );
+    QueryHelper::setToQuery( set, PimItemFlagRelation::leftFullColumnName(), qb );
+    if ( !qb.exec() ) {
       akError() << "Error:" << qb.query().lastError().text();
       return;
     }
 
-    inform(QLatin1Literal("Found and deleted ") + QString::number(count) + QLatin1Literal(" orphan pim item flags."));
+    inform( QLatin1Literal( "Found and deleted " ) + QString::number( count ) + QLatin1Literal( " orphan pim item flags." ) );
   }
 }
 
@@ -324,11 +331,11 @@ void StorageJanitor::findOverlappingParts()
 {
   QueryBuilder qb( Part::tableName(), QueryBuilder::Select );
   qb.addColumn( Part::dataColumn() );
-  qb.addColumn( QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(") as cnt") );
+  qb.addColumn( QLatin1Literal( "count(" ) + Part::idColumn() + QLatin1Literal( ") as cnt" ) );
   qb.addValueCondition( Part::externalColumn(), Query::Equals, true );
   qb.addValueCondition( Part::dataColumn(), Query::IsNot, QVariant() );
   qb.addGroupColumn( Part::dataColumn() );
-  qb.addValueCondition( QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(")"), Query::Greater, 1, QueryBuilder::HavingCondition );
+  qb.addValueCondition( QLatin1Literal( "count(" ) + Part::idColumn() + QLatin1Literal( ")" ), Query::Greater, 1, QueryBuilder::HavingCondition );
   qb.exec();
 
   int count = 0;
@@ -350,8 +357,9 @@ void StorageJanitor::verifyExternalParts()
   // list all files
   const QString dataDir = AkStandardDirs::saveDir( "data", QLatin1String( "file_db_data" ) );
   QDirIterator it( dataDir );
-  while ( it.hasNext() )
+  while ( it.hasNext() ) {
     existingFiles.insert( it.next() );
+  }
   existingFiles.remove( dataDir + QDir::separator() + QLatin1String( "." ) );
   existingFiles.remove( dataDir + QDir::separator() + QLatin1String( ".." ) );
   inform( QLatin1Literal( "Found " ) + QString::number( existingFiles.size() ) + QLatin1Literal( " external files." ) );
@@ -393,7 +401,7 @@ void StorageJanitor::verifyExternalParts()
       const QFileInfo f( file );
       QFile::rename( file, lfDir + QDir::separator() + f.fileName() );
     }
-    inform( QString::fromLatin1("Moved %1 unreferenced files to lost+found.").arg(unreferencedFiles.size()) );
+    inform( QString::fromLatin1( "Moved %1 unreferenced files to lost+found." ).arg( unreferencedFiles.size() ) );
   } else {
     inform( "Found no unreferenced external files." );
   }
@@ -402,7 +410,7 @@ void StorageJanitor::verifyExternalParts()
 void StorageJanitor::findDirtyObjects()
 {
   SelectQueryBuilder<Collection> cqb;
-  cqb.setSubQueryMode( Query::Or);
+  cqb.setSubQueryMode( Query::Or );
   cqb.addValueCondition( Collection::remoteIdColumn(), Query::Is, QVariant() );
   cqb.addValueCondition( Collection::remoteIdColumn(), Query::Equals, QString() );
   cqb.exec();
@@ -413,7 +421,7 @@ void StorageJanitor::findDirtyObjects()
   inform( QLatin1Literal( "Found " ) + QString::number( ridLessCols.size() ) + QLatin1Literal( " collections without RID." ) );
 
   SelectQueryBuilder<PimItem> iqb1;
-  iqb1.setSubQueryMode( Query::Or);
+  iqb1.setSubQueryMode( Query::Or );
   iqb1.addValueCondition( PimItem::remoteIdColumn(), Query::Is, QVariant() );
   iqb1.addValueCondition( PimItem::remoteIdColumn(), Query::Equals, QString() );
   iqb1.exec();
@@ -436,7 +444,7 @@ void StorageJanitor::findDirtyObjects()
 void StorageJanitor::vacuum()
 {
   const DbType::Type dbType = DbType::type( DataStore::self()->database() );
-  if( dbType == DbType::MySQL || dbType == DbType::PostgreSQL ) {
+  if ( dbType == DbType::MySQL || dbType == DbType::PostgreSQL ) {
     inform( "vacuuming database, that'll take some time and require a lot of temporary disk space..." );
     Q_FOREACH ( const QString &table, Akonadi::allDatabaseTables() ) {
       inform( QString::fromLatin1( "optimizing table %1..." ).arg( table ) );
@@ -460,14 +468,13 @@ void StorageJanitor::vacuum()
   }
 }
 
-void StorageJanitor::inform(const char* msg)
+void StorageJanitor::inform( const char *msg )
 {
-  inform( QLatin1String(msg) );
+  inform( QLatin1String( msg ) );
 }
 
-void StorageJanitor::inform(const QString& msg)
+void StorageJanitor::inform( const QString &msg )
 {
   akDebug() << msg;
   Q_EMIT information( msg );
 }
-

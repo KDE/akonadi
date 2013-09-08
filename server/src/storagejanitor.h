@@ -32,7 +32,7 @@ class StorageJanitorThread : public QThread
 {
   Q_OBJECT
   public:
-    explicit StorageJanitorThread( QObject * parent = 0 );
+    explicit StorageJanitorThread( QObject *parent = 0 );
   protected:
     virtual void run();
 };
@@ -45,7 +45,7 @@ class StorageJanitor : public QObject
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.Janitor" )
   public:
-    explicit StorageJanitor(QObject* parent = 0);
+    explicit StorageJanitor( QObject *parent = 0 );
     ~StorageJanitor();
 
   public Q_SLOTS:
