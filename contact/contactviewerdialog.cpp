@@ -20,24 +20,50 @@
 */
 
 #include "contactviewerdialog.h"
-
 #include "contactviewer.h"
 
 #include <akonadi/item.h>
-#include <klocalizedstring.h>
+using namespace Akonadi;
+
+#include <KConfig>
+#include <KLocalizedString>
 
 #include <QVBoxLayout>
-
-using namespace Akonadi;
 
 class ContactViewerDialog::Private
 {
   public:
+    Private( ContactViewerDialog *parent )
+      : q( parent )
+    {
+    }
+
+    void readConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, "ContactViewer" );
+      const QSize size = group.readEntry( "Size", QSize() );
+      if ( size.isValid() ) {
+        q->resize( size );
+      } else {
+        q->resize( 500, 600 );
+      }
+    }
+
+    void writeConfig()
+    {
+      KConfig config( QLatin1String( "akonadi_contactrc" ) );
+      KConfigGroup group( &config, "ContactViewer" );
+      group.writeEntry( "Size", q->size() );
+      group.sync();
+    }
+
+    ContactViewerDialog *q;
     ContactViewer *mViewer;
 };
 
 ContactViewerDialog::ContactViewerDialog( QWidget *parent )
-  : KDialog( parent ), d( new Private )
+  : KDialog( parent ), d( new Private( this ) )
 {
   setCaption( i18n( "Show Contact" ) );
   setButtons( Ok );
@@ -50,11 +76,12 @@ ContactViewerDialog::ContactViewerDialog( QWidget *parent )
   d->mViewer = new ContactViewer;
   layout->addWidget( d->mViewer );
 
-  setInitialSize( QSize( 500, 600 ) );
+  d->readConfig();
 }
 
 ContactViewerDialog::~ContactViewerDialog()
 {
+  d->writeConfig();
   delete d;
 }
 
