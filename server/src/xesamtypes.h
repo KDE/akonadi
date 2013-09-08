@@ -25,7 +25,7 @@
 #include <QVariant>
 
 typedef QVector<QList<QVariant> > XesamVariantListVector;
-Q_DECLARE_METATYPE(QList<uint>)
-Q_DECLARE_METATYPE(QVector<QList<QVariant> >)
+Q_DECLARE_METATYPE( QList<uint> )
+Q_DECLARE_METATYPE( QVector<QList<QVariant> > )
 
 #endif

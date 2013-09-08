@@ -34,15 +34,16 @@
 
 using namespace Akonadi;
 
-Tracer* Tracer::mSelf = 0;
+Tracer *Tracer::mSelf = 0;
 
-Tracer::Tracer() : mTracerBackend( 0 )
+Tracer::Tracer()
+  : mTracerBackend( 0 )
 {
   activateTracer( currentTracer() );
 
   new TracerAdaptor( this );
 
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/tracing"), this, QDBusConnection::ExportAdaptors );
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/tracing" ), this, QDBusConnection::ExportAdaptors );
 }
 
 Tracer::~Tracer()
@@ -51,10 +52,11 @@ Tracer::~Tracer()
   mTracerBackend = 0;
 }
 
-Tracer* Tracer::self()
+Tracer *Tracer::self()
 {
-  if ( !mSelf )
+  if ( !mSelf ) {
     mSelf = new Tracer();
+  }
 
   return mSelf;
 }
@@ -94,7 +96,7 @@ void Tracer::signal( const QString &signalName, const QString &msg )
   mMutex.unlock();
 }
 
-void Akonadi::Tracer::signal(const char * signalName, const QString & msg)
+void Akonadi::Tracer::signal( const char *signalName, const QString &msg )
 {
   signal( QLatin1String( signalName ), msg );
 }
@@ -113,7 +115,7 @@ void Tracer::error( const QString &componentName, const QString &msg )
   mMutex.unlock();
 }
 
-void Akonadi::Tracer::error(const char * componentName, const QString & msg)
+void Akonadi::Tracer::error( const char *componentName, const QString &msg )
 {
   error( QLatin1String( componentName ), msg );
 }
@@ -125,7 +127,7 @@ QString Tracer::currentTracer() const
   return settings.value( QLatin1String( "Debug/Tracer" ), DEFAULT_TRACER ).toString();
 }
 
-void Tracer::activateTracer(const QString & type)
+void Tracer::activateTracer( const QString &type )
 {
   QMutexLocker locker( &mMutex );
   delete mTracerBackend;
@@ -135,15 +137,14 @@ void Tracer::activateTracer(const QString & type)
   settings.setValue( QLatin1String( "Debug/Tracer" ), type );
   settings.sync();
 
-  if ( type == QLatin1String("file") ) {
+  if ( type == QLatin1String( "file" ) ) {
     const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
-    const QString file = settings.value( QLatin1String( "Debug/File" ), QLatin1String("/dev/null") ).toString();
+    const QString file = settings.value( QLatin1String( "Debug/File" ), QLatin1String( "/dev/null" ) ).toString();
     mTracerBackend = new FileTracer( file );
-  } else if ( type == QLatin1String("null") ) {
+  } else if ( type == QLatin1String( "null" ) ) {
     mTracerBackend = new NullTracer();
   } else {
     mTracerBackend = new DBusTracer();
   }
   Q_ASSERT( mTracerBackend );
 }
-

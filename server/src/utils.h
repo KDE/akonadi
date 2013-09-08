@@ -30,11 +30,11 @@ namespace Utils {
  */
 static inline QString variantToString( const QVariant &variant )
 {
-  if ( variant.type() == QVariant::String )
+  if ( variant.type() == QVariant::String ) {
     return variant.toString();
-  else if ( variant.type() == QVariant::ByteArray )
+  } else if ( variant.type() == QVariant::ByteArray ) {
     return QString::fromUtf8( variant.toByteArray() );
-  else {
+  } else {
     qWarning( "Unable to convert variant of type %s to QString", variant.typeName() );
     Q_ASSERT( false );
     return QString();
@@ -46,11 +46,11 @@ static inline QString variantToString( const QVariant &variant )
  */
 static inline QByteArray variantToByteArray( const QVariant &variant )
 {
-  if ( variant.type() == QVariant::String )
+  if ( variant.type() == QVariant::String ) {
     return variant.toString().toUtf8();
-  else if ( variant.type() == QVariant::ByteArray )
+  } else if ( variant.type() == QVariant::ByteArray ) {
     return variant.toByteArray();
-  else {
+  } else {
     qWarning( "Unable to convert variant of type %s to QByteArray", variant.typeName() );
     Q_ASSERT( false );
     return QByteArray();

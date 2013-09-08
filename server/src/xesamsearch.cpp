@@ -36,14 +36,16 @@ static qint64 uriToItemId( const QString &urlString )
 
   const qint64 id = url.queryItemValue( QLatin1String( "item" ) ).toLongLong( &ok );
 
-  if ( !ok )
+  if ( !ok ) {
     return -1;
-  else
+  } else {
     return id;
+  }
 }
 
-XesamSearch::XesamSearch( QObject* parent )
-  : QObject( parent ), mInterface( 0 )
+XesamSearch::XesamSearch( QObject *parent )
+  : QObject( parent )
+  , mInterface( 0 )
 {
   mInterface = new OrgFreedesktopXesamSearchInterface(
       QLatin1String( "org.freedesktop.xesam.searcher" ),
@@ -57,8 +59,9 @@ XesamSearch::XesamSearch( QObject* parent )
 
 XesamSearch::~XesamSearch()
 {
-  if ( mInterface->isValid() )
+  if ( mInterface->isValid() ) {
     mInterface->CloseSession( mSession );
+  }
 }
 
 QStringList XesamSearch::search( const QString &query )
@@ -92,14 +95,15 @@ void XesamSearch::hitsAdded( const QString &search, uint count )
 
   typedef QList<QVariant> VariantList;
   Q_FOREACH ( const VariantList &list, results ) {
-    if ( list.isEmpty() )
+    if ( list.isEmpty() ) {
       continue;
+    }
 
     const qint64 itemId = uriToItemId( list.first().toString() );
-    if ( itemId == -1 )
+    if ( itemId == -1 ) {
       continue;
+    }
 
     mMatchingUIDs.insert( QString::number( itemId ) );
   }
 }
-

@@ -41,13 +41,12 @@ class Tracer : public QObject, public TracerInterface
     /**
      * Returns the global tracer instance.
      */
-    static Tracer* self();
+    static Tracer *self();
 
     /**
      * Destroys the global tracer instance.
      */
     virtual ~Tracer();
-
 
   public Q_SLOTS:
     /**
@@ -100,7 +99,7 @@ class Tracer : public QObject, public TracerInterface
     /**
       Convenience method with internal toLatin1 cast to compile with QT_NO_CAST_FROM_ASCII.
     */
-    void signal( const char* signalName, const QString &msg );
+    void signal( const char *signalName, const QString &msg );
 
     /**
      * This method is called whenever a component wants to output a warning.
@@ -115,7 +114,7 @@ class Tracer : public QObject, public TracerInterface
     /**
      * Convenience method for QT_NO_CAST_FROM_ASCII usage.
      */
-    void error( const char* componentName, const QString &msg );
+    void error( const char *componentName, const QString &msg );
 
     /**
      * Returns the currently activated tracer type.

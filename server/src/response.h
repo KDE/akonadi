@@ -45,12 +45,12 @@ public:
     /** The response string to be sent to the client. */
     QByteArray asString() const;
 
-    void setTag( const QByteArray& tag );
+    void setTag( const QByteArray &tag );
     void setUntagged();
     void setContinuation();
 
-    void setString( const char* );
-    void setString( const QByteArray& string );
+    void setString( const char * );
+    void setString( const QByteArray &string );
 
     void setSuccess();
     void setFailure();
@@ -65,6 +65,6 @@ private:
 
 }
 
-Q_DECLARE_METATYPE(Akonadi::Response)
+Q_DECLARE_METATYPE( Akonadi::Response )
 
 #endif

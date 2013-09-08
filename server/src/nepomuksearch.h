@@ -33,20 +33,20 @@ class NepomukSearch : public QObject
   Q_OBJECT
 
   public:
-    NepomukSearch( QObject* parent = 0 );
+    NepomukSearch( QObject *parent = 0 );
     ~NepomukSearch();
 
     QStringList search( const QString &query );
 
   private Q_SLOTS:
-    void hitsAdded( const QList<Nepomuk::Query::Result>& entries );
-    void idHitsAdded( const QList<Nepomuk::Query::Result>& entries );
+    void hitsAdded( const QList<Nepomuk::Query::Result> &entries );
+    void idHitsAdded( const QList<Nepomuk::Query::Result> &entries );
 
   private:
-    void addHit(const Nepomuk::Query::Result& result);
+    void addHit( const Nepomuk::Query::Result &result );
     QSet<QString> mMatchingUIDs;
     QList<Nepomuk::Query::Result> mResultsWithoutIdProperty;
-    Nepomuk::Query::QueryServiceClient* mSearchService;
+    Nepomuk::Query::QueryServiceClient *mSearchService;
 };
 
 }
