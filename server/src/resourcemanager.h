@@ -44,7 +44,7 @@ class ResourceManager : public QObject
     QStringList resourceInstances() const;
 
   private:
-    static ResourceManager* mSelf;
+    static ResourceManager *mSelf;
 };
 
 }

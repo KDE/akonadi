@@ -50,34 +50,25 @@ const int gMaximumItemProcessingTimeInSecs = 180;
 const int gDeadlineItemProcessingTimeInSecs = 240;
 
 // The one and only PreprocessorManager object
-PreprocessorManager * PreprocessorManager::mSelf = NULL;
+PreprocessorManager *PreprocessorManager::mSelf = NULL;
 
 PreprocessorManager::PreprocessorManager()
   : QObject()
+  , mEnabled( true )
+  , mMutex( new QMutex() )
 {
-  mMutex = new QMutex();
-
-  mEnabled = true;
-
   mSelf = this; // just to have it set early
-
   // Hook in our D-Bus interface "shell".
   new PreprocessorManagerAdaptor( this );
 
   QDBusConnection::sessionBus().registerObject(
-      QLatin1String("/PreprocessorManager"),
+      QLatin1String( "/PreprocessorManager" ),
       this,
-      QDBusConnection::ExportAdaptors
-    );
+      QDBusConnection::ExportAdaptors );
 
   mHeartbeatTimer = new QTimer( this );
 
-  QObject::connect(
-      mHeartbeatTimer,
-      SIGNAL(timeout()),
-      this,
-      SLOT(heartbeat())
-   );
+  QObject::connect( mHeartbeatTimer, SIGNAL(timeout()), this, SLOT(heartbeat()) );
 
   mHeartbeatTimer->start( gHeartbeatTimeoutInMSecs );
 }
@@ -98,16 +89,18 @@ PreprocessorManager::~PreprocessorManager()
 
 bool PreprocessorManager::init()
 {
-  if( mSelf )
+  if ( mSelf ) {
     return false;
+  }
   mSelf = new PreprocessorManager();
   return true;
 }
 
 void PreprocessorManager::done()
 {
-  if( !mSelf )
+  if ( !mSelf ) {
     return;
+  }
   delete mSelf;
   mSelf = NULL;
 }
@@ -116,17 +109,18 @@ bool PreprocessorManager::isActive()
 {
   QMutexLocker locker( mMutex );
 
-  if( !mEnabled )
+  if ( !mEnabled ) {
     return false;
+  }
   return mPreprocessorChain.count() > 0;
 }
 
-PreprocessorInstance * PreprocessorManager::lockedFindInstance( const QString &id )
+PreprocessorInstance *PreprocessorManager::lockedFindInstance( const QString &id )
 {
-  Q_FOREACH( PreprocessorInstance * instance, mPreprocessorChain )
-  {
-    if( instance->id() == id )
+  Q_FOREACH ( PreprocessorInstance *instance, mPreprocessorChain ) {
+    if ( instance->id() == id ) {
       return instance;
+    }
   }
 
   return NULL;
@@ -138,22 +132,21 @@ void PreprocessorManager::registerInstance( const QString &id )
 
   akDebug() << "PreprocessorManager::registerInstance(" << id << ")";
 
-  PreprocessorInstance * instance = lockedFindInstance( id );
-  if( instance )
+  PreprocessorInstance *instance = lockedFindInstance( id );
+  if ( instance ) {
     return; // already registered
+  }
 
   // The PreprocessorInstance objects are actually always added at the end of the queue
   // TODO: Maybe we need some kind of ordering here ?
   //       In that case we'll need to fiddle with the items that are currently enqueued for processing...
 
   instance = new PreprocessorInstance( id );
-  if( !instance->init() )
-  {
+  if ( !instance->init() ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorManager" ),
         QString::fromLatin1( "Could not initialize preprocessor instance '%1'" )
-          .arg( id )
-      );
+          .arg( id ) );
     delete instance;
     return;
   }
@@ -174,38 +167,40 @@ void PreprocessorManager::unregisterInstance( const QString &id )
 
 void PreprocessorManager::lockedUnregisterInstance( const QString &id )
 {
-  PreprocessorInstance * instance = lockedFindInstance( id );
-  if( !instance )
+  PreprocessorInstance *instance = lockedFindInstance( id );
+  if ( !instance ) {
     return; // not our instance: don't complain (as we might be called for non-preprocessor agents too)
+  }
 
   // All of the preprocessor's waiting items must be queued to the next preprocessor (if there is one)
 
-  std::deque< qint64 > * itemList = instance->itemQueue();
+  std::deque< qint64 > *itemList = instance->itemQueue();
   Q_ASSERT( itemList );
 
   int idx = mPreprocessorChain.indexOf( instance );
   Q_ASSERT( idx >= 0 ); // must be there!
 
-  if( idx < ( mPreprocessorChain.count() - 1 ) )
-  {
+  if ( idx < ( mPreprocessorChain.count() - 1 ) ) {
     // This wasn't the last preprocessor: trigger the next one.
-    PreprocessorInstance * nextPreprocessor = mPreprocessorChain[ idx + 1 ];
+    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[ idx + 1 ];
     Q_ASSERT( nextPreprocessor );
     Q_ASSERT( nextPreprocessor != instance );
 
-    Q_FOREACH( qint64 itemId, *itemList )
+    Q_FOREACH ( qint64 itemId, *itemList ) {
       nextPreprocessor->enqueueItem( itemId );
+    }
   } else {
     // This was the last preprocessor: end handling the items
-    Q_FOREACH( qint64 itemId, *itemList )
+    Q_FOREACH ( qint64 itemId, *itemList ) {
       lockedEndHandleItem( itemId );
+    }
   }
 
   mPreprocessorChain.removeOne( instance );
   delete instance;
 }
 
-void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore * dataStore )
+void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore *dataStore )
 {
   Q_ASSERT( dataStore );
   Q_ASSERT( item.isValid() );
@@ -213,8 +208,7 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
   // This is the entry point of the pre-processing chain.
   QMutexLocker locker( mMutex );
 
-  if( !mEnabled )
-  {
+  if ( !mEnabled ) {
     // Preprocessing is disabled: immediately end handling the item.
     // In fact we shouldn't even be here as the caller should
     // have checked isActive() before calling this function.
@@ -232,22 +226,19 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
   Q_ASSERT_X( item.hidden(), "PreprocessorManager::beginHandleItem()", "The item you pass to this function should be hidden!" );
 #endif
 
-  if( mPreprocessorChain.isEmpty() )
-  {
+  if ( mPreprocessorChain.isEmpty() ) {
     // No preprocessors at all: immediately end handling the item.
     lockedEndHandleItem( item.id() );
     return;
   }
 
-  if( dataStore->inTransaction() )
-  {
+  if ( dataStore->inTransaction() ) {
     akDebug() << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
 
     // The calling thread data store is in a transaction: push the item into a wait queue
-    std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+    std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
 
-    if( !waitQueue )
-    {
+    if ( !waitQueue ) {
       // No wait queue for this transaction yet...
         waitQueue = new std::deque< qint64 >();
 
@@ -272,7 +263,7 @@ void PreprocessorManager::beginHandleItem( const PimItem &item, const DataStore 
 void PreprocessorManager::lockedActivateFirstPreprocessor( qint64 itemId )
 {
   // Activate the first preprocessor.
-  PreprocessorInstance * preProcessor = mPreprocessorChain.first();
+  PreprocessorInstance *preProcessor = mPreprocessorChain.first();
   Q_ASSERT( preProcessor );
 
   preProcessor->enqueueItem( itemId );
@@ -284,11 +275,10 @@ void PreprocessorManager::lockedActivateFirstPreprocessor( qint64 itemId )
   // FIXME: Am I *really* sure of this ? If I'm wrong for some obscure reason then we have a deadlock.
 }
 
-void PreprocessorManager::lockedKillWaitQueue( const DataStore * dataStore, bool disconnectSlots )
+void PreprocessorManager::lockedKillWaitQueue( const DataStore *dataStore, bool disconnectSlots )
 {
-  std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
-  if( !waitQueue )
-  {
+  std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+  if ( !waitQueue ) {
     qWarning() << "PreprocessorManager::lockedKillWaitQueue(): called for dataStore which has no wait queue";
     return;
   }
@@ -297,8 +287,9 @@ void PreprocessorManager::lockedKillWaitQueue( const DataStore * dataStore, bool
 
   delete waitQueue;
 
-  if( !disconnectSlots )
+  if ( !disconnectSlots ) {
     return;
+  }
 
   QObject::disconnect( dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()) );
   QObject::disconnect( dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()) );
@@ -312,9 +303,8 @@ void PreprocessorManager::dataStoreDestroyed()
 
   akDebug() << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
 
-  const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
-  if( !dataStore )
-  {
+  const DataStore *dataStore = dynamic_cast< const DataStore *>( sender() );
+  if ( !dataStore ) {
     qWarning() << "PreprocessorManager::dataStoreDestroyed(): got the signal from a non DataStore object";
     return;
   }
@@ -328,29 +318,27 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 
   akDebug() << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
 
-
-  const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
-  if( !dataStore )
-  {
+  const DataStore *dataStore = dynamic_cast< const DataStore *>( sender() );
+  if ( !dataStore ) {
     qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
     return;
   }
 
-  std::deque< qint64 > * waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
-  if( !waitQueue )
-  {
+  std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value( dataStore, 0 );
+  if ( !waitQueue ) {
     qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): called for dataStore which has no wait queue";
     return;
   }
 
-  if( !mEnabled || mPreprocessorChain.isEmpty() )
-  {
+  if ( !mEnabled || mPreprocessorChain.isEmpty() ) {
     // Preprocessing has been disabled in the meantime or all the preprocessors died
-    Q_FOREACH( qint64 id, *waitQueue )
+    Q_FOREACH ( qint64 id, *waitQueue ) {
       lockedEndHandleItem( id );
+    }
   } else {
-    Q_FOREACH( qint64 id, *waitQueue )
+    Q_FOREACH ( qint64 id, *waitQueue ) {
       lockedActivateFirstPreprocessor( id );
+    }
   }
 
   lockedKillWaitQueue( dataStore, true ); // disconnect slots this time
@@ -362,9 +350,8 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 
   akDebug() << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
 
-  const DataStore * dataStore = dynamic_cast< const DataStore * >( sender() );
-  if( !dataStore )
-  {
+  const DataStore *dataStore = dynamic_cast< const DataStore *>( sender() );
+  if ( !dataStore ) {
     qWarning() << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
     return;
   }
@@ -372,17 +359,16 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
   lockedKillWaitQueue( dataStore, true ); // disconnect slots this time
 }
 
-void PreprocessorManager::preProcessorFinishedHandlingItem( PreprocessorInstance * preProcessor, qint64 itemId )
+void PreprocessorManager::preProcessorFinishedHandlingItem( PreprocessorInstance *preProcessor, qint64 itemId )
 {
   QMutexLocker locker( mMutex );
 
   int idx = mPreprocessorChain.indexOf( preProcessor );
   Q_ASSERT( idx >= 0 ); // must be there!
 
-  if( idx < ( mPreprocessorChain.count() - 1 ) )
-  {
+  if ( idx < ( mPreprocessorChain.count() - 1 ) ) {
     // This wasn't the last preprocessor: trigger the next one.
-    PreprocessorInstance * nextPreprocessor = mPreprocessorChain[ idx + 1 ];
+    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[ idx + 1 ];
     Q_ASSERT( nextPreprocessor );
     Q_ASSERT( nextPreprocessor != preProcessor );
 
@@ -399,8 +385,7 @@ void PreprocessorManager::lockedEndHandleItem( qint64 itemId )
 
   // Refetch the PimItem, the Collection and the MimeType now: preprocessing might have changed them.
   PimItem item = PimItem::retrieveById( itemId );
-  if ( !item.isValid() )
-  {
+  if ( !item.isValid() ) {
     // HUM... the preprocessor killed the item ?
     // ... or retrieveById() failed ?
     // Well.. if the preprocessor killed the item then this might be actually OK (spam?).
@@ -409,21 +394,18 @@ void PreprocessorManager::lockedEndHandleItem( qint64 itemId )
   }
 
 #if 0
-  if ( !item.hidden() )
-  {
+  if ( !item.hidden() ) {
     // HUM... the item was already unhidden for some reason: we have nothing more to do here.
     akDebug() << "The PIM item with id '" << itemId << "' reached the preprocessing chain termination function in unhidden state";
     return;
   }
 #endif
 
-  if ( !DataStore::self()->unhidePimItem( item ) )
-  {
+  if ( !DataStore::self()->unhidePimItem( item ) ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorManager" ),
         QString::fromLatin1( "Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it" )
-          .arg( itemId )
-      );
+          .arg( itemId ) );
   }
 }
 
@@ -433,18 +415,18 @@ void PreprocessorManager::heartbeat()
 
   // Loop through the processor instances and check their current processing time.
 
-  QList< PreprocessorInstance * > firedPreprocessors;
+  QList< PreprocessorInstance *> firedPreprocessors;
 
-  PreprocessorInstance * instance;
+  PreprocessorInstance *instance;
 
-  Q_FOREACH( instance, mPreprocessorChain )
-  {
+  Q_FOREACH ( instance, mPreprocessorChain ) {
     // In this loop we check for "stuck" preprocessors.
 
     int elapsedTime = instance->currentProcessingTime();
 
-    if( elapsedTime < gWarningItemProcessingTimeInSecs )
+    if ( elapsedTime < gWarningItemProcessingTimeInSecs ) {
       continue; // ok, still in time.
+    }
 
     // Ooops... the preprocessor looks to be "stuck".
     // This is a rather critical condition and the question is "what we can do about it ?".
@@ -457,49 +439,47 @@ void PreprocessorManager::heartbeat()
     // - if it doesn't obey, we drop the interface and assume it's dead until
     //   it's effectively restarted.
 
-    if( elapsedTime < gMaximumItemProcessingTimeInSecs )
-    {
+    if ( elapsedTime < gMaximumItemProcessingTimeInSecs ) {
       // Kindly ask the preprocessor to abort the job.
 
       Tracer::self()->warning(
           QLatin1String( "PreprocessorManager" ),
           QString::fromLatin1( "Preprocessor '%1' seems to be stuck... trying to abort its job." )
-            .arg( instance->id() )
-        );
+            .arg( instance->id() ) );
 
-      if( instance->abortProcessing() )
+      if ( instance->abortProcessing() ) {
         continue;
+      }
       // If we're here then abortProcessing() failed.
     }
 
-    if( elapsedTime < gDeadlineItemProcessingTimeInSecs )
-    {
+    if ( elapsedTime < gDeadlineItemProcessingTimeInSecs ) {
       // Attempt to restart the preprocessor via AgentManager interface
 
       Tracer::self()->warning(
           QLatin1String( "PreprocessorManager" ),
           QString::fromLatin1( "Preprocessor '%1' is stuck... trying to restart it" )
-            .arg( instance->id() )
-        );
+            .arg( instance->id() ) );
 
-      if( instance->invokeRestart() )
+      if ( instance->invokeRestart() ) {
         continue;
+      }
       // If we're here then invokeRestart() failed.
     }
 
     Tracer::self()->warning(
         QLatin1String( "PreprocessorManager" ),
         QString::fromLatin1( "Preprocessor '%1' is broken... ignoring it from now on" )
-          .arg( instance->id() )
-      );
+          .arg( instance->id() ) );
 
     // You're fired! Go Away!
     firedPreprocessors.append( instance );
   }
 
   // Kill the fired preprocessors, if any.
-  Q_FOREACH( instance, firedPreprocessors )
+  Q_FOREACH ( instance, firedPreprocessors ) {
     lockedUnregisterInstance( instance->id() );
+  }
 }
 
 } // namespace Akonadi

@@ -100,7 +100,7 @@ private:
   /**
    * The preprocessor D-Bus interface. Owned.
    */
-  OrgFreedesktopAkonadiPreprocessorInterface * mInterface;
+  OrgFreedesktopAkonadiPreprocessorInterface *mInterface;
 
 protected:
 
@@ -147,7 +147,7 @@ protected:
    *
    * The returned pointer is granted to be non null.
    */
-  std::deque< qint64 > * itemQueue()
+  std::deque< qint64 > *itemQueue()
   {
     return &mItemQueue;
   }
