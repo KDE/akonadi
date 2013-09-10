@@ -34,6 +34,7 @@ set(akonadicalendar_LIB_SRC
   publishdialog_p.cpp
   scheduler_p.cpp
   standardcalendaractionmanager.cpp
+  todopurger.cpp
   utils_p.cpp
 )
 
