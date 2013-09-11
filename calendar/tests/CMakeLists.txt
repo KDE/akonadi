@@ -1,3 +1,5 @@
+set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+
 macro(add_akonadi_isolated_test _source)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
@@ -41,8 +43,8 @@ macro(add_akonadi_isolated_test _source)
 endmacro(add_akonadi_isolated_test)
 
 #add_akonadi_isolated_test( historytest.cpp )
-#add_akonadi_isolated_test( incidencechangertest.cpp )
-add_akonadi_isolated_test( mailclienttest.cpp )
+add_akonadi_isolated_test( incidencechangertest.cpp )
+#add_akonadi_isolated_test( mailclienttest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )
 #add_akonadi_isolated_test( fetchjobcalendartest.cpp )
 #add_akonadi_isolated_test( etmcalendartest.cpp )
