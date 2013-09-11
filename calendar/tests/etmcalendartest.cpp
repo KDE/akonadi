@@ -174,12 +174,12 @@ private Q_SLOTS:
 
     void testFilteredModel()
     {
-      QVERIFY( mCalendar->filteredModel() );
+      QVERIFY( mCalendar->model() );
     }
 
     void testUnfilteredModel()
     {
-      QVERIFY( mCalendar->unfilteredModel() );
+      QVERIFY( mCalendar->entityTreeModel() );
     }
 
     void testCheckableProxyModel()

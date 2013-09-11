@@ -20,7 +20,7 @@
 #include "../fetchjobcalendar.h"
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemcreatejob.h>
-#include <akonadi/collectionfetchJob.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
 
