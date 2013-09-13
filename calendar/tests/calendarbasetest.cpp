@@ -135,6 +135,7 @@ class CalendarBaseTest : public QObject
     void initTestCase()
     {
       AkonadiTest::checkTestIsIsolated();
+
       fetchCollection();
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
       mCalendar = new CalendarBase();

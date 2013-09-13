@@ -78,6 +78,8 @@ class ETMCalendarTest : public QObject, KCalCore::Calendar::CalendarObserver
 private Q_SLOTS:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
+
       qRegisterMetaType<QSet<QByteArray> >("QSet<QByteArray>");
       fetchCollection();
       createIncidence( tr( "a" ) );

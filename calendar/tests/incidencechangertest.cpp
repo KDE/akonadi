@@ -83,6 +83,8 @@ class IncidenceChangerTest : public QObject
   private slots:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
+
       mIncidencesToDelete = 0;
       mIncidencesToAdd    = 0;
       mIncidencesToModify = 0;

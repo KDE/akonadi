@@ -147,6 +147,8 @@ class HistoryTest : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
+      AkonadiTest::checkTestIsIsolated();
+
       fetchCollection();
       qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
       qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >( "QList<Akonadi::IncidenceChanger::ChangeType>" );

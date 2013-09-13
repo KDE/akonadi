@@ -50,6 +50,8 @@ private slots:
 
   void initTestCase()
   {
+    AkonadiTest::checkTestIsIsolated();
+
     mPendingSignals = 0;
     mMailClient = new MailClient( this );
     mLastResult = MailClient::ResultSuccess;
