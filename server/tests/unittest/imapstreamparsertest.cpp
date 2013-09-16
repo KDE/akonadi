@@ -39,24 +39,26 @@ QString akBacktrace()
 
   /* FIXME: is there an equivalent for darwin, *BSD, or windows? */
 #ifdef HAVE_EXECINFO_H
-  void* trace[256];
-  int n = backtrace(trace, 256);
-  if (!n)
+  void *trace[256];
+  int n = backtrace( trace, 256 );
+  if ( !n ) {
     return s;
+  }
 
-  char** strings = backtrace_symbols (trace, n);
+  char **strings = backtrace_symbols( trace, n );
 
-  s = QLatin1String("[\n");
+  s = QLatin1String( "[\n" );
 
   for ( int i = 0; i < n; ++i ) {
-    s += QString::number(i) +
-        QLatin1String(": ") +
-        QLatin1String(strings[i]) + QLatin1String("\n");
+    s += QString::number( i ) +
+        QLatin1String( ": " ) +
+        QLatin1String( strings[i] ) + QLatin1String( "\n" );
   }
-  s += QLatin1String("]\n");
+  s += QLatin1String( "]\n" );
 
-  if (strings)
-    free (strings);
+  if ( strings ) {
+    free( strings );
+  }
 #endif
 
   return s;
@@ -65,23 +67,22 @@ QString akBacktrace()
 
 AKTEST_MAIN( ImapStreamParserTest )
 
-
-void ImapStreamParserTest::testParseQuotedString( )
+void ImapStreamParserTest::testParseQuotedString()
 {
   QByteArray result;
 
   QBuffer buffer;
-  buffer.open( QBuffer::ReadWrite);
-  ImapStreamParser parser(&buffer);
+  buffer.open( QBuffer::ReadWrite );
+  ImapStreamParser parser( &buffer );
   buffer.write( QByteArray( "\"quoted \\\"NIL\\\"   string inside\"" ) );
-  buffer.write( QByteArray( "quoted") );
+  buffer.write( QByteArray( "quoted" ) );
   buffer.write( QByteArray( "\"   string inside\"" ) );
   buffer.write( QByteArray( "   string " ) );
-  buffer.write("NIL \"NIL\" \"\"");
+  buffer.write( "NIL \"NIL\" \"\"" );
   buffer.write( " string" );
   buffer.write( "\"\\\"some \\\\ quoted stuff\\\"\"" );
   buffer.write( "LOGOUT\nFOO" );
-  buffer.seek(0);
+  buffer.seek( 0 );
 
   try {
   // the whole thing
@@ -99,7 +100,6 @@ void ImapStreamParserTest::testParseQuotedString( )
   // whitespaces before unquoted string
   result = parser.parseQuotedString();
   QCOMPARE( result, QByteArray( "string" ) );
-
 
   // NIL and emptyness tests
 
@@ -129,22 +129,21 @@ void ImapStreamParserTest::testParseQuotedString( )
 
   // linebreak as separator
   result = parser.parseQuotedString();
-  QCOMPARE( result, QByteArray("LOGOUT") );
+  QCOMPARE( result, QByteArray( "LOGOUT" ) );
   } catch ( const Akonadi::Exception &e ) {
     qDebug() << "Caught exception: " << e.type() << " : " << e.what();
   }
 }
 
-
-void ImapStreamParserTest::testParseString( )
+void ImapStreamParserTest::testParseString()
 {
 
   QBuffer buffer;
-  buffer.open( QBuffer::ReadWrite);
-  ImapStreamParser parser(&buffer);
+  buffer.open( QBuffer::ReadWrite );
+  ImapStreamParser parser( &buffer );
 
   buffer.write( QByteArray( "\"quoted\" unquoted {7}\nliteral {0}\n " ) );
-  buffer.seek(0);
+  buffer.seek( 0 );
 
   QByteArray result;
   bool exceptionExpected = false;
@@ -157,15 +156,15 @@ void ImapStreamParserTest::testParseString( )
   QCOMPARE( result, QByteArray( "quoted" ) );
 
   // unquoted string
-  result = parser.peekString( );
+  result = parser.peekString();
   QCOMPARE( result, QByteArray( "unquoted" ) );
-  result = parser.readString( );
+  result = parser.readString();
   QCOMPARE( result, QByteArray( "unquoted" ) );
 
   // literal string
-  result = parser.peekString( );
+  result = parser.peekString();
   QCOMPARE( result, QByteArray( "literal" ) );
-  result = parser.readString( );
+  result = parser.readString();
   QCOMPARE( result, QByteArray( "literal" ) );
 
   // empty literal string
@@ -186,69 +185,68 @@ void ImapStreamParserTest::testParseString( )
   }
 }
 
-void ImapStreamParserTest::testParseParenthesizedList( )
+void ImapStreamParserTest::testParseParenthesizedList()
 {
   QBuffer buffer;
-  buffer.open( QBuffer::ReadWrite);
-  ImapStreamParser parser(&buffer);
+  buffer.open( QBuffer::ReadWrite );
+  ImapStreamParser parser( &buffer );
 
   buffer.write( QByteArray( "() ( )" ) );
   buffer.write( QByteArray( "(entry1 \"entry2()\" (sub list) \")))\" {6}\nentry3) " ) );
   buffer.write( QByteArray( "some_list-less_text" ) );
-  buffer.write( QByteArray( "(foo {6}\n\n\nbar\n bla)" ));
-  buffer.write( QByteArray( "(AA (\"BB)\" CC))" ));    // parenthesis inside quoted string
-  buffer.seek(0);
+  buffer.write( QByteArray( "(foo {6}\n\n\nbar\n bla)" ) );
+  buffer.write( QByteArray( "(AA (\"BB)\" CC))" ) );    // parenthesis inside quoted string
+  buffer.seek( 0 );
 
   QList<QByteArray>result;
 
   try {
-  // empty lists
-  result = parser.readParenthesizedList();
-  QVERIFY( result.isEmpty() );
+    // empty lists
+    result = parser.readParenthesizedList();
+    QVERIFY( result.isEmpty() );
 
-  result = parser.readParenthesizedList();
-  QVERIFY( result.isEmpty() );
+    result = parser.readParenthesizedList();
+    QVERIFY( result.isEmpty() );
 
-  // complex list with all kind of entries
-  qDebug() << "complex test";
-  result = parser.readParenthesizedList();
-  QList<QByteArray> reference;
-  reference << "entry1";
-  reference << "entry2()";
-  reference << "(sub list)";
-  reference << ")))";
-  reference << "entry3";
+    // complex list with all kind of entries
+    qDebug() << "complex test";
+    result = parser.readParenthesizedList();
+    QList<QByteArray> reference;
+    reference << "entry1";
+    reference << "entry2()";
+    reference << "(sub list)";
+    reference << ")))";
+    reference << "entry3";
 
+    QCOMPARE( result, reference );
 
-  QCOMPARE( result, reference );
+    // no list at all
+    result = parser.readParenthesizedList();
+    QVERIFY( result.isEmpty() );
 
-  // no list at all
-  result = parser.readParenthesizedList(  );
-  QVERIFY( result.isEmpty() );
+    parser.readString(); //just to advance in the data
 
-  parser.readString(); //just to advance in the data
+//     // out of bounds access
+//     result = parser.readParenthesizedList( input, result, input.length() );
+//     QVERIFY( result.isEmpty() );
+//     QCOMPARE( consumed, input.length() );
 
-//   // out of bounds access
-//   result = parser.readParenthesizedList( input, result, input.length() );
-//   QVERIFY( result.isEmpty() );
-//   QCOMPARE( consumed, input.length() );
+    // newline literal (based on itemappendtest bug)
+    result = parser.readParenthesizedList();
+    reference.clear();
+    reference << "foo";
+    reference << "\n\nbar\n";
+    reference << "bla";
 
-  // newline literal (based on itemappendtest bug)
-  result = parser.readParenthesizedList(  );
-  reference.clear();
-  reference << "foo";
-  reference << "\n\nbar\n";
-  reference << "bla";
+    QCOMPARE( result, reference );
 
-  QCOMPARE( result, reference );
+    // Don't try to parse characters inside a quoted-string
+    result = parser.readParenthesizedList();
+    reference.clear();
+    reference << "AA";
+    reference << "(\"BB)\" CC)";
 
-  // Don't try to parse characters inside a quoted-string
-  result = parser.readParenthesizedList();
-  reference.clear();
-  reference << "AA";
-  reference << "(\"BB)\" CC)";
-
-  QCOMPARE( result, reference );
+    QCOMPARE( result, reference );
   } catch ( const Akonadi::Exception &e ) {
     qDebug() << "Caught exception: " << e.type() << " : " <<
         e.what();
@@ -283,7 +281,7 @@ void ImapStreamParserTest::testParseNumber()
 
   QBuffer buffer;
   buffer.open( QBuffer::ReadWrite | QIODevice::Truncate );
-  ImapStreamParser parser(&buffer);
+  ImapStreamParser parser( &buffer );
 
   buffer.write( input );
   buffer.seek( startIndex );
@@ -293,13 +291,13 @@ void ImapStreamParserTest::testParseNumber()
     qint64 number = parser.readNumber();
     QCOMPARE( number, result );
   } catch ( const ImapParserException &e ) {
-    if ( success )
+    if ( success ) {
       qDebug() << "Caught unexpected parser exception: " << " : " << e.what();
+    }
     failed = true;
   }
   QCOMPARE( failed, !success );
 }
-
 
 void ImapStreamParserTest::testParseSequenceSet_data()
 {
@@ -339,10 +337,10 @@ void ImapStreamParserTest::testParseSequenceSet()
   QFETCH( bool, exceptionExpected );
 
   QBuffer buffer;
-  buffer.open( QBuffer::ReadWrite);
-  ImapStreamParser parser(&buffer);
+  buffer.open( QBuffer::ReadWrite );
+  ImapStreamParser parser( &buffer );
   buffer.write( data );
-  buffer.seek(0);
+  buffer.seek( 0 );
 
   ImapSet res;
   bool exceptionCaught = false;
@@ -355,7 +353,6 @@ void ImapStreamParserTest::testParseSequenceSet()
   }
   QCOMPARE( exceptionCaught, exceptionExpected );
 }
-
 
 void ImapStreamParserTest::testParseDateTime_data()
 {
@@ -384,10 +381,10 @@ void ImapStreamParserTest::testParseDateTime()
   QFETCH( bool, exceptionExpected );
 
   QBuffer buffer;
-  buffer.open( QBuffer::ReadWrite);
-  ImapStreamParser parser(&buffer);
+  buffer.open( QBuffer::ReadWrite );
+  ImapStreamParser parser( &buffer );
   buffer.write( data );
-  buffer.seek(0);
+  buffer.seek( 0 );
 
   QDateTime actualResult;
   bool exceptionCaught = false;
@@ -467,4 +464,3 @@ void ImapStreamParserTest::testAbortCommand()
     QFAIL( "Exception caught" );
   }
 }
-

@@ -25,8 +25,8 @@
 
 using namespace Akonadi;
 
-static AkonadiConnection * s_connection = 0;
-static DataStore * s_backend = 0;
+static AkonadiConnection *s_connection = 0;
+static DataStore *s_backend = 0;
 
 class MockConnection : public AkonadiConnection
 {
@@ -34,10 +34,11 @@ public:
     MockConnection()
     {
     }
-    DataStore* storageBackend()
+    DataStore *storageBackend()
     {
-        if ( !s_backend )
+        if ( !s_backend ) {
             s_backend = new MockBackend();
+        }
         return s_backend;
     }
 };
@@ -48,13 +49,13 @@ public:
         MockObjects();
         ~MockObjects();
 
-        static AkonadiConnection * mockConnection()
+        static AkonadiConnection *mockConnection()
         {
-           if ( !s_connection )
+           if ( !s_connection ) {
                s_connection = new MockConnection();
+           }
            return s_connection;
         }
 }; // End of class MockObjects
-
 
 #endif // MOCKOBJECTS_H
