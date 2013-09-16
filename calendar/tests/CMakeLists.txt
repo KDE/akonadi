@@ -1,3 +1,5 @@
+
+set( PREVIOUS_EXEC_OUTPUT_PATH ../../tests )
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include(../../AkonadiMacros.cmake)
