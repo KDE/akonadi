@@ -290,7 +290,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
 
   vbox->addLayout( mailPreferFormattingLayout );
 
-  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content in received HTML messages." ) );
+  mAllowRemoteContent = new QCheckBox( i18n( "Allow remote content in received HTML messages" ) );
   vbox->addWidget( mAllowRemoteContent );
 
   layout->setRowStretch( 4,1 );
