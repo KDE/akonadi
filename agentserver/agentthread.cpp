@@ -30,10 +30,10 @@
 using namespace Akonadi;
 
 AgentThread::AgentThread( const QString &identifier, QObject *factory, QObject *parent )
-  : QThread( parent ),
-    m_identifier(identifier),
-    m_factory( factory ),
-    m_instance( 0 )
+  : QThread( parent )
+  , m_identifier( identifier )
+  , m_factory( factory )
+  , m_instance( 0 )
 {
 }
 
@@ -59,7 +59,5 @@ void AgentThread::configure( qlonglong windowId )
   QMetaObject::invokeMethod( m_instance,
                              "configure",
                              Qt::DirectConnection,
-                             Q_ARG( WId, (WId)windowId )
-                           );
+                             Q_ARG( WId, (WId)windowId ) );
 }
-

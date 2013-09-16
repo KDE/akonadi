@@ -41,8 +41,7 @@ class ProcessControl : public QObject
      * @li StopOnCrash    - The application won't be restarted.
      * @li RestartOnCrash - The application is restarted with the same arguments.
      */
-    enum CrashPolicy
-    {
+    enum CrashPolicy {
       StopOnCrash,
       RestartOnCrash
     };
