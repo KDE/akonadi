@@ -363,9 +363,9 @@ Akonadi::Item CalendarBase::item( const QString &uid ) const
   return i;
 }
 
-Item CalendarBase::item( const Incidence::Ptr& inc ) const
+Item CalendarBase::item( const Incidence::Ptr &incidence ) const
 {
-  return item( inc->instanceIdentifier() );
+  return incidence ? item( incidence->instanceIdentifier() ) : Item();
 }
 
 Akonadi::Item::List CalendarBase::items() const
