@@ -43,5 +43,4 @@ class ImapStreamParserTest : public QObject
 
 };
 
-
 #endif

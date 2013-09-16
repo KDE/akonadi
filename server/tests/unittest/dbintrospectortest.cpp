@@ -51,10 +51,9 @@ class DbIntrospectorTest : public QObject
         QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName );
         DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
         QVERIFY( introspector );
-        QCOMPARE( introspector->hasIndexQuery( QL1S("myTable"), QL1S("myIndex") ), indexQuery );
+        QCOMPARE( introspector->hasIndexQuery( QL1S( "myTable" ), QL1S( "myIndex" ) ), indexQuery );
       }
     }
-
 
     void testHasIndex_data()
     {
@@ -73,13 +72,13 @@ class DbIntrospectorTest : public QObject
       QFETCH( bool, shouldThrow );
 
       if ( QSqlDatabase::drivers().contains( driverName ) ) {
-        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName + QL1S("hasIndex") );
+        QSqlDatabase db = QSqlDatabase::addDatabase( driverName, driverName + QL1S( "hasIndex" ) );
         DbIntrospector::Ptr introspector = DbIntrospector::createInstance( db );
         QVERIFY( introspector );
 
         bool didThrow = false;
         try {
-          QVERIFY( introspector->hasIndex( QL1S("myTable"), QL1S("myIndex") ) );
+          QVERIFY( introspector->hasIndex( QL1S( "myTable" ), QL1S( "myIndex" ) ) );
         } catch ( const DbException &e ) {
           didThrow = true;
           qDebug() << Q_FUNC_INFO << e.what();
