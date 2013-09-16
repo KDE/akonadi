@@ -40,7 +40,7 @@ class AgentPluginLoader
     QPluginLoader *load( const QString &pluginName );
 
   private:
-    QHash<QString, QPluginLoader*> m_pluginLoaders;
+    QHash<QString, QPluginLoader *> m_pluginLoaders;
 };
 
 #endif // AGENTPLUGINLOADER_H

@@ -38,8 +38,9 @@ int main( int argc, char *argv[] )
 
   AgentPluginLoader loader;
   QPluginLoader *factory = loader.load( agentPluginName );
-  if ( factory == 0 )
+  if ( factory == 0 ) {
     return 1;
+  }
 
   QObject *instance = 0;
   const bool invokeSucceeded = QMetaObject::invokeMethod( factory->instance(),
@@ -58,4 +59,3 @@ int main( int argc, char *argv[] )
   delete instance;
   return rv;
 }
-
