@@ -38,7 +38,7 @@ class AgentServer : public QObject
   typedef QPair<QString, qlonglong> ConfigureInfo;
 
   public:
-    explicit AgentServer( QObject * parent = 0 );
+    explicit AgentServer( QObject *parent = 0 );
     ~AgentServer();
 
   public Q_SLOTS:
@@ -52,7 +52,7 @@ class AgentServer : public QObject
     void processConfigureRequest();
 
   private:
-    QHash<QString, AgentThread*> m_agents;
+    QHash<QString, AgentThread *> m_agents;
     QQueue<ConfigureInfo> m_configureQueue;
     AgentPluginLoader m_agentLoader;
     bool m_processingConfigureRequests;
