@@ -30,20 +30,22 @@ using namespace Akonadi;
 AgentProcessInstance::AgentProcessInstance( AgentManager *manager )
   : AgentInstance( manager )
   , mController( 0 )
-{ }
+{
+}
 
 bool AgentProcessInstance::start( const AgentType &agentInfo )
 {
   Q_ASSERT( !identifier().isEmpty() );
-  if ( identifier().isEmpty() )
+  if ( identifier().isEmpty() ) {
     return false;
+  }
 
   setAgentType( agentInfo.identifier );
 
   Q_ASSERT( agentInfo.launchMethod == AgentType::Process ||
             agentInfo.launchMethod == AgentType::Launcher );
 
-  const QString executable = ( agentInfo.launchMethod == AgentType::Process)
+  const QString executable = ( agentInfo.launchMethod == AgentType::Process )
     ? XdgBaseDirs::findExecutableFile( agentInfo.exec ) : agentInfo.exec;
 
   if ( executable.isEmpty() ) {
@@ -56,7 +58,7 @@ bool AgentProcessInstance::start( const AgentType &agentInfo )
 
   if ( agentInfo.launchMethod == AgentType::Process ) {
     QStringList arguments;
-    arguments << QLatin1String("--identifier") << identifier();
+    arguments << QLatin1String( "--identifier" ) << identifier();
     mController->start( executable, arguments );
   } else {
     Q_ASSERT( agentInfo.launchMethod == AgentType::Launcher );
@@ -91,7 +93,7 @@ void AgentProcessInstance::restartWhenIdle()
   }
 }
 
-void Akonadi::AgentProcessInstance::configure(qlonglong windowId)
+void Akonadi::AgentProcessInstance::configure( qlonglong windowId )
 {
   controlInterface()->configure( windowId );
 }

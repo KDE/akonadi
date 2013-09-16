@@ -48,8 +48,8 @@ static bool startServer()
 {
   //Needed for wince build
   #undef interface
-  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) )
-       || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) ) ) {
+  if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) )
+       || QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) ) ) {
     qWarning() << "Akonadi is already running.";
     return false;
   }
@@ -59,8 +59,8 @@ static bool startServer()
 
 static bool stopServer()
 {
-  org::freedesktop::Akonadi::ControlManager iface( AkDBus::serviceName(AkDBus::Control),
-                                                   QLatin1String("/ControlManager"),
+  org::freedesktop::Akonadi::ControlManager iface( AkDBus::serviceName( AkDBus::Control ),
+                                                   QLatin1String( "/ControlManager" ),
                                                    QDBusConnection::sessionBus(), 0 );
   if ( !iface.isValid() ) {
     qWarning() << "Akonadi is not running.";
@@ -74,28 +74,29 @@ static bool stopServer()
 
 static bool statusServer()
 {
-  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) );
+  bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) );
   fprintf( stderr, "Akonadi Control: %s\n", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Server) );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Server ) );
   fprintf( stderr, "Akonadi Server: %s\n", registered ? "running" : "stopped" );
 
-  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String("org.kde.nepomuk.services.nepomukqueryservice") );
+  registered = QDBusConnection::sessionBus().interface()->isServiceRegistered( QLatin1String( "org.kde.nepomuk.services.nepomukqueryservice" ) );
   if ( registered ) {
     QString backend = QLatin1String( "Unknown" );
 
     // check which backend is used
-    QDBusInterface interface( QLatin1String("org.kde.NepomukStorage"), QLatin1String("/nepomukstorage") );
-    const QDBusReply<QString> reply = interface.call( QLatin1String("usedSopranoBackend") );
+    QDBusInterface interface( QLatin1String( "org.kde.NepomukStorage" ), QLatin1String( "/nepomukstorage" ) );
+    const QDBusReply<QString> reply = interface.call( QLatin1String( "usedSopranoBackend" ) );
     if ( reply.isValid() ) {
       const QString name = reply.value();
 
-      if ( name == QLatin1String( "redland" ) )
+      if ( name == QLatin1String( "redland" ) ) {
         backend = QLatin1String( "Redland" );
-      else if ( name == QLatin1String( "sesame2" ) )
+      } else if ( name == QLatin1String( "sesame2" ) ) {
         backend = QLatin1String( "Sesame2" );
-      else if ( name == QLatin1String( "virtuosobackend" ) )
+      } else if ( name == QLatin1String( "virtuosobackend" ) ) {
         backend = QLatin1String( "Virtuoso" );
+      }
     }
 
     fprintf( stderr, "Akonadi Server Search Support: available (backend: %s)\n", qPrintable( backend ) );
@@ -109,7 +110,7 @@ static bool statusServer()
 int main( int argc, char **argv )
 {
   AkCoreApplication app( argc, argv );
-  app.setDescription( QLatin1String("Akonadi server manipulation tool\n"
+  app.setDescription( QLatin1String( "Akonadi server manipulation tool\n"
       "Usage: akonadictl [command]\n\n"
       "Commands:\n"
       "  start      : Starts the Akonadi server with all its processes\n"
@@ -139,62 +140,65 @@ int main( int argc, char **argv )
   if ( arguments.count() != 2 ) {
     app.printUsage();
     return 1;
-  } else if ( !optionsList.contains( arguments[ 1 ] ) ) {
+  } else if ( !optionsList.contains( arguments[1] ) ) {
     app.printUsage();
     return 2;
   }
 #else
-    if (argc > 1) {
-      if (strcmp(argv[1],"start") == 0) {
-        arguments.append(QLatin1String("start"));
-      } else if (strcmp(argv[1],"stop") == 0) {
-        arguments.append(QLatin1String("stop"));
-      } else if (strcmp(argv[1],"restart") == 0) {
-        arguments.append(QLatin1String("restart"));
-      } else if (strcmp(argv[1],"status") == 0) {
-        arguments.append(QLatin1String("status"));
+    if ( argc > 1 ) {
+      if ( strcmp( argv[1],"start" ) == 0 ) {
+        arguments.append( QLatin1String( "start" ) );
+      } else if ( strcmp( argv[1],"stop" ) == 0 ) {
+        arguments.append( QLatin1String( "stop" ) );
+      } else if ( strcmp( argv[1],"restart" ) == 0 ) {
+        arguments.append( QLatin1String( "restart" ) );
+      } else if ( strcmp( argv[1],"status" ) == 0 ) {
+        arguments.append( QLatin1String( "status" ) );
       }
     } else {
-      arguments.append(QLatin1String("start"));
+      arguments.append( QLatin1String( "start" ) );
     }
 #endif
 
-  if ( arguments[ 1 ] == QLatin1String( "start" ) ) {
-    if ( !startServer() )
+  if ( arguments[1] == QLatin1String( "start" ) ) {
+    if ( !startServer() ) {
       return 3;
-  } else if ( arguments[ 1 ] == QLatin1String( "stop" ) ) {
-    if ( !stopServer() )
+    }
+  } else if ( arguments[1] == QLatin1String( "stop" ) ) {
+    if ( !stopServer() ) {
       return 4;
-    else {
+    } else {
     //Block until akonadi is shut down
 #ifdef _WIN32_WCE
         do {
-          Sleep(100000);
-        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
+          Sleep( 100000 );
+        } while ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AKONADI_DBUS_CONTROL_SERVICE ) );
 #endif
     }
-  } else if ( arguments[ 1 ] == QLatin1String( "status" ) ) {
-    if ( !statusServer() )
+  } else if ( arguments[1] == QLatin1String( "status" ) ) {
+    if ( !statusServer() ) {
       return 5;
-  } else if ( arguments[ 1 ] == QLatin1String( "restart") ) {
-      if ( !stopServer() )
+    }
+  } else if ( arguments[1] == QLatin1String( "restart" ) ) {
+      if ( !stopServer() ) {
         return 4;
-      else {
+      } else {
         do {
 #if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
-          usleep(100000);
+          usleep( 100000 );
 #else
-          Sleep(100000);
+          Sleep( 100000 );
 #endif
-        } while( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::Control) ) );
-        if ( !startServer() )
+        } while ( QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::Control ) ) );
+        if ( !startServer() ) {
           return 3;
+        }
       }
-  } else if ( arguments[ 1 ] == QLatin1String( "vacuum" ) ) {
-    QDBusInterface iface( AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
+  } else if ( arguments[1] == QLatin1String( "vacuum" ) ) {
+    QDBusInterface iface( AkDBus::serviceName( AkDBus::StorageJanitor ), QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ) );
     iface.call( QDBus::NoBlock, QLatin1String( "vacuum" ) );
-  } else if ( arguments[ 1 ] == QLatin1String( "fsck" ) ) {
-    QDBusInterface iface( AkDBus::serviceName(AkDBus::StorageJanitor), QLatin1String(AKONADI_DBUS_STORAGEJANITOR_PATH) );
+  } else if ( arguments[1] == QLatin1String( "fsck" ) ) {
+    QDBusInterface iface( AkDBus::serviceName( AkDBus::StorageJanitor ), QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ) );
     iface.call( QDBus::NoBlock, QLatin1String( "check" ) );
   }
   return 0;

@@ -30,11 +30,11 @@
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusServiceWatcher>
 
-AkonadiStarter::AkonadiStarter(QObject * parent) :
-    QObject( parent ),
-    mRegistered( false )
+AkonadiStarter::AkonadiStarter( QObject *parent )
+  : QObject( parent )
+  , mRegistered( false )
 {
-  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName(AkDBus::ControlLock),
+  QDBusServiceWatcher *watcher = new QDBusServiceWatcher( AkDBus::serviceName( AkDBus::ControlLock ),
                                                           QDBusConnection::sessionBus(),
                                                           QDBusServiceWatcher::WatchForOwnerChange, this );
 
@@ -47,10 +47,11 @@ bool AkonadiStarter::start()
   akDebug() << "Starting Akonadi Server...";
 
   QStringList serverArgs;
-  if ( AkApplication::hasInstanceIdentifier() )
-    serverArgs << QLatin1String("--instance") << AkApplication::instanceIdentifier();
+  if ( AkApplication::hasInstanceIdentifier() ) {
+    serverArgs << QLatin1String( "--instance" ) << AkApplication::instanceIdentifier();
+  }
 
-  const bool ok = QProcess::startDetached( QLatin1String("akonadi_control"), serverArgs );
+  const bool ok = QProcess::startDetached( QLatin1String( "akonadi_control" ), serverArgs );
   if ( !ok ) {
     akError() << "Error: unable to execute binary akonadi_control";
     return false;
@@ -73,10 +74,10 @@ bool AkonadiStarter::start()
 
 void AkonadiStarter::serviceOwnerChanged( const QString&, const QString&, const QString &newOwner )
 {
-  if ( newOwner.isEmpty() )
+  if ( newOwner.isEmpty() ) {
     return;
+  }
 
   mRegistered = true;
   QCoreApplication::instance()->quit();
 }
-
