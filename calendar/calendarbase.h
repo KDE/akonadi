@@ -73,7 +73,7 @@ public:
     * Returns the Item containing the incidence with uid @p uid or an invalid Item
     * if the incidence isn't found.
     */
-  Akonadi::Item item( const KCalCore::Incidence::Ptr &inc ) const;
+  Akonadi::Item item( const KCalCore::Incidence::Ptr &incidence ) const;
 
   /**
     * Returns the Item with @p id or an invalid Item if not found.
