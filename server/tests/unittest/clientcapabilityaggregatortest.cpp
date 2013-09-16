@@ -29,39 +29,39 @@ class ClientCapabilityAggregatorTest : public QObject
   private Q_SLOTS:
     void testNotifyMessageVersion()
     {
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 0);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 0);
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 0 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 0 );
 
       ClientCapabilities c;
-      c.setNotificationMessageVersion(1);
-      ClientCapabilityAggregator::addSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 1);
+      c.setNotificationMessageVersion( 1 );
+      ClientCapabilityAggregator::addSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 1 );
 
-      ClientCapabilityAggregator::removeSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 0);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 0);
+      ClientCapabilityAggregator::removeSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 0 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 0 );
 
-      ClientCapabilityAggregator::addSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 1);
+      ClientCapabilityAggregator::addSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 1 );
 
-      c.setNotificationMessageVersion(2);
-      ClientCapabilityAggregator::addSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2);
-      ClientCapabilityAggregator::addSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2);
+      c.setNotificationMessageVersion( 2 );
+      ClientCapabilityAggregator::addSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2 );
+      ClientCapabilityAggregator::addSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2 );
 
-      ClientCapabilityAggregator::removeSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2);
+      ClientCapabilityAggregator::removeSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 1 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2 );
 
-      c.setNotificationMessageVersion(1);
-      ClientCapabilityAggregator::removeSession(c);
-      QCOMPARE(ClientCapabilityAggregator::minimumNotificationMessageVersion(), 2);
-      QCOMPARE(ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2);
+      c.setNotificationMessageVersion( 1 );
+      ClientCapabilityAggregator::removeSession( c );
+      QCOMPARE( ClientCapabilityAggregator::minimumNotificationMessageVersion(), 2 );
+      QCOMPARE( ClientCapabilityAggregator::maximumNotificationMessageVersion(), 2 );
     }
 };
 
