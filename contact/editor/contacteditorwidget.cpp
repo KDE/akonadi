@@ -281,6 +281,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   label = new QLabel( i18n( "Show messages received from this contact as:" ) );
   label->setAlignment( Qt::AlignRight | Qt::AlignVCenter );
   mMailPreferFormatting = new KComboBox;
+  label->setBuddy( mMailPreferFormatting );
   QStringList listFormat;
   listFormat << i18n( "Default" ) << i18n( "Plain Text" ) << i18n( "HTML" );
   mMailPreferFormatting->addItems( listFormat );
