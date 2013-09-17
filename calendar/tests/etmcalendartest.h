@@ -58,10 +58,9 @@ private:
     Akonadi::ETMCalendar *mCalendar;
     Akonadi::Collection mCollection;
     int mIncidencesToAdd;
-    int mIncidencesToChange;
     int mIncidencesToDelete;
     QString mLastDeletedUid;
-    QString mLastModifiedUid;
+    QString mExpectedUid;
 };
 
 #endif

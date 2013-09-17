@@ -44,6 +44,7 @@ void ETMCalendarTest::createIncidence( const QString &uid )
     item.setMimeType( Event::eventMimeType() );
     Incidence::Ptr incidence = Incidence::Ptr( new Event() );
     incidence->setUid( uid );
+    incidence->setDtStart( KDateTime::currentDateTime( KDateTime::UTC ) );
     incidence->setSummary( QLatin1String( "summary" ) );
     item.setPayload<KCalCore::Incidence::Ptr>( incidence );
     ItemCreateJob *job = new ItemCreateJob( item, mCollection, this );
@@ -142,10 +143,9 @@ void ETMCalendarTest::testIncidencesModified()
     item.payload<KCalCore::Incidence::Ptr>()->setSummary( tr( "foo33" ) );
     ItemModifyJob *job = new ItemModifyJob( item );
     AKVERIFYEXEC(job);
-    mIncidencesToChange = 1;
+    mExpectedUid = uid;
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
-    QCOMPARE( mLastModifiedUid, uid );
     QCOMPARE( mCalendar->incidence( uid )->summary(), tr( "foo33" ) );
 }
 
@@ -217,7 +217,7 @@ void ETMCalendarTest::testSelectCollection()
 void ETMCalendarTest::calendarIncidenceAdded( const Incidence::Ptr &incidence )
 {
     Q_UNUSED( incidence );
-    Q_ASSERT( false );
+    Q_ASSERT( incidence );
     --mIncidencesToAdd;
     if ( mIncidencesToAdd == 0 ) {
         QTestEventLoop::instance().exitLoop();
@@ -231,9 +231,8 @@ void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & 
 
 void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence )
 {
-    --mIncidencesToChange;
-    mLastModifiedUid = incidence->uid();
-    if ( mIncidencesToChange == 0 ) {
+    if ( mExpectedUid == incidence->uid() ) {
+        mExpectedUid.clear();;
         QTestEventLoop::instance().exitLoop();
     }
 }
