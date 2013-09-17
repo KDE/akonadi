@@ -118,8 +118,7 @@ void ETMCalendarTest::testCollectionChanged()
     QFETCH( Akonadi::Collection, noRightsCollection );
     CollectionModifyJob *job = new CollectionModifyJob( mCollection, this );
     QSignalSpy spy( mCalendar, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)) );
-    connect( mCalendar, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
-             &QTestEventLoop::instance(), SLOT(exitLoop()) );
+    mIncidencesToChange = 6;
     AKVERIFYEXEC(job);
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
@@ -142,8 +141,8 @@ void ETMCalendarTest::testIncidencesModified()
     QVERIFY( item.hasPayload() );
     item.payload<KCalCore::Incidence::Ptr>()->setSummary( tr( "foo33" ) );
     ItemModifyJob *job = new ItemModifyJob( item );
+    mIncidencesToChange = 1;
     AKVERIFYEXEC(job);
-    mExpectedUid = uid;
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
     QCOMPARE( mCalendar->incidence( uid )->summary(), tr( "foo33" ) );
@@ -231,8 +230,9 @@ void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & 
 
 void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence )
 {
-    if ( mExpectedUid == incidence->uid() ) {
-        mExpectedUid.clear();;
+    --mIncidencesToChange;
+    if ( mIncidencesToChange == 0 ) {
+        mLastChangedUid = incidence->uid();
         QTestEventLoop::instance().exitLoop();
     }
 }

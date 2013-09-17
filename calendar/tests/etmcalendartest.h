@@ -59,8 +59,9 @@ private:
     Akonadi::Collection mCollection;
     int mIncidencesToAdd;
     int mIncidencesToDelete;
+    int mIncidencesToChange;
     QString mLastDeletedUid;
-    QString mExpectedUid;
+    QString mLastChangedUid;
 };
 
 #endif
