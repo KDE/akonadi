@@ -103,6 +103,23 @@ class SubscriptionDialog::Private
       filterRecursiveCollectionFilter->setIncludeCheckedOnly( checked );
     }
 
+    void writeConfig()
+    {
+      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
+      group.writeEntry( "Size", q->size() );
+    }
+
+    void readConfig()
+    {
+      KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
+      const QSize sizeDialog = group.readEntry( "Size", QSize() );
+      if ( sizeDialog.isValid() ) {
+         q->resize( sizeDialog );
+      } else {
+         q->resize( 300,200);
+      }
+    }
+
     void slotUnSubscribe();
     void slotSubscribe();
 
@@ -247,10 +264,12 @@ void SubscriptionDialog::init( const QStringList &mimetypes )
   connect( this, SIGNAL(okClicked()), SLOT(done()) );
   connect( this, SIGNAL(cancelClicked()), SLOT(deleteLater()) );
   Control::widgetNeedsAkonadi( mainWidget );
+  d->readConfig();
 }
 
-SubscriptionDialog::~ SubscriptionDialog()
+SubscriptionDialog::~SubscriptionDialog()
 {
+  d->writeConfig();
   delete d;
 }
 
