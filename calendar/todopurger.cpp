@@ -58,6 +58,9 @@ void TodoPurger::Private::onItemsDeleted(int changeId, const QVector<Entity::Id>
 
 void TodoPurger::Private::deleteTodos()
 {
+    if (!m_changer)
+        q->setIncidenceChager(new IncidenceChanger(this));
+
     m_changer->startAtomicOperation(i18n("Purging completed to-dos"));
     Akonadi::Item::List items = m_calendar->items();
     Akonadi::Item::List toDelete;
@@ -76,10 +79,8 @@ void TodoPurger::Private::deleteTodos()
     if (toDelete.isEmpty()) {
         emit q->todosPurged(true, 0, 0);
     } else {
-        if (!m_changer)
-            q->setIncidenceChager(new IncidenceChanger(this));
-
-        m_changer->deleteIncidences(toDelete);
+        m_currentChangeId = m_changer->deleteIncidences(toDelete);
+        Q_ASSERT(m_currentChangeId > 0);
     }
 
     m_changer->endAtomicOperation();

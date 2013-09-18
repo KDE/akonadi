@@ -20,6 +20,7 @@
 #ifndef TODOPURGER_H
 #define TODOPURGER_H
 
+#include "akonadi-calendar_export.h"
 #include "calendarbase.h"
 
 #include <QObject>
@@ -34,7 +35,7 @@ class IncidenceChanger;
 * @author Sérgio Martins <iamsergio@gmail.com>
 * @since 4.12
 */
-class TodoPurger : public QObject
+class AKONADI_CALENDAR_EXPORT TodoPurger : public QObject
 {
     Q_OBJECT
 public:
