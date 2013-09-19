@@ -43,12 +43,24 @@ void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bo
     item.setMimeType(Todo::todoMimeType());
     Todo::Ptr todo = Todo::Ptr(new Todo());
     todo->setUid(uid);
-    todo->setCompleted(completed);
-    todo->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
+
+    const KDateTime today = KDateTime::currentDateTime(KDateTime::UTC);
+    const KDateTime yesterday = today.addDays(-1);
+
+    todo->setDtStart(yesterday);
     todo->setRelatedTo(parentUid);
-    todo->setSummary(QLatin1String("summary"));
+
     if (recurring)
         todo->recurrence()->setDaily(1);
+
+    if (recurring && completed) {
+        todo->setCompleted(today);
+    } else {
+        todo->setCompleted(completed);
+    }
+
+    todo->setSummary(QLatin1String("summary"));
+
 
     item.setPayload<KCalCore::Incidence::Ptr>(todo);
     ItemCreateJob *job = new ItemCreateJob(item, m_collection, this);
@@ -180,7 +192,6 @@ void TodoPurgerTest::createTree()
 
     // Recurring complete, this one is ignored too because recurrence didn't end
     createTodo(tr("g"), QString(), true, true);
-
 
     // Now wait for incidences do be created
     QTestEventLoop::instance().enterLoop(10);
