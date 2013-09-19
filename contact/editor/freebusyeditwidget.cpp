@@ -35,6 +35,8 @@ FreeBusyEditWidget::FreeBusyEditWidget( QWidget *parent )
 
   mURL = new KUrlRequester;
   layout->addWidget( mURL );
+  setFocusProxy( mURL );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 FreeBusyEditWidget::~FreeBusyEditWidget()

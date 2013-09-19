@@ -104,6 +104,8 @@ EmailEditWidget::EmailEditWidget( QWidget *parent )
   mEditButton->setText( QLatin1String( "..." ) );
   connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
   layout->addWidget( mEditButton );
+  setFocusProxy( mEditButton );
+  setFocusPolicy( Qt::StrongFocus );
 }
 
 EmailEditWidget::~EmailEditWidget()

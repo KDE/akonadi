@@ -45,6 +45,8 @@ IMEditWidget::IMEditWidget( QWidget *parent )
   mEditButton = new QToolButton;
   mEditButton->setText( i18n( "..." ) );
   layout->addWidget( mEditButton );
+  setFocusProxy( mEditButton );
+  setFocusPolicy( Qt::StrongFocus );
 
   connect( mEditButton, SIGNAL(clicked()), SLOT(edit()) );
 }

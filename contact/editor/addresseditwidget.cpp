@@ -235,10 +235,16 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 0 );
 
+  QHBoxLayout *hboxLayout = new QHBoxLayout( this );
+  QLabel *label = new QLabel( i18nc( "@label:listbox type of address", "Address type:" ), this );
+  hboxLayout->addWidget( label );
+
   mAddressSelectionWidget = new AddressSelectionWidget( this );
   connect( mAddressSelectionWidget, SIGNAL(selectionChanged(KABC::Address)),
            SLOT(updateAddressView()) );
-  layout->addWidget( mAddressSelectionWidget, 0, 0, 1, 3 );
+  label->setBuddy( mAddressSelectionWidget );
+  hboxLayout->addWidget( mAddressSelectionWidget, 1 );
+  layout->addLayout( hboxLayout, 0, 0, 1, 3 );
 
   mAddressView = new QLabel( this );
   mAddressView->setFrameStyle( QFrame::StyledPanel | QFrame::Sunken );
@@ -248,11 +254,11 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   mAddressView->setTextInteractionFlags( Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse );
   layout->addWidget( mAddressView, 1, 0, 1, 3 );
 
-  mCreateButton = new QPushButton( i18nc( "street/postal", "New..." ), this );
+  mCreateButton = new QPushButton( i18nc( "@action:button street/postal", "New..." ), this );
   connect( mCreateButton, SIGNAL(clicked()), this, SLOT(createAddress()) );
-  mEditButton = new QPushButton( i18nc( "street/postal", "Edit..." ), this );
+  mEditButton = new QPushButton( i18nc( "@action:button street/postal", "Edit..." ), this );
   connect( mEditButton, SIGNAL(clicked()), this, SLOT(editAddress()) );
-  mDeleteButton = new QPushButton( i18nc( "street/postal", "Delete" ), this );
+  mDeleteButton = new QPushButton( i18nc( "@action:button street/postal", "Delete" ), this );
   connect( mDeleteButton, SIGNAL(clicked()), this, SLOT(deleteAddress()) );
 
   layout->addWidget( mCreateButton, 2, 0 );
@@ -403,10 +409,14 @@ AddressEditDialog::AddressEditDialog( QWidget *parent )
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  mTypeCombo = new AddressTypeCombo( page );
-  topLayout->addWidget( mTypeCombo, 0, 0, 1, 2 );
+  QLabel *label = new QLabel( i18nc( "@label:listbox type of address", "Address type:" ), this );
+  topLayout->addWidget( label, 0, 0 );
 
-  QLabel *label = new QLabel( i18nc( "<streetLabel>:", "%1:", KABC::Address::streetLabel() ), page );
+  mTypeCombo = new AddressTypeCombo( page );
+  label->setBuddy( mTypeCombo );
+  topLayout->addWidget( mTypeCombo, 0, 1 );
+
+  label = new QLabel( i18nc( "<streetLabel>:", "%1:", KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
   mStreetTextEdit = new KTextEdit( page );
