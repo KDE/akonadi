@@ -56,7 +56,13 @@ class ContactGroupExpandJob::Private
       for ( unsigned int i = 0; i < mGroup.contactReferenceCount(); ++i ) {
         const KABC::ContactGroup::ContactReference reference = mGroup.contactReference( i );
 
-        ItemFetchJob *job = new ItemFetchJob( Item( reference.uid().toLongLong() ), mParent );
+        Item item;
+        if ( !reference.gid().isEmpty() ) {
+          item.setGid( reference.gid() );
+        } else {
+          item.setId( reference.uid().toLongLong() );
+        }
+        ItemFetchJob *job = new ItemFetchJob( item, mParent );
         job->fetchScope().fetchFullPayload();
         job->setProperty( "preferredEmail", reference.preferredEmail() );
 

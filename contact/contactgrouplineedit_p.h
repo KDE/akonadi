@@ -58,7 +58,7 @@ class ContactGroupLineEdit : public KLineEdit
     void invalidateReference();
 
   private:
-    void updateView( const QString &uid, const QString &preferredEmail = QString() );
+    void updateView( const KABC::ContactGroup::ContactReference &referrence );
     void updateView( const Akonadi::Item &item, const QString &preferredEmail = QString() );
     QString requestPreferredEmail( const KABC::Addressee &contact ) const;
 

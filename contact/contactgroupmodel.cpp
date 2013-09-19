@@ -54,8 +54,12 @@ class ContactGroupModel::Private
 
     void resolveContactReference( const KABC::ContactGroup::ContactReference &reference, int row )
     {
-      const Item item( reference.uid().toLongLong() );
-
+      Item item;
+      if ( !reference.gid().isEmpty() ) {
+        item.setGid( reference.gid() );
+      } else {
+        item.setId( reference.uid().toLongLong() );
+      }
       ItemFetchJob *job = new ItemFetchJob( item, mParent );
       job->setProperty( "row", row );
       job->fetchScope().fetchFullPayload();
