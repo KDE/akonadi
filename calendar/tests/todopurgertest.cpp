@@ -37,15 +37,19 @@ using namespace KCalCore;
 
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
-void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bool completed )
+void TodoPurgerTest::createTodo(const QString &uid, const QString &parentUid, bool completed, bool recurring )
 {
     Item item;
     item.setMimeType(Todo::todoMimeType());
     Todo::Ptr todo = Todo::Ptr(new Todo());
     todo->setUid(uid);
     todo->setCompleted(completed);
+    todo->setDtStart(KDateTime::currentDateTime(KDateTime::UTC));
     todo->setRelatedTo(parentUid);
     todo->setSummary(QLatin1String("summary"));
+    if (recurring)
+        todo->recurrence()->setDaily(1);
+
     item.setPayload<KCalCore::Incidence::Ptr>(todo);
     ItemCreateJob *job = new ItemCreateJob(item, m_collection, this);
     m_pendingCreations++;
@@ -116,7 +120,7 @@ void TodoPurgerTest::testPurge()
     QVERIFY(!QTestEventLoop::instance().timeout());
 
     QCOMPARE(m_numDeleted, 8);
-    QCOMPARE(m_numIgnored, 6);
+    QCOMPARE(m_numIgnored, 8);
 }
 
 void TodoPurgerTest::calendarIncidenceAdded(const Incidence::Ptr &)
@@ -142,7 +146,6 @@ void TodoPurgerTest::onTodosPurged(bool success, int numDeleted, int numIgnored)
     m_numDeleted = numDeleted;
     m_numIgnored = numIgnored;
 
-    qDebug() << "DEBUG pending signal " << numDeleted << numIgnored;
     if (m_pendingDeletions == 0) {
         QTestEventLoop::instance().enterLoop(10);
         QVERIFY(!QTestEventLoop::instance().timeout());
@@ -171,6 +174,12 @@ void TodoPurgerTest::createTree()
     createTodo(tr("e1"), tr("e"), true);
     createTodo(tr("e1.1"), tr("e1"), true);
     createTodo(tr("e1.2"), tr("e1"), true);
+
+    // Recurring uncomplete
+    createTodo(tr("f"), QString(), false, true);
+
+    // Recurring complete, this one is ignored too because recurrence didn't end
+    createTodo(tr("g"), QString(), true, true);
 
 
     // Now wait for incidences do be created

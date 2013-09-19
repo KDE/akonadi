@@ -47,7 +47,7 @@ public Q_SLOTS:
 
 private:
     void createTree();
-    void createTodo(const QString &uid, const QString &parentUid, bool completed);
+    void createTodo(const QString &uid, const QString &parentUid, bool completed, bool recurring = false);
     void fetchCollection();
 
     Akonadi::ETMCalendar *m_calendar;
