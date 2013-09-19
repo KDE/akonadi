@@ -77,6 +77,7 @@ install( FILES
   freebusyproviderbase.h
   publishdialog.h
   standardcalendaractionmanager.h
+  todopurger.h
   ${CMAKE_CURRENT_BINARY_DIR}/calendarsettings.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/calendar COMPONENT Devel
 )
