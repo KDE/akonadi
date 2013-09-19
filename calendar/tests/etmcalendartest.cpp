@@ -74,16 +74,11 @@ void ETMCalendarTest:: initTestCase()
 
     qRegisterMetaType<QSet<QByteArray> >("QSet<QByteArray>");
     fetchCollection();
-    createIncidence( tr( "a" ) );
-    createIncidence( tr( "b" ) );
-    createIncidence( tr( "c" ) );
-    createIncidence( tr( "d" ) );
-    createIncidence( tr( "e" ) );
-    createIncidence( tr( "f" ) );
+
     mCalendar = new ETMCalendar();
     connect( mCalendar, SIGNAL(collectionsAdded(Akonadi::Collection::List)),
              SLOT(handleCollectionsAdded(Akonadi::Collection::List)) );
-    mIncidencesToAdd = 6;
+
     mCalendar->registerObserver( this );
 
     // Wait for the collection
@@ -95,7 +90,15 @@ void ETMCalendarTest:: initTestCase()
     QVERIFY( firstIndex.isValid() );
     checkable->setData( firstIndex, Qt::Checked, Qt::CheckStateRole );
 
-    // Now wait for incidences
+    mIncidencesToAdd = 6;
+    createIncidence( tr( "a" ) );
+    createIncidence( tr( "b" ) );
+    createIncidence( tr( "c" ) );
+    createIncidence( tr( "d" ) );
+    createIncidence( tr( "e" ) );
+    createIncidence( tr( "f" ) );
+
+    // Wait for incidences
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
 }
