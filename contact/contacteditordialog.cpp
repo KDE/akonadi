@@ -108,11 +108,9 @@ class ContactEditorDialog::Private
     {
       KConfig config( QLatin1String( "akonadi_contactrc" ) );
       KConfigGroup group( &config, QLatin1String( "ContactEditor" ) );
-      const QSize size = group.readEntry( "Size", QSize() );
+      const QSize size = group.readEntry( "Size", QSize(800,  500) );
       if ( size.isValid() ) {
         q->resize( size );
-      } else {
-        q->resize( 800,  500 );
       }
     }
 

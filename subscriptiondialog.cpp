@@ -112,11 +112,9 @@ class SubscriptionDialog::Private
     void readConfig()
     {
       KConfigGroup group( KGlobal::config(), "SubscriptionDialog" );
-      const QSize sizeDialog = group.readEntry( "Size", QSize() );
+      const QSize sizeDialog = group.readEntry( "Size", QSize(300,200) );
       if ( sizeDialog.isValid() ) {
          q->resize( sizeDialog );
-      } else {
-         q->resize( 300,200);
       }
     }
 

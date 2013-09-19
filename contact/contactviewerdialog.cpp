@@ -43,11 +43,9 @@ class ContactViewerDialog::Private
     {
       KConfig config( QLatin1String( "akonadi_contactrc" ) );
       KConfigGroup group( &config, QLatin1String( "ContactViewer" ) );
-      const QSize size = group.readEntry( "Size", QSize() );
+      const QSize size = group.readEntry( "Size", QSize(500, 600) );
       if ( size.isValid() ) {
         q->resize( size );
-      } else {
-        q->resize( 500, 600 );
       }
     }
 
