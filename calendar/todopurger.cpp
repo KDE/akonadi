@@ -69,7 +69,7 @@ void TodoPurger::Private::deleteTodos()
         KCalCore::Todo::Ptr todo = CalendarUtils::incidence(item).dynamicCast<KCalCore::Todo>();
         if (!todo)
             continue;
-        if (treeIsComplete(todo)) {
+        if (treeIsDeletable(todo)) {
             toDelete.append(item);
         } else {
             m_ignoredItems++;
@@ -86,7 +86,7 @@ void TodoPurger::Private::deleteTodos()
     m_changer->endAtomicOperation();
 }
 
-bool TodoPurger::Private::treeIsComplete(const KCalCore::Todo::Ptr &todo)
+bool TodoPurger::Private::treeIsDeletable(const KCalCore::Todo::Ptr &todo)
 {
     Q_ASSERT(todo);
 
@@ -103,7 +103,7 @@ bool TodoPurger::Private::treeIsComplete(const KCalCore::Todo::Ptr &todo)
         if (!childTodo)
             return false; // This never happens
 
-        if (!treeIsComplete(childTodo))
+        if (!treeIsDeletable(childTodo))
             return false;
     }
 

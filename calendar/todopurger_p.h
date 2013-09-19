@@ -41,7 +41,7 @@ public:
     int m_ignoredItems;
 
     void deleteTodos();
-    bool treeIsComplete(const KCalCore::Todo::Ptr &todo);
+    bool treeIsDeletable(const KCalCore::Todo::Ptr &todo);
 
 public Q_SLOTS:
     void onCalendarLoaded(bool success, const QString &message);
