@@ -90,7 +90,7 @@ bool TodoPurger::Private::treeIsDeletable(const KCalCore::Todo::Ptr &todo)
 {
     Q_ASSERT(todo);
 
-    if (!todo->isCompleted())
+    if (!todo->isCompleted() || todo->isReadOnly())
         return false;
 
     KCalCore::Incidence::List childs = m_calendar->childIncidences(todo->uid());
