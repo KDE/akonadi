@@ -241,15 +241,18 @@ void ITIPHandler::publishInformation( const KCalCore::Incidence::Ptr &incidence,
   delete publishdlg;
 }
 
-void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
+void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &originalIncidence,
                                    QWidget *parentWidget )
 {
   Q_UNUSED( parentWidget );
-  Q_ASSERT( incidence );
-  if ( !incidence ) {
+  Q_ASSERT( originalIncidence );
+  if ( !originalIncidence ) {
     kError() << "Invalid incidence";
     return;
   }
+
+  // Clone so we can change organizer and recurid
+  KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr( originalIncidence->clone() );
 
   KPIMIdentities::IdentityManager identityManager;
 
@@ -260,6 +263,11 @@ void ITIPHandler::sendAsICalendar( const KCalCore::Incidence::Ptr &incidence,
       incidence->setOrganizer( KCalCore::Person::Ptr(
                                  new KCalCore::Person( Akonadi::CalendarUtils::fullName(),
                                                        Akonadi::CalendarUtils::email() ) ) );
+    }
+
+    if ( incidence->hasRecurrenceId() ) {
+      // For an individual occurrence, recur id doesn't make sense, since we're not sending the whole recurrence series.
+      incidence->setRecurrenceId(KDateTime());
     }
 
     KCalCore::ICalFormat format;
