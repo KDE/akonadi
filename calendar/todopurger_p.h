@@ -39,6 +39,7 @@ public:
     CalendarBase::Ptr m_calendar;
     int m_currentChangeId;
     int m_ignoredItems;
+    bool m_calendarOwnership; // If false it's not ours.
 
     void deleteTodos();
     bool treeIsDeletable(const KCalCore::Todo::Ptr &todo);

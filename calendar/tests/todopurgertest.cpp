@@ -131,8 +131,8 @@ void TodoPurgerTest::testPurge()
     QTestEventLoop::instance().enterLoop(10);
     QVERIFY(!QTestEventLoop::instance().timeout());
 
-    QCOMPARE(m_numDeleted, 8);
-    QCOMPARE(m_numIgnored, 8);
+    QCOMPARE(m_numDeleted, 10);
+    QCOMPARE(m_numIgnored, 2);
 }
 
 void TodoPurgerTest::calendarIncidenceAdded(const Incidence::Ptr &)
@@ -166,32 +166,38 @@ void TodoPurgerTest::onTodosPurged(bool success, int numDeleted, int numIgnored)
 
 void TodoPurgerTest::createTree()
 {
-    createTodo(tr("a"), QString(), true); // top level to-do, completed
-    createTodo(tr("b"), QString(), false); // top level to-do, un-complete
+    createTodo(tr("a"), QString(), true);  // Will be deleted
+    createTodo(tr("b"), QString(), false); // Won't be deleted
 
     // Completed tree
-    createTodo(tr("c"), QString(), true);
-    createTodo(tr("c1"), tr("c"), true);
-    createTodo(tr("c1.1"), tr("c1"), true);
-    createTodo(tr("c1.2"), tr("c1"), true);
+    createTodo(tr("c"), QString(), true);   // Will be deleted
+    createTodo(tr("c1"), tr("c"), true);    // Will be deleted
+    createTodo(tr("c1.1"), tr("c1"), true); // Will be deleted
+    createTodo(tr("c1.2"), tr("c1"), true); // Will be deleted
 
     // Root completed but children not completed
-    createTodo(tr("d"), QString(), true);
-    createTodo(tr("d1"), tr("d"), false);
-    createTodo(tr("d1.1"), tr("d1"), false);
-    createTodo(tr("d1.2"), tr("d1"), false);
+    createTodo(tr("d"), QString(), true);    // Will be ignored (uncomplete children)
+    createTodo(tr("d1"), tr("d"), false);    // Won't be deleted
+    createTodo(tr("d1.1"), tr("d1"), false); // Won't be deleted
+    createTodo(tr("d1.2"), tr("d1"), false); // Won't be deleted
 
     // Root uncomplete with children complete
-    createTodo(tr("e"), QString(), false);
-    createTodo(tr("e1"), tr("e"), true);
-    createTodo(tr("e1.1"), tr("e1"), true);
-    createTodo(tr("e1.2"), tr("e1"), true);
+    createTodo(tr("e"), QString(), false);    // Won't be deleted
+    createTodo(tr("e1"), tr("e"), true);      // Will be deleted
+    createTodo(tr("e1.1"), tr("e1"), true);   // Will be deleted
+    createTodo(tr("e1.2"), tr("e1"), true);   // Will be deleted
 
     // Recurring uncomplete
-    createTodo(tr("f"), QString(), false, true);
+    createTodo(tr("f"), QString(), false, true); // Won't be deleted
 
-    // Recurring complete, this one is ignored too because recurrence didn't end
-    createTodo(tr("g"), QString(), true, true);
+    // Recurring complete, this one is not deleted because recurrence didn't end
+    createTodo(tr("g"), QString(), true, true); // Won't be deleted
+
+    createTodo(tr("h"), QString(), true);    // Will be ignored (uncomplete children)
+    createTodo(tr("h1"), tr("h"), false);    // Won't be deleted
+    createTodo(tr("h1.1"), tr("h1"), true);  // Will be deleted
+    createTodo(tr("h1.2"), tr("h1"), true);  // Will be deleted
+
 
     // Now wait for incidences do be created
     QTestEventLoop::instance().enterLoop(10);
