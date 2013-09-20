@@ -147,3 +147,8 @@ void TodoPurger::purgeCompletedTodos()
         connect(d->m_calendar.data(), SIGNAL(loadFinished(bool,QString)), d, SLOT(onCalendarLoaded(bool,QString)));
     }
 }
+
+QString TodoPurger::lastError() const
+{
+    return d->m_lastError;
+}
