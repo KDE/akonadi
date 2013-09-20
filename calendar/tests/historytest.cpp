@@ -18,6 +18,7 @@
 */
 
 #include "../history.h"
+#include "../history_p.h"
 #include "../incidencechanger.h"
 
 #include <akonadi/itemfetchjob.h>
@@ -187,8 +188,8 @@ private Q_SLOTS:
     {
       QFETCH( Akonadi::Item, item );
       mPendingSignals[CreationSignal] = 1;
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE( mHistory->d->redoCount(), 0 );
+      QCOMPARE( mHistory->d->undoCount(), 0 );
       QVERIFY( item.hasPayload() );
       const int changeId = mChanger->createIncidence( item.payload<KCalCore::Incidence::Ptr>() );
       QVERIFY( changeId > 0 );
@@ -198,8 +199,8 @@ private Q_SLOTS:
       // Check that it was created
       QVERIFY( confirmExists( mItemByChangeId.value( changeId ) ) );
 
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 1 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 1 );
 
       //undo it
       mPendingSignals[UndoSignal] = 1;
@@ -209,8 +210,8 @@ private Q_SLOTS:
       // Check that it doesn't exist anymore
       QVERIFY( confirmDoesntExists( mItemByChangeId.value( changeId ) ) );
 
-      QCOMPARE( mHistory->redoCount(), 1 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 1 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
 
       mPendingSignals[RedoSignal] = 1;
       mHistory->redo();
@@ -222,8 +223,8 @@ private Q_SLOTS:
       waitForSignals();
 
       mHistory->clear();
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
     }
 
     void testDeletion_data()
@@ -247,8 +248,8 @@ private Q_SLOTS:
     {
       QFETCH( Akonadi::Item::List, items );
       mPendingSignals[DeletionSignal] = 1;
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
 
       const int changeId = ( items.count() == 1 ) ? mChanger->deleteIncidence( items.first() ) :
                                                     mChanger->deleteIncidences( items );
@@ -270,8 +271,8 @@ private Q_SLOTS:
       waitForSignals();
 
       mHistory->clear();
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
     }
 
     void testModification_data()
@@ -296,8 +297,8 @@ private Q_SLOTS:
 
       item.payload<KCalCore::Incidence::Ptr>()->setSummary( newSummary );
       mPendingSignals[ModificationSignal] = 1;
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
 
       const int changeId = mChanger->modifyIncidence( item, originalPayload );
       QVERIFY( changeId > 0 );
@@ -305,26 +306,26 @@ private Q_SLOTS:
       waitForSignals();
 
       QVERIFY( checkSummary( item, newSummary ) );
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 1 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 1 );
 
       mPendingSignals[UndoSignal] = 1;
       mHistory->undo();
       waitForSignals();
       QVERIFY( checkSummary( item, oldSummary ) );
-      QCOMPARE( mHistory->redoCount(), 1 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 1 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
 
       mPendingSignals[RedoSignal] = 1;
       mHistory->redo();
       waitForSignals();
       QVERIFY( checkSummary( item, newSummary ) );
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 1 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 1 );
 
       mHistory->clear();
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
 
       // Test that it isn't recorded to history when history is disabled
       mChanger->setHistoryEnabled( false );
@@ -333,8 +334,8 @@ private Q_SLOTS:
       QVERIFY( changeId > 0 );
       mKnownChangeIds << changeId2;
       waitForSignals();
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
     }
 
     void testAtomicOperations_data()
@@ -411,14 +412,14 @@ private Q_SLOTS:
       mChanger->endAtomicOperation();
       waitForSignals();
 
-      QCOMPARE( mHistory->undoCount(), 1 );
-      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 1 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
 
       mPendingSignals[UndoSignal] = 1;
       mHistory->undo();
       waitForSignals();
-      QCOMPARE( mHistory->undoCount(), 0 );
-      QCOMPARE( mHistory->redoCount(), 1 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 1 );
 
       // Verify that it got undone
       for ( int i=0; i<items.count(); ++i ) {
@@ -441,18 +442,18 @@ private Q_SLOTS:
       mPendingSignals[RedoSignal] = 1;
       mHistory->redo();
       waitForSignals();
-      QCOMPARE( mHistory->undoCount(), 1 );
-      QCOMPARE( mHistory->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 1 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
 
       mPendingSignals[UndoSignal] = 1;
       mHistory->undo();
       waitForSignals();
-      QCOMPARE( mHistory->undoCount(), 0 );
-      QCOMPARE( mHistory->redoCount(), 1 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 1 );
 
       mHistory->clear();
-      QCOMPARE( mHistory->redoCount(), 0 );
-      QCOMPARE( mHistory->undoCount(), 0 );
+      QCOMPARE(mHistory->d->redoCount(), 0 );
+      QCOMPARE(mHistory->d->undoCount(), 0 );
     }
 
 private:
