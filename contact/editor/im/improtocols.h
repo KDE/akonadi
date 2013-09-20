@@ -24,7 +24,9 @@
 
 #include <kplugininfo.h>
 
-class IMProtocols
+#include "akonadi-contact_export.h"
+
+class AKONADI_CONTACT_EXPORT IMProtocols
 {
   public:
     ~IMProtocols();

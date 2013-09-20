@@ -207,5 +207,6 @@ install( FILES
   standardcontactactionmanager.h
   standardcontactformatter.h
   standardcontactgroupformatter.h
+  editor/im/improtocols.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/contact COMPONENT Devel
 )
