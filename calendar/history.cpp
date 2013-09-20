@@ -307,6 +307,16 @@ void History::Private::setEnabled( bool enabled )
   }
 }
 
+int History::Private::redoCount() const
+{
+    return mRedoStack.count();
+}
+
+int History::Private::undoCount() const
+{
+    return mUndoStack.count();
+}
+
 QStack<Entry::Ptr>& History::Private::stack()
 {
   return stack( mOperationTypeInProgress );
