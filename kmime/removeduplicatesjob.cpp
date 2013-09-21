@@ -203,4 +203,4 @@ bool RemoveDuplicatesJob::doKill()
     return true;
 }
 
-#include "removeduplicatesjob.moc"
+#include "moc_removeduplicatesjob.cpp"

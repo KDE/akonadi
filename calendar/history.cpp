@@ -339,5 +339,5 @@ void History::Private::emitDone( OperationType type, History::ResultCode resultC
   }
 }
 
-#include "history.moc"
-#include "history_p.moc"
+#include "moc_history.cpp"
+#include "moc_history_p.cpp"

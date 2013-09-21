@@ -70,4 +70,3 @@ void FreeBusyDownloadJob::slotResult( KJob *job )
   emitResult();
 }
 
-#include "freebusydownloadjob_p.moc"

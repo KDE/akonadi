@@ -221,4 +221,3 @@ bool ITIPHandler::Private::isLoaded()
   return true;
 }
 
-#include "itiphandler_p.moc"

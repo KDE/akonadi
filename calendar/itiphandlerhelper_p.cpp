@@ -409,4 +409,3 @@ void ITIPHandlerHelper::onSchedulerFinished( Akonadi::Scheduler::Result result,
                  success ? QString() : i18n( "Error: %1", errorMsg ) );
 }
 
-#include "itiphandlerhelper_p.moc"

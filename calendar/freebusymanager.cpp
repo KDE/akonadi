@@ -997,5 +997,5 @@ void FreeBusyManager::timerEvent( QTimerEvent * )
   publishFreeBusy();
 }
 
-#include "freebusymanager.moc"
-#include "freebusymanager_p.moc"
+#include "moc_freebusymanager.cpp"
+#include "moc_freebusymanager_p.cpp"

@@ -110,4 +110,3 @@ QString PublishDialog::addresses() const
   return to;
 }
 
-#include "publishdialog.moc"

@@ -594,5 +594,5 @@ void CalendarBase::endBatchAdding()
   KCalCore::MemoryCalendar::endBatchAdding();
 }
 
-#include "calendarbase.moc"
-#include "calendarbase_p.moc"
+#include "moc_calendarbase.cpp"
+#include "moc_calendarbase_p.cpp"

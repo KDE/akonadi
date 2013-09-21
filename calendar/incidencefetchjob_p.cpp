@@ -81,4 +81,3 @@ void Akonadi::IncidenceFetchJob::itemFetchResult(KJob* job)
     emitResult();
 }
 
-#include "incidencefetchjob_p.moc"

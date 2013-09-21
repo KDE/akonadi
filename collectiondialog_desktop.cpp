@@ -333,4 +333,4 @@ void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions op
   d->changeCollectionDialogOptions( options );
 }
 
-#include "collectiondialog.moc"
+#include "moc_collectiondialog.cpp"

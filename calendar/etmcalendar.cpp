@@ -586,5 +586,5 @@ bool ETMCalendar::collectionFilteringEnabled() const
   return d->mCollectionFilteringEnabled;
 }
 
-#include "etmcalendar.moc"
-#include "etmcalendar_p.moc"
+#include "moc_etmcalendar.cpp"
+#include "moc_etmcalendar_p.cpp"
