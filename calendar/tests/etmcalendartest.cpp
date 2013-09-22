@@ -314,7 +314,6 @@ void ETMCalendarTest::testSubTodos()
 
     QEXPECT_FAIL("", "ETMCalendar isn't updating internal state when RELATED-TO changes.", Continue);
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
-
 }
 
 void ETMCalendarTest::waitForIt()
