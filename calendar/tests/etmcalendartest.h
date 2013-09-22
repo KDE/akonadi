@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testIncidencesDeleted();
     void testUnselectCollection();
     void testSelectCollection();
+    void testSubTodos();
 
 public Q_SLOTS:
     void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );   /**Q_DECL_OVERRIDE*/
@@ -52,8 +53,12 @@ public Q_SLOTS:
     void handleCollectionsAdded( const Akonadi::Collection::List & );
 
 private:
-    void createIncidence( const QString &uid );
+    void deleteIncidence(const QString &uid);
+    void createIncidence(const QString &uid);
+    void createTodo(const QString &uid, const QString &parentUid);
     void fetchCollection();
+    void waitForIt();
+    void checkExitLoop();
 
     Akonadi::ETMCalendar *mCalendar;
     Akonadi::Collection mCollection;
