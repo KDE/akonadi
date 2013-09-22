@@ -409,7 +409,7 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
   IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
   if ( existingIncidence ) {
     *(existingIncidence.data()) = *( newIncidence.data() );
-      mItemsByCollection.insert( item.storageCollectionId(), item );
+    mItemsByCollection.insert( item.storageCollectionId(), item );
   } else if ( mItemById.contains( item.id() ) ) {
     // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
     handleUidChange( item, newIncidence->instanceIdentifier() );
