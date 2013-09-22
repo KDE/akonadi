@@ -1,0 +1,3 @@
+
+#include "akonadi-contact_export.h"
+#define AKONADI_CONTACT_TESTS_EXPORT @AKONADI_CONTACT_TESTS_EXPORT@

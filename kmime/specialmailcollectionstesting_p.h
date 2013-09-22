@@ -20,7 +20,7 @@
 #ifndef AKONADI_SPECIALMAILCOLLECTIONSTESTING_P_H
 #define AKONADI_SPECIALMAILCOLLECTIONSTESTING_P_H
 
-#include "akonadi-kmime_export.h"
+#include "akonadi-kmimeprivate_export.h"
 #include "specialmailcollections.h"
 
 namespace Akonadi {

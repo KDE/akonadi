@@ -253,6 +253,13 @@ endif()
 
 kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_TESTS_EXPORT AKONADI_EXPORT)
+endif()
+configure_file(akonadiprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h"
+)
+
 target_link_libraries( akonadi-kde ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTSQL_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} ${AKONADI_COMMON_LIBRARIES} )
 set( AKONADI_KDE_DEPS ${KDE4_KDEUI_LIBS} ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 

@@ -146,6 +146,13 @@ kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcf
 
 kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
 
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
+endif()
+configure_file(akonadi-contactprivate_export.h.in
+  "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h"
+)
+
 target_link_libraries(akonadi-contact akonadi-kde
                                       kabc
                                       kcalcore
