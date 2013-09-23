@@ -49,7 +49,7 @@ class CollectionStatisticsModelPrivate;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel with an Akonadi::StatisticsProxyModel on top
  */
-class AKONADI_EXPORT_DEPRECATED CollectionStatisticsModel : public CollectionModel
+class AKONADI_DEPRECATED_EXPORT CollectionStatisticsModel : public CollectionModel
 {
   Q_OBJECT
 

@@ -31,7 +31,7 @@ namespace Akonadi {
  * @deprecated This attribute is not used for threading and will not work.
  *             Use the messagelist component in the kdepim module instead.
  */
-class AKONADI_KMIME_EXPORT_DEPRECATED MessageThreadingAttribute : public Attribute
+class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreadingAttribute : public Attribute
 {
   public:
     /**

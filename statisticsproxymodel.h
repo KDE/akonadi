@@ -48,7 +48,7 @@ namespace Akonadi {
  * @since 4.4
  * @deprecated use the one in kdepim, which is much faster
  */
-class AKONADI_EXPORT_DEPRECATED StatisticsProxyModel : public QSortFilterProxyModel
+class AKONADI_DEPRECATED_EXPORT StatisticsProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 

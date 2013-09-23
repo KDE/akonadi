@@ -35,7 +35,7 @@ namespace Akonadi {
  * @deprecated Subclass Akonadi::EntityTreeModel instead. An example can be seen in AkonadiConsole,
  *             have a look at AkonadiBrowserModel there.
  */
-class AKONADI_KMIME_EXPORT_DEPRECATED MessageModel : public Akonadi::ItemModel
+class AKONADI_KMIME_DEPRECATED_EXPORT MessageModel : public Akonadi::ItemModel
 {
   Q_OBJECT
 

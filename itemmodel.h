@@ -53,7 +53,7 @@ class Session;
  * @author Volker Krause <vkrause@kde.org>
  * @deprecated Use Akonadi::EntityTreeModel instead
  */
-class AKONADI_EXPORT_DEPRECATED ItemModel : public QAbstractTableModel
+class AKONADI_DEPRECATED_EXPORT ItemModel : public QAbstractTableModel
 {
   Q_OBJECT
 

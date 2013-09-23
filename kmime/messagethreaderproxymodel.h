@@ -35,7 +35,7 @@ class Collection;
  * @deprecated This model is not used for threading and will not work.
  *             Use the messagelist component in the kdepim module instead.
  */
-class AKONADI_KMIME_EXPORT_DEPRECATED MessageThreaderProxyModel : public QAbstractProxyModel
+class AKONADI_KMIME_DEPRECATED_EXPORT MessageThreaderProxyModel : public QAbstractProxyModel
 {
   Q_OBJECT
 
