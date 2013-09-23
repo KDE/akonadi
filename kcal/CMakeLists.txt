@@ -13,6 +13,14 @@ set( kcalakonadi_LIB_SRC
   incidencemimetypevisitor.cpp
 )
 
+add_definitions(
+  -DKCAL_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DKCAL_DEPRECATED_EXPORT=KCAL_EXPORT
+)
+
 set(akonadi_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonadi_xml} PROPERTIES INCLUDE "notificationmessage_p.h")
 qt4_add_dbus_adaptor( kcalakonadi_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor Akonadi__FreeBusyProviderAdaptor )

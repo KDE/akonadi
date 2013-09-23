@@ -34,6 +34,16 @@ macro(add_resource_iface _kcfgFile _ifaceName _className)
   )
 endmacro()
 
+add_definitions(
+  -DAKONADI_DEPRECATED=
+  -DAKONADI_KMIME_DEPRECATED=
+)
+# This one won't be needed when CMake 2.8.13 is depended on.
+add_definitions(
+  -DAKONADI_DEPRECATED_EXPORT=AKONADI_EXPORT
+  -DAKONADI_KMIME_DEPRECATED_EXPORT=AKONADI_KMIME_EXPORT
+)
+
 ########### next target ###############
 
 set( kmimeakonadi_LIB_SRC 
