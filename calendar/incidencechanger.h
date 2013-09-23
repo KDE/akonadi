@@ -332,6 +332,7 @@ public:
 
   /**
     * Returns if we're using groupware communication.
+    * Default is false.
     * @see setGroupwareCommuniation()
     */
   bool groupwareCommunication() const;
