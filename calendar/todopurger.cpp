@@ -62,8 +62,16 @@ void TodoPurger::Private::onItemsDeleted(int changeId, const QVector<Entity::Id>
 
 void TodoPurger::Private::deleteTodos()
 {
-    if (!m_changer)
+    if (!m_changer) {
         q->setIncidenceChager(new IncidenceChanger(this));
+        m_changer->setShowDialogsOnError(false);
+        m_changer->setHistoryEnabled(false);
+    }
+
+    const bool oldShowdialogs = m_changer->showDialogsOnError();
+    const bool oldGroupware = m_changer->groupwareCommunication();
+    m_changer->setShowDialogsOnError(false);
+    m_changer->setGroupwareCommunication(false);
 
     m_changer->startAtomicOperation(i18n("Purging completed to-dos"));
     Akonadi::Item::List items = m_calendar->items();
@@ -93,6 +101,9 @@ void TodoPurger::Private::deleteTodos()
     }
 
     m_changer->endAtomicOperation();
+
+    m_changer->setShowDialogsOnError(oldShowdialogs);
+    m_changer->setGroupwareCommunication(oldGroupware);
 }
 
 bool TodoPurger::Private::treeIsDeletable(const KCalCore::Todo::Ptr &todo)
