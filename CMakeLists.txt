@@ -260,7 +260,7 @@ add_definitions(
   -DAKONADI_DEPRECATED_EXPORT=AKONADI_EXPORT
 )
 
-kde4_add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
+add_library( akonadi-kde ${LIBRARY_TYPE} ${akonadikde_LIB_SRC} )
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-kde PROPERTY DEFINE_SYMBOL akonadi_kde)
 endif()

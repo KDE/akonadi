@@ -152,7 +152,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/akonadi
 )
 
-kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
+add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-contact PROPERTY DEFINE_SYMBOL akonadi_contact)
 endif()

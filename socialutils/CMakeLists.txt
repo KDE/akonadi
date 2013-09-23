@@ -20,7 +20,7 @@ set(akonadi_social_utils_HDRS
   socialfeeditem.h
 )
 
-kde4_add_library(akonadi-socialutils SHARED ${akonadi_social_utils_SRCS})
+add_library(akonadi-socialutils SHARED ${akonadi_social_utils_SRCS})
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-socialutils PROPERTY DEFINE_SYMBOL akonadi_socialutils)
 endif()

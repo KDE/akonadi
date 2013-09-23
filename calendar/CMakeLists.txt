@@ -55,7 +55,7 @@ kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)
 kde4_add_ui_files(akonadicalendar_LIB_SRC publishdialog_base.ui)
 
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
-kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
+add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-calendar PROPERTY DEFINE_SYMBOL akonadi_calendar)
 endif()

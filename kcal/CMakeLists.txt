@@ -29,7 +29,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kcal
 )
 
-kde4_add_library( akonadi-kcal ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
+add_library( akonadi-kcal ${LIBRARY_TYPE} ${kcalakonadi_LIB_SRC} )
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-kcal PROPERTY DEFINE_SYMBOL akonadi_kcal)
 endif()

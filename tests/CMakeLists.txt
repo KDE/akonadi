@@ -58,7 +58,7 @@ set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.N
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "notificationmessagev2_p.h")
 qt4_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
-kde4_add_library(akonaditestfake STATIC
+add_library(akonaditestfake STATIC
   ${akonaditestfake_srcs}
   fakeakonadiservercommand.cpp
   fakesession.cpp

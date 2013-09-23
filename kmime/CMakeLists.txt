@@ -86,7 +86,7 @@ include_directories(
   ${CMAKE_BINARY_DIR}/kmime
 )
 
-kde4_add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
+add_library( akonadi-kmime ${LIBRARY_TYPE} ${kmimeakonadi_LIB_SRC} )
 if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
   set_property(TARGET akonadi-kmime PROPERTY DEFINE_SYMBOL akonadi_kmime)
 endif()
