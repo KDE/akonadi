@@ -6,6 +6,7 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include(../../AkonadiMacros.cmake)
 
+include_directories(${CMAKE_BINARY_DIR}/kcalcore)
 
 add_akonadi_isolated_test( historytest.cpp )
 add_akonadi_isolated_test( incidencechangertest.cpp )
