@@ -28,7 +28,6 @@
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemmodifyjob.h>
-#include <akonadi/itemmodifyjob.h>
 #include <KCheckableProxyModel>
 
 #include <QTestEventLoop>
@@ -179,6 +178,7 @@ void ETMCalendarTest::testIncidencesModified()
     QTestEventLoop::instance().enterLoop( 10 );
     QVERIFY( !QTestEventLoop::instance().timeout() );
     QCOMPARE( mCalendar->incidence( uid )->summary(), tr( "foo33" ) );
+    QVERIFY( item.revision() == mCalendar->item( item.id() ).revision() - 1 );
 }
 
 void ETMCalendarTest::testIncidencesDeleted()
