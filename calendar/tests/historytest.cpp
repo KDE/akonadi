@@ -577,4 +577,4 @@ public Q_SLOTS:
 
 QTEST_AKONADIMAIN( HistoryTest, GUI )
 
-#include "HistoryTest.moc"
+#include "historytest.moc"
