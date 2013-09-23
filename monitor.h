@@ -267,7 +267,7 @@ class AKONADI_EXPORT Monitor : public QObject
      *
      * @deprecated Use itemsMonitoredEx() instead.
      */
-    KDE_DEPRECATED QList<Item::Id> itemsMonitored() const;
+    AKONADI_DEPRECATED QList<Item::Id> itemsMonitored() const;
 
     /**
      * Returns the set of items being monitored.

@@ -80,7 +80,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit KDE_DEPRECATED CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
+    explicit AKONADI_DEPRECATED CollectionView( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
     /**
      * Creates a new collection view.
@@ -103,7 +103,7 @@ class AKONADI_EXPORT CollectionView : public QTreeView
      *
      * @param xmlGuiWindow The KXmlGuiWindow the view is used in.
      */
-     KDE_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow );
+     AKONADI_DEPRECATED void setXmlGuiWindow( KXmlGuiWindow * xmlGuiWindow );
 
     /**
      * Sets the KXMLGUIClient which the view is used in.

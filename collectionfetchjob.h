@@ -127,14 +127,14 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @param resource The resource identifier.
      * @deprecated Use CollectionFetchScope instead.
      */
-    KDE_DEPRECATED void setResource( const QString &resource );
+    AKONADI_DEPRECATED void setResource( const QString &resource );
 
     /**
      * Include also unsubscribed collections.
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch unsubscribed collections
      */
-    KDE_DEPRECATED void includeUnsubscribed( bool include = true );
+    AKONADI_DEPRECATED void includeUnsubscribed( bool include = true );
 
     /**
      * Include also statistics about the collections.
@@ -143,7 +143,7 @@ class AKONADI_EXPORT CollectionFetchJob : public Job
      * @deprecated Use CollectionFetchScope instead.
      * @param include whether to also fetch statistics
      */
-    KDE_DEPRECATED void includeStatistics( bool include = true );
+    AKONADI_DEPRECATED void includeStatistics( bool include = true );
 
     /**
      * Sets the collection fetch scope.
