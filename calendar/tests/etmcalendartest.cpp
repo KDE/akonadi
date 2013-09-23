@@ -301,11 +301,10 @@ void ETMCalendarTest::testSubTodos()
     QVERIFY(!mCalendar->incidence(tr("tb.3")));
 
     // Move a top-level to-do to a new parent
-    Incidence::Ptr ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    Incidence::Ptr ta = mCalendar->incidence(tr("ta"));
     Item ta_item = mCalendar->item(tr("ta"));
     ta_item.setPayload(ta);
     QVERIFY(ta);
-    QCOMPARE(ta_item.payload<KCalCore::Incidence::Ptr>()->uid(), tr("ta"));
     ta->setRelatedTo(tr("tb"));
     mIncidencesToChange = 1;
 
@@ -316,10 +315,10 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
 
     // Move it to another parent now
-    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta = mCalendar->incidence(tr("ta"));
     ta_item = mCalendar->item(tr("ta"));
-    ta_item.setPayload(ta);
     ta->setRelatedTo(tr("tb.2"));
+    ta_item.setPayload(ta);
     mIncidencesToChange = 1;
     job = new ItemModifyJob(ta_item);
     AKVERIFYEXEC(job);
@@ -329,10 +328,10 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb.2")).count(), 1);
 
     // Now unparent it
-    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta = mCalendar->incidence(tr("ta"));
     ta_item = mCalendar->item(tr("ta"));
-    ta_item.setPayload(ta);
     ta->setRelatedTo(QString());
+    ta_item.setPayload(ta);
     mIncidencesToChange = 1;
     job = new ItemModifyJob(ta_item);
     AKVERIFYEXEC(job);
