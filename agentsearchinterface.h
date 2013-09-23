@@ -21,6 +21,7 @@
 #define AKONADI_AGENTSEARCHINTERFACE_H
 
 #include "akonadi_export.h"
+#include <QString>
 
 namespace Akonadi {
 
