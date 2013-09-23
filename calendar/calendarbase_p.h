@@ -45,6 +45,9 @@ public:
 
   void handleUidChange( const Akonadi::Item &newItem, const QString &newUid );
 
+  // Checks if parent changed and adjust internal hierarchy info
+  void handleParentChanged( const QString &originalParent, const KCalCore::Incidence::Ptr &incidence );
+
 public Q_SLOTS:
   void slotDeleteFinished( int changeId,
                             const QVector<Akonadi::Item::Id> &,

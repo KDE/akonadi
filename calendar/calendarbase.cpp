@@ -311,6 +311,32 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   newIncidence->setUid( newUid );
 }
 
+void CalendarBasePrivate::handleParentChanged( const QString &originalParentUid, const KCalCore::Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+
+  if ( incidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
+    return;
+  }
+
+  const QString newParentUid = incidence->relatedTo();
+  if ( originalParentUid == newParentUid ) {
+    return; // nothing changed
+  }
+
+  if ( !originalParentUid.isEmpty() ) {
+    // Remove this child from it's old parent:
+    Q_ASSERT( mParentUidToChildrenUid.contains( originalParentUid ) );
+    mParentUidToChildrenUid[originalParentUid].removeAll( incidence->uid() );
+  }
+
+  if ( !newParentUid.isEmpty() ) {
+    // Deliver this child to it's new parent:
+    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( incidence->uid() ) );
+    mParentUidToChildrenUid[newParentUid].append( incidence->uid() );
+  }
+}
+
 CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )
                                               , d_ptr( new CalendarBasePrivate( this ) )
 {

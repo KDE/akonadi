@@ -292,17 +292,18 @@ void ETMCalendarTest::testSubTodos()
     QVERIFY(mCalendar->childIncidences(tr("tb.1.1")).isEmpty());
     QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
 
-     // Kill a child
-     deleteIncidence(tr("tb.3"));
-     waitForIt();
+    // Kill a child
+    deleteIncidence(tr("tb.3"));
+    waitForIt();
 
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
     QCOMPARE(mCalendar->childItems(tr("tb")).count(), 2);
     QVERIFY(!mCalendar->incidence(tr("tb.3")));
 
-    // Move a top-level to-do under a parent
-    Incidence::Ptr ta = mCalendar->incidence(tr("ta"));
+    // Move a top-level to-do to a new parent
+    Incidence::Ptr ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
     Item ta_item = mCalendar->item(tr("ta"));
+    ta_item.setPayload(ta);
     QVERIFY(ta);
     QCOMPARE(ta_item.payload<KCalCore::Incidence::Ptr>()->uid(), tr("ta"));
     ta->setRelatedTo(tr("tb"));
@@ -312,8 +313,33 @@ void ETMCalendarTest::testSubTodos()
     AKVERIFYEXEC(job);
     waitForIt();
 
-    QEXPECT_FAIL("", "ETMCalendar isn't updating internal state when RELATED-TO changes.", Continue);
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
+
+    // Move it to another parent now
+    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta_item = mCalendar->item(tr("ta"));
+    ta_item.setPayload(ta);
+    ta->setRelatedTo(tr("tb.2"));
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(ta_item);
+    AKVERIFYEXEC(job);
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
+    QCOMPARE(mCalendar->childIncidences(tr("tb.2")).count(), 1);
+
+    // Now unparent it
+    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta_item = mCalendar->item(tr("ta"));
+    ta_item.setPayload(ta);
+    ta->setRelatedTo(QString());
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(ta_item);
+    AKVERIFYEXEC(job);
+    waitForIt();
+
+    QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
+    QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
 }
 
 void ETMCalendarTest::waitForIt()

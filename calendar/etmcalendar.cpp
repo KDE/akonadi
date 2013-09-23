@@ -407,10 +407,16 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
   Q_ASSERT( newIncidence );
   Q_ASSERT( !newIncidence->uid().isEmpty() );
   IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+
   if ( existingIncidence ) {
+    const QString originalParentUid = existingIncidence.staticCast<KCalCore::Incidence>()->relatedTo();
     *(existingIncidence.data()) = *( newIncidence.data() );
     mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
     mItemsByCollection.insert( item.storageCollectionId(), item );
+
+    // Check if RELATED-TO changed, updating parenting information
+    handleParentChanged( originalParentUid, existingIncidence.staticCast<KCalCore::Incidence>() );
+
   } else if ( mItemById.contains( item.id() ) ) {
     // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
     handleUidChange( item, newIncidence->instanceIdentifier() );
