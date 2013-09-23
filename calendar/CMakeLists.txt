@@ -38,11 +38,31 @@ set(akonadicalendar_LIB_SRC
   utils_p.cpp
 )
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/kcalutils
+  ${CMAKE_BINARY_DIR}/akonadi
+  ${CMAKE_BINARY_DIR}/mailtransport
+  ${CMAKE_BINARY_DIR}/kpimidentities
+  ${CMAKE_BINARY_DIR}/akonadi/contact
+  ${CMAKE_BINARY_DIR}/akonadi/kmime
+  ${CMAKE_BINARY_DIR}/kabc
+)
+
 kde4_add_kcfg_files(akonadicalendar_LIB_SRC calendarsettings.kcfgc)
 kde4_add_ui_files(akonadicalendar_LIB_SRC publishdialog_base.ui)
 
 qt4_add_dbus_adaptor( akonadicalendar_LIB_SRC ../interfaces/org.freedesktop.Akonadi.Resource.FreeBusyProvider.xml freebusyproviderbase_p.h Akonadi::FreeBusyProviderBasePrivate freebusyprovideradaptor  Akonadi__FreeBusyProviderAdaptor )
 kde4_add_library(akonadi-calendar ${LIBRARY_TYPE} ${akonadicalendar_LIB_SRC})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-calendar PROPERTY DEFINE_SYMBOL akonadi_calendar)
+endif()
+generate_export_header(akonadi-calendar
+  BASE_NAME akonadi_calendar
+  EXPORT_FILE_NAME akonadi-calendar_export.h
+)
 
 target_link_libraries(akonadi-calendar
                       akonadi-contact
@@ -63,7 +83,7 @@ set_target_properties(akonadi-calendar PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS akonadi-calendar EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
-  akonadi-calendar_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-calendar_export.h
   blockalarmsattribute.h
   calendarbase.h
   calendarclipboard.h

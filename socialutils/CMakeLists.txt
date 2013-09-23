@@ -14,13 +14,20 @@ set(akonadi_social_utils_SRCS
 )
 
 set(akonadi_social_utils_HDRS
-  libakonadisocialutils_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/libakonadisocialutils_export.h
   socialnetworkattributes.h
   imageprovider.h
   socialfeeditem.h
 )
 
 kde4_add_library(akonadi-socialutils SHARED ${akonadi_social_utils_SRCS})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-socialutils PROPERTY DEFINE_SYMBOL akonadi_socialutils)
+endif()
+generate_export_header(akonadi-socialutils
+  BASE_NAME libakonadisocialutils
+  EXPORT_FILE_NAME libakonadisocialutils_export.h
+)
 
 target_link_libraries(akonadi-socialutils
   akonadi-kde

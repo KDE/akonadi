@@ -144,7 +144,29 @@ endif()
 qt4_wrap_ui(akonadicontact_LIB_SRC contactgroupeditor.ui)
 kde4_add_kcfg_files(akonadicontact_LIB_SRC recentcontactscollectionssettings.kcfgc )
 
+include_directories(
+  ${CMAKE_BINARY_DIR}/kpimutils
+  ${CMAKE_BINARY_DIR}/kmime
+  ${CMAKE_BINARY_DIR}/kabc
+  ${CMAKE_BINARY_DIR}/kcalcore
+  ${CMAKE_BINARY_DIR}/akonadi
+)
+
 kde4_add_library(akonadi-contact ${LIBRARY_TYPE} ${akonadicontact_LIB_SRC})
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-contact PROPERTY DEFINE_SYMBOL akonadi_contact)
+endif()
+generate_export_header(akonadi-contact
+  BASE_NAME akonadi_contact
+  EXPORT_FILE_NAME akonadi-contact_export.h
+)
+
+if (KDE4_BUILD_TESTS)
+   set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
+endif()
+configure_file(akonadi-contactprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadi-contactprivate_export.h")
+
+
 
 if (KDE4_BUILD_TESTS)
    set(AKONADI_CONTACT_TESTS_EXPORT AKONADI_CONTACT_EXPORT)
@@ -191,7 +213,7 @@ install(FILES recentcontactscollections.kcfg DESTINATION ${KCFG_INSTALL_DIR} )
 install( FILES
   abstractcontactformatter.h
   abstractcontactgroupformatter.h
-  akonadi-contact_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-contact_export.h
   contactdefaultactions.h
   contacteditor.h
   contacteditordialog.h

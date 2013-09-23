@@ -12,6 +12,13 @@ set( kabcakonadi_LIB_SRC
 )
 
 kde4_add_library( akonadi-kabc ${LIBRARY_TYPE} ${kabcakonadi_LIB_SRC} )
+if(CMAKE_MINIMUM_REQUIRED_VERSION VERSION_LESS 2.8.12)
+  set_property(TARGET akonadi-kabc PROPERTY DEFINE_SYMBOL akonadi_kabc)
+endif()
+generate_export_header(akonadi-kabc
+  BASE_NAME akonadi_kabc
+  EXPORT_FILE_NAME akonadi-kabc_export.h
+)
 
 target_link_libraries( akonadi-kabc akonadi-kde ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} )
 set_target_properties( akonadi-kabc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
@@ -20,7 +27,7 @@ install(TARGETS akonadi-kabc EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_D
 ########### install files ###############
 
 install( FILES
-  akonadi-kabc_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-kabc_export.h
   contactparts.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/kabc COMPONENT Devel
 )
