@@ -36,4 +36,6 @@
 # endif
 #endif
 
+#define AKONADI_CONTACT_DEPRECATED KDE_DEPRECATED
+
 #endif
