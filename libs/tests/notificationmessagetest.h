@@ -35,5 +35,4 @@ class NotificationMessageTest : public QObject
     void testPartModificationMerge();
 };
 
-
 #endif

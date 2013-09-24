@@ -45,24 +45,26 @@ QString akBacktrace()
 
 /* FIXME: is there an equivalent for darwin, *BSD, or windows? */
 #ifdef HAVE_EXECINFO_H
-  void* trace[256];
-  int n = backtrace(trace, 256);
-  if (!n)
+  void *trace[256];
+  int n = backtrace( trace, 256 );
+  if ( !n ) {
     return s;
+  }
 
-  char** strings = backtrace_symbols (trace, n);
+  char **strings = backtrace_symbols( trace, n );
 
-  s = QLatin1String("[\n");
+  s = QLatin1String( "[\n" );
 
   for ( int i = 0; i < n; ++i ) {
-    s += QString::number(i) +
-         QLatin1String(": ") +
-         QLatin1String(strings[i]) + QLatin1String("\n");
+    s += QString::number( i ) +
+         QLatin1String( ": " ) +
+         QLatin1String( strings[i] ) + QLatin1String( "\n" );
   }
-  s += QLatin1String("]\n");
+  s += QLatin1String( "]\n" );
 
-  if (strings)
-    free (strings);
+  if ( strings ) {
+    free( strings );
+  }
 #endif
 
   return s;
@@ -89,23 +91,26 @@ static void defaultCrashHandler( int sig )
   ++recursionCount;
   if ( recursionCount <= 2 ) {
     if ( sig != SIGTERM && sig != SIGINT ) {
-      if ( recursionCount == 1 )
+      if ( recursionCount == 1 ) {
         akError() << akBacktrace();
-      else // fall back to something more simple in case the other one crashed itself
+      } else { // fall back to something more simple in case the other one crashed itself
         fprintf( stderr, "%s", akBacktrace().toLatin1().data() );
+      }
 
-      if ( s_emergencyMethod )
+      if ( s_emergencyMethod ) {
         s_emergencyMethod( sig );
+      }
     } else {
-      if ( s_shutdownMethod )
+      if ( s_shutdownMethod ) {
         s_shutdownMethod( sig );
+      }
     }
   }
 #endif
 #ifdef Q_CC_MINGW
-  _Exit(255);
+  _Exit( 255 );
 #else
-  _exit(255);
+  _exit( 255 );
 #endif
 }
 
@@ -114,39 +119,39 @@ void AkonadiCrash::init()
   HandlerType handler = defaultCrashHandler;
 
 #ifdef Q_OS_UNIX
-  if (!handler)
+  if ( !handler ) {
     handler = SIG_DFL;
+  }
 
   sigset_t mask;
-  sigemptyset(&mask);
+  sigemptyset( &mask );
 
 #ifdef SIGSEGV
-  signal (SIGSEGV, handler);
-  sigaddset(&mask, SIGSEGV);
+  signal( SIGSEGV, handler );
+  sigaddset( &mask, SIGSEGV );
 #endif
 #ifdef SIGFPE
-  signal (SIGFPE, handler);
-  sigaddset(&mask, SIGFPE);
+  signal( SIGFPE, handler );
+  sigaddset( &mask, SIGFPE );
 #endif
 #ifdef SIGILL
-  signal (SIGILL, handler);
-  sigaddset(&mask, SIGILL);
+  signal( SIGILL, handler );
+  sigaddset( &mask, SIGILL );
 #endif
 #ifdef SIGABRT
-  signal (SIGABRT, handler);
-  sigaddset(&mask, SIGABRT);
+  signal( SIGABRT, handler );
+  sigaddset( &mask, SIGABRT );
 #endif
 #ifdef SIGTERM
-  signal (SIGTERM, handler);
-  sigaddset(&mask, SIGTERM);
+  signal( SIGTERM, handler );
+  sigaddset( &mask, SIGTERM );
 #endif
 #ifdef SIGINT
-  signal (SIGINT, handler);
-  sigaddset(&mask, SIGINT);
+  signal( SIGINT, handler );
+  sigaddset( &mask, SIGINT );
 #endif
 
-  sigprocmask(SIG_UNBLOCK, &mask, 0);
+  sigprocmask( SIG_UNBLOCK, &mask, 0 );
 #endif //Q_OS_UNIX
 
 }
-

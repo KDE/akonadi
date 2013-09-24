@@ -23,14 +23,14 @@
 #include "akapplication.h"
 
 #define AKTEST_MAIN( TestObject ) \
-int main(int argc, char **argv) \
+int main( int argc, char **argv ) \
 { \
-  qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
-  qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
-  AkCoreApplication app(argc, argv); \
+  qputenv( "XDG_DATA_HOME", ".local-unit-test/share" ); \
+  qputenv( "XDG_CONFIG_HOME", ".config-unit-test" ); \
+  AkCoreApplication app( argc, argv ); \
   app.parseCommandLine(); \
   TestObject tc; \
-  return QTest::qExec(&tc, argc, argv); \
+  return QTest::qExec( &tc, argc, argv ); \
 }
 
 inline void akTestSetInstanceIdentifier( const QString &instanceId )

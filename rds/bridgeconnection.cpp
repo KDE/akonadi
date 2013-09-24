@@ -33,10 +33,10 @@
 #include <sys/un.h>
 #endif
 
-BridgeConnection::BridgeConnection( QTcpSocket* remoteSocket, QObject *parent )
-  : QObject( parent ),
-    m_localSocket( 0 ),
-    m_remoteSocket( remoteSocket )
+BridgeConnection::BridgeConnection( QTcpSocket *remoteSocket, QObject *parent )
+  : QObject( parent )
+  , m_localSocket( 0 )
+  , m_remoteSocket( remoteSocket )
 {
   // wait for the vtable to be complete
   QMetaObject::invokeMethod( this, "doConnects", Qt::QueuedConnection );
@@ -50,13 +50,15 @@ BridgeConnection::~BridgeConnection()
 
 void BridgeConnection::slotDataAvailable()
 {
-  if ( m_localSocket->bytesAvailable() > 0 )
+  if ( m_localSocket->bytesAvailable() > 0 ) {
     m_remoteSocket->write( m_localSocket->read( m_localSocket->bytesAvailable() ) );
-  if ( m_remoteSocket->bytesAvailable() > 0 )
+  }
+  if ( m_remoteSocket->bytesAvailable() > 0 ) {
     m_localSocket->write( m_remoteSocket->read( m_remoteSocket->bytesAvailable() ) );
+  }
 }
 
-AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket* remoteSocket, QObject *parent )
+AkonadiBridgeConnection::AkonadiBridgeConnection( QTcpSocket *remoteSocket, QObject *parent )
   : BridgeConnection( remoteSocket, parent )
 {
 #ifdef Q_OS_WINCE
@@ -71,19 +73,19 @@ void AkonadiBridgeConnection::connectLocal()
   const QSettings connectionSettings( AkStandardDirs::connectionConfigFile(), QSettings::IniFormat );
 #ifdef Q_OS_WIN  //krazy:exclude=cpp
 #ifdef Q_OS_WINCE
-  (static_cast<QTcpSocket*>( m_localSocket ))->connectToHost( "127.0.0.1", 31414 );
+  (static_cast<QTcpSocket *>( m_localSocket ))->connectToHost( "127.0.0.1", 31414 );
 #else
   const QString namedPipe = connectionSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
-  (static_cast<QLocalSocket*>( m_localSocket ))->connectToServer( namedPipe );
+  (static_cast<QLocalSocket *>( m_localSocket ))->connectToServer( namedPipe );
 #endif
 #else
   const QString defaultSocketDir = AkStandardDirs::saveDir( "data" );
-  const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString(defaultSocketDir + QLatin1String( "/akonadiserver.socket" )) ).toString();
-  (static_cast<QLocalSocket*>( m_localSocket ))->connectToServer( path );
+  const QString path = connectionSettings.value( QLatin1String( "Data/UnixPath" ), QString( defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ) ).toString();
+  (static_cast<QLocalSocket *>( m_localSocket ))->connectToServer( path );
 #endif
 }
 
-DBusBridgeConnection::DBusBridgeConnection( QTcpSocket* remoteSocket, QObject *parent )
+DBusBridgeConnection::DBusBridgeConnection( QTcpSocket *remoteSocket, QObject *parent )
   : BridgeConnection( remoteSocket, parent )
 {
 #ifdef _WIN32_WCE
@@ -98,7 +100,7 @@ void DBusBridgeConnection::connectLocal()
   // TODO: support for !Linux
 #ifdef Q_OS_UNIX
   const QByteArray sessionBusAddress = qgetenv( "DBUS_SESSION_BUS_ADDRESS" );
-  QRegExp rx( QLatin1String("=(.*)[,$]") );
+  QRegExp rx( QLatin1String( "=(.*)[,$]" ) );
   if ( rx.indexIn( QString::fromLatin1( sessionBusAddress ) ) >= 0 ) {
     const QString dbusPath = rx.cap( 1 );
     qDebug() << dbusPath;
@@ -110,16 +112,16 @@ void DBusBridgeConnection::connectLocal()
       dbus_socket_addr.sun_path[0] = '\0'; // this marks an abstract unix socket on linux, something QLocalSocket doesn't support
       memcpy( dbus_socket_addr.sun_path + 1, dbusPath.toLatin1().data(), dbusPath.toLatin1().size() + 1 );
       /*sizeof(dbus_socket_addr) gives me a too large value for some reason, although that's what QLocalSocket uses*/
-      const int result = ::connect( fd, (struct sockaddr *)&dbus_socket_addr, sizeof( dbus_socket_addr.sun_family ) + dbusPath.size() + 1 /* for the leading \0 */ );
+      const int result = ::connect( fd, (struct sockaddr *)&dbus_socket_addr, sizeof ( dbus_socket_addr.sun_family ) + dbusPath.size() + 1 /* for the leading \0 */ );
       Q_ASSERT( result != -1 );
       Q_UNUSED( result ); // in release mode
-      (static_cast<QLocalSocket*>( m_localSocket ))->setSocketDescriptor( fd, QLocalSocket::ConnectedState, QLocalSocket::ReadWrite );
+      (static_cast<QLocalSocket *>( m_localSocket ))->setSocketDescriptor( fd, QLocalSocket::ConnectedState, QLocalSocket::ReadWrite );
     } else {
-      (static_cast<QLocalSocket*>( m_localSocket ))->connectToServer( dbusPath );
+      (static_cast<QLocalSocket *>( m_localSocket ))->connectToServer( dbusPath );
     }
   }
 #elif defined(_WIN32_WCE)
-  (static_cast<QTcpSocket*>( m_localSocket ))->connectToHost( "127.0.0.1", 12434 );
+  (static_cast<QTcpSocket *>( m_localSocket ))->connectToHost( "127.0.0.1", 12434 );
 #endif
 }
 

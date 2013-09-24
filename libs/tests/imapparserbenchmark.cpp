@@ -54,8 +54,9 @@ class ImapParserBenchmark : public QObject
       QTest::newRow( "two" ) << (QList<QByteArray>() << "ababab" << "ababab");
       QTest::newRow( "five" ) << (QList<QByteArray>() << "ababab" << "ababab" << "ababab" << "ababab" << "ababab");
       QList<QByteArray> list;
-      for ( int i = 0; i < 50; ++i )
+      for ( int i = 0; i < 50; ++i ) {
         list << "ababab";
+      }
       QTest::newRow( "a lot" ) << list;
     }
 
