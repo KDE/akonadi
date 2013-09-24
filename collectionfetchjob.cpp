@@ -102,11 +102,11 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
     QString jobDebuggingString() const
     {
       if ( mBase.isValid() ) {
-        return QString::number( mBase.id() );
+        return QString::fromLatin1( "Collection Id %1" ).arg( mBase.id() );
       } else if ( CollectionUtils::hasValidHierarchicalRID( mBase ) ) {
         return QString::fromUtf8( '(' + ProtocolHelper::hierarchicalRidToByteArray( mBase ) + ')' );
       } else {
-        return mBase.remoteId();
+        return QString::fromLatin1( "Collection RemoteId %1" ).arg( mBase.remoteId() );
       }
     }
 };
