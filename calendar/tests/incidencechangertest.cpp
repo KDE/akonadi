@@ -856,6 +856,14 @@ class IncidenceChangerTest : public QObject
                                   << 1 << KCalCore::RecurrenceRule::rWeekly
                                   <<  days << expectedDays;
           //-------------------------------------------------------------------------
+          days.fill(false);
+          days.setBit(dtStart.date().dayOfWeek()-1);
+          expectedDays.setBit(dtStart.addSecs(one_day).date().dayOfWeek()-1);
+
+          QTest::newRow("weekly allday") << true << KDateTime(dtStart.date()) << KDateTime(dtEnd.date())
+                                         << one_day << 1 << KCalCore::RecurrenceRule::rWeekly
+                                         <<  days << expectedDays;
+          //-------------------------------------------------------------------------
           // Here nothing should change
           days.fill(false);
           days.setBit(dtStart.date().dayOfWeek()-1);
@@ -863,6 +871,14 @@ class IncidenceChangerTest : public QObject
           QTest::newRow("weekly nop") << false << dtStart << dtEnd << one_hour
                                       << 1 << KCalCore::RecurrenceRule::rWeekly
                                       << days << days;
+          //-------------------------------------------------------------------------
+          // Test with multiple week days. Only the weekday from the old DTSTART should be unset.
+          days.fill(true);
+          expectedDays = days;
+          expectedDays.clearBit(dtStart.date().dayOfWeek()-1);
+          QTest::newRow("weekly multiple") << false << dtStart << dtEnd << one_day
+                                           << 1 << KCalCore::RecurrenceRule::rWeekly
+                                           <<  days << expectedDays;
           //-------------------------------------------------------------------------
           mCollection.setRights(Collection::Rights(Collection::AllRights));
       }
