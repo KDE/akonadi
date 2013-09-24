@@ -1144,9 +1144,9 @@ void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr
   }
 
   const QDate originalDate = originalIncidence->dtStart().date();
-  const QDate newDate = incidence->dtStart().date();
+  const QDate newStartDate = incidence->dtStart().date();
 
-  if ( !originalDate.isValid() || !newDate.isValid() || originalDate == newDate )
+  if ( !originalDate.isValid() || !newStartDate.isValid() || originalDate == newStartDate )
     return;
 
   KCalCore::Recurrence *recurrence = incidence->recurrence();
@@ -1154,7 +1154,7 @@ void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr
   case KCalCore::Recurrence::rWeekly: {
     QBitArray days = recurrence->days();
     const int oldIndex = originalDate.dayOfWeek()-1; // QDate returns [1-7];
-    const int newIndex = newDate.dayOfWeek()-1;
+    const int newIndex = newStartDate.dayOfWeek()-1;
     if ( oldIndex != newIndex ) {
       days.clearBit( oldIndex );
       days.setBit( newIndex );
