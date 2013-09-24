@@ -98,6 +98,17 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
       emit q->collectionsReceived( mPendingCollections );
       mPendingCollections.clear();
     }
+
+    QString jobDebuggingString() const
+    {
+      if ( mBase.isValid() ) {
+        return QString::number( mBase.id() );
+      } else if ( CollectionUtils::hasValidHierarchicalRID( mBase ) ) {
+        return QString::fromUtf8( '(' + ProtocolHelper::hierarchicalRidToByteArray( mBase ) + ')' );
+      } else {
+        return mBase.remoteId();
+      }
+    }
 };
 
 CollectionFetchJob::CollectionFetchJob( const Collection &collection, Type type, QObject *parent )
