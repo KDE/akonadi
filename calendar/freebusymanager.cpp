@@ -77,23 +77,59 @@ KUrl replaceVariablesUrl( const KUrl &url, const QString &email )
   return retUrl;
 }
 
-bool fbExists( const KUrl &url )
+// We need this function because using KIO::NetAccess::exists()
+// is useless for the http and https protocols. And getting back
+// arbitrary data is also useless because a server can respond back
+// with a "no such document" page.  So we need smart checking.
+FbCheckerJob::FbCheckerJob( const QList<KUrl> &urlsToCheck, QObject *parent )
+  : KJob( parent ),
+  mUrlsToCheck(urlsToCheck)
 {
-  // We need this function because using KIO::NetAccess::exists()
-  // is useless for the http and https protocols. And getting back
-  // arbitrary data is also useless because a server can respond back
-  // with a "no such document" page.  So we need smart checking.
-
-  KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  QByteArray data;
-  if ( KIO::NetAccess::synchronousRun( job, 0, &data ) ) {
-    QString dataStr( data );
-    if ( dataStr.contains( "BEGIN:VCALENDAR" ) ) {
-      return true;
-    }
-  }
-  return false;
 }
+
+void FbCheckerJob::start()
+{
+  checkNextUrl();
+}
+
+void FbCheckerJob::checkNextUrl()
+{
+  if ( mUrlsToCheck.isEmpty() ) {
+    kDebug() << "No fb file found";
+    setError( KJob::UserDefinedError );
+    emitResult();
+    return;
+  }
+  const KUrl url = mUrlsToCheck.takeFirst();
+
+  mData.clear();
+  KIO::TransferJob *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
+  connect( job, SIGNAL(data(KIO::Job*,QByteArray)), this, SLOT(dataReceived(KIO::Job*, QByteArray)) );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(onGetJobFinished(KJob*)) );
+}
+
+void FbCheckerJob::dataReceived( KIO::Job*, const QByteArray &data )
+{
+  mData.append( data );
+}
+
+void FbCheckerJob::onGetJobFinished( KJob *job )
+{
+  KIO::TransferJob *transferJob = static_cast<KIO::TransferJob*>( job );
+  if ( mData.contains( "BEGIN:VCALENDAR" ) ) {
+    kDebug() << "found freebusy";
+    mValidUrl = transferJob->url();
+    emitResult();
+  } else {
+    checkNextUrl();
+  }
+}
+
+KUrl FbCheckerJob::validUrl() const
+{
+  return mValidUrl;
+}
+
 
 /// FreeBusyManagerPrivate::FreeBusyProviderRequest
 
@@ -170,12 +206,16 @@ void FreeBusyManagerPrivate::checkFreeBusyUrl()
   mBrokenUrl = targetURL.isEmpty() || !targetURL.isValid();
 }
 
+static QString configFile()
+{
+  static QString file = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusyurls" ) );
+  return file;
+}
+
 void FreeBusyManagerPrivate::fetchFreeBusyUrl( const QString &email )
 {
   // First check if there is a specific FB url for this email
-  QString configFile = KStandardDirs::locateLocal( "data",
-                                                   QLatin1String( "korganizer/freebusyurls" ) );
-  KConfig cfg( configFile );
+  KConfig cfg( configFile() );
   KConfigGroup group = cfg.group( email );
   QString url = group.readEntry( QLatin1String( "url" ) );
   if ( !url.isEmpty() ) {
@@ -208,16 +248,13 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   }
 
   Akonadi::ContactSearchJob *job = qobject_cast<Akonadi::ContactSearchJob*>( _job );
-  QString configFile = KStandardDirs::locateLocal( "data",
-                                                   QLatin1String( "korganizer/freebusyurls" ) );
-  KConfig cfg( configFile );
+  KConfig cfg( configFile() );
   KConfigGroup group = cfg.group( email );
   QString url = group.readEntry( QLatin1String( "url" ) );
 
-  QString pref;
   const KABC::Addressee::List contacts = job->contacts();
   foreach ( const KABC::Addressee &contact, contacts ) {
-    pref = contact.preferredEmail();
+    const QString pref = contact.preferredEmail();
     if ( !pref.isEmpty() && pref != email ) {
       group = cfg.group( pref );
       url = group.readEntry ( "url" );
@@ -283,6 +320,7 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
   // else we search for a fb file in the specified URL with known possible extensions
   const QStringList extensions = QStringList() << "xfb" << "ifb" << "vfb";
   QStringList::ConstIterator ext;
+  QList<KUrl> urlsToCheck;
   for ( ext = extensions.constBegin(); ext != extensions.constEnd(); ++ext ) {
     // build a url for this extension
     const KUrl sourceUrl = CalendarSettings::self()->freeBusyRetrieveUrl();
@@ -296,18 +334,30 @@ void FreeBusyManagerPrivate::contactSearchJobFinished( KJob *_job )
     }
     dirURL.setUser( CalendarSettings::self()->freeBusyRetrieveUser() );
     dirURL.setPass( CalendarSettings::self()->freeBusyRetrievePassword() );
-    if ( fbExists( dirURL ) ) {
-      // write the URL to the cache
-      KConfigGroup group = cfg.group( email );
-      group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
-      kDebug() << "Found url email=" << email << "; url=" << dirURL;
-      emit freeBusyUrlRetrieved( email, dirURL );
-      return;
-    }
+    urlsToCheck << dirURL;
   }
+  KJob *checkerJob = new FbCheckerJob( urlsToCheck, this );
+  checkerJob->setProperty( "email", email );
+  connect( checkerJob, SIGNAL(result(KJob*)), this, SLOT(fbCheckerJobFinished(KJob*)) );
+  checkerJob->start();
+}
 
-  kDebug() << "Returning invalid url";
-  emit freeBusyUrlRetrieved( email, KUrl() );
+void FreeBusyManagerPrivate::fbCheckerJobFinished( KJob *job )
+{
+  const QString email = job->property( "email" ).toString();
+  if ( !job->error() ) {
+    FbCheckerJob *checkerJob = static_cast<FbCheckerJob*>( job );
+    KUrl dirURL = checkerJob->validUrl();
+    // write the URL to the cache
+    KConfig cfg( configFile() );
+    KConfigGroup group = cfg.group( email );
+    group.writeEntry( "url", dirURL.prettyUrl() ); // prettyURL() does not write user nor password
+    kDebug() << "Found url email=" << email << "; url=" << dirURL;
+    emit freeBusyUrlRetrieved( email, dirURL );
+  } else {
+    kDebug() << "Returning invalid url";
+    emit freeBusyUrlRetrieved( email, KUrl() );
+  }
 }
 
 QString FreeBusyManagerPrivate::freeBusyToIcal( const KCalCore::FreeBusy::Ptr &freebusy )
