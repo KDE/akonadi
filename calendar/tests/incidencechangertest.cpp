@@ -840,6 +840,10 @@ class IncidenceChangerTest : public QObject
           QTest::addColumn<QBitArray>("weekDays");
           QTest::addColumn<QBitArray>("expectedWeekDays");
 
+          // Recurrence end
+          QTest::addColumn<QDate>("recurrenceEnd");
+          QTest::addColumn<QDate>("expectedRecurrenceEnd");
+
           const KDateTime dtStart = KDateTime(QDate::currentDate(), QTime(8, 0));
           const KDateTime dtEnd = dtStart.addSecs(3600);
           const int one_day = 3600*24;
@@ -847,14 +851,13 @@ class IncidenceChangerTest : public QObject
           QBitArray days(7);
           QBitArray expectedDays(7);
 
-
           //-------------------------------------------------------------------------
           days.setBit(dtStart.date().dayOfWeek()-1);
           expectedDays.setBit(dtStart.addSecs(one_day).date().dayOfWeek()-1);
 
           QTest::newRow("weekly") << false << dtStart << dtEnd << one_day
                                   << 1 << KCalCore::RecurrenceRule::rWeekly
-                                  <<  days << expectedDays;
+                                  <<  days << expectedDays << QDate() << QDate();
           //-------------------------------------------------------------------------
           days.fill(false);
           days.setBit(dtStart.date().dayOfWeek()-1);
@@ -862,7 +865,7 @@ class IncidenceChangerTest : public QObject
 
           QTest::newRow("weekly allday") << true << KDateTime(dtStart.date()) << KDateTime(dtEnd.date())
                                          << one_day << 1 << KCalCore::RecurrenceRule::rWeekly
-                                         <<  days << expectedDays;
+                                         << days << expectedDays << QDate() << QDate();
           //-------------------------------------------------------------------------
           // Here nothing should change
           days.fill(false);
@@ -870,7 +873,7 @@ class IncidenceChangerTest : public QObject
 
           QTest::newRow("weekly nop") << false << dtStart << dtEnd << one_hour
                                       << 1 << KCalCore::RecurrenceRule::rWeekly
-                                      << days << days;
+                                      << days << days << QDate() << QDate();
           //-------------------------------------------------------------------------
           // Test with multiple week days. Only the weekday from the old DTSTART should be unset.
           days.fill(true);
@@ -878,7 +881,15 @@ class IncidenceChangerTest : public QObject
           expectedDays.clearBit(dtStart.date().dayOfWeek()-1);
           QTest::newRow("weekly multiple") << false << dtStart << dtEnd << one_day
                                            << 1 << KCalCore::RecurrenceRule::rWeekly
-                                           <<  days << expectedDays;
+                                           << days << expectedDays << QDate() << QDate();
+          //-------------------------------------------------------------------------
+          // Testing moving an event such that DTSTART > recurrence end, which would
+          // result in the event disappearing from all views.
+          QTest::newRow("recur end") << false << dtStart << dtEnd << one_day*7
+                                     << 1 << KCalCore::RecurrenceRule::rDaily
+                                     << QBitArray() << QBitArray()
+                                     << dtStart.date().addDays(3)
+                                     << QDate();
           //-------------------------------------------------------------------------
           mCollection.setRights(Collection::Rights(Collection::AllRights));
       }
@@ -893,6 +904,8 @@ class IncidenceChangerTest : public QObject
           QFETCH(KCalCore::RecurrenceRule::PeriodType, recurrenceType);
           QFETCH(QBitArray, weekDays);
           QFETCH(QBitArray, expectedWeekDays);
+          QFETCH(QDate, recurrenceEnd);
+          QFETCH(QDate, expectedRecurrenceEnd);
 
           Event::Ptr incidence = Event::Ptr(new Event());
           incidence->setSummary(QLatin1String("random summary"));
@@ -900,14 +913,23 @@ class IncidenceChangerTest : public QObject
           incidence->setDtEnd(dtEnd);
           incidence->setAllDay(allDay);
 
+          Recurrence *recurrence = incidence->recurrence();
+
           switch(recurrenceType) {
+          case KCalCore::RecurrenceRule::rDaily:
+              recurrence->setDaily(frequency);
+              break;
           case KCalCore::RecurrenceRule::rWeekly:
-              incidence->recurrence()->setWeekly(frequency, weekDays);
+              recurrence->setWeekly(frequency, weekDays);
               break;
           default:
               // Not tested yet
               Q_ASSERT(false);
               QVERIFY(false);
+          }
+
+          if (recurrenceEnd.isValid()) {
+              recurrence->setEndDate(recurrenceEnd);
           }
 
           // Create the recurring incidence
@@ -920,6 +942,7 @@ class IncidenceChangerTest : public QObject
           // Now lets move it
           Incidence::Ptr originalIncidence = Incidence::Ptr(incidence->clone());
           incidence->setDtStart(dtStart.addSecs(offsetToMove));
+
           incidence->setDtEnd(dtEnd.addSecs(offsetToMove));
           mLastItemCreated.setPayload(incidence);
           changeId = mChanger->modifyIncidence(mLastItemCreated, originalIncidence);
@@ -930,13 +953,23 @@ class IncidenceChangerTest : public QObject
 
           // Now check the results
           switch(recurrenceType) {
+          case KCalCore::RecurrenceRule::rDaily:
+              break;
           case KCalCore::RecurrenceRule::rWeekly:
               QCOMPARE(incidence->recurrence()->days(), expectedWeekDays);
+              if (weekDays != expectedWeekDays) {
+                  QVERIFY(incidence->dirtyFields().contains(IncidenceBase::FieldRecurrence));
+              }
               break;
           default:
               // Not tested yet
               Q_ASSERT(false);
               QVERIFY(false);
+          }
+
+          if (recurrenceEnd.isValid() && !expectedRecurrenceEnd.isValid()) {
+              QVERIFY(incidence->recurrence()->endDate() >= incidence->dtStart().date());
+              QVERIFY(incidence->dirtyFields().contains(IncidenceBase::FieldRecurrence));
           }
       }
 

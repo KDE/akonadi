@@ -1164,6 +1164,15 @@ void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr
   default:
     break;   // Other types not implemented
   }
+
+  // Now fix cases where dtstart would be bigger than the recurrence end rendering it impossible for a view to show it:
+  // To retrieve the recurrence end don't trust Recurrence::endDt() since it returns dtStart if the rrule's end is < than dtstart,
+  // it seems someone made Recurrence::endDt() more robust, but getNextOccurrences() still craps out. So lets fix it here
+  // there's no reason to write bogus ical to disk.
+  const QDate recurrenceEndDate = recurrence->defaultRRule() ? recurrence->defaultRRule()->endDt().date() : QDate();
+  if ( recurrenceEndDate.isValid() && recurrenceEndDate < newStartDate ) {
+    recurrence->setEndDate( newStartDate );
+  }
 }
 
 void IncidenceChanger::Private::cancelTransaction()
