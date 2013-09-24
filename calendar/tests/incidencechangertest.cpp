@@ -34,6 +34,8 @@
 #include <kcalcore/journal.h>
 #include <kcalcore/todo.h>
 
+#include <QBitArray>
+
 using namespace Akonadi;
 using namespace KCalCore;
 
@@ -42,6 +44,7 @@ Q_DECLARE_METATYPE( QList<bool> )
 Q_DECLARE_METATYPE( QList<Akonadi::Collection::Right> )
 Q_DECLARE_METATYPE( QList<Akonadi::Collection::Rights> )
 Q_DECLARE_METATYPE( QList<Akonadi::IncidenceChanger::ResultCode> )
+Q_DECLARE_METATYPE( KCalCore::RecurrenceRule::PeriodType )
 
 static Akonadi::Item item()
 {
@@ -79,6 +82,7 @@ class IncidenceChangerTest : public QObject
   int mChangeToWaitFor;
   bool mPermissionsOrRollback;
   bool mDiscardedEqualsSuccess;
+  Akonadi::Item mLastItemCreated;
 
   private slots:
     void initTestCase()
@@ -823,6 +827,103 @@ class IncidenceChangerTest : public QObject
         mPermissionsOrRollback = false;
       }
 
+      void testAdjustRecurrence_data()
+      {
+          QTest::addColumn<bool>("allDay");
+          QTest::addColumn<KDateTime>("dtStart");
+          QTest::addColumn<KDateTime>("dtEnd");
+          QTest::addColumn<int>("offsetToMove");
+          QTest::addColumn<int>("frequency");
+          QTest::addColumn<KCalCore::RecurrenceRule::PeriodType>("recurrenceType");
+
+          // For weekly recurrences
+          QTest::addColumn<QBitArray>("weekDays");
+          QTest::addColumn<QBitArray>("expectedWeekDays");
+
+          const KDateTime dtStart = KDateTime(QDate::currentDate(), QTime(8, 0));
+          const KDateTime dtEnd = dtStart.addSecs(3600);
+          const int one_day = 3600*24;
+          const int one_hour = 3600;
+          QBitArray days(7);
+          QBitArray expectedDays(7);
+
+
+          //-------------------------------------------------------------------------
+          days.setBit(dtStart.date().dayOfWeek()-1);
+          expectedDays.setBit(dtStart.addSecs(one_day).date().dayOfWeek()-1);
+
+          QTest::newRow("weekly") << false << dtStart << dtEnd << one_day
+                                  << 1 << KCalCore::RecurrenceRule::rWeekly
+                                  <<  days << expectedDays;
+          //-------------------------------------------------------------------------
+          // Here nothing should change
+          days.fill(false);
+          days.setBit(dtStart.date().dayOfWeek()-1);
+
+          QTest::newRow("weekly nop") << false << dtStart << dtEnd << one_hour
+                                      << 1 << KCalCore::RecurrenceRule::rWeekly
+                                      << days << days;
+          //-------------------------------------------------------------------------
+          mCollection.setRights(Collection::Rights(Collection::AllRights));
+      }
+
+      void testAdjustRecurrence()
+      {
+          QFETCH(bool, allDay);
+          QFETCH(KDateTime, dtStart);
+          QFETCH(KDateTime, dtEnd);
+          QFETCH(int, offsetToMove);
+          QFETCH(int, frequency);
+          QFETCH(KCalCore::RecurrenceRule::PeriodType, recurrenceType);
+          QFETCH(QBitArray, weekDays);
+          QFETCH(QBitArray, expectedWeekDays);
+
+          Event::Ptr incidence = Event::Ptr(new Event());
+          incidence->setSummary(QLatin1String("random summary"));
+          incidence->setDtStart(dtStart);
+          incidence->setDtEnd(dtEnd);
+          incidence->setAllDay(allDay);
+
+          switch(recurrenceType) {
+          case KCalCore::RecurrenceRule::rWeekly:
+              incidence->recurrence()->setWeekly(frequency, weekDays);
+              break;
+          default:
+              // Not tested yet
+              Q_ASSERT(false);
+              QVERIFY(false);
+          }
+
+          // Create the recurring incidence
+          int changeId = mChanger->createIncidence(incidence, mCollection);
+          QVERIFY(changeId != -1);
+          mIncidencesToAdd = 1;
+          mExpectedResultByChangeId.insert(changeId, IncidenceChanger::ResultCodeSuccess);
+          waitForSignals();
+
+          // Now lets move it
+          Incidence::Ptr originalIncidence = Incidence::Ptr(incidence->clone());
+          incidence->setDtStart(dtStart.addSecs(offsetToMove));
+          incidence->setDtEnd(dtEnd.addSecs(offsetToMove));
+          mLastItemCreated.setPayload(incidence);
+          changeId = mChanger->modifyIncidence(mLastItemCreated, originalIncidence);
+          QVERIFY(changeId != -1);
+          mIncidencesToModify = 1;
+          mExpectedResultByChangeId.insert(changeId, IncidenceChanger::ResultCodeSuccess);
+          waitForSignals();
+
+          // Now check the results
+          switch(recurrenceType) {
+          case KCalCore::RecurrenceRule::rWeekly:
+              QCOMPARE(incidence->recurrence()->days(), expectedWeekDays);
+              break;
+          default:
+              // Not tested yet
+              Q_ASSERT(false);
+              QVERIFY(false);
+          }
+      }
+
   public Q_SLOTS:
 
     void waitForSignals()
@@ -888,6 +989,7 @@ class IncidenceChangerTest : public QObject
       QVERIFY( item.hasPayload() );
       Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
       mItemIdByUid.insert( incidence->uid(), item.id() );
+      mLastItemCreated = item;
     } else {
       kDebug() << "Error string is " << errorString;
     }

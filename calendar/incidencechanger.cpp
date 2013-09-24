@@ -33,6 +33,8 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 
+#include <QBitArray>
+
 using namespace Akonadi;
 using namespace KCalCore;
 
@@ -136,6 +138,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mGroupwareCommunication = false;
   mLatestAtomicOperationId = 0;
   mBatchOperationInProgress = false;
+  mAutoAdjustRecurrence = true;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
@@ -877,6 +880,7 @@ int IncidenceChanger::modifyIncidence( const Item &changedItem,
     d->cleanupTransaction();
     emitModifyFinished( this, changeId, changedItem, ResultCodeRolledback, errorMessage );
   } else {
+    d->adjustRecurrence( originalPayload, CalendarUtils::incidence( modificationChange->newItem ) );
     d->performModification( change );
   }
 
@@ -1082,6 +1086,16 @@ bool IncidenceChanger::groupwareCommunication() const
   return d->mGroupwareCommunication;
 }
 
+void IncidenceChanger::setAutoAdjustRecurrence( bool enable )
+{
+  d->mAutoAdjustRecurrence = enable;
+}
+
+bool IncidenceChanger::autoAdjustRecurrence() const
+{
+  return d->mAutoAdjustRecurrence;
+}
+
 Akonadi::Collection IncidenceChanger::lastCollectionUsed() const
 {
   return d->mLastCollectionUsed;
@@ -1119,6 +1133,37 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
   }
 
   return errorString;
+}
+
+void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr &originalIncidence,
+                                                  const KCalCore::Incidence::Ptr &incidence )
+{
+  if ( !originalIncidence || !incidence->recurs() || incidence->hasRecurrenceId()
+       || !incidence->dirtyFields().contains( KCalCore::Incidence::FieldDtStart ) ) {
+    return;
+  }
+
+  const QDate originalDate = originalIncidence->dtStart().date();
+  const QDate newDate = incidence->dtStart().date();
+
+  if ( !originalDate.isValid() || !newDate.isValid() || originalDate == newDate )
+    return;
+
+  KCalCore::Recurrence *recurrence = incidence->recurrence();
+  switch( recurrence->recurrenceType() ) {
+  case KCalCore::Recurrence::rWeekly: {
+    QBitArray days = recurrence->days();
+    const int oldIndex = originalDate.dayOfWeek()-1; // QDate returns [1-7];
+    const int newIndex = newDate.dayOfWeek()-1;
+    if ( oldIndex != newIndex ) {
+      days.clearBit( oldIndex );
+      days.setBit( newIndex );
+      recurrence->setWeekly( recurrence->frequency(), days );
+    }
+  }
+  default:
+    break;   // Other types not implemented
+  }
 }
 
 void IncidenceChanger::Private::cancelTransaction()

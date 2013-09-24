@@ -268,6 +268,9 @@ public:
 
   void setChangeInternal( int changeId );
 
+  void adjustRecurrence( const KCalCore::Incidence::Ptr &originalIncidence,
+                         const KCalCore::Incidence::Ptr &incidence );
+
   bool hasRights( const Akonadi::Collection &collection, IncidenceChanger::ChangeType ) const;
   void queueModification( Change::Ptr );
   void performModification( Change::Ptr );
@@ -332,6 +335,7 @@ public:
   uint mLatestAtomicOperationId;
   bool mBatchOperationInProgress;
   Akonadi::Collection mLastCollectionUsed;
+  bool mAutoAdjustRecurrence;
 
   QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
 
