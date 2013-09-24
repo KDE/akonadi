@@ -1138,7 +1138,7 @@ QString IncidenceChanger::Private::showErrorDialog( IncidenceChanger::ResultCode
 void IncidenceChanger::Private::adjustRecurrence( const KCalCore::Incidence::Ptr &originalIncidence,
                                                   const KCalCore::Incidence::Ptr &incidence )
 {
-  if ( !originalIncidence || !incidence->recurs() || incidence->hasRecurrenceId()
+  if ( !originalIncidence || !incidence->recurs() || incidence->hasRecurrenceId() || !mAutoAdjustRecurrence
        || !incidence->dirtyFields().contains( KCalCore::Incidence::FieldDtStart ) ) {
     return;
   }
