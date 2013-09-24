@@ -31,7 +31,12 @@
 #include <QtDBus/QDBusContext>
 #include <QtDBus/QDBusInterface>
 
-class KJob;
+#include <KJob>
+#include <KUrl>
+
+namespace KIO {
+class Job;
+}
 
 namespace Akonadi {
 
@@ -117,9 +122,30 @@ public slots:
   void onFreeBusyRetrieved( const QString &email, const QString &freeBusy,
                             bool success, const QString &errorText );
   void processMailSchedulerResult( Akonadi::Scheduler::Result result, const QString &errorMsg );
+  void fbCheckerJobFinished( KJob* );
 
 signals:
   void freeBusyUrlRetrieved( const QString &email, const KUrl &url );
+};
+
+class FbCheckerJob : public KJob
+{
+  Q_OBJECT
+public:
+  explicit FbCheckerJob( const QList<KUrl> &urlsToCheck, QObject *parent = 0 );
+  virtual void start();
+
+  KUrl validUrl() const;
+
+private slots:
+  void onGetJobFinished( KJob *job );
+  void dataReceived( KIO::Job *, const QByteArray &data );
+
+private:
+  void checkNextUrl();
+  QList<KUrl> mUrlsToCheck;
+  QByteArray mData;
+  KUrl mValidUrl;
 };
 
 }
