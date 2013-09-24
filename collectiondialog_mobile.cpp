@@ -354,5 +354,5 @@ void CollectionDialog::changeCollectionDialogOptions( CollectionDialogOptions op
   d->changeCollectionDialogOptions( options );
 }
 
-#include "collectiondialog.moc"
+#include "moc_collectiondialog.cpp"
 #include "moc_collectiondialog_mobile_p.cpp"
