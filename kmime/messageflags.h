@@ -45,6 +45,7 @@ namespace Akonadi
 
     /**
      * The flag for a message being replied to by the user.
+     * @deprecated use Replied instead.
      */
     AKONADI_KMIME_EXPORT extern const char* Answered;
 
