@@ -568,6 +568,7 @@ void HistoryTest::deleteFinished(int changeId,
     if (!mKnownChangeIds.contains(changeId))
         return;
 
+    QVERIFY(mPendingSignals[DeletionSignal] > 0);
     --mPendingSignals[DeletionSignal];
 
     if (resultCode != IncidenceChanger::ResultCodeSuccess) {
@@ -591,6 +592,8 @@ void HistoryTest::createFinished(int changeId,
     if (!mKnownChangeIds.contains(changeId))
         return;
 
+    QVERIFY(mPendingSignals[CreationSignal] > 0);
+
     --mPendingSignals[CreationSignal];
 
     if (resultCode == IncidenceChanger::ResultCodeSuccess) {
@@ -612,15 +615,10 @@ void HistoryTest::modifyFinished(int changeId,
                                  Akonadi::IncidenceChanger::ResultCode resultCode,
                                  const QString &errorString)
 {
-    if (mPendingSignals[ModificationSignal] == 0) {
-        qDebug() << "This shouldnt be zero";
-        return;
-    }
-
-    --mPendingSignals[ModificationSignal];
-
     if (!mKnownChangeIds.contains(changeId))
         return;
+
+    --mPendingSignals[ModificationSignal];
 
     QVERIFY(changeId != -1);
     QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
