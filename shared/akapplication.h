@@ -45,7 +45,7 @@ class AkApplication : public QObject
  #ifndef _WIN32_WCE
     void addCommandLineOptions( const boost::program_options::options_description &desc );
     void addPositionalCommandLineOption( const char *option, int count );
-    const boost::program_options::variables_map& commandLineArguments() const { return mCmdLineArguments; }
+    const boost::program_options::variables_map &commandLineArguments() const { return mCmdLineArguments; }
 #endif
 
     void printUsage() const;
@@ -66,8 +66,8 @@ class AkApplication : public QObject
 
   private:
     /** Change instane identifier, for unit tests only. */
-    static void setInstanceIdentifier( const QString& instanceId );
-    friend void akTestSetInstanceIdentifier(const QString&);
+    static void setInstanceIdentifier( const QString &instanceId );
+    friend void akTestSetInstanceIdentifier( const QString &instanceId );
 
   private Q_SLOTS:
     void pollSessionBus() const;
@@ -77,7 +77,7 @@ class AkApplication : public QObject
     char **mArgv;
     QString mDescription;
     QString mInstanceId;
-    static AkApplication* sInstance;
+    static AkApplication *sInstance;
 
 #ifndef _WIN32_WCE
     boost::program_options::options_description mCmdLineOptions;
@@ -90,7 +90,8 @@ template <typename T>
 class AkApplicationImpl : public AkApplication
 {
   public:
-    AkApplicationImpl( int &argc, char ** argv ) : AkApplication( argc, argv )
+    AkApplicationImpl( int &argc, char **argv )
+      : AkApplication( argc, argv )
     {
       mApp.reset( new T( argc, argv ) );
       init();

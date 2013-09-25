@@ -232,6 +232,20 @@ void NotificationMessage::setItemParts( const QSet<QByteArray> &parts )
 QString NotificationMessage::toString() const
 {
   QString rv;
+  // some tests before making the string
+  if ( type() == InvalidType ) {
+	  return QLatin1String( "Error: Type is not set" );
+  }
+  if ( uid() == -1 ) {
+	return QLatin1String( "Error: uid is not set" );
+  }
+  if ( remoteId().isEmpty() ) {
+	return QLatin1String( "Error: remoteId is empty" );
+  }
+  if ( operation() == InvalidOp ) {
+	  return QLatin1String( "Error: operation is not set" );
+  }
+
   switch ( type() ) {
     case Item:
       rv += QLatin1String( "Item " );
@@ -239,19 +253,21 @@ QString NotificationMessage::toString() const
     case Collection:
       rv += QLatin1String( "Collection " );
       break;
-    case InvalidType: // TODO: an error?
+    case InvalidType:
+      // already done above
       break;
   }
 
   rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
-  if ( parentDestCollection() >= 0 )
-    rv += QString::fromLatin1( "from " );
-  else
-    rv += QString::fromLatin1( "in " );
 
-  if ( parentCollection() >= 0 )
+  if ( parentCollection() >= 0 ) {
+    if ( parentDestCollection() >= 0 ) {
+      rv += QString::fromLatin1( "from " );
+    } else {
+      rv += QString::fromLatin1( "in " );
+    }
     rv += QString::fromLatin1( "collection %1 " ).arg( parentCollection() );
-  else {
+  } else {
     rv += QLatin1String( "unspecified parent collection " );
   }
 
@@ -284,7 +300,8 @@ QString NotificationMessage::toString() const
     case Unsubscribe:
       rv += QLatin1String( "unsubscribed" );
       break;
-    case InvalidOp: // TODO: an error?
+    case InvalidOp:
+      // already done above
       break;
   }
 

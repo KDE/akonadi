@@ -31,14 +31,14 @@
 namespace po = boost::program_options;
 #endif
 
-AkApplication* AkApplication::sInstance = 0;
+AkApplication *AkApplication::sInstance = 0;
 
-AkApplication::AkApplication(int & argc, char ** argv) :
-    QObject( 0 ),
-    mArgc( argc ),
-    mArgv( argv )
+AkApplication::AkApplication( int &argc, char **argv )
+  : QObject( 0 )
+  , mArgc( argc )
+  , mArgv( argv )
 {
-  Q_ASSERT(!sInstance);
+  Q_ASSERT( !sInstance );
   sInstance = this;
 }
 
@@ -48,10 +48,11 @@ AkApplication::~AkApplication()
 
 void AkApplication::init()
 {
-  akInit( QString::fromLatin1( mArgv[ 0 ] ) );
+  akInit( QString::fromLatin1( mArgv[0] ) );
 
-  if ( !QDBusConnection::sessionBus().isConnected() )
+  if ( !QDBusConnection::sessionBus().isConnected() ) {
     akFatal() << "D-Bus session bus is not available!";
+  }
 
   // there doesn't seem to be a signal to indicate that the session bus went down, so lets use polling for now
   QTimer *timer = new QTimer( this );
@@ -63,10 +64,10 @@ void AkApplication::parseCommandLine()
 {
 #ifndef _WIN32_WCE
   try {
-    po::options_description generalOptions("General options");
+    po::options_description generalOptions( "General options" );
     generalOptions.add_options()
-      ("help,h", "show this help message")
-      ("version","show version information");
+      ( "help,h", "show this help message" )
+      ( "version","show version information" );
     mCmdLineOptions.add( generalOptions );
 
     po::options_description miOptions( "Multi-instance options" );
@@ -74,10 +75,11 @@ void AkApplication::parseCommandLine()
       ( "instance", po::value<std::string>(), "Namespace for starting multiple Akonadi instances in the same user session" );
     mCmdLineOptions.add( miOptions );
 
-    po::command_line_parser parser(mArgc, mArgv);
-    parser.options(mCmdLineOptions);
-    if (mCmdPositionalOptions.max_total_count() > 0)
-      parser.positional(mCmdPositionalOptions);
+    po::command_line_parser parser( mArgc, mArgv );
+    parser.options( mCmdLineOptions );
+    if ( mCmdPositionalOptions.max_total_count() > 0 ) {
+      parser.positional( mCmdPositionalOptions );
+    }
     po::store( parser.run(), mCmdLineArguments );
     po::notify( mCmdLineArguments );
 
@@ -111,21 +113,22 @@ void AkApplication::pollSessionBus() const
 }
 
 #ifndef _WIN32_WCE
-void AkApplication::addCommandLineOptions(const boost::program_options::options_description & desc)
+void AkApplication::addCommandLineOptions( const boost::program_options::options_description &desc )
 {
   mCmdLineOptions.add( desc );
 }
 
-void AkApplication::addPositionalCommandLineOption(const char* option, int count)
+void AkApplication::addPositionalCommandLineOption( const char *option, int count )
 {
-  mCmdPositionalOptions.add(option, count);
+  mCmdPositionalOptions.add( option, count );
 }
 #endif
 
 void AkApplication::printUsage() const
 {
-  if ( !mDescription.isEmpty() )
+  if ( !mDescription.isEmpty() ) {
     std::cout << qPrintable( mDescription ) << std::endl;
+  }
 #ifndef _WIN32_WCE
   std::cout << mCmdLineOptions << std::endl;
 #endif
@@ -133,7 +136,7 @@ void AkApplication::printUsage() const
 
 QString AkApplication::instanceIdentifier()
 {
-  Q_ASSERT(sInstance);
+  Q_ASSERT( sInstance );
   return sInstance->mInstanceId;
 }
 
@@ -147,9 +150,8 @@ int AkApplication::exec()
   return mApp->exec();
 }
 
-void AkApplication::setInstanceIdentifier(const QString& instanceId)
+void AkApplication::setInstanceIdentifier( const QString &instanceId )
 {
-  Q_ASSERT(sInstance);
+  Q_ASSERT( sInstance );
   sInstance->mInstanceId = instanceId;
 }
-
