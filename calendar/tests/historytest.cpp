@@ -449,20 +449,20 @@ void HistoryTest::testMix_data()
     changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeDelete;
     QTest::newRow("create then delete") << items << changeTypes;
     //------------------------------------------------------------------------------------------
-    // Create one, then modify it
+    // Create one, then modify it, then delete it
     i = item();
     items.clear();
-    items << i << i;
+    items << i << i << i;
     changeTypes.clear();
-    changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeModify;
-    //QTest::newRow("create then modify") << items << changeTypes; doesn't pass yet.
+    changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeModify << IncidenceChanger::ChangeTypeDelete;
+    QTest::newRow("create then modify then deelte") << items << changeTypes;
 }
 
 void HistoryTest::testMix()
 {
     QFETCH(Akonadi::Item::List, items);
     QFETCH(QList<Akonadi::IncidenceChanger::ChangeType>, changeTypes);
-    int lastChangeId = -1;
+    int lastCreateChangeId = -1;
     mHistory->clear();
     mChanger->setDefaultCollection(mCollection);
     mChanger->setRespectsCollectionRights(false);
@@ -470,32 +470,35 @@ void HistoryTest::testMix()
 
     for (int i=0; i<items.count(); ++i) {
         Akonadi::Item item = items[i];
+        int changeId = -1;
         switch (changeTypes[i]) {
         case IncidenceChanger::ChangeTypeCreate:
-            lastChangeId = mChanger->createIncidence(item.payload<KCalCore::Incidence::Ptr>());
-            QVERIFY(lastChangeId != -1);
-            mKnownChangeIds << lastChangeId;
+            lastCreateChangeId = mChanger->createIncidence(item.payload<KCalCore::Incidence::Ptr>());
+            QVERIFY(lastCreateChangeId != -1);
+            mKnownChangeIds << lastCreateChangeId;
             ++mPendingSignals[CreationSignal];
             waitForSignals();
             break;
         case IncidenceChanger::ChangeTypeDelete:
-            lastChangeId = mChanger->deleteIncidence(item.isValid() ? item : mItemByChangeId.value(lastChangeId));
-            QVERIFY(lastChangeId != -1);
-            mKnownChangeIds << lastChangeId;
+            item = item.isValid() ? item : mItemByChangeId.value(lastCreateChangeId);
+            QVERIFY(item.isValid());
+            changeId = mChanger->deleteIncidence(item);
+            QVERIFY(changeId != -1);
+            mKnownChangeIds << changeId;
             ++mPendingSignals[DeletionSignal];
             waitForSignals();
             break;
         case IncidenceChanger::ChangeTypeModify:
         {
-            item = item.isValid() ? item : mItemByChangeId.value(lastChangeId);
+            item = item.isValid() ? item : mItemByChangeId.value(lastCreateChangeId);
             QVERIFY(item.isValid());
             QVERIFY(item.hasPayload<KCalCore::Incidence::Ptr>());
             Incidence::Ptr originalPayload = Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
             item.payload<KCalCore::Incidence::Ptr>()->setSummary(QLatin1String("Changed"));
             QVERIFY(originalPayload);
-            lastChangeId = mChanger->modifyIncidence(item, originalPayload);
-            QVERIFY(lastChangeId != -1);
-            mKnownChangeIds << lastChangeId;
+            changeId = mChanger->modifyIncidence(item, originalPayload);
+            QVERIFY(changeId != -1);
+            mKnownChangeIds << changeId;
             ++mPendingSignals[ModificationSignal];
             waitForSignals();
         }
