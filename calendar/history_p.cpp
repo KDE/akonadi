@@ -56,8 +56,10 @@ void Entry::updateIds( Item::Id oldId, Item::Id newId )
 
   Akonadi::Item::List::iterator it = mItems.begin();
   while ( it != mItems.end() ) {
-    if ( (*it).id() == oldId )
+    if ( (*it).id() == oldId ) {
       (*it).setId( newId );
+      (*it).setRevision( 0 );
+    }
     ++it;
   }
 }
