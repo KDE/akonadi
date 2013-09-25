@@ -456,6 +456,115 @@ private Q_SLOTS:
       QCOMPARE(mHistory->d->undoCount(), 0 );
     }
 
+
+    // Tests a sequence of various create/delete/modify operations
+    void testMix_data()
+    {
+        QTest::addColumn<Akonadi::Item::List>("items");
+        QTest::addColumn<QList<Akonadi::IncidenceChanger::ChangeType> >("changeTypes");
+
+        Akonadi::Item::List items;
+        QList<Akonadi::IncidenceChanger::ChangeType> changeTypes;
+        //------------------------------------------------------------------------------------------
+        // Create two incidences
+        items.clear();
+        items << item() << item();
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeCreate;
+        QTest::newRow("create two - success ") << items << changeTypes;
+        //------------------------------------------------------------------------------------------
+        // Create one, then delete it
+        Akonadi::Item i = item();
+        items.clear();
+        items << i << i;
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeDelete;
+        QTest::newRow("create then delete") << items << changeTypes;
+        //------------------------------------------------------------------------------------------
+        // Create one, then modify it
+        i = item();
+        items.clear();
+        items << i << i;
+        changeTypes.clear();
+        changeTypes << IncidenceChanger::ChangeTypeCreate << IncidenceChanger::ChangeTypeModify;
+        //QTest::newRow("create then modify") << items << changeTypes; doesn't pass yet.
+    }
+
+    void testMix()
+    {
+        QFETCH(Akonadi::Item::List, items);
+        QFETCH(QList<Akonadi::IncidenceChanger::ChangeType>, changeTypes);
+        int lastChangeId = -1;
+        mHistory->clear();
+        mChanger->setDefaultCollection(mCollection);
+        mChanger->setRespectsCollectionRights(false);
+        mChanger->setDestinationPolicy(IncidenceChanger::DestinationPolicyNeverAsk);
+
+        for (int i=0; i<items.count(); ++i) {
+            Akonadi::Item item = items[i];
+            switch (changeTypes[i]) {
+            case IncidenceChanger::ChangeTypeCreate:
+                lastChangeId = mChanger->createIncidence(item.payload<KCalCore::Incidence::Ptr>());
+                QVERIFY(lastChangeId != -1);
+                mKnownChangeIds << lastChangeId;
+                ++mPendingSignals[CreationSignal];
+                waitForSignals();
+                break;
+            case IncidenceChanger::ChangeTypeDelete:
+                lastChangeId = mChanger->deleteIncidence(item.isValid() ? item : mItemByChangeId.value(lastChangeId));
+                QVERIFY(lastChangeId != -1);
+                mKnownChangeIds << lastChangeId;
+                ++mPendingSignals[DeletionSignal];
+                waitForSignals();
+                break;
+            case IncidenceChanger::ChangeTypeModify:
+            {
+                item = item.isValid() ? item : mItemByChangeId.value(lastChangeId);
+                QVERIFY(item.isValid());
+                QVERIFY(item.hasPayload<KCalCore::Incidence::Ptr>());
+                Incidence::Ptr originalPayload = Incidence::Ptr(item.payload<KCalCore::Incidence::Ptr>()->clone());
+                item.payload<KCalCore::Incidence::Ptr>()->setSummary(QLatin1String("Changed"));
+                QVERIFY(originalPayload);
+                lastChangeId = mChanger->modifyIncidence(item, originalPayload);
+                QVERIFY(lastChangeId != -1);
+                mKnownChangeIds << lastChangeId;
+                ++mPendingSignals[ModificationSignal];
+                waitForSignals();
+            }
+                break;
+            default:
+                QVERIFY(false);
+            }
+
+        }
+
+        QCOMPARE(mHistory->d->undoCount(), changeTypes.count());
+
+        // All operations are done, now undo them:
+        for (int i=0; i<changeTypes.count(); i++) {
+            QCOMPARE(mHistory->d->undoCount(), changeTypes.count()-i);
+            QCOMPARE(mHistory->d->redoCount(), i);
+            mPendingSignals[UndoSignal] = 1;
+            mHistory->undo();
+            waitForSignals();
+        }
+
+        QCOMPARE(mHistory->d->undoCount(), 0);
+        QCOMPARE(mHistory->d->redoCount(), changeTypes.count());
+
+        // Now redo them
+        for (int i=0; i<changeTypes.count(); i++) {
+            QCOMPARE(mHistory->d->undoCount(), i);
+            QCOMPARE(mHistory->d->redoCount(), changeTypes.count()-i);
+            mPendingSignals[RedoSignal] = 1;
+            mHistory->redo();
+            waitForSignals();
+        }
+
+        QCOMPARE(mHistory->d->undoCount(), changeTypes.count());
+        QCOMPARE(mHistory->d->redoCount(), 0);
+    }
+
 private:
     void waitForSignals()
     {
@@ -536,12 +645,18 @@ public Q_SLOTS:
                          Akonadi::IncidenceChanger::ResultCode resultCode,
                          const QString &errorString )
     {
+      if (mPendingSignals[ModificationSignal] == 0) {
+        qDebug() << "This shouldnt be zero";
+        return;
+      }
+
       --mPendingSignals[ModificationSignal];
 
       if ( !mKnownChangeIds.contains(changeId) )
         return;
 
       QVERIFY( changeId != -1 );
+      QCOMPARE( resultCode, IncidenceChanger::ResultCodeSuccess );
 
       if ( resultCode == IncidenceChanger::ResultCodeSuccess )
         QVERIFY( item.isValid() );
