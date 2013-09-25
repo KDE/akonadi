@@ -297,6 +297,7 @@ void HistoryTest::testModification()
 
     // Test that it isn't recorded to history when history is disabled
     mChanger->setHistoryEnabled(false);
+    mPendingSignals[ModificationSignal] = 1;
     const int changeId2 = mChanger->modifyIncidence(item, originalPayload);
     mChanger->setHistoryEnabled(true);
     QVERIFY(changeId > 0);
@@ -618,6 +619,7 @@ void HistoryTest::modifyFinished(int changeId,
     if (!mKnownChangeIds.contains(changeId))
         return;
 
+    QVERIFY(mPendingSignals[ModificationSignal] > 0);
     --mPendingSignals[ModificationSignal];
 
     QVERIFY(changeId != -1);
