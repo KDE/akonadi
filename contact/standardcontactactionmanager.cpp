@@ -332,9 +332,11 @@ class StandardContactActionManager::Private
           if ( index.isValid() ) {
             const QString mimeType = index.data( EntityTreeModel::MimeTypeRole ).toString();
             if ( mimeType == KABC::Addressee::mimeType() ) {
-              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )) {
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
                 mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems,
                                                 ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+              }
+              if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )) {
                 mGenericManager->action( Akonadi::StandardActionManager::CopyItemToMenu )->setText( i18n( "Copy Contact To" ) );
               }
               if (mGenericManager->action( Akonadi::StandardActionManager::CopyItemToDialog)) {
@@ -353,6 +355,9 @@ class StandardContactActionManager::Private
               }
               if (mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )) {
                 mGenericManager->action( Akonadi::StandardActionManager::MoveItemToDialog )->setText( i18n( "Move Contact To" ) );
+              }
+              if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
+                mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
               }
             } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
               if (mGenericManager->action( Akonadi::StandardActionManager::CopyItems )) {
