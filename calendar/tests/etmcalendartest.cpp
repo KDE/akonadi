@@ -248,8 +248,11 @@ void ETMCalendarTest::testSelectCollection()
 
 void ETMCalendarTest::calendarIncidenceAdded( const Incidence::Ptr &incidence )
 {
-    Q_UNUSED( incidence );
     Q_ASSERT( incidence );
+
+    const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
+    QCOMPARE( id.toLongLong(), mCalendar->item( incidence->uid() ).id() );
+
     --mIncidencesToAdd;
     checkExitLoop();
 }
@@ -261,12 +264,18 @@ void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & 
 
 void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence )
 {
+    const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
+    QCOMPARE( id.toLongLong(), mCalendar->item( incidence->uid() ).id() );
+
     --mIncidencesToChange;
     checkExitLoop();
 }
 
 void ETMCalendarTest::calendarIncidenceDeleted( const Incidence::Ptr &incidence )
 {
+    const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
+    QVERIFY( !id.isEmpty() );
+
     --mIncidencesToDelete;
     mLastDeletedUid = incidence->uid();
     checkExitLoop();
