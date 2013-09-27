@@ -79,13 +79,13 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 {
   Q_ASSERT( item.isValid() );
   Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-  KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
+  KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence( item );
 
   if ( !incidence ) {
     kError() << "Incidence is null. id=" << item.id()
-             << "; hasPayload()=" << item.hasPayload()
+             << "; hasPayload()="  << item.hasPayload()
              << "; has incidence=" << item.hasPayload<KCalCore::Incidence::Ptr>()
-             << "; mime type="    << item.mimeType();
+             << "; mime type="     << item.mimeType();
     Q_ASSERT( false );
     return;
   }
@@ -113,16 +113,16 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   }
 
   if ( incidence->type() == KCalCore::Incidence::TypeEvent && !incidence->dtStart().isValid() ) {
-      // TODO: make the parser discard them would also be a good idea
-      kWarning() << "Discarding event with invalid DTSTART. identifier="
-                 << incidence->instanceIdentifier() << "; summary=" << incidence->summary();
-      return;
+    // TODO: make the parser discard them would also be a good idea
+    kWarning() << "Discarding event with invalid DTSTART. identifier="
+               << incidence->instanceIdentifier() << "; summary=" << incidence->summary();
+    return;
   }
 
   Akonadi::Collection collection = item.parentCollection();
-  if (collection.isValid()) {
-      // Some items don't have collection set
-      incidence->setReadOnly(!(collection.rights() & Akonadi::Collection::CanChangeItem));
+  if ( collection.isValid() ) {
+    // Some items don't have collection set
+    incidence->setReadOnly( !( collection.rights() & Akonadi::Collection::CanChangeItem ) );
   }
 
   mItemById.insert( item.id(), item );
@@ -137,9 +137,9 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
   }
   // Must be the last one due to re-entrancy
   const bool result = q->MemoryCalendar::addIncidence( incidence );
-  if (!result) {
-    kError() << "Error adding incidence " << itemToString(item);
-    Q_ASSERT(false);
+  if ( !result ) {
+    kError() << "Error adding incidence " << itemToString( item );
+    Q_ASSERT( false );
   }
 }
 
@@ -172,7 +172,7 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
     }
     // Must be the last one due to re-entrancy
     const bool result = q->MemoryCalendar::deleteIncidence( incidence );
-    if (!result) {
+    if ( !result ) {
       kError() << "Error removing incidence " << itemToString(item);
       Q_ASSERT(false);
     }
@@ -203,7 +203,7 @@ void CalendarBasePrivate::slotDeleteFinished( int changeId,
 {
   Q_UNUSED( changeId );
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-    foreach( const Akonadi::Item::Id &id, itemIds ) {
+    foreach ( const Akonadi::Item::Id &id, itemIds ) {
       if ( mItemById.contains( id ) )
         internalRemove( mItemById.value( id ) );
     }
@@ -247,7 +247,7 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
 {
   Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
   Q_ASSERT( newIncidence );
-  if (mItemIdByUid.contains(newIdentifier)) {
+  if ( mItemIdByUid.contains( newIdentifier ) ) {
     Akonadi::Item oldItem = mItemById.value( newItem.id() );
     Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
     kWarning() << "New uid shouldn't be known: "  << newIdentifier << "; id="
