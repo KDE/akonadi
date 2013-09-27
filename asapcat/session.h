@@ -32,7 +32,7 @@ class Session : public QObject
 {
     Q_OBJECT
   public:
-    explicit Session(const QString &input, QObject *parent = 0);
+    explicit Session( const QString &input, QObject *parent = 0 );
     ~Session();
 
     void printStats() const;
@@ -46,7 +46,7 @@ class Session : public QObject
   private Q_SLOTS:
     void inputAvailable();
     void serverDisconnected();
-    void serverError(QLocalSocket::LocalSocketError socketError);
+    void serverError( QLocalSocket::LocalSocketError socketError );
     void serverRead();
 
   private:

@@ -261,8 +261,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     * FileAccessMode is a typedef for QFlags<FileAccessFlag>. It stores
     * a OR combination of FileAccessFlag values
     */
-    enum FileAccessFlag
-    {
+    enum FileAccessFlag {
         ReadOnly  = 0x1,
         WriteOnly = 0x2,
         ReadWrite = ReadOnly | WriteOnly
@@ -295,14 +294,14 @@ class AKONADIPROTOCOLINTERNALS_EXPORT XdgBaseDirs
     static QString akonadiConnectionConfigFile( FileAccessMode openMode = ReadOnly );
 
   private:
-    XdgBaseDirsPrivate* const d;
+    XdgBaseDirsPrivate *const d;
 
   private:
     static QString akonadiConfigFile( const QString &file, FileAccessMode openMode );
 
   private:
-    XdgBaseDirs( const XdgBaseDirs &);
-    XdgBaseDirs &operator=( const XdgBaseDirs &);
+    XdgBaseDirs( const XdgBaseDirs & );
+    XdgBaseDirs &operator=( const XdgBaseDirs & );
 };
 
 }

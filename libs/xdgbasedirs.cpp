@@ -38,7 +38,7 @@
 # endif
 #endif
 
-static QStringList alternateExecPaths( const QString& path )
+static QStringList alternateExecPaths( const QString &path )
 {
   QStringList pathList;
 
@@ -164,8 +164,9 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
         proc.setReadChannel( QProcess::StandardOutput );
         Q_FOREACH ( const QString &basePath, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
           const QString path = basePath + QDir::separator() + QLatin1String( "share" );
-          if ( !dataDirs.contains( path ) )
+          if ( !dataDirs.contains( path ) ) {
             dataDirs << path;
+          }
         }
       }
 
@@ -181,8 +182,9 @@ QStringList XdgBaseDirs::systemPathList( const char *resource )
       const QString basePath = agentProviders.value( agentProvider ).toString();
       if ( !basePath.isEmpty() ) {
         const QString path = basePath + QDir::separator() + QLatin1String( "share" );
-        if ( !dataDirs.contains( path ) )
+        if ( !dataDirs.contains( path ) ) {
           dataDirs << path;
+        }
       }
     }
 
@@ -230,7 +232,7 @@ QString XdgBaseDirs::findResourceFile( const char *resource, const QString &relP
   const QStringList pathList = systemPathList( resource );
 
   Q_FOREACH ( const QString &path, pathList ) {
-    fileInfo = QFileInfo( path + QLatin1Char('/' ) + relPath );
+    fileInfo = QFileInfo( path + QLatin1Char( '/' ) + relPath );
     if ( fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable() ) {
       return fileInfo.absoluteFilePath();
     }
@@ -261,7 +263,7 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
 #if defined(Q_OS_MAC) //krazy:exclude=cpp
     executableDirs += QLatin1String( AKONADIBUNDLEPATH );
 #endif
-    qWarning( ) << "search paths: " << executableDirs;
+    qWarning() << "search paths: " << executableDirs;
 
     instance()->mExecutableDirs = executableDirs;
   }
@@ -272,12 +274,13 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
   // so check if any installer providing agents has registered its base path
   QSettings agentProviders( QSettings::SystemScope, QLatin1String( "Akonadi" ), QLatin1String( "Akonadi" ) );
   agentProviders.beginGroup( QLatin1String( "AgentProviders" ) );
-  Q_FOREACH( const QString &agentProvider, agentProviders.childKeys() ) {
+  Q_FOREACH ( const QString &agentProvider, agentProviders.childKeys() ) {
     const QString basePath = agentProviders.value( agentProvider ).toString();
     if ( !basePath.isEmpty() ) {
       const QString path = basePath + QDir::separator() + QLatin1String( "bin" );
-      if ( !executableDirs.contains( path ) )
+      if ( !executableDirs.contains( path ) ) {
         executableDirs << path;
+      }
     }
   }
 
@@ -296,8 +299,9 @@ QString XdgBaseDirs::findExecutableFile( const QString &relPath, const QStringLi
       const QFileInfo fileInfo( *it );
 
       // resolve symlinks, happens eg. with Maemo optify
-      if ( fileInfo.canonicalFilePath().isEmpty() )
+      if ( fileInfo.canonicalFilePath().isEmpty() ) {
         continue;
+      }
 
       const QFileInfo canonicalFileInfo( fileInfo.canonicalFilePath() );
 
@@ -333,12 +337,13 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     if ( proc.waitForStarted() && proc.waitForFinished() && proc.exitCode() == 0 ) {
       proc.setReadChannel( QProcess::StandardOutput );
       Q_FOREACH ( const QString &path, splitPathList( QString::fromLocal8Bit( proc.readLine().trimmed() ) ) ) {
-        if ( !pluginDirs.contains( path ) )
+        if ( !pluginDirs.contains( path ) ) {
           pluginDirs.append( path );
+        }
       }
     }
 
-    qWarning( ) << "search paths: " << pluginDirs;
+    qWarning() << "search paths: " << pluginDirs;
     instance()->mPluginDirs = pluginDirs;
   }
 
@@ -352,8 +357,9 @@ QString XdgBaseDirs::findPluginFile( const QString &relPath, const QStringList &
     const QFileInfo fileInfo( path + QDir::separator() + pluginName );
 
     // resolve symlinks, happens eg. with Maemo optify
-    if ( fileInfo.canonicalFilePath().isEmpty() )
+    if ( fileInfo.canonicalFilePath().isEmpty() ) {
       continue;
+    }
 
     const QFileInfo canonicalFileInfo( fileInfo.canonicalFilePath() );
     if ( canonicalFileInfo.exists() && canonicalFileInfo.isFile() ) {
@@ -447,8 +453,9 @@ QString XdgBaseDirs::akonadiConfigFile( const QString &file, FileAccessMode open
 
   const QString savePath = saveDir( "config", akonadiDir ) + QLatin1Char( '/' ) + file;
 
-  if ( openMode == WriteOnly )
+  if ( openMode == WriteOnly ) {
     return savePath;
+  }
 
   const QString path = findResourceFile( "config", akonadiDir + QLatin1Char( '/' ) + file );
 
