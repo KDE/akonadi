@@ -51,6 +51,7 @@ FetchScope::Data::Data()
  : QSharedData()
  , ancestorDepth( 0 )
  , cacheOnly( false )
+ , changedOnly( false )
  , checkCachedPayloadPartsOnly( false )
  , fullPayload( false )
  , allAttrs( false )
@@ -135,6 +136,8 @@ void FetchScope::Data::parsePartList()
     // filter out non-part attributes we send all the time
     if ( b == AKONADI_PARAM_REVISION || b == AKONADI_PARAM_UID ) {
       continue;
+    } else if ( b == AKONADI_PARAM_CHANGEDONLY ) {
+      changedOnly = true;
     } else if ( b == AKONADI_PARAM_REMOTEID ) {
       remoteIdRequested = true;
     } else if ( b == AKONADI_PARAM_FLAGS ) {

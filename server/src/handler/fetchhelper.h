@@ -48,6 +48,7 @@ class FetchScope
     QStringList requestedPayloads() const { return d->requestedPayloads; }
     int ancestorDepth() const { return d->ancestorDepth; }
     bool cacheOnly() const { return d->cacheOnly; }
+    bool changedOnly() const { return d->changedOnly; }
     bool checkCachedPayloadPartsOnly() const { return d->checkCachedPayloadPartsOnly; }
     bool fullPayload() const { return d->fullPayload; }
     bool allAttrs() const { return d->allAttrs; }
@@ -75,6 +76,7 @@ class FetchScope
         QStringList requestedPayloads;
         int ancestorDepth;
         bool cacheOnly;
+        bool changedOnly;
         bool checkCachedPayloadPartsOnly;
         bool fullPayload;
         bool allAttrs;
@@ -91,7 +93,7 @@ class FetchScope
         ImapStreamParser *streamParser;
     };
 
-    QSharedDataPointer<Data> const d;
+    QSharedDataPointer<Data> d;
 };
 
 
