@@ -135,6 +135,8 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
       mParentUidToChildrenUid[parentUid].append( incidence->uid() );
     }
   }
+
+  incidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
   // Must be the last one due to re-entrancy
   const bool result = q->MemoryCalendar::addIncidence( incidence );
   if ( !result ) {

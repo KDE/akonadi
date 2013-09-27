@@ -385,6 +385,7 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
     const Akonadi::Item item = itemFromIndex( i );
     if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
       Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+      newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
       Q_ASSERT( newIncidence );
       Q_ASSERT( !newIncidence->uid().isEmpty() );
       IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
