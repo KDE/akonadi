@@ -406,6 +406,7 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
   Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
   Q_ASSERT( newIncidence );
   Q_ASSERT( !newIncidence->uid().isEmpty() );
+  newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
   IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
 
   if ( existingIncidence ) {
