@@ -36,6 +36,66 @@ class AkonadiConnection;
 class ImapSet;
 class Response;
 
+class FetchScope
+{
+  public:
+    FetchScope();
+    FetchScope( ImapStreamParser *parser );
+    FetchScope( const FetchScope &other );
+    ~FetchScope();
+
+    QVector<QByteArray> requestedParts() const { return d->requestedParts; }
+    QStringList requestedPayloads() const { return d->requestedPayloads; }
+    int ancestorDepth() const { return d->ancestorDepth; }
+    bool cacheOnly() const { return d->cacheOnly; }
+    bool checkCachedPayloadPartsOnly() const { return d->checkCachedPayloadPartsOnly; }
+    bool fullPayload() const { return d->fullPayload; }
+    bool allAttrs() const { return d->allAttrs; }
+    bool sizeRequested() const { return d->sizeRequested; }
+    bool mTimeRequested() const { return d->mTimeRequested; }
+    bool externalPayloadSupported() const { return d->externalPayloadSupported; }
+    bool remoteRevisionRequested() const { return d->remoteRevisionRequested; }
+    bool ignoreErrors() const { return d->ignoreErrors; }
+    bool flagsRequested() const { return d->flagsRequested; }
+    bool remoteIdRequested() const { return d->remoteIdRequested; }
+    bool gidRequested() const { return d->gidRequested; }
+    QDateTime changedSince() const { return d->changedSince; }
+
+  private:
+    class Data: public QSharedData
+    {
+      public:
+        Data();
+        Data( const Data &other );
+
+        void parseCommandStream();
+        void parsePartList();
+
+        QVector<QByteArray> requestedParts;
+        QStringList requestedPayloads;
+        int ancestorDepth;
+        bool cacheOnly;
+        bool checkCachedPayloadPartsOnly;
+        bool fullPayload;
+        bool allAttrs;
+        bool sizeRequested;
+        bool mTimeRequested;
+        bool externalPayloadSupported;
+        bool remoteRevisionRequested;
+        bool ignoreErrors;
+        bool flagsRequested;
+        bool remoteIdRequested;
+        bool gidRequested;
+        QDateTime changedSince;
+
+        ImapStreamParser *streamParser;
+    };
+
+    QSharedDataPointer<Data> const d;
+};
+
+
+
 class FetchHelper : public QObject
 {
   Q_OBJECT
@@ -69,8 +129,6 @@ class FetchHelper : public QObject
     QSqlQuery buildItemQuery();
     QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
     QSqlQuery buildFlagQuery();
-    void parseCommandStream();
-    void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
     QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
@@ -80,24 +138,9 @@ class FetchHelper : public QObject
 
     AkonadiConnection *mConnection;
     Scope mScope;
-    QVector<QByteArray> mRequestedParts;
-    QStringList mRequestedPayloads;
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
-    int mAncestorDepth;
-    bool mCacheOnly;
-    bool mCheckCachedPayloadPartsOnly;
-    bool mFullPayload;
-    bool mAllAttrs;
-    bool mSizeRequested;
-    bool mMTimeRequested;
-    bool mExternalPayloadSupported;
-    bool mRemoteRevisionRequested;
-    bool mIgnoreErrors;
-    bool mFlagsRequested;
-    bool mRemoteIdRequested;
-    bool mGidRequested;
-    QDateTime mChangedSince;
     int mItemQueryColumnMap[ItemQueryColumnCount];
+    FetchScope mFetchScope;
 
     friend class ::FetchHelperTest;
 };
