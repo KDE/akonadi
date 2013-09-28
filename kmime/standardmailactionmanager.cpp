@@ -369,22 +369,28 @@ class StandardMailActionManager::Private
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsImportant );
         if ( action ) {
+          action->setCheckable(true);
           updateMarkAction( action, allMarkedAsImportant );
           if ( allMarkedAsImportant ) {
             action->setText( i18n( "Remove Important Mark" ) );
+            action->setChecked(true);
           } else {
             action->setText( i18n( "&Mark Mail as Important" ) );
+            action->setChecked(false);
           }
           action->setEnabled( true );
         }
 
         action = mActions.value( Akonadi::StandardMailActionManager::MarkMailAsActionItem );
         if ( action ) {
+          action->setCheckable(true);
           updateMarkAction( action, allMarkedAsActionItem );
           if ( allMarkedAsActionItem ) {
             action->setText( i18n( "Remove Action Item Mark" ) );
+            action->setChecked(true);
           } else {
             action->setText( i18n( "&Mark Mail as Action Item" ) );
+            action->setChecked(false);
           }
           action->setEnabled( true );
         }
