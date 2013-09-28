@@ -20,7 +20,7 @@
 
 #include "test.h"
 
-#include "../dbusconnectionpool.h"
+#include "../../dbusconnectionpool.h"
 
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/collectiondeletejob.h>
