@@ -45,6 +45,7 @@ private Q_SLOTS:
     void testUnselectCollection();
     void testSelectCollection();
     void testSubTodos();
+    void testNotifyObserverBug();
 
 public Q_SLOTS:
     void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );   /**Q_DECL_OVERRIDE*/

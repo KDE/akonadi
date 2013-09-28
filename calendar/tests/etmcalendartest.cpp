@@ -267,7 +267,14 @@ void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence 
     const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
     QCOMPARE( id.toLongLong(), mCalendar->item( incidence->uid() ).id() );
 
+    Akonadi::Item item = mCalendar->item(incidence->uid());
+    Incidence::Ptr i2 = item.payload<KCalCore::Incidence::Ptr>();
+    QCOMPARE(i2->summary(), incidence->summary());
+    Incidence::Ptr i3 = mCalendar->incidence(incidence->uid());
+    QCOMPARE(i3->summary(), incidence->summary());
+
     --mIncidencesToChange;
+
     checkExitLoop();
 }
 
@@ -348,6 +355,33 @@ void ETMCalendarTest::testSubTodos()
 
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
     QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
+}
+
+void ETMCalendarTest::testNotifyObserverBug()
+{
+    // When an observer's calendarIncidenceChanged(Incidence) method got called
+    // and that observer then called calendar->item(incidence->uid()) the retrieved item would still
+    // have the old payload, because CalendarBase::updateItem() was still on the stack
+    // and would only update after calendarIncidenceChanged() returned.
+    // This test ensure that doesnt happen.
+
+    const QLatin1String uid("todo-notify-bug");
+    createTodo(uid, QString());
+    waitForIt();
+
+    Akonadi::Item item = mCalendar->item(uid);
+    KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(mCalendar->incidence(uid)->clone());
+    QVERIFY(item.isValid());
+
+    // Modify it
+    mIncidencesToChange = 1;
+    incidence->setSummary(QLatin1String("new-summary"));
+    item.setPayload(incidence);
+    ItemModifyJob *job = new ItemModifyJob(item);
+    AKVERIFYEXEC(job);
+
+    // The test will now happen inside ETMCalendarTest::calendarIncidenceChanged()
+    waitForIt();
 }
 
 void ETMCalendarTest::waitForIt()
