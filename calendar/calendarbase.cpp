@@ -256,6 +256,7 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
 {
   Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
   Q_ASSERT( newIncidence );
+  const QString newUid = newIncidence->uid();
   if ( mItemIdByUid.contains( newIdentifier ) ) {
     Akonadi::Item oldItem = mItemById.value( newItem.id() );
     Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
@@ -279,6 +280,11 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   Q_ASSERT( oldItem.isValid() );
   Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
   Q_ASSERT( oldIncidence );
+
+  // Get the real pointer
+  oldIncidence = q->MemoryCalendar::incidence( oldIncidence->uid() );
+  Q_ASSERT( oldIncidence );
+
   if ( newIncidence->instanceIdentifier() == oldIncidence->instanceIdentifier() ) {
     kWarning() << "New uid=" << newIncidence->uid() << "; old uid=" << oldIncidence->uid()
                << "; new recurrenceId="
@@ -293,8 +299,6 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
 
   mItemIdByUid.remove( oldIncidence->instanceIdentifier() );
   const QString oldUid = oldIncidence->uid();
-  kDebug() << "Handling identifier change from " << oldIncidence->instanceIdentifier()
-           << " to " << newIncidence->instanceIdentifier();
 
   if ( mParentUidToChildrenUid.contains( oldUid ) ) {
     Q_ASSERT( !mParentUidToChildrenUid.contains( newIdentifier ) );
@@ -307,13 +311,10 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   q->setObserversEnabled( false );
   q->MemoryCalendar::deleteIncidence( oldIncidence );
   q->MemoryCalendar::addIncidence( newIncidence );
-  const QString newUid = newIncidence->uid();
-  newIncidence->setUid( oldUid );
-  q->setObserversEnabled( true );
 
-  // The actual operation of updating the UID must be done with observers enabled so
-  // FieldUid gets dirty.
-  newIncidence->setUid( newUid );
+  newIncidence->setUid(oldUid); // We set and unset just to notify observers of a change.
+  q->setObserversEnabled( true );
+  newIncidence->setUid(newUid);
 }
 
 void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &incidence )
