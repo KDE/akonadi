@@ -364,7 +364,6 @@ void ETMCalendarTest::testNotifyObserverBug()
     // have the old payload, because CalendarBase::updateItem() was still on the stack
     // and would only update after calendarIncidenceChanged() returned.
     // This test ensure that doesnt happen.
-
     const QLatin1String uid("todo-notify-bug");
     createTodo(uid, QString());
     waitForIt();
@@ -382,6 +381,39 @@ void ETMCalendarTest::testNotifyObserverBug()
 
     // The test will now happen inside ETMCalendarTest::calendarIncidenceChanged()
     waitForIt();
+}
+
+void ETMCalendarTest::testUidChange()
+{
+    const QLatin1String originalUid("original-uid");
+    const QLatin1String newUid("new-uid");
+    createTodo(originalUid, QString());
+    waitForIt();
+
+    KCalCore::Incidence::Ptr clone = Incidence::Ptr(mCalendar->incidence(originalUid)->clone());
+    QCOMPARE(clone->uid(), originalUid);
+
+    Akonadi::Item item = mCalendar->item(originalUid);
+    clone->setUid(newUid);
+    QVERIFY(item.isValid());
+    item.setPayload(clone);
+    mIncidencesToChange = 1;
+    ItemModifyJob *job = new ItemModifyJob(item);
+    AKVERIFYEXEC(job);
+
+    waitForIt();
+
+    // Check that stuff still works fine
+    KCalCore::Incidence::Ptr incidence = mCalendar->incidence(originalUid);
+    QVERIFY(!incidence);
+    incidence = mCalendar->incidence(newUid);
+    QCOMPARE(incidence->uid(), newUid);
+
+    item = mCalendar->item(originalUid);
+    QVERIFY(!item.isValid());
+
+    item = mCalendar->item(newUid);
+    QVERIFY(item.isValid());
 }
 
 void ETMCalendarTest::waitForIt()
