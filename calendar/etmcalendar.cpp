@@ -414,16 +414,17 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
     return;
   }
 
-  mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
   mItemsByCollection.insert( item.storageCollectionId(), item );
 
   if ( existingIncidence ) {
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
     // Check if RELATED-TO changed, updating parenting information
     handleParentChanged( existingIncidence.staticCast<KCalCore::Incidence>() );
     *(existingIncidence.data()) = *( newIncidence.data() );
   } else {
     // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
     handleUidChange( item, newIncidence->instanceIdentifier() );
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
   }
 }
 
