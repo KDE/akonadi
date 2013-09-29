@@ -252,20 +252,24 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newIdentifier )
+void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
+                                          const Akonadi::Item &newItem, const QString &newIdentifier )
 {
-  Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
+  Q_ASSERT( oldItem.isValid() );
+  Incidence::Ptr newIncidence = CalendarUtils::incidence( newItem );
   Q_ASSERT( newIncidence );
+  Incidence::Ptr oldIncidence = CalendarUtils::incidence( oldItem );
+  Q_ASSERT( oldIncidence );
+
   const QString newUid = newIncidence->uid();
   if ( mItemIdByUid.contains( newIdentifier ) ) {
-    Akonadi::Item oldItem = mItemById.value( newItem.id() );
-    Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
+    Incidence::Ptr oldIncidence = CalendarUtils::incidence( oldItem );
     kWarning() << "New uid shouldn't be known: "  << newIdentifier << "; id="
                << newItem.id() << "; oldItem.id=" << mItemIdByUid[newIdentifier]
                << "; new summary= " << newIncidence->summary()
                << "; new recurrenceId=" << newIncidence->recurrenceId()
                << "; oldIncidence" << oldIncidence;
-    if (oldIncidence) {
+    if ( oldIncidence ) {
       kWarning() << "; oldIncidence uid=" << oldIncidence->uid()
                  << "; oldIncidence recurrenceId = " << oldIncidence->recurrenceId()
                  << "; oldIncidence summary = " << oldIncidence->summary();
@@ -275,11 +279,6 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   }
 
   mItemIdByUid[newIdentifier] = newItem.id();
-  Q_ASSERT( mItemById.contains( newItem.id() ) );
-  Akonadi::Item oldItem = mItemById.value( newItem.id() );
-  Q_ASSERT( oldItem.isValid() );
-  Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
-  Q_ASSERT( oldIncidence );
 
   // Get the real pointer
   oldIncidence = q->MemoryCalendar::incidence( oldIncidence->uid() );
