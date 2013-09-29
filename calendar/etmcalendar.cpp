@@ -420,7 +420,7 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
 
   if ( existingIncidence ) {
     // Check if RELATED-TO changed, updating parenting information
-    handleParentChanged( existingIncidence.staticCast<KCalCore::Incidence>() );
+    handleParentChanged( newIncidence );
     *(existingIncidence.data()) = *( newIncidence.data() );
   } else {
     // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.

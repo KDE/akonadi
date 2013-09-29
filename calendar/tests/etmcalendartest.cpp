@@ -253,6 +253,7 @@ void ETMCalendarTest::calendarIncidenceAdded( const Incidence::Ptr &incidence )
     const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
     QCOMPARE( id.toLongLong(), mCalendar->item( incidence->uid() ).id() );
 
+    QVERIFY(mIncidencesToAdd > 0);
     --mIncidencesToAdd;
     checkExitLoop();
 }
@@ -273,8 +274,10 @@ void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence 
     Incidence::Ptr i3 = mCalendar->incidence(incidence->uid());
     QCOMPARE(i3->summary(), incidence->summary());
 
-    --mIncidencesToChange;
 
+    QVERIFY(mIncidencesToChange > 0);
+
+    --mIncidencesToChange;
     checkExitLoop();
 }
 
@@ -282,6 +285,7 @@ void ETMCalendarTest::calendarIncidenceDeleted( const Incidence::Ptr &incidence 
 {
     const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
     QVERIFY( !id.isEmpty() );
+    QVERIFY(mIncidencesToDelete > 0);
 
     --mIncidencesToDelete;
     mLastDeletedUid = incidence->uid();
@@ -317,10 +321,10 @@ void ETMCalendarTest::testSubTodos()
     QVERIFY(!mCalendar->incidence(tr("tb.3")));
 
     // Move a top-level to-do to a new parent
-    Incidence::Ptr ta = mCalendar->incidence(tr("ta"));
+    Incidence::Ptr ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    QVERIFY(ta);
     Item ta_item = mCalendar->item(tr("ta"));
     ta_item.setPayload(ta);
-    QVERIFY(ta);
     ta->setRelatedTo(tr("tb"));
     mIncidencesToChange = 1;
 
@@ -331,7 +335,7 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
 
     // Move it to another parent now
-    ta = mCalendar->incidence(tr("ta"));
+    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
     ta_item = mCalendar->item(tr("ta"));
     ta->setRelatedTo(tr("tb.2"));
     ta_item.setPayload(ta);
@@ -344,7 +348,7 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb.2")).count(), 1);
 
     // Now unparent it
-    ta = mCalendar->incidence(tr("ta"));
+    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
     ta_item = mCalendar->item(tr("ta"));
     ta->setRelatedTo(QString());
     ta_item.setPayload(ta);
