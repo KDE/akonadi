@@ -252,20 +252,24 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
   emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const QString &newIdentifier )
+void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
+                                          const Akonadi::Item &newItem, const QString &newIdentifier )
 {
-  Incidence::Ptr newIncidence = CalendarUtils::incidence(newItem);
+  Q_ASSERT( oldItem.isValid() );
+  Incidence::Ptr newIncidence = CalendarUtils::incidence( newItem );
   Q_ASSERT( newIncidence );
+  Incidence::Ptr oldIncidence = CalendarUtils::incidence( oldItem );
+  Q_ASSERT( oldIncidence );
+
   const QString newUid = newIncidence->uid();
   if ( mItemIdByUid.contains( newIdentifier ) ) {
-    Akonadi::Item oldItem = mItemById.value( newItem.id() );
-    Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
+    Incidence::Ptr oldIncidence = CalendarUtils::incidence( oldItem );
     kWarning() << "New uid shouldn't be known: "  << newIdentifier << "; id="
                << newItem.id() << "; oldItem.id=" << mItemIdByUid[newIdentifier]
                << "; new summary= " << newIncidence->summary()
                << "; new recurrenceId=" << newIncidence->recurrenceId()
                << "; oldIncidence" << oldIncidence;
-    if (oldIncidence) {
+    if ( oldIncidence ) {
       kWarning() << "; oldIncidence uid=" << oldIncidence->uid()
                  << "; oldIncidence recurrenceId = " << oldIncidence->recurrenceId()
                  << "; oldIncidence summary = " << oldIncidence->summary();
@@ -275,11 +279,6 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   }
 
   mItemIdByUid[newIdentifier] = newItem.id();
-  Q_ASSERT( mItemById.contains( newItem.id() ) );
-  Akonadi::Item oldItem = mItemById.value( newItem.id() );
-  Q_ASSERT( oldItem.isValid() );
-  Incidence::Ptr oldIncidence = CalendarUtils::incidence(oldItem);
-  Q_ASSERT( oldIncidence );
 
   // Get the real pointer
   oldIncidence = q->MemoryCalendar::incidence( oldIncidence->uid() );
@@ -317,16 +316,16 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   newIncidence->setUid(newUid);
 }
 
-void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &incidence )
+void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &newIncidence )
 {
-  Q_ASSERT( incidence );
+  Q_ASSERT( newIncidence );
 
-  if ( incidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
+  if ( newIncidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
     return;
   }
 
-  const QString originalParentUid = mUidToParent.value( incidence->uid() );
-  const QString newParentUid = incidence->relatedTo();
+  const QString originalParentUid = mUidToParent.value( newIncidence->uid() );
+  const QString newParentUid = newIncidence->relatedTo();
 
   if ( originalParentUid == newParentUid ) {
     return; // nothing changed
@@ -335,16 +334,16 @@ void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &i
   if ( !originalParentUid.isEmpty() ) {
     // Remove this child from it's old parent:
     Q_ASSERT( mParentUidToChildrenUid.contains( originalParentUid ) );
-    mParentUidToChildrenUid[originalParentUid].removeAll( incidence->uid() );
+    mParentUidToChildrenUid[originalParentUid].removeAll( newIncidence->uid() );
   }
 
-  mUidToParent.remove( incidence->uid() );
+  mUidToParent.remove( newIncidence->uid() );
 
   if ( !newParentUid.isEmpty() ) {
     // Deliver this child to it's new parent:
-    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( incidence->uid() ) );
-    mParentUidToChildrenUid[newParentUid].append( incidence->uid() );
-    mUidToParent.insert( incidence->uid(), newParentUid );
+    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( newIncidence->uid() ) );
+    mParentUidToChildrenUid[newParentUid].append( newIncidence->uid() );
+    mUidToParent.insert( newIncidence->uid(), newParentUid );
   }
 }
 

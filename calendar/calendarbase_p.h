@@ -43,7 +43,7 @@ public:
 
   void deleteAllIncidencesOfType( const QString &mimeType );
 
-  void handleUidChange( const Akonadi::Item &newItem, const QString &newUid );
+  void handleUidChange( const Akonadi::Item &oldItem, const Akonadi::Item &newItem, const QString &newUid );
 
   // Checks if parent changed and adjust internal hierarchy info
   void handleParentChanged(const KCalCore::Incidence::Ptr &incidence );
