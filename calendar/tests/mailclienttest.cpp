@@ -50,6 +50,8 @@ private slots:
 
   void initTestCase()
   {
+    AkonadiTest::checkTestIsIsolated();
+
     mPendingSignals = 0;
     mMailClient = new MailClient( this );
     mLastResult = MailClient::ResultSuccess;
@@ -357,7 +359,6 @@ private slots:
       QVERIFY( !QTestEventLoop::instance().timeout() );
     }
   }
-
 
 public Q_SLOTS:
 private:
