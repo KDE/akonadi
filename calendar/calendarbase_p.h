@@ -24,6 +24,7 @@
 #include "incidencechanger.h"
 
 #include <QVector>
+#include <QMultiHash>
 
 class KJob;
 
@@ -44,6 +45,9 @@ public:
 
   void handleUidChange( const Akonadi::Item &newItem, const QString &newUid );
 
+  // Checks if parent changed and adjust internal hierarchy info
+  void handleParentChanged(const KCalCore::Incidence::Ptr &incidence );
+
 public Q_SLOTS:
   void slotDeleteFinished( int changeId,
                             const QVector<Akonadi::Item::Id> &,
@@ -61,6 +65,7 @@ public Q_SLOTS:
                             const QString &errorMessage );
 
 public:
+  QMultiHash<Akonadi::Collection::Id, Akonadi::Item> mItemsByCollection;
   QHash<QString,Akonadi::Item::Id> mItemIdByUid;
   QHash<Akonadi::Item::Id, Akonadi::Item> mItemById;
   Akonadi::IncidenceChanger *mIncidenceChanger;
@@ -69,6 +74,12 @@ public:
   Akonadi::Collection mCollectionForBatchInsertion;
   bool mBatchInsertionCancelled;
   bool mListensForNewItems; // does this model detect new item creations ?
+
+  // Hash with uid->parentUid. When receiving onDataChanged() we need a way
+  // to obtain the original RELATED-TO. Because RELATED-TO might have been modified
+  // we can't trust the incidence stored in the calendar. ( Users of this class don't
+  // operate on a incidence clone, they change the same incidence that's inside the calendar )
+  QHash<QString,QString> mUidToParent;
 
 private:
   CalendarBase *const q;

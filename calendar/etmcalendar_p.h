@@ -77,7 +77,6 @@ public:
     }
 };
 
-
 class ETMCalendarPrivate : public CalendarBasePrivate
 {
   Q_OBJECT
@@ -105,6 +104,7 @@ public Q_SLOTS:
   void onFilterChanged();
 
   void clear();
+  void updateItem( const Akonadi::Item & );
   Akonadi::Item itemFromIndex( const QModelIndex &idx );
   Akonadi::Collection collectionFromIndex( const QModelIndex &index );
   void itemsAdded( const Akonadi::Item::List &items );

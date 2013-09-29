@@ -127,12 +127,14 @@ void CalendarBasePrivate::internalInsert( const Akonadi::Item &item )
 
   mItemById.insert( item.id(), item );
   mItemIdByUid.insert( uid, item.id() );
+  mItemsByCollection.insert( item.storageCollectionId(), item );
 
   if ( !incidence->hasRecurrenceId() ) {
     // Insert parent relationships
     const QString parentUid = incidence->relatedTo();
     if ( !parentUid.isEmpty() ) {
       mParentUidToChildrenUid[parentUid].append( incidence->uid() );
+      mUidToParent.insert( uid, parentUid );
     }
   }
 
@@ -165,11 +167,15 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
     // kDebug() << "Deleting incidence from calendar .id=" << item.id() << "uid=" << incidence->uid();
     mItemIdByUid.remove( incidence->instanceIdentifier() );
 
+    mItemsByCollection.remove( item.storageCollectionId(), item );
+
     if ( !incidence->hasRecurrenceId() ) {
-      mParentUidToChildrenUid.remove( incidence->uid() );
+      const QString uid = incidence->uid();
       const QString parentUid = incidence->relatedTo();
+      mParentUidToChildrenUid.remove( uid );
       if ( !parentUid.isEmpty() ) {
-        mParentUidToChildrenUid[parentUid].removeAll( incidence->uid() );
+        mParentUidToChildrenUid[parentUid].removeAll( uid );
+        mUidToParent.remove( uid );
       }
     }
     // Must be the last one due to re-entrancy
@@ -186,10 +192,11 @@ void CalendarBasePrivate::internalRemove( const Akonadi::Item &item )
 void CalendarBasePrivate::deleteAllIncidencesOfType( const QString &mimeType )
 {
   kWarning() << "Refusing to delete your Incidences.";
+  Q_UNUSED(mimeType);
   /*
   QHash<Item::Id, Item>::iterator i;
   Item::List incidences;
-  for( i = mItemById.begin(); i != mItemById.end(); ++i ) {
+  for ( i = mItemById.begin(); i != mItemById.end(); ++i ) {
     if ( i.value().payload<KCalCore::Incidence::Ptr>()->mimeType() == mimeType )
       incidences.append( i.value() );
   }
@@ -300,7 +307,44 @@ void CalendarBasePrivate::handleUidChange( const Akonadi::Item &newItem, const Q
   q->setObserversEnabled( false );
   q->MemoryCalendar::deleteIncidence( oldIncidence );
   q->MemoryCalendar::addIncidence( newIncidence );
+  const QString newUid = newIncidence->uid();
+  newIncidence->setUid( oldUid );
   q->setObserversEnabled( true );
+
+  // The actual operation of updating the UID must be done with observers enabled so
+  // FieldUid gets dirty.
+  newIncidence->setUid( newUid );
+}
+
+void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &incidence )
+{
+  Q_ASSERT( incidence );
+
+  if ( incidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
+    return;
+  }
+
+  const QString originalParentUid = mUidToParent.value( incidence->uid() );
+  const QString newParentUid = incidence->relatedTo();
+
+  if ( originalParentUid == newParentUid ) {
+    return; // nothing changed
+  }
+
+  if ( !originalParentUid.isEmpty() ) {
+    // Remove this child from it's old parent:
+    Q_ASSERT( mParentUidToChildrenUid.contains( originalParentUid ) );
+    mParentUidToChildrenUid[originalParentUid].removeAll( incidence->uid() );
+  }
+
+  mUidToParent.remove( incidence->uid() );
+
+  if ( !newParentUid.isEmpty() ) {
+    // Deliver this child to it's new parent:
+    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( incidence->uid() ) );
+    mParentUidToChildrenUid[newParentUid].append( incidence->uid() );
+    mUidToParent.insert( incidence->uid(), newParentUid );
+  }
 }
 
 CalendarBase::CalendarBase( QObject *parent ) : MemoryCalendar( KSystemTimeZones::local() )

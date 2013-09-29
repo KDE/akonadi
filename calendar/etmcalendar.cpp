@@ -39,6 +39,7 @@
 
 #include <QSortFilterProxyModel>
 #include <QItemSelectionModel>
+#include <QTreeView>
 
 using namespace Akonadi;
 using namespace KCalCore;
@@ -174,6 +175,12 @@ void ETMCalendarPrivate::setupFilteredETM()
   mFilteredETM->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   mFilteredETM->setSortRole( CalendarModel::SortRole );
   mFilteredETM->setObjectName( "Show headers" );
+
+#ifdef AKONADI_CALENDAR_DEBUG_MODEL
+  QTreeView *view = new QTreeView;
+  view->setModel( mFilteredETM );
+  view->show();
+#endif
 }
 
 ETMCalendarPrivate::~ETMCalendarPrivate()
@@ -188,6 +195,7 @@ void ETMCalendarPrivate::loadFromETM()
 void ETMCalendarPrivate::clear()
 {
   mCollectionMap.clear();
+  mItemsByCollection.clear();
 
   itemsRemoved( mItemById.values() );
 
@@ -383,33 +391,41 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
   int row = i.row();
   while ( row <= endRow ) {
     const Akonadi::Item item = itemFromIndex( i );
-    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() ) {
-      Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
-      newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
-      Q_ASSERT( newIncidence );
-      Q_ASSERT( !newIncidence->uid().isEmpty() );
-      IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-      if ( !existingIncidence ) {
-        if ( !mItemById.contains( item.id() ) ) {
-          // We don't know about this one because it was discarded. For example, not having DTSTART.
-          return;
-        }
+    if ( item.isValid() && item.hasPayload<KCalCore::Incidence::Ptr>() )
+      updateItem( item );
 
-        // The item changed it's UID, update our maps.
-        // The Google resource, for example, changes the UID when we create incidences.
-        handleUidChange( item, newIncidence->instanceIdentifier() );
-        existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
-      }
-
-      // The item needs updating too, revision changed.
-      mItemById.insert( item.id(), item );
-
-      *(existingIncidence.data()) = *( newIncidence.data() );
-    }
     ++row;
     i = i.sibling( row, topLeft.column() );
   }
+
   emit q->calendarChanged();
+}
+
+void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
+{
+  Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+  Q_ASSERT( newIncidence );
+  Q_ASSERT( !newIncidence->uid().isEmpty() );
+  newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
+  IncidenceBase::Ptr existingIncidence = q->incidence( newIncidence->uid(), newIncidence->recurrenceId() );
+
+  if ( !existingIncidence && !mItemById.contains( item.id() ) ) {
+    // We don't know about this one because it was discarded, for example because of not having DTSTART
+    return;
+  }
+
+  mItemsByCollection.insert( item.storageCollectionId(), item );
+
+  if ( existingIncidence ) {
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+    // Check if RELATED-TO changed, updating parenting information
+    handleParentChanged( existingIncidence.staticCast<KCalCore::Incidence>() );
+    *(existingIncidence.data()) = *( newIncidence.data() );
+  } else {
+    // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
+    handleUidChange( item, newIncidence->instanceIdentifier() );
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
+  }
 }
 
 void ETMCalendarPrivate::onRowsInsertedInFilteredModel( const QModelIndex &index,
