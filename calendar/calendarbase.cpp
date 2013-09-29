@@ -316,16 +316,16 @@ void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
   newIncidence->setUid(newUid);
 }
 
-void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &incidence )
+void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &newIncidence )
 {
-  Q_ASSERT( incidence );
+  Q_ASSERT( newIncidence );
 
-  if ( incidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
+  if ( newIncidence->hasRecurrenceId() ) { // These ones don't/shouldn't have a parent
     return;
   }
 
-  const QString originalParentUid = mUidToParent.value( incidence->uid() );
-  const QString newParentUid = incidence->relatedTo();
+  const QString originalParentUid = mUidToParent.value( newIncidence->uid() );
+  const QString newParentUid = newIncidence->relatedTo();
 
   if ( originalParentUid == newParentUid ) {
     return; // nothing changed
@@ -334,16 +334,16 @@ void CalendarBasePrivate::handleParentChanged( const KCalCore::Incidence::Ptr &i
   if ( !originalParentUid.isEmpty() ) {
     // Remove this child from it's old parent:
     Q_ASSERT( mParentUidToChildrenUid.contains( originalParentUid ) );
-    mParentUidToChildrenUid[originalParentUid].removeAll( incidence->uid() );
+    mParentUidToChildrenUid[originalParentUid].removeAll( newIncidence->uid() );
   }
 
-  mUidToParent.remove( incidence->uid() );
+  mUidToParent.remove( newIncidence->uid() );
 
   if ( !newParentUid.isEmpty() ) {
     // Deliver this child to it's new parent:
-    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( incidence->uid() ) );
-    mParentUidToChildrenUid[newParentUid].append( incidence->uid() );
-    mUidToParent.insert( incidence->uid(), newParentUid );
+    Q_ASSERT( !mParentUidToChildrenUid[newParentUid].contains( newIncidence->uid() ) );
+    mParentUidToChildrenUid[newParentUid].append( newIncidence->uid() );
+    mUidToParent.insert( newIncidence->uid(), newParentUid );
   }
 }
 
