@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2011 Sérgio Martins <iamsergio@gmail.com>
+    Copyright (c) 2011-2013 Sérgio Martins <iamsergio@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -48,12 +48,13 @@ private Q_SLOTS:
     void testSubTodos();
     void testNotifyObserverBug();
     void testUidChange();
+    void testItem(); // tests item()
 
 public Q_SLOTS:
-    void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );   /**Q_DECL_OVERRIDE*/
-    void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence ); /**Q_DECL_OVERRIDE*/
-    void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence ); /**Q_DECL_OVERRIDE*/
-    void handleCollectionsAdded( const Akonadi::Collection::List & );
+    void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence);   /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceChanged(const KCalCore::Incidence::Ptr &incidence); /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceDeleted(const KCalCore::Incidence::Ptr &incidence); /**Q_DECL_OVERRIDE*/
+    void handleCollectionsAdded(const Akonadi::Collection::List &);
 
 private:
     void deleteIncidence(const QString &uid);

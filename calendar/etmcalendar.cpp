@@ -287,7 +287,7 @@ void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 
     Akonadi::Collection::Id id = items.first().storageCollectionId();
     if ( mPopulatedCollectionIds.contains( id ) ) {
-      // If the collection isn't populated yet, it will be send later
+      // If the collection isn't populated yet, it will be sent later
       // Saves some cpu cycles
       emit q->calendarChanged();
     }
@@ -403,7 +403,7 @@ void ETMCalendarPrivate::onDataChangedInFilteredModel( const QModelIndex &topLef
 
 void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
 {
-  Incidence::Ptr newIncidence = item.payload<KCalCore::Incidence::Ptr>();
+  Incidence::Ptr newIncidence = CalendarUtils::incidence( item );
   Q_ASSERT( newIncidence );
   Q_ASSERT( !newIncidence->uid().isEmpty() );
   newIncidence->setCustomProperty( "VOLATILE", "AKONADI-ID", QString::number( item.id() ) );
@@ -416,13 +416,18 @@ void ETMCalendarPrivate::updateItem( const Akonadi::Item &item )
 
   mItemsByCollection.insert( item.storageCollectionId(), item );
   Akonadi::Item oldItem = mItemById.value( item.id() );
-  mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
 
   if ( existingIncidence ) {
+    // We set the payload so that the internal incidence pointer and the one in mItemById stay the same
+    Akonadi::Item updatedItem = item;
+    updatedItem.setPayload<KCalCore::Incidence::Ptr>( existingIncidence.staticCast<KCalCore::Incidence>() );
+    mItemById.insert( item.id(), updatedItem ); // The item needs updating too, revision changed.
+
     // Check if RELATED-TO changed, updating parenting information
     handleParentChanged( newIncidence );
     *(existingIncidence.data()) = *( newIncidence.data() );
   } else {
+    mItemById.insert( item.id(), item ); // The item needs updating too, revision changed.
     // The item changed it's UID, update our maps, the Google resource changes the UID when we create incidences.
     handleUidChange( oldItem, item, newIncidence->instanceIdentifier() );
   }
