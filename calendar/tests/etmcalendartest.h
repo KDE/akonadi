@@ -51,10 +51,10 @@ private Q_SLOTS:
     void testItem(); // tests item()
 
 public Q_SLOTS:
-    void calendarIncidenceAdded( const KCalCore::Incidence::Ptr &incidence );   /**Q_DECL_OVERRIDE*/
-    void calendarIncidenceChanged( const KCalCore::Incidence::Ptr &incidence ); /**Q_DECL_OVERRIDE*/
-    void calendarIncidenceDeleted( const KCalCore::Incidence::Ptr &incidence ); /**Q_DECL_OVERRIDE*/
-    void handleCollectionsAdded( const Akonadi::Collection::List & );
+    void calendarIncidenceAdded(const KCalCore::Incidence::Ptr &incidence);   /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceChanged(const KCalCore::Incidence::Ptr &incidence); /**Q_DECL_OVERRIDE*/
+    void calendarIncidenceDeleted(const KCalCore::Incidence::Ptr &incidence); /**Q_DECL_OVERRIDE*/
+    void handleCollectionsAdded(const Akonadi::Collection::List &);
 
 private:
     void deleteIncidence(const QString &uid);
