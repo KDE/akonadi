@@ -89,7 +89,7 @@ void QueryBuilderTest::testQueryBuilder_data()
   vals << "a" << "b" << "c";
   qb.addValueCondition( "col1", Query::In, vals );
   bindVals.clear();
-  bindVals << QString("a") << QString("b") << QString("c");
+  bindVals << QString( "a" ) << QString( "b" ) << QString( "c" );
   mBuilders << qb;
   QTest::newRow( "where in" ) << mBuilders.count() << QString( "SELECT col1 FROM table WHERE ( col1 IN ( :0, :1, :2 ) )" ) << bindVals;
 

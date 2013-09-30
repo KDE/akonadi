@@ -17,7 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-
 #include "akonadi.h"
 #include "akapplication.h"
 #include "akdbus.h"
@@ -36,7 +35,7 @@
 #ifdef QT_STATICPLUGIN
 #include <QtPlugin>
 
-Q_IMPORT_PLUGIN(qsqlite3)
+Q_IMPORT_PLUGIN( qsqlite3 )
 #endif
 
 #ifndef _WIN32_WCE
@@ -75,7 +74,7 @@ int main( int argc, char ** argv )
 #else
    if (
 #endif
-        !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::ControlLock) ) ) {
+        !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
      akError() << "Akonadi control process not found - aborting.";
      akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
    }

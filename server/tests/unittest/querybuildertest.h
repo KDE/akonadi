@@ -39,5 +39,4 @@ class QueryBuilderTest : public QObject
     QList< Akonadi::QueryBuilder > mBuilders;
 };
 
-
 #endif

@@ -22,7 +22,7 @@
 
 using namespace Akonadi;
 
-static const char* s_resultCodeStrings[] = {
+static const char *s_resultCodeStrings[] = {
     "OK", "NO", "BAD", "BYE", ""
 };
 
@@ -31,7 +31,6 @@ Response::Response()
     , m_tag( "*" )
 {
 }
-
 
 Response::~Response()
 {
@@ -64,22 +63,22 @@ void Response::setError( )
     m_resultCode = Response::BAD;
 }
 
-void Response::setTag( const QByteArray& tag )
+void Response::setTag( const QByteArray &tag )
 {
     m_tag = tag;
 }
 
 void Response::setUntagged( )
 {
-    m_tag = QByteArray(1, '*');
+    m_tag = QByteArray( 1, '*' );
 }
 
 void Response::setContinuation( )
 {
-    m_tag = QByteArray(1, '+');
+    m_tag = QByteArray( 1, '+' );
 }
 
-void Response::setString( const QByteArray & string )
+void Response::setString( const QByteArray &string )
 {
     m_responseString = string;
 }

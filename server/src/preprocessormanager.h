@@ -36,7 +36,6 @@ class QMutex;
 
 #include "preprocessorinstance.h"
 
-
 namespace Akonadi
 {
 
@@ -92,13 +91,13 @@ protected:
   /**
    * The one and only instance pointer for the class PreprocessorManager
    */
-  static PreprocessorManager * mSelf;
+  static PreprocessorManager *mSelf;
 
   /**
    * The hashtable of transaction wait queues. There is one wait
    * queue for each DataStore that is currently in a transaction.
    */
-  QHash< const DataStore *, std::deque< qint64 > * > mTransactionWaitQueueHash;
+  QHash< const DataStore *, std::deque< qint64 > *> mTransactionWaitQueueHash;
 
   /**
    * The preprocessor chain.
@@ -107,7 +106,7 @@ protected:
    * In all the algorithms we assume that this list is actually very short
    * (say 3-4 elements) and reverse lookup (pointer->index) is really fast.
    */
-  QList< PreprocessorInstance * > mPreprocessorChain;
+  QList< PreprocessorInstance *> mPreprocessorChain;
 
   /**
    * Is preprocessing enabled at all in ths Akonad server instance ?
@@ -120,12 +119,12 @@ protected:
    * The mutex used to protect the internals of this class  (mainly
    * the mPreprocessorChain member).
    */
-  QMutex * mMutex;
+  QMutex *mMutex;
 
   /**
    * The heartbeat timer. Used mainly to expire preprocessor jobs.
    */
-  QTimer * mHeartbeatTimer;
+  QTimer *mHeartbeatTimer;
 
 public:
 
@@ -136,7 +135,7 @@ public:
    * \sa init()
    * \sa done()
    */
-  static PreprocessorManager * instance()
+  static PreprocessorManager *instance()
   {
     return mSelf;
   }
@@ -217,7 +216,7 @@ public:
    *
    * This function is thread-safe.
    */
-  void beginHandleItem( const PimItem &item, const DataStore * dataStore );
+  void beginHandleItem( const PimItem &item, const DataStore *dataStore );
 
   /**
    * This is called via D-Bus from AgentManager to register a preprocessor instance.
@@ -241,7 +240,7 @@ protected:
    *
    * This function is thread-safe.
    */
-  void preProcessorFinishedHandlingItem( PreprocessorInstance * preProcessor, qint64 itemId );
+  void preProcessorFinishedHandlingItem( PreprocessorInstance *preProcessor, qint64 itemId );
 
 private:
 
@@ -250,7 +249,7 @@ private:
    *
    * This must be called with mMutex locked.
    */
-  PreprocessorInstance * lockedFindInstance( const QString &id );
+  PreprocessorInstance *lockedFindInstance( const QString &id );
 
   /**
    * Pushes the specified item to the first preprocessor.
@@ -275,7 +274,7 @@ private:
   /**
    * Kill the wait queue for the specific DataStore object.
    */
-  void lockedKillWaitQueue( const DataStore * dataStore, bool disconnectSlots );
+  void lockedKillWaitQueue( const DataStore *dataStore, bool disconnectSlots );
 
 private Q_SLOTS:
 

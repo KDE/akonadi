@@ -28,7 +28,7 @@ ControlManager::ControlManager( QObject *parent )
   : QObject( parent )
 {
   new ControlManagerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/ControlManager"), this );
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/ControlManager" ), this );
 }
 
 ControlManager::~ControlManager()
@@ -39,4 +39,3 @@ void ControlManager::shutdown()
 {
   QTimer::singleShot( 0, QCoreApplication::instance(), SLOT(quit()) );
 }
-

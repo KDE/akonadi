@@ -133,7 +133,7 @@ class NotificationSource : public QObject
     Akonadi::NotificationManager *mManager;
     QString mIdentifier;
     QString mDBusIdentifier;
-    QDBusServiceWatcher* mClientWatcher;
+    QDBusServiceWatcher *mClientWatcher;
 
     bool mServerSideMonitorEnabled;
     bool mAllMonitored;
@@ -145,12 +145,6 @@ class NotificationSource : public QObject
 
 }; // class NotificationSource
 
-
-
-
 } // namespace Akonadi
 
-
-
 #endif // #define AKONADI_NOTIFICATIONSOURCE_H
-

@@ -51,7 +51,7 @@ class ImapStreamParser
      * Construct the parser.
      * @param socket the local socket to work with.
      */
-    ImapStreamParser( QIODevice* socket);
+    ImapStreamParser( QIODevice *socket );
 
     /**
      * Destructor.
@@ -96,7 +96,6 @@ class ImapStreamParser
      * @return the read character
      */
     QByteRef readChar();
-
 
     /**
      * Get the next data as a number. This call might block.
@@ -192,7 +191,6 @@ class ImapStreamParser
      */
     bool hasDateTime();
 
-
      /**
      * Check if the command end was reached
      * @return true if the end of command is reached
@@ -242,7 +240,7 @@ class ImapStreamParser
     /**
      * Set the identification used for Tracer calls.
      */
-    void setTracerIdentifier( const QString& id );
+    void setTracerIdentifier( const QString &id );
 
   private:
     QByteArray parseQuotedString();
@@ -253,7 +251,7 @@ class ImapStreamParser
      * @param wait the condition
      * @return true if more data is available
      */
-    bool waitForMoreData( bool wait);
+    bool waitForMoreData( bool wait );
 
     /**
      * Inform the client to send more literal data.

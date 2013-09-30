@@ -44,15 +44,17 @@ class ImapParser::Private
         const int end = readBuffer.lastIndexOf( '}' );
 
         // new literal in previous literal data block
-        if ( begin < pos )
+        if ( begin < pos ) {
           return false;
+        }
 
         // TODO error handling
         literalSize = readBuffer.mid( begin + 1, end - begin - 1 ).toLongLong();
 
         // empty literal
-        if ( literalSize == 0 )
+        if ( literalSize == 0 ) {
           return false;
+        }
 
         continuation = true;
         dataBuffer.reserve( dataBuffer.size() + literalSize + 1 );
@@ -68,39 +70,45 @@ template <typename T>
 int parseParenthesizedListHelper( const QByteArray &data, T &result, int start )
 {
   result.clear();
-  if ( start >= data.length() )
+  if ( start >= data.length() ) {
     return data.length();
+  }
 
   const int begin = data.indexOf( '(', start );
-  if ( begin < 0 )
+  if ( begin < 0 ) {
     return start;
+  }
 
   int count = 0;
   int sublistBegin = start;
   bool insideQuote = false;
   for ( int i = begin + 1; i < data.length(); ++i ) {
-    const char currentChar = data[ i ];
+    const char currentChar = data[i];
     if ( currentChar == '(' && !insideQuote ) {
       ++count;
-      if ( count == 1 )
+      if ( count == 1 ) {
         sublistBegin = i;
+      }
 
       continue;
     }
 
     if ( currentChar == ')' && !insideQuote ) {
-      if ( count <= 0 )
+      if ( count <= 0 ) {
         return i + 1;
+      }
 
-      if ( count == 1 )
+      if ( count == 1 ) {
         result.append( data.mid( sublistBegin, i - sublistBegin + 1 ) );
+      }
 
       --count;
       continue;
     }
 
-    if ( currentChar == ' ' || currentChar == '\n' || currentChar == '\r' )
+    if ( currentChar == ' ' || currentChar == '\n' || currentChar == '\r' ) {
        continue;
+    }
 
     if ( count == 0 ) {
       QByteArray ba;
@@ -136,8 +144,9 @@ int ImapParser::parseString( const QByteArray &data, QByteArray &result, int sta
 {
   int begin = stripLeadingSpaces( data, start );
   result.clear();
-  if ( begin >= data.length() )
+  if ( begin >= data.length() ) {
     return data.length();
+  }
 
   // literal string
   // TODO: error handling
@@ -148,10 +157,12 @@ int ImapParser::parseString( const QByteArray &data, QByteArray &result, int sta
 
     // strip CRLF
     begin = end + 1;
-    if ( begin < data.length() && data[begin] == '\r' )
+    if ( begin < data.length() && data[begin] == '\r' ) {
       ++begin;
-    if ( begin < data.length() && data[begin] == '\n' )
+    }
+    if ( begin < data.length() && data[begin] == '\n' ) {
       ++begin;
+    }
 
     end = begin + size;
     result = data.mid( begin, end - begin );
@@ -167,8 +178,9 @@ int ImapParser::parseQuotedString( const QByteArray &data, QByteArray &result, i
   int begin = stripLeadingSpaces( data, start );
   int end = begin;
   result.clear();
-  if ( begin >= data.length() )
+  if ( begin >= data.length() ) {
     return data.length();
+  }
 
   bool foundSlash = false;
   // quoted string
@@ -178,15 +190,15 @@ int ImapParser::parseQuotedString( const QByteArray &data, QByteArray &result, i
       const char ch = data.at( i );
       if ( foundSlash ) {
         foundSlash = false;
-        if ( ch == 'r' )
+        if ( ch == 'r' ) {
           result += '\r';
-        else if ( ch == 'n' )
+        } else if ( ch == 'n' ) {
           result += '\n';
-        else if ( ch == '\\' )
+        } else if ( ch == '\\' ) {
           result += '\\';
-        else if ( ch == '\"' )
+        } else if ( ch == '\"' ) {
           result += '\"';
-        else {
+        } else {
           //TODO: this is actually an error
           result += ch;
         }
@@ -214,23 +226,28 @@ int ImapParser::parseQuotedString( const QByteArray &data, QByteArray &result, i
         reachedInputEnd = false;
         break;
       }
-      if ( ch == '\\' )
+      if ( ch == '\\' ) {
         foundSlash = true;
+      }
     }
-    if ( reachedInputEnd )
+    if ( reachedInputEnd ) {
       end = data.length();
+    }
     result = data.mid( begin, end - begin );
 
     // transform unquoted NIL
-    if ( result == "NIL" )
+    if ( result == "NIL" ) {
       result.clear();
+    }
 
     // strip quotes
     if ( foundSlash ) {
-      while ( result.contains( "\\\"" ) )
+      while ( result.contains( "\\\"" ) ) {
         result.replace( "\\\"", "\"" );
-      while ( result.contains( "\\\\" ) )
+      }
+      while ( result.contains( "\\\\" ) ) {
         result.replace( "\\\\", "\\" );
+      }
     }
   }
 
@@ -240,8 +257,9 @@ int ImapParser::parseQuotedString( const QByteArray &data, QByteArray &result, i
 int ImapParser::stripLeadingSpaces( const QByteArray &data, int start )
 {
   for ( int i = start; i < data.length(); ++i ) {
-    if ( data[i] != ' ' )
+    if ( data[i] != ' ' ) {
       return i;
+    }
   }
 
   return data.length();
@@ -276,17 +294,20 @@ int ImapParser::parenthesesBalance( const QByteArray &data, int start )
 QByteArray ImapParser::join( const QList<QByteArray> &list, const QByteArray &separator )
 {
   // shortcuts for the easy cases
-  if ( list.isEmpty() )
+  if ( list.isEmpty() ) {
     return QByteArray();
-  if ( list.size() == 1 )
+  }
+  if ( list.size() == 1 ) {
     return list.first();
+  }
 
   // avoid expensive realloc's by determining the size beforehand
   QList<QByteArray>::const_iterator it = list.constBegin();
   const QList<QByteArray>::const_iterator endIt = list.constEnd();
   int resultSize = (list.size() - 1) * separator.size();
-  for ( ; it != endIt; ++it )
+  for ( ; it != endIt; ++it ) {
     resultSize += (*it).size();
+  }
 
   QByteArray result;
   result.reserve( resultSize );
@@ -318,17 +339,20 @@ int ImapParser::parseString( const QByteArray &data, QString &result, int start 
 
 int ImapParser::parseNumber( const QByteArray &data, qint64 &result, bool *ok, int start )
 {
-  if ( ok )
+  if ( ok ) {
     *ok = false;
+  }
 
   int pos = stripLeadingSpaces( data, start );
-  if ( pos >= data.length() )
+  if ( pos >= data.length() ) {
     return data.length();
+  }
 
   int begin = pos;
-  for (; pos < data.length(); ++pos ) {
-    if ( !isdigit( data.at( pos ) ) )
+  for ( ; pos < data.length(); ++pos ) {
+    if ( !isdigit( data.at( pos ) ) ) {
       break;
+    }
   }
 
   const QByteArray tmp = data.mid( begin, pos - begin );
@@ -339,15 +363,17 @@ int ImapParser::parseNumber( const QByteArray &data, qint64 &result, bool *ok, i
 
 QByteArray ImapParser::quote( const QByteArray &data )
 {
-  if ( data.isEmpty() )
+  if ( data.isEmpty() ) {
     return QByteArray( "\"\"" );
+  }
 
   const int inputLength = data.length();
   int stuffToQuote = 0;
   for ( int i = 0; i < inputLength; ++i ) {
     const char ch = data.at( i );
-    if ( ch == '"' || ch == '\\' || ch == '\n' || ch == '\r' )
+    if ( ch == '"' || ch == '\\' || ch == '\n' || ch == '\r' ) {
       ++stuffToQuote;
+    }
   }
 
   QByteArray result;
@@ -370,8 +396,9 @@ QByteArray ImapParser::quote( const QByteArray &data )
         continue;
       }
 
-      if ( ch == '"' || ch == '\\' )
+      if ( ch == '"' || ch == '\\' ) {
         result += '\\';
+      }
 
       result += ch;
     }
@@ -397,23 +424,27 @@ int ImapParser::parseSequenceSet( const QByteArray &data, ImapSet &result, int s
       --i;
     } else {
       upper = value;
-      if ( lower < 0 )
+      if ( lower < 0 ) {
         lower = value;
+      }
       result.add( ImapInterval( lower, upper ) );
       lower = -1;
       upper = -1;
       value = -1;
-      if ( data[i] != ',' )
+      if ( data[i] != ',' ) {
         return i;
+      }
     }
   }
   // take care of left-overs at input end
   upper = value;
-  if ( lower < 0 )
+  if ( lower < 0 ) {
     lower = value;
+  }
 
-  if ( lower >= 0 && upper >= 0 )
+  if ( lower >= 0 && upper >= 0 ) {
     result.add( ImapInterval( lower, upper ) );
+  }
 
   return data.length();
 }
@@ -442,82 +473,97 @@ int ImapParser::parseDateTime( const QByteArray &data, QDateTime &dateTime, int 
   //                     1         2
 
   int pos = stripLeadingSpaces( data, start );
-  if ( data.length() <= pos )
+  if ( data.length() <= pos ) {
     return pos;
+  }
 
   bool quoted = false;
   if ( data[pos] == '"' ) {
     quoted = true;
     ++pos;
 
-    if ( data.length() <= pos + 26 )
+    if ( data.length() <= pos + 26 ) {
       return start;
+    }
   } else {
-    if ( data.length() < pos + 26 )
+    if ( data.length() < pos + 26 ) {
       return start;
+    }
   }
 
   bool ok = true;
   const int day = ( data[pos] == ' ' ? data[pos + 1] - '0' // single digit day
                                      : data.mid( pos, 2 ).toInt( &ok ) );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 3;
   const QByteArray shortMonthNames( "janfebmaraprmayjunjulaugsepoctnovdec" );
   int month = shortMonthNames.indexOf( data.mid( pos, 3 ).toLower() );
-  if ( month == -1 )
+  if ( month == -1 ) {
     return start;
+  }
 
   month = month / 3 + 1;
   pos += 4;
   const int year = data.mid( pos, 4 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 5;
   const int hours = data.mid( pos, 2 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 3;
   const int minutes = data.mid( pos, 2 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 3;
   const int seconds = data.mid( pos, 2 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 4;
   const int tzhh = data.mid( pos, 2 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
   pos += 2;
   const int tzmm = data.mid( pos, 2 ).toInt( &ok );
-  if ( !ok )
+  if ( !ok ) {
     return start;
+  }
 
-  int tzsecs = tzhh*60*60 + tzmm*60;
-  if ( data[pos - 3] == '-' )
+  int tzsecs = tzhh * 60 * 60 + tzmm * 60;
+  if ( data[pos - 3] == '-' ) {
     tzsecs = -tzsecs;
+  }
 
   const QDate date( year, month, day );
   const QTime time( hours, minutes, seconds );
   dateTime = QDateTime( date, time, Qt::UTC );
-  if ( !dateTime.isValid() )
+  if ( !dateTime.isValid() ) {
     return start;
+  }
 
   dateTime = dateTime.addSecs( -tzsecs );
 
   pos += 2;
-  if ( data.length() <= pos || !quoted )
+  if ( data.length() <= pos || !quoted ) {
     return pos;
+  }
 
-  if ( data[pos] == '"' )
+  if ( data[pos] == '"' ) {
     ++pos;
+  }
 
   return pos;
 }
@@ -531,8 +577,9 @@ void ImapParser::splitVersionedKey( const QByteArray &data, QByteArray &key, int
       bool ok = false;
 
       version = data.mid( startPos + 1, endPos - startPos - 1 ).toInt( &ok );
-      if ( !ok )
+      if ( !ok ) {
         version = 0;
+      }
 
       key = data.left( startPos );
     }
@@ -560,8 +607,9 @@ bool ImapParser::parseNextLine( const QByteArray &readBuffer )
   // first line, get the tag
   if ( d->tagBuffer.isEmpty() ) {
     const int startOfData = ImapParser::parseString( readBuffer, d->tagBuffer );
-    if ( startOfData < readBuffer.length() && startOfData >= 0 )
+    if ( startOfData < readBuffer.length() && startOfData >= 0 ) {
       d->dataBuffer = readBuffer.mid( startOfData + 1 );
+    }
 
   } else {
     d->dataBuffer += readBuffer;
@@ -572,8 +620,9 @@ bool ImapParser::parseNextLine( const QByteArray &readBuffer )
     d->literalSize -= readBuffer.size();
 
     // still not everything read
-    if ( d->literalSize > 0 )
+    if ( d->literalSize > 0 ) {
       return false;
+    }
 
     // check the remaining (non-literal) part for parentheses
     if ( d->literalSize < 0 ) {
@@ -581,13 +630,15 @@ bool ImapParser::parseNextLine( const QByteArray &readBuffer )
       d->parenthesesCount += ImapParser::parenthesesBalance( readBuffer, readBuffer.length() + d->literalSize );
 
       // check if another literal read was started
-      if ( d->checkLiteralStart( readBuffer, readBuffer.length() + d->literalSize ) )
+      if ( d->checkLiteralStart( readBuffer, readBuffer.length() + d->literalSize ) ) {
         return false;
+      }
     }
 
     // literal string finished but still open parentheses
-    if ( d->parenthesesCount > 0 )
+    if ( d->parenthesesCount > 0 ) {
         return false;
+    }
 
   } else {
 
@@ -595,12 +646,14 @@ bool ImapParser::parseNextLine( const QByteArray &readBuffer )
     d->parenthesesCount += ImapParser::parenthesesBalance( readBuffer );
 
     // start new literal read
-    if ( d->checkLiteralStart( readBuffer ) )
+    if ( d->checkLiteralStart( readBuffer ) ) {
       return false;
+    }
 
     // still open parentheses
-    if ( d->parenthesesCount > 0 )
+    if ( d->parenthesesCount > 0 ) {
       return false;
+    }
 
     // just a normal response, fall through
   }

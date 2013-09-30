@@ -31,9 +31,9 @@ class ImapInterval::Private : public QSharedData
 {
   public:
     Private()
-      : QSharedData(),
-        begin( 0 ),
-        end( 0 )
+      : QSharedData()
+      , begin( 0 )
+      , end( 0 )
     {
     }
 
@@ -65,9 +65,8 @@ class ImapSet::Private : public QSharedData
     ImapInterval::List intervals;
 };
 
-
-ImapInterval::ImapInterval() :
-    d( new Private )
+ImapInterval::ImapInterval()
+  : d( new Private )
 {
 }
 
@@ -87,10 +86,11 @@ ImapInterval::~ImapInterval()
 {
 }
 
-ImapInterval& ImapInterval::operator=( const ImapInterval &other )
+ImapInterval &ImapInterval::operator=( const ImapInterval &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
@@ -102,8 +102,9 @@ bool ImapInterval::operator==( const ImapInterval &other ) const
 
 ImapInterval::Id ImapInterval::size() const
 {
-  if ( !d->begin && !d->end )
+  if ( !d->begin && !d->end ) {
     return 0;
+  }
 
   return (d->end - d->begin + 1);
 }
@@ -125,8 +126,9 @@ bool ImapInterval::hasDefinedEnd() const
 
 ImapInterval::Id ImapInterval::end() const
 {
-  if ( hasDefinedEnd() )
+  if ( hasDefinedEnd() ) {
     return d->end;
+  }
 
   return std::numeric_limits<Id>::max();
 }
@@ -147,23 +149,25 @@ void ImapInterval::setEnd( Id value )
 
 QByteArray Akonadi::ImapInterval::toImapSequence() const
 {
-  if ( size() == 0 )
+  if ( size() == 0 ) {
     return QByteArray();
+  }
 
-  if ( size() == 1 )
+  if ( size() == 1 ) {
     return QByteArray::number( d->begin );
+  }
 
   QByteArray rv;
   rv += QByteArray::number( d->begin ) + ':';
 
-  if ( hasDefinedEnd() )
+  if ( hasDefinedEnd() ) {
     rv += QByteArray::number( d->end );
-  else
+  } else {
     rv += '*';
+  }
 
   return rv;
 }
-
 
 ImapSet::ImapSet()
   : d( new Private )
@@ -179,10 +183,11 @@ ImapSet::~ImapSet()
 {
 }
 
-ImapSet& ImapSet::operator=( const ImapSet &other )
+ImapSet &ImapSet::operator=( const ImapSet &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
@@ -223,8 +228,9 @@ void ImapSet::add( const ImapInterval &interval )
 QByteArray ImapSet::toImapSequenceSet() const
 {
   QList<QByteArray> rv;
-  Q_FOREACH ( const ImapInterval &interval, d->intervals )
+  Q_FOREACH ( const ImapInterval &interval, d->intervals ) {
     rv << interval.toImapSequence();
+  }
 
   return ImapParser::join( rv, "," );
 }
@@ -239,7 +245,7 @@ bool ImapSet::isEmpty() const
   return d->intervals.isEmpty();
 }
 
-QDebug& operator<<( QDebug &d, const Akonadi::ImapInterval &interval )
+QDebug &operator<<( QDebug &d, const Akonadi::ImapInterval &interval )
 {
   d << interval.toImapSequence();
   return d;
@@ -250,4 +256,3 @@ QDebug operator<<( QDebug d, const Akonadi::ImapSet &set )
   d << set.toImapSequenceSet();
   return d;
 }
-

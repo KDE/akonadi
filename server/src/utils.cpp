@@ -56,15 +56,17 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
     // if no socket directory is defined, use the symlinked from /tmp
     socketDir = akonadiSocketDirectory();
 
-    if ( socketDir.isEmpty() ) // if that does not work, fall back on default
+    if ( socketDir.isEmpty() ) { // if that does not work, fall back on default
       socketDir = defaultDirectory;
+    }
   } else {
     socketDir = serverSettings.value( QLatin1String( "Connection/SocketDirectory" ), defaultDirectory ).toString();
   }
 
   const QString userName = QString::fromLocal8Bit( qgetenv( "USER" ) );
-  if ( socketDir.contains( QLatin1String( "$USER" ) ) && !userName.isEmpty() )
+  if ( socketDir.contains( QLatin1String( "$USER" ) ) && !userName.isEmpty() ) {
     socketDir.replace( QLatin1String( "$USER" ), userName );
+  }
 
   if ( socketDir[0] != QLatin1Char( '/' ) ) {
     QDir::home().mkdir( socketDir );
@@ -72,8 +74,9 @@ QString Utils::preferredSocketDirectory( const QString &defaultDirectory )
   }
 
   QFileInfo dirInfo( socketDir );
-  if ( !dirInfo.exists() )
+  if ( !dirInfo.exists() ) {
     QDir::home().mkpath( dirInfo.absoluteFilePath() );
+  }
 #endif
   return socketDir;
 }
@@ -98,11 +101,13 @@ QString akonadiSocketDirectory()
   const QString link = AkStandardDirs::saveDir( "data" ) + QLatin1Char( '/' ) + QLatin1String( "socket-" ) + hostname;
   const QString tmpl = QLatin1String( "akonadi-" ) + QLatin1String( pw_ent->pw_name ) + QLatin1String( ".XXXXXX" );
 
-  if ( checkSocketDirectory( link ) )
+  if ( checkSocketDirectory( link ) ) {
     return QFileInfo( link ).symLinkTarget();
+  }
 
-  if ( createSocketDirectory( link, tmpl ) )
+  if ( createSocketDirectory( link, tmpl ) ) {
     return QFileInfo( link ).symLinkTarget();
+  }
 
   qCritical() << "Could not create socket directory for Akonadi.";
   return QString();
@@ -112,17 +117,21 @@ static bool checkSocketDirectory( const QString &path )
 {
   QFileInfo info( path );
 
-  if ( !info.exists() )
+  if ( !info.exists() ) {
     return false;
+  }
 
-  if ( info.isSymLink() )
+  if ( info.isSymLink() ) {
     info = QFileInfo( info.symLinkTarget() );
+  }
 
-  if ( !info.isDir() )
+  if ( !info.isDir() ) {
     return false;
+  }
 
-  if ( info.ownerId() != getuid() )
+  if ( info.ownerId() != getuid() ) {
     return false;
+  }
 
   return true;
 }

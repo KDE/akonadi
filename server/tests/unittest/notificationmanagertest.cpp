@@ -31,7 +31,7 @@
 
 using namespace Akonadi;
 
-Q_DECLARE_METATYPE(QVector<QString>)
+Q_DECLARE_METATYPE( QVector<QString> )
 
 class NotificationManagerTest : public QObject
 {
@@ -71,7 +71,7 @@ class NotificationManagerTest : public QObject
         << false;
 
       msg.addEntity( 1, QString(), QString(), QLatin1String( "message/rfc822" ) );
-      QTest::newRow( "monitorAll vs notification with one item")
+      QTest::newRow( "monitorAll vs notification with one item" )
         << true
         << EmptyList( Entity::Id )
         << EmptyList( Entity::Id )
@@ -116,7 +116,7 @@ class NotificationManagerTest : public QObject
       msg = NotificationMessageV2();
       msg.setType( NotificationMessageV2::Collections );
       msg.setOperation( NotificationMessageV2::Add );
-      msg.addEntity( 1, QLatin1String( "imap://user@some.domain/") );
+      msg.addEntity( 1, QLatin1String( "imap://user@some.domain/" ) );
       msg.setParentCollection( 0 );
       msg.setSessionId( "akonadi_imap_resource_0" );
       msg.setResource( "akonadi_imap_resource_0" );

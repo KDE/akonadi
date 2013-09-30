@@ -38,21 +38,21 @@ class DbConfigTest : public QObject
     {
       // doesn't work, DbConfig has an internal singleton-like cache...
       //QFETCH( QString, driverName );
-      const QString driverName( QL1S("QMYSQL") );
+      const QString driverName( QL1S( "QMYSQL" ) );
 
       // isolated config file to not conflict with a running instance
-      akTestSetInstanceIdentifier( QL1S("unit-test") );
+      akTestSetInstanceIdentifier( QL1S( "unit-test" ) );
 
       {
-        QSettings s(AkStandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly));
-        s.setValue( QL1S("General/Driver"), driverName );
+        QSettings s( AkStandardDirs::serverConfigFile( XdgBaseDirs::WriteOnly ) );
+        s.setValue( QL1S( "General/Driver" ), driverName );
       }
 
       QScopedPointer<DbConfig> cfg( DbConfig::configuredDatabase() );
 
       QVERIFY( !cfg.isNull() );
       QCOMPARE( cfg->driverName(), driverName );
-      QCOMPARE( cfg->databaseName(), QL1S("akonadi") );
+      QCOMPARE( cfg->databaseName(), QL1S( "akonadi" ) );
       QCOMPARE( cfg->useInternalServer(), true );
       QCOMPARE( cfg->sizeThreshold(), 4096ll );
     }

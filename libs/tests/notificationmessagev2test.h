@@ -40,5 +40,4 @@ class NotificationMessageV2Test : public QObject
     void testPartModificationMerge();
 };
 
-
 #endif

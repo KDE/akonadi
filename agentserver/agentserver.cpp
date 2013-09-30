@@ -32,20 +32,21 @@
 
 using namespace Akonadi;
 
-AgentServer::AgentServer( QObject* parent )
+AgentServer::AgentServer( QObject *parent )
   : QObject( parent )
   , m_processingConfigureRequests( false )
   , m_quiting( false )
 {
-  QDBusConnection::sessionBus().registerObject( QLatin1String(AKONADI_DBUS_AGENTSERVER_PATH),
+  QDBusConnection::sessionBus().registerObject( QLatin1String( AKONADI_DBUS_AGENTSERVER_PATH ),
                                                 this, QDBusConnection::ExportScriptableSlots );
 }
 
 AgentServer::~AgentServer()
 {
   qDebug() << Q_FUNC_INFO;
-  if ( !m_quiting )
+  if ( !m_quiting ) {
     quit();
+  }
 }
 
 void AgentServer::agentInstanceConfigure( const QString &identifier, qlonglong windowId )
@@ -68,7 +69,7 @@ void AgentServer::startAgent( const QString &identifier, const QString &typeIden
   //First try to load it staticly
   Q_FOREACH ( QObject *plugin, QPluginLoader::staticInstances() ) {
     if ( plugin->objectName() == fileName ) {
-      AgentThread* thread = new AgentThread( identifier, plugin, this );
+      AgentThread *thread = new AgentThread( identifier, plugin, this );
       m_agents.insert( identifier, thread );
       thread->start();
       return;
@@ -76,22 +77,24 @@ void AgentServer::startAgent( const QString &identifier, const QString &typeIden
   }
 
   QPluginLoader *loader = m_agentLoader.load( fileName );
-  if ( loader == 0 )
+  if ( loader == 0 ) {
     return; // No plugin found, debug output in AgentLoader.
+  }
 
   Q_ASSERT( loader->isLoaded() );
 
-  AgentThread* thread = new AgentThread( identifier, loader->instance(), this );
+  AgentThread *thread = new AgentThread( identifier, loader->instance(), this );
   m_agents.insert( identifier, thread );
   thread->start();
 }
 
 void AgentServer::stopAgent( const QString &identifier )
 {
-  if ( !m_agents.contains( identifier ) )
+  if ( !m_agents.contains( identifier ) ) {
     return;
+  }
 
-  AgentThread* thread = m_agents.take( identifier );
+  AgentThread *thread = m_agents.take( identifier );
   thread->quit();
   thread->wait();
   delete thread;
@@ -113,8 +116,9 @@ void AgentServer::quit()
 
 void AgentServer::processConfigureRequest()
 {
-  if ( m_processingConfigureRequests )
+  if ( m_processingConfigureRequests ) {
     return; // Protect against reentrancy
+  }
 
   m_processingConfigureRequests = true;
 
@@ -128,4 +132,3 @@ void AgentServer::processConfigureRequest()
 
   m_processingConfigureRequests = false;
 }
-

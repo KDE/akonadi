@@ -29,28 +29,29 @@
 #include <QApplication>
 
 #ifndef _WIN32_WCE
-int main( int argc, char ** argv )
+int main( int argc, char **argv )
 #else
-int cemain( int argc, char ** argv )
+int cemain( int argc, char **argv )
 #endif
 {
   AkGuiApplication app( argc, argv );
-  app.setDescription(QLatin1String("Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
+  app.setDescription( QLatin1String( "Akonadi Agent Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi." ) );
   app.parseCommandLine();
   qApp->setQuitOnLastWindowClosed( false );
 
   //Needed for wince build
   #undef interface
 
-  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName(AkDBus::ControlLock) ) ) {
+  if ( !QDBusConnection::sessionBus().interface()->isServiceRegistered( AkDBus::serviceName( AkDBus::ControlLock ) ) ) {
     akError() << "Akonadi control process not found - aborting.";
     akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
   }
 
   new Akonadi::AgentServer( &app );
 
-  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName(AkDBus::AgentServer) ) )
+  if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::AgentServer ) ) ) {
     akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+  }
 
   return app.exec();
 }

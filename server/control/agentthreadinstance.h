@@ -33,7 +33,7 @@ class AgentThreadInstance : public AgentInstance
     virtual bool start( const AgentType &agentInfo );
     virtual void quit();
     virtual void restartWhenIdle();
-    virtual void configure(qlonglong windowId);
+    virtual void configure( qlonglong windowId );
 
   private Q_SLOTS:
     void agentServerRegistered();

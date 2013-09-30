@@ -72,7 +72,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapInterval
     /**
       Assignment operator.
     */
-    ImapInterval& operator=( const ImapInterval &other );
+    ImapInterval &operator=( const ImapInterval &other );
 
     /**
       Comparison operator.
@@ -158,7 +158,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
     /**
       Assignment operator.
     */
-    ImapSet& operator=( const ImapSet &other );
+    ImapSet &operator=( const ImapSet &other );
 
     /**
       Adds the given list of positive integer numbers to the set.
@@ -202,7 +202,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT ImapSet
 
 }
 
-AKONADIPROTOCOLINTERNALS_EXPORT QDebug& operator<<( QDebug& d, const Akonadi::ImapInterval &interval );
+AKONADIPROTOCOLINTERNALS_EXPORT QDebug &operator<<( QDebug &d, const Akonadi::ImapInterval &interval );
 AKONADIPROTOCOLINTERNALS_EXPORT QDebug operator<<( QDebug d, const Akonadi::ImapSet &set );
 
 Q_DECLARE_TYPEINFO( Akonadi::ImapInterval, Q_MOVABLE_TYPE );

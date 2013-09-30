@@ -70,17 +70,17 @@ public:
     typedef QVector<QVariant> ValueCache;
 
 protected:
-    QSqlCachedResult(const QSqlDriver * db);
+    QSqlCachedResult( const QSqlDriver *db );
 
-    void init(int colCount);
+    void init( int colCount );
     void cleanup();
     void clearValues();
 
-    virtual bool gotoNext(ValueCache &values, int index) = 0;
+    virtual bool gotoNext( ValueCache &values, int index ) = 0;
 
-    QVariant data(int i);
-    bool isNull(int i);
-    bool fetch(int i);
+    QVariant data( int i );
+    bool isNull( int i );
+    bool fetch( int i );
     bool fetchNext();
     bool fetchPrevious();
     bool fetchFirst();
@@ -89,7 +89,7 @@ protected:
     int colCount() const;
     ValueCache &cache();
 
-    void virtual_hook(int id, void *data);
+    void virtual_hook( int id, void *data );
 private:
     bool cacheNext();
     QSqlCachedResultPrivate *d;

@@ -77,13 +77,13 @@ class AgentManager : public QObject, protected QDBusContext
      * Returns the i18n'ed name of the agent type for
      * the given @p identifier and the given @p language.
      */
-    QString agentName( const QString &identifier, const QString &language = QLatin1String("en_US") ) const;
+    QString agentName( const QString &identifier, const QString &language = QLatin1String( "en_US" ) ) const;
 
     /**
      * Returns the i18n'ed comment of the agent type for
      * the given @p identifier and the given @p language.
      */
-    QString agentComment( const QString &identifier, const QString &language = QLatin1String("en_US") ) const;
+    QString agentComment( const QString &identifier, const QString &language = QLatin1String( "en_US" ) ) const;
 
     /**
      * Returns the icon name of the agent type for the
@@ -97,7 +97,6 @@ class AgentManager : public QObject, protected QDBusContext
      */
     QStringList agentMimeTypes( const QString &identifier ) const;
 
-
     /**
      * Returns a list of supported capabilities of the agent type
      * for the given @p identifier.
@@ -109,7 +108,7 @@ class AgentManager : public QObject, protected QDBusContext
      * for the given @p identifier
      * @since 1.11
      */
-    QVariantMap agentCustomProperties( const QString &identifier) const;
+    QVariantMap agentCustomProperties( const QString &identifier ) const;
 
     /**
      * Creates a new agent of the given agent type @p identifier.
@@ -211,7 +210,6 @@ class AgentManager : public QObject, protected QDBusContext
       Sets agent instance @p identifier to online or offline mode.
     */
     void setAgentInstanceOnline( const QString &identifier, bool state );
-
 
     /**
       Restarts the agent instance @p identifier. This is supposed to be used as a
@@ -318,7 +316,7 @@ class AgentManager : public QObject, protected QDBusContext
 
   private Q_SLOTS:
     void updatePluginInfos();
-    void serviceOwnerChanged( const QString&, const QString&, const QString& );
+    void serviceOwnerChanged( const QString &, const QString &, const QString & );
     void agentExeChanged( const QString &fileName );
     void agentServerFailure();
     void serverFailure();
@@ -359,7 +357,7 @@ class AgentManager : public QObject, protected QDBusContext
     bool checkAgentExists( const QString &identifier ) const;
     void ensureAutoStart( const AgentType &info );
     void continueStartup();
-    void registerAgentAtServer( const QString &agentIdentifier, const AgentType& type );
+    void registerAgentAtServer( const QString &agentIdentifier, const AgentType &type );
 
   private:
     /**

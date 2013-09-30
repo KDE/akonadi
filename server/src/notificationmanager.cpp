@@ -33,10 +33,9 @@
 #include <QDBusConnection>
 #include <QSettings>
 
-
 using namespace Akonadi;
 
-NotificationManager* NotificationManager::mSelf = 0;
+NotificationManager *NotificationManager::mSelf = 0;
 
 NotificationManager::NotificationManager()
   : QObject( 0 )
@@ -45,15 +44,15 @@ NotificationManager::NotificationManager()
   NotificationMessageV2::registerDBusTypes();
 
   new NotificationManagerAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications"),
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/notifications" ),
     this, QDBusConnection::ExportAdaptors );
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/notifications/debug"),
+  QDBusConnection::sessionBus().registerObject( QLatin1String( "/notifications/debug" ),
     this, QDBusConnection::ExportScriptableSlots );
 
   const QString serverConfigFile = AkStandardDirs::serverConfigFile( XdgBaseDirs::ReadWrite );
   QSettings settings( serverConfigFile, QSettings::IniFormat );
 
-  mTimer.setInterval( settings.value( QLatin1String("NotificationManager/Interval"), 50 ).toInt() );
+  mTimer.setInterval( settings.value( QLatin1String( "NotificationManager/Interval" ), 50 ).toInt() );
   mTimer.setSingleShot( true );
   connect( &mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()) );
 }
@@ -62,29 +61,31 @@ NotificationManager::~NotificationManager()
 {
 }
 
-NotificationManager* NotificationManager::self()
+NotificationManager *NotificationManager::self()
 {
-  if ( !mSelf )
+  if ( !mSelf ) {
     mSelf = new NotificationManager();
+  }
 
   return mSelf;
 }
 
-void NotificationManager::connectNotificationCollector(NotificationCollector* collector)
+void NotificationManager::connectNotificationCollector( NotificationCollector *collector )
 {
   connect( collector, SIGNAL(notify(Akonadi::NotificationMessageV2::List)),
            SLOT(slotNotify(Akonadi::NotificationMessageV2::List)) );
 }
 
-void NotificationManager::slotNotify(const Akonadi::NotificationMessageV2::List &msgs)
+void NotificationManager::slotNotify( const Akonadi::NotificationMessageV2::List &msgs )
 {
   //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs )
     NotificationMessageV2::appendAndCompress( mNotifications, msg );
   //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
-  if ( !mTimer.isActive() )
+  if ( !mTimer.isActive() ) {
     mTimer.start();
+  }
 }
 
 void NotificationManager::emitPendingNotifications()
@@ -144,8 +145,6 @@ void NotificationManager::emitPendingNotifications()
   mNotifications.clear();
 }
 
-
-
 QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, bool serverSideMonitor )
 {
   akDebug() << Q_FUNC_INFO << this << identifier << serverSideMonitor;
@@ -166,7 +165,7 @@ QDBusObjectPath NotificationManager::subscribeV2( const QString &identifier, boo
   return source->dbusPath();
 }
 
-void NotificationManager::registerSource( NotificationSource* source )
+void NotificationManager::registerSource( NotificationSource *source )
 {
   mNotificationSources.insert( source->identifier(), source );
 }
@@ -203,5 +202,3 @@ QStringList NotificationManager::subscribers() const
 
   return identifiers;
 }
-
-

@@ -42,11 +42,12 @@ namespace Akonadi
 {
 
 PreprocessorInstance::PreprocessorInstance( const QString &id )
-  : QObject(), mId( id ), mInterface( 0 )
+  : QObject()
+  , mBusy( false )
+  , mId( id )
+  , mInterface( 0 )
 {
   Q_ASSERT( !id.isEmpty() );
-
-  mBusy = false;
 }
 
 PreprocessorInstance::~PreprocessorInstance()
@@ -65,38 +66,30 @@ bool PreprocessorInstance::init()
       this
     );
 
-  if( !mInterface || !mInterface->isValid() )
-  {
+  if ( !mInterface || !mInterface->isValid() ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Could not connect to pre-processor instance '%1': %2" )
           .arg( mId )
-          .arg( mInterface ? mInterface->lastError().message() : QString() )
-      );
+          .arg( mInterface ? mInterface->lastError().message() : QString() ) );
     delete mInterface;
     mInterface = 0;
     return false;
   }
 
-  QObject::connect(
-      mInterface,
-      SIGNAL(itemProcessed(qlonglong)),
-      this,
-      SLOT(itemProcessed(qlonglong))
-    );
+  QObject::connect( mInterface, SIGNAL(itemProcessed(qlonglong)), this, SLOT(itemProcessed(qlonglong)) );
 
   return true;
 }
 
 void PreprocessorInstance::enqueueItem( qint64 itemId )
 {
-  akDebug() << "PreprocessorInstance::enqueueItem(" << itemId << ")";
+  akDebug() << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
 
   mItemQueue.push_back( itemId );
 
   // If the preprocessor is already busy processing another item then do nothing.
-  if ( mBusy )
-  {
+  if ( mBusy ) {
     // The "head" item is the one being processed and we have just added another one.
     Q_ASSERT( mItemQueue.size() > 1 );
     return;
@@ -120,15 +113,13 @@ void PreprocessorInstance::processHeadItem()
 
   PimItem actualItem = PimItem::retrieveById( itemId );
 
-  while ( !actualItem.isValid() )
-  {
+  while ( !actualItem.isValid() ) {
     // hum... item is gone ?
     // FIXME: Signal to the manager that the item is no longer valid!
     PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
 
     mItemQueue.pop_front();
-    if( mItemQueue.empty() )
-    {
+    if ( mItemQueue.empty() ) {
       // nothing more to process for this instance: jump out
       mBusy = false;
       return;
@@ -151,13 +142,13 @@ void PreprocessorInstance::processHeadItem()
   mInterface->beginProcessItem( itemId, actualItem.collectionId(), actualItem.mimeType().name() );
 
   akDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
-
 }
 
 int PreprocessorInstance::currentProcessingTime()
 {
-  if( !mBusy )
+  if ( !mBusy ) {
     return -1; // nothing being processed
+  }
 
   return mItemProcessingStartDateTime.secsTo( QDateTime::currentDateTime() );
 }
@@ -170,17 +161,14 @@ bool PreprocessorInstance::abortProcessing()
       AkDBus::agentServiceName( mId, AkDBus::Agent ),
       QLatin1String( "/" ),
       QDBusConnection::sessionBus(),
-      this
-    );
+      this );
 
-  if( !iface.isValid() )
-  {
+  if ( !iface.isValid() ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Could not connect to pre-processor instance '%1': %2" )
           .arg( mId )
-          .arg( iface.lastError().message() )
-      );
+          .arg( iface.lastError().message() ) );
     return false;
   }
 
@@ -197,20 +185,17 @@ bool PreprocessorInstance::invokeRestart()
   Q_ASSERT_X( mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false" );
 
   OrgFreedesktopAkonadiAgentManagerInterface iface(
-      AkDBus::serviceName(AkDBus::Control),
+      AkDBus::serviceName( AkDBus::Control ),
       QLatin1String( "/AgentManager" ),
       QDBusConnection::sessionBus(),
-      this
-    );
+      this );
 
-  if( !iface.isValid() )
-  {
+  if ( !iface.isValid() ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2" )
           .arg( mId )
-          .arg( iface.lastError().message() )
-      );
+          .arg( iface.lastError().message() ) );
     return false;
   }
 
@@ -219,20 +204,17 @@ bool PreprocessorInstance::invokeRestart()
   return true;
 }
 
-
 void PreprocessorInstance::itemProcessed( qlonglong id )
 {
-  akDebug() << "PreprocessorInstance::itemProcessed(" << id << ")";
+  akDebug() << "PreprocessorInstance::itemProcessed("  << id <<  ")";
 
   // We shouldn't be called if there are no items in the queue
-  if( mItemQueue.empty() )
-  {
+  if ( mItemQueue.empty() ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue" )
           .arg( mId )
-          .arg( id )
-      );
+          .arg( id ) );
     mBusy = false;
     return; // preprocessor is buggy (FIXME: What now ?)
   }
@@ -242,15 +224,13 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
 
   qlonglong itemId = mItemQueue.front();
 
-  if( itemId != id )
-  {
+  if ( itemId != id ) {
     Tracer::self()->warning(
         QLatin1String( "PreprocessorInstance" ),
         QString::fromLatin1( "Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3" )
           .arg( mId )
           .arg( id )
-          .arg( itemId )
-      );
+          .arg( itemId ) );
 
     // FIXME: And what now ?
   }
@@ -259,8 +239,7 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
 
   PreprocessorManager::instance()->preProcessorFinishedHandlingItem( this, itemId );
 
-  if( mItemQueue.empty() )
-  {
+  if ( mItemQueue.empty() ) {
     // Nothing more to do
     mBusy = false;
     return;
@@ -270,6 +249,4 @@ void PreprocessorInstance::itemProcessed( qlonglong id )
   processHeadItem();
 }
 
-
 } // namespace Akonadi
-

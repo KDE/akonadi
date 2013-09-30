@@ -40,8 +40,11 @@ using namespace Akonadi;
 static const int s_maxCrashCount = 2;
 
 ProcessControl::ProcessControl( QObject *parent )
-  : QObject( parent ), mFailedToStart( false ), mCrashCount( 0 ),
-  mRestartOnceOnExit( false ), mShutdownTimeout( 1000 )
+  : QObject( parent )
+  , mFailedToStart( false )
+  , mCrashCount( 0 )
+  , mRestartOnceOnExit( false )
+  , mShutdownTimeout( 1000 )
 {
   connect( &mProcess, SIGNAL(error(QProcess::ProcessError)),
            this, SLOT(slotError(QProcess::ProcessError)) );
@@ -51,9 +54,10 @@ ProcessControl::ProcessControl( QObject *parent )
 
   if ( AkApplication::hasInstanceIdentifier() ) {
     QProcessEnvironment env = mProcess.processEnvironment();
-    if ( env.isEmpty() )
+    if ( env.isEmpty() ) {
       env = QProcessEnvironment::systemEnvironment();
-    env.insert( QLatin1String("AKONADI_INSTANCE"), AkApplication::instanceIdentifier() );
+    }
+    env.insert( QLatin1String( "AKONADI_INSTANCE" ), AkApplication::instanceIdentifier() );
     mProcess.setProcessEnvironment( env );
   }
 }
@@ -102,7 +106,7 @@ void ProcessControl::slotError( QProcess::ProcessError error )
       break;
   }
 
-  akError() << "ProcessControl: Application" << qPrintable(mApplication) << "stopped unexpectedly (" << mProcess.errorString() << ")";
+  akError() << "ProcessControl: Application" << qPrintable( mApplication ) << "stopped unexpectedly (" << mProcess.errorString() << ")";
 }
 
 void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus )
@@ -137,9 +141,9 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
         // socket is opened if some other socket is already bind, if an application
         // crashes the registry key is not deleted and no local socket can be opened
         // so try to delete the key if it fails once
-        if ( mApplication == "akonadiserver" && exitCode == 1) {
+        if ( mApplication == QLatin1String( "akonadiserver" ) && exitCode == 1 ) {
           HKEY hKey;
-          long rc = RegOpenKeyEx (HKEY_CURRENT_USER, TEXT("Software\\Trolltech\\Qt\\QLocalServer"), 0, KEY_ALL_ACCESS, &hKey);
+          long rc = RegOpenKeyEx( HKEY_CURRENT_USER, TEXT( "Software\\Trolltech\\Qt\\QLocalServer" ), 0, KEY_ALL_ACCESS, &hKey );
           if ( rc != ERROR_SUCCESS ) {
             qWarning() << mApplication << "Tried to open HKCU\\Software\\Trolltech\\Qt\\QLocalServer to delete Key Akonadi";
           } else {
@@ -179,8 +183,9 @@ void ProcessControl::slotFinished( int exitCode, QProcess::ExitStatus exitStatus
 static bool listContains( const QStringList &list, const QString &pattern )
 {
   Q_FOREACH ( const QString &s, list ) {
-    if ( s.contains( pattern ) )
+    if ( s.contains( pattern ) ) {
       return true;
+    }
   }
   return false;
 }
@@ -199,16 +204,19 @@ void ProcessControl::start()
     mArguments.prepend( QLatin1String( "--tool=" ) + valgrindSkin );
 
     const QString valgrindOptions = getEnv( "AKONADI_VALGRIND_OPTIONS" );
-    if ( !valgrindOptions.isEmpty() )
-      mArguments = valgrindOptions.split( QLatin1Char(' '), QString::SkipEmptyParts ) << mArguments;
+    if ( !valgrindOptions.isEmpty() ) {
+      mArguments = valgrindOptions.split( QLatin1Char( ' ' ), QString::SkipEmptyParts ) << mArguments;
+    }
 
     akDebug();
     akDebug() << "============================================================";
     akDebug() << "ProcessControl: Valgrinding process" << originalArguments;
-    if ( !valgrindSkin.isEmpty() )
+    if ( !valgrindSkin.isEmpty() ) {
       akDebug() << "ProcessControl: Valgrind skin:" << valgrindSkin;
-    if ( !valgrindOptions.isEmpty() )
+    }
+    if ( !valgrindOptions.isEmpty() ) {
       akDebug() << "ProcessControl: Additional Valgrind options:" << valgrindOptions;
+    }
     akDebug() << "============================================================";
     akDebug();
   }
@@ -250,7 +258,7 @@ bool ProcessControl::isRunning() const
   return mProcess.state() != QProcess::NotRunning;
 }
 
-void ProcessControl::setShutdownTimeout(int msecs)
+void ProcessControl::setShutdownTimeout( int msecs )
 {
   mShutdownTimeout = msecs;
 }

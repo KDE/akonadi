@@ -38,7 +38,7 @@ class AgentProcessInstance : public AgentInstance
     virtual void quit();
     virtual void cleanup();
     virtual void restartWhenIdle();
-    virtual void configure(qlonglong windowId);
+    virtual void configure( qlonglong windowId );
 
   private Q_SLOTS:
     void failedToStart();

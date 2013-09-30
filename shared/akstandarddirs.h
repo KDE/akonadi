@@ -22,7 +22,6 @@
 
 #include <libs/xdgbasedirs_p.h>
 
-
 /**
  * Convenience wrappers on top of XdgBaseDirs that are instance namespace aware.
  * @since 1.7

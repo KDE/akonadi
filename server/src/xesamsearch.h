@@ -33,7 +33,7 @@ class XesamSearch : public QObject
   Q_OBJECT
 
   public:
-    XesamSearch( QObject* parent = 0 );
+    XesamSearch( QObject *parent = 0 );
     ~XesamSearch();
 
     QStringList search( const QString &query );

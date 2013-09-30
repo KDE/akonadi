@@ -365,9 +365,10 @@ bool Store::parseStream()
     const bool onlyRemoteIdAndRevisionChanged = (changes.size() == 2 && changes.contains( AKONADI_PARAM_REMOTEID )
                                                                      && changes.contains( AKONADI_PARAM_REMOTEREVISION ));
     const bool onlyFlagsChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_FLAGS ));
+    const bool onlyGIDChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_GID ));
     // If only the remote id and/or the remote revision changed, we don't have to increase the REV,
     // because these updates do not change the payload and can only be done by the owning resource -> no conflicts possible
-    const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged);
+    const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
 
     // run update query and prepare change notifications
     for ( int i = 0; i < pimItems.count(); ++i ) {
@@ -393,7 +394,8 @@ bool Store::parseStream()
       }
 
       // flags change notification went separatly during command parsing
-      if ( !changes.isEmpty() && !onlyFlagsChanged ) {
+      // GID-only changes are ignored to prevent resources from updating their storage when no actual change happened
+      if ( !changes.isEmpty() && !onlyFlagsChanged && !onlyGIDChanged ) {
         store->notificationCollector()->itemChanged( item, changes );
       }
 

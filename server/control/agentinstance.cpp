@@ -25,33 +25,35 @@
 #include <akdebug.h>
 #include <libs/xdgbasedirs_p.h>
 
-AgentInstance::AgentInstance(AgentManager * manager) :
-    QObject( manager ),
-    mManager( manager ),
-    mAgentControlInterface( 0 ),
-    mAgentStatusInterface( 0 ),
-    mSearchInterface( 0 ),
-    mResourceInterface( 0 ),
-    mPreprocessorInterface( 0 ),
-    mStatus( 0 ),
-    mPercent( 0 ),
-    mOnline( false ),
-    mPendingQuit( false )
+AgentInstance::AgentInstance( AgentManager *manager )
+  : QObject( manager )
+  , mManager( manager )
+  , mAgentControlInterface( 0 )
+  , mAgentStatusInterface( 0 )
+  , mSearchInterface( 0 )
+  , mResourceInterface( 0 )
+  , mPreprocessorInterface( 0 )
+  , mStatus( 0 )
+  , mPercent( 0 )
+  , mOnline( false )
+  , mPendingQuit( false )
 {
 }
 
 void AgentInstance::quit()
 {
-  if ( mAgentControlInterface && mAgentControlInterface->isValid() )
+  if ( mAgentControlInterface && mAgentControlInterface->isValid() ) {
     mAgentControlInterface->quit();
-  else
+  } else {
     mPendingQuit = true;
+  }
 }
 
 void AgentInstance::cleanup()
 {
-  if ( mAgentControlInterface && mAgentControlInterface->isValid() )
+  if ( mAgentControlInterface && mAgentControlInterface->isValid() ) {
     mAgentControlInterface->cleanup();
+  }
 }
 
 bool AgentInstance::obtainAgentInterface()
@@ -69,8 +71,9 @@ bool AgentInstance::obtainAgentInterface()
     mPendingQuit = false;
   }
 
-  if ( !mAgentControlInterface || !mAgentStatusInterface )
+  if ( !mAgentControlInterface || !mAgentStatusInterface ) {
     return false;
+  }
 
   mSearchInterface =
     findInterface<org::freedesktop::Akonadi::Agent::Search>( AkDBus::Agent, "/Search" );
@@ -92,8 +95,9 @@ bool AgentInstance::obtainResourceInterface()
   mResourceInterface =
     findInterface<org::freedesktop::Akonadi::Resource>( AkDBus::Resource, "/" );
 
-  if ( !mResourceInterface )
+  if ( !mResourceInterface ) {
     return false;
+  }
 
   connect( mResourceInterface, SIGNAL(nameChanged(QString)), SLOT(resourceNameChanged(QString)) );
   refreshResourceStatus();
@@ -108,10 +112,11 @@ bool AgentInstance::obtainPreprocessorInterface()
   return mPreprocessorInterface;
 }
 
-void AgentInstance::statusChanged(int status, const QString & statusMsg)
+void AgentInstance::statusChanged( int status, const QString &statusMsg )
 {
-  if ( mStatus == status && mStatusMessage == statusMsg )
+  if ( mStatus == status && mStatusMessage == statusMsg ) {
     return;
+  }
   mStatus = status;
   mStatusMessage = statusMsg;
   Q_EMIT mManager->agentInstanceStatusChanged( mIdentifier, mStatus, mStatusMessage );
@@ -122,82 +127,87 @@ void AgentInstance::advancedStatusChanged( const QVariantMap &status )
   Q_EMIT mManager->agentInstanceAdvancedStatusChanged( mIdentifier, status );
 }
 
-void AgentInstance::statusStateChanged(int status)
+void AgentInstance::statusStateChanged( int status )
 {
   statusChanged( status, mStatusMessage );
 }
 
-void AgentInstance::statusMessageChanged(const QString & msg)
+void AgentInstance::statusMessageChanged( const QString &msg )
 {
   statusChanged( mStatus, msg );
 }
 
-void AgentInstance::percentChanged(int percent)
+void AgentInstance::percentChanged( int percent )
 {
-  if ( mPercent == percent )
+  if ( mPercent == percent ) {
     return;
+  }
   mPercent = percent;
   Q_EMIT mManager->agentInstanceProgressChanged( mIdentifier, mPercent, QString() );
 }
 
-void AgentInstance::warning(const QString & msg)
+void AgentInstance::warning( const QString &msg )
 {
   Q_EMIT mManager->agentInstanceWarning( mIdentifier, msg );
 }
 
-void AgentInstance::error(const QString & msg)
+void AgentInstance::error( const QString &msg )
 {
   Q_EMIT mManager->agentInstanceError( mIdentifier, msg );
 }
 
-void AgentInstance::onlineChanged(bool state)
+void AgentInstance::onlineChanged( bool state )
 {
-  if ( mOnline == state )
+  if ( mOnline == state ) {
     return;
+  }
   mOnline = state;
   Q_EMIT mManager->agentInstanceOnlineChanged( mIdentifier, state );
 }
 
-void AgentInstance::resourceNameChanged(const QString & name)
+void AgentInstance::resourceNameChanged( const QString &name )
 {
-  if ( name == mResourceName )
+  if ( name == mResourceName ) {
     return;
+  }
   mResourceName = name;
   Q_EMIT mManager->agentInstanceNameChanged( mIdentifier, name );
 }
 
 void AgentInstance::refreshAgentStatus()
 {
-  if ( !hasAgentInterface() )
+  if ( !hasAgentInterface() ) {
     return;
+  }
 
   // async calls so we are not blocked by misbehaving agents
-  mAgentStatusInterface->callWithCallback( QLatin1String("status"), QList<QVariant>(),
+  mAgentStatusInterface->callWithCallback( QLatin1String( "status" ), QList<QVariant>(),
                                            this, SLOT(statusStateChanged(int)),
                                            SLOT(errorHandler(QDBusError)) );
-  mAgentStatusInterface->callWithCallback( QLatin1String("statusMessage"), QList<QVariant>(),
+  mAgentStatusInterface->callWithCallback( QLatin1String( "statusMessage" ), QList<QVariant>(),
                                            this, SLOT(statusMessageChanged(QString)),
                                            SLOT(errorHandler(QDBusError)) );
-  mAgentStatusInterface->callWithCallback( QLatin1String("progress"), QList<QVariant>(),
+  mAgentStatusInterface->callWithCallback( QLatin1String( "progress" ), QList<QVariant>(),
                                            this, SLOT(percentChanged(int)),
                                            SLOT(errorHandler(QDBusError)) );
-  mAgentStatusInterface->callWithCallback( QLatin1String("isOnline"), QList<QVariant>(),
+  mAgentStatusInterface->callWithCallback( QLatin1String( "isOnline" ), QList<QVariant>(),
                                            this, SLOT(onlineChanged(bool)),
                                            SLOT(errorHandler(QDBusError)) );
 }
 
 void AgentInstance::refreshResourceStatus()
 {
-  if ( !hasResourceInterface() )
+  if ( !hasResourceInterface() ) {
     return;
+  }
 
   // async call so we are not blocked by misbehaving resources
-  mResourceInterface->callWithCallback( QLatin1String("name"), QList<QVariant>(),
+  mResourceInterface->callWithCallback( QLatin1String( "name" ), QList<QVariant>(),
                                         this, SLOT(resourceNameChanged(QString)),
                                         SLOT(errorHandler(QDBusError)) );
 }
 
-void AgentInstance::errorHandler(const QDBusError & error)
+void AgentInstance::errorHandler( const QDBusError &error )
 {
   //avoid using the server tracer, can result in D-BUS lockups
   akError() <<  QString::fromLatin1( "D-Bus communication error '%1': '%2'" ).arg( error.name(), error.message() ) ;
@@ -205,9 +215,9 @@ void AgentInstance::errorHandler(const QDBusError & error)
 }
 
 template <typename T>
-T* AgentInstance::findInterface(AkDBus::AgentType agentType, const char* path)
+T *AgentInstance::findInterface( AkDBus::AgentType agentType, const char *path )
 {
-  T * iface = new T( AkDBus::agentServiceName( mIdentifier, agentType ),
+  T *iface = new T( AkDBus::agentServiceName( mIdentifier, agentType ),
                      QLatin1String( path ), QDBusConnection::sessionBus(), this );
 
   if ( !iface || !iface->isValid() ) {
@@ -218,4 +228,3 @@ T* AgentInstance::findInterface(AkDBus::AgentType agentType, const char* path)
   }
   return iface;
 }
-

@@ -30,10 +30,10 @@ using namespace Akonadi;
 static int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
 static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
-IntervalCheck* IntervalCheck::s_instance = 0;
+IntervalCheck *IntervalCheck::s_instance = 0;
 
-IntervalCheck::IntervalCheck(QObject * parent) :
-    QThread( parent )
+IntervalCheck::IntervalCheck( QObject * parent )
+  : QThread( parent )
 {
   // make sure we are created from the main thread, ie. before all other threads start to potentially use us
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
@@ -54,7 +54,7 @@ void IntervalCheck::run()
   DataStore::self()->close();
 }
 
-IntervalCheck* IntervalCheck::instance()
+IntervalCheck *IntervalCheck::instance()
 {
   Q_ASSERT( s_instance );
   return s_instance;
@@ -70,15 +70,16 @@ void IntervalCheck::doIntervalCheck()
     DataStore::self()->activeCachePolicy( collection );
 
     // check if there is something to sync at all
-    if ( collection.cachePolicyCheckInterval() <= 0 || !collection.subscribed() )
+    if ( collection.cachePolicyCheckInterval() <= 0 || !collection.subscribed() ) {
       continue;
+    }
     requestCollectionSync( collection );
   }
 
   QTimer::singleShot( 60 * 1000, this, SLOT(doIntervalCheck()) );
 }
 
-void IntervalCheck::requestCollectionSync(const Akonadi::Collection& collection)
+void IntervalCheck::requestCollectionSync( const Akonadi::Collection &collection )
 {
   const QDateTime now = QDateTime::currentDateTime();
 
@@ -88,8 +89,9 @@ void IntervalCheck::requestCollectionSync(const Akonadi::Collection& collection)
     const QString resourceName = collection.resource().name();
 
     int minInterval = MINIMUM_COLTREESYNC_INTERVAL;
-    if ( collection.cachePolicyCheckInterval() > 0 )
+    if ( collection.cachePolicyCheckInterval() > 0 ) {
       minInterval = collection.cachePolicyCheckInterval();
+    }
 
     const QDateTime lastExpectedCheck = now.addSecs( minInterval * - 60 );
     QMutexLocker locker( &m_lastSyncMutex );
@@ -102,16 +104,17 @@ void IntervalCheck::requestCollectionSync(const Akonadi::Collection& collection)
 
   // now on to the actual collection syncing
   int minInterval = MINIMUM_AUTOSYNC_INTERVAL;
-  if ( collection.cachePolicyCheckInterval() > 0 )
+  if ( collection.cachePolicyCheckInterval() > 0 ) {
     minInterval = collection.cachePolicyCheckInterval();
+  }
 
   const QDateTime lastExpectedCheck = now.addSecs( minInterval * -60 );
   QMutexLocker locker( &m_lastSyncMutex );
-  if ( mLastChecks.contains( collection.id() ) && mLastChecks.value( collection.id() ) > lastExpectedCheck )
+  if ( mLastChecks.contains( collection.id() ) && mLastChecks.value( collection.id() ) > lastExpectedCheck ) {
     return;
+  }
   mLastChecks.insert( collection.id(), now );
   locker.unlock();
   QMetaObject::invokeMethod( ItemRetrievalManager::instance(), "triggerCollectionSync", Qt::QueuedConnection,
                              Q_ARG( QString, collection.resource().name() ), Q_ARG( qint64, collection.id() ) );
 }
-

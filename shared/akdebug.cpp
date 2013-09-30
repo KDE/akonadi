@@ -38,18 +38,18 @@ using Akonadi::XdgBaseDirs;
 class FileDebugStream : public QIODevice
 {
   public:
-    FileDebugStream() :
-      mType( QtCriticalMsg )
+    FileDebugStream()
+      : mType( QtCriticalMsg )
     {
       open( WriteOnly );
     }
 
     bool isSequential() const { return true; }
-    qint64 readData(char *, qint64) { return 0;  }
-    qint64 readLineData(char *, qint64) { return 0; }
-    qint64 writeData(const char *data, qint64 len)
+    qint64 readData( char *, qint64 ) { return 0;  }
+    qint64 readLineData( char *, qint64 ) { return 0; }
+    qint64 writeData( const char *data, qint64 len )
     {
-      QByteArray buf = QByteArray::fromRawData(data, len);
+      QByteArray buf = QByteArray::fromRawData( data, len );
 
       if ( !mFileName.isEmpty() ) {
         QFile outputFile( mFileName );
@@ -62,7 +62,7 @@ class FileDebugStream : public QIODevice
       qt_message_output( mType,
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
                          QMessageLogContext(),
-                         QString::fromLatin1(buf.trimmed()) );
+                         QString::fromLatin1( buf.trimmed() ) );
 #else
                          buf.trimmed().constData() );
 #endif
@@ -86,8 +86,8 @@ class FileDebugStream : public QIODevice
 class DebugPrivate
 {
   public:
-    DebugPrivate() :
-      fileStream( new FileDebugStream() )
+    DebugPrivate()
+      : fileStream( new FileDebugStream() )
     {
     }
 
@@ -108,8 +108,9 @@ class DebugPrivate
     {
       QMutexLocker locker( &mutex );
 #ifndef QT_NO_DEBUG_OUTPUT
-      if ( type == QtDebugMsg )
+      if ( type == QtDebugMsg ) {
         return qDebug();
+      }
 #endif
       fileStream->setType( type );
       return QDebug( fileStream );
@@ -118,7 +119,7 @@ class DebugPrivate
     void setName( const QString &appName )
     {
       // Keep only the executable name, e.g. akonadi_control
-      name = appName.mid( appName.lastIndexOf( QLatin1Char('/') ) + 1 );
+      name = appName.mid( appName.lastIndexOf( QLatin1Char( '/' ) ) + 1 );
       fileStream->setFileName( errorLogFileName() );
     }
 
@@ -151,19 +152,21 @@ void akInit( const QString &appName )
   AkonadiCrash::init();
   sInstance()->setName( appName );
 
-  QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
+  QFileInfo infoOld( sInstance()->errorLogFileName() + QString::fromLatin1( ".old" ) );
   if ( infoOld.exists() ) {
     QFile fileOld( infoOld.absoluteFilePath() );
     const bool success = fileOld.remove();
-    if ( !success )
+    if ( !success ) {
       qFatal( "Cannot remove old log file - running on a readonly filesystem maybe?" );
+    }
   }
   QFileInfo info( sInstance()->errorLogFileName() );
   if ( info.exists() ) {
     QFile file( info.absoluteFilePath() );
-    const bool success = file.rename( sInstance()->errorLogFileName() + QString::fromLatin1(".old") );
-    if ( !success )
+    const bool success = file.rename( sInstance()->errorLogFileName() + QString::fromLatin1( ".old" ) );
+    if ( !success ) {
       qFatal( "Cannot rename log file - running on a readonly filesystem maybe?" );
+    }
   }
 }
 
@@ -172,4 +175,3 @@ QString getEnv( const char *name, const QString &defaultValue )
   const QString v = QString::fromLocal8Bit( qgetenv( name ) );
   return !v.isEmpty() ? v : defaultValue;
 }
-
