@@ -456,6 +456,17 @@ void ETMCalendarTest::testUidChange()
 
     item = mCalendar->item(newUid);
     QVERIFY(item.isValid());
+
+    // Mix the notify observer bug with an incidence that changes UID
+    incidence = Incidence::Ptr(incidence->clone());
+    incidence->setSummary(QLatin1String("new-summary2"));
+    item = mCalendar->item(incidence->uid());
+    incidence->setUid(QLatin1String("new-uid2"));
+    item.setPayload(incidence);
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(item);
+    AKVERIFYEXEC(job);
+    waitForIt();
 }
 
 void ETMCalendarTest::waitForIt()
