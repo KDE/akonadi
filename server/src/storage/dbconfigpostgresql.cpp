@@ -76,7 +76,9 @@ bool DbConfigPostgresql::init( QSettings &settings )
                        << QLatin1String( "/usr/local/sbin" )
                        << QLatin1String( "/usr/lib/postgresql/8.4/bin" )
                        << QLatin1String( "/usr/lib/postgresql/9.0/bin" )
-                       << QLatin1String( "/usr/lib/postgresql/9.1/bin" );
+                       << QLatin1String( "/usr/lib/postgresql/9.1/bin" )
+                       << QLatin1String( "/usr/lib/postgresql/9.2/bin" )
+                       << QLatin1String( "/usr/lib/postgresql/9.3/bin" );
 
     defaultServerPath = XdgBaseDirs::findExecutableFile( QLatin1String( "pg_ctl" ), postgresSearchPath );
     defaultInitDbPath = XdgBaseDirs::findExecutableFile( QLatin1String( "initdb" ), postgresSearchPath );
