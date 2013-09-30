@@ -42,6 +42,7 @@ class DbIntrospectorPostgreSql : public DbIntrospector
 {
   public:
     DbIntrospectorPostgreSql( const QSqlDatabase& database );
+    virtual QVector<ForeignKey> foreignKeyConstraints( const QString &tableName );
     QString hasIndexQuery(const QString& tableName, const QString& indexName);
 };
 
