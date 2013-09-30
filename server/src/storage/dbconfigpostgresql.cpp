@@ -204,8 +204,8 @@ void DbConfigPostgresql::startInternalServer()
     QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QPSQL" ), initCon );
     apply( db );
 
-    // use the dummy database that is always available
-    db.setDatabaseName( QLatin1String( "template1" ) );
+    // use the default database that is always available
+    db.setDatabaseName( QLatin1String( "postgres" ) );
 
     if ( !db.isValid() ) {
       akFatal() << "Invalid database object during database server startup";
