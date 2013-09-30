@@ -20,6 +20,7 @@
 #include "etmcalendartest.h"
 
 #include "../etmcalendar.h"
+#include "../utils_p.h"
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/qtest_akonadi.h>
@@ -38,6 +39,17 @@ using namespace KCalCore;
 
 Q_DECLARE_METATYPE( QSet<QByteArray> )
 
+
+KCalCore::Incidence::Ptr Akonadi::CalendarUtils::incidence( const Akonadi::Item &item )
+{
+    // With this try-catch block, we get a 2x performance improvement in retrieving the payload
+    // since we don't call hasPayload()
+    try {
+        return item.payload<KCalCore::Incidence::Ptr>();
+    } catch( Akonadi::PayloadException ) {
+        return KCalCore::Incidence::Ptr();
+    }
+}
 
 void ETMCalendarTest::createIncidence(const QString &uid)
 {
@@ -168,10 +180,12 @@ void ETMCalendarTest::testIncidencesAdded()
 void ETMCalendarTest::testIncidencesModified()
 {
     const QString uid = tr( "d" );
-    const Item item = mCalendar->item( uid );
+    Item item = mCalendar->item( uid );
     QVERIFY( item.isValid() );
     QVERIFY( item.hasPayload() );
-    item.payload<KCalCore::Incidence::Ptr>()->setSummary( tr( "foo33" ) );
+    Incidence::Ptr clone = Incidence::Ptr(CalendarUtils::incidence(item)->clone());
+    clone->setSummary( tr( "foo33" ) );
+    item.setPayload(clone);
     ItemModifyJob *job = new ItemModifyJob( item );
     mIncidencesToChange = 1;
     AKVERIFYEXEC(job);
@@ -268,17 +282,19 @@ void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence 
     const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
 
     Akonadi::Item item = mCalendar->item(incidence->uid());
-    Incidence::Ptr i2 = item.payload<KCalCore::Incidence::Ptr>();
+    QVERIFY(item.isValid());
+    QVERIFY(item.hasPayload());
+    Incidence::Ptr i2 = CalendarUtils::incidence(item);
 
     if ( id.toLongLong() != item.id() ) {
         qDebug() << "Incidence uid = " << incidence->uid() << "; internal incidence uid = " << i2->uid();
         QVERIFY( false );
     }
 
+    QCOMPARE(incidence.data(), i2.data());
     QCOMPARE(i2->summary(), incidence->summary());
     Incidence::Ptr i3 = mCalendar->incidence(incidence->uid());
     QCOMPARE(i3->summary(), incidence->summary());
-
 
     QVERIFY(mIncidencesToChange > 0);
 
@@ -467,6 +483,28 @@ void ETMCalendarTest::testUidChange()
     job = new ItemModifyJob(item);
     AKVERIFYEXEC(job);
     waitForIt();
+}
+
+void ETMCalendarTest::testItem()
+{
+    const QLatin1String uid("uid-testItem");
+    createTodo(uid, QString());
+    waitForIt();
+
+    Incidence::Ptr incidence = mCalendar->incidence(uid);
+    Akonadi::Item item = mCalendar->item(uid);
+    Akonadi::Item item2 = mCalendar->item(item.id());
+    QVERIFY(incidence);
+    QVERIFY(item.isValid());
+    QVERIFY(item2.isValid());
+
+    Incidence::Ptr incidence1 = CalendarUtils::incidence(item);
+    Incidence::Ptr incidence2 = CalendarUtils::incidence(item2);
+
+    // The pointers should be the same
+    QCOMPARE(incidence1.data(), incidence2.data());
+    QCOMPARE(incidence.data(), incidence1.data());
+
 }
 
 void ETMCalendarTest::waitForIt()
