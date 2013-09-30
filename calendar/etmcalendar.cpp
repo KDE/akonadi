@@ -287,7 +287,7 @@ void ETMCalendarPrivate::itemsAdded( const Akonadi::Item::List &items )
 
     Akonadi::Collection::Id id = items.first().storageCollectionId();
     if ( mPopulatedCollectionIds.contains( id ) ) {
-      // If the collection isn't populated yet, it will be send later
+      // If the collection isn't populated yet, it will be sent later
       // Saves some cpu cycles
       emit q->calendarChanged();
     }
