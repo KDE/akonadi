@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testIncidencesDeleted();
     void testUnselectCollection();
     void testSelectCollection();
+    void testSubTodos_data();
     void testSubTodos();
     void testNotifyObserverBug();
     void testUidChange();

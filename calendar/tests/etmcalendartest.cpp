@@ -266,10 +266,15 @@ void ETMCalendarTest::handleCollectionsAdded( const Akonadi::Collection::List & 
 void ETMCalendarTest::calendarIncidenceChanged( const Incidence::Ptr &incidence )
 {
     const QString id = incidence->customProperty( "VOLATILE", "AKONADI-ID" );
-    QCOMPARE( id.toLongLong(), mCalendar->item( incidence->uid() ).id() );
 
     Akonadi::Item item = mCalendar->item(incidence->uid());
     Incidence::Ptr i2 = item.payload<KCalCore::Incidence::Ptr>();
+
+    if ( id.toLongLong() != item.id() ) {
+        qDebug() << "Incidence uid = " << incidence->uid() << "; internal incidence uid = " << i2->uid();
+        QVERIFY( false );
+    }
+
     QCOMPARE(i2->summary(), incidence->summary());
     Incidence::Ptr i3 = mCalendar->incidence(incidence->uid());
     QCOMPARE(i3->summary(), incidence->summary());
@@ -292,8 +297,17 @@ void ETMCalendarTest::calendarIncidenceDeleted( const Incidence::Ptr &incidence 
     checkExitLoop();
 }
 
+void ETMCalendarTest::testSubTodos_data()
+{
+    QTest::addColumn<bool>("doClone");
+    QTest::newRow("clone") << true;
+    QTest::newRow("dont clone") << false;
+}
+
 void ETMCalendarTest::testSubTodos()
 {
+    QFETCH(bool, doClone);
+
     mIncidencesToAdd = 0;
     mIncidencesToChange = 0;
     mIncidencesToDelete = 0;
@@ -321,12 +335,17 @@ void ETMCalendarTest::testSubTodos()
     QVERIFY(!mCalendar->incidence(tr("tb.3")));
 
     // Move a top-level to-do to a new parent
-    Incidence::Ptr ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    Incidence::Ptr ta = mCalendar->incidence(tr("ta"));
+    if (doClone) {
+        ta = Incidence::Ptr(ta->clone());
+    } else {
+        mIncidencesToChange++;
+    }
     QVERIFY(ta);
     Item ta_item = mCalendar->item(tr("ta"));
     ta_item.setPayload(ta);
     ta->setRelatedTo(tr("tb"));
-    mIncidencesToChange = 1;
+    mIncidencesToChange++;
 
     ItemModifyJob *job = new ItemModifyJob(ta_item);
     AKVERIFYEXEC(job);
@@ -335,11 +354,17 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 3);
 
     // Move it to another parent now
-    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta = mCalendar->incidence(tr("ta"));
+    if (doClone) {
+        ta = Incidence::Ptr(ta->clone());
+    } else {
+        mIncidencesToChange++;
+    }
+
     ta_item = mCalendar->item(tr("ta"));
     ta->setRelatedTo(tr("tb.2"));
     ta_item.setPayload(ta);
-    mIncidencesToChange = 1;
+    mIncidencesToChange++;
     job = new ItemModifyJob(ta_item);
     AKVERIFYEXEC(job);
     waitForIt();
@@ -348,17 +373,30 @@ void ETMCalendarTest::testSubTodos()
     QCOMPARE(mCalendar->childIncidences(tr("tb.2")).count(), 1);
 
     // Now unparent it
-    ta = Incidence::Ptr(mCalendar->incidence(tr("ta"))->clone());
+    ta = mCalendar->incidence(tr("ta"));
+    if (doClone) {
+        ta = Incidence::Ptr(ta->clone());
+    } else {
+        mIncidencesToChange++;
+    }
+
     ta_item = mCalendar->item(tr("ta"));
     ta->setRelatedTo(QString());
     ta_item.setPayload(ta);
-    mIncidencesToChange = 1;
+    mIncidencesToChange++;
     job = new ItemModifyJob(ta_item);
     AKVERIFYEXEC(job);
     waitForIt();
 
     QCOMPARE(mCalendar->childIncidences(tr("tb")).count(), 2);
     QVERIFY(mCalendar->childIncidences(tr("tb.2")).isEmpty());
+
+    // Delete everything, so we don't have duplicate ids when the next test row runs
+    Akonadi::Item::List itemsToDelete = mCalendar->items();
+    mIncidencesToDelete = itemsToDelete.count();
+    ItemDeleteJob *deleteJob = new ItemDeleteJob(itemsToDelete);
+    AKVERIFYEXEC(deleteJob);
+    waitForIt();
 }
 
 void ETMCalendarTest::testNotifyObserverBug()
@@ -418,6 +456,17 @@ void ETMCalendarTest::testUidChange()
 
     item = mCalendar->item(newUid);
     QVERIFY(item.isValid());
+
+    // Mix the notify observer bug with an incidence that changes UID
+    incidence = Incidence::Ptr(incidence->clone());
+    incidence->setSummary(QLatin1String("new-summary2"));
+    item = mCalendar->item(incidence->uid());
+    incidence->setUid(QLatin1String("new-uid2"));
+    item.setPayload(incidence);
+    mIncidencesToChange = 1;
+    job = new ItemModifyJob(item);
+    AKVERIFYEXEC(job);
+    waitForIt();
 }
 
 void ETMCalendarTest::waitForIt()
