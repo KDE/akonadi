@@ -431,7 +431,7 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr incidence = CalendarUtils::incidence( item );
           if ( !incidence->supportsGroupwareCommunication() )
             continue;
           status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
@@ -447,8 +447,8 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       {
         if ( !change->originalItems.isEmpty() ) {
           Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
 
           if ( oldIncidence->supportsGroupwareCommunication() ) {
             const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
@@ -479,7 +479,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
-        Incidence::Ptr incidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+        Incidence::Ptr incidence = CalendarUtils::incidence( change->newItem );
         if ( incidence->supportsGroupwareCommunication() ) {
           const ITIPHandlerHelper::SendResult status =
             handler.sendIncidenceCreatedMessage( KCalCore::iTIPRequest, incidence );
@@ -500,7 +500,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload() );
-          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr incidence = CalendarUtils::incidence( item );
           Q_ASSERT( incidence );
           if ( !incidence->supportsGroupwareCommunication() )
             continue;
@@ -536,8 +536,8 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       {
         if ( !change->originalItems.isEmpty() ) {
           Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
           if ( newIncidence->supportsGroupwareCommunication() ) {
             if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
               handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
@@ -932,7 +932,7 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     newItem.setRevision( latestRevisionByItemId[id] );
   }
 
-  Incidence::Ptr incidence = newItem.payload<Incidence::Ptr>();
+  Incidence::Ptr incidence = CalendarUtils::incidence( newItem );
   { // increment revision ( KCalCore revision, not akonadi )
     const int revision = incidence->revision();
     incidence->setRevision( revision + 1 );
