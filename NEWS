@@ -1,3 +1,12 @@
+1.10.3                         04-October-2013
+----------------------------------------------
+- Fix support for latest PostgreSQL
+- Check MySQL version at runtime, require at least 5.1
+- Fix crash when destroying DataStore with backends other than MySQL
+- Fix problem with too long socket paths
+- Send dummy queries to MySQL to keep the connection alive
+- Fix crash when no flags are changed
+
 1.10.2                            23-July-2013
 ----------------------------------------------
 - Fix PostgreSQL support (once more)
