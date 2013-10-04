@@ -214,6 +214,7 @@ QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
   }
   if ( type == QLatin1String("QByteArray") ) {
     return QLatin1String("BYTEA");
+  }
 
   return DbInitializer::sqlType( type, size );
 }
