@@ -61,6 +61,7 @@ class AkonadiServer: public QLocalServer
     void quit();
 
   private Q_SLOTS:
+    void init();
     void doQuit();
     void serviceOwnerChanged ( const QString &name, const QString &oldOwner, const QString &newOwner );
 

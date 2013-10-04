@@ -170,4 +170,18 @@
     <raw-sql backends="mysql,psql,odbc">UPDATE CollectionTable SET isVirtual = true WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = true)</raw-sql>
     <raw-sql backends="sqlite">UPDATE CollectionTable SET isVirtual = 1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = 1)</raw-sql>
   </update>
+  <update version="24" abortOnFailure="false">
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteId TYPE text USING convert_from(remoteId,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER cachePolicyLocalParts TYPE text USING convert_from(cachePolicyLocalParts,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER queryString TYPE text USING convert_from(queryString,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER queryLanguage TYPE text USING convert_from(queryLanguage,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE FlagTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE MimeTypeTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PartTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PimItemTable ALTER remoteId TYPE text USING convert_from(remoteId,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PimItemTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE ResourceTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+  </update>
 </updates>

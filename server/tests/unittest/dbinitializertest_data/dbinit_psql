@@ -3,15 +3,15 @@ CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
 INSERT INTO SchemaVersionTable (version) VALUES (22)
 
 CREATE TABLE ResourceTable (id SERIAL PRIMARY KEY,
-                            name BYTEA UNIQUE NOT NULL,
+                            name TEXT UNIQUE NOT NULL,
                             isVirtual BOOL DEFAULT false)
 
 INSERT INTO ResourceTable (name,isVirtual) VALUES ('akonadi_search_resource',true)
 
 CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
-                              remoteId BYTEA,
-                              remoteRevision BYTEA,
-                              name BYTEA NOT NULL,
+                              remoteId TEXT,
+                              remoteRevision TEXT,
+                              name TEXT NOT NULL,
                               parentId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               resourceId int8 NOT NULL REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               subscribed BOOL NOT NULL DEFAULT true,
@@ -19,16 +19,16 @@ CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
                               cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
-                              cachePolicyLocalParts BYTEA,
-                              queryString BYTEA,
-                              queryLanguage BYTEA)
+                              cachePolicyLocalParts TEXT,
+                              queryString TEXT,
+                              queryLanguage TEXT)
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
 INSERT INTO CollectionTable (resourceId,name,parentId) VALUES (1,'Search',NULL)
 
 CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
-                            name BYTEA UNIQUE NOT NULL)
+                            name TEXT UNIQUE NOT NULL)
 
 INSERT INTO MimeTypeTable (name) VALUES ('application/octet-stream')
 
@@ -42,8 +42,8 @@ INSERT INTO MimeTypeTable (name) VALUES ('inode/directory')
 
 CREATE TABLE PimItemTable (id SERIAL PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
-                           remoteId BYTEA,
-                           remoteRevision BYTEA,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
                            collectionId int8 REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                            mimeTypeId int8 REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -54,7 +54,7 @@ CREATE TABLE PimItemTable (id SERIAL PRIMARY KEY,
 CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
 CREATE TABLE FlagTable (id SERIAL PRIMARY KEY,
-                        name BYTEA UNIQUE NOT NULL)
+                        name TEXT UNIQUE NOT NULL)
 
 INSERT INTO FlagTable (name) VALUES ('important')
 
@@ -62,19 +62,19 @@ INSERT INTO FlagTable (name) VALUES ('has_attachment')
 
 INSERT INTO FlagTable (name) VALUES ('spam')
 
-INSERT INTO FlagTable (name) VALUES ('\\ANSWERED')
+INSERT INTO FlagTable (name) VALUES ('\ANSWERED')
 
-INSERT INTO FlagTable (name) VALUES ('\\FLAGGED')
+INSERT INTO FlagTable (name) VALUES ('\FLAGGED')
 
-INSERT INTO FlagTable (name) VALUES ('\\DELETED')
+INSERT INTO FlagTable (name) VALUES ('\DELETED')
 
-INSERT INTO FlagTable (name) VALUES ('\\SEEN')
+INSERT INTO FlagTable (name) VALUES ('\SEEN')
 
-INSERT INTO FlagTable (name) VALUES ('\\DRAFT')
+INSERT INTO FlagTable (name) VALUES ('\DRAFT')
 
 CREATE TABLE PartTable (id SERIAL PRIMARY KEY,
                         pimItemId int8 NOT NULL REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
-                        name BYTEA NOT NULL,
+                        name TEXT NOT NULL,
                         data BYTEA,
                         datasize int8 NOT NULL,
                         version INTEGER DEFAULT 0,

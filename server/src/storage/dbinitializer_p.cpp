@@ -214,10 +214,7 @@ QString DbInitializerPostgreSql::sqlType(const QString& type, int size) const
   }
   if ( type == QLatin1String("QByteArray") ) {
     return QLatin1String("BYTEA");
-  }
-  if ( type == QLatin1String("QString") ) {
-    return QLatin1String("BYTEA");
-  }
+
   return DbInitializer::sqlType( type, size );
 }
 
@@ -277,11 +274,6 @@ QString DbInitializerPostgreSql::buildColumnStatement( const ColumnDescription &
 QString DbInitializerPostgreSql::buildInsertValuesStatement( const TableDescription &tableDescription, const DataDescription &dataDescription ) const
 {
   QHash<QString, QString> data = dataDescription.data;
-  QMutableHashIterator<QString, QString> it( data );
-  while ( it.hasNext() ) {
-    it.next();
-    it.value().replace( QLatin1String("\\"), QLatin1String("\\\\") );
-  }
 
   return QString::fromLatin1( "INSERT INTO %1 (%2) VALUES (%3)" )
                             .arg( tableDescription.name )
