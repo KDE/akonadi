@@ -60,6 +60,7 @@ KnutResource::KnutResource( const QString &id )
 
 KnutResource::~KnutResource()
 {
+  delete mSettings;
 }
 
 void KnutResource::load()
