@@ -166,6 +166,7 @@ void ContactEditorWidget::Private::initGuiContactTab()
   QGroupBox *internetGroupBox = new QGroupBox( i18nc( "@title:group", "Internet" ) );
   QGroupBox *phonesGroupBox = new QGroupBox( i18nc( "@title:group", "Phones" ) );
 
+  nameGroupBox->setMinimumSize(320,200);
   layout->addWidget( nameGroupBox, 0, 0 );
   layout->addWidget( internetGroupBox, 0, 1 );
   layout->addWidget( phonesGroupBox, 1, 0, 4, 1 );
