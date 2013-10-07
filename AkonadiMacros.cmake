@@ -1,8 +1,27 @@
-# convenience macro to add akonadi testrunner unit-tests
-macro(add_akonadi_isolated_test _source)
+#
+# Convenience macros to add akonadi testrunner unit-tests
+#
+# Set KDEPIMLIBS_RUN_ISOLATED_TESTS to true to enable running the test
+# Set KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
+# Set KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
+# Set KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
+# Set KDEPIMLIBS_TESTS_XML to true if you provided per-test configuration XML files
+#
+# You still need to provide the test environment, see kdepimlibs/akonadi/tests/unittestenv,
+# copy the unittestenv directory to your unit test directory and update the files
+# as necessary
+
+# add_akonadi_isolated_test_advanced
+#
+# Arguments:
+#       source: a CPP file with the test itself
+#       additionalSources: additional CPP files needed to build the test
+#       linklibraries: additional libraries to link the test executable against
+#
+macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibraries)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  kde4_add_executable(${_name} TEST ${_test})
+  kde4_add_executable(${_name} TEST ${_test} ${_additionalsources})
   target_link_libraries(${_name}
                         akonadi-calendar
                         akonadi-kde
@@ -13,24 +32,26 @@ macro(add_akonadi_isolated_test _source)
                         kmime
                         kpimidentities
                         kpimutils
-                        ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES})
+                        kresources
+                        ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES}
+                        ${_linklibraries})
 
   # based on kde4_add_unit_test
   if (WIN32)
     get_target_property( _loc ${_name} LOCATION )
     set(_executable ${_loc}.bat)
-    set(_testrunner ${PREVIOUS_EXEC_OUTPUT_PATH}/akonaditest.exe.bat)
+    set(_testrunner ${KDEPIMLIBS_BIN_DIR}/akonaditest.exe)
   else()
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_name})
-    set(_testrunner ${PREVIOUS_EXEC_OUTPUT_PATH}/akonaditest)
+    set(_testrunner ${KDEPIMLIBS_BIN_DIR}/akonaditest)
   endif()
   if (UNIX)
     if (APPLE)
       set(_executable ${_executable}.app/Contents/MacOS/${_name})
     else()
-      set(_executable ${_executable}.shell)
+      set(_executable ${_executable})
     endif()
-    set(_testrunner ${_testrunner}.shell)
+    set(_testrunner ${_testrunner})
   endif()
 
   if ( KDEPIMLIBS_TESTS_XML )
@@ -67,4 +88,20 @@ macro(add_akonadi_isolated_test _source)
         ${SQLITE_EXTRA_OPTIONS} )
     endif()
   endif()
+endmacro()
+
+
+# add_akonadi_isolated_test
+#
+# Set KDEPIMLIBS_RUN_ISOLATED_TESTS to true to enable running the test
+# Set KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
+# Set KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
+# Set KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
+# Set KDEPIMLIBS_TESTS_XML to true to load initial database data from XML files
+#
+# Arguments:
+#       source: a CPP file with the test itself
+#
+macro(add_akonadi_isolated_test _source)
+  add_akonadi_isolated_test_advanced(${_source} "" "")
 endmacro()

@@ -423,6 +423,12 @@ install( FILES
 )
 endif()
 
+set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
+install( FILES
+  AkonadiMacros.cmake
+  DESTINATION ${module_install_dir}
+)
+
 #Laurent: kdelibs commits 9f575dd and d62c854 are needed to avoid build errors with the -DQT_NO_CAST_*_ASCII flags
 if((NOT KDE_VERSION VERSION_LESS 4.10.4) AND QT_QTDESIGNER_FOUND)
   message(STATUS "Building Akonadi widgets")
