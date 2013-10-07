@@ -19,20 +19,52 @@
 #       linklibraries: additional libraries to link the test executable against
 #
 macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibraries)
+  # These are not defined when using within kdepimlibs
+  if ( NOT KDEPIMLIBS_AKONADI_CALENDAR_LIBS )
+    set( KDEPIMLIBS_AKONADI_CALENDAR_LIBS "akonadi-calendar" )
+  endif ()
+  if ( NOT KDEPIMLIBS_AKONADI_KMIME_LIBS )
+    set( KDEPIMLIBS_AKONADI_KMIME_LIBS "akonadi-kmime" )
+  endif ()
+  if ( NOT KDEPIMLIBS_AKONADI_LIBS )
+    set( KDEPIMLIBS_AKONADI_LIBS "akonadi-kde" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KCALCORE_LIBS )
+    set( KDEPIMLIBS_KCALCORE_LIBS "kcalcore" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KCALUTILS_LIBS )
+    set( KDEPIMLIBS_KCALUTILS_LIBS "kcalutils" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KMIME_LIBS )
+    set( KDEPIMLIBS_KMIME_LIBS "kmime" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KPIMIDENTITIES_LIBS )
+    set( KDEPIMLIBS_KCALCORE_LIBS "kpimidentities" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KPIMUTILS_LIBS )
+    set( KDEPIMLIBS_KPIMUTILS_LIBS "kpimutils" )
+  endif ()
+  if ( NOT KDEPIMLIBS_KRESOURCES_LIBS )
+    set( KDEPIMLIBS_KRESOURCES_LIBS "kresources" )
+  endif ()
+  if ( NOT KDEPIMLIBS_MAILTRANSPORT_LIBS )
+    set( KDEPIMLIBS_MAILTRANSPORT_LIBS "mailtransport" )
+  endif ()
+
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
   kde4_add_executable(${_name} TEST ${_test} ${_additionalsources})
   target_link_libraries(${_name}
-                        akonadi-calendar
-                        akonadi-kde
-                        akonadi-kmime
-                        mailtransport
-                        kcalcore
-                        kcalutils
-                        kmime
-                        kpimidentities
-                        kpimutils
-                        kresources
+                        ${KDEPIMLIBS_AKONADI_CALENDAR_LIBS}
+                        ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
+                        ${KDEPIMLIBS_AKONADI_LIBS}
+                        ${KDEPIMLIBS_KCALCORE_LIBS}
+                        ${KDEPIMLIBS_KCALUTILS_LIBS}
+                        ${KDEPIMLIBS_KMIME_LIBS}
+                        ${KDEPIMLIBS_KPIMIDENTIES_LIBS}
+                        ${KDEPIMLIBS_KPIMUTILS_LIBS}
+                        ${KDEPIMLIBS_KRESOURCES_LIBS}
+                        ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
                         ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES}
                         ${_linklibraries})
 
