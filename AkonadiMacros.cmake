@@ -39,7 +39,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     set( KDEPIMLIBS_KMIME_LIBS "kmime" )
   endif ()
   if ( NOT KDEPIMLIBS_KPIMIDENTITIES_LIBS )
-    set( KDEPIMLIBS_KCALCORE_LIBS "kpimidentities" )
+    set( KDEPIMLIBS_KPIMIDENTITIES_LIBS "kpimidentities" )
   endif ()
   if ( NOT KDEPIMLIBS_KPIMUTILS_LIBS )
     set( KDEPIMLIBS_KPIMUTILS_LIBS "kpimutils" )
@@ -61,7 +61,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         ${KDEPIMLIBS_KCALCORE_LIBS}
                         ${KDEPIMLIBS_KCALUTILS_LIBS}
                         ${KDEPIMLIBS_KMIME_LIBS}
-                        ${KDEPIMLIBS_KPIMIDENTIES_LIBS}
+                        ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
                         ${KDEPIMLIBS_KPIMUTILS_LIBS}
                         ${KDEPIMLIBS_KRESOURCES_LIBS}
                         ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
