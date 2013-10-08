@@ -243,13 +243,23 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
 {
   Q_UNUSED( changeId );
   Q_UNUSED( item );
+  QString message = errorMessage;
   if ( resultCode == IncidenceChanger::ResultCodeSuccess ) {
-    KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(item);
+    KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence( item );
     Q_ASSERT( incidence );
-    //update our local one
-    *(static_cast<KCalCore::IncidenceBase*>(q->incidence(incidence->uid()).data())) = *(incidence.data());
+    KCalCore::Incidence::Ptr localIncidence = q->incidence( incidence->instanceIdentifier() );
+
+    if ( localIncidence ) {
+      //update our local one
+      *( static_cast<KCalCore::IncidenceBase*>( localIncidence.data() ) ) = *( incidence.data() );
+    } else {
+      // This shouldn't happen, unless the incidence gets deleted between event loops
+      kWarning() << "CalendarBasePrivate::slotModifyFinished() Incidence was deleted already probably? id=" << item.id();
+      message = QLatin1String( "Could not find incidence to update, probably was deleted recently." );
+      resultCode = IncidenceChanger::ResultCodeAlreadyDeleted;
+    }
   }
-  emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
+  emit q->modifyFinished( resultCode == IncidenceChanger::ResultCodeSuccess, message );
 }
 
 void CalendarBasePrivate::handleUidChange(const Akonadi::Item &oldItem,
