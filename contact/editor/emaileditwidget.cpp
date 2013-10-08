@@ -233,11 +233,27 @@ EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   // set default state
   KAcceleratorManager::manage( this );
 
-  setInitialSize( QSize( 400, 200 ) );
+  readConfig();
 }
 
 EmailEditDialog::~EmailEditDialog()
 {
+    writeConfig();
+}
+
+void EmailEditDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "EmailEditDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(400,200) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void EmailEditDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "EmailEditDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QStringList EmailEditDialog::emails() const

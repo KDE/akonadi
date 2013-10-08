@@ -32,6 +32,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <klocalizedstring.h>
 #include <kmessagebox.h>
+#include <KSharedConfig>
 
 IMEditorDialog::IMEditorDialog( QWidget *parent )
   : KDialog( parent )
@@ -75,6 +76,27 @@ IMEditorDialog::IMEditorDialog( QWidget *parent )
   connect( mView, SIGNAL(doubleClicked(QModelIndex)),
            this, SLOT(slotEdit()) );
   slotUpdateButtons();
+  readConfig();
+}
+
+IMEditorDialog::~IMEditorDialog()
+{
+    writeConfig();
+}
+
+void IMEditorDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "IMEditorDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(400,200) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void IMEditorDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "IMEditorDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 void IMEditorDialog::setAddresses( const IMAddress::List &addresses )

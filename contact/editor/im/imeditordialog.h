@@ -36,7 +36,7 @@ class IMEditorDialog : public KDialog
 
   public:
     explicit IMEditorDialog( QWidget *parent );
-    ~IMEditorDialog() {}
+    ~IMEditorDialog();
 
     void setAddresses( const IMAddress::List &addresses );
     IMAddress::List addresses() const;
@@ -49,6 +49,8 @@ class IMEditorDialog : public KDialog
     void slotUpdateButtons();
 
   private:
+    void readConfig();
+    void writeConfig();
     QTreeView *mView;
     QPushButton *mAddButton;
     QPushButton *mEditButton;
