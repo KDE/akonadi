@@ -255,7 +255,7 @@ void CalendarBasePrivate::slotModifyFinished( int changeId,
     } else {
       // This shouldn't happen, unless the incidence gets deleted between event loops
       kWarning() << "CalendarBasePrivate::slotModifyFinished() Incidence was deleted already probably? id=" << item.id();
-      message = QLatin1String( "Could not find incidence to update, probably was deleted recently." );
+      message = i18n( "Could not find incidence to update, it probably was deleted recently." );
       resultCode = IncidenceChanger::ResultCodeAlreadyDeleted;
     }
   }
