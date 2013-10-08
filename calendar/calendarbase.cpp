@@ -27,6 +27,7 @@
 #include <akonadi/collection.h>
 
 #include <KSystemTimeZones>
+#include <KLocale>
 
 using namespace Akonadi;
 using namespace KCalCore;
