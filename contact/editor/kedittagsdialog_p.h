@@ -65,6 +65,8 @@ private:
     void removeNewTagItem();
 
 private:
+    void writeConfig();
+    void readConfig();
     enum ItemType {
         UrlTag = Qt::UserRole + 1
     };
