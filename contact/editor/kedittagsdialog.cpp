@@ -98,10 +98,27 @@ KEditTagsDialog::KEditTagsDialog(const QVector<Nepomuk2::Tag>& tags,
     m_deleteButtonTimer->setSingleShot( true );
     m_deleteButtonTimer->setInterval( 500 );
     connect( m_deleteButtonTimer, SIGNAL(timeout()), this, SLOT(showDeleteButton()) );
+    readConfig();
 }
 
 KEditTagsDialog::~KEditTagsDialog()
 {
+    writeConfig();
+}
+
+void KEditTagsDialog::readConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KEditTagsDialog" );
+    const QSize sizeDialog = group.readEntry( "Size", QSize(500,400) );
+    if ( sizeDialog.isValid() ) {
+        resize( sizeDialog );
+    }
+}
+
+void KEditTagsDialog::writeConfig()
+{
+    KConfigGroup group( KGlobal::config(), "KEditTagsDialog" );
+    group.writeEntry( "Size", size() );
 }
 
 QVector<Nepomuk2::Tag> KEditTagsDialog::tags() const
