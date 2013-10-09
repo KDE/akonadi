@@ -83,7 +83,7 @@ public:
   GroupwareUiDelegate *m_uiDelegate;
   ITIPHandler *const q;
 
-public Q_SLOTS:
+private Q_SLOTS:
   void finishSendAsICalendar( Akonadi::MailScheduler::Result, const QString &errorMessage );
   void onLoadFinished( bool success, const QString &errorMessage );
   void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
