@@ -39,6 +39,7 @@
 #include "search/searchmanager.h"
 #include "xesamtypes.h"
 #include "response.h"
+#include "idlemanager.h"
 
 #include "libs/xdgbasedirs_p.h"
 #include "libs/protocol_p.h"
@@ -164,6 +165,7 @@ AkonadiServer::AkonadiServer( QObject *parent )
       akFatal() << "Unable to initialize database.";
     }
 
+    IdleManager::self();
     NotificationManager::self();
     Tracer::self();
     new DebugInterface( this );
