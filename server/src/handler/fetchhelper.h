@@ -44,55 +44,43 @@ class FetchScope
     FetchScope( const FetchScope &other );
     ~FetchScope();
 
-    QVector<QByteArray> requestedParts() const { return d->requestedParts; }
-    QStringList requestedPayloads() const { return d->requestedPayloads; }
-    int ancestorDepth() const { return d->ancestorDepth; }
-    bool cacheOnly() const { return d->cacheOnly; }
-    bool changedOnly() const { return d->changedOnly; }
-    bool checkCachedPayloadPartsOnly() const { return d->checkCachedPayloadPartsOnly; }
-    bool fullPayload() const { return d->fullPayload; }
-    bool allAttrs() const { return d->allAttrs; }
-    bool sizeRequested() const { return d->sizeRequested; }
-    bool mTimeRequested() const { return d->mTimeRequested; }
-    bool externalPayloadSupported() const { return d->externalPayloadSupported; }
-    bool remoteRevisionRequested() const { return d->remoteRevisionRequested; }
-    bool ignoreErrors() const { return d->ignoreErrors; }
-    bool flagsRequested() const { return d->flagsRequested; }
-    bool remoteIdRequested() const { return d->remoteIdRequested; }
-    bool gidRequested() const { return d->gidRequested; }
-    QDateTime changedSince() const { return d->changedSince; }
+    QVector<QByteArray> requestedParts() const;
+    void setRequestedParts( const QVector<QByteArray> &parts );
+    QStringList requestedPayloads() const;
+    void setRequestedPayloads( const QStringList &payloads );
+    int ancestorDepth() const;
+    void setAncestorDepth( int depth );
+    bool cacheOnly() const;
+    void setCacheOnly( bool cacheOnly );
+    bool changedOnly() const;
+    void setChangedOnly( bool changedOnly );
+    bool checkCachedPayloadPartsOnly() const;
+    void setCheckCachedPayloadPartsOnly( bool cachedOnly );
+    bool fullPayload() const;
+    void setFullPayload( bool fullPayload );
+    bool allAttrs() const;
+    void setAllAttrs( bool allAttrs );
+    bool sizeRequested();
+    void setSizeRequested( bool sizeRequested );
+    bool mTimeRequested() const;
+    void setMTimeRequested( bool mTimeRequested );
+    bool externalPayloadSupported() const;
+    void setExternalPayloadSupported( bool supported );
+    bool remoteRevisionRequested() const;
+    void setRemoteRevisionRequested( bool requested );
+    bool ignoreErrors() const;
+    void setIgnoreErrors( bool ignoreErrors );
+    bool flagsRequested() const;
+    void setFlagsRequested( bool flagsRequested );
+    bool remoteIdRequested() const;
+    void setRemoteIdRequested( bool requested );
+    bool gidRequested() const;
+    void setGidRequested( bool requested );
+    QDateTime changedSince() const;
+    void setChangedSince( const QDateTime &changedSince );
 
   private:
-    class Data: public QSharedData
-    {
-      public:
-        Data();
-        Data( const Data &other );
-
-        void parseCommandStream();
-        void parsePartList();
-
-        QVector<QByteArray> requestedParts;
-        QStringList requestedPayloads;
-        int ancestorDepth;
-        bool cacheOnly;
-        bool changedOnly;
-        bool checkCachedPayloadPartsOnly;
-        bool fullPayload;
-        bool allAttrs;
-        bool sizeRequested;
-        bool mTimeRequested;
-        bool externalPayloadSupported;
-        bool remoteRevisionRequested;
-        bool ignoreErrors;
-        bool flagsRequested;
-        bool remoteIdRequested;
-        bool gidRequested;
-        QDateTime changedSince;
-
-        ImapStreamParser *streamParser;
-    };
-
+    class Data;
     QSharedDataPointer<Data> d;
 };
 
@@ -103,23 +91,6 @@ class FetchHelper : public QObject
   Q_OBJECT
 
   public:
-    FetchHelper( AkonadiConnection *connection, const Scope &scope );
-    FetchHelper( const Scope &scope, const FetchScope &fetchScope );
-
-    void setStreamParser( ImapStreamParser *parser );
-
-    bool parseStream( const QByteArray &responseIdentifier );
-
-    QSqlQuery buildItemQuery();
-
-    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
-
-    QSqlQuery buildFlagQuery();
-
-  Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response& );
-
-  private:
     enum ItemQueryColumns {
       ItemQueryPimItemIdColumn,
       ItemQueryPimItemRidColumn,
@@ -133,11 +104,30 @@ class FetchHelper : public QObject
       ItemQueryColumnCount
     };
 
+    FetchHelper( AkonadiConnection *connection, const Scope &scope );
+    FetchHelper( const Scope &scope, const FetchScope &fetchScope );
+
+    void setStreamParser( ImapStreamParser *parser );
+
+    bool parseStream( const QByteArray &responseIdentifier );
+
+    QSqlQuery buildItemQuery();
+
+    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
+
+    QSqlQuery buildFlagQuery();
+
+    QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
+
+  Q_SIGNALS:
+    void responseAvailable( const Akonadi::Response& );
+
+  private:
+
     void updateItemAccessTime();
     void triggerOnDemandFetch();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
-    QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
 
   private:
     ImapStreamParser *mStreamParser;

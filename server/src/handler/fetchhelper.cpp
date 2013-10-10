@@ -47,6 +47,36 @@
 
 using namespace Akonadi;
 
+class FetchScope::Data: public QSharedData
+{
+  public:
+    Data();
+    Data( const Data &other );
+
+    void parseCommandStream();
+    void parsePartList();
+
+    QVector<QByteArray> requestedParts;
+    QStringList requestedPayloads;
+    int ancestorDepth;
+    bool cacheOnly;
+    bool changedOnly;
+    bool checkCachedPayloadPartsOnly;
+    bool fullPayload;
+    bool allAttrs;
+    bool sizeRequested;
+    bool mTimeRequested;
+    bool externalPayloadSupported;
+    bool remoteRevisionRequested;
+    bool ignoreErrors;
+    bool flagsRequested;
+    bool remoteIdRequested;
+    bool gidRequested;
+    QDateTime changedSince;
+
+    ImapStreamParser *streamParser;
+};
+
 FetchScope::Data::Data()
  : QSharedData()
  , ancestorDepth( 0 )
@@ -178,6 +208,177 @@ FetchScope::FetchScope( const FetchScope &other )
 
 FetchScope::~FetchScope()
 {
+}
+
+
+QVector<QByteArray> FetchScope::requestedParts() const
+{
+  return d->requestedParts;
+}
+
+void FetchScope::setRequestedParts( const QVector<QByteArray> &parts )
+{
+  d->requestedParts = parts;
+}
+
+QStringList FetchScope::requestedPayloads() const
+{
+  return d->requestedPayloads;
+}
+
+void FetchScope::setRequestedPayloads( const QStringList &payloads )
+{
+  d->requestedPayloads = payloads;
+}
+
+int FetchScope::ancestorDepth() const
+{
+  return d->ancestorDepth;
+}
+
+void FetchScope::setAncestorDepth( int depth )
+{
+  d->ancestorDepth = depth;
+}
+
+bool FetchScope::cacheOnly() const
+{
+  return d->cacheOnly;
+}
+
+void FetchScope::setCacheOnly( bool cacheOnly )
+{
+  d->cacheOnly = cacheOnly;
+}
+
+bool FetchScope::changedOnly() const
+{
+  return d->changedOnly;
+}
+
+void FetchScope::setChangedOnly( bool changedOnly )
+{
+  d->changedOnly = changedOnly;
+}
+
+bool FetchScope::checkCachedPayloadPartsOnly() const
+{
+  return d->checkCachedPayloadPartsOnly;
+}
+
+void FetchScope::setCheckCachedPayloadPartsOnly( bool cachedOnly )
+{
+  d->checkCachedPayloadPartsOnly = cachedOnly;
+}
+
+bool FetchScope::fullPayload() const
+{
+  return d->fullPayload;
+}
+
+void FetchScope::setFullPayload( bool fullPayload )
+{
+  d->fullPayload = fullPayload;
+}
+
+bool FetchScope::allAttrs() const
+{
+  return d->allAttrs;
+}
+
+void FetchScope::setAllAttrs( bool allAttrs )
+{
+  d->allAttrs = allAttrs;
+}
+
+bool FetchScope::sizeRequested()
+{
+  return d->sizeRequested;
+}
+
+void FetchScope::setSizeRequested( bool sizeRequested )
+{
+  d->sizeRequested = sizeRequested;
+}
+
+bool FetchScope::mTimeRequested() const
+{
+  return d->mTimeRequested;
+}
+
+void FetchScope::setMTimeRequested( bool mTimeRequested )
+{
+  d->mTimeRequested = mTimeRequested;
+}
+
+bool FetchScope::externalPayloadSupported() const
+{
+  return d->externalPayloadSupported;
+}
+
+void FetchScope::setExternalPayloadSupported( bool supported )
+{
+  d->externalPayloadSupported = supported;
+}
+
+bool FetchScope::remoteRevisionRequested() const
+{
+  return d->remoteRevisionRequested;
+}
+
+void FetchScope::setRemoteRevisionRequested( bool requested )
+{
+  d->remoteRevisionRequested = requested;
+}
+
+bool FetchScope::ignoreErrors() const
+{
+  return d->ignoreErrors;
+}
+
+void FetchScope::setIgnoreErrors( bool ignoreErrors )
+{
+  d->ignoreErrors = ignoreErrors;
+}
+
+bool FetchScope::flagsRequested() const
+{
+  return d->flagsRequested;
+}
+
+void FetchScope::setFlagsRequested( bool flagsRequested )
+{
+  d->flagsRequested = flagsRequested;
+}
+
+bool FetchScope::remoteIdRequested() const
+{
+  return d->remoteIdRequested;
+}
+
+void FetchScope::setRemoteIdRequested( bool requested )
+{
+  d->remoteIdRequested = requested;
+}
+
+bool FetchScope::gidRequested() const
+{
+  return d->gidRequested;
+}
+
+void FetchScope::setGidRequested( bool requested )
+{
+  d->gidRequested = requested;
+}
+
+QDateTime FetchScope::changedSince() const
+{
+  return d->changedSince;
+}
+
+void FetchScope::setChangedSince( const QDateTime &changedSince )
+{
+  d->changedSince = changedSince;
 }
 
 
@@ -620,7 +821,7 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   return ancestors;
 }
 
-QVariant FetchHelper::extractQueryResult(const QSqlQuery& query, FetchHelper::ItemQueryColumns column) const
+QVariant FetchHelper::extractQueryResult( const QSqlQuery &query, FetchHelper::ItemQueryColumns column ) const
 {
   Q_ASSERT(mItemQueryColumnMap[column] >= 0);
   return query.value(mItemQueryColumnMap[column]);
