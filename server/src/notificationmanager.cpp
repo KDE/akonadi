@@ -25,6 +25,7 @@
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "clientcapabilityaggregator.h"
+#include "idlemanager.h"
 
 #include <akstandarddirs.h>
 #include <libs/xdgbasedirs_p.h>
@@ -93,6 +94,8 @@ void NotificationManager::emitPendingNotifications()
   if ( mNotifications.isEmpty() ) {
     return;
   }
+
+  IdleManager::self()->notify( mNotifications );
 
   NotificationMessage::List legacyNotifications;
   Q_FOREACH ( const NotificationMessageV2 &notification, mNotifications ) {
