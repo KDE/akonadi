@@ -45,6 +45,7 @@ private:
   MailClient *mMailClient;
   int mPendingSignals;
   MailClient::Result mLastResult;
+  QString mLastErrorMessage;
 
 private slots:
 
@@ -56,7 +57,7 @@ private slots:
     mMailClient = new MailClient( this );
     mLastResult = MailClient::ResultSuccess;
     connect( mMailClient, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
-             SLOT(handleFinished(Akonadi::MailClient::Result,QString)));
+             SLOT(handleFinished(Akonadi::MailClient::Result,QString)) );
   }
 
   void cleanupTestCase()
@@ -194,9 +195,20 @@ private slots:
     mPendingSignals = 1;
     mMailClient->mailAttendees( incidence, identity, bccMe, attachment, transport );
     waitForSignals();
-    QCOMPARE( mLastResult, expectedResult );
-    if ( expectedTransportId != -1 )
-      QCOMPARE( mMailClient->mUnitTestResult.transportId, expectedTransportId );
+
+    if ( mLastResult != expectedResult ) {
+      qDebug() << "Fail1: last=" << mLastResult << "; expected=" << expectedResult
+               << "; error=" << mLastErrorMessage;
+      QVERIFY( false );
+    }
+
+
+    if ( expectedTransportId != -1 &&
+         mMailClient->mUnitTestResult.transportId != expectedTransportId ) {
+      qDebug() << "got " << mMailClient->mUnitTestResult.transportId
+               << "; expected=" << expectedTransportId;
+      QVERIFY( false );
+    }
 
     QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
     QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
@@ -348,6 +360,7 @@ private slots:
   {
     kDebug() << "handleFinished: " << result << errorMessage;
     mLastResult = result;
+    mLastErrorMessage = errorMessage;
     --mPendingSignals;
     QTestEventLoop::instance().exitLoop();
   }
