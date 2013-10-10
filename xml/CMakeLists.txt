@@ -18,7 +18,7 @@ set( akonadixml_SRCS
 )
 
 set( akonadixml_HDRS
-  ${CMAKE_CURRENT_BINARY_DIR}/akonadixml_export.h
+  ${CMAKE_CURRENT_BINARY_DIR}/akonadi-xml_export.h
   xmldocument.h
   xmlreader.h
   xmlwritejob.h
@@ -37,7 +37,7 @@ target_link_libraries(akonadi-xml
 
 set_target_properties(akonadi-xml PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
-install(TARGETS akonadi-xml ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS akonadi-xml EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ${akonadixml_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/akonadi/xml COMPONENT Devel)
 install(FILES akonadi-xml.xsd DESTINATION ${DATA_INSTALL_DIR}/akonadi/)
 
