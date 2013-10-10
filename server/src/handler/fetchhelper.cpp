@@ -190,6 +190,16 @@ FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
   std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
 
+FetchHelper::FetchHelper( const Scope &scope, const FetchScope &fetchScope)
+  : mStreamParser( 0 )
+  , mConnection( 0 )
+  , mScope( scope )
+  , mFetchScope( fetchScope )
+{
+  std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, - 1);
+}
+
+
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
 {
   mStreamParser = parser;
@@ -235,7 +245,13 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     }
     partQuery.addCondition( cond );
 
-    ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+    if ( !mConnection && mScope.scope() == Akonadi::Scope::Uid ) {
+      ItemQueryHelper::itemSetToQuery( mScope.uidSet(), partQuery );
+    } else if ( mConnection ) {
+      ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
+    } else {
+      throw new HandlerException( "Can't use other than UID retrieval without connection" );
+    }
 
     if ( !partQuery.exec() ) {
       throw HandlerException("Unable to list item parts");
@@ -311,7 +327,13 @@ QSqlQuery FetchHelper::buildFlagQuery()
                      Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName() );
   flagQuery.addColumn( PimItem::idFullColumnName() );
   flagQuery.addColumn( Flag::nameFullColumnName() );
-  ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
+  if ( !mConnection && mScope.scope() == Akonadi::Scope::Uid ) {
+    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), flagQuery );
+  } else if ( mConnection ) {
+    ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
+  } else {
+    throw new HandlerException( "Can't user other than UID retrieval without connection" );
+  }
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( !flagQuery.exec() ) {
@@ -325,6 +347,8 @@ QSqlQuery FetchHelper::buildFlagQuery()
 
 bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
 {
+  Q_ASSERT( mConnection );
+
   mFetchScope = FetchScope( mStreamParser );
   triggerOnDemandFetch();
 

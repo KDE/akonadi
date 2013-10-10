@@ -104,10 +104,17 @@ class FetchHelper : public QObject
 
   public:
     FetchHelper( AkonadiConnection *connection, const Scope &scope );
+    FetchHelper( const Scope &scope, const FetchScope &fetchScope );
 
     void setStreamParser( ImapStreamParser *parser );
 
     bool parseStream( const QByteArray &responseIdentifier );
+
+    QSqlQuery buildItemQuery();
+
+    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
+
+    QSqlQuery buildFlagQuery();
 
   Q_SIGNALS:
     void responseAvailable( const Akonadi::Response& );
@@ -128,9 +135,6 @@ class FetchHelper : public QObject
 
     void updateItemAccessTime();
     void triggerOnDemandFetch();
-    QSqlQuery buildItemQuery();
-    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
-    QSqlQuery buildFlagQuery();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
     QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;

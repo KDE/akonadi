@@ -120,6 +120,7 @@ set(libakonadiprivate_SRCS
   src/handler/expunge.cpp
   src/handler/fetch.cpp
   src/handler/fetchhelper.cpp
+  src/handler/idle.cpp
   src/handler/link.cpp
   src/handler/list.cpp
   src/handler/login.cpp

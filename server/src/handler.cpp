@@ -37,6 +37,7 @@
 #include "handler/delete.h"
 #include "handler/expunge.h"
 #include "handler/fetch.h"
+#include "handler/idle.h"
 #include "handler/link.h"
 #include "handler/list.h"
 #include "handler/login.h"
@@ -140,6 +141,9 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
     }
     if ( command == AKONADI_CMD_ITEMMODIFY ) {
         return new Store( scope );
+    }
+    if ( command == AKONADI_CMD_IDLE ) {
+        return new Idle();
     }
     if ( command == AKONADI_CMD_STATUS ) {
         return new Status();
