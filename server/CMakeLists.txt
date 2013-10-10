@@ -107,6 +107,8 @@ set(libakonadiprivate_SRCS
   src/clientcapabilityaggregator.cpp
   src/handler.cpp
   src/handlerhelper.cpp
+  src/idleclient.cpp
+  src/idlemanager.cpp
   src/intervalcheck.cpp
   src/response.cpp
   src/handler/akappend.cpp
