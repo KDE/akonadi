@@ -51,49 +51,50 @@ void CollectionTest::testBuildCollection()
 {
   QDomDocument mDocument;
 
-  mDocument.setContent(collection1, true, 0);
-  Collection::List colist = XmlReader::readCollections( mDocument.documentElement());
+  mDocument.setContent( collection1, true, 0 );
+  Collection::List colist = XmlReader::readCollections( mDocument.documentElement() );
 
   QStringList mimeType;
 
-  mimeType << "inode/directory" << "message/rfc822";
-  QCOMPARE(colist.size(), 1);
-  verifyCollection(colist, 0, "c11", "Inbox", mimeType);
+  mimeType << QLatin1String( "inode/directory" ) << QLatin1String( "message/rfc822" );
+  QCOMPARE( colist.size(), 1 );
+  verifyCollection( colist, 0, QLatin1String( "c11" ), QLatin1String( "Inbox" ), mimeType );
 
-  mDocument.setContent(collection2, true, 0);
-  colist = XmlReader::readCollections( mDocument.documentElement());
+  mDocument.setContent( collection2, true, 0 );
+  colist = XmlReader::readCollections( mDocument.documentElement() );
 
-  QCOMPARE(colist.size(), 3);
-  verifyCollection(colist, 0, "c11", "Inbox", mimeType);
-  verifyCollection(colist, 1, "c111", "KDE PIM", mimeType);
-  verifyCollection(colist, 2, "c112", "Akonadi", mimeType);
+  QCOMPARE( colist.size(), 3 );
+  verifyCollection( colist, 0, QLatin1String( "c11" ), QLatin1String( "Inbox" ), mimeType );
+  verifyCollection( colist, 1, QLatin1String( "c111" ), QLatin1String( "KDE PIM" ), mimeType );
+  verifyCollection( colist, 2, QLatin1String( "c112" ), QLatin1String( "Akonadi" ), mimeType );
 
   QVERIFY( colist.at( 0 ).hasAttribute<EntityDisplayAttribute>() );
   EntityDisplayAttribute *attr = colist.at( 0 ).attribute<EntityDisplayAttribute>();
-  QCOMPARE( attr->displayName(), QString( "Posteingang" ) );
+  QCOMPARE( attr->displayName(), QString::fromLatin1( "Posteingang" ) );
 }
 
 void CollectionTest::serializeCollection()
 {
   Collection c;
-  c.setRemoteId( "c11" );
-  c.setName( "Inbox" );
-  c.setContentMimeTypes( QStringList() << Collection::mimeType() << "message/rfc822" );
-  c.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( "Posteingang" );
-  c.attribute<EntityDisplayAttribute>()->setIconName( "mail-folder-inbox" );
+  c.setRemoteId( QLatin1String( "c11" ) );
+  c.setName( QLatin1String( "Inbox" ) );
+  c.setContentMimeTypes( QStringList() << Collection::mimeType() << QLatin1String( "message/rfc822" ) );
+  c.attribute<EntityDisplayAttribute>( Collection::AddIfMissing )->setDisplayName( QLatin1String( "Posteingang" ) );
+  c.attribute<EntityDisplayAttribute>()->setIconName( QLatin1String( "mail-folder-inbox" ) );
 
   QDomDocument doc;
-  QDomElement root = doc.createElement( "test" );
+  QDomElement root = doc.createElement( QLatin1String( "test" ) );
   doc.appendChild( root );
   XmlWriter::writeCollection( c, root );
 
   QCOMPARE( doc.toString(), QString::fromUtf8( collection1 ) );
 }
 
-void CollectionTest::verifyCollection(Collection::List colist, int listPosition,QString remoteId, 
-    QString name, QStringList mimeType)
+void CollectionTest::verifyCollection( const Collection::List &colist, int listPosition,
+                                       const QString &remoteId, const QString &name,
+                                       const QStringList &mimeType )
 {
-  QVERIFY(colist.at(listPosition).name() == name);
-  QVERIFY(colist.at(listPosition).remoteId() == remoteId);
-  QVERIFY(colist.at(listPosition).contentMimeTypes() == mimeType);
+  QVERIFY( colist.at( listPosition ).name() == name );
+  QVERIFY( colist.at( listPosition ).remoteId() == remoteId );
+  QVERIFY( colist.at( listPosition ).contentMimeTypes() == mimeType );
 }

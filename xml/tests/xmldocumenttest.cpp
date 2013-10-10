@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <xml/xmldocument.h>
+#include "xmldocument.h"
 
 #include <QtCore/QObject>
 
@@ -31,20 +31,20 @@ class XmlDocumentTest : public QObject
   private slots:
     void testDocumentLoad()
     {
-      XmlDocument doc( KDESRCDIR "/knutdemo.xml" );
+      XmlDocument doc( QLatin1String( KDESRCDIR "/knutdemo.xml" ) );
       QVERIFY( doc.isValid() );
       QVERIFY( doc.lastError().isEmpty() );
       QCOMPARE( doc.collections().count(), 9 );
 
-      Collection col = doc.collectionByRemoteId( "c11" );
-      QCOMPARE( col.name(), QString( "Inbox" ) );
+      Collection col = doc.collectionByRemoteId( QLatin1String( "c11" ) );
+      QCOMPARE( col.name(), QString::fromLatin1( "Inbox" ) );
       QCOMPARE( col.attributes().count(), 1 );
-      QCOMPARE( col.parentRemoteId(), QString("c1") );
+      QCOMPARE( col.parentRemoteId(), QString::fromLatin1( "c1" ) );
 
       QCOMPARE( doc.childCollections( col.remoteId() ).count(), 2 );
 
-      Item item = doc.itemByRemoteId( "contact1" );
-      QCOMPARE( item.mimeType(), QString( "text/directory" ) );
+      Item item = doc.itemByRemoteId( QLatin1String( "contact1" ) );
+      QCOMPARE( item.mimeType(), QString::fromLatin1( "text/directory" ) );
       QVERIFY( item.hasPayload() );
 
       Item::List items = doc.items( col );

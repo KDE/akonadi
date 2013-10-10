@@ -33,6 +33,8 @@
 #include <QFile>
 #include <QStack>
 
+using namespace Akonadi;
+
 namespace Akonadi {
 
 class XmlWriteJobPrivate {
@@ -51,6 +53,8 @@ class XmlWriteJobPrivate {
     void itemFetchResult( KJob* job );
     void processItems();
 };
+
+}
 
 void XmlWriteJobPrivate::collectionFetchResult(KJob* job)
 {
@@ -152,6 +156,4 @@ void XmlWriteJob::done() // cannot be in the private class due to emitResult()
   emitResult();
 }
 
-}
-
-#include "xmlwritejob.moc"
+#include "moc_xmlwritejob.cpp"

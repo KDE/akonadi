@@ -27,7 +27,9 @@ using namespace Akonadi;
 class CollectionTest : public QObject {
   Q_OBJECT
   private:
-    void verifyCollection(Collection::List colist, int listPosition,QString remoteId, QString name, QStringList mimeType);
+    void verifyCollection( const Collection::List &colist, int listPosition,
+                           const QString &remoteId, const QString &name,
+                           const QStringList &mimeType );
   private Q_SLOTS:
     void serializeCollection();
     void testBuildCollection();

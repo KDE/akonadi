@@ -20,7 +20,7 @@
 #include "xmlwritejob.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/private/collectionpathresolver_p.h>
+#include <akonadi/collectionpathresolver_p.h>
 
 #include <KAboutData>
 #include <KApplication>

@@ -36,6 +36,7 @@ add_subdirectory( contact )
 add_subdirectory( calendar )
 add_subdirectory( notes )
 add_subdirectory( socialutils )
+add_subdirectory( xml )
 
 include_directories(
   ${QT_QTDBUS_INCLUDE_DIR}
