@@ -35,6 +35,8 @@
 #include <libxml/xmlschemas.h>
 #endif
 
+static const KCatalogLoader loader( QLatin1String( "libakonadi-xml") );
+
 using namespace Akonadi;
 
 // helper class for dealing with libxml resource management
