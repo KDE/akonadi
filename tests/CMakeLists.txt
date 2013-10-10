@@ -28,6 +28,7 @@ include_directories(
 
 add_subdirectory(etm_test_app)
 add_subdirectory(testrunner)
+add_subdirectory(testresource)
 
 # add benchmarker
 add_subdirectory(benchmarker)

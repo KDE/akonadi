@@ -1,7 +1,7 @@
-include_directories( ${Boost_INCLUDE_DIR} )
-
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-add_subdirectory( tests )
+
+# Disabled for now, resourcetester remained in kdepim-runtime
+#add_subdirectory( tests )
 
 set( knutresource_SRCS knutresource.cpp )
 
@@ -23,8 +23,8 @@ endif ()
 
 target_link_libraries(akonadi_knut_resource
   akonadi-xml
+  akonadi-kde
   ${KDE4_KIO_LIBS}
-  ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTXML_LIBRARY}
 )
 
