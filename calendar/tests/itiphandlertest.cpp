@@ -43,6 +43,7 @@ void ITIPHandlerTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
     m_itipHandler = new Akonadi::ITIPHandler(this);
+    m_itipHandler->setShowDialogsOnError(false);
     connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
             SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
     m_pendingItipMessageSignal = 0;

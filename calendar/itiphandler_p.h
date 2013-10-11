@@ -81,6 +81,7 @@ public:
   Operation m_currentOperation;
   QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
   GroupwareUiDelegate *m_uiDelegate;
+  bool m_showDialogsOnError;
   ITIPHandler *const q;
 
 private Q_SLOTS:

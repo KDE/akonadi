@@ -125,6 +125,15 @@ public:
   void setCalendar(const Akonadi::CalendarBase::Ptr &);
 
   /**
+   * Sets if the ITIP handler should show dialogs on error.
+   * Default is true, for compatibility reasons, but this will change in KDE5.
+   * TODO_KDE5: use message delegates
+   *
+   * @since 4.12
+   */
+  void setShowDialogsOnError(bool enable);
+
+  /**
    * Returns the calendar used by this itip handler.
    */
   Akonadi::CalendarBase::Ptr calendar() const;

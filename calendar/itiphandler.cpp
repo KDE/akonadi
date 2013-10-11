@@ -90,9 +90,13 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                                                     : i18n( "Unknown error while parsing iCal invitation" );
 
     kError() << "Error parsing" << errorMessage;
-    KMessageBox::detailedError( 0,// mParent, TODO
-                                i18n( "Error while processing an invitation or update." ),
-                                errorMessage );
+
+    if ( d->m_showDialogsOnError ) {
+      KMessageBox::detailedError( 0,// mParent, TODO
+                                  i18n( "Error while processing an invitation or update." ),
+                                  errorMessage );
+    }
+
     emit iTipMessageProcessed( ResultError, errorMessage );
     return;
   }
@@ -187,12 +191,15 @@ void ITIPHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
   d->m_currentOperation = OperationSendiTIPMessage;
 
   if ( incidence->attendeeCount() == 0 && method != KCalCore::iTIPPublish ) {
-    KMessageBox::information( parentWidget,
-                              i18n( "The item '%1' has no attendees. "
-                                    "Therefore no groupware message will be sent.",
-                                    incidence->summary() ),
-                              i18n( "Message Not Sent" ),
-                              QLatin1String( "ScheduleNoAttendees" ) );
+    if ( d->m_showDialogsOnError ) {
+      KMessageBox::information( parentWidget,
+                                i18n( "The item '%1' has no attendees. "
+                                      "Therefore no groupware message will be sent.",
+                                      incidence->summary() ),
+                                i18n( "Message Not Sent" ),
+                                QLatin1String( "ScheduleNoAttendees" ) );
+    }
+
     return;
   }
 
@@ -293,6 +300,11 @@ void ITIPHandler::setCalendar(const Akonadi::CalendarBase::Ptr &calendar)
   if ( d->m_calendar != calendar ) {
     d->m_calendar = calendar;
   }
+}
+
+void ITIPHandler::setShowDialogsOnError(bool enable)
+{
+    d->m_showDialogsOnError = enable;
 }
 
 Akonadi::CalendarBase::Ptr ITIPHandler::calendar() const
