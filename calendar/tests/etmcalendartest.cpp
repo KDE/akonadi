@@ -296,9 +296,10 @@ void ETMCalendarTest::calendarIncidenceChanged(const Incidence::Ptr &incidence)
     Incidence::Ptr i3 = mCalendar->incidence(incidence->uid());
     QCOMPARE(i3->summary(), incidence->summary());
 
-    QVERIFY(mIncidencesToChange > 0);
+    if (mIncidencesToChange > 0) {
+        --mIncidencesToChange;
+    }
 
-    --mIncidencesToChange;
     checkExitLoop();
 }
 
