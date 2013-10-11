@@ -44,7 +44,6 @@ class HistoryTest : public QObject
     QList<int> mKnownChangeIds;
 
     void createIncidence(const QString &uid);
-    void fetchCollection();
 
 private Q_SLOTS:
     void initTestCase();
