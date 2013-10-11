@@ -85,9 +85,9 @@ void ITIPHandlerTest::testProcessITIPMessage()
 
     QString iCalData = QString::fromLatin1(readFile(data_filename));
 
+    m_pendingItipMessageSignal = 1;
     m_itipHandler->processiTIPMessage(receiver, iCalData, action);
     waitForIt();
-
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
