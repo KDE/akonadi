@@ -26,7 +26,6 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
-
 #include <kcalcore/event.h>
 
 #include <QTestEventLoop>
@@ -93,12 +92,7 @@ void HistoryTest::initTestCase()
 
     mCollection = Helper::fetchCollection();
     QVERIFY(mCollection.isValid());
-    qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
-    qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >("QList<Akonadi::IncidenceChanger::ChangeType>");
-    qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
-    mChanger = new IncidenceChanger(this);
-    mChanger->setShowDialogsOnError(false);
-    mChanger->setHistoryEnabled(true);
+
     mHistory = mChanger->history();
     mChanger->setDefaultCollection(mCollection);
     connect(mChanger,

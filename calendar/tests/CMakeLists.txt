@@ -16,7 +16,10 @@ include_directories( ${CMAKE_BINARY_DIR}/kcalcore
                      ${CMAKE_BINARY_DIR}/akonadi/kmime
                      ${CMAKE_BINARY_DIR}/mailtransport )
 
-#add_akonadi_isolated_test_advanced( historytest.cpp helper.cpp "")
+
+set(common_sources unittestbase.cpp helper.cpp)
+
+#add_akonadi_isolated_test_advanced( historytest.cpp "${common_sources}" "")
 #add_akonadi_isolated_test( incidencechangertest.cpp )
 #add_akonadi_isolated_test( mailclienttest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )

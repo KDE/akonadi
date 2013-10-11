@@ -20,6 +20,7 @@
 #ifndef HISTORY_TEST_H
 #define HISTORY_TEST_H
 
+#include "unittestbase.h"
 #include "../history.h"
 #include "../history_p.h"
 #include "../incidencechanger.h"
@@ -33,11 +34,9 @@ enum SignalType {
     NumSignals
 };
 
-class HistoryTest : public QObject
+class HistoryTest : public UnitTestBase
 {
     Q_OBJECT
-    Collection mCollection;
-    IncidenceChanger *mChanger;
     History *mHistory;
     QHash<SignalType, int> mPendingSignals;
     QHash<int, Akonadi::Item> mItemByChangeId;
