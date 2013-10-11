@@ -90,11 +90,8 @@ void HistoryTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
-    mCollection = Helper::fetchCollection();
-    QVERIFY(mCollection.isValid());
-
     mHistory = mChanger->history();
-    mChanger->setDefaultCollection(mCollection);
+
     connect(mChanger,
              SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
              SLOT(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));

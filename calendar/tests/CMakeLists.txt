@@ -20,6 +20,7 @@ include_directories( ${CMAKE_BINARY_DIR}/kcalcore
 set(common_sources unittestbase.cpp helper.cpp)
 
 #add_akonadi_isolated_test_advanced( historytest.cpp "${common_sources}" "")
+#add_akonadi_isolated_test_advanced( itiphandlertest.cpp "${common_sources}" "")
 #add_akonadi_isolated_test( incidencechangertest.cpp )
 #add_akonadi_isolated_test( mailclienttest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )

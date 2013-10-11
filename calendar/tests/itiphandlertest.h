@@ -17,31 +17,40 @@
     02110-1301, USA.
 */
 
+#ifndef ITIPHANDLER_TEST_H
+#define ITIPHANDLER_TEST_H
 
-#ifndef UNITTEST_BASE_H
-#define UNITTEST_BASE_H
+#include "../incidencechanger.h"
+#include "../itiphandler.h"
+#include "unittestbase.h"
 
 #include <akonadi/collection.h>
 
 #include <QObject>
+#include <QHash>
 
-namespace Akonadi {
-    class IncidenceChanger;
-}
 
-class UnitTestBase : public QObject {
+class ITIPHandlerTest : public UnitTestBase
+{
     Q_OBJECT
-public:
-    UnitTestBase();
-    void waitForIt(); // Waits 10 seconds for signals
-    void stopWaiting();
 
-protected:
+private Q_SLOTS:
+    void initTestCase();
 
-    static QByteArray readFile(const QString &filename);
+    // Tests processing an incoming message
+    void testProcessITIPMessage_data();
+    void testProcessITIPMessage();
 
-    Akonadi::Collection mCollection;
-    Akonadi::IncidenceChanger *mChanger;
+private:
+    void waitForSignals();
+
+public Q_SLOTS:
+    void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
+                                const QString &errorMessage);
+private:
+    Akonadi::ITIPHandler *m_itipHandler;
+    int m_pendingItipMessageSignal;
+    Akonadi::ITIPHandler::Result m_expectedResult;
 };
 
 #endif
