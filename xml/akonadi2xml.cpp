@@ -34,7 +34,7 @@ int main( int argc, char *argv[] )
   KAboutData aboutdata( "akonadi2xml", 0,
                         ki18n( "Akonadi To XML converter" ),
                         "1.0",
-                        ki18n( "Converts a Akonadi collection subtree into a XML file." ),
+                        ki18n( "Converts an Akonadi collection subtree into a XML file." ),
                         KAboutData::License_GPL,
                         ki18n( "(c) 2009 Volker Krause <vkrause@kde.org>" ) );
 
