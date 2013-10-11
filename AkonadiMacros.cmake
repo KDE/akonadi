@@ -68,14 +68,20 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${AKONADI_COMMON_LIBRARIES}
                         ${_linklibraries})
 
+  # Set the akonaditest path when the macro is used in kdepimlibs
+  if(NOT KDEPIMLIBS_BIN_DIR)
+    set(_testrunner_BIN_DIR "${_akonaditest_DIR}")
+  else()
+    set(_testrunner_BIN_DIR "${KDEPIMLIBS_BIN_DIR}")
+  endif()
   # based on kde4_add_unit_test
   if (WIN32)
     get_target_property( _loc ${_name} LOCATION )
     set(_executable ${_loc}.bat)
-    set(_testrunner ${KDEPIMLIBS_BIN_DIR}/akonaditest.exe)
+    set(_testrunner ${_testrunner_BIN_DIR}/akonaditest.exe)
   else()
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_name})
-    set(_testrunner ${KDEPIMLIBS_BIN_DIR}/akonaditest)
+    set(_testrunner ${_testrunner_BIN_DIR}/akonaditest)
   endif()
   if (UNIX)
     if (APPLE)
