@@ -22,6 +22,7 @@
 #include "idlemanager.h"
 #include "fetchhelper.h"
 #include "imapstreamparser.h"
+#include "response.h"
 
 #include <libs/protocol_p.h>
 
@@ -39,6 +40,7 @@ bool Idle::parseStream()
   try {
     if ( subcmd == AKONADI_PARAM_START ) {
       startIdle();
+      successResponse( "IDLE Active");
     } else {
       // All subsequent subcommands require active IDLE session
       IdleClient *client = IdleManager::self()->clientForConnection( connection() );
@@ -48,18 +50,22 @@ bool Idle::parseStream()
 
       if ( subcmd == AKONADI_PARAM_FILTER ) {
         updateFilter();
+        successResponse( "IDLE Filter updated" );
       } else if ( subcmd == AKONADI_PARAM_FREEZE ) {
         if ( client->isFrozen() ) {
           throw HandlerException( "Already frozen" );
         }
         client->freeze();
+        successResponse( "Frozen" );
       } else if ( subcmd == AKONADI_PARAM_THAW ) {
         if ( !client->isFrozen() ) {
           throw HandlerException( "Not frozen" );
         }
         client->thaw();
+        successResponse( "Thawn" );
       } else if ( subcmd == AKONADI_PARAM_DONE ) {
         client->done();
+        successResponse( "Done" );
       } else if ( subcmd == AKONADI_PARAM_REPLAYED ) {
         const ImapSet set = m_streamParser->readSequenceSet();
         if ( set.isEmpty() ) {
@@ -68,6 +74,7 @@ bool Idle::parseStream()
         if ( !client->replayed( set ) ) {
           throw HandlerException( "No such notification" );
         }
+        successResponse( "Discarded" );
       } else if ( subcmd == AKONADI_PARAM_RECORD ) {
         const ImapSet set = m_streamParser->readSequenceSet();
         if ( set.isEmpty() ) {
@@ -76,6 +83,7 @@ bool Idle::parseStream()
         if ( !client->record( set ) ) {
           throw HandlerException( "Failed to record" );
         }
+        successResponse( "Recorded" );
       } else {
         throw HandlerException( "Invalid IDLE subcommand" );
       }
