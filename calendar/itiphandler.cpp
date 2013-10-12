@@ -45,6 +45,16 @@
 
 using namespace Akonadi;
 
+// async emittion
+static void emitiTipMessageProcessed(ITIPHandler *handler,
+                                     ITIPHandler::Result resultCode,
+                                     const QString &errorString)
+{
+    QMetaObject::invokeMethod(handler, "iTipMessageProcessed", Qt::QueuedConnection,
+                              Q_ARG(Akonadi::ITIPHandler::Result, resultCode ),
+                              Q_ARG(QString, errorString));
+}
+
 GroupwareUiDelegate::~GroupwareUiDelegate()
 {
 }
@@ -78,7 +88,8 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
   }
 
   if ( d->m_calendarLoadError ) {
-    emit iTipMessageProcessed( ResultError, i18n( "Error loading calendar." ) );
+    d->m_currentOperation = OperationNone;
+    emitiTipMessageProcessed( this, ResultError, i18n( "Error loading calendar." ) );
     return;
   }
 
@@ -98,6 +109,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     }
 
     emit iTipMessageProcessed( ResultError, errorMessage );
+
     return;
   }
 
@@ -107,7 +119,8 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
   d->m_incidence = message->event().dynamicCast<KCalCore::Incidence>();
   if ( !d->m_incidence ) {
     kError() << "Invalid incidence";
-    emit iTipMessageProcessed( ResultError, QLatin1String( "Invalid incidence" ) );
+    d->m_currentOperation = OperationNone;
+    emitiTipMessageProcessed( this, ResultError, i18n( "Invalid incidence" ) );
     return;
   }
 
@@ -152,7 +165,9 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     return; // signal emitted in onSchedulerFinished().
   } else {
     kError() << "Unknown incoming action" << action;
-    emit iTipMessageProcessed( ResultError, i18n( "Invalid action: %1", action ) );
+
+    d->m_currentOperation = OperationNone;
+    emitiTipMessageProcessed( this, ResultError, i18n( "Invalid action: %1", action ) );
   }
 
   if ( d->m_uiDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
@@ -188,8 +203,6 @@ void ITIPHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
     return;
   }
 
-  d->m_currentOperation = OperationSendiTIPMessage;
-
   if ( incidence->attendeeCount() == 0 && method != KCalCore::iTIPPublish ) {
     if ( d->m_showDialogsOnError ) {
       KMessageBox::information( parentWidget,
@@ -202,6 +215,8 @@ void ITIPHandler::sendiTIPMessage( KCalCore::iTIPMethod method,
 
     return;
   }
+
+  d->m_currentOperation = OperationSendiTIPMessage;
 
   KCalCore::Incidence *incidenceCopy = incidence->clone();
   incidenceCopy->registerObserver( 0 );
