@@ -77,6 +77,7 @@ void IdleManager::registerClient( IdleClient *client )
   }
 
   mClientsRegistrar.insert( client->connection()->sessionId(), client );
+  akDebug() << "Registered client" << client->clientId() << "for session" << client->connection()->sessionId();
 }
 
 void IdleManager::unregisterClient( IdleClient *client )
@@ -85,6 +86,8 @@ void IdleManager::unregisterClient( IdleClient *client )
   if ( mClientsRegistrar.remove( client->connection()->sessionId() ) == 0 ) {
     throw IdleException( "No such client");
   }
+
+  akDebug() << "Unregistered client" << client->clientId();
 }
 
 IdleClient *IdleManager::clientForConnection( AkonadiConnection *connection )
@@ -95,7 +98,6 @@ IdleClient *IdleManager::clientForConnection( AkonadiConnection *connection )
 
 void IdleManager::notify( NotificationMessageV2::List &msgs )
 {
-  QReadLocker locker( &mRegistrarLock );
 
   Collection collection;
   QTime timer;
@@ -119,12 +121,18 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         QSqlQuery partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
         QSqlQuery flagQuery = helper.buildFlagQuery();
         */
+
+        if ( itemsQuery.size() == 0 ) {
+          akDebug() << "Skipping a notification: got no items from DB";
+          continue;
+        }
       }
     }
     akDebug() << "Fetched and extracted" << itemsQuery.size() << "items in" << timer.elapsed() << "ms";
 
     timer.start();
     int acceptingClients = 0;
+    mRegistrarLock.lockForRead();
     Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
       if ( client->acceptsNotification( msg ) ) {
         ++acceptingClients;
@@ -135,6 +143,7 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         }
       }
     }
+    mRegistrarLock.unlock();
     akDebug() << "Dispatched notification to" << acceptingClients << "clients in" << timer.elapsed() << "ms";
   }
 }
