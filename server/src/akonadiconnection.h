@@ -32,6 +32,8 @@
 #include "clientcapabilities.h"
 
 namespace Akonadi {
+
+    class IdleClient;
     class Handler;
     class Response;
     class DataStore;
@@ -76,6 +78,9 @@ public:
     const ClientCapabilities &capabilities() const;
     void setCapabilities( const ClientCapabilities &capabilities );
 
+    void setIdleClient( IdleClient *client );
+    IdleClient *idleClient() const;
+
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
@@ -112,6 +117,7 @@ private:
     Resource m_resourceContext;
     ClientCapabilities m_clientCapabilities;
     bool m_verifyCacheOnRetrieval;
+    QPointer<IdleClient> m_idleClient;
 };
 
 }

@@ -29,6 +29,7 @@
 #include "response.h"
 #include "tracer.h"
 #include "clientcapabilityaggregator.h"
+#include "idleclient.h"
 
 #include "imapstreamparser.h"
 #include "shared/akdebug.h"
@@ -358,3 +359,20 @@ bool AkonadiConnection::verifyCacheOnRetrieval() const
 {
   return m_verifyCacheOnRetrieval;
 }
+
+IdleClient* AkonadiConnection::IdleClient() const
+{
+  return m_idleClient;
+}
+
+void AkonadiConnection::setIdleClient( IdleClient *client )
+{
+  if ( m_idleClient ) {
+    disconnect( m_idleClient.data(), SIGNAL(responseAvailable(Akonadi::Response)) );
+  }
+
+  m_idleClient = client;
+  connect( m_idleClient.data(), SIGNAL(responseAvailable(Akonadi::Response)),
+           this, SLOT(slotResponseAvailable(Akonadi::Response)) );
+}
+
