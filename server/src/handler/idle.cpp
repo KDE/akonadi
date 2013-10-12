@@ -36,48 +36,52 @@ Idle::Idle()
 bool Idle::parseStream()
 {
   const QByteArray subcmd = m_streamParser->readString();
-  if ( subcmd == AKONADI_PARAM_START ) {
-    startIdle();
-  } else {
-    // All subsequent subcommands require active IDLE session
-    IdleClient *client = IdleManager::self()->clientForConnection( connection() );
-    if ( !client ) {
-      throw new HandlerException( "IDLE not active" );
-    }
-
-    if ( subcmd == AKONADI_PARAM_FILTER ) {
-      updateFilter();
-    } else if ( subcmd == AKONADI_PARAM_FREEZE ) {
-      if ( client->isFrozen() ) {
-        throw new HandlerException( "Already frozen" );
-      }
-      client->freeze();
-    } else if ( subcmd == AKONADI_PARAM_THAW ) {
-      if ( !client->isFrozen() ) {
-        throw new HandlerException( "Not frozen" );
-      }
-      client->thaw();
-    } else if ( subcmd == AKONADI_PARAM_DONE ) {
-      client->done();
-    } else if ( subcmd == AKONADI_PARAM_REPLAYED ) {
-      const ImapSet set = m_streamParser->readSequenceSet();
-      if ( set.isEmpty() ) {
-        throw new HandlerException( "Invalid notification set" );
-      }
-      if ( !client->replayed( set ) ) {
-        throw new HandlerException( "No such notification" );
-      }
-    } else if ( subcmd == AKONADI_PARAM_RECORD ) {
-      const ImapSet set = m_streamParser->readSequenceSet();
-      if ( set.isEmpty() ) {
-        throw new HandlerException( "Invalid notification set" );
-      }
-      if ( !client->record( set ) ) {
-        throw new HandlerException( "Failed to record" );
-      }
+  try {
+    if ( subcmd == AKONADI_PARAM_START ) {
+      startIdle();
     } else {
-      throw new HandlerException( "Invalid IDLE subcommand" );
+      // All subsequent subcommands require active IDLE session
+      IdleClient *client = IdleManager::self()->clientForConnection( connection() );
+      if ( !client ) {
+        throw new HandlerException( "IDLE not active" );
+      }
+
+      if ( subcmd == AKONADI_PARAM_FILTER ) {
+        updateFilter();
+      } else if ( subcmd == AKONADI_PARAM_FREEZE ) {
+        if ( client->isFrozen() ) {
+          throw new HandlerException( "Already frozen" );
+        }
+        client->freeze();
+      } else if ( subcmd == AKONADI_PARAM_THAW ) {
+        if ( !client->isFrozen() ) {
+          throw new HandlerException( "Not frozen" );
+        }
+        client->thaw();
+      } else if ( subcmd == AKONADI_PARAM_DONE ) {
+        client->done();
+      } else if ( subcmd == AKONADI_PARAM_REPLAYED ) {
+        const ImapSet set = m_streamParser->readSequenceSet();
+        if ( set.isEmpty() ) {
+          throw new HandlerException( "Invalid notification set" );
+        }
+        if ( !client->replayed( set ) ) {
+          throw new HandlerException( "No such notification" );
+        }
+      } else if ( subcmd == AKONADI_PARAM_RECORD ) {
+        const ImapSet set = m_streamParser->readSequenceSet();
+        if ( set.isEmpty() ) {
+          throw new HandlerException( "Invalid notification set" );
+        }
+        if ( !client->record( set ) ) {
+          throw new HandlerException( "Failed to record" );
+        }
+      } else {
+        throw new HandlerException( "Invalid IDLE subcommand" );
+      }
     }
+  } catch ( const Akonadi::IdleException &e ) {
+    throw new HandlerException( "IDLE exception:" + QByteArray( e.what() ) );
   }
 
   return true;
