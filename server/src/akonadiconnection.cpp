@@ -360,7 +360,7 @@ bool AkonadiConnection::verifyCacheOnRetrieval() const
   return m_verifyCacheOnRetrieval;
 }
 
-IdleClient* AkonadiConnection::IdleClient() const
+IdleClient* AkonadiConnection::idleClient() const
 {
   return m_idleClient;
 }
