@@ -24,12 +24,65 @@
 #include "storage/queryhelper.h"
 #include "storage/itemqueryhelper.h"
 #include "libs/protocol_p.h"
+#include "akdebug.h"
 
 #include <QMutex>
+#include <QHash>
 
 using namespace Akonadi;
 
 IdleManager *IdleManager::s_instance = 0;
+
+IdleManager::Item::Item()
+{
+}
+
+IdleManager::Item::Item( const PimItem &item, const QVector<Part> &parts,
+                         const QVector<Flag> &flags )
+  : mPimItem( item )
+  , mParts( parts )
+  , mFlags( flags )
+{
+}
+
+IdleManager::Item::~Item()
+{
+}
+
+Entity::Id IdleManager::Item::id() const
+{
+  return mPimItem.id();
+}
+
+bool IdleManager::Item::isValid() const
+{
+  return mPimItem.isValid();
+}
+
+PimItem IdleManager::Item::item() const
+{
+  return mPimItem;
+}
+
+QVector<Part> IdleManager::Item::parts() const
+{
+  return mParts;
+}
+
+QVector<Flag> IdleManager::Item::flags() const
+{
+  return mFlags;
+}
+
+void IdleManager::Item::addFlag( const Flag &flag )
+{
+  mFlags << flag;
+}
+
+void IdleManager::Item::addPart( const Part &part )
+{
+  mParts << part;
+}
 
 IdleManager* IdleManager::self()
 {
@@ -93,14 +146,12 @@ IdleClient *IdleManager::clientForConnection( AkonadiConnection *connection )
 
 void IdleManager::notify( NotificationMessageV2::List &msgs )
 {
-  mRegistrarLock.lockForRead();
-  // TODO: Complexity...
+  QReadLocker locker( &mRegistrarLock );
 
   Collection collection;
-  QSqlQuery itemQuery, partQuery, flagQuery;
-
-
-
+  QHash<Entity::Id, Item> items;
+  QTime timer;
+  timer.start();
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
     if ( msg.type() == NotificationMessageV2::Collections ) {
       collection = fetchCollection( msg );
@@ -112,33 +163,54 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         scope.setUidSet( set );
 
         FetchHelper helper( scope, mFetchScope );
-        itemQuery = helper.buildItemQuery();
-        partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
-        flagQuery = helper.buildFlagQuery();
-      } else {
-        itemQuery = QSqlQuery();
-        partQuery = QSqlQuery();
-        flagQuery = QSqlQuery();
+        QSqlQuery itemQuery = helper.buildItemQuery();
+        QSqlQuery partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
+        QSqlQuery flagQuery = helper.buildFlagQuery();
+
+        const QVector<PimItem> pimItems = PimItem::extractResult( itemQuery );
+        const QVector<Part> parts = Part::extractResult( partQuery );
+        const QVector<Flag> flags = Flag::extractResult( flagQuery );
+
+        Q_FOREACH ( const PimItem &pimItem, pimItems ) {
+          Item item( pimItem );
+          items.insert( pimItem.id(), pimItem );
+        }
+
+        Q_FOREACH ( const Part &part, parts ) {
+          Item item = items.value( part.pimItemId() );
+          if ( !item.isValid() ) {
+            qWarning() << "Got a part, but don't have a related item...?";
+            continue;
+          }
+          item.addPart( part );
+          items.insert( item.id(), item );
+        }
+
+        Q_FOREACH ( const Flag &flag, flags ) {
+          Item item = items.value( flag.id() );
+          if ( !item.isValid() ) {
+            qWarning() << "Got a flag, but don't have a related item...?";
+            continue;
+          }
+          item.addFlag( flag );
+          items.insert( item.id(), item );
+        }
       }
     }
+    akDebug() << "Fetched and extracted" << items.count() << "items in" << timer.elapsed() << "ms";
 
+    timer.start();
     Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
       if ( client->acceptsNotification( msg ) ) {
         if ( msg.type() == NotificationMessageV2::Collections ) {
           client->dispatchNotification( msg, collection );
         } else if ( msg.type() == NotificationMessageV2::Items ) {
-          client->dispatchNotification( msg, itemQuery, partQuery, flagQuery );
-
-          if ( itemQuery.isValid() ) {
-            itemQuery.first();
-            partQuery.first();
-            flagQuery.first();
-          }
+          client->dispatchNotification( msg, items );
         }
       }
     }
+    akDebug() << "Dispatched notification to" << mClientsRegistrar.count() << "clients in" << timer.elapsed() << "ms";
   }
-  mRegistrarLock.unlock();
 }
 
 Collection IdleManager::fetchCollection( const NotificationMessageV2 &msg )
