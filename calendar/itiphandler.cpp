@@ -108,7 +108,8 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                                   errorMessage );
     }
 
-    emit iTipMessageProcessed( ResultError, errorMessage );
+    d->m_currentOperation = OperationNone;
+    emitiTipMessageProcessed( this, ResultError, errorMessage );
 
     return;
   }
