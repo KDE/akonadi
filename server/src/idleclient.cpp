@@ -33,6 +33,7 @@ IdleClient::IdleClient( AkonadiConnection *connection, const QByteArray &clientI
   , mFrozen( true )
   , mMonitorAll( true )
 {
+  mConnection->setIdleClient( this );
   connect( mConnection, SIGNAL(finished()), this, SLOT(connectionClosed()) );
 }
 
