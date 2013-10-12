@@ -40,11 +40,12 @@ class Entity
   public:
     typedef qint64 Id;
 
-  protected:
     qint64 id() const;
-    void setId( qint64 id );
 
     bool isValid() const;
+
+  protected:
+    void setId( qint64 id );
 
   public:
     template <typename T> static QString joinByName( const QVector<T> &list, const QString &sep )
