@@ -46,6 +46,11 @@ AkonadiConnection *IdleClient::connection() const
   return mConnection;
 }
 
+QByteArray IdleClient::clientId() const
+{
+  return mClientId;
+}
+
 void IdleClient::freeze()
 {
   mFrozen = true;
@@ -391,36 +396,43 @@ void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
     return;
   }
 
-  QByteArray str;
   // First handle operations that we can do in simple batches
+  int notifications = 0;
   while ( itemsQuery.isValid() ) {
-    Entity::Id id = helper.extractQueryResult( itemsQuery, FetchHelper::ItemQueryPimItemIdColumn ).toLongLong();
-    QByteArray op;
+    QByteArray str;
     if ( msg.operation() == NotificationMessageV2::Add ) {
-      op = "ADD";
+      str = "ADD";
     } else if ( msg.operation() == NotificationMessageV2::Modify ) {
-      op = "MODIFY";
+      str = "MODIFY";
     } else if ( msg.operation() == NotificationMessageV2::ModifyFlags ) {
-      op = "MODIFYFLAGS";
+      str = "MODIFYFLAGS";
     } else if ( msg.operation() == NotificationMessageV2::Move ) {
-      op = "MOVE";
+      str = "MOVE";
     } else if ( msg.operation() == NotificationMessageV2::Remove ) {
-      op = "REMOVE";
+      str = "REMOVE";
     } else if ( msg.operation() == NotificationMessageV2::Link ) {
-      op = "LINK";
+      str = "LINK";
     } else if ( msg.operation() == NotificationMessageV2::Unlink ) {
-      op = "UNLINK";
+      str = "UNLINK";
     }
 
-    str = op + ' ' + QByteArray::number( id );
+    Entity::Id id = helper.extractQueryResult( itemsQuery, FetchHelper::ItemQueryPimItemIdColumn ).toLongLong();
+    str += ' ' + QByteArray::number( id ) + ' ' + msg.toString().toLatin1();
 
     Response response;
     response.setUntagged();
     response.setString( str );
     Q_EMIT responseAvailable( response );
 
+    ++notifications;
     itemsQuery.next();
   }
+
+  // FIXME: The responses seem to arrive to client in random order (wtf?)
+  Response response;
+  response.setTag( "+" );
+  response.setString( "IDLE (" + QByteArray::number( notifications ) + ')' );
+  Q_EMIT responseAvailable( response );
 }
 
 void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,

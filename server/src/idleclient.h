@@ -50,6 +50,7 @@ class IdleClient : public QObject
                                const Collection &collection );
 
     AkonadiConnection *connection() const;
+    QByteArray clientId() const;
 
     void freeze();
     void thaw();
