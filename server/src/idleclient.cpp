@@ -19,12 +19,14 @@
 
 #include "idleclient.h"
 #include "idlemanager.h"
+#include "libs/protocol_p.h"
 
 using namespace Akonadi;
 
-IdleClient::IdleClient( AkonadiConnection *connection )
+IdleClient::IdleClient( AkonadiConnection *connection, const QByteArray &clientId )
   : QObject()
   , mConnection( connection )
+  , mClientId( clientId )
   , mRecordChanges( true )
   , mFrozen( true )
   , mMonitorAll( true )
@@ -226,7 +228,7 @@ const QSet<QByteArray> &IdleClient::monitoredOperations() const
   updateMonitorAll();
 }
 
-void IdleClient::updateMonitorAll()
+void IdleClient::updateMonitorAll() const
 {
   if ( !mMonitoredItems.isEmpty() ) {
     mMonitorAll = false;
@@ -248,7 +250,7 @@ void IdleClient::updateMonitorAll()
     return;
   }
 
-  if ( !monitoredOperations().isEmpty() ) {
+  if ( !mMonitoredOperations.isEmpty() ) {
     mMonitorAll = false;
     return;
   }
@@ -274,7 +276,7 @@ bool IdleClient::isMimeTypeMonitored( const QString &mimeType ) const
 {
   // FIXME: Handle mimetype aliases
 
-  return mMonitoredMimeTypes.contains( mimeType );
+  return mMonitoredMimeTypes.contains( mimeType.toLatin1() );
 }
 
 bool IdleClient::isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const
@@ -285,7 +287,7 @@ bool IdleClient::isMoveDestinationResourceMonitored( const NotificationMessageV2
   return mMonitoredResources.contains( msg.destinationResource() );
 }
 
-bool IdleClient::acceptsNotification( NotificationMessageV2 &msg )
+bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
 {
   // session is ignored
   if ( mIgnoredSessions.contains( msg.sessionId() ) ) {
@@ -301,8 +303,16 @@ bool IdleClient::acceptsNotification( NotificationMessageV2 &msg )
     return true;
   }
 
-  if ( !mMonitoredOperations.contains( msg.operation() ) ) {
-    return false;
+  if ( ( msg.operation() == NotificationMessageV2::Add && !mMonitoredOperations.contains( AKONADI_OPERATION_ADD ) )
+      || ( msg.operation() == NotificationMessageV2::Modify && !mMonitoredOperations.contains( AKONADI_OPERATION_MODIFY ) )
+      || ( msg.operation() == NotificationMessageV2::ModifyFlags && !mMonitoredOperations.contains( AKONADI_OPERATION_MODIFYFLAGS ) )
+      || ( msg.operation() == NotificationMessageV2::Remove && !mMonitoredOperations.contains( AKONADI_OPERATION_REMOVE ) )
+      || ( msg.operation() == NotificationMessageV2::Move && !mMonitoredOperations.contains( AKONADI_OPERATION_MOVE ) )
+      || ( msg.operation() == NotificationMessageV2::Link && !mMonitoredOperations.contains( AKONADI_OPERATION_LINK ) )
+      || ( msg.operation() == NotificationMessageV2::Unlink && !mMonitoredOperations.contains( AKONADI_OPERATION_UNLINK ) )
+      || ( msg.operation() == NotificationMessageV2::Subscribe && !mMonitoredOperations.contains( AKONADI_OPERATION_SUBSCRIBE ) )
+      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( AKONADI_OPERATION_UNSUBSCRIBE ) ) ) {
+        return false;
   }
 
   switch ( msg.type() ) {
@@ -368,7 +378,7 @@ bool IdleClient::acceptsNotification( NotificationMessageV2 &msg )
   return false;
 }
 
-void IdleClient::dispatchNotification( NotificationMessageV2 &msg,
+void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
                                        const QSqlQuery &itemsQuery,
                                        const QSqlQuery &partsQuery,
                                        const QSqlQuery &flagsQuery )
@@ -376,7 +386,7 @@ void IdleClient::dispatchNotification( NotificationMessageV2 &msg,
 
 }
 
-void IdleClient::dispatchNotification( NotificationMessageV2 &msg,
+void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
                                        const Collection &collection )
 {
 

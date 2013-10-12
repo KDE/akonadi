@@ -113,7 +113,7 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
 
         FetchHelper helper( scope, mFetchScope );
         itemQuery = helper.buildItemQuery();
-        partQuery = helper.buildPartQuery();
+        partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
         flagQuery = helper.buildFlagQuery();
       } else {
         itemQuery = QSqlQuery();

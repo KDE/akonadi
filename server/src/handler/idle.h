@@ -34,6 +34,8 @@ class Idle : public Handler
   public:
     Idle();
 
+    virtual bool parseStream();
+
   private:
     void startIdle();
     void updateFilter();

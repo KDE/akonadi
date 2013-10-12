@@ -40,15 +40,15 @@ class IdleClient : public QObject
     Q_OBJECT
 
   public:
-    explicit IdleClient( AkonadiConnection *connection );
+    explicit IdleClient( AkonadiConnection *connection, const QByteArray &clientId );
     virtual ~IdleClient();
 
-    bool acceptsNotification( NotificationMessageV2 &msg );
-    void dispatchNotification( NotificationMessageV2 &msg,
+    bool acceptsNotification( const NotificationMessageV2 &msg );
+    void dispatchNotification( const NotificationMessageV2 &msg,
                                const QSqlQuery &itemsQuery,
                                const QSqlQuery &partsQuery,
                                const QSqlQuery &flagsQuery );
-    void dispatchNotification( NotificationMessageV2 &msg,
+    void dispatchNotification( const NotificationMessageV2 &msg,
                                const Collection &collection );
 
     AkonadiConnection *connection() const;
@@ -101,19 +101,22 @@ class IdleClient : public QObject
   private:
     Q_DISABLE_COPY( IdleClient )
 
-    void updateMonitorAll();
+    // Workaround for const getters
+    void updateMonitorAll() const;
 
     bool isCollectionMonitored( Entity::Id id ) const;
     bool isMimeTypeMonitored( const QString &mimeType ) const;
     bool isMoveDestinationResourceMonitored( const NotificationMessageV2 &msg ) const;
 
     AkonadiConnection *mConnection;
+    QByteArray mClientId;
+
     bool mRecordChanges;
     FetchScope mFetchScope;
 
     bool mFrozen;
 
-    bool mMonitorAll;
+    mutable bool mMonitorAll;
     QSet<qint64> mMonitoredItems;
     QSet<qint64> mMonitoredCollections;
     QSet<QByteArray> mMonitoredMimeTypes;

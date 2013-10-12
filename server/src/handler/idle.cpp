@@ -31,6 +31,10 @@ using namespace Akonadi;
 Idle::Idle()
   : Handler()
 {
+}
+
+bool Idle::parseStream()
+{
   const QByteArray subcmd = m_streamParser->readString();
   if ( subcmd == AKONADI_PARAM_START ) {
     startIdle();
@@ -75,6 +79,8 @@ Idle::Idle()
       throw new HandlerException( "Invalid IDLE subcommand" );
     }
   }
+
+  return true;
 }
 
 void Idle::startIdle()
@@ -210,7 +216,7 @@ QSet<QByteArray> Idle::parseStringList()
     throw new HandlerException( "Invalid filter" );
   }
 
-  return m_streamParser->readParenthesizedList().toVector();
+  return m_streamParser->readParenthesizedList().toSet();
 }
 
 
@@ -229,7 +235,7 @@ QSet<QByteArray> Idle::parseOperationsList()
          operation == AKONADI_OPERATION_MOVE || operation == AKONADI_OPERATION_REMOVE ||
          operation == AKONADI_OPERATION_SUBSCRIBE || operation == AKONADI_OPERATION_UNLINK ||
          operation == AKONADI_OPERATION_UNSUBSCRIBE ) {
-      operations << operations;
+      operations << operation;
     } else {
       throw new HandlerException( "Invalid filter" );
     }
