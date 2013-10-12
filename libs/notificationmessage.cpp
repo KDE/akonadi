@@ -30,12 +30,12 @@ class NotificationMessage::Private : public QSharedData
 {
   public:
     Private()
-      : QSharedData(),
-        type( NotificationMessage::InvalidType ),
-        operation( NotificationMessage::InvalidOp ),
-        uid( -1 ),
-        parentCollection( -1 ),
-        parentDestCollection( -1 )
+      : QSharedData()
+      , type( NotificationMessage::InvalidType )
+      , operation( NotificationMessage::InvalidOp )
+      , uid( -1 )
+      , parentCollection( -1 )
+      , parentDestCollection( -1 )
     {
     }
 
@@ -102,8 +102,9 @@ NotificationMessage::~NotificationMessage()
 
 NotificationMessage& NotificationMessage::operator=( const NotificationMessage &other )
 {
-  if ( this != &other )
+  if ( this != &other ) {
     d = other.d;
+  }
 
   return *this;
 }
@@ -247,15 +248,15 @@ QString NotificationMessage::toString() const
   }
 
   switch ( type() ) {
-    case Item:
-      rv += QLatin1String( "Item " );
-      break;
-    case Collection:
-      rv += QLatin1String( "Collection " );
-      break;
-    case InvalidType:
-      // already done above
-      break;
+  case Item:
+    rv += QLatin1String( "Item " );
+    break;
+  case Collection:
+    rv += QLatin1String( "Collection " );
+    break;
+  case InvalidType:
+    // already done above
+    break;
   }
 
   rv += QString::fromLatin1( "(%1, %2) " ).arg( uid() ).arg( remoteId() );
@@ -274,39 +275,40 @@ QString NotificationMessage::toString() const
   rv += QString::fromLatin1( "mimetype %1 " ).arg( mimeType().isEmpty() ? QLatin1String( "unknown" ) : mimeType() );
 
   switch ( operation() ) {
-    case Add:
-      rv += QLatin1String( "added" );
-      break;
-    case Modify:
-      rv += QLatin1String( "modified parts (" );
-      rv += QString::fromLatin1( ImapParser::join( itemParts().toList(), ", " ) );
-      rv += QLatin1String( ")" );
-      break;
-    case Move:
-      rv += QLatin1String( "moved" );
-      break;
-    case Remove:
-      rv += QLatin1String( "removed" );
-      break;
-    case Link:
-      rv += QLatin1String( "linked" );
-      break;
-    case Unlink:
-      rv += QLatin1String( "unlinked" );
-      break;
-    case Subscribe:
-      rv += QLatin1String( "subscribed" );
-      break;
-    case Unsubscribe:
-      rv += QLatin1String( "unsubscribed" );
-      break;
-    case InvalidOp:
-      // already done above
-      break;
+  case Add:
+    rv += QLatin1String( "added" );
+    break;
+  case Modify:
+    rv += QLatin1String( "modified parts (" );
+    rv += QString::fromLatin1( ImapParser::join( itemParts().toList(), ", " ) );
+    rv += QLatin1String( ")" );
+    break;
+  case Move:
+    rv += QLatin1String( "moved" );
+    break;
+  case Remove:
+    rv += QLatin1String( "removed" );
+    break;
+  case Link:
+    rv += QLatin1String( "linked" );
+    break;
+  case Unlink:
+    rv += QLatin1String( "unlinked" );
+    break;
+  case Subscribe:
+    rv += QLatin1String( "subscribed" );
+    break;
+  case Unsubscribe:
+    rv += QLatin1String( "unsubscribed" );
+    break;
+  case InvalidOp:
+    // already done above
+    break;
   }
 
-  if ( parentDestCollection() >= 0 )
+  if ( parentDestCollection() >= 0 ) {
     rv += QString::fromLatin1( " to collection %1" ).arg( parentDestCollection() );
+  }
 
   return rv;
 }
@@ -323,7 +325,7 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
   if ( msg.operation() != Add && msg.operation() != Link && msg.operation() != Unlink && msg.operation() != Subscribe && msg.operation() != Unsubscribe && msg.operation() != Move ) {
     NotificationMessage::List::Iterator end = list.end();
     for ( NotificationMessage::List::Iterator it = list.begin(); it != end; ) {
-      if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
+      if ( msg.d.constData()->compareWithoutOpAndParts( *( (*it).d.constData() ) ) ) {
         // same operation: merge changed parts and drop the new one
         if ( msg.operation() == (*it).operation() ) {
           (*it).setItemParts( (*it).itemParts() + msg.itemParts() );
@@ -424,5 +426,5 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &
 
 uint qHash( const Akonadi::NotificationMessage &msg )
 {
-  return qHash( msg.uid() + (msg.type() << 31) + (msg.operation() << 28) );
+  return qHash( msg.uid() + ( msg.type() << 31 ) + ( msg.operation() << 28 ) );
 }

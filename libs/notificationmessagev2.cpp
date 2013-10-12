@@ -34,11 +34,11 @@ class NotificationMessageV2::Private: public QSharedData
 {
   public:
     Private()
-      : QSharedData(),
-        type( InvalidType ),
-        operation( InvalidOp ),
-        parentCollection( -1 ),
-        parentDestCollection( -1 )
+      : QSharedData()
+      , type( InvalidType )
+      , operation( InvalidOp )
+      , parentCollection( -1 )
+      , parentDestCollection( -1 )
     {
     }
 
@@ -268,14 +268,14 @@ QString NotificationMessageV2::toString() const
   QString rv;
 
   switch ( d->type ) {
-    case Items:
-      rv += QLatin1String( "Items " );
-      break;
-    case Collections:
-      rv += QLatin1String( "Collections " );
-      break;
-    case InvalidType:
-      return QLatin1String( "*INVALID TYPE* " );
+  case Items:
+    rv += QLatin1String( "Items " );
+    break;
+  case Collections:
+    rv += QLatin1String( "Collections " );
+    break;
+  case InvalidType:
+    return QLatin1String( "*INVALID TYPE* " );
   }
 
   QSet<QByteArray> items;
@@ -305,47 +305,48 @@ QString NotificationMessageV2::toString() const
   }
 
   switch ( d->operation ) {
-    case Add:
-      rv += QLatin1String( "added" );
-      break;
-    case Modify:
-      rv += QLatin1String( "modified parts (" );
-      rv += QString::fromLatin1( ImapParser::join( d->parts.toList(), ", " ) );
-      rv += QLatin1String( ")" );
-      break;
-    case ModifyFlags:
-      rv += QLatin1String( "added flags (" );
-      rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
-      rv += QLatin1String ( ") " );
+  case Add:
+    rv += QLatin1String( "added" );
+    break;
+  case Modify:
+    rv += QLatin1String( "modified parts (" );
+    rv += QString::fromLatin1( ImapParser::join( d->parts.toList(), ", " ) );
+    rv += QLatin1String( ")" );
+    break;
+  case ModifyFlags:
+    rv += QLatin1String( "added flags (" );
+    rv += QString::fromLatin1( ImapParser::join( d->addedFlags.toList(), ", " ) );
+    rv += QLatin1String ( ") " );
 
-      rv += QLatin1String( "removed flags (" );
-      rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
-      rv += QLatin1String ( ") " );
-      break;
-    case Move:
-      rv += QLatin1String( "moved" );
-      break;
-    case Remove:
-      rv += QLatin1String( "removed" );
-      break;
-    case Link:
-      rv += QLatin1String( "linked" );
-      break;
-    case Unlink:
-      rv += QLatin1String( "unlinked" );
-      break;
-    case Subscribe:
-      rv += QLatin1String( "subscribed" );
-      break;
-    case Unsubscribe:
-      rv += QLatin1String( "unsubscribed" );
-      break;
-    case InvalidOp:
-      return QLatin1String( "*INVALID OPERATION*" );
+    rv += QLatin1String( "removed flags (" );
+    rv += QString::fromLatin1( ImapParser::join( d->removedFlags.toList(), ", " ) );
+    rv += QLatin1String ( ") " );
+    break;
+  case Move:
+    rv += QLatin1String( "moved" );
+    break;
+  case Remove:
+    rv += QLatin1String( "removed" );
+    break;
+  case Link:
+    rv += QLatin1String( "linked" );
+    break;
+  case Unlink:
+    rv += QLatin1String( "unlinked" );
+    break;
+  case Subscribe:
+    rv += QLatin1String( "subscribed" );
+    break;
+  case Unsubscribe:
+    rv += QLatin1String( "unsubscribed" );
+    break;
+  case InvalidOp:
+    return QLatin1String( "*INVALID OPERATION*" );
   }
 
-  if ( d->parentDestCollection >= 0 )
+  if ( d->parentDestCollection >= 0 ) {
     rv += QString::fromLatin1( " to collection %1" ).arg( d->parentDestCollection );
+  }
 
   return rv;
 }
@@ -451,7 +452,7 @@ uint qHash( const Akonadi::NotificationMessageV2 &msg )
     i += item.id;
   }
 
-  return qHash( i + (msg.type() << 31) + (msg.operation() << 28) );
+  return qHash( i + ( msg.type() << 31 ) + ( msg.operation() << 28 ) );
 }
 
 QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
@@ -480,7 +481,7 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
     QSet<QByteArray> parts;
     if ( d->operation == Remove ) {
       QByteArray rr = item.remoteRevision.toLatin1();
-      parts << (rr.isEmpty() ? "1" : rr);
+      parts << ( rr.isEmpty() ? "1" : rr );
     } else if ( d->operation == ModifyFlags ) {
       parts << "FLAGS";
     } else {
@@ -502,7 +503,7 @@ bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const Notif
 
     typename T::Iterator end = list.end();
     for ( typename T::Iterator it = list.begin(); it != end; ) {
-      if ( msg.d.constData()->compareWithoutOpAndParts( *((*it).d.constData()) ) ) {
+      if ( msg.d.constData()->compareWithoutOpAndParts( *( (*it).d.constData() ) ) ) {
 
         // both are modifications, merge them together and drop the new one
         if ( msg.operation() == Modify && it->operation() == Modify ) {
@@ -523,11 +524,11 @@ bool NotificationMessageV2::Private::appendAndCompressImpl( T &list, const Notif
           return false;
         }
         // new one is a modification, the existing one not, so drop the new one
-        else if ( ( ( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags ) ) && ( (*it).operation() != Modify) && (*it).operation() != ModifyFlags ) {
+        else if ( ( ( msg.operation() == Modify ) || ( msg.operation() == ModifyFlags ) ) && ( (*it).operation() != Modify ) && (*it).operation() != ModifyFlags ) {
           return false;
         }
         // new one is a deletion, erase the existing modification ones (and keep going, in case there are more)
-        else if ( msg.operation() == Remove && ((*it).operation() == Modify || (*it).operation() == ModifyFlags) ) {
+        else if ( msg.operation() == Remove && ( (*it).operation() == Modify || (*it).operation() == ModifyFlags ) ) {
           it = list.erase( it );
           end = list.end();
         }

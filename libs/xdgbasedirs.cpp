@@ -117,7 +117,7 @@ QString XdgBaseDirs::homePath( const char *resource )
 #ifdef Q_OS_WINCE
       WIN32_FIND_DATA lpwFlashCard;
       if ( FindFirstFlashCard( &lpwFlashCard ) != INVALID_HANDLE_VALUE ) {
-              QString dirName = QString::fromUtf16( ( const ushort * ) lpwFlashCard.cFileName );
+              QString dirName = QString::fromUtf16( (const ushort *) lpwFlashCard.cFileName );
               instance()->mDataHome = QDir::rootPath() + dirName;
       }
 #endif

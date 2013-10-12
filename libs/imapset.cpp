@@ -97,7 +97,7 @@ ImapInterval &ImapInterval::operator=( const ImapInterval &other )
 
 bool ImapInterval::operator==( const ImapInterval &other ) const
 {
-  return (d->begin == other.d->begin && d->end == other.d->end);
+  return ( d->begin == other.d->begin && d->end == other.d->end );
 }
 
 ImapInterval::Id ImapInterval::size() const
@@ -106,12 +106,12 @@ ImapInterval::Id ImapInterval::size() const
     return 0;
   }
 
-  return (d->end - d->begin + 1);
+  return ( d->end - d->begin + 1 );
 }
 
 bool ImapInterval::hasDefinedBegin() const
 {
-  return (d->begin != 0);
+  return ( d->begin != 0 );
 }
 
 ImapInterval::Id ImapInterval::begin() const
@@ -121,7 +121,7 @@ ImapInterval::Id ImapInterval::begin() const
 
 bool ImapInterval::hasDefinedEnd() const
 {
-  return (d->end != 0);
+  return ( d->end != 0 );
 }
 
 ImapInterval::Id ImapInterval::end() const
@@ -211,7 +211,7 @@ void ImapSet::add( const QVector<Id> &values )
     do {
       ++i;
       Q_ASSERT( vals[i] >= 0 );
-      if ( vals[i] != (vals[i - 1] + 1) ) {
+      if ( vals[i] != ( vals[i - 1] + 1 ) ) {
         --i;
         break;
       }

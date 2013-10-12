@@ -304,7 +304,7 @@ QByteArray ImapParser::join( const QList<QByteArray> &list, const QByteArray &se
   // avoid expensive realloc's by determining the size beforehand
   QList<QByteArray>::const_iterator it = list.constBegin();
   const QList<QByteArray>::const_iterator endIt = list.constEnd();
-  int resultSize = (list.size() - 1) * separator.size();
+  int resultSize = ( list.size() - 1 ) * separator.size();
   for ( ; it != endIt; ++it ) {
     resultSize += (*it).size();
   }

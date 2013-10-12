@@ -21,7 +21,6 @@
 #ifndef AKONADI_NOTIFICATIONMESSAGEV2_H
 #define AKONADI_NOTIFICATIONMESSAGEV2_H
 
-
 #include "akonadiprotocolinternals_export.h"
 
 #include <QtCore/QList>
@@ -71,8 +70,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     class Entity
     {
       public:
-        Entity():
-          id( -1 )
+        Entity()
+          : id( -1 )
         {
         }
 
@@ -93,7 +92,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
     NotificationMessageV2( const NotificationMessageV2 &other );
     ~NotificationMessageV2();
 
-    NotificationMessageV2& operator=( const NotificationMessageV2 &other );
+    NotificationMessageV2 &operator=( const NotificationMessageV2 &other );
     bool operator==( const NotificationMessageV2 &other ) const;
 
     static void registerDBusTypes();
@@ -147,10 +146,10 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessageV2
 
 } // namespace Akonadi
 
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg );
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item );
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item );
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg );
+QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg );
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item );
+QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item );
 uint qHash( const Akonadi::NotificationMessageV2 &msg );
 
 Q_DECLARE_TYPEINFO( Akonadi::NotificationMessageV2, Q_MOVABLE_TYPE );

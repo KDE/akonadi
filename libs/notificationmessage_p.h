@@ -63,7 +63,7 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
     NotificationMessage( const NotificationMessage &other );
     ~NotificationMessage();
 
-    NotificationMessage& operator=( const NotificationMessage &other );
+    NotificationMessage &operator=( const NotificationMessage &other );
     bool operator==( const NotificationMessage &other ) const;
 
     static void registerDBusTypes();
@@ -118,8 +118,8 @@ class AKONADIPROTOCOLINTERNALS_EXPORT NotificationMessage
 
 }
 
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessage &msg );
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessage &msg );
+QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessage &msg );
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessage &msg );
 
 uint qHash( const Akonadi::NotificationMessage &msg );
 
