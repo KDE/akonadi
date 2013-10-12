@@ -124,7 +124,7 @@ void IdleManager::registerClient( IdleClient *client )
 {
   QWriteLocker locker( &mRegistrarLock );
   if ( mClientsRegistrar.contains( client->connection()->sessionId() ) ) {
-    throw new IdleException( "IDLE session for this connection already exists" );
+    throw IdleException( "IDLE session for this connection already exists" );
   }
 
   mClientsRegistrar.insert( client->connection()->sessionId(), client );
@@ -134,7 +134,7 @@ void IdleManager::unregisterClient( IdleClient *client )
 {
   QWriteLocker locker( &mRegistrarLock );
   if ( mClientsRegistrar.remove( client->connection()->sessionId() ) == 0 ) {
-    throw new IdleException( "No such client");
+    throw IdleException( "No such client");
   }
 }
 

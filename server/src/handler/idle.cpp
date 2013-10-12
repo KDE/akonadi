@@ -43,19 +43,19 @@ bool Idle::parseStream()
       // All subsequent subcommands require active IDLE session
       IdleClient *client = IdleManager::self()->clientForConnection( connection() );
       if ( !client ) {
-        throw new HandlerException( "IDLE not active" );
+        throw HandlerException( "IDLE not active" );
       }
 
       if ( subcmd == AKONADI_PARAM_FILTER ) {
         updateFilter();
       } else if ( subcmd == AKONADI_PARAM_FREEZE ) {
         if ( client->isFrozen() ) {
-          throw new HandlerException( "Already frozen" );
+          throw HandlerException( "Already frozen" );
         }
         client->freeze();
       } else if ( subcmd == AKONADI_PARAM_THAW ) {
         if ( !client->isFrozen() ) {
-          throw new HandlerException( "Not frozen" );
+          throw HandlerException( "Not frozen" );
         }
         client->thaw();
       } else if ( subcmd == AKONADI_PARAM_DONE ) {
@@ -63,25 +63,25 @@ bool Idle::parseStream()
       } else if ( subcmd == AKONADI_PARAM_REPLAYED ) {
         const ImapSet set = m_streamParser->readSequenceSet();
         if ( set.isEmpty() ) {
-          throw new HandlerException( "Invalid notification set" );
+          throw HandlerException( "Invalid notification set" );
         }
         if ( !client->replayed( set ) ) {
-          throw new HandlerException( "No such notification" );
+          throw HandlerException( "No such notification" );
         }
       } else if ( subcmd == AKONADI_PARAM_RECORD ) {
         const ImapSet set = m_streamParser->readSequenceSet();
         if ( set.isEmpty() ) {
-          throw new HandlerException( "Invalid notification set" );
+          throw HandlerException( "Invalid notification set" );
         }
         if ( !client->record( set ) ) {
-          throw new HandlerException( "Failed to record" );
+          throw HandlerException( "Failed to record" );
         }
       } else {
-        throw new HandlerException( "Invalid IDLE subcommand" );
+        throw HandlerException( "Invalid IDLE subcommand" );
       }
     }
   } catch ( const Akonadi::IdleException &e ) {
-    throw new HandlerException( "IDLE exception:" + QByteArray( e.what() ) );
+    throw HandlerException( "IDLE exception:" + QByteArray( e.what() ) );
   }
 
   return true;
@@ -100,25 +100,25 @@ void Idle::startIdle()
       bool ok = false;
       recordChanges = m_streamParser->readNumber( &ok );
       if ( !ok ) {
-        throw new HandlerException( "Invalid value of RECORDCHANGES parameter" );
+        throw HandlerException( "Invalid value of RECORDCHANGES parameter" );
       }
     }
   }
 
   if ( clientId.isEmpty() ) {
-    throw new HandlerException( "Empty client ID" );
+    throw HandlerException( "Empty client ID" );
   }
 
   IdleClient *client = new IdleClient( connection(), clientId );
   client->setRecordChanges( recordChanges );
 
   if ( !m_streamParser->hasList() ) {
-    throw new HandlerException( "Invalid filter" );
+    throw HandlerException( "Invalid filter" );
   }
   parseFilter( client );
 
   if ( !m_streamParser->hasList() ) {
-    throw new HandlerException( "Invalid scope" );
+    throw HandlerException( "Invalid scope" );
   }
   parseFetchScope( client );
 
@@ -129,7 +129,7 @@ void Idle::updateFilter()
 {
   IdleClient *client = IdleManager::self()->clientForConnection( connection() );
   if ( !client ) {
-    throw new HandlerException( "No such client");
+    throw HandlerException( "No such client");
   }
 
   if ( m_streamParser->hasList() ) {
@@ -183,7 +183,7 @@ void Idle::parseFilter( IdleClient *client )
     } else if ( arg == "-" AKONADI_PARAM_OPERATIONS ) {
       client->removeMonitoredOperations( parseOperationsList() );
     } else {
-      throw new HandlerException( "Invalid filter" );
+      throw HandlerException( "Invalid filter" );
     }
   }
 }
@@ -198,7 +198,7 @@ void Idle::parseFetchScope( IdleClient *client )
 QSet<qint64> Idle::parseIdList()
 {
   if ( !m_streamParser->hasList() ) {
-    throw new HandlerException( "Invalid filter" );
+    throw HandlerException( "Invalid filter" );
   }
 
   QSet<qint64> ids;
@@ -207,7 +207,7 @@ QSet<qint64> Idle::parseIdList()
     bool ok = false;
     ids.insert( m_streamParser->readNumber( &ok ) );
     if ( !ok ) {
-      throw new HandlerException( "Invalid filter" );
+      throw HandlerException( "Invalid filter" );
     }
   }
 
@@ -217,7 +217,7 @@ QSet<qint64> Idle::parseIdList()
 QSet<QByteArray> Idle::parseStringList()
 {
   if ( !m_streamParser->hasList() ) {
-    throw new HandlerException( "Invalid filter" );
+    throw HandlerException( "Invalid filter" );
   }
 
   return m_streamParser->readParenthesizedList().toSet();
@@ -227,7 +227,7 @@ QSet<QByteArray> Idle::parseStringList()
 QSet<QByteArray> Idle::parseOperationsList()
 {
   if ( !m_streamParser->hasList() ) {
-    throw new HandlerException( "Invalid filter" );
+    throw HandlerException( "Invalid filter" );
   }
 
   QSet<QByteArray> operations;
@@ -241,7 +241,7 @@ QSet<QByteArray> Idle::parseOperationsList()
          operation == AKONADI_OPERATION_UNSUBSCRIBE ) {
       operations << operation;
     } else {
-      throw new HandlerException( "Invalid filter" );
+      throw HandlerException( "Invalid filter" );
     }
   }
 

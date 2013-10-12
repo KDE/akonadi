@@ -113,7 +113,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     } else if ( mConnection ) {
       ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
     } else {
-      throw new HandlerException( "Can't use other than UID retrieval without connection" );
+      throw HandlerException( "Can't use other than UID retrieval without connection" );
     }
 
     if ( !partQuery.exec() ) {
@@ -195,7 +195,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
   } else if ( mConnection ) {
     ItemQueryHelper::scopeToQuery( mScope, mConnection, flagQuery );
   } else {
-    throw new HandlerException( "Can't user other than UID retrieval without connection" );
+    throw HandlerException( "Can't user other than UID retrieval without connection" );
   }
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
