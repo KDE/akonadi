@@ -21,8 +21,11 @@
 #define AKONADI_FETCHSCOPE_H
 
 #include <QVector>
+#include <QStringList>
 #include <QDateTime>
 #include <QSharedDataPointer>
+
+class FetchHelperTest;
 
 namespace Akonadi {
 
@@ -74,10 +77,43 @@ class FetchScope
     void setChangedSince( const QDateTime &changedSince );
 
   private:
-    class Private;
+    class Private: public QSharedData
+    {
+      public:
+        Private();
+        Private( const Private &other );
+
+        void parseCommandStream();
+        void parsePartList();
+
+        QVector<QByteArray> requestedParts;
+        QStringList requestedPayloads;
+        int ancestorDepth;
+        bool cacheOnly;
+        bool changedOnly;
+        bool checkCachedPayloadPartsOnly;
+        bool fullPayload;
+        bool allAttrs;
+        bool sizeRequested;
+        bool mTimeRequested;
+        bool externalPayloadSupported;
+        bool remoteRevisionRequested;
+        bool ignoreErrors;
+        bool flagsRequested;
+        bool remoteIdRequested;
+        bool gidRequested;
+        QDateTime changedSince;
+
+        ImapStreamParser *streamParser;
+    };
+
     QSharedDataPointer<Private> d;
+
+    friend class ::FetchHelperTest;
 };
 
 }
+
+Q_DECLARE_TYPEINFO( Akonadi::FetchScope, Q_MOVABLE_TYPE );
 
 #endif // AKONADI_FETCHSCOPE_H

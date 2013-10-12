@@ -33,7 +33,7 @@ class FetchHelperTest : public QObject
     void testCommandParsing()
     {
       FetchHelper fh( 0, Scope( Scope::Invalid ) );
-      QVERIFY( !fh.mRemoteRevisionRequested );
+      QVERIFY( !fh.mFetchScope.remoteRevisionRequested() );
 
       QByteArray input( "CACHEONLY EXTERNALPAYLOAD IGNOREERRORS CHANGEDSINCE 1374150376 ANCESTORS 42 (DATETIME REMOTEREVISION REMOTEID GID FLAGS SIZE PLD:RFC822 ATR::MyAttr)\n" );
       QBuffer buffer( &input, this );
@@ -41,21 +41,21 @@ class FetchHelperTest : public QObject
       ImapStreamParser parser( &buffer );
       fh.setStreamParser( &parser );
 
-      fh.parseCommandStream();
+      fh.mFetchScope.d->parseCommandStream();
 
-      QVERIFY( fh.mRemoteRevisionRequested );
-      QVERIFY( fh.mSizeRequested );
-      QVERIFY( fh.mCacheOnly );
-      QVERIFY( fh.mExternalPayloadSupported );
-      QCOMPARE( fh.mAncestorDepth, 42 );
-      QCOMPARE( fh.mChangedSince.toTime_t(), 1374150376u );
-      QVERIFY( fh.mIgnoreErrors );
-      QVERIFY( !fh.mFullPayload );
-      QCOMPARE( fh.mRequestedParts.size(), 2 );
-      QVERIFY( !fh.mAllAttrs );
-      QVERIFY( fh.mMTimeRequested );
-      QVERIFY( fh.mRemoteIdRequested );
-      QVERIFY( fh.mGidRequested );
+      QVERIFY( fh.mFetchScope.remoteRevisionRequested() );
+      QVERIFY( fh.mFetchScope.sizeRequested() );
+      QVERIFY( fh.mFetchScope.cacheOnly() );
+      QVERIFY( fh.mFetchScope.externalPayloadSupported() );
+      QCOMPARE( fh.mFetchScope.ancestorDepth(), 42 );
+      QCOMPARE( fh.mFetchScope.changedSince().toTime_t(), 1374150376u );
+      QVERIFY( fh.mFetchScope.ignoreErrors() );
+      QVERIFY( !fh.mFetchScope.fullPayload() );
+      QCOMPARE( fh.mFetchScope.requestedParts().size(), 2 );
+      QVERIFY( !fh.mFetchScope.allAttrs() );
+      QVERIFY( fh.mFetchScope.mTimeRequested() );
+      QVERIFY( fh.mFetchScope.remoteIdRequested() );
+      QVERIFY( fh.mFetchScope.gidRequested() );
 
       // full payload special case
       input = "FULLPAYLOAD ()";
@@ -65,22 +65,22 @@ class FetchHelperTest : public QObject
 
       FetchHelper fh2( 0, Scope( Scope::Invalid ) );
       fh2.setStreamParser( &parser );
-      fh2.parseCommandStream();
+      fh2.mFetchScope.d->parseCommandStream();
 
-      QVERIFY( !fh2.mRemoteRevisionRequested );
-      QVERIFY( !fh2.mSizeRequested );
-      QVERIFY( !fh2.mCacheOnly );
-      QVERIFY( !fh2.mExternalPayloadSupported );
-      QCOMPARE( fh2.mAncestorDepth, 0 );
-      QVERIFY( fh2.mChangedSince.isNull() );
-      QVERIFY( !fh2.mIgnoreErrors );
-      QVERIFY( fh2.mFullPayload );
-      QCOMPARE( fh2.mRequestedParts.size(), 1 );
-      QCOMPARE( fh2.mRequestedParts.at( 0 ), QByteArray( "PLD:RFC822" ) );
-      QVERIFY( !fh2.mAllAttrs );
-      QVERIFY( !fh2.mMTimeRequested );
-      QVERIFY( !fh2.mRemoteIdRequested );
-      QVERIFY( !fh2.mGidRequested );
+      QVERIFY( !fh2.mFetchScope.remoteRevisionRequested() );
+      QVERIFY( !fh2.mFetchScope.sizeRequested() );
+      QVERIFY( !fh2.mFetchScope.cacheOnly() );
+      QVERIFY( !fh2.mFetchScope.externalPayloadSupported() );
+      QCOMPARE( fh2.mFetchScope.ancestorDepth(), 0 );
+      QVERIFY( fh2.mFetchScope.changedSince().isNull() );
+      QVERIFY( !fh2.mFetchScope.ignoreErrors() );
+      QVERIFY( fh2.mFetchScope.fullPayload() );
+      QCOMPARE( fh2.mFetchScope.requestedParts().size(), 1 );
+      QCOMPARE( fh2.mFetchScope.requestedParts().at( 0 ), QByteArray( "PLD:RFC822" ) );
+      QVERIFY( !fh2.mFetchScope.allAttrs() );
+      QVERIFY( !fh2.mFetchScope.mTimeRequested() );
+      QVERIFY( !fh2.mFetchScope.remoteIdRequested() );
+      QVERIFY( !fh2.mFetchScope.gidRequested() );
     }
 };
 

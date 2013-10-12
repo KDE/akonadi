@@ -24,39 +24,7 @@
 #include "handler.h"
 #include "handlerhelper.h"
 
-#include <QStringList>
-
 using namespace Akonadi;
-
-class FetchScope::Private: public QSharedData
-{
-  public:
-    Private();
-    Private( const Private &other );
-
-    void parseCommandStream();
-    void parsePartList();
-
-    QVector<QByteArray> requestedParts;
-    QStringList requestedPayloads;
-    int ancestorDepth;
-    bool cacheOnly;
-    bool changedOnly;
-    bool checkCachedPayloadPartsOnly;
-    bool fullPayload;
-    bool allAttrs;
-    bool sizeRequested;
-    bool mTimeRequested;
-    bool externalPayloadSupported;
-    bool remoteRevisionRequested;
-    bool ignoreErrors;
-    bool flagsRequested;
-    bool remoteIdRequested;
-    bool gidRequested;
-    QDateTime changedSince;
-
-    ImapStreamParser *streamParser;
-};
 
 FetchScope::Private::Private()
  : QSharedData()
