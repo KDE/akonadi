@@ -112,15 +112,17 @@ void Idle::startIdle()
   IdleClient *client = new IdleClient( connection(), clientId );
   client->setRecordChanges( recordChanges );
 
-  if ( !m_streamParser->hasList() ) {
-    throw HandlerException( "Invalid filter" );
-  }
-  parseFilter( client );
+  if ( !m_streamParser->atCommandEnd() ) {
+    if ( !m_streamParser->hasList() ) {
+      throw HandlerException( "Invalid filter" );
+    }
+    parseFilter( client );
 
-  if ( !m_streamParser->hasList() ) {
-    throw HandlerException( "Invalid scope" );
+    if ( !m_streamParser->hasList() ) {
+      throw HandlerException( "Invalid scope" );
+    }
+    parseFetchScope( client );
   }
-  parseFetchScope( client );
 
   IdleManager::self()->registerClient( client );
 }
