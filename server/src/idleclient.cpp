@@ -19,6 +19,8 @@
 
 #include "idleclient.h"
 #include "idlemanager.h"
+#include "response.h"
+#include "akonadiconnection.h"
 #include "libs/protocol_p.h"
 
 using namespace Akonadi;
@@ -31,6 +33,7 @@ IdleClient::IdleClient( AkonadiConnection *connection, const QByteArray &clientI
   , mFrozen( true )
   , mMonitorAll( true )
 {
+  connect( mConnection, SIGNAL(finished()), this, SLOT(connectionClosed()) );
 }
 
 IdleClient::~IdleClient()
@@ -379,18 +382,54 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
 }
 
 void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
-                                       const QSqlQuery &itemsQuery,
-                                       const QSqlQuery &partsQuery,
-                                       const QSqlQuery &flagsQuery )
+                                       const QHash<Entity::Id, IdleManager::Item> &items )
 {
+  // Assert? Manager should make sure it ignores offline clients
+  if ( mConnection == 0 ) {
+    return;
+  }
 
+  QByteArray str;
+  // First handle operations that we can do in simple batches
+  Q_FOREACH ( const IdleManager::Item &item, items ) {
+    QByteArray op;
+    if ( msg.operation() == NotificationMessageV2::Add ) {
+      op = "ADD";
+    } else if ( msg.operation() == NotificationMessageV2::Modify ) {
+      op = "MODIFY";
+    } else if ( msg.operation() == NotificationMessageV2::ModifyFlags ) {
+      op = "MODIFYFLAGS";
+    } else if ( msg.operation() == NotificationMessageV2::Move ) {
+      op = "MOVE";
+    } else if ( msg.operation() == NotificationMessageV2::Remove ) {
+      op = "REMOVE";
+    } else if ( msg.operation() == NotificationMessageV2::Link ) {
+      op = "LINK";
+    } else if ( msg.operation() == NotificationMessageV2::Unlink ) {
+      op = "UNLINK";
+    }
+
+    str = op + ' ' + QByteArray::number( item.id() );
+
+    Response response;
+    response.setUntagged();
+    response.setString( str );
+    Q_EMIT responseAvailable( response );
+  }
 }
 
 void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
                                        const Collection &collection )
 {
-
 }
 
+void IdleClient::connectionClosed()
+{
+  mConnection = 0;
 
-
+  // If recording is disabled, there's no point in keeping this client alive
+  if ( !mRecordChanges ) {
+    IdleManager::self()->unregisterClient( this );
+    deleteLater();
+  }
+}

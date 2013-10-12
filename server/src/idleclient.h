@@ -25,14 +25,13 @@
 #include <QSet>
 
 #include "fetchhelper.h"
+#include "idlemanager.h"
 
 namespace Akonadi
 {
 
 class FetchScope;
-
 class ImapSet;
-
 class AkonadiConnection;
 
 class IdleClient : public QObject
@@ -45,9 +44,7 @@ class IdleClient : public QObject
 
     bool acceptsNotification( const NotificationMessageV2 &msg );
     void dispatchNotification( const NotificationMessageV2 &msg,
-                               const QSqlQuery &itemsQuery,
-                               const QSqlQuery &partsQuery,
-                               const QSqlQuery &flagsQuery );
+                               const QHash<Entity::Id, IdleManager::Item> &items );
     void dispatchNotification( const NotificationMessageV2 &msg,
                                const Collection &collection );
 
@@ -97,6 +94,12 @@ class IdleClient : public QObject
     void addMonitoredOperations( const QSet<QByteArray> &operations );
     void removeMonitoredOperations( const  QSet<QByteArray> &operations );
     const QSet<QByteArray> &monitoredOperations() const;
+
+  Q_SIGNALS:
+    void responseAvailable( const Akonadi::Response &response );
+
+  private Q_SLOTS:
+    void connectionClosed();
 
   private:
     Q_DISABLE_COPY( IdleClient )
