@@ -77,6 +77,8 @@ class IdleManager : public QObject
     QStringList mRequestedParts;
     // Whether at least one client requests full payload
     bool mFullPayload;
+
+    FetchScope mFetchScope;
 };
 
 }

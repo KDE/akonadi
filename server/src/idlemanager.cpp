@@ -46,6 +46,21 @@ IdleManager* IdleManager::self()
 IdleManager::IdleManager()
   : QObject()
 {
+  mFetchScope.setAllAttrs( true );
+  mFetchScope.setAncestorDepth( -1 );
+  mFetchScope.setCacheOnly( true );
+  mFetchScope.setChangedOnly( false );
+  mFetchScope.setCheckCachedPayloadPartsOnly( false );
+  mFetchScope.setExternalPayloadSupported( true );
+  mFetchScope.setFlagsRequested( true );
+  mFetchScope.setFullPayload( true );
+  mFetchScope.setGidRequested( true );
+  mFetchScope.setIgnoreErrors( true );
+  mFetchScope.setMTimeRequested( true );
+  mFetchScope.setRemoteIdRequested( true );
+  mFetchScope.setRemoteRevisionRequested( true );
+  mFetchScope.setSizeRequested( true );
+  mFetchScope.setRequestedParts( QVector<QByteArray>() << AKONADI_PARAM_PLD_RFC822 );
 }
 
 IdleManager::~IdleManager()
@@ -84,22 +99,7 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
   Collection collection;
   QSqlQuery itemQuery, partQuery, flagQuery;
 
-  FetchScope fetchScope;
-  fetchScope.setAllAttrs( true );
-  fetchScope.setAncestorDepth( -1 );
-  fetchScope.setCacheOnly( true );
-  fetchScope.setChangedOnly( false );
-  fetchScope.setCheckCachedPayloadPartsOnly( false );
-  fetchScope.setExternalPayloadSupported( true );
-  fetchScope.setFlagsRequested( true );
-  fetchScope.setFullPayload( true );
-  fetchScope.setGidRequested( true );
-  fetchScope.setIgnoreErrors( true );
-  fetchScope.setMTimeRequested( true );
-  fetchScope.setRemoteIdRequested( true );
-  fetchScope.setRemoteRevisionRequested( true );
-  fetchScope.setSizeRequested( true );
-  fetchScope.setRequestedParts( QVector<QByteArray>() << AKONADI_PARAM_PLD_RFC822 );
+
 
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
     if ( msg.type() == NotificationMessageV2::Collections ) {
@@ -111,7 +111,7 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         Scope scope( Scope::Uid );
         scope.setUidSet( set );
 
-        FetchHelper helper( scope, fetchScope );
+        FetchHelper helper( scope, mFetchScope );
         itemQuery = helper.buildItemQuery();
         partQuery = helper.buildPartQuery();
         flagQuery = helper.buildFlagQuery();
@@ -148,4 +148,10 @@ Collection IdleManager::fetchCollection( const NotificationMessageV2 &msg )
 
   // Makes use of internal Collection cache to avoid repetitive queries
   return Collection::retrieveById( msg.uids().first() );
+}
+
+void IdleManager::updateGlobalFetchScope( const FetchScope &oldFetchScope,
+                                          const FetchScope &newFetchScope )
+{
+  // TODO
 }
