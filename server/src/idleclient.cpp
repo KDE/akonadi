@@ -383,7 +383,8 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
 }
 
 void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
-                                       const QHash<Entity::Id, IdleManager::Item> &items )
+                                       const FetchHelper &helper,
+                                       QSqlQuery &itemsQuery )
 {
   // Assert? Manager should make sure it ignores offline clients
   if ( mConnection == 0 ) {
@@ -392,7 +393,8 @@ void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
 
   QByteArray str;
   // First handle operations that we can do in simple batches
-  Q_FOREACH ( const IdleManager::Item &item, items ) {
+  while ( itemsQuery.isValid() ) {
+    Entity::Id id = helper.extractQueryResult( itemsQuery, FetchHelper::ItemQueryPimItemIdColumn ).toLongLong();
     QByteArray op;
     if ( msg.operation() == NotificationMessageV2::Add ) {
       op = "ADD";
@@ -410,12 +412,14 @@ void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
       op = "UNLINK";
     }
 
-    str = op + ' ' + QByteArray::number( item.id() );
+    str = op + ' ' + QByteArray::number( id );
 
     Response response;
     response.setUntagged();
     response.setString( str );
     Q_EMIT responseAvailable( response );
+
+    itemsQuery.next();
   }
 }
 

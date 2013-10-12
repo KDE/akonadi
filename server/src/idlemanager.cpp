@@ -33,57 +33,6 @@ using namespace Akonadi;
 
 IdleManager *IdleManager::s_instance = 0;
 
-IdleManager::Item::Item()
-{
-}
-
-IdleManager::Item::Item( const PimItem &item, const QVector<Part> &parts,
-                         const QVector<Flag> &flags )
-  : mPimItem( item )
-  , mParts( parts )
-  , mFlags( flags )
-{
-}
-
-IdleManager::Item::~Item()
-{
-}
-
-Entity::Id IdleManager::Item::id() const
-{
-  return mPimItem.id();
-}
-
-bool IdleManager::Item::isValid() const
-{
-  return mPimItem.isValid();
-}
-
-PimItem IdleManager::Item::item() const
-{
-  return mPimItem;
-}
-
-QVector<Part> IdleManager::Item::parts() const
-{
-  return mParts;
-}
-
-QVector<Flag> IdleManager::Item::flags() const
-{
-  return mFlags;
-}
-
-void IdleManager::Item::addFlag( const Flag &flag )
-{
-  mFlags << flag;
-}
-
-void IdleManager::Item::addPart( const Part &part )
-{
-  mParts << part;
-}
-
 IdleManager* IdleManager::self()
 {
   static QMutex instanceLock;
@@ -149,10 +98,12 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
   QReadLocker locker( &mRegistrarLock );
 
   Collection collection;
-  QHash<Entity::Id, Item> items;
   QTime timer;
   timer.start();
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
+    FetchHelper *helper = 0;
+    QSqlQuery itemsQuery;
+
     if ( msg.type() == NotificationMessageV2::Collections ) {
       collection = fetchCollection( msg );
     } else if ( msg.type() == Akonadi::NotificationMessageV2::Items ) {
@@ -162,54 +113,29 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         Scope scope( Scope::Uid );
         scope.setUidSet( set );
 
-        FetchHelper helper( scope, mFetchScope );
-        QSqlQuery itemQuery = helper.buildItemQuery();
+        helper = new FetchHelper( scope, mFetchScope );
+        itemsQuery = helper->buildItemQuery();
+        /*
         QSqlQuery partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
         QSqlQuery flagQuery = helper.buildFlagQuery();
-
-        const QVector<PimItem> pimItems = PimItem::extractResult( itemQuery );
-        const QVector<Part> parts = Part::extractResult( partQuery );
-        const QVector<Flag> flags = Flag::extractResult( flagQuery );
-
-        Q_FOREACH ( const PimItem &pimItem, pimItems ) {
-          Item item( pimItem );
-          items.insert( pimItem.id(), pimItem );
-        }
-
-        Q_FOREACH ( const Part &part, parts ) {
-          Item item = items.value( part.pimItemId() );
-          if ( !item.isValid() ) {
-            qWarning() << "Got a part, but don't have a related item...?";
-            continue;
-          }
-          item.addPart( part );
-          items.insert( item.id(), item );
-        }
-
-        Q_FOREACH ( const Flag &flag, flags ) {
-          Item item = items.value( flag.id() );
-          if ( !item.isValid() ) {
-            qWarning() << "Got a flag, but don't have a related item...?";
-            continue;
-          }
-          item.addFlag( flag );
-          items.insert( item.id(), item );
-        }
+        */
       }
     }
-    akDebug() << "Fetched and extracted" << items.count() << "items in" << timer.elapsed() << "ms";
+    akDebug() << "Fetched and extracted" << itemsQuery.size() << "items in" << timer.elapsed() << "ms";
 
     timer.start();
+    int acceptingClients = 0;
     Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
       if ( client->acceptsNotification( msg ) ) {
+        ++acceptingClients;
         if ( msg.type() == NotificationMessageV2::Collections ) {
           client->dispatchNotification( msg, collection );
         } else if ( msg.type() == NotificationMessageV2::Items ) {
-          client->dispatchNotification( msg, items );
+          client->dispatchNotification( msg, *helper, itemsQuery );
         }
       }
     }
-    akDebug() << "Dispatched notification to" << mClientsRegistrar.count() << "clients in" << timer.elapsed() << "ms";
+    akDebug() << "Dispatched notification to" << acceptingClients << "clients in" << timer.elapsed() << "ms";
   }
 }
 

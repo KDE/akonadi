@@ -43,31 +43,6 @@ class IdleManager : public QObject
     Q_OBJECT
 
   public:
-
-    class Item
-    {
-      public:
-        Item();
-        Item(const PimItem &item, const QVector<Part> &parts = QVector<Part>(),
-             const QVector<Flag> &mFlags = QVector<Flag>() );
-        ~Item();
-
-        bool isValid() const;
-
-        Entity::Id id() const;
-        PimItem item() const;
-        QVector<Part> parts() const;
-        QVector<Flag> flags() const;
-
-        void addPart( const Part &part );
-        void addFlag( const Flag &flag );
-
-      private:
-        PimItem mPimItem;
-        QVector<Part> mParts;
-        QVector<Flag> mFlags;
-    };
-
     static IdleManager *self();
 
     virtual ~IdleManager();

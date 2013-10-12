@@ -44,7 +44,8 @@ class IdleClient : public QObject
 
     bool acceptsNotification( const NotificationMessageV2 &msg );
     void dispatchNotification( const NotificationMessageV2 &msg,
-                               const QHash<Entity::Id, IdleManager::Item> &items );
+                               const FetchHelper &helper,
+                               QSqlQuery &itemsQuery );
     void dispatchNotification( const NotificationMessageV2 &msg,
                                const Collection &collection );
 
