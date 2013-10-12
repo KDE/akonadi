@@ -23,6 +23,7 @@
 #include <QtCore/QStack>
 
 #include "scope.h"
+#include "fetchscope.h"
 #include "libs/imapset_p.h"
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
@@ -35,56 +36,6 @@ namespace Akonadi {
 class AkonadiConnection;
 class ImapSet;
 class Response;
-
-class FetchScope
-{
-  public:
-    FetchScope();
-    FetchScope( ImapStreamParser *parser );
-    FetchScope( const FetchScope &other );
-    ~FetchScope();
-
-    QVector<QByteArray> requestedParts() const;
-    void setRequestedParts( const QVector<QByteArray> &parts );
-    QStringList requestedPayloads() const;
-    void setRequestedPayloads( const QStringList &payloads );
-    int ancestorDepth() const;
-    void setAncestorDepth( int depth );
-    bool cacheOnly() const;
-    void setCacheOnly( bool cacheOnly );
-    bool changedOnly() const;
-    void setChangedOnly( bool changedOnly );
-    bool checkCachedPayloadPartsOnly() const;
-    void setCheckCachedPayloadPartsOnly( bool cachedOnly );
-    bool fullPayload() const;
-    void setFullPayload( bool fullPayload );
-    bool allAttrs() const;
-    void setAllAttrs( bool allAttrs );
-    bool sizeRequested();
-    void setSizeRequested( bool sizeRequested );
-    bool mTimeRequested() const;
-    void setMTimeRequested( bool mTimeRequested );
-    bool externalPayloadSupported() const;
-    void setExternalPayloadSupported( bool supported );
-    bool remoteRevisionRequested() const;
-    void setRemoteRevisionRequested( bool requested );
-    bool ignoreErrors() const;
-    void setIgnoreErrors( bool ignoreErrors );
-    bool flagsRequested() const;
-    void setFlagsRequested( bool flagsRequested );
-    bool remoteIdRequested() const;
-    void setRemoteIdRequested( bool requested );
-    bool gidRequested() const;
-    void setGidRequested( bool requested );
-    QDateTime changedSince() const;
-    void setChangedSince( const QDateTime &changedSince );
-
-  private:
-    class Data;
-    QSharedDataPointer<Data> d;
-};
-
-
 
 class FetchHelper : public QObject
 {

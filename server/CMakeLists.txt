@@ -105,6 +105,7 @@ set(libakonadiprivate_SRCS
   src/akonadiconnection.cpp
   src/clientcapabilities.cpp
   src/clientcapabilityaggregator.cpp
+  src/fetchscope.cpp
   src/handler.cpp
   src/handlerhelper.cpp
   src/idleclient.cpp
