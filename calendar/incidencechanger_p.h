@@ -250,6 +250,10 @@ public:
   explicit Private( bool enableHistory, IncidenceChanger *mIncidenceChanger );
   ~Private();
 
+  void continueCreatingIncidence(const Change::Ptr &change,
+                                 const KCalCore::Incidence::Ptr &incidence,
+                                 const Collection &collection);
+
   /**
       Returns true if, for a specific item, an ItemDeleteJob is already running,
       or if one already run successfully.

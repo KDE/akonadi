@@ -20,6 +20,7 @@ set(akonadicalendar_LIB_SRC
   icalimporter.cpp
   incidencefetchjob_p.cpp
   incidencechanger.cpp
+  incidencechanger_p.cpp
   itiphandler.cpp
   itiphandler_p.cpp
   itiphandlerhelper_p.cpp

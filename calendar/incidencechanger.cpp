@@ -607,8 +607,6 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
 
   const Change::Ptr change( new CreationChange( this, ++d->mLatestChangeId,
                                                 atomicOperationId, parent ) );
-  Collection collectionToUse;
-
   const int changeId = change->id;
   Q_ASSERT( !( d->mBatchOperationInProgress && !d->mAtomicOperations.contains( atomicOperationId ) ) );
   if ( d->mBatchOperationInProgress && d->mAtomicOperations[atomicOperationId]->rolledback() ) {
@@ -623,6 +621,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
 
   d->handleInvitationsBeforeChange( change );
 
+  Collection collectionToUse;
   if ( collection.isValid() && d->hasRights( collection, ChangeTypeCreate ) ) {
     // The collection passed always has priority
     collectionToUse = collection;
@@ -696,26 +695,7 @@ int IncidenceChanger::createIncidence( const Incidence::Ptr &incidence,
     }
   }
 
-  d->mLastCollectionUsed = collectionToUse;
-
-  Item item;
-  item.setPayload<Incidence::Ptr>( incidence );
-  item.setMimeType( incidence->mimeType() );
-
-  ItemCreateJob *createJob = new ItemCreateJob( item, collectionToUse, d->parentJob( change ) );
-  d->mChangeForJob.insert( createJob, change );
-
-  if ( d->mBatchOperationInProgress ) {
-    AtomicOperation *atomic = d->mAtomicOperations[d->mLatestAtomicOperationId];
-    Q_ASSERT( atomic );
-    atomic->addChange( change );
-  }
-
-  // QueuedConnection because of possible sync exec calls.
-  connect( createJob, SIGNAL(result(KJob*)),
-           d, SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection );
-
-  d->mChangeById.insert( changeId, change );
+  d->continueCreatingIncidence(change, incidence, collectionToUse);
   return change->id;
 }
 
