@@ -36,7 +36,7 @@ using namespace KCalCore;
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ChangeType>)
 Q_DECLARE_METATYPE(Akonadi::ITIPHandler::Result)
 
-static const char *s_ourEmail = "kdepimlibs-unittests@kde.org";
+static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
 
 
 void ITIPHandlerTest::initTestCase()
@@ -56,18 +56,26 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<QString>("receiver");
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
 
+    QString data_filename;
     QString action = QLatin1String("accepted");
     QString receiver = QLatin1String(s_ourEmail);
     Akonadi::ITIPHandler::Result expectedResult;
 
+    //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult;
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     QTest::newRow("invalid data") << QString() << action << receiver << expectedResult;
 
     //----------------------------------------------------------------------------------------------
+    // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
-    QTest::newRow("invalid receiver") << QString() << action << QString() << expectedResult;
+    data_filename = QLatin1String("invitation");
+    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult;
 
     //----------------------------------------------------------------------------------------------
 
@@ -82,6 +90,8 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
 
     m_expectedResult = expectedResult;
+
+    data_filename = QLatin1String(ITIP_DATA_DIR) + QLatin1Char('/') + data_filename;
 
     QString iCalData = QString::fromLatin1(readFile(data_filename));
 
