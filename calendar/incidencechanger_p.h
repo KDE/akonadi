@@ -168,34 +168,34 @@ public:
 };
 
 struct AtomicOperation {
-  uint id;
+  uint m_id;
 
   // To make sure they are not repeated
-  QSet<Akonadi::Item::Id> mItemIdsInOperation;
+  QSet<Akonadi::Item::Id> m_itemIdsInOperation;
 
   // After endAtomicOperation() is called we don't accept more changes
-  bool endCalled;
+  bool m_endCalled;
 
   // Number of completed changes(jobs)
-  int numCompletedChanges;
-  QString description;
-  bool transactionCompleted;
+  int m_numCompletedChanges;
+  QString m_description;
+  bool m_transactionCompleted;
 
   AtomicOperation( IncidenceChanger::Private *icp, uint ident );
 
   ~AtomicOperation()
   {
     //kDebug() << "AtomicOperation::~ " << wasRolledback << changes.count();
-    if ( wasRolledback ) {
-      for ( int i=0; i<changes.count(); ++i ) {
+    if ( m_wasRolledback ) {
+      for ( int i=0; i<m_changes.count(); ++i ) {
         // When a job that can finish successfully is aborted because the transaction failed
         // because of some other job, akonadi is returning an Unknown error
         // which isnt very specific
-        if ( changes[i]->completed &&
-              ( changes[i]->resultCode == IncidenceChanger::ResultCodeSuccess ||
-                ( changes[i]->resultCode == IncidenceChanger::ResultCodeJobError &&
-                  changes[i]->errorString == QLatin1String( "Unknown error." ) ) ) ) {
-          changes[i]->resultCode = IncidenceChanger::ResultCodeRolledback;
+        if ( m_changes[i]->completed &&
+              ( m_changes[i]->resultCode == IncidenceChanger::ResultCodeSuccess ||
+                ( m_changes[i]->resultCode == IncidenceChanger::ResultCodeJobError &&
+                  m_changes[i]->errorString == QLatin1String( "Unknown error." ) ) ) ) {
+          m_changes[i]->resultCode = IncidenceChanger::ResultCodeRolledback;
         }
       }
     }
@@ -204,19 +204,19 @@ struct AtomicOperation {
   // Did all jobs return ?
   bool pendingJobs() const
   {
-    return changes.count() > numCompletedChanges;
+    return m_changes.count() > m_numCompletedChanges;
   }
 
   void setRolledback()
   {
     //kDebug() << "AtomicOperation::setRolledBack()";
-    wasRolledback = true;
+    m_wasRolledback = true;
     transaction()->rollback();
   }
 
   bool rolledback() const
   {
-    return wasRolledback;
+    return m_wasRolledback;
   }
 
   void addChange( const Change::Ptr &change )
@@ -224,22 +224,22 @@ struct AtomicOperation {
     if ( change->type == IncidenceChanger::ChangeTypeDelete ) {
       DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
       foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
-        Q_ASSERT( !mItemIdsInOperation.contains( id ) );
-        mItemIdsInOperation.insert( id );
+        Q_ASSERT( !m_itemIdsInOperation.contains( id ) );
+        m_itemIdsInOperation.insert( id );
       }
     } else if ( change->type == IncidenceChanger::ChangeTypeModify ) {
-      Q_ASSERT( !mItemIdsInOperation.contains( change->newItem.id() ) );
-      mItemIdsInOperation.insert( change->newItem.id() );
+      Q_ASSERT( !m_itemIdsInOperation.contains( change->newItem.id() ) );
+      m_itemIdsInOperation.insert( change->newItem.id() );
     }
 
-    changes << change;
+    m_changes << change;
   }
 
   Akonadi::TransactionSequence *transaction();
 
 private:
-  QVector<Change::Ptr> changes;
-  bool wasRolledback;
+  QVector<Change::Ptr> m_changes;
+  bool m_wasRolledback;
   Akonadi::TransactionSequence *m_transaction; // constructed in first use
   IncidenceChanger::Private *m_incidenceChangerPrivate;
 };
