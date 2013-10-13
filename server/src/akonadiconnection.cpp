@@ -159,6 +159,13 @@ void AkonadiConnection::slotNewData()
                Qt::DirectConnection );
       m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );
+
+      // When we are in IDLE mode (i.e. m_idleClient is assigned to this session,
+      // don't allow other commands than IDLE
+      if ( m_idleClient && command != "IDLE" ) {
+        throw HandlerException( "Invalid command; this session is in IDLE mode" );
+      }
+
       if ( !m_currentHandler->parseStream() ) {
         m_streamParser->skipCurrentCommand();
       }
@@ -372,7 +379,8 @@ void AkonadiConnection::setIdleClient( IdleClient *client )
   }
 
   m_idleClient = client;
-  connect( m_idleClient.data(), SIGNAL(responseAvailable(Akonadi::Response)),
-           this, SLOT(slotResponseAvailable(Akonadi::Response)) );
+  if ( client ) {
+    connect( m_idleClient.data(), SIGNAL(responseAvailable(Akonadi::Response)),
+            this, SLOT(slotResponseAvailable(Akonadi::Response)) );
+  }
 }
-

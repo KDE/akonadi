@@ -68,6 +68,9 @@ bool IdleClient::isFrozen() const
 
 void IdleClient::done()
 {
+  mConnection->setIdleClient( 0 );
+  IdleManager::self()->unregisterClient( this );
+  deleteLater();
 }
 
 bool IdleClient::replayed( const ImapSet &set )

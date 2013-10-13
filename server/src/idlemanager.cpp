@@ -77,7 +77,7 @@ void IdleManager::registerClient( IdleClient *client )
   }
 
   mClientsRegistrar.insert( client->connection()->sessionId(), client );
-  akDebug() << "Registered client" << client->clientId() << "for session" << client->connection()->sessionId();
+  akDebug() << "Registered IDLE client" << client->clientId() << "for session" << client->connection()->sessionId();
 }
 
 void IdleManager::unregisterClient( IdleClient *client )
@@ -87,7 +87,7 @@ void IdleManager::unregisterClient( IdleClient *client )
     throw IdleException( "No such client");
   }
 
-  akDebug() << "Unregistered client" << client->clientId();
+  akDebug() << "Unregistered IDLE client" << client->clientId();
 }
 
 IdleClient *IdleManager::clientForConnection( AkonadiConnection *connection )
