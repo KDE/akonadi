@@ -431,7 +431,6 @@ void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
     itemsQuery.next();
   }
 
-  // FIXME: The responses seem to arrive to client in random order (wtf?)
   Response response;
   response.setTag( "+" );
   response.setString( "IDLE (" + QByteArray::number( notifications ) + ')' );
