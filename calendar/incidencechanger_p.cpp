@@ -46,29 +46,167 @@ void IncidenceChanger::Private::loadCollections()
     m_collectionFetchJob->start();
 }
 
-void IncidenceChanger::Private::onCollectionLoaded(KJob *job)
+Collection::List IncidenceChanger::Private::collectionsForMimeType(const QString &mimeType,
+                                                                   const Collection::List &collections)
 {
-    m_collections.clear();
-
-    if (job->error() == 0 && m_collectionFetchJob) {
-        Q_ASSERT(job == m_collectionFetchJob);
-        foreach (const Akonadi::Collection &collection, m_collectionFetchJob->collections()) {
-            QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
-            if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty() &&
-                collection.rights() & Akonadi::Collection::CanCreateItem) {
-                m_collections << collection;
-            }
+    Collection::List result;
+    foreach (const Akonadi::Collection &collection, collections) {
+        if (collection.contentMimeTypes().contains(mimeType)) {
+            result << collection;
         }
-    } else {
+    }
+
+    return result;
+}
+
+void IncidenceChanger::Private::onCollectionsLoaded(KJob *job)
+{
+    Q_ASSERT(!mPendingCreations.isEmpty());
+    if (job->error() != 0 || !m_collectionFetchJob) {
         kError() << "Error loading collections:" << job->errorString();
+        return;
+    }
+
+    Q_ASSERT(job == m_collectionFetchJob);
+    Akonadi::Collection::List allCollections;
+    foreach (const Akonadi::Collection &collection, m_collectionFetchJob->collections()) {
+        if (collection.rights() & Akonadi::Collection::CanCreateItem) {
+            allCollections << collection;
+        }
     }
 
     m_collectionFetchJob = 0;
+    bool canceled = false;
+
+    // These two will never be true, maybe even assert
+    bool noAcl = false;
+    bool invalidCollection = false;
+    Collection collectionToUse;
+    foreach (const Change::Ptr &change, mPendingCreations) {
+        mPendingCreations.removeAll(change);
+
+        if (canceled) {
+            change->resultCode = ResultCodeUserCanceled;
+            continue;
+        }
+
+        if (noAcl) {
+            change->resultCode = ResultCodePermissions;
+            continue;
+        }
+
+        if (invalidCollection) {
+            change->resultCode = ResultCodeInvalidUserCollection;
+            continue;
+        }
+
+        if (collectionToUse.isValid()) {
+            // We don't show the dialog multiple times
+            step2CreateIncidence(change, collectionToUse);
+            continue;
+        }
+
+        KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(change->newItem);
+        Collection::List candidateCollections = collectionsForMimeType(incidence->mimeType(), allCollections);
+        if (candidateCollections.count() == 1 && candidateCollections.first().isValid()) {
+            // We only have 1 writable collection, don't bother the user with a dialog
+            collectionToUse = candidateCollections.first();
+            kDebug() << "Only one collection exists, will not show collection dialog: " << collectionToUse.displayName();
+            step2CreateIncidence(change, collectionToUse);
+            continue;
+        }
+
+        // Lets ask the user which collection to use:
+        int dialogCode;
+        QWidget *parent = change->parentWidget;
+
+        const QStringList mimeTypes(incidence->mimeType());
+        collectionToUse = CalendarUtils::selectCollection(parent, /*by-ref*/dialogCode,
+                                                          mimeTypes, mDefaultCollection);
+        if (dialogCode != QDialog::Accepted) {
+            kDebug() << "User canceled collection choosing";
+            change->resultCode = ResultCodeUserCanceled;
+            canceled = true;
+            cancelTransaction();
+            continue;
+        }
+
+        if (collectionToUse.isValid() && !hasRights(collectionToUse, ChangeTypeCreate)) {
+            kWarning() << "No ACLs for incidence creation";
+            const QString errorMessage = showErrorDialog(ResultCodePermissions, parent);
+            change->resultCode = ResultCodePermissions;
+            change->errorString = errorMessage;
+            noAcl = true;
+            cancelTransaction();
+            continue;
+        }
+
+        // TODO: add unit test for these two situations after reviewing API
+        if (!collectionToUse.isValid()) {
+            kError() << "Invalid collection selected. Can't create incidence.";
+            change->resultCode = ResultCodeInvalidUserCollection;
+            const QString errorString = showErrorDialog(ResultCodeInvalidUserCollection, parent);
+            change->errorString = errorString;
+            invalidCollection = true;
+            cancelTransaction();
+            continue;
+        }
+
+        step2CreateIncidence(change, collectionToUse);
+    }
 }
 
 bool IncidenceChanger::Private::isLoadingCollections() const
 {
     return m_collectionFetchJob != 0;
+}
+
+void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change::Ptr &change,
+                                                                    const Akonadi::Collection &collection)
+{
+    QWidget *parent = change->parentWidget.data();
+    if (collection.isValid() && hasRights(collection, ChangeTypeCreate)) {
+        // The collection passed always has priority
+        step2CreateIncidence(change, collection);
+    } else {
+        switch (mDestinationPolicy) {
+        case DestinationPolicyDefault:
+            if (mDefaultCollection.isValid() && hasRights(mDefaultCollection, ChangeTypeCreate)) {
+                step2CreateIncidence(change, mDefaultCollection);
+                break;
+            }
+            kWarning() << "Destination policy is to use the default collection."
+                       << "But it's invalid or doesn't have proper ACLs."
+                       << "isValid = "  << mDefaultCollection.isValid()
+                       << "has ACLs = " << hasRights(mDefaultCollection, ChangeTypeCreate);
+            // else fallthrough, and ask the user.
+        case DestinationPolicyAsk:
+        {
+            mPendingCreations << change;
+            loadCollections(); // Now we wait, collections are being loaded async
+            break;
+        }
+        case DestinationPolicyNeverAsk:
+        {
+            const bool hasRights = this->hasRights(mDefaultCollection, ChangeTypeCreate);
+            if (mDefaultCollection.isValid() && hasRights) {
+                step2CreateIncidence(change, mDefaultCollection);
+            } else {
+                const QString errorString = showErrorDialog(ResultCodeInvalidDefaultCollection, parent);
+                kError() << errorString << "; rights are " << hasRights;
+                change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
+                                                 ResultCodePermissions;
+                change->errorString = errorString;
+                cancelTransaction();
+            }
+            break;
+        }
+        default:
+            // Never happens
+            Q_ASSERT_X(false, "createIncidence()", "unknown destination policy");
+            cancelTransaction();
+        }
+    }
 }
 
 void IncidenceChanger::Private::step2CreateIncidence(const Change::Ptr &change,
@@ -92,86 +230,4 @@ void IncidenceChanger::Private::step2CreateIncidence(const Change::Ptr &change,
             SLOT(handleCreateJobResult(KJob*)), Qt::QueuedConnection);
 
     mChangeById.insert(change->id, change);
-}
-
-
-void IncidenceChanger::Private::step1DetermineDestinationCollection(const Change::Ptr &change,
-                                                                    const Akonadi::Collection &collection)
-{
-    KCalCore::Incidence::Ptr incidence = CalendarUtils::incidence(change->newItem);
-    Collection collectionToUse;
-    QWidget *parent = change->parentWidget.data();
-    if (collection.isValid() && hasRights(collection, ChangeTypeCreate)) {
-        // The collection passed always has priority
-        collectionToUse = collection;
-    } else {
-        switch (mDestinationPolicy) {
-        case DestinationPolicyDefault:
-            if (mDefaultCollection.isValid() && hasRights(mDefaultCollection, ChangeTypeCreate)) {
-                collectionToUse = mDefaultCollection;
-                break;
-            }
-            kWarning() << "Destination policy is to use the default collection."
-                       << "But it's invalid or doesn't have proper ACLs."
-                       << "isValid = "  << mDefaultCollection.isValid()
-                       << "has ACLs = " << hasRights(mDefaultCollection, ChangeTypeCreate);
-            // else fallthrough, and ask the user.
-        case DestinationPolicyAsk:
-        {
-            int dialogCode;
-            const QStringList mimeTypes(incidence->mimeType());
-            collectionToUse = CalendarUtils::selectCollection(parent, dialogCode /*by-ref*/, mimeTypes, mDefaultCollection);
-            if (dialogCode != QDialog::Accepted) {
-                kDebug() << "User canceled collection choosing";
-                change->resultCode = ResultCodeUserCanceled;
-                cancelTransaction();
-                return;
-            }
-
-            if (collectionToUse.isValid() && !hasRights(collectionToUse, ChangeTypeCreate)) {
-                kWarning() << "No ACLs for incidence creation";
-                const QString errorMessage = showErrorDialog(ResultCodePermissions, parent);
-                change->resultCode = ResultCodePermissions;
-                change->errorString = errorMessage;
-                cancelTransaction();
-                return;
-            }
-
-            // TODO: add unit test for these two situations after reviewing API
-            if (!collectionToUse.isValid()) {
-                kError() << "Invalid collection selected. Can't create incidence.";
-                change->resultCode = ResultCodeInvalidUserCollection;
-                const QString errorString = showErrorDialog(ResultCodeInvalidUserCollection, parent);
-                change->errorString = errorString;
-                cancelTransaction();
-                return;
-            }
-        }
-            break;
-        case DestinationPolicyNeverAsk:
-        {
-            const bool hasRights = this->hasRights(mDefaultCollection, ChangeTypeCreate);
-            if (mDefaultCollection.isValid() && hasRights) {
-                collectionToUse = mDefaultCollection;
-            } else {
-                const QString errorString = showErrorDialog(ResultCodeInvalidDefaultCollection, parent);
-                kError() << errorString << "; rights are " << hasRights;
-                change->resultCode = hasRights ? ResultCodeInvalidDefaultCollection :
-                                                 ResultCodePermissions;
-                change->errorString = errorString;
-                cancelTransaction();
-                return;
-            }
-            break;
-        }
-
-        default:
-            // Never happens
-            Q_ASSERT_X(false, "createIncidence()", "unknown destination policy");
-            cancelTransaction();
-            return;
-        }
-    }
-
-    step2CreateIncidence(change, collectionToUse);
 }

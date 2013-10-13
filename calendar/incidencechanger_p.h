@@ -49,6 +49,7 @@ class Change {
 
 public:
   typedef QSharedPointer<Change> Ptr;
+  typedef QList<Ptr> List;
   Change( IncidenceChanger *incidenceChanger, int changeId,
           IncidenceChanger::ChangeType changeType, uint operationId,
           QWidget *parent ) : id( changeId )
@@ -253,6 +254,7 @@ public:
 
   void loadCollections();  // async-loading of list of writable collections
   bool isLoadingCollections() const;
+  Collection::List collectionsForMimeType(const QString &mimeType, const Collection::List &collections);
 
   // steps for the async operation:
   void step1DetermineDestinationCollection(const Change::Ptr &change, const Collection &collection);
@@ -294,7 +296,7 @@ public Q_SLOTS:
   void handleDeleteJobResult( KJob* );
   void handleTransactionJobResult( KJob* );
   void performNextModification( Akonadi::Item::Id id );
-  void onCollectionLoaded( KJob* );
+  void onCollectionsLoaded( KJob* );
 
 public:
   int mLatestChangeId;
@@ -303,7 +305,7 @@ public:
   Akonadi::Collection mDefaultCollection;
   DestinationPolicy mDestinationPolicy;
   QVector<Akonadi::Item::Id> mDeletedItemIds;
-  Akonadi::Collection::List m_collections;
+  Change::List mPendingCreations; // Creations waiting for collections to be loaded
 
   History *mHistory;
   bool mUseHistory;

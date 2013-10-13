@@ -139,6 +139,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mLatestAtomicOperationId = 0;
   mBatchOperationInProgress = false;
   mAutoAdjustRecurrence = true;
+  m_collectionFetchJob = 0;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
