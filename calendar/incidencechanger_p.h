@@ -43,6 +43,7 @@ class QWidget;
 namespace Akonadi {
 
 class TransactionSequence;
+class CollectionFetchJob;
 
 class Change {
 
@@ -250,6 +251,8 @@ public:
   explicit Private( bool enableHistory, IncidenceChanger *mIncidenceChanger );
   ~Private();
 
+  void loadCollections();  // async-loading of list of writable collections
+  bool isLoadingCollections() const;
   void continueCreatingIncidence(const Change::Ptr &change,
                                  const KCalCore::Incidence::Ptr &incidence,
                                  const Collection &collection);
@@ -288,6 +291,7 @@ public Q_SLOTS:
   void handleDeleteJobResult( KJob* );
   void handleTransactionJobResult( KJob* );
   void performNextModification( Akonadi::Item::Id id );
+  void onCollectionLoaded( KJob* );
 
 public:
   int mLatestChangeId;
@@ -296,6 +300,7 @@ public:
   Akonadi::Collection mDefaultCollection;
   DestinationPolicy mDestinationPolicy;
   QVector<Akonadi::Item::Id> mDeletedItemIds;
+  Akonadi::Collection::List m_collections;
 
   History *mHistory;
   bool mUseHistory;
@@ -332,6 +337,8 @@ public:
   bool mBatchOperationInProgress;
   Akonadi::Collection mLastCollectionUsed;
   bool mAutoAdjustRecurrence;
+
+  Akonadi::CollectionFetchJob *m_collectionFetchJob;
 
   QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
 

@@ -22,10 +22,52 @@
 
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
-
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionfetchscope.h>
 #include <QString>
+#include <QSet>
 
 using namespace Akonadi;
+
+void IncidenceChanger::Private::loadCollections()
+{
+    if (isLoadingCollections()) {
+        // Collections are already loading
+        return;
+    }
+
+    m_collectionFetchJob = new Akonadi::CollectionFetchJob(Akonadi::Collection::root(),
+                                                           Akonadi::CollectionFetchJob::Recursive);
+
+    m_collectionFetchJob->fetchScope().setContentMimeTypes(KCalCore::Incidence::mimeTypes());
+    connect(m_collectionFetchJob, SIGNAL(result(KJob*)), SLOT(onCollectionsLoaded(KJob*)));
+    m_collectionFetchJob->start();
+}
+
+void IncidenceChanger::Private::onCollectionLoaded(KJob *job)
+{
+    m_collections.clear();
+
+    if (job->error() == 0 && m_collectionFetchJob) {
+        Q_ASSERT(job == m_collectionFetchJob);
+        foreach (const Akonadi::Collection &collection, m_collectionFetchJob->collections()) {
+            QSet<QString> mimeTypeSet = KCalCore::Incidence::mimeTypes().toSet();
+            if (!mimeTypeSet.intersect(collection.contentMimeTypes().toSet()).isEmpty() &&
+                collection.rights() & Akonadi::Collection::CanCreateItem) {
+                m_collections << collection;
+            }
+        }
+    } else {
+        kError() << "Error loading collections:" << job->errorString();
+    }
+
+    m_collectionFetchJob = 0;
+}
+
+bool IncidenceChanger::Private::isLoadingCollections() const
+{
+    return m_collectionFetchJob != 0;
+}
 
 void IncidenceChanger::Private::continueCreatingIncidence(const Change::Ptr &change,
                                                           const KCalCore::Incidence::Ptr &incidence,
