@@ -253,9 +253,12 @@ public:
 
   void loadCollections();  // async-loading of list of writable collections
   bool isLoadingCollections() const;
-  void continueCreatingIncidence(const Change::Ptr &change,
-                                 const KCalCore::Incidence::Ptr &incidence,
-                                 const Collection &collection);
+
+  // steps for the async operation:
+  void step1DetermineDestinationCollection(const Change::Ptr &change, const Collection &collection);
+  void step2CreateIncidence(const Change::Ptr &change, const Collection &collection);
+
+
 
   /**
       Returns true if, for a specific item, an ItemDeleteJob is already running,
