@@ -161,7 +161,7 @@ bool IncidenceChanger::Private::atomicOperationIsValid( uint atomicOperationId )
 {
   // Changes must be done between startAtomicOperation() and endAtomicOperation()
   return mAtomicOperations.contains( atomicOperationId ) &&
-         !mAtomicOperations[atomicOperationId]->endCalled;
+         !mAtomicOperations[atomicOperationId]->m_endCalled;
 }
 
 bool IncidenceChanger::Private::hasRights( const Collection &collection,
@@ -230,22 +230,22 @@ void IncidenceChanger::Private::handleTransactionJobResult( KJob *job )
   Q_ASSERT( mAtomicOperations.contains(atomicOperationId) );
   AtomicOperation *operation = mAtomicOperations[atomicOperationId];
   Q_ASSERT( operation );
-  Q_ASSERT( operation->id == atomicOperationId );
+  Q_ASSERT( operation->m_id == atomicOperationId );
   if ( job->error() ) {
     if ( !operation->rolledback() )
       operation->setRolledback();
     kError() << "Transaction failed, everything was rolledback. "
              << job->errorString();
   } else {
-    Q_ASSERT( operation->endCalled );
+    Q_ASSERT( operation->m_endCalled );
     Q_ASSERT( !operation->pendingJobs() );
   }
 
-  if ( !operation->pendingJobs() && operation->endCalled ) {
+  if ( !operation->pendingJobs() && operation->m_endCalled ) {
     delete mAtomicOperations.take( atomicOperationId );
     mBatchOperationInProgress = false;
   } else {
-    operation->transactionCompleted = true;
+    operation->m_transactionCompleted = true;
   }
 }
 
@@ -265,9 +265,9 @@ void IncidenceChanger::Private::handleCreateJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
 
   if ( j->error() ) {
@@ -316,9 +316,9 @@ void IncidenceChanger::Private::handleDeleteJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
   if ( j->error() ) {
     resultCode = ResultCodeJobError;
@@ -364,9 +364,9 @@ void IncidenceChanger::Private::handleModifyJobResult( KJob *job )
   QString description;
   if ( change->atomicOperationId != 0 ) {
     AtomicOperation *a = mAtomicOperations[change->atomicOperationId];
-    a->numCompletedChanges++;
+    a->m_numCompletedChanges++;
     change->completed = true;
-    description = a->description;
+    description = a->m_description;
   }
   if ( j->error() ) {
     if ( deleteAlreadyCalled( item.id() ) ) {
@@ -975,7 +975,7 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
   d->mBatchOperationInProgress = true;
 
   AtomicOperation *atomicOperation = new AtomicOperation( d, d->mLatestAtomicOperationId );
-  atomicOperation->description = operationDescription;
+  atomicOperation->m_description = operationDescription;
   d->mAtomicOperations.insert( d->mLatestAtomicOperationId, atomicOperation );
 }
 
@@ -993,12 +993,12 @@ void IncidenceChanger::endAtomicOperation()
   Q_ASSERT( d->mAtomicOperations.contains(d->mLatestAtomicOperationId) );
   AtomicOperation *atomicOperation = d->mAtomicOperations[d->mLatestAtomicOperationId];
   Q_ASSERT( atomicOperation );
-  atomicOperation->endCalled = true;
+  atomicOperation->m_endCalled = true;
 
   const bool allJobsCompleted = !atomicOperation->pendingJobs();
 
   if ( allJobsCompleted && atomicOperation->rolledback() &&
-       atomicOperation->transactionCompleted ) {
+       atomicOperation->m_transactionCompleted ) {
     // The transaction job already completed, we can cleanup:
     delete d->mAtomicOperations.take( d->mLatestAtomicOperationId );
     d->mBatchOperationInProgress = false;
@@ -1184,7 +1184,7 @@ void IncidenceChanger::Private::cleanupTransaction()
   AtomicOperation *operation = mAtomicOperations[mLatestAtomicOperationId];
   Q_ASSERT( operation );
   Q_ASSERT( operation->rolledback() );
-  if ( !operation->pendingJobs() && operation->endCalled && operation->transactionCompleted ) {
+  if ( !operation->pendingJobs() && operation->m_endCalled && operation->m_transactionCompleted ) {
     delete mAtomicOperations.take(mLatestAtomicOperationId);
     mBatchOperationInProgress = false;
   }
@@ -1201,11 +1201,11 @@ bool IncidenceChanger::Private::allowAtomicOperation( int atomicOperationId,
     if ( change->type == ChangeTypeCreate ) {
       allow = true;
     } else if ( change->type == ChangeTypeModify ) {
-      allow = !operation->mItemIdsInOperation.contains( change->newItem.id() );
+      allow = !operation->m_itemIdsInOperation.contains( change->newItem.id() );
     } else if ( change->type == ChangeTypeDelete ) {
       DeletionChange::Ptr deletion = change.staticCast<DeletionChange>();
       foreach( Akonadi::Item::Id id, deletion->mItemIds ) {
-        if ( operation->mItemIdsInOperation.contains( id ) ) {
+        if ( operation->m_itemIdsInOperation.contains( id ) ) {
           allow = false;
           break;
         }
@@ -1273,16 +1273,16 @@ void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
 */
 
 AtomicOperation::AtomicOperation( IncidenceChanger::Private *icp,
-                                  uint ident ) : id ( ident )
-                                               , endCalled( false )
-                                               , numCompletedChanges( 0 )
-                                               , transactionCompleted( false )
-                                               , wasRolledback( false )
+                                  uint ident ) : m_id ( ident )
+                                               , m_endCalled( false )
+                                               , m_numCompletedChanges( 0 )
+                                               , m_transactionCompleted( false )
+                                               , m_wasRolledback( false )
                                                , m_transaction( 0 )
                                                , m_incidenceChangerPrivate( icp )
 
 {
-  Q_ASSERT( id != 0 );
+  Q_ASSERT( m_id != 0 );
 }
 
 Akonadi::TransactionSequence *AtomicOperation::transaction()
@@ -1291,7 +1291,7 @@ Akonadi::TransactionSequence *AtomicOperation::transaction()
     m_transaction = new Akonadi::TransactionSequence;
     m_transaction->setAutomaticCommittingEnabled( true );
 
-    m_incidenceChangerPrivate->mAtomicOperationByTransaction.insert( m_transaction, id );
+    m_incidenceChangerPrivate->mAtomicOperationByTransaction.insert( m_transaction, m_id );
 
     QObject::connect( m_transaction, SIGNAL(result(KJob*)),
                       m_incidenceChangerPrivate, SLOT(handleTransactionJobResult(KJob*)) );
