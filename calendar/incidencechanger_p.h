@@ -177,22 +177,10 @@ struct AtomicOperation {
 
   // Number of completed changes(jobs)
   int numCompletedChanges;
-  Akonadi::TransactionSequence *transaction;
   QString description;
   bool transactionCompleted;
 
-  AtomicOperation( uint ident ) :
-            id ( ident ),
-            endCalled( false ),
-            numCompletedChanges( 0 ),
-            transaction( 0 ),
-            transactionCompleted(false),
-            wasRolledback( false )
-  {
-    Q_ASSERT( id != 0 );
-    transaction = new Akonadi::TransactionSequence;
-    transaction->setAutomaticCommittingEnabled( true );
-  }
+  AtomicOperation( IncidenceChanger::Private *icp, uint ident );
 
   ~AtomicOperation()
   {
@@ -222,7 +210,7 @@ struct AtomicOperation {
   {
     //kDebug() << "AtomicOperation::setRolledBack()";
     wasRolledback = true;
-    transaction->rollback();
+    transaction()->rollback();
   }
 
   bool rolledback() const
@@ -246,9 +234,13 @@ struct AtomicOperation {
     changes << change;
   }
 
+  Akonadi::TransactionSequence *transaction();
+
 private:
   QVector<Change::Ptr> changes;
   bool wasRolledback;
+  Akonadi::TransactionSequence *m_transaction; // constructed in first use
+  IncidenceChanger::Private *m_incidenceChangerPrivate;
 };
 
 class IncidenceChanger::Private : public QObject

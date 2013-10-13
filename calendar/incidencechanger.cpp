@@ -188,7 +188,7 @@ bool IncidenceChanger::Private::hasRights( const Collection &collection,
 Akonadi::Job* IncidenceChanger::Private::parentJob( const Change::Ptr &change ) const
 {
   return (mBatchOperationInProgress && !change->queuedModification) ?
-                                       mAtomicOperations[mLatestAtomicOperationId]->transaction : 0;
+              mAtomicOperations[mLatestAtomicOperationId]->transaction() : 0;
 }
 
 void IncidenceChanger::Private::queueModification( Change::Ptr change )
@@ -974,13 +974,9 @@ void IncidenceChanger::startAtomicOperation( const QString &operationDescription
   ++d->mLatestAtomicOperationId;
   d->mBatchOperationInProgress = true;
 
-  AtomicOperation *atomicOperation = new AtomicOperation( d->mLatestAtomicOperationId );
+  AtomicOperation *atomicOperation = new AtomicOperation( d, d->mLatestAtomicOperationId );
   atomicOperation->description = operationDescription;
   d->mAtomicOperations.insert( d->mLatestAtomicOperationId, atomicOperation );
-  d->mAtomicOperationByTransaction.insert( atomicOperation->transaction, d->mLatestAtomicOperationId );
-
-  d->connect( atomicOperation->transaction, SIGNAL(result(KJob*)),
-              d, SLOT(handleTransactionJobResult(KJob*)) );
 }
 
 void IncidenceChanger::endAtomicOperation()
@@ -1275,3 +1271,31 @@ void IncidenceChanger::cancelAttendees( const Akonadi::Item &aitem )
 }
 
 */
+
+AtomicOperation::AtomicOperation( IncidenceChanger::Private *icp,
+                                  uint ident ) : id ( ident )
+                                               , endCalled( false )
+                                               , numCompletedChanges( 0 )
+                                               , transactionCompleted( false )
+                                               , wasRolledback( false )
+                                               , m_transaction( 0 )
+                                               , m_incidenceChangerPrivate( icp )
+
+{
+  Q_ASSERT( id != 0 );
+}
+
+Akonadi::TransactionSequence *AtomicOperation::transaction()
+{
+  if ( !m_transaction ) {
+    m_transaction = new Akonadi::TransactionSequence;
+    m_transaction->setAutomaticCommittingEnabled( true );
+
+    m_incidenceChangerPrivate->mAtomicOperationByTransaction.insert( m_transaction, id );
+
+    QObject::connect( m_transaction, SIGNAL(result(KJob*)),
+                      m_incidenceChangerPrivate, SLOT(handleTransactionJobResult(KJob*)) );
+  }
+
+  return m_transaction;
+}
