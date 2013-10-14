@@ -19,7 +19,6 @@
 
 // mailclient_p.cpp isn't exported so we include it directly.
 
-#define MAILCLIENTTEST_UNITTEST
 #include "../mailclient_p.cpp"
 #include "../moc_mailclient_p.cpp"
 
