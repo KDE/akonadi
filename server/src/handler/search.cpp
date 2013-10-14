@@ -81,9 +81,7 @@ bool Search::parseStream()
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( AKONADI_CMD_SEARCH ) ) {
-    return false;
-  }
+  fetchHelper.parseStream( AKONADI_CMD_SEARCH );
 
   successResponse( "SEARCH completed" );
   return true;

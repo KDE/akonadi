@@ -43,9 +43,7 @@ bool Fetch::parseStream()
   connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
            this, SIGNAL(responseAvailable(Akonadi::Response)) );
 
-  if ( !fetchHelper.parseStream( AKONADI_CMD_ITEMFETCH ) ) {
-    return false;
-  }
+  fetchHelper.parseStream( AKONADI_CMD_ITEMFETCH );
 
   if ( mScope.scope() == Scope::Uid ) {
     successResponse( "UID FETCH completed" );
