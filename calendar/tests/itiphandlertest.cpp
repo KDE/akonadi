@@ -74,7 +74,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     //----------------------------------------------------------------------------------------------
     // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
-    data_filename = QLatin1String("invitation");
+    data_filename = QLatin1String("invitation_us");
     QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult;
 
     //----------------------------------------------------------------------------------------------

@@ -16,6 +16,7 @@ include_directories( ${CMAKE_BINARY_DIR}/kcalcore
                      ${CMAKE_BINARY_DIR}/akonadi/kmime
                      ${CMAKE_BINARY_DIR}/mailtransport )
 
+add_definitions(-DITIP_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/itip_data\\"" )
 
 set(common_sources unittestbase.cpp helper.cpp)
 
