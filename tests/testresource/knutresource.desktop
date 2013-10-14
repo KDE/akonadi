@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Knut
+Name[ca]=Knut
 Name[de]=Knut
 Name[kk]=Knut
 Name[nl]=Knut
@@ -14,6 +15,7 @@ Name[sv]=Knut
 Name[uk]=Knut
 Name[x-test]=xxKnutxx
 Comment=An agent for debugging purpose
+Comment[ca]=Un agent amb la finalitat de depuració
 Comment[de]=Agent für die Fehlersuche
 Comment[kk]=Жөндеу агенті
 Comment[nl]=Een agent voor debugging-doeleinden
