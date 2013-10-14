@@ -43,9 +43,7 @@ class IdleClient : public QObject
     virtual ~IdleClient();
 
     bool acceptsNotification( const NotificationMessageV2 &msg );
-    void dispatchNotification( const NotificationMessageV2 &msg,
-                               const FetchHelper &helper,
-                               QSqlQuery &itemsQuery );
+    void dispatchNotification( const Akonadi::Response &response );
     void dispatchNotification( const NotificationMessageV2 &msg,
                                const Collection &collection );
 

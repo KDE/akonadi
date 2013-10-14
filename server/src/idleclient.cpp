@@ -390,50 +390,13 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
   return false;
 }
 
-void IdleClient::dispatchNotification( const NotificationMessageV2 &msg,
-                                       const FetchHelper &helper,
-                                       QSqlQuery &itemsQuery )
+void IdleClient::dispatchNotification( const Response &response )
 {
   // Assert? Manager should make sure it ignores offline clients
   if ( mConnection == 0 ) {
     return;
   }
 
-  // First handle operations that we can do in simple batches
-  int notifications = 0;
-  while ( itemsQuery.isValid() ) {
-    QByteArray str;
-    if ( msg.operation() == NotificationMessageV2::Add ) {
-      str = "ADD";
-    } else if ( msg.operation() == NotificationMessageV2::Modify ) {
-      str = "MODIFY";
-    } else if ( msg.operation() == NotificationMessageV2::ModifyFlags ) {
-      str = "MODIFYFLAGS";
-    } else if ( msg.operation() == NotificationMessageV2::Move ) {
-      str = "MOVE";
-    } else if ( msg.operation() == NotificationMessageV2::Remove ) {
-      str = "REMOVE";
-    } else if ( msg.operation() == NotificationMessageV2::Link ) {
-      str = "LINK";
-    } else if ( msg.operation() == NotificationMessageV2::Unlink ) {
-      str = "UNLINK";
-    }
-
-    Entity::Id id = helper.extractQueryResult( itemsQuery, FetchHelper::ItemQueryPimItemIdColumn ).toLongLong();
-    str += ' ' + QByteArray::number( id ) + ' ' + msg.toString().toLatin1();
-
-    Response response;
-    response.setUntagged();
-    response.setString( str );
-    Q_EMIT responseAvailable( response );
-
-    ++notifications;
-    itemsQuery.next();
-  }
-
-  Response response;
-  response.setTag( "+" );
-  response.setString( "IDLE (" + QByteArray::number( notifications ) + ')' );
   Q_EMIT responseAvailable( response );
 }
 

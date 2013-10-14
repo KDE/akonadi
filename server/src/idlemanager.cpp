@@ -23,6 +23,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/queryhelper.h"
 #include "storage/itemqueryhelper.h"
+#include "response.h"
 #include "libs/protocol_p.h"
 #include "akdebug.h"
 
@@ -73,6 +74,7 @@ void IdleManager::registerClient( IdleClient *client )
 {
   QWriteLocker locker( &mRegistrarLock );
   if ( mClientsRegistrar.contains( client->connection()->sessionId() ) ) {
+    client->done();
     throw IdleException( "IDLE session for this connection already exists" );
   }
 
@@ -103,11 +105,32 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
   QTime timer;
   timer.start();
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
-    FetchHelper *helper = 0;
-    QSqlQuery itemsQuery;
+    QByteArray command;
+    if ( msg.operation() == NotificationMessageV2::Add ) {
+      command = "ADD";
+    } else if ( msg.operation() == NotificationMessageV2::Modify ) {
+      command = "MODIFY";
+    } else if ( msg.operation() == NotificationMessageV2::ModifyFlags ) {
+      command = "MODIFYFLAGS";
+    } else if ( msg.operation() == NotificationMessageV2::Move ) {
+      command = "MOVE";
+    } else if ( msg.operation() == NotificationMessageV2::Remove ) {
+      command = "REMOVE";
+    } else if ( msg.operation() == NotificationMessageV2::Link ) {
+      command = "LINK";
+    } else if ( msg.operation() == NotificationMessageV2::Unlink ) {
+      command = "UNLINK";
+    }
 
     if ( msg.type() == NotificationMessageV2::Collections ) {
       collection = fetchCollection( msg );
+      mRegistrarLock.lockForRead();
+      Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
+        if ( client->acceptsNotification( msg ) ) {
+            client->dispatchNotification( msg, collection );
+        }
+      }
+      mRegistrarLock.unlock();
     } else if ( msg.type() == Akonadi::NotificationMessageV2::Items ) {
       if ( msg.operation() != NotificationMessageV2::Remove ) {
         ImapSet set;
@@ -115,36 +138,20 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         Scope scope( Scope::Uid );
         scope.setUidSet( set );
 
-        helper = new FetchHelper( scope, mFetchScope );
-        itemsQuery = helper->buildItemQuery();
-        /*
-        QSqlQuery partQuery = helper.buildPartQuery( QVector<QByteArray>(), true, true );
-        QSqlQuery flagQuery = helper.buildFlagQuery();
-        */
+        FetchHelper fetchHelper( scope );
+        fetchHelper.setProperty( "NotificationMessageV2", QVariant::fromValue( msg ) );
+        // FIXME: We assume, that if client supports IDLE, it has to support NOPAYLOADPATH
+        fetchHelper.setResolvePayloadPath( false );
+        connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
+                 this, SLOT(fetchHelperResponseAvailable(Akonadi::Response)) );
+        int count = fetchHelper.parseStream( command, mFetchScope );
 
-        if ( itemsQuery.size() == 0 ) {
-          akDebug() << "Skipping a notification: got no items from DB";
-          continue;
-        }
+        Response response;
+        response.setTag( "+" );
+        response.setString( "IDLE (" + QByteArray::number( count ) + ')' );
+        fetchHelperResponseAvailable( response );
       }
     }
-    akDebug() << "Fetched and extracted" << itemsQuery.size() << "items in" << timer.elapsed() << "ms";
-
-    timer.start();
-    int acceptingClients = 0;
-    mRegistrarLock.lockForRead();
-    Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
-      if ( client->acceptsNotification( msg ) ) {
-        ++acceptingClients;
-        if ( msg.type() == NotificationMessageV2::Collections ) {
-          client->dispatchNotification( msg, collection );
-        } else if ( msg.type() == NotificationMessageV2::Items ) {
-          client->dispatchNotification( msg, *helper, itemsQuery );
-        }
-      }
-    }
-    mRegistrarLock.unlock();
-    akDebug() << "Dispatched notification to" << acceptingClients << "clients in" << timer.elapsed() << "ms";
   }
 }
 
@@ -161,4 +168,23 @@ void IdleManager::updateGlobalFetchScope( const FetchScope &oldFetchScope,
                                           const FetchScope &newFetchScope )
 {
   // TODO
+}
+
+void IdleManager::fetchHelperResponseAvailable( const Response &response )
+{
+  QReadLocker locker( &mRegistrarLock );
+
+  // HACK: Called by FetchHelper, or directly?
+  if ( sender() ) {
+    const NotificationMessageV2 &msg = sender()->property( "NotificationMessageV2" ).value<NotificationMessageV2>();
+    Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
+      if ( client->acceptsNotification( msg ) ) {
+        client->dispatchNotification( response );
+      }
+    }
+  } else {
+    Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
+      client->dispatchNotification( response );
+    }
+  }
 }

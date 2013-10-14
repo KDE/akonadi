@@ -64,11 +64,12 @@ class IdleManager : public QObject
     explicit IdleManager();
     static IdleManager *s_instance;
 
-
-  private:
     // We don't support batch operations on collections (yet), so msg
     // will always have only one collection
     Collection fetchCollection( const NotificationMessageV2 &msg );
+
+  private Q_SLOTS:
+    void fetchHelperResponseAvailable( const Akonadi::Response &response );
 
   private:
     QHash<QByteArray, IdleClient*> mClientsRegistrar;
