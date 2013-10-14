@@ -216,25 +216,25 @@ const QSet<QByteArray> &IdleClient::ignoredSessions() const
   return mIgnoredSessions;
 }
 
-void IdleClient::setMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
+void IdleClient::setMonitoredOperations( const QSet<Idle::Operation> &operations )
 {
   mMonitoredOperations = operations;
   updateMonitorAll();
 }
 
-void IdleClient::addMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
+void IdleClient::addMonitoredOperations( const QSet<Idle::Operation> &operations )
 {
   mMonitoredOperations += operations;
   updateMonitorAll();
 }
 
-void IdleClient::removeMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
+void IdleClient::removeMonitoredOperations( const QSet<Idle::Operation> &operations )
 {
   mMonitoredOperations -= operations;
   updateMonitorAll();
 }
 
-const QSet<Idle::IdleOperation> &IdleClient::monitoredOperations() const
+const QSet<Idle::Operation> &IdleClient::monitoredOperations() const
 {
   return mMonitoredOperations;
   updateMonitorAll();

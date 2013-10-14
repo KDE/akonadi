@@ -234,17 +234,17 @@ QSet<QByteArray> IdleHandler::parseStringList()
 }
 
 
-QSet<Idle::IdleOperation> IdleHandler::parseOperationsList()
+QSet<Idle::Operation> IdleHandler::parseOperationsList()
 {
   if ( !m_streamParser->hasList() ) {
     throw HandlerException( "Invalid filter" );
   }
 
-  QSet<Idle::IdleOperation> operations;
+  QSet<Idle::Operation> operations;
   m_streamParser->beginList();
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray operation = m_streamParser->readString();
-    Idle::IdleOperation op = Idle::commandToOperation( operation );
+    Idle::Operation op = Idle::commandToOperation( operation );
     if ( op == Idle::InvalidOperation ) {
       throw HandlerException( "Invalid operation" );
     } else {

@@ -24,7 +24,7 @@
 
 using namespace Akonadi;
 
-Idle::IdleOperation Idle::commandToOperation( const QByteArray &command )
+Idle::Operation Idle::commandToOperation( const QByteArray &command )
 {
   if ( command == AKONADI_OPERATION_ADD ) {
     return Akonadi::Idle::Add;
@@ -49,7 +49,7 @@ Idle::IdleOperation Idle::commandToOperation( const QByteArray &command )
   return Akonadi::Idle::InvalidOperation;
 }
 
-QByteArray Idle::operationToCommand( Idle::IdleOperation operation )
+QByteArray Idle::operationToCommand( Idle::Operation operation )
 {
   switch ( operation ) {
   case Akonadi::Idle::Add:

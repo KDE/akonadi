@@ -43,7 +43,7 @@ class IdleHandler : public Handler
     void parseFilter( IdleClient *client );
     void parseFetchScope( IdleClient *client );
     QSet<qint64> parseIdList();
-    QSet<Idle::IdleOperation> parseOperationsList();
+    QSet<Idle::Operation> parseOperationsList();
     QSet<QByteArray> parseStringList();
 };
 

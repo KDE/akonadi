@@ -28,7 +28,7 @@ namespace Akonadi
 {
   namespace Idle {
 
-    enum IdleOperation {
+    enum Operation {
       InvalidOperation,
       Add,
       Modify,
@@ -41,8 +41,14 @@ namespace Akonadi
       Unsubsrcibe
     };
 
-    AKONADIPROTOCOLINTERNALS_EXPORT Idle::IdleOperation commandToOperation( const QByteArray &command );
-    AKONADIPROTOCOLINTERNALS_EXPORT QByteArray operationToCommand( Idle::IdleOperation operation );
+    enum Type {
+      InvalidType,
+      Item,
+      Collection
+    };
+
+    AKONADIPROTOCOLINTERNALS_EXPORT Idle::Operation commandToOperation( const QByteArray &command );
+    AKONADIPROTOCOLINTERNALS_EXPORT QByteArray operationToCommand( Idle::Operation operation );
   }
 }
 
