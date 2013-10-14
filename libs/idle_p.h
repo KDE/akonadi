@@ -17,36 +17,33 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_IDLE_H
-#define AKONADI_IDLE_H
+#ifndef AKONADI_IDLE_P_H
+#define AKONADI_IDLE_P_H
 
-#include "handler.h"
-#include "scope.h"
-#include <libs/idle_p.h>
+#include "akonadiprotocolinternals_export.h"
 
-namespace Akonadi {
+class QByteArray;
 
-class IdleClient;
-
-class IdleHandler : public Handler
+namespace Akonadi
 {
-  Q_OBJECT
-  public:
-    IdleHandler();
+  namespace Idle {
 
-    virtual bool parseStream();
+    enum IdleOperation {
+      InvalidOperation,
+      Add,
+      Modify,
+      ModifyFlags,
+      Remove,
+      Move,
+      Link,
+      Unlink,
+      Subscribe,
+      Unsubsrcibe
+    };
 
-  private:
-    void startIdle();
-    void updateFilter();
-
-    void parseFilter( IdleClient *client );
-    void parseFetchScope( IdleClient *client );
-    QSet<qint64> parseIdList();
-    QSet<Idle::IdleOperation> parseOperationsList();
-    QSet<QByteArray> parseStringList();
-};
-
+    AKONADIPROTOCOLINTERNALS_EXPORT Idle::IdleOperation commandToOperation( const QByteArray &command );
+    AKONADIPROTOCOLINTERNALS_EXPORT QByteArray operationToCommand( Idle::IdleOperation operation );
+  }
 }
 
-#endif // AKONADI_IDLE_H
+#endif // AKONADI_IDLE_P_H

@@ -26,6 +26,7 @@
 
 #include "fetchhelper.h"
 #include "idlemanager.h"
+#include <libs/idle_p.h>
 
 namespace Akonadi
 {
@@ -90,10 +91,10 @@ class IdleClient : public QObject
     void removeIgnoredSessions( const QSet<QByteArray> &sessions );
     const QSet<QByteArray> &ignoredSessions() const;
 
-    void setMonitoredOperations( const QSet<QByteArray> &operations );
-    void addMonitoredOperations( const QSet<QByteArray> &operations );
-    void removeMonitoredOperations( const  QSet<QByteArray> &operations );
-    const QSet<QByteArray> &monitoredOperations() const;
+    void setMonitoredOperations( const QSet<Idle::IdleOperation> &operations );
+    void addMonitoredOperations( const QSet<Idle::IdleOperation> &operations );
+    void removeMonitoredOperations( const  QSet<Idle::IdleOperation> &operations );
+    const QSet<Idle::IdleOperation> &monitoredOperations() const;
 
   Q_SIGNALS:
     void responseAvailable( const Akonadi::Response &response );
@@ -124,7 +125,7 @@ class IdleClient : public QObject
     QSet<qint64> mMonitoredCollections;
     QSet<QByteArray> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
-    QSet<QByteArray> mMonitoredOperations;
+    QSet<Idle::IdleOperation> mMonitoredOperations;
     QSet<QByteArray> mIgnoredSessions;
 };
 

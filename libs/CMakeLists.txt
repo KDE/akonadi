@@ -4,6 +4,7 @@ configure_file(akonadiprotocolinternals_export.h.in ${Akonadi_BINARY_DIR}/akonad
 
 # libakonadiprotocolinternals
 set(akonadiprotocolinternals_srcs
+  idle.cpp
   imapparser.cpp
   imapset.cpp
   notificationmessage.cpp
@@ -24,6 +25,7 @@ install(TARGETS akonadiprotocolinternals EXPORT akonadiLibraryTargets ${INSTALL_
 
 install(FILES
   ${Akonadi_BINARY_DIR}/akonadiprotocolinternals_export.h
+  idle_p.h
   imapparser_p.h
   imapset_p.h
   notificationmessage_p.h

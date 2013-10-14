@@ -216,25 +216,25 @@ const QSet<QByteArray> &IdleClient::ignoredSessions() const
   return mIgnoredSessions;
 }
 
-void IdleClient::setMonitoredOperations( const QSet<QByteArray> &operations )
+void IdleClient::setMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
 {
   mMonitoredOperations = operations;
   updateMonitorAll();
 }
 
-void IdleClient::addMonitoredOperations( const QSet<QByteArray> &operations )
+void IdleClient::addMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
 {
   mMonitoredOperations += operations;
   updateMonitorAll();
 }
 
-void IdleClient::removeMonitoredOperations( const QSet<QByteArray> &operations )
+void IdleClient::removeMonitoredOperations( const QSet<Idle::IdleOperation> &operations )
 {
   mMonitoredOperations -= operations;
   updateMonitorAll();
 }
 
-const QSet<QByteArray> &IdleClient::monitoredOperations() const
+const QSet<Idle::IdleOperation> &IdleClient::monitoredOperations() const
 {
   return mMonitoredOperations;
   updateMonitorAll();
@@ -315,15 +315,15 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
     return true;
   }
 
-  if ( ( msg.operation() == NotificationMessageV2::Add && !mMonitoredOperations.contains( AKONADI_OPERATION_ADD ) )
-      || ( msg.operation() == NotificationMessageV2::Modify && !mMonitoredOperations.contains( AKONADI_OPERATION_MODIFY ) )
-      || ( msg.operation() == NotificationMessageV2::ModifyFlags && !mMonitoredOperations.contains( AKONADI_OPERATION_MODIFYFLAGS ) )
-      || ( msg.operation() == NotificationMessageV2::Remove && !mMonitoredOperations.contains( AKONADI_OPERATION_REMOVE ) )
-      || ( msg.operation() == NotificationMessageV2::Move && !mMonitoredOperations.contains( AKONADI_OPERATION_MOVE ) )
-      || ( msg.operation() == NotificationMessageV2::Link && !mMonitoredOperations.contains( AKONADI_OPERATION_LINK ) )
-      || ( msg.operation() == NotificationMessageV2::Unlink && !mMonitoredOperations.contains( AKONADI_OPERATION_UNLINK ) )
-      || ( msg.operation() == NotificationMessageV2::Subscribe && !mMonitoredOperations.contains( AKONADI_OPERATION_SUBSCRIBE ) )
-      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( AKONADI_OPERATION_UNSUBSCRIBE ) ) ) {
+  if ( ( msg.operation() == NotificationMessageV2::Add && !mMonitoredOperations.contains( Idle::Add ) )
+      || ( msg.operation() == NotificationMessageV2::Modify && !mMonitoredOperations.contains( Idle::Modify ) )
+      || ( msg.operation() == NotificationMessageV2::ModifyFlags && !mMonitoredOperations.contains( Idle::ModifyFlags ) )
+      || ( msg.operation() == NotificationMessageV2::Remove && !mMonitoredOperations.contains( Idle::Remove ) )
+      || ( msg.operation() == NotificationMessageV2::Move && !mMonitoredOperations.contains( Idle::Move ) )
+      || ( msg.operation() == NotificationMessageV2::Link && !mMonitoredOperations.contains( Idle::Link ) )
+      || ( msg.operation() == NotificationMessageV2::Unlink && !mMonitoredOperations.contains( Idle::Unlink ) )
+      || ( msg.operation() == NotificationMessageV2::Subscribe && !mMonitoredOperations.contains( Idle::Subscribe ) )
+      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( Idle::Unsubsrcibe ) ) ) {
         return false;
   }
 

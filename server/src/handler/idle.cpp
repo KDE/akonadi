@@ -234,24 +234,21 @@ QSet<QByteArray> IdleHandler::parseStringList()
 }
 
 
-QSet<QByteArray> IdleHandler::parseOperationsList()
+QSet<Idle::IdleOperation> IdleHandler::parseOperationsList()
 {
   if ( !m_streamParser->hasList() ) {
     throw HandlerException( "Invalid filter" );
   }
 
-  QSet<QByteArray> operations;
+  QSet<Idle::IdleOperation> operations;
   m_streamParser->beginList();
   while ( !m_streamParser->atListEnd() ) {
     const QByteArray operation = m_streamParser->readString();
-    if ( operation == AKONADI_OPERATION_ADD || operation == AKONADI_OPERATION_LINK ||
-         operation == AKONADI_OPERATION_MODIFY || operation == AKONADI_OPERATION_MODIFYFLAGS ||
-         operation == AKONADI_OPERATION_MOVE || operation == AKONADI_OPERATION_REMOVE ||
-         operation == AKONADI_OPERATION_SUBSCRIBE || operation == AKONADI_OPERATION_UNLINK ||
-         operation == AKONADI_OPERATION_UNSUBSCRIBE ) {
-      operations << operation;
+    Idle::IdleOperation op = Idle::commandToOperation( operation );
+    if ( op == Idle::InvalidOperation ) {
+      throw HandlerException( "Invalid operation" );
     } else {
-      throw HandlerException( "Invalid filter" );
+      operations << op;
     }
   }
 
