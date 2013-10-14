@@ -45,19 +45,20 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
-FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
-  mStreamParser( 0 ),
-  mConnection( connection ),
-  mScope( scope )
+FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
+  : mStreamParser( 0 )
+  , mConnection( connection )
+  , mScope( scope )
+  , mResolvePayloadPath( false )
 {
   std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
 
-FetchHelper::FetchHelper( const Scope &scope, const FetchScope &fetchScope)
+FetchHelper::FetchHelper( const Scope &scope )
   : mStreamParser( 0 )
   , mConnection( 0 )
   , mScope( scope )
-  , mFetchScope( fetchScope )
+  , mResolvePayloadPath( false )
 {
   std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, - 1);
 }
@@ -66,6 +67,16 @@ FetchHelper::FetchHelper( const Scope &scope, const FetchScope &fetchScope)
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
 {
   mStreamParser = parser;
+}
+
+void FetchHelper::setResolvePayloadPath( bool resolve )
+{
+  mResolvePayloadPath = resolve;
+}
+
+bool FetchHelper::resolvePayloadPath() const
+{
+  return mResolvePayloadPath;
 }
 
 enum PartQueryColumns {
@@ -158,8 +169,12 @@ QSqlQuery FetchHelper::buildItemQuery()
 
   itemQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
-  if ( mScope.scope() != Scope::Invalid ) {
+  if ( !mConnection && mScope.scope() == Scope::Uid ) {
+    ItemQueryHelper::itemSetToQuery( mScope.uidSet(), itemQuery );
+  } else if ( mConnection && mScope.scope() != Scope::Invalid ) {
     ItemQueryHelper::scopeToQuery( mScope, mConnection, itemQuery );
+  } else {
+    throw new HandlerException( "Can't use other than UID retrieval without connection" );
   }
 
   const QDateTime changedSince = mFetchScope.changedSince();
@@ -208,15 +223,28 @@ QSqlQuery FetchHelper::buildFlagQuery()
   return flagQuery.query();
 }
 
-bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
+int FetchHelper::parseStream( const QByteArray &responseIdentifier )
 {
-  Q_ASSERT( mConnection );
+  Q_ASSERT( mStreamParser );
 
-  mFetchScope = FetchScope( mStreamParser );
-  triggerOnDemandFetch();
+  return parseStream( responseIdentifier, FetchScope( mStreamParser ) );
+}
+
+int FetchHelper::parseStream( const QByteArray &responseIdentifier, const FetchScope &fetchScope )
+{
+  mFetchScope = fetchScope;
+
+  // mConnection is null when FetchHelper is used outside of a Handler, for instance
+  // in IdleManager
+  if ( mConnection ) {
+    triggerOnDemandFetch();
+  }
 
   // retrieve missing parts
   if ( !mFetchScope.cacheOnly() ) {
+    if ( !mConnection ) {
+      throw new HandlerException( "Fetch without connection only allowed for cached-only items" );
+    }
     // Prepare for a call to ItemRetriever::exec();
     // From a resource perspective the only parts that can be fetched are payloads.
     ItemRetriever retriever( mConnection );
@@ -269,6 +297,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   // build responses
   Response response;
   response.setUntagged();
+  int responseCount = 0;
   while ( itemQuery.isValid() ) {
     const qint64 pimItemId = extractQueryResult( itemQuery, ItemQueryPimItemIdColumn ).toLongLong();
     const int pimItemRev = extractQueryResult( itemQuery, ItemQueryRevColumn ).toInt();
@@ -372,7 +401,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
           part += " \"\"";
         } else {
           if ( partIsExternal ) {
-            if ( !mConnection->capabilities().noPayloadPath() ) {
+            if ( mResolvePayloadPath || ( mConnection && !mConnection->capabilities().noPayloadPath() ) ) {
               data = PartHelper::resolveAbsolutePath( data ).toLocal8Bit();
             }
           }
@@ -389,7 +418,7 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       }
     }
 
-    if (skipItem) {
+    if ( skipItem ) {
       itemQuery.next();
       continue;
     }
@@ -404,19 +433,21 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     response.setUntagged();
     response.setString( attr );
     Q_EMIT responseAvailable( response );
+    ++responseCount;
 
     itemQuery.next();
   }
 
-  // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
-  if ( needsAccessTimeUpdate( requestedParts ) || mFetchScope.fullPayload() ) {
+  // update atime (only if the payload was actually requested, otherwise a simple
+  // resource sync prevents cache clearing and only when mConnection is available)
+  if ( mConnection && ( needsAccessTimeUpdate( requestedParts ) || mFetchScope.fullPayload() ) ) {
     updateItemAccessTime();
   }
 
-  return true;
+  return responseCount;
 }
 
-bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray>& parts)
+bool FetchHelper::needsAccessTimeUpdate( const QVector<QByteArray> &parts )
 {
   // TODO technically we should compare the part list with the cache policy of
   // the parent collection of the retrieved items, but that's kinda expensive
@@ -427,6 +458,8 @@ bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray>& parts)
 
 void FetchHelper::updateItemAccessTime()
 {
+  Q_ASSERT( mConnection );
+
   Transaction transaction( mConnection->storageBackend() );
   QueryBuilder qb( PimItem::tableName(), QueryBuilder::Update );
   qb.setColumnValue( PimItem::atimeColumn(), QDateTime::currentDateTime() );
@@ -441,6 +474,8 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
+  Q_ASSERT( mConnection );
+
   if ( mScope.scope() != Scope::None || mConnection->selectedCollectionId() <= 0 || mFetchScope.cacheOnly() ) {
     return;
   }

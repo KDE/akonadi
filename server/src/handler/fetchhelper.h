@@ -42,6 +42,21 @@ class FetchHelper : public QObject
   Q_OBJECT
 
   public:
+    FetchHelper( AkonadiConnection *connection, const Scope &scope );
+    FetchHelper( const Scope &scope );
+
+    void setStreamParser( ImapStreamParser *parser );
+
+    int parseStream( const QByteArray &responseIdentifier );
+    int parseStream( const QByteArray &responseIdentifier, const FetchScope &fetchScope );
+
+    void setResolvePayloadPath( bool resolve );
+    bool resolvePayloadPath() const;
+
+  Q_SIGNALS:
+    void responseAvailable( const Akonadi::Response& );
+
+  private:
     enum ItemQueryColumns {
       ItemQueryPimItemIdColumn,
       ItemQueryPimItemRidColumn,
@@ -55,30 +70,14 @@ class FetchHelper : public QObject
       ItemQueryColumnCount
     };
 
-    FetchHelper( AkonadiConnection *connection, const Scope &scope );
-    FetchHelper( const Scope &scope, const FetchScope &fetchScope );
-
-    void setStreamParser( ImapStreamParser *parser );
-
-    bool parseStream( const QByteArray &responseIdentifier );
-
-    QSqlQuery buildItemQuery();
-
-    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
-
-    QSqlQuery buildFlagQuery();
-
-    QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
-
-  Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response& );
-
-  private:
-
     void updateItemAccessTime();
     void triggerOnDemandFetch();
+    QSqlQuery buildItemQuery();
+    QSqlQuery buildPartQuery( const QVector<QByteArray> &partList, bool allPayload, bool allAttrs );
+    QSqlQuery buildFlagQuery();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
     static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
+    QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
 
   private:
     ImapStreamParser *mStreamParser;
@@ -88,6 +87,7 @@ class FetchHelper : public QObject
     QHash<Collection::Id, QStack<Collection> > mAncestorCache;
     int mItemQueryColumnMap[ItemQueryColumnCount];
     FetchScope mFetchScope;
+    bool mResolvePayloadPath;
 
     friend class ::FetchHelperTest;
 };
