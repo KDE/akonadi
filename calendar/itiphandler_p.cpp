@@ -98,7 +98,7 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
 {
   const bool success = result == MailScheduler::ResultSuccess;
 
-  if ( m_method != KCalCore::iTIPCounter) {
+  if ( m_method == KCalCore::iTIPCounter) {
     if ( success ) {
       // send update to all attendees
       Q_ASSERT( m_incidence );
@@ -119,8 +119,8 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
     }
   }
 
-  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
-                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+  emit q->iTipMessageProcessed( success ? ResultSuccess : ResultError,
+                                success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
 void ITIPHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
