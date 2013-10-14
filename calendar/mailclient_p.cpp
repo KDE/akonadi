@@ -46,6 +46,7 @@
 using namespace Akonadi;
 
 MailClient::MailClient( QObject *parent ) : QObject( parent )
+                                          , mRunningUnitTests( false )
 {
 }
 
@@ -198,14 +199,7 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
   Q_UNUSED( identity );
   Q_UNUSED( hidden );
 
-#ifdef MAILCLIENTTEST_UNITTEST
-  mUnitTestResult.message = KMime::Message::Ptr();
-  mUnitTestResult.from.clear();
-  mUnitTestResult.to.clear();
-  mUnitTestResult.cc.clear();
-  mUnitTestResult.bcc.clear();
-  mUnitTestResult.transportId = -1;
-#endif
+  UnitTestResult unitTestResult;
 
   if ( !MailTransport::TransportManager::self()->showTransportCreationDialog(
         0, MailTransport::TransportManager::IfNoTransportExists ) ) {
@@ -370,18 +364,26 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
     bccStringList = extractEmailAndNormalize( from );
     qjob->addressAttribute().setBcc( bccStringList );
   }
-  qjob->setMessage( message );
-  connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
-  qjob->start();
 
-#ifdef MAILCLIENTTEST_UNITTEST
-  mUnitTestResult.message            = message;
-  mUnitTestResult.from               = finalFrom;
-  mUnitTestResult.to                 = toStringList;
-  mUnitTestResult.cc                 = ccStringList;
-  mUnitTestResult.bcc                = bccStringList;
-  mUnitTestResult.transportId        = transportId;
-#endif
+  if ( mRunningUnitTests ) {
+    unitTestResult.message     = message;
+    unitTestResult.from        = finalFrom;
+    unitTestResult.to          = toStringList;
+    unitTestResult.cc          = ccStringList;
+    unitTestResult.bcc         = bccStringList;
+    unitTestResult.transportId = transportId;
+    mUnitTestResults << unitTestResult;
+    qjob->deleteLater();
+
+    QMetaObject::invokeMethod( this, "finished", Qt::QueuedConnection,
+                               Q_ARG( Akonadi::MailClient::Result, ResultSuccess ),
+                               Q_ARG( QString, QString() ) );
+
+  } else {
+    qjob->setMessage( message );
+    connect( qjob, SIGNAL(finished(KJob*)), SLOT(handleQueueJobFinished(KJob*)) );
+    qjob->start();
+  }
 }
 
 void MailClient::handleQueueJobFinished( KJob *job )
