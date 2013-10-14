@@ -19,12 +19,12 @@
 
 // mailclient_p.cpp isn't exported so we include it directly.
 
-#include "../mailclient_p.cpp"
-#include "../moc_mailclient_p.cpp"
+#include "../mailclient_p.h"
 
 #include <kcalcore/incidence.h>
 #include <kcalcore/freebusy.h>
 #include <mailtransport/messagequeuejob.h>
+#include <kpimidentities/identity.h>
 
 #include <akonadi/qtest_akonadi.h>
 

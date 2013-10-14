@@ -4,6 +4,13 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+
+# TODO: Add a cmake option for this and enable it on jenkins
+set( PLEASE_TEST_INVITATIONS FALSE)
+if ( PLEASE_TEST_INVITATIONS )
+  add_definitions( -DPLEASE_TEST_INVITATIONS )
+endif()
+
 add_subdirectory( tests )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -UQT_NO_CAST_FROM_ASCII -UQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}")

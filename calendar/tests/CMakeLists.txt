@@ -21,9 +21,13 @@ add_definitions(-DITIP_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/itip_data\\"" )
 set(common_sources unittestbase.cpp helper.cpp)
 
 #add_akonadi_isolated_test_advanced( historytest.cpp "${common_sources}" "")
-#add_akonadi_isolated_test_advanced( itiphandlertest.cpp "${common_sources}" "")
 #add_akonadi_isolated_test( incidencechangertest.cpp )
-#add_akonadi_isolated_test( mailclienttest.cpp )
 #add_akonadi_isolated_test( calendarbasetest.cpp )
 #add_akonadi_isolated_test( fetchjobcalendartest.cpp )
 #add_akonadi_isolated_test( etmcalendartest.cpp )
+
+
+if ( PLEASE_TEST_INVITATIONS )
+  add_akonadi_isolated_test_advanced( itiphandlertest.cpp "${common_sources}" "")
+  add_akonadi_isolated_test( mailclienttest.cpp )
+endif()
