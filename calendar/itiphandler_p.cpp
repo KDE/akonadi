@@ -118,8 +118,8 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
     }
   }
 
-  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
-                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+  emit q->iTipMessageProcessed( success ? ResultSuccess : ResultError,
+                                success ? QString() : i18n( "Error: %1", errorMessage ) );
 }
 
 void ITIPHandler::Private::finishSendiTIPMessage( Akonadi::MailScheduler::Result result,
