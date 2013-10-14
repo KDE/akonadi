@@ -97,7 +97,7 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
 {
   const bool success = result == MailScheduler::ResultSuccess;
 
-  if ( m_method != KCalCore::iTIPCounter) {
+  if ( m_method == KCalCore::iTIPCounter) {
     if ( success ) {
       // send update to all attendees
       Q_ASSERT( m_incidence );
