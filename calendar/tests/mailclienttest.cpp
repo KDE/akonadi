@@ -57,7 +57,7 @@ private slots:
 
     mPendingSignals = 0;
     mMailClient = new MailClient( this );
-    mMailClient->mRunningUnitTests = true;
+    mMailClient->sRunningUnitTests = true;
     mLastResult = MailClient::ResultSuccess;
     connect( mMailClient, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
              SLOT(handleFinished(Akonadi::MailClient::Result,QString)) );
@@ -194,7 +194,7 @@ private slots:
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedCcList  );
     QFETCH( QStringList, expectedBccList );
-    mMailClient->mUnitTestResults.clear();
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailAttendees( incidence, identity, bccMe, attachment, transport );
@@ -207,10 +207,10 @@ private slots:
     }
 
     UnitTestResult unitTestResult;
-    if ( mMailClient->mUnitTestResults.isEmpty() ) {
+    if ( mMailClient->sUnitTestResults.isEmpty() ) {
         qDebug() << "mail results are empty";
     } else {
-        unitTestResult = mMailClient->mUnitTestResults.first();
+        unitTestResult = mMailClient->sUnitTestResults.first();
     }
 
     if ( expectedTransportId != -1 && unitTestResult.transportId != expectedTransportId ) {
@@ -288,14 +288,14 @@ private slots:
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedBccList );
     QFETCH( QString, expectedSubject );
-    mMailClient->mUnitTestResults.clear();
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailOrganizer( incidence, identity, from, bccMe, attachment, subject, transport );
     waitForSignals();
     QCOMPARE( mLastResult, expectedResult );
 
-    UnitTestResult unitTestResult = mMailClient->mUnitTestResults.first();
+    UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
     if ( expectedTransportId != -1 )
       QCOMPARE( unitTestResult.transportId, expectedTransportId );
 
@@ -355,13 +355,13 @@ private slots:
     QFETCH( QString, expectedFrom );
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedBccList );
-    mMailClient->mUnitTestResults.clear();
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailTo( incidence, identity, from, bccMe, recipients, attachment, transport );
     waitForSignals();
     QCOMPARE( mLastResult, expectedResult );
-    UnitTestResult unitTestResult = mMailClient->mUnitTestResults.first();
+    UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
     if ( expectedTransportId != -1 )
       QCOMPARE( unitTestResult.transportId, expectedTransportId );
 

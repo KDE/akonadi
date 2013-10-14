@@ -26,7 +26,6 @@
 #include <kmime/kmime_message.h>
 #include <QObject>
 
-
 struct UnitTestResult {
   typedef QList<UnitTestResult> List;
   QString from;
@@ -108,8 +107,9 @@ class MailClient : public QObject
     void finished( Akonadi::MailClient::Result result, const QString &errorString );
 
   public:
-    UnitTestResult::List mUnitTestResults; // So unit-tests can check the result without having to check the mail the transport sent
-    bool mRunningUnitTests;
+    // For unit-test usage, since we can't depend on kdepim-runtime on jenkins
+    static UnitTestResult::List sUnitTestResults;
+    static bool sRunningUnitTests;
 };
 
 }

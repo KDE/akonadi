@@ -45,8 +45,10 @@
 
 using namespace Akonadi;
 
+bool Akonadi::MailClient::sRunningUnitTests = false;
+UnitTestResult::List MailClient::sUnitTestResults;
+
 MailClient::MailClient( QObject *parent ) : QObject( parent )
-                                          , mRunningUnitTests( false )
 {
 }
 
@@ -365,14 +367,14 @@ void MailClient::send( const KPIMIdentities::Identity &identity,
     qjob->addressAttribute().setBcc( bccStringList );
   }
 
-  if ( mRunningUnitTests ) {
+  if ( sRunningUnitTests ) {
     unitTestResult.message     = message;
     unitTestResult.from        = finalFrom;
     unitTestResult.to          = toStringList;
     unitTestResult.cc          = ccStringList;
     unitTestResult.bcc         = bccStringList;
     unitTestResult.transportId = transportId;
-    mUnitTestResults << unitTestResult;
+    sUnitTestResults << unitTestResult;
     qjob->deleteLater();
 
     QMetaObject::invokeMethod( this, "finished", Qt::QueuedConnection,
