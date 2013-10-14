@@ -22,17 +22,16 @@
 
 #include "handler.h"
 #include "scope.h"
-#include <notificationmessagev2_p.h>
 
 namespace Akonadi {
 
 class IdleClient;
 
-class Idle : public Handler
+class IdleHandler : public Handler
 {
   Q_OBJECT
   public:
-    Idle();
+    IdleHandler();
 
     virtual bool parseStream();
 

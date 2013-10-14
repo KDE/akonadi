@@ -25,16 +25,16 @@
 #include "response.h"
 
 #include <libs/protocol_p.h>
-
+#include <libs/idle_p.h>
 
 using namespace Akonadi;
 
-Idle::Idle()
+IdleHandler::IdleHandler()
   : Handler()
 {
 }
 
-bool Idle::parseStream()
+bool IdleHandler::parseStream()
 {
   const QByteArray subcmd = m_streamParser->readString();
   try {
@@ -95,7 +95,7 @@ bool Idle::parseStream()
   return true;
 }
 
-void Idle::startIdle()
+void IdleHandler::startIdle()
 {
   QByteArray clientId;
   bool recordChanges = true;
@@ -135,7 +135,7 @@ void Idle::startIdle()
   IdleManager::self()->registerClient( client );
 }
 
-void Idle::updateFilter()
+void IdleHandler::updateFilter()
 {
   IdleClient *client = IdleManager::self()->clientForConnection( connection() );
   if ( !client ) {
@@ -151,7 +151,7 @@ void Idle::updateFilter()
   }
 }
 
-void Idle::parseFilter( IdleClient *client )
+void IdleHandler::parseFilter( IdleClient *client )
 {
   m_streamParser->beginList();
   while ( m_streamParser->atListEnd() ) {
@@ -198,14 +198,14 @@ void Idle::parseFilter( IdleClient *client )
   }
 }
 
-void Idle::parseFetchScope( IdleClient *client )
+void IdleHandler::parseFetchScope( IdleClient *client )
 {
   m_streamParser->beginList();
   client->setFetchScope( FetchScope( m_streamParser ) );
 }
 
 
-QSet<qint64> Idle::parseIdList()
+QSet<qint64> IdleHandler::parseIdList()
 {
   if ( !m_streamParser->hasList() ) {
     throw HandlerException( "Invalid filter" );
@@ -224,7 +224,7 @@ QSet<qint64> Idle::parseIdList()
   return ids;
 }
 
-QSet<QByteArray> Idle::parseStringList()
+QSet<QByteArray> IdleHandler::parseStringList()
 {
   if ( !m_streamParser->hasList() ) {
     throw HandlerException( "Invalid filter" );
@@ -234,7 +234,7 @@ QSet<QByteArray> Idle::parseStringList()
 }
 
 
-QSet<QByteArray> Idle::parseOperationsList()
+QSet<QByteArray> IdleHandler::parseOperationsList()
 {
   if ( !m_streamParser->hasList() ) {
     throw HandlerException( "Invalid filter" );

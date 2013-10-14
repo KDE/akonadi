@@ -143,7 +143,7 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_comman
         return new Store( scope );
     }
     if ( command == AKONADI_CMD_IDLE ) {
-        return new Idle();
+        return new IdleHandler();
     }
     if ( command == AKONADI_CMD_STATUS ) {
         return new Status();
