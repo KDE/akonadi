@@ -2,6 +2,7 @@
 Name=Knut
 Name[ca]=Knut
 Name[de]=Knut
+Name[es]=Knut
 Name[kk]=Knut
 Name[nl]=Knut
 Name[pt]=Knut
@@ -17,6 +18,7 @@ Name[x-test]=xxKnutxx
 Comment=An agent for debugging purpose
 Comment[ca]=Un agent amb la finalitat de depuració
 Comment[de]=Agent für die Fehlersuche
+Comment[es]=Un agente para el propósito de depuración
 Comment[kk]=Жөндеу агенті
 Comment[nl]=Een agent voor debugging-doeleinden
 Comment[pt]=Um agente para fins de depuração
