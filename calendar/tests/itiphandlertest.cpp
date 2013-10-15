@@ -48,10 +48,6 @@ static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlib
 void ITIPHandlerTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
-    m_itipHandler = new Akonadi::ITIPHandler(this);
-    m_itipHandler->setShowDialogsOnError(false);
-    connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
-            SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
     m_pendingItipMessageSignal = 0;
     m_pendingLoadedSignal = 0;
     MailClient::sRunningUnitTests = true;
@@ -76,21 +72,35 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     KCalCore::Attendee::PartStat expectedPartStat;
 
     //----------------------------------------------------------------------------------------------
-    // Someone invited us to an event
+    // Someone invited us to an event, and we accept
     expectedResult = ITIPHandler::ResultSuccess;
     data_filename = QLatin1String("invited_us");
     expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
                            // kmail's text_calendar.cpp.
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Accepted;
-    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult
-                                << expectedNumEmails << expectedNumIncidences
-                                << expectedPartStat;
+    action = QLatin1String("accepted");
+    QTest::newRow("invited us1") << data_filename << action << receiver << expectedResult
+                                 << expectedNumEmails << expectedNumIncidences
+                                 << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event, and we accept conditionally
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
+                           // kmail's text_calendar.cpp.
+    expectedNumIncidences = 1;
+    expectedPartStat = KCalCore::Attendee::Tentative;
+    action = QLatin1String("tentative");
+    QTest::newRow("invited us2") << data_filename << action << receiver << expectedResult
+                                 << expectedNumEmails << expectedNumIncidences
+                                 << expectedPartStat;
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
+    action = QLatin1String("accepted");
     QTest::newRow("invalid data") << QString() << action << receiver << expectedResult
                                   << expectedNumEmails << expectedNumIncidences
                                   << expectedPartStat;
@@ -100,6 +110,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     data_filename = QLatin1String("invitation_us");
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
+    action = QLatin1String("accepted");
     QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult
                                     << expectedNumEmails << expectedNumIncidences
                                     << expectedPartStat;
@@ -120,6 +131,11 @@ void ITIPHandlerTest::testProcessITIPMessage()
 
     MailClient::sUnitTestResults.clear();
 
+    Akonadi::ITIPHandler *itipHandler = new Akonadi::ITIPHandler(this);
+    itipHandler->setShowDialogsOnError(false);
+    connect(itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
+            SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
+
     m_expectedResult = expectedResult;
 
     data_filename = QLatin1String(ITIP_DATA_DIR) + QLatin1Char('/') + data_filename;
@@ -127,7 +143,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QString iCalData = QString::fromLatin1(readFile(data_filename));
 
     m_pendingItipMessageSignal = 1;
-    m_itipHandler->processiTIPMessage(receiver, iCalData, action);
+    itipHandler->processiTIPMessage(receiver, iCalData, action);
     waitForIt();
 
     QCOMPARE(MailClient::sUnitTestResults.count(), expectedNumEmails);
@@ -163,6 +179,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
     }
 
     delete calendar;
+    delete itipHandler;
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
