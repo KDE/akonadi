@@ -22,6 +22,7 @@
 #include "../mailclient_p.h"
 #include "../fetchjobcalendar.h"
 
+#include <kcalcore/attendee.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/collectionfetchjob.h>
@@ -31,6 +32,7 @@
 
 #include <kcalcore/event.h>
 
+#include <QString>
 #include <QTestEventLoop>
 
 using namespace Akonadi;
@@ -38,6 +40,7 @@ using namespace KCalCore;
 
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ChangeType>)
 Q_DECLARE_METATYPE(Akonadi::ITIPHandler::Result)
+Q_DECLARE_METATYPE(KCalCore::Attendee::PartStat)
 
 static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
 
@@ -62,6 +65,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
     QTest::addColumn<int>("expectedNumEmails");
     QTest::addColumn<int>("expectedNumIncidences");
+    QTest::addColumn<KCalCore::Attendee::PartStat>("expectedPartStat");
 
     QString data_filename;
     QString action = QLatin1String("accepted");
@@ -69,6 +73,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     Akonadi::ITIPHandler::Result expectedResult;
     int expectedNumEmails = 0;
     int expectedNumIncidences = 0;
+    KCalCore::Attendee::PartStat expectedPartStat;
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event
@@ -77,15 +82,18 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
                            // kmail's text_calendar.cpp.
     expectedNumIncidences = 1;
+    expectedPartStat = KCalCore::Attendee::Accepted;
     QTest::newRow("invited us") << data_filename << action << receiver << expectedResult
-                                << expectedNumEmails << expectedNumIncidences;
+                                << expectedNumEmails << expectedNumIncidences
+                                << expectedPartStat;
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
     QTest::newRow("invalid data") << QString() << action << receiver << expectedResult
-                                  << expectedNumEmails << expectedNumIncidences;
+                                  << expectedNumEmails << expectedNumIncidences
+                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
     // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
@@ -93,7 +101,8 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
     QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult
-                                    << expectedNumEmails << expectedNumIncidences;
+                                    << expectedNumEmails << expectedNumIncidences
+                                    << expectedPartStat;
     //----------------------------------------------------------------------------------------------
 
     //----------------------------------------------------------------------------------------------
@@ -107,6 +116,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
     QFETCH(int, expectedNumEmails);
     QFETCH(int, expectedNumIncidences);
+    QFETCH(KCalCore::Attendee::PartStat, expectedPartStat);
 
     MailClient::sUnitTestResults.clear();
 
@@ -128,10 +138,22 @@ void ITIPHandlerTest::testProcessITIPMessage()
     waitForIt();
 
     Item::List items = calendar->items();
-
     QCOMPARE(items.count(), expectedNumIncidences);
 
-    delete calendar;
+    if (expectedNumIncidences == 1) {
+        KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
+        QVERIFY(incidence);
+        KCalCore::Attendee::List attendees = incidence->attendees();
+        KCalCore::Attendee::Ptr me;
+        foreach (const KCalCore::Attendee::Ptr &attendee, attendees) {
+            if (attendee->email() == QLatin1String(s_ourEmail)) {
+                me = attendee;
+                break;
+            }
+        }
+        QVERIFY(me);
+        QCOMPARE(me->status(), expectedPartStat);
+    }
 
 
     // Cleanup
@@ -139,6 +161,8 @@ void ITIPHandlerTest::testProcessITIPMessage()
         ItemDeleteJob *job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
     }
+
+    delete calendar;
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
