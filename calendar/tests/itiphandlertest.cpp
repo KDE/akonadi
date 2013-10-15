@@ -19,6 +19,7 @@
 
 #include "itiphandlertest.h"
 #include "helper.h"
+#include "../mailclient_p.h"
 
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/collectionfetchjob.h>
@@ -47,6 +48,7 @@ void ITIPHandlerTest::initTestCase()
     connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
             SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
     m_pendingItipMessageSignal = 0;
+    MailClient::sRunningUnitTests = true;
 }
 
 void ITIPHandlerTest::testProcessITIPMessage_data()
@@ -55,27 +57,33 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<QString>("action");
     QTest::addColumn<QString>("receiver");
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
+    QTest::addColumn<int>("expectedNumEmails");
 
     QString data_filename;
     QString action = QLatin1String("accepted");
     QString receiver = QLatin1String(s_ourEmail);
     Akonadi::ITIPHandler::Result expectedResult;
+    int expectedNumEmails = 0;
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event
     expectedResult = ITIPHandler::ResultSuccess;
     data_filename = QLatin1String("invited_us");
-    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult;
+    expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
+                           // kmail's text_calendar.cpp.
+    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult << expectedNumEmails;
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
-    QTest::newRow("invalid data") << QString() << action << receiver << expectedResult;
+    expectedNumEmails = 0;
+    QTest::newRow("invalid data") << QString() << action << receiver << expectedResult << expectedNumEmails;
 
     //----------------------------------------------------------------------------------------------
     // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
     data_filename = QLatin1String("invitation_us");
-    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult;
+    expectedNumEmails = 0;
+    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult << expectedNumEmails;
 
     //----------------------------------------------------------------------------------------------
 
@@ -88,6 +96,8 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(QString, action);
     QFETCH(QString, receiver);
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
+    QFETCH(int, expectedNumEmails);
+    MailClient::sUnitTestResults.clear();
 
     m_expectedResult = expectedResult;
 
@@ -98,6 +108,9 @@ void ITIPHandlerTest::testProcessITIPMessage()
     m_pendingItipMessageSignal = 1;
     m_itipHandler->processiTIPMessage(receiver, iCalData, action);
     waitForIt();
+
+    QCOMPARE(MailClient::sUnitTestResults.count(), expectedNumEmails);
+
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
