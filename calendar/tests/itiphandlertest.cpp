@@ -96,6 +96,20 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event, we delegate it
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
+                           // kmail's text_calendar.cpp.
+
+    // The e-mail to the delegate is sent by kmail's text_calendar.cpp
+    expectedNumIncidences = 1;
+    expectedPartStat = KCalCore::Attendee::Delegated;
+    action = QLatin1String("delegated");
+    QTest::newRow("invited us3") << data_filename << action << receiver << expectedResult
+                                 << expectedNumEmails << expectedNumIncidences
+                                 << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
