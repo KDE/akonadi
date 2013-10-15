@@ -20,8 +20,10 @@
 #include "itiphandlertest.h"
 #include "helper.h"
 #include "../mailclient_p.h"
+#include "../fetchjobcalendar.h"
 
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchscope.h>
@@ -48,6 +50,7 @@ void ITIPHandlerTest::initTestCase()
     connect(m_itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
             SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
     m_pendingItipMessageSignal = 0;
+    m_pendingLoadedSignal = 0;
     MailClient::sRunningUnitTests = true;
 }
 
@@ -58,12 +61,14 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<QString>("receiver");
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
     QTest::addColumn<int>("expectedNumEmails");
+    QTest::addColumn<int>("expectedNumIncidences");
 
     QString data_filename;
     QString action = QLatin1String("accepted");
     QString receiver = QLatin1String(s_ourEmail);
     Akonadi::ITIPHandler::Result expectedResult;
     int expectedNumEmails = 0;
+    int expectedNumIncidences = 0;
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event
@@ -71,20 +76,24 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     data_filename = QLatin1String("invited_us");
     expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
                            // kmail's text_calendar.cpp.
-    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult << expectedNumEmails;
+    expectedNumIncidences = 1;
+    QTest::newRow("invited us") << data_filename << action << receiver << expectedResult
+                                << expectedNumEmails << expectedNumIncidences;
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
-    QTest::newRow("invalid data") << QString() << action << receiver << expectedResult << expectedNumEmails;
-
+    expectedNumIncidences = 0;
+    QTest::newRow("invalid data") << QString() << action << receiver << expectedResult
+                                  << expectedNumEmails << expectedNumIncidences;
     //----------------------------------------------------------------------------------------------
     // Testing invalid action
     expectedResult = ITIPHandler::ResultError;
     data_filename = QLatin1String("invitation_us");
     expectedNumEmails = 0;
-    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult << expectedNumEmails;
-
+    expectedNumIncidences = 0;
+    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult
+                                    << expectedNumEmails << expectedNumIncidences;
     //----------------------------------------------------------------------------------------------
 
     //----------------------------------------------------------------------------------------------
@@ -97,6 +106,8 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(QString, receiver);
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
     QFETCH(int, expectedNumEmails);
+    QFETCH(int, expectedNumIncidences);
+
     MailClient::sUnitTestResults.clear();
 
     m_expectedResult = expectedResult;
@@ -111,6 +122,23 @@ void ITIPHandlerTest::testProcessITIPMessage()
 
     QCOMPARE(MailClient::sUnitTestResults.count(), expectedNumEmails);
 
+    m_pendingLoadedSignal = 1;
+    FetchJobCalendar *calendar = new FetchJobCalendar();
+    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+
+    Item::List items = calendar->items();
+
+    QCOMPARE(items.count(), expectedNumIncidences);
+
+    delete calendar;
+
+
+    // Cleanup
+    foreach (const Akonadi::Item &item, items) {
+        ItemDeleteJob *job = new ItemDeleteJob(item);
+        AKVERIFYEXEC(job);
+    }
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
@@ -123,7 +151,18 @@ void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const Q
 
     m_pendingItipMessageSignal--;
     QVERIFY(m_pendingItipMessageSignal >= 0);
-    if (m_pendingItipMessageSignal == 0) {
+    if (m_pendingItipMessageSignal == 0 && m_pendingLoadedSignal == 0) {
+        stopWaiting();
+    }
+}
+
+void ITIPHandlerTest::onLoadFinished(bool success, const QString &)
+{
+    QVERIFY(success);
+
+    m_pendingLoadedSignal--;
+    QVERIFY(m_pendingItipMessageSignal >= 0);
+    if (m_pendingItipMessageSignal == 0 && m_pendingLoadedSignal == 0) {
         stopWaiting();
     }
 }

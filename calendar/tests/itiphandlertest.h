@@ -47,9 +47,12 @@ private:
 public Q_SLOTS:
     void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
                                 const QString &errorMessage);
+
+    void onLoadFinished(bool success, const QString &errorMessage);
 private:
     Akonadi::ITIPHandler *m_itipHandler;
     int m_pendingItipMessageSignal;
+    int m_pendingLoadedSignal;
     Akonadi::ITIPHandler::Result m_expectedResult;
 };
 
