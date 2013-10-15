@@ -38,7 +38,7 @@ namespace Akonadi
       Link,
       Unlink,
       Subscribe,
-      Unsubsrcibe
+      Unsubscribe
     };
 
     enum Type {

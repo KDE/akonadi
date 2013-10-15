@@ -43,7 +43,7 @@ Idle::Operation Idle::commandToOperation( const QByteArray &command )
   } else if ( command == AKONADI_OPERATION_SUBSCRIBE ) {
     return Akonadi::Idle::Subscribe;
   } else if ( command == AKONADI_OPERATION_UNSUBSCRIBE ) {
-    return Akonadi::Idle::Unsubsrcibe;
+    return Akonadi::Idle::Unsubscribe;
   }
 
   return Akonadi::Idle::InvalidOperation;
@@ -68,7 +68,7 @@ QByteArray Idle::operationToCommand( Idle::Operation operation )
     return AKONADI_OPERATION_UNLINK;
   case Akonadi::Idle::Subscribe:
     return AKONADI_OPERATION_SUBSCRIBE;
-  case Akonadi::Idle::Unsubsrcibe:
+  case Akonadi::Idle::Unsubscribe:
     return AKONADI_OPERATION_UNSUBSCRIBE;
   default:
     return QByteArray();

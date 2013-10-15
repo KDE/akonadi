@@ -323,7 +323,7 @@ bool IdleClient::acceptsNotification( const NotificationMessageV2 &msg )
       || ( msg.operation() == NotificationMessageV2::Link && !mMonitoredOperations.contains( Idle::Link ) )
       || ( msg.operation() == NotificationMessageV2::Unlink && !mMonitoredOperations.contains( Idle::Unlink ) )
       || ( msg.operation() == NotificationMessageV2::Subscribe && !mMonitoredOperations.contains( Idle::Subscribe ) )
-      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( Idle::Unsubsrcibe ) ) ) {
+      || ( msg.operation() == NotificationMessageV2::Unsubscribe && !mMonitoredOperations.contains( Idle::Unsubscribe ) ) ) {
         return false;
   }
 
