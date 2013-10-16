@@ -155,8 +155,15 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
-    return; // signal emitted in onSchedulerFinished().
+
+    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidence( d->m_incidence->instanceIdentifier() );
+    if ( existingIncidence ) {
+      d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
+      return; // signal emitted in onSchedulerFinished().
+    } else {
+      // We don't have the incidence, nothing to cancel
+      emitiTipMessageProcessed( this, ResultSuccess, QString() );
+    }
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
     if ( d->m_method != KCalCore::iTIPCounter ) {
       d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), d->m_method, status, QString() );
