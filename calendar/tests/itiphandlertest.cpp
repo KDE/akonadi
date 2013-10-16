@@ -110,6 +110,18 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
+    // Process a CANCEL without having the incidence in our calendar.
+    // itiphandler should return success and not error
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
+                           // kmail's text_calendar.cpp.
+    expectedNumIncidences = 0;
+    action = QLatin1String("cancel");
+    QTest::newRow("invited us4") << data_filename << action << receiver << expectedResult
+                                 << expectedNumEmails << expectedNumIncidences
+                                 << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
@@ -202,13 +214,13 @@ void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const Q
         qDebug() << "ITIPHandlerTest::oniTipMessageProcessed() error = " << errorMessage;
     }
 
-    QCOMPARE(m_expectedResult, result);
-
     m_pendingItipMessageSignal--;
     QVERIFY(m_pendingItipMessageSignal >= 0);
     if (m_pendingItipMessageSignal == 0 && m_pendingLoadedSignal == 0) {
         stopWaiting();
     }
+
+    QCOMPARE(m_expectedResult, result);
 }
 
 void ITIPHandlerTest::onLoadFinished(bool success, const QString &)
