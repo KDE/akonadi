@@ -231,11 +231,11 @@ void AddressTypeCombo::otherSelected()
 AddressEditWidget::AddressEditWidget( QWidget *parent )
   : QWidget( parent ), mReadOnly( false )
 {
-  QGridLayout *layout = new QGridLayout( this );
+  QGridLayout *layout = new QGridLayout;
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( 0 );
 
-  QHBoxLayout *hboxLayout = new QHBoxLayout( this );
+  QHBoxLayout *hboxLayout = new QHBoxLayout;
   QLabel *label = new QLabel( i18nc( "@label:listbox type of address", "Address type:" ), this );
   hboxLayout->addWidget( label );
 
@@ -264,7 +264,7 @@ AddressEditWidget::AddressEditWidget( QWidget *parent )
   layout->addWidget( mCreateButton, 2, 0 );
   layout->addWidget( mEditButton, 2, 1 );
   layout->addWidget( mDeleteButton, 2, 2 );
-
+  setLayout(layout);
   updateButtons();
 }
 
