@@ -118,6 +118,15 @@ class AKONADI_EXPORT CollectionComboBox : public KComboBox
      */
     Akonadi::Collection currentCollection() const;
 
+    /**
+     * @since 4.12
+     */
+    void setExcludeVirtualCollections(bool b);
+    /**
+     * @since 4.12
+     */
+    bool excludeVirtualCollections() const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the current selection

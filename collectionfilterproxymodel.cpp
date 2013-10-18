@@ -160,6 +160,11 @@ void CollectionFilterProxyModel::setExcludeVirtualCollections( bool exclude )
   }
 }
 
+bool CollectionFilterProxyModel::excludeVirtualCollections() const
+{
+    return d->mExcludeVirtualCollections;
+}
+
 Qt::ItemFlags CollectionFilterProxyModel::flags( const QModelIndex& index ) const
 {
   if ( !index.isValid() ) {

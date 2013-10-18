@@ -218,5 +218,16 @@ Akonadi::Collection CollectionComboBox::currentCollection() const
   }
 }
 
+void CollectionComboBox::setExcludeVirtualCollections(bool b)
+{
+    d->mMimeTypeFilterModel->setExcludeVirtualCollections(b);
+}
+
+bool CollectionComboBox::excludeVirtualCollections() const
+{
+    return d->mMimeTypeFilterModel->excludeVirtualCollections();
+}
+
+
 #include "moc_collectioncombobox.cpp"
 #include "moc_collectioncombobox_p.cpp"
