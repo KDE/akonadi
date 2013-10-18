@@ -794,6 +794,16 @@ class StandardActionManager::Private
 
     bool testAndSetOnlineResources(const Akonadi::Collection& collection)
     {
+      // Shortcut for the Search resource, which is a virtual resource and thus
+      // is awlays online (but AgentManager does not know about it, so it returns
+      // an invalid AgentInstance, which is "offline").
+      //
+      // FIXME: AgentManager should return a valid AgentInstance even
+      // for virtual resources, which would be always online.
+      if ( collection.resource() == QLatin1String( "akonadi_search_resource" ) ) {
+        return true;
+      }
+
       Akonadi::AgentInstance instance = Akonadi::AgentManager::self()->instance( collection.resource() );
       if ( !instance.isOnline() ) {
         if ( KMessageBox::questionYesNo( parentWidget,
