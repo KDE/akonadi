@@ -274,14 +274,18 @@ AddressEditWidget::~AddressEditWidget()
 
 void AddressEditWidget::setReadOnly( bool readOnly )
 {
-  mReadOnly = readOnly;
-  updateButtons();
+    if (mReadOnly != readOnly) {
+        mReadOnly = readOnly;
+        updateButtons();
+    }
 }
 
 void AddressEditWidget::updateName( const QString &name )
 {
-  mName = name;
-  updateAddressView();
+    if (mName != name) {
+        mName = name;
+        updateAddressView();
+    }
 }
 
 void AddressEditWidget::createAddress()
