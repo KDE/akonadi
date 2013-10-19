@@ -1193,6 +1193,8 @@ static QModelIndex proxiedIndex( const QModelIndex &idx, QList<const QAbstractPr
 QModelIndex EntityTreeModel::modelIndexForCollection( const QAbstractItemModel *model, const Collection &collection )
 {
   QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel*> pair = proxiesAndModel( model );
+
+  Q_ASSERT( pair.second );
   QModelIndex idx = pair.second->d_ptr->indexForCollection( collection );
   return proxiedIndex( idx, pair.first );
 }
