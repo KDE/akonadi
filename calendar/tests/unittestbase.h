@@ -24,6 +24,7 @@
 #include <akonadi/collection.h>
 
 #include <QObject>
+#include <QString>
 
 namespace Akonadi {
     class IncidenceChanger;
@@ -36,6 +37,10 @@ public:
     void waitForIt(); // Waits 10 seconds for signals
     void stopWaiting();
     void createIncidence(const QString &uid);
+    void verifyExists(const QString &uid, bool exists);
+
+public Q_SLOTS:
+    void onLoadFinished(bool success, const QString &errorMessage);
 
 protected:
 

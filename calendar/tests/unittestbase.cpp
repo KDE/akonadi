@@ -20,6 +20,7 @@
 
 #include "unittestbase.h"
 #include "helper.h"
+#include "../fetchjobcalendar.h"
 
 #include <kcalcore/event.h>
 #include <akonadi/item.h>
@@ -67,11 +68,28 @@ void UnitTestBase::createIncidence(const QString &uid)
     item.setMimeType(KCalCore::Event::eventMimeType());
     KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
     incidence->setUid(uid);
+    incidence->setDtStart(KDateTime::currentUtcDateTime());
     incidence->setSummary(QLatin1String("summary"));
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
     QVERIFY(mCollection.isValid());
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
     QVERIFY(job->exec());
+}
+
+void UnitTestBase::verifyExists(const QString &uid, bool exists)
+{
+    FetchJobCalendar *calendar = new FetchJobCalendar();
+    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+    calendar->deleteLater();
+
+    QCOMPARE(calendar->incidence(uid) != 0, exists);
+}
+
+void UnitTestBase::onLoadFinished(bool success, const QString &)
+{
+    QVERIFY(success);
+    stopWaiting();
 }
 
 /** static */
