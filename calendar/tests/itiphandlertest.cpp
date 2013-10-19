@@ -23,7 +23,6 @@
 #include "../fetchjobcalendar.h"
 
 #include <kcalcore/attendee.h>
-#include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
@@ -57,6 +56,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<QString>("data_filename");
     QTest::addColumn<QString>("action");
     QTest::addColumn<QString>("receiver");
+    QTest::addColumn<QString>("existingIncidenceUid"); // uid of an existing incidence to create
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
     QTest::addColumn<int>("expectedNumEmails");
     QTest::addColumn<int>("expectedNumIncidences");
@@ -79,7 +79,8 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Accepted;
     action = QLatin1String("accepted");
-    QTest::newRow("invited us1") << data_filename << action << receiver << expectedResult
+    QTest::newRow("invited us1") << data_filename << action << receiver << QString()
+                                 << expectedResult
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -91,7 +92,8 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Tentative;
     action = QLatin1String("tentative");
-    QTest::newRow("invited us2") << data_filename << action << receiver << expectedResult
+    QTest::newRow("invited us2") << data_filename << action << receiver << QString()
+                                 << expectedResult
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -105,7 +107,8 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Delegated;
     action = QLatin1String("delegated");
-    QTest::newRow("invited us3") << data_filename << action << receiver << expectedResult
+    QTest::newRow("invited us3") << data_filename << action << receiver << QString()
+                                 << expectedResult
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -117,16 +120,32 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                            // kmail's text_calendar.cpp.
     expectedNumIncidences = 0;
     action = QLatin1String("cancel");
-    QTest::newRow("invited us4") << data_filename << action << receiver << expectedResult
+    QTest::newRow("invited us4") << data_filename << action << receiver << QString()
+                                 << expectedResult
                                  << expectedNumEmails << expectedNumIncidences
                                  << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
+    // Process a CANCEL for an incidence that we do have. It should be deleted.
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("invited_us");
+    expectedNumEmails = 0; // 0 e-mails are sent because the status update e-mail is sent by
+                           // kmail's text_calendar.cpp.
+    expectedNumIncidences = 0;
+    action = QLatin1String("cancel");
+    QTest::newRow("test cancel") << data_filename << action << receiver
+                                 << QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg") // This is hardcoded in "invited_us" file, do not change
+                                 << expectedResult
+                                 << expectedNumEmails << expectedNumIncidences
+                                 << expectedPartStat;
+
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
     action = QLatin1String("accepted");
-    QTest::newRow("invalid data") << QString() << action << receiver << expectedResult
+    QTest::newRow("invalid data") << QString() << action << receiver << QString()
+                                  << expectedResult
                                   << expectedNumEmails << expectedNumIncidences
                                   << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -136,7 +155,8 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumEmails = 0;
     expectedNumIncidences = 0;
     action = QLatin1String("accepted");
-    QTest::newRow("invalid action") << data_filename << QString() << receiver << expectedResult
+    QTest::newRow("invalid action") << data_filename << QString() << receiver << QString()
+                                    << expectedResult
                                     << expectedNumEmails << expectedNumIncidences
                                     << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -149,12 +169,21 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(QString, data_filename);
     QFETCH(QString, action);
     QFETCH(QString, receiver);
+    QFETCH(QString, existingIncidenceUid);
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
     QFETCH(int, expectedNumEmails);
     QFETCH(int, expectedNumIncidences);
     QFETCH(KCalCore::Attendee::PartStat, expectedPartStat);
 
     MailClient::sUnitTestResults.clear();
+
+    if (!existingIncidenceUid.isEmpty()) {
+        // We're expected to have an incidence already in our calendar. Create it first.
+        createIncidence(existingIncidenceUid);
+        verifyExists(existingIncidenceUid, true);
+        Item::List items = calendarItems();
+        QCOMPARE(items.count(), 1);
+    }
 
     Akonadi::ITIPHandler *itipHandler = new Akonadi::ITIPHandler(this);
     itipHandler->setShowDialogsOnError(false);
