@@ -69,8 +69,9 @@ void UnitTestBase::createIncidence(const QString &uid)
     incidence->setUid(uid);
     incidence->setSummary(QLatin1String("summary"));
     item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    QVERIFY(mCollection.isValid());
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
-    QVERIFY(job->exec() == 0);
+    QVERIFY(job->exec());
 }
 
 /** static */
