@@ -65,7 +65,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
 
     QString data_filename;
     QString action = QLatin1String("accepted");
-    const QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
+    QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
     QString receiver = QLatin1String(s_ourEmail);
     Akonadi::ITIPHandler::Result expectedResult;
     int expectedNumEmails = 0;
@@ -162,6 +162,20 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                     << false << expectedResult
                                     << expectedNumEmails << expectedNumIncidences
                                     << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
+    // Test bug 235749
+    expectedResult = ITIPHandler::ResultSuccess;
+    data_filename = QLatin1String("bug235749");
+    expectedNumEmails = 0;
+    expectedNumIncidences = 1;
+    expectedPartStat = KCalCore::Attendee::Accepted;
+    action = QLatin1String("accepted");
+    incidenceUid = QLatin1String("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07"); // Don't change, hardcoded in data file
+    QTest::newRow("bug 235749") << data_filename << action << receiver << incidenceUid << false
+                                << expectedResult
+                                << expectedNumEmails << expectedNumIncidences
+                                << expectedPartStat;
+
     //----------------------------------------------------------------------------------------------
 }
 
