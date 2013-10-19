@@ -42,8 +42,6 @@ class HistoryTest : public UnitTestBase
     QHash<int, Akonadi::Item> mItemByChangeId;
     QList<int> mKnownChangeIds;
 
-    void createIncidence(const QString &uid);
-
 private Q_SLOTS:
     void initTestCase();
 

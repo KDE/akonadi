@@ -35,6 +35,7 @@ public:
     UnitTestBase();
     void waitForIt(); // Waits 10 seconds for signals
     void stopWaiting();
+    void createIncidence(const QString &uid);
 
 protected:
 

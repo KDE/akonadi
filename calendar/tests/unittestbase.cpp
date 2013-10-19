@@ -21,7 +21,9 @@
 #include "unittestbase.h"
 #include "helper.h"
 
+#include <kcalcore/event.h>
 #include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
 #include <akonadi/calendar/incidencechanger.h>
 #include <akonadi/calendar/itiphandler.h>
 
@@ -57,6 +59,18 @@ void UnitTestBase::waitForIt()
 void UnitTestBase::stopWaiting()
 {
     QTestEventLoop::instance().exitLoop();
+}
+
+void UnitTestBase::createIncidence(const QString &uid)
+{
+    Item item;
+    item.setMimeType(KCalCore::Event::eventMimeType());
+    KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
+    incidence->setUid(uid);
+    incidence->setSummary(QLatin1String("summary"));
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
+    QVERIFY(job->exec() == 0);
 }
 
 /** static */

@@ -74,18 +74,6 @@ static Akonadi::Item createItem(const Akonadi::Collection &collection)
     return createJob->item();
 }
 
-void HistoryTest::createIncidence(const QString &uid)
-{
-    Item item;
-    item.setMimeType(Event::eventMimeType());
-    Incidence::Ptr incidence = Incidence::Ptr(new Event());
-    incidence->setUid(uid);
-    incidence->setSummary(QLatin1String("summary"));
-    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
-    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
-    AKVERIFYEXEC(job);
-}
-
 void HistoryTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
