@@ -74,6 +74,9 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                                       const QString &iCal,
                                       const QString &action )
 {
+  kDebug() << "processiTIPMessage called with receiver=" << receiver
+           << "; action=" << action;
+
   if ( d->m_currentOperation != OperationNone ) {
     kFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
     return;
@@ -90,6 +93,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
 
   if ( d->m_calendarLoadError ) {
     d->m_currentOperation = OperationNone;
+    kError() << "Error loading calendar";
     emitiTipMessageProcessed( this, ResultError, i18n( "Error loading calendar." ) );
     return;
   }
@@ -163,6 +167,11 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
       return; // signal emitted in onSchedulerFinished().
     } else {
       // We don't have the incidence, nothing to cancel
+      kWarning() << "Couldn't find the incidence to delete.\n"
+                 << "You deleted it previously or didn't even accept the invitation it in the first place.\n"
+                 << "; uid=" << d->m_incidence->uid()
+                 << "; identifier=" << d->m_incidence->instanceIdentifier()
+                 << "; summary=" << d->m_incidence->summary();
       emitiTipMessageProcessed( this, ResultSuccess, QString() );
     }
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
