@@ -217,8 +217,24 @@ void ITIPHandlerTest::testProcessITIPMessage()
         QCOMPARE(me->status(), expectedPartStat);
     }
 
+    if (testCancel) {
+        QVERIFY(!items.isEmpty());
+
+        m_expectedResult = ITIPHandler::ResultSuccess;
+        m_pendingItipMessageSignal = 1;
+        itipHandler->processiTIPMessage(receiver, iCalData, QLatin1String("cancel"));
+        waitForIt();
+
+        QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+
+        // Check that they were deleted properly
+        Item::List items = calendarItems();
+        QVERIFY(items.isEmpty());
+    }
+
 
     // Cleanup
+    items = calendarItems();
     foreach (const Akonadi::Item &item, items) {
         ItemDeleteJob *job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
