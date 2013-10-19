@@ -22,6 +22,7 @@
 #define UNITTEST_BASE_H
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QObject>
 #include <QString>
@@ -38,6 +39,7 @@ public:
     void stopWaiting();
     void createIncidence(const QString &uid);
     void verifyExists(const QString &uid, bool exists);
+    Akonadi::Item::List calendarItems();
 
 public Q_SLOTS:
     void onLoadFinished(bool success, const QString &errorMessage);

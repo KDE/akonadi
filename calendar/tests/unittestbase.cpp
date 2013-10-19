@@ -86,6 +86,15 @@ void UnitTestBase::verifyExists(const QString &uid, bool exists)
     QCOMPARE(calendar->incidence(uid) != 0, exists);
 }
 
+Akonadi::Item::List UnitTestBase::calendarItems()
+{
+    FetchJobCalendar *calendar = new FetchJobCalendar();
+    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+    calendar->deleteLater();
+    return calendar->items();
+}
+
 void UnitTestBase::onLoadFinished(bool success, const QString &)
 {
     QVERIFY(success);

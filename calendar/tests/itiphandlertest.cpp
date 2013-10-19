@@ -49,7 +49,6 @@ void ITIPHandlerTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
     m_pendingItipMessageSignal = 0;
-    m_pendingLoadedSignal = 0;
     MailClient::sRunningUnitTests = true;
 }
 
@@ -174,12 +173,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
 
     QCOMPARE(MailClient::sUnitTestResults.count(), expectedNumEmails);
 
-    m_pendingLoadedSignal = 1;
-    FetchJobCalendar *calendar = new FetchJobCalendar();
-    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
-    waitForIt();
-
-    Item::List items = calendar->items();
+    Item::List items = calendarItems();
     QCOMPARE(items.count(), expectedNumIncidences);
 
     if (expectedNumIncidences == 1) {
@@ -204,7 +198,6 @@ void ITIPHandlerTest::testProcessITIPMessage()
         AKVERIFYEXEC(job);
     }
 
-    delete calendar;
     delete itipHandler;
 }
 
@@ -216,22 +209,11 @@ void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const Q
 
     m_pendingItipMessageSignal--;
     QVERIFY(m_pendingItipMessageSignal >= 0);
-    if (m_pendingItipMessageSignal == 0 && m_pendingLoadedSignal == 0) {
+    if (m_pendingItipMessageSignal == 0) {
         stopWaiting();
     }
 
     QCOMPARE(m_expectedResult, result);
-}
-
-void ITIPHandlerTest::onLoadFinished(bool success, const QString &)
-{
-    QVERIFY(success);
-
-    m_pendingLoadedSignal--;
-    QVERIFY(m_pendingItipMessageSignal >= 0);
-    if (m_pendingItipMessageSignal == 0 && m_pendingLoadedSignal == 0) {
-        stopWaiting();
-    }
 }
 
 QTEST_AKONADIMAIN(ITIPHandlerTest, GUI)
