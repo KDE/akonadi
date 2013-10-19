@@ -38,8 +38,6 @@ UnitTestBase::UnitTestBase()
     qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >("QList<Akonadi::IncidenceChanger::ChangeType>");
     qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
-    qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
-
 
     mChanger = new IncidenceChanger(this);
     mChanger->setShowDialogsOnError(false);

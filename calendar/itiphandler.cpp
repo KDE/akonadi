@@ -62,6 +62,7 @@ GroupwareUiDelegate::~GroupwareUiDelegate()
 ITIPHandler::ITIPHandler( QObject *parent ) : QObject( parent )
                                             , d( new Private( this ) )
 {
+    qRegisterMetaType<Akonadi::ITIPHandler::Result>("Akonadi::ITIPHandler::Result");
 }
 
 ITIPHandler::~ITIPHandler()
