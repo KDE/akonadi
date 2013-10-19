@@ -160,8 +160,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-
-    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidence( d->m_incidence->instanceIdentifier() );
+    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidenceFromSchedulingID( d->m_incidence->instanceIdentifier() );
     if ( existingIncidence ) {
       d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
       return; // signal emitted in onSchedulerFinished().
