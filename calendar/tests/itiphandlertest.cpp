@@ -323,6 +323,15 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate()
     QVERIFY(incidence);
     QCOMPARE(items.count(), 1);
     QCOMPARE(incidence->summary(), expectedNewSummary);
+
+    // Cleanup
+    items = calendarItems();
+    foreach (const Akonadi::Item &item, items) {
+        ItemDeleteJob *job = new ItemDeleteJob(item);
+        AKVERIFYEXEC(job);
+    }
+
+    delete itipHandler;
 }
 
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
