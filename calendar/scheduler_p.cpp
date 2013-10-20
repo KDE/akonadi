@@ -36,11 +36,13 @@ struct Akonadi::Scheduler::Private
 {
   public:
     Private( Scheduler *qq ) : mFreeBusyCache( 0 )
+                             , mShowDialogs( true )
                              , q( qq )
     {
     }
 
     FreeBusyCache *mFreeBusyCache;
+    bool mShowDialogs;
     Scheduler *const q;
 };
 
@@ -55,6 +57,11 @@ Scheduler::~Scheduler()
 {
   delete mFormat;
   delete d;
+}
+
+void Scheduler::setShowDialogs( bool enable )
+{
+  d->mShowDialogs = enable;
 }
 
 void Scheduler::setFreeBusyCache( FreeBusyCache *c )
@@ -255,7 +262,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
   // Move the uid to be the schedulingID and make a unique UID
   inc->setSchedulingID( inc->uid(), CalFormat::createUniqueId() );
   // notify the user in case this is an update and we didn't find the to-be-updated incidence
-  if ( existingIncidences.count() == 0 && inc->revision() > 0 ) {
+  if ( d->mShowDialogs && existingIncidences.isEmpty() && inc->revision() > 0 ) {
     KMessageBox::information(
       0,
       i18nc( "@info",
@@ -357,7 +364,7 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidence,
   }
 
   // in case we didn't find the to-be-removed incidence
-  if ( existingIncidences.count() > 0 && inc->revision() > 0 ) {
+  if ( d->mShowDialogs && existingIncidences.count() > 0 && inc->revision() > 0 ) {
     KMessageBox::error(
       0,
       i18nc( "@info",
