@@ -513,8 +513,14 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       // We set at least one of the attendees, so the incidence changed
       // Note: This should not result in a sequence number bump
       incidence->updated();
-      calendar->modifyIncidence( incidence );
-      // success will be emitted in the handleModifyFinished() slot
+      const bool success = calendar->modifyIncidence( incidence );
+
+      if ( !success ) {
+        emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+      } else {
+        // success will be emitted in the handleModifyFinished() slot
+      }
+
       return;
     }
   } else {
@@ -574,6 +580,7 @@ void Scheduler::handleCreateFinished( bool success, const QString &errorMessage 
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )
 {
+  kDebug() << "Modification finished. Success=" << success << errorMessage;
   emit transactionFinished( success ? ResultSuccess : ResultModifyingError, errorMessage );
 }
 

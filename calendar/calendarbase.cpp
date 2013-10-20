@@ -236,7 +236,6 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
-//TODO: unit-test this
 void CalendarBasePrivate::slotModifyFinished( int changeId,
                                               const Akonadi::Item &item,
                                               IncidenceChanger::ResultCode resultCode,
@@ -598,15 +597,10 @@ bool CalendarBase::deleteIncidence( const KCalCore::Incidence::Ptr &incidence )
 
 bool CalendarBase::modifyIncidence( const KCalCore::Incidence::Ptr &newIncidence )
 {
-  Q_D(CalendarBase);
+  Q_D( CalendarBase );
   Q_ASSERT( newIncidence );
-  const KCalCore::Incidence::Ptr incidence( newIncidence.dynamicCast<KCalCore::Incidence>() );
-  Akonadi::Item item_;
-  if ( incidence ) {
-    item_ = item( incidence->instanceIdentifier() );
-  } else  {
-    item_ = item( newIncidence->uid() );
-  }
+  Akonadi::Item item_ = item( newIncidence->instanceIdentifier() );
+  item_.setPayload<KCalCore::Incidence::Ptr>( newIncidence );
   return -1 != d->mIncidenceChanger->modifyIncidence( item_ );
 }
 
