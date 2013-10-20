@@ -69,7 +69,7 @@ class DbConfig
      * An example would be to run some SQL commands on every new session,
      * typically stuff like setting encodings, transaction isolation levels, etc.
      */
-    virtual void initSession( const QSqlDatabase& database );
+    virtual void initSession( const QSqlDatabase &database );
 
     /**
      * Returns whether an internal server needs to be used.

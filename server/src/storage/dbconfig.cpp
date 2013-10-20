@@ -72,7 +72,7 @@ DbConfig *DbConfig::configuredDatabase()
     if ( driverName.isEmpty() ) {
       driverName = QLatin1String( AKONADI_DATABASE_BACKEND );
       // when using the default, write it explicitly, in case the default changes later
-      settings.setValue( QLatin1String("General/Driver"), driverName );
+      settings.setValue( QLatin1String( "General/Driver" ), driverName );
       settings.sync();
     }
 
@@ -123,12 +123,12 @@ qint64 DbConfig::sizeThreshold() const
 QString DbConfig::defaultDatabaseName()
 {
   if ( !AkApplication::hasInstanceIdentifier() ) {
-    return QLatin1String("akonadi");
+    return QLatin1String( "akonadi" );
   }
-  return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier();
+  return QLatin1Literal( "akonadi_" ) % AkApplication::instanceIdentifier();
 }
 
-void DbConfig::initSession(const QSqlDatabase& database)
+void DbConfig::initSession( const QSqlDatabase &database )
 {
-  Q_UNUSED(database);
+  Q_UNUSED( database );
 }

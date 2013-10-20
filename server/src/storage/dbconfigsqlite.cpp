@@ -177,8 +177,8 @@ void DbConfigSqlite::setup()
   akDebug() << "sqlite version is " << sqliteVersion;
 
   const QStringList list = sqliteVersion.split( QLatin1Char( '.' ) );
-  const int sqliteVersionMajor = list[ 0 ].toInt();
-  const int sqliteVersionMinor = list[ 1 ].toInt();
+  const int sqliteVersionMajor = list[0].toInt();
+  const int sqliteVersionMinor = list[1].toInt();
 
 #ifndef Q_OS_WINCE
 

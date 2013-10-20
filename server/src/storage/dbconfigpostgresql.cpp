@@ -95,8 +95,8 @@ bool DbConfigPostgresql::init( QSettings &settings )
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-  mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
-  mInitDbPath = settings.value( QLatin1String("InitDbPath"), defaultInitDbPath ).toString();
+  mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
+  mInitDbPath = settings.value( QLatin1String( "InitDbPath" ), defaultInitDbPath ).toString();
   mCleanServerShutdownCommand = settings.value( QLatin1String( "CleanServerShutdownCommand" ), defaultCleanShutdownCommand ).toString();
   settings.endGroup();
 

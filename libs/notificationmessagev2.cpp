@@ -18,7 +18,6 @@
     02110-1301, USA.
 */
 
-
 #include "notificationmessagev2_p.h"
 #include "notificationmessage_p.h"
 #include "imapparser_p.h"
@@ -106,7 +105,7 @@ NotificationMessageV2::~NotificationMessageV2()
 {
 }
 
-NotificationMessageV2& NotificationMessageV2::operator=( const NotificationMessageV2 &other )
+NotificationMessageV2 &NotificationMessageV2::operator=( const NotificationMessageV2 &other )
 {
   if ( this != &other ) {
     d = other.d;
@@ -143,7 +142,7 @@ void NotificationMessageV2::addEntity( Id id, const QString &remoteId, const QSt
 void NotificationMessageV2::setEntities( const QList<NotificationMessageV2::Entity> &items )
 {
   d->items.clear();
-  Q_FOREACH( const NotificationMessageV2::Entity &item, items ) {
+  Q_FOREACH ( const NotificationMessageV2::Entity &item, items ) {
     d->items.insert( item.id, item );
   }
 }
@@ -351,7 +350,7 @@ QString NotificationMessageV2::toString() const
   return rv;
 }
 
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg )
+QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2 &msg )
 {
   arg.beginStructure();
   arg << msg.sessionId();
@@ -376,7 +375,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessag
   return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg )
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2 &msg )
 {
   QByteArray ba;
   int i;
@@ -421,7 +420,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
   return arg;
 }
 
-QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item )
+QDBusArgument &operator<<( QDBusArgument &arg, const Akonadi::NotificationMessageV2::Entity &item )
 {
   arg.beginStructure();
   arg << item.id;
@@ -433,7 +432,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const Akonadi::NotificationMessag
   return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item )
+const QDBusArgument &operator>>( const QDBusArgument &arg, Akonadi::NotificationMessageV2::Entity &item )
 {
   arg.beginStructure();
   arg >> item.id;
@@ -448,7 +447,7 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, Akonadi::Notification
 uint qHash( const Akonadi::NotificationMessageV2 &msg )
 {
   uint i = 0;
-  Q_FOREACH( const NotificationMessageV2::Entity &item, msg.entities() ) {
+  Q_FOREACH ( const NotificationMessageV2::Entity &item, msg.entities() ) {
     i += item.id;
   }
 
@@ -459,7 +458,7 @@ QVector<NotificationMessage> NotificationMessageV2::toNotificationV1() const
 {
   QVector<NotificationMessage> v1;
 
-  Q_FOREACH( const Entity &item, d->items ) {
+  Q_FOREACH ( const Entity &item, d->items ) {
     NotificationMessage msgv1;
     msgv1.setSessionId( d->sessionId );
     msgv1.setUid( item.id );

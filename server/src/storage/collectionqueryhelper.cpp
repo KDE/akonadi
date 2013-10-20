@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-void CollectionQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection *connection, QueryBuilder& qb)
+void CollectionQueryHelper::remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb )
 {
   if ( rids.size() == 1 ) {
     qb.addValueCondition( Collection::remoteIdFullColumnName(), Query::Equals, rids.first() );
@@ -43,7 +43,7 @@ void CollectionQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConn
   }
 }
 
-void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection *connection, QueryBuilder& qb)
+void CollectionQueryHelper::scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb )
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     QueryHelper::setToQuery( scope.uidSet(), Collection::idFullColumnName(), qb );
@@ -63,7 +63,7 @@ void CollectionQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection *
   }
 }
 
-bool CollectionQueryHelper::hasAllowedName(const Collection & collection, const QString & name, Collection::Id parent)
+bool CollectionQueryHelper::hasAllowedName( const Collection &collection, const QString &name, Collection::Id parent )
 {
   Q_UNUSED( collection );
   SelectQueryBuilder<Collection> qb;
@@ -135,7 +135,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID( const QStringList &rid
   return result;
 }
 
-Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope(const Akonadi::Scope& scope, AkonadiConnection* connection)
+Collection Akonadi::CollectionQueryHelper::singleCollectionFromScope( const Akonadi::Scope &scope, AkonadiConnection *connection )
 {
   // root
   if ( (scope.scope() == Scope::Uid || scope.scope() == Scope::None) && scope.uidSet().intervals().count() == 1 ) {

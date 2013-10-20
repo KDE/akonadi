@@ -142,7 +142,7 @@ class DbInitializer
      */
     void execQuery( const QString &queryString );
 
-    bool checkTable( const TableDescription& tableDescription );
+    bool checkTable( const TableDescription &tableDescription );
     /**
      * Checks foreign key constraints on table @p tableDescription and fixes them if necessary.
      */

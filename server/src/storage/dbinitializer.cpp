@@ -40,7 +40,7 @@
 
 using namespace Akonadi;
 
-DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase& database, Schema *schema)
+DbInitializer::Ptr DbInitializer::createInstance( const QSqlDatabase &database, Schema *schema )
 {
   DbInitializer::Ptr i;
   switch ( DbType::type( database ) ) {
@@ -154,7 +154,7 @@ bool DbInitializer::checkTable( const TableDescription &tableDescription )
   return true;
 }
 
-void DbInitializer::checkForeignKeys(const TableDescription& tableDescription)
+void DbInitializer::checkForeignKeys( const TableDescription &tableDescription )
 {
   try {
     const QVector<DbIntrospector::ForeignKey> existingForeignKeys = m_introspector->foreignKeyConstraints( tableDescription.name );
@@ -251,26 +251,26 @@ bool DbInitializer::hasForeignKeyConstraints() const
   return !m_noForeignKeyContraints;
 }
 
-QString DbInitializer::sqlType(const QString & type, int size) const
+QString DbInitializer::sqlType( const QString &type, int size ) const
 {
-  Q_UNUSED(size);
-  if ( type == QLatin1String("int") ) {
-    return QLatin1String("INTEGER");
+  Q_UNUSED( size );
+  if ( type == QLatin1String( "int" ) ) {
+    return QLatin1String( "INTEGER" );
   }
-  if ( type == QLatin1String("qint64") ) {
+  if ( type == QLatin1String( "qint64" ) ) {
     return QLatin1String( "BIGINT" );
   }
-  if ( type == QLatin1String("QString") ) {
-    return QLatin1String("TEXT");
+  if ( type == QLatin1String( "QString" ) ) {
+    return QLatin1String( "TEXT" );
   }
-  if (type == QLatin1String("QByteArray") ) {
-    return QLatin1String("LONGBLOB");
+  if ( type == QLatin1String( "QByteArray" ) ) {
+    return QLatin1String( "LONGBLOB" );
   }
-  if ( type == QLatin1String("QDateTime") ) {
-    return QLatin1String("TIMESTAMP");
+  if ( type == QLatin1String( "QDateTime" ) ) {
+    return QLatin1String( "TIMESTAMP" );
   }
   if ( type == QLatin1String( "bool" ) ) {
-    return QLatin1String("BOOL");
+    return QLatin1String( "BOOL" );
   }
   Q_ASSERT( false );
   return QString();
@@ -300,27 +300,27 @@ QString DbInitializer::buildCreateIndexStatement( const TableDescription &tableD
                             .arg( indexDescription.columns.join( QLatin1String( "," ) ) );
 }
 
-QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription& table, const ColumnDescription& column) const
+QString DbInitializer::buildAddForeignKeyConstraintStatement( const TableDescription &table, const ColumnDescription &column ) const
 {
   Q_UNUSED( table );
   Q_UNUSED( column );
   return QString();
 }
 
-QString DbInitializer::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey& fk, const TableDescription& table) const
+QString DbInitializer::buildRemoveForeignKeyConstraintStatement( const DbIntrospector::ForeignKey &fk, const TableDescription &table ) const
 {
   Q_UNUSED( fk );
   Q_UNUSED( table );
   return QString();
 }
 
-QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
+QString DbInitializer::buildReferentialAction( ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete )
 {
   return QLatin1Literal( "ON UPDATE " ) + referentialActionToString( onUpdate )
-       + QLatin1Literal( " ON DELETE ") + referentialActionToString( onDelete );
+       + QLatin1Literal( " ON DELETE " ) + referentialActionToString( onDelete );
 }
 
-QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
+QString DbInitializer::referentialActionToString( ColumnDescription::ReferentialAction action )
 {
   switch ( action ) {
   case ColumnDescription::Cascade:
@@ -335,7 +335,7 @@ QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialA
   return QString();
 }
 
-QString DbInitializer::buildPrimaryKeyStatement(const TableDescription& table)
+QString DbInitializer::buildPrimaryKeyStatement( const TableDescription &table )
 {
   QStringList cols;
   Q_FOREACH ( const ColumnDescription &column, table.columns ) {
@@ -346,7 +346,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription& table)
   return QLatin1Literal( "PRIMARY KEY (" ) + cols.join( QLatin1String( ", " ) ) + QLatin1Char( ')' );
 }
 
-void DbInitializer::execQuery(const QString& queryString)
+void DbInitializer::execQuery( const QString &queryString )
 {
   // if ( Q_UNLIKELY( mTestInterface ) ) { Qt 4.7 has no Q_UNLIKELY yet
   if ( mTestInterface ) {
@@ -365,7 +365,7 @@ void DbInitializer::setTestInterface( TestInterface *interface )
   mTestInterface = interface;
 }
 
-void DbInitializer::setIntrospector(const DbIntrospector::Ptr& introspector)
+void DbInitializer::setIntrospector( const DbIntrospector::Ptr &introspector )
 {
   m_introspector = introspector;
 }

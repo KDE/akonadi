@@ -56,8 +56,9 @@ class CountQueryBuilder : public QueryBuilder
       Q_ASSERT( !table.isEmpty() );
       Q_ASSERT( !column.isEmpty() );
       QString s = QLatin1String( "count(" );
-      if ( mode == Distinct )
+      if ( mode == Distinct ) {
         s += QLatin1String( "DISTINCT " );
+      }
       s += column;
       s += QLatin1Char( ')' );
       addColumn( s );

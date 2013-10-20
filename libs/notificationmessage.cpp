@@ -100,7 +100,7 @@ NotificationMessage::~NotificationMessage()
 {
 }
 
-NotificationMessage& NotificationMessage::operator=( const NotificationMessage &other )
+NotificationMessage &NotificationMessage::operator=( const NotificationMessage &other )
 {
   if ( this != &other ) {
     d = other.d;
@@ -235,16 +235,16 @@ QString NotificationMessage::toString() const
   QString rv;
   // some tests before making the string
   if ( type() == InvalidType ) {
-	  return QLatin1String( "Error: Type is not set" );
+    return QLatin1String( "Error: Type is not set" );
   }
   if ( uid() == -1 ) {
-	return QLatin1String( "Error: uid is not set" );
+    return QLatin1String( "Error: uid is not set" );
   }
   if ( remoteId().isEmpty() ) {
-	return QLatin1String( "Error: remoteId is empty" );
+    return QLatin1String( "Error: remoteId is empty" );
   }
   if ( operation() == InvalidOp ) {
-	  return QLatin1String( "Error: operation is not set" );
+    return QLatin1String( "Error: operation is not set" );
   }
 
   switch ( type() ) {
@@ -355,7 +355,7 @@ void NotificationMessage::appendAndCompress( NotificationMessage::List &list, co
   list.append( msg );
 }
 
-QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
+QDBusArgument &operator<<( QDBusArgument &arg, const NotificationMessage &msg )
 {
   arg.beginStructure();
   arg << msg.sessionId();
@@ -373,8 +373,9 @@ QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
     // encode destination resource in parts, as a backward compat hack
     itemParts.push_back( QString::fromLatin1( msg.destinationResource() ) );
   } else {
-    Q_FOREACH ( const QByteArray &itemPart, msg.itemParts() )
+    Q_FOREACH ( const QByteArray &itemPart, msg.itemParts() ) {
       itemParts.append( QString::fromLatin1( itemPart ) );
+    }
   }
 
   arg << itemParts;
@@ -382,7 +383,7 @@ QDBusArgument& operator<<( QDBusArgument &arg, const NotificationMessage &msg )
   return arg;
 }
 
-const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &msg )
+const QDBusArgument &operator>>( const QDBusArgument &arg, NotificationMessage &msg )
 {
   arg.beginStructure();
   QByteArray b;
@@ -415,8 +416,9 @@ const QDBusArgument& operator>>( const QDBusArgument &arg, NotificationMessage &
     // decode destination resource, which is stored in parts as a backward compat hack
     msg.setDestinationResource( l.first().toLatin1() );
   } else {
-    Q_FOREACH ( const QString &itemPart, l )
+    Q_FOREACH ( const QString &itemPart, l ) {
       itemParts.insert( itemPart.toLatin1() );
+    }
   }
 
   msg.setItemParts( itemParts );
