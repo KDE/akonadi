@@ -257,6 +257,74 @@ void ITIPHandlerTest::testProcessITIPMessage()
     delete itipHandler;
 }
 
+void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
+{
+    QTest::addColumn<QString>("creation_data_filename"); // filename to create incidence
+    QTest::addColumn<QString>("update_data_filename"); // filename with update to incidence
+    QTest::addColumn<QString>("incidenceUid"); // uid of incidence in invitation
+    QTest::addColumn<QString>("expectedNewSummary"); // The new summary that's present in the update. Hardcoded in the file, don't change this.
+
+    QString creation_data_filename;
+    QString update_data_filename;
+    QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
+    QString expectedNewSummary = QLatin1String("new-summary");
+    //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event, we accept, then organizer changes event, and we record update:
+    creation_data_filename = QLatin1String("invited_us");
+    update_data_filename = QLatin1String("invited_us_update01");
+
+    QTest::newRow("accept update") << creation_data_filename << update_data_filename
+                                   << incidenceUid << expectedNewSummary;
+    //----------------------------------------------------------------------------------------------
+}
+
+void ITIPHandlerTest::testProcessITIPMessageUpdate()
+{
+    QFETCH(QString, creation_data_filename);
+    QFETCH(QString, update_data_filename);
+    QFETCH(QString, incidenceUid);
+    QFETCH(QString, expectedNewSummary);
+    const QString receiver = QLatin1String(s_ourEmail);
+
+    MailClient::sUnitTestResults.clear();
+
+    Akonadi::ITIPHandler *itipHandler = new Akonadi::ITIPHandler(this);
+    itipHandler->setShowDialogsOnError(false);
+    connect(itipHandler, SIGNAL(iTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)),
+            SLOT(oniTipMessageProcessed(Akonadi::ITIPHandler::Result,QString)) );
+
+    m_expectedResult = Akonadi::ITIPHandler::ResultSuccess;
+
+    // First accept the invitation that creates the incidence:
+    creation_data_filename = QLatin1String(ITIP_DATA_DIR) + QLatin1Char('/') + creation_data_filename;
+    QString iCalData = QString::fromLatin1(readFile(creation_data_filename));
+
+    m_pendingItipMessageSignal = 1;
+    itipHandler->processiTIPMessage(receiver, iCalData, QLatin1String("accepted"));
+    waitForIt();
+
+    QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+    Item::List items = calendarItems();
+    KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
+    QVERIFY(incidence);
+    QCOMPARE(items.count(), 1);
+
+    // good, now accept the invitation that has the update
+    update_data_filename = QLatin1String(ITIP_DATA_DIR) + QLatin1Char('/') + update_data_filename;
+    iCalData = QString::fromLatin1(readFile(update_data_filename));
+
+    m_pendingItipMessageSignal = 1;
+    itipHandler->processiTIPMessage(receiver, iCalData, QLatin1String("accepted"));
+    waitForIt();
+
+    QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+    items = calendarItems();
+    incidence = items.first().payload<KCalCore::Incidence::Ptr>();
+    QVERIFY(incidence);
+    QCOMPARE(items.count(), 1);
+    QCOMPARE(incidence->summary(), expectedNewSummary);
+}
+
 void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const QString &errorMessage)
 {
     if (result != ITIPHandler::ResultSuccess && result != m_expectedResult) {

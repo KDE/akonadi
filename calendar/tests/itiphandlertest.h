@@ -41,6 +41,10 @@ private Q_SLOTS:
     void testProcessITIPMessage_data();
     void testProcessITIPMessage();
 
+    // Tests cenarios where we receive an update from the organizer:
+    void testProcessITIPMessageUpdate_data();
+    void testProcessITIPMessageUpdate();
+
 private:
     void waitForSignals();
 
