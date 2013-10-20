@@ -230,7 +230,10 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           // This isn't an update - the found incidence was modified more recently
           errorString = i18n( "This isn't an update. "
                               "The found incidence was modified more recently." );
-          kWarning() << errorString;
+          kWarning() << errorString
+                     << "; revision=" << existingIncidence->revision()
+                     << "; existing->lastModified=" << existingIncidence->lastModified()
+                     << "; update->lastModified=" << inc->lastModified();
           emit transactionFinished( ResultOutatedUpdate, errorString );
           return;
         }
