@@ -25,6 +25,7 @@
 #include "unittestbase.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 #include <QObject>
 #include <QHash>
@@ -47,6 +48,13 @@ private Q_SLOTS:
 
 private:
     void waitForSignals();
+    void cleanup();
+    void createITIPHandler();
+    QString icalData(const QString &filename);
+    void processItip(const QString &icaldata, const QString &receiver,
+                     const QString &action, int expectedNumIncidences,
+                     Akonadi::Item::List &items);
+    KCalCore::Attendee::Ptr ourAttendee(const KCalCore::Incidence::Ptr &incidence) const;
 
 public Q_SLOTS:
     void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
@@ -55,6 +63,7 @@ public Q_SLOTS:
 private:
     int m_pendingItipMessageSignal;
     Akonadi::ITIPHandler::Result m_expectedResult;
+    Akonadi::ITIPHandler *m_itipHandler;
 };
 
 #endif
