@@ -58,7 +58,6 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     QTest::addColumn<QString>("action");
     QTest::addColumn<QString>("receiver");
     QTest::addColumn<QString>("incidenceUid"); // uid of incidence in invitation
-    QTest::addColumn<bool>("testCancel"); // if true, after accepting, itip CANCEL is tested too
     QTest::addColumn<Akonadi::ITIPHandler::Result>("expectedResult");
     QTest::addColumn<int>("expectedNumIncidences");
     QTest::addColumn<KCalCore::Attendee::PartStat>("expectedPartStat");
@@ -78,7 +77,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Accepted;
     action = QLatin1String("accepted");
-    QTest::newRow("invited us1") << data_filename << action << receiver << incidenceUid << false
+    QTest::newRow("invited us1") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
                                  << expectedPartStat;
@@ -89,7 +88,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Tentative;
     action = QLatin1String("tentative");
-    QTest::newRow("invited us2") << data_filename << action << receiver << incidenceUid << false
+    QTest::newRow("invited us2") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
                                  << expectedPartStat;
@@ -102,7 +101,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 1;
     expectedPartStat = KCalCore::Attendee::Delegated;
     action = QLatin1String("delegated");
-    QTest::newRow("invited us3") << data_filename << action << receiver << incidenceUid << false
+    QTest::newRow("invited us3") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
                                  << expectedPartStat;
@@ -113,29 +112,16 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     data_filename = QLatin1String("invited_us");
     expectedNumIncidences = 0;
     action = QLatin1String("cancel");
-    QTest::newRow("invited us4") << data_filename << action << receiver << incidenceUid << false
+    QTest::newRow("invited us4") << data_filename << action << receiver << incidenceUid
                                  << expectedResult
                                  << expectedNumIncidences
                                  << expectedPartStat;
-    //----------------------------------------------------------------------------------------------
-    // Process a CANCEL for an incidence that we do have. It should be deleted.
-    expectedResult = ITIPHandler::ResultSuccess;
-    data_filename = QLatin1String("invited_us");
-    expectedNumIncidences = 1;
-    action = QLatin1String("accepted");
-    expectedPartStat = KCalCore::Attendee::Accepted;
-    QTest::newRow("test cancel") << data_filename << action << receiver << incidenceUid
-                                 << /**test_cancel = */ true
-                                 << expectedResult
-                                 << expectedNumIncidences
-                                 << expectedPartStat;
-
     //----------------------------------------------------------------------------------------------
     // Here we're testing an error case, where data is null.
     expectedResult = ITIPHandler::ResultError;
     expectedNumIncidences = 0;
     action = QLatin1String("accepted");
-    QTest::newRow("invalid data") << QString() << action << receiver << incidenceUid << false
+    QTest::newRow("invalid data") << QString() << action << receiver << incidenceUid
                                   << expectedResult
                                   << expectedNumIncidences
                                   << expectedPartStat;
@@ -146,7 +132,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedNumIncidences = 0;
     action = QLatin1String("accepted");
     QTest::newRow("invalid action") << data_filename << QString() << receiver << incidenceUid
-                                    << false << expectedResult
+                                    << expectedResult
                                     << expectedNumIncidences
                                     << expectedPartStat;
     //----------------------------------------------------------------------------------------------
@@ -157,7 +143,7 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
     expectedPartStat = KCalCore::Attendee::Accepted;
     action = QLatin1String("accepted");
     incidenceUid = QLatin1String("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07"); // Don't change, hardcoded in data file
-    QTest::newRow("bug 235749") << data_filename << action << receiver << incidenceUid << false
+    QTest::newRow("bug 235749") << data_filename << action << receiver << incidenceUid
                                 << expectedResult
                                 << expectedNumIncidences
                                 << expectedPartStat;
@@ -171,7 +157,6 @@ void ITIPHandlerTest::testProcessITIPMessage()
     QFETCH(QString, action);
     QFETCH(QString, receiver);
     QFETCH(QString, incidenceUid);
-    QFETCH(bool, testCancel);
     QFETCH(Akonadi::ITIPHandler::Result, expectedResult);
     QFETCH(int, expectedNumIncidences);
     QFETCH(KCalCore::Attendee::PartStat, expectedPartStat);
@@ -194,12 +179,6 @@ void ITIPHandlerTest::testProcessITIPMessage()
         KCalCore::Attendee::Ptr me = ourAttendee(incidence);
         QVERIFY(me);
         QCOMPARE(me->status(), expectedPartStat);
-    }
-
-    if (testCancel) {
-        m_expectedResult = ITIPHandler::ResultSuccess;
-        Item::List items;
-        processItip(iCalData, receiver, QLatin1String("cancel"), 0, items);
     }
 
     cleanup();
@@ -257,6 +236,51 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate()
     QCOMPARE(incidence->summary(), expectedNewSummary);
 
     cleanup();
+}
+
+void ITIPHandlerTest::testProcessITIPMessageCancel_data()
+{
+    QTest::addColumn<QString>("creation_data_filename"); // filename to create incidence
+    QTest::addColumn<QString>("cancel_data_filename"); // filename with incidence cancelation
+    QTest::addColumn<QString>("incidenceUid"); // uid of incidence in invitation
+
+
+    QString creation_data_filename;
+    QString cancel_data_filename;
+    QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
+    //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event, we accept, then organizer changes event, and we record update:
+    creation_data_filename = QLatin1String("invited_us");
+    cancel_data_filename = QLatin1String("invited_us_cancel01");
+
+    QTest::newRow("cancel1") << creation_data_filename << cancel_data_filename
+                             << incidenceUid;
+    //----------------------------------------------------------------------------------------------
+}
+
+void ITIPHandlerTest::testProcessITIPMessageCancel()
+{
+    QFETCH(QString, creation_data_filename);
+    QFETCH(QString, cancel_data_filename);
+    QFETCH(QString, incidenceUid);
+
+    const QString receiver = QLatin1String(s_ourEmail);
+    MailClient::sUnitTestResults.clear();
+    createITIPHandler();
+
+    m_expectedResult = Akonadi::ITIPHandler::ResultSuccess;
+
+    // First accept the invitation that creates the incidence:
+    QString iCalData = icalData(creation_data_filename);
+    Item::List items;
+    processItip(iCalData, receiver, QLatin1String("accepted"), 1, items);
+
+    KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
+    QVERIFY(incidence);
+
+    // good, now accept the invitation that has the CANCEL
+    iCalData = icalData(cancel_data_filename);
+    processItip(iCalData, receiver, QLatin1String("accepted"), 0, items);
 }
 
 void ITIPHandlerTest::cleanup()

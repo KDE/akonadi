@@ -46,6 +46,9 @@ private Q_SLOTS:
     void testProcessITIPMessageUpdate_data();
     void testProcessITIPMessageUpdate();
 
+    void testProcessITIPMessageCancel_data();
+    void testProcessITIPMessageCancel();
+
 private:
     void waitForSignals();
     void cleanup();
