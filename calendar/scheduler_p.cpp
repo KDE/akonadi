@@ -290,7 +290,12 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
   kDebug() << "Storing new incidence with scheduling uid=" << incidence->schedulingID()
            << " and uid=" << incidence->uid();
 
-  calendar->addIncidence( incidence ); // The slot will emit the result
+  const bool success = calendar->addIncidence( incidence );
+  if ( !success ) {
+    emit transactionFinished( ResultCreatingError, QLatin1String( "Error adding incidence" ) );
+  } else {
+    // The slot will emit the result
+  }
 }
 
 void Scheduler::acceptAdd( const IncidenceBase::Ptr &, ScheduleMessage::Status )
