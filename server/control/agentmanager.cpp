@@ -261,7 +261,7 @@ QString AgentManager::createAgentInstance( const QString &identifier )
   }
 
   const AgentType agentInfo = mAgents.value( identifier );
-  mAgents[ identifier ].instanceCounter++;
+  mAgents[identifier].instanceCounter++;
 
   const AgentInstance::Ptr instance = createAgentInstance( agentInfo );
   if ( agentInfo.capabilities.contains( AgentType::CapabilityUnique ) ) {
@@ -521,7 +521,7 @@ void AgentManager::readPluginInfos( const QDir &directory )
   akDebug() << "PLUGINS: " << files;
 
   for ( int i = 0; i < files.count(); ++i ) {
-    const QString fileName = directory.absoluteFilePath( files[ i ] );
+    const QString fileName = directory.absoluteFilePath( files[i] );
 
     AgentType agentInfo;
     if ( agentInfo.load( fileName, this ) ) {
@@ -573,14 +573,14 @@ void AgentManager::load()
   file.beginGroup( QLatin1String( "Instances" ) );
   const QStringList entries = file.childGroups();
   for ( int i = 0; i < entries.count(); ++i ) {
-    const QString instanceIdentifier = entries[ i ];
+    const QString instanceIdentifier = entries[i];
 
     if ( mAgentInstances.contains( instanceIdentifier ) ) {
       akError() << Q_FUNC_INFO << "Duplicated instance identifier" << instanceIdentifier << "found in agentsrc";
       continue;
     }
 
-    file.beginGroup( entries[ i ] );
+    file.beginGroup( entries[i] );
 
     const QString agentType = file.value( QLatin1String( "AgentType" ) ).toString();
     if ( !mAgents.contains( agentType ) ) {
@@ -763,11 +763,11 @@ bool AgentManager::checkResourceInterface( const QString &identifier, const QStr
     return false;
   }
 
-  if ( !mAgents[ mAgentInstances[ identifier ]->agentType() ].capabilities.contains( QLatin1String( "Resource" ) ) ) {
+  if ( !mAgents[ mAgentInstances[identifier]->agentType() ].capabilities.contains( QLatin1String( "Resource" ) ) ) {
     return false;
   }
 
-  if ( !mAgentInstances[ identifier ]->hasResourceInterface() ) {
+  if ( !mAgentInstances[identifier]->hasResourceInterface() ) {
     qWarning() << QLatin1String( "AgentManager::" ) + method << " Agent instance "
         << identifier << " has no resource interface!";
     return false;

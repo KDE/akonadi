@@ -96,14 +96,14 @@ void ProcessControl::stop()
 void ProcessControl::slotError( QProcess::ProcessError error )
 {
   switch ( error ) {
-    case QProcess::Crashed:
-      mCrashCount++;
-      // do nothing, we'll respawn in slotFinished
-      break;
-    case QProcess::FailedToStart:
-    default:
-        mFailedToStart = true;
-      break;
+  case QProcess::Crashed:
+    mCrashCount++;
+    // do nothing, we'll respawn in slotFinished
+    break;
+  case QProcess::FailedToStart:
+  default:
+      mFailedToStart = true;
+    break;
   }
 
   akError() << "ProcessControl: Application" << qPrintable( mApplication ) << "stopped unexpectedly (" << mProcess.errorString() << ")";
@@ -223,7 +223,7 @@ void ProcessControl::start()
 #endif
 
   mProcess.start( mApplication, mArguments );
-  if ( !mProcess.waitForStarted( ) ) {
+  if ( !mProcess.waitForStarted() ) {
     qWarning( "ProcessControl: Unable to start application '%s' (%s)",
             qPrintable( mApplication ), qPrintable( mProcess.errorString() ) );
     Q_EMIT unableToStart();

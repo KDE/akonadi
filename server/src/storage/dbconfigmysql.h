@@ -70,7 +70,7 @@ class DbConfigMysql : public DbConfig
     virtual void stopInternalServer();
 
     /// reimpl
-    virtual void initSession(const QSqlDatabase& database);
+    virtual void initSession( const QSqlDatabase &database );
 
   private:
     QString mDatabaseName;

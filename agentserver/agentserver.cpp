@@ -105,7 +105,7 @@ void AgentServer::quit()
   Q_ASSERT( !m_quiting );
   m_quiting = true;
 
-  QMutableHashIterator<QString, AgentThread*> it( m_agents );
+  QMutableHashIterator<QString, AgentThread *> it( m_agents );
   while ( it.hasNext() ) {
     it.next();
     stopAgent( it.key() );

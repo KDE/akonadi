@@ -75,11 +75,11 @@ class AgentInstance : public QObject
     bool hasAgentInterface() const { return mAgentControlInterface && mAgentStatusInterface; }
     bool hasPreprocessorInterface() const { return mPreprocessorInterface; }
 
-    org::freedesktop::Akonadi::Agent::Control* controlInterface() const { return mAgentControlInterface; }
-    org::freedesktop::Akonadi::Agent::Status* statusInterface() const { return mAgentStatusInterface; }
-    org::freedesktop::Akonadi::Agent::Search* searchInterface() const { return mSearchInterface; }
-    org::freedesktop::Akonadi::Resource* resourceInterface() const { return mResourceInterface; }
-    org::freedesktop::Akonadi::Preprocessor * preProcessorInterface() const { return mPreprocessorInterface; }
+    org::freedesktop::Akonadi::Agent::Control *controlInterface() const { return mAgentControlInterface; }
+    org::freedesktop::Akonadi::Agent::Status *statusInterface() const { return mAgentStatusInterface; }
+    org::freedesktop::Akonadi::Agent::Search *searchInterface() const { return mSearchInterface; }
+    org::freedesktop::Akonadi::Resource *resourceInterface() const { return mResourceInterface; }
+    org::freedesktop::Akonadi::Preprocessor *preProcessorInterface() const { return mPreprocessorInterface; }
 
     bool obtainAgentInterface();
     bool obtainResourceInterface();
@@ -102,7 +102,7 @@ class AgentInstance : public QObject
     void errorHandler( const QDBusError &error );
 
   private:
-    template <typename T> T* findInterface( AkDBus::AgentType agentType, const char* path = 0 );
+    template <typename T> T *findInterface( AkDBus::AgentType agentType, const char *path = 0 );
 
   protected:
     void setAgentType( const QString &agentType ) { mType = agentType; }
@@ -113,9 +113,9 @@ class AgentInstance : public QObject
     AgentManager *mManager;
     org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface;
     org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface;
-    org::freedesktop::Akonadi::Agent::Search* mSearchInterface;
+    org::freedesktop::Akonadi::Agent::Search *mSearchInterface;
     org::freedesktop::Akonadi::Resource *mResourceInterface;
-    org::freedesktop::Akonadi::Preprocessor * mPreprocessorInterface;
+    org::freedesktop::Akonadi::Preprocessor *mPreprocessorInterface;
 
     int mStatus;
     QString mStatusMessage;

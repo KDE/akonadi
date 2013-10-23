@@ -136,12 +136,14 @@ class ScopeTest : public QObject
         scope.parseScope( &parser );
       } catch ( const Akonadi::Exception &e ) {
         didThrow = true;
-        if ( success )
+        if ( success ) {
           qDebug() << e.type() << e.what();
+        }
       }
       QCOMPARE( didThrow, !success );
-      if ( success )
+      if ( success ) {
         QCOMPARE( scope.ridChain(), result );
+      }
     }
 
     void testSelectionScopeParsing_data()

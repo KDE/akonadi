@@ -34,7 +34,7 @@ int main( int argc, char **argv )
       new BridgeServer<AkonadiBridgeConnection>( 31415 );
       new BridgeServer<DBusBridgeConnection>( 31416 );
       return app.exec();
-  } catch ( const std::exception & e ) {
+  } catch ( const std::exception &e ) {
       qDebug( "Caught exception: %s", e.what() );
       return EXIT_FAILURE;
   } catch ( ... ) {

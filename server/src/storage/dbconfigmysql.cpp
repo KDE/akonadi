@@ -115,7 +115,7 @@ bool DbConfigMysql::init( QSettings &settings )
   mUserName = settings.value( QLatin1String( "User" ) ).toString();
   mPassword = settings.value( QLatin1String( "Password" ) ).toString();
   mConnectionOptions = settings.value( QLatin1String( "Options" ), defaultOptions ).toString();
-  mServerPath = settings.value( QLatin1String("ServerPath"), defaultServerPath ).toString();
+  mServerPath = settings.value( QLatin1String( "ServerPath" ), defaultServerPath ).toString();
   mCleanServerShutdownCommand = settings.value( QLatin1String( "CleanServerShutdownCommand" ), defaultCleanShutdownCommand ).toString();
   settings.endGroup();
 
@@ -123,9 +123,9 @@ bool DbConfigMysql::init( QSettings &settings )
   if ( mInternalServer ) {
     mConnectionOptions = defaultOptions;
     // intentionally not namespaced as we are the only one in this db instance when using internal mode
-    mDatabaseName = QLatin1String("akonadi");
+    mDatabaseName = QLatin1String( "akonadi" );
   }
-  if ( mInternalServer && (mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) ) {
+  if ( mInternalServer && ( mServerPath.isEmpty() || !QFile::exists( mServerPath ) ) ) {
     mServerPath = defaultServerPath;
   }
 
@@ -264,9 +264,9 @@ void DbConfigMysql::startInternalServer()
   }
 
   // first run, some MySQL versions need a mysql_install_db run for that
-  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String("akonadi/mysql-global.conf" ));
+  const QString confFile = XdgBaseDirs::findResourceFile( "config", QLatin1String( "akonadi/mysql-global.conf" ) );
   if ( QDir( dataDir ).entryList( QDir::NoDotAndDotDot | QDir::AllEntries ).isEmpty() && !mMysqlInstallDbPath.isEmpty() ) {
-    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1").arg(confFile) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
+    const QStringList arguments = QStringList() << QString::fromLatin1( "--force" ) << QString::fromLatin1( "--defaults-file=%1" ).arg( confFile ) << QString::fromLatin1( "--datadir=%1/" ).arg( dataDir );
     QProcess::execute( mMysqlInstallDbPath, arguments );
   }
 
@@ -286,7 +286,7 @@ void DbConfigMysql::startInternalServer()
   arguments << QString::fromLatin1( "--shared-memory" );
 #endif
 
-  if (mysqldPath.isEmpty()) {
+  if ( mysqldPath.isEmpty() ) {
     akError() << "mysqld not found. Please verify your installation";
     return;
   }
@@ -342,7 +342,7 @@ void DbConfigMysql::startInternalServer()
       // Verify MySQL version
       {
         QSqlQuery query( db );
-        if ( !query.exec( QString::fromLatin1( "SELECT VERSION()") ) || !query.first() ) {
+        if ( !query.exec( QString::fromLatin1( "SELECT VERSION()" ) ) || !query.first() ) {
           akError() << "Failed to verify database server version";
           akError() << "Query error:" << query.lastError().text();
           akFatal() << "Database error:" << db.lastError().text();
@@ -409,8 +409,8 @@ void DbConfigMysql::stopInternalServer()
   }
 }
 
-void DbConfigMysql::initSession(const QSqlDatabase& database)
+void DbConfigMysql::initSession( const QSqlDatabase &database )
 {
   QSqlQuery query( database );
-  query.exec( QLatin1String("SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED") );
+  query.exec( QLatin1String( "SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED" ) );
 }

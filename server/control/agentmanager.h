@@ -316,7 +316,7 @@ class AgentManager : public QObject, protected QDBusContext
 
   private Q_SLOTS:
     void updatePluginInfos();
-    void serviceOwnerChanged( const QString &, const QString &, const QString & );
+    void serviceOwnerChanged( const QString &name, const QString &, const QString &newOwner );
     void agentExeChanged( const QString &fileName );
     void agentServerFailure();
     void serverFailure();
