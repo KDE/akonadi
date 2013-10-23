@@ -202,6 +202,13 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
     QTest::newRow("accept update") << creation_data_filename << update_data_filename
                                    << incidenceUid << expectedNewSummary;
     //----------------------------------------------------------------------------------------------
+    // Someone invited us to an event, we accept, then organizer changes event, and we record update:
+    creation_data_filename = QLatin1String("invited_us");
+    update_data_filename = QLatin1String("invited_us_daily_update01");
+
+    QTest::newRow("accept recurringupdate") << creation_data_filename << update_data_filename
+                                            << incidenceUid << expectedNewSummary;
+    //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testProcessITIPMessageUpdate()
