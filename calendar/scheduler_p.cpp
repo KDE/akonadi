@@ -175,14 +175,15 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
     return;
   }
 
+  QString schedulingUid = incidence->uid();
   QString errorString;
   Result result = ResultSuccess;
 
-  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( incidence->uid() );
+  const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( schedulingUid );
   kDebug() << "status=" << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy:exclude=kdebug
            << ": found " << existingIncidences.count()
            << " incidences with schedulingID " << incidence->schedulingID()
-           << "; uid was = " << incidence->uid();
+           << "; uid was = " << schedulingUid;
 
   if ( existingIncidences.isEmpty() ) {
     // Perfectly normal if the incidence doesn't exist. This is probably
@@ -200,7 +201,11 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
     if ( existingIncidence->isReadOnly() ) {
       continue;
     }
-    if ( existingIncidence->revision() <= incidence->revision() ) {
+
+    const QString existingUid = existingIncidence->uid();
+    const int existingRevision = existingIncidence->revision();
+
+    if ( existingRevision <= incidence->revision() ) {
       // The new incidence might be an update for the found one
       bool isUpdate = true;
       // Code for new invitations:
@@ -208,7 +213,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
       // It comes from a similar check inside libical, where the event is compared to
       // other events in the calendar. But if we have another version of the event around
       // (e.g. shared folder for a group), the status could be RequestNew, Obsolete or Updated.
-      kDebug() << "looking in " << existingIncidence->uid() << "'s attendees";
+      kDebug() << "looking in " << existingUid << "'s attendees";
       // This is supposed to be a new request, not an update - however we want to update
       // the existing one to handle the "clicking more than once on the invitation" case.
       // So check the attendee status of the attendee.
@@ -218,14 +223,13 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
         if( (*ait)->email() == email && (*ait)->status() == Attendee::NeedsAction ) {
           // This incidence wasn't created by me - it's probably in a shared folder
           // and meant for someone else, ignore it.
-          kDebug() << "ignoring " << existingIncidence->uid()
-                   << " since I'm still NeedsAction there";
+          kDebug() << "ignoring " << existingUid << " since I'm still NeedsAction there";
           isUpdate = false;
           break;
         }
       }
       if ( isUpdate ) {
-        if ( existingIncidence->revision() == incidence->revision() &&
+        if ( existingRevision == incidence->revision() &&
              existingIncidence->lastModified() > incidence->lastModified() ) {
           // This isn't an update - the found incidence was modified more recently
           errorString = i18n( "This isn't an update. "
@@ -239,15 +243,14 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
           emit transactionFinished( ResultOutatedUpdate, errorString );
           return;
         }
-        kDebug() << "replacing existing incidence " << existingIncidence->uid();
-        const QString oldUid = existingIncidence->uid();
+        kDebug() << "replacing existing incidence " << existingUid;
         if ( existingIncidence->type() != incidence->type() ) {
           kError() << "assigning different incidence types";
           result = ResultAssigningDifferentTypes;
           errorString = i18n( "Error: Assigning different incidence types." );
           emit transactionFinished( result, errorString );
         } else {
-          incidence->setSchedulingID( incidence->uid(), oldUid );
+          incidence->setSchedulingID( schedulingUid, existingUid );
           const bool success = calendar->modifyIncidence( incidence );
 
           if ( !success ) {
@@ -270,7 +273,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
   }
 
   // Move the uid to be the schedulingID and make a unique UID
-  incidence->setSchedulingID( incidence->uid(), CalFormat::createUniqueId() );
+  incidence->setSchedulingID( schedulingUid, CalFormat::createUniqueId() );
   // notify the user in case this is an update and we didn't find the to-be-updated incidence
   if ( existingIncidences.count() == 0 && incidence->revision() > 0 ) {
     KMessageBox::information(
@@ -287,8 +290,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
              "<para>This is not a problem, but we thought you should know.</para>" ),
       i18nc( "@title", "Cannot find invitation to be updated" ), "AcceptCantFindIncidence" );
   }
-  kDebug() << "Storing new incidence with scheduling uid=" << incidence->schedulingID()
-           << " and uid=" << incidence->uid();
+  kDebug() << "Storing new incidence with scheduling uid=" << schedulingUid << " and uid=" << incidence->uid();
 
   const bool success = calendar->addIncidence( incidence );
   if ( !success ) {
