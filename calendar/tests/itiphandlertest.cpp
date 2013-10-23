@@ -147,7 +147,6 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                 << expectedResult
                                 << expectedNumIncidences
                                 << expectedPartStat;
-
     //----------------------------------------------------------------------------------------------
 }
 
@@ -249,12 +248,19 @@ void ITIPHandlerTest::testProcessITIPMessageCancel_data()
     QString cancel_data_filename;
     QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
     //----------------------------------------------------------------------------------------------
-    // Someone invited us to an event, we accept, then organizer changes event, and we record update:
+    // Someone invited us to an event, we accept, then organizer cancels event
     creation_data_filename = QLatin1String("invited_us");
     cancel_data_filename = QLatin1String("invited_us_cancel01");
 
     QTest::newRow("cancel1") << creation_data_filename << cancel_data_filename
                              << incidenceUid;
+    //----------------------------------------------------------------------------------------------
+    // Someone invited us to daily event, we accept, then organizer cancels the whole recurrence series
+    creation_data_filename = QLatin1String("invited_us_daily");
+    cancel_data_filename = QLatin1String("invited_us_daily_cancel01");
+
+    QTest::newRow("cancel_daily") << creation_data_filename << cancel_data_filename
+                                  << incidenceUid;
     //----------------------------------------------------------------------------------------------
 }
 
@@ -274,6 +280,8 @@ void ITIPHandlerTest::testProcessITIPMessageCancel()
     QString iCalData = icalData(creation_data_filename);
     Item::List items;
     processItip(iCalData, receiver, QLatin1String("accepted"), 1, items);
+
+    qDebug() << "DEBUG foo " << items.count();
 
     KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
     QVERIFY(incidence);
@@ -323,6 +331,7 @@ void ITIPHandlerTest::processItip(const QString &icaldata, const QString &receiv
     QCOMPARE(MailClient::sUnitTestResults.count(), 0);
 
     items = calendarItems();
+
     if (expectedNumIncidences != -1) {
         QCOMPARE(items.count(), expectedNumIncidences);
     }
