@@ -558,8 +558,9 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
   Q_D(CalendarBase);
 
   // User canceled on the collection selection dialog
-  if ( batchAdding() && d->mBatchInsertionCancelled )
-    return -1;
+  if ( batchAdding() && d->mBatchInsertionCancelled ) {
+    return false;
+  }
 
   Akonadi::Collection collection;
 
