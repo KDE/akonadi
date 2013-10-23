@@ -140,8 +140,15 @@ void Scheduler::acceptPublish( const IncidenceBase::Ptr &newIncBase,
             kError() << errorString;
           } else {
             newInc->setSchedulingID( newInc->uid(), oldUid );
-            calendar->modifyIncidence( newInc );
-            return; // signal will be emitted in the handleModifyFinished() slot
+            const bool success = calendar->modifyIncidence( newInc );
+
+            if ( !success ) {
+              emit transactionFinished( ResultModifyingError, QLatin1String( "Error modifying incidence" ) );
+            } else {
+              // signal will be emitted in the handleModifyFinished() slot
+            }
+
+            return;
           }
         }
       }
