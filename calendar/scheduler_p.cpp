@@ -246,8 +246,13 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidence,
           emit transactionFinished( result, errorString );
         } else {
           inc->setSchedulingID( inc->uid(), oldUid );
-          calendar->modifyIncidence( inc );
-          //handleModifyFinished() will emit the final signal.
+          const bool success = calendar->modifyIncidence( inc );
+
+          if ( !success ) {
+            emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+          } else {
+            //handleModifyFinished() will emit the final signal.
+          }
         }
         return;
       }
@@ -506,8 +511,12 @@ void Scheduler::acceptReply( const IncidenceBase::Ptr &incidenceBase,
       if ( update && ( calendarTodo->percentComplete() != update->percentComplete() ) ) {
         calendarTodo->setPercentComplete( update->percentComplete() );
         calendarTodo->updated();
-        calendar->modifyIncidence( calendarTodo );
-        // success will be emitted in the handleModifyFinished() slot
+        const bool success = calendar->modifyIncidence( calendarTodo );
+        if ( !success ) {
+          emit transactionFinished( ResultModifyingError, i18n( "Error modifying incidence" ) );
+        } else {
+          // success will be emitted in the handleModifyFinished() slot
+        }
         return;
       }
     }
