@@ -35,10 +35,10 @@ class Exception : public std::exception
     Exception( const char *what ) throw() : mWhat( what ) {}
     Exception( const QByteArray &what ) throw() : mWhat( what ) {}
     Exception( const QString &what ) throw() : mWhat( what.toUtf8() ) {}
-    Exception( const Exception &other ) throw() : std::exception(other), mWhat( other.what() ) {}
+    Exception( const Exception &other ) throw() : std::exception( other ), mWhat( other.what() ) {}
     virtual ~Exception() throw() {}
-    const char* what() const throw() { return mWhat.constData(); }
-    virtual const char* type() const throw() { return "General Exception"; }
+    const char *what() const throw() { return mWhat.constData(); }
+    virtual const char *type() const throw() { return "General Exception"; }
   protected:
     QByteArray mWhat;
 };
@@ -50,7 +50,7 @@ class classname : public Akonadi::Exception \
     classname ( const char *what ) throw() : Akonadi::Exception( what ) {} \
     classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) {} \
     classname ( const QString &what ) throw() : Akonadi::Exception( what ) {} \
-    const char* type() const throw() { return "" #classname; } \
+    const char *type() const throw() { return "" #classname; } \
 }
 
 }

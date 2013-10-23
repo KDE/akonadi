@@ -96,12 +96,12 @@ void Handler::setTag( const QByteArray &tag )
     m_tag = tag;
 }
 
-QByteArray Handler::tag( ) const
+QByteArray Handler::tag() const
 {
     return m_tag;
 }
 
-Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray &_command, ImapStreamParser *streamParser )
+Handler *Handler::findHandlerForCommandAuthenticated( const QByteArray &_command, ImapStreamParser *streamParser )
 {
   QByteArray command( _command );
   // deal with command prefixes

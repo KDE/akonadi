@@ -51,8 +51,8 @@ class DBusTracer : public QObject, public TracerInterface
     void connectionDataInput( const QString &identifier, const QString &msg );
     void connectionDataOutput( const QString &identifier, const QString &msg );
     void signalEmitted( const QString &signalName, const QString &msg );
-    void warningEmitted( const QString& componentName, const QString &msg );
-    void errorEmitted( const QString& componentName, const QString &msg );
+    void warningEmitted( const QString &componentName, const QString &msg );
+    void errorEmitted( const QString &componentName, const QString &msg );
 };
 
 }

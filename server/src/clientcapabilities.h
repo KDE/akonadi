@@ -36,10 +36,10 @@ public:
   bool isEmpty();
 
   int notificationMessageVersion() const;
-  void setNotificationMessageVersion(int version);
+  void setNotificationMessageVersion( int version );
 
   bool noPayloadPath() const;
-  void setNoPayloadPath(bool noPayloadPath);
+  void setNoPayloadPath( bool noPayloadPath );
 
 private:
   int m_notificationMessageVersion;

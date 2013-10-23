@@ -60,7 +60,7 @@ class AkApplication : public QObject
     int exec();
 
   protected:
-    AkApplication( int & argc, char ** argv );
+    AkApplication( int &argc, char **argv );
     void init();
     QScopedPointer<QCoreApplication> mApp;
 

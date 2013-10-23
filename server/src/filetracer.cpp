@@ -71,6 +71,6 @@ void FileTracer::error( const QString &componentName, const QString &msg )
 
 void FileTracer::output( const QString &id, const QString &msg )
 {
-  QString output = QString::fromLatin1( "%1: %2: %3\r\n" ).arg( QTime::currentTime().toString( QLatin1String( "HH:mm:ss.zzz" ) ), id, msg.left( msg.indexOf( QLatin1String("\n") ) ) );
+  QString output = QString::fromLatin1( "%1: %2: %3\r\n" ).arg( QTime::currentTime().toString( QLatin1String( "HH:mm:ss.zzz" ) ), id, msg.left( msg.indexOf( QLatin1String( "\n" ) ) ) );
   m_file->write( output.toUtf8() );
 }

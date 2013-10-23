@@ -45,7 +45,7 @@ class FileTracer : public TracerInterface
     virtual void error( const QString &componentName, const QString &msg );
 
   private:
-    void output( const QString&, const QString& );
+    void output( const QString &id, const QString &msg );
 
     QFile *m_file;
 };
