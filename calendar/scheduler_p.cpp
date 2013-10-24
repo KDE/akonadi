@@ -1,7 +1,7 @@
 /*
   Copyright (c) 2001,2004 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-  Copyright (C) 2012 Sérgio Martins <iamsergio@gmail.com>
+  Copyright (C) 2012-2013 Sérgio Martins <iamsergio@gmail.com>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -198,9 +198,8 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
     kDebug() << "incidence not found; calendar = " << calendar.data()
              << "; incidence count = " << calendar->incidences().count();
   }
-  Incidence::List::ConstIterator incit = existingIncidences.begin();
-  for ( ; incit != existingIncidences.end() ; ++incit ) {
-    Incidence::Ptr existingIncidence = *incit;
+
+  foreach ( const KCalCore::Incidence::Ptr &existingIncidence, existingIncidences ) {
     kDebug() << "Considering this found event ("
              << ( existingIncidence->isReadOnly() ? "readonly" : "readwrite" )
              << ") :" << mFormat->toString( existingIncidence );
@@ -256,7 +255,25 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
           errorString = i18n( "Error: Assigning different incidence types." );
           emit transactionFinished( result, errorString );
         } else {
-          incidence->setSchedulingID( schedulingUid, existingUid );
+          incidence->setSchedulingID( schedulingUid, existingUid ) ;
+
+          if ( incidence->hasRecurrenceId() ) {
+            Incidence::Ptr existingInstance = calendar->incidence(incidence->instanceIdentifier());
+            if ( !existingInstance ) {
+              // The organizer created an exception, lets create it in our calendar, we don't have it yet
+              const bool success = calendar->addIncidence(incidence);
+
+              if ( !success ) {
+                emit transactionFinished( ResultCreatingError, i18n( "Error creating incidence" ) );
+              } else {
+                // Signal emitted in the result slot of addFinished()
+              }
+
+              return;
+            }
+          }
+
+
           const bool success = calendar->modifyIncidence( incidence );
 
           if ( !success ) {
