@@ -21,6 +21,7 @@
 #ifndef UNITTEST_BASE_H
 #define UNITTEST_BASE_H
 
+#include <kcalcore/calendar.h>
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
@@ -46,6 +47,7 @@ public Q_SLOTS:
 
 protected:
 
+    void compareCalendars(const KCalCore::Calendar::Ptr &expectedCalendar);
     static QByteArray readFile(const QString &filename);
 
     Akonadi::Collection mCollection;

@@ -23,6 +23,7 @@
 #include "../fetchjobcalendar.h"
 
 #include <kcalcore/event.h>
+#include <kcalcore/icalformat.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/calendar/incidencechanger.h>
@@ -35,6 +36,7 @@
 #include <qtest.h>
 
 using namespace Akonadi;
+using namespace KCalCore;
 
 UnitTestBase::UnitTestBase()
 {
@@ -88,9 +90,12 @@ void UnitTestBase::verifyExists(const QString &uid, bool exists)
 
 Akonadi::Item::List UnitTestBase::calendarItems()
 {
-    FetchJobCalendar *calendar = new FetchJobCalendar();
-    connect(calendar, SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr(new FetchJobCalendar());
+    connect(calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
     waitForIt();
+    KCalCore::ICalFormat format;
+    QString dump = format.toString(calendar.staticCast<KCalCore::Calendar>());
+    qDebug() << dump;
     calendar->deleteLater();
     return calendar->items();
 }
@@ -99,6 +104,51 @@ void UnitTestBase::onLoadFinished(bool success, const QString &)
 {
     QVERIFY(success);
     stopWaiting();
+}
+
+void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalendar)
+{
+    FetchJobCalendar::Ptr calendar = FetchJobCalendar::Ptr(new FetchJobCalendar());
+    connect(calendar.data(), SIGNAL(loadFinished(bool,QString)), SLOT(onLoadFinished(bool,QString)));
+    waitForIt();
+
+
+    // Now compare the expected calendar to the calendar we got.
+    Incidence::List incidences = calendar->incidences();
+    Incidence::List expectedIncidences = expectedCalendar->incidences();
+
+    // First, replace the randomly generated UIDs with the UID that came in the invitation e-mail...
+    foreach (const KCalCore::Incidence::Ptr &incidence, incidences) {
+        incidence->setUid(incidence->schedulingID());
+        foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
+            attendee->setUid(attendee->email());
+        }
+    }
+
+    // ... so we can compare them
+    foreach (const KCalCore::Incidence::Ptr &incidence, expectedIncidences) {
+        incidence->setUid(incidence->schedulingID());
+        foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
+            attendee->setUid(attendee->email());
+        }
+    }
+
+    QCOMPARE(incidences.count(), expectedIncidences.count());
+
+    foreach (const KCalCore::Incidence::Ptr &expectedIncidence, expectedIncidences) {
+        KCalCore::Incidence::Ptr incidence;
+        for (int i=0; i<incidences.count(); i++) {
+            if (incidences.at(i)->instanceIdentifier() == expectedIncidence->instanceIdentifier()) {
+                incidence = incidences.at(i);
+                incidences.remove(i);
+                break;
+            }
+        }
+        QVERIFY(incidence);
+        // Don't fail on creation times, which are obviously different
+        expectedIncidence->setCreated(incidence->created());
+        QCOMPARE(*expectedIncidence, *incidence);
+    }
 }
 
 /** static */

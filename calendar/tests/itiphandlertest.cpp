@@ -22,6 +22,7 @@
 #include "../mailclient_p.h"
 #include "../fetchjobcalendar.h"
 
+#include <kcalcore/icalformat.h>
 #include <kcalcore/attendee.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/collectionfetchjob.h>
@@ -40,29 +41,9 @@ using namespace KCalCore;
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ChangeType>)
 Q_DECLARE_METATYPE(Akonadi::ITIPHandler::Result)
 Q_DECLARE_METATYPE(KCalCore::Attendee::PartStat)
+Q_DECLARE_METATYPE(QList<int>)
 
 static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
-
-struct ExpectedIncidenceData {
-    typedef QList<ExpectedIncidenceData> List;
-    QString summary;
-    QString uid;
-    QString instanceIdentifier;
-    bool hasRecurringId;
-};
-
-Q_DECLARE_METATYPE(ExpectedIncidenceData)
-Q_DECLARE_METATYPE(ExpectedIncidenceData::List)
-
-
-static void validateIncidence(const KCalCore::Incidence::Ptr &incidence, const ExpectedIncidenceData &data)
-{
-    const QString instanceIdentifier = incidence->schedulingID() + incidence->recurrenceId().toString();
-    QCOMPARE(incidence->hasRecurrenceId(), data.hasRecurringId);
-    QCOMPARE(instanceIdentifier, data.instanceIdentifier);
-    QCOMPARE(incidence->summary(), data.summary);
-    QCOMPARE(incidence->schedulingID(), data.uid);
-}
 
 void ITIPHandlerTest::initTestCase()
 {
@@ -70,7 +51,6 @@ void ITIPHandlerTest::initTestCase()
     m_pendingItipMessageSignal = 0;
     MailClient::sRunningUnitTests = true;
     m_itipHandler = 0;
-    qRegisterMetaType<ExpectedIncidenceData::List>("ExpectedIncidenceData::List");
 }
 
 void ITIPHandlerTest::testProcessITIPMessage_data()
@@ -206,73 +186,37 @@ void ITIPHandlerTest::testProcessITIPMessage()
 
 void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
 {
-    QTest::addColumn<QString>("creation_data_filename"); // filename to create incidence
-    QTest::addColumn<QString>("update_data_filename"); // filename with update to incidence
-    QTest::addColumn<QString>("incidenceUid"); // uid of incidence in invitation
-    // The new summary that's present in the update. Hardcoded in the file, don't change this.
-    // It's a list for testing recur-id
-    QTest::addColumn<ExpectedIncidenceData::List>("expectedData");
-
-    ExpectedIncidenceData::List expectedDataList;
-    ExpectedIncidenceData expectedData;
-
-    QString creation_data_filename;
-    QString update_data_filename;
-    QString incidenceUid = QString::fromLatin1("uosj936i6arrtl9c2i5r2mfuvg");
-    QString expectedNewSummary = QLatin1String("new-summary");
-
-    expectedData.hasRecurringId = false;
-    expectedData.instanceIdentifier = incidenceUid;
-    expectedData.uid = incidenceUid;
-    expectedData.summary = expectedNewSummary;
-    expectedDataList << expectedData;
+    QTest::addColumn<QStringList>("invitation_filenames"); // filename to create incidence (inputs)
+    QTest::addColumn<QString>("expected_filename"); // filename with expected data   (reference)
+    QStringList invitation_filenames;
+    QString expected_filename;
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
-
-    creation_data_filename = QLatin1String("invited_us");
-    update_data_filename = QLatin1String("invited_us_update01");
-
-    QTest::newRow("accept update") << creation_data_filename << update_data_filename
-                                   << incidenceUid << expectedDataList;
+    invitation_filenames.clear();
+    invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_update01");
+    expected_filename = QLatin1String("expected_data/update1");
+    QTest::newRow("accept update") << invitation_filenames << expected_filename;
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
-    creation_data_filename = QLatin1String("invited_us");
-    update_data_filename = QLatin1String("invited_us_daily_update01");
-
-    QTest::newRow("accept recurringupdate") << creation_data_filename << update_data_filename
-                                            << incidenceUid << expectedDataList;
-
+    invitation_filenames.clear();
+    invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_daily_update01");
+    expected_filename = QLatin1String("expected_data/update2");
+    QTest::newRow("accept recurringupdate") << invitation_filenames << expected_filename;
     //----------------------------------------------------------------------------------------------
     // We accept a recurring event, then the organizer changes the summary to the second instance (RECID)
-    creation_data_filename = QLatin1String("invited_us_daily");
-    update_data_filename = QLatin1String("invited_us_daily_update_recid01");
-    expectedNewSummary = QLatin1String("new-summary-for-second-occurrence");
-    expectedDataList.clear();
-
-    expectedData.hasRecurringId = false;
-    expectedData.instanceIdentifier = incidenceUid;
-    expectedData.uid = incidenceUid;
-    expectedData.summary = QLatin1String("Daily stuff"); // The original summary
-    expectedDataList << expectedData;
-
-    expectedData.hasRecurringId = true;
-    expectedData.instanceIdentifier = incidenceUid + QLatin1String("2013-10-23T09:00:00Z");
-    expectedData.uid = incidenceUid;
-    expectedData.summary = expectedNewSummary;
-    expectedDataList << expectedData;
-
-    QTest::newRow("accept recid update") << creation_data_filename << update_data_filename
-                                         << incidenceUid  << expectedDataList;
+    expected_filename = QLatin1String("expected_data/update3");
+    invitation_filenames.clear();
+    invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_update_recid01");
+    QTest::newRow("accept recid update") << invitation_filenames << expected_filename;
     //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testProcessITIPMessageUpdate()
 {
-    QFETCH(QString, creation_data_filename);
-    QFETCH(QString, update_data_filename);
-    QFETCH(QString, incidenceUid);
-    QFETCH(ExpectedIncidenceData::List, expectedData);
+    QFETCH(QStringList, invitation_filenames);
+    QFETCH(QString, expected_filename);
+
     const QString receiver = QLatin1String(s_ourEmail);
 
     MailClient::sUnitTestResults.clear();
@@ -280,26 +224,22 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate()
 
     m_expectedResult = Akonadi::ITIPHandler::ResultSuccess;
 
-    // First accept the invitation that creates the incidence:
-    QString iCalData = icalData(creation_data_filename);
-    Item::List items;
-    processItip(iCalData, receiver, QLatin1String("accepted"), 1, items);
-
-    KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
-    QVERIFY(incidence);
-
-    // good, now accept the invitation that has the update
-    const int expectedCount = expectedData.count();
-    iCalData = icalData(update_data_filename);
-    processItip(iCalData, receiver, QLatin1String("accepted"), expectedCount, items);
-
-
-
-    QCOMPARE(items.count(), expectedData.count());
-    for (int i = 0; i < items.count(); i++) {
-        incidence = items.at(i).payload<KCalCore::Incidence::Ptr>();
-        validateIncidence(incidence, expectedData.at(i));
+    for (int i=0; i<invitation_filenames.count(); i++) {
+        // First accept the invitation that creates the incidence:
+        QString iCalData = icalData(invitation_filenames.at(i));
+        Item::List items;
+        qDebug() << "Processing " << invitation_filenames.at(i);
+        processItip(iCalData, receiver, QLatin1String("accepted"), -1, items);
     }
+
+
+    QString expectedICalData = icalData(expected_filename);
+    KCalCore::MemoryCalendar::Ptr expectedCalendar = KCalCore::MemoryCalendar::Ptr(new KCalCore::MemoryCalendar(KDateTime::UTC));
+    KCalCore::ICalFormat format;
+    format.fromString(expectedCalendar, expectedICalData);
+    compareCalendars(expectedCalendar);
+
+
 
     cleanup();
 }
@@ -347,8 +287,6 @@ void ITIPHandlerTest::testProcessITIPMessageCancel()
     QString iCalData = icalData(creation_data_filename);
     Item::List items;
     processItip(iCalData, receiver, QLatin1String("accepted"), 1, items);
-
-    qDebug() << "DEBUG foo " << items.count();
 
     KCalCore::Incidence::Ptr incidence = items.first().payload<KCalCore::Incidence::Ptr>();
     QVERIFY(incidence);
