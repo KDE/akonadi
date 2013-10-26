@@ -264,7 +264,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
               const bool success = calendar->addIncidence(incidence);
 
               if ( !success ) {
-                emit transactionFinished( ResultCreatingError, i18n( "Error creating incidence" ) );
+                emit transactionFinished( ResultCreatingError, QLatin1String( "Error creating incidence" ) );
               } else {
                 // Signal emitted in the result slot of addFinished()
               }
