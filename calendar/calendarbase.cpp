@@ -564,8 +564,17 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
 
   Akonadi::Collection collection;
 
-  if ( batchAdding() && d->mCollectionForBatchInsertion.isValid() )
+  if ( batchAdding() && d->mCollectionForBatchInsertion.isValid() ) {
     collection = d->mCollectionForBatchInsertion;
+  }
+
+  if ( incidence->hasRecurrenceId() && !collection.isValid() ) {
+    // We are creating an exception, reuse the same collection that the main incidence uses
+    Item mainItem = item( incidence->uid() );
+    if ( mainItem.isValid() ) {
+      collection = Collection( mainItem.storageCollectionId() );
+    }
+  }
 
   const int changeId = d->mIncidenceChanger->createIncidence( incidence, collection );
 
