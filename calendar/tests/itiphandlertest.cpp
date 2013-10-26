@@ -188,32 +188,30 @@ void ITIPHandlerTest::testProcessITIPMessages_data()
 {
     QTest::addColumn<QStringList>("invitation_filenames"); // filename to create incidence (inputs)
     QTest::addColumn<QString>("expected_filename"); // filename with expected data   (reference)
-    QTest::addColumn<QString>("action"); // we must specify the METHOD. This is an ITipHandler API workaround, not sure why we must pass it as argument since it's already inside the icaldata.
+    QTest::addColumn<QStringList>("actions"); // we must specify the METHOD. This is an ITipHandler API workaround, not sure why we must pass it as argument since it's already inside the icaldata.
     QStringList invitation_filenames;
     QString expected_filename;
-    QString action;
+    QStringList actions;
+    actions << QLatin1String("accepted") << QLatin1String("accepted");
 
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
     invitation_filenames.clear();
     invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_update01");
     expected_filename = QLatin1String("expected_data/update1");
-    action = QLatin1String("accepted");
-    QTest::newRow("accept update") << invitation_filenames << expected_filename << action;
+    QTest::newRow("accept update") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // Someone invited us to an event, we accept, then organizer changes event, and we record update:
     invitation_filenames.clear();
     invitation_filenames << QLatin1String("invited_us") << QLatin1String("invited_us_daily_update01");
     expected_filename = QLatin1String("expected_data/update2");
-    action = QLatin1String("accepted");
-    QTest::newRow("accept recurringupdate") << invitation_filenames << expected_filename << action;
+    QTest::newRow("accept recurringupdate") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // We accept a recurring event, then the organizer changes the summary to the second instance (RECID)
     expected_filename = QLatin1String("expected_data/update3");
     invitation_filenames.clear();
     invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_update_recid01");
-    action = QLatin1String("accepted");
-    QTest::newRow("accept recid update") << invitation_filenames << expected_filename << action;
+    QTest::newRow("accept recid update") << invitation_filenames << expected_filename << actions;
     //----------------------------------------------------------------------------------------------
     // We accept a recurring event, then we accept a CANCEL with recuring-id.
     // The result is that a exception with status CANCELLED should be created, and our main incidence
@@ -221,8 +219,8 @@ void ITIPHandlerTest::testProcessITIPMessages_data()
     invitation_filenames.clear();
     invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_cancel_recid01");
     expected_filename = QLatin1String("expected_data/cancel1");
-    action = QLatin1String("cancel");
-    QTest::newRow("accept recid cancel") << invitation_filenames << expected_filename << action;
+    actions << QLatin1String("accepted") << QLatin1String("cancel");
+    QTest::newRow("accept recid cancel") << invitation_filenames << expected_filename << actions;
 
     //----------------------------------------------------------------------------------------------
 }
@@ -231,7 +229,7 @@ void ITIPHandlerTest::testProcessITIPMessages()
 {
     QFETCH(QStringList, invitation_filenames);
     QFETCH(QString, expected_filename);
-    QFETCH(QString, action);
+    QFETCH(QStringList, actions);
 
     const QString receiver = QLatin1String(s_ourEmail);
 
@@ -245,7 +243,7 @@ void ITIPHandlerTest::testProcessITIPMessages()
         QString iCalData = icalData(invitation_filenames.at(i));
         Item::List items;
         qDebug() << "Processing " << invitation_filenames.at(i);
-        processItip(iCalData, receiver, action, -1, items);
+        processItip(iCalData, receiver, actions.at(i), -1, items);
     }
 
 
@@ -253,9 +251,7 @@ void ITIPHandlerTest::testProcessITIPMessages()
     KCalCore::MemoryCalendar::Ptr expectedCalendar = KCalCore::MemoryCalendar::Ptr(new KCalCore::MemoryCalendar(KDateTime::UTC));
     KCalCore::ICalFormat format;
     format.fromString(expectedCalendar, expectedICalData);
-    compareCalendars(expectedCalendar);
-
-
+    compareCalendars(expectedCalendar); // Here's where the cool and complex comparations are done
 
     cleanup();
 }
