@@ -30,11 +30,11 @@
 
 using namespace Akonadi;
 
-CacheCleaner::CacheCleaner( QObject *parent ) :
-    QThread( parent )
+CacheCleaner::CacheCleaner( QObject *parent )
+  : QThread( parent )
+  , mTime ( 60 )
+  , mLoops ( 0 )
 {
-  mTime = 60;
-  mLoops = 0;
 }
 
 CacheCleaner::~CacheCleaner()
@@ -107,7 +107,7 @@ void CacheCleaner::cleanCache()
    * mTime is 60 otherwise we increment mTime in 60
    */
 
-  if ( mLoops < loopsWithExpiredItem) {
+  if ( mLoops < loopsWithExpiredItem ) {
     if ( (mTime > 60) && (loopsWithExpiredItem - mLoops) < 50 ) {
       mTime -= 60;
     } else {
