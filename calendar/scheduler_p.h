@@ -55,7 +55,8 @@ public:
     ResultErrorSavingFreeBusy,
     ResultCreatingError,
     ResultModifyingError,
-    ResultDeletingError
+    ResultDeletingError,
+    ResultUnsupported
   };
 
   /**
