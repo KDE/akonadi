@@ -335,6 +335,11 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
     return;
   }
 
+  if ( incidence->type() == IncidenceBase::TypeJournal ) {
+    emit transactionFinished( ResultUnsupported, QLatin1String( "Unsupported incidence type") );
+    return;
+  }
+
   const Incidence::List existingIncidences = calendar->incidencesFromSchedulingID( incidence->uid() );
   kDebug() << "Scheduler::acceptCancel="
            << KCalUtils::Stringify::scheduleMessageStatus( status ) //krazy2:exclude=kdebug
