@@ -389,10 +389,26 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
     }
 
     kDebug() << "removing existing incidence " << existingUid;
+    if ( incidence->hasRecurrenceId() ) {
+        Incidence::Ptr existingInstance = calendar->incidence( incidence->instanceIdentifier() );
+        existingInstance->setStatus( Incidence::StatusCanceled );
 
-    result = calendar->deleteIncidence( existingIncidence ) ? ResultSuccess : ResultErrorDelete;
-    if ( result != ResultSuccess ) {
-      emit transactionFinished( result, errorString );
+        if ( existingInstance ) {
+          result = calendar->modifyIncidence( existingInstance ) ? ResultSuccess : ResultModifyingError;
+        } else {
+          incidence->setSchedulingID( incidence->uid(), existingIncidence->uid() );
+          result = calendar->addIncidence( incidence ) ? ResultSuccess : ResultCreatingError;
+        }
+
+        if ( result != ResultSuccess ) {
+            emit transactionFinished( result, QLatin1String( "Error recording exception" ) );
+        }
+
+    } else {
+      result = calendar->deleteIncidence( existingIncidence ) ? ResultSuccess : ResultErrorDelete;
+      if ( result != ResultSuccess ) {
+        emit transactionFinished( result, errorString );
+      }
     }
 
     // The success case will be handled in handleDeleteFinished()
