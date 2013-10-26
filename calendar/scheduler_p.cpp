@@ -317,7 +317,7 @@ void Scheduler::acceptRequest( const IncidenceBase::Ptr &incidenceBase,
 
   const bool success = calendar->addIncidence( incidence );
   if ( !success ) {
-    emit transactionFinished( ResultCreatingError, QLatin1String( "Error adding incidence" ) );
+    emit transactionFinished( ResultCreatingError, i18n( "Error adding incidence" ) );
   } else {
     // The slot will emit the result
   }
