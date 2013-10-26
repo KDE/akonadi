@@ -78,6 +78,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
            << "; action=" << action;
 
   if ( d->m_currentOperation != OperationNone ) {
+    d->m_currentOperation = OperationNone;
     kFatal() << "There can't be an operation in progress!" << d->m_currentOperation;
     return;
   }
@@ -160,7 +161,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     //TODO: what happens here? we must emit a signal
   } else if ( action.startsWith( QLatin1String( "cancel" ) ) ) {
     // Delete the old incidence, if one is present
-    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidenceFromSchedulingID( d->m_incidence->instanceIdentifier() );
+    KCalCore::Incidence::Ptr existingIncidence = d->calendar()->incidenceFromSchedulingID( d->m_incidence->uid() );
     if ( existingIncidence ) {
       d->m_scheduler->acceptTransaction( d->m_incidence, d->calendar(), KCalCore::iTIPCancel, status, receiver );
       return; // signal emitted in onSchedulerFinished().
@@ -171,6 +172,17 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
                  << "; uid=" << d->m_incidence->uid()
                  << "; identifier=" << d->m_incidence->instanceIdentifier()
                  << "; summary=" << d->m_incidence->summary();
+
+      kDebug() << "\n Here's what we do have with such a summary:";
+      KCalCore::Incidence::List knownIncidences = calendar()->incidences();
+      foreach (const KCalCore::Incidence::Ptr &knownIncidence, knownIncidences) {
+        if ( knownIncidence->summary() == d->m_incidence->summary() ) {
+          kDebug() << "\nFound: uid=" << knownIncidence->uid()
+                   << "; identifier=" << knownIncidence->instanceIdentifier()
+                   << "; schedulingId" << knownIncidence->schedulingID();
+        }
+      }
+
       emitiTipMessageProcessed( this, ResultSuccess, QString() );
     }
   } else if ( action.startsWith( QLatin1String( "reply" ) ) ) {
