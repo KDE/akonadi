@@ -397,12 +397,13 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
     kDebug() << "removing existing incidence " << existingUid;
     if ( incidence->hasRecurrenceId() ) {
         Incidence::Ptr existingInstance = calendar->incidence( incidence->instanceIdentifier() );
-        existingInstance->setStatus( Incidence::StatusCanceled );
 
         if ( existingInstance ) {
+          existingInstance->setStatus( Incidence::StatusCanceled );
           result = calendar->modifyIncidence( existingInstance ) ? ResultSuccess : ResultModifyingError;
         } else {
           incidence->setSchedulingID( incidence->uid(), existingIncidence->uid() );
+          incidence->setStatus( Incidence::StatusCanceled );
           result = calendar->addIncidence( incidence ) ? ResultSuccess : ResultCreatingError;
         }
 
