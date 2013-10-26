@@ -405,8 +405,8 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
     return;
   }
 
-  // in case we didn't find the to-be-removed incidence
-  if ( d->mShowDialogs !existingIncidences.isEmpty() && incidence->revision() > 0 ) {
+  // in case we didn't find the to-be-removed incidencez
+  if ( d->mShowDialogs && !existingIncidences.isEmpty() && incidence->revision() > 0 ) {
     KMessageBox::error(
       0,
       i18nc( "@info",
