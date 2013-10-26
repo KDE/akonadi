@@ -184,7 +184,7 @@ void ITIPHandlerTest::testProcessITIPMessage()
     cleanup();
 }
 
-void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
+void ITIPHandlerTest::testProcessITIPMessages_data()
 {
     QTest::addColumn<QStringList>("invitation_filenames"); // filename to create incidence (inputs)
     QTest::addColumn<QString>("expected_filename"); // filename with expected data   (reference)
@@ -221,7 +221,7 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
     //----------------------------------------------------------------------------------------------
 }
 
-void ITIPHandlerTest::testProcessITIPMessageUpdate()
+void ITIPHandlerTest::testProcessITIPMessages()
 {
     QFETCH(QStringList, invitation_filenames);
     QFETCH(QString, expected_filename);

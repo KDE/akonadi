@@ -38,14 +38,14 @@ class ITIPHandlerTest : public UnitTestBase
 private Q_SLOTS:
     void initTestCase();
 
-    // Tests processing an incoming message
+    void testProcessITIPMessages_data();
+    void testProcessITIPMessages();
+
+    // Deprecated methods, use testProcessITIPMessages() for new stuff
     void testProcessITIPMessage_data();
     void testProcessITIPMessage();
 
-    // Tests cenarios where we receive an update from the organizer:
-    void testProcessITIPMessageUpdate_data();
-    void testProcessITIPMessageUpdate();
-
+    // Deprecated methods do test CANCEL.
     void testProcessITIPMessageCancel_data();
     void testProcessITIPMessageCancel();
 
