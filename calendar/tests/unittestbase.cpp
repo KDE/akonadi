@@ -120,6 +120,8 @@ void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalen
     // First, replace the randomly generated UIDs with the UID that came in the invitation e-mail...
     foreach (const KCalCore::Incidence::Ptr &incidence, incidences) {
         incidence->setUid(incidence->schedulingID());
+        qDebug() << "We have incidece with uid=" << incidence->uid()
+                 << "; instanceidentifier=" << incidence->instanceIdentifier();
         foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
             attendee->setUid(attendee->email());
         }
@@ -128,6 +130,8 @@ void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalen
     // ... so we can compare them
     foreach (const KCalCore::Incidence::Ptr &incidence, expectedIncidences) {
         incidence->setUid(incidence->schedulingID());
+        qDebug() << "We expect incidece with uid=" << incidence->uid()
+                 << "; instanceidentifier=" << incidence->instanceIdentifier();
         foreach (const KCalCore::Attendee::Ptr &attendee, incidence->attendees()) {
             attendee->setUid(attendee->email());
         }
@@ -147,7 +151,14 @@ void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalen
         QVERIFY(incidence);
         // Don't fail on creation times, which are obviously different
         expectedIncidence->setCreated(incidence->created());
-        QCOMPARE(*expectedIncidence, *incidence);
+
+        if (*expectedIncidence != *incidence) {
+            ICalFormat format;
+            QString expectedData = format.toString(expectedIncidence);
+            QString gotData = format.toString(incidence);
+            qDebug() << "Test failed, expected:\n" << expectedData << "\nbut got " << gotData;
+            QVERIFY(false);
+        }
     }
 }
 

@@ -210,6 +210,15 @@ void ITIPHandlerTest::testProcessITIPMessageUpdate_data()
     invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_update_recid01");
     QTest::newRow("accept recid update") << invitation_filenames << expected_filename;
     //----------------------------------------------------------------------------------------------
+    // We accept a recurring event, then we accept a CANCEL with recuring-id.
+    // The result is that a exception with status CANCELLED should be created, and our main incidence
+    // should not be touched
+    invitation_filenames.clear();
+    invitation_filenames << QLatin1String("invited_us_daily") << QLatin1String("invited_us_daily_cancel_recid01");
+    expected_filename = QLatin1String("expected_data/cancel1");
+    QTest::newRow("accept recid cancel") << invitation_filenames << expected_filename;
+
+    //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testProcessITIPMessageUpdate()
