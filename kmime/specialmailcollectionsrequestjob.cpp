@@ -50,12 +50,12 @@ SpecialMailCollectionsRequestJob::SpecialMailCollectionsRequestJob( QObject *par
 {
   static QMap<QByteArray, QString> displayNameMap;
   displayNameMap.insert( "local-mail", i18nc( "local mail folder", "Local Folders" ) );
-  displayNameMap.insert( "inbox", i18nc( "local mail folder", "inbox" ) );
-  displayNameMap.insert( "outbox", i18nc( "local mail folder", "outbox" ) );
-  displayNameMap.insert( "sent-mail", i18nc( "local mail folder", "sent-mail" ) );
-  displayNameMap.insert( "trash", i18nc( "local mail folder", "trash" ) );
-  displayNameMap.insert( "drafts", i18nc( "local mail folder", "drafts" ) );
-  displayNameMap.insert( "templates", i18nc( "local mail folder", "templates" ) );
+  displayNameMap.insert( "inbox", /*i18nc( "local mail folder",*/QLatin1String("inbox" ) );
+  displayNameMap.insert( "outbox", /*i18nc( "local mail folder",*/ QLatin1String("outbox" ) );
+  displayNameMap.insert( "sent-mail", /*i18nc( "local mail folder",*/QLatin1String( "sent-mail" ) );
+  displayNameMap.insert( "trash", /*i18nc( "local mail folder", */QLatin1String("trash" ) );
+  displayNameMap.insert( "drafts", /*i18nc( "local mail folder", */QLatin1String("drafts" ) );
+  displayNameMap.insert( "templates", /*i18nc( "local mail folder", */QLatin1String("templates" ) );
 
   static QMap<QByteArray, QString> iconNameMap;
   iconNameMap.insert( "local-mail", QLatin1String( "folder" ) );
