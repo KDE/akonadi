@@ -385,17 +385,12 @@ void Scheduler::acceptCancel( const IncidenceBase::Ptr &incidenceBase,
     }
 
     if ( !isMine ) {
-        continue;
+      continue;
     }
 
     kDebug() << "removing existing incidence " << existingUid;
-    if ( existingIncidence->type() == IncidenceBase::TypeEvent ) {
-        Event::Ptr event = calendar->event( existingUid );
-        result = ( event && calendar->deleteEvent( event ) ) ? ResultSuccess : ResultErrorDelete;
-    } else if ( existingIncidence->type() == IncidenceBase::TypeTodo ) {
-        Todo::Ptr todo = calendar->todo( existingUid );
-        result = ( todo && calendar->deleteTodo( todo ) ) ? ResultSuccess : ResultErrorDelete;
-    }
+
+    result = calendar->deleteIncidence( existingIncidence ) ? ResultSuccess : ResultErrorDelete;
     if ( result != ResultSuccess ) {
       emit transactionFinished( result, errorString );
     }
