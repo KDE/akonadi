@@ -102,7 +102,7 @@ class ImapStreamParser
      * @param ok true if the data found was a number
      * @return the number
      */
-    qint64 readNumber( bool * ok = 0 );
+    qint64 readNumber( bool *ok = 0 );
 
     /**
      * Check if the next data is a string or not. This call might block.

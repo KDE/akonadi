@@ -57,14 +57,14 @@ AkonadiConnection::AkonadiConnection( quintptr socketDescriptor, QObject *parent
     , m_streamParser( 0 )
     , m_verifyCacheOnRetrieval( false )
 {
-    m_identifier.sprintf( "%p", static_cast<void*>( this ) );
+    m_identifier.sprintf( "%p", static_cast<void *>( this ) );
     ClientCapabilityAggregator::addSession( m_clientCapabilities );
 
     const QSettings settings( AkStandardDirs::serverConfigFile(), QSettings::IniFormat );
     m_verifyCacheOnRetrieval = settings.value( QLatin1String( "Cache/VerifyOnRetrieval" ), m_verifyCacheOnRetrieval ).toBool();
 }
 
-DataStore * Akonadi::AkonadiConnection::storageBackend()
+DataStore *Akonadi::AkonadiConnection::storageBackend()
 {
     if ( !m_backend ) {
       m_backend = DataStore::self();
@@ -152,10 +152,10 @@ void AkonadiConnection::slotNewData()
       m_currentHandler = findHandlerForCommand( command );
       assert( m_currentHandler );
       connect( m_currentHandler, SIGNAL(responseAvailable(Akonadi::Response)),
-              this, SLOT(slotResponseAvailable(Akonadi::Response)), Qt::DirectConnection );
+               this, SLOT(slotResponseAvailable(Akonadi::Response)), Qt::DirectConnection );
       connect( m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
               this, SLOT(slotConnectionStateChange(ConnectionState)),
-               Qt::DirectConnection );
+              Qt::DirectConnection );
       m_currentHandler->setTag( tag );
       m_currentHandler->setStreamParser( m_streamParser );
       if ( !m_currentHandler->parseStream() ) {
@@ -185,10 +185,11 @@ void AkonadiConnection::slotNewData()
     delete m_currentHandler;
     m_currentHandler = 0;
 
-    if ( m_streamParser->readRemainingData().startsWith( '\n' ) || m_streamParser->readRemainingData().startsWith( "\r\n" ) )
+    if ( m_streamParser->readRemainingData().startsWith( '\n' ) || m_streamParser->readRemainingData().startsWith( "\r\n" ) ) {
       try {
         m_streamParser->readUntilCommandEnd(); //just eat the ending newline
       } catch ( ... ) {}
+    }
   }
 }
 
@@ -203,7 +204,7 @@ void AkonadiConnection::writeOut( const QByteArray &data )
 
 Handler *AkonadiConnection::findHandlerForCommand( const QByteArray &command )
 {
-    Handler * handler = Handler::findHandlerForCommandAlwaysAllowed( command );
+    Handler *handler = Handler::findHandlerForCommandAlwaysAllowed( command );
     if ( handler ) {
       handler->setConnection( this );
       return handler;
@@ -260,7 +261,7 @@ void AkonadiConnection::slotConnectionStateChange( ConnectionState state )
     }
 }
 
-qint64 Akonadi::AkonadiConnection::selectedCollectionId( ) const
+qint64 Akonadi::AkonadiConnection::selectedCollectionId() const
 {
     return m_selectedConnection;
 }
@@ -285,7 +286,7 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
     for ( int i = 0; i < m_statusMessageQueue.count(); ++i ) {
       Response response;
       response.setUntagged();
-      response.setString( m_statusMessageQueue[ i ] );
+      response.setString( m_statusMessageQueue[i] );
 
       slotResponseAvailable( response );
     }
@@ -295,7 +296,7 @@ void Akonadi::AkonadiConnection::flushStatusMessageQueue()
 
 void AkonadiConnection::setSessionId( const QByteArray &id )
 {
-  m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void*>( this ) );
+  m_identifier.sprintf( "%s (%p)", id.data(), static_cast<void *>( this ) );
   Tracer::self()->beginConnection( m_identifier, QString() );
   m_streamParser->setTracerIdentifier( m_identifier );
 

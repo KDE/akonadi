@@ -44,7 +44,6 @@ namespace AkDBus
    */
   QString serviceName( ServiceType serviceType );
 
-
   /** Known D-Bus service name types for agents. */
   enum AgentType {
     Unknown,
@@ -59,7 +58,7 @@ namespace AkDBus
    * @param agentType Output parameter containing the agent type.
    * @return The identifier of the agent, empty string if that's not an agent (or an agent of a different Akonadi instance)
    */
-  QString parseAgentServiceName( const QString& serviceName, AkDBus::AgentType& agentType );
+  QString parseAgentServiceName( const QString &serviceName, AkDBus::AgentType &agentType );
 
   /**
    * Returns the D-Bus service name of the agent @p agentIdentifier for type @p agentType.

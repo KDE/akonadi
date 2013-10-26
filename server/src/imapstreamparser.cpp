@@ -499,7 +499,7 @@ QDateTime ImapStreamParser::readDateTime()
     m_position = savedPos;
     return QDateTime();
   }
-  int tzsecs = tzhh*60*60 + tzmm*60;
+  int tzsecs = tzhh * 60 * 60 + tzmm * 60;
   if ( m_data[m_position - 3] == '-' ) {
     tzsecs = -tzsecs;
   }
@@ -767,8 +767,9 @@ QByteArray ImapStreamParser::readUntilCommandEnd()
     result.append( m_data[i] );
 
     if ( m_data[i] == '"' ) {
-      if ( m_data[i - 1] != '\\' )
+      if ( m_data[i - 1] != '\\' ) {
         inQuotedString = !inQuotedString;
+      }
     }
 
     if ( ( i == m_data.length() && paranthesisBalance == 0 ) || m_data[i] == '\n'  || m_data[i] == '\r' ) {
