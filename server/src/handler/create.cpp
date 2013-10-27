@@ -38,9 +38,9 @@
 
 using namespace Akonadi;
 
-Create::Create( Scope::SelectionScope scope ) :
-  Handler(),
-  m_scope( scope )
+Create::Create( Scope::SelectionScope scope )
+  : Handler()
+  , m_scope( scope )
 {
 }
 
@@ -58,7 +58,7 @@ bool Create::parseStream()
     qint64 parentId = m_streamParser->readNumber( &ok );
     if ( !ok ) { // RFC 3501 compat
       QString parentPath;
-      int index = name.lastIndexOf( QLatin1Char('/') );
+      int index = name.lastIndexOf( QLatin1Char( '/' ) );
       if ( index > 0 ) {
         parentPath = name.left( index );
         name = name.mid( index + 1 );
@@ -180,7 +180,7 @@ bool Create::parseStream()
   Transaction transaction( db );
 
   if ( !db->appendCollection( collection ) ) {
-    return failureResponse( "Could not create collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId));
+    return failureResponse( "Could not create collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number( resourceId ) );
   }
 
   QStringList effectiveMimeTypes;
@@ -192,7 +192,7 @@ bool Create::parseStream()
       effectiveMimeTypes << mt.name();
   }
   if ( !db->appendMimeTypeForCollection( collection.id(), effectiveMimeTypes ) ) {
-    return failureResponse( "Unable to append mimetype for collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number(resourceId) );
+    return failureResponse( "Unable to append mimetype for collection " + name.toLocal8Bit() + " resourceId: " + QByteArray::number( resourceId ) );
   }
 
   // store user defined attributes

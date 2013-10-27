@@ -26,12 +26,12 @@
 
 using namespace Akonadi;
 
-Scope::Scope( SelectionScope scope ) :
-  mScope( scope )
+Scope::Scope( SelectionScope scope )
+  : mScope( scope )
 {
 }
 
-void Scope::parseScope( ImapStreamParser* parser )
+void Scope::parseScope( ImapStreamParser *parser )
 {
   if ( mScope == None || mScope == Uid ) {
     mUidSet = parser->readSequenceSet();
@@ -77,7 +77,7 @@ void Scope::parseScope( ImapStreamParser* parser )
   }
 }
 
-Scope::SelectionScope Scope::selectionScopeFromByteArray(const QByteArray& input)
+Scope::SelectionScope Scope::selectionScopeFromByteArray( const QByteArray &input )
 {
   if ( input == AKONADI_CMD_UID ) {
     return Scope::Uid;

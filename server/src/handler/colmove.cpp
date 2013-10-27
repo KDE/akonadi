@@ -30,8 +30,8 @@
 
 namespace Akonadi {
 
-ColMove::ColMove(Scope::SelectionScope scope) :
-  m_scope( scope )
+ColMove::ColMove( Scope::SelectionScope scope )
+  : m_scope( scope )
 {
 }
 
@@ -64,7 +64,7 @@ bool ColMove::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setCollection( source, true );
   retriever.setRetrieveFullPayload( true );
-  if (!retriever.exec()) {
+  if ( !retriever.exec() ) {
     return failureResponse( retriever.lastError() );
   }
 

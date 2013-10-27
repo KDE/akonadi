@@ -38,7 +38,7 @@ using namespace Akonadi;
 template <typename T>
 static bool intersect( const QVector<typename T::Id> &l1, const QVector<T> &l2 )
 {
-  Q_FOREACH ( const T& e2, l2 ) {
+  Q_FOREACH ( const T &e2, l2 ) {
     if ( l1.contains( e2.id() ) ) {
       return true;
     }
@@ -71,7 +71,7 @@ QStack<Collection> List::ancestorsForCollection( const Collection &col )
   return ancestors;
 }
 
-bool List::listCollection(const Collection & root, int depth, const QStack<Collection> &ancestors )
+bool List::listCollection( const Collection &root, int depth, const QStack<Collection> &ancestors  )
 {
   // recursive listing of child collections
   bool childrenFound = false;
@@ -89,9 +89,9 @@ bool List::listCollection(const Collection & root, int depth, const QStack<Colle
   const bool isUnsubscribed = mOnlySubscribed && !root.subscribed();
 
   // filter if this node isn't needed by it's children
-  const bool hidden = (mResource.isValid() && root.resourceId() != mResource.id())
+  const bool hidden = ( mResource.isValid() && root.resourceId() != mResource.id() )
       || isUnsubscribed
-      || (!mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes()) );
+      || ( !mMimeTypes.isEmpty() && !intersect( mMimeTypes, root.mimeTypes() ) );
 
   if ( !childrenFound && hidden ) {
     return false;

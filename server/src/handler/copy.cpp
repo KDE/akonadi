@@ -34,7 +34,7 @@
 
 using namespace Akonadi;
 
-bool Copy::copyItem(const PimItem & item, const Collection & target)
+bool Copy::copyItem( const PimItem &item, const Collection &target )
 {
 //  akDebug() << "Copy::copyItem";
 
@@ -49,7 +49,7 @@ bool Copy::copyItem(const PimItem & item, const Collection & target)
   Part::List parts;
   Q_FOREACH ( const Part &part, item.parts() ) {
     Part newPart( part );
-    newPart.setData(PartHelper::translateData( newPart.data(), part.external() ) );
+    newPart.setData( PartHelper::translateData( newPart.data(), part.external() )  );
     newPart.setPimItemId( -1 );
     parts << newPart;
   }
@@ -76,7 +76,7 @@ bool Copy::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setItemSet( set );
   retriever.setRetrieveFullPayload( true );
-  if (!retriever.exec()) {
+  if ( !retriever.exec() ) {
     return failureResponse( retriever.lastError() );
   }
 

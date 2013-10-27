@@ -36,7 +36,8 @@
 
 using namespace Akonadi;
 
-Modify::Modify( Scope::SelectionScope scope ) : m_scope( scope )
+Modify::Modify( Scope::SelectionScope scope )
+  : m_scope( scope )
 {
 }
 
@@ -62,7 +63,7 @@ bool Modify::parseStream()
   m_streamParser->insertData( "\n" );
 
   int p = 0;
-  if ( (p = line.indexOf( AKONADI_PARAM_PARENT ) ) > 0 ) {
+  if ( ( p = line.indexOf( AKONADI_PARAM_PARENT ) ) > 0 ) {
     QByteArray tmp;
     ImapParser::parseString( line, tmp, p + 6 );
     const Collection newParent = HandlerHelper::collectionFromIdOrName( tmp );
@@ -71,7 +72,7 @@ bool Modify::parseStream()
       ItemRetriever retriever( connection() );
       retriever.setCollection( collection, true );
       retriever.setRetrieveFullPayload( true );
-      if (!retriever.exec() ) {
+      if ( !retriever.exec()  ) {
         throw HandlerException( retriever.lastError() );
       }
     }
@@ -90,7 +91,7 @@ bool Modify::parseStream()
       pos = ImapParser::parseParenthesizedList( line, mimeTypes, pos );
       QStringList mts;
       Q_FOREACH ( const QByteArray &ba, mimeTypes ) {
-        mts << QString::fromLatin1(ba);
+        mts << QString::fromLatin1( ba );
       }
       MimeType::List currentMts = collection.mimeTypes();
       bool equal = true;

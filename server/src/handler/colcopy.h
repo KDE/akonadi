@@ -60,7 +60,7 @@ class ColCopy : public Copy
     bool parseStream();
 
   private:
-    bool copyCollection( const Collection& source, const Collection &target );
+    bool copyCollection( const Collection &source, const Collection &target );
 };
 
 }

@@ -32,8 +32,10 @@
 
 using namespace Akonadi;
 
-Link::Link( Scope::SelectionScope scope, bool create) : Handler(),
-  mDestinationScope( scope ), mCreateLinks( create )
+Link::Link( Scope::SelectionScope scope, bool create )
+  : Handler()
+  , mDestinationScope( scope )
+  , mCreateLinks( create )
 {
 }
 

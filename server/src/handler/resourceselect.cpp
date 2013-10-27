@@ -25,8 +25,8 @@
 
 using namespace Akonadi;
 
-ResourceSelect::ResourceSelect() :
-  Handler()
+ResourceSelect::ResourceSelect()
+  : Handler()
 {
 }
 

@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-bool ColCopy::copyCollection(const Collection & source, const Collection & target)
+bool ColCopy::copyCollection( const Collection &source, const Collection &target )
 {
   if ( !CollectionQueryHelper::canBeMovedTo( source, target ) ) {
     // We don't accept source==target, or source being an ancestor of target.
@@ -101,7 +101,7 @@ bool ColCopy::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setCollection( source, true );
   retriever.setRetrieveFullPayload( true );
-  if (!retriever.exec()) {
+  if ( !retriever.exec() ) {
     return failureResponse( retriever.lastError() );
   }
 

@@ -32,8 +32,8 @@
 
 namespace Akonadi {
 
-Move::Move( Scope::SelectionScope scope ) :
-  mScope( scope )
+Move::Move( Scope::SelectionScope scope )
+  : mScope( scope )
 {
 }
 
@@ -50,7 +50,7 @@ bool Move::parseStream()
   ItemRetriever retriever( connection() );
   retriever.setScope( mScope );
   retriever.setRetrieveFullPayload( true );
-  if (!retriever.exec()) {
+  if ( !retriever.exec() ) {
     return failureResponse( retriever.lastError() );
   }
 

@@ -30,12 +30,12 @@ QList<QByteArray> SearchHelper::splitLine( const QByteArray &line )
   int i, start = 0;
   bool escaped = false;
   for ( i = 0; i < line.count(); ++i ) {
-    if ( line[ i ] == ' ' ) {
+    if ( line[i] == ' ' ) {
       if ( !escaped ) {
         retval.append( line.mid( start, i - start ) );
         start = i + 1;
       }
-    } else if ( line[ i ] == '"' ) {
+    } else if ( line[i] == '"' ) {
       if ( escaped ) {
         escaped = false;
       } else {
@@ -57,23 +57,23 @@ QString SearchHelper::extractMimetype( const QList<QByteArray> &junks, int start
     return QString();
   }
 
-  if ( junks[ start ].toUpper() == AKONADI_PARAM_CHARSET ) {
+  if ( junks[start].toUpper() == AKONADI_PARAM_CHARSET ) {
     if ( junks.count() <= ( start + 2 ) ) {
       return QString();
     }
-    if ( junks[ start + 2 ].toUpper() == AKONADI_PARAM_MIMETYPE ) {
+    if ( junks[start + 2].toUpper() == AKONADI_PARAM_MIMETYPE ) {
       if ( junks.count() <= ( start + 3 ) ) {
         return QString();
       } else {
-        mimeType = QString::fromLatin1( junks[ start + 3 ].toLower() );
+        mimeType = QString::fromLatin1( junks[start + 3].toLower() );
       }
     }
   } else {
-    if ( junks[ start ].toUpper() == AKONADI_PARAM_MIMETYPE ) {
+    if ( junks[start].toUpper() == AKONADI_PARAM_MIMETYPE ) {
       if ( junks.count() <= ( start + 1 ) ) {
         return QString();
       } else {
-        mimeType = QString::fromLatin1( junks[ start + 1 ].toLower() );
+        mimeType = QString::fromLatin1( junks[start + 1].toLower() );
       }
     }
   }

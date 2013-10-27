@@ -79,7 +79,7 @@ bool Store::replaceFlags( const PimItem::List &item, const QList<QByteArray> &fl
   return true;
 }
 
-bool Store::addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool& flagsChanged )
+bool Store::addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool &flagsChanged )
 {
   const Flag::List flagList = HandlerHelper::resolveFlags( flags );
   DataStore *store = connection()->storageBackend();
@@ -98,7 +98,7 @@ bool Store::deleteFlags( const PimItem::List &items, const QList<QByteArray> &fl
   QVector<Flag> flagList;
   flagList.reserve( flags.size() );
   for ( int i = 0; i < flags.count(); ++i ) {
-    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[ i ] ) );
+    Flag flag = Flag::retrieveByName( QString::fromUtf8( flags[i] ) );
     if ( !flag.isValid() ) {
       continue;
     }
@@ -135,7 +135,7 @@ bool Store::parseStream()
   for ( int i = 0; i < pimItems.size(); ++i ) {
     if ( mCheckRevision ) {
       // check for conflicts if a resources tries to overwrite an item with dirty payload
-      const PimItem& pimItem = pimItems.at( i );
+      const PimItem &pimItem = pimItems.at( i );
       if ( connection()->isOwnerResource( pimItem ) ) {
         if ( pimItem.dirty() ) {
           const QString error = QString::fromLatin1( "[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE." );
@@ -190,7 +190,7 @@ bool Store::parseStream()
           return failureResponse( "Unable to add item flags." );
         }
       } else if ( op == Delete ) {
-        if ( !(flagsChanged = deleteFlags( pimItems, flags )) ) {
+        if ( !( flagsChanged = deleteFlags( pimItems, flags ) ) ) {
           return failureResponse( "Unable to remove item flags." );
         }
       }
@@ -319,7 +319,7 @@ bool Store::parseStream()
           continue;
         } else { // not store in file
           //don't write in streaming way as the data goes to the database
-          while (!m_streamParser->atLiteralEnd()) {
+          while ( !m_streamParser->atLiteralEnd() ) {
             value += m_streamParser->readLiteralPart();
           }
         }
@@ -353,28 +353,28 @@ bool Store::parseStream()
   if ( !changes.isEmpty() || invalidateCache || undirty ) {
 
     // update item size
-    if ( pimItems.size() == 1 && (mSize > 0 || partSizes > 0) ) {
+    if ( pimItems.size() == 1 && ( mSize > 0 || partSizes > 0 ) ) {
       pimItems.first().setSize( qMax( mSize, partSizes ) );
     }
 
-    const bool onlyRemoteIdChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_REMOTEID ));
-    const bool onlyRemoteRevisionChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_REMOTEREVISION ));
-    const bool onlyRemoteIdAndRevisionChanged = (changes.size() == 2 && changes.contains( AKONADI_PARAM_REMOTEID )
-                                                                     && changes.contains( AKONADI_PARAM_REMOTEREVISION ));
-    const bool onlyFlagsChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_FLAGS ));
-    const bool onlyGIDChanged = (changes.size() == 1 && changes.contains( AKONADI_PARAM_GID ));
+    const bool onlyRemoteIdChanged = ( changes.size() == 1 && changes.contains( AKONADI_PARAM_REMOTEID ) );
+    const bool onlyRemoteRevisionChanged = ( changes.size() == 1 && changes.contains( AKONADI_PARAM_REMOTEREVISION ) );
+    const bool onlyRemoteIdAndRevisionChanged = ( changes.size() == 2 && changes.contains( AKONADI_PARAM_REMOTEID )
+                                                                     && changes.contains( AKONADI_PARAM_REMOTEREVISION ) );
+    const bool onlyFlagsChanged = ( changes.size() == 1 && changes.contains( AKONADI_PARAM_FLAGS ) );
+    const bool onlyGIDChanged = ( changes.size() == 1 && changes.contains( AKONADI_PARAM_GID ) );
     // If only the remote id and/or the remote revision changed, we don't have to increase the REV,
     // because these updates do not change the payload and can only be done by the owning resource -> no conflicts possible
-    const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
+    const bool revisionNeedsUpdate = ( !changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged );
 
     // run update query and prepare change notifications
     for ( int i = 0; i < pimItems.count(); ++i ) {
 
       if ( revisionNeedsUpdate ) {
-        pimItems[ i ].setRev( pimItems[ i ].rev() + 1 );
+        pimItems[i].setRev( pimItems[i].rev() + 1 );
       }
 
-      PimItem &item = pimItems[ i ];
+      PimItem &item = pimItems[i];
       item.setDatetime( modificationtime );
       item.setAtime( modificationtime );
       if ( !connection()->isOwnerResource( item ) && payloadChanged( changes ) ) {

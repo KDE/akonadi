@@ -43,21 +43,21 @@ bool Capability::parseStream()
   ClientCapabilities capabilities;
 
   m_streamParser->beginList();
-  while (!m_streamParser->atListEnd()) {
+  while ( !m_streamParser->atListEnd() ) {
     const QByteArray capability = m_streamParser->readString();
-    if (capability.isEmpty()) {
+    if ( capability.isEmpty() ) {
       break; // shouldn't happen
     }
-    if (capability == AKONADI_PARAM_CAPABILITY_NOTIFY) {
-      capabilities.setNotificationMessageVersion(m_streamParser->readNumber());
-    } else if (capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH) {
-      capabilities.setNoPayloadPath(true);
+    if ( capability == AKONADI_PARAM_CAPABILITY_NOTIFY ) {
+      capabilities.setNotificationMessageVersion( m_streamParser->readNumber() );
+    } else if ( capability == AKONADI_PARAM_CAPABILITY_NOPAYLOADPATH ) {
+      capabilities.setNoPayloadPath( true );
     } else {
       qDebug() << Q_FUNC_INFO << "Unknown client capability:" << capability;
     }
   }
 
-  connection()->setCapabilities(capabilities);
+  connection()->setCapabilities( capabilities );
 
   Response response;
   response.setSuccess();

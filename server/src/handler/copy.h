@@ -60,7 +60,7 @@ class Copy : public Handler
       Copy the given item and all its parts into the @p target.
       The changes mentioned above are applied.
     */
-    bool copyItem( const PimItem& item, const Collection &target );
+    bool copyItem( const PimItem &item, const Collection &target );
 };
 
 }

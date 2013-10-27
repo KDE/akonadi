@@ -28,8 +28,8 @@
 
 using namespace Akonadi;
 
-Subscribe::Subscribe( bool subscribe ) :
-  mSubscribe( subscribe )
+Subscribe::Subscribe( bool subscribe )
+  : mSubscribe( subscribe )
 {
 }
 

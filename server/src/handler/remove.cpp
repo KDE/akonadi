@@ -30,8 +30,8 @@
 
 namespace Akonadi {
 
-Remove::Remove( Scope::SelectionScope scope ) :
-  mScope( scope )
+Remove::Remove( Scope::SelectionScope scope )
+  : mScope( scope )
 {
 }
 

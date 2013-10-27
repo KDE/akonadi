@@ -97,7 +97,7 @@ bool Append::commit()
     QString remote_revision;
     QString gid;
     QList<QByteArray> flags;
-    Q_FOREACH( const QByteArray &flag, m_flags ) {
+    Q_FOREACH ( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( "\\MimeType" ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
@@ -126,7 +126,7 @@ bool Append::commit()
     if ( !mimeType.isValid() ) {
       MimeType m( QString::fromLatin1( mt ) );
       if ( !m.insert() ) {
-        return failureResponse( QByteArray( "Unable to create mimetype '") +  mt + QByteArray( "'." ) );
+        return failureResponse( QByteArray( "Unable to create mimetype '" ) +  mt + QByteArray( "'." ) );
       }
       mimeType = m;
     }
@@ -172,7 +172,7 @@ bool Append::commit()
       return failureResponse( "Unable to append item flags." );
     }
 
-    if (storeInFile) {
+    if ( storeInFile ) {
       const QString fileName = PartHelper::resolveAbsolutePath( parts[0].data() );
 
       //the new item was just created and the transaction is not yet committed, so delete + overwrite should be safe, as no
@@ -188,8 +188,9 @@ bool Append::commit()
     //      actions SHOULD occur.  Specifically, the server SHOULD notify the
     //      client immediately via an untagged EXISTS response.
 
-    if ( !transaction.commit() )
+    if ( !transaction.commit() ) {
         return failureResponse( "Unable to commit transaction." );
+    }
 
     if ( doPreprocessing ) {
       // enqueue the item for preprocessing

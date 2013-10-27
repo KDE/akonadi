@@ -45,7 +45,7 @@ bool Expunge::parseStream()
   DataStore *store = connection()->storageBackend();
   Transaction transaction( store );
 
-  Flag flag = Flag::retrieveByName( QLatin1String("\\DELETED") );
+  Flag flag = Flag::retrieveByName( QLatin1String( "\\DELETED" ) );
   if ( !flag.isValid() ) {
     response.setError();
     response.setString( "\\DELETED flag unknown" );
@@ -63,7 +63,7 @@ bool Expunge::parseStream()
     const QVector<PimItem> items = qb.result();
     if ( store->cleanupPimItems( items ) ) {
       // FIXME: Change the protocol to EXPUNGE + list of removed ids
-      Q_FOREACH( const PimItem &item, items ) {
+      Q_FOREACH ( const PimItem &item, items ) {
         response.setUntagged();
         // IMAP protocol violation: should actually be the sequence number
         response.setString( QByteArray::number( item.id() ) + " EXPUNGE" );

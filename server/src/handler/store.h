@@ -112,7 +112,7 @@ class Store : public Handler
     void parseCommand();
 
     bool replaceFlags( const PimItem::List &items, const QList<QByteArray> &flags );
-    bool addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool& flagsChanged );
+    bool addFlags( const PimItem::List &items, const QList<QByteArray> &flags, bool &flagsChanged );
     bool deleteFlags( const PimItem::List &items, const QList<QByteArray> &flags );
     bool setGid( const PimItem &item, const QString &gid );
     void sendPimItemResponse( const PimItem &pimItem );

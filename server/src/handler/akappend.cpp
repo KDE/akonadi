@@ -65,7 +65,7 @@ bool Akonadi::AkAppend::commit()
     QString remote_revision;
     QString gid;
     QList<QByteArray> flags;
-    Q_FOREACH( const QByteArray &flag, m_flags ) {
+    Q_FOREACH ( const QByteArray &flag, m_flags ) {
       if ( flag.startsWith( AKONADI_FLAG_MIMETYPE ) ) {
         int pos1 = flag.indexOf( '[' );
         int pos2 = flag.indexOf( ']', pos1 );
@@ -94,7 +94,7 @@ bool Akonadi::AkAppend::commit()
     if ( !mimeType.isValid() ) {
       MimeType m( QString::fromLatin1( mt ) );
       if ( !m.insert() ) {
-        return failureResponse( QByteArray( "Unable to create mimetype '") + mt + QByteArray( "'." ) );
+        return failureResponse( QByteArray( "Unable to create mimetype '" ) + mt + QByteArray( "'." ) );
       }
       mimeType = m;
     }
@@ -196,12 +196,12 @@ bool AkAppend::parseStream()
   bool ok = false;
 
   QList<QByteArray> list = m_streamParser->readParenthesizedList();
-  Q_FOREACH( const QByteArray &item, list ) {
-    if (partName.isEmpty() && partSize == -1) {
+  Q_FOREACH ( const QByteArray &item, list ) {
+    if ( partName.isEmpty() && partSize == -1 ) {
       partName = item;
       continue;
     }
-    if (item.startsWith(':')) {
+    if ( item.startsWith( ':' ) ) {
       int pos = 1;
       ImapParser::parseNumber( item, partSize, &ok, pos );
       if ( !ok ) {
@@ -227,7 +227,7 @@ bool AkAppend::parseStream()
   // chop up literal data in parts
   int pos = 0; // traverse through part data now
   QPair<QByteArray, QPair<qint64, int> > partSpec;
-  Q_FOREACH( partSpec, partSpecs ) {
+  Q_FOREACH ( partSpec, partSpecs ) {
     // wrap data into a part
     Part part;
     part.setName( QLatin1String( partSpec.first ) );

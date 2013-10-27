@@ -25,8 +25,8 @@
 
 #include <QMetaEnum>
 
-Akonadi::TransactionHandler::TransactionHandler( Mode mode ) :
-  mMode( mode )
+Akonadi::TransactionHandler::TransactionHandler( Mode mode )
+  : mMode( mode )
 {
 }
 

@@ -34,9 +34,9 @@
 
 using namespace Akonadi;
 
-Select::Select( Scope::SelectionScope scope ) :
-  Handler(),
-  mScope( scope )
+Select::Select( Scope::SelectionScope scope )
+  : Handler()
+  , mScope( scope )
 {
 }
 
@@ -92,7 +92,7 @@ bool Select::parseStream()
   Response response;
   if ( !silent ) {
     response.setUntagged();
-    response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String(" ") ).toLatin1() + ")" );
+    response.setString( "FLAGS (" + Flag::joinByName( Flag::retrieveAll(), QLatin1String( " " ) ).toLatin1() + ")" );
     Q_EMIT responseAvailable( response );
 
     const int itemCount = HandlerHelper::itemCount( col );
