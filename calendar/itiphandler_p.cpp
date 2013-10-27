@@ -29,6 +29,7 @@ ITIPHandler::Private::Private( ITIPHandler *qq ) : m_calendarLoadError( false )
                                                  , m_method( KCalCore::iTIPNoMethod )
                                                  , m_helper( new ITIPHandlerHelper() ) //TODO parent
                                                  , m_currentOperation( OperationNone )
+                                                 , m_uiDelegate( 0 )
                                                  , m_showDialogsOnError( true )
                                                  , q( qq )
 {
