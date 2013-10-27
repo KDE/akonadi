@@ -149,6 +149,18 @@ void ITIPHandlerTest::testProcessITIPMessage_data()
                                 << expectedNumIncidences
                                 << expectedPartStat;
     //----------------------------------------------------------------------------------------------
+    // Test counterproposal without a UI delegat set
+    expectedResult = ITIPHandler::ResultError;
+    data_filename = QLatin1String("invited_us");
+    expectedNumIncidences = 0;
+    expectedPartStat = KCalCore::Attendee::Accepted;
+    action = QLatin1String("counter");
+    incidenceUid = QLatin1String("b6f0466a-8877-49d0-a4fc-8ee18ffd8e07");
+    QTest::newRow("counter error") << data_filename << action << receiver << incidenceUid
+                                   << expectedResult
+                                   << expectedNumIncidences
+                                   << expectedPartStat;
+    //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testProcessITIPMessage()
