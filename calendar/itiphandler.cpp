@@ -194,11 +194,17 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
     emitiTipMessageProcessed( this, ResultError, i18n( "Invalid action: %1", action ) );
   }
 
-  if ( d->m_uiDelegate && action.startsWith( QLatin1String( "counter" ) ) ) {
-    Akonadi::Item item;
-    item.setMimeType( d->m_incidence->mimeType() );
-    item.setPayload( KCalCore::Incidence::Ptr( d->m_incidence->clone() ) );
-    d->m_uiDelegate->requestIncidenceEditor( item );
+  if ( action.startsWith( QLatin1String( "counter" ) ) ) {
+    if ( d->m_uiDelegate ) {
+      Akonadi::Item item;
+      item.setMimeType( d->m_incidence->mimeType() );
+      item.setPayload( KCalCore::Incidence::Ptr( d->m_incidence->clone() ) );
+      d->m_uiDelegate->requestIncidenceEditor( item );
+    } else {
+      // This should never happen
+      kWarning() << "No UI delegate is set";
+      emitiTipMessageProcessed( this, ResultError, QLatin1String( "Could not start editor to edit counter proposal" ) );
+    }
   }
 }
 
