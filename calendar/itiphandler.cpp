@@ -223,14 +223,14 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
         ITIPHandlerHelper::SendResult result = d->m_helper->sendCounterProposal(d->m_incidence, newIncidence);
         if ( result != ITIPHandlerHelper::ResultSuccess ) {
           // It gives success in all paths, this never happens
-          emitiTipMessageProcessed( this, ResultError, QLatin1String( "Error sending counter proposal") );
+          emitiTipMessageProcessed( this, ResultError, i18n( "Error sending counter proposal") );
           Q_ASSERT( false );
         }
       }
     } else {
       // This should never happen
       kWarning() << "No UI delegate is set";
-      emitiTipMessageProcessed( this, ResultError, QLatin1String( "Could not start editor to edit counter proposal" ) );
+      emitiTipMessageProcessed( this, ResultError, i18n( "Could not start editor to edit counter proposal" ) );
     }
   }
 }
