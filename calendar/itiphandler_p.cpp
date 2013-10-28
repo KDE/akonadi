@@ -66,8 +66,21 @@ void ITIPHandler::Private::onHelperFinished( Akonadi::ITIPHandlerHelper::SendRes
                                              const QString &errorMessage )
 {
   const bool success = result == ITIPHandlerHelper::ResultSuccess;
-  emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
-                           success ? QString() : i18n( "Error: %1", errorMessage ) );
+
+  if ( m_currentOperation == OperationProcessiTIPMessage ) {
+    MailScheduler::Result result2 = success ? MailScheduler::ResultSuccess : MailScheduler::ResultGenericError;
+    finishProcessiTIPMessage( result2, i18n( "Error: %1", errorMessage ) );
+  } else {
+    emit q->iTipMessageSent( success ? ResultSuccess : ResultError,
+                             success ? QString() : i18n( "Error: %1", errorMessage ) );
+  }
+}
+
+void ITIPHandler::Private::onCounterProposalDelegateFinished( bool success, const QString &errorMessage )
+{
+  Q_UNUSED(success);
+  Q_UNUSED(errorMessage);
+  // This will be used when we make editing counter proposals async.
 }
 
 void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMessage )
@@ -99,6 +112,8 @@ void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Res
   const bool success = result == MailScheduler::ResultSuccess;
 
   if ( m_method == KCalCore::iTIPCounter) {
+    // Here we're processing a counter-proposal that someone sent us and we're the organizer.
+    // TODO: Shouldn't there be a test to see if we're the organizer?
     if ( success ) {
       // send update to all attendees
       Q_ASSERT( m_incidence );

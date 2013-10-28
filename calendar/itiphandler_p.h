@@ -76,7 +76,7 @@ public:
   CalendarBase::Ptr m_calendar;
   MailScheduler *m_scheduler;
   KCalCore::Incidence::Ptr m_incidence;
-  KCalCore::iTIPMethod m_method;
+  KCalCore::iTIPMethod m_method; // METHOD field of ical rfc of incoming invitation
   ITIPHandlerHelper *m_helper;
   Operation m_currentOperation;
   QPointer<QWidget> m_parentWidget; // To be used for KMessageBoxes
@@ -89,6 +89,8 @@ private Q_SLOTS:
   void onSchedulerFinished( Akonadi::Scheduler::Result, const QString &errorMessage );
   void onHelperFinished( Akonadi::ITIPHandlerHelper::SendResult result,
                          const QString &errorMessage );
+
+  void onCounterProposalDelegateFinished(bool success, const QString &errorMessage);
 };
 
 }
