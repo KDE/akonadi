@@ -62,7 +62,8 @@ class AKONADI_CALENDAR_EXPORT ITIPHandler : public QObject
 public:
   enum Result {
     ResultError,      /**< An unexpected error occurred */
-    ResultSuccess     /**< The invitation was successfuly handled. */
+    ResultSuccess,    /**< The invitation was successfuly handled. */
+    ResultCancelled   /**< User cancelled the operation. @since 4.12 */
   };
 
   /**

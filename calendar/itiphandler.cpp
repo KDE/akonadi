@@ -214,11 +214,7 @@ void ITIPHandler::processiTIPMessage( const QString &receiver,
       }
 
       if ( *newIncidence == *d->m_incidence ) {
-        // If we emit success here, kontact will delete the invitation e-mail, but the user just
-        // cancelled the editor. As a workaround, send empty string so that kmail doesn't show
-        // the error dialog and doesn't delete the e-mail either. In master will create a ResultCanceled
-        // and remove this hack.
-        emitiTipMessageProcessed( this, ResultError, QString() );
+        emitiTipMessageProcessed( this, ResultCancelled, QString() );
       } else {
         ITIPHandlerHelper::SendResult result = d->m_helper->sendCounterProposal(d->m_incidence, newIncidence);
         if ( result != ITIPHandlerHelper::ResultSuccess ) {
