@@ -2,8 +2,6 @@ include_directories(
         ${CMAKE_SOURCE_DIR}/
         ${QT_QTDBUS_INCLUDE_DIR}
         ${Boost_INCLUDE_DIR}
-        ${CMAKE_CURRENT_BINARY_DIR}/akonadi
-        ${CMAKE_CURRENT_BINARY_DIR}/akonadi/kmime
 )
 
 add_subdirectory( tests )

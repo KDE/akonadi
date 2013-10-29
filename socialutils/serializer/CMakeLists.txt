@@ -12,7 +12,6 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 include_directories(
-  ${CMAKE_BINARY_DIR}/socialutils
   ${CMAKE_BINARY_DIR}/akonadi/socialutils
 )
 
