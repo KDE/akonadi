@@ -47,25 +47,25 @@
 
 using namespace Akonadi;
 
-FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope ) :
-  mStreamParser( 0 ),
-  mConnection( connection ),
-  mScope( scope ),
-  mAncestorDepth( 0 ),
-  mCacheOnly( false ),
-  mCheckCachedPayloadPartsOnly( false ),
-  mFullPayload( false ),
-  mAllAttrs( false ),
-  mSizeRequested( false ),
-  mMTimeRequested( false ),
-  mExternalPayloadSupported( false ),
-  mRemoteRevisionRequested( false ),
-  mIgnoreErrors( false ),
-  mFlagsRequested( false ),
-  mRemoteIdRequested( false ),
-  mGidRequested( false )
+FetchHelper::FetchHelper( AkonadiConnection *connection, const Scope &scope )
+  : mStreamParser( 0 )
+  , mConnection( connection )
+  , mScope( scope )
+  , mAncestorDepth( 0 )
+  , mCacheOnly( false )
+  , mCheckCachedPayloadPartsOnly( false )
+  , mFullPayload( false )
+  , mAllAttrs( false )
+  , mSizeRequested( false )
+  , mMTimeRequested( false )
+  , mExternalPayloadSupported( false )
+  , mRemoteRevisionRequested( false )
+  , mIgnoreErrors( false )
+  , mFlagsRequested( false )
+  , mRemoteIdRequested( false )
+  , mGidRequested( false )
 {
-  std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
+  std::fill( mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1 );
 }
 
 void FetchHelper::setStreamParser( ImapStreamParser *parser )
@@ -116,7 +116,7 @@ QSqlQuery FetchHelper::buildPartQuery( const QVector<QByteArray> &partList, bool
     ItemQueryHelper::scopeToQuery( mScope, mConnection, partQuery );
 
     if ( !partQuery.exec() ) {
-      throw HandlerException("Unable to list item parts");
+      throw HandlerException( "Unable to list item parts" );
     }
 
     partQuery.query().next();
@@ -135,22 +135,22 @@ QSqlQuery FetchHelper::buildItemQuery()
   int column = 0;
   #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
   ADD_COLUMN( PimItem::idFullColumnName(), ItemQueryPimItemIdColumn );
-  if (mRemoteIdRequested) {
+  if ( mRemoteIdRequested ) {
     ADD_COLUMN( PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn )
   }
   ADD_COLUMN( MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn )
   ADD_COLUMN( PimItem::revFullColumnName(), ItemQueryRevColumn )
-  if (mRemoteRevisionRequested) {
+  if ( mRemoteRevisionRequested ) {
     ADD_COLUMN( PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn )
   }
-  if (mSizeRequested) {
+  if ( mSizeRequested ) {
     ADD_COLUMN( PimItem::sizeFullColumnName(), ItemQuerySizeColumn )
   }
-  if (mMTimeRequested) {
+  if ( mMTimeRequested ) {
     ADD_COLUMN( PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn )
   }
   ADD_COLUMN( PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn )
-  if (mGidRequested) {
+  if ( mGidRequested ) {
     ADD_COLUMN( PimItem::gidFullColumnName(), ItemQueryPimItemGidColumn )
   }
   #undef ADD_COLUMN
@@ -166,7 +166,7 @@ QSqlQuery FetchHelper::buildItemQuery()
   }
 
   if ( !itemQuery.exec() ) {
-    throw HandlerException("Unable to list items");
+    throw HandlerException( "Unable to list items" );
   }
 
   itemQuery.query().next();
@@ -192,7 +192,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
   flagQuery.addSortColumn( PimItem::idFullColumnName(), Query::Descending );
 
   if ( !flagQuery.exec() ) {
-    throw HandlerException("Unable to retrieve item flags");
+    throw HandlerException( "Unable to retrieve item flags" );
   }
 
   flagQuery.query().next();
@@ -214,15 +214,15 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
     retriever.setRetrieveParts( mRequestedPayloads );
     retriever.setRetrieveFullPayload( mFullPayload );
     if ( !retriever.exec() && !mIgnoreErrors ) { // There we go, retrieve the missing parts from the resource.
-      if (mConnection->resourceContext().isValid()) {
-        throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2) : %3")
-                .arg(mConnection->selectedCollectionId())
-                .arg(mConnection->resourceContext().id())
-                .arg(QString::fromLatin1(retriever.lastError())));
+      if ( mConnection->resourceContext().isValid() ) {
+        throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1, resource %2) : %3" )
+                .arg( mConnection->selectedCollectionId() )
+                .arg( mConnection->resourceContext().id() )
+                .arg( QString::fromLatin1( retriever.lastError() ) ) );
       } else {
-        throw HandlerException( QString::fromLatin1("Unable to fetch item from backend (collection %1) : %2")
-                .arg(mConnection->selectedCollectionId())
-                .arg(QString::fromLatin1(retriever.lastError())));
+        throw HandlerException( QString::fromLatin1( "Unable to fetch item from backend (collection %1) : %2" )
+                .arg( mConnection->selectedCollectionId() )
+                .arg( QString::fromLatin1( retriever.lastError() ) ) );
       }
     }
   }
@@ -377,13 +377,13 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
       }
     }
 
-    if (skipItem) {
+    if ( skipItem ) {
       itemQuery.next();
       continue;
     }
 
     if ( mCheckCachedPayloadPartsOnly ) {
-      attributes.append( AKONADI_PARAM_CACHEDPARTS " (" + ImapParser::join( cachedParts, " " ) + ')');
+      attributes.append( AKONADI_PARAM_CACHEDPARTS " (" + ImapParser::join( cachedParts, " " ) + ')' );
     }
 
     // IMAP protocol violation: should actually be the sequence number
@@ -397,14 +397,14 @@ bool FetchHelper::parseStream( const QByteArray &responseIdentifier )
   }
 
   // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
-  if ( needsAccessTimeUpdate(mRequestedParts) || mFullPayload ) {
+  if ( needsAccessTimeUpdate( mRequestedParts ) || mFullPayload ) {
     updateItemAccessTime();
   }
 
   return true;
 }
 
-bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray>& parts)
+bool FetchHelper::needsAccessTimeUpdate( const QVector<QByteArray> &parts )
 {
   // TODO technically we should compare the part list with the cache policy of
   // the parent collection of the retrieved items, but that's kinda expensive
@@ -542,8 +542,8 @@ QStack<Collection> FetchHelper::ancestorsForItem( Collection::Id parentColId )
   return ancestors;
 }
 
-QVariant FetchHelper::extractQueryResult(const QSqlQuery& query, FetchHelper::ItemQueryColumns column) const
+QVariant FetchHelper::extractQueryResult( const QSqlQuery &query, FetchHelper::ItemQueryColumns column ) const
 {
-  Q_ASSERT(mItemQueryColumnMap[column] >= 0);
-  return query.value(mItemQueryColumnMap[column]);
+  Q_ASSERT( mItemQueryColumnMap[column] >= 0 );
+  return query.value( mItemQueryColumnMap[column] );
 }

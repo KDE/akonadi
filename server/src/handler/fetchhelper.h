@@ -48,7 +48,7 @@ class FetchHelper : public QObject
     bool parseStream( const QByteArray &responseIdentifier );
 
   Q_SIGNALS:
-    void responseAvailable( const Akonadi::Response& );
+    void responseAvailable( const Akonadi::Response &response );
 
   private:
     enum ItemQueryColumns {
@@ -72,8 +72,8 @@ class FetchHelper : public QObject
     void parseCommandStream();
     void parsePartList();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
-    static bool needsAccessTimeUpdate(const QVector< QByteArray >& parts);
-    QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
+    static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
+    QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
 
   private:
     ImapStreamParser *mStreamParser;
