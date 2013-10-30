@@ -140,6 +140,7 @@ IncidenceChanger::Private::Private( bool enableHistory, IncidenceChanger *qq ) :
   mBatchOperationInProgress = false;
   mAutoAdjustRecurrence = true;
   m_collectionFetchJob = 0;
+  m_invitationPolicy = InvitationPolicyAsk;
 
   qRegisterMetaType<QVector<Akonadi::Item::Id> >( "QVector<Akonadi::Item::Id>" );
   qRegisterMetaType<Akonadi::Item::Id>( "Akonadi::Item::Id" );
@@ -418,7 +419,10 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
   bool result = true;
   if ( mGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget );  // TODO make async
-    if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+
+    if ( m_invitationPolicy == InvitationPolicySend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    } else if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
 
@@ -477,6 +481,12 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
 {
   if ( change->useGroupwareCommunication ) {
     ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
+
+    const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
+    if ( alwaysSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    }
+
     switch( change->type ) {
       case IncidenceChanger::ChangeTypeCreate:
       {
@@ -540,7 +550,7 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
           Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
           if ( newIncidence->supportsGroupwareCommunication() ) {
-            if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+            if ( !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
               handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
             }
             const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
@@ -1001,7 +1011,17 @@ void IncidenceChanger::setAutoAdjustRecurrence( bool enable )
 
 bool IncidenceChanger::autoAdjustRecurrence() const
 {
-  return d->mAutoAdjustRecurrence;
+    return d->mAutoAdjustRecurrence;
+}
+
+void IncidenceChanger::setInvitationPolicy( IncidenceChanger::InvitationPolicy policy )
+{
+  d->m_invitationPolicy = policy;
+}
+
+IncidenceChanger::InvitationPolicy IncidenceChanger::invitationPolicy() const
+{
+  return d->m_invitationPolicy;
 }
 
 Akonadi::Collection IncidenceChanger::lastCollectionUsed() const

@@ -347,6 +347,8 @@ public:
 
   QMap<KJob *, QSet<KCalCore::IncidenceBase::Field> > mDirtyFieldsByJob;
 
+  IncidenceChanger::InvitationPolicy m_invitationPolicy;
+
 private:
   IncidenceChanger *q;
 };
