@@ -670,12 +670,11 @@ void ResourceBase::changeCommitted( const Item& item )
 
 void ResourceBase::changesCommitted(const Item::List& items)
 {
-  Q_D( ResourceBase );
   ItemModifyJob *job = new ItemModifyJob( items );
   job->d_func()->setClean();
   job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
   job->setIgnorePayload( true ); // we only want to reset the dirty flag and update the remote id
-  d->changeProcessed();
+  connect( job, SIGNAL(finished(KJob*)), this, SLOT(changeCommittedResult(KJob*)) );
 }
 
 void ResourceBase::changeCommitted( const Collection &collection )
@@ -687,9 +686,16 @@ void ResourceBase::changeCommitted( const Collection &collection )
 void ResourceBasePrivate::changeCommittedResult( KJob *job )
 {
   Q_Q( ResourceBase );
-  if ( job->error() )
-    emit q->error( i18nc( "@info", "Updating local collection failed: %1.", job->errorText() ) );
-  mChangeRecorder->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
+  if ( qobject_cast<CollectionModifyJob*>( job ) ) {
+    if ( job->error() ) {
+      emit q->error( i18nc( "@info", "Updating local collection failed: %1.", job->errorText() ) );
+    }
+    mChangeRecorder->d_ptr->invalidateCache( static_cast<CollectionModifyJob*>( job )->collection() );
+  } else {
+    // TODO: Error handling for item changes?
+    // Item cache is invalidated by ItemModifyJob
+  }
+
   changeProcessed();
 }
 
