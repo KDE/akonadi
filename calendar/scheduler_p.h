@@ -56,7 +56,8 @@ public:
     ResultCreatingError,
     ResultModifyingError,
     ResultDeletingError,
-    ResultUnsupported
+    ResultUnsupported,
+    ResultUserCancelled
   };
 
   /**

@@ -51,6 +51,7 @@ CalendarBasePrivate::CalendarBasePrivate( CalendarBase *qq ) : QObject()
                                                              , mIncidenceChanger( new IncidenceChanger() )
                                                              , mBatchInsertionCancelled( false )
                                                              , mListensForNewItems( false )
+                                                             , mLastCreationCancelled( false )
                                                              , q( qq )
 {
   connect( mIncidenceChanger,
@@ -218,6 +219,7 @@ void CalendarBasePrivate::slotDeleteFinished( int changeId,
         internalRemove( mItemById.value( id ) );
     }
   }
+
   emit q->deleteFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
@@ -233,6 +235,9 @@ void CalendarBasePrivate::slotCreateFinished( int changeId,
     Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
     internalInsert( item );
   }
+
+  mLastCreationCancelled = ( resultCode == IncidenceChanger::ResultCodeUserCanceled );
+
   emit q->createFinished( resultCode == IncidenceChanger::ResultCodeSuccess, errorMessage );
 }
 
@@ -568,6 +573,8 @@ bool CalendarBase::addIncidence( const KCalCore::Incidence::Ptr &incidence )
   if ( batchAdding() && d->mBatchInsertionCancelled ) {
     return false;
   }
+
+  d->mLastCreationCancelled = false;
 
   Akonadi::Collection collection;
 

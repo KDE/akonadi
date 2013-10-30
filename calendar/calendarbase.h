@@ -293,6 +293,8 @@ protected:
   Q_DECLARE_PRIVATE( CalendarBase )
   QScopedPointer<CalendarBasePrivate> d_ptr;
   CalendarBase( CalendarBasePrivate *const d, QObject *parent );
+
+  friend class Scheduler;
 };
 }
 

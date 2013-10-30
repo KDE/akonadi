@@ -74,6 +74,7 @@ public:
   Akonadi::Collection mCollectionForBatchInsertion;
   bool mBatchInsertionCancelled;
   bool mListensForNewItems; // does this model detect new item creations ?
+  bool mLastCreationCancelled; // User pressed cancel in the collection selection dialog
 
   // Hash with uid->parentUid. When receiving onDataChanged() we need a way
   // to obtain the original RELATED-TO. Because RELATED-TO might have been modified

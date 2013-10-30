@@ -19,6 +19,8 @@
   Boston, MA 02110-1301, USA.
 */
 #include "scheduler_p.h"
+#include "calendarbase_p.h"
+
 #include <kcalutils/stringify.h>
 
 #include <kcalcore/icalformat.h>
@@ -638,7 +640,13 @@ void Scheduler::acceptFreeBusy( const IncidenceBase::Ptr &incidence, iTIPMethod 
 
 void Scheduler::handleCreateFinished( bool success, const QString &errorMessage )
 {
-  emit transactionFinished( success ? ResultSuccess : ResultCreatingError, errorMessage );
+  CalendarBase *calendar = qobject_cast<Akonadi::CalendarBase*>( sender() );
+  const bool cancelled = calendar && calendar->d_ptr->mLastCreationCancelled;
+
+  emit transactionFinished( success ? ResultSuccess
+                                    : ( cancelled ? ResultUserCancelled
+                                                  : ResultCreatingError ),
+                            errorMessage );
 }
 
 void Scheduler::handleModifyFinished( bool success, const QString &errorMessage )

@@ -110,6 +110,12 @@ void ITIPHandler::Private::onLoadFinished( bool success, const QString &errorMes
 void ITIPHandler::Private::finishProcessiTIPMessage( Akonadi::MailScheduler::Result result,
                                                      const QString &errorMessage )
 {
+  // Handle when user cancels on the collection selection dialog
+  if ( result == MailScheduler::ResultUserCancelled ) {
+    emit q->iTipMessageProcessed( ResultCancelled, QString() );
+    return;
+  }
+
   const bool success = result == MailScheduler::ResultSuccess;
 
   if ( m_method == KCalCore::iTIPCounter) {
