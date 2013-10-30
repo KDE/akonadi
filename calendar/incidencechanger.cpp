@@ -422,6 +422,8 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 
     if ( m_invitationPolicy == InvitationPolicySend ) {
       handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    } else if ( m_invitationPolicy == InvitationPolicyDontSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
     } else if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
       handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
     }
@@ -483,8 +485,13 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
     ITIPHandlerHelper handler( change->parentWidget ); // TODO make async
 
     const bool alwaysSend = m_invitationPolicy == InvitationPolicySend;
+    const bool neverSend = m_invitationPolicy == InvitationPolicyDontSend;
     if ( alwaysSend ) {
       handler.setDefaultAction( ITIPHandlerHelper::ActionSendMessage );
+    }
+
+    if ( neverSend ) {
+      handler.setDefaultAction( ITIPHandlerHelper::ActionDontSendMessage );
     }
 
     switch( change->type ) {
@@ -550,15 +557,15 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
           Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
           Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
           if ( newIncidence->supportsGroupwareCommunication() ) {
-            if ( !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+            if ( !neverSend && !alwaysSend && mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
               handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
             }
             const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
                                                                         oldIncidence,
                                                                         Akonadi::CalendarUtils::allEmails() );
             ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                              newIncidence,
-                                                                                              attendeeStatusChanged );
+                                                                                         newIncidence,
+                                                                                         attendeeStatusChanged );
 
             if ( change->atomicOperationId != 0 ) {
               mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );

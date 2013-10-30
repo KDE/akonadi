@@ -119,7 +119,8 @@ public:
    */
   enum InvitationPolicy {
       InvitationPolicySend = 0, ///< Invitation e-mails are sent without asking the user if he wants to.
-      InvitationPolicyAsk       ///< The user is asked if an e-mail should be sent. This is the default.
+      InvitationPolicyAsk,      ///< The user is asked if an e-mail should be sent. This is the default.
+      InvitationPolicyDontSend  ///< E-mails aren't sent
   };
 
   /**
