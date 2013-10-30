@@ -373,6 +373,23 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     expectedEmailCount = 0;
     QTest::newRow("Creation. We organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
     //----------------------------------------------------------------------------------------------
+    // We delete an event that we organized, and has attendees, that will be notified.
+    changeType = IncidenceChanger::ChangeTypeDelete;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 1;
+    QTest::newRow("Deletion. We organized.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    //----------------------------------------------------------------------------------------------
+    // We delete an event that we organized, and has attendees. We won't send e-mail notifications.
+    changeType = IncidenceChanger::ChangeTypeDelete;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 0;
+    QTest::newRow("Deletion. We organized.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
 }
 
 void ITIPHandlerTest::testOutgoingInvitations()
@@ -396,6 +413,20 @@ void ITIPHandlerTest::testOutgoingInvitations()
     case IncidenceChanger::ChangeTypeModify:
         break;
     case IncidenceChanger::ChangeTypeDelete:
+        // Create if first, so we have something to delete
+        m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicyDontSend);
+        m_changer->createIncidence(incidence, mCollection);
+        waitForIt();
+        QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+
+        m_changer->setInvitationPolicy(invitationPolicy);
+        QVERIFY(mLastInsertedItem.isValid());
+        m_pendingIncidenceChangerSignal = 1;
+        m_changer->deleteIncidence(mLastInsertedItem);
+        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+        waitForIt();
+
+
         break;
     default:
         Q_ASSERT(false);
@@ -484,6 +515,7 @@ void ITIPHandlerTest::onCreateFinished(int changeId, const Item &item,
 {
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
+    mLastInsertedItem = item;
     QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);
@@ -498,6 +530,7 @@ void ITIPHandlerTest::onDeleteFinished(int changeId, const QVector<Entity::Id> &
 {
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
+    Q_UNUSED(deletedIds);
     QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);
@@ -512,6 +545,7 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
 {
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
+
     QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);

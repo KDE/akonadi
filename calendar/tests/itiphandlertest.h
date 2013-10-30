@@ -83,6 +83,7 @@ public Q_SLOTS:
 private:
     int m_pendingItipMessageSignal;
     int m_pendingIncidenceChangerSignal;
+    Akonadi::Item mLastInsertedItem;
     Akonadi::ITIPHandler::Result m_expectedResult;
     Akonadi::ITIPHandler *m_itipHandler;
     Akonadi::IncidenceChanger *m_changer;
