@@ -39,6 +39,7 @@ public:
     void waitForIt(); // Waits 10 seconds for signals
     void stopWaiting();
     void createIncidence(const QString &uid);
+
     void verifyExists(const QString &uid, bool exists);
     Akonadi::Item::List calendarItems();
 
@@ -49,6 +50,7 @@ protected:
 
     void compareCalendars(const KCalCore::Calendar::Ptr &expectedCalendar);
     static QByteArray readFile(const QString &filename);
+    static Akonadi::Item generateIncidence(const QString &uid, const QString &organizer = QString());
 
     Akonadi::Collection mCollection;
     Akonadi::IncidenceChanger *mChanger;

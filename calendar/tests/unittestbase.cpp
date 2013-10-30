@@ -66,13 +66,7 @@ void UnitTestBase::stopWaiting()
 
 void UnitTestBase::createIncidence(const QString &uid)
 {
-    Item item;
-    item.setMimeType(KCalCore::Event::eventMimeType());
-    KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
-    incidence->setUid(uid);
-    incidence->setDtStart(KDateTime::currentUtcDateTime());
-    incidence->setSummary(QLatin1String("summary"));
-    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+    Item item = generateIncidence(uid);
     QVERIFY(mCollection.isValid());
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
     QVERIFY(job->exec());
@@ -171,4 +165,27 @@ QByteArray UnitTestBase::readFile(const QString &filename)
     }
 
     return file.readAll();
+}
+
+Item UnitTestBase::generateIncidence(const QString &uid, const QString &organizer)
+{
+    Item item;
+    item.setMimeType(KCalCore::Event::eventMimeType());
+    KCalCore::Incidence::Ptr incidence = KCalCore::Incidence::Ptr(new KCalCore::Event());
+
+    if (!uid.isEmpty()) {
+        incidence->setUid(uid);
+    }
+
+    const KDateTime now = KDateTime::currentUtcDateTime();
+    incidence->setDtStart(now);
+    incidence->setDateTime(now.addSecs(3600), Incidence::RoleEnd);
+    incidence->setSummary(QLatin1String("summary"));
+    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
+
+    if (!organizer.isEmpty()) {
+        incidence->setOrganizer(organizer);
+    }
+
+    return item;
 }
