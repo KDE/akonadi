@@ -37,7 +37,7 @@ class Akonadi::CollectionStatisticsJobPrivate : public JobPrivate
     }
 
     QString jobDebuggingString() const /*Q_DECL_OVERRIDE*/ {
-      return QString::number( mCollection.id() );
+      return QString::fromLatin1( "Collection Id %1").arg( mCollection.id() );
     }
 
     Collection mCollection;
