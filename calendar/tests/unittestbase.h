@@ -39,6 +39,7 @@ public:
     void waitForIt(); // Waits 10 seconds for signals
     void stopWaiting();
     void createIncidence(const QString &uid);
+    void createIncidence(const Akonadi::Item &item);
 
     void verifyExists(const QString &uid, bool exists);
     Akonadi::Item::List calendarItems();

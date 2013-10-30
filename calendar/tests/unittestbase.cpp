@@ -67,6 +67,11 @@ void UnitTestBase::stopWaiting()
 void UnitTestBase::createIncidence(const QString &uid)
 {
     Item item = generateIncidence(uid);
+    createIncidence(item);
+}
+
+void UnitTestBase::createIncidence(const Item &item)
+{
     QVERIFY(mCollection.isValid());
     ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
     QVERIFY(job->exec());
