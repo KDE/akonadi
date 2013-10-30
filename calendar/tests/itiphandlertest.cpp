@@ -38,6 +38,7 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
+Q_DECLARE_METATYPE(Akonadi::IncidenceChanger::InvitationPolicy)
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ChangeType>)
 Q_DECLARE_METATYPE(Akonadi::ITIPHandler::Result)
 Q_DECLARE_METATYPE(KCalCore::Attendee::PartStat)
@@ -49,8 +50,22 @@ void ITIPHandlerTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
     m_pendingItipMessageSignal = 0;
+    m_pendingIncidenceChangerSignal = 0;
     MailClient::sRunningUnitTests = true;
     m_itipHandler = 0;
+    m_changer = new IncidenceChanger(this);
+    m_changer->setHistoryEnabled(false);
+    m_changer->setGroupwareCommunication(true);
+    m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicySend); // don't show dialogs
+
+    connect(m_changer, SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(onCreateFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
+
+    connect(m_changer, SIGNAL(deleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(onDeleteFinished(int,QVector<Akonadi::Item::Id>,Akonadi::IncidenceChanger::ResultCode,QString)) );
+
+    connect(m_changer,SIGNAL(modifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
+            SLOT(onModifyFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)) );
 }
 
 void ITIPHandlerTest::testProcessITIPMessage_data()
@@ -320,6 +335,74 @@ void ITIPHandlerTest::testProcessITIPMessageCancel()
     processItip(iCalData, receiver, QLatin1String("accepted"), 0, items);
 }
 
+void ITIPHandlerTest::testOutgoingInvitations_data()
+{
+    QTest::addColumn<Akonadi::Item>("item"); // existing incidence that will be target of creation, deletion or modification
+    QTest::addColumn<Akonadi::IncidenceChanger::ChangeType>("changeType"); // creation, deletion, modification
+    QTest::addColumn<int>("expectedEmailCount");
+    QTest::addColumn<IncidenceChanger::InvitationPolicy>("invitationPolicy");
+
+    Akonadi::Item item;
+    KCalCore::Incidence::Ptr incidence;
+    IncidenceChanger::ChangeType changeType;
+    const IncidenceChanger::InvitationPolicy invitationPolicySend     = IncidenceChanger::InvitationPolicySend;
+    const IncidenceChanger::InvitationPolicy invitationPolicyDontSend = IncidenceChanger::InvitationPolicyDontSend;
+    int expectedEmailCount = 0;
+
+    const QString ourEmail     = QLatin1String(s_ourEmail);
+    const Attendee::Ptr vincent = Attendee::Ptr(new Attendee(QLatin1String("Vincent"), QLatin1String("vincent@dev.nul")));
+    const Attendee::Ptr jules = Attendee::Ptr(new Attendee(QLatin1String("Jules"), QLatin1String("jules@dev.nul")));
+    const QString uid = QLatin1String("random-uid-123");
+
+    //----------------------------------------------------------------------------------------------
+    // Creation. We are organizer. We invite another person.
+    changeType = IncidenceChanger::ChangeTypeCreate;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 1;
+    QTest::newRow("Creation. We organize.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    //----------------------------------------------------------------------------------------------
+    // Creation. We are organizer. We invite another person. But we choose not to send invitation e-mail.
+    changeType = IncidenceChanger::ChangeTypeCreate;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 0;
+    QTest::newRow("Creation. We organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    //----------------------------------------------------------------------------------------------
+}
+
+void ITIPHandlerTest::testOutgoingInvitations()
+{
+    QFETCH(Akonadi::Item, item);
+    QFETCH(IncidenceChanger::ChangeType, changeType);
+    QFETCH(int, expectedEmailCount);
+    QFETCH(IncidenceChanger::InvitationPolicy, invitationPolicy);
+    KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
+
+    m_pendingIncidenceChangerSignal = 1;
+    MailClient::sUnitTestResults.clear();
+    m_changer->setInvitationPolicy(invitationPolicy);
+
+    switch(changeType) {
+    case IncidenceChanger::ChangeTypeCreate:
+        m_changer->createIncidence(incidence, mCollection);
+        waitForIt();
+        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+        break;
+    case IncidenceChanger::ChangeTypeModify:
+        break;
+    case IncidenceChanger::ChangeTypeDelete:
+        break;
+    default:
+        Q_ASSERT(false);
+    }
+
+}
+
 void ITIPHandlerTest::cleanup()
 {
     Akonadi::Item::List items = calendarItems();
@@ -393,6 +476,48 @@ void ITIPHandlerTest::oniTipMessageProcessed(ITIPHandler::Result result, const Q
     }
 
     QCOMPARE(m_expectedResult, result);
+}
+
+void ITIPHandlerTest::onCreateFinished(int changeId, const Item &item,
+                                       IncidenceChanger::ResultCode resultCode,
+                                       const QString &errorString)
+{
+    Q_UNUSED(changeId);
+    Q_UNUSED(errorString);
+    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
+    m_pendingIncidenceChangerSignal--;
+    QVERIFY(m_pendingIncidenceChangerSignal >= 0);
+    if (m_pendingIncidenceChangerSignal == 0) {
+        stopWaiting();
+    }
+}
+
+void ITIPHandlerTest::onDeleteFinished(int changeId, const QVector<Entity::Id> &deletedIds,
+                                       IncidenceChanger::ResultCode resultCode,
+                                       const QString &errorString)
+{
+    Q_UNUSED(changeId);
+    Q_UNUSED(errorString);
+    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
+    m_pendingIncidenceChangerSignal--;
+    QVERIFY(m_pendingIncidenceChangerSignal >= 0);
+    if (m_pendingIncidenceChangerSignal == 0) {
+        stopWaiting();
+    }
+}
+
+void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
+                                       IncidenceChanger::ResultCode resultCode,
+                                       const QString &errorString)
+{
+    Q_UNUSED(changeId);
+    Q_UNUSED(errorString);
+    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
+    m_pendingIncidenceChangerSignal--;
+    QVERIFY(m_pendingIncidenceChangerSignal >= 0);
+    if (m_pendingIncidenceChangerSignal == 0) {
+        stopWaiting();
+    }
 }
 
 QTEST_AKONADIMAIN(ITIPHandlerTest, GUI)

@@ -49,6 +49,11 @@ private Q_SLOTS:
     void testProcessITIPMessageCancel_data();
     void testProcessITIPMessageCancel();
 
+    // These ones don't have to do with kmail. It's when doing a modification, itip REQUESTs are sent.
+    // Also tests cases where we're not the organizer.
+    void testOutgoingInvitations_data();
+    void testOutgoingInvitations();
+
 private:
     void waitForSignals();
     void cleanup();
@@ -63,10 +68,24 @@ public Q_SLOTS:
     void oniTipMessageProcessed(Akonadi::ITIPHandler::Result result,
                                 const QString &errorMessage);
 
+    void onCreateFinished(int changeId, const Akonadi::Item &item,
+                          Akonadi::IncidenceChanger::ResultCode resultCode,
+                          const QString &errorString);
+
+    void onDeleteFinished(int changeId, const QVector<Akonadi::Item::Id> &deletedIds,
+                          Akonadi::IncidenceChanger::ResultCode resultCode,
+                          const QString &errorMessage);
+
+    void onModifyFinished(int changeId, const Akonadi::Item &item,
+                          Akonadi::IncidenceChanger::ResultCode resultCode,
+                          const QString &errorString);
+
 private:
     int m_pendingItipMessageSignal;
+    int m_pendingIncidenceChangerSignal;
     Akonadi::ITIPHandler::Result m_expectedResult;
     Akonadi::ITIPHandler *m_itipHandler;
+    Akonadi::IncidenceChanger *m_changer;
 };
 
 #endif

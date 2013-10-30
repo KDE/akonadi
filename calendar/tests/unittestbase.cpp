@@ -21,6 +21,7 @@
 #include "unittestbase.h"
 #include "helper.h"
 #include "../fetchjobcalendar.h"
+#include "mailclient_p.h"
 
 #include <kcalcore/event.h>
 #include <kcalcore/icalformat.h>
@@ -43,6 +44,7 @@ UnitTestBase::UnitTestBase()
     qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
     qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >("QList<Akonadi::IncidenceChanger::ChangeType>");
     qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
+    qRegisterMetaType<Akonadi::MailClient::Result>("Akonadi::MailClient::Result");
 
     mChanger = new IncidenceChanger(this);
     mChanger->setShowDialogsOnError(false);
