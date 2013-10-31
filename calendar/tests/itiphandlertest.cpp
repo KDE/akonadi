@@ -435,6 +435,17 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     expectedEmailCount = 1;
     QTest::newRow("Deletion. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicySend;
     //----------------------------------------------------------------------------------------------
+    // We modified an event which we're not the organizer of.
+    changeType = IncidenceChanger::ChangeTypeModify;
+    item = generateIncidence(uid, /**organizer=*/mia->email());
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    us->setStatus(Attendee::Accepted);
+    incidence->addAttendee(us);
+    expectedEmailCount = 0;
+    QTest::newRow("Modification. We didnt organize") << item << changeType << expectedEmailCount << invitationPolicyAsk;
+    //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testOutgoingInvitations()

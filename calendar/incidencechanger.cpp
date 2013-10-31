@@ -570,9 +570,10 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       {
         if ( !change->originalItems.isEmpty() ) {
           Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-          if ( newIncidence->supportsGroupwareCommunication() ) {
+          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+          if ( newIncidence->supportsGroupwareCommunication() &&
+               Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() ) ) { // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
             if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
               handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
             }
