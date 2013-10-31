@@ -38,6 +38,12 @@
 using namespace Akonadi;
 using namespace KCalCore;
 
+#ifdef PLEASE_TEST_INVITATIONS
+# define RUNNING_UNIT_TESTS true
+#else
+# define RUNNING_UNIT_TESTS false
+#endif
+
 ITIPHandlerHelper::Action actionFromStatus( ITIPHandlerHelper::SendResult result )
 {
   //enum SendResult {
@@ -467,6 +473,18 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
 
         if ( !oldIncidence->supportsGroupwareCommunication() ) {
           break;
+        }
+
+        const bool weAreOrganizer = Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() );
+        if (RUNNING_UNIT_TESTS && !weAreOrganizer ) {
+          // This is a bit of a workaround when running tests. I don't want to show the
+          // "You're not organizer, do you want to modify event?" dialog in unit-tests, but want
+          // to emulate a "yes" and a "no" press.
+          if ( m_invitationPolicy == InvitationPolicySend ) {
+            return true;
+          } else if (m_invitationPolicy == InvitationPolicyDontSend) {
+            return false;
+          }
         }
 
         const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
