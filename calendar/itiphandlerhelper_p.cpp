@@ -133,7 +133,7 @@ bool ITIPHandlerHelper::weAreOrganizerOf( const KCalCore::Incidence::Ptr &incide
 bool ITIPHandlerHelper::weNeedToSendMailFor( const KCalCore::Incidence::Ptr &incidence )
 {
   if ( !weAreOrganizerOf( incidence ) ) {
-    kError() << "We should be the organizer of ths incidence."
+    kError() << "We should be the organizer of this incidence."
              << "; email= "       << incidence->organizer()->email()
              << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
@@ -181,7 +181,7 @@ ITIPHandlerHelper::sendIncidenceCreatedMessage( KCalCore::iTIPMethod method,
   /// When we created the incidence, we *must* be the organizer.
 
   if ( !weAreOrganizerOf( incidence ) ) {
-    kError() << "We should be the organizer of ths incidence!"
+    kError() << "We should be the organizer of this incidence!"
              << "; email= "       << incidence->organizer()->email()
              << "; thatIsMe() = " << Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() );
     Q_ASSERT( false );
