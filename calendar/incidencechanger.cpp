@@ -568,26 +568,34 @@ bool IncidenceChanger::Private::handleInvitationsAfterChange( const Change::Ptr 
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
-          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
-          if ( newIncidence->supportsGroupwareCommunication() &&
-               Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() ) ) { // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
-            if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
-              handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
-            }
-            const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
-                                                                        oldIncidence,
-                                                                        Akonadi::CalendarUtils::allEmails() );
-            ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
-                                                                                              newIncidence,
-                                                                                              attendeeStatusChanged );
+        if ( change->originalItems.isEmpty() ) {
+          break;
+        }
 
-            if ( change->atomicOperationId != 0 ) {
-              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
-            }
-          }
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !newIncidence->supportsGroupwareCommunication() ||
+             !Akonadi::CalendarUtils::thatIsMe( newIncidence->organizer()->email() ) ) {
+          // If we're not the organizer, the user already saw the "Do you really want to do this, incidence will become out of sync"
+          break;
+        }
+
+        if ( mInvitationStatusByAtomicOperation.contains( change->atomicOperationId ) ) {
+          handler.setDefaultAction( actionFromStatus( mInvitationStatusByAtomicOperation.value( change->atomicOperationId ) ) );
+        }
+
+        const bool attendeeStatusChanged = myAttendeeStatusChanged( newIncidence,
+                                                                    oldIncidence,
+                                                                    Akonadi::CalendarUtils::allEmails() );
+
+        ITIPHandlerHelper::SendResult status = handler.sendIncidenceModifiedMessage( KCalCore::iTIPRequest,
+                                                                                     newIncidence,
+                                                                                     attendeeStatusChanged );
+
+        if ( change->atomicOperationId != 0 ) {
+          mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
         }
       }
       break;
