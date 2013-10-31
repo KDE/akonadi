@@ -479,23 +479,29 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
-          Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
-
-          if ( oldIncidence->supportsGroupwareCommunication() ) {
-            const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-            if ( !modify ) {
-              if ( newIncidence->type() == oldIncidence->type() ) {
-                IncidenceBase *i1 = newIncidence.data();
-                IncidenceBase *i2 = oldIncidence.data();
-                *i1 = *i2;
-              }
-              result = false;
-            }
-          }
+        if ( change->originalItems.isEmpty() ) {
+          break;
         }
+
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = change->originalItems.first().payload<KCalCore::Incidence::Ptr>();
+        Incidence::Ptr newIncidence = change->newItem.payload<KCalCore::Incidence::Ptr>();
+
+        if ( !oldIncidence->supportsGroupwareCommunication() ) {
+          break;
+        }
+
+        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+        if ( modify ) {
+          break;
+        }
+
+        if ( newIncidence->type() == oldIncidence->type() ) {
+          IncidenceBase *i1 = newIncidence.data();
+          IncidenceBase *i2 = oldIncidence.data();
+          *i1 = *i2;
+        }
+        result = false;
       }
       break;
       default:
