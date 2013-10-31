@@ -390,6 +390,24 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(jules);
     expectedEmailCount = 0;
     QTest::newRow("Deletion. We organized.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    //----------------------------------------------------------------------------------------------
+    // We delete an event that we organized, and has attendees, who will be notified.
+    changeType = IncidenceChanger::ChangeTypeModify;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 1;
+    QTest::newRow("Modification. We organizd.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    //----------------------------------------------------------------------------------------------
+    // We delete an event that we organized, and has attendees, who wont be notified.
+    changeType = IncidenceChanger::ChangeTypeModify;
+    item = generateIncidence(uid, /**organizer=*/ourEmail);
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    expectedEmailCount = 0;
+    QTest::newRow("Modification. We organizd.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
 }
 
 void ITIPHandlerTest::testOutgoingInvitations()
@@ -410,7 +428,22 @@ void ITIPHandlerTest::testOutgoingInvitations()
         waitForIt();
         QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
         break;
-    case IncidenceChanger::ChangeTypeModify:
+    case IncidenceChanger::ChangeTypeModify: {
+        // Create if first, so we have something to modify
+        m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicyDontSend);
+        m_changer->createIncidence(incidence, mCollection);
+        waitForIt();
+        QCOMPARE(MailClient::sUnitTestResults.count(), 0);
+        QVERIFY(mLastInsertedItem.isValid());
+        m_pendingIncidenceChangerSignal = 1;
+        Incidence::Ptr oldIncidence = Incidence::Ptr(incidence->clone());
+        incidence->setSummary(QLatin1String("the-new-summary"));
+        m_changer->setInvitationPolicy(invitationPolicy);
+        int changeId = m_changer->modifyIncidence(mLastInsertedItem, oldIncidence);
+        QVERIFY(changeId != 1);
+        waitForIt();
+        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
+    }
         break;
     case IncidenceChanger::ChangeTypeDelete:
         // Create if first, so we have something to delete
@@ -423,8 +456,8 @@ void ITIPHandlerTest::testOutgoingInvitations()
         QVERIFY(mLastInsertedItem.isValid());
         m_pendingIncidenceChangerSignal = 1;
         m_changer->deleteIncidence(mLastInsertedItem);
-        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
         waitForIt();
+        QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
 
 
         break;
@@ -545,6 +578,7 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
 {
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
+    Q_UNUSED(item);
 
     QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
