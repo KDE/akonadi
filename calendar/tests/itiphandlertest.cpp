@@ -345,11 +345,15 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     Akonadi::Item item;
     KCalCore::Incidence::Ptr incidence;
     IncidenceChanger::ChangeType changeType;
+    const IncidenceChanger::InvitationPolicy invitationPolicyAsk     = IncidenceChanger::InvitationPolicyAsk;
     const IncidenceChanger::InvitationPolicy invitationPolicySend     = IncidenceChanger::InvitationPolicySend;
     const IncidenceChanger::InvitationPolicy invitationPolicyDontSend = IncidenceChanger::InvitationPolicyDontSend;
     int expectedEmailCount = 0;
+    Q_UNUSED(invitationPolicyAsk);
 
     const QString ourEmail     = QLatin1String(s_ourEmail);
+    const Attendee::Ptr us = Attendee::Ptr(new Attendee(QString(), ourEmail));
+    const Attendee::Ptr mia = Attendee::Ptr(new Attendee(QLatin1String("Mia Wallace"), QLatin1String("mia@dev.nul")));
     const Attendee::Ptr vincent = Attendee::Ptr(new Attendee(QLatin1String("Vincent"), QLatin1String("vincent@dev.nul")));
     const Attendee::Ptr jules = Attendee::Ptr(new Attendee(QLatin1String("Jules"), QLatin1String("jules@dev.nul")));
     const QString uid = QLatin1String("random-uid-123");
@@ -404,10 +408,33 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     changeType = IncidenceChanger::ChangeTypeModify;
     item = generateIncidence(uid, /**organizer=*/ourEmail);
     incidence = item.payload<KCalCore::Incidence::Ptr>();
-    incidence->addAttendee(vincent);
+    incidence->addAttendee(vincent); // TODO: test that all attendees got the e-mail
     incidence->addAttendee(jules);
     expectedEmailCount = 0;
     QTest::newRow("Modification. We organizd.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    //----------------------------------------------------------------------------------------------
+    // We delete an event which we're not the organizer of. Organizer gets REPLY with PartState=Declined
+    changeType = IncidenceChanger::ChangeTypeDelete;
+    item = generateIncidence(uid, /**organizer=*/mia->email());
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    us->setStatus(Attendee::Accepted); // TODO: Test without accepted status
+    incidence->addAttendee(us); // TODO: test that attendees didn't receive the REPLY
+    expectedEmailCount = 1; // REPLY is always sent, there are no dialogs to control this. Dialogs only control REQUEST and CANCEL. Bug or feature ?
+    QTest::newRow("Deletion. We didnt organize.") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    //----------------------------------------------------------------------------------------------
+    // We delete an event which we're not the organizer of. Organizer gets REPLY with PartState=Declined
+    changeType = IncidenceChanger::ChangeTypeDelete;
+    item = generateIncidence(uid, /**organizer=*/mia->email());
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules); // TODO: test that attendees didn't receive the REPLY
+    us->setStatus(Attendee::Accepted); // TODO: Test without accepted status
+    incidence->addAttendee(us);
+    expectedEmailCount = 1;
+    QTest::newRow("Deletion. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicySend;
+    //----------------------------------------------------------------------------------------------
 }
 
 void ITIPHandlerTest::testOutgoingInvitations()
@@ -430,15 +457,15 @@ void ITIPHandlerTest::testOutgoingInvitations()
         break;
     case IncidenceChanger::ChangeTypeModify: {
         // Create if first, so we have something to modify
-        m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicyDontSend);
+        m_changer->setGroupwareCommunication(false); // we disable groupware because creating an incidence which we're not the organizer of is not permitted.
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
+        m_changer->setGroupwareCommunication(true);
         QCOMPARE(MailClient::sUnitTestResults.count(), 0);
         QVERIFY(mLastInsertedItem.isValid());
         m_pendingIncidenceChangerSignal = 1;
         Incidence::Ptr oldIncidence = Incidence::Ptr(incidence->clone());
         incidence->setSummary(QLatin1String("the-new-summary"));
-        m_changer->setInvitationPolicy(invitationPolicy);
         int changeId = m_changer->modifyIncidence(mLastInsertedItem, oldIncidence);
         QVERIFY(changeId != 1);
         waitForIt();
@@ -447,19 +474,17 @@ void ITIPHandlerTest::testOutgoingInvitations()
         break;
     case IncidenceChanger::ChangeTypeDelete:
         // Create if first, so we have something to delete
-        m_changer->setInvitationPolicy(IncidenceChanger::InvitationPolicyDontSend);
+        m_changer->setGroupwareCommunication(false);
         m_changer->createIncidence(incidence, mCollection);
         waitForIt();
+        m_changer->setGroupwareCommunication(true);
         QCOMPARE(MailClient::sUnitTestResults.count(), 0);
 
-        m_changer->setInvitationPolicy(invitationPolicy);
         QVERIFY(mLastInsertedItem.isValid());
         m_pendingIncidenceChangerSignal = 1;
         m_changer->deleteIncidence(mLastInsertedItem);
         waitForIt();
         QCOMPARE(MailClient::sUnitTestResults.count(), expectedEmailCount);
-
-
         break;
     default:
         Q_ASSERT(false);
