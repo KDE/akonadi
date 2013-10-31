@@ -53,6 +53,7 @@ void ITIPHandlerTest::initTestCase()
     m_pendingIncidenceChangerSignal = 0;
     MailClient::sRunningUnitTests = true;
     m_itipHandler = 0;
+    m_cancelExpected = false;
     m_changer = new IncidenceChanger(this);
     m_changer->setHistoryEnabled(false);
     m_changer->setGroupwareCommunication(true);
@@ -341,6 +342,10 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     QTest::addColumn<Akonadi::IncidenceChanger::ChangeType>("changeType"); // creation, deletion, modification
     QTest::addColumn<int>("expectedEmailCount");
     QTest::addColumn<IncidenceChanger::InvitationPolicy>("invitationPolicy");
+    QTest::addColumn<bool>("userCancels");
+
+    const bool userDoesntCancel = false;
+    const bool userCancels      = true;
 
     Akonadi::Item item;
     KCalCore::Incidence::Ptr incidence;
@@ -366,7 +371,8 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent);
     incidence->addAttendee(jules);
     expectedEmailCount = 1;
-    QTest::newRow("Creation. We organize.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    QTest::newRow("Creation. We organize.") << item << changeType << expectedEmailCount
+                                            << invitationPolicySend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // Creation. We are organizer. We invite another person. But we choose not to send invitation e-mail.
     changeType = IncidenceChanger::ChangeTypeCreate;
@@ -375,7 +381,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent);
     incidence->addAttendee(jules);
     expectedEmailCount = 0;
-    QTest::newRow("Creation. We organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    QTest::newRow("Creation. We organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event that we organized, and has attendees, that will be notified.
     changeType = IncidenceChanger::ChangeTypeDelete;
@@ -384,7 +390,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent);
     incidence->addAttendee(jules);
     expectedEmailCount = 1;
-    QTest::newRow("Deletion. We organized.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    QTest::newRow("Deletion. We organized.") << item << changeType << expectedEmailCount << invitationPolicySend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event that we organized, and has attendees. We won't send e-mail notifications.
     changeType = IncidenceChanger::ChangeTypeDelete;
@@ -393,7 +399,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent);
     incidence->addAttendee(jules);
     expectedEmailCount = 0;
-    QTest::newRow("Deletion. We organized.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    QTest::newRow("Deletion. We organized.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event that we organized, and has attendees, who will be notified.
     changeType = IncidenceChanger::ChangeTypeModify;
@@ -402,7 +408,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent);
     incidence->addAttendee(jules);
     expectedEmailCount = 1;
-    QTest::newRow("Modification. We organizd.") << item << changeType << expectedEmailCount << invitationPolicySend;
+    QTest::newRow("Modification. We organizd.") << item << changeType << expectedEmailCount << invitationPolicySend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event that we organized, and has attendees, who wont be notified.
     changeType = IncidenceChanger::ChangeTypeModify;
@@ -411,7 +417,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     incidence->addAttendee(vincent); // TODO: test that all attendees got the e-mail
     incidence->addAttendee(jules);
     expectedEmailCount = 0;
-    QTest::newRow("Modification. We organizd.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    QTest::newRow("Modification. We organizd.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event which we're not the organizer of. Organizer gets REPLY with PartState=Declined
     changeType = IncidenceChanger::ChangeTypeDelete;
@@ -422,7 +428,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     us->setStatus(Attendee::Accepted); // TODO: Test without accepted status
     incidence->addAttendee(us); // TODO: test that attendees didn't receive the REPLY
     expectedEmailCount = 1; // REPLY is always sent, there are no dialogs to control this. Dialogs only control REQUEST and CANCEL. Bug or feature ?
-    QTest::newRow("Deletion. We didnt organize.") << item << changeType << expectedEmailCount << invitationPolicyDontSend;
+    QTest::newRow("Deletion. We didnt organize.") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
     // We delete an event which we're not the organizer of. Organizer gets REPLY with PartState=Declined
     changeType = IncidenceChanger::ChangeTypeDelete;
@@ -433,9 +439,9 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     us->setStatus(Attendee::Accepted); // TODO: Test without accepted status
     incidence->addAttendee(us);
     expectedEmailCount = 1;
-    QTest::newRow("Deletion. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicySend;
+    QTest::newRow("Deletion. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicySend << userDoesntCancel;
     //----------------------------------------------------------------------------------------------
-    // We modified an event which we're not the organizer of.
+    // We modified an event which we're not the organizer of. And, when the "do you really want to modify", we choose "yes".
     changeType = IncidenceChanger::ChangeTypeModify;
     item = generateIncidence(uid, /**organizer=*/mia->email());
     incidence = item.payload<KCalCore::Incidence::Ptr>();
@@ -444,7 +450,18 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     us->setStatus(Attendee::Accepted);
     incidence->addAttendee(us);
     expectedEmailCount = 0;
-    QTest::newRow("Modification. We didnt organize") << item << changeType << expectedEmailCount << invitationPolicyAsk;
+    QTest::newRow("Modification. We didnt organize") << item << changeType << expectedEmailCount << invitationPolicySend << userDoesntCancel;
+    //----------------------------------------------------------------------------------------------
+    // We modified an event which we're not the organizer of. And, when the "do you really want to modify", we choose "no".
+    changeType = IncidenceChanger::ChangeTypeModify;
+    item = generateIncidence(uid, /**organizer=*/mia->email());
+    incidence = item.payload<KCalCore::Incidence::Ptr>();
+    incidence->addAttendee(vincent);
+    incidence->addAttendee(jules);
+    us->setStatus(Attendee::Accepted);
+    incidence->addAttendee(us);
+    expectedEmailCount = 0;
+    QTest::newRow("Modification. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userCancels;
     //----------------------------------------------------------------------------------------------
 }
 
@@ -454,11 +471,14 @@ void ITIPHandlerTest::testOutgoingInvitations()
     QFETCH(IncidenceChanger::ChangeType, changeType);
     QFETCH(int, expectedEmailCount);
     QFETCH(IncidenceChanger::InvitationPolicy, invitationPolicy);
+    QFETCH(bool, userCancels);
     KCalCore::Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
 
     m_pendingIncidenceChangerSignal = 1;
     MailClient::sUnitTestResults.clear();
     m_changer->setInvitationPolicy(invitationPolicy);
+
+    m_cancelExpected = userCancels;
 
     switch(changeType) {
     case IncidenceChanger::ChangeTypeCreate:
@@ -474,6 +494,7 @@ void ITIPHandlerTest::testOutgoingInvitations()
         m_changer->setGroupwareCommunication(true);
         QCOMPARE(MailClient::sUnitTestResults.count(), 0);
         QVERIFY(mLastInsertedItem.isValid());
+
         m_pendingIncidenceChangerSignal = 1;
         Incidence::Ptr oldIncidence = Incidence::Ptr(incidence->clone());
         incidence->setSummary(QLatin1String("the-new-summary"));
@@ -585,12 +606,12 @@ void ITIPHandlerTest::onCreateFinished(int changeId, const Item &item,
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
     mLastInsertedItem = item;
-    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);
     if (m_pendingIncidenceChangerSignal == 0) {
         stopWaiting();
     }
+    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
 }
 
 void ITIPHandlerTest::onDeleteFinished(int changeId, const QVector<Entity::Id> &deletedIds,
@@ -600,12 +621,13 @@ void ITIPHandlerTest::onDeleteFinished(int changeId, const QVector<Entity::Id> &
     Q_UNUSED(changeId);
     Q_UNUSED(errorString);
     Q_UNUSED(deletedIds);
-    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
+
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);
     if (m_pendingIncidenceChangerSignal == 0) {
         stopWaiting();
     }
+    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
 }
 
 void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
@@ -616,12 +638,13 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
     Q_UNUSED(errorString);
     Q_UNUSED(item);
 
-    QCOMPARE(resultCode, IncidenceChanger::ResultCodeSuccess);
     m_pendingIncidenceChangerSignal--;
     QVERIFY(m_pendingIncidenceChangerSignal >= 0);
     if (m_pendingIncidenceChangerSignal == 0) {
         stopWaiting();
     }
+    QCOMPARE(resultCode, m_cancelExpected ? IncidenceChanger::ResultCodeUserCanceled
+                                          : IncidenceChanger::ResultCodeSuccess);
 }
 
 QTEST_AKONADIMAIN(ITIPHandlerTest, GUI)

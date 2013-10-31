@@ -87,6 +87,7 @@ private:
     Akonadi::ITIPHandler::Result m_expectedResult;
     Akonadi::ITIPHandler *m_itipHandler;
     Akonadi::IncidenceChanger *m_changer;
+    bool m_cancelExpected;
 };
 
 #endif

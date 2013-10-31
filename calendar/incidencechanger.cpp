@@ -457,23 +457,29 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
       break;
       case IncidenceChanger::ChangeTypeModify:
       {
-        if ( !change->originalItems.isEmpty() ) {
-          Q_ASSERT( change->originalItems.count() == 1 );
-          Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
-          Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
-
-          if ( oldIncidence->supportsGroupwareCommunication() ) {
-            const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
-            if ( !modify ) {
-              if ( newIncidence->type() == oldIncidence->type() ) {
-                IncidenceBase *i1 = newIncidence.data();
-                IncidenceBase *i2 = oldIncidence.data();
-                *i1 = *i2;
-              }
-              result = false;
-            }
-          }
+        if ( change->originalItems.isEmpty() ) {
+          break;
         }
+
+        Q_ASSERT( change->originalItems.count() == 1 );
+        Incidence::Ptr oldIncidence = CalendarUtils::incidence( change->originalItems.first() );
+        Incidence::Ptr newIncidence = CalendarUtils::incidence( change->newItem );
+
+        if ( !oldIncidence->supportsGroupwareCommunication() ) {
+          break;
+        }
+
+        const bool modify = handler.handleIncidenceAboutToBeModified( newIncidence );
+        if ( modify ) {
+          break;
+        }
+
+        if ( newIncidence->type() == oldIncidence->type() ) {
+          IncidenceBase *i1 = newIncidence.data();
+          IncidenceBase *i2 = oldIncidence.data();
+          *i1 = *i2;
+        }
+        result = false;
       }
       break;
       default:
@@ -859,7 +865,13 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     return;
   }
 
-  handleInvitationsBeforeChange( change );
+  const bool userCancelled = !handleInvitationsBeforeChange( change );
+  if ( userCancelled ) {
+    // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
+    kDebug() << "User cancelled, giving up";
+    emitModifyFinished( q, changeId, newItem, ResultCodeUserCanceled, QString() );
+    return;
+  }
 
   QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
                                                  ConflictPreventer::self()->mLatestRevisionByItemId;
