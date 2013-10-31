@@ -460,15 +460,20 @@ bool IncidenceChanger::Private::handleInvitationsBeforeChange( const Change::Ptr
         Q_ASSERT( !change->originalItems.isEmpty() );
         foreach( const Akonadi::Item &item, change->originalItems ) {
           Q_ASSERT( item.hasPayload<KCalCore::Incidence::Ptr>() );
-          Incidence::Ptr incidence = item.payload<KCalCore::Incidence::Ptr>();
-          if ( !incidence->supportsGroupwareCommunication() )
+          Incidence::Ptr incidence = CalendarUtils::incidence( item );
+          if ( !incidence->supportsGroupwareCommunication() ) {
             continue;
-          status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
-          if ( change->atomicOperationId ) {
-            mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
           }
-          result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
-          //TODO: with some status we want to break immediately
+          // We only send CANCEL if we're the organizer.
+          // If we're not, then we send REPLY with PartStat=Declined in handleInvitationsAfterChange()
+          if ( Akonadi::CalendarUtils::thatIsMe( incidence->organizer()->email() ) ) {
+            status = handler.sendIncidenceDeletedMessage( KCalCore::iTIPCancel, incidence );
+            if ( change->atomicOperationId ) {
+              mInvitationStatusByAtomicOperation.insert( change->atomicOperationId, status );
+            }
+            result = status != ITIPHandlerHelper::ResultFailAbortUpdate;
+            //TODO: with some status we want to break immediately
+          }
         }
       }
       break;
