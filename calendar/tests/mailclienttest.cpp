@@ -19,18 +19,19 @@
 
 // mailclient_p.cpp isn't exported so we include it directly.
 
-#define MAILCLIENTTEST_UNITTEST
-#include "../mailclient_p.cpp"
-#include "../moc_mailclient_p.cpp"
+#include "../mailclient_p.h"
 
 #include <kcalcore/incidence.h>
 #include <kcalcore/freebusy.h>
 #include <mailtransport/messagequeuejob.h>
+#include <kpimidentities/identity.h>
 
 #include <akonadi/qtest_akonadi.h>
 
 #include <QTestEventLoop>
 #include <QtCore/QObject>
+
+static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
 
 using namespace Akonadi;
 
@@ -55,6 +56,7 @@ private slots:
 
     mPendingSignals = 0;
     mMailClient = new MailClient( this );
+    mMailClient->sRunningUnitTests = true;
     mLastResult = MailClient::ResultSuccess;
     connect( mMailClient, SIGNAL(finished(Akonadi::MailClient::Result,QString)),
              SLOT(handleFinished(Akonadi::MailClient::Result,QString)) );
@@ -114,7 +116,7 @@ private slots:
     incidence->addAttendee( attendee );
     incidence->setOrganizer( organizer );
     expectedResult = MailClient::ResultSuccess;
-    toList << QLatin1String( "name1 <test@foo.org>" );
+    toList << QLatin1String( "test@foo.org" );
     QTest::newRow("One attendee") << incidence << identity << bccMe << attachment << transport
                                   << expectedResult << expectedTransportId << expectedFrom
                                   << toList << toCcList << toBccList;
@@ -142,11 +144,11 @@ private slots:
     expectedResult = MailClient::ResultSuccess;
     // Should default to the default transport
     toBccList.clear();
-    toBccList << QLatin1String( "Organizer <unittests@dev.nul>" );
-    QTest::newRow("Invalid transport") << incidence << identity << /*bccMe*/true << attachment
-                                       << transport  << expectedResult
-                                       << expectedTransportId << expectedFrom
-                                       << toList << toCcList << toBccList;
+    toBccList << QLatin1String( "unittests@dev.nul" );
+    QTest::newRow("Test bcc") << incidence << identity << /*bccMe*/true << attachment
+                                           << transport  << expectedResult
+                                           << expectedTransportId << expectedFrom
+                                           << toList << toCcList << toBccList;
     //----------------------------------------------------------------------------------------------
     // Test CC list
     attendee = KCalCore::Attendee::Ptr ( new KCalCore::Attendee( QLatin1String( "name1" ),
@@ -167,15 +169,15 @@ private slots:
     expectedResult = MailClient::ResultSuccess;
     // Should default to the default transport
     toBccList.clear();
-    toBccList << QLatin1String( "Organizer <unittests@dev.nul>" );
+    toBccList << QLatin1String( "unittests@dev.nul" );
 
     toCcList.clear();
-    toCcList << QLatin1String( "opt <optional@foo.org>" )
-             << QLatin1String( "non <non@foo.org>" );
-    QTest::newRow("Invalid transport") << incidence << identity << /*bccMe*/true << attachment
-                                       << transport  << expectedResult
-                                       << expectedTransportId << expectedFrom
-                                       << toList << toCcList << toBccList;
+    toCcList << QLatin1String( "optional@foo.org" )
+             << QLatin1String( "non@foo.org" );
+    QTest::newRow("Test cc") << incidence << identity << /*bccMe*/true << attachment
+                                          << transport  << expectedResult
+                                          << expectedTransportId << expectedFrom
+                                          << toList << toCcList << toBccList;
   }
 
   void testMailAttendees()
@@ -191,6 +193,7 @@ private slots:
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedCcList  );
     QFETCH( QStringList, expectedBccList );
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailAttendees( incidence, identity, bccMe, attachment, transport );
@@ -202,18 +205,23 @@ private slots:
       QVERIFY( false );
     }
 
+    UnitTestResult unitTestResult;
+    if ( mMailClient->sUnitTestResults.isEmpty() ) {
+        qDebug() << "mail results are empty";
+    } else {
+        unitTestResult = mMailClient->sUnitTestResults.first();
+    }
 
-    if ( expectedTransportId != -1 &&
-         mMailClient->mUnitTestResult.transportId != expectedTransportId ) {
-      qDebug() << "got " << mMailClient->mUnitTestResult.transportId
+    if ( expectedTransportId != -1 && unitTestResult.transportId != expectedTransportId ) {
+      qDebug() << "got " << unitTestResult.transportId
                << "; expected=" << expectedTransportId;
       QVERIFY( false );
     }
 
-    QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
-    QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
-    QCOMPARE( mMailClient->mUnitTestResult.cc, expectedCcList );
-    QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
+    QCOMPARE( unitTestResult.from, expectedFrom );
+    QCOMPARE( unitTestResult.to, expectedToList );
+    QCOMPARE( unitTestResult.cc, expectedCcList );
+    QCOMPARE( unitTestResult.bcc, expectedBccList );
   }
 
   void testMailOrganizer_data()
@@ -234,7 +242,7 @@ private slots:
 
     KCalCore::IncidenceBase::Ptr incidence( new KCalCore::Event() );
     KPIMIdentities::Identity identity;
-    const QString from = QLatin1String( "from@kde.org" );
+    const QString from = QLatin1String( s_ourEmail );
     bool bccMe;
     QString attachment;
     QString subject = QLatin1String( "subject1" );
@@ -247,7 +255,7 @@ private slots:
     incidence->setOrganizer( organizer );
 
     QStringList toList;
-    toList << QLatin1String( "Organizer <unittests@dev.nul>" );
+    toList << QLatin1String( "unittests@dev.nul" );
     QStringList toBccList;
     QString expectedSubject;
     //----------------------------------------------------------------------------------------------
@@ -279,18 +287,21 @@ private slots:
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedBccList );
     QFETCH( QString, expectedSubject );
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailOrganizer( incidence, identity, from, bccMe, attachment, subject, transport );
     waitForSignals();
     QCOMPARE( mLastResult, expectedResult );
-    if ( expectedTransportId != -1 )
-      QCOMPARE( mMailClient->mUnitTestResult.transportId, expectedTransportId );
 
-    QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
-    QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
-    QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
-    QCOMPARE( mMailClient->mUnitTestResult.message->subject()->asUnicodeString(), expectedSubject );
+    UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
+    if ( expectedTransportId != -1 )
+      QCOMPARE( unitTestResult.transportId, expectedTransportId );
+
+    QCOMPARE( unitTestResult.from, expectedFrom );
+    QCOMPARE( unitTestResult.to, expectedToList );
+    QCOMPARE( unitTestResult.bcc, expectedBccList );
+    QCOMPARE( unitTestResult.message->subject()->asUnicodeString(), expectedSubject );
   }
 
   void testMailTo_data()
@@ -310,9 +321,9 @@ private slots:
 
     KCalCore::IncidenceBase::Ptr incidence( new KCalCore::Event() );
     KPIMIdentities::Identity identity;
-    const QString from = QLatin1String( "from@kde.org" );
+    const QString from = QLatin1String( s_ourEmail );
     bool bccMe;
-    const QString recipients = QLatin1String( "Organizer <unittests@dev.nul>" );
+    const QString recipients = QLatin1String( "unittests@dev.nul" );
     QString attachment;
     QString transport;
     MailClient::Result expectedResult = MailClient::ResultSuccess;
@@ -321,7 +332,7 @@ private slots:
     KCalCore::Person::Ptr organizer( new KCalCore::Person( QLatin1String( "Organizer" ),
                                                            QLatin1String( "unittests@dev.nul" ) ) );
     QStringList toList;
-    toList << QLatin1String( "Organizer <unittests@dev.nul>" );
+    toList << QLatin1String( s_ourEmail );
     QStringList toBccList;
     //----------------------------------------------------------------------------------------------
     QTest::newRow("test1") << incidence << identity << from << bccMe << recipients << attachment
@@ -343,17 +354,19 @@ private slots:
     QFETCH( QString, expectedFrom );
     QFETCH( QStringList, expectedToList  );
     QFETCH( QStringList, expectedBccList );
+    mMailClient->sUnitTestResults.clear();
 
     mPendingSignals = 1;
     mMailClient->mailTo( incidence, identity, from, bccMe, recipients, attachment, transport );
     waitForSignals();
     QCOMPARE( mLastResult, expectedResult );
+    UnitTestResult unitTestResult = mMailClient->sUnitTestResults.first();
     if ( expectedTransportId != -1 )
-      QCOMPARE( mMailClient->mUnitTestResult.transportId, expectedTransportId );
+      QCOMPARE( unitTestResult.transportId, expectedTransportId );
 
-    QCOMPARE( mMailClient->mUnitTestResult.from, expectedFrom );
-    QCOMPARE( mMailClient->mUnitTestResult.to, expectedToList );
-    QCOMPARE( mMailClient->mUnitTestResult.bcc, expectedBccList );
+    QCOMPARE( unitTestResult.from, expectedFrom );
+    QCOMPARE( unitTestResult.to, expectedToList );
+    QCOMPARE( unitTestResult.bcc, expectedBccList );
   }
 
   void handleFinished( Akonadi::MailClient::Result result, const QString &errorMessage )

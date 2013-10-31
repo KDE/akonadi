@@ -18,6 +18,7 @@
 */
 
 #include "historytest.h"
+#include "helper.h"
 
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemcreatejob.h>
@@ -25,7 +26,6 @@
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/qtest_akonadi.h>
-
 #include <kcalcore/event.h>
 
 #include <QTestEventLoop>
@@ -35,17 +35,6 @@ using namespace KCalCore;
 
 Q_DECLARE_METATYPE(QList<Akonadi::IncidenceChanger::ChangeType>)
 
-static bool confirmExists(const Akonadi::Item &item)
-{
-    ItemFetchJob *job = new ItemFetchJob(item);
-    return job->exec() != 0;
-}
-
-static bool confirmDoesntExists(const Akonadi::Item &item)
-{
-    ItemFetchJob *job = new ItemFetchJob(item);
-    return job->exec() == 0;
-}
 
 static bool checkSummary(const Akonadi::Item &item, const QString &expected)
 {
@@ -85,48 +74,12 @@ static Akonadi::Item createItem(const Akonadi::Collection &collection)
     return createJob->item();
 }
 
-void HistoryTest::createIncidence(const QString &uid)
-{
-    Item item;
-    item.setMimeType(Event::eventMimeType());
-    Incidence::Ptr incidence = Incidence::Ptr(new Event());
-    incidence->setUid(uid);
-    incidence->setSummary(QLatin1String("summary"));
-    item.setPayload<KCalCore::Incidence::Ptr>(incidence);
-    ItemCreateJob *job = new ItemCreateJob(item, mCollection, this);
-    AKVERIFYEXEC(job);
-}
-
-void HistoryTest::fetchCollection()
-{
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(),
-                                                     CollectionFetchJob::Recursive,
-                                                     this);
-    // Get list of collections
-    job->fetchScope().setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.event"));
-    AKVERIFYEXEC(job);
-
-    // Find our collection
-    Collection::List collections = job->collections();
-    QVERIFY(!collections.isEmpty());
-    mCollection = collections.first();
-
-    QVERIFY(mCollection.isValid());
-}
-
 void HistoryTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
 
-    fetchCollection();
-    qRegisterMetaType<Akonadi::Item>("Akonadi::Item");
-    qRegisterMetaType<QList<Akonadi::IncidenceChanger::ChangeType> >("QList<Akonadi::IncidenceChanger::ChangeType>");
-    qRegisterMetaType<QVector<Akonadi::Item::Id> >("QVector<Akonadi::Item::Id>");
-    mChanger = new IncidenceChanger(this);
-    mChanger->setShowDialogsOnError(false);
-    mChanger->setHistoryEnabled(true);
     mHistory = mChanger->history();
-    mChanger->setDefaultCollection(mCollection);
+
     connect(mChanger,
              SIGNAL(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)),
              SLOT(createFinished(int,Akonadi::Item,Akonadi::IncidenceChanger::ResultCode,QString)));
@@ -165,7 +118,7 @@ void HistoryTest::testCreation()
     waitForSignals();
 
     // Check that it was created
-    QVERIFY(confirmExists(mItemByChangeId.value(changeId)));
+    QVERIFY(Helper::confirmExists(mItemByChangeId.value(changeId)));
 
     QCOMPARE(mHistory->d->redoCount(), 0);
     QCOMPARE(mHistory->d->undoCount(), 1);
@@ -176,7 +129,7 @@ void HistoryTest::testCreation()
     waitForSignals();
 
     // Check that it doesn't exist anymore
-    QVERIFY(confirmDoesntExists(mItemByChangeId.value(changeId)));
+    QVERIFY(Helper::confirmDoesntExist(mItemByChangeId.value(changeId)));
 
     QCOMPARE(mHistory->d->redoCount(), 1);
     QCOMPARE(mHistory->d->undoCount(), 0);
@@ -227,7 +180,7 @@ void HistoryTest::testDeletion()
 
     // Check that it doesn't exist anymore
     foreach(const Akonadi::Item &item, items) {
-        QVERIFY(confirmDoesntExists(item));
+        QVERIFY(Helper::confirmDoesntExist(item));
     }
 
     mPendingSignals[UndoSignal] = 1;
@@ -397,7 +350,7 @@ void HistoryTest::testAtomicOperations()
             // It changed id, have no way to verify
             break;
         case IncidenceChanger::ChangeTypeDelete:
-            QVERIFY(confirmDoesntExists(item));
+            QVERIFY(Helper::confirmDoesntExist(item));
             break;
         case IncidenceChanger::ChangeTypeModify:
             QVERIFY(checkSummary(item, QLatin1String("random summary")));

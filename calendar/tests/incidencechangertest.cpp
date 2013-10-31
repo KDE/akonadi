@@ -165,6 +165,12 @@ class IncidenceChangerTest : public QObject
                                             << IncidenceChanger::DestinationPolicyDefault
                                             << false << IncidenceChanger::ResultCodeSuccess;
 
+      // In this case, the collection dialog shouldn't be shown, as we only have 1 collection
+      QTest::newRow( "Only one collection" ) << false << "SomeUid6" << "Summary6" << Collection()
+                                             << Collection() << true
+                                             << IncidenceChanger::DestinationPolicyAsk
+                                             << false << IncidenceChanger::ResultCodeSuccess;
+
       Collection collectionWithoutRights = Collection( mCollection.id() );
       collectionWithoutRights.setRights( Collection::Rights() );
       Q_ASSERT( ( mCollection.rights() & Akonadi::Collection::CanCreateItem ) );
@@ -250,7 +256,7 @@ class IncidenceChangerTest : public QObject
       Item::List items = fetchJob->items();
 
       // 5 Incidences were created in testCreating(). Keep this in sync.
-      QVERIFY( items.count() == 4 );
+      QCOMPARE( items.count(), 5 );
       QTest::newRow( "Simple delete" ) << (Item::List() << items.at( 0 ) ) << true << false
                                        << IncidenceChanger::ResultCodeSuccess;
 
