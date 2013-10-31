@@ -25,10 +25,12 @@
 #include "storage/itemqueryhelper.h"
 #include "response.h"
 #include "libs/protocol_p.h"
+#include "libs/imapparser_p.h"
 #include "akdebug.h"
 
 #include <QMutex>
 #include <QHash>
+#include <boost/concept_check.hpp>
 
 using namespace Akonadi;
 
@@ -98,6 +100,30 @@ IdleClient *IdleManager::clientForConnection( AkonadiConnection *connection )
   return mClientsRegistrar.value( connection->sessionId() );
 }
 
+QByteArray IdleManager::notificationOperationName( NotificationMessageV2::Operation operation ) const
+{
+  switch ( operation ) {
+    case NotificationMessageV2::Add:
+      return "ADD";
+    case NotificationMessageV2::Modify:
+      return "MODIFY";
+    case NotificationMessageV2::ModifyFlags:
+      return "MODIFYFLAGS";
+    case NotificationMessageV2::Move:
+      return "MOVE";
+    case NotificationMessageV2::Remove:
+      return "REMOVE";
+    case NotificationMessageV2::Link:
+      return "LINK";
+    case NotificationMessageV2::Unlink:
+      return "UNLINK";
+    }
+
+    Q_ASSERT( !"Invalid operation" );
+    return QByteArray();
+}
+
+
 void IdleManager::notify( NotificationMessageV2::List &msgs )
 {
 
@@ -105,24 +131,12 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
   QTime timer;
   timer.start();
   Q_FOREACH ( const NotificationMessageV2 &msg, msgs ) {
-    QByteArray command;
-    if ( msg.operation() == NotificationMessageV2::Add ) {
-      command = "ADD";
-    } else if ( msg.operation() == NotificationMessageV2::Modify ) {
-      command = "MODIFY";
-    } else if ( msg.operation() == NotificationMessageV2::ModifyFlags ) {
-      command = "MODIFYFLAGS";
-    } else if ( msg.operation() == NotificationMessageV2::Move ) {
-      command = "MOVE";
-    } else if ( msg.operation() == NotificationMessageV2::Remove ) {
-      command = "REMOVE";
-    } else if ( msg.operation() == NotificationMessageV2::Link ) {
-      command = "LINK";
-    } else if ( msg.operation() == NotificationMessageV2::Unlink ) {
-      command = "UNLINK";
-    }
+    QByteArray command = "NOTIFY ";
+    command += notificationOperationName( msg.operation() );
 
     if ( msg.type() == NotificationMessageV2::Collections ) {
+      command += " COLLECTION";
+
       collection = fetchCollection( msg );
       mRegistrarLock.lockForRead();
       Q_FOREACH ( IdleClient *client, mClientsRegistrar ) {
@@ -132,25 +146,59 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
       }
       mRegistrarLock.unlock();
     } else if ( msg.type() == Akonadi::NotificationMessageV2::Items ) {
-      if ( msg.operation() != NotificationMessageV2::Remove ) {
-        ImapSet set;
-        set.add( msg.uids().toVector() );
-        Scope scope( Scope::Uid );
-        scope.setUidSet( set );
+      command += " ITEM";
 
-        FetchHelper fetchHelper( scope );
-        fetchHelper.setProperty( "NotificationMessageV2", QVariant::fromValue( msg ) );
-        // FIXME: We assume, that if client supports IDLE, it has to support NOPAYLOADPATH
-        fetchHelper.setResolvePayloadPath( false );
-        connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
-                 this, SLOT(fetchHelperResponseAvailable(Akonadi::Response)) );
-        int count = fetchHelper.parseStream( command, mFetchScope );
-
-        Response response;
-        response.setTag( "+" );
-        response.setString( "IDLE (" + QByteArray::number( count ) + ')' );
-        fetchHelperResponseAvailable( response );
+      switch ( msg.operation() ) {
+      case NotificationMessageV2::Add:
+      case NotificationMessageV2::Link:
+      case NotificationMessageV2::Unlink:
+        command += " DESTINATION " + QByteArray::number( msg.parentCollection() );
+        break;
+      case NotificationMessageV2::ModifyFlags:
+        if ( !msg.addedFlags().isEmpty() ) {
+          command += " ADDED (" + ImapParser::join( msg.addedFlags(), "," ) + ")";
+        }
+        if ( !msg.removedFlags().isEmpty() ) {
+          command += " REMOVED (" + ImapParser::join( msg.removedFlags(), "," ) + ")";
+        }
+        break;
+      case NotificationMessageV2::Modify:
+        command += " PARTS (" + ImapParser::join( msg.itemParts(), "," ) + ")";
+        break;
+      case NotificationMessageV2::Move:
+        command += " SOURCE " + QByteArray::number( msg.parentCollection() ) +
+                   " DESTINATION " + QByteArray::number( msg.parentDestCollection() );
+        break;
+      default:
+        break;
       }
+
+      ImapSet set;
+      set.add( msg.uids().toVector() );
+      Scope scope( Scope::Uid );
+      scope.setUidSet( set );
+
+      FetchHelper fetchHelper( scope );
+      fetchHelper.setProperty( "NotificationMessageV2", QVariant::fromValue( msg ) );
+      // FIXME: We assume, that if client supports IDLE, it has to support NOPAYLOADPATH
+      fetchHelper.setResolvePayloadPath( false );
+      connect( &fetchHelper, SIGNAL(responseAvailable(Akonadi::Response)),
+                this, SLOT(fetchHelperResponseAvailable(Akonadi::Response)) );
+      FetchScope fetchScope;
+      if ( msg.operation() == NotificationMessageV2::Remove ) {
+        fetchScope.setRemoteIdRequested( true );
+        fetchScope.setRemoteRevisionRequested( true );
+        fetchScope.setCacheOnly( true );
+      } else {
+        fetchScope = mFetchScope;
+      }
+
+      int count = fetchHelper.parseStream( command, fetchScope );
+
+      Response response;
+      response.setTag( "+" );
+      response.setString( "IDLE (" + QByteArray::number( count ) + ')' );
+      fetchHelperResponseAvailable( response );
     }
   }
 }

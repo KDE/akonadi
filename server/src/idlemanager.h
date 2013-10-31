@@ -68,6 +68,8 @@ class IdleManager : public QObject
     // will always have only one collection
     Collection fetchCollection( const NotificationMessageV2 &msg );
 
+    QByteArray notificationOperationName( NotificationMessageV2::Operation operation ) const;
+
   private Q_SLOTS:
     void fetchHelperResponseAvailable( const Akonadi::Response &response );
 
