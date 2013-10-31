@@ -959,7 +959,13 @@ void IncidenceChanger::Private::performModification( Change::Ptr change )
     return;
   }
 
-  handleInvitationsBeforeChange( change );
+  const bool userCancelled = !handleInvitationsBeforeChange( change );
+  if ( userCancelled ) {
+    // User got a "You're not the organizer, do you really want to send" dialog, and said "no"
+    kDebug() << "User cancelled, giving up";
+    emitModifyFinished( q, changeId, newItem, ResultCodeUserCanceled, QString() );
+    return;
+  }
 
   QHash<Akonadi::Item::Id, int> &latestRevisionByItemId =
                                                  ConflictPreventer::self()->mLatestRevisionByItemId;
