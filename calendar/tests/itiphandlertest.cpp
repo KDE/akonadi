@@ -461,7 +461,7 @@ void ITIPHandlerTest::testOutgoingInvitations_data()
     us->setStatus(Attendee::Accepted);
     incidence->addAttendee(us);
     expectedEmailCount = 0;
-    QTest::newRow("Modification. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicyAsk << userCancels;
+    QTest::newRow("Modification. We didnt organize.2") << item << changeType << expectedEmailCount << invitationPolicyDontSend << userCancels;
     //----------------------------------------------------------------------------------------------
 }
 
