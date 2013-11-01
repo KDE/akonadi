@@ -167,7 +167,9 @@ void IdleManager::notify( NotificationMessageV2::List &msgs )
         break;
       case NotificationMessageV2::Move:
         command += " SOURCE " + QByteArray::number( msg.parentCollection() ) +
-                   " DESTINATION " + QByteArray::number( msg.parentDestCollection() );
+                   " DESTINATION " + QByteArray::number( msg.parentDestCollection() ) +
+                   " RESOURCE " + msg.resource() +
+                   " DESTRESOURCE " + msg.destinationResource();
         break;
       default:
         break;
