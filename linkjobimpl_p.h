@@ -61,7 +61,14 @@ template <typename LinkJob> class LinkJobImpl : public JobPrivate
         return;
       }
 
-      command += ProtocolHelper::entitySetToByteArray( objectsToLink, QByteArray() );
+      try {
+        command += ProtocolHelper::entitySetToByteArray( objectsToLink, QByteArray() );
+      } catch ( const std::exception &e ) {
+        q->setError( Job::Unknown );
+        q->setErrorText( QString::fromUtf8( e.what() ) );
+        q->emitResult();
+        return;
+      }
       command += '\n';
 
       writeData( command );
