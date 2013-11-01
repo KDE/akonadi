@@ -40,7 +40,7 @@ bool IdleHandler::parseStream()
   try {
     if ( subcmd == AKONADI_PARAM_START ) {
       startIdle();
-      successResponse( "IDLE Active");
+      successResponse( "IDLE Active" );
     } else {
       // All subsequent subcommands require active IDLE session
       IdleClient *client = IdleManager::self()->clientForConnection( connection() );
@@ -104,12 +104,14 @@ void IdleHandler::startIdle()
     const QByteArray arg = m_streamParser->readString();
     if ( arg == AKONADI_PARAM_CLIENTID ) {
       clientId = m_streamParser->readString();
+      continue;
     } else if ( arg == AKONADI_PARAM_RECORDCHANGES ) {
       bool ok = false;
       recordChanges = m_streamParser->readNumber( &ok );
       if ( !ok ) {
         throw HandlerException( "Invalid value of RECORDCHANGES parameter" );
       }
+      continue;
     }
   }
 
@@ -120,12 +122,14 @@ void IdleHandler::startIdle()
   IdleClient *client = new IdleClient( connection(), clientId );
   client->setRecordChanges( recordChanges );
 
-  if ( !m_streamParser->atCommandEnd() ) {
+  if ( !m_streamParser->atCommandEnd() && m_streamParser->hasString() && m_streamParser->readString() == "FILTER" ) {
     if ( !m_streamParser->hasList() ) {
       throw HandlerException( "Invalid filter" );
     }
     parseFilter( client );
+  }
 
+  if ( !m_streamParser->atCommandEnd() && m_streamParser->hasString() && m_streamParser->readString() == "SCOPE" ) {
     if ( !m_streamParser->hasList() ) {
       throw HandlerException( "Invalid scope" );
     }
@@ -144,10 +148,16 @@ void IdleHandler::updateFilter()
 
   if ( m_streamParser->hasList() ) {
     parseFilter( client );
+  } else {
+    client->setAllMonitored( true );
   }
 
-  if ( m_streamParser->hasList() ) {
-    parseFetchScope( client );
+  if ( m_streamParser->hasString() && m_streamParser->readString() == "SCOPE" ) {
+    if (m_streamParser->hasList() ) {
+      parseFetchScope( client );
+    } else {
+      throw HandlerException( "Invalid scope" );
+    }
   }
 }
 
