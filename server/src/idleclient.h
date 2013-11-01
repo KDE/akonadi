@@ -66,6 +66,9 @@ class IdleClient : public QObject
     void setFetchScope( const FetchScope &fetchScope );
     const FetchScope& fetchScope() const;
 
+    void setAllMonitored( bool allMonitored );
+    bool isAllMonitored() const;
+
     void setMonitoredItems( const QSet<qint64> &items );
     void addMonitoredItems( const QSet<qint64> &items );
     void removeMonitoredItems( const QSet<qint64> &items );

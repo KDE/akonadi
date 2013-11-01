@@ -104,6 +104,25 @@ const FetchScope &IdleClient::fetchScope() const
   return mFetchScope;
 }
 
+void IdleClient::setAllMonitored( bool allMonitored )
+{
+  if ( allMonitored ) {
+    mMonitoredCollections.clear();
+    mMonitoredItems.clear();
+    mMonitoredMimeTypes.clear();
+    mMonitoredOperations.clear();
+    mMonitoredResources.clear();
+    mIgnoredSessions.clear();
+  }
+  mMonitorAll = allMonitored;
+}
+
+bool IdleClient::isAllMonitored() const
+{
+  return mMonitorAll;
+}
+
+
 void IdleClient::setMonitoredItems( const QSet<qint64> &items )
 {
   mMonitoredItems = items;
