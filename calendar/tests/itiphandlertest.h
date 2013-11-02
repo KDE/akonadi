@@ -54,6 +54,10 @@ private Q_SLOTS:
     void testOutgoingInvitations_data();
     void testOutgoingInvitations();
 
+    // Tests identity related code, like "thisIsMe()".
+    void testIdentity_data();
+    void testIdentity();
+
 private:
     void waitForSignals();
     void cleanup();

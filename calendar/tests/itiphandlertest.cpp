@@ -21,6 +21,7 @@
 #include "helper.h"
 #include "../mailclient_p.h"
 #include "../fetchjobcalendar.h"
+#include "../utils_p.h"
 
 #include <kcalcore/icalformat.h>
 #include <kcalcore/attendee.h>
@@ -45,6 +46,7 @@ Q_DECLARE_METATYPE(KCalCore::Attendee::PartStat)
 Q_DECLARE_METATYPE(QList<int>)
 
 static const char *s_ourEmail = "unittests@dev.nul"; // change also in kdepimlibs/akonadi/calendar/tests/unittestenv/kdehome/share/config
+static const char *s_outEmail2 = "identity2@kde.org";
 
 void ITIPHandlerTest::initTestCase()
 {
@@ -524,6 +526,40 @@ void ITIPHandlerTest::testOutgoingInvitations()
 
 }
 
+void ITIPHandlerTest::testIdentity_data()
+{
+    QTest::addColumn<QString>("email");
+    QTest::addColumn<bool>("expectedResult");
+
+    const QString myEmail = QLatin1String(s_ourEmail);
+    QString myEmail2      = QString::fromLatin1("Some name <%1>").arg(myEmail);
+
+    const QString myAlias1    = QLatin1String("alias1@kde.org"); // hardcoded in emailidentities, do not change
+    const QString myIdentity2 = QLatin1String(s_outEmail2);
+
+
+    QTest::newRow("Me")           << myEmail     << true;
+    QTest::newRow("Also me")      << myEmail2    << true;
+    QTest::newRow("My identity2") << myIdentity2 << true;
+    QTest::newRow("Not me")       << QString::fromLatin1("laura.palmer@twinpeaks.com") << false;
+
+    QTest::newRow("My alias") << myAlias1 << true;
+
+}
+
+void ITIPHandlerTest::testIdentity()
+{
+    QFETCH(QString, email);
+    QFETCH(bool, expectedResult);
+
+    QEXPECT_FAIL("My alias", "This is broken.", Abort);
+
+    if (CalendarUtils::thatIsMe(email) != expectedResult) {
+        qDebug() << email;
+        QVERIFY(false);
+    }
+}
+
 void ITIPHandlerTest::cleanup()
 {
     Akonadi::Item::List items = calendarItems();
@@ -647,5 +683,6 @@ void ITIPHandlerTest::onModifyFinished(int changeId, const Item &item,
     QCOMPARE(resultCode, m_cancelExpected ? IncidenceChanger::ResultCodeUserCanceled
                                           : IncidenceChanger::ResultCodeSuccess);
 }
+
 
 QTEST_AKONADIMAIN(ITIPHandlerTest, GUI)

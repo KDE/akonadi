@@ -18,7 +18,7 @@ include_directories( ${CMAKE_BINARY_DIR}/kcalcore
 
 add_definitions(-DITIP_DATA_DIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/itip_data\\"" )
 
-set(common_sources unittestbase.cpp helper.cpp)
+set(common_sources unittestbase.cpp helper.cpp ../utils_p.cpp)
 
 #add_akonadi_isolated_test_advanced( historytest.cpp "${common_sources}" "")
 #add_akonadi_isolated_test( incidencechangertest.cpp )
