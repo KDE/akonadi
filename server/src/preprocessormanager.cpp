@@ -182,7 +182,7 @@ void PreprocessorManager::lockedUnregisterInstance( const QString &id )
 
   if ( idx < ( mPreprocessorChain.count() - 1 ) ) {
     // This wasn't the last preprocessor: trigger the next one.
-    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[ idx + 1 ];
+    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[idx + 1];
     Q_ASSERT( nextPreprocessor );
     Q_ASSERT( nextPreprocessor != instance );
 
@@ -368,7 +368,7 @@ void PreprocessorManager::preProcessorFinishedHandlingItem( PreprocessorInstance
 
   if ( idx < ( mPreprocessorChain.count() - 1 ) ) {
     // This wasn't the last preprocessor: trigger the next one.
-    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[ idx + 1 ];
+    PreprocessorInstance *nextPreprocessor = mPreprocessorChain[idx + 1];
     Q_ASSERT( nextPreprocessor );
     Q_ASSERT( nextPreprocessor != preProcessor );
 

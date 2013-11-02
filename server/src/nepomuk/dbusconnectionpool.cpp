@@ -31,7 +31,7 @@ public:
     DBusConnectionPoolPrivate()
         : m_connection( QDBusConnection::connectToBus(
                             QDBusConnection::SessionBus,
-                            QString::fromLatin1("NepomukQueryServiceConnection%1").arg(newNumber()) ) )
+                            QString::fromLatin1( "NepomukQueryServiceConnection%1" ).arg( newNumber() ) ) )
     {
     }
     ~DBusConnectionPoolPrivate() {
@@ -42,7 +42,7 @@ public:
 
 private:
     static int newNumber() {
-        return s_connectionCounter.fetchAndAddAcquire(1);
+        return s_connectionCounter.fetchAndAddAcquire( 1 );
     }
     QDBusConnection m_connection;
 };
@@ -52,8 +52,8 @@ QThreadStorage<DBusConnectionPoolPrivate *> s_perThreadConnection;
 
 QDBusConnection DBusConnectionPool::threadConnection()
 {
-    if (!s_perThreadConnection.hasLocalData()) {
-        s_perThreadConnection.setLocalData(new DBusConnectionPoolPrivate);
+    if ( !s_perThreadConnection.hasLocalData() ) {
+        s_perThreadConnection.setLocalData( new DBusConnectionPoolPrivate );
     }
     return s_perThreadConnection.localData()->connection();
 }

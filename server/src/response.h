@@ -49,7 +49,7 @@ public:
     void setUntagged();
     void setContinuation();
 
-    void setString( const char * );
+    void setString( const char *string );
     void setString( const QByteArray &string );
 
     void setSuccess();

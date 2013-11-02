@@ -40,13 +40,13 @@ class SearchManager : public QObject
   Q_OBJECT
   public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager( const QStringList &searchEngines, QObject* parent = 0 );
+    explicit SearchManager( const QStringList &searchEngines, QObject *parent = 0 );
     ~SearchManager();
 
     /**
      * Returns a global instance of the search manager.
      */
-    static SearchManager* instance();
+    static SearchManager *instance();
 
     /**
      * Adds the given @p collection to the search.
@@ -65,15 +65,15 @@ class SearchManager : public QObject
     /**
      * Update the search query of the given collection.
      */
-    void updateSearch( const Collection &collection, NotificationCollector* collector );
+    void updateSearch( const Collection &collection, NotificationCollector *collector );
 
   private Q_SLOTS:
     void addSearchInternal( const Collection &collection );
     void removeSearchInternal( qint64 id );
 
   private:
-    static SearchManager* m_instance;
-    QVector<AbstractSearchEngine*> m_engines;
+    static SearchManager *m_instance;
+    QVector<AbstractSearchEngine *> m_engines;
 };
 
 }

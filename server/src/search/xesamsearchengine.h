@@ -46,7 +46,7 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
   private:
     void reloadSearches();
     void stopSearches();
-    qint64 searchToCollectionId( const QString& search );
+    qint64 searchToCollectionId( const QString &search );
 
   private Q_SLOTS:
     void initializeSearchInterface();
@@ -63,7 +63,7 @@ class XesamSearchEngine : public QObject, public AbstractSearchEngine
     QHash<int, QString> mInvSearchMap;
     QMutex mMutex;
     bool mValid;
-    NotificationCollector* mCollector;
+    NotificationCollector *mCollector;
 };
 
 }

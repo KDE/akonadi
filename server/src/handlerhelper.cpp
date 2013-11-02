@@ -179,7 +179,7 @@ int HandlerHelper::parseCachePolicy( const QByteArray &data, Collection &col, in
     }
   }
 
-  if ( changed && (inheritChanged || (!col.cachePolicyInherit() && somethingElseChanged)) ) {
+  if ( changed && ( inheritChanged || ( !col.cachePolicyInherit() && somethingElseChanged ) ) ) {
     *changed = true;
   }
 

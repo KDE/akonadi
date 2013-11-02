@@ -52,7 +52,7 @@ namespace ItemQueryHelper
     The rid context is taken from @p connection.
   */
   void remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb );
-  void gidToQuery(const QStringList& gids, QueryBuilder& qb);
+  void gidToQuery( const QStringList &gids, QueryBuilder &qb );
 
   /**
     Add conditions to @p qb for the given item operation scope @p scope.

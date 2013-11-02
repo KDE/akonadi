@@ -48,17 +48,17 @@ QByteArray Response::asString() const
     return b;
 }
 
-void Response::setSuccess( )
+void Response::setSuccess()
 {
     m_resultCode = Response::OK;
 }
 
-void Response::setFailure( )
+void Response::setFailure()
 {
     m_resultCode = Response::NO;
 }
 
-void Response::setError( )
+void Response::setError()
 {
     m_resultCode = Response::BAD;
 }
@@ -68,12 +68,12 @@ void Response::setTag( const QByteArray &tag )
     m_tag = tag;
 }
 
-void Response::setUntagged( )
+void Response::setUntagged()
 {
     m_tag = QByteArray( 1, '*' );
 }
 
-void Response::setContinuation( )
+void Response::setContinuation()
 {
     m_tag = QByteArray( 1, '+' );
 }
@@ -88,7 +88,7 @@ void Akonadi::Response::setString( const char *string )
     m_responseString = QByteArray( string );
 }
 
-void Response::setBye( )
+void Response::setBye()
 {
     m_resultCode = Response::BYE;
 }

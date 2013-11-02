@@ -40,25 +40,25 @@ namespace Nepomuk {
         {
         public:
             Result();
-            explicit Result( const QUrl& uri, double score = 0.0 );
-            Result( const Result& );
+            explicit Result( const QUrl &uri, double score = 0.0 );
+            Result( const Result &other );
             ~Result();
 
-            Result& operator=( const Result& );
+            Result &operator=( const Result &other );
 
             double score() const;
             QUrl resourceUri() const;
 
             void setScore( double score );
 
-            void addRequestProperty( const QUrl& property, const Soprano::Node& value );
+            void addRequestProperty( const QUrl &property, const Soprano::Node &value );
 
             QHash<QUrl, Soprano::Node> requestProperties() const;
 
-            Soprano::Node operator[]( const QUrl& property ) const;
-            Soprano::Node requestProperty( const QUrl& property ) const;
+            Soprano::Node operator[]( const QUrl &property ) const;
+            Soprano::Node requestProperty( const QUrl &property ) const;
 
-            bool operator==( const Result& ) const;
+            bool operator==( const Result &other ) const;
 
         private:
             class Private;

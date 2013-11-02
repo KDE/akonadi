@@ -50,7 +50,7 @@ class Entity
     template <typename T> static QString joinByName( const QVector<T> &list, const QString &sep )
     {
       QStringList tmp;
-      Q_FOREACH ( const T & t, list ) {
+      Q_FOREACH ( const T &t, list ) {
         tmp << t.name();
       }
       return tmp.join( sep );
@@ -125,12 +125,12 @@ class Entity
     ~Entity();
 
   private:
-    static int countImpl( const QString & tableName, const QString & column, const QVariant & value );
-    static bool removeImpl( const QString & tableName, const QString & column, const QVariant & value );
-    static bool relatesToImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId );
-    static bool addToRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId );
-    static bool removeFromRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId );
-    static bool clearRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 id, RelationSide side );
+    static int countImpl( const QString &tableName, const QString &column, const QVariant &value );
+    static bool removeImpl( const QString &tableName, const QString &column, const QVariant &value );
+    static bool relatesToImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId );
+    static bool addToRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId );
+    static bool removeFromRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId );
+    static bool clearRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side );
 
   private:
     static QSqlDatabase database();
@@ -159,19 +159,23 @@ namespace _detail {
     template <template <typename U> class Op>
     struct ById {
         typedef bool result_type;
-        bool operator()( Entity::Id lhs, Entity::Id rhs ) const {
+        bool operator()( Entity::Id lhs, Entity::Id rhs ) const
+        {
             return Op<Entity::Id>()( lhs, rhs );
         }
         template <typename E>
-        bool operator()( const E & lhs, const E & rhs ) const {
+        bool operator()( const E &lhs, const E &rhs ) const
+        {
             return this->operator()( lhs.id() , rhs.id() );
         }
         template <typename E>
-        bool operator()( const E & lhs, Entity::Id rhs ) const {
+        bool operator()( const E &lhs, Entity::Id rhs ) const
+        {
             return this->operator()( lhs.id(), rhs );
         }
         template <typename E>
-        bool operator()( Entity::Id lhs, const E & rhs ) const {
+        bool operator()( Entity::Id lhs, const E &rhs ) const
+        {
             return this->operator()( lhs, rhs.id() );
         }
     };

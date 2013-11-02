@@ -27,9 +27,9 @@
 #include <QDBusInterface>
 #include <QDBusError>
 
-void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection)
+void Akonadi::AgentSearchEngine::addSearch( const Akonadi::Collection &collection )
 {
-  QDBusInterface agentMgr( AkDBus::serviceName(AkDBus::Control),
+  QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
                            QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
                            QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
   if ( agentMgr.isValid() ) {
@@ -44,9 +44,9 @@ void Akonadi::AgentSearchEngine::addSearch(const Akonadi::Collection& collection
   akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
-void Akonadi::AgentSearchEngine::removeSearch(qint64 id)
+void Akonadi::AgentSearchEngine::removeSearch( qint64 id )
 {
-  QDBusInterface agentMgr( AkDBus::serviceName(AkDBus::Control),
+  QDBusInterface agentMgr( AkDBus::serviceName( AkDBus::Control ),
                             QLatin1String( AKONADI_DBUS_AGENTMANAGER_PATH ),
                             QLatin1String( "org.freedesktop.Akonadi.AgentManagerInternal" ) );
   if ( agentMgr.isValid() ) {

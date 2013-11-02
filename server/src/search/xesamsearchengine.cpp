@@ -104,7 +104,7 @@ void XesamSearchEngine::initializeSearchInterface()
   }
 }
 
-qint64 XesamSearchEngine::searchToCollectionId( const QString& search )
+qint64 XesamSearchEngine::searchToCollectionId( const QString &search )
 {
   mMutex.lock();
   const qint64 collectionId = mSearchMap.contains( search ) ? mSearchMap.value( search ) : -1;
@@ -275,7 +275,7 @@ void XesamSearchEngine::stopSearches()
   }
 }
 
-void XesamSearchEngine::slotSearchDone(const QString &search)
+void XesamSearchEngine::slotSearchDone( const QString &search )
 {
   // If we get a search done signal, this is not a live search
   // so we can stop monitoring it. This is to avoid getting

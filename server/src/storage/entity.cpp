@@ -61,7 +61,7 @@ QSqlDatabase Entity::database()
   return DataStore::self()->database();
 }
 
-int Entity::countImpl( const QString & tableName, const QString & column, const QVariant & value )
+int Entity::countImpl( const QString &tableName, const QString &column, const QVariant &value )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -80,7 +80,7 @@ int Entity::countImpl( const QString & tableName, const QString & column, const 
   return builder.result();
 }
 
-bool Entity::removeImpl( const QString & tableName, const QString & column, const QVariant & value )
+bool Entity::removeImpl( const QString &tableName, const QString &column, const QVariant &value )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -98,7 +98,7 @@ bool Entity::removeImpl( const QString & tableName, const QString & column, cons
   return true;
 }
 
-bool Entity::relatesToImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
+bool Entity::relatesToImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -121,7 +121,7 @@ bool Entity::relatesToImpl( const QString & tableName, const QString & leftColum
   return false;
 }
 
-bool Entity::addToRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
+bool Entity::addToRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -142,7 +142,7 @@ bool Entity::addToRelationImpl( const QString & tableName, const QString & leftC
   return true;
 }
 
-bool Entity::removeFromRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 leftId, qint64 rightId )
+bool Entity::removeFromRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -162,7 +162,7 @@ bool Entity::removeFromRelationImpl( const QString & tableName, const QString & 
   return true;
 }
 
-bool Entity::clearRelationImpl( const QString & tableName, const QString & leftColumn, const QString & rightColumn, qint64 id, RelationSide side )
+bool Entity::clearRelationImpl( const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 id, RelationSide side )
 {
   QSqlDatabase db = database();
   if ( !db.isOpen() ) {
@@ -178,7 +178,7 @@ bool Entity::clearRelationImpl( const QString & tableName, const QString & leftC
     builder.addValueCondition( rightColumn, Query::Equals, id );
     break;
   default:
-    qFatal("Invalid enum value");
+    qFatal( "Invalid enum value" );
   }
   if ( !builder.exec() ) {
     akDebug() << "Error during clearing relation table" << tableName

@@ -108,7 +108,7 @@ void CacheCleaner::cleanCache()
    */
 
   if ( mLoops < loopsWithExpiredItem ) {
-    if ( (mTime > 60) && (loopsWithExpiredItem - mLoops) < 50 ) {
+    if ( ( mTime > 60 ) && ( loopsWithExpiredItem - mLoops ) < 50 ) {
       mTime -= 60;
     } else {
       mTime = 60;
@@ -120,7 +120,7 @@ void CacheCleaner::cleanCache()
   }
 
   // measured arithmetic between mLoops and loopsWithExpiredItem
-  mLoops = (loopsWithExpiredItem + mLoops) >> 2;
+  mLoops = ( loopsWithExpiredItem + mLoops ) >> 2;
 
   QTimer::singleShot( mTime * 1000, this, SLOT(cleanCache()) );
 }

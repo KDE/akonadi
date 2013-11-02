@@ -77,7 +77,7 @@ class QueryBuilder
 
       @param table The main table to operate on.
     */
-    explicit QueryBuilder( const QString& table, QueryType type = Select );
+    explicit QueryBuilder( const QString &table, QueryType type = Select );
 
     /**
       Sets the database which should execute the query. Unfortunately the SQL "standard"
@@ -217,7 +217,7 @@ class QueryBuilder
     /**
       Returns the query, only valid after exec().
     */
-    QSqlQuery& query();
+    QSqlQuery &query();
 
     /**
       Executes the query, returns true on success.

@@ -28,8 +28,8 @@ namespace Akonadi {
 class AgentSearchEngine : public AbstractSearchEngine
 {
   public:
-    virtual void addSearch(const Akonadi::Collection& collection);
-    virtual void removeSearch(qint64 id);
+    virtual void addSearch( const Akonadi::Collection &collection );
+    virtual void removeSearch( qint64 id );
 };
 
 }

@@ -32,7 +32,7 @@ static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
 IntervalCheck *IntervalCheck::s_instance = 0;
 
-IntervalCheck::IntervalCheck( QObject * parent )
+IntervalCheck::IntervalCheck( QObject *parent )
   : QThread( parent )
 {
   // make sure we are created from the main thread, ie. before all other threads start to potentially use us
@@ -93,7 +93,7 @@ void IntervalCheck::requestCollectionSync( const Akonadi::Collection &collection
       minInterval = collection.cachePolicyCheckInterval();
     }
 
-    const QDateTime lastExpectedCheck = now.addSecs( minInterval * - 60 );
+    const QDateTime lastExpectedCheck = now.addSecs( minInterval * -60 );
     QMutexLocker locker( &m_lastSyncMutex );
     if ( !mLastCollectionTreeSyncs.contains( resourceName ) || mLastCollectionTreeSyncs.value( resourceName ) < lastExpectedCheck ) {
       mLastCollectionTreeSyncs.insert( resourceName, now );

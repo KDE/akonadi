@@ -28,12 +28,12 @@
 
 using namespace Akonadi;
 
-SearchManager* SearchManager::m_instance = 0;
+SearchManager *SearchManager::m_instance = 0;
 
 Q_DECLARE_METATYPE( Collection )
 
-SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent  ) :
-  QObject( parent )
+SearchManager::SearchManager( const QStringList &searchEngines, QObject *parent  )
+  : QObject( parent )
 {
   Q_ASSERT( m_instance == 0 );
   m_instance = this;
@@ -64,12 +64,12 @@ SearchManager::~SearchManager()
   m_instance = 0;
 }
 
-SearchManager* SearchManager::instance()
+SearchManager *SearchManager::instance()
 {
   return m_instance;
 }
 
-bool SearchManager::addSearch(const Collection& collection)
+bool SearchManager::addSearch( const Collection &collection )
 {
   if ( collection.queryString().size() >= 32768 ) {
     qWarning() << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
@@ -80,32 +80,32 @@ bool SearchManager::addSearch(const Collection& collection)
   }
 
   // send to the main thread
-  QMetaObject::invokeMethod( this, "addSearchInternal", Qt::QueuedConnection, Q_ARG(Collection, collection) );
+  QMetaObject::invokeMethod( this, "addSearchInternal", Qt::QueuedConnection, Q_ARG( Collection, collection ) );
   return true;
 }
 
-void SearchManager::addSearchInternal(const Collection& collection)
+void SearchManager::addSearchInternal( const Collection &collection )
 {
-  Q_FOREACH ( AbstractSearchEngine* engine, m_engines ) {
+  Q_FOREACH ( AbstractSearchEngine *engine, m_engines ) {
     engine->addSearch( collection );
   }
 }
 
-bool SearchManager::removeSearch(qint64 id)
+bool SearchManager::removeSearch( qint64 id )
 {
   // send to the main thread
-  QMetaObject::invokeMethod( this, "removeSearchInternal", Qt::QueuedConnection, Q_ARG(qint64, id) );
+  QMetaObject::invokeMethod( this, "removeSearchInternal", Qt::QueuedConnection, Q_ARG( qint64, id ) );
   return true;
 }
 
-void SearchManager::removeSearchInternal(qint64 id)
+void SearchManager::removeSearchInternal( qint64 id )
 {
-  Q_FOREACH ( AbstractSearchEngine* engine, m_engines ) {
+  Q_FOREACH ( AbstractSearchEngine *engine, m_engines ) {
     engine->removeSearch( id );
   }
 }
 
-void SearchManager::updateSearch(const Akonadi::Collection& collection, NotificationCollector* collector)
+void SearchManager::updateSearch( const Akonadi::Collection &collection, NotificationCollector *collector )
 {
   removeSearch( collection.id() );
   collector->itemsUnlinked( collection.pimItems(), collection );

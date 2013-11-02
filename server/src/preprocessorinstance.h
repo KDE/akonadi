@@ -133,7 +133,7 @@ protected:
    * Returns the id of this preprocessor. This is actually
    * the AgentInstance identifier but it's not a requirement.
    */
-  const QString & id() const
+  const QString &id() const
   {
     return mId;
   }

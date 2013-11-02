@@ -151,7 +151,7 @@ bool ImapStreamParser::hasLiteral()
 
 bool ImapStreamParser::atLiteralEnd() const
 {
-  return (m_literalSize == 0);
+  return ( m_literalSize == 0 );
 }
 
 qint64 ImapStreamParser::remainingLiteralSize()

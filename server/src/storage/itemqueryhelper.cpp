@@ -30,7 +30,7 @@
 
 using namespace Akonadi;
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const Collection& collection )
+void ItemQueryHelper::itemSetToQuery( const ImapSet &set, QueryBuilder &qb, const Collection &collection )
 {
   QueryHelper::setToQuery( set, PimItem::idFullColumnName(), qb );
   if ( collection.isValid() ) {
@@ -44,7 +44,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, QueryBuilder& qb, const
   }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConnection *connection, QueryBuilder& qb)
+void ItemQueryHelper::itemSetToQuery( const ImapSet &set, bool isUid, AkonadiConnection *connection, QueryBuilder &qb )
 {
   if ( !isUid && connection->selectedCollectionId() >= 0 ) {
     itemSetToQuery( set, qb, connection->selectedCollection() );
@@ -53,7 +53,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet& set, bool isUid, AkonadiConn
   }
 }
 
-void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection *connection, QueryBuilder& qb)
+void ItemQueryHelper::remoteIdToQuery( const QStringList &rids, AkonadiConnection *connection, QueryBuilder &qb )
 {
   if ( rids.size() == 1 ) {
     qb.addValueCondition( PimItem::remoteIdFullColumnName(), Query::Equals, rids.first() );
@@ -70,7 +70,7 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList& rids, AkonadiConnection
   }
 }
 
-void ItemQueryHelper::gidToQuery(const QStringList& gids, QueryBuilder& qb)
+void ItemQueryHelper::gidToQuery( const QStringList &gids, QueryBuilder &qb )
 {
   if ( gids.size() == 1 ) {
     qb.addValueCondition( PimItem::gidFullColumnName(), Query::Equals, gids.first() );
@@ -80,7 +80,7 @@ void ItemQueryHelper::gidToQuery(const QStringList& gids, QueryBuilder& qb)
 
 }
 
-void ItemQueryHelper::scopeToQuery(const Scope& scope, AkonadiConnection *connection, QueryBuilder& qb)
+void ItemQueryHelper::scopeToQuery( const Scope &scope, AkonadiConnection *connection, QueryBuilder &qb )
 {
   if ( scope.scope() == Scope::None || scope.scope() == Scope::Uid ) {
     itemSetToQuery( scope.uidSet(), scope.scope() == Scope::Uid, connection, qb );
