@@ -552,8 +552,6 @@ void ITIPHandlerTest::testIdentity()
     QFETCH(QString, email);
     QFETCH(bool, expectedResult);
 
-    QEXPECT_FAIL("My alias", "This is broken.", Abort);
-
     if (CalendarUtils::thatIsMe(email) != expectedResult) {
         qDebug() << email;
         QVERIFY(false);

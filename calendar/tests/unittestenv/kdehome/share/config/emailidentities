@@ -21,7 +21,7 @@ uoid=1319040445
 [Identity #1]
 Dictionary=English (United States of America)
 Email Address=identity2@kde.org
-Email Aliases= alias1@kde.org,alias2@kde.org
+Email Aliases=alias1@kde.org,alias2@kde.org
 Identity=UnitTestUser
 Image Location=
 Inline Signature=
