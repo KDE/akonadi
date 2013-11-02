@@ -152,6 +152,7 @@ void UnitTestBase::compareCalendars(const KCalCore::Calendar::Ptr &expectedCalen
         QVERIFY(incidence);
         // Don't fail on creation times, which are obviously different
         expectedIncidence->setCreated(incidence->created());
+        incidence->removeCustomProperty(QByteArray("LIBKCAL"), QByteArray("ID"));
 
         if (*expectedIncidence != *incidence) {
             ICalFormat format;
